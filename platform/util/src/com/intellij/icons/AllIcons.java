@@ -425,6 +425,9 @@ public class AllIcons {
     public static final Icon Pin_tab = IconLoader.getIcon("/general/pin_tab.png"); // 16x16
     public static final Icon PluginManager = IconLoader.getIcon("/general/pluginManager.png"); // 32x32
     public static final Icon Progress = IconLoader.getIcon("/general/progress.png"); // 8x10
+    public static final Icon ProjectConfigurable = IconLoader.getIcon("/general/projectConfigurable.png"); // 9x9
+    public static final Icon ProjectConfigurableBanner = IconLoader.getIcon("/general/projectConfigurableBanner.png"); // 9x9
+    public static final Icon ProjectConfigurableSelected = IconLoader.getIcon("/general/projectConfigurableSelected.png"); // 9x9
     public static final Icon ProjectSettings = IconLoader.getIcon("/general/projectSettings.png"); // 16x16
     public static final Icon ProjectStructure = IconLoader.getIcon("/general/projectStructure.png"); // 16x16
     public static final Icon ProjectTab = IconLoader.getIcon("/general/projectTab.png"); // 16x16
@@ -608,9 +611,7 @@ public class AllIcons {
     public static final Icon Warning_notifications = IconLoader.getIcon("/ide/warning_notifications.png"); // 16x16
 
   }
-  public static final Icon Idea_logo_background = IconLoader.getIcon("/idea_logo_background.png"); // 500x500
-  public static final Icon Idea_logo_welcome = IconLoader.getIcon("/idea_logo_welcome.png"); // 100x100
-  
+
   public static class Javaee {
     public static final Icon Application_xml = IconLoader.getIcon("/javaee/application_xml.png"); // 16x16
     public static final Icon BuildOnFrameDeactivation = IconLoader.getIcon("/javaee/buildOnFrameDeactivation.png"); // 16x16
@@ -687,9 +688,12 @@ public class AllIcons {
   }
   
   public static class Nodes {
+    public static final Icon Attribute = IconLoader.getIcon("/nodes/attribute.png"); // 16x16
+    public static final Icon AbstractAttribute = IconLoader.getIcon("/nodes/abstractAttribute.png"); // 16x16
     public static final Icon AbstractClass = IconLoader.getIcon("/nodes/abstractClass.png"); // 16x16
     public static final Icon AbstractException = IconLoader.getIcon("/nodes/abstractException.png"); // 16x16
     public static final Icon AbstractMethod = IconLoader.getIcon("/nodes/abstractMethod.png"); // 16x16
+    public static final Icon AbstractStruct = IconLoader.getIcon("/nodes/abstractStruct.png"); // 16x16
     public static final Icon Advice = IconLoader.getIcon("/nodes/advice.png"); // 16x16
     public static final Icon Annotationtype = IconLoader.getIcon("/nodes/annotationtype.png"); // 16x16
     public static final Icon AnonymousClass = IconLoader.getIcon("/nodes/anonymousClass.png"); // 16x16
@@ -729,6 +733,7 @@ public class AllIcons {
     public static final Icon ExcludedFromCompile = IconLoader.getIcon("/nodes/excludedFromCompile.png"); // 16x16
     public static final Icon ExpandNode = IconLoader.getIcon("/nodes/expandNode.png"); // 9x9
     public static final Icon ExtractedFolder = IconLoader.getIcon("/nodes/extractedFolder.png"); // 16x16
+    public static final Icon Event = IconLoader.getIcon("/nodes/event.png"); // 16x16
     public static final Icon Field = IconLoader.getIcon("/nodes/field.png"); // 16x16
     public static final Icon FieldPK = IconLoader.getIcon("/nodes/fieldPK.png"); // 16x16
     public static final Icon FinalMark = IconLoader.getIcon("/nodes/finalMark.png"); // 16x16
@@ -739,7 +744,7 @@ public class AllIcons {
     public static final Icon InspectionResults = IconLoader.getIcon("/nodes/inspectionResults.png"); // 16x16
     public static final Icon Interface = IconLoader.getIcon("/nodes/interface.png"); // 16x16
     public static final Icon Trait = IconLoader.getIcon("/nodes/trait.png"); // 16x16
-    public static final Icon TypeAlias = IconLoader.getIcon("/nodes/type_alias.png"); // 16x16
+    public static final Icon TypeAlias = IconLoader.getIcon("/nodes/typeAlias.png"); // 16x16
     public static final Icon J2eeParameter = IconLoader.getIcon("/nodes/j2eeParameter.png"); // 16x16
     public static final Icon JarDirectory = IconLoader.getIcon("/nodes/jarDirectory.png"); // 16x16
     public static final Icon JavaDocFolder = IconLoader.getIcon("/nodes/javaDocFolder.png"); // 16x16
@@ -767,9 +772,7 @@ public class AllIcons {
     public static final Icon Method = IconLoader.getIcon("/nodes/method.png"); // 16x16
     public static final Icon Module = IconLoader.getIcon("/nodes/Module.png"); // 16x16
     public static final Icon ModuleGroup = IconLoader.getIcon("/nodes/moduleGroup.png"); // 16x16
-    public static final Icon NewException = IconLoader.getIcon("/nodes/newException.png"); // 14x14
     public static final Icon NewFolder = IconLoader.getIcon("/nodes/newFolder.png"); // 16x16
-    public static final Icon NewParameter = IconLoader.getIcon("/nodes/newParameter.png"); // 14x14
     public static final Icon NodePlaceholder = IconLoader.getIcon("/nodes/nodePlaceholder.png"); // 16x16
     public static final Icon Package = IconLoader.getIcon("/nodes/package.png"); // 16x16
     public static final Icon TestPackage = IconLoader.getIcon("/nodes/testPackage.png"); // 16x16
@@ -804,6 +807,7 @@ public class AllIcons {
     public static final Icon SortBySeverity = IconLoader.getIcon("/nodes/sortBySeverity.png"); // 16x16
     public static final Icon Static = IconLoader.getIcon("/nodes/static.png"); // 16x16
     public static final Icon StaticMark = IconLoader.getIcon("/nodes/staticMark.png"); // 16x16
+    public static final Icon Struct = IconLoader.getIcon("/nodes/struct.png"); // 16x16
     public static final Icon Symlink = IconLoader.getIcon("/nodes/symlink.png"); // 16x16
     public static final Icon TabAlert = IconLoader.getIcon("/nodes/tabAlert.png"); // 16x16
     public static final Icon TabPin = IconLoader.getIcon("/nodes/tabPin.png"); // 16x16

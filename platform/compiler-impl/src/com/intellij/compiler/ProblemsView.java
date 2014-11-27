@@ -19,12 +19,12 @@ import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ArrayUtil;
+import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,19 +36,11 @@ import java.util.StringTokenizer;
  * @author Eugene Zhuravlev
  *         Date: 9/18/12
  */
+@ProjectService
 public abstract class ProblemsView {
   public static final String PROBLEMS_TOOLWINDOW_ID = "Problems";
 
   private final Project myProject;
-
-  public static class SERVICE {
-    private SERVICE() {
-    }
-
-    public static ProblemsView getInstance(Project project) {
-      return ServiceManager.getService(project, ProblemsView.class);
-    }
-  }
 
   protected ProblemsView(Project project) {
     myProject = project;
@@ -75,6 +67,12 @@ public abstract class ProblemsView {
     final String groupName = file != null? file.getPresentableUrl() : category.getPresentableText();
     addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
   }
+
+  public abstract void showOrHide(boolean hide);
+
+  public abstract boolean isHideWarnings();
+
+  public abstract void selectFirstMessage();
 
   public abstract void setProgress(String text, float fraction);
   

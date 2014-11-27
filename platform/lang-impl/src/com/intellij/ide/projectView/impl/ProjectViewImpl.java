@@ -70,7 +70,7 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.AutoScrollFromSourceHandler;
@@ -623,21 +623,20 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
 
   private void createToolbarActions() {
     myActionGroup.removeAll();
-    if (BaseProjectViewDirectoryHelper.getInstance(myProject).supportsFlattenPackages()) {
-      myActionGroup.addAction(new PaneOptionAction(myFlattenPackages, IdeBundle.message("action.flatten.packages"),
-                                             IdeBundle.message("action.flatten.packages"), AllIcons.ObjectBrowser.FlattenPackages,
-                                             ourFlattenPackagesDefaults) {
-        @Override
-        public void setSelected(AnActionEvent event, boolean flag) {
-          final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
-          final SelectionInfo selectionInfo = SelectionInfo.create(viewPane);
 
-          super.setSelected(event, flag);
+    myActionGroup.addAction(new PaneOptionAction(myFlattenPackages, IdeBundle.message("action.flatten.packages"),
+                                           IdeBundle.message("action.flatten.packages"), AllIcons.ObjectBrowser.FlattenPackages,
+                                           ourFlattenPackagesDefaults) {
+      @Override
+      public void setSelected(AnActionEvent event, boolean flag) {
+        final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
+        final SelectionInfo selectionInfo = SelectionInfo.create(viewPane);
 
-          selectionInfo.apply(viewPane);
-        }
-      }).setAsSecondary(true);
-    }
+        super.setSelected(event, flag);
+
+        selectionInfo.apply(viewPane);
+      }
+    }).setAsSecondary(true);
 
     class FlattenPackagesDependableAction extends PaneOptionAction {
       FlattenPackagesDependableAction(Map<String, Boolean> optionsMap,
@@ -655,30 +654,26 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
         presentation.setVisible(isFlattenPackages(myCurrentViewId));
       }
     }
-    if (BaseProjectViewDirectoryHelper.getInstance(myProject).supportsHideEmptyMiddlePackages()) {
-      myActionGroup.addAction(new HideEmptyMiddlePackagesAction()).setAsSecondary(true);
-    }
-    if (BaseProjectViewDirectoryHelper.getInstance(myProject).supportsFlattenPackages()) {
-      myActionGroup.addAction(new FlattenPackagesDependableAction(myAbbreviatePackageNames,
-                                                            IdeBundle.message("action.abbreviate.qualified.package.names"),
-                                                            IdeBundle.message("action.abbreviate.qualified.package.names"),
-                                                            AllIcons.ObjectBrowser.AbbreviatePackageNames,
-                                                            ourAbbreviatePackagesDefaults) {
-        @Override
-        public boolean isSelected(AnActionEvent event) {
-          return super.isSelected(event) && isAbbreviatePackageNames(myCurrentViewId);
-        }
+    myActionGroup.addAction(new HideEmptyMiddlePackagesAction()).setAsSecondary(true);
+    myActionGroup.addAction(new FlattenPackagesDependableAction(myAbbreviatePackageNames,
+                                                          IdeBundle.message("action.abbreviate.qualified.package.names"),
+                                                          IdeBundle.message("action.abbreviate.qualified.package.names"),
+                                                          AllIcons.ObjectBrowser.AbbreviatePackageNames,
+                                                          ourAbbreviatePackagesDefaults) {
+      @Override
+      public boolean isSelected(AnActionEvent event) {
+        return super.isSelected(event) && isAbbreviatePackageNames(myCurrentViewId);
+      }
 
 
-        @Override
-        public void update(AnActionEvent e) {
-          super.update(e);
-          if (ScopeViewPane.ID.equals(myCurrentViewId)) {
-            e.getPresentation().setEnabled(false);
-          }
+      @Override
+      public void update(AnActionEvent e) {
+        super.update(e);
+        if (ScopeViewPane.ID.equals(myCurrentViewId)) {
+          e.getPresentation().setEnabled(false);
         }
-      }).setAsSecondary(true);
-    }
+      }
+    }).setAsSecondary(true);
 
     myActionGroup.addAction(new PaneOptionAction(myShowMembers, IdeBundle.message("action.show.members"),
                                                    IdeBundle.message("action.show.hide.members"),
@@ -931,12 +926,11 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
         final PsiElement element = elements[idx];
         if (element instanceof PsiDirectory) {
           PsiDirectory directory = (PsiDirectory)element;
-          final BaseProjectViewDirectoryHelper directoryHelper = BaseProjectViewDirectoryHelper.getInstance(myProject);
-          if (isHideEmptyMiddlePackages(viewPane.getId()) && directory.getChildren().length == 0 && !directoryHelper.skipDirectory(directory)) {
+          if (isHideEmptyMiddlePackages(viewPane.getId()) && directory.getChildren().length == 0 && !BaseProjectViewDirectoryHelper.skipDirectory(directory)) {
             while (true) {
               PsiDirectory parent = directory.getParentDirectory();
               if (parent == null) break;
-              if (directoryHelper.skipDirectory(parent) || PsiDirectoryFactory.getInstance(myProject).getQualifiedName(parent, false).length() == 0) break;
+              if (BaseProjectViewDirectoryHelper.skipDirectory(parent) || PsiPackageHelper.getInstance(myProject).getQualifiedName(parent, false).length() == 0) break;
               PsiElement[] children = parent.getChildren();
               if (children.length == 0 || children.length == 1 && children[0] == directory) {
                 directory = parent;

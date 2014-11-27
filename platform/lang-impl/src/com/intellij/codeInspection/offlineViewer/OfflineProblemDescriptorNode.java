@@ -141,7 +141,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
       return descriptor;
     }
     CommonProblemDescriptor descriptor =
-      inspectionManager.createProblemDescriptor(offlineProblemDescriptor.getDescription(), (QuickFix)null);
+            inspectionManager.createProblemDescriptor(offlineProblemDescriptor.getDescription(), (QuickFix)null);
     final QuickFix[] quickFixes = getFixes(descriptor, hints);
     if (quickFixes != null) {
       descriptor = inspectionManager.createProblemDescriptor(offlineProblemDescriptor.getDescription(), quickFixes);

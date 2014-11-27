@@ -35,10 +35,10 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureCo
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ParameterizedRunnable;
-import com.intellij.util.containers.Predicate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,7 +81,7 @@ public class LibraryEditingUtil {
     return candidateName;
   }
 
-  public static Predicate<Library> getNotAddedLibrariesCondition(final ModuleRootModel rootModel) {
+  public static Condition<Library> getNotAddedLibrariesCondition(final ModuleRootModel rootModel) {
     final OrderEntry[] orderEntries = rootModel.getOrderEntries();
     final Set<Library> result = new HashSet<Library>(orderEntries.length);
     for (OrderEntry orderEntry : orderEntries) {
@@ -93,9 +93,9 @@ public class LibraryEditingUtil {
         }
       }
     }
-    return new Predicate<Library>() {
+    return new Condition<Library>() {
       @Override
-      public boolean apply(Library library) {
+      public boolean value(Library library) {
         if (result.contains(library)) return false;
         if (library instanceof LibraryImpl) {
           final Library source = ((LibraryImpl)library).getSource();
@@ -201,7 +201,7 @@ public class LibraryEditingUtil {
       }
       if (library != null) {
 
-        if (!getNotAddedLibrariesCondition(rootModel).apply(library)) {
+        if (!getNotAddedLibrariesCondition(rootModel).value(library)) {
           continue;
         }
       }

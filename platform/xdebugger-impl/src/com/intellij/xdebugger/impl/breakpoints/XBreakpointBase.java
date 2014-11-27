@@ -15,7 +15,6 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.components.ComponentSerializationUtil;
@@ -62,7 +61,9 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   private final XBreakpointManagerImpl myBreakpointManager;
   private Icon myIcon;
   private CustomizedBreakpointPresentation myCustomizedPresentation;
+  private boolean myConditionEnabled = true;
   private XExpression myCondition;
+  private boolean myLogExpressionEnabled = true;
   private XExpression myLogExpression;
 
   public XBreakpointBase(final XBreakpointType<Self, P> type, XBreakpointManagerImpl breakpointManager, final @Nullable P properties, final S state) {
@@ -85,8 +86,10 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   private void initExpressions() {
+    myConditionEnabled = myState.isConditionEnabled();
     BreakpointState.Condition condition = myState.getCondition();
     myCondition = condition != null ? condition.toXExpression() : null;
+    myLogExpressionEnabled = myState.isLogExpressionEnabled();
     BreakpointState.LogExpression expression = myState.getLogExpression();
     myLogExpression = expression != null ? expression.toXExpression() : null;
   }
@@ -158,9 +161,32 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
   }
 
+  public boolean isConditionEnabled() {
+    return myConditionEnabled;
+  }
+
+  public void setConditionEnabled(boolean conditionEnabled) {
+    if (myConditionEnabled != conditionEnabled) {
+      myConditionEnabled = conditionEnabled;
+      fireBreakpointChanged();
+    }
+  }
+
+  public boolean isLogExpressionEnabled() {
+    return myLogExpressionEnabled;
+  }
+
+  public void setLogExpressionEnabled(boolean logExpressionEnabled) {
+    if (myLogExpressionEnabled != logExpressionEnabled) {
+      myLogExpressionEnabled = logExpressionEnabled;
+      fireBreakpointChanged();
+    }
+  }
+
   @Override
   public String getLogExpression() {
-    return myLogExpression != null ? myLogExpression.getExpression() : null;
+    XExpression expression = getLogExpressionObject();
+    return expression != null ? expression.getExpression() : null;
   }
 
   @Override
@@ -171,15 +197,19 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
   }
 
+  public XExpression getLogExpressionObjectInt() {
+    return myLogExpression;
+  }
+
   @Nullable
   @Override
   public XExpression getLogExpressionObject() {
-    return myLogExpression;
+    return myLogExpressionEnabled ? myLogExpression : null;
   }
 
   @Override
   public void setLogExpressionObject(@Nullable XExpression expression) {
-    if (!Comparing.equal(getLogExpressionObject(), expression)) {
+    if (!Comparing.equal(myLogExpression, expression)) {
       myLogExpression = expression;
       fireBreakpointChanged();
     }
@@ -187,7 +217,8 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
   @Override
   public String getCondition() {
-    return myCondition != null ? myCondition.getExpression() : null;
+    XExpression expression = getConditionExpression();
+    return expression != null ? expression.getExpression() : null;
   }
 
   @Override
@@ -198,15 +229,19 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
   }
 
+  public XExpression getConditionExpressionInt() {
+    return myCondition;
+  }
+
   @Nullable
   @Override
   public XExpression getConditionExpression() {
-    return myCondition;
+    return myConditionEnabled ? myCondition : null;
   }
 
   @Override
   public void setConditionExpression(@Nullable XExpression condition) {
-    if (!Comparing.equal(condition, getConditionExpression())) {
+    if (!Comparing.equal(condition, myCondition)) {
       myCondition = condition;
       fireBreakpointChanged();
     }
@@ -235,8 +270,8 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
   public S getState() {
     Element propertiesElement = myProperties != null ? XmlSerializer.serialize(myProperties.getState(), SERIALIZATION_FILTERS) : null;
-    myState.setCondition(myCondition != null && !myCondition.getExpression().isEmpty() ? new BreakpointState.Condition(myCondition) : null);
-    myState.setLogExpression(myLogExpression != null && !myLogExpression.getExpression().isEmpty() ? new BreakpointState.LogExpression(myLogExpression) : null);
+    myState.setCondition(BreakpointState.Condition.create(!myConditionEnabled, myCondition));
+    myState.setLogExpression(BreakpointState.LogExpression.create(!myLogExpressionEnabled, myLogExpression));
     myState.setPropertiesElement(propertiesElement);
     return myState;
   }
@@ -351,13 +386,18 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
   @Nullable
   protected final Icon calculateSpecialIcon() {
+    XDebugSessionImpl session = getBreakpointManager().getDebuggerManager().getCurrentSession();
     if (!isEnabled()) {
       // disabled icon takes precedence to other to visually distinguish it and provide feedback then it is enabled/disabled
       // (e.g. in case of mute-mode we would like to differentiate muted but enabled breakpoints from simply disabled ones)
-      return getType().getDisabledIcon();
+      if (session == null || !session.areBreakpointsMuted()) {
+        return getType().getDisabledIcon();
+      }
+      else {
+        return getType().getMutedDisabledIcon();
+      }
     }
 
-    XDebugSessionImpl session = getBreakpointManager().getDebuggerManager().getCurrentSession();
     if (session == null) {
       if (getBreakpointManager().getDependentBreakpointManager().getMasterBreakpoint(this) != null) {
         return getType().getInactiveDependentIcon();
@@ -365,7 +405,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
     else {
       if (session.areBreakpointsMuted()) {
-        return AllIcons.Debugger.Db_muted_breakpoint;
+        return getType().getMutedEnabledIcon();
       }
       if (session.isInactiveSlaveBreakpoint(this)) {
         return getType().getInactiveDependentIcon();

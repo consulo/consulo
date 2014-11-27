@@ -40,7 +40,7 @@ import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.psi.impl.file.PsiDirectoryImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ConcurrencyUtil;
@@ -390,14 +390,14 @@ public class FileManagerImpl implements FileManager {
     PsiDirectory psiDir = myVFileToPsiDirMap.get(vFile);
     if (psiDir != null) return psiDir;
 
-    if (myFileIndex.isExcludedFile(vFile)) return null;
+    if (myFileIndex.isUnderIgnored(vFile)) return null;
 
     VirtualFile parent = vFile.getParent();
     if (parent != null) { //?
       findDirectoryImpl(parent);// need to cache parent directory - used for firing events
     }
 
-    psiDir = PsiDirectoryFactory.getInstance(myManager.getProject()).createDirectory(vFile);
+    psiDir = new PsiDirectoryImpl(myManager, vFile);
     return ConcurrencyUtil.cacheOrGet(myVFileToPsiDirMap, vFile, psiDir);
   }
 

@@ -1,9 +1,7 @@
 <component name="libraryTable">
   <library name="pty4">
-    <CLASSES>
+    <binaries>
       <root url="jar://$PROJECT_DIR$/lib/pty4j-0.3.jar!/" />
-    </CLASSES>
-    <DOCUMENTATION />
-    <SOURCES />
+    </binaries>
   </library>
 </component>

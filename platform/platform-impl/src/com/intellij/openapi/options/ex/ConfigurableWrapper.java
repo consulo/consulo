@@ -46,9 +46,10 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   private static final Logger LOG = Logger.getInstance(ConfigurableWrapper.class);
 
   @Nullable
+  @SuppressWarnings("unchecked")
   public static <T extends UnnamedConfigurable> T wrapConfigurable(ConfigurableEP<T> ep) {
     if (ep.displayName != null || ep.key != null) {
-      return (T)(ep.children != null || ep.childrenEPName != null || ep.dynamic ? new CompositeWrapper(ep) : new ConfigurableWrapper(ep));
+      return (T)new CompositeWrapper(ep);
     }
     else {
       return ep.createConfigurable();

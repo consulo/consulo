@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,16 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.search.UsageSearchContext;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.InlineKeyDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -42,27 +44,28 @@ import java.util.Map;
  */
 public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
   @NonNls public static final ID<IdIndexEntry, Integer> NAME = ID.create("IdIndex");
-  
+
   private final FileBasedIndex.InputFilter myInputFilter = new FileBasedIndex.InputFilter() {
     @Override
-    public boolean acceptInput(Project project, @NotNull final VirtualFile file) {
-      final FileType fileType = file.getFileType();
-      return isIndexable(fileType) && !ProjectCoreUtil.isProjectOrWorkspaceFile(file, fileType);
+    public boolean acceptInput(@Nullable Project project, @NotNull final VirtualFile file) {
+      return isIndexable(file.getFileType());
     }
   };
+
+  public static final boolean ourSnapshotMappingsEnabled = SystemProperties.getBooleanProperty("idea.index.snapshot.mappings.enabled", true);
 
   private final DataExternalizer<Integer> myValueExternalizer = new DataExternalizer<Integer>() {
     @Override
-    public void save(final DataOutput out, final Integer value) throws IOException {
-      out.writeByte(value.intValue());
+    public void save(@NotNull final DataOutput out, final Integer value) throws IOException {
+      out.write(value.intValue() & UsageSearchContext.ANY);
     }
 
     @Override
-    public Integer read(final DataInput in) throws IOException {
-      return Integer.valueOf(in.readByte());
+    public Integer read(@NotNull final DataInput in) throws IOException {
+      return Integer.valueOf(in.readByte() & UsageSearchContext.ANY);
     }
   };
-  
+
   private final KeyDescriptor<IdIndexEntry> myKeyDescriptor = new InlineKeyDescriptor<IdIndexEntry>() {
     @Override
     public IdIndexEntry fromInt(int n) {
@@ -74,11 +77,11 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
       return idIndexEntry.getWordHashCode();
     }
   };
-  
+
   private final DataIndexer<IdIndexEntry, Integer, FileContent> myIndexer = new DataIndexer<IdIndexEntry, Integer, FileContent>() {
     @Override
     @NotNull
-    public Map<IdIndexEntry, Integer> map(final FileContent inputData) {
+    public Map<IdIndexEntry, Integer> map(@NotNull final FileContent inputData) {
       final FileTypeIdIndexer indexer = IdTableBuilding.getFileTypeIndexer(inputData.getFileType());
       if (indexer != null) {
         return indexer.map(inputData);
@@ -90,7 +93,7 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
 
   @Override
   public int getVersion() {
-    return 9; // TODO: version should enumerate all word scanner versions and build version upon that set
+    return 12 + (ourSnapshotMappingsEnabled ? 0xFF:0); // TODO: version should enumerate all word scanner versions and build version upon that set
   }
 
   @Override
@@ -110,21 +113,24 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
     return myIndexer;
   }
 
+  @NotNull
   @Override
   public DataExternalizer<Integer> getValueExternalizer() {
     return myValueExternalizer;
   }
 
+  @NotNull
   @Override
   public KeyDescriptor<IdIndexEntry> getKeyDescriptor() {
     return myKeyDescriptor;
   }
 
+  @NotNull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return myInputFilter;
   }
-  
+
   public static boolean isIndexable(FileType fileType) {
     return fileType instanceof LanguageFileType ||
            fileType instanceof CustomSyntaxTableFileType ||
@@ -132,4 +138,8 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
            CacheBuilderRegistry.getInstance().getCacheBuilder(fileType) != null;
   }
 
+  @Override
+  public boolean hasSnapshotMapping() {
+    return true;
+  }
 }

@@ -106,8 +106,8 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
   @Attribute("enabledByDefault")
   public boolean enabledByDefault = false;
 
-  @Attribute("applyToDialects")
-  public boolean applyToDialects = true;
+  @Attribute("cleanupTool")
+  public boolean cleanupTool = false;
 
   /**
    * Highlighting level for this inspection tool that is used in default settings.
@@ -130,9 +130,12 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
   public boolean hasStaticDescription;
 
   @Nullable
-  private String getLocalizedString(String bundleName, @NotNull String key) {
+  private String getLocalizedString(String bundleName, String key) {
     final String baseName = bundleName != null ? bundleName : bundle == null ? ((IdeaPluginDescriptor)myPluginDescriptor).getResourceBundleBaseName() : bundle;
-    if (baseName == null) {
+    if (baseName == null || key == null) {
+      if (bundleName != null) {
+        LOG.warn(implementationClass);
+      }
       return null;
     }
     final ResourceBundle resourceBundle = AbstractBundle.getResourceBundle(baseName, myPluginDescriptor.getPluginClassLoader());
@@ -184,7 +187,6 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
            ", groupDisplayName='" + groupDisplayName + '\'' +
            ", groupPath='" + groupPath + '\'' +
            ", enabledByDefault=" + enabledByDefault +
-           ", applyToDialects=" + applyToDialects +
            ", level='" + level + '\'' +
            ", hasStaticDescription=" + hasStaticDescription +
            ", presentation='" + presentation + '\'' +

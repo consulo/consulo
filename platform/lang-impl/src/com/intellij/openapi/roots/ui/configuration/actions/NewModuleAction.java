@@ -36,10 +36,9 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
 import org.consulo.ide.eap.EarlyAccessProgramManager;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
 
 import java.util.List;
 
@@ -48,26 +47,6 @@ import java.util.List;
  *         Date: Jan 5, 2004
  */
 public class NewModuleAction extends AnAction implements DumbAware {
-  public static class NewModuleWizard implements EarlyAccessProgramDescriptor {
-
-    @NotNull
-    @Override
-    public String getName() {
-      return "New Style Module Wizard";
-    }
-
-    @Override
-    public boolean getDefaultState() {
-      return true;
-    }
-
-    @NotNull
-    @Override
-    public String getDescription() {
-      return "Due Consulo have new configuration style. IDEA Module wizard are broken and useless";
-    }
-  }
-
   public NewModuleAction() {
     super(ProjectBundle.message("module.new.action"), ProjectBundle.message("module.new.action.description"), null);
   }
@@ -80,34 +59,39 @@ public class NewModuleAction extends AnAction implements DumbAware {
     }
     Object dataFromContext = prepareDataFromContext(e);
 
-    String defaultPath = null;
     final VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
-    if (virtualFile != null && virtualFile.isDirectory()) {
-      defaultPath = virtualFile.getPath();
-    }
 
-    if(!EarlyAccessProgramManager.getInstance().getState(NewModuleWizard.class)) {
-      showModuleWizard(project, dataFromContext, defaultPath);
+    Module newModule = null;
+    boolean eapState = EarlyAccessProgramManager.is(NewProjectOrModuleDialogWithSetup.EapDescriptor.class);
+    if (eapState) {
+      VirtualFile moduleDir = selectModuleDirectory(project, virtualFile);
+      if(moduleDir == null) {
+        return;
+      }
+
+      NewProjectOrModuleDialogWithSetup dialog = new NewProjectOrModuleDialogWithSetup(project, moduleDir);
+      newModule = dialog.showAndGet() ? dialog.doCreate(project, moduleDir) : null;
     }
     else {
-      Module moduleBySimpleWay = createModuleBySimpleWay(project, virtualFile);
-      if(moduleBySimpleWay != null) {
-        processCreatedModule(moduleBySimpleWay, dataFromContext);
-      }
+      newModule = createModuleBySimpleWay(project, virtualFile);
+    }
+
+    if (newModule != null) {
+      processCreatedModule(newModule, dataFromContext);
     }
   }
 
-  public static Module createModuleBySimpleWay(Project project, VirtualFile virtualFile) {
+  private static VirtualFile selectModuleDirectory(Project project, VirtualFile virtualFile) {
     final ModuleManager moduleManager = ModuleManager.getInstance(project);
-    FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false){
+    FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override
       public boolean isFileSelectable(VirtualFile file) {
-        if(!super.isFileSelectable(file)) {
+        if (!super.isFileSelectable(file)) {
           return false;
         }
         for (Module module : moduleManager.getModules()) {
           VirtualFile moduleDir = module.getModuleDir();
-          if(moduleDir != null && moduleDir.equals(file)) {
+          if (moduleDir != null && moduleDir.equals(file)) {
             return false;
           }
         }
@@ -116,9 +100,14 @@ public class NewModuleAction extends AnAction implements DumbAware {
     };
     fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
 
-    VirtualFile moduleDir =
-      FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
+    return FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
+  }
 
+  @Nullable
+  public static Module createModuleBySimpleWay(Project project, VirtualFile virtualFile) {
+    final ModuleManager moduleManager = ModuleManager.getInstance(project);
+
+    VirtualFile moduleDir = selectModuleDirectory(project, virtualFile);
     if(moduleDir == null) {
       return null;
     }
@@ -143,18 +132,6 @@ public class NewModuleAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  private Module showModuleWizard(Project project, Object dataFromContext, String defaultPath) {
-    final AddModuleWizard wizard = new AddModuleWizard(project, new DefaultModulesProvider(project), defaultPath);
-
-    wizard.show();
-
-    if (wizard.isOK()) {
-      return createModuleFromWizard(project, dataFromContext, wizard);
-    }
-    return null;
-  }
-
-  @Nullable
   public Module createModuleFromWizard(Project project, @Nullable Object dataFromContext, AddModuleWizard wizard) {
     final ProjectBuilder builder = wizard.getProjectBuilder();
     if (builder instanceof ModuleBuilder) {
@@ -171,7 +148,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     }
     Module module;
     if (builder instanceof ModuleBuilder) {
-      module = ((ModuleBuilder) builder).commitModule(project, null);
+      module = ((ModuleBuilder)builder).commitModule(project, null);
       if (module != null) {
         processCreatedModule(module, dataFromContext);
       }
@@ -199,6 +176,6 @@ public class NewModuleAction extends AnAction implements DumbAware {
   @Override
   public void update(AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabled(getEventProject(e) != null);
+    e.getPresentation().setEnabled(e.getProject() != null);
   }
 }

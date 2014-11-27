@@ -31,9 +31,10 @@ import java.util.Collections;
  * @since 12:14/14.08.13
  */
 public class CompilerServerStubIndexImpl extends StubIndex {
+  @NotNull
   @Override
   public <Key, Psi extends PsiElement> Collection<Psi> get(@NotNull StubIndexKey<Key, Psi> indexKey, @NotNull Key key, @NotNull Project project, GlobalSearchScope scope) {
-    return null;
+    return Collections.emptyList();
   }
 
   @Override
@@ -43,7 +44,7 @@ public class CompilerServerStubIndexImpl extends StubIndex {
                                             GlobalSearchScope scope,
                                             Class<Psi> requiredClass,
                                             @NotNull Processor<? super Psi> processor) {
-    return false;
+    return true;
   }
 
   @NotNull
@@ -54,6 +55,6 @@ public class CompilerServerStubIndexImpl extends StubIndex {
 
   @Override
   public <K> boolean processAllKeys(@NotNull StubIndexKey<K, ?> indexKey, @NotNull Project project, Processor<K> processor) {
-    return false;
+    return true;
   }
 }

@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.roots.OrderRootType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,8 +32,4 @@ public abstract class PersistentLibraryKind<P extends LibraryProperties> extends
 
   @NotNull
   public abstract P createDefaultProperties();
-
-  public OrderRootType[] getAdditionalRootTypes() {
-    return new OrderRootType[0];
-  }
 }

@@ -34,12 +34,15 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public final class EditorHistoryManager extends AbstractProjectComponent implements JDOMExternalizable {
@@ -53,7 +56,7 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
   /**
    * State corresponding to the most recent file is the last
    */
-  private final ArrayList<HistoryEntry> myEntriesList = new ArrayList<HistoryEntry>();
+  private final List<HistoryEntry> myEntriesList = new ArrayList<HistoryEntry>();
 
   /** Invoked by reflection */
   EditorHistoryManager(final Project project, final UISettings uiSettings){
@@ -68,34 +71,32 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
     connection.subscribe(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER, new MyEditorManagerBeforeListener());
     connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new MyEditorManagerListener());
 
-    StartupManager.getInstance(myProject).runWhenProjectIsInitialized(
-            new DumbAwareRunnable() {
-              @Override
-              public void run() {
-                // myElement may be null if node that corresponds to this manager does not exist
-                if (myElement != null) {
-                  final List<Element> children = myElement.getChildren(HistoryEntry.TAG);
-                  myElement = null;
-                  //noinspection unchecked
-                  for (final Element e : children) {
-                    try {
-                      myEntriesList.add(new HistoryEntry(myProject, e));
-                    }
-                    catch (InvalidDataException e1) {
-                      // OK here
-                    }
-                    catch (ProcessCanceledException e1) {
-                      // OK here
-                    }
-                    catch (Exception anyException) {
-                      LOG.error(anyException);
-                    }
-                  }
-                  trimToSize();
-                }
-              }
+    StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new DumbAwareRunnable() {
+      @Override
+      public void run() {
+        // myElement may be null if node that corresponds to this manager does not exist
+        if (myElement != null) {
+          final List<Element> children = myElement.getChildren(HistoryEntry.TAG);
+          myElement = null;
+          //noinspection unchecked
+          for (final Element e : children) {
+            try {
+              myEntriesList.add(new HistoryEntry(myProject, e));
             }
-    );
+            catch (InvalidDataException e1) {
+              // OK here
+            }
+            catch (ProcessCanceledException e1) {
+              // OK here
+            }
+            catch (Exception anyException) {
+              LOG.error(anyException);
+            }
+          }
+          trimToSize();
+        }
+      }
+    });
   }
 
   @Override
@@ -139,7 +140,7 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
     }
     LOG.assertTrue(selectedEditor != null);
     final int selectedProviderIndex = ArrayUtilRt.find(editors, selectedEditor);
-    LOG.assertTrue(selectedProviderIndex != -1);
+    LOG.assertTrue(selectedProviderIndex != -1, "Can't find " + selectedEditor + " among " + Arrays.asList(editors));
 
     final HistoryEntry entry = getEntry(file);
     if(entry != null){
@@ -239,13 +240,26 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
   }
 
   /**
-   * @return array of valid files that are in the history. The greater is index the more recent the file is.
+   * @return array of valid files that are in the history, oldest first. May contain duplicates.
    */
   public VirtualFile[] getFiles(){
     validateEntries();
     final VirtualFile[] result = new VirtualFile[myEntriesList.size()];
     for(int i=myEntriesList.size()-1; i>=0 ;i--){
       result[i] = myEntriesList.get(i).myFile;
+    }
+    return result;
+  }
+
+  /**
+   * @return a set of valid files that are in the history, oldest first.
+   */
+  public LinkedHashSet<VirtualFile> getFileSet() {
+    LinkedHashSet<VirtualFile> result = ContainerUtil.newLinkedHashSet();
+    for (VirtualFile file : getFiles()) {
+      // if the file occurs several times in the history, only its last occurrence counts 
+      result.remove(file);
+      result.add(file);
     }
     return result;
   }

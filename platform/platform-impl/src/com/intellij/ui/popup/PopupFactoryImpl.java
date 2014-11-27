@@ -49,6 +49,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.mock.MockConfirmation;
 import com.intellij.ui.popup.tree.TreePopupImpl;
+import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.EmptyIcon;
@@ -163,7 +164,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
                                                   boolean showDisabledActions,
                                                   boolean honorActionMnemonics,
                                                   final Runnable disposeCallback,
-                                          final int maxRowCount) {
+                                                  final int maxRowCount) {
     return createActionGroupPopup(title, actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, disposeCallback,
                                   maxRowCount, null, null);
   }
@@ -226,8 +227,11 @@ public class PopupFactoryImpl extends JBPopupFactory {
           Presentation presentation = new Presentation();
           presentation.setDescription(action.getTemplatePresentation().getDescription());
           final String actualActionPlace = actionPlace == null ? ActionPlaces.UNKNOWN : actionPlace;
-          action.update(new AnActionEvent(null, DataManager.getInstance().getDataContext(myComponent), actualActionPlace, presentation,
-                                          ActionManager.getInstance(), 0));
+          final AnActionEvent actionEvent =
+                  new AnActionEvent(null, DataManager.getInstance().getDataContext(myComponent), actualActionPlace, presentation,
+                                    ActionManager.getInstance(), 0);
+          actionEvent.setInjectedContext(action.isInInjectedContext());
+          action.update(actionEvent);
           ActionMenu.showDescriptionInStatusBar(true, myComponent, presentation.getDescription());
         }
       });
@@ -246,7 +250,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
       LOG.assertTrue(component != null, "dataContext has no component for new ListPopupStep");
 
       final ActionStepBuilder builder =
-        new ActionStepBuilder(dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics);
+              new ActionStepBuilder(dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics);
       if (actionPlace != null) {
         builder.setActionPlace(actionPlace);
       }
@@ -431,7 +435,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
     return new ComponentPopupBuilderImpl(content, prefferableFocusComponent);
   }
 
- 
+
   @NotNull
   @Override
   public RelativePoint guessBestPopupLocation(@NotNull DataContext dataContext) {
@@ -452,7 +456,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
       return new RelativePoint(focusOwner, point);
     }
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
     if (editor != null && focusOwner == editor.getContentComponent()) {
       return guessBestPopupLocation(editor);
     }
@@ -607,7 +611,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
     public Icon getIcon() {
       return myIcon;
-    }                                                                                                                           
+    }
 
     public boolean isPrependWithSeparator() {
       return myPrependWithSeparator;
@@ -620,7 +624,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
     public boolean isEnabled() { return myIsEnabled; }
   }
 
-  private static class ActionPopupStep implements ListPopupStep<ActionItem>, MnemonicNavigationFilter<ActionItem>, SpeedSearchFilter<ActionItem> {
+  private static class ActionPopupStep implements ListPopupStepEx<ActionItem>, MnemonicNavigationFilter<ActionItem>, SpeedSearchFilter<ActionItem> {
     private final List<ActionItem> myItems;
     private final String myTitle;
     private final Component myContext;
@@ -710,6 +714,11 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
     @Override
     public PopupStep onChosen(final ActionItem actionChoice, final boolean finalChoice) {
+      return onChosen(actionChoice, finalChoice, 0);
+    }
+
+    @Override
+    public PopupStep onChosen(ActionItem actionChoice, boolean finalChoice, final int eventModifiers) {
       if (!actionChoice.isEnabled()) return FINAL_CHOICE;
       final AnAction action = actionChoice.getAction();
       DataManager mgr = DataManager.getInstance();
@@ -717,16 +726,17 @@ public class PopupFactoryImpl extends JBPopupFactory {
       final DataContext dataContext = myContext != null ? mgr.getDataContext(myContext) : mgr.getDataContext();
 
       if (action instanceof ActionGroup && (!finalChoice || !((ActionGroup)action).canBePerformed(dataContext))) {
-          return createActionsStep((ActionGroup)action, dataContext, myEnableMnemonics, true, myShowDisabledActions, null, myContext, false,
-                                   myPreselectActionCondition, false);
+        return createActionsStep((ActionGroup)action, dataContext, myEnableMnemonics, true, myShowDisabledActions, null, myContext, false,
+                                 myPreselectActionCondition, false);
       }
       else {
         myFinalRunnable = new Runnable() {
           @Override
           public void run() {
-            action.actionPerformed(
-              new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, action.getTemplatePresentation().clone(),
-                                ActionManager.getInstance(), 0));
+            final AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, action.getTemplatePresentation().clone(),
+                                                          ActionManager.getInstance(), eventModifiers);
+            event.setInjectedContext(action.isInInjectedContext());
+            action.actionPerformed(event);
           }
         };
         return FINAL_CHOICE;
@@ -791,7 +801,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
   @Override
   public boolean isPopupActive() {
-  return IdeEventQueue.getInstance().isPopupActive();
+    return IdeEventQueue.getInstance().isPopupActive();
   }
 
   private static class ActionStepBuilder {
@@ -859,6 +869,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
         }
 
         Icon icon = action.getTemplatePresentation().getIcon();
+        if (icon == null && action instanceof Toggleable) icon = PlatformIcons.CHECK_ICON;
         if (icon != null) {
           final int width = icon.getIconWidth();
           final int height = icon.getIconHeight();
@@ -874,7 +885,10 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
     @NotNull
     private AnActionEvent createActionEvent(@NotNull AnAction actionGroup) {
-      return new AnActionEvent(null, myDataContext, myActionPlace, getPresentation(actionGroup), ActionManager.getInstance(), 0);
+      final AnActionEvent actionEvent =
+              new AnActionEvent(null, myDataContext, myActionPlace, getPresentation(actionGroup), ActionManager.getInstance(), 0);
+      actionEvent.setInjectedContext(actionGroup.isInInjectedContext());
+      return actionEvent;
     }
 
     private void appendActionsFromGroup(@NotNull ActionGroup actionGroup) {
@@ -931,7 +945,16 @@ public class PopupFactoryImpl extends JBPopupFactory {
         Icon icon = presentation.getIcon();
         if (icon == null) {
           @NonNls final String actionId = ActionManager.getInstance().getId(action);
-          icon = actionId != null && actionId.startsWith("QuickList.") ? AllIcons.Actions.QuickList : myEmptyIcon;
+          if (actionId != null && actionId.startsWith("QuickList.")) {
+            icon = AllIcons.Actions.QuickList;
+          }
+          else if (action instanceof Toggleable) {
+            boolean toggled = Boolean.TRUE.equals(presentation.getClientProperty(Toggleable.SELECTED_PROPERTY));
+            icon = toggled? new IconWrapper(PlatformIcons.CHECK_ICON) : myEmptyIcon;
+          }
+          else {
+            icon = myEmptyIcon;
+          }
         }
         else {
           icon = new IconWrapper(icon);
@@ -995,16 +1018,16 @@ public class PopupFactoryImpl extends JBPopupFactory {
     final Color borderOriginal = Color.darkGray;
     final Color border = ColorUtil.toAlpha(borderOriginal, 75);
     builder
-      .setDialogMode(true)
-      .setTitle(title)
-      .setAnimationCycle(200)
-      .setFillColor(bg)
-      .setBorderColor(border)
-      .setHideOnClickOutside(false)
-      .setHideOnKeyOutside(false)
-      .setHideOnAction(false)
-      .setCloseButtonEnabled(true)
-      .setShadow(true);
+            .setDialogMode(true)
+            .setTitle(title)
+            .setAnimationCycle(200)
+            .setFillColor(bg)
+            .setBorderColor(border)
+            .setHideOnClickOutside(false)
+            .setHideOnKeyOutside(false)
+            .setHideOnAction(false)
+            .setCloseButtonEnabled(true)
+            .setShadow(true);
 
     return builder;
   }

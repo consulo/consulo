@@ -16,21 +16,27 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.util.io.URLUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author yole
  */
 public class StandardFileSystems {
-  public static String FILE_PROTOCOL = "file";
-  public static String FILE_PROTOCOL_PREFIX = "file://";
+  public static final String FILE_PROTOCOL = URLUtil.FILE_PROTOCOL;
+  public static final String FILE_PROTOCOL_PREFIX = FILE_PROTOCOL + URLUtil.SCHEME_SEPARATOR;
   @Deprecated
   public static String JAR_PROTOCOL = "jar";
   @Deprecated
   public static String JAR_PROTOCOL_PREFIX = "jar://";
   @Deprecated
   public static String JAR_SEPARATOR = "!/";
-  public static String HTTP_PROTOCOL = "http";
+  @Deprecated
+  @SuppressWarnings("UnusedDeclaration")
+  /**
+   * @deprecated use {@link com.intellij.util.io.URLUtil#HTTP_PROTOCOL}
+   */
+  public static final String HTTP_PROTOCOL = URLUtil.HTTP_PROTOCOL;
 
   private static final NotNullLazyValue<IVirtualFileSystem> ourLocal = new NotNullLazyValue<IVirtualFileSystem>() {
     @NotNull

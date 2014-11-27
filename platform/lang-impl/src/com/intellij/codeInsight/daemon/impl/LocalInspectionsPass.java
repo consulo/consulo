@@ -246,23 +246,16 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                                                                                   @NotNull List<PsiElement> outside) {
     Set<Language> languages = new SmartHashSet<Language>();
     Map<String, Language> langIds = new SmartHashMap<String, Language>();
-    Set<String> dialects = new SmartHashSet<String>();
     for (PsiElement element : inside) {
       Language language = element.getLanguage();
       if (languages.add(language)) {
         langIds.put(language.getID(), language);
-        for (Language dialect : language.getDialects()) {
-          dialects.add(dialect.getID());
-        }
       }
     }
     for (PsiElement element : outside) {
       Language language = element.getLanguage();
       if (languages.add(language)) {
         langIds.put(language.getID(), language);
-        for (Language dialect : language.getDialects()) {
-          dialects.add(dialect.getID());
-        }
       }
     }
     MultiMap<LocalInspectionToolWrapper, String> toolToLanguages = new MultiMap<LocalInspectionToolWrapper, String>() {
@@ -287,17 +280,6 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
       }
       Language lang = langIds.get(language);
       if (lang != null) {
-        LocalInspectionTool tool = wrapper.getTool();
-        if (!checkDumbAwareness || tool instanceof DumbAware) {
-          toolToLanguages.putValue(wrapper, language);
-          if (wrapper.applyToDialects()) {
-            for (Language dialect : lang.getDialects()) {
-              toolToLanguages.putValue(wrapper, dialect.getID());
-            }
-          }
-        }
-      }
-      else if (wrapper.applyToDialects() && dialects.contains(language)) {
         LocalInspectionTool tool = wrapper.getTool();
         if (!checkDumbAwareness || tool instanceof DumbAware) {
           toolToLanguages.putValue(wrapper, language);

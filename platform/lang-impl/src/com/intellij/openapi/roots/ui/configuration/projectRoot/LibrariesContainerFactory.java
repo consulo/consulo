@@ -27,6 +27,8 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
@@ -135,10 +137,10 @@ public class LibrariesContainerFactory {
       NewLibraryEditor editor = new NewLibraryEditor();
       editor.setName(name);
       for (VirtualFile classRoot : classRoots) {
-        editor.addRoot(classRoot, OrderRootType.CLASSES);
+        editor.addRoot(classRoot, BinariesOrderRootType.getInstance());
       }
       for (VirtualFile sourceRoot : sourceRoots) {
-        editor.addRoot(sourceRoot, OrderRootType.SOURCES);
+        editor.addRoot(sourceRoot, SourcesOrderRootType.getInstance());
       }
       return createLibrary(editor, level);
     }

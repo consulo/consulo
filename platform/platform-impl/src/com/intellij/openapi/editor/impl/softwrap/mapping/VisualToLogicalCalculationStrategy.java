@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,19 +24,18 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-* @author Denis Zhdanov
-* @since Sep 9, 2010 9:20:44 AM
-*/
+ * @author Denis Zhdanov
+ * @since Sep 9, 2010 9:20:44 AM
+ */
 class VisualToLogicalCalculationStrategy extends AbstractMappingStrategy<LogicalPosition> {
 
   private final CacheEntry mySearchKey;
   private VisualPosition myTargetVisual;
 
-  VisualToLogicalCalculationStrategy(@NotNull Editor editor, @NotNull SoftWrapsStorage storage, @NotNull List<CacheEntry> cache, 
-                                     @NotNull EditorTextRepresentationHelper representationHelper) 
+  VisualToLogicalCalculationStrategy(@NotNull Editor editor, @NotNull SoftWrapsStorage storage, @NotNull List<CacheEntry> cache)
   {
-    super(editor, storage, cache, representationHelper);
-    mySearchKey = new CacheEntry(0, editor, representationHelper);
+    super(editor, storage, cache);
+    mySearchKey = new CacheEntry(0, editor);
   }
 
   public void init(@NotNull final VisualPosition targetVisual, @NotNull final List<CacheEntry> cache) {
@@ -76,7 +74,7 @@ class VisualToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
       }
       return;
     }
-    
+
     i = -i - 1;
     if (i > 0 && i <= cache.size()) {
       CacheEntry entry = cache.get(i - 1);
@@ -92,7 +90,7 @@ class VisualToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
   @Override
   protected LogicalPosition buildIfExceeds(EditorPosition position, int offset) {
     Document document = myEditor.getDocument();
-    
+
     // There is a possible case that target visual line starts with soft wrap. We want to process that at 'processSoftWrap()' method.
     CacheEntry targetEntry = getTargetEntry();
     if (targetEntry != null && targetEntry.startOffset == offset && myStorage.getSoftWrap(offset) != null) {
@@ -108,11 +106,11 @@ class VisualToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
     if (cacheEntry.visualLine < myTargetVisual.line) {
       return null;
     }
-    
+
     // Return eagerly if target visual position remains between current context position and the one defined by the given offset.
 
-    if (offset < cacheEntry.startOffset || myTargetVisual.line < cacheEntry.visualLine 
-        || (position.visualColumn + offset - position.offset >= myTargetVisual.column)) 
+    if (offset < cacheEntry.startOffset || myTargetVisual.line < cacheEntry.visualLine
+        || (position.visualColumn + offset - position.offset >= myTargetVisual.column))
     {
       int linesDiff = myTargetVisual.line - position.visualLine;
       if (linesDiff > 0) {
@@ -125,11 +123,11 @@ class VisualToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
         position.logicalColumn += columnsDiff;
         position.offset += columnsDiff;
       }
-      
+
       // There is a possible case that target visual position points to virtual space after line end. We need
       // to define correct offset then
       position.offset = Math.min(position.offset, document.getLineEndOffset(position.logicalLine));
-      
+
       position.visualLine += linesDiff;
       position.visualColumn = myTargetVisual.column;
       position.logicalLine += linesDiff;
@@ -158,7 +156,7 @@ class VisualToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
         return null;
       }
     }
-    
+
     return null;
   }
 
@@ -208,7 +206,7 @@ class VisualToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
       }
       position.logicalColumn = myTargetVisual.column;
     }
-    
+
     position.visualColumn = myTargetVisual.column;
     return position.buildLogicalPosition();
   }

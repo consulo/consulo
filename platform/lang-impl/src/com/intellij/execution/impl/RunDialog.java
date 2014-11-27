@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.Executor;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
@@ -38,7 +39,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
   private final Project myProject;
   private final RunConfigurable myConfigurable;
   private JComponent myCenterPanel;
-  @NonNls public static String HELP_ID = "reference.dialogs.rundebug";
+  @NonNls public static final String HELP_ID = "reference.dialogs.rundebug";
   private final Executor myExecutor;
 
   public RunDialog(final Project project, final Executor executor) {
@@ -111,9 +112,13 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
     return editConfiguration(project, configuration, title, null);
   }
 
+  public static boolean editConfiguration(@NotNull ExecutionEnvironment environment, @NotNull String title) {
+    return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
+  }
+
   public static boolean editConfiguration(final Project project, final RunnerAndConfigurationSettings configuration, final String title, @Nullable final Executor executor) {
     final SingleConfigurationConfigurable<RunConfiguration> configurable = SingleConfigurationConfigurable.editSettings(configuration, executor);
-    final SingleConfigurableEditor dialog = new SingleConfigurableEditor(project, configurable) {
+    final SingleConfigurableEditor dialog = new SingleConfigurableEditor(project, configurable, IdeModalityType.PROJECT) {
       {
         if (executor != null) setOKButtonText(executor.getActionName());
         if (executor != null) setOKButtonIcon(executor.getIcon());

@@ -19,7 +19,6 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.ReflectionCache;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -46,12 +45,12 @@ public class ClassExtension<T> extends KeyedExtensionCollector<T, Class> {
 
   private static void collectSupers(Class classKey, Set<String> allSupers) {
     allSupers.add(classKey.getName());
-    final Class[] interfaces = ReflectionCache.getInterfaces(classKey);
+    final Class[] interfaces = classKey.getInterfaces();
     for (final Class anInterface : interfaces) {
       collectSupers(anInterface, allSupers);
     }
 
-    final Class superClass = ReflectionCache.getSuperClass(classKey);
+    final Class superClass = classKey.getSuperclass();
     if (superClass != null) {
       collectSupers(superClass, allSupers);
     }

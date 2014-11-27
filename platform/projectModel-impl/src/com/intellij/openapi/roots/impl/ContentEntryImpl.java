@@ -43,7 +43,7 @@ import java.util.*;
  * @author dsl
  */
 @Logger
-public class ContentEntryImpl extends RootModelComponentBase implements ContentEntry, ClonableContentEntry, Comparable<ContentEntryImpl> {
+public class ContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntry, ClonableContentEntry, Comparable<ContentEntryImpl> {
   @NonNls
   public static final String ELEMENT_NAME = "content";
   @NonNls
@@ -52,18 +52,18 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   @NotNull
   private final VirtualFilePointer myRoot;
 
-  private final Set<ContentFolder> myContentFolders = new LinkedHashSet<ContentFolder>();
+  private final Set<ContentFolder> myContentFolders = new TreeSet<ContentFolder>(ContentFolderComparator.INSTANCE);
 
-  ContentEntryImpl(@NotNull VirtualFile file, @NotNull RootModelImpl m) {
+  ContentEntryImpl(@NotNull VirtualFile file, @NotNull ModuleRootLayerImpl m) {
     this(file.getUrl(), m);
   }
 
-  ContentEntryImpl(@NotNull String url, @NotNull RootModelImpl m) {
+  ContentEntryImpl(@NotNull String url, @NotNull ModuleRootLayerImpl m) {
     super(m);
     myRoot = VirtualFilePointerManager.getInstance().create(url, this, null);
   }
 
-  ContentEntryImpl(@NotNull Element e, @NotNull RootModelImpl m) throws InvalidDataException {
+  ContentEntryImpl(@NotNull Element e, @NotNull ModuleRootLayerImpl m) throws InvalidDataException {
     this(getUrlFrom(e), m);
 
     for (Element child : e.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
@@ -206,7 +206,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   @Override
   @NotNull
-  public ContentEntry cloneEntry(@NotNull RootModelImpl rootModel) {
+  public ContentEntry cloneEntry(@NotNull ModuleRootLayerImpl rootModel) {
     assert !isDisposed();
 
     ContentEntryImpl cloned = new ContentEntryImpl(myRoot.getUrl(), rootModel);

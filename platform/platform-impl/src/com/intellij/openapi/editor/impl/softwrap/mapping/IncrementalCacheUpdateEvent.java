@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,26 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.FoldRegion;
-import com.intellij.openapi.editor.FoldingModel;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.ex.FoldingModelEx;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Encapsulates information about incremental soft wraps cache update.
- * 
+ *
  * @author Denis Zhdanov
  * @since 11/17/10 9:33 AM
  */
 public class IncrementalCacheUpdateEvent {
-  
+
   private final int myStartLogicalLine;
-  private final int myOldExactStartOffset;
+  private final int myExactStartOffset;
   private final int myOldExactEndOffset;
   private final int myOldStartOffset;
   private final int myOldEndOffset;
   private final int myOldLogicalLinesDiff;
-  private final int myNewExactStartOffset;
   private final int myNewExactEndOffset;
   private int myNewStartOffset;
   private int myNewEndOffset;
@@ -48,26 +48,42 @@ public class IncrementalCacheUpdateEvent {
    * This constructor is assumed to be used during processing <b>before</b> the document change, i.e. it's assumed that
    * <code>'old'</code> offsets within the document {@link DocumentEvent#getDocument() denoted} by the given event object.
    * <p/>
-   * <code>'New'</code> offsets are assumed to be configured during {@link #updateNewOffsetsIfNecessary(Document, FoldingModel)}
+   * <code>'New'</code> offsets are assumed to be configured during {@link #updateNewOffsetsIfNecessary(Document, FoldingModelEx)}
    * processing that, in turn, is called <b>'after'</b> document change.
-   * 
+   *
    * @param event   object that describes document change that caused cache update
    */
-  public IncrementalCacheUpdateEvent(@NotNull DocumentEvent event) {
-    myStartLogicalLine = getLine(event.getOffset(), event.getDocument());
-    myOldExactStartOffset = myNewExactStartOffset = event.getOffset();
-    myOldExactEndOffset = myOldExactStartOffset + event.getOldLength();
-    myNewExactEndOffset = myNewExactStartOffset + event.getNewLength();
-    Document document = event.getDocument();
-    myOldStartOffset = getLineStartOffset(myOldExactStartOffset, document);
-    myOldEndOffset = getLineEndOffset(myOldExactEndOffset, document);
-    myOldLogicalLinesDiff = document.getLineNumber(myOldExactEndOffset) - document.getLineNumber(myOldExactStartOffset);
+  public IncrementalCacheUpdateEvent(@NotNull DocumentEvent event, @NotNull Editor editor) {
+    this(editor,
+         event.getOffset(),
+         event.getOffset() + event.getOldLength(),
+         event.getOffset() + event.getNewLength());
+  }
+
+  /**
+   * Creates new <code>IncrementalCacheUpdateEvent</code> object for the event not changing document length
+   * (like expansion of folded region).
+   */
+  public IncrementalCacheUpdateEvent(@NotNull Editor editor, int startOffset, int endOffset) {
+    this(editor, startOffset, endOffset, endOffset);
+  }
+
+  private IncrementalCacheUpdateEvent(@NotNull Editor editor, int startOffset, int oldEndOffset, int newEndOffset) {
+    Document document = editor.getDocument();
+    myExactStartOffset = startOffset;
+    myOldExactEndOffset = oldEndOffset;
+    myNewExactEndOffset = newEndOffset;
+    myStartLogicalLine = getLine(myExactStartOffset, document);
+    myOldLogicalLinesDiff = getLine(myOldExactEndOffset, document) - myStartLogicalLine;
+
+    myOldStartOffset = EditorUtil.getNotFoldedLineStartOffset(editor, myExactStartOffset);
+    myOldEndOffset = EditorUtil.getNotFoldedLineEndOffset(editor, myOldExactEndOffset);
   }
 
   /**
    * Creates new <code>IncrementalCacheUpdateEvent</code> object that is configured to perform whole reparse of the given
    * document.
-   * 
+   *
    * @param document    target document to reparse
    */
   public IncrementalCacheUpdateEvent(@NotNull Document document) {
@@ -77,16 +93,16 @@ public class IncrementalCacheUpdateEvent {
   /**
    * Creates new <code>IncrementalCacheUpdateEvent</code> object that is configured for exact document region with
    * the given offsets.
-   * 
+   *
    * @param document          document which text should be re-parsed
    * @param exactStartOffset  start offset of document range to reparse (inclusive)
    * @param exactEndOffset    end offset of document range to reparse (inclusive)
    */
   public IncrementalCacheUpdateEvent(@NotNull Document document, int exactStartOffset, int exactEndOffset) {
-    myStartLogicalLine = getLine(exactStartOffset, document);
-    myOldExactStartOffset = myNewExactStartOffset = myOldStartOffset = myNewStartOffset = exactStartOffset;
-    myOldExactEndOffset = myNewExactEndOffset = myOldEndOffset = myNewEndOffset = exactEndOffset;
-    myOldLogicalLinesDiff = document.getLineNumber(myOldExactEndOffset) - document.getLineNumber(myOldExactStartOffset);
+    myOldStartOffset = myExactStartOffset = exactStartOffset;
+    myOldEndOffset = myOldExactEndOffset = myNewExactEndOffset = exactEndOffset;
+    myStartLogicalLine = getLine(myExactStartOffset, document);
+    myOldLogicalLinesDiff = getLine(myOldExactEndOffset, document) - myStartLogicalLine;
   }
 
   /**
@@ -95,21 +111,15 @@ public class IncrementalCacheUpdateEvent {
    * <p/>
    * This method allows to do that, i.e. it's assumed that current cache update event will be used within the cache that is
    * bound to the given document and normalizes 'new offsets' if necessary when the document is really changed.
-   * 
+   *
    * @param document      document which change caused current cache update event construction
    * @param foldingModel  fold model to use
    */
-  public void updateNewOffsetsIfNecessary(@NotNull Document document, @NotNull FoldingModel foldingModel) {
-    myNewStartOffset = getLineStartOffset(myNewExactStartOffset, document);
-    myNewEndOffset = getLineEndOffset(myNewExactEndOffset, document);
-    for (
-      FoldRegion region = foldingModel.getCollapsedRegionAtOffset(myNewEndOffset);
-      region != null;
-      region = foldingModel.getCollapsedRegionAtOffset(myNewEndOffset))
-    {
-      myNewEndOffset = getLineEndOffset(region.getEndOffset(), document);
-    }
-    myNewLogicalLinesDiff = document.getLineNumber(myNewExactEndOffset) - document.getLineNumber(myNewExactStartOffset);
+  public void updateNewOffsetsIfNecessary(@NotNull Editor editor) {
+    Document document = editor.getDocument();
+    myNewLogicalLinesDiff = document.getLineNumber(myNewExactEndOffset) - document.getLineNumber(myExactStartOffset);
+    myNewStartOffset = EditorUtil.getNotFoldedLineStartOffset(editor, myExactStartOffset);
+    myNewEndOffset = EditorUtil.getNotFoldedLineEndOffset(editor, myNewExactEndOffset);
   }
 
   /**
@@ -125,13 +135,13 @@ public class IncrementalCacheUpdateEvent {
   public int getStartLogicalLine() {
     return myStartLogicalLine;
   }
-  
+
   /**
    * @return    exact start offset of the changed document range
-   * @see #getOldStartOffset()  
+   * @see #getOldStartOffset()
    */
   public int getOldExactStartOffset() {
-    return myOldExactStartOffset;
+    return myExactStartOffset;
   }
 
   /**
@@ -145,7 +155,7 @@ public class IncrementalCacheUpdateEvent {
   /**
    * We assume that the cache where such cache update events are processed works in 'by line' mode. E.g. it re-parses whole line
    * if particular symbol on it is changed. Hence, we want to use line start offset instead of 'exact' start offset.
-   * 
+   *
    * @return    old start offset of the change document to use
    */
   public int getOldStartOffset() {
@@ -154,7 +164,7 @@ public class IncrementalCacheUpdateEvent {
 
   /**
    * Has the same relation to {@link #getOldExactEndOffset()} as {@link #getOldStartOffset()} to {@link #getOldExactStartOffset()}.
-   * 
+   *
    * @return      old end offset of the change document to use
    */
   public int getOldEndOffset() {
@@ -205,30 +215,14 @@ public class IncrementalCacheUpdateEvent {
     }
     return document.getLineNumber(offset);
   }
-  
-  private static int getLineStartOffset(int offset, Document document) {
-    if (offset > document.getTextLength()) {
-      return offset;
-    }
-    int lineNumber = document.getLineNumber(offset);
-    return document.getLineStartOffset(lineNumber);
-  }
-
-  private static int getLineEndOffset(int offset, Document document) {
-    if (offset >= document.getTextLength()) {
-      return offset;
-    }
-    int lineNumber = document.getLineNumber(offset);
-    return document.getLineEndOffset(lineNumber);
-  }
 
   @Override
   public String toString() {
     return String.format(
-      "exact old offsets: %d-%d; recalculation old offsets: %d-%d; exact new offsets: %d-%d; recalculation new offsets: %d-%d; "
-      + "old logical lines diff: %d; new logical lines diff: %d; offset diff: %d",
-      myOldExactStartOffset, myOldExactEndOffset, myOldStartOffset, myOldEndOffset, myNewExactStartOffset, myNewExactEndOffset,
-      myNewStartOffset, myNewEndOffset, getOldLogicalLinesDiff(), getNewLogicalLinesDiff(), getExactOffsetsDiff()
+            "exact old offsets: %d-%d; recalculation old offsets: %d-%d; exact new offsets: %d-%d; recalculation new offsets: %d-%d; "
+            + "old logical lines diff: %d; new logical lines diff: %d; offset diff: %d",
+            myExactStartOffset, myOldExactEndOffset, myOldStartOffset, myOldEndOffset, myExactStartOffset, myNewExactEndOffset,
+            myNewStartOffset, myNewEndOffset, getOldLogicalLinesDiff(), getNewLogicalLinesDiff(), getExactOffsetsDiff()
     );
   }
 }

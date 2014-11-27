@@ -28,17 +28,21 @@ public class StepAdapter implements Step {
 
   private final List<StepListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
+  @Override
   public void _init() {}
 
+  @Override
   public void _commit(boolean finishChosen) throws CommitStepException {}
 
+  @Override
   public JComponent getComponent() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   @Nullable
   public Icon getIcon() {
-    throw new UnsupportedOperationException();
+    return null;
   }
 
   public void registerStepListener(StepListener listener) {
@@ -51,6 +55,7 @@ public class StepAdapter implements Step {
     }
   }
 
+  @Override
   public JComponent getPreferredFocusedComponent() {
     return null;
   }

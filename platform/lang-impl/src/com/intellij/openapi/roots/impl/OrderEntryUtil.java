@@ -72,21 +72,27 @@ public class OrderEntryUtil {
   }
 
   @Nullable
-  public static SdkOrderEntry findJdkOrderEntry(@NotNull ModuleRootModel model, @Nullable Sdk sdk) {
+  @Deprecated
+  public static ModuleExtensionWithSdkOrderEntry findJdkOrderEntry(@NotNull ModuleRootModel model, @Nullable Sdk sdk) {
+    return findModuleExtensionWithSdkOrderEntry(model, sdk);
+  }
+
+  @Nullable
+  public static ModuleExtensionWithSdkOrderEntry findModuleExtensionWithSdkOrderEntry(@NotNull ModuleRootModel model, @Nullable Sdk sdk) {
     if (sdk == null) return null;
 
     for (OrderEntry orderEntry : model.getOrderEntries()) {
-      if (orderEntry instanceof SdkOrderEntry && sdk.equals(((SdkOrderEntry)orderEntry).getSdk())) {
-        return (SdkOrderEntry)orderEntry;
+      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry && sdk.equals(((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk())) {
+        return (ModuleExtensionWithSdkOrderEntry)orderEntry;
       }
     }
     return null;
   }
 
   public static boolean equals(OrderEntry orderEntry1, OrderEntry orderEntry2) {
-    if (orderEntry1 instanceof SdkOrderEntry && orderEntry2 instanceof SdkOrderEntry) {
-      final SdkOrderEntry sdkOrderEntry1 = (SdkOrderEntry)orderEntry1;
-      final SdkOrderEntry sdkOrderEntry2 = (SdkOrderEntry)orderEntry2;
+    if (orderEntry1 instanceof ModuleExtensionWithSdkOrderEntry && orderEntry2 instanceof ModuleExtensionWithSdkOrderEntry) {
+      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry1 = (ModuleExtensionWithSdkOrderEntry)orderEntry1;
+      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry2 = (ModuleExtensionWithSdkOrderEntry)orderEntry2;
       return Comparing.equal(sdkOrderEntry1.getSdk(), sdkOrderEntry2.getSdk()) &&
              Comparing.strEqual(sdkOrderEntry1.getSdkName(), sdkOrderEntry2.getSdkName());
     }

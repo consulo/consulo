@@ -20,9 +20,9 @@ import com.intellij.injected.editor.*;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.injection.InjectedLanguageManager;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -92,6 +92,17 @@ public class InjectedLanguageUtil {
     return ((DocumentWindowImpl)myFileViewProvider.getDocument()).getShreds();
   }
 
+  public static void enumerate(@NotNull DocumentWindow documentWindow,
+                               @NotNull PsiFile hostPsiFile,
+                               @NotNull PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
+    Segment[] ranges = documentWindow.getHostRanges();
+    Segment rangeMarker = ranges.length > 0 ? ranges[0] : null;
+    PsiElement element = rangeMarker == null ? null : hostPsiFile.findElementAt(rangeMarker.getStartOffset());
+    if (element != null) {
+      enumerate(element, hostPsiFile, true, visitor);
+    }
+  }
+
   public static void enumerate(@NotNull PsiElement host, @NotNull PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
     PsiFile containingFile = host.getContainingFile();
     enumerate(host, containingFile, true, visitor);
@@ -135,6 +146,13 @@ public class InjectedLanguageUtil {
     }
   }
 
+  public static Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable Caret caret, @Nullable PsiFile file) {
+    if (editor == null || file == null || editor instanceof EditorWindow || caret == null) return editor;
+
+    PsiFile injectedFile = findInjectedPsiNoCommit(file, caret.getOffset());
+    return getInjectedEditorForInjectedFile(editor, caret, injectedFile);
+  }
+
   public static Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file) {
     if (editor == null || file == null || editor instanceof EditorWindow) return editor;
 
@@ -150,24 +168,30 @@ public class InjectedLanguageUtil {
 
   @NotNull
   public static Editor getInjectedEditorForInjectedFile(@NotNull Editor hostEditor, @Nullable final PsiFile injectedFile) {
+    return getInjectedEditorForInjectedFile(hostEditor, hostEditor.getCaretModel().getCurrentCaret(), injectedFile);
+  }
+
+  @NotNull
+  public static Editor getInjectedEditorForInjectedFile(@NotNull Editor hostEditor, @NotNull Caret hostCaret, @Nullable final PsiFile injectedFile) {
     if (injectedFile == null || hostEditor instanceof EditorWindow || hostEditor.isDisposed()) return hostEditor;
     Project project = hostEditor.getProject();
     if (project == null) project = injectedFile.getProject();
     Document document = PsiDocumentManager.getInstance(project).getDocument(injectedFile);
     if (!(document instanceof DocumentWindowImpl)) return hostEditor;
     DocumentWindowImpl documentWindow = (DocumentWindowImpl)document;
-    SelectionModel selectionModel = hostEditor.getSelectionModel();
-    if (selectionModel.hasSelection()) {
-      int selstart = selectionModel.getSelectionStart();
+    if (hostCaret.hasSelection()) {
+      int selstart = hostCaret.getSelectionStart();
       if (selstart != -1) {
-        int selend = Math.max(selstart, selectionModel.getSelectionEnd());
+        int selend = Math.max(selstart, hostCaret.getSelectionEnd());
         if (!documentWindow.containsRange(selstart, selend)) {
           // selection spreads out the injected editor range
           return hostEditor;
         }
       }
     }
-    if (!documentWindow.isValid()) return hostEditor; // since the moment we got hold of injectedFile and this moment call, document may have been dirtied
+    if (!documentWindow.isValid()) {
+      return hostEditor; // since the moment we got hold of injectedFile and this moment call, document may have been dirtied
+    }
     return EditorWindowImpl.create(documentWindow, (EditorImpl)hostEditor, injectedFile);
   }
 

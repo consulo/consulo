@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.openapi.roots.impl.RootModelImpl;
+import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.util.InvalidDataException;
@@ -35,16 +35,15 @@ public class LibraryTableImplUtil {
   private LibraryTableImplUtil() {
   }
 
-  public static Library loadLibrary(Element rootElement, RootModelImpl rootModel) throws InvalidDataException {
-    final List children = rootElement.getChildren(LibraryImpl.ELEMENT);
+  public static Library loadLibrary(Element rootElement, ModuleRootLayerImpl rootModel) throws InvalidDataException {
+    final List<Element> children = rootElement.getChildren(LibraryImpl.ELEMENT);
     if (children.size() != 1) throw new InvalidDataException();
-    Element element = (Element)children.get(0);
-    return new LibraryImpl(null, element, rootModel);
+    return new LibraryImpl(null, children.get(0), rootModel);
   }
 
   public static Library createModuleLevelLibrary(@Nullable String name,
                                                  final PersistentLibraryKind kind,
-                                                 RootModelImpl rootModel) {
+                                                 ModuleRootLayerImpl rootModel) {
     return new LibraryImpl(name, kind, null, rootModel);
   }
 }

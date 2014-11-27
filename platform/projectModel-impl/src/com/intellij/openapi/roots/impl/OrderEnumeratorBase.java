@@ -20,6 +20,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -139,12 +141,12 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
 
   @Override
   public OrderRootsEnumerator classes() {
-    return new OrderRootsEnumeratorImpl(this, OrderRootType.CLASSES);
+    return new OrderRootsEnumeratorImpl(this, BinariesOrderRootType.getInstance());
   }
 
   @Override
   public OrderRootsEnumerator sources() {
-    return new OrderRootsEnumeratorImpl(this, OrderRootType.SOURCES);
+    return new OrderRootsEnumeratorImpl(this, SourcesOrderRootType.getInstance());
   }
 
   @Override
@@ -195,7 +197,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
     return flags;
   }
 
-  protected void processEntries(final ModuleRootModel rootModel,
+  protected void processEntries(final ModuleRootLayer rootModel,
                                 Processor<OrderEntry> processor,
                                 Set<Module> processed, boolean firstLevel) {
     if (processed != null && !processed.add(rootModel.getModule())) return;

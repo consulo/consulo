@@ -30,6 +30,7 @@ import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -75,8 +76,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
           children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(module, libraryOrderEntry), getSettings()));
         }
       }
-      else if (orderEntry instanceof SdkOrderEntry) {
-        final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;
+      else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+        final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
         final Sdk jdk = sdkOrderEntry.getSdk();
         if (jdk != null) {
           children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(module, sdkOrderEntry), getSettings()));
@@ -86,10 +87,10 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     return children;
   }
 
-  public static void addLibraryChildren(final LibraryOrSdkOrderEntry entry, final List<AbstractTreeNode> children, Project project, ProjectViewNode node) {
+  public static void addLibraryChildren(final OrderEntry entry, final List<AbstractTreeNode> children, Project project, ProjectViewNode node) {
     final PsiManager psiManager = PsiManager.getInstance(project);
     VirtualFile[] files =
-      entry instanceof LibraryOrderEntry ? getLibraryRoots((LibraryOrderEntry)entry) : entry.getRootFiles(OrderRootType.CLASSES);
+      entry instanceof LibraryOrderEntry ? getLibraryRoots((LibraryOrderEntry)entry) : entry.getFiles(BinariesOrderRootType.getInstance());
     for (final VirtualFile file : files) {
       if (!file.isValid()) continue;
       if (file.isDirectory()) {

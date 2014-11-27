@@ -16,7 +16,6 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.util.text.CharArrayUtil;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -221,8 +220,6 @@ public class CacheUpdateEventsStorageTest {
   }
   
   private void change(int offset, String newText) {
-    DocumentEventImpl event 
-      = new DocumentEventImpl(myDocument, offset, myText.substring(offset, offset + newText.length()), newText, 1, false);
-    myStorage.add(myDocument, new IncrementalCacheUpdateEvent(event));
+    myStorage.add(myDocument, new IncrementalCacheUpdateEvent(myDocument));
   }
 }

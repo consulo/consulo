@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
  *         Date: Feb 18, 2009
  */
 public abstract class SingleEntryFileBasedIndexExtension<V> extends FileBasedIndexExtension<Integer, V>{
+  @NotNull
   @Override
   public final KeyDescriptor<Integer> getKeyDescriptor() {
     return EnumeratorIntegerDescriptor.INSTANCE;

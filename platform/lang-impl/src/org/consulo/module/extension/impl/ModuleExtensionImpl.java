@@ -17,7 +17,8 @@ package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModifiableModuleRootLayer;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -40,11 +41,17 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
 
   protected boolean myIsEnabled;
   protected final String myId;
-  protected final ModifiableRootModel myRootModel;
+  protected final ModuleRootLayer myModuleRootLayer;
 
-  public ModuleExtensionImpl(@NotNull String id, @NotNull ModifiableRootModel rootModel) {
+  public ModuleExtensionImpl(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer) {
     myId = id;
-    myRootModel = rootModel;
+    myModuleRootLayer = moduleRootLayer;
+  }
+
+  @NotNull
+  @Override
+  public ModifiableModuleRootLayer getModuleRootLayer() {
+    return (ModifiableModuleRootLayer)myModuleRootLayer;
   }
 
   @NotNull
@@ -61,7 +68,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   @NotNull
   @Override
   public Module getModule() {
-    return myRootModel.getModule();
+    return myModuleRootLayer.getModule();
   }
 
   @NotNull

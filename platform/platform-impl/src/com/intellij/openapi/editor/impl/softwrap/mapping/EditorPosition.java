@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
+import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -46,29 +46,24 @@ class EditorPosition implements Cloneable {
   public int symbolWidthInPixels;
 
   private final Editor myEditor;
-  private final EditorTextRepresentationHelper myRepresentationHelper;
 
-  EditorPosition(@NotNull Editor editor, @NotNull EditorTextRepresentationHelper representationHelper) {
+  EditorPosition(@NotNull Editor editor) {
     myEditor = editor;
-    myRepresentationHelper = representationHelper;
   }
 
   EditorPosition(@NotNull LogicalPosition logical,
                  int offset,
-                 @NotNull Editor editor,
-                 @NotNull EditorTextRepresentationHelper representationHelper)
+                 @NotNull Editor editor)
   {
-    this(logical, logical.toVisualPosition(), offset, editor, representationHelper);
+    this(logical, logical.toVisualPosition(), offset, editor);
   }
 
   EditorPosition(@NotNull LogicalPosition logical,
                  @NotNull VisualPosition visual,
                  int offset,
-                 @NotNull Editor editor,
-                 @NotNull EditorTextRepresentationHelper representationHelper)
+                 @NotNull Editor editor)
   {
     myEditor = editor;
-    myRepresentationHelper = representationHelper;
     logicalLine = logical.line;
     logicalColumn = logical.column;
     softWrapLinesBefore = logical.softWrapLinesBeforeCurrentLogicalLine;
@@ -86,7 +81,7 @@ class EditorPosition implements Cloneable {
   @NotNull
   public LogicalPosition buildLogicalPosition() {
     return new LogicalPosition(
-      logicalLine, logicalColumn, softWrapLinesBefore, softWrapLinesCurrent, softWrapColumnDiff, foldedLines, foldingColumnDiff
+            logicalLine, logicalColumn, softWrapLinesBefore, softWrapLinesCurrent, softWrapColumnDiff, foldedLines, foldingColumnDiff
     );
   }
 
@@ -97,7 +92,7 @@ class EditorPosition implements Cloneable {
 
   /**
    * Asks current position to change its state assuming that it should point to the start of the next visual line.
-   * 
+   *
    * @param softWrapAware     flag that indicates if state update should check if current visual line ends with soft wrap
    */
   public void onNewLine(boolean softWrapAware) {
@@ -105,7 +100,7 @@ class EditorPosition implements Cloneable {
       onNewLine();
       return;
     }
-    
+
     softWrapLinesCurrent++;
     softWrapColumnDiff = -logicalColumn - foldingColumnDiff;
     visualLine++;
@@ -130,25 +125,11 @@ class EditorPosition implements Cloneable {
   }
 
   /**
-   * Calculates width in columns for the collapsed symbols of the given fold region and delegates further processing
-   * to {@link #advance(FoldRegion, int)}.
-   *
-   * @param foldRegion    fold region which end offset should be pointed by the current position
-   */
-  public void advance(@NotNull FoldRegion foldRegion) {
-    Document document = myEditor.getDocument();
-    int collapsedSymbolsWidthInColumns = myRepresentationHelper.toVisualColumnSymbolsNumber(
-      document.getCharsSequence(), foldRegion.getStartOffset(), foldRegion.getEndOffset(), x
-    );
-    advance(foldRegion, collapsedSymbolsWidthInColumns);
-  }
-
-  /**
    * Updates state of the current processing position in order to point it to the end offset of the given fold region.
    *
    * @param foldRegion                        fold region which end offset should be pointed by the current position
    * @param collapsedSymbolsWidthInColumns    identifies collapsed text width in columns, i.e. width of the last collapsed logical line
-   *                                          in columns
+   *                                          in columns, negative value, if it's unknown and needs to be calculated
    */
   public void advance(@NotNull FoldRegion foldRegion, int collapsedSymbolsWidthInColumns) {
     // We assume that fold region placeholder contains only 'simple' symbols, i.e. symbols that occupy single visual column.
@@ -161,11 +142,25 @@ class EditorPosition implements Cloneable {
     int endOffsetLogicalLine = document.getLineNumber(foldRegion.getEndOffset());
     if (logicalLine == endOffsetLogicalLine) {
       // Single-line fold region.
+      if (collapsedSymbolsWidthInColumns < 0) {
+        collapsedSymbolsWidthInColumns = SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor)
+                .toVisualColumnSymbolsNumber(document.getCharsSequence(),
+                                             foldRegion.getStartOffset(),
+                                             foldRegion.getEndOffset(),
+                                             x);
+      }
       logicalColumn += collapsedSymbolsWidthInColumns;
       foldingColumnDiff += placeholder.length() - collapsedSymbolsWidthInColumns;
     }
     else {
       // Multi-line fold region.
+      if (collapsedSymbolsWidthInColumns < 0) {
+        collapsedSymbolsWidthInColumns = SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor)
+                .toVisualColumnSymbolsNumber(document.getCharsSequence(),
+                                             foldRegion.getStartOffset(),
+                                             foldRegion.getEndOffset(),
+                                             0);
+      }
       int linesDiff = endOffsetLogicalLine - logicalLine;
       logicalLine += linesDiff;
       foldedLines += linesDiff;
@@ -193,7 +188,7 @@ class EditorPosition implements Cloneable {
 
   @Override
   protected EditorPosition clone() {
-    EditorPosition result = new EditorPosition(myEditor, myRepresentationHelper);
+    EditorPosition result = new EditorPosition(myEditor);
     result.logicalLine = logicalLine;
     result.logicalColumn = logicalColumn;
     result.visualLine = visualLine;
@@ -214,8 +209,8 @@ class EditorPosition implements Cloneable {
   @Override
   public String toString() {
     return String.format(
-      "visual position: (%d; %d); logical position: (%d; %d); offset: %d; soft wraps: before=%d, current=%d, column diff=%d; "
-      + "fold regions: lines=%d, column diff=%d", visualLine, visualColumn, logicalLine, logicalColumn, offset, softWrapLinesBefore,
-      softWrapLinesCurrent, softWrapColumnDiff, foldedLines, foldingColumnDiff);
+            "visual position: (%d; %d); logical position: (%d; %d); offset: %d; soft wraps: before=%d, current=%d, column diff=%d; "
+            + "fold regions: lines=%d, column diff=%d", visualLine, visualColumn, logicalLine, logicalColumn, offset, softWrapLinesBefore,
+            softWrapLinesCurrent, softWrapColumnDiff, foldedLines, foldingColumnDiff);
   }
 }

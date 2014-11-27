@@ -202,6 +202,7 @@ public class MockChangeListManager extends ChangeListManagerEx {
     return changes;
   }
 
+  @NotNull
   @Override
   public ThreeState haveChangesUnder(VirtualFile vf) {
     throw new UnsupportedOperationException();
@@ -249,6 +250,11 @@ public class MockChangeListManager extends ChangeListManagerEx {
 
   @Override
   public void addFilesToIgnore(IgnoredFileBean... ignoredFiles) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void addDirectoryToIgnoreImplicitly(@NotNull String path) {
     throw new UnsupportedOperationException();
   }
 

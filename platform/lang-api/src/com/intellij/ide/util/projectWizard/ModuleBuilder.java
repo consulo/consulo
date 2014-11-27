@@ -129,10 +129,6 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     return null;
   }
 
-  protected List<WizardInputField> getAdditionalFields() {
-    return Collections.emptyList();
-  }
-
   @Override
   public void setName(String name) {
     myName = acceptParameter(name);

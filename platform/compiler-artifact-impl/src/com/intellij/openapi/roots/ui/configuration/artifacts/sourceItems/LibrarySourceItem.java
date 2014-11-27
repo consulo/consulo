@@ -18,9 +18,9 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
@@ -103,7 +103,7 @@ public class LibrarySourceItem extends PackagingSourceItem {
       if (name != null) {
         return name;
       }
-      final VirtualFile[] files = myLibrary.getFiles(OrderRootType.CLASSES);
+      final VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.getInstance());
       return files.length > 0 ? files[0].getName() : "Empty Library";
     }
 
@@ -122,7 +122,7 @@ public class LibrarySourceItem extends PackagingSourceItem {
           presentationData.addText("Invalid Library", SimpleTextAttributes.ERROR_ATTRIBUTES);
           return;
         }
-        final VirtualFile[] files = myLibrary.getFiles(OrderRootType.CLASSES);
+        final VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.getInstance());
         if (files.length > 0) {
           final VirtualFile file = files[0];
           presentationData.setIcon(VirtualFilePresentation.getIcon(file));

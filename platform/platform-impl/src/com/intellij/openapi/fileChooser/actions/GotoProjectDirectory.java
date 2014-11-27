@@ -15,20 +15,15 @@
  */
 package com.intellij.openapi.fileChooser.actions;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.fileChooser.FileSystemTree;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-
 public final class GotoProjectDirectory extends FileChooserAction {
-  private static final Icon ourIcon = IconLoader.getIcon(ApplicationInfoEx.getInstanceEx().getSmallIconUrl());
-
   protected void actionPerformed(final FileSystemTree fileSystemTree, final AnActionEvent e) {
     final VirtualFile projectPath = getProjectDir(e);
     if (projectPath != null) {
@@ -42,7 +37,7 @@ public final class GotoProjectDirectory extends FileChooserAction {
 
   protected void update(final FileSystemTree fileSystemTree, final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    presentation.setIcon(ourIcon);
+    presentation.setIcon(AllIcons.Icon16);
     final VirtualFile projectPath = getProjectDir(e);
     presentation.setEnabled(projectPath != null && fileSystemTree.isUnderRoots(projectPath));
   }

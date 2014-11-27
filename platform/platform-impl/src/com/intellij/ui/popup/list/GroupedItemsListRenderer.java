@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,14 +56,13 @@ public class GroupedItemsListRenderer extends GroupedElementsRenderer.List imple
   @Override
   protected JComponent createItemComponent() {
     myTextLabel = new ErrorLabel();
-    myTextLabel.setOpaque(true);
     myTextLabel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
+    myTextLabel.setOpaque(true);
     return layoutComponent(myTextLabel);
   }
 
   protected final JComponent layoutComponent(JComponent middleItemComponent) {
-    JPanel result = new OpaquePanel(new BorderLayout(4, 4), Color.white);
+    JPanel result = new OpaquePanel(new BorderLayout(0, 0), Color.white);
 
     myNextStepLabel = new JLabel();
     myNextStepLabel.setOpaque(true);

@@ -40,7 +40,8 @@ import java.util.List;
  */
 public abstract class LibraryType<P extends LibraryProperties> extends LibraryPresentationProvider<P> {
   public static final ExtensionPointName<LibraryType<?>> EP_NAME = ExtensionPointName.create("com.intellij.library.type");
-  
+
+  // TODO [VISTALL] currently we cant replace it by BinariesOrderRootType.getInstance() due it recursive call it throw NPE
   public final static OrderRootType[] DEFAULT_EXTERNAL_ROOT_TYPES = {OrderRootType.CLASSES};
 
   protected LibraryType(@NotNull PersistentLibraryKind<P> libraryKind) {

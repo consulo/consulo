@@ -41,7 +41,6 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
@@ -59,6 +58,7 @@ import com.intellij.util.graph.GraphGenerator;
 import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.awt.*;
@@ -343,8 +343,8 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   public List<Module> addModule(Component parent, boolean anImport) {
     if (myProject.isDefault()) return null;
 
-    if(anImport || !EarlyAccessProgramManager.getInstance().getState(NewModuleAction.NewModuleWizard.class)) {
-      final ProjectBuilder builder = runModuleWizard(parent, anImport);
+    if(anImport) {
+      final ProjectBuilder builder = runModuleWizard(parent, true);
       if (builder != null ) {
         final List<Module> modules = new ArrayList<Module>();
         final List<Module> commitedModules;
@@ -395,30 +395,41 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         return null;
       }
 
-      final Module module = myModuleModel.newModule(moduleDir.getNameWithoutExtension(), moduleDir.getPath());
+      final Module newModule;
+      if(EarlyAccessProgramManager.is(NewProjectOrModuleDialogWithSetup.EapDescriptor.class)) {
+        NewProjectOrModuleDialogWithSetup dialogWithSetup = new NewProjectOrModuleDialogWithSetup(myProject, moduleDir);
+        newModule = dialogWithSetup.showAndGet() ? dialogWithSetup.doCreate(myModuleModel, moduleDir) : null;
+      }
+      else {
+        newModule = myModuleModel.newModule(moduleDir.getNameWithoutExtension(), moduleDir.getPath());
 
-      final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+        final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(newModule).getModifiableModel();
 
-      modifiableModel.addContentEntry(moduleDir);
+        modifiableModel.addContentEntry(moduleDir);
 
-      new WriteAction<Object>() {
-        @Override
-        protected void run(Result<Object> result) throws Throwable {
-          modifiableModel.commit();
-        }
-      }.execute();
+        new WriteAction<Object>() {
+          @Override
+          protected void run(Result<Object> result) throws Throwable {
+            modifiableModel.commit();
+          }
+        }.execute();
+      }
+
+      if(newModule == null) {
+        return null;
+      }
 
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
-          getOrCreateModuleEditor(module);
+          getOrCreateModuleEditor(newModule);
 
           Collections.sort(myModuleEditors, myModuleEditorComparator);
         }
       });
       processModuleCountChanged();
 
-      return Collections.singletonList(module);
+      return Collections.singletonList(newModule);
     }
     return null;
   }
@@ -505,7 +516,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     }
     int result =
       Messages.showYesNoDialog(myProject, question, ProjectBundle.message("module.remove.confirmation.title"), Messages.getQuestionIcon());
-    if (result != 0) {
+    if (result != Messages.YES) {
       return false;
     }
     // do remove
@@ -531,7 +542,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
   private void processModuleCountChanged() {
     for (ModuleEditor moduleEditor : myModuleEditors) {
-      moduleEditor.moduleCountChanged();
+      moduleEditor.fireModuleStateChanged();
     }
   }
 

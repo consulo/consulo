@@ -41,6 +41,7 @@ import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
@@ -190,7 +191,7 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
             final Library projectLib = projectLibraryTable.createLibrary(lib.getName());
             final Library.ModifiableModel libraryModel = projectLib.getModifiableModel();
             for (File file : files) {
-              libraryModel.addRoot(VfsUtil.getUrlForLibraryRoot(file), OrderRootType.CLASSES);
+              libraryModel.addRoot(VfsUtil.getUrlForLibraryRoot(file), BinariesOrderRootType.getInstance());
             }
             libraryModel.commit();
             projectLibs.put(lib, projectLib);
@@ -370,7 +371,7 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
         for (File file : jars) {
           Library library = moduleLibraryTable.createLibrary();
           Library.ModifiableModel modifiableModel = library.getModifiableModel();
-          modifiableModel.addRoot(VfsUtil.getUrlForLibraryRoot(file), OrderRootType.CLASSES);
+          modifiableModel.addRoot(VfsUtil.getUrlForLibraryRoot(file), BinariesOrderRootType.getInstance());
           modifiableModel.commit();
         }
       }

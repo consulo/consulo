@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.options;
 
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -120,14 +120,17 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
       myTitle = title;
     }
 
+    @Override
     JCheckBox createComponent() {
       return new JCheckBox(myTitle);
     }
 
+    @Override
     Object getComponentValue() {
       return getComponent().isSelected();
     }
 
+    @Override
     void setComponentValue(final Object instance) {
       getComponent().setSelected(((Boolean) instance).booleanValue());
     }
@@ -137,6 +140,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
       return "is" + StringUtil.capitalize(myFieldName);
     }
 
+    @Override
     protected Class getValueClass() {
       return boolean.class;
     }
@@ -152,14 +156,16 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     myFields.add(new CheckboxField(fieldName, title));
   }
 
+  @Override
   public JComponent createComponent() {
-    final JPanel panel = new JPanel(new GridLayout(myFields.size(), 1));
+    final JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP));
     for (BeanField field: myFields) {
       panel.add(field.getComponent());
     }
     return panel;
   }
 
+  @Override
   public boolean isModified() {
     for (BeanField field : myFields) {
       if (field.isModified(myInstance)) return true;
@@ -167,18 +173,21 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     return false;
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     for (BeanField field : myFields) {
       field.apply(myInstance);
     }
   }
 
+  @Override
   public void reset() {
     for (BeanField field : myFields) {
       field.reset(myInstance);
     }
   }
 
+  @Override
   public void disposeUIResources() {
   }
 }

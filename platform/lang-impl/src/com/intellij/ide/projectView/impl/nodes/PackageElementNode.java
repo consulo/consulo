@@ -96,7 +96,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     // process only files in package's directories
     final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(aPackage, myProject, module, isLibraryElement());
     for (final PsiDirectory dir : dirs) {
-      children.addAll(BaseProjectViewDirectoryHelper.getInstance(myProject).getDirectoryChildren(dir, getSettings(), false));
+      children.addAll(BaseProjectViewDirectoryHelper.getDirectoryChildren(dir, getSettings(), false));
     }
     return children;
   }

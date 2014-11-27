@@ -230,7 +230,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     if (modifiableModel != null && modifiableModel.isModified()) {
       return true;
     }
-    return myPackagingEditorContext.getManifestFilesInfo().isManifestFilesModified() || super.isModified();
+    return super.isModified();
   }
 
   public ArtifactsStructureConfigurableContext getArtifactsStructureContext() {
@@ -315,7 +315,6 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     myPackagingEditorContext.saveEditorSettings();
     super.apply();
 
-    myPackagingEditorContext.getManifestFilesInfo().saveManifestFiles();
     final ModifiableArtifactModel modifiableModel = myPackagingEditorContext.getActualModifiableModel();
     if (modifiableModel != null) {
       new WriteAction() {

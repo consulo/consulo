@@ -19,7 +19,7 @@ import org.mustbe.consulo.DeprecationInfo;
 
 @Deprecated
 @DeprecationInfo(value = "See field info", until = "1.0")
-public class StdFileTypes extends FileTypes {
+public class StdFileTypes {
   private StdFileTypes() { }
 
   public static final LanguageFileType JAVA = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("JAVA");

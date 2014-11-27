@@ -73,61 +73,6 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
     SYSTEM_MACROS.add(USER_HOME_MACRO_NAME);
   }
 
-  private static final Set<String> ourToolsMacros = ContainerUtil.immutableSet(
-    "ClasspathEntry",
-    "Classpath",
-    "ColumnNumber",
-    "FileClass",
-    "FileDir",
-    "FileParentDir",
-    "FileDirName",
-    "FileDirPathFromParent",
-    "FileDirRelativeToProjectRoot",
-    "/FileDirRelativeToProjectRoot",
-    "FileDirRelativeToSourcepath",
-    "/FileDirRelativeToSourcepath",
-    "FileExt",
-    "FileFQPackage",
-    "FileName",
-    "FileNameWithoutExtension",
-    "FileNameWithoutAllExtensions",
-    "FilePackage",
-    "FilePath",
-    "FilePathRelativeToProjectRoot",
-    "/FilePathRelativeToProjectRoot",
-    "FilePathRelativeToSourcepath",
-    "/FilePathRelativeToSourcepath",
-    "FilePrompt",
-    "FileRelativeDir",
-    "/FileRelativeDir",
-    "FileRelativePath",
-    "/FileRelativePath",
-    "FileEncoding",
-    "JavaDocPath",
-    "JDKPath",
-    "LineNumber",
-    "ModuleDir",
-    "ModuleFilePath",
-    "ModuleName",
-    "ModuleSourcePath",
-    "ModuleSdkPath",
-    "OutputPath",
-    "PhpExecutable",
-    "ProjectFileDir",
-    "ProjectFilePath",
-    "ProjectName",
-    "Projectpath",
-    "Prompt",
-    "SourcepathEntry",
-    "Sourcepath",
-    "SHOW_CHANGES",
-    "SelectedText",
-    "SelectionStartLine",
-    "SelectionEndLine",
-    "SelectionStartColumn",
-    "SelectionEndColumn"
-  );
-
   public PathMacrosImpl() {
     //setMacro(USER_HOME_MACRO_NAME, FileUtil.toSystemIndependentName(SystemProperties.getUserHome()));
   }
@@ -164,10 +109,6 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
     finally {
       myLock.readLock().unlock();
     }
-  }
-
-  public static Set<String> getToolMacroNames() {
-    return ourToolsMacros;
   }
 
   @Override

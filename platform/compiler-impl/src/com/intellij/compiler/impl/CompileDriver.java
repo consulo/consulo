@@ -17,10 +17,7 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.compiler.CompilerMessageImpl;
-import com.intellij.compiler.CompilerWorkspaceConfiguration;
-import com.intellij.compiler.ModuleCompilerUtil;
-import com.intellij.compiler.ProblemsView;
+import com.intellij.compiler.*;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.make.DependencyCache;
@@ -84,7 +81,6 @@ import com.intellij.util.containers.OrderedSet;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
-import org.consulo.compiler.CompilerPathsManager;
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -164,27 +160,25 @@ public class CompileDriver {
 
     myGenerationCompilerModuleToOutputDirMap = new HashMap<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>>();
 
-    if (true) {
-      final LocalFileSystem lfs = LocalFileSystem.getInstance();
-      final IntermediateOutputCompiler[] generatingCompilers =
-        CompilerManager.getInstance(myProject).getCompilers(IntermediateOutputCompiler.class, myCompilerFilter);
-      final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
+    final LocalFileSystem lfs = LocalFileSystem.getInstance();
+    final IntermediateOutputCompiler[] generatingCompilers =
+      CompilerManager.getInstance(myProject).getCompilers(IntermediateOutputCompiler.class, myCompilerFilter);
+    final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
 
-      for (Module module : allModules) {
-        for (IntermediateOutputCompiler compiler : generatingCompilers) {
-          final VirtualFile productionOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, false));
-          final VirtualFile testOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, true));
-          final Pair<IntermediateOutputCompiler, Module> pair = new Pair<IntermediateOutputCompiler, Module>(compiler, module);
-          final Pair<VirtualFile, VirtualFile> outputs = new Pair<VirtualFile, VirtualFile>(productionOutput, testOutput);
-          myGenerationCompilerModuleToOutputDirMap.put(pair, outputs);
-        }
+    for (Module module : allModules) {
+      for (IntermediateOutputCompiler compiler : generatingCompilers) {
+        final VirtualFile productionOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, false));
+        final VirtualFile testOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, true));
+        final Pair<IntermediateOutputCompiler, Module> pair = new Pair<IntermediateOutputCompiler, Module>(compiler, module);
+        final Pair<VirtualFile, VirtualFile> outputs = new Pair<VirtualFile, VirtualFile>(productionOutput, testOutput);
+        myGenerationCompilerModuleToOutputDirMap.put(pair, outputs);
+      }
 
-        for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
-          final String[] outputDirectories = provider.getOutputDirectories(project, module);
-          if (outputDirectories.length > 0) {
-            for (String path : outputDirectories) {
-              lookupVFile(lfs, path);
-            }
+      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+        final String[] outputDirectories = provider.getOutputDirectories(project, module);
+        if (outputDirectories.length > 0) {
+          for (String path : outputDirectories) {
+            lookupVFile(lfs, path);
           }
         }
       }
@@ -198,14 +192,9 @@ public class CompileDriver {
   public void rebuild(CompileStatusNotification callback) {
     final CompileScope compileScope;
     ProjectCompileScope projectScope = new ProjectCompileScope(myProject);
-    if (false) {
-      compileScope = projectScope;
-    }
-    else {
-      CompileScope scopeWithArtifacts =
-        ArtifactCompileScope.createScopeWithArtifacts(projectScope, ArtifactUtil.getArtifactWithOutputPaths(myProject), false);
-      compileScope = addAdditionalRoots(scopeWithArtifacts, ALL_EXCEPT_SOURCE_PROCESSING);
-    }
+    CompileScope scopeWithArtifacts =
+      ArtifactCompileScope.createScopeWithArtifacts(projectScope, ArtifactUtil.getArtifactWithOutputPaths(myProject), false);
+    compileScope = addAdditionalRoots(scopeWithArtifacts, ALL_EXCEPT_SOURCE_PROCESSING);
     doRebuild(callback, null, true, compileScope);
   }
 
@@ -378,7 +367,7 @@ public class CompileDriver {
                          CompilerMessage message,
                          final boolean checkCachesVersion,
                          final CompileScope compileScope) {
-    if (validateCompilerConfiguration(compileScope, !false)) {
+    if (validateCompilerConfiguration(compileScope, true)) {
       startup(compileScope, true, false, callback, message, checkCachesVersion);
     }
     else {
@@ -455,9 +444,7 @@ public class CompileDriver {
                        final boolean checkCachesVersion) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-    ProblemsViewImpl.SERVICE.getInstance(myProject).clearOldMessages(null);
-
-    final boolean useExtProcessBuild = false;
+    ProblemsView.getInstance(myProject).clearOldMessages(null);
 
     final String contentName =
       forceCompile ? CompilerBundle.message("compiler.content.name.compile") : CompilerBundle.message("compiler.content.name.make");
@@ -466,31 +453,22 @@ public class CompileDriver {
       new CompilerTask(myProject, contentName, isUnitTestMode, true, true, isCompilationStartedAutomatically(scope));
 
     StatusBar.Info.set("", myProject, "Compiler");
-    if (useExtProcessBuild) {
-      // ensure the project model seen by build process is up-to-date
-      myProject.save();
-      if (!isUnitTestMode) {
-        ApplicationManager.getApplication().saveSettings();
-      }
-    }
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
     FileDocumentManager.getInstance().saveAllDocuments();
 
-    final CompositeDependencyCache dependencyCache = useExtProcessBuild ? null : createDependencyCache();
+    final CompositeDependencyCache dependencyCache = createDependencyCache();
     final CompileContextImpl compileContext =
       new CompileContextImpl(myProject, compileTask, scope, dependencyCache, !isRebuild && !forceCompile, isRebuild);
 
-    if (!useExtProcessBuild) {
-      for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>> entry : myGenerationCompilerModuleToOutputDirMap
-        .entrySet()) {
-        final Pair<VirtualFile, VirtualFile> outputs = entry.getValue();
-        final Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
-        final Module module = key.getSecond();
-        compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
-        compileContext.assignModule(outputs.getSecond(), module, true, key.getFirst());
-      }
-      attachAnnotationProcessorsOutputDirectories(compileContext);
+    for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>> entry : myGenerationCompilerModuleToOutputDirMap
+      .entrySet()) {
+      final Pair<VirtualFile, VirtualFile> outputs = entry.getValue();
+      final Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
+      final Module module = key.getSecond();
+      compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
+      compileContext.assignModule(outputs.getSecond(), module, true, key.getFirst());
     }
+    attachAnnotationProcessorsOutputDirectories(compileContext);
 
     final Runnable compileWork = new Runnable() {
       @Override
@@ -1443,7 +1421,7 @@ public class CompileDriver {
     CompilerUtil.runInContext(context, CompilerBundle.message("progress.clearing.output"), new ThrowableRunnable<RuntimeException>() {
       @Override
       public void run() {
-        final boolean isTestMode = ApplicationManager.getApplication().isUnitTestMode();
+        //final boolean isTestMode = ApplicationManager.getApplication().isUnitTestMode();
         final VirtualFile[] allSources = context.getProjectCompileScope().getFiles(null, true);
         if (myShouldClearOutputDirectory) {
           CompilerUtil.clearOutputDirectories(myAllOutputDirectories);
@@ -1466,9 +1444,9 @@ public class CompileDriver {
                     @Override
                     public void run() {
                       TranslatingCompilerFilesMonitor.getInstance()
-                        .collectFiles(context, (TranslatingCompiler)compiler, Arrays.<VirtualFile>asList(allSources).iterator(), true /*pass true to make sure that every source in scope file is processed*/,
-                                      false /*important! should pass false to enable collection of files to delete*/,
-                                      new ArrayList<VirtualFile>(), toDelete);
+                              .collectFiles(context, (TranslatingCompiler)compiler, Arrays.<VirtualFile>asList(allSources).iterator(), true /*pass true to make sure that every source in scope file is processed*/,
+                                            false /*important! should pass false to enable collection of files to delete*/, new ArrayList<VirtualFile>(),
+                                            toDelete);
                     }
                   });
                   for (Trinity<File, String, Boolean> trinity : toDelete) {
@@ -2140,14 +2118,6 @@ public class CompileDriver {
     finally {
       progressIndicator.popState();
       WindowManager.getInstance().getStatusBar(myProject).setInfo("");
-      if (progressIndicator instanceof CompilerTask) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            ((CompilerTask)progressIndicator).showCompilerContent();
-          }
-        });
-      }
     }
     return true;
   }
@@ -2159,7 +2129,6 @@ public class CompileDriver {
       boolean isProjectCompilePathSpecified = true;
       final Set<File> nonExistingOutputPaths = new HashSet<File>();
       final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
-      final boolean useOutOfProcessBuild = false;
       for (final Module module : scopeModules) {
         if (!compilerManager.isValidationEnabled(module)) {
           continue;
@@ -2196,8 +2165,8 @@ public class CompileDriver {
         for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
           for (String path : provider.getOutputDirectories(myProject, module)) {
             if (path == null) {
-              final CompilerPathsManager extension = CompilerPathsManager.getInstance(module.getProject());
-              if (extension == null || extension.getCompilerOutputUrl() == null) {
+              final CompilerConfiguration extension = CompilerConfiguration.getInstance(module.getProject());
+              if (extension.getCompilerOutputUrl() == null) {
                 isProjectCompilePathSpecified = false;
               }
               else {
@@ -2275,13 +2244,11 @@ public class CompileDriver {
         CompilerPathsEx.CLEAR_ALL_OUTPUTS_KEY.set(scope, false);
       }
 
-      if (!useOutOfProcessBuild) {
-        final Compiler[] allCompilers = compilerManager.getCompilers(Compiler.class);
-        for (Compiler compiler : allCompilers) {
-          if (!compiler.validateConfiguration(scope)) {
-            LOG.info("Validation with compiler " + compiler.getDescription() + " is failed.");
-            return false;
-          }
+      final Compiler[] allCompilers = compilerManager.getCompilers(Compiler.class);
+      for (Compiler compiler : allCompilers) {
+        if (!compiler.validateConfiguration(scope)) {
+          LOG.info("Validation with compiler " + compiler.getDescription() + " is failed.");
+          return false;
         }
       }
       return true;
@@ -2289,50 +2256,6 @@ public class CompileDriver {
     catch (Throwable e) {
       LOG.info(e);
       return false;
-    }
-  }
-
-  private void showCyclicModulesHaveDifferentLanguageLevel(Module[] modulesInChunk) {
-    LOG.assertTrue(modulesInChunk.length > 0);
-    String moduleNameToSelect = modulesInChunk[0].getName();
-    final String moduleNames = getModulesString(modulesInChunk);
-    Messages.showMessageDialog(myProject, CompilerBundle.message("error.chunk.modules.must.have.same.language.level", moduleNames),
-                               CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-    showConfigurationDialog(moduleNameToSelect, null);
-  }
-
-  private void showCyclicModulesHaveDifferentJdksError(Module[] modulesInChunk) {
-    LOG.assertTrue(modulesInChunk.length > 0);
-    String moduleNameToSelect = modulesInChunk[0].getName();
-    final String moduleNames = getModulesString(modulesInChunk);
-    Messages.showMessageDialog(myProject, CompilerBundle.message("error.chunk.modules.must.have.same.jdk", moduleNames),
-                               CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-    showConfigurationDialog(moduleNameToSelect, null);
-  }
-
-  private void showCyclesNotSupportedForAnnotationProcessors(Module[] modulesInChunk) {
-    LOG.assertTrue(modulesInChunk.length > 0);
-    String moduleNameToSelect = modulesInChunk[0].getName();
-    final String moduleNames = getModulesString(modulesInChunk);
-    Messages
-      .showMessageDialog(myProject, CompilerBundle.message("error.annotation.processing.not.supported.for.module.cycles", moduleNames),
-                         CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-    showConfigurationDialog(moduleNameToSelect, null);
-  }
-
-  private static String getModulesString(Module[] modulesInChunk) {
-    final StringBuilder moduleNames = StringBuilderSpinAllocator.alloc();
-    try {
-      for (Module module : modulesInChunk) {
-        if (moduleNames.length() > 0) {
-          moduleNames.append("\n");
-        }
-        moduleNames.append("\"").append(module.getName()).append("\"");
-      }
-      return moduleNames.toString();
-    }
-    finally {
-      StringBuilderSpinAllocator.dispose(moduleNames);
     }
   }
 

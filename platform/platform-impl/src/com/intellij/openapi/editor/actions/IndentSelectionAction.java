@@ -22,26 +22,21 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.IndentStrategy;
-import com.intellij.openapi.editor.LanguageIndentStrategy;
+import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.DocumentEx;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +52,9 @@ public class IndentSelectionAction extends EditorAction {
     }
 
     @Override
-    public void executeWriteAction(Editor editor, DataContext dataContext) {
+    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       Project project = CommonDataKeys.PROJECT.getData(dataContext);
-      if (isEnabled(editor, dataContext)) {
+      if (isEnabled(editor, caret, dataContext)) {
         indentSelection(editor, project);
       }
     }
@@ -84,8 +79,7 @@ public class IndentSelectionAction extends EditorAction {
   }
 
   /**
-   * Returns true if there is a selection in the editor and it spans multiple lines or the whole single line (potentially without leading and
-   * trailing whitespaces).
+   * Returns true if there is a selection in the editor and it contains at least one non-whitespace character
    */
   private static boolean hasSuitableSelection(Editor editor) {
     if (!editor.getSelectionModel().hasSelection()) {
@@ -94,15 +88,7 @@ public class IndentSelectionAction extends EditorAction {
     Document document = editor.getDocument();
     int selectionStart = editor.getSelectionModel().getSelectionStart();
     int selectionEnd = editor.getSelectionModel().getSelectionEnd();
-    int selectionLineStart = document.getLineNumber(selectionStart);
-    int selectionLineEnd = document.getLineNumber(selectionEnd);
-    if (selectionLineStart != selectionLineEnd) {
-      return true;
-    }
-    int lineStart = document.getLineStartOffset(selectionLineStart);
-    int lineEnd = document.getLineEndOffset(selectionLineEnd);
-    return (selectionStart <= lineStart || CharArrayUtil.containsOnlyWhiteSpaces(document.getCharsSequence().subSequence(lineStart, selectionStart)))
-           && (selectionEnd >= lineEnd || CharArrayUtil.containsOnlyWhiteSpaces(document.getCharsSequence().subSequence(selectionEnd, lineEnd)));
+    return !CharArrayUtil.containsOnlyWhiteSpaces(document.getCharsSequence().subSequence(selectionStart, selectionEnd));
   }
 
   private static void indentSelection(Editor editor, Project project) {
@@ -125,15 +111,14 @@ public class IndentSelectionAction extends EditorAction {
     if(endIndex == -1) {
       endIndex = document.getLineCount() - 1;
     }
-    
-    VirtualFile vFile = FileDocumentManager.getInstance().getFile(document);
-    final FileType fileType = vFile == null ? null : vFile.getFileType();
-    int blockIndent = CodeStyleFacade.getInstance(project).getIndentSize(fileType);
+
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
+    int blockIndent = CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).INDENT_SIZE;
     doIndent(endIndex, startIndex, document, project, editor, blockIndent);
   }
 
   static void doIndent(final int endIndex, final int startIndex, final Document document, final Project project, final Editor editor,
-                               final int blockIndent) {
+                       final int blockIndent) {
     boolean bulkMode = endIndex - startIndex > 50;
     if (bulkMode) ((DocumentEx)document).setInBulkUpdate(true);
 

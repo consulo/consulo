@@ -99,14 +99,14 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
         if(entry instanceof ModuleExtensionWithSdkOrderEntry) {
           modulesLibraryUsedIn.add(entry.getOwnerModule());
         }
-        else if (entry instanceof SdkOrderEntry) {
-          return LibraryScopeCache.getInstance(myProject).getScopeForSdk((SdkOrderEntry)entry);
-        }
         else if (entry instanceof LibraryOrderEntry) {
           lib = (LibraryOrderEntry)entry;
           modulesLibraryUsedIn.add(entry.getOwnerModule());
         }
         else if (entry instanceof ModuleOrderEntry) {
+          modulesLibraryUsedIn.add(entry.getOwnerModule());
+        }
+        else if(entry instanceof OrderEntryWithTracking) {
           modulesLibraryUsedIn.add(entry.getOwnerModule());
         }
       }
@@ -117,7 +117,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
         // prefer current library
         return new DelegatingGlobalSearchScope(allCandidates, preferred) {
           @Override
-          public int compare(VirtualFile file1, VirtualFile file2) {
+          public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
             boolean c1 = preferred.contains(file1);
             boolean c2 = preferred.contains(file2);
             if (c1 && !c2) return 1;

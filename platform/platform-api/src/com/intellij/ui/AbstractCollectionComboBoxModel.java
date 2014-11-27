@@ -24,10 +24,10 @@ import java.util.List;
 /**
  * @author traff
  */
-public abstract class AbstractCollectionComboBoxModel extends AbstractListModel implements ComboBoxModel {
-  private Object mySelection;
+public abstract class AbstractCollectionComboBoxModel<T> extends AbstractListModel implements ComboBoxModel {
+  private T mySelection;
 
-  public AbstractCollectionComboBoxModel(Object selection) {
+  public AbstractCollectionComboBoxModel(@Nullable T selection) {
     mySelection = selection;
   }
 
@@ -37,13 +37,14 @@ public abstract class AbstractCollectionComboBoxModel extends AbstractListModel 
   }
 
   @Override
-  public Object getElementAt(final int index) {
+  public T getElementAt(final int index) {
     return getItems().get(index);
   }
 
   @Override
-  public void setSelectedItem(@Nullable final Object anItem) {
-    mySelection = anItem;
+  public void setSelectedItem(@Nullable Object anItem) {
+    //noinspection unchecked
+    mySelection = (T)anItem;
   }
 
   @Override
@@ -52,14 +53,19 @@ public abstract class AbstractCollectionComboBoxModel extends AbstractListModel 
     return mySelection;
   }
 
+  @Nullable
+  public T getSelected() {
+    return mySelection;
+  }
+
   public void update() {
     super.fireContentsChanged(this, -1, -1);
   }
 
-  public boolean contains(Object item) {
+  public boolean contains(T item) {
     return getItems().contains(item);
   }
 
   @NotNull
-  abstract protected List getItems();
+  abstract protected List<T> getItems();
 }

@@ -26,7 +26,7 @@ import java.awt.*;
  * @since 10/23/12 11:46 PM
  */
 public interface ArrangementColorsProvider {
-  
+
   @NotNull
   Color getBorderColor(boolean selected);
 

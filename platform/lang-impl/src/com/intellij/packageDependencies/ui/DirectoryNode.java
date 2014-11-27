@@ -248,7 +248,7 @@ public class DirectoryNode extends PackageDependenciesNode {
     if (myVDirectory != null && myVDirectory.isValid() && !myProject.isDisposed()) {
       final PsiDirectory directory = getPsiDirectory();
       if (directory != null) {
-        return BaseProjectViewDirectoryHelper.getInstance(myProject).getLocationString(directory);
+        return BaseProjectViewDirectoryHelper.getLocationString(directory);
       }
     }
     return super.getComment();

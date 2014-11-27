@@ -51,11 +51,9 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
 
   private static final Logger LOG = Logger.getInstance("#" + ModuleDependencyDataService.class.getName());
 
-  @NotNull private final ProjectStructureHelper myProjectStructureHelper;
   @NotNull private final ModuleDataService      myModuleDataManager;
 
-  public ModuleDependencyDataService(@NotNull ProjectStructureHelper projectStructureHelper, @NotNull ModuleDataService manager) {
-    myProjectStructureHelper = projectStructureHelper;
+  public ModuleDependencyDataService(@NotNull ModuleDataService manager) {
     myModuleDataManager = manager;
   }
 
@@ -69,10 +67,10 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
   public void importData(@NotNull Collection<DataNode<ModuleDependencyData>> toImport, @NotNull Project project, boolean synchronous) {
     Map<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> byModule= ExternalSystemApiUtil.groupBy(toImport, MODULE);
     for (Map.Entry<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> entry : byModule.entrySet()) {
-      Module ideModule = myProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
+      Module ideModule = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
       if (ideModule == null) {
         myModuleDataManager.importData(Collections.singleton(entry.getKey()), project, true);
-        ideModule = myProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
+        ideModule = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
       }
       if (ideModule == null) {
         LOG.warn(String.format(
@@ -107,7 +105,7 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
             final ModuleDependencyData dependencyData = dependencyNode.getData();
             toRemove.remove(Pair.create(dependencyData.getInternalName(), dependencyData.getScope()));
             final String moduleName = dependencyData.getInternalName();
-            Module ideDependencyModule = myProjectStructureHelper.findIdeModule(moduleName, module.getProject());
+            Module ideDependencyModule = ProjectStructureHelper.findIdeModule(moduleName, module.getProject());
             if (ideDependencyModule == null) {
               DataNode<ProjectData> projectNode = dependencyNode.getDataNode(ProjectKeys.PROJECT);
               if (projectNode != null) {
@@ -120,7 +118,7 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
                 });
                 if (n != null) {
                   myModuleDataManager.importData(Collections.singleton(n), module.getProject(), true);
-                  ideDependencyModule = myProjectStructureHelper.findIdeModule(moduleName, module.getProject());
+                  ideDependencyModule = ProjectStructureHelper.findIdeModule(moduleName, module.getProject());
                 }
               }
             }
@@ -134,7 +132,7 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
               continue;
             }
 
-            ModuleOrderEntry orderEntry = myProjectStructureHelper.findIdeModuleDependency(dependencyData, moduleRootModel);
+            ModuleOrderEntry orderEntry = ProjectStructureHelper.findIdeModuleDependency(dependencyData, moduleRootModel);
             if (orderEntry == null) {
               orderEntry = moduleRootModel.addModuleOrderEntry(ideDependencyModule);
             }

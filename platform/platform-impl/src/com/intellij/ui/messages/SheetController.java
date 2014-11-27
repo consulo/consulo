@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.messages;
 
-import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.Gray;
@@ -287,7 +287,8 @@ public class SheetController {
     messageTextPane.repaint();
 
     ico.setOpaque(false);
-    ico.setSize(new Dimension(AllIcons.Logo_welcomeScreen.getIconWidth(), AllIcons.Logo_welcomeScreen.getIconHeight()));
+    Icon welcomeScreenLogo = ApplicationInfoEx.getWelcomeScreenLogo();
+    ico.setSize(new Dimension(welcomeScreenLogo.getIconWidth(), welcomeScreenLogo.getIconHeight()));
     ico.setLocation(LEFT_SHEET_PADDING, TOP_SHEET_PADDING);
     sheetPanel.add(ico);
     headerLabel.setLocation(LEFT_SHEET_OFFSET, TOP_SHEET_PADDING);

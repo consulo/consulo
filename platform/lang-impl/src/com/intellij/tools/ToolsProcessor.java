@@ -24,7 +24,9 @@ import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Parent;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +58,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
   @NonNls private static final String APPLICATION_HOME_MACRO = "$APPLICATION_HOME_DIR$";
 
   @Override
-  public ToolsGroup<T> readScheme(final Document document) throws InvalidDataException, IOException, JDOMException {
+  public ToolsGroup<T> readScheme(@NotNull final Document document) throws InvalidDataException, IOException, JDOMException {
     Element root = document.getRootElement();
     if (root == null || !TOOL_SET.equals(root.getName())) {
       throw new InvalidDataException();
@@ -97,9 +99,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
         }
       }
 
-      for (final Object o2 : element.getChildren(FILTER)) {
-        Element childNode = (Element)o2;
-
+      for (final Element childNode : element.getChildren(FILTER)) {
         FilterInfo filterInfo = new FilterInfo();
         filterInfo.readExternal(childNode);
         tool.addOutputFilter(filterInfo);
@@ -131,7 +131,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
   protected abstract T createTool();
 
   @Override
-  public Document writeScheme(final ToolsGroup<T> scheme) throws WriteExternalException {
+  public Parent writeScheme(@NotNull final ToolsGroup<T> scheme) throws WriteExternalException {
     Element groupElement = new Element(TOOL_SET);
     if (scheme.getName() != null) {
       groupElement.setAttribute(ATTRIBUTE_NAME, scheme.getName());
@@ -141,11 +141,11 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
       saveTool(tool, groupElement);
     }
 
-    return new Document(groupElement);
+    return groupElement;
   }
 
   @Override
-  public boolean shouldBeSaved(final ToolsGroup scheme) {
+  public boolean shouldBeSaved(@NotNull final ToolsGroup scheme) {
     return true;
   }
 

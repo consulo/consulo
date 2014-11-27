@@ -20,11 +20,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ComponentSerializationUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.PersistentOrderRootType;
+import com.intellij.openapi.roots.OrderRootTypeWithConvert;
 import com.intellij.openapi.roots.RootProvider;
-import com.intellij.openapi.roots.impl.RootModelImpl;
+import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.util.*;
@@ -73,12 +72,12 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   private LibraryProperties myProperties;
 
   private final MyRootProviderImpl myRootProvider = new MyRootProviderImpl();
-  private final ModifiableRootModel myRootModel;
+  private final ModuleRootLayerImpl myModuleRootLayer;
   private boolean myDisposed;
   private final Disposable myPointersDisposable = Disposer.newDisposable();
   private final JarDirectoryWatcher myRootsWatcher = JarDirectoryWatcherFactory.getInstance().createWatcher(myJarDirectories, myRootProvider);
 
-  LibraryImpl(LibraryTable table, Element element, ModifiableRootModel rootModel) throws InvalidDataException {
+  LibraryImpl(LibraryTable table, Element element, ModuleRootLayerImpl rootModel) throws InvalidDataException {
     this(table, rootModel, null, element.getAttributeValue(LIBRARY_NAME_ATTR),
          (PersistentLibraryKind<?>)LibraryKind.findById(element.getAttributeValue(LIBRARY_TYPE_ATTR)));
     readProperties(element);
@@ -87,14 +86,14 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     myRootsWatcher.updateWatchedRoots();
   }
 
-  LibraryImpl(String name, @Nullable final PersistentLibraryKind<?> kind, LibraryTable table, ModifiableRootModel rootModel) {
+  LibraryImpl(String name, @Nullable final PersistentLibraryKind<?> kind, LibraryTable table, ModuleRootLayerImpl rootModel) {
     this(table, rootModel, null, name, kind);
     if (kind != null) {
       myProperties = kind.createDefaultProperties();
     }
   }
 
-  private LibraryImpl(@NotNull LibraryImpl from, LibraryImpl newSource, ModifiableRootModel rootModel) {
+  private LibraryImpl(@NotNull LibraryImpl from, LibraryImpl newSource, ModuleRootLayerImpl rootModel) {
     this(from.myLibraryTable, rootModel, newSource, from.myName, from.myKind);
     from.checkDisposed();
 
@@ -103,7 +102,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
       //noinspection unchecked
       myProperties.loadState(from.myProperties.getState());
     }
-    for (OrderRootType rootType : getAllRootTypes()) {
+    for (OrderRootType rootType : OrderRootType.getAllTypes()) {
       final VirtualFilePointerContainer thisContainer = myRoots.get(rootType);
       final VirtualFilePointerContainer thatContainer = from.myRoots.get(rootType);
       thisContainer.addAll(thatContainer);
@@ -115,25 +114,20 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   // primary
-  private LibraryImpl(LibraryTable table, ModifiableRootModel rootModel, LibraryImpl newSource, String name, @Nullable final PersistentLibraryKind<?> kind) {
+  private LibraryImpl(LibraryTable table,
+                      ModuleRootLayerImpl moduleRootLayer,
+                      LibraryImpl newSource,
+                      String name,
+                      @Nullable final PersistentLibraryKind<?> kind) {
     super(new Throwable());
     myLibraryTable = table;
-    myRootModel = rootModel;
+    myModuleRootLayer = moduleRootLayer;
     mySource = newSource;
     myKind = kind;
     myName = name;
     //init roots depends on my myKind
     myRoots = initRoots();
     Disposer.register(this, myRootsWatcher);
-  }
-
-  private Set<OrderRootType> getAllRootTypes() {
-    Set<OrderRootType> rootTypes = new HashSet<OrderRootType>();
-    rootTypes.addAll(Arrays.asList(OrderRootType.getAllTypes()));
-    if (myKind != null) {
-      rootTypes.addAll(Arrays.asList(myKind.getAdditionalRootTypes()));
-    }
-    return rootTypes;
   }
 
   @Override
@@ -191,7 +185,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     VfsUtilCore.visitChildrenRecursively(dir, new VirtualFileVisitor(SKIP_ROOT, (recursively ? null : ONE_LEVEL_DEEP)) {
       @Override
       public boolean visitFile(@NotNull VirtualFile file) {
-        final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(file);
+        final VirtualFile jarRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
         if (jarRoot != null) {
           container.add(jarRoot);
           return false;
@@ -212,13 +206,13 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   @NotNull
   public ModifiableModelEx getModifiableModel() {
     checkDisposed();
-    return new LibraryImpl(this, this, myRootModel);
+    return new LibraryImpl(this, this, myModuleRootLayer);
   }
 
   @Override
-  public Library cloneLibrary(RootModelImpl rootModel) {
+  public Library cloneLibrary(ModuleRootLayerImpl moduleRootLayer) {
     LOG.assertTrue(myLibraryTable == null);
-    final LibraryImpl clone = new LibraryImpl(this, null, rootModel);
+    final LibraryImpl clone = new LibraryImpl(this, null, moduleRootLayer);
     clone.myRootsWatcher.updateWatchedRoots();
     return clone;
   }
@@ -257,7 +251,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
 
     Map<OrderRootType, VirtualFilePointerContainer> result = new HashMap<OrderRootType, VirtualFilePointerContainer>(4);
 
-    for (OrderRootType rootType : getAllRootTypes()) {
+    for (OrderRootType rootType : OrderRootType.getAllTypes()) {
       result.put(rootType, VirtualFilePointerManager.getInstance().createContainer(myPointersDisposable));
     }
 
@@ -277,7 +271,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     final String typeId = element.getAttributeValue(LIBRARY_TYPE_ATTR);
     if (typeId == null) return;
 
-    myKind = (PersistentLibraryKind<?>) LibraryKind.findById(typeId);
+    myKind = (PersistentLibraryKind<?>)LibraryKind.findById(typeId);
     if (myKind == null) return;
 
     myProperties = myKind.createDefaultProperties();
@@ -292,8 +286,8 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   private void readRoots(Element element) throws InvalidDataException {
-    for (OrderRootType rootType : getAllRootTypes()) {
-      final Element rootChild = element.getChild(rootType.name());
+    for (OrderRootType rootType : OrderRootType.getAllTypes()) {
+      final Element rootChild = OrderRootTypeWithConvert.findFirstElement(element, rootType);
       if (rootChild == null) {
         continue;
       }
@@ -311,26 +305,6 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
       myExcludedRoots = VirtualFilePointerManager.getInstance().createContainer(myPointersDisposable);
     }
     return myExcludedRoots;
-  }
-
-  //TODO<rv> Remove the next two methods as a temporary solution. Sort in OrderRootType.
-  //
-  public static List<OrderRootType> sortRootTypes(Collection<OrderRootType> rootTypes) {
-    List<OrderRootType> allTypes = new ArrayList<OrderRootType>(rootTypes);
-    Collections.sort(allTypes, new Comparator<OrderRootType>() {
-      @Override
-      public int compare(final OrderRootType o1, final OrderRootType o2) {
-        return getSortKey(o1).compareTo(getSortKey(o2));
-      }
-    });
-    return allTypes;
-  }
-
-  private static String getSortKey(OrderRootType orderRootType) {
-    if (orderRootType instanceof PersistentOrderRootType) {
-      return ((PersistentOrderRootType)orderRootType).getSdkRootName();
-    }
-    return "";
   }
 
   @Override
@@ -351,15 +325,12 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
         }
       }
     }
-    ArrayList<OrderRootType> storableRootTypes = new ArrayList<OrderRootType>();
-    storableRootTypes.addAll(Arrays.asList(OrderRootType.getAllTypes()));
-    if (myKind != null) {
-      storableRootTypes.addAll(Arrays.asList(myKind.getAdditionalRootTypes()));
-    }
-    for (OrderRootType rootType : sortRootTypes(storableRootTypes)) {
+    for (OrderRootType rootType : OrderRootType.getSortedRootTypes()) {
       final VirtualFilePointerContainer roots = myRoots.get(rootType);
-      if (roots.size() == 0 && rootType.skipWriteIfEmpty()) continue; //compatibility iml/ipr
-      final Element rootTypeElement = new Element(rootType.name());
+      if (roots.size() == 0) {
+        continue;
+      }
+      final Element rootTypeElement = new Element(rootType.getName());
       roots.writeExternal(rootTypeElement, ROOT_PATH_ELEMENT);
       element.addContent(rootTypeElement);
     }
@@ -654,6 +625,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     return myLibraryTable;
   }
 
+  @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -670,6 +642,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     return true;
   }
 
+  @Override
   public int hashCode() {
     int result = myName != null ? myName.hashCode() : 0;
     result = 31 * result + (myRoots != null ? myRoots.hashCode() : 0);
@@ -685,6 +658,6 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
 
   @Nullable("will return non-null value only for module level libraries")
   public Module getModule() {
-    return myRootModel == null ? null : myRootModel.getModule();
+    return myModuleRootLayer == null ? null : myModuleRootLayer.getModule();
   }
 }

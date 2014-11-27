@@ -1,11 +1,10 @@
 <component name="libraryTable">
   <library name="JDOM">
-    <CLASSES>
+    <binaries>
       <root url="jar://$PROJECT_DIR$/lib/jdom.jar!/" />
-    </CLASSES>
-    <DOCUMENTATION />
-    <SOURCES>
+    </binaries>
+    <sources>
       <root url="jar://$PROJECT_DIR$/libSrc/jdom.zip!/" />
-    </SOURCES>
+    </sources>
   </library>
 </component>

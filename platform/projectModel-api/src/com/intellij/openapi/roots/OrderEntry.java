@@ -19,6 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 
 /**
  * Represents an entry in the classpath of a module (as shown in the "Order/Export" page
@@ -31,6 +32,12 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * The empty array of order entries which can be reused to avoid unnecessary allocations.
    */
   OrderEntry[] EMPTY_ARRAY = new OrderEntry[0];
+
+  /**
+   * Return provider of ths order entry
+   * @return provider
+   */
+  OrderEntryTypeProvider<?> getProvider();
 
   /**
    * Returns list of root {@link VirtualFile}s of given type for this entry.
@@ -91,4 +98,6 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * @return the value returned by the visitor.
    */
   <R> R accept(RootPolicy<R> policy, @Nullable R initialValue);
+
+  boolean isEquivalentTo(@NotNull OrderEntry other);
 }

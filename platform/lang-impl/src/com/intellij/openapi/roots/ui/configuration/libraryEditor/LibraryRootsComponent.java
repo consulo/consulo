@@ -30,12 +30,12 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.PersistentOrderRootType;
 import com.intellij.openapi.roots.libraries.LibraryKind;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.ui.*;
 import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.ui.ex.MultiLineLabel;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -48,6 +48,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IconUtil;
@@ -135,7 +136,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     final LibraryType<?> type = getLibraryEditor().getType();
     final Set<LibraryKind> excluded =
       type != null ? Collections.<LibraryKind>singleton(type.getKind()) : Collections.<LibraryKind>emptySet();
-    for (String description : LibraryPresentationManager.getInstance().getDescriptions(getLibraryEditor().getFiles(OrderRootType.CLASSES),
+    for (String description : LibraryPresentationManager.getInstance().getDescriptions(getLibraryEditor().getFiles(BinariesOrderRootType.getInstance()),
                                                                                        excluded)) {
       if (text.length() > 0) {
         text.append("\n");
@@ -157,6 +158,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myTree).disableUpDownActions()
             .setRemoveActionName(ProjectBundle.message("library.remove.action"))
             .disableRemoveAction();
+    toolbarDecorator.setPanelBorder(new CustomLineBorder(1, 0, 0, 0));
 
     final List<AttachRootButtonDescriptor> popupItems = new ArrayList<AttachRootButtonDescriptor>();
     for (AttachRootButtonDescriptor descriptor : myDescriptor.createAttachButtons()) {
@@ -261,7 +263,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
   @Override
   @Nullable
   public VirtualFile getExistingRootDirectory() {
-    for (OrderRootType orderRootType : OrderRootType.getAllPersistentTypes()) {
+    for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
       final VirtualFile[] existingRoots = getLibraryEditor().getFiles(orderRootType);
       if (existingRoots.length > 0) {
         VirtualFile existingRoot = existingRoots[0];
@@ -508,7 +510,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     for (String url : excludedRootUrls) {
       ContainerUtil.addIfNotNull(excludedRoots, VirtualFileManager.getInstance().findFileByUrl(url));
     }
-    for (PersistentOrderRootType type : OrderRootType.getAllPersistentTypes()) {
+    for (OrderRootType type : OrderRootType.getAllTypes()) {
       VirtualFile[] files = getLibraryEditor().getFiles(type);
       for (VirtualFile file : files) {
         if (!VfsUtilCore.isUnder(file, excludedRoots)) {

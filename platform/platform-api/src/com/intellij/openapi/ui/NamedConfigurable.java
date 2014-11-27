@@ -22,6 +22,7 @@ import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 
@@ -56,6 +57,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
         }
       });
     }
+    myNamePanel.setBorder(new EmptyBorder(10, 10, 6, 10));
   }
 
   public boolean isNameEditable() {

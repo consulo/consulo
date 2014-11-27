@@ -28,7 +28,9 @@ import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorAndFontDescriptorsProvider;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.HashMap;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,11 +71,11 @@ public class ColorSettingsUtil {
       if (settingsPage == provider) break;
       if (settingsPage instanceof InspectionColorSettingsPage) return false;
     }
-    return true;        
+    return true;
   }
 
   static boolean isSharedScheme(EditorColorsScheme selected) {
-      return ((EditorColorsManagerImpl) EditorColorsManager.getInstance()).getSchemesManager().isShared(selected);
+    return ((EditorColorsManagerImpl) EditorColorsManager.getInstance()).getSchemesManager().isShared(selected);
   }
 
   private static void addInspectionSeverityAttributes(List<AttributesDescriptor> descriptors) {
@@ -89,8 +91,13 @@ public class ColorSettingsUtil {
     for (SeveritiesProvider provider : Extensions.getExtensions(SeveritiesProvider.EP_NAME)) {
       for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
         final TextAttributesKey attributesKey = highlightInfoType.getAttributesKey();
-        descriptors.add(new AttributesDescriptor(attributesKey.myExternalName, attributesKey));
+        descriptors.add(new AttributesDescriptor(toDisplayName(attributesKey), attributesKey));
       }
     }
+  }
+
+  @NotNull
+  private static String toDisplayName(@NotNull TextAttributesKey attributesKey) {
+    return StringUtil.capitalize(attributesKey.getExternalName().toLowerCase().replaceAll("_", " "));
   }
 }

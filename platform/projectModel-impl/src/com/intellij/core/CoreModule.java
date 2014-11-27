@@ -27,14 +27,14 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.impl.ModuleEx;
 import com.intellij.openapi.module.impl.ModuleScopeProvider;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleFileIndex;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
+import com.intellij.openapi.roots.impl.ModuleFileIndexImpl;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
-import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -67,10 +67,7 @@ public class CoreModule extends MockComponentManager implements ModuleEx {
     initModuleExtensions();
 
     final ModuleRootManagerImpl moduleRootManager =
-      new ModuleRootManagerImpl(this,
-                                DirectoryIndex.getInstance(project),
-                                ProjectRootManagerImpl.getInstanceImpl(project),
-                                VirtualFilePointerManager.getInstance()) {
+      new ModuleRootManagerImpl(this) {
         @Override
         public void loadState(Element object) {
           loadState(object, false);
@@ -84,6 +81,7 @@ public class CoreModule extends MockComponentManager implements ModuleEx {
     });
     getPicoContainer().registerComponentInstance(ModuleRootManager.class, moduleRootManager);
     getPicoContainer().registerComponentInstance(PathMacroManager.class, new ModulePathMacroManager(PathMacros.getInstance(), this));
+    getPicoContainer().registerComponentInstance(ModuleFileIndex.class, new ModuleFileIndexImpl(this, DirectoryIndex.getInstance(project)));
     myModuleScopeProvider = createModuleScopeProvider();
   }
 

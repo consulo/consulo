@@ -80,7 +80,7 @@ public class JBEditorTabs extends JBTabsImpl {
     }
   }
 
-  private static final String TABS_ALPHABETICAL_KEY = "tabs.alphabetical";
+  public static final String TABS_ALPHABETICAL_KEY = "tabs.alphabetical";
 
   public JBEditorTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @NotNull Disposable parent) {
     super(project, actionManager, focusManager, parent);
@@ -171,7 +171,7 @@ public class JBEditorTabs extends JBTabsImpl {
     return ourTabsPainter;
   }
 
-  public static boolean isAlphabeticalMode() {
+  public boolean isAlphabeticalMode() {
     return Registry.is(TABS_ALPHABETICAL_KEY);
   }
 

@@ -18,11 +18,14 @@ package com.intellij.psi.codeStyle;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.DifferenceFilter;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +35,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
 
   public volatile CodeStyleSettings PER_PROJECT_SETTINGS = null;
   public volatile boolean USE_PER_PROJECT_SETTINGS = false;
+  public volatile String PREFERRED_PROJECT_CODE_STYLE = null;
   private volatile CodeStyleSettings myTemporarySettings;
   private volatile boolean myIsLoaded = false;
 
@@ -72,7 +76,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     if (temporarySettings != null) return temporarySettings;
     CodeStyleSettings projectSettings = PER_PROJECT_SETTINGS;
     if (USE_PER_PROJECT_SETTINGS && projectSettings != null) return projectSettings;
-    return CodeStyleSchemes.getInstance().getCurrentScheme().getCodeStyleSettings();
+    return CodeStyleSchemes.getInstance().findPreferredScheme(PREFERRED_PROJECT_CODE_STYLE).getCodeStyleSettings();
   }
 
   private void readExternal(Element element) throws InvalidDataException {
@@ -106,6 +110,10 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     }
   }
 
+  public CodeStyleSettings getTemporarySettings() {
+    return myTemporarySettings;
+  }
+
   public void setTemporarySettings(@NotNull CodeStyleSettings settings) {
     myTemporarySettings = settings;
   }
@@ -116,5 +124,25 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
 
   public boolean isLoaded() {
     return myIsLoaded;
+  }
+
+  /**
+   * Updates document's indent options from indent options providers.
+   * <p><b>Note:</b> Calling this method directly when there is an editor associated with the document may cause the editor work
+   * incorrectly. To keep consistency with the editor call <code>EditorEx.reinitSettings()</code> instead.
+   * @param project  The project of the document.
+   * @param document The document to update indent options for.
+   */
+  public static void updateDocumentIndentOptions(@NotNull Project project, @NotNull Document document) {
+    if (!project.isDisposed()) {
+      PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+      if (documentManager != null) {
+        PsiFile file = documentManager.getPsiFile(document);
+        if (file != null) {
+          CommonCodeStyleSettings.IndentOptions indentOptions = getSettings(project).getIndentOptionsByFile(file, null, true);
+          indentOptions.associateWithDocument(document);
+        }
+      }
+    }
   }
 }

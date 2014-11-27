@@ -17,12 +17,11 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.impl.scopes.JdkScope;
+import com.intellij.openapi.module.impl.scopes.SdkScope;
 import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.SdkResolveScopeProvider;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ConcurrentHashMap;
@@ -68,16 +67,7 @@ public class LibraryScopeCache {
     if (jdkName == null) return GlobalSearchScope.allScope(myProject);
     GlobalSearchScope scope = mySdkScopes.get(jdkName);
     if (scope == null) {
-      for (SdkResolveScopeProvider provider : SdkResolveScopeProvider.EP_NAME.getExtensions()) {
-        scope = provider.getScope(myProject, sdkOrderEntry);
-
-        if (scope != null) {
-          break;
-        }
-      }
-      if (scope == null) {
-        scope = new JdkScope(myProject, sdkOrderEntry);
-      }
+      scope = new SdkScope(myProject, sdkOrderEntry);
       return ConcurrencyUtil.cacheOrGet(mySdkScopes, jdkName, scope);
     }
     return scope;
@@ -91,18 +81,22 @@ public class LibraryScopeCache {
       myOriginal = original;
     }
 
-    public boolean contains(VirtualFile file) {
+    @Override
+    public boolean contains(@NotNull VirtualFile file) {
       return myOriginal.contains(file);
     }
 
-    public int compare(VirtualFile file1, VirtualFile file2) {
+    @Override
+    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
       return myOriginal.compare(file1, file2);
     }
 
+    @Override
     public boolean isSearchInModuleContent(@NotNull Module aModule) {
       return false;
     }
 
+    @Override
     public boolean isSearchInLibraries() {
       return true;
     }

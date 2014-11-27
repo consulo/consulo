@@ -33,7 +33,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -163,7 +163,7 @@ class ExportToHTMLManager {
   }
 
   private static String constructOutputDirectory(@NotNull final PsiDirectory directory, final String outputDirectoryName) {
-    String qualifiedName = PsiDirectoryFactory.getInstance(directory.getProject()).getQualifiedName(directory, false);
+    String qualifiedName = PsiPackageHelper.getInstance(directory.getProject()).getQualifiedName(directory, false);
     String dirName = outputDirectoryName;
     if(qualifiedName.length() > 0) {
       dirName += File.separator + qualifiedName.replace('.', File.separatorChar);
@@ -195,7 +195,7 @@ class ExportToHTMLManager {
     throws FileNotFoundException {
     String indexHtmlName = constructOutputDirectory(psiDirectory, outputDirectoryName) + File.separator + "index.html";
     OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(indexHtmlName), CharsetToolkit.UTF8_CHARSET);
-    final String title = PsiDirectoryFactory.getInstance(psiDirectory.getProject()).getQualifiedName(psiDirectory, true);
+    final String title = PsiPackageHelper.getInstance(psiDirectory.getProject()).getQualifiedName(psiDirectory, true);
     try {
       writer.write("<html><head><title>" + title + "</title></head><body>");
       if (recursive) {
@@ -268,7 +268,7 @@ class ExportToHTMLManager {
         if (!dirToShow.endsWith(File.separator)) {
           dirToShow += File.separatorChar;
         }
-        dirToShow += PsiDirectoryFactory.getInstance(myProject).getQualifiedName(myPsiDirectory, false).replace('.', File.separatorChar);
+        dirToShow += PsiPackageHelper.getInstance(myProject).getQualifiedName(myPsiDirectory, false).replace('.', File.separatorChar);
         BrowserUtil.launchBrowser(dirToShow);
       }
     }

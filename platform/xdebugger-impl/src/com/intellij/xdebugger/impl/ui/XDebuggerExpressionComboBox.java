@@ -17,6 +17,9 @@ package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.event.DocumentAdapter;
+import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.EditorComboBoxEditor;
@@ -46,7 +49,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
   public XDebuggerExpressionComboBox(final @NotNull Project project, final @NotNull XDebuggerEditorsProvider debuggerEditorsProvider, final @Nullable @NonNls String historyId,
                                      final @Nullable XSourcePosition sourcePosition) {
     super(project, debuggerEditorsProvider, EvaluationMode.EXPRESSION, historyId, sourcePosition);
-    myComboBox = new ComboBox();
+    myComboBox = new ComboBox(100);
     myComboBox.setEditable(true);
     myExpression = XExpressionImpl.EMPTY_EXPRESSION;
     Dimension minimumSize = new Dimension(myComboBox.getMinimumSize());
@@ -79,10 +82,10 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     if (enable == myComboBox.isEnabled()) return;
 
     myComboBox.setEnabled(enable);
-    myComboBox.setEditable(enable);
+    //myComboBox.setEditable(enable);
 
     if (enable) {
-      initEditor();
+      //initEditor();
     }
     else {
       myExpression = getExpression();
@@ -107,6 +110,23 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
   }
 
   @Override
+  protected Document createDocument(XExpression text) {
+    Document document = super.createDocument(text);
+    document.addDocumentListener(REPLACE_NEWLINES_LISTENER);
+    return document;
+  }
+
+  private static DocumentListener REPLACE_NEWLINES_LISTENER = new DocumentAdapter() {
+    @Override
+    public void documentChanged(DocumentEvent e) {
+      String text = e.getNewFragment().toString();
+      if (text.contains("\n")) {
+        e.getDocument().replaceString(e.getOffset(), e.getOffset() + e.getNewLength(), text.replace('\n', ' '));
+      }
+    }
+  };
+
+  @Override
   protected void onHistoryChanged() {
     fillComboBox();
   }
@@ -127,9 +147,9 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
       myComboBox.setSelectedIndex(0);
     }
 
-    if (myComboBox.isEditable()) {
-      myEditor.setItem(text);
-    }
+    //if (myComboBox.isEditable()) {
+    myEditor.setItem(text);
+    //}
     myExpression = text;
   }
 

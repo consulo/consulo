@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class AnActionEvent implements PlaceProvider<String> {
   private final InputEvent myInputEvent;
-  private final ActionManager myActionManager;
+  @NotNull private final ActionManager myActionManager;
   @NotNull private final DataContext myDataContext;
   @NotNull private final String myPlace;
   @NotNull private final Presentation myPresentation;
@@ -49,12 +49,14 @@ public class AnActionEvent implements PlaceProvider<String> {
   /**
    * @throws IllegalArgumentException if <code>dataContext</code> is <code>null</code> or
    * <code>place</code> is <code>null</code> or <code>presentation</code> is <code>null</code>
+   *
+   * @see ActionManager#getInstance()
    */
   public AnActionEvent(InputEvent inputEvent,
                        @NotNull DataContext dataContext,
                        @NotNull @NonNls String place,
                        @NotNull Presentation presentation,
-                       ActionManager actionManager,
+                       @NotNull ActionManager actionManager,
                        @JdkConstants.InputEventMask int modifiers) {
     // TODO[vova,anton] make this constructor package local. No one is allowed to create AnActionEvents
     myInputEvent = inputEvent;
@@ -69,14 +71,16 @@ public class AnActionEvent implements PlaceProvider<String> {
   public static AnActionEvent createFromInputEvent(@NotNull AnAction action, InputEvent event, @NotNull String place) {
     DataContext context = event == null ? DataManager.getInstance().getDataContext() : DataManager.getInstance().getDataContext(event.getComponent());
     int modifiers = event == null ? 0 : event.getModifiers();
-    return new AnActionEvent(
-      event,
-      context,
-      place,
-      action.getTemplatePresentation(),
-      ActionManager.getInstance(),
-      modifiers
+    AnActionEvent anActionEvent = new AnActionEvent(
+            event,
+            context,
+            place,
+            action.getTemplatePresentation(),
+            ActionManager.getInstance(),
+            modifiers
     );
+    anActionEvent.setInjectedContext(action.isInInjectedContext());
+    return anActionEvent;
   }
 
   /**
@@ -107,10 +111,22 @@ public class AnActionEvent implements PlaceProvider<String> {
       return injected;
     }
   }
-  
+
   @NonNls
   public static String uninjectedId(@NotNull String dataId) {
     return StringUtil.trimStart(dataId, ourInjectedPrefix);
+  }
+
+  public static DataContext getInjectedDataContext(final DataContext context) {
+    return new DataContextWrapper(context) {
+      @Nullable
+      @Override
+      public Object getData(@NonNls String dataId) {
+        Object injected = super.getData(injectedId(dataId));
+        if (injected != null) return injected;
+        return super.getData(dataId);
+      }
+    };
   }
 
   /**
@@ -121,18 +137,7 @@ public class AnActionEvent implements PlaceProvider<String> {
    */
   @NotNull
   public DataContext getDataContext() {
-    if (!myWorksInInjected) {
-      return myDataContext;
-    }
-    return new DataContext() {
-      @Override
-      @Nullable
-      public Object getData(@NonNls String dataId) {
-        Object injected = myDataContext.getData(injectedId(dataId));
-        if (injected != null) return injected;
-        return myDataContext.getData(dataId);
-      }
-    };
+    return myWorksInInjected ? getInjectedDataContext(myDataContext) : myDataContext;
   }
 
   @Nullable
@@ -140,6 +145,29 @@ public class AnActionEvent implements PlaceProvider<String> {
     return key.getData(getDataContext());
   }
 
+  /**
+   * Returns not null data by a data key. This method assumes that data has been checked for null in AnAction#update method.
+   *<br/><br/>
+   * Example of proper usage:
+   *
+   * <pre>
+   *
+   * public class MyAction extends AnAction {
+   *   public void update(AnActionEvent e) {
+   *     //perform action if and only if EDITOR != null
+   *     boolean enabled = e.getData(CommonDataKeys.EDITOR) != null;
+   *     e.getPresentation.setEnabled(enabled);
+   *   }
+   *
+   *   public void actionPerformed(AnActionEvent e) {
+   *     //if we're here then EDITOR != null
+   *     Document doc = e.getRequiredData(CommonDataKeys.EDITOR).getDocument();
+   *     doSomething(doc);
+   *   }
+   * }
+   *
+   * </pre>
+   */
   @NotNull
   public <T> T getRequiredData(@NotNull DataKey<T> key) {
     T data = getData(key);
@@ -180,9 +208,11 @@ public class AnActionEvent implements PlaceProvider<String> {
     return myModifiers;
   }
 
+  @NotNull
   public ActionManager getActionManager() {
     return myActionManager;
   }
+
   public void setInjectedContext(boolean worksInInjected) {
     myWorksInInjected = worksInInjected;
   }

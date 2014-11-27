@@ -16,7 +16,6 @@
 
 package com.intellij.ide.macro;
 
-import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -62,7 +61,6 @@ public final class MacroManager {
     registerMacro(new FilePathRelativeToProjectRootMacro());
     registerMacro(new FileDirRelativeToSourcepathMacro());
     registerMacro(new FilePathRelativeToSourcepathMacro());
-    //registerMacro(new JdkPathMacro());
     registerMacro(new PromptMacro());
     registerMacro(new FilePromptMacro());
     registerMacro(new SourcepathEntryMacro());
@@ -72,8 +70,10 @@ public final class MacroManager {
 
     registerMacro(new ModuleDirMacro());
     registerMacro(new ModuleNameMacro());
+    registerMacro(new ModuleProfileNameMacro());
     registerMacro(new ModulePathMacro());
-    //TODO [VISTALL] new api registerMacro(new ModuleSdkPathMacro());
+    registerMacro(new ModuleProductionOutputDirPathMacro());
+    registerMacro(new ModuleTestOutputDirPathMacro());
 
     registerMacro(new FileRelativePathMacro());
     registerMacro(new FileRelativeDirMacro());
@@ -100,8 +100,6 @@ public final class MacroManager {
   }
 
   private void registerMacro(Macro macro) {
-    assert PathMacrosImpl.getToolMacroNames().contains(macro.getName()) : "Macro '" + macro.getName() + "' should be registered in PathMacros!";
-
     myMacrosMap.put(macro.getName(), macro);
   }
 

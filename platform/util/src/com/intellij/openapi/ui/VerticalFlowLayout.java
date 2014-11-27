@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,10 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
     this(alignment, 5, 5, fillHorizontally, fillVertically);
   }
 
+  public VerticalFlowLayout(int hGap, int vGap) {
+    this(TOP, hGap, vGap, true, false);
+  }
+
   public VerticalFlowLayout(@VerticalFlowAlignment int alignment, int hGap, int vGap, boolean fillHorizontally, boolean fillVertically) {
     setAlignment(alignment);
     this.hGap = hGap;
@@ -56,6 +60,7 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
     myVerticalFill = fillVertically;
   }
 
+  @Override
   public void layoutContainer(Container container) {
     Insets insets = container.getInsets();
     int i = container.getSize().height - (insets.top + insets.bottom + vGap * 2);
@@ -132,6 +137,7 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
     myVerticalFill = flag;
   }
 
+  @Override
   public Dimension minimumLayoutSize(Container container) {
     Dimension dimension = new Dimension(0, 0);
     for(int i = 0; i < container.getComponentCount(); i++){
@@ -150,6 +156,7 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
     return dimension;
   }
 
+  @Override
   public Dimension preferredLayoutSize(Container container) {
     Dimension dimension = new Dimension(0, 0);
     for(int i = 0; i < container.getComponentCount(); i++){

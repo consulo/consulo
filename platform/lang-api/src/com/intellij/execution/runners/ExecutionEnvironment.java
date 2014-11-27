@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.execution.runners;
 
 import com.intellij.execution.*;
@@ -23,17 +22,23 @@ import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.intellij.openapi.actionSystem.LangDataKeys.*;
 
-public class ExecutionEnvironment extends UserDataHolderBase {
+public class ExecutionEnvironment extends UserDataHolderBase implements Disposable {
   private static final AtomicLong myIdHolder = new AtomicLong(1L);
 
   @NotNull private final Project myProject;
@@ -46,8 +51,9 @@ public class ExecutionEnvironment extends UserDataHolderBase {
   @Nullable private ConfigurationPerRunnerSettings myConfigurationSettings;
   @Nullable private final RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
   @Nullable private RunContentDescriptor myContentToReuse;
-  @Nullable private String myRunnerId;
+  private final ProgramRunner<?> myRunner;
   private long myExecutionId = 0;
+  @Nullable private DataContext myDataContext;
 
   @TestOnly
   public ExecutionEnvironment() {
@@ -55,11 +61,12 @@ public class ExecutionEnvironment extends UserDataHolderBase {
     myContentToReuse = null;
     myRunnerAndConfigurationSettings = null;
     myExecutor = null;
+    myRunner = null;
   }
 
   public ExecutionEnvironment(@NotNull Executor executor,
-                              @NotNull final ProgramRunner runner,
-                              @NotNull final RunnerAndConfigurationSettings configuration,
+                              @NotNull ProgramRunner runner,
+                              @NotNull RunnerAndConfigurationSettings configuration,
                               @NotNull Project project) {
     this(configuration.getConfiguration(),
          executor,
@@ -69,11 +76,12 @@ public class ExecutionEnvironment extends UserDataHolderBase {
          configuration.getConfigurationSettings(runner),
          null,
          null,
-         runner.getRunnerId());
+         runner);
   }
 
   /**
    * @deprecated, use {@link com.intellij.execution.runners.ExecutionEnvironmentBuilder} instead
+   * to remove in IDEA 14
    */
   @TestOnly
   public ExecutionEnvironment(@NotNull Executor executor,
@@ -88,45 +96,46 @@ public class ExecutionEnvironment extends UserDataHolderBase {
          configuration.getRunnerSettings(runner),
          configuration.getConfigurationSettings(runner),
          null,
-         configuration, runner.getRunnerId());
+         configuration,
+         runner);
   }
 
   /**
    * @deprecated, use {@link com.intellij.execution.runners.ExecutionEnvironmentBuilder} instead
+   * to remove in IDEA 15
    */
   public ExecutionEnvironment(@NotNull RunProfile runProfile,
                               @NotNull Executor executor,
                               @NotNull Project project,
                               @Nullable RunnerSettings runnerSettings) {
-    this(runProfile, executor, DefaultExecutionTarget.INSTANCE, project, runnerSettings, null, null, null, null);
+    //noinspection ConstantConditions
+    this(runProfile, executor, DefaultExecutionTarget.INSTANCE, project, runnerSettings, null, null, null, RunnerRegistry.getInstance().getRunner(executor.getId(), runProfile));
   }
 
-  public ExecutionEnvironment(@NotNull RunProfile runProfile,
-                              @NotNull Executor executor,
-                              @NotNull ExecutionTarget target,
-                              @NotNull Project project,
-                              @Nullable RunnerSettings runnerSettings,
-                              @Nullable ConfigurationPerRunnerSettings configurationSettings,
-                              @Nullable RunContentDescriptor contentToReuse,
-                              @Nullable RunnerAndConfigurationSettings settings,
-                              @Nullable String runnerId) {
+  ExecutionEnvironment(@NotNull RunProfile runProfile,
+                       @NotNull Executor executor,
+                       @NotNull ExecutionTarget target,
+                       @NotNull Project project,
+                       @Nullable RunnerSettings runnerSettings,
+                       @Nullable ConfigurationPerRunnerSettings configurationSettings,
+                       @Nullable RunContentDescriptor contentToReuse,
+                       @Nullable RunnerAndConfigurationSettings settings,
+                       @NotNull ProgramRunner<?> runner) {
     myExecutor = executor;
     myTarget = target;
     myRunProfile = runProfile;
     myRunnerSettings = runnerSettings;
     myConfigurationSettings = configurationSettings;
     myProject = project;
-    myContentToReuse = contentToReuse;
+    setContentToReuse(contentToReuse);
     myRunnerAndConfigurationSettings = settings;
-    myRunnerId = runnerId;
-    if (myContentToReuse != null) {
-      Disposer.register(myContentToReuse, new Disposable() {
-        @Override
-        public void dispose() {
-          myContentToReuse = null;
-        }
-      });
-    }
+
+    myRunner = runner;
+  }
+
+  @Override
+  public void dispose() {
+    myContentToReuse = null;
   }
 
   @NotNull
@@ -154,9 +163,27 @@ public class ExecutionEnvironment extends UserDataHolderBase {
     return myContentToReuse;
   }
 
+  public void setContentToReuse(@Nullable RunContentDescriptor contentToReuse) {
+    myContentToReuse = contentToReuse;
+
+    if (contentToReuse != null) {
+      Disposer.register(contentToReuse, this);
+    }
+  }
+
   @Nullable
+  @Deprecated
+  /**
+   * Use {@link #getRunner()} instead
+   * to remove in IDEA 15
+   */
   public String getRunnerId() {
-    return myRunnerId;
+    return myRunner.getRunnerId();
+  }
+
+  @NotNull
+  public ProgramRunner<?> getRunner() {
+    return myRunner;
   }
 
   @Nullable
@@ -196,11 +223,45 @@ public class ExecutionEnvironment extends UserDataHolderBase {
   public String toString() {
     if (myRunnerAndConfigurationSettings != null) {
       return myRunnerAndConfigurationSettings.getName();
-    } else if (myRunProfile != null) {
+    }
+    else if (myRunProfile != null) {
       return myRunProfile.getName();
-    } else if (myContentToReuse != null) {
+    }
+    else if (myContentToReuse != null) {
       return myContentToReuse.getDisplayName();
     }
     return super.toString();
+  }
+
+  void setDataContext(@NotNull DataContext dataContext) {
+    myDataContext = CachingDataContext.cacheIfNeed(dataContext);
+  }
+
+  @Nullable
+  public DataContext getDataContext() {
+    return myDataContext;
+  }
+
+  private static class CachingDataContext implements DataContext {
+    private static final DataKey[] keys = {PROJECT, PROJECT_FILE_DIRECTORY, EDITOR, VIRTUAL_FILE, MODULE, PSI_FILE};
+    private final Map<String, Object> values = new HashMap<String, Object>();
+
+    @NotNull
+    static CachingDataContext cacheIfNeed(@NotNull DataContext context) {
+      if (context instanceof CachingDataContext)
+        return (CachingDataContext)context;
+      return new CachingDataContext(context);
+    }
+
+    private CachingDataContext(DataContext context) {
+      for (DataKey key : keys) {
+        values.put(key.getName(), key.getData(context));
+      }
+    }
+
+    @Override
+    public Object getData(@NonNls String dataId) {
+      return values.get(dataId);
+    }
   }
 }

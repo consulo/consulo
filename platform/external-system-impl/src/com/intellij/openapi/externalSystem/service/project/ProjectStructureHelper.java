@@ -5,11 +5,12 @@ import com.intellij.openapi.externalSystem.model.project.ModuleData;
 import com.intellij.openapi.externalSystem.model.project.ModuleDependencyData;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,31 +21,19 @@ import org.jetbrains.annotations.Nullable;
  * @since 2/6/12 3:28 PM
  */
 public class ProjectStructureHelper {
-
-  @NotNull private final PlatformFacade myFacade;
-
-  public ProjectStructureHelper(@NotNull PlatformFacade facade) {
-    myFacade = facade;
-  }
-
   @Nullable
-  public Module findIdeModule(@NotNull ModuleData module, @NotNull Project ideProject) {
+  public static Module findIdeModule(@NotNull ModuleData module, @NotNull Project ideProject) {
     return findIdeModule(module.getInternalName(), ideProject);
   }
 
   @Nullable
-  public Module findIdeModule(@NotNull String ideModuleName, @NotNull Project ideProject) {
-    for (Module module : myFacade.getModules(ideProject)) {
-      if (ideModuleName.equals(module.getName())) {
-        return module;
-      }
-    }
-    return null;
+  public static Module findIdeModule(@NotNull String ideModuleName, @NotNull Project ideProject) {
+    return ModuleManager.getInstance(ideProject).findModuleByName(ideModuleName);
   }
 
   @Nullable
-  public Library findIdeLibrary(@NotNull final LibraryData libraryData, @NotNull Project ideProject) {
-    final LibraryTable libraryTable = myFacade.getProjectLibraryTable(ideProject);
+  public static Library findIdeLibrary(@NotNull final LibraryData libraryData, @NotNull Project ideProject) {
+    final LibraryTable libraryTable = ProjectLibraryTable.getInstance(ideProject);
     for (Library ideLibrary : libraryTable.getLibraries()) {
       if (ExternalSystemApiUtil.isRelated(ideLibrary, libraryData)) return ideLibrary;
     }
@@ -52,7 +41,7 @@ public class ProjectStructureHelper {
   }
 
   public static boolean isOrphanProjectLibrary(@NotNull final Library library,
-                                               @NotNull final Iterable<Module> ideModules) {
+                                               @NotNull final Module[] ideModules) {
     RootPolicy<Boolean> visitor = new RootPolicy<Boolean>() {
       @Override
       public Boolean visitLibraryOrderEntry(LibraryOrderEntry ideDependency, Boolean value) {
@@ -67,9 +56,8 @@ public class ProjectStructureHelper {
     return true;
   }
 
-  @SuppressWarnings("MethodMayBeStatic")
   @Nullable
-  public ModuleOrderEntry findIdeModuleDependency(@NotNull ModuleDependencyData dependency, @NotNull ModifiableRootModel model) {
+  public static ModuleOrderEntry findIdeModuleDependency(@NotNull ModuleDependencyData dependency, @NotNull ModifiableRootModel model) {
     for (OrderEntry entry : model.getOrderEntries()) {
       if (entry instanceof ModuleOrderEntry) {
         ModuleOrderEntry candidate = (ModuleOrderEntry)entry;

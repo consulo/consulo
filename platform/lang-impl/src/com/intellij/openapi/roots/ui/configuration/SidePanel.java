@@ -25,6 +25,7 @@ import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -52,6 +53,7 @@ public class SidePanel extends JPanel {
 
     myModel = new DefaultListModel();
     myList = new JBList(myModel);
+    myList.setBorder(new EmptyBorder(5, 0, 0, 0));
 
     final ListItemDescriptor descriptor = new ListItemDescriptor() {
       @Override
@@ -85,7 +87,7 @@ public class SidePanel extends JPanel {
     myList.setCellRenderer(new GroupedItemsListRenderer(descriptor));
 
 
-    add(ScrollPaneFactory.createScrollPane(myList), BorderLayout.CENTER);
+    add(ScrollPaneFactory.createScrollPane(myList, true), BorderLayout.CENTER);
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     myList.addListSelectionListener(new ListSelectionListener() {

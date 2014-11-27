@@ -100,10 +100,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     if (matchContext != null) {
       return true;
     }
-    if (myBaseDir != null && VfsUtilCore.isAncestor(myBaseDir, file, false)) {
-      return !ProjectRootManager.getInstance(myProject).getFileIndex().isIgnored(file);
-    }
-    return false;
+    return myBaseDir != null && VfsUtilCore.isAncestor(myBaseDir, file, false);
   }
 
   @Override

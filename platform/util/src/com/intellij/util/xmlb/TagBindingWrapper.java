@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 //todo: merge with option tag binding
 class TagBindingWrapper implements Binding {
@@ -36,45 +37,52 @@ class TagBindingWrapper implements Binding {
     myAttributeName = attributeName;
   }
 
-  public Object serialize(Object o, Object context, SerializationFilter filter) {
+  @Nullable
+  @Override
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Element e = new Element(myTagName);
-    Object n = binding.serialize(o, e, filter);
-
-    final String value = ((Content)n).getValue();
-
-    if (myAttributeName.length() != 0) {
-      e.setAttribute(myAttributeName, value);
+    Content content = (Content)binding.serialize(o, e, filter);
+    if (content != null) {
+      if (!myAttributeName.isEmpty()) {
+        e.setAttribute(myAttributeName, content.getValue());
+      }
+      else if (content instanceof Text) {
+        e.addContent(content);
+      }
+      else {
+        e.addContent(content.getValue());
+      }
     }
-    else {
-      e.addContent(new Text(value));
-    }
-
     return e;
   }
 
+  @Override
   public Object deserialize(Object context, @NotNull Object... nodes) {
     assert nodes.length == 1;
 
     Element e = (Element)nodes[0];
     final Object[] childNodes;
-    if (myAttributeName.length() != 0) {
+    if (!myAttributeName.isEmpty()) {
       childNodes = new Object[]{e.getAttribute(myAttributeName)};
     }
     else {
       childNodes = JDOMUtil.getContent(e);
     }
-  
+
     return binding.deserialize(context, childNodes);
   }
 
+  @Override
   public boolean isBoundTo(Object node) {
     return node instanceof Element && ((Element)node).getName().equals(myTagName);
   }
 
+  @Override
   public Class getBoundNodeType() {
     return Element.class;
   }
 
+  @Override
   public void init() {
   }
 }

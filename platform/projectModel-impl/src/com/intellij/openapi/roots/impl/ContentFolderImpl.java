@@ -40,7 +40,7 @@ import java.util.Map;
 /**
  * @author dsl
  */
-public class ContentFolderImpl extends RootModelComponentBase
+public class ContentFolderImpl extends BaseModuleRootLayerChild
   implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
   private static Map<Key, ContentFolderPropertyProvider> ourPropertiesToKeyCache = new HashMap<Key, ContentFolderPropertyProvider>();
 
@@ -65,7 +65,7 @@ public class ContentFolderImpl extends RootModelComponentBase
   ContentFolderImpl(@NotNull VirtualFile file,
                     @NotNull ContentFolderTypeProvider contentFolderType,
                     @NotNull ContentEntryImpl contentEntry) {
-    super(contentEntry.getRootModel());
+    super(contentEntry.getModuleRootLayer());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
     myFilePointer = VirtualFilePointerManager.getInstance().create(file, this, null);
@@ -75,7 +75,7 @@ public class ContentFolderImpl extends RootModelComponentBase
                     @NotNull ContentFolderTypeProvider contentFolderType,
                     @Nullable Map<Key, Object> map,
                     @NotNull ContentEntryImpl contentEntry) {
-    super(contentEntry.getRootModel());
+    super(contentEntry.getModuleRootLayer());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
     myProperties = map == null ? null : new HashMap<Key, Object>(map);
@@ -94,7 +94,7 @@ public class ContentFolderImpl extends RootModelComponentBase
                               @Nullable Map<Key, Object> properties,
                               @NotNull ContentFolderTypeProvider contentFolderType,
                               @NotNull ContentEntryImpl contentEntry) {
-    super(contentEntry.getRootModel());
+    super(contentEntry.getModuleRootLayer());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
     myProperties = properties == null ? null : new HashMap<Key, Object>(properties);

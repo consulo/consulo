@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,11 @@
 
 package com.intellij.util.indexing;
 
+import com.intellij.util.io.DataExternalizer;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,7 +31,7 @@ import java.util.List;
 public abstract class ValueContainer<Value> {
   interface IntIterator {
     boolean hasNext();
-    
+
     int next();
 
     int size();
@@ -35,15 +40,19 @@ public abstract class ValueContainer<Value> {
   abstract static class IntPredicate {
     abstract boolean contains(int id);
   }
-  
+
+  @NotNull
   public abstract IntIterator getInputIdsIterator(Value value);
 
   public abstract boolean isAssociated(Value value, int inputId);
 
+  @NotNull
   public abstract IntPredicate getValueAssociationPredicate(Value value);
 
+  @NotNull
   public abstract Iterator<Value> getValueIterator();
 
+  @NotNull
   public abstract List<Value> toValueList();
 
   public abstract int size();
@@ -53,7 +62,7 @@ public abstract class ValueContainer<Value> {
     boolean perform(int id, T value);
   }
 
-  public final boolean forEach(final ContainerAction<Value> action) {
+  public final boolean forEach(@NotNull ContainerAction<Value> action) {
     for (final Iterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext();) {
       final Value value = valueIterator.next();
       for (final IntIterator intIterator = getInputIdsIterator(value); intIterator.hasNext();) {
@@ -72,4 +81,6 @@ public abstract class ValueContainer<Value> {
   void setNeedsCompacting(boolean value) {
     myNeedsCompacting = value;
   }
+
+  public abstract void saveTo(DataOutput out, DataExternalizer<Value> externalizer) throws IOException;
 }

@@ -889,8 +889,10 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     public MySearchTextField() {
       super(false);
       getTextEditor().setOpaque(false);
-      getTextEditor().setUI((DarculaTextFieldUI)DarculaTextFieldUI.createUI(getTextEditor()));
-      getTextEditor().setBorder(new DarculaTextBorder());
+      if(!UIUtil.isUnderBuildInLaF()) {
+        getTextEditor().setUI((DarculaTextFieldUI)DarculaTextFieldUI.createUI(getTextEditor()));
+        getTextEditor().setBorder(new DarculaTextBorder());
+      }
 
       getTextEditor().putClientProperty("JTextField.Search.noBorderRing", Boolean.TRUE);
       if (UIUtil.isUnderDarcula()) {

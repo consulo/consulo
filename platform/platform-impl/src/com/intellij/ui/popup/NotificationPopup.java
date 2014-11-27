@@ -74,15 +74,15 @@ public class NotificationPopup {
       };
 
       final Balloon balloon = JBPopupFactory.getInstance().createBalloonBuilder(wrapper)
-        .setFadeoutTime(5000)
-        .setHideOnClickOutside(false)
-        .setHideOnFrameResize(false)
-        .setHideOnKeyOutside(false)
-        .setCloseButtonEnabled(true)
-        .setFillColor(backgroud)
-        .setShowCallout(false)
-        .setClickHandler(clickHandler, closeOnClick)
-        .createBalloon();
+              .setFadeoutTime(5000)
+              .setHideOnClickOutside(false)
+              .setHideOnFrameResize(false)
+              .setHideOnKeyOutside(false)
+              .setCloseButtonEnabled(true)
+              .setFillColor(backgroud)
+              .setShowCallout(false)
+              .setClickHandler(clickHandler, closeOnClick)
+              .createBalloon();
 
       BalloonLayout layout = frame.getBalloonLayout();
       assert layout != null;

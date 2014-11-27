@@ -20,8 +20,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="org.consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
-    <eapDescriptor implementation="com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction$NewModuleWizard" />
-    <eapDescriptor implementation="com.intellij.openapi.wm.impl.IdeMenuBar$UbuntuNativeMenuEAPDescriptor" />
+    <eapDescriptor implementation="org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup$EapDescriptor" />
 
     <applicationConfigurable instance="org.consulo.ide.eap.EarlyAccessProgramConfigurable" />
     <applicationService serviceImplementation="org.consulo.ide.eap.EarlyAccessProgramManager" />

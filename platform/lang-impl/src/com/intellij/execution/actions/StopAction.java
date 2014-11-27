@@ -93,7 +93,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
       }
 
       Pair<List<HandlerItem>, HandlerItem>
-        handlerItems = getItemsList(backgroundTasks, getActiveDescriptors(dataContext), activeProcessHandler);
+              handlerItems = getItemsList(backgroundTasks, getActiveDescriptors(dataContext), activeProcessHandler);
       if (handlerItems.first.isEmpty()) return;
 
       final JBList list = new JBList(handlerItems.first);
@@ -132,21 +132,21 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
 
       final PopupChooserBuilder builder = JBPopupFactory.getInstance().createListPopupBuilder(list);
       final JBPopup popup = builder
-        .setMovable(true)
-        .setTitle(handlerItems.first.size() == 1 ? "Confirm process stop" : "Stop process")
-        .setFilteringEnabled(new Function<Object, String>() {
-          @Override
-          public String fun(Object o) {
-            return ((HandlerItem)o).displayName;
-          }
-        })
-        .setItemChoosenCallback(new Runnable() {
-          @Override
-          public void run() {
-            HandlerItem item = (HandlerItem)list.getSelectedValue();
-            if (item != null) item.stop();
-          }
-        }).setRequestFocus(true).createPopup();
+              .setMovable(true)
+              .setTitle(handlerItems.first.size() == 1 ? "Confirm process stop" : "Stop process")
+              .setFilteringEnabled(new Function<Object, String>() {
+                @Override
+                public String fun(Object o) {
+                  return ((HandlerItem)o).displayName;
+                }
+              })
+              .setItemChoosenCallback(new Runnable() {
+                @Override
+                public void run() {
+                  HandlerItem item = (HandlerItem)list.getSelectedValue();
+                  if (item != null) item.stop();
+                }
+              }).setRequestFocus(true).createPopup();
 
       popup.showCenteredInCurrentWindow(e.getProject());
     }
@@ -220,7 +220,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
   }
 
   @Nullable
-  private static ProcessHandler getHandler(final DataContext dataContext) {
+  static ProcessHandler getHandler(final DataContext dataContext) {
     final RunContentDescriptor contentDescriptor = RunContentManager.RUN_CONTENT_DESCRIPTOR.getData(dataContext);
     final ProcessHandler processHandler;
     if (contentDescriptor != null) {
@@ -231,7 +231,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
       // main menu toolbar
       final Project project = CommonDataKeys.PROJECT.getData(dataContext);
       final RunContentDescriptor selectedContent =
-        project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
+              project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
       processHandler = selectedContent == null ? null : selectedContent.getProcessHandler();
     }
     return processHandler;

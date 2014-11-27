@@ -19,6 +19,8 @@ import com.google.common.base.Predicate;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.*;
@@ -270,7 +272,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                                 NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, T[]> funForSources,
                                 NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, T[]> funForRuntime) {
 
-    if (type.equals(OrderRootType.SOURCES)) {
+    if (type.equals(SourcesOrderRootType.getInstance())) {
       if (includeProduction) {
         for (ContentEntry entry : rootModel.getContentEntries()) {
           Collections.addAll(result, funForSources
@@ -283,7 +285,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         }
       }
     }
-    else if (type.equals(OrderRootType.CLASSES)) {
+    else if (type.equals(BinariesOrderRootType.getInstance())) {
       if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
         if (includeTests && includeProduction) {
           Collections.addAll(result, funForRuntime.fun(rootModel, ContentFolderScopes.productionAndTest()));

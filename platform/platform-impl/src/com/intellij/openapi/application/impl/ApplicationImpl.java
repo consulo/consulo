@@ -856,7 +856,7 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
     }
 
     int exitCode = 0;
-    if (restart) {
+    if (restart && Restarter.isSupported()) {
       try {
         exitCode = Restarter.scheduleRestart();
       }
@@ -1505,17 +1505,6 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
   @Override
   public boolean isRestartCapable() {
     return Restarter.isSupported();
-  }
-
-  public boolean isSaving() {
-    if (getStateStore().isSaving()) return true;
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-    for (Project openProject : openProjects) {
-      ProjectEx project = (ProjectEx)openProject;
-      if (project.getStateStore().isSaving()) return true;
-    }
-
-    return false;
   }
 
   @Override

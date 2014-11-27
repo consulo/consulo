@@ -41,7 +41,7 @@ public class CompilerServerConnectorImpl extends CompilerServerConnector impleme
 
   @Override
   public void initComponent() {
-    tryToConnect();
+    //tryToConnect();
   }
 
   private void tryToConnect() {
@@ -60,10 +60,10 @@ public class CompilerServerConnectorImpl extends CompilerServerConnector impleme
 
             myServerInterface.notify(true);
 
-            CompilerServerConnectorImpl.LOGGER.info("Success connected to compiler server");
+            LOGGER.info("Success connected to compiler server");
           }
           catch (Exception e) {
-            CompilerServerConnectorImpl.LOGGER.debug(e);
+            LOGGER.debug(e);
             try {
               Thread.sleep(5000L);
 

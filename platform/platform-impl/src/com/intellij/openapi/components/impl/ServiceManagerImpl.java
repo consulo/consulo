@@ -25,15 +25,17 @@ import com.intellij.openapi.extensions.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.util.PairProcessor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.pico.AssignableToComponentAdapter;
+import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.picocontainer.*;
-import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @Logger
@@ -57,8 +59,6 @@ public class ServiceManagerImpl implements BaseComponent {
   protected void installEP(final ExtensionPointName<ServiceDescriptor> pointName, final ComponentManager componentManager) {
     myExtensionPointName = pointName;
     final ExtensionPoint<ServiceDescriptor> extensionPoint = Extensions.getArea(null).getExtensionPoint(pointName);
-    assert extensionPoint != null;
-
     final MutablePicoContainer picoContainer = (MutablePicoContainer)componentManager.getPicoContainer();
 
     myExtensionPointListener = new ExtensionPointListener<ServiceDescriptor>() {
@@ -66,12 +66,9 @@ public class ServiceManagerImpl implements BaseComponent {
       public void extensionAdded(@NotNull final ServiceDescriptor descriptor, final PluginDescriptor pluginDescriptor) {
         if (descriptor.overrides) {
           ComponentAdapter oldAdapter =
-            picoContainer.unregisterComponent(descriptor.getInterface());// Allow to re-define service implementations in plugins.
+                  picoContainer.unregisterComponent(descriptor.getInterface());// Allow to re-define service implementations in plugins.
           if (oldAdapter == null) {
             throw new RuntimeException("Service: " + descriptor.getInterface() + " doesn't override anything");
-          }
-          else {
-            LOGGER.warn("`overrides` attribute ill later deleted. Require api change. Interface: " + descriptor.getInterface());
           }
         }
 
@@ -91,6 +88,40 @@ public class ServiceManagerImpl implements BaseComponent {
     return Arrays.asList(extensions);
   }
 
+  public static void processAllImplementationClasses(@NotNull ComponentManager componentManager, @NotNull PairProcessor<Class<?>, PluginDescriptor> processor) {
+    Collection adapters = componentManager.getPicoContainer().getComponentAdapters();
+    if (adapters.isEmpty()) {
+      return;
+    }
+
+    for (Object o : adapters) {
+      if (o instanceof MyComponentAdapter) {
+        MyComponentAdapter adapter = (MyComponentAdapter)o;
+        PluginDescriptor pluginDescriptor = adapter.myPluginDescriptor;
+        Class aClass;
+        try {
+          ComponentAdapter delegate = adapter.myDelegate;
+          // avoid delegation creation & class initialization
+          if (delegate == null) {
+            ClassLoader classLoader = pluginDescriptor == null ? ServiceManagerImpl.class.getClassLoader() : pluginDescriptor.getPluginClassLoader();
+            aClass = Class.forName(adapter.myDescriptor.getImplementation(), false, classLoader);
+          }
+          else {
+            aClass = delegate.getComponentImplementation();
+          }
+        }
+        catch (Throwable e) {
+          LOGGER.error(e);
+          continue;
+        }
+
+        if (!processor.process(aClass, pluginDescriptor)) {
+          break;
+        }
+      }
+    }
+  }
+
   @Override
   @NonNls
   @NotNull
@@ -105,7 +136,6 @@ public class ServiceManagerImpl implements BaseComponent {
   @Override
   public void disposeComponent() {
     final ExtensionPoint<ServiceDescriptor> extensionPoint = Extensions.getArea(null).getExtensionPoint(myExtensionPointName);
-    assert extensionPoint != null;
     extensionPoint.removeExtensionPointListener(myExtensionPointListener);
   }
 
@@ -124,7 +154,7 @@ public class ServiceManagerImpl implements BaseComponent {
     }
 
     @Override
-    public Object getComponentKey() {
+    public String getComponentKey() {
       return myDescriptor.getInterface();
     }
 
@@ -183,7 +213,7 @@ public class ServiceManagerImpl implements BaseComponent {
     private synchronized ComponentAdapter getDelegate() {
       if (myDelegate == null) {
         myDelegate = new CachingComponentAdapter(new ConstructorInjectionComponentAdapter(getComponentKey(), loadClass(
-          myDescriptor.getImplementation()), null, true));
+                myDescriptor.getImplementation()), null, true));
       }
 
       return myDelegate;
@@ -207,6 +237,11 @@ public class ServiceManagerImpl implements BaseComponent {
     @Override
     public String getAssignableToClassName() {
       return myDescriptor.getInterface();
+    }
+
+    @Override
+    public String toString() {
+      return "ServiceComponentAdapter[" + myDescriptor.getInterface() + "]: implementation=" + myDescriptor.getImplementation() + ", plugin=" + myPluginDescriptor;
     }
   }
 }

@@ -28,6 +28,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
@@ -155,7 +156,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   public <T extends XDebuggerSettings<?>> T getDebuggerSettings(Class<T> aClass) {
-    return XDebuggerSettingsManager.getInstance().getSettings(aClass);
+    return XDebuggerSettingsManager.getInstanceImpl().getSettings(aClass);
   }
 
   @Override
@@ -365,5 +366,9 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
   @Override
   public XExpression createExpression(@NotNull String text, Language language, String custom, EvaluationMode mode) {
     return new XExpressionImpl(text, language, custom, mode);
+  }
+
+  public static boolean isEmptyExpression(@Nullable XExpression expression) {
+    return expression == null || StringUtil.isEmptyOrSpaces(expression.getExpression());
   }
 }

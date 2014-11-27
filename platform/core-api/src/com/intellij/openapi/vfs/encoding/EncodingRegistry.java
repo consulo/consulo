@@ -32,6 +32,7 @@ public abstract class EncodingRegistry {
   public static Getter<EncodingRegistry> ourInstanceGetter;
 
   public abstract boolean isNative2Ascii(@NotNull VirtualFile virtualFile);
+  public abstract boolean isNative2AsciiForPropertiesFiles();
 
   /**
    * @return name of default charset configured in Settings|File Encodings|IDE encoding

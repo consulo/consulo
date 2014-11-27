@@ -15,8 +15,11 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
-import com.intellij.openapi.roots.ModifiableRootModel;
-import org.consulo.module.extension.MutableModuleExtension;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModuleRootLayer;
+import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
+import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,15 +29,21 @@ import javax.swing.*;
  * @author VISTALL
  * @since 19.03.14
  */
-public class SandMutableModuleExtension extends SandModuleExtension implements MutableModuleExtension<SandModuleExtension> {
-  public SandMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel) {
+public class SandMutableModuleExtension extends SandModuleExtension implements MutableModuleExtensionWithSdk<SandModuleExtension> {
+  public SandMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
     super(id, rootModel);
+  }
+
+  @NotNull
+  @Override
+  public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
+    return (MutableModuleInheritableNamedPointer<Sdk>)super.getInheritableSdk();
   }
 
   @Nullable
   @Override
   public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
-    return null;
+    return wrapToNorth(new ModuleExtensionWithSdkPanel(this, updateOnCheck));
   }
 
   @Override

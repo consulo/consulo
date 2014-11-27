@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 /**
 * @author nik
 */
-class XValueTextRendererImpl extends XValueTextRendererBase {
+public class XValueTextRendererImpl extends XValueTextRendererBase {
   private final ColoredTextContainer myText;
 
   public XValueTextRendererImpl(ColoredTextContainer text) {
@@ -53,6 +53,11 @@ class XValueTextRendererImpl extends XValueTextRendererBase {
     myText.append(String.valueOf(quoteChar), attributes);
     XValuePresentationUtil.renderValue(value, myText, attributes, maxLength, additionalSpecialCharsToHighlight);
     myText.append(String.valueOf(quoteChar), attributes);
+  }
+
+  @Override
+  public void renderError(@NotNull String error) {
+    myText.append(error, SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
   @Override

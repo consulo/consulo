@@ -55,8 +55,11 @@ import java.util.*;
 @State(
   name = "HttpConfigurable",
   storages = {
-    @Storage( file = StoragePathMacros.APP_CONFIG + "/other.xml")
-  }
+    // we use two storages due to backward compatibility, see http://crucible.labs.intellij.net/cru/CR-IC-5142
+    @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"),
+    @Storage(file = StoragePathMacros.APP_CONFIG + "/proxy.settings.xml")
+  },
+  storageChooser = LastStorageChooserForWrite.class
 )
 public class HttpConfigurable implements PersistentStateComponent<HttpConfigurable>, ApplicationComponent, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.net.HttpConfigurable");

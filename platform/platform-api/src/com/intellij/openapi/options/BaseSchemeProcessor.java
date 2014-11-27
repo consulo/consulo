@@ -15,17 +15,19 @@
  */
 package com.intellij.openapi.options;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author yole
  */
 public abstract class BaseSchemeProcessor<T extends ExternalizableScheme> implements SchemeProcessor<T> {
-  public void initScheme(T scheme) {
+  public void initScheme(@NotNull T scheme) {
   }
 
-  public void onSchemeAdded(final T scheme) {
+  public void onSchemeAdded(@NotNull final T scheme) {
   }
 
-  public void onSchemeDeleted(final T scheme) {
+  public void onSchemeDeleted(@NotNull final T scheme) {
   }
 
   public void onCurrentSchemeChanged(final T newCurrentScheme) {

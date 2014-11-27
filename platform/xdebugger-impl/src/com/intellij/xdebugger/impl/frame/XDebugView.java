@@ -15,14 +15,66 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
+import com.intellij.execution.ui.layout.ViewContext;
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.ui.content.ContentManager;
+import com.intellij.util.SingleAlarm;
+import com.intellij.xdebugger.XDebugSession;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
+import java.util.EventObject;
 
 /**
  * @author nik
  */
-public interface XDebugView extends Disposable {
-  enum SessionEvent {PAUSED, BEFORE_RESUME, RESUMED, STOPPED, FRAME_CHANGED, SETTINGS_CHANGED}
+public abstract class XDebugView implements Disposable {
+  public enum SessionEvent {PAUSED, BEFORE_RESUME, RESUMED, STOPPED, FRAME_CHANGED, SETTINGS_CHANGED}
 
-  void processSessionEvent(@NotNull SessionEvent event);
+  private final SingleAlarm myClearAlarm;
+  private static final int VIEW_CLEAR_DELAY = 100; //ms
+
+  public XDebugView() {
+    myClearAlarm = new SingleAlarm(new Runnable() {
+      @Override
+      public void run() {
+        clear();
+      }
+    }, VIEW_CLEAR_DELAY, this);
+  }
+
+  protected final void requestClear() {
+    myClearAlarm.cancelAndRequest();
+  }
+
+  protected final void cancelClear() {
+    myClearAlarm.cancel();
+  }
+
+  protected abstract void clear();
+
+  public abstract void processSessionEvent(@NotNull SessionEvent event);
+
+  @Nullable
+  protected static XDebugSession getSession(@NotNull EventObject e) {
+    Component component = e.getSource() instanceof Component ? (Component)e.getSource() : null;
+    return component == null ? null : getSession(component);
+  }
+
+  @Nullable
+  public static XDebugSession getSession(@NotNull Component component) {
+    DataContext dataContext = DataManager.getInstance().getDataContext(component);
+    ViewContext viewContext = ViewContext.CONTEXT_KEY.getData(dataContext);
+    ContentManager contentManager = viewContext == null ? null : viewContext.getContentManager();
+    if (contentManager != null) {
+      XDebugSession session = XDebugSession.DATA_KEY.getData(DataManager.getInstance().getDataContext(contentManager.getComponent()));
+      if (session != null) {
+        return session;
+      }
+    }
+    return XDebugSession.DATA_KEY.getData(dataContext);
+  }
 }

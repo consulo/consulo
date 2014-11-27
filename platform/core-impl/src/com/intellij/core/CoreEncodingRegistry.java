@@ -33,6 +33,11 @@ public class CoreEncodingRegistry extends EncodingRegistry {
   }
 
   @Override
+  public boolean isNative2AsciiForPropertiesFiles() {
+    return false;
+  }
+
+  @Override
   public Charset getDefaultCharset() {
     return CharsetToolkit.getDefaultSystemCharset();
   }

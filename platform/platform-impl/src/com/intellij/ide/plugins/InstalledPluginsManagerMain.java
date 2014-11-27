@@ -199,7 +199,6 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   protected JScrollPane createTable() {
     pluginsModel = new InstalledPluginsTableModel();
     pluginTable = new PluginTable(pluginsModel);
-    pluginTable.setTableHeader(null);
 
     JScrollPane installedScrollPane = ScrollPaneFactory
             .createScrollPane(pluginTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -248,7 +247,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     }
     else {
       actionGroup.add(new RefreshAction());
-      actionGroup.addAction(new SortByStatusAction("Sort by Status"));
+      actionGroup.addAction(createSortersGroup());
       actionGroup.add(AnSeparator.getInstance());
       actionGroup.add(new ActionInstallPlugin(getAvailable(), getInstalled()));
       actionGroup.add(new UninstallPluginAction(this, pluginTable));

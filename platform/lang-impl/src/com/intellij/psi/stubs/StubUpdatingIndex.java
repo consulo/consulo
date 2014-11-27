@@ -88,7 +88,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
         if (((IStubFileElementType)elementType).shouldBuildStubFor(file)) {
           return true;
         }
-        if (IndexingStamp.isFileIndexed(file, INDEX_ID, IndexInfrastructure.getIndexCreationStamp(INDEX_ID))) {
+        if (IndexingStamp.isFileIndexedStateCurrent(file, INDEX_ID)) {
           return true;
         }
       }
@@ -229,7 +229,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
   @NotNull
   @Override
   public UpdatableIndex<Integer, SerializedStubTree, FileContent> createIndexImplementation(@NotNull final ID<Integer, SerializedStubTree> indexId, @NotNull final FileBasedIndex owner, @NotNull IndexStorage<Integer, SerializedStubTree> storage)
-          throws StorageException {
+          throws StorageException, IOException {
     if (storage instanceof MemoryIndexStorage) {
       final MemoryIndexStorage<Integer, SerializedStubTree> memStorage = (MemoryIndexStorage<Integer, SerializedStubTree>)storage;
       memStorage.addBufferingStateListener(new MemoryIndexStorage.BufferingStateListener() {
@@ -275,7 +275,8 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
   private class MyIndex extends MapReduceIndex<Integer, SerializedStubTree, FileContent> {
     private StubIndexImpl myStubIndex;
 
-    public MyIndex(final ID<Integer, SerializedStubTree> indexId, final IndexStorage<Integer, SerializedStubTree> storage, final DataIndexer<Integer, SerializedStubTree, FileContent> indexer) throws StorageException {
+    public MyIndex(final ID<Integer, SerializedStubTree> indexId, final IndexStorage<Integer, SerializedStubTree> storage, final DataIndexer<Integer, SerializedStubTree, FileContent> indexer)
+            throws StorageException, IOException {
       super(indexId, indexer, storage);
       checkNameStorage();
     }
@@ -295,7 +296,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
 
     @Override
     protected void updateWithMap(final int inputId,
-                                 @NotNull final Map<Integer, SerializedStubTree> newData,
+                                 int savedInputId, @NotNull final Map<Integer, SerializedStubTree> newData,
                                  @NotNull NotNullComputable<Collection<Integer>> oldKeysGetter)
             throws StorageException {
 
@@ -329,7 +330,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
             throw new StorageException(e);
           }
 
-          super.updateWithMap(inputId, newData, oldKeysGetter);
+          super.updateWithMap(inputId, savedInputId, newData, oldKeysGetter);
 
           updateStubIndices(getAffectedIndices(oldStubTree, newStubTree), inputId, oldStubTree, newStubTree);
         }

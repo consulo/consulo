@@ -226,13 +226,13 @@ public class CompilerServerManagingFSImpl extends PersistentFS {
   @Nullable
   @Override
   public DataInputStream readAttribute(@NotNull VirtualFile file, @NotNull FileAttribute att) {
-    throw new UnsupportedOperationException();
+    return new DataInputStream(new ByteArrayInputStream(new byte[100]));
   }
 
   @NotNull
   @Override
   public DataOutputStream writeAttribute(@NotNull VirtualFile file, @NotNull FileAttribute att) {
-    throw new UnsupportedOperationException();
+    return new DataOutputStream(new ByteArrayOutputStream(100));
   }
 
   @Override

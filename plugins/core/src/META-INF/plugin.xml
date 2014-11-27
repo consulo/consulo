@@ -2,19 +2,54 @@
   <id>com.intellij</id>
   <name>IDEA CORE</name>
 
-  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/ProjectComponents.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/ApplicationComponents.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/ModuleComponents.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/ExternalSystems.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/RemoteServers.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/Bundled.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/ProjectComponents.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/ApplicationComponents.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/ModuleComponents.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/ExternalSystems.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/RemoteServers.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/Bundled.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/PostfixTemplates.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/Coverage.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="/META-INF/XDebugger.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
 
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP"/>
@@ -22,10 +57,9 @@
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
-    <extensionPoint name="sdkResolveScopeProvider" interface="com.intellij.psi.SdkResolveScopeProvider"/>
     <extensionPoint name="contentFolderTypeProvider" interface="org.mustbe.consulo.roots.ContentFolderTypeProvider"/>
     <extensionPoint name="contentFolderPropertyProvider" interface="org.mustbe.consulo.roots.ContentFolderPropertyProvider"/>
-    <extensionPoint name="contentFolderSupportPatcher" interface="org.mustbe.consulo.roots.ContentFolderSupportPatcher" />
+    <extensionPoint name="contentFolderSupportPatcher" interface="org.mustbe.consulo.roots.ContentFolderSupportPatcher"/>
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="projectModelProcessor" interface="org.consulo.projectImport.ProjectModelProcessor"/>
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
@@ -50,6 +84,10 @@
     <extensionPoint name="applicationConfigurable"
                     beanClass="com.intellij.openapi.options.ConfigurableEP">
       <with attribute="instanceClass" implements="com.intellij.openapi.options.Configurable"/>
+    </extensionPoint>
+
+    <extensionPoint name="generalCodeStyleOptionsProvider" beanClass="com.intellij.application.options.GeneralCodeStyleOptionsProviderEP">
+      <with attribute="instance" implements="com.intellij.application.options.GeneralCodeStyleOptionsProvider"/>
     </extensionPoint>
 
     <extensionPoint name="selectInTarget"
@@ -119,14 +157,6 @@
       <with attribute="handlerClass" implements="com.intellij.codeInsight.highlighting.TooltipLinkHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="directoryProjectConfigurator"
-                    interface="com.intellij.platform.DirectoryProjectConfigurator"/>
-    <extensionPoint name="directoryProjectGenerator"
-                    interface="com.intellij.platform.DirectoryProjectGenerator"/>
-
-    <extensionPoint name="projectTemplatesFactory"
-                    interface="com.intellij.platform.ProjectTemplatesFactory"/>
-
     <extensionPoint name="applicationLoadListener" interface="com.intellij.ide.ApplicationLoadListener"/>
 
     <extensionPoint name="editorTabTitleProvider" interface="com.intellij.openapi.fileEditor.impl.EditorTabTitleProvider"/>
@@ -151,10 +181,6 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.actionSystem.TypedActionHandler"/>
     </extensionPoint>
     <extensionPoint name="contentBasedClassFileProcessor" interface="com.intellij.openapi.fileTypes.ContentBasedClassFileProcessor"/>
-
-    <extensionPoint name="browserSettingsProvider" beanClass="com.intellij.ide.BrowserSettingsProviderEP">
-      <with attribute="instance" implements="com.intellij.ide.BrowserSettingsProvider"/>
-    </extensionPoint>
 
     <extensionPoint name="toolWindow" beanClass="com.intellij.openapi.wm.ToolWindowEP">
       <with attribute="factoryClass" implements="com.intellij.openapi.wm.ToolWindowFactory"/>
@@ -203,8 +229,6 @@
 
     <extensionPoint name="fileTypeDetector" interface="com.intellij.openapi.fileTypes.FileTypeRegistry$FileTypeDetector"/>
 
-    <extensionPoint name="projectAttachProcessor" interface="com.intellij.projectImport.ProjectAttachProcessor"/>
-
     <extensionPoint name="pathMacroFilter" interface="com.intellij.openapi.application.PathMacroFilter"/>
     <extensionPoint name="pathMacroExpendableProtocol" beanClass="com.intellij.application.options.PathMacroExpendableProtocolBean"/>
 
@@ -247,10 +271,6 @@
 
     <extensionPoint name="vcsRootChecker" interface="com.intellij.openapi.vcs.VcsRootChecker"/>
 
-    <!--<extensionPoint name="writingAccessProvider"-->
-    <!--interface="com.intellij.openapi.vfs.WritingAccessProvider"-->
-    <!--area="CONSULO_PROJECT"/>-->
-
     <extensionPoint name="vcs.fileStatusProvider"
                     interface="com.intellij.openapi.vcs.impl.FileStatusProvider"
                     area="CONSULO_PROJECT"/>
@@ -273,7 +293,7 @@
                     interface="com.intellij.compiler.impl.AdditionalCompileScopeProvider"/>
 
     <extensionPoint name="compiler.translatingHelper"
-                    interface="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorHelper" />
+                    interface="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorHelper"/>
 
     <extensionPoint name="compiler.resourceCompilerExtension"
                     interface="com.intellij.compiler.impl.resourceCompiler.ResourceCompilerExtension"/>
@@ -310,12 +330,7 @@
     <extensionPoint name="errorOptionsProvider" beanClass="com.intellij.profile.codeInspection.ui.ErrorOptionsProviderEP">
       <with attribute="instance" implements="com.intellij.profile.codeInspection.ui.ErrorOptionsProvider"/>
     </extensionPoint>
-    <extensionPoint name="codeFoldingOptionsProvider" beanClass="com.intellij.application.options.editor.CodeFoldingOptionsProviderEP">
-      <with attribute="instance" implements="com.intellij.application.options.editor.CodeFoldingOptionsProvider"/>
-    </extensionPoint>
-    <extensionPoint name="autoImportOptionsProvider" beanClass="com.intellij.application.options.editor.AutoImportOptionsProviderEP">
-      <with attribute="instance" implements="com.intellij.application.options.editor.AutoImportOptionsProvider"/>
-    </extensionPoint>
+
     <extensionPoint name="moduleService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
 
 
@@ -390,10 +405,6 @@
     <extensionPoint name="templateParameterTraversalPolicy"
                     interface="com.intellij.codeInsight.completion.TemplateParameterTraversalPolicy"/>
 
-    <!-- com.intellij.psi.PsiElement -->
-    <extensionPoint name="cantBeStatic"
-                    interface="com.intellij.openapi.util.Condition"/>
-
     <extensionPoint name="daemon.changeLocalityDetector"
                     interface="com.intellij.codeInsight.daemon.ChangeLocalityDetector"/>
 
@@ -447,6 +458,11 @@
     <extensionPoint name="lang.commenter"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.Commenter"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.inspectionSuppressor"
+                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.codeInspection.InspectionSuppressor"/>
     </extensionPoint>
 
     <extensionPoint name="lang.braceMatcher"
@@ -556,7 +572,6 @@
 
     <extensionPoint name="gotoRelatedProvider" interface="com.intellij.navigation.GotoRelatedProvider"/>
 
-    <extensionPoint name="projectExtension" interface="com.intellij.openapi.roots.ProjectExtension" area="CONSULO_PROJECT"/>
     <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="CONSULO_PROJECT"/>
 
     <extensionPoint name="moduleExtensionProvider" beanClass="org.consulo.module.extension.ModuleExtensionProviderEP">
@@ -565,6 +580,7 @@
     </extensionPoint>
 
     <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
+    <extensionPoint name="orderEntryTypeProvider" interface="org.mustbe.consulo.roots.OrderEntryTypeProvider"/>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
     <extensionPoint name="directoryIndexExcludePolicy" interface="com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy"
                     area="CONSULO_PROJECT"/>
@@ -702,11 +718,6 @@
     <extensionPoint name="executionTargetProvider"
                     interface="com.intellij.execution.ExecutionTargetProvider"/>
 
-    <extensionPoint name="runConfigurationExtension"
-                    interface="com.intellij.execution.RunConfigurationExtension"/>
-
-    <extensionPoint name="jreProvider"
-                    interface="com.intellij.execution.ui.JreProvider"/>
 
     <extensionPoint name="stepsBeforeRunProvider"
                     interface="com.intellij.execution.BeforeRunTaskProvider"
@@ -841,15 +852,14 @@
       <with attribute="implementationClass" implements="com.intellij.lang.parameterInfo.ParameterInfoHandler"/>
     </extensionPoint>
 
+    <extensionPoint name="codeInsight.containerProvider" interface="com.intellij.codeInsight.ContainerProvider"/>
+
     <extensionPoint name="codeInsight.fillParagraph" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.fillParagraph.ParagraphFillHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="editorOptionsProvider" beanClass="com.intellij.application.options.editor.EditorOptionsProviderEP">
-      <with attribute="instance" implements="com.intellij.application.options.editor.EditorOptionsProvider"/>
-    </extensionPoint>
-
     <extensionPoint name="fileTypeIndentOptionsProvider" interface="com.intellij.psi.codeStyle.FileTypeIndentOptionsProvider"/>
+    <extensionPoint name="fileIndentOptionsProvider" interface="com.intellij.psi.codeStyle.FileIndentOptionsProvider"/>
     <extensionPoint name="referenceImporter" interface="com.intellij.codeInsight.daemon.ReferenceImporter"/>
     <extensionPoint name="elementLookupRenderer" interface="com.intellij.codeInsight.lookup.impl.ElementLookupRenderer"/>
 
@@ -922,10 +932,7 @@
       <with attribute="builderClass" implements="com.intellij.ide.util.projectWizard.ModuleBuilder"/>
     </extensionPoint>
 
-    <extensionPoint name="projectTemplateParameterFactory"
-                    interface="com.intellij.ide.util.projectWizard.ProjectTemplateParameterFactory"/>
-    <extensionPoint name="projectTemplateFileProcessor"
-                    interface="com.intellij.ide.util.projectWizard.ProjectTemplateFileProcessor"/>
+    <extensionPoint name="newModuleBuilder" interface="org.mustbe.consulo.ide.impl.NewModuleBuilder"/>
 
     <extensionPoint name="methodNavigationOffsetProvider"
                     interface="com.intellij.codeInsight.navigation.MethodNavigationOffsetProvider"/>
@@ -962,12 +969,6 @@
     <extensionPoint name="editorAppearanceConfigurable" beanClass="com.intellij.application.options.editor.EditorAppearanceConfigurableEP">
       <with attribute="instance" implements="com.intellij.application.options.editor.EditorAppearanceConfigurable"/>
     </extensionPoint>
-
-    <extensionPoint name="editorSmartKeysConfigurable" beanClass="com.intellij.application.options.editor.EditorSmartKeysConfigurableEP">
-      <with attribute="instance" implements="com.intellij.application.options.editor.EditorSmartKeysConfigurable"/>
-    </extensionPoint>
-
-    <extensionPoint name="optionsApplicabilityFilter" interface="com.intellij.application.options.OptionsApplicabilityFilter"/>
 
     <extensionPoint name="metaDataContributor" interface="com.intellij.psi.meta.MetaDataContributor"/>
 
@@ -1017,7 +1018,7 @@
                     area="CONSULO_PROJECT"/>
 
     <extensionPoint name="previewHintProvider" interface="com.intellij.codeInsight.preview.PreviewHintProvider"/>
-    <extensionPoint name="elementPreviewProvider" interface="com.intellij.codeInsight.preview.ElementPreviewProvider" />
+    <extensionPoint name="elementPreviewProvider" interface="com.intellij.codeInsight.preview.ElementPreviewProvider"/>
     <extensionPoint name="testActionProvider" interface="com.intellij.execution.testframework.ToggleModelActionProvider"/>
 
     <extensionPoint name="psiViewerExtension" interface="com.intellij.internal.psiView.PsiViewerExtension"/>
@@ -1079,9 +1080,7 @@
     <extensionPoint name="defaultHighlightingSettingProvider"
                     interface="com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider"/>
 
-    <extensionPoint name="xdebugger.settings" interface="com.intellij.xdebugger.settings.XDebuggerSettings"/>
-    <extensionPoint name="xdebugger.breakpointType" interface="com.intellij.xdebugger.breakpoints.XBreakpointType"/>
-    <extensionPoint name="xdebugger.debuggerSupport" interface="com.intellij.xdebugger.impl.DebuggerSupport"/>
+
     <extensionPoint name="testFramework" interface="com.intellij.testIntegration.TestFramework"/>
     <extensionPoint name="unusedDeclarationFixProvider"
                     interface="com.intellij.codeInspection.reference.UnusedDeclarationFixProvider"/>
@@ -1089,6 +1088,13 @@
     <extensionPoint name="library.dependencyScopeSuggester" interface="com.intellij.openapi.roots.LibraryDependencyScopeSuggester"/>
 
     <extensionPoint name="eventLogCategory" interface="com.intellij.notification.EventLogCategory"/>
+
+    <extensionPoint name="urlOpener" interface="com.intellij.ide.browsers.UrlOpener"/>
+
+    <extensionPoint name="editor.linePainter" interface="com.intellij.openapi.editor.EditorLinePainter"/>
+
+    <extensionPoint name="addModuleDependencyTabFactory"
+                    interface="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -1097,7 +1103,7 @@
     <appStarter implementation="com.intellij.openapi.diff.MergeApplication"/>
 
     <applicationService serviceInterface="com.intellij.openapi.application.ApplicationInfo"
-                        serviceImplementation="com.intellij.openapi.application.impl.ApplicationInfoImpl" />
+                        serviceImplementation="com.intellij.openapi.application.impl.ApplicationInfoImpl"/>
 
     <applicationService serviceInterface="com.intellij.ide.util.PropertiesComponent"
                         serviceImplementation="com.intellij.ide.util.AppPropertiesComponentImpl"/>
@@ -1156,6 +1162,9 @@
                         serviceImplementation="com.intellij.ide.ui.search.SearchableOptionsRegistrarImpl"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.options.ex.IdeConfigurablesGroup"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.editor.EditorCopyPasteHelper"
+                        serviceImplementation="com.intellij.openapi.editor.impl.EditorCopyPasteHelperImpl"/>
 
     <applicationService serviceInterface="com.intellij.diagnostic.ErrorReportConfigurable"
                         serviceImplementation="com.intellij.diagnostic.ErrorReportConfigurable"/>
@@ -1309,10 +1318,6 @@
     <!-- Customizations -->
     <applicationConfigurable instance="com.intellij.ide.ui.customization.CustomizationConfigurable" id="preferences.customizations"
                              key="title.customizations" bundle="messages.IdeBundle"/>
-
-    <!-- Web Browser -->
-    <applicationConfigurable instance="com.intellij.ide.BrowserSettings" id="reference.settings.ide.settings.web.browsers"
-                             key="browsers.settings" bundle="messages.IdeBundle"/>
 
     <!-- Notifications -->
     <applicationConfigurable instance="com.intellij.notification.impl.NotificationsConfigurable"/>
@@ -1518,8 +1523,6 @@
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.GlobalLibrariesConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
-    <projectService serviceInterface="com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper"
-                    serviceImplementation="com.intellij.ide.projectView.impl.DefaultProjectViewDirectoryHelper"/>
 
     <!-- Compiler -->
     <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler"
@@ -1551,38 +1554,36 @@
     <codeStyleSettingsProvider implementation="com.intellij.application.options.CommonCodeStyleSettingsProvider"/>
 
     <!-- new project wizard -->
-    <wizardMode implementation="com.intellij.ide.util.newProjectWizard.modes.CreateFromTemplateMode" id="CreateFromTemplateMode"
-                order="after CreateFromScratchMode"/>
+
     <wizardMode implementation="com.intellij.ide.util.newProjectWizard.modes.ImportMode" order="before ImportImlMode"/>
     <wizardMode implementation="com.intellij.ide.util.newProjectWizard.modes.ImportImlMode" id="ImportImlMode"/>
 
     <projectImportProvider implementation="com.intellij.ide.util.projectWizard.ImportFromSourcesProvider"/>
-
-    <projectTemplatesFactory implementation="com.intellij.platform.templates.ArchivedTemplatesFactory"/>
-    <!--
-    <projectTemplatesFactory implementation="com.intellij.platform.templates.RemoteTemplatesFactory"/>
-    -->
-    <projectTemplatesFactory implementation="com.intellij.platform.templates.PlainModuleTemplatesFactory"/>
-    <!--
-    <projectTemplateFileProcessor implementation="com.intellij.platform.templates.SystemFileProcessor"/>
-    -->
 
     <applicationService serviceImplementation="com.intellij.ide.util.newProjectWizard.SelectTemplateSettings"/>
 
     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 
 
-    <orderRootTypeEditor key="DOCUMENTATION"
-                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
-    <orderRootTypeEditor key="CLASSES"
-                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
-    <orderRootTypeEditor key="SOURCES"
+    <orderRootType implementation="com.intellij.openapi.roots.types.BinariesOrderRootType"/>
+    <orderRootTypeEditor key="binaries"
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.BinariesOrderRootTypeUIFactory"/>
+
+    <orderRootType implementation="com.intellij.openapi.roots.types.SourcesOrderRootType"/>
+    <orderRootTypeEditor key="sources"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
-    <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
-    <!--TODO [VISTALL] <statistics.usagesCollector implementation="com.intellij.compiler.CompilerSettingsUsageCollector"/>    -->
+    <orderRootType implementation="com.intellij.openapi.roots.types.DocumentationOrderRootType"/>
+    <orderRootTypeEditor key="documentation"
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
 
-    <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.LibraryOrderEntryTypeProvider"/>
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleExtensionWithSdkOrderEntryTypeProvider"/>
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleLibraryOrderEntryTypeProvider"/>
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleOrderEntryTypeProvider"/>
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleSourceOrderEntryTypeProvider"/>
+
+    <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
 
     <copyPastePostProcessor implementation="com.intellij.codeInsight.editorActions.CopyPasteFoldingProcessor"/>
 
@@ -1604,12 +1605,6 @@
     <!-- this depends on TemplateLanguageConfigurable which isn't registered in LangExtensions, so it should go here as well -->
     <errorQuickFixProvider implementation="com.intellij.psi.templateLanguages.TemplateLanguageErrorQuickFixProvider"/>
 
-    <!-- File Exclusions -->
-    <!--
-    <projectService serviceInterface="com.intellij.openapi.file.exclude.ProjectFileExclusionManager"
-                    serviceImplementation="com.intellij.openapi.file.exclude.ProjectFileExclusionManagerImpl"/>
-    <projectConfigurable instance="com.intellij.openapi.file.exclude.ui.ExcludedFilesConfigurable"/>
-    -->
     <fileTypeFactory implementation="com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeFactory"/>
     <applicationService serviceInterface="com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeManager"
                         serviceImplementation="com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeManager"/>
@@ -1930,6 +1925,8 @@
                     serviceImplementation="com.intellij.openapi.roots.impl.ProjectFileIndexImpl"/>
     <projectService serviceInterface="com.intellij.psi.impl.source.resolve.ResolveCache"
                     serviceImplementation="com.intellij.psi.impl.source.resolve.ResolveCache"/>
+    <moduleService serviceInterface="com.intellij.openapi.roots.ModuleFileIndex"
+                   serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ProjectRootModificationTracker"
                     serviceImplementation="com.intellij.openapi.roots.ProjectRootModificationTrackerImpl"/>
 
@@ -1953,8 +1950,7 @@
 
     <!-- Editor -->
     <applicationConfigurable instance="com.intellij.application.options.editor.EditorOptions" id="editor" key="title.editor"
-                             bundle="messages.ApplicationBundle" order="after appearance"
-                             childrenEPName="com.intellij.editorOptionsProvider"/>
+                             bundle="messages.ApplicationBundle" order="after appearance"/>
 
     <projectService serviceInterface="com.intellij.semantic.SemService" serviceImplementation="com.intellij.semantic.SemServiceImpl"/>
 
@@ -2039,11 +2035,9 @@
     <liveTemplateMacro implementation="com.intellij.codeInsight.template.macro.ClassNameCompleteMacro"/>
 
     <liveTemplateMacro implementation="com.intellij.codeInsight.template.macro.EnumMacro"/>
-    <internalFileTemplate name="Html"/>
-    <internalFileTemplate name="Html5"/>
-    <internalFileTemplate name="Xhtml"/>
+
     <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.todo.TodoIndex"/>
-    <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.id.IdIndex"/>
+    <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.id.IdIndexImpl"/>
     <fileBasedIndex implementation="com.intellij.psi.search.FilenameIndex"/>
     <fileBasedIndex implementation="com.intellij.psi.search.FileTypeIndex"/>
     <fileBasedIndex implementation="com.intellij.psi.stubs.StubUpdatingIndex"/>
@@ -2162,8 +2156,6 @@
     <syntaxHighlighter factoryClass="com.intellij.ide.highlighter.custom.impl.CustomFileTypeHighlighterProvider"/>
     <fileTypeRegistrator implementation="com.intellij.ide.highlighter.custom.impl.StandardFileTypeRegistrator"/>
 
-    <directoryProjectConfigurator implementation="com.intellij.platform.PlatformProjectViewOpener"/>
-
     <statementUpDownMover implementation="com.intellij.codeInsight.editorActions.moveUpDown.LineMover" id="line" order="last"/>
 
     <enterHandlerDelegate implementation="com.intellij.codeInsight.editorActions.enter.EnterInStringLiteralHandler"/>
@@ -2176,12 +2168,14 @@
     <codeInsight.linkHandler prefix="#inspection/" handlerClass="com.intellij.codeInsight.hint.InspectionDescriptionLinkHandler"/>
     <codeInsight.linkHandler prefix="#navigation/" handlerClass="com.intellij.codeInsight.hint.NavigationLinkHandler"/>
 
-    <codeFoldingOptionsProvider instance="com.intellij.application.options.editor.BaseCodeFoldingOptionsProvider" order="first"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.EditorSmartKeysConfigurable" id="editor.preferences.smartKeys"
-                           displayName="Smart Keys"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.EditorAppearanceConfigurable"
-                           id="editor.preferences.appearance"
-                           key="tab.editor.settings.appearance" bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorSmartKeysConfigurable"
+                             id="editor.preferences.smartKeys"
+                             parentId="editor"
+                             displayName="Smart Keys"/>
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorAppearanceConfigurable"
+                             id="editor.preferences.appearance"
+                             parentId="editor"
+                             key="tab.editor.settings.appearance" bundle="messages.ApplicationBundle"/>
     <editorCustomization implementation="com.intellij.ui.SoftWrapsEditorCustomization"/>
     <editorCustomization implementation="com.intellij.ui.HorizontalScrollBarEditorCustomization"/>
     <editorCustomization implementation="com.intellij.ui.AdditionalPageAtBottomEditorCustomization"/>
@@ -2189,16 +2183,36 @@
     <editorCustomization implementation="com.intellij.ui.RightMarginEditorCustomization"/>
 
     <!-- Colors & Fonts-->
-    <editorOptionsProvider instance="com.intellij.application.options.colors.ColorAndFontOptions"
-                           id="reference.settingsdialog.IDE.editor.colors"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.EditorTabsConfigurable" id="editor.preferences.tabs"
-                           displayName="Editor Tabs"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.CodeFoldingConfigurable" id="editor.preferences.folding"
-                           key="group.code.folding" bundle="messages.ApplicationBundle"/>
-    <editorOptionsProvider instance="com.intellij.application.options.CodeCompletionOptions" id="editor.preferences.completion"
-                           key="title.code.completion" bundle="messages.ApplicationBundle"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.AutoImportOptionsConfigurable" id="editor.preferences.import"
-                           key="auto.import" bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable instance="com.intellij.application.options.colors.ColorAndFontOptions"
+                             parentId="editor"
+                             id="editor.preferences.colors.and.fonts"
+                             dynamic="true"
+                             key="title.colors.and.fonts"
+                             bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorTabsConfigurable"
+                             id="editor.preferences.tabs"
+                             parentId="editor"
+                             displayName="Editor Tabs"/>
+    <applicationConfigurable instance="com.intellij.application.options.editor.CodeFoldingConfigurable"
+                             id="editor.preferences.folding"
+                             parentId="editor"
+                             key="group.code.folding"
+                             bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable instance="com.intellij.application.options.CodeCompletionOptions"
+                             id="editor.preferences.completion"
+                             parentId="editor"
+                             key="title.code.completion"
+                             bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable instance="com.intellij.application.options.editor.AutoImportOptionsConfigurable"
+                             id="editor.preferences.import"
+                             parentId="editor"
+                             key="auto.import"
+                             bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable id="editor.preferences.folding.general"
+                             parentId="editor.preferences.folding"
+                             displayName="General"
+                             instance="com.intellij.application.options.editor.GeneralCodeFoldingConfigurable"/>
+
 
     <editorTabColorProvider implementation="com.intellij.ui.tabs.EditorTabColorProviderImpl"/>
 
@@ -2410,7 +2424,6 @@
     <toolsProvider implementation="com.intellij.tools.LocalToolsProvider"/>
 
     <favoritesListProvider implementation="com.intellij.ide.bookmarks.BookmarksFavoriteListProvider"/>
-    <favoritesListProvider implementation="com.intellij.xdebugger.impl.breakpoints.BreakpointsFavoriteListProvider"/>
     <applicationService serviceInterface="com.intellij.codeInsight.FileModificationService"
                         serviceImplementation="com.intellij.codeInsight.CodeInsightUtilBase"/>
 
@@ -2427,8 +2440,8 @@
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy"
                     serviceImplementation="com.intellij.openapi.vcs.impl.ModuleDefaultVcsRootPolicy"/>
 
-    <projectService serviceInterface="com.intellij.psi.impl.file.PsiDirectoryFactory"
-                    serviceImplementation="com.intellij.psi.impl.file.PsiDirectoryFactoryImpl"/>
+    <projectService serviceInterface="com.intellij.psi.impl.file.PsiPackageHelper"
+                    serviceImplementation="com.intellij.psi.impl.file.PsiPackageHelperImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.IdeaProjectSettingsService"/>
@@ -2465,29 +2478,6 @@
     <weigher key="proximity" implementationClass="com.intellij.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"
              order="after openedInEditor"/>
 
-    <colorSettingsPage implementation="com.intellij.xdebugger.impl.ui.DebuggerColorsPage"/>
-
-    <applicationService serviceInterface="com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager"
-                        serviceImplementation="com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager"/>
-
-    <applicationService serviceInterface="com.intellij.xdebugger.XDebuggerUtil"
-                        serviceImplementation="com.intellij.xdebugger.impl.XDebuggerUtilImpl"/>
-
-    <projectService serviceImplementation="com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager"/>
-
-    <projectService serviceInterface="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory"
-                    serviceImplementation="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory"/>
-
-    <projectService serviceInterface="com.intellij.xdebugger.impl.XDebuggerHistoryManager"
-                    serviceImplementation="com.intellij.xdebugger.impl.XDebuggerHistoryManager"/>
-
-    <applicationConfigurable provider="com.intellij.xdebugger.impl.settings.DebuggerConfigurableProvider"/>
-
-    <customizableActionGroupProvider implementation="com.intellij.xdebugger.impl.ui.XDebugTabCustomizableActionGroupProvider"/>
-
-    <xdebugger.debuggerSupport implementation="com.intellij.xdebugger.impl.XDebuggerSupport" order="first"/>
-
-    <executor implementation="com.intellij.execution.executors.DefaultDebugExecutor" order="first,after run"/>
 
     <iconDescriptorUpdater implementation="com.intellij.psi.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
     <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver"/>
@@ -2511,8 +2501,6 @@
 
 
     <iconDescriptorUpdater implementation="com.intellij.execution.testframework.TestIconDescriptorUpdater" order="before default"/>
-
-    <directoryProjectGenerator implementation="com.intellij.platform.DefaultDirectoryProjectGenerator"/>
 
     <search.topHitProvider implementation="com.intellij.platform.DefaultPlatformTopHitProvider"/>
     <search.topHitProvider implementation="com.intellij.ide.ui.UISimpleSettingsProvider"/>
@@ -2548,7 +2536,7 @@
     <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.WebResourcesFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider"/>
-    <contentFolderSupportPatcher implementation="org.mustbe.consulo.roots.DeprecatedContentFolderSupportPatcher" />
+    <contentFolderSupportPatcher implementation="org.mustbe.consulo.roots.DeprecatedContentFolderSupportPatcher"/>
 
     <contentFolderPropertyProvider implementation="org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
 
@@ -2556,16 +2544,26 @@
     <defaultHighlightingSettingProvider implementation="com.intellij.codeInsight.daemon.impl.analysis.GeneratedSourcesHighlightingSettingProvider"/>
     <editorNotificationProvider implementation="com.intellij.ide.GeneratedFileEditingNotificationProvider"/>
 
-    <actionPromoter implementation="com.intellij.ui.EditorTextFieldActionPromoter" />
-    <actionPromoter implementation="com.intellij.ui.ToolbarDecoratorActionPromoter" />
-    <actionPromoter implementation="com.intellij.openapi.vcs.actions.VcsActionPromoter" />
+    <actionPromoter implementation="com.intellij.ui.EditorTextFieldActionPromoter"/>
+    <actionPromoter implementation="com.intellij.ui.ToolbarDecoratorActionPromoter"/>
+    <actionPromoter implementation="com.intellij.openapi.vcs.actions.VcsActionPromoter"/>
 
-    <projectOpenProcessor implementation="com.intellij.platform.PlatformProjectOpenProcessor" />
+    <projectOpenProcessor implementation="com.intellij.platform.PlatformProjectOpenProcessor"/>
 
-    <elementPreviewProvider implementation="com.intellij.codeInsight.preview.ElementPreviewHintProvider" />
+    <elementPreviewProvider implementation="com.intellij.codeInsight.preview.ElementPreviewHintProvider"/>
 
     <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.TextWithMarkupProcessor"/>
-    <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.RtfCopyPasteProcessor"/>
-    <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.HtmlCopyPasteProcessor"/>
+    <!--the following binding uses 'first' order to make sure it captures raw text before any other processor modifies it -->
+    <copyPastePreProcessor implementation="com.intellij.openapi.editor.richcopy.TextWithMarkupProcessor$RawTextSetter" order="first" id="richcopy"/>
+
+    <newModuleBuilder implementation="org.mustbe.consulo.ide.impl.EmptyNewModuleBuilder"/>
+
+    <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.IndentingBackspaceHandler"/>
+
+    <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.FileOrDirectoryDependencyTabFactory"/>
+    <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.ModuleDependencyTabFactory"/>
+    <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.ProjectLibraryTabFactory"/>
+
+    <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectableIndentOptionsProvider" order="last"/>
   </extensions>
 </idea-plugin>

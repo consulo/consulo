@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -30,7 +31,7 @@ public abstract class FileEditorManager {
 
   public static final Key<Boolean> USE_CURRENT_WINDOW = Key.create("OpenFile.searchForOpen");
 
-  public static FileEditorManager getInstance(Project project) {
+  public static FileEditorManager getInstance(@NotNull Project project) {
     return project.getComponent(FileEditorManager.class);
   }
 
@@ -49,7 +50,6 @@ public abstract class FileEditorManager {
    *
    * @param file file to open
    * @param focusEditor <code>true</code> if need to focus
-   * @param searchForOpen
    * @return array of opened editors
    */
   @NotNull
@@ -138,11 +138,11 @@ public abstract class FileEditorManager {
   /**
    * @deprecated use addTopComponent
    */
-  public abstract void showEditorAnnotation(@NotNull FileEditor editor, @NotNull JComponent annotationComoponent);
+  public abstract void showEditorAnnotation(@NotNull FileEditor editor, @NotNull JComponent annotationComponent);
   /**
    * @deprecated use removeTopComponent
    */
-  public abstract void removeEditorAnnotation(@NotNull FileEditor editor, @NotNull JComponent annotationComoponent);
+  public abstract void removeEditorAnnotation(@NotNull FileEditor editor, @NotNull JComponent annotationComponent);
 
   public abstract void addTopComponent(@NotNull final FileEditor editor, @NotNull final JComponent component);
   public abstract void removeTopComponent(@NotNull final FileEditor editor, @NotNull final JComponent component);
@@ -185,10 +185,17 @@ public abstract class FileEditorManager {
   public abstract void registerExtraEditorDataProvider(@NotNull EditorDataProvider provider, Disposable parentDisposable);
 
   /**
+   * Returns data associated with given editor/caret context. Data providers are registered via
+   * {@link #registerExtraEditorDataProvider(EditorDataProvider, com.intellij.openapi.Disposable)} method.
+   */
+  @Nullable
+  public abstract Object getData(@NotNull String dataId, @NotNull Editor editor, @NotNull Caret caret);
+
+  /**
    * Selects a specified file editor tab for the specified editor.
    * @param file a file to switch the file editor tab for. The function does nothing if the file is not currently open in the editor.
    * @param fileEditorProviderId the ID of the file editor to open; matches the return value of
    * {@link com.intellij.openapi.fileEditor.FileEditorProvider#getEditorTypeId()}
    */
-  public abstract void setSelectedEditor(@NotNull VirtualFile file, String fileEditorProviderId);
+  public abstract void setSelectedEditor(@NotNull VirtualFile file, @NotNull String fileEditorProviderId);
 }

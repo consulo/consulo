@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
@@ -41,10 +40,13 @@ public abstract class FileBasedIndexExtension<K, V> {
   @NotNull
   public abstract DataIndexer<K, V, FileContent> getIndexer();
 
+  @NotNull
   public abstract KeyDescriptor<K> getKeyDescriptor();
 
+  @NotNull
   public abstract DataExternalizer<V> getValueExternalizer();
 
+  @NotNull
   public abstract FileBasedIndex.InputFilter getInputFilter();
 
   public abstract boolean dependsOnFileContent();
@@ -69,7 +71,7 @@ public abstract class FileBasedIndexExtension<K, V> {
    *
    * Use carefully, because indexing large files may influence index update speed dramatically.
    *
-   * @see com.intellij.openapi.vfs.PersistentFSConstants#MAX_INTELLISENSE_FILESIZE
+   * @see com.intellij.openapi.vfs.PersistentFSConstants#getMaxIntellisenseFileSize()
    */
   @NotNull
   public Collection<FileType> getFileTypesWithSizeLimitNotApplicable() {
@@ -84,8 +86,7 @@ public abstract class FileBasedIndexExtension<K, V> {
     return false;
   }
 
-  /** Per-filetype index version support */
-  public Map<FileType, Integer> getVersionMap() {
-    return Collections.emptyMap();
+  public boolean hasSnapshotMapping() {
+    return false;
   }
 }

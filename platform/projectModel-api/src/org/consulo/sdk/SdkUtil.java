@@ -15,47 +15,13 @@
  */
 package org.consulo.sdk;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptor;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.util.ObjectUtils;
-import org.consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author VISTALL
  * @since 17:51/15.06.13
  */
-public class SdkUtil {
-  @NotNull
-  public static NamedPointer<Sdk> createPointer(@NotNull Sdk sdk) {
-    final SdkPointerManager service = ServiceManager.getService(SdkPointerManager.class);
-    return service.create(sdk);
-  }
-
-  @NotNull
-  public static NamedPointer<Sdk> createPointer(@NotNull String name) {
-    final SdkPointerManager service = ServiceManager.getService(SdkPointerManager.class);
-    return service.create(name);
-  }
-
-  @NotNull
-  public static Icon getIcon(@Nullable Sdk sdk) {
-    if (sdk == null) {
-      return AllIcons.Toolbar.Unknown;
-    }
-    SdkType sdkType = (SdkType)sdk.getSdkType();
-    Icon icon = ObjectUtils.notNull(sdkType.getIcon(), AllIcons.Toolbar.Unknown);
-    if(sdk.isBundled()) {
-      return new IconDescriptor(icon).addLayerIcon(AllIcons.Nodes.Locked).toIcon();
-    }
-    else {
-      return icon;
-    }
-  }
+@Deprecated
+@DeprecationInfo(value = "Use org.mustbe.consulo.sdk.SdkUtil", until = "1.0")
+public class SdkUtil extends org.mustbe.consulo.sdk.SdkUtil {
 }

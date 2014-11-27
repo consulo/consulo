@@ -17,7 +17,9 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -35,16 +37,14 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.*;
-import com.intellij.openapi.ui.DetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsComponent;
-import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.packaging.artifacts.Artifact;
+import com.intellij.ui.JBSplitter;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.ui.navigation.BackAction;
-import com.intellij.ui.navigation.ForwardAction;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.io.storage.HeavyProcessLatch;
@@ -64,8 +64,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
   public static final DataKey<ProjectStructureConfigurable> KEY = DataKey.create("ProjectStructureConfiguration");
 
   protected final UIState myUiState = new UIState();
-  private Splitter mySplitter;
-  private JComponent myToolbarComponent;
+  private JBSplitter mySplitter;
   @NonNls public static final String CATEGORY = "category";
   private JComponent myToFocus;
   private boolean myWasUiDisposed;
@@ -167,7 +166,8 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
   public JComponent createComponent() {
     myComponent = new MyPanel();
 
-    mySplitter = new Splitter(false, .15f);
+    mySplitter = new OnePixelSplitter(false, .15f);
+    mySplitter.setSplitterProportionKey("ProjectStructure.TopLevelElements");
     mySplitter.setHonorComponentsMinimumSize(true);
 
     initSidePanel();
@@ -180,14 +180,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
       }
     };
 
-    final DefaultActionGroup toolbarGroup = new DefaultActionGroup();
-    toolbarGroup.add(new BackAction(myComponent));
-    toolbarGroup.add(new ForwardAction(myComponent));
-    final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarGroup, true);
-    toolbar.setTargetComponent(myComponent);
-    myToolbarComponent = toolbar.getComponent();
-    left.add(myToolbarComponent, BorderLayout.NORTH);
-    left.add(mySidePanel, BorderLayout.CENTER);
+    left.add(mySidePanel, BorderLayout.NORTH);
 
     mySplitter.setFirstComponent(left);
     mySplitter.setSecondComponent(myDetails);
@@ -217,7 +210,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
     }
     mySidePanel.addSeparator(IdeBundle.message("global.settings.separator"));
     addGlobalBundleListConfig();
-    addGlobalLibrariesConfig();
+    //addGlobalLibrariesConfig();
   }
 
   private void addArtifactsConfig() {
@@ -476,10 +469,6 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
           masterDetails.getSplitter().setProportion(myUiState.sideProportion);
         }
         masterDetails.setHistory(myHistory);
-      }
-
-      if (toSelect instanceof DetailsComponent.Facade) {
-        ((DetailsComponent.Facade)toSelect).getDetailsComponent().setBannerMinHeight(myToolbarComponent.getPreferredSize().height);
       }
 
       if (toSelect instanceof BaseStructureConfigurable) {

@@ -38,6 +38,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   private final ArrayList<TextSection> mySections = new ArrayList<TextSection>();
   private int myInsertionIndex = 0;
 
+  @Override
   public void customize(@NotNull SimpleColoredComponent component) {
     synchronized (mySections) {
       for (TextSection section : mySections) {
@@ -59,18 +60,21 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
     }
   }
 
+  @Override
   public Icon getIcon() {
     synchronized (mySections) {
       return myIcon;
     }
   }
 
+  @Override
   public void setIcon(@Nullable final Icon icon) {
     synchronized (mySections) {
       myIcon = icon;
     }
   }
 
+  @Override
   @NotNull
   public String getText() {
     synchronized (mySections) {
@@ -82,6 +86,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
     }
   }
 
+  @Override
   public boolean equals(Object obj) {
     synchronized (mySections) {
       if (!(obj instanceof CompositeAppearance)) return false;
@@ -95,6 +100,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
     }
   }
 
+  @Override
   public int hashCode() {
     return getText().hashCode();
   }
@@ -171,12 +177,14 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
       return ATTRIBUTES;
     }
 
+    @Override
     public boolean equals(Object obj) {
       if (!(obj instanceof TextSection)) return false;
       TextSection section = (TextSection)obj;
       return section.ATTRIBUTES.equals(ATTRIBUTES) && section.TEXT.equals(TEXT);
     }
 
+    @Override
     public int hashCode() {
       return TEXT.hashCode();
     }
@@ -217,6 +225,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   }
 
   private class DequeBeginning extends DequeEnd {
+    @Override
     public void addSection(TextSection section) {
       synchronized (mySections) {
         addSectionAt(0, section);
@@ -226,6 +235,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   }
 
   private class DequeEnding extends DequeEnd {
+    @Override
     public void addSection(TextSection section) {
       synchronized (mySections) {
         addSectionAt(myInsertionIndex, section);
@@ -235,6 +245,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   }
 
   private class DequeSuffix extends DequeEnd {
+    @Override
     public void addSection(TextSection section) {
       synchronized (mySections) {
         addSectionAt(mySections.size(), section);

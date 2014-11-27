@@ -17,8 +17,13 @@ package com.intellij.util;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.LocalFileProvider;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -97,4 +102,14 @@ public class PathUtil {
     return PathUtilRt.isValidFileName(fileName);
   }
 
+  @Contract("null -> null; !null -> !null")
+  public static String toSystemIndependentName(@Nullable String path) {
+    return path == null ? null : FileUtilRt.toSystemIndependentName(path);
+  }
+
+
+  @Contract("null -> null; !null -> !null")
+  public static String toSystemDependentName(@Nullable String path) {
+    return path == null ? null : FileUtilRt.toSystemDependentName(path);
+  }
 }

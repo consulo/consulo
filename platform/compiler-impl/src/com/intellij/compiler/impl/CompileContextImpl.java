@@ -22,7 +22,7 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.compiler.CompilerMessageImpl;
-import com.intellij.compiler.CompilerWorkspaceConfiguration;
+import com.intellij.compiler.ProblemsView;
 import com.intellij.compiler.make.impl.CompositeDependencyCache;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.openapi.application.ApplicationManager;
@@ -68,7 +68,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private final CompilerTask myTask;
   private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages =
           new EnumMap<CompilerMessageCategory, Collection<CompilerMessage>>(CompilerMessageCategory.class);
-  private final boolean myShouldUpdateProblemsView;
   private CompileScope myCompileScope;
   private final CompositeDependencyCache myDependencyCache;
   private final boolean myMake;
@@ -105,17 +104,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     myProjectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
     myProjectCompileScope = new ProjectCompileScope(myProject);
 
-
-    if (compilerSession != null) {
-      compilerSession.setContentIdKey(compileScope.getUserData(CompilerManager.CONTENT_ID_KEY));
-    }
     recalculateOutputDirs();
-    final CompilerWorkspaceConfiguration workspaceConfig = CompilerWorkspaceConfiguration.getInstance(myProject);
-    myShouldUpdateProblemsView = workspaceConfig.useOutOfProcessBuild() && workspaceConfig.MAKE_PROJECT_ON_SAVE;
-  }
-
-  public boolean shouldUpdateProblemsView() {
-    return myShouldUpdateProblemsView;
   }
 
   @Override
@@ -310,7 +299,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
                           msg.getColumn());
     }
     else {
-      ProblemsViewImpl.SERVICE.getInstance(myProject).addMessage(msg);
+      ProblemsView.getInstance(myProject).addMessage(msg);
     }
   }
 
@@ -356,6 +345,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return myRebuildReason;
   }
 
+  @NotNull
   @Override
   public ProgressIndicator getProgressIndicator() {
     //if (myProgressIndicatorProxy != null) {

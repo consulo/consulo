@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,12 +38,12 @@ public abstract class HeavyFileEditorManagerTestCase extends CodeInsightFixtureT
 
   protected VirtualFile getFile(String path) {
     return LocalFileSystem.getInstance().refreshAndFindFileByPath(
-      PlatformTestUtil.getCommunityPath().replace(File.separatorChar, '/') + "/platform/platform-tests/testData/fileEditorManager" + path);
+            PlatformTestUtil.getCommunityPath().replace(File.separatorChar, '/') + "/platform/platform-tests/testData/fileEditorManager" + path);
   }
 
   public void setUp() throws Exception {
     super.setUp();
-    myManager = new FileEditorManagerImpl(getProject(), DockManager.getInstance(getProject()));
+    myManager = new FileEditorManagerImpl(getProject(), DockManager.getInstance(getProject()), EditorHistoryManager.getInstance(getProject()));
     ((ComponentManagerImpl)getProject()).registerComponentInstance(FileEditorManager.class, myManager);
     ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(getProject())).projectOpened();
     EditorHistoryManager.getInstance(getProject()).projectOpened();

@@ -16,8 +16,6 @@
 
 package com.intellij.application.options.editor;
 
-import com.intellij.application.options.OptionId;
-import com.intellij.application.options.OptionsApplicabilityFilter;
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPass;
@@ -119,8 +117,6 @@ public class EditorOptionsPanel {
     myHighlightSettingsPanel.setLayout(new BorderLayout());
     myHighlightSettingsPanel.add(myErrorHighlightingPanel.getPanel(), BorderLayout.CENTER);
 
-
-    myCbRenameLocalVariablesInplace.setVisible(OptionsApplicabilityFilter.isApplicable(OptionId.RENAME_IN_PLACE));
 
     myRichCopyColorSchemeComboBox.setRenderer(new ListCellRendererWrapper<String>() {
       @Override

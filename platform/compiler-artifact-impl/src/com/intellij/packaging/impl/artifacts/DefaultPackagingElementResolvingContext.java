@@ -23,7 +23,6 @@ import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactModel;
-import com.intellij.packaging.elements.ManifestFileProvider;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,29 +39,27 @@ public class DefaultPackagingElementResolvingContext implements PackagingElement
     myModulesProvider = new DefaultModulesProvider(myProject);
   }
 
+  @Override
   @NotNull
   public Project getProject() {
     return myProject;
   }
 
+  @Override
   @NotNull
   public ArtifactModel getArtifactModel() {
     return ArtifactManager.getInstance(myProject);
   }
 
+  @Override
   @NotNull
   public ModulesProvider getModulesProvider() {
     return myModulesProvider;
   }
 
+  @Override
   public Library findLibrary(@NotNull String level, @NotNull String libraryName) {
     return findLibrary(myProject, level, libraryName);
-  }
-
-  @NotNull
-  @Override
-  public ManifestFileProvider getManifestFileProvider() {
-    return new DefaultManifestFileProvider(this);
   }
 
   @Nullable

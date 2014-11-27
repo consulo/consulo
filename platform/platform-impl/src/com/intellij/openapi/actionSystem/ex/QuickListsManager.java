@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.BundledQuickListsProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.ExportableApplicationComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.diagnostic.Logger;
@@ -36,6 +35,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Parent;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,17 +65,20 @@ public class QuickListsManager implements ExportableApplicationComponent, NamedJ
     mySchemesManager = schemesManagerFactory.createSchemesManager(
         "$ROOT_CONFIG$/quicklists",
         new BaseSchemeProcessor<QuickList>(){
-          public QuickList readScheme(final Document schemeContent) throws InvalidDataException, IOException, JDOMException {
+          @Override
+          public QuickList readScheme(@NotNull final Document schemeContent) throws InvalidDataException, IOException, JDOMException {
             return loadListFromDocument(schemeContent);
           }
 
-          public Document writeScheme(final QuickList scheme) throws WriteExternalException {
+          @Override
+          public Parent writeScheme(@NotNull final QuickList scheme) throws WriteExternalException {
             Element element = new Element(LIST_TAG);
             scheme.writeExternal(element);
-            return new Document(element);
+            return element;
           }
 
-          public boolean shouldBeSaved(final QuickList scheme) {
+          @Override
+          public boolean shouldBeSaved(@NotNull final QuickList scheme) {
             return true;
           }
         },
@@ -92,11 +95,13 @@ public class QuickListsManager implements ExportableApplicationComponent, NamedJ
     return list;
   }
 
+  @Override
   @NotNull
   public String getComponentName() {
     return "QuickListsManager";
   }
 
+  @Override
   @NotNull
   public File[] getExportFiles() {
     File dir = getListsDir();
@@ -109,23 +114,28 @@ public class QuickListsManager implements ExportableApplicationComponent, NamedJ
     return new File(directoryPath);
   }
 
+  @Override
   @NotNull
   public String getPresentableName() {
     return IdeBundle.message("quick.lists.presentable.name");
   }
 
+  @Override
   public void initComponent() {
     mySchemesManager.loadSchemes();
     registerActions();    
   }
 
+  @Override
   public void disposeComponent() {
   }
 
+  @Override
   public String getExternalFileName() {
     return "quicklists";
   }
 
+  @Override
   public void readExternal(Element element) throws InvalidDataException {
     for (Object group : element.getChildren(LIST_TAG)) {
       Element groupElement = (Element)group;
@@ -137,6 +147,7 @@ public class QuickListsManager implements ExportableApplicationComponent, NamedJ
     registerActions();
   }
 
+  @Override
   public void writeExternal(Element element) throws WriteExternalException {
 
   }
@@ -189,7 +200,7 @@ public class QuickListsManager implements ExportableApplicationComponent, NamedJ
 
       for (final String path : paths) {
         try {
-          final InputStream inputStream = DecodeDefaultsUtil.getDefaultsInputStream(provider, path);
+          final InputStream inputStream = provider.getClass().getClassLoader().getResourceAsStream(path + ".xml");
           if (inputStream == null) {
             // Error shouldn't occur during this operation
             // thus we report error instead of info
@@ -211,6 +222,7 @@ public class QuickListsManager implements ExportableApplicationComponent, NamedJ
         catch (final Exception e) {
           ApplicationManager.getApplication().invokeLater(
             new Runnable(){
+              @Override
               public void run() {
                 // Error shouldn't occur during this operation
                 // thus we report error instead of info
@@ -233,6 +245,7 @@ public class QuickListsManager implements ExportableApplicationComponent, NamedJ
       getTemplatePresentation().setText(myQuickList.getDisplayName(), false);
     }
 
+    @Override
     protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
       ActionManager actionManager = ActionManagerEx.getInstance();
       for (String actionId : myQuickList.getActionIds()) {
@@ -248,6 +261,7 @@ public class QuickListsManager implements ExportableApplicationComponent, NamedJ
       }
     }
 
+    @Override
     protected boolean isEnabled() {
       return true;
     }

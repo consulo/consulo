@@ -18,17 +18,13 @@ package com.intellij.navigation;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-
-import javax.swing.*;
 
 public class DirectoryPresentationProvider implements ItemPresentationProvider<PsiDirectory> {
   @Override
@@ -38,8 +34,7 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
     final String locationString = vFile.getPath();
 
     if (ProjectRootsUtil.isProjectHome(directory)) {
-      final Icon projectIcon = IconLoader.getIcon(ApplicationInfoEx.getInstanceEx().getSmallIconUrl());
-      return new PresentationData(project.getName(), locationString, projectIcon, null);
+      return new PresentationData(project.getName(), locationString, AllIcons.Icon16, null);
     }
 
     if (ProjectRootsUtil.isModuleContentRoot(directory)) {

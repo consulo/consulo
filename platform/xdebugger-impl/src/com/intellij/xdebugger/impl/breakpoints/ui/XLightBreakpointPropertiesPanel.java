@@ -17,13 +17,21 @@ package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.popup.util.DetailView;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import com.intellij.util.ui.UIUtil;
+import com.intellij.xdebugger.XDebuggerBundle;
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
+import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
+import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
+import com.intellij.xdebugger.impl.ui.XDebuggerExpressionComboBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +42,9 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implements XSuspendPolicyPanel.Delegate {
+public class XLightBreakpointPropertiesPanel<B extends XBreakpointBase<?,?,?>> implements XSuspendPolicyPanel.Delegate {
+  public static final String CONDITION_HISTORY_ID = "breakpointCondition";
+
   @SuppressWarnings("UnusedDeclaration")
   public boolean showMoreOptions() {
     return myShowMoreOptions;
@@ -76,11 +86,20 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
   private JPanel myCustomConditionsPanelWrapper;
   private JCheckBox myEnabledCheckbox;
   private JPanel myCustomRightPropertiesPanelWrapper;
+  private JBCheckBox myConditionEnabledCheckbox;
+  private JPanel myCustomTopPropertiesPanelWrapper;
+  private JPanel myConditionEnabledPanel;
   private final List<XBreakpointCustomPropertiesPanel<B>> myCustomPanels;
 
   private List<XBreakpointPropertiesSubPanel<B>> mySubPanels = new ArrayList<XBreakpointPropertiesSubPanel<B>>();
 
+  private XDebuggerExpressionComboBox myConditionComboBox;
+
   private B myBreakpoint;
+
+  private final boolean myShowAllOptions;
+  private static final String CONDITION_ENABLED_LABEL = "label";
+  private static final String CONDITION_ENABLED_CHECKBOX = "checkbox";
 
   public void setDetailView(DetailView detailView) {
     myMasterBreakpointPanel.setDetailView(detailView);
@@ -88,6 +107,7 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
 
   public XLightBreakpointPropertiesPanel(Project project, XBreakpointManager breakpointManager, B breakpoint, boolean showAllOptions) {
     myBreakpoint = breakpoint;
+    myShowAllOptions = showAllOptions;
     XBreakpointType<B, ?> breakpointType = XBreakpointUtil.getType(breakpoint);
 
     mySuspendPolicyPanel.init(project, breakpointManager, breakpoint);
@@ -103,23 +123,21 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
 
     myCustomPanels = new ArrayList<XBreakpointCustomPropertiesPanel<B>>();
     if (debuggerEditorsProvider != null) {
-      final XBreakpointCustomPropertiesPanel<B> conditionPanel;
-      if (debuggerEditorsProvider instanceof XDebuggerComboBoxProvider) {
-        conditionPanel = ((XDebuggerComboBoxProvider<B>)debuggerEditorsProvider).createConditionComboBoxPanel(
-                project, debuggerEditorsProvider, DefaultConditionComboBoxPanel.HISTORY_KEY, myBreakpoint.getSourcePosition());
-      }
-      else {
-        conditionPanel =
-                new DefaultConditionComboBoxPanel<B>(project, debuggerEditorsProvider, myBreakpoint.getSourcePosition());
-      }
-      myConditionExpressionPanel.add(conditionPanel.getComponent(), BorderLayout.CENTER);
-      myCustomPanels.add(conditionPanel);
-      myMainPanel.addFocusListener(new FocusAdapter() {
+      myConditionEnabledCheckbox = new JBCheckBox(XDebuggerBundle.message("xbreakpoints.condition.checkbox"));
+      JBLabel conditionEnabledLabel = new JBLabel(XDebuggerBundle.message("xbreakpoints.condition.checkbox"));
+      conditionEnabledLabel.setBorder(UIUtil.getTextAlignBorder(myConditionEnabledCheckbox));
+      myConditionEnabledPanel.add(myConditionEnabledCheckbox, CONDITION_ENABLED_CHECKBOX);
+      myConditionEnabledPanel.add(conditionEnabledLabel, CONDITION_ENABLED_LABEL);
+      myConditionComboBox = new XDebuggerExpressionComboBox(project, debuggerEditorsProvider, CONDITION_HISTORY_ID, myBreakpoint.getSourcePosition());
+      JComponent conditionComponent = myConditionComboBox.getComponent();
+      myConditionExpressionPanel.add(conditionComponent, BorderLayout.CENTER);
+      myConditionEnabledCheckbox.addActionListener(new ActionListener() {
         @Override
-        public void focusGained(FocusEvent event) {
-          IdeFocusManager.findInstance().requestFocus(conditionPanel.getComponent(), false);
+        public void actionPerformed(ActionEvent e) {
+          onCheckboxChanged();
         }
       });
+      DebuggerUIUtil.focusEditorOnCheck(myConditionEnabledCheckbox, myConditionComboBox.getEditorComponent());
     } else {
       myConditionPanel.setVisible(false);
     }
@@ -148,6 +166,25 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
       myCustomRightPropertiesPanelWrapper.add(customRightConditionPanel.getComponent(), BorderLayout.CENTER);
       myCustomPanels.add(customRightConditionPanel);
     }
+    else {
+      // see IDEA-125745
+      myCustomRightPropertiesPanelWrapper.getParent().remove(myCustomRightPropertiesPanelWrapper);
+    }
+
+    XBreakpointCustomPropertiesPanel<B> customTopPropertiesPanel = breakpointType.createCustomTopPropertiesPanel(project);
+    if (customTopPropertiesPanel != null) {
+      myCustomTopPropertiesPanelWrapper.add(customTopPropertiesPanel.getComponent(), BorderLayout.CENTER);
+      myCustomPanels.add(customTopPropertiesPanel);
+    }
+
+    myMainPanel.addFocusListener(new FocusAdapter() {
+      @Override
+      public void focusGained(FocusEvent event) {
+        if (myConditionComboBox != null) {
+          IdeFocusManager.findInstance().requestFocus(myConditionComboBox.getEditorComponent(), false);
+        }
+      }
+    });
 
     myEnabledCheckbox.addActionListener(new ActionListener() {
       @Override
@@ -157,9 +194,23 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
     });
   }
 
+  private void onCheckboxChanged() {
+    if (myConditionComboBox != null) {
+      myConditionComboBox.setEnabled(myConditionEnabledCheckbox.isSelected());
+    }
+  }
+
   public void saveProperties() {
     for (XBreakpointPropertiesSubPanel<B> panel : mySubPanels) {
       panel.saveProperties();
+    }
+
+    if (myConditionComboBox != null) {
+      XExpression expression = myConditionComboBox.getExpression();
+      XExpression condition = !XDebuggerUtilImpl.isEmptyExpression(expression) ? expression : null;
+      myBreakpoint.setConditionEnabled(condition == null || myConditionEnabledCheckbox.isSelected());
+      myBreakpoint.setConditionExpression(condition);
+      myConditionComboBox.saveTextInHistory();
     }
 
     for (XBreakpointCustomPropertiesPanel<B> customPanel : myCustomPanels) {
@@ -173,6 +224,16 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
       panel.loadProperties();
     }
 
+    if (myConditionComboBox != null) {
+      XExpression condition = myBreakpoint.getConditionExpressionInt();
+      myConditionComboBox.setExpression(condition);
+      boolean hideCheckbox = !myShowAllOptions && condition == null;
+      myConditionEnabledCheckbox.setSelected(hideCheckbox || (myBreakpoint.isConditionEnabled() && condition != null));
+      ((CardLayout)myConditionEnabledPanel.getLayout()).show(myConditionEnabledPanel, hideCheckbox ? CONDITION_ENABLED_LABEL : CONDITION_ENABLED_CHECKBOX);
+
+      onCheckboxChanged();
+    }
+    
     for (XBreakpointCustomPropertiesPanel<B> customPanel : myCustomPanels) {
       customPanel.loadFrom(myBreakpoint);
     }

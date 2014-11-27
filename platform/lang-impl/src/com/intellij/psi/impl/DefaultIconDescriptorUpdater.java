@@ -21,6 +21,7 @@ import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
 import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -68,6 +69,11 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
           symbolIcon =
             contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory) : AllIcons.Nodes.TreeClosed;
         }
+      }
+
+      boolean ignored = ProjectRootManager.getInstance(project).getFileIndex().isExcluded(vFile);
+      if (ignored) {
+        symbolIcon = AllIcons.Modules.ExcludeRoot;
       }
 
       iconDescriptor.setMainIcon(symbolIcon);

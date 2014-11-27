@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.EditorMarkupModelImpl;
 import com.intellij.openapi.editor.markup.MarkupModel;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
@@ -88,7 +86,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
                                                       @NotNull final List<HighlightInfo> infos,
                                                       @NotNull final TextRange priorityRange,
                                                       @NotNull final TextRange restrictedRange) {
-    PsiFile psiFile = highlightingSession.getPsiFile();
+    final PsiFile psiFile = highlightingSession.getPsiFile();
     final Project project = psiFile.getProject();
     final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
     if (document == null) return;
@@ -101,7 +99,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         Editor editor = highlightingSession.getEditor();
         EditorColorsScheme scheme = editor == null ? null : editor.getColorsScheme();
 
-        UpdateHighlightersUtil.setHighlightersOutsideRange(project, document, infos, scheme,
+        UpdateHighlightersUtil.setHighlightersOutsideRange(project, document, psiFile, infos, scheme,
                                                            restrictedRange.getStartOffset(), restrictedRange.getEndOffset(),
                                                            ProperTextRange.create(priorityRange),
                                                            highlightingSession.getPassId());
@@ -128,26 +126,25 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     final Project project = psiFile.getProject();
     final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
     if (document == null) return;
-    final ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
     DaemonCodeAnalyzerEx
-      .processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), new Processor<HighlightInfo>() {
-        @Override
-        public boolean process(final HighlightInfo existing) {
-          if (existing.isBijective() &&
-              existing.getGroup() == Pass.UPDATE_ALL &&
-              range.equalsToRange(existing.getActualStartOffset(), existing.getActualEndOffset())) {
-            if (infos != null) {
-              for (HighlightInfo created : infos) {
-                if (existing.equalsByActualOffset(created)) return true;
+            .processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), new Processor<HighlightInfo>() {
+              @Override
+              public boolean process(final HighlightInfo existing) {
+                if (existing.isBijective() &&
+                    existing.getGroup() == Pass.UPDATE_ALL &&
+                    range.equalsToRange(existing.getActualStartOffset(), existing.getActualEndOffset())) {
+                  if (infos != null) {
+                    for (HighlightInfo created : infos) {
+                      if (existing.equalsByActualOffset(created)) return true;
+                    }
+                  }
+                  // seems that highlight info "existing" is going to disappear
+                  // remove it earlier
+                  ((HighlightingSessionImpl)highlightingSession).queueDisposeHighlighter(existing.highlighter);
+                }
+                return true;
               }
-            }
-            // seems that highlight info "existing" is going to disappear
-            // remove it earlier
-            ((HighlightingSessionImpl)highlightingSession).queueDisposeHighlighter(existing.highlighter);
-          }
-          return true;
-        }
-      });
+            });
   }
 
   @Override

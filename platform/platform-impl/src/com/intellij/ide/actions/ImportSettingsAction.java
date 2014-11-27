@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,11 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.Consumer;
+import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.io.File;
@@ -49,7 +52,7 @@ import java.util.zip.ZipFile;
 
 public class ImportSettingsAction extends AnAction implements DumbAware {
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
     ChooseComponentsToExportDialog.chooseSettingsFile(PathManager.getConfigPath(), component, IdeBundle.message("title.import.file.location"), IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(new Consumer<String>() {
@@ -69,22 +72,25 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         return;
       }
 
+      @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
       final ZipEntry magicEntry = new ZipFile(saveFile).getEntry(ImportSettingsFilenameFilter.SETTINGS_JAR_MARKER);
       if (magicEntry == null) {
         Messages.showErrorDialog(
-          IdeBundle.message("error.file.contains.no.settings.to.import", presentableFileName(saveFile), promptLocationMessage()),
-          IdeBundle.message("title.invalid.file"));
+                IdeBundle.message("error.file.contains.no.settings.to.import", presentableFileName(saveFile), promptLocationMessage()),
+                IdeBundle.message("title.invalid.file"));
         return;
       }
 
-      final ArrayList<ExportableComponent> registeredComponents = new ArrayList<ExportableComponent>();
-      final Map<File, Set<ExportableComponent>> filesToComponents = ExportSettingsAction.getRegisteredComponentsAndFiles(registeredComponents);
-      List<ExportableComponent> components = getComponentsStored(saveFile, registeredComponents);
-      final ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(components, filesToComponents, false,
+      MultiMap<File, ExportableComponent> fileToComponents = ExportSettingsAction.getExportableComponentsMap(false, true);
+      List<ExportableComponent> components = getComponentsStored(saveFile, fileToComponents.values());
+      fileToComponents.values().retainAll(components);
+      final ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(fileToComponents, false,
                                                                                        IdeBundle.message("title.select.components.to.import"),
                                                                                        IdeBundle.message("prompt.check.components.to.import"));
-      dialog.show();
-      if (!dialog.isOK()) return;
+      if (!dialog.showAndGet()) {
+        return;
+      }
+
       final Set<ExportableComponent> chosenComponents = dialog.getExportableComponents();
       Set<String> relativeNamesToExtract = new HashSet<String>();
       for (final ExportableComponent chosenComponent : chosenComponents) {
@@ -119,14 +125,14 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
                                                                     ApplicationNamesInfo.getInstance().getProductName(),
                                                                     ApplicationNamesInfo.getInstance().getFullProductName()),
                                                   IdeBundle.message("title.restart.needed"), Messages.getQuestionIcon());
-      if (ret == 0) {
+      if (ret == Messages.OK) {
         ((ApplicationEx)ApplicationManager.getApplication()).restart(true);
       }
     }
     catch (ZipException e1) {
       Messages.showErrorDialog(
-        IdeBundle.message("error.reading.settings.file", presentableFileName(saveFile), e1.getMessage(), promptLocationMessage()),
-        IdeBundle.message("title.invalid.file"));
+              IdeBundle.message("error.reading.settings.file", presentableFileName(saveFile), e1.getMessage(), promptLocationMessage()),
+              IdeBundle.message("title.invalid.file"));
     }
     catch (IOException e1) {
       Messages.showErrorDialog(IdeBundle.message("error.reading.settings.file.2", presentableFileName(saveFile), e1.getMessage()),
@@ -142,19 +148,19 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
     return IdeBundle.message("message.please.ensure.correct.settings");
   }
 
-  private static List<ExportableComponent> getComponentsStored(File zipFile,
-                                                               ArrayList<ExportableComponent> registeredComponents)
-    throws IOException {
-    final File configPath = new File(PathManager.getConfigPath());
-
-    final ArrayList<ExportableComponent> components = new ArrayList<ExportableComponent>();
+  @NotNull
+  private static List<ExportableComponent> getComponentsStored(@NotNull File zipFile,
+                                                               @NotNull Collection<? extends ExportableComponent> registeredComponents) throws IOException {
+    File configPath = new File(PathManager.getConfigPath());
+    List<ExportableComponent> components = new ArrayList<ExportableComponent>();
     for (ExportableComponent component : registeredComponents) {
-      final File[] exportFiles = component.getExportFiles();
-      for (File exportFile : exportFiles) {
-        final String rPath = FileUtil.getRelativePath(configPath, exportFile);
+      for (File exportFile : component.getExportFiles()) {
+        String rPath = FileUtilRt.getRelativePath(configPath, exportFile);
         assert rPath != null;
-        String relativePath = FileUtil.toSystemIndependentName(rPath);
-        if (exportFile.isDirectory()) relativePath += "/";
+        String relativePath = FileUtilRt.toSystemIndependentName(rPath);
+        if (exportFile.isDirectory()) {
+          relativePath += '/';
+        }
         if (ZipUtil.isZipContainsEntry(zipFile, relativePath)) {
           components.add(component);
           break;
@@ -163,5 +169,4 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
     }
     return components;
   }
-
 }

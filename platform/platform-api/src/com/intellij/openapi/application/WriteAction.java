@@ -16,9 +16,12 @@
 package com.intellij.openapi.application;
 
 import com.intellij.ui.GuiUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class WriteAction<T> extends BaseActionRunnable<T> {
+  @NotNull
+  @Override
   public RunResult<T> execute() {
     final RunResult<T> result = new RunResult<T>(this);
 
@@ -29,6 +32,7 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
 
     try {
       GuiUtils.runOrInvokeAndWait(new Runnable() {
+        @Override
         public void run() {
           final AccessToken accessToken = start();
           try {

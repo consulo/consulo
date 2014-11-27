@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -220,7 +221,7 @@ public class ModuleDependenciesAnalyzer {
               }
               else {
                 final OrderPath p = new OrderPath(myStack);
-                for (String u : orderEntry.getUrls(OrderRootType.CLASSES)) {
+                for (String u : orderEntry.getUrls(BinariesOrderRootType.getInstance())) {
                   addUrlPath(p, u);
                 }
                 addEntryPath(orderEntry, p);

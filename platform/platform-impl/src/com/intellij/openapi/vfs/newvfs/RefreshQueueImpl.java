@@ -131,6 +131,7 @@ public class RefreshQueueImpl extends RefreshQueue {
     }
   }
 
+  @NotNull
   @Override
   public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @NotNull ModalityState state) {
     return new RefreshSessionImpl(async, recursively, finishRunnable, state);
@@ -139,5 +140,12 @@ public class RefreshQueueImpl extends RefreshQueue {
   @Override
   public void processSingleEvent(@NotNull VFileEvent event) {
     new RefreshSessionImpl(Collections.singletonList(event)).launch();
+  }
+
+  public static boolean isRefreshInProgress() {
+    RefreshQueueImpl refreshQueue = (RefreshQueueImpl)RefreshQueue.getInstance();
+    synchronized (refreshQueue.mySessions) {
+      return !refreshQueue.mySessions.isEmpty();
+    }
   }
 }

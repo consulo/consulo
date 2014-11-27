@@ -29,8 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 22:29/15.10.13
  */
 public class ShowDiagramAction extends AnAction {
-  public static class DiagramSupport implements EarlyAccessProgramDescriptor {
-
+  public static class DiagramSupport extends EarlyAccessProgramDescriptor {
     @NotNull
     @Override
     public String getName() {
@@ -38,7 +37,7 @@ public class ShowDiagramAction extends AnAction {
     }
 
     @Override
-    public boolean getDefaultState() {
+    public boolean isAvailable() {
       return false;
     }
 
@@ -57,7 +56,7 @@ public class ShowDiagramAction extends AnAction {
   public void update(AnActionEvent e) {
     super.update(e);
 
-    boolean state = EarlyAccessProgramManager.getInstance().getState(DiagramSupport.class);
+    boolean state = EarlyAccessProgramManager.is(DiagramSupport.class);
     if (state) {
       PsiElement psiElement = e.getData(CommonDataKeys.PSI_ELEMENT);
       state = false;

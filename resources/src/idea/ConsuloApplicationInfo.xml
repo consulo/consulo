@@ -4,11 +4,8 @@
   <build number="SNAPSHOT" date="__BUILD_DATE__"/>
   <logo url="/logo.png" textcolor="ffffff" progressColor="ffaa16" progressY="230" progressTailIcon="/community_progress_tail.png"/>
   <about url="/logo_about.png" foreground="000000" logoX="300" logoY="265" logoW="75" logoH="30"/>
-  <icon size32="/icon32.png" size16="/icon16.png" size32opaque="/icon16.png" size128="/icon128.png" ico="icon.ico"/>
 
   <names product="Consulo" fullname="Consulo" script="consulo"/>
-
-  <welcome-screen logo-url="/Logo_welcomeScreen.png" />
 
   <help file="ideahelp.jar" root="idea"/>
   <documentation url="http://must-be.org/consulo/wiki/"/>

@@ -1,10 +1,10 @@
 package com.intellij.util.ui.classpath;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jdom.Element;
@@ -55,7 +55,7 @@ public class SimpleClasspathElementFactory {
       return Collections.<SimpleClasspathElement>singletonList(new GlobalLibraryReferenceElement(library.getName()));
     }
     final List<SimpleClasspathElement> elements = new ArrayList<SimpleClasspathElement>();
-    for (VirtualFile file : library.getFiles(OrderRootType.CLASSES)) {
+    for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
       elements.add(new SingleRootClasspathElement(file.getUrl()));
     }
     return elements;

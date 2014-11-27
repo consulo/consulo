@@ -42,13 +42,13 @@ public class NewProjectCheckoutListener implements VcsAwareCheckoutListener {
     int rc = Messages.showYesNoDialog(project, VcsBundle
       .message("checkout.create.project.prompt", ProjectDirCheckoutListener.getProductNameWithArticle(), directory.getAbsolutePath()),
                                       VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
-    if (rc == 0) {
+    if (rc == Messages.YES) {
       final ProjectManager pm = ProjectManager.getInstance();
       final Project[] projects = pm.getOpenProjects();
       final Set<VirtualFile> files = projectsLocationSet(projects);
       VirtualFile file = LocalFileSystem.getInstance().findFileByIoFile(directory);
       AddModuleWizard wizard =
-        ImportModuleAction.createImportWizard(null, null, file, ProjectImportProvider.PROJECT_IMPORT_PROVIDER.getExtensions());
+        ImportModuleAction.createImportWizard(null, null, file, ProjectImportProvider.EP_NAME.getExtensions());
       if (wizard.showAndGet()) {
         ImportModuleAction.createFromWizard(null, wizard);
       }

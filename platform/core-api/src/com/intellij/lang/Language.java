@@ -258,11 +258,6 @@ public abstract class Language extends UserDataHolderBase implements Named {
     return false;
   }
 
-  @Deprecated
-  public List<Language> getDialects() {
-    return Collections.emptyList();
-  }
-
   @Nullable
   public static Language findLanguageByID(String id) {
     final Collection<Language> languages = getRegisteredLanguages();

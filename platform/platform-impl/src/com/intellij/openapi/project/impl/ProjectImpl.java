@@ -38,10 +38,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.project.DumbAwareRunnable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.project.ProjectManagerAdapter;
+import com.intellij.openapi.project.*;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
@@ -75,7 +72,7 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
   private static final String PLUGIN_SETTINGS_ERROR = "Plugin Settings Error";
   public static final String NAME_FILE = ".name";
 
-  private ProjectManagerImpl myManager;
+  private ProjectManager myManager;
 
   private volatile IProjectStore myComponentStore;
 
@@ -91,7 +88,7 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
 
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
 
-  protected ProjectImpl(@NotNull ProjectManagerImpl manager, @NotNull String filePath, boolean isOptimiseTestLoadSpeed, String projectName) {
+  protected ProjectImpl(@NotNull ProjectManager manager, @NotNull String filePath, boolean isOptimiseTestLoadSpeed, String projectName) {
     super(ApplicationManager.getApplication(), "Project "+(projectName == null ? filePath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
 
@@ -318,19 +315,21 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
 
   @Override
   public void save() {
-    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) return; //no need to save
+    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
+      return; //no need to save
+    }
 
     if (!mySavingInProgress.compareAndSet(false, true)) {
       return;
     }
+
     try {
       if (isToSaveProjectName()) {
-        final IProjectStore stateStore = getStateStore();
-        final VirtualFile baseDir = stateStore.getProjectBaseDir();
+        VirtualFile baseDir = getStateStore().getProjectBaseDir();
         if (baseDir != null && baseDir.isValid()) {
-          final VirtualFile ideaDir = baseDir.findChild(DIRECTORY_STORE_FOLDER);
+          VirtualFile ideaDir = baseDir.findChild(DIRECTORY_STORE_FOLDER);
           if (ideaDir != null && ideaDir.isValid() && ideaDir.isDirectory()) {
-            final File nameFile = new File(ideaDir.getPath(), NAME_FILE);
+            File nameFile = new File(ideaDir.getPath(), NAME_FILE);
             try {
               FileUtil.writeToFile(nameFile, getName().getBytes("UTF-8"), false);
               myOldName = null;
@@ -351,19 +350,25 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
     catch (PluginException e) {
       PluginManagerCore.disablePlugin(e.getPluginId().getIdString());
       Notification notification = new Notification(
-        PLUGIN_SETTINGS_ERROR,
-        "Unable to save plugin settings!",
-        "<p>The plugin <i>" + e.getPluginId() + "</i> failed to save settings and has been disabled. Please restart" +
-        ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" +
-        (ApplicationManagerEx.getApplicationEx().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : ""),
-        NotificationType.ERROR);
+              PLUGIN_SETTINGS_ERROR,
+              "Unable to save plugin settings!",
+              "<p>The plugin <i>" + e.getPluginId() + "</i> failed to save settings and has been disabled. Please restart " +
+              ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" +
+              (ApplicationManagerEx.getApplicationEx().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : ""),
+              NotificationType.ERROR);
       Notifications.Bus.notify(notification, this);
-      LOG.info("Unable to save plugin settings",e);
+      LOG.info("Unable to save plugin settings", e);
     }
-    catch (IOException e) {
-      MessagesEx.error(this, ProjectBundle.message("project.save.error", e.getMessage())).showLater();
-      LOG.info("Error saving project", e);
-    } finally {
+    catch (Throwable e) {
+      if (ApplicationManager.getApplication().isUnitTestMode()) {
+        LOG.error(e);
+      }
+      else {
+        LOG.info("Error saving project", e);
+        MessagesEx.error(this, ProjectBundle.message("project.save.error", e.getMessage())).showLater();
+      }
+    }
+    finally {
       mySavingInProgress.set(false);
       ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
     }
@@ -505,7 +510,7 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
           }
           else {
             if (Messages.showYesNoDialog(this, "Component could not be reloaded. Reload project?", "Configuration Changed",
-                                         Messages.getQuestionIcon()) == 0) {
+                                         Messages.getQuestionIcon()) == Messages.YES) {
               ProjectManagerEx.getInstanceEx().reloadProject(this);
             }
           }

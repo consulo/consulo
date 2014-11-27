@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.openapi.fileEditor.ex;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.EditorDataProvider;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -122,6 +123,12 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   @Nullable
   public abstract Pair <FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@NotNull VirtualFile file);
 
+  /**
+   * Closes all files IN ACTIVE SPLITTER (window).
+   *
+   * @see com.intellij.ui.docking.DockManager#getContainers()
+   * @see com.intellij.ui.docking.DockContainer#closeAll()
+   */
   public abstract void closeAllFiles();
 
   @NotNull
@@ -157,10 +164,11 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
 
   public abstract boolean isInsideChange();
 
+  @Override
   @Nullable
-  public final Object getData(@NotNull String dataId, @NotNull Editor editor, @NotNull VirtualFile file) {
+  public final Object getData(@NotNull String dataId, @NotNull Editor editor, @NotNull Caret caret) {
     for (final EditorDataProvider dataProvider : myDataProviders) {
-      final Object o = dataProvider.getData(dataId, editor, file);
+      final Object o = dataProvider.getData(dataId, editor, caret);
       if (o != null) return o;
     }
     return null;

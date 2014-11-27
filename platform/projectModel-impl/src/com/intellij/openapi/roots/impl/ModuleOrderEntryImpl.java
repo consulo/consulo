@@ -19,60 +19,46 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
 import org.consulo.util.pointers.NamedPointer;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ModuleOrderEntryTypeProvider;
 
 /**
  * @author dsl
  */
-public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOrderEntry, WritableOrderEntry, ClonableOrderEntry {
-  @NonNls public static final String ENTRY_TYPE = "module";
-  @NonNls public static final String MODULE_NAME_ATTR = "module-name";
-  @NonNls private static final String EXPORTED_ATTR = "exported";
-  @NonNls private static final String PRODUCTION_ON_TEST_ATTRIBUTE = "production-on-test";
-
+public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOrderEntry, ClonableOrderEntry {
   private final NamedPointer<Module> myModulePointer;
-  private boolean myExported = false;
-  @NotNull private DependencyScope myScope;
+  private boolean myExported;
+  @NotNull
+  private DependencyScope myScope = DependencyScope.COMPILE;
   private boolean myProductionOnTestDependency;
 
-  ModuleOrderEntryImpl(@NotNull Module module, @NotNull RootModelImpl rootModel) {
-    super(rootModel);
+  ModuleOrderEntryImpl(@NotNull Module module, @NotNull ModuleRootLayerImpl rootLayer) {
+    super(ModuleOrderEntryTypeProvider.getInstance(), rootLayer);
     myModulePointer = ModuleUtilCore.createPointer(module);
-    myScope = DependencyScope.COMPILE;
   }
 
-  ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull RootModelImpl rootModel) {
-    super(rootModel);
-    myModulePointer = ModuleUtilCore.createPointer(rootModel.getProject(), moduleName);
-    myScope = DependencyScope.COMPILE;
+  ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull ModuleRootLayerImpl rootLayer) {
+    this(moduleName, rootLayer, DependencyScope.COMPILE, false, false);
   }
 
-  ModuleOrderEntryImpl(Element element, RootModelImpl rootModel) throws InvalidDataException {
-    super(rootModel);
-    myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
-    final String moduleName = element.getAttributeValue(MODULE_NAME_ATTR);
-    if (moduleName == null) {
-      throw new InvalidDataException();
-    }
-
-    myModulePointer = ModuleUtilCore.createPointer(rootModel.getProject(), moduleName);
-    myScope = DependencyScope.readExternal(element);
-    myProductionOnTestDependency = element.getAttributeValue(PRODUCTION_ON_TEST_ATTRIBUTE) != null;
+  public ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull ModuleRootLayerImpl rootLayer, @NotNull DependencyScope dependencyScope, boolean exported,
+                       boolean productionOnTestDependency) {
+    super(ModuleOrderEntryTypeProvider.getInstance(), rootLayer);
+    myModulePointer = ModuleUtilCore.createPointer(rootLayer.getProject(), moduleName);
+    myScope = dependencyScope;
+    myExported = exported;
+    myProductionOnTestDependency = productionOnTestDependency;
   }
 
-  private ModuleOrderEntryImpl(ModuleOrderEntryImpl that, RootModelImpl rootModel) {
-    super(rootModel);
+  private ModuleOrderEntryImpl(ModuleOrderEntryImpl that, ModuleRootLayerImpl rootLayer) {
+    super(ModuleOrderEntryTypeProvider.getInstance(), rootLayer);
     final NamedPointer<Module> thatModule = that.myModulePointer;
-    myModulePointer = ModuleUtilCore.createPointer(rootModel.getProject(), thatModule.getName());
+    myModulePointer = ModuleUtilCore.createPointer(rootLayer.getProject(), thatModule.getName());
     myExported = that.myExported;
     myProductionOnTestDependency = that.myProductionOnTestDependency;
     myScope = that.myScope;
@@ -125,6 +111,11 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
+  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+    return other instanceof ModuleOrderEntry && Comparing.equal(getModuleName(), ((ModuleOrderEntry)other).getModuleName());
+  }
+
+  @Override
   @NotNull
   public String getPresentableName() {
     return getModuleName();
@@ -142,28 +133,12 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  public void writeExternal(Element rootElement) throws WriteExternalException {
-    final Element element = OrderEntryFactory.createOrderEntryElement(ENTRY_TYPE);
-    element.setAttribute(MODULE_NAME_ATTR, getModuleName());
-    if (myExported) {
-      element.setAttribute(EXPORTED_ATTR, "");
-    }
-    myScope.writeExternal(element);
-    if (myProductionOnTestDependency) {
-      element.setAttribute(PRODUCTION_ON_TEST_ATTRIBUTE, "");
-    }
-    rootElement.addContent(element);
-  }
-
-  @Override
   public String getModuleName() {
     return myModulePointer.getName();
   }
 
   @Override
-  public OrderEntry cloneEntry(RootModelImpl rootModel,
-                               ProjectRootManagerImpl projectRootManager,
-                               VirtualFilePointerManager filePointerManager) {
+  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
     return new ModuleOrderEntryImpl(this, rootModel);
   }
 

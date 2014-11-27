@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,18 @@
 
 package com.intellij.util.xmlb;
 
-import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
+import gnu.trove.THashMap;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 abstract class AbstractCollectionBinding implements Binding {
   private Map<Class, Binding> myElementBindings;
@@ -37,9 +41,10 @@ abstract class AbstractCollectionBinding implements Binding {
     myElementType = elementType;
     myTagName = tagName;
     myAccessor = accessor;
-    myAnnotation = accessor == null ? null : XmlSerializerImpl.findAnnotation(accessor.getAnnotations(), AbstractCollection.class);
+    myAnnotation = accessor == null ? null : accessor.getAnnotation(AbstractCollection.class);
   }
 
+  @Override
   public void init() {
     if (myAnnotation != null) {
       if (!myAnnotation.surroundWithTag()) {
@@ -58,21 +63,18 @@ abstract class AbstractCollectionBinding implements Binding {
     }
   }
 
-  protected Binding getElementBinding(Class<?> elementClass) {
+  protected Binding getElementBinding(@NotNull Class<?> elementClass) {
     final Binding binding = getElementBindings().get(elementClass);
     return binding == null ? XmlSerializerImpl.getBinding(elementClass) : binding;
   }
 
   private synchronized Map<Class, Binding> getElementBindings() {
     if (myElementBindings == null) {
-      myElementBindings = new HashMap<Class, Binding>();
-
+      myElementBindings = new THashMap<Class, Binding>();
       myElementBindings.put(myElementType, getBinding(myElementType));
-
       if (myAnnotation != null) {
         for (Class aClass : myAnnotation.elementTypes()) {
           myElementBindings.put(aClass, getBinding(aClass));
-
         }
       }
     }
@@ -87,7 +89,7 @@ abstract class AbstractCollectionBinding implements Binding {
     throw new XmlSerializationException("Node " + node + " is not bound");
   }
 
-  private Binding getBinding(final Class type) {
+  private Binding getBinding(@NotNull Class type) {
     Binding binding = XmlSerializerImpl.getBinding(type);
     return binding.getBoundNodeType().isAssignableFrom(Element.class) ? binding : createElementTagWrapper(binding);
   }
@@ -101,72 +103,86 @@ abstract class AbstractCollectionBinding implements Binding {
   }
 
   abstract Object processResult(Collection result, Object target);
-  abstract Iterable getIterable(Object o);
 
-  public Object serialize(Object o, Object context, SerializationFilter filter) {
-    Iterable iterable = getIterable(o);
-    if (iterable == null) return context;
+  @NotNull
+  abstract Collection<Object> getIterable(@NotNull Object o);
+
+  @Nullable
+  @Override
+  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+    Collection<Object> collection = o == null ? null : getIterable(o);
 
     final String tagName = getTagName(o);
     if (tagName != null) {
       Element result = new Element(tagName);
-      for (Object e : iterable) {
+      if (ContainerUtil.isEmpty(collection)) {
+        return new Element(tagName);
+      }
+      for (Object e : collection) {
         if (e == null) {
           throw new XmlSerializationException("Collection " + myAccessor + " contains 'null' object");
         }
-        final Binding binding = getElementBinding(e.getClass());
-        result.addContent((Content)binding.serialize(e, result, filter));
+        Content child = (Content)getElementBinding(e.getClass()).serialize(e, result, filter);
+        if (child != null) {
+          result.addContent(child);
+        }
       }
-
       return result;
     }
     else {
-      List<Object> result = new ArrayList<Object>();
-      for (Object e : iterable) {
-        final Binding binding = getElementBinding(e.getClass());
-        result.add(binding.serialize(e, result, filter));
+      List<Object> result = new SmartList<Object>();
+      if (ContainerUtil.isEmpty(collection)) {
+        return result;
       }
 
+      for (Object e : collection) {
+        ContainerUtil.addIfNotNull(result, getElementBinding(e.getClass()).serialize(e, result, filter));
+      }
       return result;
     }
   }
 
+  @Override
   public Object deserialize(Object o, @NotNull Object... nodes) {
     Collection result;
+    if (getTagName(o) == null) {
+      if (o instanceof Collection) {
+        result = (Collection)o;
+        result.clear();
+      }
+      else {
+        result = new SmartList();
+      }
+      for (Object node : nodes) {
+        if (!XmlSerializerImpl.isIgnoredNode(node)) {
+          //noinspection unchecked
+          result.add(getElementBinding(node).deserialize(o, node));
+        }
+      }
 
-    if (getTagName(o) != null) {
-      assert nodes.length == 1;
-      Element e = (Element)nodes[0];
-
-      result = createCollection(e.getName());
-      final Content[] childElements = JDOMUtil.getContent(e);
-      for (final Content n : childElements) {
-        if (XmlSerializerImpl.isIgnoredNode(n)) continue;
-        final Binding elementBinding = getElementBinding(n);
-        Object v = elementBinding.deserialize(o, n);
-        //noinspection unchecked
-        result.add(v);
+      if (result == o) {
+        return result;
       }
     }
     else {
-      result = new ArrayList();
-      for (Object node : nodes) {
-        if (XmlSerializerImpl.isIgnoredNode(node)) continue;
-        final Binding elementBinding = getElementBinding(node);
-        Object v = elementBinding.deserialize(o, node);
-        //noinspection unchecked
-        result.add(v);
+      assert nodes.length == 1;
+      Element e = (Element)nodes[0];
+      result = createCollection(e.getName());
+      for (Content child : e.getContent()) {
+        if (!XmlSerializerImpl.isIgnoredNode(child)) {
+          //noinspection unchecked
+          result.add(getElementBinding(child).deserialize(o, child));
+        }
       }
     }
-
-
     return processResult(result, o);
   }
 
-  protected Collection createCollection(final String tagName) {
-    return new ArrayList();
+  protected Collection createCollection(@NotNull String tagName) {
+    return new SmartList();
   }
 
+  @Override
   public boolean isBoundTo(Object node) {
     if (!(node instanceof Element)) return false;
 
@@ -180,6 +196,7 @@ abstract class AbstractCollectionBinding implements Binding {
     return ((Element)node).getName().equals(tagName);
   }
 
+  @Override
   public Class getBoundNodeType() {
     return Element.class;
   }
@@ -190,8 +207,7 @@ abstract class AbstractCollectionBinding implements Binding {
 
   @Nullable
   private String getTagName(final Object target) {
-    if (myAnnotation == null || myAnnotation.surroundWithTag()) return getCollectionTagName(target);
-    return null;
+    return myAnnotation == null || myAnnotation.surroundWithTag() ? getCollectionTagName(target) : null;
   }
 
   protected String getCollectionTagName(final Object target) {

@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
+import com.intellij.util.Processor;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.graph.Graph;
 import org.consulo.module.extension.ModuleExtension;
@@ -58,6 +59,7 @@ public class ModuleUtilCore {
 
   public static String getModuleNameInReadAction(@NotNull final Module module) {
     return new ReadAction<String>() {
+      @Override
       protected void run(final Result<String> result) throws Throwable {
         result.setResult(module.getName());
       }
@@ -194,13 +196,13 @@ public class ModuleUtilCore {
     return list;
   }
 
-  public static boolean visitMeAndDependentModules(@NotNull final Module module, final ModuleVisitor visitor) {
-    if (!visitor.visit(module)) {
+  public static boolean visitMeAndDependentModules(@NotNull final Module module, final Processor<Module> visitor) {
+    if (!visitor.process(module)) {
       return false;
     }
     final List<Module> list = getAllDependentModules(module);
     for (Module dependentModule : list) {
-      if (!visitor.visit(dependentModule)) {
+      if (!visitor.process(dependentModule)) {
         return false;
       }
     }
@@ -241,9 +243,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(@NotNull Project project,
-                                                              @NotNull VirtualFile virtualFile,
-                                                              @NotNull Class<E> extensionClass) {
+  public static <E extends ModuleExtension<E>> E getExtension(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull Class<E> extensionClass) {
     Module moduleForFile = findModuleForFile(virtualFile, project);
     if (moduleForFile == null) {
       return null;
@@ -252,21 +252,20 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull Module module, @NotNull Class<E> extensionClass) {
+  public static Sdk getSdk(@NotNull Module module, @NotNull Class<? extends ModuleExtensionWithSdk> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
-    final E extension = moduleRootManager.getExtension(extensionClass);
+    final ModuleExtensionWithSdk<?> extension = moduleRootManager.getExtension(extensionClass);
     if (extension == null) {
       return null;
     }
     else {
-      return (S)extension.getSdk();
+      return extension.getSdk();
     }
   }
 
   @Nullable
-  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull PsiElement element,
-                                                                              @NotNull Class<E> extensionClass) {
+  public static Sdk getSdk(@NotNull PsiElement element, @NotNull Class<? extends ModuleExtensionWithSdk> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {
       return null;
@@ -275,9 +274,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull Project project,
-                                                                              @NotNull VirtualFile virtualFile,
-                                                                              @NotNull Class<E> extensionClass) {
+  public static Sdk getSdk(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull Class<? extends ModuleExtensionWithSdk> extensionClass) {
     Module moduleForPsiElement = findModuleForFile(virtualFile, project);
     if (moduleForPsiElement == null) {
       return null;
@@ -295,13 +292,5 @@ public class ModuleUtilCore {
   public static NamedPointer<Module> createPointer(@NotNull Project project, @NotNull String name) {
     ModulePointerManager manager = ServiceManager.getService(project, ModulePointerManager.class);
     return manager.create(name);
-  }
-
-  public interface ModuleVisitor {
-    /**
-     * @param module module to be visited.
-     * @return false to stop visiting.
-     */
-    boolean visit(final Module module);
   }
 }

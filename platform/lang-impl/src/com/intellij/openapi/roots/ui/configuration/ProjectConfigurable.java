@@ -103,7 +103,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   @Override
   public JComponent createOptionsPanel() {
-    myDetailsComponent = new DetailsComponent();
+    myDetailsComponent = new DetailsComponent(false, false);
     myDetailsComponent.setContent(myPanel);
     myDetailsComponent.setText(getBannerSlogan());
 

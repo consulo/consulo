@@ -62,6 +62,12 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
     renderer.append(myText, myTextAttributes);
   }
 
+  @Nullable
+  @Override
+  public Icon getIcon() {
+    return myIcon;
+  }
+
   @Override
   @NotNull
   public String getText() {

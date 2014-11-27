@@ -118,7 +118,7 @@ public class PathEditor {
     myList.setCellRenderer(createListCellRenderer(myList));
 
     if (isImmutable()) {
-      myComponent = myList;
+      myComponent = ScrollPaneFactory.createScrollPane(myList, true);
     }
     else {
       ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions().setAddAction(new AnActionButtonRunnable() {
@@ -364,6 +364,9 @@ public class PathEditor {
         FileType fileType = findFileType(file);
         if(fileType instanceof ArchiveFileType) {
           return fileType.getIcon();
+        }
+        else if(file.isDirectory()) {
+          return AllIcons.Nodes.Folder;
         }
         return file.getFileType().getIcon();
       }

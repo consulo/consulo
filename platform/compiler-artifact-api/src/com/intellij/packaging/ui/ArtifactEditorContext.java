@@ -48,10 +48,6 @@ public interface ArtifactEditorContext extends PackagingElementResolvingContext 
   @NotNull
   ModifiableRootModel getOrCreateModifiableRootModel(@NotNull Module module);
 
-  @Nullable
-  ManifestFileConfiguration getManifestFile(CompositePackagingElement<?> element, ArtifactType artifactType);
-
-
   CompositePackagingElement<?> getRootElement(@NotNull Artifact artifact);
 
   void editLayout(@NotNull Artifact artifact, Runnable runnable);

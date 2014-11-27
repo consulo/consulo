@@ -1,11 +1,10 @@
 <component name="libraryTable">
   <library name="Mac">
-    <CLASSES>
+    <binaries>
       <root url="jar://$PROJECT_DIR$/libProvided/eawtstub.jar!/" />
-    </CLASSES>
-    <DOCUMENTATION />
-    <SOURCES>
+    </binaries>
+    <sources>
       <root url="jar://$PROJECT_DIR$/libSrc/eawtstub_src.zip!/src" />
-    </SOURCES>
+    </sources>
   </library>
 </component>

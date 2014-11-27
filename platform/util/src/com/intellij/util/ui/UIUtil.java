@@ -38,12 +38,16 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComboBoxUI;
 import javax.swing.plaf.ProgressBarUI;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.plaf.basic.BasicRadioButtonUI;
 import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.NumberFormatter;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
@@ -59,6 +63,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -70,6 +75,14 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
 public class UIUtil {
+
+  public static int getMultiClickInterval() {
+    Object property = Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
+    if (property instanceof Integer) {
+      return (Integer)property;
+    }
+    return 500;
+  }
 
   private static final AtomicNotNullLazyValue<Boolean> X_RENDER_ACTIVE = new AtomicNotNullLazyValue<Boolean>() {
     @NotNull
@@ -91,6 +104,9 @@ public class UIUtil {
 
   private static final String[] STANDARD_FONT_SIZES =
     {"8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72"};
+
+  @NonNls
+  public static final String BORDER_LINE = "<hr size=1 noshade>";
 
   public static void applyStyle(@NotNull ComponentStyle componentStyle, @NotNull Component comp) {
     if (!(comp instanceof JComponent)) return;
@@ -751,6 +767,10 @@ public class UIUtil {
   }
 
   public static Color getListUnfocusedSelectionBackground() {
+    Color color = UIManager.getColor("Color.SelectionBackground");
+    if(color != null) {
+      return color;
+    }
     return isUnderDarcula() ? Gray._52 : UNFOCUSED_SELECTION_COLOR;
   }
 
@@ -2043,6 +2063,17 @@ public class UIUtil {
     }
   }
 
+  public static <T> T invokeAndWaitIfNeeded(@NotNull final Computable<T> computable) {
+    final Ref<T> result = Ref.create();
+    invokeAndWaitIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        result.set(computable.compute());
+      }
+    });
+    return result.get();
+  }
+
   public static void invokeAndWaitIfNeeded(@NotNull final ThrowableRunnable runnable) throws Throwable {
     if (SwingUtilities.isEventDispatchThread()) {
       runnable.run();
@@ -2411,7 +2442,7 @@ public class UIUtil {
     /**
      * _position(block width, block height) => (x, y) of the block
      */
-    public void draw(@NotNull final Graphics g, final PairFunction<Integer, Integer, Pair<Integer, Integer>> _position) {
+    public void draw(@NotNull final Graphics g, final PairFunction<Integer, Integer, Couple<Integer>> _position) {
       final int[] maxWidth = {0};
       final int[] height = {0};
       final int[] maxBulletWidth = {0};
@@ -2745,5 +2776,56 @@ public class UIUtil {
       catch (InvocationTargetException e) { LOG.debug(e); }
       catch (IllegalAccessException e) { LOG.debug(e); }
     }
+  }
+
+  @NotNull
+  public static String rightArrow() {
+    char rightArrow = '\u2192';
+    return getLabelFont().canDisplay(rightArrow) ? String.valueOf(rightArrow) : "->";
+  }
+
+  public static EmptyBorder getTextAlignBorder(@NotNull JToggleButton alignSource) {
+    ButtonUI ui = alignSource.getUI();
+    int leftGap = alignSource.getIconTextGap();
+    Border border = alignSource.getBorder();
+    if (border != null) {
+      leftGap += border.getBorderInsets(alignSource).left;
+    }
+    if (ui instanceof BasicRadioButtonUI) {
+      leftGap += ((BasicRadioButtonUI)alignSource.getUI()).getDefaultIcon().getIconWidth();
+    }
+    else {
+      Method method = ReflectionUtil.getMethod(ui.getClass(), "getDefaultIcon", JComponent.class);
+      if (method != null) {
+        try {
+          Object o = method.invoke(ui, alignSource);
+          if (o instanceof Icon) {
+            leftGap += ((Icon)o).getIconWidth();
+          }
+        }
+        catch (IllegalAccessException e) {
+          e.printStackTrace();
+        }
+        catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    return new EmptyBorder(0, leftGap, 0, 0);
+  }
+
+  /**
+   * It is your responsibility to set correct horizontal align (left in case of UI Designer)
+   */
+  public static void configureNumericFormattedTextField(@NotNull JFormattedTextField textField) {
+    NumberFormat format = NumberFormat.getIntegerInstance();
+    format.setParseIntegerOnly(true);
+    format.setGroupingUsed(false);
+    NumberFormatter numberFormatter = new NumberFormatter(format);
+    numberFormatter.setMinimum(0);
+    textField.setFormatterFactory(new DefaultFormatterFactory(numberFormatter));
+    textField.setHorizontalAlignment(SwingConstants.TRAILING);
+
+    textField.setColumns(4);
   }
 }

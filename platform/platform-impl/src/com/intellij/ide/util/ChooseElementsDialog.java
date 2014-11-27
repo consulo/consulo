@@ -38,29 +38,30 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
   protected ElementsChooser<T> myChooser;
   private String myDescription;
 
-  public ChooseElementsDialog(Project project, List<? extends T> items, String title, final String description) {
+  public ChooseElementsDialog(Project project, Collection<? extends T> items, String title, final String description) {
     this(project, items, title, description, false);
   }
 
-  public ChooseElementsDialog(Project project, List<? extends T> items, String title, final String description, boolean sort) {
+  public ChooseElementsDialog(Project project, Collection<? extends T> items, String title, final String description, boolean sort) {
     super(project, true);
     myDescription = description;
     initializeDialog(items, title, sort);
   }
 
-  public ChooseElementsDialog(Component parent, List<T> items, String title) {
+  public ChooseElementsDialog(Component parent, Collection<T> items, String title) {
     this(parent, items, title, null, false);
   }
 
-  public ChooseElementsDialog(Component parent, List<T> items, String title, @Nullable String description, final boolean sort) {
+  public ChooseElementsDialog(Component parent, Collection<T> items, String title, @Nullable String description, final boolean sort) {
     super(parent, true);
     myDescription = description;
     initializeDialog(items, title, sort);
   }
 
-  private void initializeDialog(final List<? extends T> items, final String title, boolean sort) {
+  private void initializeDialog(final Collection<? extends T> items, final String title, boolean sort) {
     setTitle(title);
     myChooser = new ElementsChooser<T>(false) {
+      @Override
       protected String getItemText(@NotNull final T item) {
         return ChooseElementsDialog.this.getItemText(item);
       }
@@ -70,6 +71,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     List<? extends T> elements = new ArrayList<T>(items);
     if (sort) {
       Collections.sort(elements, new Comparator<T>() {
+        @Override
         public int compare(final T o1, final T o2) {
           return getItemText(o1).compareToIgnoreCase(getItemText(o2));
         }
@@ -77,6 +79,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     }
     setElements(elements, elements.size() > 0 ? elements.subList(0, 1) : Collections.<T>emptyList());
     myChooser.getComponent().registerKeyboardAction(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         doOKAction();
       }
@@ -112,10 +115,12 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     myChooser.selectElements(elements);
   }
 
+  @Override
   public JComponent getPreferredFocusedComponent() {
     return myChooser.getComponent();
   }
 
+  @Override
   protected JComponent createCenterPanel() {
     final JPanel panel = new JPanel(new BorderLayout());
     panel.add(ScrollPaneFactory.createScrollPane(myChooser.getComponent()), BorderLayout.CENTER);
@@ -125,7 +130,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     return panel;
   }
 
-  private void setElements(final Collection<? extends T> elements, final Collection<? extends T> elementsToSelect) {
+  protected void setElements(final Collection<? extends T> elements, final Collection<? extends T> elementsToSelect) {
     myChooser.clear();
     for (final T item : elements) {
       myChooser.addElement(item, false, createElementProperties(item));
@@ -135,10 +140,12 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
 
   private ElementsChooser.ElementProperties createElementProperties(final T item) {
     return new ElementsChooser.ElementProperties() {
+      @Override
       public Icon getIcon() {
         return getItemIcon(item);
       }
 
+      @Override
       public Color getColor() {
         return null;
       }

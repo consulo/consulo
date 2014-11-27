@@ -26,27 +26,22 @@ import java.util.List;
 
 /**
  * Abstraction layer for executing gradle tasks.
- * 
+ *
  * @author Denis Zhdanov
  * @since 3/14/13 5:04 PM
  */
 public interface ExternalSystemTaskManager<S extends ExternalSystemExecutionSettings> {
 
-  /**
-   *
-   * @deprecated will be removed in 13.1
-   */
-  @Deprecated
   void executeTasks(@NotNull ExternalSystemTaskId id,
                     @NotNull List<String> taskNames,
                     @NotNull String projectPath,
                     @Nullable S settings,
-                    @Nullable String vmOptions,
+                    @NotNull final List<String> vmOptions,
+                    @NotNull List<String> scriptParameters,
                     @Nullable String debuggerSetup,
-                    @NotNull ExternalSystemTaskNotificationListener listener)
-    throws ExternalSystemException;
+                    @NotNull ExternalSystemTaskNotificationListener listener) throws ExternalSystemException;
 
   boolean cancelTask(@NotNull ExternalSystemTaskId id,
-                  @NotNull ExternalSystemTaskNotificationListener listener)
-    throws ExternalSystemException;
+                     @NotNull ExternalSystemTaskNotificationListener listener)
+          throws ExternalSystemException;
 }

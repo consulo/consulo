@@ -47,6 +47,13 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
     return labeledComponent;
   }
 
+  @NotNull
+  public static <Comp extends JComponent> LabeledComponent<Comp> left(@NotNull Comp component, @NotNull String text) {
+    LabeledComponent<Comp> labeledComponent = create(component, text);
+    labeledComponent.setLabelLocation(BorderLayout.WEST);
+    return labeledComponent;
+  }
+
   private void insertLabel() {
     remove(myLabel);
     add(myLabel, myLabelConstraints);
@@ -105,11 +112,12 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
     myLabel.setEnabled(enabled);
   }
 
-  public void setLabelLocation(@NonNls String borderConstrains) {
+  public LabeledComponent<Comp> setLabelLocation(@NonNls String borderConstrains) {
     String constrains = findBorderConstrains(borderConstrains);
-    if (constrains == null || constrains.equals(myLabelConstraints)) return;
+    if (constrains == null || constrains.equals(myLabelConstraints)) return this;
     myLabelConstraints = borderConstrains;
     insertLabel();
+    return this;
   }
 
   public String getLabelLocation() {

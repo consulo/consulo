@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
@@ -108,9 +109,7 @@ public abstract class XDebuggerEditorBase {
     }
 
     DataContext dataContext = DataManager.getInstance().getDataContext(getComponent());
-    return JBPopupFactory.getInstance().createActionGroupPopup("Choose language", actions, dataContext,
-                                                               JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                                                               false);
+    return JBPopupFactory.getInstance().createActionGroupPopup("Choose language", actions, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
   }
 
   protected JPanel addChooseFactoryLabel(JComponent component, boolean top) {
@@ -127,6 +126,9 @@ public abstract class XDebuggerEditorBase {
   public EvaluationMode getMode() {
     return myMode;
   }
+
+  @Nullable
+  public abstract Editor getEditor();
 
   public abstract JComponent getComponent();
 
@@ -218,7 +220,7 @@ public abstract class XDebuggerEditorBase {
   }
 
   public boolean canGoBackward() {
-    return myHistoryIndex < getRecentExpressions().size()-1;
+    return myHistoryIndex < getRecentExpressions().size() - 1;
   }
 
   public boolean canGoForward() {

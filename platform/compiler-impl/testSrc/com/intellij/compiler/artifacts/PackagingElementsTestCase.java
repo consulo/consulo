@@ -7,9 +7,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModuleRootModificationUtil;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -109,7 +109,7 @@ public abstract class PackagingElementsTestCase extends ArtifactsTestCase {
         final Library library = LibraryTablesRegistrar.getInstance().getLibraryTable(project).createLibrary(name);
         final Library.ModifiableModel libraryModel = library.getModifiableModel();
         for (VirtualFile jar : jars) {
-          libraryModel.addRoot(jar, OrderRootType.CLASSES);
+          libraryModel.addRoot(jar, BinariesOrderRootType.getInstance());
         }
         libraryModel.commit();
         if (module != null) {

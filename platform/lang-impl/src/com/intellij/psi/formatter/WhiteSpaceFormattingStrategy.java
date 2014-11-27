@@ -48,12 +48,12 @@ public interface WhiteSpaceFormattingStrategy {
 
   /**
    * Allows to answer if given node should be treated as white space node.
-   * 
+   *
    * @param node  node to check
    * @return      <code>true</code> if given node should be treated as white space; <code>false</code> otherwise
    */
   boolean containsWhitespacesOnly(@NotNull ASTNode node);
-  
+
   /**
    * @return    <code>true</code> if default white space strategy used by formatter should be replaced by the current one;
    *            <code>false</code> to indicate that current strategy should be used in composition with default strategy
@@ -71,26 +71,28 @@ public interface WhiteSpaceFormattingStrategy {
    * document symbols sub-sequence if necessary.
    *
    *
+   *
    * @param whiteSpaceText    white space text to use by default for replacing sub-sequence of the given text
    * @param text              target text which region is to be replaced by the given white space symbols
    * @param startOffset       start offset to use with the given text (inclusive)
    * @param endOffset         end offset to use with the given text (exclusive)
    * @param codeStyleSettings the code style settings
+   * @param nodeAfter         the AST node following the whitespace, if known
    * @return                  symbols to use for replacing <code>[startOffset; endOffset)</code> sub-sequence of the given text
    */
   @NotNull
   CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText, @NotNull CharSequence text, int startOffset,
-                                           int endOffset, CodeStyleSettings codeStyleSettings);
+                                           int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter);
 
-            
+
   /**
-   * PSI-based version of {@link #adjustWhiteSpaceIfNecessary(CharSequence, CharSequence, int, int, com.intellij.psi.codeStyle.CodeStyleSettings)}.
+   * PSI-based version of {@link #adjustWhiteSpaceIfNecessary(CharSequence, CharSequence, int, int, com.intellij.psi.codeStyle.CodeStyleSettings, com.intellij.lang.ASTNode)}.
    * <p/>
    * There is a possible case that particular changes are performed to PSI tree and it's not yet synchronized with the underlying
    * document. Hence, we can't directly work with document char sequence but need to traverse PSI tree instead. I.e. we start with
    * particular PSI element that contains given start offset and process its right siblings/relatives until given end offset
    * is reached.
-   * 
+   *
    * @param whiteSpaceText    white space text to use by default for replacing sub-sequence of the given text
    * @param startElement      PSI element that contains given start offset
    * @param startOffset       start offset to use with the given text (inclusive)
@@ -103,7 +105,7 @@ public interface WhiteSpaceFormattingStrategy {
 
   /**
    * Allows to customize addition of the given white space element to the AST referenced by the given node.
-   * 
+   *
    * @param treePrev           target node to use as an anchor for inserting given white space element
    * @param whiteSpaceElement  target white space element to insert
    * @return                   <code>true</code> if given white space element was added in a custom way during the current method call

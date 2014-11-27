@@ -16,16 +16,14 @@
 package com.intellij.profile;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.StateSplitter;
+import com.intellij.openapi.components.MainConfigurationStateSplitter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.UniqueNameGenerator;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -242,61 +240,28 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     myProfilesListener.remove(profilesListener);
   }
 
-  public static class ProfileStateSplitter implements StateSplitter {
-
+  public static class ProfileStateSplitter extends MainConfigurationStateSplitter {
+    @NotNull
     @Override
-    public List<Pair<Element, String>> splitState(final Element e) {
-      final UniqueNameGenerator generator = new UniqueNameGenerator();
-      List<Pair<Element, String>> result = new ArrayList<Pair<Element, String>>();
-
-      final Element[] elements = JDOMUtil.getElements(e);
-      for (Element element : elements) {
-        if (element.getName().equals("profiles")) {
-          element.detach();
-
-          final Element[] profiles = JDOMUtil.getElements(element);
-          for (Element profile : profiles) {
-            String profileName = null;
-
-            final Element[] options = JDOMUtil.getElements(profile);
-            for (Element option : options) {
-              if (option.getName().equals("option") && option.getAttributeValue("name").equals("myName")) {
-                profileName = option.getAttributeValue("value");
-              }
-            }
-
-            assert profileName != null;
-
-            final String name = generator.generateUniqueName(FileUtil.sanitizeFileName(profileName)) + ".xml";
-            result.add(new Pair<Element, String>(profile,  name));
-          }
+    protected String getSubStateFileName(@NotNull Element element) {
+      for (Element option : element.getChildren("option")) {
+        if (option.getAttributeValue("name").equals("myName")) {
+          return option.getAttributeValue("value");
         }
       }
-
-
-      if (!e.getContent().isEmpty()) result.add(new Pair<Element, String>(e, generator.generateUniqueName("profiles_settings") + ".xml"));
-
-      return result;
+      throw new IllegalStateException();
     }
 
+    @NotNull
     @Override
-    public void mergeStatesInto(final Element target, final Element[] elements) {
-      Element profiles = new Element("profiles");
-      target.addContent(profiles);
+    protected String getComponentStateFileName() {
+      return "profiles_settings";
+    }
 
-      for (Element element : elements) {
-        if (element.getName().equals("profile")) {
-          element.detach();
-          profiles.addContent(element);
-        }
-        else {
-          final Element[] states = JDOMUtil.getElements(element);
-          for (Element state : states) {
-            state.detach();
-            target.addContent(state);
-          }
-        }
-      }
+    @NotNull
+    @Override
+    protected String getSubStateTagName() {
+      return PROFILE;
     }
   }
 

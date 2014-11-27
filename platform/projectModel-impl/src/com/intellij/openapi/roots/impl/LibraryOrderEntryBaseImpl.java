@@ -17,29 +17,32 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.DependencyScope;
-import com.intellij.openapi.roots.LibraryOrSdkOrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.RootProvider;
+import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+
+import java.util.Arrays;
 
 /**
- *  @author dsl
+ * @author dsl
  */
 @Logger
-abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements LibraryOrSdkOrderEntry {
+abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements OrderEntryWithTracking {
   protected final ProjectRootManagerImpl myProjectRootManagerImpl;
   @NotNull
   protected DependencyScope myScope = DependencyScope.COMPILE;
   @Nullable
   private RootProvider myCurrentlySubscribedRootProvider = null;
 
-  LibraryOrderEntryBaseImpl(@NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl instanceImpl) {
-    super(rootModel);
+  LibraryOrderEntryBaseImpl(@NotNull OrderEntryTypeProvider<?> provider, @NotNull ModuleRootLayerImpl rootModel, @NotNull ProjectRootManagerImpl instanceImpl) {
+    super(provider, rootModel);
     myProjectRootManagerImpl = instanceImpl;
   }
 
@@ -50,20 +53,16 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
   @Override
   @NotNull
   public VirtualFile[] getFiles(@NotNull OrderRootType type) {
-    return getRootFiles(type);
-  }
+    RootProvider rootProvider = getRootProvider();
+    return rootProvider != null ? rootProvider.getFiles(type) : VirtualFile.EMPTY_ARRAY;  }
 
   @Override
   @NotNull
   public String[] getUrls(@NotNull OrderRootType type) {
     LOGGER.assertTrue(!getRootModel().getModule().isDisposed());
-    return getRootUrls(type);
-  }
-
-  @Override
-  public VirtualFile[] getRootFiles(@NotNull OrderRootType type) {
     RootProvider rootProvider = getRootProvider();
-    return rootProvider != null ? rootProvider.getFiles(type) : VirtualFile.EMPTY_ARRAY;
+    return rootProvider == null ? ArrayUtil.EMPTY_STRING_ARRAY : rootProvider.getUrls(type);
+
   }
 
   @Nullable
@@ -71,15 +70,37 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
 
   @Override
   @NotNull
-  public String[] getRootUrls(@NotNull OrderRootType type) {
-    RootProvider rootProvider = getRootProvider();
-    return rootProvider == null ? ArrayUtil.EMPTY_STRING_ARRAY : rootProvider.getUrls(type);
+  public final Module getOwnerModule() {
+    return getRootModel().getModule();
   }
 
   @Override
-  @NotNull
-  public final Module getOwnerModule() {
-    return getRootModel().getModule();
+  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+    // for ModuleExtensionWithSdkOrderEntry need override
+    LOGGER.assertTrue(this instanceof LibraryOrderEntry);
+
+    LibraryOrderEntry libraryOrderEntry1 = (LibraryOrderEntry)this;
+    LibraryOrderEntry libraryOrderEntry2 = (LibraryOrderEntry)other;
+    boolean equal = Comparing.equal(libraryOrderEntry1.getLibraryName(), libraryOrderEntry2.getLibraryName()) &&
+                    Comparing.equal(libraryOrderEntry1.getLibraryLevel(), libraryOrderEntry2.getLibraryLevel());
+    if (!equal) return false;
+
+    Library library1 = libraryOrderEntry1.getLibrary();
+    Library library2 = libraryOrderEntry2.getLibrary();
+    if (library1 != null && library2 != null) {
+      if (!Arrays.equals(((LibraryEx)library1).getExcludedRootUrls(), ((LibraryEx)library2).getExcludedRootUrls())) {
+        return false;
+      }
+    }
+    final OrderRootType[] allTypes = OrderRootType.getAllTypes();
+    for (OrderRootType type : allTypes) {
+      final String[] orderedRootUrls1 = getUrls(type);
+      final String[] orderedRootUrls2 = other.getUrls(type);
+      if (!Arrays.equals(orderedRootUrls1, orderedRootUrls2)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   protected void updateFromRootProviderAndSubscribe() {

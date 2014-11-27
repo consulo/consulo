@@ -19,18 +19,23 @@ package com.intellij.xdebugger;
  * @author nik
  */
 public abstract class XDebugSessionAdapter implements XDebugSessionListener {
+  @Override
   public void sessionPaused() {
   }
 
+  @Override
   public void sessionResumed() {
   }
 
+  @Override
   public void sessionStopped() {
   }
 
+  @Override
   public void stackFrameChanged() {
   }
 
+  @Override
   public void beforeSessionResume() {
   }
 }

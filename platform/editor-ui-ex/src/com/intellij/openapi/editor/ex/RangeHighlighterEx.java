@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,32 @@
  * User: max
  * Date: Jun 10, 2002
  * Time: 5:54:59 PM
- * To change template for new interface use 
+ * To change template for new interface use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
 package com.intellij.openapi.editor.ex;
 
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Comparator;
 
 public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
+  RangeHighlighterEx[] EMPTY_ARRAY = new RangeHighlighterEx[0];
   boolean isAfterEndOfLine();
-  void setAfterEndOfLine(boolean val);
+  void setAfterEndOfLine(boolean value);
 
   int getAffectedAreaStartOffset();
 
   int getAffectedAreaEndOffset();
-  @Override
-  long getId();
 
-  void setTextAttributes(TextAttributes textAttributes);
+  void setTextAttributes(@NotNull TextAttributes textAttributes);
+
+  Comparator<RangeHighlighterEx> BY_AFFECTED_START_OFFSET = new Comparator<RangeHighlighterEx>() {
+    @Override
+    public int compare(RangeHighlighterEx r1, RangeHighlighterEx r2) {
+      return r1.getAffectedAreaStartOffset() - r2.getAffectedAreaStartOffset();
+    }
+  };
 }

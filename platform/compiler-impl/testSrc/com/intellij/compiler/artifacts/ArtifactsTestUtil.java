@@ -15,7 +15,6 @@ import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.packaging.impl.elements.DirectoryPackagingElement;
-import com.intellij.packaging.impl.elements.ManifestFileUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

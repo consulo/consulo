@@ -20,8 +20,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ExportableApplicationComponent;
 import com.intellij.openapi.util.NamedJDOMExternalizable;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -30,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.List;
 
 public class GeneralSettings implements NamedJDOMExternalizable, ExportableApplicationComponent {
@@ -68,27 +65,12 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
   @NonNls private static final String OPTION_AUTO_SAVE_FILES = "autoSaveFiles";
   @NonNls private static final String OPTION_AUTO_SAVE_IF_INACTIVE = "autoSaveIfInactive";
   @NonNls private static final String OPTION_USE_SAFE_WRITE = "useSafeWrite";
-
-  @Deprecated
-  @NonNls private static final String OPTION_CHARSET = "charset";
-  @Deprecated
-  @NonNls private static final String OPTION_UTFGUESSING = "UTFGuessing";
-
   @NonNls private static final String OPTION_USE_DEFAULT_BROWSER = "useDefaultBrowser";
   @NonNls private static final String OPTION_CONFIRM_EXTRACT_FILES = "confirmExtractFiles";
-  @NonNls private static final String OPTION_USE_CYCLIC_BUFFER = "useCyclicBuffer";
   @NonNls private static final String OPTION_SEARCH_IN_BACKGROUND = "searchInBackground";
   @NonNls private static final String OPTION_CONFIRM_EXIT = "confirmExit";
   @NonNls private static final String OPTION_CONFIRM_OPEN_NEW_PROJECT = "confirmOpenNewProject2";
-  @NonNls private static final String OPTION_CYCLIC_BUFFER_SIZE = "cyclicBufferSize";
   @NonNls private static final String OPTION_LAST_PROJECT_LOCATION = "lastProjectLocation";
-
-  @Deprecated
-  private Charset myCharset;
-  @Deprecated
-  private boolean myUseUTFGuessing;
-  @Deprecated
-  private boolean oldCharsetSettingsHaveBeenRead;
 
   public static GeneralSettings getInstance(){
     return ApplicationManager.getApplication().getComponent(GeneralSettings.class);
@@ -118,8 +100,10 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
     myPropertyChangeSupport.removePropertyChangeListener(listener);
   }
 
+  @Override
   public void initComponent() { }
 
+  @Override
   public void disposeComponent() { }
 
   public String getBrowserPath() {
@@ -222,6 +206,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
   }
 
   //todo use DefaultExternalizer
+  @Override
   public void readExternal(Element parentNode) {
     boolean safeWriteSettingRead = false;
 
@@ -245,7 +230,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
       }
       if (OPTION_SHOW_TIPS_ON_STARTUP.equals(name)) {
         try {
-          myShowTipsOnStartup = Boolean.valueOf(value).booleanValue();
+          myShowTipsOnStartup = Boolean.valueOf(value);
         }
         catch (Exception ex) {
           myShowTipsOnStartup = true;
@@ -253,7 +238,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
       }
       if (OPTION_SHOW_OCCUPIED_MEMORY.equals(name)) {
         try {
-          myShowOccupiedMemory = Boolean.valueOf(value).booleanValue();
+          myShowOccupiedMemory = Boolean.valueOf(value);
         }
         catch (Exception ex) {
           myShowOccupiedMemory = false;
@@ -261,7 +246,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
       }
       if (OPTION_REOPEN_LAST_PROJECT.equals(name)) {
         try {
-          myReopenLastProject = Boolean.valueOf(value).booleanValue();
+          myReopenLastProject = Boolean.valueOf(value);
         }
         catch (Exception ex) {
           myReopenLastProject = true;
@@ -269,7 +254,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
       }
       if (OPTION_AUTO_SYNC_FILES.equals(name)) {
         try {
-          mySyncOnFrameActivation = Boolean.valueOf(value).booleanValue();
+          mySyncOnFrameActivation = Boolean.valueOf(value);
         }
         catch (Exception ex) {
           mySyncOnFrameActivation = true;
@@ -277,14 +262,14 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
       }
       if (OPTION_AUTO_SAVE_FILES.equals(name)) {
         try {
-          mySaveOnFrameDeactivation = Boolean.valueOf(value).booleanValue();
+          mySaveOnFrameDeactivation = Boolean.valueOf(value);
         }
         catch (Exception ex) {
           mySaveOnFrameDeactivation = true;
         }
       }
       if (OPTION_AUTO_SAVE_IF_INACTIVE.equals(name) && value != null) {
-        myAutoSaveIfInactive = Boolean.valueOf(value).booleanValue();
+        myAutoSaveIfInactive = Boolean.valueOf(value);
       }
       if (OPTION_INACTIVE_TIMEOUT.equals(name)) {
         try {
@@ -297,23 +282,13 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
         }
       }
       if (OPTION_USE_SAFE_WRITE.equals(name) && value != null) {
-        myUseSafeWrite = Boolean.valueOf(value).booleanValue();
+        myUseSafeWrite = Boolean.valueOf(value);
         safeWriteSettingRead = true;
-      }
-
-      if (OPTION_CHARSET.equals(name)) {
-        //for migration
-        myCharset = CharsetToolkit.forName(value);
-        oldCharsetSettingsHaveBeenRead = true;
-      }
-      if (OPTION_UTFGUESSING.equals(name)) {
-        myUseUTFGuessing = Boolean.valueOf(value).booleanValue();
-        oldCharsetSettingsHaveBeenRead = true;
       }
 
       if (OPTION_USE_DEFAULT_BROWSER.equals(name)) {
         try {
-          myUseDefaultBrowser = Boolean.valueOf(value).booleanValue();
+          myUseDefaultBrowser = Boolean.valueOf(value);
         }
         catch (Exception ex) {
           myUseDefaultBrowser = true;
@@ -322,7 +297,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
 
       if (OPTION_CONFIRM_EXTRACT_FILES.equals(name)) {
         try {
-          myConfirmExtractFiles = Boolean.valueOf(value).booleanValue();
+          myConfirmExtractFiles = Boolean.valueOf(value);
         }
         catch (Exception ex) {
           myConfirmExtractFiles = true;
@@ -331,7 +306,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
 
       if (OPTION_SEARCH_IN_BACKGROUND.equals(name)) {
         try {
-          mySearchInBackground = Boolean.valueOf(value).booleanValue();
+          mySearchInBackground = Boolean.valueOf(value);
         }
         catch (Exception ex) {
           mySearchInBackground = false;
@@ -340,7 +315,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
 
       if (OPTION_CONFIRM_EXIT.equals(name)) {
         try {
-          myConfirmExit = Boolean.valueOf(value).booleanValue();
+          myConfirmExit = Boolean.valueOf(value);
         }
         catch (Exception ex) {
           myConfirmExit = false;
@@ -349,7 +324,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
 
       if (OPTION_CONFIRM_OPEN_NEW_PROJECT.equals(name)) {
         try {
-          myConfirmOpenNewProject = Integer.valueOf(value).intValue();
+          myConfirmOpenNewProject = Integer.valueOf(value);
         }
         catch (Exception ex) {
           myConfirmOpenNewProject = OPEN_PROJECT_ASK;
@@ -371,6 +346,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
     }
   }
 
+  @Override
   public void writeExternal(Element parentNode) {
     if (myBrowserPath != null) {
       Element element = new Element(ELEMENT_OPTION);
@@ -457,20 +433,24 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
     }
   }
 
+  @Override
   public String getExternalFileName() {
     return "ide.general";
   }
 
+  @Override
   @NotNull
   public File[] getExportFiles() {
     return new File[]{PathManager.getOptionsFile(this)};
   }
 
+  @Override
   @NotNull
   public String getPresentableName() {
     return IdeBundle.message("general.settings");
   }
 
+  @Override
   @NotNull
   public String getComponentName() {
     return "GeneralSettings";
@@ -529,14 +509,5 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
 
   public void setSearchInBackground(final boolean searchInBackground) {
     mySearchInBackground = searchInBackground;
-  }
-
-  // returns true if something has been migrated
-  public boolean migrateCharsetSettingsTo(EncodingManager encodingProjectManager) {
-    if (oldCharsetSettingsHaveBeenRead) {
-      encodingProjectManager.setEncoding(null, myCharset);
-      encodingProjectManager.setUseUTFGuessing(null, myUseUTFGuessing);
-    }
-    return oldCharsetSettingsHaveBeenRead;
   }
 }

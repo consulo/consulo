@@ -15,8 +15,8 @@
  */
 package org.mustbe.consulo.sandLanguage.lang.psi;
 
+import com.intellij.psi.tree.ElementTypeAsPsiFactory;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IElementTypeAsPsiFactory;
 import org.mustbe.consulo.sandLanguage.lang.SandLanguage;
 
 /**
@@ -24,6 +24,6 @@ import org.mustbe.consulo.sandLanguage.lang.SandLanguage;
  * @since 19.03.14
  */
 public interface SandElements {
-  IElementType CLASS = new IElementTypeAsPsiFactory("CLASS", SandLanguage.INSTANCE, SandClass.class);
-  IElementType DEF = new IElementTypeAsPsiFactory("DEF", SandLanguage.INSTANCE, SandDef.class);
+  IElementType CLASS = new ElementTypeAsPsiFactory("CLASS", SandLanguage.INSTANCE, SandClass.class);
+  IElementType DEF = new ElementTypeAsPsiFactory("DEF", SandLanguage.INSTANCE, SandDef.class);
 }

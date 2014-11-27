@@ -29,7 +29,8 @@ import java.util.ResourceBundle;
 public class OptionsBundle {
   private static Reference<ResourceBundle> ourBundle;
 
-  @NonNls protected static final String PATH_TO_BUNDLE = "messages.OptionsBundle";
+  @NonNls
+  public static final String PATH_TO_BUNDLE = "messages.OptionsBundle";
 
   private OptionsBundle() {
   }

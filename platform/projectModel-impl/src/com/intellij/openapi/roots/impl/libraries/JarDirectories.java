@@ -16,9 +16,7 @@
 package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.PersistentOrderRootType;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.util.containers.MultiMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -32,7 +30,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public class JarDirectories implements JDOMExternalizable {
+public class JarDirectories {
   private final MultiMap<OrderRootType, String> myDirectories = new MultiMap<OrderRootType, String>();
   private final MultiMap<OrderRootType, String> myRecursivelyIncluded = new MultiMap<OrderRootType, String>();
 
@@ -40,7 +38,7 @@ public class JarDirectories implements JDOMExternalizable {
   @NonNls private static final String URL_ATTR = "url";
   @NonNls private static final String RECURSIVE_ATTR = "recursive";
   @NonNls private static final String ROOT_TYPE_ATTR = "type";
-  public static final OrderRootType DEFAULT_JAR_DIRECTORY_TYPE = OrderRootType.CLASSES;
+  public static final OrderRootType DEFAULT_JAR_DIRECTORY_TYPE = BinariesOrderRootType.getInstance();
 
   public void copyFrom(JarDirectories other) {
     myDirectories.clear();
@@ -110,42 +108,45 @@ public class JarDirectories implements JDOMExternalizable {
   }
 
 
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
+  public void readExternal(Element element) {
     clear();
-    final List jarDirs = element.getChildren(JAR_DIRECTORY_ELEMENT);
-    for (Object item : jarDirs) {
-      final Element jarDir = (Element)item;
-      final String url = jarDir.getAttributeValue(URL_ATTR);
-      final String recursive = jarDir.getAttributeValue(RECURSIVE_ATTR);
-      final OrderRootType rootType = getJarDirectoryRootType(jarDir.getAttributeValue(ROOT_TYPE_ATTR));
+    final List<Element> jarDirs = element.getChildren(JAR_DIRECTORY_ELEMENT);
+    for (Element item : jarDirs) {
+      final String url = item.getAttributeValue(URL_ATTR);
+      final String recursive = item.getAttributeValue(RECURSIVE_ATTR);
+      final OrderRootType rootType = getJarDirectoryRootType(item.getAttributeValue(ROOT_TYPE_ATTR));
       if (url != null) {
-        add(rootType, url, Boolean.valueOf(Boolean.parseBoolean(recursive)));
+        add(rootType, url, Boolean.parseBoolean(recursive));
       }
     }
   }
 
   private static OrderRootType getJarDirectoryRootType(@Nullable String type) {
-    for (PersistentOrderRootType rootType : OrderRootType.getAllPersistentTypes()) {
-      if (rootType.name().equals(type)) {
+    if(type == null) {
+      return DEFAULT_JAR_DIRECTORY_TYPE;
+    }
+    for (OrderRootType rootType : OrderRootType.getAllTypes()) {
+      if (rootType.isMe(type)) {
         return rootType;
       }
     }
     return DEFAULT_JAR_DIRECTORY_TYPE;
   }
 
-  @Override
   public void writeExternal(Element element) {
-    final List<OrderRootType> rootTypes = LibraryImpl.sortRootTypes(getRootTypes());
-    for (OrderRootType rootType : rootTypes) {
-      final List<String> urls = new ArrayList<String>(getDirectories(rootType));
+    for (OrderRootType rootType : OrderRootType.getSortedRootTypes()) {
+      Collection<String> directories = getDirectories(rootType);
+      if(directories.isEmpty()) {
+        continue;
+      }
+      final List<String> urls = new ArrayList<String>(directories);
       Collections.sort(urls, String.CASE_INSENSITIVE_ORDER);
       for (String url : urls) {
         final Element jarDirElement = new Element(JAR_DIRECTORY_ELEMENT);
         jarDirElement.setAttribute(URL_ATTR, url);
         jarDirElement.setAttribute(RECURSIVE_ATTR, Boolean.toString(isRecursive(rootType, url)));
         if (!rootType.equals(DEFAULT_JAR_DIRECTORY_TYPE)) {
-          jarDirElement.setAttribute(ROOT_TYPE_ATTR, rootType.name());
+          jarDirElement.setAttribute(ROOT_TYPE_ATTR, rootType.getName());
         }
         element.addContent(jarDirElement);
       }

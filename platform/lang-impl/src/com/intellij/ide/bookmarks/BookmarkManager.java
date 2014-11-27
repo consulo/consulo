@@ -50,10 +50,10 @@ import java.util.*;
 import java.util.List;
 
 @State(
-  name = "BookmarkManager",
-  storages = {
-    @Storage( file = StoragePathMacros.WORKSPACE_FILE)
-  }
+        name = "BookmarkManager",
+        storages = {
+                @Storage( file = StoragePathMacros.WORKSPACE_FILE)
+        }
 )
 public class BookmarkManager extends AbstractProjectComponent implements PersistentStateComponent<Element> {
   private static final int MAX_AUTO_DESCRIPTION_SIZE = 50;
@@ -99,19 +99,19 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
 
   public void editDescription(@NotNull Bookmark bookmark) {
     String description = Messages
-      .showInputDialog(myProject, IdeBundle.message("action.bookmark.edit.description.dialog.message"),
-                       IdeBundle.message("action.bookmark.edit.description.dialog.title"), Messages.getQuestionIcon(),
-                       bookmark.getDescription(), new InputValidator() {
-        @Override
-        public boolean checkInput(String inputString) {
-          return true;
-        }
+            .showInputDialog(myProject, IdeBundle.message("action.bookmark.edit.description.dialog.message"),
+                             IdeBundle.message("action.bookmark.edit.description.dialog.title"), Messages.getQuestionIcon(),
+                             bookmark.getDescription(), new InputValidator() {
+              @Override
+              public boolean checkInput(String inputString) {
+                return true;
+              }
 
-        @Override
-        public boolean canClose(String inputString) {
-          return true;
-        }
-      });
+              @Override
+              public boolean canClose(String inputString) {
+                return true;
+              }
+            });
     if (description != null) {
       setDescription(bookmark, description);
     }
@@ -146,7 +146,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
     if ( autoDescription == null ) {
       Document document = editor.getDocument();
       autoDescription = document.getCharsSequence()
-        .subSequence(document.getLineStartOffset(lineIndex), document.getLineEndOffset(lineIndex)).toString().trim();
+              .subSequence(document.getLineStartOffset(lineIndex), document.getLineEndOffset(lineIndex)).toString().trim();
     }
     if ( autoDescription.length () > MAX_AUTO_DESCRIPTION_SIZE) {
       return autoDescription.substring(0, MAX_AUTO_DESCRIPTION_SIZE)+"...";
@@ -407,6 +407,12 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
   public void setDescription(@NotNull Bookmark bookmark, String description) {
     bookmark.setDescription(description);
     myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(bookmark);
+  }
+
+  public void colorsChanged() {
+    for (Bookmark bookmark : myBookmarks) {
+      bookmark.updateHighlighter();
+    }
   }
 
 

@@ -18,17 +18,15 @@ package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleComponent;
-import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import gnu.trove.THashMap;
 import org.consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtension;
@@ -45,28 +43,23 @@ import java.util.Set;
 @Logger
 public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleComponent {
   private final Module myModule;
-  private final ProjectRootManagerImpl myProjectRootManager;
-  private final VirtualFilePointerManager myFilePointerManager;
   private RootModelImpl myRootModel;
-  private final ModuleFileIndexImpl myFileIndex;
-  private boolean myIsDisposed = false;
-  private boolean isModuleAdded = false;
+  private boolean myIsDisposed;
+  private boolean isModuleAdded;
   private final OrderRootsCache myOrderRootsCache;
   private final Map<RootModelImpl, Throwable> myModelCreations = new THashMap<RootModelImpl, Throwable>();
 
 
-  public ModuleRootManagerImpl(Module module,
-                               DirectoryIndex directoryIndex,
-                               ProjectRootManagerImpl projectRootManager,
-                               VirtualFilePointerManager filePointerManager) {
+  public ModuleRootManagerImpl(Module module) {
     myModule = module;
-    myProjectRootManager = projectRootManager;
-    myFilePointerManager = filePointerManager;
-
-    myFileIndex = new ModuleFileIndexImpl(myModule, directoryIndex);
-
-    myRootModel = new RootModelImpl(this, myProjectRootManager, myFilePointerManager);
+    myRootModel = new RootModelImpl(this);
     myOrderRootsCache = new OrderRootsCache(module);
+  }
+
+  @NotNull
+  @Override
+  public Project getProject() {
+    return myModule.getProject();
   }
 
   @Override
@@ -78,7 +71,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @Override
   @NotNull
   public ModuleFileIndex getFileIndex() {
-    return myFileIndex;
+    return ModuleServiceManager.getService(myModule, ModuleFileIndex.class);
   }
 
   @Override
@@ -119,7 +112,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @NotNull
   public ModifiableRootModel getModifiableModel(final RootConfigurationAccessor accessor) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    final RootModelImpl model = new RootModelImpl(myRootModel, this, accessor, myFilePointerManager, myProjectRootManager) {
+    final RootModelImpl model = new RootModelImpl(myRootModel, this, accessor) {
       @Override
       public void dispose() {
         super.dispose();
@@ -128,7 +121,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
         }
 
         for (OrderEntry entry : ModuleRootManagerImpl.this.getOrderEntries()) {
-          assert !((RootModelComponentBase)entry).isDisposed();
+          assert !((BaseModuleRootLayerChild)entry).isDisposed();
         }
       }
     };
@@ -256,10 +249,10 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @NotNull
   private static OrderRootsEnumerator getEnumeratorForType(OrderRootType type, Module module) {
     OrderEnumerator base = OrderEnumerator.orderEntries(module);
-    if (type == OrderRootType.CLASSES) {
+    if (type == BinariesOrderRootType.getInstance()) {
       return base.exportedOnly().withoutModuleSourceEntries().recursively().classes();
     }
-    if (type == OrderRootType.SOURCES) {
+    if (type == SourcesOrderRootType.getInstance()) {
       return base.exportedOnly().recursively().sources();
     }
     return base.roots(type);
@@ -340,6 +333,32 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getSourceRoots(includingTests);
   }
 
+  @NotNull
+  @Override
+  public ModuleRootLayer getCurrentLayer() {
+    return myRootModel.getCurrentLayer();
+  }
+
+  @NotNull
+  @Override
+  public String getCurrentLayerName() {
+    return myRootModel.getCurrentLayerName();
+  }
+
+  @Nullable
+  @Override
+  public ModuleRootLayer findLayerByName(@NotNull String name) {
+    LOGGER.assertTrue(!myIsDisposed);
+    return myRootModel.findLayerByName(name);
+  }
+
+  @NotNull
+  @Override
+  public Map<String, ModuleRootLayer> getLayers() {
+    LOGGER.assertTrue(!myIsDisposed);
+    return myRootModel.getLayers();
+  }
+
   @Override
   public void projectOpened() {
   }
@@ -353,13 +372,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     isModuleAdded = true;
   }
 
-
   public void dropCaches() {
     myOrderRootsCache.clearCache();
   }
 
   public void saveState(Element parent) {
-    myRootModel.writeExternal(parent);
+    myRootModel.putState(parent);
   }
 
   public void loadState(Element parent) {
@@ -368,7 +386,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
   protected void loadState(Element element, boolean throwEvent) {
     try {
-      final RootModelImpl newModel = new RootModelImpl(element, this, myProjectRootManager, myFilePointerManager, throwEvent);
+      final RootModelImpl newModel = new RootModelImpl(element, this, throwEvent);
 
       if (throwEvent) {
         makeRootsChange(new Runnable() {
@@ -381,8 +399,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
       else {
         myRootModel = newModel;
       }
-
-      assert !myRootModel.isOrderEntryDisposed();
     }
     catch (InvalidDataException e) {
       LOGGER.error(e);

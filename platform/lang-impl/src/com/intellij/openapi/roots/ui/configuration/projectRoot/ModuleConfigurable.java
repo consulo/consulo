@@ -77,6 +77,12 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     myContext.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
   }
 
+  @Nullable
+  @Override
+  protected JComponent createTopRightComponent() {
+    return new ModuleLayerPanel(getModuleEditor());
+  }
+
   @Override
   public ProjectStructureElement getProjectStructureElement() {
     return myProjectStructureElement;

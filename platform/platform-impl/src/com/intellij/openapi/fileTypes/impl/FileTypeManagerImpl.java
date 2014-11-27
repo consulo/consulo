@@ -18,8 +18,10 @@ package com.intellij.openapi.fileTypes.impl;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.ide.highlighter.custom.impl.ReadFileType;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.impl.TransferToPooledThreadQueue;
 import com.intellij.openapi.components.ExportableApplicationComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.diagnostic.Logger;
@@ -36,15 +38,18 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.VFileProperty;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.FileSystemInterface;
+import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
+import com.intellij.util.*;
+import com.intellij.util.containers.ConcurrentBitSet;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashMap;
@@ -54,25 +59,25 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Yura Cangea
  */
-public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOMExternalizable, ExportableApplicationComponent {
+public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOMExternalizable, ExportableApplicationComponent, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl");
   private static final int VERSION = 11;
   private static final Key<FileType> FILE_TYPE_KEY = Key.create("FILE_TYPE_KEY");
   private static final Key<FileType> DETECTED_FROM_CONTENT_FILE_TYPE_KEY = Key.create("DETECTED_FROM_CONTENT_FILE_TYPE_KEY");
-
+  private static final int DETECT_BUFFER_SIZE = 8192; // the number of bytes to read from the file to feed to the file type detector
+  private boolean RE_DETECT_ASYNC = !ApplicationManager.getApplication().isUnitTestMode();
   private final Set<FileType> myDefaultTypes = new THashSet<FileType>();
   private final List<FileTypeIdentifiableByVirtualFile> mySpecialFileTypes = new ArrayList<FileTypeIdentifiableByVirtualFile>();
 
@@ -100,10 +105,10 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
   @NonNls private static final String ATTRIBUTE_DEFAULT_EXTENSION = "default_extension";
 
   private static class StandardFileType {
-    private final FileType fileType;
-    private final List<FileNameMatcher> matchers;
+    @NotNull private final FileType fileType;
+    @NotNull private final List<FileNameMatcher> matchers;
 
-    private StandardFileType(final FileType fileType, final List<FileNameMatcher> matchers) {
+    private StandardFileType(@NotNull FileType fileType, @NotNull List<FileNameMatcher> matchers) {
       this.fileType = fileType;
       this.matchers = matchers;
     }
@@ -111,9 +116,16 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
 
   private final MessageBus myMessageBus;
   private final Map<String, StandardFileType> myStandardFileTypes = new LinkedHashMap<String, StandardFileType>();
-  @NonNls private static final String[] FILE_TYPES_WITH_PREDEFINED_EXTENSIONS = {"JSP", "JSPX", "DTD", "HTML", "Properties", "XHTML"};
+  @NonNls
+  private static final String[] FILE_TYPES_WITH_PREDEFINED_EXTENSIONS = {"JSP", "JSPX", "DTD", "HTML", "Properties", "XHTML"};
   private final SchemesManager<FileType, AbstractFileType> mySchemesManager;
-  @NonNls private static final String FILE_SPEC = "$ROOT_CONFIG$/filetypes";
+  @NonNls
+  private static final String FILE_SPEC = "$ROOT_CONFIG$/filetypes";
+  private final ConcurrentBitSet autoDetectWasRun = new ConcurrentBitSet();
+  private final ConcurrentBitSet autoDetectedAsText = new ConcurrentBitSet();
+  private final ConcurrentBitSet autoDetectedAsBinary = new ConcurrentBitSet();
+  private final AtomicInteger counterAutoDetect = new AtomicInteger();
+  private final AtomicLong elapsedAutoDetect = new AtomicLong();
 
   private void initStandardFileTypes() {
     final FileTypeConsumer consumer = new FileTypeConsumer() {
@@ -123,12 +135,12 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
       }
 
       @Override
-      public void consume(@NotNull final FileType fileType, final String extensions) {
+      public void consume(@NotNull final FileType fileType, String extensions) {
         register(fileType, parse(extensions));
       }
 
       @Override
-      public void consume(@NotNull final FileType fileType, final FileNameMatcher... matchers) {
+      public void consume(@NotNull final FileType fileType, @NotNull final FileNameMatcher... matchers) {
         register(fileType, new ArrayList<FileNameMatcher>(Arrays.asList(matchers)));
       }
 
@@ -138,7 +150,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
         return type != null ? type.fileType : null;
       }
 
-      private void register(final FileType fileType, final List<FileNameMatcher> fileNameMatchers) {
+      private void register(@NotNull FileType fileType, @NotNull List<FileNameMatcher> fileNameMatchers) {
         final StandardFileType type = myStandardFileTypes.get(fileType.getName());
         if (type != null) {
           for (FileNameMatcher matcher : fileNameMatchers) type.matchers.add(matcher);
@@ -168,9 +180,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<AbstractFileType>() {
       @Override
       public AbstractFileType readScheme(@NotNull final Document document) throws InvalidDataException {
-        if (document == null) {
-          throw new InvalidDataException();
-        }
         Element root = document.getRootElement();
         if (root == null || !ELEMENT_FILETYPE.equals(root.getName())) {
           throw new InvalidDataException();
@@ -199,7 +208,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
       }
 
       @Override
-      public Document writeScheme(@NotNull final AbstractFileType fileType) throws WriteExternalException {
+      public org.jdom.Parent writeScheme(@NotNull final AbstractFileType fileType) throws WriteExternalException {
         Element root = new Element(ELEMENT_FILETYPE);
 
         writeHeader(root, fileType);
@@ -216,7 +225,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
           writeExtensionsMap(map, fileType, false);
         }
 
-        return new Document(root);
+        return root;
       }
 
       @Override
@@ -235,6 +244,71 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
         fireFileTypesChanged();
       }
     }, RoamingType.PER_USER);
+    bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter(){
+      @Override
+      public void after(@NotNull List<? extends VFileEvent> events) {
+        Set<VirtualFile> files = ContainerUtil.map2Set(events, new Function<VFileEvent, VirtualFile>() {
+          @Override
+          public VirtualFile fun(VFileEvent event) {
+            VirtualFile file = event instanceof VFileCreateEvent ? null : event.getFile();
+            return file != null && wasAutoDetectedBefore(file) && isDetectable(file) ? file : null;
+          }
+        });
+        files.remove(null);
+        if (!files.isEmpty() && RE_DETECT_ASYNC) {
+          reDetectQueue.offer(files);
+        }
+      }
+    });
+  }
+
+  private final TransferToPooledThreadQueue<Collection<VirtualFile>> reDetectQueue = new TransferToPooledThreadQueue<Collection<VirtualFile>>("File type re-detect", Condition.FALSE, -1, new Processor<Collection<VirtualFile>>() {
+    @Override
+    public boolean process(Collection<VirtualFile> files) {
+      reDetect(files);
+      return true;
+    }
+  });
+
+  @TestOnly
+  public void drainReDetectQueue() {
+    reDetectQueue.drain();
+  }
+  @TestOnly
+  public void reDetectAsync(boolean enable) {
+    RE_DETECT_ASYNC = enable;
+  }
+
+  private void reDetect(@NotNull Collection<VirtualFile> files) {
+    final List<VirtualFile> changed = new ArrayList<VirtualFile>();
+    for (VirtualFile file : files) {
+      if (wasAutoDetectedBefore(file) && isDetectable(file)) {
+        FileType before = file.getFileType();
+        FileType after = detectFromContent(file);
+        if (before != after) {
+          changed.add(file);
+          LOG.debug(file+" type was re-detected. Was: "+before+"; now: "+after);
+        }
+      }
+    }
+    if (!changed.isEmpty()) {
+      ApplicationManager.getApplication().invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          FileContentUtilCore.reparseFiles(changed);
+        }
+      }, ApplicationManager.getApplication().getDisposed());
+    }
+  }
+
+  private boolean wasAutoDetectedBefore(@NotNull VirtualFile file) {
+    if (file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY) != null) return true;
+    if (file instanceof VirtualFileWithId) {
+      int id = Math.abs(((VirtualFileWithId)file).getId());
+      // do not re-detect binary files
+      return autoDetectWasRun.get(id) && !autoDetectedAsBinary.get(id);
+    }
+    return false;
   }
 
   private static void writeImportedExtensionsMap(final Element map, final ImportedFileType type) {
@@ -248,8 +322,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
 
   private boolean shouldBeSavedToFile(final FileType fileType) {
     if (!(fileType instanceof JDOMExternalizable) || !shouldSave(fileType)) return false;
-    if (myDefaultTypes.contains(fileType) && !isDefaultModified(fileType)) return false;
-    return true;
+    return !myDefaultTypes.contains(fileType) || isDefaultModified(fileType);
   }
 
   @Override
@@ -339,35 +412,96 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     fileType = getFileTypeByFileName(file.getNameSequence());
     if (fileType != UnknownFileType.INSTANCE) return fileType;
 
-    fileType = cachedDetectedFromContent(file);
-    if (fileType != null) return fileType;
+    if (!(file instanceof StubVirtualFile)) {
+      fileType = getOrDetectFromContent(file);
+    }
 
-    return UnknownFileType.INSTANCE;
+    return fileType;
   }
 
-  private static FileType cachedDetectedFromContent(@NotNull VirtualFile file) {
-    return file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY);
+  @NotNull
+  private FileType getOrDetectFromContent(@NotNull VirtualFile file) {
+    if (!isDetectable(file)) return UnknownFileType.INSTANCE;
+    if (file instanceof VirtualFileWithId) {
+      int id = ((VirtualFileWithId)file).getId();
+      if (id < 0) return UnknownFileType.INSTANCE;
+      if (autoDetectWasRun.get(id)) {
+        return autoDetectedAsText.get(id) ? PlainTextFileType.INSTANCE : autoDetectedAsBinary.get(id) ? UnknownFileType.INSTANCE :
+                                                                   ObjectUtils.notNull(file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY),
+                                                                                       PlainTextFileType.INSTANCE);
+      }
+      boolean wasDetectedAsText = false;
+      boolean wasDetectedAsBinary = false;
+      boolean wasAutoDetectRun = false;
+      DataInputStream stream = autoDetectedAttribute.readAttribute(file);
+      try {
+        try {
+          byte status = stream != null ? stream.readByte() : 0;
+          wasAutoDetectRun = stream != null;
+          wasDetectedAsText = BitUtil.isSet(status, AUTO_DETECTED_AS_TEXT_FLAG);
+          wasDetectedAsBinary = BitUtil.isSet(status, AUTO_DETECTED_AS_BINARY_FLAG);
+        }
+        finally {
+          if (stream != null) {
+            stream.close();
+          }
+        }
+      }
+      catch (IOException ignored) {
+      }
+      autoDetectWasRun.set(id, wasAutoDetectRun);
+      autoDetectedAsText.set(id, wasDetectedAsText);
+      autoDetectedAsBinary.set(id, wasDetectedAsBinary);
+      if (wasAutoDetectRun && (wasDetectedAsText || wasDetectedAsBinary)) {
+        return wasDetectedAsText ? PlainTextFileType.INSTANCE : UnknownFileType.INSTANCE;
+      }
+    }
+    FileType fileType = file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY);
+    // run autodetection
+    if (fileType == null) {
+      fileType = detectFromContent(file);
+    }
+
+    return fileType;
   }
 
   @NotNull
   @Override
+  @Deprecated
   public FileType detectFileTypeFromContent(@NotNull VirtualFile file) {
-    if (file.isDirectory() || !file.isValid() || file.is(VFileProperty.SPECIAL)) {
-      return UnknownFileType.INSTANCE;
-    }
-    FileType fileType = cachedDetectedFromContent(file);
-    if (fileType == null) {
-      fileType = detectFromContent(file);
-      // for empty file there is still hope its type will change
-      if (file.getLength() != 0) {
-        file.putUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY, fileType);
-      }
-    }
-    return fileType;
+    return file.getFileType();
   }
 
-  public static boolean isFileTypeDetectedFromContent(@NotNull VirtualFile file) {
-    return cachedDetectedFromContent(file) != null;
+  private volatile FileAttribute autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", 0, true);
+  private static final int AUTO_DETECTED_AS_TEXT_FLAG = 0x01;
+  private static final int AUTO_DETECTED_AS_BINARY_FLAG = 0x02;
+  private void cacheAutoDetectedFileType(@NotNull VirtualFile file, @NotNull FileType fileType) {
+    DataOutputStream stream = autoDetectedAttribute.writeAttribute(file);
+    boolean wasAutodetectedAsText = fileType == PlainTextFileType.INSTANCE;
+    boolean wasAutodetectedAsBinary = fileType == UnknownFileType.INSTANCE;
+    try {
+      try {
+        byte b = (byte)((wasAutodetectedAsText ? AUTO_DETECTED_AS_TEXT_FLAG : 0) |
+                        (wasAutodetectedAsBinary ? AUTO_DETECTED_AS_BINARY_FLAG : 0));
+        stream.writeByte(b);
+      }
+      finally {
+        stream.close();
+      }
+    }
+    catch (IOException e) {
+      LOG.error(e);
+    }
+    if (file instanceof VirtualFileWithId) {
+      int id = Math.abs(((VirtualFileWithId)file).getId());
+      autoDetectWasRun.set(id);
+      autoDetectedAsText.set(id, wasAutodetectedAsText);
+      autoDetectedAsBinary.set(id, wasAutodetectedAsBinary);
+      if (wasAutodetectedAsText || wasAutodetectedAsBinary) {
+        return;
+      }
+    }
+    file.putUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY, fileType);
   }
 
   @Override
@@ -385,23 +519,19 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     return type;
   }
 
-  private static final AtomicInteger DETECTED_COUNT = new AtomicInteger();
-  private static final int DETECT_BUFFER_SIZE = 8192;
+  private static boolean isDetectable(@NotNull final VirtualFile file) {
+    if (file.isDirectory() || !file.isValid() || file.is(VFileProperty.SPECIAL) || file.getLength() == 0) {
+      // for empty file there is still hope its type will change
+      return false;
+    }
+    return file.getFileSystem() instanceof FileSystemInterface && !SingleRootFileViewProvider.isTooLargeForContentLoading(file);
+  }
 
   @NotNull
-  private static FileType detectFromContent(@NotNull final VirtualFile file) {
+  private FileType detectFromContent(@NotNull final VirtualFile file) {
+    long start = System.currentTimeMillis();
     try {
-      final long length = file.getLength();
-      if (length == 0) return UnknownFileType.INSTANCE;
-
-      final VirtualFileSystem fileSystem = file.getFileSystem();
-      if (!(fileSystem instanceof FileSystemInterface)) return UnknownFileType.INSTANCE;
-
-      if (SingleRootFileViewProvider.isTooLargeForContentLoading(file)) {
-        return UnknownFileType.INSTANCE;
-      }
-
-      final InputStream inputStream = ((FileSystemInterface)fileSystem).getInputStream(file);
+      final InputStream inputStream = ((FileSystemInterface)file.getFileSystem()).getInputStream(file);
       final Ref<FileType> result;
       try {
         result = new Ref<FileType>(UnknownFileType.INSTANCE);
@@ -412,7 +542,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
             CharSequence text;
             if (isText) {
               byte[] bytes = Arrays.copyOf(byteSequence.getBytes(), byteSequence.getLength());
-              text = LoadTextUtil.getTextByBinaryPresentation(bytes, file);
+              text = LoadTextUtil.getTextByBinaryPresentation(bytes, file, true, true, UnknownFileType.INSTANCE);
             }
             else {
               text = null;
@@ -443,16 +573,18 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
       FileType fileType = result.get();
 
       if (LOG.isDebugEnabled()) {
-        LOG.debug(file + "; type=" + fileType.getDescription() + "; " + DETECTED_COUNT.incrementAndGet());
+        LOG.debug(file + "; type=" + fileType.getDescription() + "; " + counterAutoDetect);
       }
+
+      cacheAutoDetectedFileType(file, fileType);
+      counterAutoDetect.incrementAndGet();
+      long elapsed = System.currentTimeMillis() - start;
+      elapsedAutoDetect.addAndGet(elapsed);
+
       return fileType;
     }
-    catch (FileNotFoundException e) {
-      return UnknownFileType.INSTANCE;
-    }
     catch (IOException e) {
-      LOG.info(e);
-      return UnknownFileType.INSTANCE;
+      return UnknownFileType.INSTANCE; // return unknown, do not cache
     }
   }
 
@@ -467,7 +599,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     }
     // use wild guess
     CharsetToolkit.GuessedEncoding guess = guessed.second;
-    return guess != null && guess != CharsetToolkit.GuessedEncoding.INVALID_UTF8;
+    return guess != null && (guess == CharsetToolkit.GuessedEncoding.VALID_UTF8 || guess == CharsetToolkit.GuessedEncoding.SEVEN_BIT);
   }
 
   @Override
@@ -616,9 +748,18 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     return mySchemesManager;
   }
 
+  private final AtomicInteger fileTypeChangedCount = new AtomicInteger();
   @Override
   public void fireFileTypesChanged() {
+    clearCaches();
     myMessageBus.syncPublisher(TOPIC).fileTypesChanged(new FileTypeEvent(this));
+  }
+
+  private void clearCaches() {
+    autoDetectedAttribute = autoDetectedAttribute.newVersion(fileTypeChangedCount.incrementAndGet());
+    autoDetectWasRun.clear();
+    autoDetectedAsText.clear();
+    autoDetectedAsBinary.clear();
   }
 
   private final Map<FileTypeListener, MessageBusConnection> myAdapters = new HashMap<FileTypeListener, MessageBusConnection>();
@@ -715,10 +856,11 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
       addIgnore("*.rbc");
     }
     myIgnoredFileCache.clearCache();
+    fileTypeChangedCount.set(JDOMExternalizer.readInteger(parentNode, "fileTypeChangedCounter", 0));
+    autoDetectedAttribute = autoDetectedAttribute.newVersion(fileTypeChangedCount.get());
   }
 
-  private void readGlobalMappings(final Element e) {
-
+  private void readGlobalMappings(@NotNull Element e) {
     List<Pair<FileNameMatcher, String>> associations = AbstractFileType.readAssociations(e);
 
     for (Pair<FileNameMatcher, String> association : associations) {
@@ -746,8 +888,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     }
   }
 
-  private void readMappingsForFileType(final Element e, FileType type) {
-
+  private void readMappingsForFileType(@NotNull Element e, FileType type) {
     List<Pair<FileNameMatcher, String>> associations = AbstractFileType.readAssociations(e);
 
     for (Pair<FileNameMatcher, String> association : associations) {
@@ -759,10 +900,9 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     for (Trinity<FileNameMatcher, String, Boolean> removedAssociation : removedAssociations) {
       removeAssociation(type, removedAssociation.getFirst(), false);
     }
-
   }
 
-  private void addIgnore(@NonNls final String ignoreMask) {
+  private void addIgnore(@NonNls @NotNull String ignoreMask) {
     myIgnoredPatterns.addIgnoreMask(ignoreMask);
   }
 
@@ -786,7 +926,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     }
   }
 
-  private static int getVersion(final Element node) {
+  private static int getVersion(@NotNull Element node) {
     final String verString = node.getAttributeValue(ATTRIBUTE_VERSION);
     if (verString == null) return 0;
     try {
@@ -817,6 +957,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     for (FileType type : fileTypes) {
       writeExtensionsMap(map, type, true);
     }
+    JDOMExternalizer.write(parentNode, "fileTypeChangedCounter", fileTypeChangedCount.get());
   }
 
   private void writeExtensionsMap(final Element map, final FileType type, boolean specifyTypeName) {
@@ -867,10 +1008,11 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
   // -------------------------------------------------------------------------
 
   @Nullable
-  private FileType getFileTypeByName(String name) {
+  private FileType getFileTypeByName(@NotNull String name) {
     return mySchemesManager.findSchemeByName(name);
   }
 
+  @NotNull
   private static List<FileNameMatcher> parse(@NonNls String semicolonDelimited) {
     if (semicolonDelimited == null) return Collections.emptyList();
     StringTokenizer tokenizer = new StringTokenizer(semicolonDelimited, FileTypeConsumer.EXTENSION_DELIMITER, false);
@@ -884,7 +1026,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
   /**
    * Registers a standard file type. Doesn't notifyListeners any change events.
    */
-  private void registerFileTypeWithoutNotification(FileType fileType, List<FileNameMatcher> matchers) {
+  private void registerFileTypeWithoutNotification(@NotNull FileType fileType, @NotNull List<FileNameMatcher> matchers) {
     mySchemesManager.addNewScheme(fileType, true);
     for (FileNameMatcher matcher : matchers) {
       myPatternsTable.addAssociation(matcher, fileType);
@@ -897,7 +1039,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
 
   }
 
-  private void bindUnresolvedMappings(FileType fileType) {
+  private void bindUnresolvedMappings(@NotNull FileType fileType) {
     for (FileNameMatcher matcher : new THashSet<FileNameMatcher>(myUnresolvedMappings.keySet())) {
       String name = myUnresolvedMappings.get(matcher);
       if (Comparing.equal(name, fileType.getName())) {
@@ -916,7 +1058,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
   }
 
   // returns true if at least one standard file type has been read
-  @SuppressWarnings({"EmptyCatchBlock"})
   private boolean loadAllFileTypes() {
     Collection<AbstractFileType> collection = mySchemesManager.loadSchemes();
 
@@ -928,16 +1069,16 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     }
 
     return res;
-
   }
 
-  private FileType loadFileType(final ReadFileType readFileType) {
-    return loadFileType(readFileType.getElement(), false, mySchemesManager.isShared(readFileType) ? readFileType.getExternalInfo() : null,
+  private FileType loadFileType(@NotNull ReadFileType readFileType) {
+    ExternalInfo info = mySchemesManager.isShared(readFileType) ? readFileType.getExternalInfo() : null;
+    return loadFileType(readFileType.getElement(), false, info,
                         true, readFileType.getExternalInfo().getCurrentFileName());
   }
 
 
-  private FileType loadFileType(Element typeElement, boolean isDefaults, final ExternalInfo info, boolean ignoreExisting, String fileName) {
+  private FileType loadFileType(@NotNull Element typeElement, boolean isDefaults, final ExternalInfo info, boolean ignoreExisting, String fileName) {
     String fileTypeName = typeElement.getAttributeValue(ATTRIBUTE_NAME);
     String fileTypeDescr = typeElement.getAttributeValue(ATTRIBUTE_DESCRIPTION);
     String iconPath = typeElement.getAttributeValue(ATTRIBUTE_ICON);
@@ -1009,7 +1150,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     return StringUtil.join(list, FileTypeConsumer.EXTENSION_DELIMITER);
   }
 
-  private static FileType loadCustomFile(final Element typeElement, ExternalInfo info, String fileName) {
+  @NotNull
+  private static FileType loadCustomFile(@NotNull Element typeElement, ExternalInfo info, String fileName) {
     FileType type = null;
 
     Element element = typeElement.getChild(AbstractFileType.ELEMENT_HIGHLIGHTING);
@@ -1162,5 +1304,10 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
 
   Map<FileNameMatcher, Pair<FileType, Boolean>> getRemovedMappings() {
     return myRemovedMappings;
+  }
+
+  @Override
+  public void dispose() {
+    LOG.info("FileTypeManager: "+ counterAutoDetect +" auto-detected files\nElapsed time on auto-detect: "+elapsedAutoDetect+" ms");
   }
 }

@@ -21,36 +21,29 @@ import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.RootProvider;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import com.intellij.openapi.util.Comparing;
+import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ModuleExtensionWithSdkOrderEntryTypeProvider;
 
 /**
  * @author dsl
  */
-public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseImpl
-        implements WritableOrderEntry, ClonableOrderEntry, ModuleExtensionWithSdkOrderEntry {
-  @NonNls public static final String ENTRY_TYPE = "module-extension-sdk";
-
-  @NonNls public static final String EXTENSION_ID_ATTRIBUTE = "extension-id";
-
+public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseImpl implements ClonableOrderEntry, ModuleExtensionWithSdkOrderEntry {
   private String myModuleExtensionId;
 
-  ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull RootModelImpl rootModel) {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-
-    myModuleExtensionId = moduleExtensionId;
-    init();
+  public ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull ModuleRootLayerImpl rootModel) {
+    this(moduleExtensionId, rootModel, true);
   }
 
-  ModuleExtensionWithSdkOrderEntryImpl(@NotNull Element element, @NotNull RootModelImpl rootModel) throws InvalidDataException {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-    myModuleExtensionId =  element.getAttributeValue(EXTENSION_ID_ATTRIBUTE);
-    init();
+  public ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull ModuleRootLayerImpl rootModel, boolean init) {
+    super(ModuleExtensionWithSdkOrderEntryTypeProvider.getInstance(), rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
+    myModuleExtensionId = moduleExtensionId;
+    if (init) {
+      init();
+    }
   }
 
   @Override
@@ -124,18 +117,19 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  public void writeExternal(@NotNull Element rootElement) {
-    final Element element = OrderEntryFactory.createOrderEntryElement(ENTRY_TYPE);
-    element.setAttribute(EXTENSION_ID_ATTRIBUTE, myModuleExtensionId);
-    rootElement.addContent(element);
+  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+    if (other instanceof ModuleExtensionWithSdkOrderEntry) {
+      String name1 = this.getSdkName();
+      String name2 = ((ModuleExtensionWithSdkOrderEntry)other).getSdkName();
+      return Comparing.strEqual(name1, name2);
+    }
+    return false;
   }
 
   @Override
   @NotNull
-  public OrderEntry cloneEntry(@NotNull RootModelImpl rootModel,
-                               ProjectRootManagerImpl projectRootManager,
-                               VirtualFilePointerManager filePointerManager) {
-    return new ModuleExtensionWithSdkOrderEntryImpl(myModuleExtensionId, rootModel);
+  public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl rootModel) {
+    return new ModuleExtensionWithSdkOrderEntryImpl(myModuleExtensionId, rootModel, true);
   }
 
   @NotNull
@@ -147,6 +141,10 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Nullable
   @Override
   public ModuleExtensionWithSdk<?> getModuleExtension() {
-    return getRootModel().getExtensionWithoutCheck(myModuleExtensionId);
+    ModuleExtension<?> extensionWithoutCheck = myModuleRootLayer.getExtensionWithoutCheck(myModuleExtensionId);
+    if (!(extensionWithoutCheck instanceof ModuleExtensionWithSdk)) {
+      return null;
+    }
+    return (ModuleExtensionWithSdk) extensionWithoutCheck;
   }
 }

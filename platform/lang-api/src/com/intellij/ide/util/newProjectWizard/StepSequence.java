@@ -20,10 +20,7 @@
  */
 package com.intellij.ide.util.newProjectWizard;
 
-import com.intellij.ide.util.projectWizard.AbstractModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
@@ -52,15 +49,8 @@ public class StepSequence {
     myCommonFinishingSteps.add(Pair.create(step, suitableTypes));
   }
 
-  public void addStepsForBuilder(AbstractModuleBuilder builder, WizardContext wizardContext, ModulesProvider modulesProvider) {
-
-    /*if (!mySpecificSteps.containsKey(id)) {
-      mySpecificSteps.put(id, Arrays.asList(builder.createWizardSteps(wizardContext, modulesProvider)));
-    }   */
-  }
-
-  public void addSpecificStep(String type, ModuleWizardStep step) {
-    mySpecificSteps.putValue(type, step);
+  public void addSpecificStep(String id, ModuleWizardStep step) {
+    mySpecificSteps.putValue(id, step);
   }
 
   public List<ModuleWizardStep> getSelectedSteps() {
@@ -103,7 +93,10 @@ public class StepSequence {
   }
 
   public void setType(@Nullable @NonNls final String type) {
-    setTypes(Collections.singletonList(""));
+    if(type == null) {
+      return;
+    }
+    setTypes(Collections.singletonList(type));
   }
 
   public String getSelectedType() {

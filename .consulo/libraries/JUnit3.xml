@@ -1,9 +1,7 @@
 <component name="libraryTable">
   <library name="JUnit3">
-    <CLASSES>
+    <binaries>
       <root url="jar://$PROJECT_DIR$/lib/junit.jar!/" />
-    </CLASSES>
-    <DOCUMENTATION />
-    <SOURCES />
+    </binaries>
   </library>
 </component>

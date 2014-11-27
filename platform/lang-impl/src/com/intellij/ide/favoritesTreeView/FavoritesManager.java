@@ -30,6 +30,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
@@ -608,7 +609,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
       }
       if (element instanceof NamedLibraryElement) {
         NamedLibraryElement namedLibraryElement = (NamedLibraryElement)element;
-        final VirtualFile[] files = namedLibraryElement.getOrderEntry().getRootFiles(OrderRootType.CLASSES);
+        final VirtualFile[] files = namedLibraryElement.getOrderEntry().getFiles(BinariesOrderRootType.getInstance());
         if (files != null && ArrayUtil.find(files, vFile) > -1) {
           return true;
         }

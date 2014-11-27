@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,18 @@ import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.stores.IProjectStore;
 import com.intellij.openapi.components.impl.stores.StateStorageManager;
+import com.intellij.openapi.components.store.ComponentSaveSession;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.containers.MultiMap;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -48,6 +51,12 @@ public class MockProjectStore implements IProjectStore {
   @Override
   public void reinitComponents(@NotNull Set<String> componentNames, boolean reloadData) {
     throw new UnsupportedOperationException("Method reinitComponents is not yet implemented in " + getClass().getName());
+  }
+
+  @NotNull
+  @Override
+  public Collection<String> getNotReloadableComponents(@NotNull Collection<String> componentNames) {
+    return Collections.emptyList();
   }
 
   @Override
@@ -115,14 +124,6 @@ public class MockProjectStore implements IProjectStore {
     throw new UnsupportedOperationException("Method initComponent is not yet implemented in " + getClass().getName());
   }
 
-  public void commit() {
-    throw new UnsupportedOperationException("Method commit is not yet implemented in " + getClass().getName());
-  }
-
-  public boolean save() throws IOException {
-    throw new UnsupportedOperationException("Method save is not yet implemented in " + getClass().getName());
-  }
-
   @Override
   public void load() throws IOException {
     throw new UnsupportedOperationException("Method load is not yet implemented in " + getClass().getName());
@@ -130,7 +131,7 @@ public class MockProjectStore implements IProjectStore {
 
   @Override
   @NotNull
-  public SaveSession startSave() throws IOException {
+  public ComponentSaveSession startSave() {
     throw new UnsupportedOperationException("Method startSave not implemented in " + getClass());
   }
 
@@ -140,19 +141,15 @@ public class MockProjectStore implements IProjectStore {
     throw new UnsupportedOperationException("Method getPresentableUrl not implemented in " + getClass());
   }
 
+  @Nullable
   @Override
-  public boolean reload(@NotNull final Set<Pair<VirtualFile,StateStorage>> changedFiles) {
-    throw new UnsupportedOperationException("Method reload not implemented in " + getClass());
+  public Collection<String> reload(@NotNull MultiMap<StateStorage, VirtualFile> changedStorages) {
+    return null;
   }
 
   @NotNull
   @Override
   public StateStorageManager getStateStorageManager() {
     throw new UnsupportedOperationException("Method getStateStorageManager not implemented in " + getClass());
-  }
-
-  @Override
-  public boolean isSaving() {
-    return false;
   }
 }

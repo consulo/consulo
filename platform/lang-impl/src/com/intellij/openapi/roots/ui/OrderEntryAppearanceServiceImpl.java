@@ -21,9 +21,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
@@ -38,9 +39,10 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
-import org.consulo.sdk.SdkUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import org.mustbe.consulo.sdk.SdkUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,39 +52,10 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
 
   @NotNull
   @Override
+  @SuppressWarnings("unchecked")
   public CellAppearanceEx forOrderEntry(Project project, @NotNull final OrderEntry orderEntry, final boolean selected) {
-    if(orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
-      ModuleExtensionWithSdkOrderEntry sdkLibraryEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
-      Sdk sdk = sdkLibraryEntry.getSdk();
-      if (!orderEntry.isValid() || sdk == null) {
-        sdk = null;
-      }
-
-      return forSdk(sdk, false, selected, true);
-    }
-    else if (!orderEntry.isValid()) {
-      return FileAppearanceService.getInstance().forInvalidUrl(orderEntry.getPresentableName());
-    }
-    else if (orderEntry instanceof LibraryOrderEntry) {
-      LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)orderEntry;
-      if (!libraryOrderEntry.isValid()) { //library can be removed
-        return FileAppearanceService.getInstance().forInvalidUrl(orderEntry.getPresentableName());
-      }
-      Library library = libraryOrderEntry.getLibrary();
-      assert library != null : libraryOrderEntry;
-      return forLibrary(project, library, !((LibraryEx)library).getInvalidRootUrls(OrderRootType.CLASSES).isEmpty());
-    }
-    else if (orderEntry.isSynthetic()) {
-      String presentableName = orderEntry.getPresentableName();
-      Icon icon = orderEntry instanceof ModuleSourceOrderEntry ? sourceFolderIcon(false) : null;
-      return new SimpleTextCellAppearance(presentableName, icon, SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
-    }
-    else if (orderEntry instanceof ModuleOrderEntry) {
-      return SimpleTextCellAppearance.regular(orderEntry.getPresentableName(), AllIcons.Nodes.Module);
-    }
-    else {
-      return CompositeAppearance.single(orderEntry.getPresentableName());
-    }
+    OrderEntryTypeProvider provider = orderEntry.getProvider();
+    return provider.getCellAppearance(orderEntry);
   }
 
   @NotNull
@@ -96,7 +69,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       return normalOrRedWaved(name, (icon != null ? icon :  AllIcons.Nodes.PpLib), hasInvalidRoots);
     }
 
-    final String[] files = library.getUrls(OrderRootType.CLASSES);
+    final String[] files = library.getUrls(BinariesOrderRootType.getInstance());
     if (files.length == 0) {
       return SimpleTextCellAppearance.invalid(ProjectBundle.message("library.empty.library.item"),  AllIcons.Nodes.PpLib);
     }

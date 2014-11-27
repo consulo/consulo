@@ -25,6 +25,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.projectView.impl.ProjectViewImpl;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -40,9 +41,8 @@ import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
-import com.intellij.projectImport.ProjectAttachProcessor;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.ui.SimpleTextAttributes;
@@ -105,7 +105,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
     final String name = parentValue instanceof Project
                         ? psiDirectory.getVirtualFile().getPresentableUrl()
-                        : BaseProjectViewDirectoryHelper.getInstance(psiDirectory.getProject()).getNodeName(getSettings(), parentValue, psiDirectory);
+                        : BaseProjectViewDirectoryHelper.getNodeName(getSettings(), parentValue, psiDirectory);
     if (name == null) {
       setValue(null);
       return;
@@ -116,7 +116,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
       data.setLocationString("library home");
     }
     else {
-      data.setLocationString(BaseProjectViewDirectoryHelper.getInstance(project).getLocationString(psiDirectory));
+      data.setLocationString(BaseProjectViewDirectoryHelper.getLocationString(psiDirectory));
     }
 
     setupIcon(data, psiDirectory);
@@ -130,7 +130,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
   @Override
   public Collection<AbstractTreeNode> getChildrenImpl() {
-    return BaseProjectViewDirectoryHelper.getInstance(myProject).getDirectoryChildren(getValue(), getSettings(), true);
+    return BaseProjectViewDirectoryHelper.getDirectoryChildren(getValue(), getSettings(), true);
   }
 
   @Override
@@ -140,7 +140,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   }
 
   public boolean isFQNameShown() {
-    return BaseProjectViewDirectoryHelper.getInstance(getProject()).isShowFQName(getSettings(), getParentValue(), getValue());
+    return BaseProjectViewDirectoryHelper.isShowFQName(getProject(), getSettings(), getParentValue(), getValue());
   }
 
   @Override
@@ -159,9 +159,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
       return false;
     }
 
-    final Project project = value.getProject();
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    return !fileIndex.isIgnored(file);
+    return !FileTypeRegistry.getInstance().isFileIgnored(file);
   }
 
   @Override
@@ -176,7 +174,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     if (super.canRepresent(element)) return true;
     PsiDirectory directory = getValue();
     if (directory == null) return false;
-    return BaseProjectViewDirectoryHelper.getInstance(getProject()).canRepresent(element, directory);
+    return BaseProjectViewDirectoryHelper.canRepresent(element, directory);
   }
 
   @Override
@@ -248,7 +246,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   public String getTitle() {
     final PsiDirectory directory = getValue();
     if (directory != null) {
-      return PsiDirectoryFactory.getInstance(getProject()).getQualifiedName(directory, true);
+      return PsiPackageHelper.getInstance(getProject()).getQualifiedName(directory, true);
     }
     return super.getTitle();
   }
@@ -276,21 +274,8 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   }
 
   @Override
-  public Comparable getSortKey() {
-    if (ProjectAttachProcessor.canAttachToProject()) {
-      // primary module is always on top; attached modules are sorted alphabetically
-      final VirtualFile file = getVirtualFile();
-      if (Comparing.equal(file, myProject.getBaseDir())) {
-        return "";    // sorts before any other name
-      }
-      return getTitle();
-    }
-    return null;
-  }
-
-  @Override
   public String getQualifiedNameSortKey() {
-    final PsiDirectoryFactory factory = PsiDirectoryFactory.getInstance(getProject());
+    final PsiPackageHelper factory = PsiPackageHelper.getInstance(getProject());
     return factory.getQualifiedName(getValue(), true);
   }
 

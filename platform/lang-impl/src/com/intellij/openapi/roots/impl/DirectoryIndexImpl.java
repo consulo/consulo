@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -35,10 +36,11 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Query;
+import com.intellij.util.containers.ConcurrentIntObjectMap;
+import com.intellij.util.containers.StripedLockIntObjectConcurrentHashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.List;
@@ -122,25 +124,42 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   private RootIndex getRootIndex() {
     RootIndex rootIndex = myRootIndex;
     if (rootIndex == null) {
-      myRootIndex = rootIndex = new RootIndex(myProject);
+      myRootIndex = rootIndex = new RootIndex(myProject, createRootInfoCache());
     }
     return rootIndex;
   }
 
-  @Override
-  @TestOnly
-  public void checkConsistency() {
-    getRootIndex().checkConsistency();
+  protected RootIndex.InfoCache createRootInfoCache() {
+    return new RootIndex.InfoCache() {
+      // Upsource can't use int-mapping because different files may have the same id there
+      private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = new StripedLockIntObjectConcurrentHashMap<DirectoryInfo>();
+      @Override
+      public void cacheInfo(@NotNull VirtualFile dir, @NotNull DirectoryInfo info) {
+        myInfoCache.put(((NewVirtualFile)dir).getId(), info);
+      }
+
+      @Override
+      public DirectoryInfo getCachedInfo(@NotNull VirtualFile dir) {
+        return myInfoCache.get(((NewVirtualFile)dir).getId());
+      }
+    };
   }
 
   @Override
   public DirectoryInfo getInfoForDirectory(@NotNull VirtualFile dir) {
+    DirectoryInfo info = getInfoForFile(dir);
+    return info.isInProject() ? info : null;
+  }
+
+  @NotNull
+  @Override
+  public DirectoryInfo getInfoForFile(@NotNull VirtualFile file) {
     checkAvailability();
     dispatchPendingEvents();
 
-    if (!(dir instanceof NewVirtualFile)) return null;
+    if (!(file instanceof NewVirtualFile)) return NonProjectDirectoryInfo.NOT_SUPPORTED_VIRTUAL_FILE_IMPLEMENTATION;
 
-    return getRootIndex().getInfoForDirectory(dir);
+    return getRootIndex().getInfoForFile(file);
   }
 
   @Override
@@ -153,27 +172,18 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   }
 
   @Override
-  public boolean isProjectExcludeRoot(@NotNull VirtualFile dir) {
-    checkAvailability();
-    if (!(dir instanceof NewVirtualFile)) return false;
-
-    return getRootIndex().isProjectExcludeRoot(dir);
-  }
-
-  @Override
-  public boolean isModuleExcludeRoot(@NotNull VirtualFile dir) {
-    checkAvailability();
-    if (!(dir instanceof NewVirtualFile)) return false;
-
-    return getRootIndex().isModuleExcludeRoot(dir);
-  }
-
-  @Override
   public String getPackageName(@NotNull VirtualFile dir) {
     checkAvailability();
     if (!(dir instanceof NewVirtualFile)) return null;
 
     return getRootIndex().getPackageName(dir);
+  }
+
+  @NotNull
+  @Override
+  public OrderEntry[] getOrderEntries(@NotNull DirectoryInfo info) {
+    checkAvailability();
+    return getRootIndex().getOrderEntries(info);
   }
 
   private void checkAvailability() {

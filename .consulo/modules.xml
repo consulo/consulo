@@ -2,879 +2,1035 @@
 <project version="4">
   <component name="ModuleManager">
     <modules>
-      <module name="platform/analysis-api" dirurl="file://$PROJECT_DIR$/platform/analysis-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="util" />
-        <orderEntry type="library" name="JDOM" level="project" />
-        <orderEntry type="module" module-name="extensions" />
-        <orderEntry type="module" module-name="core-api" />
-        <orderEntry type="module" module-name="editor-ui-api" exported="" />
-        <orderEntry type="module" module-name="projectModel-api" />
+      <module name="platform/analysis-api" dirurl="file://$PROJECT_DIR$/platform/analysis-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="library" name="JDOM" level="project" />
+          <orderEntry type="module" module-name="extensions" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="editor-ui-api" exported="" />
+          <orderEntry type="module" module-name="projectModel-api" />
+        </module-layer>
       </module>
-      <module name="platform/analysis-impl" dirurl="file://$PROJECT_DIR$/platform/analysis-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="analysis-api" exported="" />
-        <orderEntry type="module" module-name="core-api" />
-        <orderEntry type="module" module-name="core-impl" />
-        <orderEntry type="module" module-name="util" />
-        <orderEntry type="module" module-name="extensions" />
-        <orderEntry type="module" module-name="projectModel-impl" />
-        <orderEntry type="module" module-name="editor-ui-ex" />
+      <module name="platform/analysis-impl" dirurl="file://$PROJECT_DIR$/platform/analysis-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="analysis-api" exported="" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="core-impl" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="module" module-name="extensions" />
+          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="editor-ui-ex" />
+        </module-layer>
       </module>
-      <module name="platform/annotations" dirurl="file://$PROJECT_DIR$/platform/annotations">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
+      <module name="platform/annotations" dirurl="file://$PROJECT_DIR$/platform/annotations" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
       </module>
-      <module name="platform/boot" dirurl="file://$PROJECT_DIR$/platform/boot">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
+      <module name="platform/boot" dirurl="file://$PROJECT_DIR$/platform/boot" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
       </module>
-      <module name="platform/bootstrap" dirurl="file://$PROJECT_DIR$/platform/bootstrap">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="util" />
+      <module name="platform/bootstrap" dirurl="file://$PROJECT_DIR$/platform/bootstrap" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="util" />
+        </module-layer>
       </module>
-      <module name="platform/compiler/compiler-api" dirurl="file://$PROJECT_DIR$/platform/compiler-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-api" exported="" />
-        <orderEntry type="module" module-name="projectModel-api" exported="" />
-        <orderEntry type="module" module-name="platform-api" exported="" />
-        <orderEntry type="module" module-name="lang-api" exported="" />
-        <orderEntry type="module" module-name="compiler-artifact-api" />
+      <module name="platform/compiler/compiler-api" dirurl="file://$PROJECT_DIR$/platform/compiler-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" exported="" />
+          <orderEntry type="module" module-name="projectModel-api" exported="" />
+          <orderEntry type="module" module-name="platform-api" exported="" />
+          <orderEntry type="module" module-name="lang-api" exported="" />
+          <orderEntry type="module" module-name="compiler-artifact-api" />
+        </module-layer>
       </module>
-      <module name="platform/compiler/compiler-artifact-api" dirurl="file://$PROJECT_DIR$/platform/compiler-artifact-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="compiler-api" />
+      <module name="platform/compiler/compiler-artifact-api" dirurl="file://$PROJECT_DIR$/platform/compiler-artifact-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="compiler-api" />
+        </module-layer>
       </module>
-      <module name="platform/compiler/compiler-artifact-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-artifact-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="compiler-api" exported="" />
-        <orderEntry type="module" module-name="compiler-impl" />
-        <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="library" name="Lombok" level="project" />
+      <module name="platform/compiler/compiler-artifact-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-artifact-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="compiler-api" exported="" />
+          <orderEntry type="module" module-name="compiler-impl" />
+          <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="library" name="Lombok" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-bridge-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="module" module-name="compiler-api" />
+      <module name="platform/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-bridge-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="compiler-api" />
+        </module-layer>
       </module>
-      <module name="platform/compiler/compiler-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="compiler-api" exported="" />
-        <orderEntry type="module" module-name="resources-en" exported="" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="library" name="Netty" level="project" />
-        <orderEntry type="library" name="OroMatcher" level="project" />
-        <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
-        <orderEntry type="module" module-name="compiler-artifact-impl" />
-        <orderEntry type="module" module-name="compiler-bridge-impl" />
+      <module name="platform/compiler/compiler-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="compiler-api" exported="" />
+          <orderEntry type="module" module-name="resources-en" exported="" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="library" name="Netty" level="project" />
+          <orderEntry type="library" name="OroMatcher" level="project" />
+          <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
+          <orderEntry type="module" module-name="compiler-artifact-impl" />
+          <orderEntry type="module" module-name="compiler-bridge-impl" />
+        </module-layer>
       </module>
-      <module name="platform/compiler-server-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-server-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="module" module-name="testFramework" />
-        <orderEntry type="module" module-name="compiler-artifact-impl" />
-        <orderEntry type="module" module-name="compiler-impl" />
-        <orderEntry type="module" module-name="compiler-bridge-impl" />
+      <module name="platform/compiler-server-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-server-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="testFramework" />
+          <orderEntry type="module" module-name="compiler-artifact-impl" />
+          <orderEntry type="module" module-name="compiler-impl" />
+          <orderEntry type="module" module-name="compiler-bridge-impl" />
+        </module-layer>
       </module>
-      <module name="consulo" dirurl="file://$PROJECT_DIR$">
-        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/.consulo/sandbox" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="annotations" />
-        <orderEntry type="module" module-name="boot" />
-        <orderEntry type="module" module-name="bootstrap" />
-        <orderEntry type="module" module-name="extensions" />
-        <orderEntry type="module" module-name="forms_rt" />
-        <orderEntry type="module" module-name="icons" />
-        <orderEntry type="module" module-name="lang-api" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="module" module-name="lvcs-api" />
-        <orderEntry type="module" module-name="lvcs-impl" />
-        <orderEntry type="module" module-name="platform-api" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="module" module-name="platform-main" />
-        <orderEntry type="module" module-name="platform-resources" />
-        <orderEntry type="module" module-name="platform-resources-en" />
-        <orderEntry type="module" module-name="resources" />
-        <orderEntry type="module" module-name="resources-en" />
-        <orderEntry type="module" module-name="testFramework" />
-        <orderEntry type="module" module-name="testRunner" />
-        <orderEntry type="module" module-name="usageView" />
-        <orderEntry type="module" module-name="util" />
-        <orderEntry type="module" module-name="vcs-api" />
-        <orderEntry type="module" module-name="vcs-impl" />
-        <orderEntry type="module" module-name="xdebugger-api" />
-        <orderEntry type="module" module-name="xdebugger-impl" />
-        <orderEntry type="module" module-name="core" />
-        <orderEntry type="module" module-name="smRunner" />
-        <orderEntry type="module" module-name="projectImportModel" />
-        <orderEntry type="module" module-name="platform-tests" />
-        <orderEntry type="module" module-name="remote-servers-api" />
-        <orderEntry type="module" module-name="remote-servers-impl" />
-        <orderEntry type="module" module-name="compiler-bridge-impl" />
-        <orderEntry type="module" module-name="compiler-server-impl" />
-        <orderEntry type="module" module-name="sandLanguage" />
+      <module name="consulo" dirurl="file://$PROJECT_DIR$" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/.consulo/sandbox" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="annotations" />
+          <orderEntry type="module" module-name="boot" />
+          <orderEntry type="module" module-name="bootstrap" />
+          <orderEntry type="module" module-name="extensions" />
+          <orderEntry type="module" module-name="forms_rt" />
+          <orderEntry type="module" module-name="icons" />
+          <orderEntry type="module" module-name="lang-api" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="lvcs-api" />
+          <orderEntry type="module" module-name="lvcs-impl" />
+          <orderEntry type="module" module-name="platform-api" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="platform-main" />
+          <orderEntry type="module" module-name="platform-resources" />
+          <orderEntry type="module" module-name="platform-resources-en" />
+          <orderEntry type="module" module-name="resources" />
+          <orderEntry type="module" module-name="resources-en" />
+          <orderEntry type="module" module-name="testFramework" />
+          <orderEntry type="module" module-name="testRunner" />
+          <orderEntry type="module" module-name="usageView" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="module" module-name="vcs-api" />
+          <orderEntry type="module" module-name="vcs-impl" />
+          <orderEntry type="module" module-name="xdebugger-api" />
+          <orderEntry type="module" module-name="xdebugger-impl" />
+          <orderEntry type="module" module-name="core" />
+          <orderEntry type="module" module-name="smRunner" />
+          <orderEntry type="module" module-name="projectImportModel" />
+          <orderEntry type="module" module-name="platform-tests" />
+          <orderEntry type="module" module-name="remote-servers-api" />
+          <orderEntry type="module" module-name="remote-servers-impl" />
+          <orderEntry type="module" module-name="compiler-bridge-impl" />
+          <orderEntry type="module" module-name="compiler-server-impl" />
+          <orderEntry type="module" module-name="sandLanguage" />
+        </module-layer>
       </module>
-      <module name="plugins/core" dirurl="file://$PROJECT_DIR$/plugins/core">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="lang-impl" />
+      <module name="plugins/core" dirurl="file://$PROJECT_DIR$/plugins/core" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-impl" />
+        </module-layer>
       </module>
-      <module name="platform/core-api" dirurl="file://$PROJECT_DIR$/platform/core-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="util" exported="" />
-        <orderEntry type="module" module-name="extensions" exported="" />
-        <orderEntry type="library" exploded="" name="picocontainer" level="project" />
-        <orderEntry type="module" module-name="platform-resources-en" exported="" />
-        <orderEntry type="library" exploded="" name="Lombok" level="project" />
-        <orderEntry type="library" name="JUnit4" level="project" />
+      <module name="platform/core-api" dirurl="file://$PROJECT_DIR$/platform/core-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="util" exported="" />
+          <orderEntry type="module" module-name="extensions" exported="" />
+          <orderEntry type="library" exploded="" name="picocontainer" level="project" />
+          <orderEntry type="module" module-name="platform-resources-en" exported="" />
+          <orderEntry type="library" exploded="" name="Lombok" level="project" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/core-impl" dirurl="file://$PROJECT_DIR$/platform/core-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-api" exported="" />
-        <orderEntry type="library" name="picocontainer" level="project" />
-        <orderEntry type="module" module-name="boot" />
-        <orderEntry type="library" name="Snappy-Java" level="project" />
+      <module name="platform/core-impl" dirurl="file://$PROJECT_DIR$/platform/core-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" exported="" />
+          <orderEntry type="library" name="picocontainer" level="project" />
+          <orderEntry type="module" module-name="boot" />
+          <orderEntry type="library" name="Snappy-Java" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/dvcs" dirurl="file://$PROJECT_DIR$/platform/dvcs">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-api" />
-        <orderEntry type="module" module-name="testFramework" />
-        <orderEntry type="module" module-name="vcs-impl" />
-        <orderEntry type="library" name="Guava" level="project" />
-        <orderEntry type="module" module-name="vcs-log-api" />
+      <module name="platform/dvcs" dirurl="file://$PROJECT_DIR$/platform/dvcs" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="testFramework" />
+          <orderEntry type="module" module-name="vcs-impl" />
+          <orderEntry type="library" name="Guava" level="project" />
+          <orderEntry type="module" module-name="vcs-log-api" />
+        </module-layer>
       </module>
-      <module name="platform/editor-ui-api" dirurl="file://$PROJECT_DIR$/platform/editor-ui-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-api" />
-        <orderEntry type="module" module-name="util" />
-        <orderEntry type="module" module-name="annotations" />
-        <orderEntry type="module" module-name="projectModel-api" />
-        <orderEntry type="module" module-name="indexing-api" />
+      <module name="platform/editor-ui-api" dirurl="file://$PROJECT_DIR$/platform/editor-ui-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="module" module-name="annotations" />
+          <orderEntry type="module" module-name="projectModel-api" />
+          <orderEntry type="module" module-name="indexing-api" />
+        </module-layer>
       </module>
-      <module name="platform/editor-ui-ex" dirurl="file://$PROJECT_DIR$/platform/editor-ui-ex">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="editor-ui-api" exported="" />
-        <orderEntry type="module" module-name="util" exported="" />
-        <orderEntry type="module" module-name="annotations" exported="" />
-        <orderEntry type="module" module-name="core-impl" exported="" />
-        <orderEntry type="module" module-name="indexing-impl" />
-        <orderEntry type="module" module-name="projectModel-impl" />
+      <module name="platform/editor-ui-ex" dirurl="file://$PROJECT_DIR$/platform/editor-ui-ex" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="editor-ui-api" exported="" />
+          <orderEntry type="module" module-name="util" exported="" />
+          <orderEntry type="module" module-name="annotations" exported="" />
+          <orderEntry type="module" module-name="core-impl" exported="" />
+          <orderEntry type="module" module-name="indexing-impl" />
+          <orderEntry type="module" module-name="projectModel-impl" />
+        </module-layer>
       </module>
-      <module name="platform/extensions" dirurl="file://$PROJECT_DIR$/platform/extensions">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="library" exploded="" name="XStream" level="project" />
-        <orderEntry type="library" exploded="" name="JDOM" level="project" />
-        <orderEntry type="library" name="picocontainer" level="project" />
-        <orderEntry type="module" module-name="util" />
-        <orderEntry type="library" name="JUnit4" level="project" />
-        <orderEntry type="library" name="JMock1" level="project" />
-        <orderEntry type="library" name="asm" level="project" />
-        <orderEntry type="library" name="CGLIB" level="project" />
-        <orderEntry type="library" name="Mocks" level="project" />
+      <module name="platform/extensions" dirurl="file://$PROJECT_DIR$/platform/extensions" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="library" exploded="" name="XStream" level="project" />
+          <orderEntry type="library" exploded="" name="JDOM" level="project" />
+          <orderEntry type="library" name="picocontainer" level="project" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+          <orderEntry type="library" name="JMock1" level="project" />
+          <orderEntry type="library" name="asm" level="project" />
+          <orderEntry type="library" name="CGLIB" level="project" />
+          <orderEntry type="library" name="Mocks" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/external-system-api" dirurl="file://$PROJECT_DIR$/platform/external-system-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="annotations" exported="" />
-        <orderEntry type="module" module-name="util" exported="" />
-        <orderEntry type="module" module-name="projectModel-api" exported="" />
-        <orderEntry type="module" module-name="platform-api" exported="" />
-        <orderEntry type="module" module-name="lang-api" exported="" />
-        <orderEntry type="module" module-name="compiler-api" exported="" />
+      <module name="platform/external-system-api" dirurl="file://$PROJECT_DIR$/platform/external-system-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="annotations" exported="" />
+          <orderEntry type="module" module-name="util" exported="" />
+          <orderEntry type="module" module-name="projectModel-api" exported="" />
+          <orderEntry type="module" module-name="platform-api" exported="" />
+          <orderEntry type="module" module-name="lang-api" exported="" />
+          <orderEntry type="module" module-name="compiler-api" exported="" />
+        </module-layer>
       </module>
-      <module name="platform/external-system-impl" dirurl="file://$PROJECT_DIR$/platform/external-system-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="external-system-api" exported="" />
-        <orderEntry type="module" module-name="projectModel-impl" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="module" module-name="compiler-artifact-api" />
-        <orderEntry type="module" module-name="vcs-impl" />
-        <orderEntry type="module" module-name="xdebugger-impl" />
+      <module name="platform/external-system-impl" dirurl="file://$PROJECT_DIR$/platform/external-system-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="external-system-api" exported="" />
+          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="compiler-artifact-api" />
+          <orderEntry type="module" module-name="vcs-impl" />
+          <orderEntry type="module" module-name="xdebugger-impl" />
+        </module-layer>
       </module>
-      <module name="platform/forms_rt" dirurl="file://$PROJECT_DIR$/platform/forms_rt">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
+      <module name="platform/forms_rt" dirurl="file://$PROJECT_DIR$/platform/forms_rt" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
       </module>
-      <module name="platform/graph-api" dirurl="file://$PROJECT_DIR$/platform/graph-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-api" />
+      <module name="platform/graph-api" dirurl="file://$PROJECT_DIR$/platform/graph-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-api" />
+        </module-layer>
       </module>
-      <module name="platform/graph-impl" dirurl="file://$PROJECT_DIR$/platform/graph-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="module" module-name="graph-api" />
+      <module name="platform/graph-impl" dirurl="file://$PROJECT_DIR$/platform/graph-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="graph-api" />
+        </module-layer>
       </module>
-      <module name="platform/icons" dirurl="file://$PROJECT_DIR$/platform/icons">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
+      <module name="platform/icons" dirurl="file://$PROJECT_DIR$/platform/icons" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
       </module>
-      <module name="platform/indexing-api" dirurl="file://$PROJECT_DIR$/platform/indexing-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-api" exported="" />
-        <orderEntry type="module" module-name="projectModel-api" />
+      <module name="platform/indexing-api" dirurl="file://$PROJECT_DIR$/platform/indexing-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" exported="" />
+          <orderEntry type="module" module-name="projectModel-api" />
+        </module-layer>
       </module>
-      <module name="platform/indexing-impl" dirurl="file://$PROJECT_DIR$/platform/indexing-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-impl" />
-        <orderEntry type="module" module-name="indexing-api" exported="" />
-        <orderEntry type="module" module-name="projectModel-impl" />
+      <module name="platform/indexing-impl" dirurl="file://$PROJECT_DIR$/platform/indexing-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-impl" />
+          <orderEntry type="module" module-name="indexing-api" exported="" />
+          <orderEntry type="module" module-name="projectModel-impl" />
+        </module-layer>
       </module>
-      <module name="platform/lang-api" dirurl="file://$PROJECT_DIR$/platform/lang-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-api" exported="" />
-        <orderEntry type="module" module-name="lvcs-api" exported="" />
-        <orderEntry type="library" exploded="" name="NanoXML" level="project" />
-        <orderEntry type="module" module-name="indexing-api" exported="" />
-        <orderEntry type="module" module-name="projectModel-api" exported="" />
-        <orderEntry type="library" name="JUnit4" level="project" />
-        <orderEntry type="library" name="Mocks" level="project" />
-        <orderEntry type="module" module-name="analysis-api" exported="" />
-        <orderEntry type="module" module-name="compiler-api" />
-        <orderEntry type="module" module-name="resources-en" />
-        <orderEntry type="module" module-name="compiler-artifact-api" />
+      <module name="platform/lang-api" dirurl="file://$PROJECT_DIR$/platform/lang-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-api" exported="" />
+          <orderEntry type="module" module-name="lvcs-api" exported="" />
+          <orderEntry type="library" exploded="" name="NanoXML" level="project" />
+          <orderEntry type="module" module-name="indexing-api" exported="" />
+          <orderEntry type="module" module-name="projectModel-api" exported="" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+          <orderEntry type="library" name="Mocks" level="project" />
+          <orderEntry type="module" module-name="analysis-api" exported="" />
+          <orderEntry type="module" module-name="compiler-api" />
+          <orderEntry type="module" module-name="resources-en" />
+          <orderEntry type="module" module-name="compiler-artifact-api" />
+        </module-layer>
       </module>
-      <module name="platform/lang-impl" dirurl="file://$PROJECT_DIR$/platform/lang-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="boot" />
-        <orderEntry type="module" module-name="lang-api" exported="" />
-        <orderEntry type="module" module-name="vcs-api" />
-        <orderEntry type="library" name="OroMatcher" level="project" />
-        <orderEntry type="library" name="JUnit4" level="project" />
-        <orderEntry type="library" name="Velocity" level="project" />
-        <orderEntry type="module" module-name="vcs-impl" />
-        <orderEntry type="module" module-name="platform-impl" exported="" />
-        <orderEntry type="module" module-name="usageView" exported="" />
-        <orderEntry type="library" name="xpp3-1.1.4-min" level="project" />
-        <orderEntry type="library" exploded="" name="cli-parser" level="project" />
-        <orderEntry type="library" name="http-client-3.1" level="project" />
-        <orderEntry type="module" module-name="indexing-api" />
-        <orderEntry type="module" module-name="indexing-impl" exported="" />
-        <orderEntry type="library" name="Snappy-Java" level="project" />
-        <orderEntry type="module" module-name="projectModel-impl" exported="" />
-        <orderEntry type="library" name="swingx" level="project" />
-        <orderEntry type="library" name="Guava" level="project" />
-        <orderEntry type="library" name="gson" level="project" />
-        <orderEntry type="module" module-name="analysis-impl" exported="" />
-        <orderEntry type="module" module-name="compiler-api" />
-        <orderEntry type="module" module-name="compiler-impl" />
-        <orderEntry type="module" module-name="compiler-artifact-api" />
-        <orderEntry type="module" module-name="compiler-artifact-impl" />
-        <orderEntry type="library" name="jsr166" level="project" />
+      <module name="platform/lang-impl" dirurl="file://$PROJECT_DIR$/platform/lang-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="boot" />
+          <orderEntry type="module" module-name="lang-api" exported="" />
+          <orderEntry type="module" module-name="vcs-api" />
+          <orderEntry type="library" name="OroMatcher" level="project" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+          <orderEntry type="library" name="Velocity" level="project" />
+          <orderEntry type="module" module-name="vcs-impl" />
+          <orderEntry type="module" module-name="platform-impl" exported="" />
+          <orderEntry type="module" module-name="usageView" exported="" />
+          <orderEntry type="library" name="xpp3-1.1.4-min" level="project" />
+          <orderEntry type="library" exploded="" name="cli-parser" level="project" />
+          <orderEntry type="library" name="http-client-3.1" level="project" />
+          <orderEntry type="module" module-name="indexing-api" />
+          <orderEntry type="module" module-name="indexing-impl" exported="" />
+          <orderEntry type="library" name="Snappy-Java" level="project" />
+          <orderEntry type="module" module-name="projectModel-impl" exported="" />
+          <orderEntry type="library" name="swingx" level="project" />
+          <orderEntry type="library" name="Guava" level="project" />
+          <orderEntry type="library" name="gson" level="project" />
+          <orderEntry type="module" module-name="analysis-impl" exported="" />
+          <orderEntry type="module" module-name="compiler-api" />
+          <orderEntry type="module" module-name="compiler-impl" />
+          <orderEntry type="module" module-name="compiler-artifact-api" />
+          <orderEntry type="module" module-name="compiler-artifact-impl" />
+          <orderEntry type="library" name="jsr166" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/lvcs-api" dirurl="file://$PROJECT_DIR$/platform/lvcs-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-api" />
+      <module name="platform/lvcs-api" dirurl="file://$PROJECT_DIR$/platform/lvcs-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-api" />
+        </module-layer>
       </module>
-      <module name="platform/lvcs-impl" dirurl="file://$PROJECT_DIR$/platform/lvcs-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="library" name="picocontainer" level="project" />
-        <orderEntry type="module" module-name="vcs-api" />
-        <orderEntry type="module" module-name="vcs-impl" />
-        <orderEntry type="module" module-name="lvcs-api" />
-        <orderEntry type="library" name="jcip" level="project" />
-        <orderEntry type="module" module-name="lang-api" />
-        <orderEntry type="module" module-name="platform-impl" />
+      <module name="platform/lvcs-impl" dirurl="file://$PROJECT_DIR$/platform/lvcs-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="library" name="picocontainer" level="project" />
+          <orderEntry type="module" module-name="vcs-api" />
+          <orderEntry type="module" module-name="vcs-impl" />
+          <orderEntry type="module" module-name="lvcs-api" />
+          <orderEntry type="library" name="jcip" level="project" />
+          <orderEntry type="module" module-name="lang-api" />
+          <orderEntry type="module" module-name="platform-impl" />
+        </module-layer>
       </module>
-      <module name="platform/platform-api" dirurl="file://$PROJECT_DIR$/platform/platform-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="util" exported="" />
-        <orderEntry type="module" module-name="extensions" exported="" />
-        <orderEntry type="module" module-name="core-api" exported="" />
-        <orderEntry type="library" exploded="" name="picocontainer" level="project" />
-        <orderEntry type="module" module-name="bootstrap" />
-        <orderEntry type="library" exploded="" name="jgoodies-forms" level="project" />
-        <orderEntry type="module" module-name="forms_rt" exported="" />
-        <orderEntry type="library" exploded="" name="commons-codec" level="project" />
-        <orderEntry type="module" module-name="platform-resources-en" exported="" />
-        <orderEntry type="library" name="OroMatcher" level="project" />
-        <orderEntry type="module" module-name="icons" />
-        <orderEntry type="module-library">
-          <library>
-            <CLASSES>
-              <root url="jar://$MODULE_DIR$/../../lib/automaton.jar!/" />
-            </CLASSES>
-            <DOCUMENTATION />
-            <SOURCES />
-          </library>
-        </orderEntry>
-        <orderEntry type="module" module-name="projectModel-api" exported="" />
-        <orderEntry type="library" name="Netty" level="project" />
-        <orderEntry type="library" name="proxy-vole" level="project" />
-        <orderEntry type="library" name="miglayout-swing" level="project" />
-        <orderEntry type="module" module-name="analysis-api" exported="" />
-        <orderEntry type="library" name="pty4" level="project" />
+      <module name="platform/platform-api" dirurl="file://$PROJECT_DIR$/platform/platform-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="util" exported="" />
+          <orderEntry type="module" module-name="extensions" exported="" />
+          <orderEntry type="module" module-name="core-api" exported="" />
+          <orderEntry type="library" exploded="" name="picocontainer" level="project" />
+          <orderEntry type="module" module-name="bootstrap" />
+          <orderEntry type="library" exploded="" name="jgoodies-forms" level="project" />
+          <orderEntry type="module" module-name="forms_rt" exported="" />
+          <orderEntry type="library" exploded="" name="commons-codec" level="project" />
+          <orderEntry type="module" module-name="platform-resources-en" exported="" />
+          <orderEntry type="library" name="OroMatcher" level="project" />
+          <orderEntry type="module" module-name="icons" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/../../lib/automaton.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
+          <orderEntry type="module" module-name="projectModel-api" exported="" />
+          <orderEntry type="library" name="Netty" level="project" />
+          <orderEntry type="library" name="proxy-vole" level="project" />
+          <orderEntry type="library" name="miglayout-swing" level="project" />
+          <orderEntry type="module" module-name="analysis-api" exported="" />
+          <orderEntry type="library" name="pty4" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/platform-impl" dirurl="file://$PROJECT_DIR$/platform/platform-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="library" name="Mac" level="project" />
-        <orderEntry type="module" module-name="platform-api" exported="" />
-        <orderEntry type="library" name="picocontainer" level="project" />
-        <orderEntry type="library" name="Log4J" level="project" />
-        <orderEntry type="module" module-name="boot" />
-        <orderEntry type="module" module-name="bootstrap" />
-        <orderEntry type="library" exploded="" name="commons-codec" level="project" />
-        <orderEntry type="library" name="OroMatcher" level="project" />
-        <orderEntry type="library" name="XmlRPC" level="project" />
-        <orderEntry type="library" name="commons-net" level="project" />
-        <orderEntry type="library" name="asm" level="project" />
-        <orderEntry type="library" name="CGLIB" level="project" />
-        <orderEntry type="module" module-name="lvcs-api" exported="" />
-        <orderEntry type="library" name="JavaHelp" level="project" />
-        <orderEntry type="module" module-name="lang-api" />
-        <orderEntry type="library" name="jna" level="project" />
-        <orderEntry type="library" name="http-client-3.1" level="project" />
-        <orderEntry type="library" name="winp" level="project" />
-        <orderEntry type="library" name="swingx" level="project" />
-        <orderEntry type="module" module-name="core-impl" exported="" />
-        <orderEntry type="library" exploded="" name="miglayout-swing" level="project" />
-        <orderEntry type="module" module-name="indexing-api" />
-        <orderEntry type="module" module-name="indexing-impl" />
-        <orderEntry type="module" module-name="projectModel-impl" />
-        <orderEntry type="library" name="Snappy-Java" level="project" />
-        <orderEntry type="library" name="Netty" level="project" />
-        <orderEntry type="library" name="Sanselan" level="project" />
-        <orderEntry type="library" name="Guava" level="project" />
-        <orderEntry type="module" module-name="analysis-impl" />
-        <orderEntry type="module" module-name="editor-ui-ex" exported="" />
-        <orderEntry type="library" name="jsr166" level="project" />
-        <orderEntry type="library" name="gson" level="project" />
-        <orderEntry type="library" name="jayatana" level="project" />
-        <orderEntry type="module" module-name="editor-ui-api" />
+      <module name="platform/platform-impl" dirurl="file://$PROJECT_DIR$/platform/platform-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="library" name="Mac" level="project" />
+          <orderEntry type="module" module-name="platform-api" exported="" />
+          <orderEntry type="library" name="picocontainer" level="project" />
+          <orderEntry type="library" name="Log4J" level="project" />
+          <orderEntry type="module" module-name="boot" />
+          <orderEntry type="module" module-name="bootstrap" />
+          <orderEntry type="library" exploded="" name="commons-codec" level="project" />
+          <orderEntry type="library" name="OroMatcher" level="project" />
+          <orderEntry type="library" name="XmlRPC" level="project" />
+          <orderEntry type="library" name="commons-net" level="project" />
+          <orderEntry type="library" name="asm" level="project" />
+          <orderEntry type="library" name="CGLIB" level="project" />
+          <orderEntry type="module" module-name="lvcs-api" exported="" />
+          <orderEntry type="library" name="JavaHelp" level="project" />
+          <orderEntry type="module" module-name="lang-api" />
+          <orderEntry type="library" name="jna" level="project" />
+          <orderEntry type="library" name="http-client-3.1" level="project" />
+          <orderEntry type="library" name="winp" level="project" />
+          <orderEntry type="library" name="swingx" level="project" />
+          <orderEntry type="module" module-name="core-impl" exported="" />
+          <orderEntry type="library" exploded="" name="miglayout-swing" level="project" />
+          <orderEntry type="module" module-name="indexing-api" />
+          <orderEntry type="module" module-name="indexing-impl" />
+          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="library" name="Snappy-Java" level="project" />
+          <orderEntry type="library" name="Netty" level="project" />
+          <orderEntry type="library" name="Sanselan" level="project" />
+          <orderEntry type="library" name="Guava" level="project" />
+          <orderEntry type="module" module-name="analysis-impl" />
+          <orderEntry type="module" module-name="editor-ui-ex" exported="" />
+          <orderEntry type="library" name="jsr166" level="project" />
+          <orderEntry type="library" name="gson" level="project" />
+          <orderEntry type="module" module-name="editor-ui-api" />
+        </module-layer>
       </module>
-      <module name="platform/platform-main" dirurl="file://$PROJECT_DIR$/platform/platform-main">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="module" module-name="bootstrap" />
+      <module name="platform/platform-main" dirurl="file://$PROJECT_DIR$/platform/platform-main" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="bootstrap" />
+        </module-layer>
       </module>
-      <module name="platform/platform-resources" dirurl="file://$PROJECT_DIR$/platform/platform-resources">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="lvcs-impl" exported="" />
-        <orderEntry type="module" module-name="util" />
+      <module name="platform/platform-resources" dirurl="file://$PROJECT_DIR$/platform/platform-resources" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lvcs-impl" exported="" />
+          <orderEntry type="module" module-name="util" />
+        </module-layer>
       </module>
-      <module name="platform/platform-resources-en" dirurl="file://$PROJECT_DIR$/platform/platform-resources-en">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
+      <module name="platform/platform-resources-en" dirurl="file://$PROJECT_DIR$/platform/platform-resources-en" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
       </module>
-      <module name="platform/platform-tests" dirurl="file://$PROJECT_DIR$/platform/platform-tests">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="library" name="Mocks" level="project" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="library" name="JUnit4" level="project" />
-        <orderEntry type="module" module-name="testFramework" />
-        <orderEntry type="library" name="EasyMock" level="project" />
-        <orderEntry type="module" module-name="lvcs-impl" />
-        <orderEntry type="module" module-name="vcs-impl" />
-        <orderEntry type="module" module-name="platform-resources" />
-        <orderEntry type="module" module-name="xdebugger-impl" />
+      <module name="platform/platform-tests" dirurl="file://$PROJECT_DIR$/platform/platform-tests" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="library" name="Mocks" level="project" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+          <orderEntry type="module" module-name="testFramework" />
+          <orderEntry type="library" name="EasyMock" level="project" />
+          <orderEntry type="module" module-name="lvcs-impl" />
+          <orderEntry type="module" module-name="vcs-impl" />
+          <orderEntry type="module" module-name="platform-resources" />
+          <orderEntry type="module" module-name="xdebugger-impl" />
+        </module-layer>
       </module>
-      <module name="platform/projectImportModel" dirurl="file://$PROJECT_DIR$/platform/projectImportModel">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-api" />
+      <module name="platform/projectImportModel" dirurl="file://$PROJECT_DIR$/platform/projectImportModel" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" />
+        </module-layer>
       </module>
-      <module name="platform/projectModel-api" dirurl="file://$PROJECT_DIR$/platform/projectModel-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-api" exported="" />
-        <orderEntry type="module" module-name="lang-api" exported="" />
-        <orderEntry type="module" module-name="resources-en" exported="" />
-        <orderEntry type="library" exploded="" name="Guava" level="project" />
+      <module name="platform/projectModel-api" dirurl="file://$PROJECT_DIR$/platform/projectModel-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" exported="" />
+          <orderEntry type="module" module-name="lang-api" exported="" />
+          <orderEntry type="module" module-name="resources-en" exported="" />
+          <orderEntry type="library" exploded="" name="Guava" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/projectModel-impl" dirurl="file://$PROJECT_DIR$/platform/projectModel-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="projectModel-api" exported="" />
-        <orderEntry type="module" module-name="core-impl" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="module" module-name="compiler-api" />
+      <module name="platform/projectModel-impl" dirurl="file://$PROJECT_DIR$/platform/projectModel-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="projectModel-api" exported="" />
+          <orderEntry type="module" module-name="core-impl" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="compiler-api" />
+          <orderEntry type="library" name="Snappy-Java" level="project" />
+        </module-layer>
       </module>
-      <module name="remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/platform/remote-servers-agent-rt">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
+      <module name="remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/platform/remote-servers-agent-rt" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
       </module>
-      <module name="platform/remote-servers-api" dirurl="file://$PROJECT_DIR$/platform/remote-servers-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-api" exported="" />
-        <orderEntry type="module" module-name="platform-api" exported="" />
-        <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
-        <orderEntry type="module" module-name="remote-servers-agent-rt" exported="" />
+      <module name="platform/remote-servers-api" dirurl="file://$PROJECT_DIR$/platform/remote-servers-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" exported="" />
+          <orderEntry type="module" module-name="platform-api" exported="" />
+          <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
+          <orderEntry type="module" module-name="remote-servers-agent-rt" exported="" />
+        </module-layer>
       </module>
-      <module name="platform/remote-servers-impl" dirurl="file://$PROJECT_DIR$/platform/remote-servers-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="remote-servers-api" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="module" module-name="xdebugger-api" />
-        <orderEntry type="module" module-name="compiler-impl" />
+      <module name="platform/remote-servers-impl" dirurl="file://$PROJECT_DIR$/platform/remote-servers-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="remote-servers-api" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="xdebugger-api" />
+          <orderEntry type="module" module-name="compiler-impl" />
+        </module-layer>
       </module>
-      <module name="resources" dirurl="file://$PROJECT_DIR$/resources">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-resources" />
-        <orderEntry type="module" module-name="util" />
+      <module name="resources" dirurl="file://$PROJECT_DIR$/resources" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-resources" />
+          <orderEntry type="module" module-name="util" />
+        </module-layer>
       </module>
-      <module name="resources-en" dirurl="file://$PROJECT_DIR$/resources-en">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
+      <module name="resources-en" dirurl="file://$PROJECT_DIR$/resources-en" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
       </module>
-      <module name="platform/smRunner" dirurl="file://$PROJECT_DIR$/platform/smRunner">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="module" module-name="testRunner" exported="" />
-        <orderEntry type="module" module-name="xdebugger-api" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="library" exploded="" name="tcServiceMessages" level="project" />
-        <orderEntry type="module" module-name="annotations" />
-        <orderEntry type="module" module-name="testFramework" />
+      <module name="platform/smRunner" dirurl="file://$PROJECT_DIR$/platform/smRunner" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="testRunner" exported="" />
+          <orderEntry type="module" module-name="xdebugger-api" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="library" exploded="" name="tcServiceMessages" level="project" />
+          <orderEntry type="module" module-name="annotations" />
+          <orderEntry type="module" module-name="testFramework" />
+          <orderEntry type="library" name="thrift" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/testFramework" dirurl="file://$PROJECT_DIR$/platform/testFramework">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="lang-api" exported="" />
-        <orderEntry type="module" module-name="lang-impl" exported="" />
-        <orderEntry type="library" exploded="" name="JUnit4" level="project" />
-        <orderEntry type="module" module-name="platform-impl" exported="" />
-        <orderEntry type="library" exploded="" name="Log4J" level="project" />
-        <orderEntry type="module" module-name="vcs-api" exported="" />
-        <orderEntry type="module" module-name="lvcs-impl" />
-        <orderEntry type="module" module-name="tests_bootstrap" />
-        <orderEntry type="module" module-name="resources-en" />
-        <orderEntry type="library" exploded="" name="Mocks" level="project" />
-        <orderEntry type="module" module-name="vcs-impl" />
-        <orderEntry type="module" module-name="platform-resources" exported="" />
-        <orderEntry type="module" module-name="compiler-api" />
+      <module name="platform/testFramework" dirurl="file://$PROJECT_DIR$/platform/testFramework" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-api" exported="" />
+          <orderEntry type="module" module-name="lang-impl" exported="" />
+          <orderEntry type="library" exploded="" name="JUnit4" level="project" />
+          <orderEntry type="module" module-name="platform-impl" exported="" />
+          <orderEntry type="library" exploded="" name="Log4J" level="project" />
+          <orderEntry type="module" module-name="vcs-api" exported="" />
+          <orderEntry type="module" module-name="lvcs-impl" />
+          <orderEntry type="module" module-name="tests_bootstrap" />
+          <orderEntry type="module" module-name="resources-en" />
+          <orderEntry type="library" exploded="" name="Mocks" level="project" />
+          <orderEntry type="module" module-name="vcs-impl" />
+          <orderEntry type="module" module-name="platform-resources" exported="" />
+          <orderEntry type="module" module-name="compiler-api" />
+        </module-layer>
       </module>
-      <module name="platform/testRunner" dirurl="file://$PROJECT_DIR$/platform/testRunner">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-api" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="module" module-name="xdebugger-api" />
+      <module name="platform/testRunner" dirurl="file://$PROJECT_DIR$/platform/testRunner" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-api" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="xdebugger-api" />
+        </module-layer>
       </module>
-      <module name="platform/tests_bootstrap" dirurl="file://$PROJECT_DIR$/platform/testFramework/bootstrap">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="library" name="JUnit4" level="project" />
+      <module name="platform/tests_bootstrap" dirurl="file://$PROJECT_DIR$/platform/testFramework/bootstrap" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/usageView" dirurl="file://$PROJECT_DIR$/platform/usageView">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="lang-api" />
-        <orderEntry type="module" module-name="platform-impl" />
+      <module name="platform/usageView" dirurl="file://$PROJECT_DIR$/platform/usageView" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-api" />
+          <orderEntry type="module" module-name="platform-impl" />
+        </module-layer>
       </module>
-      <module name="platform/util" dirurl="file://$PROJECT_DIR$/platform/util">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="library" name="Mac" level="project" />
-        <orderEntry type="library" name="JDOM" level="project" />
-        <orderEntry type="library" name="Log4J" level="project" />
-        <orderEntry type="library" exploded="" name="Trove4j" level="project" />
-        <orderEntry type="library" name="picocontainer" level="project" />
-        <orderEntry type="module" module-name="platform-resources-en" />
-        <orderEntry type="module" module-name="annotations" exported="" />
-        <orderEntry type="module" module-name="util-rt" exported="" />
-        <orderEntry type="library" name="jna" level="project" />
-        <orderEntry type="library" name="OroMatcher" level="project" />
-        <orderEntry type="library" name="JUnit4" level="project" />
-        <orderEntry type="library" name="Guava" level="project" />
-        <orderEntry type="module" module-name="icons" />
-        <orderEntry type="library" name="jsr166" level="project" />
-        <orderEntry type="library" name="Lombok" level="project" />
+      <module name="platform/util" dirurl="file://$PROJECT_DIR$/platform/util" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="library" name="Mac" level="project" />
+          <orderEntry type="library" name="JDOM" level="project" />
+          <orderEntry type="library" name="Log4J" level="project" />
+          <orderEntry type="library" exploded="" name="Trove4j" level="project" />
+          <orderEntry type="library" name="picocontainer" level="project" />
+          <orderEntry type="module" module-name="platform-resources-en" />
+          <orderEntry type="module" module-name="annotations" exported="" />
+          <orderEntry type="module" module-name="util-rt" exported="" />
+          <orderEntry type="library" name="jna" level="project" />
+          <orderEntry type="library" name="OroMatcher" level="project" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+          <orderEntry type="library" name="Guava" level="project" />
+          <orderEntry type="module" module-name="icons" />
+          <orderEntry type="library" name="jsr166" level="project" />
+          <orderEntry type="library" name="Lombok" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/util-rt" dirurl="file://$PROJECT_DIR$/platform/util-rt">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="annotations" />
+      <module name="platform/util-rt" dirurl="file://$PROJECT_DIR$/platform/util-rt" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="annotations" />
+        </module-layer>
       </module>
-      <module name="platform/vcs-api" dirurl="file://$PROJECT_DIR$/platform/vcs-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="platform-api" exported="" />
-        <orderEntry type="library" name="microba" level="project" />
+      <module name="platform/vcs-api" dirurl="file://$PROJECT_DIR$/platform/vcs-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-api" exported="" />
+          <orderEntry type="library" name="microba" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/vcs-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="vcs-api" exported="" />
-        <orderEntry type="module" module-name="platform-api" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="library" name="commons-codec" level="project" />
-        <orderEntry type="module" module-name="lang-api" />
-        <orderEntry type="library" name="Guava" level="project" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="library" name="OroMatcher" level="project" />
+      <module name="platform/vcs-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="vcs-api" exported="" />
+          <orderEntry type="module" module-name="platform-api" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="library" name="commons-codec" level="project" />
+          <orderEntry type="module" module-name="lang-api" />
+          <orderEntry type="library" name="Guava" level="project" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="library" name="OroMatcher" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/vcs-log-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log/api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="util-rt" />
-        <orderEntry type="module" module-name="core-api" />
-        <orderEntry type="module" module-name="vcs-api" />
-        <orderEntry type="library" name="JUnit4" level="project" />
+      <module name="platform/vcs-log-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log/api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="util-rt" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="vcs-api" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/vcs-log-graph" dirurl="file://$PROJECT_DIR$/platform/vcs-log/graph">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="util" />
-        <orderEntry type="module" module-name="core-api" />
-        <orderEntry type="module" module-name="platform-api" />
-        <orderEntry type="module" module-name="vcs-log-api" />
-        <orderEntry type="library" name="JUnit4" level="project" />
+      <module name="platform/vcs-log-graph" dirurl="file://$PROJECT_DIR$/platform/vcs-log/graph" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="platform-api" />
+          <orderEntry type="module" module-name="vcs-log-api" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+        </module-layer>
       </module>
-      <module name="platform/vcs-log-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log/impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/icons" />
-          <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="core-api" />
-        <orderEntry type="module" module-name="vcs-log-api" />
-        <orderEntry type="module" module-name="vcs-api" />
-        <orderEntry type="module" module-name="vcs-log-graph" />
-        <orderEntry type="module" module-name="platform-impl" />
-        <orderEntry type="module" module-name="vcs-impl" />
-        <orderEntry type="library" name="Guava" level="project" />
-        <orderEntry type="library" name="JUnit4" level="project" />
-        <orderEntry type="module" module-name="lang-impl" />
+      <module name="platform/vcs-log-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log/impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/icons" />
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="vcs-log-api" />
+          <orderEntry type="module" module-name="vcs-api" />
+          <orderEntry type="module" module-name="vcs-log-graph" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="vcs-impl" />
+          <orderEntry type="library" name="Guava" level="project" />
+          <orderEntry type="library" name="JUnit4" level="project" />
+          <orderEntry type="module" module-name="lang-impl" />
+        </module-layer>
       </module>
-      <module name="platform/xdebugger-api" dirurl="file://$PROJECT_DIR$/platform/xdebugger-api">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="lang-api" exported="" />
+      <module name="platform/xdebugger-api" dirurl="file://$PROJECT_DIR$/platform/xdebugger-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-api" exported="" />
+        </module-layer>
       </module>
-      <module name="platform/xdebugger-impl" dirurl="file://$PROJECT_DIR$/platform/xdebugger-impl">
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="xdebugger-api" exported="" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="module" module-name="testFramework" />
-        <orderEntry type="module" module-name="platform-resources" />
+      <module name="platform/xdebugger-impl" dirurl="file://$PROJECT_DIR$/platform/xdebugger-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="xdebugger-api" exported="" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="testFramework" />
+          <orderEntry type="module" module-name="platform-resources" />
+        </module-layer>
       </module>
-      <module name="updater" dirurl="file://$PROJECT_DIR$/tools/updater">
-        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
+      <module name="updater" dirurl="file://$PROJECT_DIR$/tools/updater" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
       </module>
-      <module name="plugins/sandLanguage" dirurl="file://$PROJECT_DIR$/pluginsTest/sandLanguage">
-        <extension id="consulo-plugin" sdk-module-name="" sdk-name="" />
-        <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="lang-impl" />
-        <orderEntry type="module" module-name="compiler-impl" />
-        <orderEntry type="module" module-name="compiler-artifact-impl" />
+      <module name="plugins/sandLanguage" dirurl="file://$PROJECT_DIR$/pluginsTest/sandLanguage" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="consulo-plugin" sdk-module-name="" sdk-name="" />
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="compiler-impl" />
+          <orderEntry type="module" module-name="compiler-artifact-impl" />
+        </module-layer>
+      </module>
+      <module name="platform/coverage-impl" dirurl="file://$PROJECT_DIR$/platform/coverage-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/lib/coverage-agent.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/lib/instrumenter.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/lib/coverage-util.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
+          <orderEntry type="module" module-name="testRunner" />
+        </module-layer>
       </module>
     </modules>
   </component>

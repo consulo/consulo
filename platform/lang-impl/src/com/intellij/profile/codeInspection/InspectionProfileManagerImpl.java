@@ -52,10 +52,10 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.Profile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.util.pointers.Named;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Parent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
@@ -89,32 +89,32 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
     SchemeProcessor<InspectionProfileImpl> processor = new BaseSchemeProcessor<InspectionProfileImpl>() {
       @Override
-      public InspectionProfileImpl readScheme(final Document document) {
+      public InspectionProfileImpl readScheme(@NotNull final Document document) {
         InspectionProfileImpl profile = new InspectionProfileImpl(InspectionProfileLoadUtil.getProfileName(document), myRegistrar, InspectionProfileManagerImpl.this);
         read(profile, document.getRootElement());
         return profile;
       }
 
       @Override
-      public boolean shouldBeSaved(final InspectionProfileImpl scheme) {
+      public boolean shouldBeSaved(@NotNull final InspectionProfileImpl scheme) {
         return scheme.wasInitialized();
       }
 
 
       @Override
-      public Document writeScheme(final InspectionProfileImpl scheme) throws WriteExternalException {
+      public Parent writeScheme(@NotNull final InspectionProfileImpl scheme) throws WriteExternalException {
         return scheme.saveToDocument();
       }
 
       @Override
-      public void onSchemeAdded(final InspectionProfileImpl scheme) {
+      public void onSchemeAdded(@NotNull final InspectionProfileImpl scheme) {
         updateProfileImpl(scheme);
         fireProfileChanged(scheme);
         onProfilesChanged();
       }
 
       @Override
-      public void onSchemeDeleted(final InspectionProfileImpl scheme) {
+      public void onSchemeDeleted(@NotNull final InspectionProfileImpl scheme) {
         onProfilesChanged();
       }
 

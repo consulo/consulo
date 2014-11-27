@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,26 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
+import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 /**
-* @author Denis Zhdanov
-* @since Sep 9, 2010 10:08:08 AM
-*/
+ * @author Denis Zhdanov
+ * @since Sep 9, 2010 10:08:08 AM
+ */
 @SuppressWarnings({"UnusedDeclaration"})
 class LogicalToVisualMappingStrategy extends AbstractMappingStrategy<VisualPosition> {
 
   private LogicalPosition myTargetLogical;
 
   LogicalToVisualMappingStrategy(@NotNull LogicalPosition logical, @NotNull Editor editor, @NotNull SoftWrapsStorage storage,
-                                 @NotNull EditorTextRepresentationHelper representationHelper, @NotNull List<CacheEntry> cache)
-    throws IllegalStateException
+                                 @NotNull List<CacheEntry> cache)
+          throws IllegalStateException
   {
-    super(editor, storage, cache, representationHelper);
+    super(editor, storage, cache);
     myTargetLogical = logical;
   }
 
@@ -84,15 +84,15 @@ class LogicalToVisualMappingStrategy extends AbstractMappingStrategy<VisualPosit
     }
 
     throw new IllegalStateException(String.format(
-      "Can't map logical position (%s) to visual position. Reason: no cached information information about target visual "
-      + "line is found. Registered entries: %s", logical, cache
+            "Can't map logical position (%s) to visual position. Reason: no cached information information about target visual "
+            + "line is found. Registered entries: %s", logical, cache
     ));
   }
 
   @Override
   protected VisualPosition buildIfExceeds(EditorPosition position, int offset) {
     if (position.logicalLine < myTargetLogical.line) {
-       return null;
+      return null;
     }
 
     int diff = myTargetLogical.column - position.logicalColumn;
@@ -120,13 +120,14 @@ class LogicalToVisualMappingStrategy extends AbstractMappingStrategy<VisualPosit
     FoldingData data = getFoldRegionData(foldRegion);
     int foldEndColumn;
     if (data == null) {
-      foldEndColumn = myRepresentationHelper.toVisualColumnSymbolsNumber(
-        myEditor.getDocument().getCharsSequence(), foldRegion.getStartOffset(), foldRegion.getEndOffset(), 0
+      int xStart = myEditor.getDocument().getLineNumber(foldRegion.getStartOffset()) == foldEndLine ? context.x : 0;
+      foldEndColumn = SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor).toVisualColumnSymbolsNumber(
+              myEditor.getDocument().getCharsSequence(), foldRegion.getStartOffset(), foldRegion.getEndOffset(), xStart
       );
     } else {
       foldEndColumn = data.getCollapsedSymbolsWidthInColumns();
     }
-    
+
     if (foldEndLine == context.logicalLine) {
       // Single-line fold region.
       foldEndColumn += context.logicalColumn;

@@ -69,6 +69,18 @@ public class DataNode<T> implements Serializable {
   }
 
   @NotNull
+  public <T> DataNode<T> createOrReplaceChild(@NotNull Key<T> key, @NotNull T data) {
+    for (Iterator<DataNode<?>> iterator = myChildren.iterator(); iterator.hasNext(); ) {
+      DataNode<?> child = iterator.next();
+      if (child.getKey().equals(key)) {
+        iterator.remove();
+        break;
+      }
+    }
+    return createChild(key, data);
+  }
+
+  @NotNull
   public Key<T> getKey() {
     return myKey;
   }
@@ -90,7 +102,7 @@ public class DataNode<T> implements Serializable {
    * the right class loader.
    * <p/>
    * This method is a no-op if the content is already built.
-   *  
+   *
    * @param loaders  class loaders which are assumed to be able to build object of the target content class
    */
   @SuppressWarnings({"unchecked", "IOResourceOpenedButNotSafelyClosed"})
@@ -127,7 +139,7 @@ public class DataNode<T> implements Serializable {
           }
           return super.resolveProxyClass(interfaces);
         }
-        
+
         private Class<?> doResolveProxyClass(@NotNull String[] interfaces, @NotNull ClassLoader loader) throws ClassNotFoundException {
           ClassLoader nonPublicLoader = null;
           boolean hasNonPublicInterface = false;
@@ -140,7 +152,7 @@ public class DataNode<T> implements Serializable {
               if (hasNonPublicInterface) {
                 if (nonPublicLoader != cl.getClassLoader()) {
                   throw new IllegalAccessError(
-                    "conflicting non-public interface class loaders");
+                          "conflicting non-public interface class loaders");
                 }
               } else {
                 nonPublicLoader = cl.getClassLoader();
@@ -162,14 +174,14 @@ public class DataNode<T> implements Serializable {
     }
     catch (IOException e) {
       throw new IllegalStateException(
-        String.format("Can't deserialize target data of key '%s'. Given class loaders: %s", myKey, Arrays.toString(loaders)),
-        e
+              String.format("Can't deserialize target data of key '%s'. Given class loaders: %s", myKey, Arrays.toString(loaders)),
+              e
       );
     }
     catch (ClassNotFoundException e) {
       throw new IllegalStateException(
-        String.format("Can't deserialize target data of key '%s'. Given class loaders: %s", myKey, Arrays.toString(loaders)),
-        e
+              String.format("Can't deserialize target data of key '%s'. Given class loaders: %s", myKey, Arrays.toString(loaders)),
+              e
       );
     }
     finally {
@@ -233,7 +245,7 @@ public class DataNode<T> implements Serializable {
     myRawData = bOut.toByteArray();
     out.defaultWriteObject();
   }
-  
+
   @Override
   public int hashCode() {
     int result = myChildren.hashCode();

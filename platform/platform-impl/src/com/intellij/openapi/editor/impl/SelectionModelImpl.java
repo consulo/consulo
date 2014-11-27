@@ -24,6 +24,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
@@ -36,16 +37,14 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.ide.CopyPasteManager;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.datatransfer.StringSelection;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -467,6 +466,16 @@ public class SelectionModelImpl implements SelectionModel, PrioritizedDocumentLi
     mySelectionListeners.add(listener);
   }
 
+  public void addSelectionListener(final SelectionListener listener, Disposable parent) {
+    mySelectionListeners.add(listener);
+    Disposer.register(parent, new Disposable() {
+      @Override
+      public void dispose() {
+        mySelectionListeners.remove(listener);
+      }
+    });
+  }
+
   @Override
   public void removeSelectionListener(SelectionListener listener) {
     boolean success = mySelectionListeners.remove(listener);
@@ -482,8 +491,8 @@ public class SelectionModelImpl implements SelectionModel, PrioritizedDocumentLi
   public String getSelectedText(boolean allCarets) {
     validateContext(false);
 
-    CharSequence text = myEditor.getDocument().getCharsSequence();
-    if (hasBlockSelection() || (myEditor.getCaretModel().supportsMultipleCarets() && allCarets)) {
+    if (hasBlockSelection()) {
+      CharSequence text = myEditor.getDocument().getCharsSequence();
       int[] starts = getBlockSelectionStarts();
       int[] ends = getBlockSelectionEnds();
       int width = myEditor.getCaretModel().supportsMultipleCarets() ? 0 : Math.abs(myBlockEnd.column - myBlockStart.column);
@@ -496,8 +505,22 @@ public class SelectionModelImpl implements SelectionModel, PrioritizedDocumentLi
       }
       return buf.toString();
     }
-
-    return myEditor.getCaretModel().getCurrentCaret().getSelectedText();
+    else if (myEditor.getCaretModel().supportsMultipleCarets() && allCarets) {
+      final StringBuilder buf = new StringBuilder();
+      String separator = "";
+      for (Caret caret : myEditor.getCaretModel().getAllCarets()) {
+        buf.append(separator);
+        String caretSelectedText = caret.getSelectedText();
+        if (caretSelectedText != null) {
+          buf.append(caretSelectedText);
+        }
+        separator = "\n";
+      }
+      return buf.toString();
+    }
+    else {
+      return myEditor.getCaretModel().getCurrentCaret().getSelectedText();
+    }
   }
 
   private static void appendCharSequence(@NotNull StringBuilder buf, @NotNull CharSequence s, int srcOffset, int len) {
@@ -556,13 +579,7 @@ public class SelectionModelImpl implements SelectionModel, PrioritizedDocumentLi
 
   @Override
   public void copySelectionToClipboard() {
-    validateContext(true);
-    String s = getSelectedText(true);
-    if (s == null) return;
-
-    s = StringUtil.convertLineSeparators(s);
-    StringSelection contents = new StringSelection(s);
-    CopyPasteManager.getInstance().setContents(contents);
+    EditorCopyPasteHelper.getInstance().copySelectionToClipboard(myEditor);
   }
 
   @Override

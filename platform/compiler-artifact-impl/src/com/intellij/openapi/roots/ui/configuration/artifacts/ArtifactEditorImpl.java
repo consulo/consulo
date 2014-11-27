@@ -39,15 +39,12 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.artifacts.ModifiableArtifact;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
-import com.intellij.packaging.impl.elements.ManifestFileUtil;
-import com.intellij.packaging.ui.ManifestFileConfiguration;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.border.CustomLineBorder;
@@ -67,7 +64,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * @author nik
@@ -80,6 +76,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   private JPanel myErrorPanelPlace;
   private ThreeStateCheckBox myShowContentCheckBox;
   private FixedSizeButton myShowSpecificContentOptionsButton;
+  private JPanel myTopPanel;
   private final ActionGroup myShowSpecificContentOptionsGroup;
   private final Project myProject;
   private final ComplexElementSubstitutionParameters mySubstitutionParameters = new ComplexElementSubstitutionParameters();
@@ -103,6 +100,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     myPropertiesEditors = new ArtifactPropertiesEditors(myContext, myOriginalArtifact, myOriginalArtifact);
     Disposer.register(this, mySourceItemsTree);
     Disposer.register(this, myLayoutTreeComponent);
+    myTopPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
     myBuildOnMakeCheckBox.setSelected(artifact.isBuildOnMake());
     final String outputPath = artifact.getOutputPath();
     myOutputDirectoryField.addBrowseFolderListener(CompilerBundle.message("dialog.title.output.directory.for.artifact"),
@@ -199,7 +197,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
 
     myErrorPanelPlace.add(myValidationManager.getMainErrorPanel(), BorderLayout.CENTER);
 
-    Splitter splitter = new Splitter(false);
+    Splitter splitter = new OnePixelSplitter(false);
     final JPanel leftPanel = new JPanel(new BorderLayout());
     JPanel treePanel = myLayoutTreeComponent.getTreePanel();
     if (UIUtil.isUnderDarcula()) {
@@ -238,7 +236,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     labelPanel.add(link);
     rightTopPanel.add(labelPanel, BorderLayout.CENTER);
     rightPanel.add(rightTopPanel, BorderLayout.NORTH);
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(mySourceItemsTree, UIUtil.isUnderDarcula());
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(mySourceItemsTree, true);
     JPanel scrollPaneWrap = new JPanel(new BorderLayout());
     scrollPaneWrap.add(scrollPane, BorderLayout.CENTER);
     if (UIUtil.isUnderDarcula()) {
@@ -254,6 +252,10 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
       rightPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 3));
     }
     splitter.setSecondComponent(rightPanel);
+    treePanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+    rightPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+    scrollPaneWrap.setBorder(new EmptyBorder(0,0,0,0));
+    leftPanel.setBorder(new EmptyBorder(0,0,0,0));
 
 
     myShowContentCheckBox.addActionListener(new ActionListener() {
@@ -336,7 +338,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     DefaultActionGroup popupActionGroup = new DefaultActionGroup();
     popupActionGroup.add(createAddGroup());
     final RemovePackagingElementAction removeAction = new RemovePackagingElementAction(this);
-    removeAction.registerCustomShortcutSet(CommonShortcuts.DELETE, tree);
+    removeAction.registerCustomShortcutSet(CommonShortcuts.getDelete(), tree);
     popupActionGroup.add(removeAction);
     popupActionGroup.add(new ExtractArtifactAction(this));
     popupActionGroup.add(new InlineArtifactAction(this));
@@ -482,26 +484,6 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   @Override
   public void putLibraryIntoDefaultLocation(@NotNull Library library) {
     myLayoutTreeComponent.putIntoDefaultLocations(Collections.singletonList(new LibrarySourceItem(library)));
-  }
-
-  @Override
-  public void addToClasspath(final CompositePackagingElement<?> element, List<String> classpath) {
-    myLayoutTreeComponent.saveElementProperties();
-    ManifestFileConfiguration manifest = myContext.getManifestFile(element, getArtifact().getArtifactType());
-    if (manifest == null) {
-      final VirtualFile file = ManifestFileUtil.showDialogAndCreateManifest(myContext, element);
-      if (file == null) {
-        return;
-      }
-
-      ManifestFileUtil.addManifestFileToLayout(file.getPath(), myContext, element);
-      manifest = myContext.getManifestFile(element, getArtifact().getArtifactType());
-    }
-
-    if (manifest != null) {
-      manifest.addToClasspath(classpath);
-    }
-    myLayoutTreeComponent.resetElementProperties();
   }
 
   public void setArtifactType(ArtifactType artifactType) {

@@ -18,7 +18,6 @@ package com.intellij.patterns;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ProcessingContext;
-import com.intellij.util.ReflectionCache;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -110,7 +109,7 @@ public abstract class PatternCondition<T> {
 
   // this code eats CPU, for debug purposes ONLY
   public boolean processParameters(final PairProcessor<String, Object> processor) {
-    for (Class aClass = getClass(); aClass != null; aClass = ReflectionCache.getSuperClass(aClass)) {
+    for (Class aClass = getClass(); aClass != null; aClass = aClass.getSuperclass()) {
       for (final Field field : aClass.getDeclaredFields()) {
         if (!Modifier.isStatic(field.getModifiers()) &&
             (((field.getModifiers() & 0x1000 /*Modifer.SYNTHETIC*/) == 0 && !aClass.equals(PatternCondition.class))

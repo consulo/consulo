@@ -48,7 +48,7 @@ public class CompilerClientInterfaceImpl extends UnicastRemoteObject implements 
     VirtualFile file = findFileByUrl(url);
     final String groupName = file != null? file.getPresentableUrl() : category.getPresentableText();
 
-    ProblemsView.SERVICE.getInstance(myProject).addMessage(type, text, groupName, null, null, null);
+    ProblemsView.getInstance(myProject).addMessage(type, text, groupName, null, null, null);
   }
 
   @Override

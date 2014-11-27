@@ -18,7 +18,6 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.projectRoots.ex.ProjectRoot;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -32,7 +31,7 @@ import java.io.File;
 /**
  * @author mike
  */
-public class SimpleProjectRoot implements ProjectRoot, JDOMExternalizable {
+public class SimpleProjectRoot implements ProjectRoot {
   private String myUrl;
   private VirtualFile myFile;
   private final VirtualFile[] myFileArray = new VirtualFile[1];
@@ -113,12 +112,10 @@ public class SimpleProjectRoot implements ProjectRoot, JDOMExternalizable {
     return myUrl;
   }
 
-  @Override
   public void readExternal(Element element) throws InvalidDataException {
     myUrl = element.getAttributeValue(ATTRIBUTE_URL);
   }
 
-  @Override
   public void writeExternal(Element element) throws WriteExternalException {
     if (!myInitialized) {
       initialize();

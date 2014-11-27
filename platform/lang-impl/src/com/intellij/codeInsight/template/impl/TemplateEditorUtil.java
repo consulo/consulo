@@ -96,7 +96,7 @@ public class TemplateEditorUtil {
 
   public static void setHighlighter(Editor editor, TemplateContext templateContext) {
     SyntaxHighlighter baseHighlighter = null;
-    for(TemplateContextType type: TemplateManagerImpl.getAllContextTypes()) {
+    for(TemplateContextType type: TemplateContextType.EP_NAME.getExtensions()) {
       if (templateContext.isEnabled(type)) {
         baseHighlighter = type.createHighlighter();
         if (baseHighlighter != null) break;

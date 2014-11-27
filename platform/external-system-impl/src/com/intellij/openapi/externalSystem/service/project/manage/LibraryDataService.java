@@ -7,7 +7,6 @@ import com.intellij.openapi.externalSystem.model.ProjectKeys;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
 import com.intellij.openapi.externalSystem.service.project.ExternalLibraryPathTypeMapper;
-import com.intellij.openapi.externalSystem.service.project.PlatformFacade;
 import com.intellij.openapi.externalSystem.service.project.ProjectStructureHelper;
 import com.intellij.openapi.externalSystem.util.DisposeAwareProjectChange;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
@@ -15,8 +14,10 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
 import com.intellij.openapi.externalSystem.util.Order;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -48,16 +49,10 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     }
   };
 
-  @NotNull private final PlatformFacade                myPlatformFacade;
-  @NotNull private final ProjectStructureHelper        myProjectStructureHelper;
   @NotNull private final ExternalLibraryPathTypeMapper myLibraryPathTypeMapper;
 
-  public LibraryDataService(@NotNull PlatformFacade platformFacade,
-                            @NotNull ProjectStructureHelper helper,
-                            @NotNull ExternalLibraryPathTypeMapper mapper)
+  public LibraryDataService(@NotNull ExternalLibraryPathTypeMapper mapper)
   {
-    myPlatformFacade = platformFacade;
-    myProjectStructureHelper = helper;
     myLibraryPathTypeMapper = mapper;
   }
 
@@ -77,7 +72,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
   public void importLibrary(@NotNull final LibraryData toImport, @NotNull final Project project, boolean synchronous) {
     Map<OrderRootType, Collection<File>> libraryFiles = prepareLibraryFiles(toImport);
 
-    Library library = myProjectStructureHelper.findIdeLibrary(toImport, project);
+    Library library = ProjectStructureHelper.findIdeLibrary(toImport, project);
     if (library != null) {
       syncPaths(toImport, library, project, synchronous);
       return;
@@ -107,7 +102,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
       @Override
       public void execute() {
         // Is assumed to be called from the EDT.
-        final LibraryTable libraryTable = myPlatformFacade.getProjectLibraryTable(project);
+        final LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
         final LibraryTable.ModifiableModel projectLibraryModel = libraryTable.getModifiableModel();
         final Library intellijLibrary;
         try {
@@ -136,7 +131,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
       for (File file : entry.getValue()) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
         if (virtualFile == null) {
-          if (ExternalSystemConstants.VERBOSE_PROCESSING && entry.getKey() == OrderRootType.CLASSES) {
+          if (ExternalSystemConstants.VERBOSE_PROCESSING && entry.getKey() == BinariesOrderRootType.getInstance()) {
             LOG.warn(
               String.format("Can't find %s of the library '%s' at path '%s'", entry.getKey(), libraryName, file.getAbsolutePath())
             );
@@ -162,6 +157,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     }
   }
 
+  @Override
   public void removeData(@NotNull final Collection<? extends Library> libraries, @NotNull final Project project, boolean synchronous) {
     if (libraries.isEmpty()) {
       return;
@@ -169,7 +165,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
       @Override
       public void execute() {
-        final LibraryTable libraryTable = myPlatformFacade.getProjectLibraryTable(project);
+        final LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
         final LibraryTable.ModifiableModel model = libraryTable.getModifiableModel();
         try {
           for (Library library : libraries) {

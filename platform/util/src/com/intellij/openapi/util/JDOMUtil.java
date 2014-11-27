@@ -54,8 +54,7 @@ import java.util.List;
 public class JDOMUtil {
   private static final ThreadLocal<SoftReference<SAXBuilder>> ourSaxBuilder = new ThreadLocal<SoftReference<SAXBuilder>>();
 
-  private JDOMUtil() {
-  }
+  private JDOMUtil() { }
 
   @NotNull
   public static List<Element> getChildren(@Nullable Element parent) {
@@ -88,9 +87,9 @@ public class JDOMUtil {
     if (e1 == null && e2 == null) return true;
     if (e1 == null || e2 == null) return false;
 
-    return Comparing.equal(e1.getName(), e2.getName()) &&
-           attListsEqual(e1.getAttributes(), e2.getAttributes()) &&
-           contentListsEqual(e1.getContent(CONTENT_FILTER), e2.getContent(CONTENT_FILTER));
+    return Comparing.equal(e1.getName(), e2.getName())
+           && attListsEqual(e1.getAttributes(), e2.getAttributes())
+           && contentListsEqual(e1.getContent(CONTENT_FILTER), e2.getContent(CONTENT_FILTER));
   }
 
   private static final EmptyTextFilter CONTENT_FILTER = new EmptyTextFilter();
@@ -205,35 +204,34 @@ public class JDOMUtil {
 
   @NotNull
   private static String intern(@NotNull final StringInterner interner, @NotNull final String s) {
-    synchronized (interner) {
-      return interner.intern(s);
-    }
+    return interner.intern(s);
   }
 
   @NotNull
-  public static String legalizeText(@NotNull final String str) {
-    StringReader reader = new StringReader(str);
-    StringBuilder result = new StringBuilder();
-
-    while (true) {
-      try {
-        int each = reader.read();
-        if (each == -1) break;
-
-        if (Verifier.isXMLCharacter(each)) {
-          result.append((char)each);
-        }
-        else {
-          result.append("0x").append(StringUtil.toUpperCase(Long.toHexString(each)));
-        }
-      }
-      catch (IOException ignored) {
-      }
-    }
-
-    return result.toString().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+  public static String legalizeText(@NotNull String str) {
+    return legalizeChars(str).toString();
   }
 
+  @NotNull
+  public static CharSequence legalizeChars(@NotNull CharSequence str) {
+    StringBuilder result = new StringBuilder(str.length());
+    for (int i = 0, len = str.length(); i < len; i ++) {
+      appendLegalized(result, str.charAt(i));
+    }
+    return result;
+  }
+
+  public static void appendLegalized(@NotNull StringBuilder sb, char each) {
+    if (each == '<' || each == '>') {
+      sb.append(each == '<' ? "&lt;" : "&gt;");
+    }
+    else if (!Verifier.isXMLCharacter(each)) {
+      sb.append("0x").append(StringUtil.toUpperCase(Long.toHexString(each)));
+    }
+    else {
+      sb.append(each);
+    }
+  }
 
   private static class EmptyTextFilter implements Filter {
     @Override
@@ -279,9 +277,9 @@ public class JDOMUtil {
   }
 
   public static boolean areDocumentsEqual(@NotNull Document d1, @NotNull Document d2) {
-    if (d1.hasRootElement() != d2.hasRootElement()) return false;
+    if(d1.hasRootElement() != d2.hasRootElement()) return false;
 
-    if (!d1.hasRootElement()) return true;
+    if(!d1.hasRootElement()) return true;
 
     CharArrayWriter w1 = new CharArrayWriter();
     CharArrayWriter w2 = new CharArrayWriter();
@@ -400,9 +398,13 @@ public class JDOMUtil {
   }
 
   public static void writeDocument(@NotNull Document document, @NotNull File file, String lineSeparator) throws IOException {
+    writeParent(document, file, lineSeparator);
+  }
+
+  public static void writeParent(@NotNull Parent element, @NotNull File file, String lineSeparator) throws IOException {
     OutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
     try {
-      writeDocument(document, stream, lineSeparator);
+      writeParent(element, stream, lineSeparator);
     }
     finally {
       stream.close();
@@ -410,9 +412,23 @@ public class JDOMUtil {
   }
 
   public static void writeDocument(@NotNull Document document, @NotNull OutputStream stream, String lineSeparator) throws IOException {
-    writeDocument(document, new OutputStreamWriter(stream, CharsetToolkit.UTF8_CHARSET), lineSeparator);
+    writeParent(document, stream, lineSeparator);
   }
 
+  public static void writeParent(@NotNull Parent element, @NotNull OutputStream stream, @NotNull String lineSeparator) throws IOException {
+    OutputStreamWriter writer = new OutputStreamWriter(stream, CharsetToolkit.UTF8_CHARSET);
+    try {
+      if (element instanceof Document) {
+        writeDocument((Document)element, writer, lineSeparator);
+      }
+      else {
+        writeElement((Element) element, writer, lineSeparator);
+      }
+    }
+    finally {
+      writer.close();
+    }
+  }
 
   @NotNull
   public static byte[] printDocument(@NotNull Document document, String lineSeparator) throws IOException {
@@ -449,10 +465,9 @@ public class JDOMUtil {
 
   public static void writeParent(Parent element, Writer writer, String lineSeparator) throws IOException {
     if (element instanceof Element) {
-      writeElement((Element)element, writer, lineSeparator);
-    }
-    else if (element instanceof Document) {
-      writeDocument((Document)element, writer, lineSeparator);
+      writeElement((Element) element, writer, lineSeparator);
+    } else if (element instanceof Document) {
+      writeDocument((Document) element, writer, lineSeparator);
     }
   }
 
@@ -530,24 +545,15 @@ public class JDOMUtil {
   @Nullable
   private static String escapeChar(char c, boolean escapeApostrophes, boolean escapeSpaces, boolean escapeLineEnds) {
     switch (c) {
-      case '\n':
-        return escapeLineEnds ? "&#10;" : null;
-      case '\r':
-        return escapeLineEnds ? "&#13;" : null;
-      case '\t':
-        return escapeLineEnds ? "&#9;" : null;
-      case ' ':
-        return escapeSpaces ? "&#20" : null;
-      case '<':
-        return "&lt;";
-      case '>':
-        return "&gt;";
-      case '\"':
-        return "&quot;";
-      case '\'':
-        return escapeApostrophes ? "&apos;" : null;
-      case '&':
-        return "&amp;";
+      case '\n': return escapeLineEnds ? "&#10;" : null;
+      case '\r': return escapeLineEnds ? "&#13;" : null;
+      case '\t': return escapeLineEnds ? "&#9;" : null;
+      case ' ' : return escapeSpaces  ? "&#20" : null;
+      case '<':  return "&lt;";
+      case '>':  return "&gt;";
+      case '\"': return "&quot;";
+      case '\'': return escapeApostrophes ? "&apos;": null;
+      case '&':  return "&amp;";
     }
     return null;
   }
@@ -664,10 +670,8 @@ public class JDOMUtil {
     return info;
   }
 
-  public static void updateFileSet(@NotNull File[] oldFiles,
-                                   @NotNull String[] newFilePaths,
-                                   @NotNull Document[] newFileDocuments,
-                                   String lineSeparator) throws IOException {
+  public static void updateFileSet(@NotNull File[] oldFiles, @NotNull String[] newFilePaths, @NotNull Document[] newFileDocuments, String lineSeparator)
+          throws IOException {
     getLogger().assertTrue(newFilePaths.length == newFileDocuments.length);
 
     ArrayList<String> writtenFilesPaths = new ArrayList<String>();
@@ -784,7 +788,7 @@ public class JDOMUtil {
     return hasContent ? result : null;
   }
 
-  public static boolean isEmpty(@NotNull Element element) {
-    return element.getAttributes().isEmpty() && element.getContent().isEmpty();
+  public static boolean isEmpty(@Nullable Element element) {
+    return element == null || (element.getAttributes().isEmpty() && element.getContent().isEmpty());
   }
 }

@@ -883,7 +883,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
   private class BlameAction extends AbstractAction {
     protected BlameAction() {
-      super(DiagnosticBundle.message("error.report.to.jetbrains.action"));
+      super(DiagnosticBundle.message("error.report.to.must-be.actionn"));
     }
 
     public void update() {
@@ -896,7 +896,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
           return;
         }
       }
-      putValue(NAME, DiagnosticBundle.message("error.report.to.jetbrains.action"));
+      putValue(NAME, DiagnosticBundle.message("error.report.to.must-be.action"));
       setEnabled(false);
     }
 

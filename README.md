@@ -1,9 +1,6 @@
-# UNSTABLE
-
 ## Information
 
 This is IDE based on IntelliJ Platform. The main goal of our project is creating one IDE for all programming languages.
-
 
 ## Building
 
@@ -18,4 +15,5 @@ To run the project, use the "Consulo" shared run configuration.
 ## Links
 
 * [Download] (https://github.com/consulo/consulo/wiki/Download-links)
-* [Tracker](http://napile.myjetbrains.com/youtrack/issues/CO)
+* [Issues] (https://github.com/consulo/consulo/issues)
+* [Forum] (https://groups.google.com/forum/#!forum/consulo)

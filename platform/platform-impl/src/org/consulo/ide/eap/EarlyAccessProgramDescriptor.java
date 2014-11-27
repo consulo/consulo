@@ -22,14 +22,24 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 17:09/15.10.13
  */
-public interface EarlyAccessProgramDescriptor {
-  ExtensionPointName<EarlyAccessProgramDescriptor> EP_NAME = ExtensionPointName.create("com.intellij.eapDescriptor");
+public abstract class EarlyAccessProgramDescriptor {
+  public static final ExtensionPointName<EarlyAccessProgramDescriptor> EP_NAME = ExtensionPointName.create("com.intellij.eapDescriptor");
 
   @NotNull
-  String getName();
+  public abstract String getName();
 
-  boolean getDefaultState();
+  public boolean getDefaultState() {
+    return false;
+  }
+
+  public boolean isAvailable() {
+    return true;
+  }
+
+  public boolean isRestartRequired() {
+    return false;
+  }
 
   @NotNull
-  String getDescription();
+  public abstract String getDescription();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.execution;
 
 import com.intellij.execution.actions.RunContextAction;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.runners.ExecutionEnvironmentBuilder;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.*;
@@ -34,16 +33,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-/**
- * @author spleaner
- */
 public class ExecutorRegistryImpl extends ExecutorRegistry {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.ExecutorRegistryImpl");
+  private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 
-  @NonNls
-  public static final String RUNNERS_GROUP = "RunnerActions";
-  @NonNls
-  public static final String RUN_CONTEXT_GROUP = "RunContextGroup";
+  @NonNls public static final String RUNNERS_GROUP = "RunnerActions";
+  @NonNls public static final String RUN_CONTEXT_GROUP = "RunContextGroup";
 
   private List<Executor> myExecutors = new ArrayList<Executor>();
   private ActionManager myActionManager;
@@ -84,8 +78,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
       action = anAction;
     }
 
-    final DefaultActionGroup group = (DefaultActionGroup) myActionManager.getAction(groupId);
-    group.add(action);
+    ((DefaultActionGroup)myActionManager.getAction(groupId)).add(action);
   }
 
   synchronized void deinitExecutor(@NotNull final Executor executor) {
@@ -135,18 +128,18 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
         final MessageBusConnection connect = project.getMessageBus().connect(project);
         connect.subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionAdapter(){
           @Override
-          public void processStartScheduled(String executorId, ExecutionEnvironment env) {
-            myInProgress.add(createExecutionId(executorId, env, project));
+          public void processStartScheduled(String executorId, ExecutionEnvironment environment) {
+            myInProgress.add(createExecutionId(executorId, environment));
           }
 
           @Override
-          public void processNotStarted(String executorId, @NotNull ExecutionEnvironment env) {
-            myInProgress.remove(createExecutionId(executorId, env, project));
+          public void processNotStarted(String executorId, @NotNull ExecutionEnvironment environment) {
+            myInProgress.remove(createExecutionId(executorId, environment));
           }
 
           @Override
-          public void processStarted(String executorId, @NotNull ExecutionEnvironment env, @NotNull ProcessHandler handler) {
-            myInProgress.remove(createExecutionId(executorId, env, project));
+          public void processStarted(String executorId, @NotNull ExecutionEnvironment environment, @NotNull ProcessHandler handler) {
+            myInProgress.remove(createExecutionId(executorId, environment));
           }
         });
       }
@@ -171,26 +164,29 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     }
   }
 
-  private static Trinity<Project, String, String> createExecutionId(String executorId, ExecutionEnvironment env, Project project) {
-    return new Trinity<Project, String, String>(project, executorId, env.getRunnerId());
+  @NotNull
+  private static Trinity<Project, String, String> createExecutionId(String executorId, @NotNull ExecutionEnvironment environment) {
+    return Trinity.create(environment.getProject(), executorId, environment.getRunner().getRunnerId());
   }
 
   @Override
   public boolean isStarting(Project project, final String executorId, final String runnerId) {
-    return myInProgress.contains(new Trinity<Project, String, String>(project, executorId, runnerId));
+    return myInProgress.contains(Trinity.create(project, executorId, runnerId));
+  }
+
+  @Override
+  public boolean isStarting(@NotNull ExecutionEnvironment environment) {
+    return isStarting(environment.getProject(), environment.getExecutor().getId(), environment.getRunner().getRunnerId());
   }
 
   @Override
   public synchronized void disposeComponent() {
-    if (myExecutors.size() > 0) {
-      List<Executor> executors = new ArrayList<Executor>(myExecutors);
-      for (Executor executor : executors) {
+    if (!myExecutors.isEmpty()) {
+      for (Executor executor : new ArrayList<Executor>(myExecutors)) {
         deinitExecutor(executor);
       }
-
-      myExecutors = null;
     }
-
+    myExecutors = null;
     myActionManager = null;
   }
 
@@ -206,7 +202,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     @Override
     public void update(final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
-      final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+      final Project project = e.getProject();
 
       if (project == null || !project.isInitialized() || project.isDisposed() || DumbService.getInstance(project).isDumb()) {
         presentation.setEnabled(false);
@@ -227,7 +223,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
 
         ExecutionTarget target = ExecutionTargetManager.getActiveTarget(project);
         enabled = ExecutionTargetManager.canRun(selectedConfiguration, target)
-                  &&  runner != null && !isStarting(project, myExecutor.getId(), runner.getRunnerId());
+                  && runner != null && !isStarting(project, myExecutor.getId(), runner.getRunnerId());
 
         if (enabled) {
           presentation.setDescription(myExecutor.getDescription());
@@ -249,18 +245,17 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
 
     @Override
     public void actionPerformed(final AnActionEvent e) {
-      final DataContext dataContext = e.getDataContext();
-      final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      final Project project = e.getProject();
       if (project == null || project.isDisposed()) {
         return;
       }
-      final RunnerAndConfigurationSettings configuration = getConfiguration(project);
-      if (configuration == null) {
+
+      RunnerAndConfigurationSettings configuration = getConfiguration(project);
+      ExecutionEnvironmentBuilder builder = configuration == null ? null : ExecutionEnvironmentBuilder.createOrNull(myExecutor, configuration);
+      if (builder == null) {
         return;
       }
-
-      ExecutionTarget target = ExecutionTargetManager.getActiveTarget(project);
-      ExecutionManager.getInstance(project).restartRunProfile(project, myExecutor, target, configuration, (RunContentDescriptor)null);
+      ExecutionManager.getInstance(project).restartRunProfile(builder.activeTarget().dataContext(e.getDataContext()).build());
     }
   }
 }

@@ -22,7 +22,6 @@
  */
 package com.intellij.openapi.vfs.encoding;
 
-import com.intellij.ide.GeneralSettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
@@ -30,12 +29,10 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
@@ -62,14 +59,11 @@ import java.util.*;
 @State(
   name = "Encoding",
   storages = {
-    @Storage( file = StoragePathMacros.PROJECT_FILE),
     @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/encodings.xml", scheme = StorageScheme.DIRECTORY_BASED)
-    }
+  }
 )
 public class EncodingProjectManagerImpl extends EncodingProjectManager {
   private final Project myProject;
-  private final GeneralSettings myGeneralSettings;
-  private final EditorSettingsExternalizable myEditorSettings;
   private boolean myUseUTFGuessing = true;
   private boolean myNative2AsciiForPropertiesFiles;
   private Charset myDefaultCharsetForPropertiesFiles;
@@ -81,13 +75,8 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager {
     }
   };
 
-  public EncodingProjectManagerImpl(Project project,
-                                    GeneralSettings generalSettings,
-                                    EditorSettingsExternalizable editorSettings,
-                                    PsiDocumentManager documentManager) {
+  public EncodingProjectManagerImpl(Project project, PsiDocumentManager documentManager) {
     myProject = project;
-    myGeneralSettings = generalSettings;
-    myEditorSettings = editorSettings;
     documentManager.addListener(new PsiDocumentManager.Listener() {
       @Override
       public void documentCreated(@NotNull Document document, PsiFile psiFile) {
@@ -150,16 +139,6 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager {
     myNative2AsciiForPropertiesFiles = Boolean.parseBoolean(element.getAttributeValue("native2AsciiForPropertiesFiles"));
     myDefaultCharsetForPropertiesFiles = CharsetToolkit.forName(element.getAttributeValue("defaultCharsetForPropertiesFiles"));
 
-    boolean migrated = myGeneralSettings.migrateCharsetSettingsTo(this);
-    migrated |= myEditorSettings.migrateCharsetSettingsTo(this);
-    if (migrated) {
-      // load up default project only if some settings have been migrated
-      EncodingProjectManager defaultManager = getInstance(ProjectManager.getInstance().getDefaultProject());
-      if (defaultManager != null) {
-        myGeneralSettings.migrateCharsetSettingsTo(defaultManager);
-        myEditorSettings.migrateCharsetSettingsTo(defaultManager);
-      }
-    }
     myModificationCount++;
   }
 

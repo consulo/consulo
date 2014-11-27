@@ -127,7 +127,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     final boolean versionFileExisted = versionFile.exists();
     final File indexRootDir = IndexInfrastructure.getIndexRootDir(indexKey);
     boolean needRebuild = false;
-    if (forceClean || IndexInfrastructure.versionDiffers(versionFile, version)) {
+    if (forceClean || IndexingStamp.versionDiffers(versionFile, version)) {
       final String[] children = indexRootDir.list();
       // rebuild only if there exists what to rebuild
       needRebuild = !forceClean && (versionFileExisted || children != null && children.length > 0);
@@ -135,7 +135,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
         LOG.info("Version has changed for stub index " + extension.getKey() + ". The index will be rebuilt.");
       }
       FileUtil.delete(indexRootDir);
-      IndexInfrastructure.rewriteVersion(versionFile, version);
+      IndexingStamp.rewriteVersion(versionFile, version); // todo snapshots indices
     }
 
     for (int attempt = 0; attempt < 2; attempt++) {
@@ -157,7 +157,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
         LOG.info(e);
         needRebuild = true;
         FileUtil.delete(indexRootDir);
-        IndexInfrastructure.rewriteVersion(versionFile, version);
+        IndexingStamp.rewriteVersion(versionFile, version); // todo snapshots indices
       }
     }
     return needRebuild;
@@ -211,6 +211,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     return get(indexKey, key, project, scope, null);
   }
 
+  @NotNull
   @Override
   public <Key, Psi extends PsiElement> Collection<Psi> get(@NotNull StubIndexKey<Key, Psi> indexKey,
                                                            @NotNull Key key,
@@ -286,6 +287,8 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
       else {
         throw e;
       }
+    } catch (AssertionError ae) {
+      forceRebuild(ae);
     }
 
     return true;
@@ -428,7 +431,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
   public <K> void updateIndex(@NotNull StubIndexKey key, int fileId, @NotNull final Map<K, StubIdList> oldValues, @NotNull Map<K, StubIdList> newValues) {
     try {
       final MyIndex<K> index = (MyIndex<K>)myIndices.get(key);
-      index.updateWithMap(fileId, newValues, new NotNullComputable<Collection<K>>() {
+      index.updateWithMap(fileId, fileId, newValues, new NotNullComputable<Collection<K>>() {
         @NotNull
         @Override
         public Collection<K> compute() {
@@ -443,15 +446,15 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
   }
 
   private static class MyIndex<K> extends MapReduceIndex<K, StubIdList, Void> {
-    public MyIndex(final IndexStorage<K, StubIdList> storage) {
+    public MyIndex(final IndexStorage<K, StubIdList> storage) throws IOException {
       super(null, null, storage);
     }
 
     @Override
     public void updateWithMap(final int inputId,
-                              @NotNull final Map<K, StubIdList> newData,
+                              int savedInputId, @NotNull final Map<K, StubIdList> newData,
                               @NotNull NotNullComputable<Collection<K>> oldKeysGetter) throws StorageException {
-      super.updateWithMap(inputId, newData, oldKeysGetter);
+      super.updateWithMap(inputId, savedInputId, newData, oldKeysGetter);
     }
   }
 

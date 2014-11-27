@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * Encapsulates information about grouping rules to use during arrangement.
  * <p/>
  * E.g. a rule might look like 'keep together class methods which implement methods from particular interface'.
- * 
+ *
  * @author Denis Zhdanov
  * @since 9/18/12 8:50 AM
  */
@@ -49,6 +49,11 @@ public class ArrangementGroupingRule {
   @NotNull
   public ArrangementSettingsToken getOrderType() {
     return myOrderType;
+  }
+
+  @Override
+  public ArrangementGroupingRule clone() {
+    return new ArrangementGroupingRule(myGroupingType, myOrderType);
   }
 
   @Override

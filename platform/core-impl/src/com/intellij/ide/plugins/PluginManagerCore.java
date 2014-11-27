@@ -785,17 +785,11 @@ public class PluginManagerCore {
 
     int pluginsCount = countPlugins(PathManager.getPluginsPath()) + countPlugins(PathManager.getPreInstalledPluginsPath());
     loadDescriptors(PathManager.getPluginsPath(), result, progress, pluginsCount);
-    Application application = ApplicationManager.getApplication();
-    boolean fromSources = false;
-    if (application == null || !application.isUnitTestMode()) {
-      int size = result.size();
-      loadDescriptors(PathManager.getPreInstalledPluginsPath(), result, progress, pluginsCount);
-      fromSources = size == result.size();
-    }
+    loadDescriptors(PathManager.getPreInstalledPluginsPath(), result, progress, pluginsCount);
 
     loadDescriptorsFromProperty(result);
 
-    loadDescriptorsFromClassPath(result, fromSources ? progress : null);
+    loadDescriptorsFromClassPath(result, null);
 
     IdeaPluginDescriptorImpl[] pluginDescriptors = result.toArray(new IdeaPluginDescriptorImpl[result.size()]);
     try {

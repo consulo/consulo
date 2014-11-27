@@ -16,10 +16,7 @@
 package com.intellij.packaging.ui;
 
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.packaging.elements.CompositePackagingElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * @author nik
@@ -28,8 +25,6 @@ public interface ArtifactEditor {
   void updateLayoutTree();
 
   void putLibraryIntoDefaultLocation(@NotNull Library library);
-
-  void addToClasspath(CompositePackagingElement<?> element, List<String> classpath);
 
   boolean isDisposed();
 }

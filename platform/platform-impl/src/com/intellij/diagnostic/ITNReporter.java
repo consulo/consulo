@@ -35,7 +35,9 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Consumer;
+import com.intellij.util.SystemProperties;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -109,8 +111,8 @@ public class ITNReporter extends ErrorReportSubmitter {
     String description = throwableText.substring(0, Math.min(Math.max(80, throwableText.length()), 80));
 
 
-    @SuppressWarnings("ThrowableResultOfMethodCallIgnored") Integer signature =
-      ideaLoggingEvent.getThrowable().getStackTrace()[0].hashCode();
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    Integer signature = ideaLoggingEvent.getThrowable().getStackTrace()[0].hashCode();
 
     String existing = findExisting(signature);
     if (existing != null) {
@@ -122,18 +124,20 @@ public class ITNReporter extends ErrorReportSubmitter {
 
     @NonNls StringBuilder descBuilder = new StringBuilder();
 
-    String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
-
-    descBuilder.append("Platform Version: ").append(platformBuild).append('\n');
+    descBuilder.append("Build: ").append(ApplicationInfo.getInstance().getBuild()).append('\n');
+    descBuilder.append("OS: ").append(SystemInfo.OS_NAME).append(" ").append(SystemInfo.OS_ARCH).append(" ").append(SystemInfo.OS_VERSION).append('\n');
+    descBuilder.append("Java Vendor: ").append(SystemProperties.getJavaVmVendor()).append('\n');
+    descBuilder.append("Java Version: ").append(SystemInfo.JAVA_VERSION).append('\n');
+    descBuilder.append("Java Arch: ").append(SystemInfo.ARCH_DATA_MODEL).append('\n');
+    descBuilder.append("Java Runtime Version: ").append(SystemInfo.JAVA_RUNTIME_VERSION).append('\n');
 
     String affectedVersion = null;
     Throwable t = ideaLoggingEvent.getThrowable();
     final PluginId pluginId = IdeErrorsDialog.findPluginId(t);
     if (pluginId != null) {
       final IdeaPluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(pluginId);
-      if (ideaPluginDescriptor != null && !ideaPluginDescriptor.isBundled()) {
-        descBuilder.append("Plugin ").append(ideaPluginDescriptor.getName()).append(" version: ")
-          .append(ideaPluginDescriptor.getVersion()).append("\n");
+      if (ideaPluginDescriptor != null) {
+        descBuilder.append("Plugin ").append(ideaPluginDescriptor.getName()).append(" version: ").append(ideaPluginDescriptor.getVersion()).append("\n");
         affectedVersion = ideaPluginDescriptor.getVersion();
       }
     }
@@ -142,7 +146,7 @@ public class ITNReporter extends ErrorReportSubmitter {
       addInfo = "<none>";
     }
 
-    descBuilder.append("\n\nDescription: ").append(addInfo);
+    descBuilder.append("Description: ").append(addInfo);
 
     for (IdeaLoggingEvent e : ideaLoggingEvents) {
       descBuilder.append("\n\n").append(e.toString());

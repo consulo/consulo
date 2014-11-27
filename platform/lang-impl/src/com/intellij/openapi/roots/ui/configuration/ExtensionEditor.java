@@ -16,14 +16,15 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModifiableModuleRootLayer;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
+import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckboxTreeNoPolicy;
 import com.intellij.ui.CheckedTreeNode;
-import com.intellij.ui.JBSplitter;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.consulo.module.extension.ModuleExtension;
@@ -38,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
@@ -56,7 +58,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   private final ContentEntriesEditor myContentEntriesEditor;
   private JPanel myRootPane;
   private CheckboxTreeNoPolicy myTree;
-  private JBSplitter mySplitter;
+  private Splitter mySplitter;
 
   private ModuleExtension<?> myConfigurablePanelExtension;
 
@@ -68,12 +70,19 @@ public class ExtensionEditor extends ModuleElementsEditor {
     myContentEntriesEditor = contentEntriesEditor;
   }
 
+  @Override
+  public void moduleStateChanged() {
+    mySplitter.setSecondComponent(null);
+    myTree.setModel(new DefaultTreeModel(new ExtensionCheckedTreeNode(null, myState, this)));
+    TreeUtil.expandAll(myTree);
+  }
+
   @NotNull
   @Override
   protected JComponent createComponentImpl() {
     myRootPane = new JPanel(new BorderLayout());
 
-    mySplitter = new JBSplitter();
+    mySplitter = new OnePixelSplitter();
 
     myTree = new CheckboxTreeNoPolicy(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, this)) {
       @Override
@@ -156,27 +165,31 @@ public class ExtensionEditor extends ModuleElementsEditor {
       }
     }
 
-    final ModifiableRootModel rootModel = myState.getRootModel();
-    assert rootModel != null;
-
     if (extension instanceof ModuleExtensionWithSdk) {
-      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = rootModel.findModuleExtensionSdkEntry(extension);
+      // we using module layer, dont use modifiable model - it ill proxy, and methods 'addModuleExtensionSdkEntry' && 'removeOrderEntry'
+      // ill call this method again
+      ModifiableModuleRootLayer moduleRootLayer = extension.getModuleRootLayer();
+
+      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(extension);
       if (!extension.isEnabled() && sdkOrderEntry != null) {
-        rootModel.removeOrderEntry(sdkOrderEntry);
+        moduleRootLayer.removeOrderEntry(sdkOrderEntry);
       }
 
       if (extension.isEnabled()) {
         final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
         if (!sdkExtension.getInheritableSdk().isNull()) {
           if (sdkOrderEntry == null) {
-            rootModel.addModuleExtensionSdkEntry(sdkExtension);
+            moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
           }
           else {
             final ModuleExtensionWithSdk<?> moduleExtension = sdkOrderEntry.getModuleExtension();
             if (moduleExtension != null && !Comparing.equal(sdkExtension.getInheritableSdk(), moduleExtension.getInheritableSdk())) {
-              rootModel.addModuleExtensionSdkEntry(sdkExtension);
+              moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
             }
           }
+        }
+        else if(sdkOrderEntry != null) {
+          moduleRootLayer.removeOrderEntry(sdkOrderEntry);
         }
       }
     }

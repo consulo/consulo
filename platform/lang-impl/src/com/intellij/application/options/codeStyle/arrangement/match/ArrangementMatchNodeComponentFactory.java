@@ -77,14 +77,14 @@ public class ArrangementMatchNodeComponentFactory {
       public void visit(@NotNull ArrangementAtomMatchCondition condition) {
         RemoveAtomConditionCallback callback = allowModification ? new RemoveAtomConditionCallback(rule) : null;
         ArrangementUiComponent component = new ArrangementAtomMatchConditionComponent(
-          mySettingsManager, myColorsProvider, condition, callback
+                mySettingsManager, myColorsProvider, condition, callback
         );
         ref.set(component);
       }
 
       @Override
       public void visit(@NotNull ArrangementCompositeMatchCondition condition) {
-        ref.set(new ArrangementAndMatchConditionComponent(rule, condition, ArrangementMatchNodeComponentFactory.this, mySettingsManager));
+        ref.set(new ArrangementAndMatchConditionComponent(rule, condition, ArrangementMatchNodeComponentFactory.this, mySettingsManager, allowModification));
       }
     });
     return ref.get();
@@ -151,9 +151,8 @@ public class ArrangementMatchNodeComponentFactory {
       if (!finished) {
         return;
       }
-      ArrangementMatchingRulesModel model = myList.getModel();
       if (myModelValue instanceof DummyElement) {
-        model.removeRow(myRow);
+        myList.removeRow(myRow);
       }
     }
 

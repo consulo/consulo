@@ -16,32 +16,21 @@
 
 package com.intellij.application.options.editor;
 
-import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.options.CompositeConfigurable;
-import com.intellij.openapi.options.ex.ConfigurableWrapper;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
-public class AutoImportOptionsConfigurable extends CompositeConfigurable<AutoImportOptionsProvider> implements EditorOptionsProvider {
-  private JPanel myPanel;
-  private JPanel myProvidersPanel;
-
-  @Override
-  protected List<AutoImportOptionsProvider> createConfigurables() {
-    return ConfigurableWrapper.createConfigurables(AutoImportOptionsProviderEP.EP_NAME);
-  }
-
+public class AutoImportOptionsConfigurable implements Configurable {
   @Override
   @Nls
   public String getDisplayName() {
-    return ApplicationBundle.message("auto.import");
+    return null;
   }
 
   @Override
@@ -49,32 +38,29 @@ public class AutoImportOptionsConfigurable extends CompositeConfigurable<AutoImp
     return "reference.settingsdialog.IDE.editor.autoimport";
   }
 
+  @Nullable
   @Override
   public JComponent createComponent() {
-    myProvidersPanel.removeAll();
-    for (int i = 0; i < getConfigurables().size(); i++) {
-      AutoImportOptionsProvider provider = getConfigurables().get(i);
-      myProvidersPanel.add(provider.createComponent(), new GridBagConstraints(0, i, 1, 1, 0, 0,
-                                                                     GridBagConstraints.NORTH,
-                                                                     GridBagConstraints.HORIZONTAL, new Insets(0,0,0,0), 0,0));
-    }
-    myProvidersPanel.add(Box.createVerticalGlue(), new GridBagConstraints(0, getConfigurables().size(), 1, 1, 0, 1,
-                                                                     GridBagConstraints.NORTH,
-                                                                     GridBagConstraints.BOTH, new Insets(0,0,0,0), 0,0));
-    myProvidersPanel.add(Box.createVerticalGlue(), new GridBagConstraints(1, 0, getConfigurables().size() + 1, 1, 1, 0,
-                                                                     GridBagConstraints.NORTH,
-                                                                     GridBagConstraints.BOTH, new Insets(0,0,0,0), 0,0));
-    return myPanel;
-  }
-
-  @Override
-  @NotNull
-  public String getId() {
-    return "editor.preferences.import";
-  }
-
-  @Override
-  public Runnable enableSearch(final String option) {
     return null;
+  }
+
+  @Override
+  public boolean isModified() {
+    return false;
+  }
+
+  @Override
+  public void apply() throws ConfigurationException {
+
+  }
+
+  @Override
+  public void reset() {
+
+  }
+
+  @Override
+  public void disposeUIResources() {
+
   }
 }

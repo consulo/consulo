@@ -20,11 +20,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
@@ -210,7 +210,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
       }
     }
     final List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
-    for (VirtualFile file : library.getFiles(OrderRootType.CLASSES)) {
+    for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
       final String path = FileUtil.toSystemIndependentName(PathUtil.getLocalPath(file));
       elements.add(
         file.isDirectory() && file.isInLocalFileSystem() ? new DirectoryCopyPackagingElement(path) : new FileCopyPackagingElement(path));

@@ -17,6 +17,7 @@ package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.execution.rmi.RemoteUtil;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -31,23 +32,24 @@ import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutio
 import com.intellij.openapi.externalSystem.service.ParametersEnhancer;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
-import com.intellij.util.BooleanFunction;
-import com.intellij.util.NullableFunction;
-import com.intellij.util.PathUtil;
-import com.intellij.util.PathsList;
+import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtilRt;
+import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,6 +119,15 @@ public class ExternalSystemApiUtil {
       return ((Comparable)o1).compareTo(o2);
     }
   };
+
+  @NotNull private static final TransferToEDTQueue<Runnable> TRANSFER_TO_EDT_QUEUE =
+          new TransferToEDTQueue<Runnable>("External System queue", new Processor<Runnable>() {
+            @Override
+            public boolean process(Runnable runnable) {
+              runnable.run();
+              return true;
+            }
+          }, Condition.FALSE, 300);
 
   private ExternalSystemApiUtil() {
   }
@@ -249,11 +260,11 @@ public class ExternalSystemApiUtil {
       K key = grouper.fun(data);
       if (key == null) {
         LOG.warn(String.format(
-          "Skipping entry '%s' during grouping. Reason: it's not possible to build a grouping key with grouping strategy '%s'. "
-          + "Given entries: %s",
-          data,
-          grouper.getClass(),
-          nodes));
+                "Skipping entry '%s' during grouping. Reason: it's not possible to build a grouping key with grouping strategy '%s'. "
+                + "Given entries: %s",
+                data,
+                grouper.getClass(),
+                nodes));
         continue;
       }
       List<V> grouped = result.get(key);
@@ -375,6 +386,26 @@ public class ExternalSystemApiUtil {
     }
     else {
       UIUtil.invokeLaterIfNeeded(task);
+    }
+  }
+
+  /**
+   * Adds runnable to Event Dispatch Queue
+   * if we aren't in UnitTest of Headless environment mode
+   *
+   * @param runnable Runnable
+   */
+  public static void addToInvokeLater(final Runnable runnable) {
+    final Application application = ApplicationManager.getApplication();
+    final boolean unitTestMode = application.isUnitTestMode();
+    if (unitTestMode) {
+      UIUtil.invokeLaterIfNeeded(runnable);
+    }
+    else if (application.isHeadlessEnvironment() || application.isDispatchThread()) {
+      runnable.run();
+    }
+    else {
+      TRANSFER_TO_EDT_QUEUE.offer(runnable);
     }
   }
 
@@ -513,13 +544,13 @@ public class ExternalSystemApiUtil {
   @SuppressWarnings("unchecked")
   @NotNull
   public static AbstractExternalSystemSettings getSettings(@NotNull Project project, @NotNull ProjectSystemId externalSystemId)
-    throws IllegalArgumentException
+          throws IllegalArgumentException
   {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
       throw new IllegalArgumentException(String.format(
-        "Can't retrieve external system settings for id '%s'. Reason: no such external system is registered",
-        externalSystemId.getReadableName()
+              "Can't retrieve external system settings for id '%s'. Reason: no such external system is registered",
+              externalSystemId.getReadableName()
       ));
     }
     return manager.getSettingsProvider().fun(project);
@@ -528,13 +559,13 @@ public class ExternalSystemApiUtil {
   @SuppressWarnings("unchecked")
   public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(@NotNull Project project,
                                                                                    @NotNull ProjectSystemId externalSystemId)
-    throws IllegalArgumentException
+          throws IllegalArgumentException
   {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
       throw new IllegalArgumentException(String.format(
-        "Can't retrieve local external system settings for id '%s'. Reason: no such external system is registered",
-        externalSystemId.getReadableName()
+              "Can't retrieve local external system settings for id '%s'. Reason: no such external system is registered",
+              externalSystemId.getReadableName()
       ));
     }
     return (S)manager.getLocalSettingsProvider().fun(project);
@@ -542,15 +573,15 @@ public class ExternalSystemApiUtil {
 
   @SuppressWarnings("unchecked")
   public static <S extends ExternalSystemExecutionSettings> S getExecutionSettings(@NotNull Project project,
-                                                                            @NotNull String linkedProjectPath,
-                                                                            @NotNull ProjectSystemId externalSystemId)
-    throws IllegalArgumentException
+                                                                                   @NotNull String linkedProjectPath,
+                                                                                   @NotNull ProjectSystemId externalSystemId)
+          throws IllegalArgumentException
   {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
       throw new IllegalArgumentException(String.format(
-        "Can't retrieve external system execution settings for id '%s'. Reason: no such external system is registered",
-        externalSystemId.getReadableName()
+              "Can't retrieve external system execution settings for id '%s'. Reason: no such external system is registered",
+              externalSystemId.getReadableName()
       ));
     }
     return (S)manager.getExecutionSettingsProvider().fun(Pair.create(project, linkedProjectPath));
@@ -598,7 +629,7 @@ public class ExternalSystemApiUtil {
    */
   @NotNull
   public static <T extends ParametersEnhancer> T reloadIfNecessary(@NotNull final Class<T> clazz)
-    throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException
+          throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException
   {
     T instance = clazz.newInstance();
     List<URL> urls = ContainerUtilRt.newArrayList();
@@ -631,5 +662,25 @@ public class ExternalSystemApiUtil {
     };
     //noinspection unchecked
     return (T)loader.loadClass(clazz.getName()).newInstance();
+  }
+
+  @Contract("_, null -> false")
+  public static boolean isExternalSystemAwareModule(@NotNull ProjectSystemId systemId, @Nullable Module module) {
+    return module != null && systemId.getId().equals(module.getOptionValue(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY));
+  }
+
+  @Contract("_, null -> false")
+  public static boolean isExternalSystemAwareModule(@NotNull String systemId, @Nullable Module module) {
+    return module != null && systemId.equals(module.getOptionValue(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY));
+  }
+
+  @Nullable
+  public static String getExternalProjectPath(@Nullable Module module) {
+    return module != null ? module.getOptionValue(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY) : null;
+  }
+
+  @Nullable
+  public static String getExternalProjectId(@Nullable Module module) {
+    return module != null ? module.getOptionValue(ExternalSystemConstants.LINKED_PROJECT_ID_KEY) : null;
   }
 }

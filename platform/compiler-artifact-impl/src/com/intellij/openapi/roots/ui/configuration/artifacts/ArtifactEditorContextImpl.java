@@ -33,11 +33,9 @@ import com.intellij.packaging.artifacts.ArtifactModel;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.ManifestFileProvider;
 import com.intellij.packaging.impl.ui.ChooseArtifactsDialog;
 import com.intellij.packaging.ui.ArtifactEditor;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.ManifestFileConfiguration;
 import com.intellij.util.ui.classpath.ChooseLibrariesFromTablesDialog;
 import org.jetbrains.annotations.NotNull;
 
@@ -71,11 +69,6 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
   @NotNull
   public ModifiableRootModel getOrCreateModifiableRootModel(@NotNull Module module) {
     return myParent.getOrCreateModifiableRootModel(module);
-  }
-
-  @Override
-  public ManifestFileConfiguration getManifestFile(CompositePackagingElement<?> element, ArtifactType artifactType) {
-    return myParent.getManifestFile(element, artifactType);
   }
 
   @Override
@@ -162,12 +155,6 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
   @Override
   public Library findLibrary(@NotNull String level, @NotNull String libraryName) {
     return myParent.findLibrary(level, libraryName);
-  }
-
-  @NotNull
-  @Override
-  public ManifestFileProvider getManifestFileProvider() {
-    return myParent.getManifestFileProvider();
   }
 
   @Override

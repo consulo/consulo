@@ -930,6 +930,11 @@ public class StringUtil extends StringUtilRt {
     return s == null ? defaultValue : s;
   }
 
+  @NotNull
+  public static String notNullizeIfEmpty(@Nullable final String s, @NotNull String defaultValue) {
+    return isEmpty(s) ? defaultValue : s;
+  }
+
   @Nullable
   public static String nullize(@Nullable final String s) {
     return nullize(s, false);

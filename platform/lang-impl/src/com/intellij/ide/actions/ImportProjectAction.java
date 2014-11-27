@@ -15,20 +15,13 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-
 /**
  * @author Dmitry Avdeev
  *         Date: 11/6/12
  */
 public class ImportProjectAction extends ImportModuleAction {
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    doImport(null);
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-
+  public boolean canCreateNewProject() {
+    return true;
   }
 }

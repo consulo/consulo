@@ -16,21 +16,23 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.OrderEntry;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 
-public abstract class OrderEntryBaseImpl extends RootModelComponentBase implements OrderEntry {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.OrderEntryVeryBaseImpl");
-
-  private int myIndex;
+@org.consulo.lombok.annotations.Logger
+public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
   private static int _hc = 0;
 
   @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
   private final int hc = _hc++;
 
-  protected OrderEntryBaseImpl(@NotNull RootModelImpl rootModel) {
-    super(rootModel);
+  private int myIndex;
+  private OrderEntryTypeProvider<?> myProvider;
+
+  protected OrderEntryBaseImpl(@NotNull OrderEntryTypeProvider<?> provider, @NotNull ModuleRootLayerImpl rootLayer) {
+    super(rootLayer);
+    myProvider = provider;
   }
 
   void setIndex(int index) {
@@ -38,13 +40,14 @@ public abstract class OrderEntryBaseImpl extends RootModelComponentBase implemen
   }
 
   @Override
-  public int compareTo(@NotNull OrderEntry orderEntry) {
-    LOG.assertTrue(orderEntry.getOwnerModule() == getOwnerModule());
-    return myIndex - ((OrderEntryBaseImpl)orderEntry).myIndex;
+  public OrderEntryTypeProvider<?> getProvider() {
+    return myProvider;
   }
 
-  boolean sameType(@NotNull OrderEntry that) {
-    return getClass().equals(that.getClass());
+  @Override
+  public int compareTo(@NotNull OrderEntry orderEntry) {
+    LOGGER.assertTrue(orderEntry.getOwnerModule() == getOwnerModule());
+    return myIndex - ((OrderEntryBaseImpl)orderEntry).myIndex;
   }
 
   @Override

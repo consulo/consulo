@@ -18,6 +18,7 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
@@ -37,13 +38,18 @@ public abstract class FileIndexFacade {
     return ServiceManager.getService(project, FileIndexFacade.class);
   }
 
+  @NotNull
+  public abstract ModificationTracker getRootModificationTracker();
+
   public abstract boolean isInContent(@NotNull VirtualFile file);
   public abstract boolean isInSource(@NotNull VirtualFile file);
   public abstract boolean isInSourceContent(@NotNull VirtualFile file);
   public abstract boolean isInLibraryClasses(@NotNull VirtualFile file);
 
   public abstract boolean isInLibrarySource(@NotNull VirtualFile file);
+
   public abstract boolean isExcludedFile(@NotNull VirtualFile file);
+  public abstract boolean isUnderIgnored(@NotNull VirtualFile file);
 
   @Nullable
   public abstract Module getModuleForFile(@NotNull VirtualFile file);

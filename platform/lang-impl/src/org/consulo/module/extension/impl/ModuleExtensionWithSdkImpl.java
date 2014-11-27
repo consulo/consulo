@@ -16,7 +16,7 @@
 package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jdom.Element;
@@ -32,7 +32,7 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
 
   private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 
-  public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull ModifiableRootModel rootModel) {
+  public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
     super(id, rootModel);
 
     mySdkPointer = new SdkModuleInheritableNamedPointerImpl(rootModel.getProject(), id);

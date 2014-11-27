@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -31,16 +30,13 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public abstract class GlobalSearchScope extends SearchScope implements ProjectAwareFileFilter {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.search.GlobalSearchScope");
   @Nullable private final Project myProject;
 
-  protected GlobalSearchScope(Project project) {
+  protected GlobalSearchScope(@Nullable Project project) {
     myProject = project;
   }
 
@@ -48,21 +44,20 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     this(null);
   }
 
-  public abstract boolean contains(VirtualFile file);
+  public abstract boolean contains(@NotNull VirtualFile file);
 
+  @Nullable
   @Override
   public Project getProject() {
     return myProject;
   }
 
   /**
-   * @param file1
-   * @param file2
    * @return a positive integer (+1), if file1 is located in the classpath before file2,
    *         a negative integer (-1), if file1 is located in the classpath after file2
    *         zero - otherwise or when the file are not comparable.
    */
-  public abstract int compare(VirtualFile file1, VirtualFile file2);
+  public abstract int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2);
 
   // optimization methods:
 
@@ -129,12 +124,12 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   public GlobalSearchScope union(@NotNull final LocalSearchScope scope) {
     return new GlobalSearchScope(scope.getScope()[0].getProject()) {
       @Override
-      public boolean contains(VirtualFile file) {
+      public boolean contains(@NotNull VirtualFile file) {
         return GlobalSearchScope.this.contains(file) || scope.isInScope(file);
       }
 
       @Override
-      public int compare(VirtualFile file1, VirtualFile file2) {
+      public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
         return GlobalSearchScope.this.contains(file1) && GlobalSearchScope.this.contains(file2) ? GlobalSearchScope.this.compare(file1, file2) : 0;
       }
 
@@ -181,13 +176,18 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   public static GlobalSearchScope notScope(@NotNull final GlobalSearchScope scope) {
     return new DelegatingGlobalSearchScope(scope) {
       @Override
-      public boolean contains(final VirtualFile file) {
+      public boolean contains(@NotNull final VirtualFile file) {
         return !myBaseScope.contains(file);
       }
 
       @Override
       public boolean isSearchOutsideRootModel() {
         return true;
+      }
+
+      @Override
+      public String toString() {
+        return "NOT: "+myBaseScope;
       }
     };
   }
@@ -263,6 +263,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   @NotNull
   public static GlobalSearchScope fileScope(@NotNull Project project, final VirtualFile virtualFile, @Nullable final String displayName) {
     return new FileScope(project, virtualFile) {
+      @NotNull
       @Override
       public String getDisplayName() {
         return displayName == null ? super.getDisplayName() : displayName;
@@ -279,6 +280,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   public static GlobalSearchScope filesScope(@NotNull Project project, @NotNull Collection<VirtualFile> files, @Nullable final String displayName) {
     if (files.isEmpty()) return EMPTY_SCOPE;
     return files.size() == 1? fileScope(project, files.iterator().next(), displayName) : new FilesScope(project, files) {
+      @NotNull
       @Override
       public String getDisplayName() {
         return displayName == null ? super.getDisplayName() : displayName;
@@ -307,6 +309,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
       return new IntersectionScope(this, scope, null);
     }
 
+    @NotNull
     @Override
     public String getDisplayName() {
       if (myDisplayName == null) {
@@ -316,12 +319,12 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     }
 
     @Override
-    public boolean contains(VirtualFile file) {
+    public boolean contains(@NotNull VirtualFile file) {
       return myScope1.contains(file) && myScope2.contains(file);
     }
 
     @Override
-    public int compare(VirtualFile file1, VirtualFile file2) {
+    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
       int res1 = myScope1.compare(file1, file2);
       int res2 = myScope2.compare(file1, file2);
 
@@ -349,7 +352,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     public boolean isSearchInLibraries() {
       return myScope1.isSearchInLibraries() && myScope2.isSearchInLibraries();
     }
-    
+
     @Override
     public boolean isSearchOutsideRootModel() {
       return myScope1.isSearchOutsideRootModel() && myScope2.isSearchOutsideRootModel();
@@ -389,6 +392,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
       myDisplayName = displayName;
     }
 
+    @NotNull
     @Override
     public String getDisplayName() {
       if (myDisplayName == null) {
@@ -398,7 +402,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     }
 
     @Override
-    public boolean contains(VirtualFile file) {
+    public boolean contains(@NotNull VirtualFile file) {
       return myScope1.contains(file) || myScope2.contains(file);
     }
 
@@ -408,7 +412,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     }
 
     @Override
-    public int compare(VirtualFile file1, VirtualFile file2) {
+    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
       int res1 = myScope1.contains(file1) && myScope1.contains(file2) ? myScope1.compare(file1, file2) : 0;
       int res2 = myScope2.contains(file1) && myScope2.contains(file2) ? myScope2.compare(file1, file2) : 0;
 
@@ -460,7 +464,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   }
 
   @NotNull
-  public static GlobalSearchScope getScopeRestrictedByFileTypes (@NotNull GlobalSearchScope scope, final FileType... fileTypes) {
+  public static GlobalSearchScope getScopeRestrictedByFileTypes(@NotNull GlobalSearchScope scope, @NotNull FileType... fileTypes) {
     if (scope == EMPTY_SCOPE) {
       return EMPTY_SCOPE;
     }
@@ -477,7 +481,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     }
 
     @Override
-    public boolean contains(VirtualFile file) {
+    public boolean contains(@NotNull VirtualFile file) {
       if (!super.contains(file)) return false;
 
       final FileType fileType = file.getFileType();
@@ -518,6 +522,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof FileTypeRestrictionScope)) return false;
+      if (!super.equals(o)) return false;
 
       FileTypeRestrictionScope that = (FileTypeRestrictionScope)o;
 
@@ -530,16 +535,21 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
       result = 31 * result + Arrays.hashCode(myFileTypes);
       return result;
     }
+
+    @Override
+    public String toString() {
+      return "(" + myBaseScope + " restricted by file types: "+Arrays.asList(myFileTypes)+")";
+    }
   }
 
   private static class EmptyScope extends GlobalSearchScope {
     @Override
-    public boolean contains(VirtualFile file) {
+    public boolean contains(@NotNull VirtualFile file) {
       return false;
     }
 
     @Override
-    public int compare(VirtualFile file1, VirtualFile file2) {
+    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
       return 0;
     }
 
@@ -564,28 +574,32 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     public GlobalSearchScope uniteWith(@NotNull final GlobalSearchScope scope) {
       return scope;
     }
+
+    @Override
+    public String toString() {
+      return "EMPTY";
+    }
   }
 
   public static final GlobalSearchScope EMPTY_SCOPE = new EmptyScope();
 
-  private static class FileScope extends GlobalSearchScope {
-    private final VirtualFile myVirtualFile;
+  private static class FileScope extends GlobalSearchScope implements Iterable<VirtualFile> {
+    private final VirtualFile myVirtualFile; // files can be out of project roots
     private final Module myModule;
 
-    protected FileScope(@NotNull Project project, final VirtualFile virtualFile) {
+    private FileScope(@NotNull Project project, VirtualFile virtualFile) {
       super(project);
       myVirtualFile = virtualFile;
-      FileIndexFacade fileIndex = ServiceManager.getService(project, FileIndexFacade.class);
-      myModule = myVirtualFile != null ? fileIndex.getModuleForFile(myVirtualFile) : null;
+      myModule = virtualFile == null || project.isDefault() ? null : FileIndexFacade.getInstance(project).getModuleForFile(virtualFile);
     }
 
     @Override
-    public boolean contains(VirtualFile file) {
+    public boolean contains(@NotNull VirtualFile file) {
       return Comparing.equal(myVirtualFile, file);
     }
 
     @Override
-    public int compare(VirtualFile file1, VirtualFile file2) {
+    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
       return 0;
     }
 
@@ -598,23 +612,33 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     public boolean isSearchInLibraries() {
       return myModule == null;
     }
+
+    @Override
+    public String toString() {
+      return "File :"+myVirtualFile;
+    }
+
+    @Override
+    public Iterator<VirtualFile> iterator() {
+      return Collections.singletonList(myVirtualFile).iterator();
+    }
   }
 
-  public static class FilesScope extends GlobalSearchScope {
-    private final Collection<VirtualFile> myFiles;
+  public static class FilesScope extends GlobalSearchScope implements Iterable<VirtualFile> {
+    private final Collection<VirtualFile> myFiles; // files can be out of project roots
 
-    public FilesScope(final Project project, final Collection<VirtualFile> files) {
+    public FilesScope(final Project project, @NotNull Collection<VirtualFile> files) {
       super(project);
       myFiles = files;
     }
 
     @Override
-    public boolean contains(final VirtualFile file) {
+    public boolean contains(@NotNull final VirtualFile file) {
       return myFiles.contains(file);
     }
 
     @Override
-    public int compare(final VirtualFile file1, final VirtualFile file2) {
+    public int compare(@NotNull final VirtualFile file1, @NotNull final VirtualFile file2) {
       return 0;
     }
 
@@ -637,6 +661,17 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     @Override
     public int hashCode() {
       return myFiles.hashCode();
+    }
+
+    @Override
+    public String toString() {
+      List<VirtualFile> files = myFiles.size() <= 20 ? new ArrayList<VirtualFile>(myFiles) : new ArrayList<VirtualFile>(myFiles).subList(0,20);
+      return "Files: ("+ files +")";
+    }
+
+    @Override
+    public Iterator<VirtualFile> iterator() {
+      return myFiles.iterator();
     }
   }
 }

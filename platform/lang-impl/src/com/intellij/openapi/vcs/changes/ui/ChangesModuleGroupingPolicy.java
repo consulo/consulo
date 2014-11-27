@@ -55,8 +55,8 @@ public class ChangesModuleGroupingPolicy implements ChangesGroupingPolicy {
     if (vFile == null) {
       vFile = LocalFileSystem.getInstance().findFileByIoFile(new File(node.getPath()));
     }
-    if (vFile != null && Comparing.equal(vFile, index.getContentRootForFile(vFile))) {
-      Module module = index.getModuleForFile(vFile);
+    if (vFile != null && Comparing.equal(vFile, index.getContentRootForFile(vFile, false))) {
+      Module module = index.getModuleForFile(vFile, false);
       return getNodeForModule(module, rootNode);
     }
     return null;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,10 +44,12 @@ public abstract class CodeFoldingManager {
 
   public abstract CodeFoldingState saveFoldingState(@NotNull Editor editor);
   public abstract void restoreFoldingState(@NotNull Editor editor, @NotNull CodeFoldingState state);
-  
+
   public abstract void writeFoldingState(@NotNull CodeFoldingState state, @NotNull Element element) throws WriteExternalException;
   public abstract CodeFoldingState readFoldingState(@NotNull Element element, @NotNull Document document);
 
   public abstract void releaseFoldings(@NotNull Editor editor);
   public abstract void buildInitialFoldings(@NotNull Editor editor);
+  @Nullable
+  public abstract CodeFoldingState buildInitialFoldings(@NotNull Document document);
 }

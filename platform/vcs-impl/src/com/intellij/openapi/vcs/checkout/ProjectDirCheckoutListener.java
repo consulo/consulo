@@ -35,8 +35,8 @@ public class ProjectDirCheckoutListener implements CheckoutListener {
       String message = VcsBundle.message("checkout.open.project.dir.prompt",
                                          getProductNameWithArticle(), directory.getPath());
       int rc = Messages.showYesNoDialog(project, message, VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
-      if (rc == 0) {
-        ProjectUtil.openProject(directory.getPath(), project, false);
+      if (rc == Messages.YES) {
+        ProjectUtil.openOrImport(directory.getPath(), project, false);
       }
       return true;
     }

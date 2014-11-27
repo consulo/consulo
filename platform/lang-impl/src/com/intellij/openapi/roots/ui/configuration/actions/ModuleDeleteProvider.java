@@ -35,7 +35,6 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.projectImport.ProjectAttachProcessor;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
@@ -96,15 +95,12 @@ public class ModuleDeleteProvider  implements DeleteProvider, TitledHandler  {
   }
 
   private static String getConfirmationText(Module[] modules, String names) {
-    if (ProjectAttachProcessor.canAttachToProject()) {
-      return "Would you like to detach the project" + (modules.length > 1 ? "s " : " ") +  names + "?";
-    }
     return ProjectBundle.message("module.remove.confirmation.prompt", names, modules.length);
   }
 
   @Override
   public String getActionTitle() {
-    return ProjectAttachProcessor.canAttachToProject() ? "Remove from Project View" : "Remove Module";
+    return "Remove Module";
   }
 
   public static void removeModule(@NotNull final Module moduleToRemove,

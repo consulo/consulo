@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.CodeInsightSettings;
+import com.intellij.codeInsight.TargetElementUtilBase;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl;
 import com.intellij.codeInsight.editorActions.CompletionAutoPopupHandler;
@@ -121,6 +122,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     }
   };
   private volatile int myCount;
+  private volatile boolean myHasPsiElements;
   private boolean myLookupUpdated;
   private final ConcurrentHashMap<LookupElement, CompletionSorterImpl> myItemSorters =
           new ConcurrentHashMap<LookupElement, CompletionSorterImpl>(
@@ -134,13 +136,14 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
                                      CodeCompletionHandlerBase handler,
                                      Semaphore freezeSemaphore,
                                      final OffsetMap offsetMap,
-                                     boolean hasModifiers) {
+                                     boolean hasModifiers,
+                                     LookupImpl lookup) {
     myEditor = editor;
     myParameters = parameters;
     myHandler = handler;
     myFreezeSemaphore = freezeSemaphore;
     myOffsetMap = offsetMap;
-    myLookup = (LookupImpl)parameters.getLookup();
+    myLookup = lookup;
     myStartCaret = myEditor.getCaretModel().getOffset();
 
     myAdvertiserChanges.offer(new Runnable() {
@@ -190,9 +193,10 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         if (!CodeInsightSettings.getInstance().SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS) {
           myLookup.setFocusDegree(LookupImpl.FocusDegree.SEMI_FOCUSED);
           if (FeatureUsageTracker.getInstance().isToBeAdvertisedInLookup(CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_CONTROL_DOT, getProject())) {
-            addAdvertisement("Press " +
-                             CompletionContributor.getActionShortcut(IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_DOT) +
-                             " to choose the selected (or first) suggestion and insert a dot afterwards", null);
+            String dotShortcut = CompletionContributor.getActionShortcut(IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_DOT);
+            if (StringUtil.isNotEmpty(dotShortcut)) {
+              addAdvertisement("Press " + dotShortcut + " to choose the selected (or first) suggestion and insert a dot afterwards", null);
+            }
           }
         } else {
           myLookup.setFocusDegree(LookupImpl.FocusDegree.FOCUSED);
@@ -201,9 +205,11 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
       if (!myEditor.isOneLineMode() &&
           FeatureUsageTracker.getInstance()
                   .isToBeAdvertisedInLookup(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ARROWS, getProject())) {
-        addAdvertisement(CompletionContributor.getActionShortcut(IdeActions.ACTION_LOOKUP_DOWN) + " and " +
-                         CompletionContributor.getActionShortcut(IdeActions.ACTION_LOOKUP_UP) +
-                         " will move caret down and up in the editor", null);
+        String downShortcut = CompletionContributor.getActionShortcut(IdeActions.ACTION_LOOKUP_DOWN);
+        String upShortcut = CompletionContributor.getActionShortcut(IdeActions.ACTION_LOOKUP_UP);
+        if (StringUtil.isNotEmpty(downShortcut) && StringUtil.isNotEmpty(upShortcut)) {
+          addAdvertisement(downShortcut + " and " + upShortcut + " will move caret down and up in the editor", null);
+        }
       }
     } else if (DumbService.isDumb(getProject())) {
       addAdvertisement("The results might be incomplete while indexing is in progress", MessageType.WARNING.getPopupBackground());
@@ -214,7 +220,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     if (!initContext.getOffsetMap().wasModified(CompletionInitializationContext.IDENTIFIER_END_OFFSET)) {
       try {
         final int selectionEndOffset = initContext.getSelectionEndOffset();
-        final PsiReference reference = initContext.getFile().findReferenceAt(selectionEndOffset);
+        final PsiReference reference = TargetElementUtilBase.findReference(myEditor, selectionEndOffset);
         if (reference != null) {
           initContext.setReplacementOffset(findReplacementOffset(selectionEndOffset, reference));
         }
@@ -250,7 +256,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
       }
     }
 
-    return reference.getElement().getTextRange().getStartOffset() + reference.getRangeInElement().getEndOffset();
+    return selectionEndOffset;
   }
 
 
@@ -320,7 +326,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     if (!myLookupUpdated) {
       if (myLookup.getAdvertisements().isEmpty() && !isAutopopupCompletion() && !DumbService.isDumb(getProject())) {
-        DefaultCompletionContributor.addDefaultAdvertisements(myParameters, myLookup);
+        DefaultCompletionContributor.addDefaultAdvertisements(myParameters, myLookup, myHasPsiElements);
       }
       myLookup.getAdvertiser().showRandomText();
     }
@@ -380,8 +386,12 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     LOG.assertTrue(myParameters.getPosition().isValid());
 
-    myItemSorters.put(item.getLookupElement(), (CompletionSorterImpl)item.getSorter());
-    if (!myLookup.addItem(item.getLookupElement(), item.getPrefixMatcher())) {
+    LookupElement lookupElement = item.getLookupElement();
+    if (!myHasPsiElements && lookupElement.getPsiElement() != null) {
+      myHasPsiElements = true;
+    }
+    myItemSorters.put(lookupElement, (CompletionSorterImpl)item.getSorter());
+    if (!myLookup.addItem(lookupElement, item.getPrefixMatcher())) {
       return;
     }
     myCount++;
@@ -523,7 +533,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
       myLookup.hideLookup(false);
       LOG.assertTrue(CompletionServiceImpl.getCompletionService().getCurrentCompletion() == null);
-      CompletionServiceImpl.setCompletionPhase(new CompletionPhase.EmptyAutoPopup(this));
+      CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion);
       return true;
     }
     return false;
@@ -752,10 +762,11 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
           data.set(calculateItems(initContext, weigher));
         }
         catch (ProcessCanceledException ignore) {
+          cancel(); // some contributor may just throw PCE; if indicator is not canceled everything will hang
         }
         catch (Throwable t) {
-          LOG.error(t);
           cancel();
+          LOG.error(t);
         }
       }
     }

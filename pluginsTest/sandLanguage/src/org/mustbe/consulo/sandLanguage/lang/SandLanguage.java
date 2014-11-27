@@ -27,4 +27,9 @@ public class SandLanguage extends Language {
   private SandLanguage() {
     super("SAND");
   }
+
+  @Override
+  public String getDisplayName() {
+    return "Sand";
+  }
 }

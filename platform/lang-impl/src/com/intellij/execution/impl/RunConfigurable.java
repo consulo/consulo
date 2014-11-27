@@ -1193,9 +1193,7 @@ class RunConfigurable extends BaseConfigurable {
             applicableTypes.add(type);
           }
         }
-        if (applicableTypes.size() < allTypes.length - 3) {
-          return applicableTypes;
-        }
+        return applicableTypes;
       }
       return new ArrayList<ConfigurationType>(Arrays.asList(allTypes));
     }
@@ -1216,7 +1214,7 @@ class RunConfigurable extends BaseConfigurable {
     public MyRemoveAction() {
       super(ExecutionBundle.message("remove.run.configuration.action.name"),
             ExecutionBundle.message("remove.run.configuration.action.name"), REMOVE_ICON);
-      registerCustomShortcutSet(CommonShortcuts.DELETE, myTree);
+      registerCustomShortcutSet(CommonShortcuts.getDelete(), myTree);
     }
 
     @Override

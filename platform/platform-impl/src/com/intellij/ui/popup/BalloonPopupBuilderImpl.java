@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
   @Nullable private final Map<Disposable, List<Balloon>> myStorage;
   @Nullable private Disposable myAnchor;
 
-  private JComponent myContent;
+  private final JComponent myContent;
 
   private Color   myBorder             = new JBColor(JBColor.GRAY, Gray._200);
   @Nullable private Insets myBorderInsets = null;
@@ -74,6 +74,11 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
     myContent = content;
   }
 
+  @Override
+  public boolean isHideOnAction() {
+    return myHideOnAction;
+  }
+
   @NotNull
   @Override
   public BalloonBuilder setHideOnAction(boolean hideOnAction) {
@@ -85,6 +90,12 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
   @Override
   public BalloonBuilder setDialogMode(boolean dialogMode) {
     myDialogMode = dialogMode;
+    return this;
+  }
+
+  @NotNull
+  @Override
+  public BalloonBuilder setPreferredPosition(final Balloon.Position position) {
     return this;
   }
 
@@ -246,10 +257,10 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
   @Override
   public Balloon createBalloon() {
     final BalloonImpl result = new BalloonImpl(
-      myContent, myBorder, myBorderInsets, myFill, myHideOnMouseOutside, myHideOnKeyOutside, myHideOnAction, myShowCallout, myCloseButtonEnabled,
-      myFadeoutTime, myHideOnFrameResize, myHideOnLinkClick, myClickHandler, myCloseOnClick, myAnimationCycle, myCalloutShift,
-      myPositionChangeXShift, myPositionChangeYShift, myDialogMode, myTitle, myContentInsets, myShadow, mySmallVariant, myBlockClicks,
-      myLayer);
+            myContent, myBorder, myBorderInsets, myFill, myHideOnMouseOutside, myHideOnKeyOutside, myHideOnAction, myShowCallout, myCloseButtonEnabled,
+            myFadeoutTime, myHideOnFrameResize, myHideOnLinkClick, myClickHandler, myCloseOnClick, myAnimationCycle, myCalloutShift,
+            myPositionChangeXShift, myPositionChangeYShift, myDialogMode, myTitle, myContentInsets, myShadow, mySmallVariant, myBlockClicks,
+            myLayer);
 
     if (myStorage != null && myAnchor != null) {
       List<Balloon> balloons = myStorage.get(myAnchor);

@@ -111,12 +111,19 @@ public class XValuePresentationUtil {
 
     @Override
     public void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
+      myBuilder.append(quoteChar);
       myBuilder.append(value);
+      myBuilder.append(quoteChar);
     }
 
     @Override
     public void renderComment(@NotNull String comment) {
       myBuilder.append(comment);
+    }
+
+    @Override
+    public void renderError(@NotNull String error) {
+      myBuilder.append(error);
     }
 
     @Override

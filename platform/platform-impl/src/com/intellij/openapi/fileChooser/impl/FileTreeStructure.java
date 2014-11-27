@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.intellij.openapi.fileChooser.impl;
 
 import com.intellij.ide.highlighter.ArchiveFileType;
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -52,9 +51,10 @@ public class FileTreeStructure extends AbstractTreeStructure {
     final String name = rootFiles.length == 1 && rootFiles[0] != null ? rootFiles[0].getPresentableUrl() : chooserDescriptor.getTitle();
     myRootElement = new RootFileElement(rootFiles, name, chooserDescriptor.isShowFileSystemRoots());
     myChooserDescriptor = chooserDescriptor;
-    myShowHidden = PropertiesComponent.getInstance().getBoolean("FileChooser.showHiddens", false);
+    myShowHidden = myChooserDescriptor.isShowHiddenFiles();
   }
 
+  @Override
   public boolean isToBuildChildrenInBackground(final Object element) {
     return true;
   }
@@ -67,10 +67,12 @@ public class FileTreeStructure extends AbstractTreeStructure {
     myShowHidden = showHidden;
   }
 
+  @Override
   public final Object getRootElement() {
     return myRootElement;
   }
 
+  @Override
   public Object[] getChildElements(Object nodeElement) {
     if (!(nodeElement instanceof FileElement)) {
       return ArrayUtil.EMPTY_OBJECT_ARRAY;
@@ -117,6 +119,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
   }
 
 
+  @Override
   @Nullable
   public Object getParentElement(Object element) {
     if (element instanceof FileElement) {
@@ -146,7 +149,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
       }
 
       if (parent != null && parent.isValid() && parent.equals(myRootElement.getFile())) {
-        return myRootElement;                       
+        return myRootElement;
       }
 
       if (parent == null) {
@@ -164,16 +167,15 @@ public class FileTreeStructure extends AbstractTreeStructure {
     return file != null && file.isValid() ? file : null;
   }
 
+  @Override
   public final void commit() { }
 
+  @Override
   public final boolean hasSomethingToCommit() {
     return false;
   }
 
-  public final void dispose() {
-    PropertiesComponent.getInstance().setValue("FileChooser.showHiddens", Boolean.toString(myShowHidden));
-  }
-
+  @Override
   @NotNull
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     LOG.assertTrue(element instanceof FileElement, element.getClass().getName());

@@ -22,52 +22,37 @@ import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.PathUtil;
 import org.consulo.lombok.annotations.Logger;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.impl.ModuleLibraryOrderEntryTypeProvider;
 
 /**
  * Library entry for module ("in-place") libraries
- *  @author dsl
+ *
+ * @author dsl
  */
 @Logger
-public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry, WritableOrderEntry {
+public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry {
   private final Library myLibrary;
-  @NonNls public static final String ENTRY_TYPE = "module-library";
   private boolean myExported;
-  @NonNls public static final String EXPORTED_ATTR = "exported";
 
-  //cloning
-  private ModuleLibraryOrderEntryImpl(Library library, RootModelImpl rootModel, boolean isExported, DependencyScope scope) {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-    myLibrary = ((LibraryEx)library).cloneLibrary(getRootModel());
-    doinit();
+  public ModuleLibraryOrderEntryImpl(Library library, ModuleRootLayerImpl rootLayer, boolean isExported, DependencyScope scope, boolean init) {
+    super(ModuleLibraryOrderEntryTypeProvider.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+    myLibrary = library;
     myExported = isExported;
     myScope = scope;
+    Disposer.register(this, myLibrary);
+    if (init) {
+      init();
+    }
   }
 
-  ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, RootModelImpl rootModel) {
-    super(rootModel,  ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-    myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, getRootModel());
-    doinit();
-  }
-
-  ModuleLibraryOrderEntryImpl(Element element, RootModelImpl rootModel) throws InvalidDataException {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-    LOGGER.assertTrue(ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR)));
-    myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
-    myScope = DependencyScope.readExternal(element);
-    myLibrary = LibraryTableImplUtil.loadLibrary(element, getRootModel());
-    doinit();
-  }
-
-  private void doinit() {
+  ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
+    super(ModuleLibraryOrderEntryTypeProvider.getInstance(), moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
+    myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, moduleRootLayer);
     Disposer.register(this, myLibrary);
     init();
   }
@@ -109,7 +94,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
         return "<unknown>";
       }
 
-      final String[] urls = myLibrary.getUrls(OrderRootType.CLASSES);
+      final String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
       if (urls.length > 0) {
         String url = urls[0];
         return PathUtil.toPresentableUrl(url);
@@ -132,27 +117,13 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 
   @Override
   public boolean isSynthetic() {
-    return true;
+    return false;
   }
 
   @Override
-  public OrderEntry cloneEntry(RootModelImpl rootModel,
-                               ProjectRootManagerImpl projectRootManager,
-                               VirtualFilePointerManager filePointerManager) {
-    return new ModuleLibraryOrderEntryImpl(myLibrary, rootModel, myExported, myScope);
+  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
+    return new ModuleLibraryOrderEntryImpl(((LibraryEx)myLibrary).cloneLibrary(rootModel), rootModel, myExported, myScope, true);
   }
-
-  @Override
-  public void writeExternal(Element rootElement) throws WriteExternalException {
-    final Element element = OrderEntryFactory.createOrderEntryElement(ENTRY_TYPE);
-    if (myExported) {
-      element.setAttribute(EXPORTED_ATTR, "");
-    }
-    myScope.writeExternal(element);
-    myLibrary.writeExternal(element);
-    rootElement.addContent(element);
-  }
-
 
   @Override
   public boolean isExported() {

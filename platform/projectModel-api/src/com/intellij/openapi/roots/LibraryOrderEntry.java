@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  *  @author dsl
  */
-public interface LibraryOrderEntry extends LibraryOrSdkOrderEntry, ExportableOrderEntry {
+public interface LibraryOrderEntry extends ExportableOrderEntry, OrderEntryWithTracking {
   @Nullable
   Library getLibrary();
   

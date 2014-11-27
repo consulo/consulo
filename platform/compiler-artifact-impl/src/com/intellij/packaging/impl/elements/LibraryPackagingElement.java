@@ -18,8 +18,8 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
@@ -66,7 +66,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
   public List<? extends PackagingElement<?>> getSubstitution(@NotNull PackagingElementResolvingContext context, @NotNull ArtifactType artifactType) {
     final Library library = findLibrary(context);
     if (library != null) {
-      final VirtualFile[] files = library.getFiles(OrderRootType.CLASSES);
+      final VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
       final List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
       for (VirtualFile file : files) {
         final String path = FileUtil.toSystemIndependentName(PathUtil.getLocalPath(file));
@@ -168,7 +168,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
   public static PackagingElementOutputKind getKindForLibrary(final Library library) {
     boolean containsDirectories = false;
     boolean containsJars = false;
-    for (VirtualFile file : library.getFiles(OrderRootType.CLASSES)) {
+    for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
       if (file.isInLocalFileSystem()) {
         containsDirectories = true;
       }

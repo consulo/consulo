@@ -174,11 +174,11 @@ public abstract class SourceScope {
       }
     }
 
-    public boolean contains(final VirtualFile file) {
+    public boolean contains(@NotNull final VirtualFile file) {
       return findScopeFor(file) != null;
     }
 
-    public int compare(final VirtualFile file1, final VirtualFile file2) {
+    public int compare(@NotNull final VirtualFile file1, @NotNull final VirtualFile file2) {
       final GlobalSearchScope scope = findScopeFor(file1);
       assert scope != null;
       if (scope.contains(file2)) return scope.compare(file1, file2);

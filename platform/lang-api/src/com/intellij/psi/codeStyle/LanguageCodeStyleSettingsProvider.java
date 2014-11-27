@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,10 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
@@ -36,7 +34,7 @@ import java.util.Set;
  */
 public abstract class LanguageCodeStyleSettingsProvider {
   public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME =
-    ExtensionPointName.create("com.intellij.langCodeStyleSettingsProvider");
+          ExtensionPointName.create("com.intellij.langCodeStyleSettingsProvider");
 
   public enum SettingsType {
     BLANK_LINES_SETTINGS, SPACING_SETTINGS, WRAPPING_AND_BRACES_SETTINGS, INDENT_SETTINGS, LANGUAGE_SPECIFIC
@@ -132,14 +130,14 @@ public abstract class LanguageCodeStyleSettingsProvider {
 
   @NotNull
   public static Language[] getLanguagesWithSharedPreview() {
-  final ArrayList<Language> languages = new ArrayList<Language>();
-  for (LanguageCodeStyleSettingsProvider provider : Extensions.getExtensions(EP_NAME)) {
-    if (provider.usesSharedPreview()) {
-      languages.add(provider.getLanguage());
+    final ArrayList<Language> languages = new ArrayList<Language>();
+    for (LanguageCodeStyleSettingsProvider provider : Extensions.getExtensions(EP_NAME)) {
+      if (provider.usesSharedPreview()) {
+        languages.add(provider.getLanguage());
+      }
     }
+    return languages.toArray(new Language[languages.size()]);
   }
-  return languages.toArray(new Language[languages.size()]);
-}
 
   @Nullable
   public static String getCodeSample(Language lang, @NotNull SettingsType settingsType) {
@@ -225,6 +223,10 @@ public abstract class LanguageCodeStyleSettingsProvider {
     return fieldCollector.getCollectedFields();
   }
 
+  public boolean isIndentBasedLanguageSemantics() {
+    return false;
+  }
+
   private final class SupportedFieldCollector implements CodeStyleSettingsCustomizable {
     private final Set<String> myCollectedFields = new HashSet<String>();
     private SettingsType myCurrSettingsType;
@@ -286,6 +288,11 @@ public abstract class LanguageCodeStyleSettingsProvider {
 
     @Override
     public void renameStandardOption(String fieldName, String newTitle) {
+      // Ignore
+    }
+
+    @Override
+    public void moveStandardOption(String fieldName, String newGroup) {
       // Ignore
     }
 

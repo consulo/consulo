@@ -44,21 +44,14 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     setFont(list.getFont());
     mySelected = selected;
     myForeground = list.getForeground();
-    mySelectionForeground = list.getSelectionForeground();
-    if (UIUtil.isWinLafOnVista()) {
-      // the system draws a gradient background on the combobox selected item - don't overdraw it with our solid background
-      if (index == -1) {
-        setOpaque(false);
-        mySelected = false;
-      }
-      else {
-        setOpaque(true);
-        setBackground(selected ? list.getSelectionBackground() : null);
-      }
+
+    if(index == -1) {
+      mySelectionForeground = list.getForeground();
     }
     else {
-      setBackground(selected ? list.getSelectionBackground() : null);
+      mySelectionForeground = list.getSelectionForeground();
     }
+    setBackground(selected ? hasFocus ? UIUtil.getListSelectionBackground() : UIUtil.getListUnfocusedSelectionBackground() : UIUtil.getListBackground());
 
     setPaintFocusBorder(hasFocus);
 

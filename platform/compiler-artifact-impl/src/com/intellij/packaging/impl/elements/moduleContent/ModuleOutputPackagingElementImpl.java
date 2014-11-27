@@ -39,6 +39,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.consulo.util.pointers.NamedPointer;
+import org.consulo.util.pointers.NamedPointerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -106,7 +107,7 @@ public class ModuleOutputPackagingElementImpl
   @NotNull
   @Override
   public Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context) {
-    Module module = myModulePointer.get();
+    Module module = NamedPointerUtil.get(myModulePointer);
     if (module == null) {
       return Collections.emptyList();
     }
@@ -159,7 +160,7 @@ public class ModuleOutputPackagingElementImpl
   @Override
   @Nullable
   public String getModuleName() {
-    return myModulePointer != null ? myModulePointer.getName() : null;
+    return NamedPointerUtil.getName(myModulePointer);
   }
 
   @NotNull
@@ -176,18 +177,15 @@ public class ModuleOutputPackagingElementImpl
   @Override
   @Nullable
   public Module findModule(PackagingElementResolvingContext context) {
-    if (myModulePointer != null) {
-      final Module module = myModulePointer.get();
-      final ModulesProvider modulesProvider = context.getModulesProvider();
-      if (module != null) {
-        if (modulesProvider instanceof DefaultModulesProvider//optimization
-            || ArrayUtil.contains(module, modulesProvider.getModules())) {
-          return module;
-        }
+    final Module module = NamedPointerUtil.get(myModulePointer);
+    final ModulesProvider modulesProvider = context.getModulesProvider();
+    if (module != null) {
+      if (modulesProvider instanceof DefaultModulesProvider//optimization
+          || ArrayUtil.contains(module, modulesProvider.getModules())) {
+        return module;
       }
-      return modulesProvider.getModule(myModulePointer.getName());
     }
-    return null;
+    return modulesProvider.getModule(myModulePointer.getName());
   }
 
   public static class ModuleOutputPackagingElementState {

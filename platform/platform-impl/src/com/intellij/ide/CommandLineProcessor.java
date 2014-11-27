@@ -89,12 +89,7 @@ public class CommandLineProcessor {
   private static Project doOpenFile(VirtualFile virtualFile, int line) {
     final Project[] projects = ProjectManager.getInstance().getOpenProjects();
     if (projects.length == 0) {
-      final PlatformProjectOpenProcessor processor = PlatformProjectOpenProcessor.getInstanceIfItExists();
-      if (processor != null) {
-        return PlatformProjectOpenProcessor.doOpenProject(virtualFile, null, false, line, null, false);
-      }
-      Messages.showErrorDialog("No project found to open file in", "Cannot open file");
-      return null;
+      return PlatformProjectOpenProcessor.doOpenProject(virtualFile, null, false, line, null);
     }
     else {
       Project project = findBestProject(virtualFile, projects);

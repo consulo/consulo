@@ -18,10 +18,13 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo(value = "Use ep 'com.intellij.bundleLiveTemplateSet' for register", until = "2.0")
 public interface DefaultLiveTemplatesProvider {
   ExtensionPointName<DefaultLiveTemplatesProvider> EP_NAME = ExtensionPointName.create("com.intellij.defaultLiveTemplatesProvider");
 

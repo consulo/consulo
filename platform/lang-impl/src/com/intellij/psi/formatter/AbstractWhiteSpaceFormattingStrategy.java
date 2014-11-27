@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
   public CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText,
                                                   @NotNull CharSequence text,
                                                   int startOffset,
-                                                  int endOffset, CodeStyleSettings codeStyleSettings)
+                                                  int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter)
   {
     // Does nothing
     return whiteSpaceText;
@@ -56,8 +56,8 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
                                                   final int endOffset, CodeStyleSettings codeStyleSettings)
   {
     assert startElement.getTextRange().contains(startOffset)
-      : String.format("Element: %s, range: %s, offset: %d", startElement, startElement.getTextRange(), startOffset); 
-    
+            : String.format("Element: %s, range: %s, offset: %d", startElement, startElement.getTextRange(), startOffset);
+
     // Collect target text from the PSI elements and delegate to the text-based method.
     StringBuilder buffer = new StringBuilder();
     for (PsiElement current = startElement; current != null && current.getTextRange().getStartOffset() < endOffset; current = next(current)) {
@@ -66,7 +66,7 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
       if (StringUtil.isEmpty(text)) {
         continue;
       }
-      
+
       int start = startOffset > range.getStartOffset() ? startOffset - range.getStartOffset() : 0;
       if (start >= text.length()) {
         continue;
@@ -82,14 +82,14 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
       }
       else {
         buffer.append(text.substring(start, end));
-      } 
+      }
     }
-    
-    return adjustWhiteSpaceIfNecessary(whiteSpaceText, buffer, 0, endOffset - startOffset, codeStyleSettings);
+
+    return adjustWhiteSpaceIfNecessary(whiteSpaceText, buffer, 0, endOffset - startOffset, codeStyleSettings, null);
   }
 
   @Nullable
-  private static PsiElement next(final @NotNull PsiElement element) {
+  private static PsiElement next(@NotNull final PsiElement element) {
     for (PsiElement anchor = element; anchor != null; anchor = anchor.getParent()) {
       final PsiElement result = element.getNextSibling();
       if (result != null) {

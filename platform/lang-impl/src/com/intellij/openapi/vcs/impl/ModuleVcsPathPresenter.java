@@ -48,12 +48,11 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
     return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
       @Override
       public String compute() {
-        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject)
-          .getFileIndex();
-        Module module = fileIndex.getModuleForFile(file);
-        VirtualFile contentRoot = fileIndex.getContentRootForFile(file);
+        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+        Module module = fileIndex.getModuleForFile(file, false);
+        VirtualFile contentRoot = fileIndex.getContentRootForFile(file, false);
         if (module == null || contentRoot == null) return file.getPresentableUrl();
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append("[");
         result.append(module.getName());
         result.append("] ");
@@ -88,7 +87,7 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
       }
     }
     final RelativePathCalculator calculator =
-      new RelativePathCalculator(toPath.getIOFile().getAbsolutePath(), fromPath.getIOFile().getAbsolutePath());
+            new RelativePathCalculator(toPath.getIOFile().getAbsolutePath(), fromPath.getIOFile().getAbsolutePath());
     calculator.execute();
     final String result = calculator.getResult();
     return (result == null) ? null : result.replace("/", File.separator);

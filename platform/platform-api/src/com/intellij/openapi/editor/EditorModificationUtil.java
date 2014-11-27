@@ -32,7 +32,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 public class EditorModificationUtil {
@@ -40,7 +39,9 @@ public class EditorModificationUtil {
 
   public static void deleteSelectedText(Editor editor) {
     deleteSelectedTextNoScrolling(editor);
-    editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+    if (editor.getCaretModel().getCurrentCaret() == editor.getCaretModel().getPrimaryCaret()) {
+      editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+    }
   }
 
   private static void deleteSelectedTextNoScrolling(Editor editor) {
@@ -97,7 +98,7 @@ public class EditorModificationUtil {
     zeroWidthBlockSelectionAtCaretColumn(editor, startLine, endLine);
   }
 
-  private static void zeroWidthBlockSelectionAtCaretColumn(final Editor editor, final int startLine, final int endLine) {
+  public static void zeroWidthBlockSelectionAtCaretColumn(final Editor editor, final int startLine, final int endLine) {
     int caretColumn = editor.getCaretModel().getLogicalPosition().column;
     editor.getSelectionModel().setBlockSelection(new LogicalPosition(startLine, caretColumn), new LogicalPosition(endLine, caretColumn));
   }
@@ -106,13 +107,21 @@ public class EditorModificationUtil {
     insertStringAtCaret(editor, s, false, true);
   }
 
+  public static int insertStringAtCaret(Editor editor, @NotNull String s, boolean toProcessOverwriteMode) {
+    return insertStringAtCaret(editor, s, toProcessOverwriteMode, s.length());
+  }
+
   public static int insertStringAtCaret(Editor editor, @NotNull String s, boolean toProcessOverwriteMode, boolean toMoveCaret) {
     return insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, s.length());
   }
 
+  public static int insertStringAtCaret(Editor editor, @NotNull String s, boolean toProcessOverwriteMode, int caretShift) {
+    return insertStringAtCaret(editor, s, toProcessOverwriteMode, true, caretShift);
+  }
+
   public static int insertStringAtCaret(Editor editor, @NotNull String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
     int result = insertStringAtCaretNoScrolling(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
-    if (toMoveCaret) {
+    if (toMoveCaret && editor.getCaretModel().getCurrentCaret() == editor.getCaretModel().getPrimaryCaret()) {
       editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
     return result;
@@ -171,31 +180,29 @@ public class EditorModificationUtil {
     return offset;
   }
 
+  /**
+   * @deprecated Use {@link com.intellij.openapi.editor.EditorCopyPasteHelper} methods instead.
+   * (to remove in IDEA 15)
+   */
   @Nullable
   public static TextRange pasteTransferable(final Editor editor, @Nullable Producer<Transferable> producer) {
-    String text = getStringContent(producer);
-    if (text == null) return null;
-
-    if (editor.getCaretModel().supportsMultipleCarets()) {
-      int caretCount = editor.getCaretModel().getCaretCount();
-      final Iterator<String> segments = new ClipboardTextPerCaretSplitter().split(text, caretCount).iterator();
-      editor.getCaretModel().runForEachCaret(new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          insertStringAtCaret(editor, segments.next(), false, true);
-        }
-      });
+    EditorCopyPasteHelper helper = EditorCopyPasteHelper.getInstance();
+    if (producer == null) {
+      TextRange[] ranges = helper.pasteFromClipboard(editor);
+      return ranges != null && ranges.length == 1 ? ranges[0] : null;
+    }
+    Transferable transferable = producer.produce();
+    if (transferable == null) {
       return null;
     }
-    else {
-      int caretOffset = editor.getCaretModel().getOffset();
-      insertStringAtCaret(editor, text, false, true);
-      return new TextRange(caretOffset, caretOffset + text.length());
-    }
+    TextRange[] ranges = helper.pasteTransferable(editor, transferable);
+    return ranges != null && ranges.length == 1 ? ranges[0] : null;
   }
 
   public static void pasteTransferableAsBlock(Editor editor, @Nullable Producer<Transferable> producer) {
-    String text = getStringContent(producer);
+    Transferable content = getTransferable(producer);
+    if (content == null) return;
+    String text = getStringContent(content);
     if (text == null) return;
 
     int caretLine = editor.getCaretModel().getLogicalPosition().line;
@@ -242,19 +249,7 @@ public class EditorModificationUtil {
   }
 
   @Nullable
-  private static String getStringContent(@Nullable Producer<Transferable> producer) {
-    Transferable content = null;
-    if (producer != null) {
-      content = producer.produce();
-    }
-    else {
-      CopyPasteManager manager = CopyPasteManager.getInstance();
-      if (manager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
-        content = manager.getContents();
-      }
-    }
-    if (content == null) return null;
-
+  private static String getStringContent(@NotNull Transferable content) {
     RawText raw = RawText.fromTransferable(content);
     if (raw != null) return raw.rawText;
 
@@ -267,6 +262,19 @@ public class EditorModificationUtil {
     return null;
   }
 
+  private static Transferable getTransferable(Producer<Transferable> producer) {
+    Transferable content = null;
+    if (producer != null) {
+      content = producer.produce();
+    }
+    else {
+      CopyPasteManager manager = CopyPasteManager.getInstance();
+      if (manager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
+        content = manager.getContents();
+      }
+    }
+    return content;
+  }
   /**
    * Calculates difference in columns between current editor caret position and end of the logical line fragment displayed
    * on a current visual line.
@@ -403,6 +411,14 @@ public class EditorModificationUtil {
     }
   }
 
+  public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @NotNull final String str) {
+    typeInStringAtCaretHonorMultipleCarets(editor, str, true, str.length());
+  }
+
+  public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @NotNull final String str, final int caretShift) {
+    typeInStringAtCaretHonorMultipleCarets(editor, str, true, caretShift);
+  }
+
   public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @NotNull final String str, final boolean toProcessOverwriteMode) {
     typeInStringAtCaretHonorMultipleCarets(editor, str, toProcessOverwriteMode, str.length());
   }
@@ -458,5 +474,10 @@ public class EditorModificationUtil {
         caret.moveToOffset(caret.getOffset() + caretShift);
       }
     });
+  }
+
+  public static void moveCaretRelatively(@NotNull Editor editor, final int caretShift) {
+    CaretModel caretModel = editor.getCaretModel();
+    caretModel.moveToOffset(caretModel.getOffset() + caretShift);
   }
 }

@@ -32,7 +32,7 @@ public interface OrderRootTypeUIFactory {
     new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, "com.intellij.orderRootTypeEditor") {
       @Override
       public String getKey(final OrderRootType key) {
-        return key.name();
+        return key.getName();
       }
     };
 

@@ -32,7 +32,6 @@ import org.jmock.Mockery;
 import org.jmock.api.Invocation;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.action.CustomAction;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -223,7 +222,7 @@ public class CachingSoftWrapDataMapperTest {
 
     myRepresentationHelper = new MockEditorTextRepresentationHelper(SPACE_SIZE, TAB_SIZE);
 
-    myMapper = new CachingSoftWrapDataMapper(myEditor, myStorage, myRepresentationHelper);
+    myMapper = new CachingSoftWrapDataMapper(myEditor, myStorage);
   }
   
   @After
@@ -702,7 +701,7 @@ public class CachingSoftWrapDataMapperTest {
     int     foldingStartX;
 
     TestEditorPosition() {
-      super(myEditor, myRepresentationHelper);
+      super(myEditor);
       lineStartPosition = clone();
     }
 

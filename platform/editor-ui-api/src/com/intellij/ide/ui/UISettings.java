@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.ide.ui;
 
 import com.intellij.ide.IdeBundle;
@@ -31,6 +30,7 @@ import com.intellij.util.xmlb.Accessor;
 import com.intellij.util.xmlb.SerializationFilter;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Property;
+import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,21 +43,35 @@ import java.util.Map;
 import static com.intellij.util.ui.UIUtil.isValidFont;
 
 @State(
-  name = "UISettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/ui.lnf.xml"
-    )}
+        name = "UISettings",
+        storages = {@Storage(
+                file = StoragePathMacros.APP_CONFIG + "/ui.lnf.xml"
+        )}
 )
 public class UISettings implements PersistentStateComponent<UISettings>, ExportableApplicationComponent {
-  private final EventListenerList myListenerList;
+  /**
+   * Not tabbed pane.
+   */
+  public static final int TABS_NONE = 0;
+
+  public static UISettings getInstance() {
+    return ApplicationManager.getApplication().getComponent(UISettings.class);
+  }
+
+  /**
+   * Use this method if you are not sure whether the application is initialized.
+   *
+   * @return persisted UISettings instance or default values.
+   */
+  public static UISettings getShadowInstance() {
+    Application application = ApplicationManager.getApplication();
+    return application != null ? getInstance() : new UISettings();
+  }
 
   @Property(filter = FontFilter.class)
-  @NonNls
   public String FONT_FACE;
   @Property(filter = FontFilter.class)
   public int FONT_SIZE;
-
   public int RECENT_FILES_LIMIT = 50;
   public int CONSOLE_COMMAND_HISTORY_LIMIT = 300;
   public int EDITOR_TAB_LIMIT = 10;
@@ -76,14 +90,14 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   public boolean SHOW_NAVIGATION_BAR = true;
   public boolean ALWAYS_SHOW_WINDOW_BUTTONS = false;
   public boolean CYCLE_SCROLLING = true;
-  public boolean SCROLL_TAB_LAYOUT_IN_EDITOR;
+  public boolean SCROLL_TAB_LAYOUT_IN_EDITOR = false;
   public boolean SHOW_CLOSE_BUTTON = true;
   public int EDITOR_TAB_PLACEMENT = 1;
   public boolean HIDE_KNOWN_EXTENSION_IN_TABS = false;
   public boolean SHOW_ICONS_IN_QUICK_NAVIGATION = true;
   public boolean CLOSE_NON_MODIFIED_FILES_FIRST = false;
   public boolean ACTIVATE_MRU_EDITOR_ON_CLOSE = false;
-  public boolean ACTIVATE_RIGHT_EDITOR_ON_CLOSE;
+  public boolean ACTIVATE_RIGHT_EDITOR_ON_CLOSE = false;
   public boolean ANTIALIASING_IN_EDITOR = true;
   public boolean MOVE_MOUSE_ON_DEFAULT_BUTTON = false;
   public boolean ENABLE_ALPHA_MODE = false;
@@ -102,20 +116,14 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   public boolean DND_WITH_PRESSED_ALT_ONLY = false;
   public boolean FILE_COLORS_IN_PROJECT_VIEW = false;
   public boolean DEFAULT_AUTOSCROLL_TO_SOURCE = false;
+  @Transient
   public boolean PRESENTATION_MODE = false;
   public int PRESENTATION_MODE_FONT_SIZE = 24;
-
-  /**
-   * Defines whether asterisk is shown on modified editor tab or not
-   */
   public boolean MARK_MODIFIED_TABS_WITH_ASTERISK = false;
-
+  public boolean SHOW_TABS_TOOLTIPS = true;
   public boolean SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = false;
 
-  /**
-   * Not tabbed pane
-   */
-  public static final int TABS_NONE = 0;
+  private final EventListenerList myListenerList;
 
   public UISettings() {
     myListenerList = new EventListenerList();
@@ -131,7 +139,7 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   }
 
   public void addUISettingsListener(@NotNull final UISettingsListener listener, @NotNull Disposable parentDisposable) {
-    myListenerList.add(UISettingsListener.class,listener);
+    myListenerList.add(UISettingsListener.class, listener);
     Disposer.register(parentDisposable, new Disposable() {
       @Override
       public void dispose() {
@@ -144,27 +152,14 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
    * Notifies all registered listeners that UI settings has been changed.
    */
   public void fireUISettingsChanged() {
-    UISettingsListener[] listeners= myListenerList.getListeners(UISettingsListener.class);
+    UISettingsListener[] listeners = myListenerList.getListeners(UISettingsListener.class);
     for (UISettingsListener listener : listeners) {
       listener.uiSettingsChanged(this);
     }
   }
 
-  public static UISettings getInstance() {
-    return ApplicationManager.getApplication().getComponent(UISettings.class);
-  }
-
-  /**
-   * Use this method if you are not sure is application initialized or not
-   * @return UISettings instance or default values
-   */
-  public static UISettings getShadowInstance() {
-    Application application = ApplicationManager.getApplication();
-    return application != null ? getInstance() : new UISettings();
-  }
-
   public void removeUISettingsListener(UISettingsListener listener) {
-    myListenerList.remove(UISettingsListener.class,listener);
+    myListenerList.remove(UISettingsListener.class, listener);
   }
 
   private void setSystemFontFaceAndSize() {
@@ -176,17 +171,9 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   }
 
   private static Pair<String, Integer> getSystemFontFaceAndSize() {
-    final Pair<String,Integer> fontData = UIUtil.getSystemFontData();
+    final Pair<String, Integer> fontData = UIUtil.getSystemFontData();
     if (fontData != null) {
       return fontData;
-    }
-
-    if (SystemInfo.isWindows) {
-      //noinspection HardCodedStringLiteral
-      final Font font = (Font)Toolkit.getDefaultToolkit().getDesktopProperty("win.messagebox.font");
-      if (font != null) {
-        return Pair.create(font.getName(), font.getSize());
-      }
     }
 
     return Pair.create("Dialog", 12);
@@ -259,10 +246,8 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
     fireUISettingsChanged();
   }
 
-  private static final boolean DEFAULT_ALIASING             =
-    SystemProperties.getBooleanProperty("idea.use.default.antialiasing.in.editor", false);
-  private static final boolean FORCE_USE_FRACTIONAL_METRICS =
-    SystemProperties.getBooleanProperty("idea.force.use.fractional.metrics", false);
+  private static final boolean DEFAULT_ALIASING = SystemProperties.getBooleanProperty("idea.use.default.antialiasing.in.editor", false);
+  private static final boolean FORCE_USE_FRACTIONAL_METRICS = SystemProperties.getBooleanProperty("idea.force.use.fractional.metrics", false);
 
   public static void setupAntialiasing(final Graphics g) {
     if (DEFAULT_ALIASING) return;
@@ -313,24 +298,29 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   }
 
   @NotNull
+  @Override
   public File[] getExportFiles() {
     return new File[]{PathManager.getOptionsFile("ui.lnf")};
   }
 
   @NotNull
+  @Override
   public String getPresentableName() {
     return IdeBundle.message("ui.settings");
   }
 
   @NonNls
   @NotNull
+  @Override
   public String getComponentName() {
     return "UISettings";
   }
 
+  @Override
   public void initComponent() {
   }
 
+  @Override
   public void disposeComponent() {
   }
 }

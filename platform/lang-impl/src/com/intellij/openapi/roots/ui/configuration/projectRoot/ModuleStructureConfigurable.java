@@ -16,14 +16,9 @@
 
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
-import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.projectView.impl.ModuleGroupUtil;
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
-import com.intellij.ide.util.projectWizard.NamePathComponent;
-import com.intellij.ide.util.projectWizard.ProjectWizardUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
@@ -35,10 +30,9 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.impl.ClonableOrderEntry;
-import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
-import com.intellij.openapi.roots.impl.RootModelImpl;
+import com.intellij.openapi.roots.LibraryOrderEntry;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ClasspathEditor;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
@@ -48,19 +42,18 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryPro
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureDaemonAnalyzer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.openapi.ui.*;
+import com.intellij.openapi.ui.MasterDetailsComponent;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.NullableComputable;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.projectImport.ProjectImportProvider;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -148,7 +141,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   @Override
   @NotNull
   protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
-    return Collections.singletonList(new MyCopyAction());
+    return Collections.emptyList();//singletonList(new MyCopyAction());
   }
 
   @Override
@@ -658,18 +651,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         importModuleAction.getTemplatePresentation().setIcon(AllIcons.ToolbarDecorator.Import);
         result.add(importModuleAction);
 
-        final NullableComputable<MyNode> selectedNodeRetriever = new NullableComputable<MyNode>() {
-          @Override
-          public MyNode compute() {
-            final TreePath selectionPath = myTree.getSelectionPath();
-            final Object lastPathComponent = selectionPath == null ? null : selectionPath.getLastPathComponent();
-            if (lastPathComponent instanceof MyNode) {
-              return (MyNode)lastPathComponent;
-            }
-            return null;
-          }
-        };
-
         return result.toArray(new AnAction[result.size()]);
       }
     };
@@ -693,7 +674,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     return ProjectBundle.message("empty.module.selection.string");
   }
 
-  private class MyCopyAction extends AnAction implements DumbAware {
+  /*private class MyCopyAction extends AnAction implements DumbAware {
     private MyCopyAction() {
       super(CommonBundle.message("button.copy"), CommonBundle.message("button.copy"), AllIcons.Actions.Copy);
     }
@@ -757,8 +738,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
                 if (entry instanceof ClonableOrderEntry) {
                   modifiableRootModel.addOrderEntry(((ClonableOrderEntry)entry).cloneEntry((RootModelImpl)modifiableRootModel,
                                                                                            (ProjectRootManagerImpl)ProjectRootManager
-                                                                                             .getInstance(myProject),
-                                                                                           VirtualFilePointerManager.getInstance()));
+                                                                                             .getInstance(myProject)));
                 }
               }
 
@@ -792,7 +772,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         e.getPresentation().setEnabled(selectedConfigurable instanceof ModuleConfigurable);
       }
     }
-  }
+  }     */
 
   private class AddModuleAction extends AnAction implements DumbAware {
 
@@ -806,6 +786,20 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     @Override
     public void actionPerformed(final AnActionEvent e) {
       addModule(myImport);
+    }
+
+    @Override
+    public void update(AnActionEvent e) {
+      super.update(e);
+      if(myImport) {
+        Presentation presentation = e.getPresentation();
+        presentation.setEnabledAndVisible(ContainerUtil.find(ProjectImportProvider.EP_NAME.getExtensions(), new Condition<ProjectImportProvider>() {
+          @Override
+          public boolean value(ProjectImportProvider projectImportProvider) {
+            return !projectImportProvider.canCreateNewProject();
+          }
+        }) != null);
+      }
     }
   }
 }

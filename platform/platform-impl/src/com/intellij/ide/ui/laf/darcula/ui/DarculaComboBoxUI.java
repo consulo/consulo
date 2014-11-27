@@ -19,6 +19,7 @@ import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.UIUtil;
+import sun.swing.DefaultLookup;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -72,7 +73,8 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
           if (index == -1) {
             jc.setOpaque(false);
             jc.setForeground(list.getForeground());
-          } else {
+          }
+          else {
             jc.setOpaque(true);
           }
         }
@@ -119,7 +121,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
       @Override
       public Dimension getPreferredSize() {
         int size = getFont().getSize() + 4;
-        if (size%2==1) size++;
+        if (size % 2 == 1) size++;
         return new DimensionUIResource(size, size);
       }
     };
@@ -151,7 +153,8 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
     Object prototypeValue = comboBox.getPrototypeDisplayValue();
     if (prototypeValue != null) {
       display = getSizeForComponent(renderer.getListCellRendererComponent(listBox, prototypeValue, -1, false, false));
-    } else {
+    }
+    else {
       final ComboBoxModel model = comboBox.getModel();
 
       int baseline = -1;
@@ -197,7 +200,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
     return display;
   }
 
-  @Override
+  //@Override
   protected Dimension getSizeForComponent(Component comp) {
     currentValuePane.add(comp);
     comp.setFont(comboBox.getFont());
@@ -219,6 +222,51 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
     Rectangle r = rectangleForCurrentValue();
     paintCurrentValueBackground(g, r, hasFocus);
     paintCurrentValue(g, r, hasFocus);
+  }
+
+  @Override
+  public void paintCurrentValue(Graphics g, Rectangle bounds, boolean hasFocus) {
+    ListCellRenderer renderer = comboBox.getRenderer();
+    Component c;
+
+    if (hasFocus && !isPopupVisible(comboBox)) {
+      c = renderer.getListCellRendererComponent(listBox, comboBox.getSelectedItem(), -1, true, false);
+    }
+    else {
+      c = renderer.getListCellRendererComponent(listBox, comboBox.getSelectedItem(), -1, false, false);
+      c.setBackground(UIManager.getColor("ComboBox.background"));
+    }
+    c.setFont(comboBox.getFont());
+    if (hasFocus && !isPopupVisible(comboBox)) {
+      c.setForeground(DefaultLookup.getColor(comboBox, this, "ComboBox.selectionForeground", listBox.getSelectionForeground()));
+      c.setBackground(comboBox.getBackground());
+    }
+    else {
+      if (comboBox.isEnabled()) {
+        c.setForeground(comboBox.getForeground());
+        c.setBackground(comboBox.getBackground());
+      }
+      else {
+        c.setForeground(DefaultLookup.getColor(comboBox, this, "ComboBox.disabledForeground", null));
+        c.setBackground(DefaultLookup.getColor(comboBox, this, "ComboBox.disabledBackground", null));
+      }
+    }
+
+    // Fix for 4238829: should lay out the JPanel.
+    boolean shouldValidate = false;
+    if (c instanceof JPanel) {
+      shouldValidate = true;
+    }
+
+    int x = bounds.x, y = bounds.y, w = bounds.width, h = bounds.height;
+    if (myPadding != null) {
+      x = bounds.x + myPadding.left;
+      y = bounds.y + myPadding.top;
+      w = bounds.width - (myPadding.left + myPadding.right);
+      h = bounds.height - (myPadding.top + myPadding.bottom);
+    }
+
+    currentValuePane.paintComponent(g, c, comboBox, x, y, w, h, shouldValidate);
   }
 
   @Override
@@ -248,7 +296,8 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
       g.fillRoundRect(xxx, y + 1, width - xxx, height - 4, 5, 5);
       g.setColor(editor.getBackground());
       g.fillRect(xxx, y + 1, 5, height - 4);
-    } else {
+    }
+    else {
       g.setColor(UIUtil.getPanelBackground());
       g.fillRoundRect(x + 1, y + 1, width - 2, height - 4, 5, 5);
     }

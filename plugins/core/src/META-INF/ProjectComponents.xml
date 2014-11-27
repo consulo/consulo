@@ -427,12 +427,6 @@
       <option name="workspace" value="true"/>
       <skipForDefaultProject/>
     </component>
-
-    <component>
-      <interface-class>com.intellij.xdebugger.XDebuggerManager</interface-class>
-      <implementation-class>com.intellij.xdebugger.impl.XDebuggerManagerImpl</implementation-class>
-    </component>
-
    <component>
       <interface-class>com.intellij.compiler.impl.CompilerCacheManager</interface-class>
       <implementation-class>com.intellij.compiler.impl.CompilerCacheManager</implementation-class>
@@ -445,6 +439,10 @@
 
     <component>
       <implementation-class>org.consulo.compiler.CompilerPathsManager</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>org.mustbe.consulo.roots.ExtensionListenerByLayerListenerInvoker</implementation-class>
     </component>
   </project-components>
 </idea-plugin>

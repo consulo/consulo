@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,11 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.impl.EditorImpl;
-import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
+import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDataMapper;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Trinity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,10 +56,10 @@ import java.util.List;
  * @since Aug 31, 2010 10:24:47 AM
  */
 public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAwareDocumentParsingListener, Dumpable {
-  
+
   private static final Logger LOG = Logger.getInstance("#" + CachingSoftWrapDataMapper.class.getName());
   private static final boolean DEBUG_SOFT_WRAP_PROCESSING = false;
-  
+
   /** Caches information for the document visual line starts sorted in ascending order. */
   private final List<CacheEntry>               myCache                               = new ArrayList<CacheEntry>();
   private final List<CacheEntry>               myAffectedByUpdateCacheEntries        = new ArrayList<CacheEntry>();
@@ -72,19 +71,16 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
   private final VisualToLogicalCalculationStrategy myVisualToLogicalStrategy;
   private final EditorEx                           myEditor;
   private final SoftWrapsStorage                   myStorage;
-  private final EditorTextRepresentationHelper     myRepresentationHelper;
   private final CacheEntry                         mySearchKey;
 
-  public CachingSoftWrapDataMapper(@NotNull EditorEx editor, @NotNull SoftWrapsStorage storage,
-                                   @NotNull EditorTextRepresentationHelper representationHelper)
+  public CachingSoftWrapDataMapper(@NotNull EditorEx editor, @NotNull SoftWrapsStorage storage)
   {
     myEditor = editor;
     myStorage = storage;
-    myRepresentationHelper = representationHelper;
-    mySearchKey = new CacheEntry(0, editor, representationHelper);
+    mySearchKey = new CacheEntry(0, editor);
 
-    myOffsetToLogicalStrategy = new OffsetToLogicalCalculationStrategy(editor, storage, myCache, representationHelper);
-    myVisualToLogicalStrategy = new VisualToLogicalCalculationStrategy(editor, storage, myCache, representationHelper);
+    myOffsetToLogicalStrategy = new OffsetToLogicalCalculationStrategy(editor, storage, myCache);
+    myVisualToLogicalStrategy = new VisualToLogicalCalculationStrategy(editor, storage, myCache);
   }
 
   @NotNull
@@ -107,7 +103,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
 
   @Override
   public VisualPosition logicalToVisualPosition(@NotNull LogicalPosition logical, @NotNull VisualPosition softWrapUnawareVisual)
-    throws IllegalStateException
+          throws IllegalStateException
   {
     // We can't use standard strategy-based approach with logical -> visual mapping because folding processing quite often
     // temporarily disables folding. So, there is an inconsistency between cached data (folding aware) and current folding
@@ -126,7 +122,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
     int endIndex = myStorage.getSoftWrapIndex(maxOffset);
     if (endIndex < 0) {
       endIndex = -endIndex - 2; // We subtract '2' instead of '1' here in order to point to offset of the first soft wrap that
-                                // is located before the given logical position.
+      // is located before the given logical position.
     }
 
     // Return eagerly if no soft wraps are registered before the target offset.
@@ -147,8 +143,8 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
 
       // Count soft wrap column offset only if it's located at the same line as the target offset.
       if (column < 0 && softWrap.getStart() >= targetLogicalLineStartOffset) {
-        column = softWrap.getIndentInColumns() + myRepresentationHelper.toVisualColumnSymbolsNumber(
-          myEditor.getDocument().getCharsSequence(), softWrap.getStart(), maxOffset, softWrap.getIndentInPixels()
+        column = softWrap.getIndentInColumns() + SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor).toVisualColumnSymbolsNumber(
+                myEditor.getDocument().getCharsSequence(), softWrap.getStart(), maxOffset, softWrap.getIndentInPixels()
         );
 
         // Count lines introduced by the current soft wrap. We assume that every soft wrap has a single line feed.
@@ -187,8 +183,8 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
     CompositeDataProvider provider;
     try {
       provider = new CompositeDataProvider(
-        new SoftWrapsDataProvider(myStorage), new FoldingDataProvider(myEditor.getFoldingModel().fetchTopLevel()),
-        getTabulationDataProvider(position.visualLine)
+              new SoftWrapsDataProvider(myStorage), new FoldingDataProvider(myEditor.getFoldingModel().fetchTopLevel()),
+              getTabulationDataProvider(position.visualLine)
       );
     }
     finally {
@@ -254,12 +250,12 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
   }
 
   @Override
-  public void onCollapsedFoldRegion(@NotNull FoldRegion foldRegion, int x, int visualLine) {
+  public void onCollapsedFoldRegion(@NotNull FoldRegion foldRegion, int widthInColumns, int visualLine) {
     CacheEntry cacheEntry = getCacheEntryForVisualLine(visualLine, false);
     if (cacheEntry == null) {
       return;
     }
-    cacheEntry.store(new FoldingData(foldRegion, x, myRepresentationHelper, myEditor), foldRegion.getStartOffset());
+    cacheEntry.store(new FoldingData(foldRegion, widthInColumns), foldRegion.getStartOffset());
   }
 
   @Override
@@ -311,7 +307,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
    * <p/>
    * There is a possible case that no such object is registered yet and it may be created if necessary as a result of this
    * method call.
-   * 
+   *
    * @param visualLine          target visual line
    * @param createIfNecessary   flag that indicates if new {@link CacheEntry} object should be created in case no information
    *                            is stored for the target visual line 
@@ -327,7 +323,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
         return lastEntry;
       }
       else if (lastEntry.visualLine < visualLine && createIfNecessary) {
-        CacheEntry result = new CacheEntry(visualLine, myEditor, myRepresentationHelper);
+        CacheEntry result = new CacheEntry(visualLine, myEditor);
         myCache.add(result);
         return result;
       }
@@ -358,7 +354,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
     if (cacheEntryIndex < 0) {
       cacheEntryIndex = start;
       if (createIfNecessary) {
-        myCache.add(cacheEntryIndex, result = new CacheEntry(visualLine, myEditor, myRepresentationHelper));
+        myCache.add(cacheEntryIndex, result = new CacheEntry(visualLine, myEditor));
       }
     }
     else {
@@ -372,7 +368,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
     if (DEBUG_SOFT_WRAP_PROCESSING) {
       log(String.format("xxxxxxxxxxxx CachingSoftWrapDataMapper.onRecalculationStart(%s). Current cache size: %d", event, myCache.size()));
     }
-    
+
     myAffectedByUpdateCacheEntries.clear();
     myNotAffectedByUpdateTailCacheEntries.clear();
     myBeforeChangeState.updateByDocumentOffsets(event.getOldStartOffset(), event.getOldEndOffset(), event.getOldLogicalLinesDiff());
@@ -380,7 +376,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
 
     // Advance offsets of all soft wraps that lay beyond the changed document region.
     advanceSoftWrapOffsets(event.getExactOffsetsDiff(), event.getOldEndOffset());
-    
+
     if (!myBeforeChangeState.cacheShouldBeUpdated) {
       if (DEBUG_SOFT_WRAP_PROCESSING) {
         log(String.format("xxxxxxxxxxxx CachingSoftWrapDataMapper.onRecalculationStart(): performing eager return"));
@@ -389,7 +385,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
       }
       return;
     }
-    
+
     // Remember all trailing entries that lay beyond the changed region.
     int startTrailingIndex = myBeforeChangeState.endCacheEntryIndex;
     if (startTrailingIndex >= 0) {
@@ -403,25 +399,25 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
       myNotAffectedByUpdateTailCacheEntries.addAll(entries);
       entries.clear();
       if (DEBUG_SOFT_WRAP_PROCESSING) {
-        log("xxxxxxxxxxxxx CachingSoftWrapDataMapper.onRecalculationStart(). Marked the following " 
+        log("xxxxxxxxxxxxx CachingSoftWrapDataMapper.onRecalculationStart(). Marked the following "
             + myNotAffectedByUpdateTailCacheEntries.size() + " entries for update: ");
         for (CacheEntry cacheEntry : myNotAffectedByUpdateTailCacheEntries) {
           log("\t" + cacheEntry);
         }
       }
     }
-    
+
     int startAffectedIndex = myBeforeChangeState.startCacheEntryIndex;
     if (startAffectedIndex < 0) {
       startAffectedIndex = -startAffectedIndex - 1;
     }
-    
+
     if (startAffectedIndex < myCache.size()) {
       List<CacheEntry> entries = myCache.subList(startAffectedIndex, myCache.size());
       myAffectedByUpdateCacheEntries.addAll(entries);
       entries.clear();
       if (DEBUG_SOFT_WRAP_PROCESSING) {
-        log("xxxxxxxxxxxxxx   Removed all affected cache entries starting from index " + startAffectedIndex + ". Remaining: " 
+        log("xxxxxxxxxxxxxx   Removed all affected cache entries starting from index " + startAffectedIndex + ". Remaining: "
             + myAffectedByUpdateCacheEntries.size() + " entries affected by the change: " + myAffectedByUpdateCacheEntries);
         for (CacheEntry cacheEntry : myCache) {
           log("\t" + cacheEntry);
@@ -434,7 +430,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
   public void onRecalculationEnd(@NotNull IncrementalCacheUpdateEvent event, boolean normal) {
     if (DEBUG_SOFT_WRAP_PROCESSING) {
       log(String.format(
-        "xxxxxxxxxxxx CachingSoftWrapDataMapper.onRecalculationEnd(%s, %b). Current cache size: %d", event, normal, myCache.size()
+              "xxxxxxxxxxxx CachingSoftWrapDataMapper.onRecalculationEnd(%s, %b). Current cache size: %d", event, normal, myCache.size()
       ));
       if (myCache.size() < 10) {
         log("\tCurrent cache:");
@@ -466,22 +462,13 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
           || (beforeLast.visualLine + 1 == last.visualLine && last.startOffset - beforeLast.endOffset > 1)
           || last.startOffset > myEditor.getDocument().getTextLength())
       {
-        CharSequence editorState = "";
-        if (myEditor instanceof EditorImpl) {
-          editorState = ((EditorImpl)myEditor).dumpState();
-        }
-        LOG.error(
-          "Detected invalid soft wraps cache update",
-          String.format(
-            "Event: %s, normal: %b.%n%nTail cache entries: %s%n%nAffected by change cache entries: %s%n%nBefore change state: %s%n%n"
-            + "After change state: %s%n%nEditor state: %s",
-            event, normal, myNotAffectedByUpdateTailCacheEntries, myAffectedByUpdateCacheEntries,
-            myBeforeChangeState, myAfterChangeState, editorState
-          )
-        );
+        logInvalidUpdate(event, normal);
       }
     }
-    
+    if (!myCache.isEmpty() && myEditor.getDocument().getTextLength() == 0) {
+      logInvalidUpdate(event, normal);
+    }
+
     myAffectedByUpdateCacheEntries.clear();
     myNotAffectedByUpdateTailCacheEntries.clear();
 
@@ -491,6 +478,22 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
     }
 
     myBeforeChangeState.cacheShouldBeUpdated = false;
+  }
+
+  private void logInvalidUpdate(@NotNull IncrementalCacheUpdateEvent event, boolean normal) {
+    CharSequence editorState = "";
+    if (myEditor instanceof EditorImpl) {
+      editorState = ((EditorImpl)myEditor).dumpState();
+    }
+    LOG.error(
+            "Detected invalid soft wraps cache update",
+            String.format(
+                    "Event: %s, normal: %b.%n%nTail cache entries: %s%n%nAffected by change cache entries: %s%n%nBefore change state: %s%n%n"
+                    + "After change state: %s%n%nEditor state: %s",
+                    event, normal, myNotAffectedByUpdateTailCacheEntries, myAffectedByUpdateCacheEntries,
+                    myBeforeChangeState, myAfterChangeState, editorState
+            )
+    );
   }
 
   @Override
@@ -542,13 +545,13 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
     }
 
     log("\nxxxxxxxxxxxxxxxx Soft wraps: " + myStorage.getSoftWraps());
-    
+
     log("xxxxxxxxxx dump complete. Cache size: " + myCache.size() + "\n");
   }
 
   /**
    * Applies given offsets diff to all soft wraps that lay after the given offset
-   * 
+   *
    * @param offsetsDiff   offset diff to apply to the target soft wraps
    * @param offset        offset to use for filtering soft wraps to advance. All soft wraps which offsets are strictly greater
    *                      than the given one should be advanced
@@ -586,7 +589,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
    *   <li>Diff between current region state and remembered one is applied to the cache;</li>
    * </ol>
    * </pre>
-   * 
+   *
    * @param offsetsDiff  offset shift to apply to the tail entries
    */
   private void applyStateChange(int offsetsDiff) {
@@ -623,7 +626,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
       cacheEntry.endSoftWrapLinesBefore += softWrappedLinesDiff;
       cacheEntry.startFoldedLines += foldedLinesDiff;
       cacheEntry.endFoldedLines += foldedLinesDiff;
-    } 
+    }
   }
 
   @NotNull
@@ -642,7 +645,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
    * <p/>
    * One entry is expected to contain information about single visual lines (what logical lines are mapped to it, what fold
    * regions and tabulations are located there etc).
-   * 
+   *
    * @param visualLine   target entry's visual line
    * @param startOffset  target entry's start offset
    * @param endOffset    target entry's end offset
@@ -657,10 +660,10 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
                      int endLogicalLine,
                      int endLogicalColumn,
                      int endVisualColumn,
-                     @NotNull List<Trinity<Integer, Integer, FoldRegion>> foldRegions,
+                     @NotNull List<Pair<Integer, FoldRegion>> foldRegions,
                      @NotNull List<Pair<Integer, Integer>> tabData)
   {
-    final CacheEntry entry = new CacheEntry(visualLine, myEditor, myRepresentationHelper);
+    final CacheEntry entry = new CacheEntry(visualLine, myEditor);
     entry.startOffset = startOffset;
     entry.endOffset = endOffset;
     entry.startLogicalLine = startLogicalLine;
@@ -670,17 +673,16 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
     assert endLogicalLine == myEditor.getDocument().getLineNumber(endOffset);
     entry.endLogicalColumn = endLogicalColumn;
     entry.endVisualColumn = endVisualColumn;
-    for (Trinity<Integer, Integer, FoldRegion> region : foldRegions) {
-      final FoldingData foldData = new FoldingData(region.third, region.second, myRepresentationHelper, myEditor);
-      foldData.widthInColumns = region.first;
-      entry.store(foldData, region.third.getStartOffset());
+    for (Pair<Integer, FoldRegion> region : foldRegions) {
+      final FoldingData foldData = new FoldingData(region.second, region.first);
+      entry.store(foldData, region.second.getStartOffset());
     }
     for (Pair<Integer, Integer> pair : tabData) {
       entry.storeTabData(new TabData(pair.second, pair.first));
     }
     myCache.add(entry);
   }
-  
+
   @SuppressWarnings({"UnusedDeclaration"})
   public static void log(Object o) {
     //try {
@@ -700,7 +702,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
   //  myWriter.newLine();
   //  myWriter.flush();
   //}
-  
+
   private class CacheState {
 
     public boolean cacheShouldBeUpdated = true;
@@ -715,26 +717,26 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
     public void updateByDocumentOffsets(int startOffset, int endOffset, int logicalLinesDiff) {
       reset();
       Document document = myEditor.getDocument();
-      
+
       startCacheEntryIndex = MappingUtil.getCacheEntryIndexForOffset(startOffset, document, myCache);
       endCacheEntryIndex = MappingUtil.getCacheEntryIndexForOffset(endOffset, document, myCache);
-      
+
       logicalLines = logicalLinesDiff;
       visualLines = logicalLinesDiff;
       softWrapLines = myStorage.getNumberOfSoftWrapsInRange(startOffset, endOffset);
       visualLines += softWrapLines;
-      
+
       if (startCacheEntryIndex < 0 && -startCacheEntryIndex - 1 >= myCache.size()) {
         cacheShouldBeUpdated = false;
         return;
       }
-      
+
       // We assume here that the cache contains entries for all visual lines that contain collapsed fold regions.
       foldedLines = 0;
       int startIndex = startCacheEntryIndex;
       if (startIndex < 0) {
         startIndex = -startIndex - 1;
-        
+
         // There is a possible case that the nearest cache entry which start offset is not less than the given start offset layes
         // after the changed region. We just stop processing then.
         if (startIndex >= myCache.size() || myCache.get(startIndex).startOffset > endOffset) {
@@ -770,8 +772,8 @@ public class CachingSoftWrapDataMapper implements SoftWrapDataMapper, SoftWrapAw
     @Override
     public String toString() {
       return String.format(
-        "visual lines: %d, logical lines: %d, soft wrap lines: %d, fold lines: %d, cache entry indices: [%d;%d]",
-        visualLines, logicalLines, softWrapLines, foldedLines, startCacheEntryIndex, endCacheEntryIndex
+              "visual lines: %d, logical lines: %d, soft wrap lines: %d, fold lines: %d, cache entry indices: [%d;%d]",
+              visualLines, logicalLines, softWrapLines, foldedLines, startCacheEntryIndex, endCacheEntryIndex
       );
     }
   }

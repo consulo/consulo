@@ -12,16 +12,16 @@ public interface ExternalSystemProgressNotificationManager {
 
   /**
    * Allows to register given listener to listen events from all tasks.
-   * 
+   *
    * @param listener  listener to register
    * @return          <code>true</code> if given listener was not registered before for the given key;
    *                  <code>false</code> otherwise
    */
   boolean addNotificationListener(@NotNull ExternalSystemTaskNotificationListener listener);
-  
+
   /**
    * Allows to register given listener within the current manager for listening events from the task with the target id. 
-   * 
+   *
    * @param taskId    target task's id
    * @param listener  listener to register
    * @return          <code>true</code> if given listener was not registered before for the given key;

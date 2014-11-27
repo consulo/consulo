@@ -17,59 +17,56 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.ex.ApplicationEx2;
+import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.NamedJDOMExternalizable;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
+import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 
 public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplicationStore {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.components.impl.stores.ApplicationStoreImpl");
+  private static final Logger LOG = Logger.getInstance(ApplicationStoreImpl.class);
 
   private static final String XML_EXTENSION = ".xml";
   private static final String DEFAULT_STORAGE_SPEC = StoragePathMacros.APP_CONFIG + "/" + PathManager.DEFAULT_OPTIONS_FILE_NAME + XML_EXTENSION;
-  private static final String OPTIONS_MACRO = "OPTIONS";
-  private static final String CONFIG_MACRO = "ROOT_CONFIG";
   private static final String ROOT_ELEMENT_NAME = "application";
 
-  private final ApplicationEx2 myApplication;
+  private final ApplicationImpl myApplication;
   private final StateStorageManager myStateStorageManager;
   private final DefaultsStateStorage myDefaultsStateStorage;
 
+  private String myConfigPath;
+
   // created from PicoContainer
   @SuppressWarnings({"UnusedDeclaration"})
-  public ApplicationStoreImpl(final ApplicationEx2 application, PathMacroManager pathMacroManager) {
+  public ApplicationStoreImpl(final ApplicationImpl application, PathMacroManager pathMacroManager) {
     myApplication = application;
     myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application.getPicoContainer()) {
+      private boolean myConfigDirectoryRefreshed;
+
       @Override
-      protected StorageData createStorageData(String storageSpec) {
+      protected StorageData createStorageData(@NotNull String storageSpec) {
         return new FileBasedStorage.FileStorageData(ROOT_ELEMENT_NAME);
       }
 
+      @Nullable
       @Override
-      protected String getOldStorageSpec(Object component, final String componentName, final StateStorageOperation operation) {
-        final String fileName;
-
+      protected String getOldStorageSpec(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation) {
         if (component instanceof NamedJDOMExternalizable) {
-          fileName = StoragePathMacros.APP_CONFIG + "/" + ((NamedJDOMExternalizable)component).getExternalFileName() + XML_EXTENSION;
+          return StoragePathMacros.APP_CONFIG + "/" + ((NamedJDOMExternalizable)component).getExternalFileName() + XML_EXTENSION;
         }
         else {
-          fileName = DEFAULT_STORAGE_SPEC;
+          return DEFAULT_STORAGE_SPEC;
         }
-
-        return fileName;
       }
 
       @Override
       protected String getVersionsFilePath() {
-        return PathManager.getConfigPath() + "/options/appComponentVersions.xml";
+        return getConfigPath() + "/options/appComponentVersions.xml";
       }
 
       @Override
@@ -77,70 +74,70 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
         if (fileSpec.equals(StoragePathMacros.APP_CONFIG + "/" + PathMacrosImpl.EXT_FILE_NAME + XML_EXTENSION)) return null;
         return super.getMacroSubstitutor(fileSpec);
       }
+
+      @Override
+      protected boolean isUseXmlProlog() {
+        return false;
+      }
+
+      @Override
+      protected void beforeFileBasedStorageCreate() {
+        if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
+          try {
+            VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
+            if (configDir != null) {
+              VfsUtilCore.visitChildrenRecursively(configDir, new VirtualFileVisitor() {
+                @Override
+                public boolean visitFile(@NotNull VirtualFile file) {
+                  return !"componentVersions".equals(file.getName());
+                }
+              });
+              VfsUtil.markDirtyAndRefresh(false, true, false, configDir);
+            }
+          }
+          finally {
+            myConfigDirectoryRefreshed = true;
+          }
+        }
+      }
     };
     myDefaultsStateStorage = new DefaultsStateStorage(null);
   }
 
   @Override
   public void load() throws IOException {
-    long start = System.currentTimeMillis();
-    myApplication.initComponents();
-    LOG.info(myApplication.getComponentConfigurations().length + " application components initialized in " + (System.currentTimeMillis() - start) + " ms");
+    long t = System.currentTimeMillis();
+    myApplication.init();
+    t = System.currentTimeMillis() - t;
+    LOG.info(myApplication.getComponentConfigurations().length + " application components initialized in " + t + " ms");
   }
 
   @Override
-  public void setOptionsPath(final String path) {
-    myStateStorageManager.addMacro(StoragePathMacros.getMacroName(StoragePathMacros.APP_CONFIG), path);
-    myStateStorageManager.addMacro(OPTIONS_MACRO, path);
+  public void setOptionsPath(@NotNull String path) {
+    myStateStorageManager.addMacro(StoragePathMacros.APP_CONFIG, path);
   }
 
   @Override
   public void setConfigPath(@NotNull final String configPath) {
-    myStateStorageManager.addMacro(CONFIG_MACRO, configPath);
+    myStateStorageManager.addMacro(StoragePathMacros.ROOT_CONFIG, configPath);
+    myConfigPath = configPath;
   }
 
   @Override
-  public boolean reload(@NotNull final Set<Pair<VirtualFile, StateStorage>> changedFiles,
-                        @NotNull final Collection<String> notReloadableComponents) throws StateStorageException, IOException {
-    final SaveSession saveSession = startSave();
-    final Set<String> componentNames = saveSession.analyzeExternalChanges(changedFiles);
-
-    try {
-      if (componentNames == null) return false;
-
-      for (Pair<VirtualFile, StateStorage> pair : changedFiles) {
-        if (pair.second == null) return false;
-      }
-
-      for (String name : componentNames) {
-        if (!isReloadPossible(Collections.singleton(name))) {
-          notReloadableComponents.add(name);
-        }
-      }
-
-      StorageUtil.logStateDiffInfo(changedFiles, componentNames);
-
-      if (!isReloadPossible(componentNames)) {
-        return false;
-      }
+  @NotNull
+  public String getConfigPath() {
+    String configPath = myConfigPath;
+    if (configPath == null) {
+      // unrealistic case, but we keep backward compatibility
+      configPath = PathManager.getConfigPath();
     }
-    finally {
-      finishSave(saveSession);
-    }
+    return configPath;
+  }
 
-    if (!componentNames.isEmpty()) {
-      myApplication.getMessageBus().syncPublisher(BatchUpdateListener.TOPIC).onBatchUpdateStarted();
-
-      try {
-        doReload(changedFiles, componentNames);
-        reinitComponents(componentNames, false);
-      }
-      finally {
-        myApplication.getMessageBus().syncPublisher(BatchUpdateListener.TOPIC).onBatchUpdateFinished();
-      }
-    }
-
-    return true;
+  @Override
+  @NotNull
+  protected MessageBus getMessageBus() {
+    return myApplication.getMessageBus();
   }
 
   @NotNull
@@ -149,6 +146,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
     return myStateStorageManager;
   }
 
+  @Nullable
   @Override
   protected StateStorage getDefaultsStorage() {
     return myDefaultsStateStorage;

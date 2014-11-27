@@ -16,15 +16,13 @@
 package com.intellij.application.options.codeStyle.arrangement;
 
 import com.intellij.application.options.CodeStyleAbstractPanel;
-import com.intellij.application.options.codeStyle.arrangement.action.RemoveArrangementRuleAction;
+import com.intellij.application.options.codeStyle.arrangement.additional.ForceArrangementPanel;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProviderImpl;
 import com.intellij.application.options.codeStyle.arrangement.group.ArrangementGroupingRulesPanel;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesPanel;
 import com.intellij.lang.Language;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.CommonShortcuts;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
@@ -33,7 +31,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
+import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
@@ -42,8 +40,10 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * @author Denis Zhdanov
@@ -57,6 +57,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
   @NotNull private final ArrangementStandardSettingsAware mySettingsAware;
   @NotNull private final ArrangementGroupingRulesPanel    myGroupingRulesPanel;
   @NotNull private final ArrangementMatchingRulesPanel    myMatchingRulesPanel;
+  @Nullable private final ForceArrangementPanel myForceArrangementPanel;
 
   public ArrangementSettingsPanel(@NotNull CodeStyleSettings settings, @NotNull Language language) {
     super(settings);
@@ -77,18 +78,41 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     ArrangementStandardSettingsManager settingsManager = new ArrangementStandardSettingsManager(mySettingsAware, colorsProvider);
 
     myGroupingRulesPanel = new ArrangementGroupingRulesPanel(settingsManager, colorsProvider);
-    myMatchingRulesPanel = new ArrangementMatchingRulesPanel(settingsManager, colorsProvider);
+    myMatchingRulesPanel = new ArrangementMatchingRulesPanel(myLanguage, settingsManager, colorsProvider);
 
     myContent.add(myGroupingRulesPanel, new GridBag().coverLine().fillCellHorizontally().weightx(1));
-    myContent.add(myMatchingRulesPanel, new GridBag().fillCell().weightx(1).weighty(1));
+    myContent.add(myMatchingRulesPanel, new GridBag().fillCell().weightx(1).weighty(1).coverLine());
+
+
+
+    if (settings.getCommonSettings(myLanguage).isForceArrangeMenuAvailable()) {
+      myForceArrangementPanel = new ForceArrangementPanel();
+      myForceArrangementPanel.setSelectedMode(settings.getCommonSettings(language).FORCE_REARRANGE_MODE);
+      myContent.add(myForceArrangementPanel.getPanel(), new GridBag().anchor(GridBagConstraints.WEST).coverLine().fillCellHorizontally());
+    }
+    else {
+      myForceArrangementPanel = null;
+    }
 
     final List<CompositeArrangementSettingsToken> groupingTokens = settingsManager.getSupportedGroupingTokens();
     myGroupingRulesPanel.setVisible(groupingTokens != null && !groupingTokens.isEmpty());
 
-    AnAction removeRuleAction = new RemoveArrangementRuleAction();
-    removeRuleAction.copyFrom(ActionManager.getInstance().getAction("Arrangement.Rule.Remove"));
-    removeRuleAction.registerCustomShortcutSet(CommonShortcuts.DELETE, myMatchingRulesPanel);
-    myMatchingRulesPanel.putClientProperty(AnAction.ourClientProperty, ContainerUtilRt.newArrayList(removeRuleAction));
+    registerShortcut(ArrangementConstants.MATCHING_RULE_ADD, CommonShortcuts.getNew(), myMatchingRulesPanel);
+    registerShortcut(ArrangementConstants.MATCHING_RULE_REMOVE, CommonShortcuts.getDelete(), myMatchingRulesPanel);
+    registerShortcut(ArrangementConstants.MATCHING_RULE_MOVE_UP, CommonShortcuts.MOVE_UP, myMatchingRulesPanel);
+    registerShortcut(ArrangementConstants.MATCHING_RULE_MOVE_DOWN, CommonShortcuts.MOVE_DOWN, myMatchingRulesPanel);
+    final CustomShortcutSet edit = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+    registerShortcut(ArrangementConstants.MATCHING_RULE_EDIT, edit, myMatchingRulesPanel);
+
+    registerShortcut(ArrangementConstants.GROUPING_RULE_MOVE_UP, CommonShortcuts.MOVE_UP, myGroupingRulesPanel);
+    registerShortcut(ArrangementConstants.GROUPING_RULE_MOVE_DOWN, CommonShortcuts.MOVE_DOWN, myGroupingRulesPanel);
+  }
+
+  private void registerShortcut(@NotNull String actionId, @NotNull ShortcutSet shortcut, @NotNull JComponent component) {
+    final AnAction action = ActionManager.getInstance().getAction(actionId);
+    if (action != null) {
+      action.registerCustomShortcutSet(shortcut, component, this);
+    }
   }
 
   @Nullable
@@ -116,13 +140,22 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
   @Override
   public void apply(CodeStyleSettings settings) {
     CommonCodeStyleSettings commonSettings = settings.getCommonSettings(myLanguage);
-    commonSettings.setArrangementSettings(new StdRulePriorityAwareSettings(myGroupingRulesPanel.getRules(), myMatchingRulesPanel.getRules()));
+    commonSettings.setArrangementSettings(createSettings());
+    if (myForceArrangementPanel != null) {
+      commonSettings.FORCE_REARRANGE_MODE = myForceArrangementPanel.getRearrangeMode();
+    }
   }
 
   @Override
   public boolean isModified(CodeStyleSettings settings) {
-    StdArrangementSettings s = new StdRulePriorityAwareSettings(myGroupingRulesPanel.getRules(), myMatchingRulesPanel.getRules());
-    return !Comparing.equal(getSettings(settings), s);
+    final StdArrangementSettings s = createSettings();
+    return !Comparing.equal(getSettings(settings), s)
+           || myForceArrangementPanel != null && settings.getCommonSettings(myLanguage).FORCE_REARRANGE_MODE != myForceArrangementPanel.getRearrangeMode();
+  }
+
+  private StdArrangementSettings createSettings() {
+    final List<ArrangementGroupingRule> groupingRules = myGroupingRulesPanel.getRules();
+    return new StdArrangementSettings(groupingRules, myMatchingRulesPanel.getSections());
   }
 
   @Override
@@ -130,21 +163,22 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     StdArrangementSettings s = getSettings(settings);
     if (s == null) {
       myGroupingRulesPanel.setRules(null);
-      myMatchingRulesPanel.setRules(null);
+      myMatchingRulesPanel.setSections(null);
     }
     else {
       List<ArrangementGroupingRule> groupings = s.getGroupings();
-      if (!groupings.isEmpty()) {
-        myGroupingRulesPanel.setRules(ContainerUtilRt.newArrayList(groupings));
+      myGroupingRulesPanel.setRules(ContainerUtilRt.newArrayList(groupings));
+      myMatchingRulesPanel.setSections(copy(s.getSections()));
+      if (myForceArrangementPanel != null) {
+        myForceArrangementPanel.setSelectedMode(settings.getCommonSettings(myLanguage).FORCE_REARRANGE_MODE);
       }
-      myMatchingRulesPanel.setRules(copy(s.getRules()));
     }
   }
 
   @NotNull
-  private static List<StdArrangementMatchRule> copy(@NotNull List<StdArrangementMatchRule> rules) {
-    List<StdArrangementMatchRule> result = new ArrayList<StdArrangementMatchRule>();
-    for (StdArrangementMatchRule rule : rules) {
+  private static List<ArrangementSectionRule> copy(@NotNull List<ArrangementSectionRule> rules) {
+    List<ArrangementSectionRule> result = new ArrayList<ArrangementSectionRule>();
+    for (ArrangementSectionRule rule : rules) {
       result.add(rule.clone());
     }
     return result;

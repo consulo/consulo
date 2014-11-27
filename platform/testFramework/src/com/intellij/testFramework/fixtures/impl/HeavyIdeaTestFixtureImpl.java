@@ -201,7 +201,7 @@ class HeavyIdeaTestFixtureImpl extends BaseFixture implements HeavyIdeaTestFixtu
         Editor editor = (Editor)getData(PlatformDataKeys.EDITOR.getName());
         if (editor != null) {
           FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(myProject);
-          return manager.getData(dataId, editor, manager.getSelectedFiles()[0]);
+          return manager.getData(dataId, editor, editor.getCaretModel().getCurrentCaret());
         }
         else if (LangDataKeys.IDE_VIEW.is(dataId)) {
           VirtualFile[] contentRoots = ProjectRootManager.getInstance(myProject).getContentRoots();

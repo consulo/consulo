@@ -16,10 +16,16 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.DocumentationOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
+import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Root types that can be queried from OrderEntry.
@@ -27,16 +33,40 @@ import java.util.*;
  * @author dsl
  */
 public class OrderRootType {
-  private final String myName;
-  private static boolean ourExtensionsLoaded = false;
+  private static final ExtensionPointName<OrderRootType> EP_NAME = ExtensionPointName.create("com.intellij.orderRootType");
 
-  public static final ExtensionPointName<OrderRootType> EP_NAME = ExtensionPointName.create("com.intellij.orderRootType");
+  private static AtomicNotNullLazyValue<OrderRootType[]> ourExtensions = new AtomicNotNullLazyValue<OrderRootType[]>() {
+    @NotNull
+    @Override
+    protected OrderRootType[] compute() {
+      return EP_NAME.getExtensions();
+    }
+  };
 
-  protected static PersistentOrderRootType[] ourPersistentOrderRootTypes = new PersistentOrderRootType[0];
+  private static AtomicNotNullLazyValue<OrderRootType[]> ourSortExtensions = new AtomicNotNullLazyValue<OrderRootType[]>() {
+    @NotNull
+    @Override
+    protected OrderRootType[] compute() {
+      OrderRootType[] extensions = ourExtensions.getValue();
+      Arrays.sort(extensions, new Comparator<OrderRootType>() {
+        @Override
+        public int compare(final OrderRootType o1, final OrderRootType o2) {
+          return o1.getName().compareTo(o2.getName());
+        }
+      });
+      return extensions;
+    }
+  };
 
-  protected OrderRootType(@NonNls String name) {
-    myName = name;
-  }
+  /**
+   * Binaries without output directories for modules.
+   * Includes:
+   * <li>  binaries roots for libraries and sdk
+   * <li>  recursively for module dependencies: only exported items
+   */
+  @Deprecated
+  @DeprecationInfo(value = "Use BinariesOrderRootType#getInstance()", until = "1.0")
+  public static final OrderRootType BINARIES = BinariesOrderRootType.getInstance();
 
   /**
    * Classpath without output directories for modules.
@@ -44,7 +74,9 @@ public class OrderRootType {
    * <li>  classes roots for libraries and sdk
    * <li>  recursively for module dependencies: only exported items
    */
-  public static final OrderRootType CLASSES = new PersistentOrderRootType("CLASSES", "classPath");
+  @Deprecated
+  @DeprecationInfo(value = "Use BinariesOrderRootType#getInstance()", until = "1.0")
+  public static final OrderRootType CLASSES = BinariesOrderRootType.getInstance();
 
   /**
    * Sources.
@@ -53,76 +85,59 @@ public class OrderRootType {
    * <li>  source roots for libraries and sdk
    * <li>  recursively for module dependencies: only exported items
    */
-  public static final OrderRootType SOURCES = new PersistentOrderRootType("SOURCES", "sourcePath");
+  @Deprecated
+  @DeprecationInfo(value = "Use SourcesOrderRootType#getInstance()", until = "1.0")
+  public static final OrderRootType SOURCES = SourcesOrderRootType.getInstance();
 
   /**
    * Documentation.
    * Generic documentation order root type
    */
-  public static final OrderRootType DOCUMENTATION = new PersistentOrderRootType("DOCUMENTATION", "documentationPath");
+  @Deprecated
+  @DeprecationInfo(value = "Use DocumentationOrderRootType#getInstance()", until = "1.0")
+  public static final OrderRootType DOCUMENTATION = DocumentationOrderRootType.getInstance();
 
-  public String name() {
+  private final String myName;
+
+  protected OrderRootType(@NonNls String name) {
+    myName = name;
+  }
+
+  public String getName() {
     return myName;
   }
 
-  /**
-   * Whether this root type should be skipped when writing a Library if the root type doesn't contain
-   * any roots.
-   *
-   * @return true if empty root type should be skipped, false otherwise.
-   */
-  public boolean skipWriteIfEmpty() {
-    return false;
+  @Deprecated
+  @DeprecationInfo(value = "Use getName()", until = "3.0")
+  public String name() {
+    return getName();
   }
 
-  public static synchronized OrderRootType[] getAllTypes() {
-    return getAllPersistentTypes();
+  public boolean isMe(@NotNull String type) {
+    return type.equals(getName());
   }
 
-  public static PersistentOrderRootType[] getAllPersistentTypes() {
-    if (!ourExtensionsLoaded) {
-      ourExtensionsLoaded = true;
-      Extensions.getExtensions(EP_NAME);
-    }
-    return ourPersistentOrderRootTypes;
+  public static OrderRootType[] getAllTypes() {
+    return ourExtensions.getValue();
   }
 
-  public static List<PersistentOrderRootType> getSortedRootTypes() {
-    List<PersistentOrderRootType> allTypes = new ArrayList<PersistentOrderRootType>();
-    Collections.addAll(allTypes, getAllPersistentTypes());
-    Collections.sort(allTypes, new Comparator<PersistentOrderRootType>() {
-      @Override
-      public int compare(final PersistentOrderRootType o1, final PersistentOrderRootType o2) {
-        return o1.getSdkRootName().compareTo(o2.getSdkRootName());
-      }
-    });
-    return allTypes;
+  public static OrderRootType[] getSortedRootTypes() {
+    return ourSortExtensions.getValue();
   }
 
-  protected static <T> T getOrderRootType(final Class<? extends T> orderRootTypeClass) {
-    OrderRootType[] rootTypes = Extensions.getExtensions(EP_NAME);
-    for(OrderRootType rootType: rootTypes) {
+  public static <T> T getOrderRootType(final Class<? extends T> orderRootTypeClass) {
+    for(OrderRootType rootType: getAllTypes()) {
       if (orderRootTypeClass.isInstance(rootType)) {
         //noinspection unchecked
         return (T)rootType;
       }
     }
-    assert false : "Root type "+orderRootTypeClass+" not found. All roots: "+ Arrays.asList(rootTypes);
+    assert false : "Root type "+orderRootTypeClass+" not found. All roots: "+ Arrays.asList(getAllTypes());
     return null;
   }
 
   @Override
-  public final int hashCode() {
-    return super.hashCode();
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return super.equals(obj);
-  }
-
-  @Override
   public String toString() {
-    return "Root " + name();
+    return "Root " + getName();
   }
 }

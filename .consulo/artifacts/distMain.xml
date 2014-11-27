@@ -88,6 +88,7 @@
           <element id="module-production-resource-output" name="analysis-api" />
           <element id="module-production-resource-output" name="remote-servers-impl" />
           <element id="module-production-resource-output" name="core-api" />
+          <element id="module-output" name="coverage-impl" />
         </element>
         <element id="zip-archive" name="forms_rt.jar">
           <element id="module-output" name="forms_rt" />
@@ -97,6 +98,9 @@
           <element id="module-output" name="util-rt" />
           <element id="module-production-resource-output" name="util" />
         </element>
+        <element id="file-copy" path="$PROJECT_DIR$/platform/coverage-impl/lib/coverage-agent.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/platform/coverage-impl/lib/instrumenter.jar" />
+        <element id="file-copy" path="$PROJECT_DIR$/platform/coverage-impl/lib/coverage-util.jar" />
       </element>
       <element id="directory" name="bin">
         <element id="file-copy" path="$PROJECT_DIR$/bin/appletviewer.policy" />

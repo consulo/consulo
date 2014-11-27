@@ -26,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
  * @since 12/6/11 3:58 PM
  */
 public class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormattingStrategy {
-  
+
   private final WhiteSpaceFormattingStrategy DELEGATE = new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n');
-  
+
   @Override
   public int check(@NotNull CharSequence text, int start, int end) {
     return DELEGATE.check(text, start, end);
@@ -49,7 +49,7 @@ public class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormatting
   public CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText,
                                                   @NotNull CharSequence text,
                                                   int startOffset,
-                                                  int endOffset, CodeStyleSettings codeStyleSettings) {
+                                                  int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter) {
     return whiteSpaceText;
   }
 

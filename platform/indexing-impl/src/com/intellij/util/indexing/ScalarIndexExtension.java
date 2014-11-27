@@ -17,6 +17,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.util.io.DataExternalizer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInput;
@@ -31,6 +32,7 @@ public abstract class ScalarIndexExtension<K> extends FileBasedIndexExtension<K,
 
   public static final DataExternalizer<Void> VOID_DATA_EXTERNALIZER = new VoidDataExternalizer();
 
+  @NotNull
   @Override
   public final DataExternalizer<Void> getValueExternalizer() {
     return VOID_DATA_EXTERNALIZER;

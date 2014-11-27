@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * {@link BlockAlignmentProcessor} implementation for {@link Alignment} that
  * {@link Alignment.Anchor#RIGHT anchors to the right block edge}.
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/28/11 4:06 PM
  */
@@ -38,7 +38,7 @@ public class RightEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor
       return new IndentData(whiteSpace.getIndentSpaces() + offsetResponsibleBlock.getSymbolsAtTheLastLine(), whiteSpace.getSpaces());
     }
     else {
-      final int targetIndent = CoreFormatterUtil.getOffsetBefore(offsetResponsibleBlock)
+      final int targetIndent = CoreFormatterUtil.getStartColumn(offsetResponsibleBlock)
                                + offsetResponsibleBlock.getSymbolsAtTheLastLine();
       final AbstractBlockWrapper prevIndentedBlock = CoreFormatterUtil.getIndentedParentBlock(context.targetBlock);
       if (prevIndentedBlock == null) {
@@ -79,7 +79,7 @@ public class RightEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor
       CompositeBlockWrapper parent = context.targetBlock.getParent();
       if (parent != null) {
         IndentData childOffset = CoreFormatterUtil.getIndent(
-          context.indentOptions, context.targetBlock, context.targetBlock.getStartOffset()
+                context.indentOptions, context.targetBlock, context.targetBlock.getStartOffset()
         );
         if (whiteSpace.getTotalSpaces() > childOffset.getTotalSpaces()) {
           int leftShift = whiteSpace.getTotalSpaces() - childOffset.getTotalSpaces();

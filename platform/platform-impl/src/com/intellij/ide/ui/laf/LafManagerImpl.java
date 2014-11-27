@@ -24,7 +24,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
-import com.intellij.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import com.intellij.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
@@ -90,10 +89,13 @@ import java.util.List;
  * @author Vladimir Kondratyev
  */
 @State(
-  name = "LafManager",
-  roamingType = RoamingType.PER_PLATFORM,
-  storages = {@Storage(
-    file = StoragePathMacros.APP_CONFIG + "/options.xml")})
+        name = "LafManager",
+        storages = {
+                @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml"),
+                @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)
+        },
+        storageChooser = LastStorageChooserForWrite.ElementStateLastStorageChooserForWrite.class
+)
 public final class LafManagerImpl extends LafManager implements ApplicationComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
 
@@ -144,7 +146,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
 
     lafList.add(new ModernWhiteLookAndFeelInfo());
-    lafList.add(new ModernDarkLookAndFeelInfo());
+    //lafList.add(new ModernDarkLookAndFeelInfo());
     lafList.add(new DarculaLookAndFeelInfo());
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
@@ -489,6 +491,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     if (UIUtil.isUnderAquaLookAndFeel()) {
       uiDefaults.put("Panel.opaque", Boolean.TRUE);
+      uiDefaults.put("ScrollBarUI", "com.intellij.ide.ui.laf.IntelliJButtonlessScrollBarUI");
     }
     else if (UIUtil.isWinLafOnVista()) {
       uiDefaults.put("ComboBox.border", null);

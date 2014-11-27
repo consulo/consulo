@@ -31,6 +31,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
@@ -86,14 +87,20 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
             children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(null, libraryOrderEntry), getSettings()));
           }
         }
-        else if (orderEntry instanceof SdkOrderEntry) {
-          final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;
+        else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+          final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
           final Sdk jdk = sdkOrderEntry.getSdk();
           if (jdk != null) {
             if (processedSdk.contains(jdk)) continue;
             processedSdk.add(jdk);
             children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(null, sdkOrderEntry), getSettings()));
           }
+        }
+        else if(orderEntry instanceof OrderEntryWithTracking) {
+          if(!orderEntry.isValid()) {
+            continue;
+          }
+          children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(null, orderEntry), getSettings()));
         }
       }
     }
@@ -102,7 +109,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
 
   public static void addLibraryChildren(final LibraryOrderEntry entry, final List<AbstractTreeNode> children, Project project, ProjectViewNode node) {
     final PsiManager psiManager = PsiManager.getInstance(project);
-    final VirtualFile[] files = entry.getRootFiles(OrderRootType.CLASSES);
+    final VirtualFile[] files = entry.getFiles(BinariesOrderRootType.getInstance());
     for (final VirtualFile file : files) {
       final PsiDirectory psiDir = psiManager.findDirectory(file);
       if (psiDir == null) {

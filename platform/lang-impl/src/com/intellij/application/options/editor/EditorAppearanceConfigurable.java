@@ -16,18 +16,18 @@
 
 package com.intellij.application.options.editor;
 
-import com.intellij.application.options.OptionId;
-import com.intellij.application.options.OptionsApplicabilityFilter;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.options.*;
+import com.intellij.openapi.options.CompositeConfigurable;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ import java.util.List;
  *
  * @author yole
  */
-public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedConfigurable> implements EditorOptionsProvider {
+public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedConfigurable> implements Configurable {
   private static final ExtensionPointName<EditorAppearanceConfigurableEP> EP_NAME = ExtensionPointName.create("com.intellij.editorAppearanceConfigurable");
   private JPanel myRootPanel;
   private JCheckBox myCbBlinkCaret;
@@ -70,9 +70,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
       }
     }
     );
-    if (!OptionsApplicabilityFilter.isApplicable(OptionId.ICONS_IN_GUTTER)) {
-      myCbShowIconsInGutter.setVisible(false);
-    }
   }
 
 
@@ -193,16 +190,5 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
   @Override
   protected List<UnnamedConfigurable> createConfigurables() {
     return ConfigurableWrapper.createConfigurables(EP_NAME);
-  }
-
-  @Override
-  @NotNull
-  public String getId() {
-    return "editor.preferences.appearance";
-  }
-
-  @Override
-  public Runnable enableSearch(final String option) {
-    return null;
   }
 }
