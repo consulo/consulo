@@ -74,10 +74,7 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
     return null;
   }
 
-  public void beforeShown(boolean forward) {
-  }
-
-  public boolean beforeOkAction() {
-    return true;
+  public boolean beforeShown(boolean forward) {
+    return false;
   }
 }

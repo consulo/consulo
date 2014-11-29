@@ -1,4 +1,4 @@
-package com.intellij.platform.templates.github;
+package com.intellij.util.io;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

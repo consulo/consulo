@@ -15,193 +15,173 @@
  */
 package com.intellij.ide.customize;
 
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.Pair;
-import com.intellij.ui.ColorUtil;
-import com.intellij.ui.JBCardLayout;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.ui.components.labels.LinkListener;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.openapi.extensions.PluginId;
+import com.intellij.ui.CheckboxTree;
+import com.intellij.ui.CheckedTreeNode;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.util.containers.MultiMap;
+import com.intellij.util.ui.tree.TreeUtil;
+import gnu.trove.THashSet;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.Set;
 
-public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep implements LinkListener<String> {
-  private static final String MAIN = "main";
-  private static final String CUSTOMIZE = "customize";
-  private static final int COLS = 3;
-  private static final TextProvider CUSTOMIZE_TEXT_PROVIDER = new TextProvider() {
-    @Override
-    public String getText() {
-      return "Customize...";
-    }
-  };
-  private static final String SWITCH_COMMAND = "Switch";
-  private static final String CUSTOMIZE_COMMAND = "Customize";
-  private final JBCardLayout myCardLayout;
-  private final IdSetPanel myCustomizePanel;
+public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
+  private final MultiMap<String, IdeaPluginDescriptor> myPluginDescriptors;
+  private final CustomizeSelectTemplateStepPanel myTemplateStepPanel;
+  private final CheckedTreeNode myRoot;
 
-  public CustomizePluginsStepPanel() {
-    myCardLayout = new JBCardLayout();
-    setLayout(myCardLayout);
-    JPanel gridPanel = new JPanel(new GridLayout(0, COLS));
-    myCustomizePanel = new IdSetPanel();
-    JBScrollPane scrollPane =
-            new JBScrollPane(gridPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-    scrollPane.setBorder(null);
-    add(scrollPane, MAIN);
-    add(myCustomizePanel, CUSTOMIZE);
+  public CustomizePluginsStepPanel(MultiMap<String, IdeaPluginDescriptor> pluginDescriptors, @Nullable CustomizeSelectTemplateStepPanel templateStepPanel) {
+    myPluginDescriptors = pluginDescriptors;
+    myTemplateStepPanel = templateStepPanel;
+    setLayout(new BorderLayout());
 
-    Map<String, Pair<String, List<String>>> groups = PluginGroups.getInstance().getTree();
-    for (final Map.Entry<String, Pair<String, List<String>>> entry : groups.entrySet()) {
-      final String group = entry.getKey();
-      if (PluginGroups.CORE.equals(group)) continue;
+    myRoot = new CheckedTreeNode(null);
+    for (Map.Entry<String, Collection<IdeaPluginDescriptor>> entry : pluginDescriptors.entrySet()) {
+      String key = entry.getKey();
+      Collection<IdeaPluginDescriptor> value = entry.getValue();
 
-      JPanel groupPanel = new JPanel(new GridBagLayout()) {
-        @Override
-        public Color getBackground() {
-          Color color = UIManager.getColor("Panel.background");
-          return isGroupEnabled(group)? color : ColorUtil.darker(color, 1);
-        }
-      };
-      gridPanel.setOpaque(true);
-      GridBagConstraints gbc = new GridBagConstraints();
-      gbc.fill = GridBagConstraints.BOTH;
-      gbc.gridwidth = GridBagConstraints.REMAINDER;
-      gbc.weightx = 1;
-      JLabel titleLabel = new JLabel("<html><body><h2 style=\"text-align:left;\">" + group + "</h2></body></html>", SwingConstants.CENTER) {
-        @Override
-        public boolean isEnabled() {
-          return isGroupEnabled(group);
-        }
-      };
-      groupPanel.add(new JLabel(IconLoader.getIcon(entry.getValue().getFirst())), gbc);
-      //gbc.insets.bottom = 5;
-      groupPanel.add(titleLabel, gbc);
-      JLabel descriptionLabel = new JLabel(PluginGroups.getInstance().getDescription(group), SwingConstants.CENTER) {
-        @Override
-        public Dimension getPreferredSize() {
-          Dimension size = super.getPreferredSize();
-          size.width = Math.min(size.width, 200);
-          return size;
-        }
-
-        @Override
-        public boolean isEnabled() {
-          return isGroupEnabled(group);
-        }
-
-        @Override
-        public Color getForeground() {
-          return ColorUtil.withAlpha(UIManager.getColor("Label.foreground"), .75);
-        }
-      };
-      groupPanel.add(descriptionLabel, gbc);
-      gbc.weighty = 1;
-      groupPanel.add(Box.createVerticalGlue(), gbc);
-      gbc.weighty = 0;
-      JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
-      buttonsPanel.setOpaque(false);
-      if (PluginGroups.getInstance().getSets(group).size() == 1) {
-        buttonsPanel.add(createLink(SWITCH_COMMAND + ":" + group, getGroupSwitchTextProvider(group)));
+      DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(key);
+      for (IdeaPluginDescriptor ideaPluginDescriptor : value) {
+        CheckedTreeNode newChild = new CheckedTreeNode(ideaPluginDescriptor);
+        newChild.setChecked(false);
+        groupNode.add(newChild);
       }
-      else {
-        buttonsPanel.add(createLink(CUSTOMIZE_COMMAND + ":" + group, CUSTOMIZE_TEXT_PROVIDER));
-        buttonsPanel.add(createLink(SWITCH_COMMAND + ":" + group, getGroupSwitchTextProvider(group)));
-      }
-      groupPanel.add(buttonsPanel, gbc);
-      gridPanel.add(groupPanel);
+      myRoot.add(groupNode);
     }
 
-    int cursor = 0;
-    Component[] components = gridPanel.getComponents();
-    int rowCount = components.length / COLS;
-    for (Component component : components) {
-      ((JComponent)component).setBorder(
-              new CompoundBorder(new CustomLineBorder(ColorUtil.withAlpha(JBColor.foreground(), .2), 0, 0, cursor / 3 < rowCount - 1 ? 1 : 0,
-                                                      cursor % COLS != COLS - 1 ? 1 : 0) {
-                @Override
-                protected Color getColor() {
-                  return ColorUtil.withAlpha(JBColor.foreground(), .2);
-                }
-              }, BorderFactory.createEmptyBorder(GAP / 2, GAP, GAP / 2, GAP)));
-      cursor++;
+    val checkboxTree = new CheckboxTree(new CheckboxTree.CheckboxTreeCellRenderer() {
+      @Override
+      public void customizeRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+        String valueOfNode = getValueOfNode(value);
+        if (valueOfNode != null) {
+          getTextRenderer().append(valueOfNode);
+        }
+      }
+    }, myRoot) {
+      @Override
+      protected void onNodeStateChanged(CheckedTreeNode node) {
+        boolean state = node.isChecked();
+
+        Object userObject = node.getUserObject();
+        if(userObject instanceof IdeaPluginDescriptor) {
+          Set<String> deepDependencies = new THashSet<String>();
+          collectDeepDependencies(deepDependencies, (IdeaPluginDescriptor)userObject);
+          setupChecked(myRoot, deepDependencies, state);
+        }
+        repaint();
+      }
+    };
+    TreeUtil.sort(myRoot, new Comparator() {
+      @Override
+      public int compare(Object o1, Object o2) {
+        String stringValue1 = getValueOfNode(o1);
+        String stringValue2 = getValueOfNode(o2);
+        if (stringValue1 != null && stringValue2 != null) {
+          return stringValue1.compareToIgnoreCase(stringValue2);
+        }
+        return 0;
+      }
+    });
+    checkboxTree.setRootVisible(false);
+    TreeUtil.expandAll(checkboxTree);
+    add(ScrollPaneFactory.createScrollPane(checkboxTree, true), BorderLayout.CENTER);
+  }
+
+  private void collectDeepDependencies(Set<String> deepDependencies, IdeaPluginDescriptor ideaPluginDescriptor) {
+    for (PluginId depPluginId : ideaPluginDescriptor.getDependentPluginIds()) {
+      String idString = depPluginId.getIdString();
+      deepDependencies.add(idString);
+
+      for (IdeaPluginDescriptor pluginDescriptor : myPluginDescriptors.values()) {
+        if(pluginDescriptor.getPluginId().equals(depPluginId)) {
+          collectDeepDependencies(deepDependencies, pluginDescriptor);
+        }
+      }
     }
+  }
+
+  private static String getValueOfNode(Object value) {
+    if (value instanceof CheckedTreeNode) {
+      Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
+      if (!(userObject instanceof IdeaPluginDescriptor)) {
+        return null;
+      }
+
+      return ((IdeaPluginDescriptor)userObject).getName();
+    }
+    else if (value instanceof DefaultMutableTreeNode) {
+      Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
+      if (!(userObject instanceof String)) {
+        return null;
+      }
+      return (String)userObject;
+    }
+    return null;
   }
 
   @Override
-  public void linkSelected(LinkLabel linkLabel, String command) {
-    if (command == null || !command.contains(":")) return;
-    int semicolonPosition = command.indexOf(":");
-    String group = command.substring(semicolonPosition + 1);
-    command = command.substring(0, semicolonPosition);
-
-    if (SWITCH_COMMAND.equals(command)) {
-      boolean enabled = isGroupEnabled(group);
-      List<IdSet> sets = PluginGroups.getInstance().getSets(group);
-      for (IdSet idSet : sets) {
-        String[] ids = idSet.getIds();
-        for (String id : ids) {
-          PluginGroups.getInstance().setPluginEnabledWithDependencies(id, !enabled);
-        }
-      }
-      repaint();
-      return;
+  public boolean beforeShown(boolean forward) {
+    if (myTemplateStepPanel == null) {
+      return false;
     }
-    if (CUSTOMIZE_COMMAND.equals(command)) {
-      myCustomizePanel.update(group);
-      myCardLayout.show(this, CUSTOMIZE);
-      setButtonsVisible(false);
-    }
-  }
+    Set<String> enablePluginSet = myTemplateStepPanel.getEnablePluginSet();
 
-  private void setButtonsVisible(boolean visible) {
-    DialogWrapper window = DialogWrapper.findInstance(this);
-    if (window instanceof CustomizeIDEWizardDialog) {
-      ((CustomizeIDEWizardDialog)window).setButtonsVisible(visible);
-    }
-  }
-
-  private LinkLabel createLink(String command, final TextProvider provider) {
-    return new LinkLabel<String>("", null, this, command) {
-      @Override
-      public String getText() {
-        return provider.getText();
-      }
-    };
-  }
-
-  TextProvider getGroupSwitchTextProvider(final String group) {
-    return new TextProvider() {
-      @Override
-      public String getText() {
-        return (isGroupEnabled(group) ? "Disable" : "Enable") +
-               (PluginGroups.getInstance().getSets(group).size() > 1 ? " All" : "");
-      }
-    };
-  }
-
-  private boolean isGroupEnabled(String group) {
-    List<IdSet> sets = PluginGroups.getInstance().getSets(group);
-    for (IdSet idSet : sets) {
-      String[] ids = idSet.getIds();
-      for (String id : ids) {
-        if (PluginGroups.getInstance().isPluginEnabled(id)) return true;
-      }
-    }
+    setupChecked(myRoot, enablePluginSet, null);
     return false;
+  }
+
+  private static void setupChecked(DefaultMutableTreeNode treeNode, Set<String> set, Boolean state) {
+    Object userObject = treeNode.getUserObject();
+    if (userObject instanceof IdeaPluginDescriptor) {
+      String id = ((IdeaPluginDescriptor)userObject).getPluginId().getIdString();
+      boolean contains = set.contains(id);
+      if(state == null) {
+        ((CheckedTreeNode)treeNode).setChecked(contains);
+      }
+      else if(contains) {
+        ((CheckedTreeNode)treeNode).setChecked(state);
+      }
+    }
+
+    int childCount = treeNode.getChildCount();
+    for (int i = 0; i < childCount; i++) {
+      DefaultMutableTreeNode childAt = (DefaultMutableTreeNode)treeNode.getChildAt(i);
+      setupChecked(childAt, set, state);
+    }
+  }
+
+  @NotNull
+  public Set<IdeaPluginDescriptor> getPluginsForDownload() {
+    Set<IdeaPluginDescriptor> set = new THashSet<IdeaPluginDescriptor>();
+    collect(myRoot, set);
+    return set;
+  }
+
+  private static void collect(DefaultMutableTreeNode treeNode, Set<IdeaPluginDescriptor> set) {
+    Object userObject = treeNode.getUserObject();
+    if (userObject instanceof IdeaPluginDescriptor) {
+      CheckedTreeNode checkedTreeNode = (CheckedTreeNode)treeNode;
+      if (checkedTreeNode.isChecked()) {
+        set.add(((IdeaPluginDescriptor)userObject));
+      }
+    }
+
+    int childCount = treeNode.getChildCount();
+    for (int i = 0; i < childCount; i++) {
+      DefaultMutableTreeNode childAt = (DefaultMutableTreeNode)treeNode.getChildAt(i);
+      collect(childAt, set);
+    }
   }
 
   @Override
@@ -211,83 +191,11 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep imple
 
   @Override
   public String getHTMLHeader() {
-    return "<html><body><h2>Tune " +
-           ApplicationNamesInfo.getInstance().getProductName() +
-           " to your tasks</h2>" +
-           "</body></html>";
+    return "<html><body><h2>Select Plugins For Download</body></html>";
   }
 
   @Override
   public String getHTMLFooter() {
     return null;
-  }
-
-  private class IdSetPanel extends JPanel implements LinkListener<String> {
-    private JLabel myTitleLabel = new JLabel();
-    private JPanel myContentPanel = new JPanel(new GridLayout(0, 3, 5, 5));
-    private JButton mySaveButton = new JButton("Save Changes and Go Back");
-    private String myGroup;
-
-    private IdSetPanel() {
-      setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, GAP, true, false));
-      add(myTitleLabel);
-      add(myContentPanel);
-      JPanel buttonPanel = new JPanel(new GridBagLayout());
-      GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets.right = 25;
-      gbc.gridy = 0;
-      buttonPanel.add(mySaveButton, gbc);
-      buttonPanel.add(new LinkLabel<String>("Enable All", null, this, "enable"), gbc);
-      buttonPanel.add(new LinkLabel<String>("Disable All", null, this, "disable"), gbc);
-      gbc.weightx = 1;
-      buttonPanel.add(Box.createHorizontalGlue(), gbc);
-      add(buttonPanel);
-      mySaveButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          myCardLayout.show(CustomizePluginsStepPanel.this, MAIN);
-          setButtonsVisible(true);
-        }
-      });
-    }
-
-    @Override
-    public void linkSelected(LinkLabel aSource, String command) {
-      if (myGroup == null) return;
-      boolean enable = "enable".equals(command);
-      List<IdSet> idSets = PluginGroups.getInstance().getSets(myGroup);
-      for (IdSet set : idSets) {
-        PluginGroups.getInstance().setIdSetEnabled(set, enable);
-      }
-      CustomizePluginsStepPanel.this.repaint();
-    }
-
-    void update(String group) {
-      myGroup = group;
-      myTitleLabel.setText("<html><body><h2 style=\"text-align:left;\">" + group + "</h2></body></html>");
-      myContentPanel.removeAll();
-      List<IdSet> idSets = PluginGroups.getInstance().getSets(group);
-      for (final IdSet set : idSets) {
-        final JCheckBox checkBox = new JCheckBox(set.getTitle(), PluginGroups.getInstance().isIdSetAllEnabled(set));
-        checkBox.setModel(new JToggleButton.ToggleButtonModel() {
-          @Override
-          public boolean isSelected() {
-            return PluginGroups.getInstance().isIdSetAllEnabled(set);
-          }
-        });
-        checkBox.addActionListener(new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            PluginGroups.getInstance().setIdSetEnabled(set, !checkBox.isSelected());
-            CustomizePluginsStepPanel.this.repaint();
-          }
-        });
-        myContentPanel.add(checkBox);
-      }
-    }
-  }
-
-  private interface TextProvider {
-    String getText();
   }
 }

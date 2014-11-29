@@ -13,19 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.internal;
+package com.intellij.ide.customize;
 
-import com.intellij.ide.customize.CustomizeUtil;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.ui.DialogWrapper;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 10.05.14
+ * @since 29.11.14
  */
-public class ShowStartupManagerAction extends AnAction {
+public class CustomizeDownloadDialog extends DialogWrapper {
+
+  public CustomizeDownloadDialog() {
+    super(false);
+    setResizable(false);
+    pack();
+    init();
+  }
+
+  @Nullable
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    CustomizeUtil.show(false);
+  protected JComponent createSouthPanel() {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  protected JComponent createCenterPanel() {
+    return new JLabel("Connecting to plugin manager");
   }
 }

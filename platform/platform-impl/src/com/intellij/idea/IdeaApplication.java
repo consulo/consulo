@@ -20,7 +20,7 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.CommandLineProcessor;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeRepaintManager;
-import com.intellij.ide.customize.CustomizeIDEWizardDialog;
+import com.intellij.ide.customize.CustomizeUtil;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.*;
@@ -234,8 +234,7 @@ public class IdeaApplication {
       }, ModalityState.NON_MODAL);
 
       if(Registry.is("ide.firstStartup")) {
-        CustomizeIDEWizardDialog.initLaf();
-        new CustomizeIDEWizardDialog().show();
+        CustomizeUtil.show(true);
       }
 
       if (!willOpenProject.get()) {

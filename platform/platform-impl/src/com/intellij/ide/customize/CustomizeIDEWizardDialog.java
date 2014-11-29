@@ -15,22 +15,21 @@
  */
 package com.intellij.ide.customize;
 
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.JBCardLayout;
 import com.intellij.util.SystemProperties;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.containers.MultiMap;
+import lombok.val;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +42,8 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
 
   private final JBCardLayout myCardLayout = new JBCardLayout();
   protected final List<AbstractCustomizeWizardStep> mySteps = new ArrayList<AbstractCustomizeWizardStep>();
+  private final MultiMap<String, IdeaPluginDescriptor> myPluginDescriptors;
+  private final MultiMap<String, String> myPredefinedTemplateSets;
   private int myIndex = 0;
   private final JLabel myNavigationLabel = new JLabel();
   private final JLabel myHeaderLabel = new JLabel();
@@ -51,8 +52,10 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   private final JPanel myButtonWrapper = new JPanel(myButtonWrapperLayout);
   private JPanel myContentPanel;
 
-  public CustomizeIDEWizardDialog() {
+  public CustomizeIDEWizardDialog(MultiMap<String, IdeaPluginDescriptor> pluginDescriptors, MultiMap<String, String> predefinedTemplateSets) {
     super(null);
+    myPluginDescriptors = pluginDescriptors;
+    myPredefinedTemplateSets = predefinedTemplateSets;
     setTitle("Customize " + ApplicationNamesInfo.getInstance().getProductName());
     initSteps();
     mySkipButton.addActionListener(this);
@@ -69,7 +72,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   @Override
   protected void dispose() {
     System.clearProperty(StartupActionScriptManager.STARTUP_WIZARD_MODE);
-    if(!SystemProperties.getBooleanProperty("no.ide.firstStartup", false)) {
+    if (!SystemProperties.getBooleanProperty("no.ide.firstStartup", false)) {
       Registry.get("ide.firstStartup").setValue(false);
     }
     super.dispose();
@@ -80,7 +83,19 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     if (SystemInfo.isMac) {
       mySteps.add(new CustomizeKeyboardSchemeStepPanel());
     }
-    mySteps.add(new CustomizePluginsStepPanel());
+
+    val templateStepPanel = myPredefinedTemplateSets.isEmpty() ? null : new CustomizeSelectTemplateStepPanel(myPredefinedTemplateSets);
+    CustomizePluginsStepPanel pluginsStepPanel = null;
+    if (!myPluginDescriptors.isEmpty()) {
+
+      if (templateStepPanel != null) {
+        mySteps.add(templateStepPanel);
+      }
+      pluginsStepPanel = new CustomizePluginsStepPanel(myPluginDescriptors, templateStepPanel);
+      mySteps.add(pluginsStepPanel);
+
+    }
+    mySteps.add(new CustomizeDownloadAndStartStepPanel(this, pluginsStepPanel));
   }
 
   @Override
@@ -155,23 +170,9 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     dispose();
   }
 
-  @Override
-  protected void doOKAction() {
-    for (AbstractCustomizeWizardStep step : mySteps) {
-      if (!step.beforeOkAction()) return;
-    }
-    try {
-      PluginManager.saveDisabledPlugins(PluginGroups.getInstance().getDisabledPluginIds(), false);
-    }
-    catch (IOException ignored) {
-    }
-
-    super.doOKAction();
-  }
-
   private void initCurrentStep(boolean forward) {
     final AbstractCustomizeWizardStep myCurrentStep = mySteps.get(myIndex);
-    myCurrentStep.beforeShown(forward);
+    boolean disableBack = myCurrentStep.beforeShown(forward);
     myCardLayout.swipe(myContentPanel, myCurrentStep.getTitle(), JBCardLayout.SwipeDirection.AUTO, new Runnable() {
       @Override
       public void run() {
@@ -183,14 +184,22 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     });
 
     myBackButton.setVisible(myIndex > 0);
+    if (disableBack) {
+      myBackButton.setVisible(false);
+      mySkipButton.setVisible(false);
+    }
     if (myIndex > 0) {
       myBackButton.setText("Back to " + mySteps.get(myIndex - 1).getTitle());
     }
     mySkipButton.setText("Skip " + (myIndex > 0 ? "Remaining" : "All"));
 
-    myNextButton.setText(myIndex < mySteps.size() - 1
-                         ? "Next: " + mySteps.get(myIndex + 1).getTitle()
-                         : "Start using " + ApplicationNamesInfo.getInstance().getFullProductName());
+    boolean nextButton = myIndex < mySteps.size() - 1;
+    if (nextButton) {
+      myNextButton.setText("Next: " + mySteps.get(myIndex + 1).getTitle());
+    }
+    else {
+      myNextButton.setVisible(false);
+    }
     myHeaderLabel.setText(myCurrentStep.getHTMLHeader());
     myFooterLabel.setText(myCurrentStep.getHTMLFooter());
     StringBuilder navHTML = new StringBuilder("<html><body>");
@@ -203,29 +212,10 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     myNavigationLabel.setText(navHTML.toString());
   }
 
-  public static void initLaf() {
-    String className = null;
-    if(SystemInfo.isMac) {
-      className = "com.apple.laf.AquaLookAndFeel";
-    }
-    else {
-      className = IntelliJLaf.class.getName();
-    }
-    try {
-      UIManager.setLookAndFeel(className);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+  public void updateHeader() {
+    final AbstractCustomizeWizardStep myCurrentStep = mySteps.get(myIndex);
 
-  private static <T extends Component> void getChildren(@NotNull Component c, Class<? extends T> cls, List<T> accumulator) {
-    if (cls.isAssignableFrom(c.getClass())) accumulator.add((T)c);
-    if (c instanceof Container) {
-      Component[] components = ((Container)c).getComponents();
-      for (Component component : components) {
-        getChildren(component, cls, accumulator);
-      }
-    }
+    myHeaderLabel.setText(myCurrentStep.getHTMLHeader());
+    myFooterLabel.setText(myCurrentStep.getHTMLFooter());
   }
 }
