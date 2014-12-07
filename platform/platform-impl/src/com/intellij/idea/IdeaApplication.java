@@ -44,6 +44,7 @@ import com.intellij.openapi.wm.impl.WindowManagerImpl;
 import com.intellij.openapi.wm.impl.X11UiUtil;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.Splash;
+import com.intellij.util.SandboxUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -233,7 +234,7 @@ public class IdeaApplication {
         }
       }, ModalityState.NON_MODAL);
 
-      if(Registry.is("ide.firstStartup")) {
+      if(Registry.is("ide.firstStartup") && !SandboxUtil.isInsideSandbox()) {
         CustomizeUtil.show(true);
       }
 
