@@ -202,8 +202,8 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         OrderRootType type = getRootType(orderEntry);
 
         if (orderEntry instanceof ModuleSourceOrderEntry) {
-          collectRoots(type, ((ModuleSourceOrderEntry)orderEntry).getRootModel(), result, true, !myOrderEnumerator.isProductionOnly(),
-                       ourSourcesToUrlFunc, ourRuntimeToUrlFunc);
+          collectRootUrls(type, ((ModuleSourceOrderEntry)orderEntry).getRootModel(), result, true, !myOrderEnumerator.isProductionOnly(), ourSourcesToUrlFunc,
+                          ourRuntimeToUrlFunc);
         }
         else if (orderEntry instanceof ModuleOrderEntry) {
           ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)orderEntry;
@@ -215,7 +215,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
             boolean includeTests =
               !myOrderEnumerator.isProductionOnly() && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath() ||
               productionOnTests;
-            collectRoots(type, rootModel, result, !productionOnTests, includeTests, ourSourcesToUrlFunc, ourRuntimeToUrlFunc);
+            collectRootUrls(type, rootModel, result, !productionOnTests, includeTests, ourSourcesToUrlFunc, ourRuntimeToUrlFunc);
           }
         }
         else {
@@ -264,24 +264,35 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     return this;
   }
 
-  private <T> void collectRoots(OrderRootType type,
+  private void collectRoots(OrderRootType type,
                                 ModuleRootModel rootModel,
-                                Collection<T> result,
+                                Collection<VirtualFile> result,
                                 final boolean includeProduction,
                                 final boolean includeTests,
-                                NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, T[]> funForSources,
-                                NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, T[]> funForRuntime) {
+                                NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, VirtualFile[]> funForSources,
+                                NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]> funForRuntime) {
 
+    ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(rootModel);
     if (type.equals(SourcesOrderRootType.getInstance())) {
       if (includeProduction) {
-        for (ContentEntry entry : rootModel.getContentEntries()) {
-          Collections.addAll(result, funForSources
-            .fun(entry, includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production()));
+        Predicate<ContentFolderTypeProvider> predicate = includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production();
+        if(rootsProcessor != null) {
+          Collections.addAll(result, rootsProcessor.getFiles(rootModel, predicate));
+        }
+        else {
+          for (ContentEntry entry : rootModel.getContentEntries()) {
+            Collections.addAll(result, funForSources.fun(entry, predicate));
+          }
         }
       }
       else {
-        for (ContentEntry entry : rootModel.getContentEntries()) {
-          Collections.addAll(result, funForSources.fun(entry, ContentFolderScopes.test()));
+        if(rootsProcessor != null) {
+          Collections.addAll(result, rootsProcessor.getFiles(rootModel, ContentFolderScopes.test()));
+        }
+        else {
+          for (ContentEntry entry : rootModel.getContentEntries()) {
+            Collections.addAll(result, funForSources.fun(entry, ContentFolderScopes.test()));
+          }
         }
       }
     }
@@ -294,6 +305,51 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       else {
         Collections.addAll(result, funForRuntime
           .fun(rootModel, includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production()));
+      }
+    }
+  }
+
+  private void collectRootUrls(OrderRootType type,
+                                ModuleRootModel rootModel,
+                                Collection<String> result,
+                                final boolean includeProduction,
+                                final boolean includeTests,
+                                NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]> funForSources,
+                                NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]> funForRuntime) {
+
+    ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(rootModel);
+    if (type.equals(SourcesOrderRootType.getInstance())) {
+      if (includeProduction) {
+        Predicate<ContentFolderTypeProvider> predicate = includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production();
+        if(rootsProcessor != null) {
+          Collections.addAll(result, rootsProcessor.getUrls(rootModel, predicate));
+        }
+        else {
+          for (ContentEntry entry : rootModel.getContentEntries()) {
+            Collections.addAll(result, funForSources.fun(entry, predicate));
+          }
+        }
+      }
+      else {
+        if(rootsProcessor != null) {
+          Collections.addAll(result, rootsProcessor.getUrls(rootModel, ContentFolderScopes.test()));
+        }
+        else {
+          for (ContentEntry entry : rootModel.getContentEntries()) {
+            Collections.addAll(result, funForSources.fun(entry, ContentFolderScopes.test()));
+          }
+        }
+      }
+    }
+    else if (type.equals(BinariesOrderRootType.getInstance())) {
+      if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
+        if (includeTests && includeProduction) {
+          Collections.addAll(result, funForRuntime.fun(rootModel, ContentFolderScopes.productionAndTest()));
+        }
+      }
+      else {
+        Collections.addAll(result, funForRuntime
+                .fun(rootModel, includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production()));
       }
     }
   }

@@ -17,6 +17,9 @@ package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.impl.ModuleRootsProcessor;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
@@ -53,6 +56,9 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   private final Set<Module> myModules;
   private final TObjectIntHashMap<VirtualFile> myRoots = new TObjectIntHashMap<VirtualFile>();
 
+  private ModuleRootsProcessor myRootsProcessor;
+  private ModuleRootManager myModuleRootManager;
+
   public ModuleWithDependenciesScope(@NotNull Module module, @ScopeConstant int options) {
     super(module.getProject());
     myModule = module;
@@ -60,7 +66,9 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
 
     myProjectFileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
 
-    OrderEnumerator en = ModuleRootManager.getInstance(module).orderEntries();
+    myModuleRootManager = ModuleRootManager.getInstance(module);
+    myRootsProcessor = ModuleRootsProcessor.findRootsProcessor(myModuleRootManager);
+    OrderEnumerator en = myModuleRootManager.orderEntries();
     en.recursively();
 
     if (hasOption(COMPILE)) {
@@ -104,8 +112,10 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
         @NotNull
         @Override
         public OrderRootType fun(OrderEntry entry) {
-          if (entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry) return OrderRootType.SOURCES;
-          return OrderRootType.CLASSES;
+          if (entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry) {
+            return SourcesOrderRootType.getInstance();
+          }
+          return BinariesOrderRootType.getInstance();
         }
       }).getRoots());
     }
@@ -152,8 +162,15 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
     if (hasOption(CONTENT)) {
       return myRoots.contains(myProjectFileIndex.getContentRootForFile(file));
     }
-    if (myProjectFileIndex.isInContent(file) && myRoots.contains(myProjectFileIndex.getSourceRootForFile(file))) {
-      return true;
+    if(myProjectFileIndex.isInContent(file)) {
+      if(myRootsProcessor != null) {
+        if(myRootsProcessor.containsFile(myRoots, file)) {
+          return true;
+        }
+      }
+      if(myRoots.contains(myProjectFileIndex.getSourceRootForFile(file))) {
+        return true;
+      }
     }
     return myRoots.contains(myProjectFileIndex.getClassRootForFile(file));
   }

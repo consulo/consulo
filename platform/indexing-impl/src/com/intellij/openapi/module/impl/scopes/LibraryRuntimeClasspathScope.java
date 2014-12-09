@@ -20,6 +20,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.impl.ModuleRootsProcessor;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
@@ -31,6 +32,7 @@ import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.*;
 
@@ -109,7 +111,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
       public LinkedHashSet<VirtualFile> visitModuleSourceOrderEntry(final ModuleSourceOrderEntry moduleSourceOrderEntry,
                                                                     final LinkedHashSet<VirtualFile> value) {
         processedModules.add(moduleSourceOrderEntry.getOwnerModule());
-        ContainerUtil.addAll(value, moduleSourceOrderEntry.getRootModel().getSourceRoots());
+        ContainerUtil.addAll(value, getModuleScopeFiles(moduleSourceOrderEntry.getOwnerModule()));
         return value;
       }
 
@@ -117,9 +119,22 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
       public LinkedHashSet<VirtualFile> visitModuleOrderEntry(ModuleOrderEntry moduleOrderEntry, LinkedHashSet<VirtualFile> value) {
         final Module depModule = moduleOrderEntry.getModule();
         if (depModule != null) {
-          ContainerUtil.addAll(value, ModuleRootManager.getInstance(depModule).getSourceRoots());
+          ContainerUtil.addAll(value, getModuleScopeFiles(depModule));
         }
         return value;
+      }
+
+      @NotNull
+      private VirtualFile[] getModuleScopeFiles(@NotNull final Module module) {
+        ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+
+        ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(moduleRootManager);
+        if(rootsProcessor != null) {
+          return rootsProcessor.getFiles(moduleRootManager, ContentFolderScopes.productionAndTest());
+        }
+        else {
+          return moduleRootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest());
+        }
       }
 
       @Override

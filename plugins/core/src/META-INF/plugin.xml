@@ -579,6 +579,7 @@
       <with attribute="mutableClass" implements="org.consulo.module.extension.MutableModuleExtension"/>
     </extensionPoint>
 
+    <extensionPoint name="moduleRootsProcessor" interface="com.intellij.openapi.roots.impl.ModuleRootsProcessor" />
     <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
     <extensionPoint name="orderEntryTypeProvider" interface="org.mustbe.consulo.roots.OrderEntryTypeProvider"/>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
