@@ -541,6 +541,7 @@
           <orderEntry type="library" name="miglayout-swing" level="project" />
           <orderEntry type="module" module-name="analysis-api" exported="" />
           <orderEntry type="library" name="pty4" level="project" />
+          <orderEntry type="library" name="httpmime-4.3.6" level="project" />
         </module-layer>
       </module>
       <module name="platform/platform-impl" dirurl="file://$PROJECT_DIR$/platform/platform-impl" current-layer="Default">
@@ -1035,4 +1036,3 @@
     </modules>
   </component>
 </project>
-

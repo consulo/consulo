@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.util.net;
 
 import com.intellij.Patches;
@@ -66,7 +65,7 @@ public class NetUtils {
   }
 
   public static boolean isLocalhost(@NotNull String host) {
-    return host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1");
+    return host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1") || host.equals("::1");
   }
 
   private static boolean canBindToLocalSocket(String host, int port) {
@@ -193,15 +192,17 @@ public class NetUtils {
    * @throws com.intellij.openapi.progress.ProcessCanceledException if process was canceled.
    */
   public static int copyStreamContent(@Nullable ProgressIndicator indicator,
-                                      InputStream inputStream,
-                                      OutputStream outputStream,
+                                      @NotNull InputStream inputStream,
+                                      @NotNull OutputStream outputStream,
                                       int expectedContentSize) throws IOException, ProcessCanceledException {
     if (indicator != null) {
       indicator.checkCanceled();
-      if (expectedContentSize < 0) indicator.setIndeterminate(true);
+      if (expectedContentSize < 0) {
+        indicator.setIndeterminate(true);
+      }
     }
 
-    final byte[] buffer = new byte[4 * 1024];
+    final byte[] buffer = new byte[8 * 1024];
     int count;
     int total = 0;
     while ((count = inputStream.read(buffer)) > 0) {
