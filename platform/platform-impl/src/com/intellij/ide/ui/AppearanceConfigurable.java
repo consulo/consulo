@@ -16,6 +16,9 @@
 package com.intellij.ide.ui;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.ui.laf.LafWithColorScheme;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -189,6 +192,14 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
       if (lafManager.checkLookAndFeel(lafInfo)) {
         update = shouldUpdateUI = true;
         lafManager.setCurrentLookAndFeel(lafInfo);
+      }
+
+      if(lafInfo instanceof LafWithColorScheme) {
+        EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
+        EditorColorsScheme editorColorsScheme = editorColorsManager.getScheme(((LafWithColorScheme)lafInfo).getColorSchemeName());
+        if (editorColorsScheme != null) {
+          editorColorsManager.setGlobalScheme(editorColorsScheme);
+        }
       }
     }
 

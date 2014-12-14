@@ -16,6 +16,8 @@
 package com.intellij.ide.ui.laf.modernWhite;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.ui.laf.LafWithColorScheme;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -23,7 +25,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 02.03.14
  */
-public class ModernWhiteLookAndFeelInfo extends UIManager.LookAndFeelInfo {
+public class ModernWhiteLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
   public ModernWhiteLookAndFeelInfo(){
     super(IdeBundle.message("modern.white.intellij.look.and.feel"), ModernWhiteLaf.class.getName());
   }
@@ -36,5 +38,11 @@ public class ModernWhiteLookAndFeelInfo extends UIManager.LookAndFeelInfo {
   @Override
   public int hashCode(){
     return getName().hashCode();
+  }
+
+  @NotNull
+  @Override
+  public String getColorSchemeName() {
+    return getName();
   }
 }

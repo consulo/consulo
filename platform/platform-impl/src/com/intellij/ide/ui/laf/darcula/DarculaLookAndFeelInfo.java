@@ -16,13 +16,15 @@
 package com.intellij.ide.ui.laf.darcula;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.ui.laf.LafWithColorScheme;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaLookAndFeelInfo extends UIManager.LookAndFeelInfo {
+public class DarculaLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
   public DarculaLookAndFeelInfo() {
     super(IdeBundle.message("idea.dark.look.and.feel"), DarculaLaf.class.getName());
   }
@@ -35,5 +37,11 @@ public class DarculaLookAndFeelInfo extends UIManager.LookAndFeelInfo {
   @Override
   public int hashCode() {
     return getName().hashCode();
+  }
+
+  @NotNull
+  @Override
+  public String getColorSchemeName() {
+    return getName();
   }
 }

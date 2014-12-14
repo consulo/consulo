@@ -13,36 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf.modernDark;
+package com.intellij.ide.ui.laf;
 
-import com.intellij.ide.IdeBundle;
-import com.intellij.ide.ui.laf.LafWithColorScheme;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 02.03.14
+ * @since 14.12.14
  */
-public class ModernDarkLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
-  public ModernDarkLookAndFeelInfo(){
-    super(IdeBundle.message("modern.dark.intellij.look.and.feel"), ModernDarkLaf.class.getName());
-  }
-
-  @Override
-  public boolean equals(Object obj){
-    return (obj instanceof ModernDarkLookAndFeelInfo);
-  }
-
-  @Override
-  public int hashCode(){
-    return getName().hashCode();
-  }
-
+public interface LafWithColorScheme {
   @NotNull
-  @Override
-  public String getColorSchemeName() {
-    return "Darcula";
-  }
+  String getColorSchemeName();
 }

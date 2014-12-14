@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,35 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf.intellij;
+package com.intellij.ide.ui.laf;
 
-import com.intellij.ide.IdeBundle;
-import com.intellij.ide.ui.laf.LafWithColorScheme;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 /**
- * @author Konstantin Bulenkov
+ * @author VISTALL
+ * @since 14.12.14
  */
-public class IntelliJLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
-  public IntelliJLookAndFeelInfo(){
-    super(IdeBundle.message("idea.intellij.look.and.feel"), IntelliJLaf.class.getName());
-  }
-
-  @Override
-  public boolean equals(Object obj){
-    return (obj instanceof IntelliJLookAndFeelInfo);
-  }
-
-  @Override
-  public int hashCode(){
-    return getName().hashCode();
+public class MacDefaultLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
+  public MacDefaultLookAndFeelInfo(String name, String className) {
+    super(name, className);
   }
 
   @NotNull
   @Override
   public String getColorSchemeName() {
-    return "Default";
+    return getName();
   }
 }

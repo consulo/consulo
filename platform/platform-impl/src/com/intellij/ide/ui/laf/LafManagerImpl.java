@@ -24,6 +24,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
+import com.intellij.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import com.intellij.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
@@ -33,8 +34,6 @@ import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.JBPopupMenu;
@@ -139,14 +138,16 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     List<UIManager.LookAndFeelInfo> lafList = ContainerUtil.newArrayList();
 
     if (SystemInfo.isMac) {
-      lafList.add(new UIManager.LookAndFeelInfo("Default", UIManager.getSystemLookAndFeelClassName()));
+      lafList.add(new MacDefaultLookAndFeelInfo("Default", UIManager.getSystemLookAndFeelClassName()));
     }
     else {
       lafList.add(new IntelliJLookAndFeelInfo());
     }
 
-    lafList.add(new ModernWhiteLookAndFeelInfo());
-    //lafList.add(new ModernDarkLookAndFeelInfo());
+    if(!SystemInfo.isMac) {
+      lafList.add(new ModernWhiteLookAndFeelInfo());
+      lafList.add(new ModernDarkLookAndFeelInfo());
+    }
     lafList.add(new DarculaLookAndFeelInfo());
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
@@ -315,74 +316,32 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       LOG.error("unknown LookAndFeel : " + lookAndFeelInfo);
       return;
     }
-    boolean old = UIUtil.isUnderDarkBuildInLaf();
-    // Set L&F
-  /*  if (IdeaLookAndFeelInfo.CLASS_NAME.equals(lookAndFeelInfo.getClassName())) { // that is IDEA default LAF
-      IdeaLaf laf = new IdeaLaf();
-      MetalLookAndFeel.setCurrentTheme(new IdeaBlueMetalTheme());
-      try {
-        UIManager.setLookAndFeel(laf);
+    try {
+      LookAndFeel laf = ((LookAndFeel)Class.forName(lookAndFeelInfo.getClassName()).newInstance());
+      if (laf instanceof MetalLookAndFeel) {
+        MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
       }
-      catch (Exception e) {
-        Messages.showMessageDialog(
-          IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()),
-          CommonBundle.getErrorTitle(),
-          Messages.getErrorIcon()
-        );
-        return;
-      }
-    }
-    else if (DarculaLookAndFeelInfo.CLASS_NAME.equals(lookAndFeelInfo.getClassName())) {
-      DarculaLaf laf = new DarculaLaf();
-      try {
-        UIManager.setLookAndFeel(laf);
-        JBColor.setDark(true);
-        IconLoader.setUseDarkIcons(true);
-      }
-      catch (Exception e) {
-        Messages.showMessageDialog(
-          IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()),
-          CommonBundle.getErrorTitle(),
-          Messages.getErrorIcon()
-        );
-        return;
-      }
-    }
-    else*/ { // non default LAF
-      try {
-        LookAndFeel laf = ((LookAndFeel)Class.forName(lookAndFeelInfo.getClassName()).newInstance());
-        if (laf instanceof MetalLookAndFeel) {
-          MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-        }
 
-        boolean dark = laf instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)laf).isDark();
-        JBColor.setDark(dark);
-        IconLoader.setUseDarkIcons(dark);
-        update(old, dark);
-        UIManager.setLookAndFeel(laf);
-      }
-      catch (Exception e) {
-        Messages.showMessageDialog(
-          IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()),
-          CommonBundle.getErrorTitle(),
-          Messages.getErrorIcon()
-        );
-        return;
-      }
+      boolean dark = laf instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)laf).isDark();
+      JBColor.setDark(dark);
+      IconLoader.setUseDarkIcons(dark);
+      fireUpdate();
+      UIManager.setLookAndFeel(laf);
+    }
+    catch (Exception e) {
+      Messages.showMessageDialog(
+        IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()),
+        CommonBundle.getErrorTitle(),
+        Messages.getErrorIcon()
+      );
+      return;
     }
     myCurrentLaf = lookAndFeelInfo;
 
     checkLookAndFeel(lookAndFeelInfo, false);
   }
 
-  private static void update(boolean oldDark, boolean newDark) {
-    if(oldDark != newDark) {
-      String name = newDark ? "Darcula" : EditorColorsScheme.DEFAULT_SCHEME_NAME;
-      final EditorColorsScheme scheme = EditorColorsManager.getInstance().getScheme(name);
-      if (scheme != null) {
-        EditorColorsManager.getInstance().setGlobalScheme(scheme);
-      }
-    }
+  private static void fireUpdate() {
 
     UISettings.getInstance().fireUISettingsChanged();
     EditorFactory.getInstance().refreshAllEditors();
