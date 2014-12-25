@@ -23,10 +23,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-/**
- * @see com.intellij.openapi.fileTypes.StdFileTypes
- * @see com.intellij.openapi.fileTypes.FileTypes
- */
 public interface FileType extends Named {
   FileType[] EMPTY_ARRAY = new FileType[0];
 
