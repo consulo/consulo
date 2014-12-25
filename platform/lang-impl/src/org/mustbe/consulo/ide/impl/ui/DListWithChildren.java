@@ -76,6 +76,7 @@ public class DListWithChildren extends JBList {
 
   public DListWithChildren() {
     setModel(new MyModel());
+    setFocusable(false);
     setCellRenderer(new ColoredListCellRenderer<DListItem>() {
       @Override
       protected void customizeCellRenderer(JList list, DListItem value, int index, boolean selected, boolean hasFocus) {
@@ -142,9 +143,9 @@ public class DListWithChildren extends JBList {
   }
 
   public void select(@NotNull DListItem root) {
+    removeSelectionInterval(0, getItemsCount());
     mySelected = root;
 
-    removeSelectionInterval(0, getItemsCount());
     MyModel model = (MyModel)getModel();
     model.fireContentsChanged(this, -1, -1);
   }
