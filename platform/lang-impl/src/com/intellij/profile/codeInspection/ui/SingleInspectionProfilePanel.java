@@ -909,7 +909,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     myBrowser = new JEditorPane(UIUtil.HTML_MIME, EMPTY_HTML);
     myBrowser.setEditable(false);
     myBrowser.setBorder(IdeBorderFactory.createEmptyBorder(5, 5, 5, 5));
-    myBrowser.addHyperlinkListener(new BrowserHyperlinkListener());
+    myBrowser.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
 
     initDescriptors();
     fillTreeData(myProfileFilter != null ? myProfileFilter.getFilter() : null, true);

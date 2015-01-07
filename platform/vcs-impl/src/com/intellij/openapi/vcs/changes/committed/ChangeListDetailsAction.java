@@ -98,7 +98,7 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
     editorPane.setEditable(false);
     editorPane.setBackground(HintUtil.INFORMATION_COLOR);
     editorPane.select(0, 0);
-    editorPane.addHyperlinkListener(new BrowserHyperlinkListener());
+    editorPane.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(editorPane);
     final JBPopup hint =
       JBPopupFactory.getInstance().createComponentPopupBuilder(scrollPane, editorPane)

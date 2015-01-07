@@ -51,7 +51,7 @@ public class GotItPanel {
     myMessage = new JEditorPane("text/html", "<html></html>");
     myMessage.setEditorKit(UIUtil.getHTMLEditorKit());
     myMessage.setEditable(false);
-    myMessage.addHyperlinkListener(new BrowserHyperlinkListener());
+    myMessage.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
     myMessage.setFont(UIUtil.getLabelFont().deriveFont(UIUtil.getLabelFont().getSize() + 2f));
   }
 }

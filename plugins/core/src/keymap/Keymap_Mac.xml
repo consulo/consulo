@@ -178,15 +178,15 @@
     </action>
     <action id="ContextHelp">
     </action>
-    <action id="ActivateMessagesToolWindow">
-      <keyboard-shortcut first-keystroke="meta 0"/>
-    </action>
     <action id="NewElement">
       <keyboard-shortcut first-keystroke="meta N"/>
       <keyboard-shortcut first-keystroke="control ENTER"/>
     </action>
     <action id="NewElementSamePlace">
       <keyboard-shortcut first-keystroke="control alt N"/>
+    </action>
+    <action id="ActivateProblemsToolWindow">
+      <keyboard-shortcut first-keystroke="meta 0"/>
     </action>
     <action id="ActivateProjectToolWindow">
       <keyboard-shortcut first-keystroke="meta 1"/>
@@ -212,7 +212,7 @@
     <action id="ActivateHierarchyToolWindow">
       <keyboard-shortcut first-keystroke="meta 8"/>
     </action>
-    <action id="ActivateChangesToolWindow">
+    <action id="ActivateVersionControlToolWindow">
       <keyboard-shortcut first-keystroke="meta 9"/>
     </action>
     <action id="Generate">

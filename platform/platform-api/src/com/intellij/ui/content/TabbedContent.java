@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package com.intellij.ui.content;
 
-import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.util.Pair;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.event.HyperlinkEvent;
+import javax.swing.*;
+import java.util.List;
 
 /**
- * @author yole
+ * @author Konstantin Bulenkov
+ * @since 14.1
  */
-public class BrowserHyperlinkListener extends HyperlinkAdapter {
-  public static final BrowserHyperlinkListener INSTANCE = new BrowserHyperlinkListener();
-
-  @Override
-  protected void hyperlinkActivated(HyperlinkEvent e) {
-    BrowserUtil.browse(e.getDescription());
-  }
+public interface TabbedContent extends Content {
+  void addContent(@NotNull JComponent content, @NotNull String name, boolean selectTab);
+  void removeContent(@NotNull JComponent content);
+  void selectContent(int index);
+  List<Pair<String, JComponent>> getTabs();
+  String getTitlePrefix();
+  void setTitlePrefix(String titlePrefix);
 }

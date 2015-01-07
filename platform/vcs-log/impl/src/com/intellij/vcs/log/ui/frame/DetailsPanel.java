@@ -157,7 +157,7 @@ class DetailsPanel extends JPanel implements ListSelectionListener {
       super(UIUtil.HTML_MIME, "");
       setEditable(false);
       myProject = project;
-      addHyperlinkListener(new BrowserHyperlinkListener());
+      addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
       setOpaque(false);
     }
 

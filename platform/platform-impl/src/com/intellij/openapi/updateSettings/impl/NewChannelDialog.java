@@ -62,7 +62,7 @@ public class NewChannelDialog extends DialogWrapper {
   @Override
   protected JComponent createCenterPanel() {
     JEditorPane pane = new JEditorPane(UIUtil.HTML_MIME, myInformationText);
-    pane.addHyperlinkListener(new BrowserHyperlinkListener());
+    pane.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
     pane.setEditable(false);
     pane.setBackground(UIUtil.getLabelBackground());
     JBScrollPane scrollPane = new JBScrollPane(pane);

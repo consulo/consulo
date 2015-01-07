@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,7 +140,7 @@ public abstract class ProjectLevelVcsManager {
 
   @Nullable
   public abstract VcsRoot getVcsRootObjectFor(final VirtualFile file);
-  
+
   @Nullable
   public abstract VcsRoot getVcsRootObjectFor(FilePath file);
 
@@ -229,7 +229,8 @@ public abstract class ProjectLevelVcsManager {
   public abstract boolean isBackgroundVcsOperationRunning();
 
   public abstract List<VirtualFile> getRootsUnderVcsWithoutFiltering(final AbstractVcs vcs);
-  public abstract VirtualFile[] getRootsUnderVcs(AbstractVcs vcs);
+
+  public abstract VirtualFile[] getRootsUnderVcs(@NotNull AbstractVcs vcs);
 
   /**
    * Also includes into list all modules under roots
@@ -257,7 +258,7 @@ public abstract class ProjectLevelVcsManager {
   public abstract void setDirectoryMappings(final List<VcsDirectoryMapping> items);
 
   public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator);
-  
+
   public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator,
                                       @Nullable VirtualFileFilter directoryFilter);
 
@@ -272,8 +273,10 @@ public abstract class ProjectLevelVcsManager {
   public abstract VcsHistoryCache getVcsHistoryCache();
   public abstract ContentRevisionCache getContentRevisionCache();
   public abstract boolean isFileInContent(final VirtualFile vf);
+  public abstract boolean isIgnored(VirtualFile vf);
 
   public abstract boolean dvcsUsedInProject();
 
+  @NotNull
   public abstract VcsAnnotationLocalChangesListener getAnnotationLocalChangesListener();
 }

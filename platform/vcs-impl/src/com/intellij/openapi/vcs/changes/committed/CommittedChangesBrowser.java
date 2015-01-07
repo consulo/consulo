@@ -85,7 +85,7 @@ public class CommittedChangesBrowser extends JPanel {
 
     myCommitMessageArea = new JEditorPane(UIUtil.HTML_MIME, "");
     myCommitMessageArea.setBackground(UIUtil.getComboBoxDisabledBackground());
-    myCommitMessageArea.addHyperlinkListener(new BrowserHyperlinkListener());
+    myCommitMessageArea.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
     myCommitMessageArea.setPreferredSize(new Dimension(150, 100));
     myCommitMessageArea.setEditable(false);
 

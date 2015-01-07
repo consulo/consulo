@@ -204,7 +204,7 @@ class UpdateInfoDialog extends AbstractUpdateDialog {
           .append(StringUtil.formatLinks(myLatestBuild.getMessage()))
           .append("</body></html>");
         myUpdateMessageLabel.setText(builder.toString());
-        myUpdateMessageLabel.addHyperlinkListener(new BrowserHyperlinkListener());
+        myUpdateMessageLabel.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
       }
       else {
         myUpdateMessageLabel.setVisible(false);

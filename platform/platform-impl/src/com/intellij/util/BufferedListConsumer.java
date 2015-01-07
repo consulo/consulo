@@ -16,6 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.application.ApplicationManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,28 +66,37 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
     }
   }
 
-    // we need to 1) pass information to consumer in another thread since consumer potentially has heavy consume() - with info linking (git log)
-    // 2) requests passed to background thread can come in wrong order -> solution: initiate pooled thread requests which would take what we have currently
-    // 3) time is updated at the moment of flush -> buffer is empty at that moment
+  // we need to 1) pass information to consumer in another thread since consumer potentially has heavy consume() - with info linking (git log)
+  // 2) requests passed to background thread can come in wrong order -> solution: initiate pooled thread requests which would take what we have currently
+  // 3) time is updated at the moment of flush -> buffer is empty at that moment
   private void flushImpl(final long ts) {
     synchronized (myFlushLock) {
       if (myPendingFlush || myBuffer.isEmpty()) return;
       myPendingFlush = true;
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-        @Override
-        public void run() {
-          myTs = ts;
-          final List<T> list;
-          synchronized (myFlushLock) {
-            myPendingFlush = false;
-            if (myBuffer.isEmpty()) return;
-            list = myBuffer;
-            myBuffer = new ArrayList<T>(mySize);
-          }
-          myConsumer.consume(list);
-        }
-      });
+      invokeConsumer(createConsumerRunnable(ts));
     }
+  }
+
+  protected void invokeConsumer(@NotNull Runnable consumerRunnable) {
+    ApplicationManager.getApplication().executeOnPooledThread(consumerRunnable);
+  }
+
+  @NotNull
+  private Runnable createConsumerRunnable(final long ts) {
+    return new Runnable() {
+      @Override
+      public void run() {
+        myTs = ts;
+        final List<T> list;
+        synchronized (myFlushLock) {
+          myPendingFlush = false;
+          if (myBuffer.isEmpty()) return;
+          list = myBuffer;
+          myBuffer = new ArrayList<T>(mySize);
+        }
+        myConsumer.consume(list);
+      }
+    };
   }
 
   public void flush() {
