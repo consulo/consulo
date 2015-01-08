@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,10 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.progress.StandardProgressIndicator;
+import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TraceableDisposable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
@@ -24,14 +27,15 @@ import org.jetbrains.annotations.TestOnly;
 /**
  * @author cdr
  */
-public class DaemonProgressIndicator extends ProgressIndicatorBase {
+public class DaemonProgressIndicator extends AbstractProgressIndicatorBase implements StandardProgressIndicator, Disposable {
   private static boolean debug;
   private final TraceableDisposable myTraceableDisposable = new TraceableDisposable(debug ? new Throwable() : null);
+  private volatile boolean myDisposed;
 
   @Override
   public synchronized void stop() {
     super.stop();
-    super.cancel();
+    cancel();
   }
 
   public synchronized void stopIfRunning() {
@@ -39,14 +43,31 @@ public class DaemonProgressIndicator extends ProgressIndicatorBase {
       stop();
     }
     else {
-      super.cancel();
+      cancel();
     }
   }
 
   @Override
-  public void cancel() {
+  public final void cancel() {
     myTraceableDisposable.kill("Daemon Progress Canceled");
     super.cancel();
+    Disposer.dispose(this);
+  }
+
+  // called when canceled
+  @Override
+  public void dispose() {
+    myDisposed = true;
+  }
+
+  @Override
+  public final boolean isCanceled() {
+    return super.isCanceled();
+  }
+
+  @Override
+  public final void checkCanceled() {
+    super.checkCanceled();
   }
 
   public void cancel(@NotNull Throwable cause) {
@@ -58,24 +79,11 @@ public class DaemonProgressIndicator extends ProgressIndicatorBase {
   public void start() {
     assert !isCanceled() : "canceled";
     assert !isRunning() : "running";
-    assert !wasStarted() : "was started";
     super.start();
   }
 
-  public boolean waitFor(int millisTimeout) {
-    synchronized (this) {
-      try {
-        // we count on ProgressManagerImpl doing progress.notifyAll() on finish
-        wait(millisTimeout);
-      }
-      catch (InterruptedException ignored) {
-      }
-    }
-    return isCanceled();
-  }
-
   @TestOnly
-  public static void setDebug(boolean debug) {
+  static void setDebug(boolean debug) {
     DaemonProgressIndicator.debug = debug;
   }
 
@@ -87,5 +95,14 @@ public class DaemonProgressIndicator extends ProgressIndicatorBase {
   @Override
   public final int hashCode() {
     return super.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + (debug ? "; "+myTraceableDisposable.getStackTrace()+"\n;" : "");
+  }
+
+  public boolean isDisposed() {
+    return myDisposed;
   }
 }

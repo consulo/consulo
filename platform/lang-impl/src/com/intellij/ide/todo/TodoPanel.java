@@ -47,6 +47,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.usageView.UsageInfo;
+import com.intellij.usages.UsageViewPresentation;
 import com.intellij.usages.impl.UsagePreviewPanel;
 import com.intellij.util.*;
 import com.intellij.util.ui.UIUtil;
@@ -151,7 +152,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     );
 
 
-    myUsagePreviewPanel = new UsagePreviewPanel(myProject);
+    myUsagePreviewPanel = new UsagePreviewPanel(myProject, new UsageViewPresentation());
     myUsagePreviewPanel.setBorder(IdeBorderFactory.createBorder(SideBorder.LEFT));
     Disposer.register(this, myUsagePreviewPanel);
     myUsagePreviewPanel.setVisible(mySettings.isShowPreview());

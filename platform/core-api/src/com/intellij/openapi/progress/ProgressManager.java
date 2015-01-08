@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,55 +25,36 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public abstract class ProgressManager {
-  private static final ProgressManager ourInstance = ServiceManager.getService(ProgressManager.class);
-
-  static {
-    if (ProgressIndicatorProvider.ourInstance == null) {
-      ProgressIndicatorProvider.ourInstance = new ProgressIndicatorProvider() {
-        @Override
-        public ProgressIndicator getProgressIndicator() {
-          return ProgressManager.ourInstance.getProgressIndicator();
-        }
-
-        @Override
-        protected void doCheckCanceled() throws ProcessCanceledException {
-          ProgressManager.ourInstance.doCheckCanceled();
-        }
-
-        @Override
-        public NonCancelableSection startNonCancelableSection() {
-          return ProgressManager.ourInstance.startNonCancelableSection();
-        }
-      };
-    }
+public abstract class ProgressManager extends ProgressIndicatorProvider {
+  private static class ProgressManagerHolder {
+    private static final ProgressManager ourInstance = ServiceManager.getService(ProgressManager.class);
   }
 
+  @NotNull
   public static ProgressManager getInstance() {
-    return ourInstance;
+    return ProgressManagerHolder.ourInstance;
   }
 
   public abstract boolean hasProgressIndicator();
   public abstract boolean hasModalProgressIndicator();
   public abstract boolean hasUnsafeProgressIndicator();
 
+  /**
+   * Runs given process synchronously (in calling thread).
+   */
   public abstract void runProcess(@NotNull Runnable process, ProgressIndicator progress) throws ProcessCanceledException;
+
+  /**
+   * Runs given process synchronously (in calling thread).
+   */
   public abstract <T> T runProcess(@NotNull Computable<T> process, ProgressIndicator progress) throws ProcessCanceledException;
 
+  @Override
   public ProgressIndicator getProgressIndicator() {
-    return myThreadIndicator.get();
+    return null;
   }
 
-  protected static volatile boolean ourNeedToCheckCancel = false;
-  public static void checkCanceled() throws ProcessCanceledException {
-    // smart optimization! There's a thread started in ProgressManagerImpl, that set's this flag up once in 10 milliseconds
-    if (ourNeedToCheckCancel) {
-      getInstance().doCheckCanceled();
-      ourNeedToCheckCancel = false;
-    }
-  }
-
-  public static void progress(final String text) throws ProcessCanceledException {
+  public static void progress(@NotNull String text) throws ProcessCanceledException {
     progress(text, "");
   }
 
@@ -85,7 +66,7 @@ public abstract class ProgressManager {
     }
   }
 
-  public static void progress(final String text, @Nullable String text2) throws ProcessCanceledException {
+  public static void progress(@NotNull String text, @Nullable String text2) throws ProcessCanceledException {
     final ProgressIndicator pi = getInstance().getProgressIndicator();
     if (pi != null) {
       pi.checkCanceled();
@@ -94,10 +75,7 @@ public abstract class ProgressManager {
     }
   }
 
-  protected abstract void doCheckCanceled() throws ProcessCanceledException;
-
   public abstract void executeNonCancelableSection(@NotNull Runnable runnable);
-  public abstract NonCancelableSection startNonCancelableSection();
 
   public abstract void setCancelButtonText(String cancelButtonText);
 
@@ -191,28 +169,26 @@ public abstract class ProgressManager {
 
   /**
    * Runs a specified <code>task</code> in either background/foreground thread and shows a progress dialog.
-   * @param task          task to run (either {@link com.intellij.openapi.progress.Task.Modal} or {@link com.intellij.openapi.progress.Task.Backgroundable}).
+   *
+   * @param task task to run (either {@link com.intellij.openapi.progress.Task.Modal}
+   *             or {@link com.intellij.openapi.progress.Task.Backgroundable}).
    */
   public abstract void run(@NotNull Task task);
 
   public abstract void runProcessWithProgressAsynchronously(@NotNull Task.Backgroundable task, @NotNull ProgressIndicator progressIndicator);
 
-  protected static final ThreadLocal<ProgressIndicator> myThreadIndicator = new ThreadLocal<ProgressIndicator>();
-  public void executeProcessUnderProgress(@NotNull Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
-    ProgressIndicator oldIndicator = null;
-
-    boolean set = progress != null && progress != (oldIndicator = myThreadIndicator.get());
-    if (set) {
-      myThreadIndicator.set(progress);
-    }
-
-    try {
-      process.run();
-    }
-    finally {
-      if (set) {
-        myThreadIndicator.set(oldIndicator);
-      }
-    }
+  protected void indicatorCanceled(@NotNull ProgressIndicator indicator) {
   }
+
+  public static void canceled(@NotNull ProgressIndicator indicator) {
+    getInstance().indicatorCanceled(indicator);
+  }
+
+  public static void checkCanceled() throws ProcessCanceledException {
+    getInstance().doCheckCanceled();
+  }
+
+  public abstract void executeProcessUnderProgress(@NotNull Runnable process,
+                                                   @Nullable("null means reuse current progress") ProgressIndicator progress)
+          throws ProcessCanceledException;
 }

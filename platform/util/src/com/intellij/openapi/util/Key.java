@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.containers.ConcurrentWeakValueIntObjectHashMap;
-import com.intellij.util.containers.StripedLockIntObjectConcurrentHashMap;
+import com.intellij.util.containers.ConcurrentIntObjectMap;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,13 +35,15 @@ public class Key<T> {
   private static final AtomicInteger ourKeysCounter = new AtomicInteger();
   private final int myIndex = ourKeysCounter.getAndIncrement();
   private final String myName; // for debug purposes only
-  private static final ConcurrentWeakValueIntObjectHashMap<Key> allKeys = new ConcurrentWeakValueIntObjectHashMap<Key>();
+  private static final ConcurrentIntObjectMap<Key> allKeys = ContainerUtil.createConcurrentIntObjectWeakValueMap();
 
   public Key(@NotNull @NonNls String name) {
     myName = name;
     allKeys.put(myIndex, this);
   }
 
+  // made final because many classes depend on one-to-one key index <-> key instance relationship. See e.g. UserDataHolderBase
+  @Override
   public final int hashCode() {
     return myIndex;
   }
@@ -51,6 +53,7 @@ public class Key<T> {
     return obj == this;
   }
 
+  @Override
   public String toString() {
     return myName;
   }
@@ -97,6 +100,7 @@ public class Key<T> {
     }
   }
 
+  @Nullable("can become null if the key has been gc-ed")
   public static <T> Key<T> getKeyByIndex(int index) {
     //noinspection unchecked
     return (Key<T>)allKeys.get(index);
@@ -107,7 +111,7 @@ public class Key<T> {
    */
   @Nullable
   public static Key<?> findKeyByName(String name) {
-    for (StripedLockIntObjectConcurrentHashMap.IntEntry<Key> key : allKeys.entries()) {
+    for (ConcurrentIntObjectMap.IntEntry<Key> key : allKeys.entries()) {
       if (name.equals(key.getValue().myName)) {
         //noinspection unchecked
         return key.getValue();

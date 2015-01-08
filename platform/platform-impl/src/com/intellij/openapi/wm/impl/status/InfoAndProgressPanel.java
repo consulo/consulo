@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
+import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonHandler;
@@ -558,12 +559,13 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
       super(compact, task);
       myOriginal = original;
       original.addStateDelegate(this);
-    }
-
-    @Override
-    public void cancel() {
-      super.cancel();
-      updateProgress();
+      addStateDelegate(new AbstractProgressIndicatorExBase(){
+        @Override
+        public void cancel() {
+          super.cancel();
+          updateProgress();
+        }
+      });
     }
 
     @Override

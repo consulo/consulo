@@ -30,7 +30,6 @@ import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.LineSeparator;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.util.Collections;
 import java.util.Set;
 
 public class FileBasedStorage extends XmlElementStorage {
@@ -54,9 +52,8 @@ public class FileBasedStorage extends XmlElementStorage {
                           @NotNull String rootElementName,
                           @NotNull Disposable parentDisposable,
                           @Nullable final Listener listener,
-                          @Nullable StreamProvider streamProvider,
-                          ComponentVersionProvider componentVersionProvider) {
-    super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider, componentVersionProvider);
+                          @Nullable StreamProvider streamProvider) {
+    super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider);
 
     myFilePath = filePath;
     myFile = new File(filePath);
@@ -100,6 +97,13 @@ public class FileBasedStorage extends XmlElementStorage {
   @Override
   protected XmlElementStorageSaveSession createSaveSession(@NotNull StorageData storageData) {
     return new FileSaveSession(storageData);
+  }
+
+  public void forceSave() {
+    XmlElementStorageSaveSession externalizationSession = startExternalization();
+    if (externalizationSession != null) {
+      externalizationSession.forceSave();
+    }
   }
 
   private class FileSaveSession extends XmlElementStorageSaveSession {
@@ -150,32 +154,7 @@ public class FileBasedStorage extends XmlElementStorage {
   @Override
   @NotNull
   protected StorageData createStorageData() {
-    FileStorageData data = new FileStorageData(myRootElementName);
-    data.myFilePath = myFilePath;
-    return data;
-  }
-
-  public static class FileStorageData extends StorageData {
-    String myFilePath;
-
-    public FileStorageData(final String rootElementName) {
-      super(rootElementName);
-    }
-
-    protected FileStorageData(FileStorageData storageData) {
-      super(storageData);
-      myFilePath = storageData.myFilePath;
-    }
-
-    @Override
-    public StorageData clone() {
-      return new FileStorageData(this);
-    }
-
-    @NonNls
-    public String toString() {
-      return "FileStorageData[" + myFilePath + "]";
-    }
+    return new StorageData(myRootElementName);
   }
 
   @Nullable
@@ -228,30 +207,23 @@ public class FileBasedStorage extends XmlElementStorage {
   @Nullable
   private Element processReadException(@Nullable Exception e) {
     boolean contentTruncated = e == null;
-    myBlockSavingTheContent = isProjectOrModuleOrWorkspaceFile() && !contentTruncated;
+    myBlockSavingTheContent = !contentTruncated && (StorageUtil.isProjectOrModuleFile(myFileSpec) || myFileSpec.equals(StoragePathMacros.WORKSPACE_FILE));
     if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
       if (e != null) {
         LOG.info(e);
       }
-      Notifications.Bus.notify(
-              new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Load Settings",
-                               "Cannot load settings from file '" + myFile.getPath() + "': " + (e == null ? "content truncated" : e.getLocalizedMessage()) + "\n" +
-                               getInvalidContentMessage(contentTruncated), NotificationType.WARNING));
+      new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Load Settings",
+                       "Cannot load settings from file '" +
+                       myFile.getPath() + "': " +
+                       (e == null ? "content truncated" : e.getMessage()) + "\n" +
+                       (myBlockSavingTheContent ? "Please correct the file content" : "File content will be recreated"),
+                       NotificationType.WARNING).notify(null);
     }
-
     return null;
   }
 
-  private boolean isProjectOrModuleOrWorkspaceFile() {
-    return StorageUtil.isProjectOrModuleFile(myFileSpec) || myFileSpec.equals(StoragePathMacros.WORKSPACE_FILE);
-  }
-
-  private String getInvalidContentMessage(boolean contentTruncated) {
-    return isProjectOrModuleOrWorkspaceFile() && !contentTruncated ? "Please correct the file content" : "File content will be recreated";
-  }
-
   @Override
-  public void setDefaultState(final Element element) {
+  public void setDefaultState(@NotNull Element element) {
     element.setName(myRootElementName);
     super.setDefaultState(element);
   }
@@ -261,8 +233,6 @@ public class FileBasedStorage extends XmlElementStorage {
       // storage roaming was changed to DISABLED, but settings repository has old state
       return;
     }
-
-    resetProviderCache();
 
     try {
       Element newElement = deleted ? null : loadDataFromStreamProvider();
@@ -284,25 +254,6 @@ public class FileBasedStorage extends XmlElementStorage {
     catch (Throwable e) {
       LOG.error(e);
     }
-  }
-
-  @Nullable
-  @Deprecated
-  public File updateFileExternallyFromStreamProviders() throws IOException {
-    Element element = getElement(loadData(true), true, Collections.<String, Element>emptyMap());
-    if (element == null) {
-      FileUtil.delete(myFile);
-      return null;
-    }
-
-    BufferExposingByteArrayOutputStream out = StorageUtil.newContentIfDiffers(element, getVirtualFile());
-    if (out == null) {
-      return null;
-    }
-
-    File file = new File(myFile.getAbsolutePath());
-    FileUtil.writeToFile(file, out.getInternalBuffer(), 0, out.size());
-    return file;
   }
 
   @Override

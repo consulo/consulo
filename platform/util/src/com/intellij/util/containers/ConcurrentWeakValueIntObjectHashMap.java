@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,12 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-public class ConcurrentWeakValueIntObjectHashMap<V> extends ConcurrentRefValueIntObjectHashMap<V> {
+/**
+ * Concurrent int key -> weak value:V map
+ * Null values are NOT allowed
+ * @deprecated Use {@link ContainerUtil#createConcurrentIntObjectWeakValueMap()} instead
+ */
+class ConcurrentWeakValueIntObjectHashMap<V> extends ConcurrentRefValueIntObjectHashMap<V> {
   private static class MyRef<V> extends WeakReference<V> implements IntReference<V> {
     private final int hash;
     private final int key;

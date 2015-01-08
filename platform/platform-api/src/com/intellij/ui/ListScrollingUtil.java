@@ -259,37 +259,31 @@ public class ListScrollingUtil {
   public static void installActions(final JList list) {
     ActionMap actionMap = list.getActionMap();
     actionMap.put(SCROLLUP_ACTION_ID, new AbstractAction() {
-      @Override
       public void actionPerformed(ActionEvent e) {
         movePageUp(list);
       }
     });
     actionMap.put(SCROLLDOWN_ACTION_ID, new AbstractAction() {
-      @Override
       public void actionPerformed(ActionEvent e) {
         movePageDown(list);
       }
     });
     actionMap.put(SELECT_PREVIOUS_ROW_ACTION_ID, new AbstractAction() {
-      @Override
       public void actionPerformed(ActionEvent e) {
         moveUp(list, e.getModifiers());
       }
     });
     actionMap.put(SELECT_NEXT_ROW_ACTION_ID, new AbstractAction() {
-      @Override
       public void actionPerformed(ActionEvent e) {
         moveDown(list, e.getModifiers());
       }
     });
     actionMap.put(SELECT_LAST_ROW_ACTION_ID, new AbstractAction() {
-      @Override
       public void actionPerformed(ActionEvent e) {
         moveEnd(list);
       }
     });
     actionMap.put(SELECT_FIRST_ROW_ACTION_ID, new AbstractAction() {
-      @Override
       public void actionPerformed(ActionEvent e) {
         moveHome(list);
       }
@@ -307,15 +301,7 @@ public class ListScrollingUtil {
       }
     });
 
-    InputMap map = list.getInputMap(JComponent.WHEN_FOCUSED);
-    UIUtil.maybeInstall(map, SCROLLUP_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0));
-    UIUtil.maybeInstall(map, SCROLLDOWN_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0));
-    UIUtil.maybeInstall(map, SELECT_PREVIOUS_ROW_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
-    UIUtil.maybeInstall(map, SELECT_NEXT_ROW_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
-    UIUtil.maybeInstall(map, SELECT_FIRST_ROW_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
-    UIUtil.maybeInstall(map, SELECT_LAST_ROW_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_END, 0));
-    UIUtil.maybeInstall(map, MOVE_HOME_ID, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
-    UIUtil.maybeInstall(map, MOVE_END_ID, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
+    maybeInstallDefaultShortcuts(list);
 
     new ListScrollAction(CommonShortcuts.getMoveUp(), list) {
       @Override
@@ -353,6 +339,18 @@ public class ListScrollingUtil {
         moveEnd(list);
       }
     };
+  }
+
+  static void maybeInstallDefaultShortcuts(JComponent component) {
+    InputMap map = component.getInputMap(JComponent.WHEN_FOCUSED);
+    UIUtil.maybeInstall(map, SCROLLUP_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0));
+    UIUtil.maybeInstall(map, SCROLLDOWN_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0));
+    UIUtil.maybeInstall(map, SELECT_PREVIOUS_ROW_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
+    UIUtil.maybeInstall(map, SELECT_NEXT_ROW_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
+    UIUtil.maybeInstall(map, SELECT_FIRST_ROW_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
+    UIUtil.maybeInstall(map, SELECT_LAST_ROW_ACTION_ID, KeyStroke.getKeyStroke(KeyEvent.VK_END, 0));
+    UIUtil.maybeInstall(map, MOVE_HOME_ID, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
+    UIUtil.maybeInstall(map, MOVE_END_ID, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
   }
 
   public static abstract class ListScrollAction extends AnAction {

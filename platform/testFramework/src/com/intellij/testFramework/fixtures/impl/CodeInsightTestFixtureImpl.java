@@ -977,15 +977,10 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
           @Override
           public void run() {
             final CodeCompletionHandlerBase handler = new CodeCompletionHandlerBase(type) {
-
               @Override
-              protected void completionFinished(int offset1,
-                                                int offset2,
-                                                CompletionProgressIndicator indicator,
-                                                LookupElement[] items,
-                                                boolean hasModifiers) {
-                myEmptyLookup = items.length == 0;
-                super.completionFinished(offset1, offset2, indicator, items, hasModifiers);
+              protected void completionFinished(CompletionProgressIndicator indicator, boolean hasModifiers) {
+                myEmptyLookup = indicator.getLookup().getItems().isEmpty();
+                super.completionFinished(indicator, hasModifiers);
               }
             };
             Editor editor = getCompletionEditor();

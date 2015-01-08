@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -283,6 +283,7 @@ public interface Application extends ComponentManager {
    * Returns modality state which is active anytime
    * @return modality state
    */
+  @NotNull
   ModalityState getAnyModalityState();
 
   /**
@@ -339,6 +340,7 @@ public interface Application extends ComponentManager {
    * @param action to be executed
    * @return future result
    */
+  @NotNull
   Future<?> executeOnPooledThread(@NotNull Runnable action);
 
   /**
@@ -346,6 +348,7 @@ public interface Application extends ComponentManager {
    * @param action to be executed
    * @return future result
    */
+  @NotNull
   <T> Future<T> executeOnPooledThread(@NotNull Callable<T> action);
 
   /**
@@ -363,7 +366,7 @@ public interface Application extends ComponentManager {
 
   /**
    * Exits and restarts IDEA. If the current platform is not restart capable, only exits.
-   * 
+   *
    * @since 8.1
    */
   void restart();
@@ -378,12 +381,16 @@ public interface Application extends ComponentManager {
   /**
    * Returns lock used for read operations, should be closed in finally block
    */
+  @NotNull
   AccessToken acquireReadActionLock();
 
   /**
    * Returns lock used for write operations, should be closed in finally block
    */
+  @NotNull
   AccessToken acquireWriteActionLock(@Nullable Class marker);
 
   boolean isInternal();
+
+  boolean isEAP();
 }

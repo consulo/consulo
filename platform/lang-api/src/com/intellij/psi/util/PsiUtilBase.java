@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,31 +23,32 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.NonPhysicalFileSystem;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class PsiUtilBase extends PsiUtilCore {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.util.PsiUtilBase");
   public static final Comparator<Language> LANGUAGE_COMPARATOR = new Comparator<Language>() {
     @Override
-    public int compare(Language o1, Language o2) {
+    public int compare(@NotNull Language o1, @NotNull Language o2) {
       return o1.getID().compareTo(o2.getID());
     }
   };
@@ -85,20 +86,22 @@ public class PsiUtilBase extends PsiUtilCore {
 
   @Nullable
   public static Language getLanguageInEditor(@NotNull final Editor editor, @NotNull final Project project) {
+    return getLanguageInEditor(editor.getCaretModel().getCurrentCaret(), project);
+  }
+
+  @Nullable
+  public static Language getLanguageInEditor(@NotNull Caret caret, @NotNull final Project project) {
+    Editor editor = caret.getEditor();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
 
-    final SelectionModel selectionModel = editor.getSelectionModel();
-    int caretOffset = editor.getCaretModel().getOffset();
-    int mostProbablyCorrectLanguageOffset = caretOffset == selectionModel.getSelectionStart() ||
-                                            caretOffset == selectionModel.getSelectionEnd()
-                                            ? selectionModel.getSelectionStart()
-                                            : caretOffset;
+    int caretOffset = caret.getOffset();
+    int mostProbablyCorrectLanguageOffset = caretOffset == caret.getSelectionEnd() ? caret.getSelectionStart() : caretOffset;
     PsiElement elt = getElementAtOffset(file, mostProbablyCorrectLanguageOffset);
     Language lang = findLanguageFromElement(elt);
 
-    if (selectionModel.hasSelection()) {
-      final Language rangeLanguage = evaluateLanguageInRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), file);
+    if (caret.hasSelection()) {
+      final Language rangeLanguage = evaluateLanguageInRange(caret.getSelectionStart(), caret.getSelectionEnd(), file);
       if (rangeLanguage == null) return file.getLanguage();
 
       lang = rangeLanguage;
@@ -117,20 +120,24 @@ public class PsiUtilBase extends PsiUtilCore {
 
   @Nullable
   public static PsiFile getPsiFileInEditor(@NotNull final Editor editor, @NotNull final Project project) {
+    return getPsiFileInEditor(editor.getCaretModel().getCurrentCaret(), project);
+  }
+
+  @Nullable
+  public static PsiFile getPsiFileInEditor(@NotNull Caret caret, @NotNull final Project project) {
+    Editor editor = caret.getEditor();
     final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
 
-    final Language language = getLanguageInEditor(editor, project);
+    PsiUtilCore.ensureValid(file);
+
+    final Language language = getLanguageInEditor(caret, project);
     if (language == null) return file;
 
     if (language == file.getLanguage()) return file;
 
-    final SelectionModel selectionModel = editor.getSelectionModel();
-    int caretOffset = editor.getCaretModel().getOffset();
-    int mostProbablyCorrectLanguageOffset = caretOffset == selectionModel.getSelectionStart() ||
-                                            caretOffset == selectionModel.getSelectionEnd()
-                                            ? selectionModel.getSelectionStart()
-                                            : caretOffset;
+    int caretOffset = caret.getOffset();
+    int mostProbablyCorrectLanguageOffset = caretOffset == caret.getSelectionEnd() ? caret.getSelectionStart() : caretOffset;
     return getPsiFileAtOffset(file, mostProbablyCorrectLanguageOffset);
   }
 
@@ -142,7 +149,10 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language reallyEvaluateLanguageInRange(final int start, final int end, final PsiFile file) {
+  public static Language reallyEvaluateLanguageInRange(final int start, final int end, @NotNull PsiFile file) {
+    if (file instanceof PsiBinaryFile) {
+      return file.getLanguage();
+    }
     Language lang = null;
     int curOffset = start;
     do {
@@ -170,7 +180,7 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language evaluateLanguageInRange(final int start, final int end, final PsiFile file) {
+  public static Language evaluateLanguageInRange(final int start, final int end, @NotNull PsiFile file) {
     PsiElement elt = getElementAtOffset(file, start);
 
     TextRange selectionRange = new TextRange(start, end);
@@ -208,44 +218,45 @@ public class PsiUtilBase extends PsiUtilCore {
    * Tries to find editor for the given element.
    * <p/>
    * There are at least two approaches to achieve the target. Current method is intended to encapsulate both of them:
-   * <pre>
    * <ul>
    *   <li>target editor works with a real file that remains at file system;</li>
    *   <li>target editor works with a virtual file;</li>
    * </ul>
-   * </pre>
+   * <p/>
+   * Please don't use this method for finding an editor for quick fix.
+   * @see {@link com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement}
    *
    * @param element   target element
    * @return          editor that works with a given element if the one is found; <code>null</code> otherwise
    */
   @Nullable
   public static Editor findEditor(@NotNull PsiElement element) {
-    PsiFile psiFile = element.getContainingFile();
-    if (psiFile == null) {
-      return null;
+    if (!EventQueue.isDispatchThread()) {
+      LOG.warn("Invoke findEditor() from EDT only. Otherwise, it causes deadlocks.");
     }
-    VirtualFile virtualFile = psiFile.getOriginalFile().getVirtualFile();
+    PsiFile psiFile = element.getContainingFile();
+    VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
     if (virtualFile == null) {
       return null;
     }
 
-    VirtualFileSystem fileSystem = virtualFile.getFileSystem();
-    if (fileSystem instanceof LocalFileSystem) {
+    Project project = psiFile.getProject();
+    if (virtualFile.isInLocalFileSystem() || virtualFile.getFileSystem() instanceof NonPhysicalFileSystem) {
       // Try to find editor for the real file.
-      final FileEditor[] editors = FileEditorManager.getInstance(psiFile.getProject()).getEditors(virtualFile);
+      final FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(virtualFile);
       for (FileEditor editor : editors) {
         if (editor instanceof TextEditor) {
           return ((TextEditor)editor).getEditor();
         }
       }
     }
-    else if (SwingUtilities.isEventDispatchThread()) {
+    if (SwingUtilities.isEventDispatchThread()) {
       // We assume that data context from focus-based retrieval should success if performed from EDT.
       AsyncResult<DataContext> asyncResult = DataManager.getInstance().getDataContextFromFocus();
       if (asyncResult.isDone()) {
         Editor editor = CommonDataKeys.EDITOR.getData(asyncResult.getResult());
         if (editor != null) {
-          Document cachedDocument = PsiDocumentManager.getInstance(psiFile.getProject()).getCachedDocument(psiFile);
+          Document cachedDocument = PsiDocumentManager.getInstance(project).getCachedDocument(psiFile);
           // Ensure that target editor is found by checking its document against the one from given PSI element.
           if (cachedDocument == editor.getDocument()) {
             return editor;
@@ -267,8 +278,6 @@ public class PsiUtilBase extends PsiUtilCore {
       PsiFileSystemItem psiFileSystemItem = (PsiFileSystemItem)element;
       return psiFileSystemItem.isValid() ? psiFileSystemItem.getVirtualFile() : null;
     }
-    else {
-      return null;
-    }
+    return null;
   }
 }

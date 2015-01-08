@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ import java.awt.event.*;
 import java.io.File;
 
 @SuppressWarnings({"NonStaticInitializer"})
-public class ProgressWindow extends BlockingProgressIndicator implements Disposable {
+public class ProgressWindow extends ProgressIndicatorBase implements BlockingProgressIndicator, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.progress.util.ProgressWindow");
 
   /**
@@ -63,7 +63,7 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
 
   private final Project myProject;
   private final boolean myShouldShowCancel;
-  private       String  myCancelText;
+  private String myCancelText;
 
   private String myTitle = null;
 
@@ -100,20 +100,29 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
     myFocusTrackback = new FocusTrackback(this, WindowManager.getInstance().suggestParentWindow(project), false);
 
     Component parent = parentComponent;
-    if (parent == null && project == null) {
+    if (parent == null && project == null && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
       parent = JOptionPane.getRootFrame();
     }
 
-    if (parent != null) {
-      myDialog = new MyDialog(shouldShowBackground, parent, myCancelText);
+    if (parent == null) {
+      myDialog = new MyDialog(shouldShowBackground, myProject, myCancelText);
     }
     else {
-      myDialog = new MyDialog(shouldShowBackground, myProject, myCancelText);
+      myDialog = new MyDialog(shouldShowBackground, parent, myCancelText);
     }
 
     Disposer.register(this, myDialog);
 
     myFocusTrackback.registerFocusComponent(myDialog.getPanel());
+    addStateDelegate(new AbstractProgressIndicatorExBase(){
+      @Override
+      public void cancel() {
+        super.cancel();
+        if (myDialog != null) {
+          myDialog.cancel();
+        }
+      }
+    });
   }
 
   @Override
@@ -287,14 +296,6 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
 
   private boolean isDialogShowing() {
     return myDialog != null && myDialog.getPanel() != null && myDialog.getPanel().isShowing();
-  }
-
-  @Override
-  public void cancel() {
-    super.cancel();
-    if (myDialog != null) {
-      myDialog.cancel();
-    }
   }
 
   public void background() {
@@ -511,11 +512,11 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
 
     }
 
-    public JPanel getPanel() {
+    private JPanel getPanel() {
       return myPanel;
     }
 
-    public void setShouldShowBackground(final boolean shouldShowBackground) {
+    private void setShouldShowBackground(final boolean shouldShowBackground) {
       myShouldShowBackground = shouldShowBackground;
       SwingUtilities.invokeLater(new Runnable() {
         @Override
@@ -526,17 +527,17 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
       });
     }
 
-    public void changeCancelButtonText(String text) {
+    private void changeCancelButtonText(String text) {
       myCancelButton.setText(text);
     }
 
-    public void doCancelAction() {
+    private void doCancelAction() {
       if (myShouldShowCancel) {
         ProgressWindow.this.cancel();
       }
     }
 
-    public void cancel() {
+    private void cancel() {
       if (myShouldShowCancel) {
         SwingUtilities.invokeLater(new Runnable() {
           @Override
@@ -557,14 +558,14 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
 
       myBackgroundButton.setVisible(myShouldShowBackground);
       myBackgroundButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            if (myShouldShowBackground) {
-              ProgressWindow.this.background();
-            }
-          }
-        }
+              new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                  if (myShouldShowBackground) {
+                    ProgressWindow.this.background();
+                  }
+                }
+              }
       );
     }
 
@@ -582,7 +583,7 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
       }
     }
 
-    public synchronized void background() {
+    private synchronized void background() {
       if (myShouldShowBackground) {
         myBackgroundButton.setEnabled(false);
       }
@@ -590,7 +591,7 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
       hide();
     }
 
-    public void hide() {
+    private void hide() {
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
@@ -602,7 +603,7 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
       });
     }
 
-    public void show() {
+    private void show() {
       if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
       if (myParentWindow == null) return;
       if (myPopup != null) {
@@ -613,6 +614,11 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
                 ? new MyDialogWrapper(myParentWindow, myShouldShowCancel)
                 : new MyDialogWrapper(myProject, myShouldShowCancel);
       myPopup.setUndecorated(true);
+      if (SystemInfo.isAppleJvm) {
+        // With Apple JDK we look for MacMessage parent by the window title.
+        // Let's set just the title as the window title for simplicity.
+        myPopup.setTitle(myTitle);
+      }
       if (myPopup.getPeer() instanceof DialogWrapperPeerImpl) {
         ((DialogWrapperPeerImpl)myPopup.getPeer()).setAutoRequestFocus(false);
       }
@@ -637,7 +643,7 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
       myPopup.show();
     }
 
-    public boolean wasShown() {
+    private boolean wasShown() {
       return myWasShown;
     }
 
@@ -663,6 +669,7 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
         }
       }
 
+      @NotNull
       @Override
       protected DialogWrapperPeer createPeer(@NotNull final Component parent, final boolean canBeParent) {
         if (System.getProperty("vintage.progress") == null) {
@@ -678,11 +685,13 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
         }
       }
 
+      @NotNull
       @Override
       protected DialogWrapperPeer createPeer(final boolean canBeParent, final boolean applicationModalIfPossible) {
         return createPeer(null, canBeParent, applicationModalIfPossible);
       }
 
+      @NotNull
       @Override
       protected DialogWrapperPeer createPeer(final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
         if (System.getProperty("vintage.progress") == null) {
@@ -698,6 +707,7 @@ public class ProgressWindow extends BlockingProgressIndicator implements Disposa
         }
       }
 
+      @NotNull
       @Override
       protected DialogWrapperPeer createPeer(final Project project, final boolean canBeParent) {
         if (System.getProperty("vintage.progress") == null) {

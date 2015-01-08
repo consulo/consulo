@@ -33,7 +33,6 @@ import com.intellij.openapi.components.impl.stores.IComponentStore;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
-import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
@@ -72,7 +71,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   public static CompilerServerApplication createApplication() {
-    ProgressIndicatorProvider.ourInstance = createProgressIndicatorProvider();
     final CompilerServerApplication app = new CompilerServerApplication();
     ApplicationManager.setApplication(app, new Getter<FileTypeRegistry>() {
                                         @Override
@@ -87,28 +85,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
                                       }, app
     );
     return app;
-  }
-
-  private static ProgressIndicatorProvider createProgressIndicatorProvider() {
-    return new ProgressIndicatorProvider() {
-      @Override
-      public ProgressIndicator getProgressIndicator() {
-        return new EmptyProgressIndicator();
-      }
-
-      @Override
-      protected void doCheckCanceled() throws ProcessCanceledException {
-      }
-
-      @Override
-      public NonCancelableSection startNonCancelableSection() {
-        return new NonCancelableSection() {
-          @Override
-          public void done() {
-          }
-        };
-      }
-    };
   }
 
   private IApplicationStore myComponentStore;

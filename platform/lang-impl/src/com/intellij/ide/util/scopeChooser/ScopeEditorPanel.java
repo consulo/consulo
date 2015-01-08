@@ -748,17 +748,6 @@ public class ScopeEditorPanel {
     }
 
     @Override
-    public void start() {
-      super.start();
-      myTextChanged = false;
-    }
-
-    @Override
-    public boolean isCanceled() {
-      return super.isCanceled() || myTextChanged;
-    }
-
-    @Override
     public void stop() {
       super.stop();
       setToComponent(myMatchingCountLabel, myRequestFocus);

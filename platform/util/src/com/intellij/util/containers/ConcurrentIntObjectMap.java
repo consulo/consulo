@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,14 @@ package com.intellij.util.containers;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.Enumeration;
+
 /**
- * methods adapted from java.util.concurrent.ConcurrentMap to integer keys
+ * Base interface for concurrent int key -> value:V map
+ * Null values are NOT allowed
+ *
+ * Methods are adapted from {@link java.util.concurrent.ConcurrentMap} to integer keys
  * @see java.util.concurrent.ConcurrentMap
  */
 public interface ConcurrentIntObjectMap<V> {
@@ -37,7 +43,7 @@ public interface ConcurrentIntObjectMap<V> {
   boolean containsKey(int key);
   void clear();
   @NotNull
-  Iterable<StripedLockIntObjectConcurrentHashMap.IntEntry<V>> entries();
+  Iterable<IntEntry<V>> entries();
 
   @NotNull
   int[] keys();
@@ -50,4 +56,18 @@ public interface ConcurrentIntObjectMap<V> {
    *         rather than alive values because otherwise it would be too expensive
    */
   int size();
+
+  boolean isEmpty();
+  @NotNull
+  Enumeration<V> elements();
+  @NotNull
+  Collection<V> values();
+  boolean containsValue(@NotNull V value);
+  V putIfAbsent(int key, @NotNull V value);
+
+  interface IntEntry<V> {
+    int getKey();
+    @NotNull
+    V getValue();
+  }
 }

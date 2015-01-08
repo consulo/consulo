@@ -32,7 +32,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.project.DumbModeAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -170,7 +170,7 @@ public class CompilerTask extends Task.Backgroundable {
   private void addIndicatorDelegate() {
     ProgressIndicator indicator = myIndicator;
     if (!(indicator instanceof ProgressIndicatorEx)) return;
-    ((ProgressIndicatorEx)indicator).addStateDelegate(new ProgressIndicatorBase() {
+    ((ProgressIndicatorEx)indicator).addStateDelegate(new AbstractProgressIndicatorExBase() {
 
       @Override
       public void cancel() {

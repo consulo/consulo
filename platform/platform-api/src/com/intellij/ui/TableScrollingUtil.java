@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Couple;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 
@@ -90,47 +90,60 @@ public class TableScrollingUtil {
     return getTrailingRow(list, visibleRect) - getLeadingRow(list, visibleRect) + 1;
   }
 
-  public static Pair<Integer, Integer> getVisibleRows(JTable list) {
+  public static Couple<Integer> getVisibleRows(JTable list) {
     Rectangle visibleRect = list.getVisibleRect();
-    return new Pair<Integer, Integer>(getLeadingRow(list, visibleRect) + 1, getTrailingRow(list, visibleRect));
+    return Couple.of(getLeadingRow(list, visibleRect) + 1, getTrailingRow(list, visibleRect));
   }
 
   private static int getLeadingRow(JTable table,Rectangle visibleRect) {
-      Point leadingPoint;
+    return table.rowAtPoint(getLeadingPoint(table, visibleRect));
+  }
 
-      if (table.getComponentOrientation().isLeftToRight()) {
-          leadingPoint = new Point(visibleRect.x, visibleRect.y);
-      }
-      else {
-          leadingPoint = new Point(visibleRect.x + visibleRect.width,
-                                   visibleRect.y);
-      }
-      return table.rowAtPoint(leadingPoint);
+  private static Point getLeadingPoint(JTable table, Rectangle visibleRect) {
+    if (table.getComponentOrientation().isLeftToRight()) {
+      return new Point(visibleRect.x, visibleRect.y);
+    }
+    else {
+      return new Point(visibleRect.x + visibleRect.width,
+                       visibleRect.y);
+    }
+  }
+
+  public static int getReadableRow(JTable table, int maximumHiddenPart) {
+    Rectangle visibleRect = table.getVisibleRect();
+    Point leadingPoint = getLeadingPoint(table, visibleRect);
+    int row = table.rowAtPoint(leadingPoint);
+    int column = table.columnAtPoint(leadingPoint);
+    if (leadingPoint.y - table.getCellRect(row, column, true).getY() <= maximumHiddenPart) {
+      return row;
+    } else {
+      return Math.min(row + 1, table.getRowCount() - 1); // just in case
+    }
+
   }
 
   private static int getTrailingRow(JTable table,Rectangle visibleRect) {
-      Point trailingPoint;
+    Point trailingPoint;
 
-      if (table.getComponentOrientation().isLeftToRight()) {
-          trailingPoint = new Point(visibleRect.x,
-                                    visibleRect.y + visibleRect.height - 1);
-      }
-      else {
-          trailingPoint = new Point(visibleRect.x + visibleRect.width,
-                                    visibleRect.y + visibleRect.height - 1);
-      }
-      return table.rowAtPoint(trailingPoint);
+    if (table.getComponentOrientation().isLeftToRight()) {
+      trailingPoint = new Point(visibleRect.x,
+                                visibleRect.y + visibleRect.height - 1);
+    }
+    else {
+      trailingPoint = new Point(visibleRect.x + visibleRect.width,
+                                visibleRect.y + visibleRect.height - 1);
+    }
+    return table.rowAtPoint(trailingPoint);
   }
 
 
-  public static void moveDown(JTable list, @JdkConstants.InputEventMask int modifiers) {
+  public static void moveDown(JTable list, @JdkConstants.InputEventMask int modifiers, boolean cycleScrolling) {
     int size = list.getModel().getRowCount();
     if (size == 0) {
       return;
     }
     final ListSelectionModel selectionModel = list.getSelectionModel();
     int index = selectionModel.getLeadSelectionIndex();
-    boolean cycleScrolling = UISettings.getInstance().CYCLE_SCROLLING;
     final int indexToSelect;
     if (index < size - 1) {
       indexToSelect = index + 1;
@@ -153,11 +166,10 @@ public class TableScrollingUtil {
     }
   }
 
-  public static void moveUp(JTable list, @JdkConstants.InputEventMask int modifiers) {
+  public static void moveUp(JTable list, @JdkConstants.InputEventMask int modifiers, boolean cycleScrolling) {
     int size = list.getModel().getRowCount();
     final ListSelectionModel selectionModel = list.getSelectionModel();
     int index = selectionModel.getMinSelectionIndex();
-    boolean cycleScrolling = UISettings.getInstance().CYCLE_SCROLLING;
     int indexToSelect;
     if (index > 0) {
       indexToSelect = index - 1;
@@ -249,6 +261,10 @@ public class TableScrollingUtil {
   }
 
   public static void installActions(final JTable list) {
+    installActions(list, UISettings.getInstance().CYCLE_SCROLLING);
+  }
+
+  public static void installActions(final JTable list, final boolean cycleScrolling) {
     ActionMap actionMap = list.getActionMap();
     actionMap.put(ListScrollingUtil.SCROLLUP_ACTION_ID, new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -262,12 +278,12 @@ public class TableScrollingUtil {
     });
     actionMap.put(ListScrollingUtil.SELECT_PREVIOUS_ROW_ACTION_ID, new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        moveUp(list, e.getModifiers());
+        moveUp(list, e.getModifiers(), cycleScrolling);
       }
     });
     actionMap.put(ListScrollingUtil.SELECT_NEXT_ROW_ACTION_ID, new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        moveDown(list, e.getModifiers());
+        moveDown(list, e.getModifiers(), cycleScrolling);
       }
     });
     actionMap.put(ListScrollingUtil.SELECT_LAST_ROW_ACTION_ID, new AbstractAction() {
@@ -280,6 +296,9 @@ public class TableScrollingUtil {
         moveHome(list);
       }
     });
+
+    ListScrollingUtil.maybeInstallDefaultShortcuts(list);
+
     new AnAction() {
       public void actionPerformed(AnActionEvent e) {
         moveHome(list);

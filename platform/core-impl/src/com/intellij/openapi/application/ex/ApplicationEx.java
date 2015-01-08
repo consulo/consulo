@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.intellij.openapi.application.ex;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,24 +35,48 @@ public interface ApplicationEx extends Application {
    *
    * @param optionsPath Path to /config folder
    * @throws IOException
-   * @throws InvalidDataException
    */
-  void load(String optionsPath) throws IOException, InvalidDataException;
+  void load(@Nullable String optionsPath) throws IOException;
+
   boolean isLoaded();
 
   @NotNull
   String getName();
 
+  /**
+   * @return true if this thread is inside read action.
+   * @see #runReadAction(Runnable)
+   */
   boolean holdsReadLock();
+
+  /**
+   * @return true if the EDT is performing write action right now.
+   * @see #runWriteAction(Runnable)
+   */
+  boolean isWriteActionInProgress();
+
+  /**
+   * @return true if the EDT started to acquire write action but has not acquired it yet.
+   * @see #runWriteAction(Runnable)
+   */
+  boolean isWriteActionPending();
 
   void doNotSave();
   void doNotSave(boolean value);
   boolean isDoNotSave();
 
-  //force exit
-  void exit(boolean force);
+  /**
+   * @param force if true, no additional confirmations will be shown. The application is guaranteed to exit
+   * @param exitConfirmed if true, suppresses any shutdown confirmation. However, if there are any background processes or tasks running,
+   *                      a corresponding confirmation will be shown with the possibility to cancel the operation
+   */
+  void exit(boolean force, boolean exitConfirmed);
 
-  void restart(boolean force);
+  /**
+   * @param exitConfirmed if true, suppresses any shutdown confirmation. However, if there are any background processes or tasks running,
+   *                      a corresponding confirmation will be shown with the possibility to cancel the operation
+   */
+  void restart(boolean exitConfirmed);
 
   /**
    * Runs modal process. For internal use only, see {@link Task}
@@ -82,8 +105,6 @@ public interface ApplicationEx extends Application {
                                               JComponent parentComponent,
                                               final String cancelText);
 
-  boolean isInModalProgressThread();
-
   void assertIsDispatchThread(@Nullable JComponent component);
 
   void assertTimeConsuming();
@@ -91,7 +112,7 @@ public interface ApplicationEx extends Application {
   void runEdtSafeAction(@NotNull Runnable runnable);
 
   /**
-   * Grab the lock and run the action, in a nonblocking fashion
+   * Grab the lock and run the action, in a non-blocking fashion
    *
    * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
    */

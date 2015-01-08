@@ -38,7 +38,7 @@
           <element id="module-production-resource-output" name="platform-resources-en" />
           <element id="module-production-resource-output" name="external-system-impl" />
           <element id="module-production-resource-output" name="external-system-api" />
-          <element id="module-production-resource-output" name="dvcs" />
+          <element id="module-production-resource-output" name="dvcs-impl" />
         </element>
         <element id="zip-archive" name="idea.jar">
           <element id="module-output" name="analysis-api" />
@@ -51,7 +51,7 @@
           <element id="module-output" name="compiler-server-impl" />
           <element id="module-output" name="core-api" />
           <element id="module-output" name="core-impl" />
-          <element id="module-output" name="dvcs" />
+          <element id="module-output" name="dvcs-impl" />
           <element id="module-output" name="editor-ui-api" />
           <element id="module-output" name="editor-ui-ex" />
           <element id="module-output" name="external-system-api" />
@@ -79,7 +79,7 @@
           <element id="module-output" name="vcs-api" />
           <element id="module-output" name="vcs-impl" />
           <element id="module-output" name="vcs-log-api" />
-          <element id="module-output" name="vcs-log-graph" />
+          <element id="module-output" name="vcs-log-graph-impl" />
           <element id="module-output" name="vcs-log-impl" />
           <element id="module-output" name="xdebugger-api" />
           <element id="module-output" name="xdebugger-impl" />
@@ -89,6 +89,8 @@
           <element id="module-production-resource-output" name="remote-servers-impl" />
           <element id="module-production-resource-output" name="core-api" />
           <element id="module-output" name="coverage-impl" />
+          <element id="module-output" name="vcs-log-graph-api" />
+          <element id="module-output" name="dvcs-api" />
         </element>
         <element id="zip-archive" name="forms_rt.jar">
           <element id="module-output" name="forms_rt" />
@@ -111,6 +113,48 @@
       <element id="directory" name="license">
         <element id="dir-copy" path="$PROJECT_DIR$/license" />
       </element>
+      <element id="library" level="project" name="JUnit4" />
+      <element id="module-production-resource-output" name="core-api" />
+      <element id="library" level="project" name="picocontainer" />
+      <element id="library" level="project" name="Lombok" />
+      <element id="module-production-resource-output" name="util" />
+      <element id="library" level="project" name="Mac" />
+      <element id="library" level="project" name="JDOM" />
+      <element id="library" level="project" name="Log4J" />
+      <element id="library" level="project" name="Trove4j" />
+      <element id="library" level="project" name="jna" />
+      <element id="library" level="project" name="OroMatcher" />
+      <element id="library" level="project" name="Guava" />
+      <element id="library" level="project" name="jsr166" />
+      <element id="module-production-resource-output" name="extensions" />
+      <element id="library" level="project" name="XStream" />
+      <element id="library" level="project" name="JMock1" />
+      <element id="library" level="project" name="asm" />
+      <element id="library" level="project" name="CGLIB" />
+      <element id="library" level="project" name="Mocks" />
+      <element id="library" level="project" name="microba" />
+      <element id="library" level="project" name="jgoodies-forms" />
+      <element id="library" level="project" name="commons-codec" />
+      <element id="file-copy" path="$PROJECT_DIR$/lib/automaton.jar" />
+      <element id="library" level="project" name="Netty" />
+      <element id="library" level="project" name="proxy-vole" />
+      <element id="library" level="project" name="miglayout-swing" />
+      <element id="library" level="project" name="pty4" />
+      <element id="library" level="project" name="httpmime-4.3.6" />
+      <element id="library" level="project" name="NanoXML" />
+      <element id="library" level="project" name="XmlRPC" />
+      <element id="library" level="project" name="commons-net" />
+      <element id="library" level="project" name="JavaHelp" />
+      <element id="library" level="project" name="http-client-3.1" />
+      <element id="library" level="project" name="winp" />
+      <element id="library" level="project" name="swingx" />
+      <element id="library" level="project" name="Snappy-Java" />
+      <element id="library" level="project" name="Sanselan" />
+      <element id="library" level="project" name="gson" />
+      <element id="library" level="project" name="Velocity" />
+      <element id="library" level="project" name="xpp3-1.1.4-min" />
+      <element id="library" level="project" name="cli-parser" />
+      <element id="module-production-resource-output" name="vcs-log-impl" />
     </root>
   </artifact>
 </component>

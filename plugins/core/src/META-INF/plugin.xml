@@ -41,6 +41,9 @@
   <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)">
     <xi:fallback/>
   </xi:include>
+  <xi:include href="/META-INF/DVcs.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
   <xi:include href="/META-INF/PostfixTemplates.xml" xpointer="xpointer(/idea-plugin/*)">
     <xi:fallback/>
   </xi:include>
@@ -1134,7 +1137,8 @@
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
                         serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
-                        serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"/>
+                        serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"
+                        serviceImplementationForCompilerServer="com.intellij.core.CoreProgressManager"/>
 
     <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>
     <exportable serviceInterface="com.intellij.ide.ui.customization.CustomActionsSchema"/>

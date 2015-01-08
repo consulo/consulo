@@ -18,7 +18,8 @@ package org.jetbrains.annotations;
 import java.lang.annotation.*;
 
 /**
- * Specifies some aspects of the method behavior depending on the arguments. Can be used by tools for advanced data flow analysis.<p>
+ * Specifies some aspects of the method behavior depending on the arguments. Can be used by tools for advanced data flow analysis.
+ * Note that this annotation just describes how the code works and doesn't add any functionality by means of code generation.<p>
  *
  * Method contract has the following syntax:<br/>
  *  contract ::= (clause ';')* clause<br/>
@@ -26,7 +27,7 @@ import java.lang.annotation.*;
  *  args ::= ((arg ',')* arg )?<br/>
  *  arg ::= value-constraint<br/>
  *  value-constraint ::= 'any' | 'null' | '!null' | 'false' | 'true'<br/>
- *  effect ::= value-constraint | 'fail' | 'exit'<p/>
+ *  effect ::= value-constraint | 'fail' <p/>
  *
  * The constraints denote the following:<br/>
  * <ul>
@@ -35,19 +36,32 @@ import java.lang.annotation.*;
  * <li> !null - a value statically proved to be not-null
  * <li> true - true boolean value
  * <li> false - false boolean value
- * <li> fail - the method throws exception, if the arguments satisfy argument constraints
- * <li> exit - the method terminates the current process, if the arguments satisfy argument constraints
+ * <li> fail - the method throws an exception, if the arguments satisfy argument constraints
  * </ul>
  * Examples:<p/>
  * <code>@Contract("_, null -> null")</code> - method returns null if its second argument is null<br/>
  * <code>@Contract("_, null -> null; _, !null -> !null")</code> - method returns null if its second argument is null and not-null otherwise<br/>
  * <code>@Contract("true -> fail")</code> - a typical assertFalse method which throws an exception if <code>true</code> is passed to it<br/> 
  *
- * @author peter
  */
 @Documented
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Contract {
-  String value();
+  /**
+   * Contains the contract clauses describing causal relations between call arguments and the returned value 
+   */
+  String value() default "";
+
+  /**
+   * Specifies that the annotated method has no visible side effects, in the following sense.
+   * If its return value is not used, removing its invocation won't
+   * affect program state and change the semantics. Exception throwing is not considered to be a side effect.
+   *
+   * "Invisible" side effects (such as logging) that don't affect the "important" program semantics are allowed.<br><br>
+   *
+   * This annotation may be used for more precise data flow analysis, and
+   * to check that the method's return value is actually used in the call place.
+   */
+  boolean pure() default false;
 }

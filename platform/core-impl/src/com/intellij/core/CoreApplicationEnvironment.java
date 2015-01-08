@@ -106,7 +106,9 @@ public class CoreApplicationEnvironment {
     myApplication.registerService(ReferenceProvidersRegistry.class, new MockReferenceProvidersRegistry());
     myApplication.registerService(StubTreeLoader.class, new CoreStubTreeLoader());
     myApplication.registerService(PsiReferenceService.class, new PsiReferenceServiceImpl());
+    myApplication.registerService(ProgressManager.class, createProgressIndicatorProvider());
     //myApplication.registerService(CommandProcessor.class, new MockCommandProcessor());
+
 
     registerApplicationExtensionPoint(ContentBasedFileSubstitutor.EP_NAME, ContentBasedFileSubstitutor.class);
     registerExtensionPoint(Extensions.getRootArea(), BinaryFileStubBuilders.EP_NAME, FileTypeExtensionPoint.class);
@@ -122,8 +124,6 @@ public class CoreApplicationEnvironment {
     addExtension(PsiElementFactory.EP.getExtensionPointName(), new DefaultPsiElementFactory(), LoadingOrder.LAST);
 
     registerFileType(ZipArchiveFileType.INSTANCE, "zip");
-
-    ProgressIndicatorProvider.ourInstance = createProgressIndicatorProvider();
 
     myApplication.registerService(JobLauncher.class, createJobLauncher());
   }
@@ -212,26 +212,8 @@ public class CoreApplicationEnvironment {
     };
   }
 
-  protected ProgressIndicatorProvider createProgressIndicatorProvider() {
-    return new ProgressIndicatorProvider() {
-      @Override
-      public ProgressIndicator getProgressIndicator() {
-        return new EmptyProgressIndicator();
-      }
-
-      @Override
-      protected void doCheckCanceled() throws ProcessCanceledException {
-      }
-
-      @Override
-      public NonCancelableSection startNonCancelableSection() {
-        return new NonCancelableSection() {
-          @Override
-          public void done() {
-          }
-        };
-      }
-    };
+  protected ProgressManager createProgressIndicatorProvider() {
+    return new CoreProgressManager();
   }
 
   protected IVirtualFileSystem createJarFileSystem() {

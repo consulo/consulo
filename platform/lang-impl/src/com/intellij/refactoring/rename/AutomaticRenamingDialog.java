@@ -35,6 +35,7 @@ import com.intellij.ui.GuiUtils;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.table.JBTable;
 import com.intellij.usageView.UsageInfo;
+import com.intellij.usages.UsageViewPresentation;
 import com.intellij.usages.impl.UsagePreviewPanel;
 
 import javax.swing.*;
@@ -78,7 +79,7 @@ public class AutomaticRenamingDialog extends DialogWrapper {
     super(project, true);
     myProject = project;
     myRenamer = renamer;
-    myUsagePreviewPanel = new UsagePreviewPanel(myProject);
+    myUsagePreviewPanel = new UsagePreviewPanel(myProject, new UsageViewPresentation());
     myUsageFileLabel = new JLabel();
     populateData();
     setTitle(myRenamer.getDialogTitle());

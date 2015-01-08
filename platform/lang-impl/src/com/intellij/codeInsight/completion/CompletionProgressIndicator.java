@@ -39,6 +39,7 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
@@ -63,7 +64,6 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ThreeState;
 import com.intellij.util.concurrency.Semaphore;
-import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.update.MergingUpdateQueue;
@@ -81,7 +81,7 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author peter
@@ -89,6 +89,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CompletionProgressIndicator extends ProgressIndicatorBase implements CompletionProcess, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.CompletionProgressIndicator");
   private final Editor myEditor;
+  @NotNull
+  private final Caret myCaret;
   private final CompletionParameters myParameters;
   private final CodeCompletionHandlerBase myHandler;
   private final LookupImpl myLookup;
@@ -97,6 +99,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     @Override
     public void run() {
       updateLookup();
+      myQueue.setMergingTimeSpan(300);
     }
   };
   private final Semaphore myFreezeSemaphore;
@@ -124,14 +127,14 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   private volatile int myCount;
   private volatile boolean myHasPsiElements;
   private boolean myLookupUpdated;
-  private final ConcurrentHashMap<LookupElement, CompletionSorterImpl> myItemSorters =
-          new ConcurrentHashMap<LookupElement, CompletionSorterImpl>(
-                  ContainerUtil.<LookupElement>identityStrategy());
+  private final ConcurrentMap<LookupElement, CompletionSorterImpl> myItemSorters =
+          ContainerUtil.newConcurrentMap(ContainerUtil.<LookupElement>identityStrategy());
   private final PropertyChangeListener myLookupManagerListener;
   private final Queue<Runnable> myAdvertiserChanges = new ConcurrentLinkedQueue<Runnable>();
   private final int myStartCaret;
 
   public CompletionProgressIndicator(final Editor editor,
+                                     @NotNull Caret caret,
                                      CompletionParameters parameters,
                                      CodeCompletionHandlerBase handler,
                                      Semaphore freezeSemaphore,
@@ -139,6 +142,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
                                      boolean hasModifiers,
                                      LookupImpl lookup) {
     myEditor = editor;
+    myCaret = caret;
     myParameters = parameters;
     myHandler = handler;
     myFreezeSemaphore = freezeSemaphore;
@@ -168,7 +172,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     };
     LookupManager.getInstance(getProject()).addPropertyChangeListener(myLookupManagerListener);
 
-    myQueue = new MergingUpdateQueue("completion lookup progress", 300, true, myEditor.getContentComponent());
+    myQueue = new MergingUpdateQueue("completion lookup progress", 100, true, myEditor.getContentComponent());
     myQueue.setPassThrough(false);
 
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -272,11 +276,6 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         addAdvertisement(s, null);
       }
     }
-  }
-
-  @Override
-  public void cancel() {
-    super.cancel();
   }
 
   private boolean isOutdated() {
@@ -580,6 +579,11 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     return myEditor;
   }
 
+  @NotNull
+  public Caret getCaret() {
+    return myCaret;
+  }
+
   public boolean isRepeatedInvocation(CompletionType completionType, Editor editor) {
     if (completionType != myParameters.getCompletionType() || editor != myEditor) {
       return false;
@@ -742,7 +746,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     return false;
   }
 
-  AtomicReference<LookupElement[]> startCompletion(final CompletionInitializationContext initContext) {
+  void startCompletion(final CompletionInitializationContext initContext) {
     boolean sync = ApplicationManager.getApplication().isUnitTestMode() && !CompletionAutoPopupHandler.ourTestingAutopopup;
     final CompletionThreading strategy = sync ? new SyncCompletion() : new AsyncCompletion();
 
@@ -754,12 +758,11 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     });
     final WeighingDelegate weigher = strategy.delegateWeighing(this);
 
-    final AtomicReference<LookupElement[]> data = new AtomicReference<LookupElement[]>(null);
     class CalculateItems implements Runnable {
       @Override
       public void run() {
         try {
-          data.set(calculateItems(initContext, weigher));
+          calculateItems(initContext, weigher);
         }
         catch (ProcessCanceledException ignore) {
           cancel(); // some contributor may just throw PCE; if indicator is not canceled everything will hang
@@ -771,7 +774,6 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
       }
     }
     strategy.startThread(this, new CalculateItems());
-    return data;
   }
 
   private LookupElement[] calculateItems(CompletionInitializationContext initContext, WeighingDelegate weigher) {

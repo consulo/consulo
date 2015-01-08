@@ -15,19 +15,12 @@
  */
 package com.intellij.openapi.application.ex;
 
-import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.impl.stores.IApplicationStore;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 12:05/12.08.13
  */
 public interface ApplicationEx2 extends ApplicationEx {
-  void initComponents();
-
-  @NotNull
-  ComponentConfig[] getComponentConfigurations();
-
   IApplicationStore getStateStore();
 }
