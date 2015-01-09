@@ -1,5 +1,7 @@
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
+import com.intellij.ide.RecentProjectsManagerBase;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.ui.ClickListener;
 import com.intellij.util.ui.UIUtil;
 
@@ -105,10 +107,12 @@ public class WelcomePaneMain extends JPanel {
     c.fill = GridBagConstraints.BOTH;
     add(myCardPanel, c);
 
-    myCardPanel.add(new RecentProjectPanel(), "recent-projects");
+    final AnAction[] recentProjectActions = RecentProjectsManagerBase.getInstance().getRecentProjectsActions(false);
+
+    myCardPanel.add(new RecentProjectPanel(recentProjectActions), "recent-projects");
     myCardPanel.add(new CardActionsPanel(root), "quick-start");
 
-    myButtons[0].setActive(true);
+    myButtons[recentProjectActions.length > 0 ? 0 : 1].setActive(true);
   }
 
   public RecentProjectPanel getRecentProjectPanel() {
