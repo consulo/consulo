@@ -762,6 +762,7 @@
           <orderEntry type="module" module-name="annotations" />
           <orderEntry type="module" module-name="testFramework" />
           <orderEntry type="library" name="thrift" level="project" />
+          <orderEntry type="library" name="slf4j-api" level="project" />
         </module-layer>
       </module>
       <module name="platform/testFramework" dirurl="file://$PROJECT_DIR$/platform/testFramework" current-layer="Default">
