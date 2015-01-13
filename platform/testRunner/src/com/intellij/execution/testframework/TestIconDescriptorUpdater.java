@@ -29,16 +29,12 @@ import org.jetbrains.annotations.NotNull;
 public class TestIconDescriptorUpdater implements IconDescriptorUpdater {
   @Override
   public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
-    final TestFramework[] testFrameworks = TestFramework.EXTENSION_NAME.getExtensions();
-
-    for (TestFramework framework : testFrameworks) {
+    for (TestFramework framework : TestFramework.EXTENSION_NAME.getExtensions()) {
       if (framework.isIgnoredMethod(element)) {
         iconDescriptor.setMainIcon(AllIcons.RunConfigurations.IgnoredTest);
       }
-    }
 
-    for (TestFramework framework : testFrameworks) {
-      if (framework.isTestMethod(element)) {
+      if (framework.isTestMethod(element) || framework.isTestClass(element)) {
         iconDescriptor.addLayerIcon(AllIcons.RunConfigurations.TestMark);
       }
     }
