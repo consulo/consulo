@@ -25,7 +25,6 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
-import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.picocontainer.MutablePicoContainer;
 
@@ -55,12 +54,6 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
                                         @Override
                                         public FileTypeRegistry get() {
                                           return FileTypeManager.getInstance();
-                                        }
-                                      },
-                                      new Getter<EncodingRegistry>() {
-                                        @Override
-                                        public EncodingRegistry get() {
-                                          return EncodingManager.getInstance();
                                         }
                                       },
                                       getTestRootDisposable());

@@ -15,7 +15,6 @@
  */
 package org.consulo.compiler.server.application;
 
-import com.intellij.core.CoreEncodingRegistry;
 import com.intellij.core.CoreFileTypeRegistry;
 import com.intellij.ide.StartupProgress;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
@@ -37,7 +36,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -76,11 +74,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
                                         @Override
                                         public FileTypeRegistry get() {
                                           return new CoreFileTypeRegistry();
-                                        }
-                                      }, new Getter<EncodingRegistry>() {
-                                        @Override
-                                        public EncodingRegistry get() {
-                                          return new CoreEncodingRegistry();
                                         }
                                       }, app
     );

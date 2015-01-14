@@ -16,10 +16,10 @@
 package com.intellij.openapi.extensions;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.picocontainer.PicoContainer;
-import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author peter
@@ -53,6 +53,7 @@ public abstract class AbstractExtensionPointBean implements PluginAware {
     }
   }
 
+  @NotNull
   public ClassLoader getLoaderForClass() {
     return myPluginDescriptor == null ? getClass().getClassLoader() : myPluginDescriptor.getPluginClassLoader();
   }

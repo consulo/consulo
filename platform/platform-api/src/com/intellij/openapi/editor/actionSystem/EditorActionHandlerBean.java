@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.util.pico.IdeaPicoContainer;
+import com.intellij.util.pico.DefaultPicoContainer;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 /**
@@ -27,7 +27,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
  */
 public class EditorActionHandlerBean extends AbstractExtensionPointBean {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.actionSystem.EditorActionHandlerBean");
-  
+
   public static final ExtensionPointName<EditorActionHandlerBean> EP_NAME = ExtensionPointName.create("com.intellij.editorActionHandler");
 
   // these must be public for scrambling compatibility
@@ -41,7 +41,7 @@ public class EditorActionHandlerBean extends AbstractExtensionPointBean {
   public EditorActionHandler getHandler(EditorActionHandler originalHandler) {
     if (myHandler == null) {
       try {
-        IdeaPicoContainer container = new IdeaPicoContainer(ApplicationManager.getApplication().getPicoContainer());
+        DefaultPicoContainer container = new DefaultPicoContainer(ApplicationManager.getApplication().getPicoContainer());
         container.registerComponentInstance(originalHandler);
         myHandler = instantiate(implementationClass, container);
       }

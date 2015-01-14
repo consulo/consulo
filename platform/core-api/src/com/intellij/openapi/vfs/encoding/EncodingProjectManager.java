@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,8 @@
  */
 package com.intellij.openapi.vfs.encoding;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.Charset;
@@ -28,7 +25,7 @@ import java.util.Map;
 /**
  * @author cdr
  */
-public abstract class EncodingProjectManager extends EncodingManager implements ProjectComponent, PersistentStateComponent<Element> {
+public abstract class EncodingProjectManager extends EncodingManager {
   public static EncodingProjectManager getInstance(Project project) {
     return project.getComponent(EncodingProjectManager.class);
   }
@@ -38,4 +35,23 @@ public abstract class EncodingProjectManager extends EncodingManager implements 
 
   public abstract void setMapping(@NotNull Map<VirtualFile, Charset> result);
 
+  /**
+   * @return Project encoding name (configured in Settings|File Encodings|Project Encoding) or empty string if it's configured to "System Default"
+   */
+  @NotNull
+  @Override
+  public abstract String getDefaultCharsetName();
+
+  /**
+   * @return Project encoding (configured in Settings|File Encodings|Project Encoding)
+   */
+  @NotNull
+  @Override
+  public abstract Charset getDefaultCharset();
+
+  /**
+   * Sets Project encoding (configured in Settings|File Encodings|Project Encoding). Use empty string to specify "System Default"
+   */
+  @Override
+  public abstract void setDefaultCharsetName(@NotNull String name);
 }

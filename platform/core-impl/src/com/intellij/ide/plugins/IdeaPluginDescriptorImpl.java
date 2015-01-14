@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,25 @@ package com.intellij.ide.plugins;
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.diagnostic.PluginException;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.*;
+import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.SmartList;
+import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.StringInterner;
 import com.intellij.util.xmlb.JDOMXIncluder;
 import com.intellij.util.xmlb.XmlSerializer;
+import gnu.trove.THashMap;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -47,17 +54,17 @@ import java.util.*;
  * @author mike
  */
 public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.plugins.PluginDescriptor");
-
   public static final IdeaPluginDescriptorImpl[] EMPTY_ARRAY = new IdeaPluginDescriptorImpl[0];
-  private String myName;
-  private PluginId myId;
+  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.plugins.PluginDescriptor");
   private final NullableLazyValue<String> myDescription = new NullableLazyValue<String>() {
     @Override
     protected String compute() {
       return computeDescription();
     }
   };
+
+  private String myName;
+  private PluginId myId;
   private String myResourceBundleBaseName;
   private String myChangeNotes;
   private String myVersion;
@@ -78,29 +85,69 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private boolean myDeleted = false;
   private ClassLoader myLoader;
   private HelpSetPath[] myHelpSets;
-  @Nullable private List<Element> myExtensions;
-  @Nullable private List<Element> myExtensionsPoints;
+  @Nullable private MultiMap<String, Element> myExtensions;
+  @Nullable private MultiMap<String, Element> myExtensionsPoints;
   private String myDescriptionChildText;
   private String myDownloadCounter;
   private long myDate;
-
   private boolean myEnabled = true;
-
   private String mySinceBuild;
   private String myUntilBuild;
-
   private Boolean mySkipped;
-
+  private List<String> myModules = null;
 
   public IdeaPluginDescriptorImpl(@NotNull File pluginPath) {
     myPath = pluginPath;
   }
 
-  IdeaPluginDescriptorImpl() {
+  /**
+   * @deprecated
+   * use {@link com.intellij.util.containers.StringInterner#intern(Object)} directly instead
+   */
+  @NotNull
+  @Deprecated
+  public static String intern(@NotNull String s) {
+    return s;
   }
 
-  public void setPath(@NotNull File path) {
-    myPath = path;
+  /**
+   * @deprecated
+   * use {@link com.intellij.openapi.util.JDOMUtil#internElement(org.jdom.Element, com.intellij.util.containers.StringInterner)}
+   */
+  @SuppressWarnings("unused")
+  @Deprecated
+  public static void internJDOMElement(@NotNull Element rootElement) {
+  }
+
+  @Nullable
+  private static List<Element> copyElements(@Nullable Element[] elements, StringInterner interner) {
+    if (elements == null || elements.length == 0) {
+      return null;
+    }
+
+    List<Element> result = new SmartList<Element>();
+    for (Element extensionsRoot : elements) {
+      for (Element element : extensionsRoot.getChildren()) {
+        JDOMUtil.internElement(element, interner);
+        result.add(element);
+      }
+    }
+    return result;
+  }
+
+  @SuppressWarnings({"HardCodedStringLiteral"})
+  private static String createDescriptionKey(final PluginId id) {
+    return "plugin." + id + ".description";
+  }
+
+  private static ComponentConfig[] mergeComponents(ComponentConfig[] first, ComponentConfig[] second) {
+    if (first == null) {
+      return second;
+    }
+    if (second == null) {
+      return first;
+    }
+    return ArrayUtil.mergeArrays(first, second);
   }
 
   @Override
@@ -108,21 +155,19 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myPath;
   }
 
-  private static final StringInterner ourInterner = new StringInterner();
-
-  @NotNull
-  public static String intern(@NotNull String s) {
-    return ourInterner.intern(s);
-  }
-
-  public static void internJDOMElement(@NotNull Element rootElement) {
-    JDOMUtil.internElement(rootElement, ourInterner);
+  public void setPath(@NotNull File path) {
+    myPath = path;
   }
 
   public void readExternal(@NotNull Document document, @NotNull URL url) throws InvalidDataException, FileNotFoundException {
-    document = JDOMXIncluder.resolve(document, url.toExternalForm());
+    Application application = ApplicationManager.getApplication();
+    readExternal(document, url, application != null && application.isUnitTestMode());
+  }
+
+  public void readExternal(@NotNull Document document, @NotNull URL url, boolean ignoreMissingInclude) throws InvalidDataException, FileNotFoundException {
+    document = JDOMXIncluder.resolve(document, url.toExternalForm(), ignoreMissingInclude);
     Element rootElement = document.getRootElement();
-    internJDOMElement(rootElement);
+    JDOMUtil.internElement(rootElement, new StringInterner());
     readExternal(document.getRootElement());
   }
 
@@ -151,18 +196,18 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     if (idString == null || idString.isEmpty()) {
       idString = myName;
     }
-    myId = PluginId.getId(idString);
+    myId = idString == null ? null : PluginId.getId(idString);
 
     String internalVersionString = pluginBean.formatVersion;
     if (internalVersionString != null) {
       try {
+        //noinspection ResultOfMethodCallIgnored
         Integer.parseInt(internalVersionString);
       }
       catch (NumberFormatException e) {
-        LOG.error(new PluginException("Invalid value in plugin.xml format version: '" + internalVersionString+"'", e, myId));
+        LOG.error(new PluginException("Invalid value in plugin.xml format version: '" + internalVersionString + "'", e, myId));
       }
     }
-
     if (pluginBean.ideaVersion != null) {
       mySinceBuild = pluginBean.ideaVersion.sinceBuild;
       myUntilBuild = pluginBean.ideaVersion.untilBuild;
@@ -185,33 +230,37 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     // preserve items order as specified in xml (filterBadPlugins will not fail if module comes first)
     Set<PluginId> dependentPlugins = new LinkedHashSet<PluginId>();
     Set<PluginId> optionalDependentPlugins = new LinkedHashSet<PluginId>();
-    myOptionalConfigs = new HashMap<PluginId, String>();
     if (pluginBean.dependencies != null) {
+      myOptionalConfigs = new THashMap<PluginId, String>();
       for (PluginDependency dependency : pluginBean.dependencies) {
         String text = dependency.pluginId;
-        if (text != null && !text.isEmpty()) {
-          final PluginId id = PluginId.getId(text);
+        if (!StringUtil.isEmpty(text)) {
+          PluginId id = PluginId.getId(text);
           dependentPlugins.add(id);
           if (dependency.optional) {
             optionalDependentPlugins.add(id);
-            if (dependency.configFile != null && !dependency.configFile.isEmpty()) {
-              myOptionalConfigs.put(id, dependency.configFile);  
+            if (!StringUtil.isEmpty(dependency.configFile)) {
+              myOptionalConfigs.put(id, dependency.configFile);
             }
           }
         }
       }
     }
+
     myDependencies = dependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : dependentPlugins.toArray(new PluginId[dependentPlugins.size()]);
     myOptionalDependencies = optionalDependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependentPlugins.toArray(new PluginId[optionalDependentPlugins.size()]);
 
-    List<HelpSetPath> hsPathes = new ArrayList<HelpSetPath>();
-    if (pluginBean.helpSets != null) {
-      for (PluginHelpSet pluginHelpSet : pluginBean.helpSets) {
-        HelpSetPath hsPath = new HelpSetPath(pluginHelpSet.file, pluginHelpSet.path);
-        hsPathes.add(hsPath);
+    if (pluginBean.helpSets == null || pluginBean.helpSets.length == 0) {
+      myHelpSets = HelpSetPath.EMPTY;
+    }
+    else {
+      myHelpSets = new HelpSetPath[pluginBean.helpSets.length];
+      PluginHelpSet[] sets = pluginBean.helpSets;
+      for (int i = 0, n = sets.length; i < n; i++) {
+        PluginHelpSet pluginHelpSet = sets[i];
+        myHelpSets[i] = new HelpSetPath(pluginHelpSet.file, pluginHelpSet.path);
       }
     }
-    myHelpSets = !hsPathes.isEmpty() ? hsPathes.toArray(new HelpSetPath[hsPathes.size()]) : HelpSetPath.EMPTY;
 
     myAppComponents = pluginBean.applicationComponents;
     myProjectComponents = pluginBean.projectComponents;
@@ -221,46 +270,40 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     if (myProjectComponents == null) myProjectComponents = ComponentConfig.EMPTY_ARRAY;
     if (myModuleComponents == null) myModuleComponents = ComponentConfig.EMPTY_ARRAY;
 
-    myExtensions = copyElements(pluginBean.extensions);
-    myExtensionsPoints = copyElements(pluginBean.extensionPoints);
-    myActionsElements = copyElements(pluginBean.actions);
-  }
-
-  @Nullable
-  private static List<Element> copyElements(final Element[] elements) {
-    if (elements != null) {
-      List<Element> result = new ArrayList<Element>();
-      for (Element extensionsRoot : elements) {
-        for (final Object o : extensionsRoot.getChildren()) {
-          Element element = (Element)o;
-          internJDOMElement(element);
-          result.add(element);
-        }
+    StringInterner interner = new StringInterner();
+    List<Element> extensions = copyElements(pluginBean.extensions, interner);
+    if (extensions != null) {
+      myExtensions = MultiMap.createSmart();
+      for (Element extension : extensions) {
+        myExtensions.putValue(ExtensionsAreaImpl.extractEPName(extension), extension);
       }
-      return result;
     }
-    return null;
+
+    List<Element> extensionPoints = copyElements(pluginBean.extensionPoints, interner);
+    if (extensionPoints != null) {
+      myExtensionsPoints = MultiMap.createSmart();
+      for (Element extensionPoint : extensionPoints) {
+        myExtensionsPoints.putValue(StringUtil.notNullize(extensionPoint.getAttributeValue(ExtensionsAreaImpl.ATTRIBUTE_AREA)), extensionPoint);
+      }
+    }
+
+    myActionsElements = copyElements(pluginBean.actions, interner);
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  private static String createDescriptionKey(final PluginId id) {
-    return "plugin." + id + ".description";
+  // made public for Upsource
+  public void registerExtensionPoints(@NotNull ExtensionsArea area) {
+    if (myExtensionsPoints != null) {
+      for (Element element : myExtensionsPoints.get(StringUtil.notNullize(area.getAreaClass()))) {
+        area.registerExtensionPoint(this, element);
+      }
+    }
   }
 
-  void registerExtensions() {
-    if (myExtensions != null || myExtensionsPoints != null) {
-      Extensions.getRootArea().getExtensionPoint(Extensions.AREA_LISTENER_EXTENSION_POINT).registerExtension(new AreaListener() {
-        @Override
-        public void areaCreated(@NotNull String areaClass, @NotNull AreaInstance areaInstance) {
-          if (PluginManagerCore.shouldSkipPlugin(IdeaPluginDescriptorImpl.this)) return;
-          final ExtensionsArea area = Extensions.getArea(areaInstance);
-          area.registerAreaExtensionsAndPoints(IdeaPluginDescriptorImpl.this, myExtensionsPoints, myExtensions);
-        }
-
-        @Override
-        public void areaDisposing(@NotNull String areaClass, @NotNull AreaInstance areaInstance) {
-        }
-      });
+  void registerExtensions(@NotNull ExtensionsArea area, @NotNull String epName) {
+    if (myExtensions != null) {
+      for (Element element : myExtensions.get(epName)) {
+        area.registerExtension(this, element);
+      }
     }
   }
 
@@ -285,7 +328,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myDependencies;
   }
 
-
   @Override
   @NotNull
   public PluginId[] getOptionalDependentPluginIds() {
@@ -295,6 +337,11 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @Override
   public String getVendor() {
     return myVendor;
+  }
+
+  public void setVendor( final String val )
+  {
+    myVendor = val;
   }
 
   @Override
@@ -310,6 +357,29 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @Override
   public String getCategory() {
     return myCategory;
+  }
+
+  /*
+     This setter was explicitly defined to be able to set a category for a
+     descriptor outside its loading from the xml file.
+     Problem was that most commonly plugin authors do not publish the plugin's
+     category in its .xml file so to be consistent in plugins representation
+     (e.g. in the Plugins form) we have to set this value outside.
+  */
+  public void setCategory( String category ){
+    myCategory = category;
+  }
+
+  @SuppressWarnings("UnusedDeclaration") // Used in Upsource
+  @Nullable
+  public MultiMap<String, Element> getExtensionsPoints() {
+    return myExtensionsPoints;
+  }
+
+  @SuppressWarnings("UnusedDeclaration") // Used in Upsource
+  @Nullable
+  public MultiMap<String, Element> getExtensions() {
+    return myExtensions;
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
@@ -374,14 +444,29 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myVendorEmail;
   }
 
+  public void setVendorEmail( final String val )
+  {
+    myVendorEmail = val;
+  }
+
   @Override
   public String getVendorUrl() {
     return myVendorUrl;
   }
 
+  public void setVendorUrl( final String val )
+  {
+    myVendorUrl = val;
+  }
+
   @Override
   public String getUrl() {
     return url;
+  }
+
+  public void setUrl( final String val )
+  {
+    url = val;
   }
 
   @Override
@@ -398,13 +483,8 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     myDeleted = deleted;
   }
 
-  public void setLoader(ClassLoader loader, final boolean registerExtensions) {
+  public void setLoader(ClassLoader loader) {
     myLoader = loader;
-
-    //Now we're ready to load root area extensions
-    if (registerExtensions) {
-      Extensions.getRootArea().registerAreaExtensionsAndPoints(this, myExtensionsPoints, myExtensions);
-    }
   }
 
   @Override
@@ -434,28 +514,21 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   }
 
   /*
-     This setter was explicitly defined to be able to set a category for a
-     descriptor outside its loading from the xml file.
-     Problem was that most commonly plugin authors do not publish the plugin's
-     category in its .xml file so to be consistent in plugins representation
-     (e.g. in the Plugins form) we have to set this value outside.
-  */
-  public void setCategory( String category ){
-    myCategory = category;
-  }
-
-  /*
      This setter was explicitly defined to be able to set downloads count for a
      descriptor outside its loading from the xml file since this information
      is available only from the site.
   */
-  public void setDownloadsCount( String dwnlds ){
-    myDownloadCounter = dwnlds;
+  public void setDownloadsCount(String downloadsCount) {
+    myDownloadCounter = downloadsCount;
   }
 
   @Override
   public String getDownloads(){
     return myDownloadCounter;
+  }
+
+  public long getDate(){
+    return myDate;
   }
 
   /*
@@ -465,27 +538,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   */
   public void setDate( long date ){
     myDate = date;
-  }
-
-  public long getDate(){
-    return myDate;
-  }
-
-  public void setVendor( final String val )
-  {
-    myVendor = val;
-  }
-  public void setVendorEmail( final String val )
-  {
-    myVendorEmail = val;
-  }
-  public void setVendorUrl( final String val )
-  {
-    myVendorUrl = val;
-  }
-  public void setUrl( final String val )
-  {
-    url = val;
   }
 
   @Override
@@ -538,10 +590,12 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myUntilBuild;
   }
 
+  @Nullable
   Map<PluginId, String> getOptionalConfigs() {
     return myOptionalConfigs;
   }
 
+  @Nullable
   Map<PluginId, IdeaPluginDescriptorImpl> getOptionalDescriptors() {
     return myOptionalDescriptors;
   }
@@ -555,14 +609,14 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
       myExtensions = descriptor.myExtensions;
     }
     else if (descriptor.myExtensions != null) {
-      myExtensions.addAll(descriptor.myExtensions);
+      myExtensions.putAllValues(descriptor.myExtensions);
     }
 
     if (myExtensionsPoints == null) {
       myExtensionsPoints = descriptor.myExtensionsPoints;
     }
     else if (descriptor.myExtensionsPoints != null) {
-      myExtensionsPoints.addAll(descriptor.myExtensionsPoints);
+      myExtensionsPoints.putAllValues(descriptor.myExtensionsPoints);
     }
 
     if (myActionsElements == null) {
@@ -577,16 +631,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     myModuleComponents = mergeComponents(myModuleComponents, descriptor.myModuleComponents);
   }
 
-  private static ComponentConfig[] mergeComponents(ComponentConfig[] first, ComponentConfig[] second) {
-    if (first == null) {
-      return second;
-    }
-    if (second == null) {
-      return first;
-    }
-    return ArrayUtil.mergeArrays(first, second);
-  }
-
   public Boolean getSkipped() {
     return mySkipped;
   }
@@ -597,6 +641,24 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
 
   @Override
   public boolean isBundled() {
-    return getPath().getAbsolutePath().startsWith(PathManager.getPreInstalledPluginsPath());
+    String path;
+    try {
+      //to avoid paths like this /home/kb/IDEA/bin/../config/plugins/APlugin
+      path = getPath().getCanonicalPath();
+    } catch (IOException e) {
+      path = getPath().getAbsolutePath();
+    }
+    if (ApplicationManager.getApplication() != null && ApplicationManager.getApplication().isInternal()) {
+      if (path.startsWith(PathManager.getHomePath() + File.separator + "out" + File.separator + "classes")) {
+        return true;
+      }
+    }
+
+    return path.startsWith(PathManager.getPreInstalledPluginsPath());
+  }
+
+  @Nullable
+  public List<String> getModules() {
+    return myModules;
   }
 }
