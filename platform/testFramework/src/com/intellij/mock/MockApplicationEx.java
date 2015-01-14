@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +27,6 @@ import javax.swing.*;
 import java.io.IOException;
 
 public class MockApplicationEx extends MockApplication implements ApplicationEx {
-
   public MockApplicationEx(@NotNull Disposable parentDisposable) {
     super(parentDisposable);
   }
@@ -45,7 +43,7 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   }
 
   @Override
-  public void load(String path) throws IOException, InvalidDataException {
+  public void load(String path) throws IOException {
   }
 
   @Override
@@ -54,11 +52,11 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   }
 
   @Override
-  public void exit(boolean force) {
+  public void exit(boolean force, boolean exitConfirmed) {
   }
 
   @Override
-  public void restart(boolean force) {
+  public void restart(boolean exitConfirmed) {
   }
 
   @Override
@@ -71,7 +69,7 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
 
   @Override
   public boolean isDoNotSave() {
-    return false; 
+    return false;
   }
 
   @Override
@@ -98,14 +96,9 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
     return false;
   }
 
+  @NotNull
   @Override
-  public boolean isInModalProgressThread() {
-    return false;
-  }
-
-
-  @Override
-  public <T> T[] getExtensions(final ExtensionPointName<T> extensionPointName) {
+  public <T> T[] getExtensions(@NotNull final ExtensionPointName<T> extensionPointName) {
     return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();
   }
 
@@ -124,6 +117,17 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
 
   @Override
   public boolean tryRunReadAction(@NotNull Runnable runnable) {
+    runReadAction(runnable);
+    return true;
+  }
+
+  @Override
+  public boolean isWriteActionInProgress() {
+    return false;
+  }
+
+  @Override
+  public boolean isWriteActionPending() {
     return false;
   }
 }

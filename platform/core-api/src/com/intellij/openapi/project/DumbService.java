@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * A service managing IDEA's 'dumb' mode: when indices are updated in background and the functionality is very much limited.
- * Only the explicitly allowed functionality is available. Usually it's allowed by implementing {@link com.intellij.openapi.project.DumbAware} interface.
+ * Only the explicitly allowed functionality is available. Usually it's allowed by implementing {@link DumbAware} interface.
  *
  * If you want to register a toolwindow, which will be enabled during the dumb mode, please use {@link com.intellij.openapi.wm.ToolWindowManager}'s
  * registration methods which have 'canWorkInDumMode' parameter. 
@@ -45,7 +45,7 @@ public abstract class DumbService {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.project.DumbService");
 
   /**
-   * @see com.intellij.openapi.project.Project#getMessageBus()
+   * @see Project#getMessageBus()
    */
   public static final Topic<DumbModeListener> DUMB_MODE = new Topic<DumbModeListener>("dumb mode", DumbModeListener.class);
 
@@ -87,13 +87,15 @@ public abstract class DumbService {
   }
 
   @Nullable
-  public <T> T tryRunReadActionInSmartMode(@NotNull Computable<T> task, @NotNull String notification) {
+  public <T> T tryRunReadActionInSmartMode(@NotNull Computable<T> task, @Nullable String notification) {
     if (ApplicationManager.getApplication().isReadAccessAllowed()) {
       try {
         return task.compute();
       }
       catch (IndexNotReadyException e) {
-        showDumbModeNotification(notification);
+        if (notification != null) {
+          showDumbModeNotification(notification);
+        }
         return null;
       }
     }
@@ -147,23 +149,9 @@ public abstract class DumbService {
    * Invoke the runnable later on EventDispatchThread AND when IDEA isn't in dumb mode
    * @param runnable runnable
    */
-  public void smartInvokeLater(@NotNull final Runnable runnable) {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        runWhenSmart(runnable);
-      }
-    });
-  }
+  public abstract void smartInvokeLater(@NotNull Runnable runnable);
 
-  public void smartInvokeLater(@NotNull final Runnable runnable, @NotNull ModalityState modalityState) {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        runWhenSmart(runnable);
-      }
-    }, modalityState);
-  }
+  public abstract void smartInvokeLater(@NotNull Runnable runnable, @NotNull ModalityState modalityState);
 
   private static final NotNullLazyKey<DumbService, Project> INSTANCE_KEY = ServiceManager.createLazyKey(DumbService.class);
 
@@ -190,7 +178,9 @@ public abstract class DumbService {
     return new ArrayList<T>(collection);
   }
 
-  public abstract void queueTask(DumbModeTask task);
+  public abstract void queueTask(@NotNull DumbModeTask task);
+
+  public abstract void cancelTask(@NotNull DumbModeTask task);
 
   public abstract JComponent wrapGently(@NotNull JComponent dumbUnawareContent, @NotNull Disposable parentDisposable);
 
@@ -219,6 +209,30 @@ public abstract class DumbService {
     }
     return o instanceof DumbAware;
   }
+
+  /**
+   * Enables or disables alternative resolve strategies for the current thread.<p/> 
+   *
+   * Normally reference resolution uses index, and hence is not available in dumb mode. In some cases, alternative ways
+   * of performing resolve are available, although much slower. It's impractical to always use these ways because it'll
+   * lead to overloaded CPU (especially given there's also indexing in progress). But for some explicit user actions
+   * (e.g. explicit Goto Declaration) turning these slower methods is beneficial.<p/>
+   *
+   * NOTE: even with alternative resolution enabled, methods like resolve(), findClass() etc may still throw
+   * {@link IndexNotReadyException}. So alternative resolve is not a panacea, it might help provide navigation in some cases
+   * but not in all.<p/>
+   *
+   * A typical usage would involve try-finally, where the alternative resolution is first enabled, then an action is performed,
+   * and then alternative resolution is turned off in the finally block.
+   */
+  public abstract void setAlternativeResolveEnabled(boolean enabled);
+
+  /**
+   * @return whether alternative resolution is enabled for the current thread.
+   *
+   * @see #setAlternativeResolveEnabled(boolean)
+   */
+  public abstract boolean isAlternativeResolveEnabled();
 
   /**
    * @see #DUMB_MODE

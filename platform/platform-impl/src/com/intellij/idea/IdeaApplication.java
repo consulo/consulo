@@ -55,6 +55,7 @@ import java.util.Arrays;
 
 public class IdeaApplication {
   @NonNls public static final String IDEA_IS_INTERNAL_PROPERTY = "idea.is.internal";
+  @NonNls public static final String IDEA_IS_UNIT_TEST = "idea.is.unit.test";
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.idea.IdeaApplication");
 

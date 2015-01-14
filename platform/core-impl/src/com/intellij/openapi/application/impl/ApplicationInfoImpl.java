@@ -15,11 +15,15 @@
  */
 package com.intellij.openapi.application.impl;
 
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.BuildNumber;
+import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -359,7 +363,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
 
   private void load() {
     try {
-      Document doc = JDOMUtil.loadDocument(ApplicationInfoImpl.class, ABSOLUTE_APPLICATION_INFO_XML);
+      Document doc = JDOMUtil.loadDocument(ApplicationInfoImpl.class, ApplicationInfo.ABSOLUTE_APPLICATION_INFO_XML);
 
       readExternal(doc.getRootElement());
     }

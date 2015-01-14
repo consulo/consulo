@@ -15,12 +15,14 @@
  */
 package com.intellij.openapi.project;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.caches.CacheUpdater;
 import com.intellij.ide.caches.FileContent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -34,12 +36,13 @@ import com.intellij.util.Consumer;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CacheUpdateRunner {
+public class CacheUpdateRunner extends DumbModeTask {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.project.CacheUpdateRunner");
   private static final Key<Boolean> FAILED_TO_INDEX = Key.create("FAILED_TO_INDEX");
   private static final int PROC_COUNT = Runtime.getRuntime().availableProcessors();
@@ -52,13 +55,14 @@ public class CacheUpdateRunner {
     myUpdaters = updaters;
   }
 
-  public int queryNeededFiles(@NotNull ProgressIndicator indicator) {
-    // can be queried twice in DumbService  
-    return getSession(indicator).getFilesToUpdate().size();
+  @Override
+  public String toString() {
+    return new ArrayList<CacheUpdater>(myUpdaters).toString();
   }
 
-  public int getNumberOfPendingUpdateJobs(@NotNull ProgressIndicator indicator) {
-    return getSession(indicator).getNumberOfPendingUpdateJobs();
+  private int queryNeededFiles(@NotNull ProgressIndicator indicator) {
+    // can be queried twice in DumbService
+    return getSession(indicator).getFilesToUpdate().size();
   }
 
   @NotNull
@@ -70,7 +74,7 @@ public class CacheUpdateRunner {
     return session;
   }
 
-  public void processFiles(@NotNull final ProgressIndicator indicator, boolean processInReadAction) {
+  private void processFiles(@NotNull final ProgressIndicator indicator, boolean processInReadAction) {
     try {
       Collection<VirtualFile> files = mySession.getFilesToUpdate();
 
@@ -128,7 +132,7 @@ public class CacheUpdateRunner {
     }
   }
 
-  public void updatingDone() {
+  private void updatingDone() {
     try {
       mySession.updatingDone();
     }
@@ -156,7 +160,12 @@ public class CacheUpdateRunner {
       }
     };
     final Application application = ApplicationManager.getApplication();
-    application.addApplicationListener(canceller);
+    application.invokeAndWait(new Runnable() {
+      @Override
+      public void run() {
+        application.addApplicationListener(canceller);
+      }
+    }, ModalityState.any());
 
     final AtomicBoolean isFinished = new AtomicBoolean();
     try {
@@ -164,7 +173,7 @@ public class CacheUpdateRunner {
       if (threadsCount <= 0) {
         threadsCount = Math.max(1, Math.min(PROC_COUNT - 1, 4));
       }
-      if (threadsCount == 1) {
+      if (threadsCount == 1 || application.isWriteAccessAllowed()) {
         Runnable process = new MyRunnable(innerIndicator, queue, isFinished, progressUpdater, processInReadAction, project, fileProcessor);
         ProgressManager.getInstance().runProcess(process, innerIndicator);
       }
@@ -175,7 +184,7 @@ public class CacheUpdateRunner {
           AtomicBoolean ref = new AtomicBoolean();
           finishedRefs[i] = ref;
           Runnable process = new MyRunnable(innerIndicator, queue, ref, progressUpdater, processInReadAction, project, fileProcessor);
-          futures[i] = ApplicationManager.getApplication().executeOnPooledThread(getProcessWrapper(process));
+          futures[i] = ApplicationManager.getApplication().executeOnPooledThread(process);
         }
         isFinished.set(waitForAll(finishedRefs, futures));
       }
@@ -188,6 +197,7 @@ public class CacheUpdateRunner {
   }
 
   private static boolean waitForAll(@NotNull AtomicBoolean[] finishedRefs, @NotNull Future<?>[] futures) {
+    assert !ApplicationManager.getApplication().isWriteAccessAllowed();
     try {
       for (Future<?> future : futures) {
         future.get();
@@ -201,12 +211,28 @@ public class CacheUpdateRunner {
         }
       }
       return allFinished;
-
+    }
+    catch (InterruptedException ignored) {
     }
     catch (Throwable throwable) {
       LOG.error(throwable);
     }
     return false;
+  }
+
+  @Override
+  public void performInDumbMode(@NotNull ProgressIndicator indicator) {
+    indicator.checkCanceled();
+    indicator.setIndeterminate(true);
+    indicator.setText(IdeBundle.message("progress.indexing.scanning"));
+    int count = queryNeededFiles(indicator);
+
+    indicator.setIndeterminate(false);
+    indicator.setText(IdeBundle.message("progress.indexing.updating"));
+    if (count > 0) {
+      processFiles(indicator, true);
+    }
+    updatingDone();
   }
 
   private static class MyRunnable implements Runnable {
@@ -243,7 +269,7 @@ public class CacheUpdateRunner {
         try {
           final FileContent fileContent = myQueue.take(myInnerIndicator);
           if (fileContent == null) {
-            myFinished.set(Boolean.TRUE);
+            myFinished.set(true);
             return;
           }
 
@@ -275,7 +301,10 @@ public class CacheUpdateRunner {
                       @Override
                       public void run() {
                         if (myProcessInReadAction) {
-                          ApplicationManager.getApplication().runReadAction(action);
+                          // in wait methods we don't want to deadlock by grabbing write lock (or having it in queue) and trying to run read action in separate thread
+                          if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(action)) {
+                            throw new ProcessCanceledException();
+                          }
                         }
                         else {
                           action.run();
@@ -298,21 +327,5 @@ public class CacheUpdateRunner {
         }
       }
     }
-  }
-
-  private static Runnable getProcessWrapper(final Runnable process) {
-    // launching thread will hold read access for workers
-    return ApplicationManager.getApplication().isReadAccessAllowed() ? new Runnable() {
-      @Override
-      public void run() {
-        boolean old = ApplicationImpl.setExceptionalThreadWithReadAccessFlag(true);
-        try {
-          process.run();
-        }
-        finally {
-          ApplicationImpl.setExceptionalThreadWithReadAccessFlag(old);
-        }
-      }
-    } : process;
   }
 }

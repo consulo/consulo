@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
     myMessage = message;
   }
 
+  @NotNull
   public static YesNo yesNo(@NotNull String title, @NotNull String message) {
     return new YesNo(title, message).icon(Messages.getQuestionIcon());
   }
@@ -50,6 +51,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
 
   protected abstract T getThis();
 
+  @NotNull
   public T project(@Nullable Project project) {
     myProject = project;
     return getThis();
@@ -66,6 +68,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
     return getThis();
   }
 
+  @NotNull
   public T doNotAsk(@NotNull DialogWrapper.DoNotAskOption doNotAskOption) {
     myDoNotAskOption = doNotAskOption;
     return getThis();
@@ -95,12 +98,18 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
     public int show() {
       String yesText = ObjectUtils.chooseNotNull(myYesText, Messages.YES_BUTTON);
       String noText = ObjectUtils.chooseNotNull(myNoText, Messages.NO_BUTTON);
-      if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
-        return MacMessages.getInstance().showYesNoDialog(myTitle, myMessage, yesText, noText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
-      }
-      else {
-        return Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText}, 0, myIcon, myDoNotAskOption) == 0 ? Messages.YES : Messages.NO;
-      }
+      try {
+        if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
+          return MacMessages.getInstance().showYesNoDialog(myTitle, myMessage, yesText, noText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
+        }
+      } catch (Exception ignored) {}
+
+      return Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText}, 0, myIcon, myDoNotAskOption) == 0 ? Messages.YES : Messages.NO;
+
+    }
+
+    public boolean is() {
+      return show() == Messages.YES;
     }
   }
 
@@ -126,13 +135,16 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
       String yesText = ObjectUtils.chooseNotNull(myYesText, Messages.YES_BUTTON);
       String noText = ObjectUtils.chooseNotNull(myNoText, Messages.NO_BUTTON);
       String cancelText = ObjectUtils.chooseNotNull(myCancelText, Messages.CANCEL_BUTTON);
-      if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
-        return MacMessages.getInstance().showYesNoCancelDialog(myTitle, myMessage, yesText, noText, cancelText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
+      try {
+        if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
+          return MacMessages.getInstance().showYesNoCancelDialog(myTitle, myMessage, yesText, noText, cancelText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
+        }
       }
-      else {
-        int buttonNumber = Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText, cancelText}, 0, myIcon, myDoNotAskOption);
-        return buttonNumber == 0 ? Messages.YES : buttonNumber == 1 ? Messages.NO : Messages.CANCEL;
-      }
+      catch (Exception ignored) {}
+
+      int buttonNumber = Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText, cancelText}, 0, myIcon, myDoNotAskOption);
+      return buttonNumber == 0 ? Messages.YES : buttonNumber == 1 ? Messages.NO : Messages.CANCEL;
+
     }
   }
 }

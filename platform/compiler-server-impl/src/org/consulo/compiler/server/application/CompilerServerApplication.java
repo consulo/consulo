@@ -138,6 +138,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return myComponentStore;
   }
 
+  @NotNull
   @Override
   protected MutablePicoContainer createPicoContainer() {
     return Extensions.getRootArea().getPicoContainer();
@@ -214,6 +215,11 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @Override
   public boolean isInternal() {
+    return false;
+  }
+
+  @Override
+  public boolean isEAP() {
     return false;
   }
 
@@ -358,6 +364,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return ModalityState.NON_MODAL;
   }
 
+  @NotNull
   @Override
   public ModalityState getAnyModalityState() {
     return ModalityState.NON_MODAL;
@@ -393,11 +400,13 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return false;
   }
 
+  @NotNull
   @Override
   public Future<?> executeOnPooledThread(@NotNull Runnable action) {
     return ExecutorServiceHolder.ourThreadExecutorsService.submit(action);
   }
 
+  @NotNull
   @Override
   public <T> Future<T> executeOnPooledThread(@NotNull Callable<T> action) {
     return ExecutorServiceHolder.ourThreadExecutorsService.submit(action);
@@ -422,22 +431,24 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
+  @NotNull
   @Override
   public AccessToken acquireReadActionLock() {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
+  @NotNull
   @Override
   public AccessToken acquireWriteActionLock(@Nullable Class marker) {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
   @Override
-  public void load(String path) throws IOException, InvalidDataException {
+  public void load(String path) throws IOException {
     getStateStore().setOptionsPath(path);
     getStateStore().setConfigPath(PathManager.getConfigPath());
 
-    HeavyProcessLatch.INSTANCE.processStarted();
+    AccessToken accessToken = HeavyProcessLatch.INSTANCE.processStarted("app store load");
     try {
       getStateStore().load();
     }
@@ -445,7 +456,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
       throw new IOException(e.getMessage());
     }
     finally {
-      HeavyProcessLatch.INSTANCE.processFinished();
+      accessToken.finish();
     }
   }
 
@@ -467,6 +478,16 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
+  public boolean isWriteActionInProgress() {
+    return false;
+  }
+
+  @Override
+  public boolean isWriteActionPending() {
+    return false;
+  }
+
+  @Override
   public void doNotSave() {
   }
 
@@ -480,7 +501,8 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void exit(boolean force) {
+  public void exit(boolean force, boolean exitConfirmed) {
+
   }
 
   @Override
@@ -518,11 +540,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public boolean isInModalProgressThread() {
-    return true;
-  }
-
-  @Override
   public void assertIsDispatchThread(@Nullable JComponent component) {
   }
 
@@ -541,6 +558,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
+  @NotNull
   @Override
   public <T> T[] getExtensions(final ExtensionPointName<T> extensionPointName) {
     return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();

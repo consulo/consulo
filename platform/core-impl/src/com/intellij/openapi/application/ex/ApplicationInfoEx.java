@@ -37,7 +37,7 @@ import java.util.List;
 public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public static ApplicationInfoEx getInstanceEx() {
-    return (ApplicationInfoEx) getInstance();
+    return (ApplicationInfoEx) ApplicationInfo.getInstance();
   }
 
   public abstract Calendar getMajorReleaseBuildDate();

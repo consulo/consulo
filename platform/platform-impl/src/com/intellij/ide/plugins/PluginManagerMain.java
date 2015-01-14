@@ -640,7 +640,7 @@ public abstract class PluginManagerMain implements Disposable {
                   app.restart(true);
                 }
                 else {
-                  app.exit(true);
+                  app.exit(true, true);
                 }
               }
             }).notify(project);
