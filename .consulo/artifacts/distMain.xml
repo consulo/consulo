@@ -38,7 +38,7 @@
           <element id="module-production-resource-output" name="platform-resources-en" />
           <element id="module-production-resource-output" name="external-system-impl" />
           <element id="module-production-resource-output" name="external-system-api" />
-          <element id="module-production-resource-output" name="dvcs" />
+          <element id="module-production-resource-output" name="dvcs-impl" />
         </element>
         <element id="zip-archive" name="idea.jar">
           <element id="module-output" name="analysis-api" />
@@ -51,7 +51,7 @@
           <element id="module-output" name="compiler-server-impl" />
           <element id="module-output" name="core-api" />
           <element id="module-output" name="core-impl" />
-          <element id="module-output" name="dvcs" />
+          <element id="module-output" name="dvcs-impl" />
           <element id="module-output" name="editor-ui-api" />
           <element id="module-output" name="editor-ui-ex" />
           <element id="module-output" name="external-system-api" />
@@ -79,7 +79,7 @@
           <element id="module-output" name="vcs-api" />
           <element id="module-output" name="vcs-impl" />
           <element id="module-output" name="vcs-log-api" />
-          <element id="module-output" name="vcs-log-graph" />
+          <element id="module-output" name="vcs-log-graph-impl" />
           <element id="module-output" name="vcs-log-impl" />
           <element id="module-output" name="xdebugger-api" />
           <element id="module-output" name="xdebugger-impl" />
@@ -89,6 +89,8 @@
           <element id="module-production-resource-output" name="remote-servers-impl" />
           <element id="module-production-resource-output" name="core-api" />
           <element id="module-output" name="coverage-impl" />
+          <element id="module-output" name="vcs-log-graph-api" />
+          <element id="module-output" name="dvcs-api" />
           <element id="module-output" name="slf4j-bind" />
         </element>
         <element id="zip-archive" name="forms_rt.jar">

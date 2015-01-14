@@ -248,23 +248,6 @@
           <orderEntry type="library" name="Snappy-Java" level="project" />
         </module-layer>
       </module>
-      <module name="platform/dvcs" dirurl="file://$PROJECT_DIR$/platform/dvcs" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-          <extension id="lombok" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="core-api" />
-          <orderEntry type="module" module-name="testFramework" />
-          <orderEntry type="module" module-name="vcs-impl" />
-          <orderEntry type="library" name="Guava" level="project" />
-          <orderEntry type="module" module-name="vcs-log-api" />
-        </module-layer>
-      </module>
       <module name="platform/editor-ui-api" dirurl="file://$PROJECT_DIR$/platform/editor-ui-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
@@ -895,12 +878,12 @@
           <orderEntry type="library" name="OroMatcher" level="project" />
         </module-layer>
       </module>
-      <module name="platform/vcs-log-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log/api" current-layer="Default">
+      <module name="platform/vcs-log-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/../vcs-log/api/test" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
@@ -908,39 +891,24 @@
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="vcs-api" />
           <orderEntry type="library" name="JUnit4" level="project" />
+          <orderEntry type="module" module-name="vcs-log-graph-api" />
         </module-layer>
       </module>
-      <module name="platform/vcs-log-graph" dirurl="file://$PROJECT_DIR$/platform/vcs-log/graph" current-layer="Default">
+      <module name="platform/vcs-log-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
           <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="util" />
-          <orderEntry type="module" module-name="core-api" />
-          <orderEntry type="module" module-name="platform-api" />
-          <orderEntry type="module" module-name="vcs-log-api" />
-          <orderEntry type="library" name="JUnit4" level="project" />
-        </module-layer>
-      </module>
-      <module name="platform/vcs-log-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log/impl" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/icons" />
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
             <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/../vcs-log/impl/icons" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" />
-          <orderEntry type="module" module-name="vcs-log-api" />
+          <orderEntry type="module" module-name="vcs-log-api" exported="" />
           <orderEntry type="module" module-name="vcs-api" />
-          <orderEntry type="module" module-name="vcs-log-graph" />
+          <orderEntry type="module" module-name="vcs-log-graph-impl" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="vcs-impl" />
           <orderEntry type="library" name="Guava" level="project" />
@@ -1032,6 +1000,65 @@
             </library>
           </orderEntry>
           <orderEntry type="module" module-name="testRunner" />
+        </module-layer>
+      </module>
+      <module name="platform/dvcs-api" dirurl="file://$PROJECT_DIR$/platform/dvcs-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="util-rt" />
+          <orderEntry type="module" module-name="vcs-log-api" />
+          <orderEntry type="module" module-name="vcs-api" />
+        </module-layer>
+      </module>
+      <module name="platform/vcs-log-graph-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log-graph-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="util-rt" />
+        </module-layer>
+      </module>
+      <module name="platform/dvcs-impl" dirurl="file://$PROJECT_DIR$/platform/dvcs-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="dvcs-api" />
+          <orderEntry type="module" module-name="vcs-log-graph-api" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="util-rt" />
+          <orderEntry type="module" module-name="vcs-api" />
+          <orderEntry type="module" module-name="vcs-impl" />
+          <orderEntry type="module" module-name="vcs-log-impl" />
+          <orderEntry type="module" module-name="lang-impl" />
+        </module-layer>
+      </module>
+      <module name="platform/vcs-log-graph-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log-graph-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="vcs-log-graph-api" exported="" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="module" module-name="vcs-log-api" />
+          <orderEntry type="library" scope="TEST" name="JUnit4" level="project" />
         </module-layer>
       </module>
       <module name="platform/slf4j-bind" dirurl="file://$PROJECT_DIR$/platform/slf4j-bind" current-layer="Default">
