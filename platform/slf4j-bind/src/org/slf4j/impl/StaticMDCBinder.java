@@ -1,5 +1,6 @@
+
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.slf4j.impl;
 
-package com.intellij.execution.configurations;
+import org.slf4j.helpers.BasicMDCAdapter;
+import org.slf4j.spi.MDCAdapter;
 
-// This interface for RunConfiguration indicates specific debugger (e.g. provided by plugin)
-// and RunConfiguration won't be started with default runner (UI will show disabled button)
-public interface RunConfigurationWithSuppressedDefaultDebugAction {
+/**
+ * @author VISTALL
+ */
+public class StaticMDCBinder {
+  public static final StaticMDCBinder SINGLETON = new StaticMDCBinder();
+
+  private StaticMDCBinder() {
+  }
+  
+  public MDCAdapter getMDCA() {
+     return new BasicMDCAdapter();
+  }
+  
+  public String  getMDCAdapterClassStr() {
+    return BasicMDCAdapter.class.getName();
+  }
 }

@@ -1,13 +1,7 @@
 <component name="libraryTable">
   <library name="thrift">
     <binaries>
-      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/slf4j-log4j12-1.7.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/libthrift-0.9.1.jar!/" />
     </binaries>
-    <sources>
-      <root url="jar://$PROJECT_DIR$/libSrc/slf4j-api-1.7.6-sources.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libSrc/slf4j-log4j12-1.7.6-sources.jar!/" />
-    </sources>
   </library>
 </component>

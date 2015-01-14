@@ -48,10 +48,8 @@ public class RecentProjectPanel extends JPanel {
   private final JBList myList;
   private final UniqueNameBuilder<ReopenProjectAction> myPathShortener;
 
-  public RecentProjectPanel() {
+  public RecentProjectPanel(AnAction[] recentProjectActions) {
     super(new BorderLayout());
-
-    final AnAction[] recentProjectActions = RecentProjectsManagerBase.getInstance().getRecentProjectsActions(false);
 
     myPathShortener = new UniqueNameBuilder<ReopenProjectAction>(SystemProperties.getUserHome(), File.separator, 40);
     for (AnAction action : recentProjectActions) {
@@ -64,7 +62,7 @@ public class RecentProjectPanel extends JPanel {
 
     new ClickListener(){
       @Override
-      public boolean onClick(MouseEvent event, int clickCount) {
+      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
         int selectedIndex = myList.getSelectedIndex();
         if (selectedIndex >= 0) {
           if (myList.getCellBounds(selectedIndex, selectedIndex).contains(event.getPoint())) {
@@ -124,6 +122,7 @@ public class RecentProjectPanel extends JPanel {
 
     myList.addMouseMotionListener(new MouseMotionAdapter() {
       boolean myIsEngaged = false;
+      @Override
       public void mouseMoved(MouseEvent e) {
         if (myIsEngaged && !UIUtil.isSelectionButtonDown(e)) {
           Point point = e.getPoint();
