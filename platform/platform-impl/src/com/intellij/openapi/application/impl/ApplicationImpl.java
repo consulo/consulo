@@ -199,7 +199,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
     getPicoContainer().registerComponentInstance(Application.class, this);
 
-    BundleBase.assertKeyIsFound = IconLoader.STRICT = isUnitTestMode || isInternal;
+    BundleBase.assertKeyIsFound = IconLoader.STRICT = isUnitTestMode;
 
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
 
