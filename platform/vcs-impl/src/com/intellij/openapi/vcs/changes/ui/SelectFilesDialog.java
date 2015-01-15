@@ -88,12 +88,12 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
         }
       };
       defaultGroup.add(deleteAction);
-      deleteAction.registerCustomShortcutSet(CommonShortcuts.DELETE, this.getFileList());
+      deleteAction.registerCustomShortcutSet(CommonShortcuts.getDelete(), this.getFileList());
     }
     return defaultGroup;
   }
 
-  private static class VirtualFileList extends ChangesTreeList<VirtualFile> {
+  public static class VirtualFileList extends ChangesTreeList<VirtualFile> {
     private final Project myProject;
     @Nullable private final DeleteProvider myDeleteProvider;
 
@@ -103,14 +103,17 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
       myDeleteProvider = (deletableFiles ?  new VirtualFileDeleteProvider() : null);
     }
 
+    @Override
     protected DefaultTreeModel buildTreeModel(final List<VirtualFile> changes, ChangeNodeDecorator changeNodeDecorator) {
       return new TreeModelBuilder(myProject, false).buildModelFromFiles(changes);
     }
 
+    @Override
     protected List<VirtualFile> getSelectedObjects(final ChangesBrowserNode node) {
       return node.getAllFilesUnder();
     }
 
+    @Override
     protected VirtualFile getLeadSelectedObject(final ChangesBrowserNode node) {
       final Object o = node.getUserObject();
       if (o instanceof VirtualFile) {
@@ -125,7 +128,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
       if (key.equals(PlatformDataKeys.DELETE_ELEMENT_PROVIDER) && myDeleteProvider != null) {
         sink.put(key, myDeleteProvider);
       }
-      else if (key.equals(PlatformDataKeys.VIRTUAL_FILE_ARRAY)) {
+      else if (key.equals(CommonDataKeys.VIRTUAL_FILE_ARRAY)) {
         sink.put(key, ArrayUtil.toObjectArray(getSelectedChanges(), VirtualFile.class));
       }
     }
