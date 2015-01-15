@@ -81,6 +81,7 @@ public class HighlightDisplayLevel {
   }
 
 
+  @Override
   public String toString() {
     return mySeverity.toString();
   }
