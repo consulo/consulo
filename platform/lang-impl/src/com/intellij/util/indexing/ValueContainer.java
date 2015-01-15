@@ -29,28 +29,40 @@ import java.util.List;
  *         Date: Dec 14, 2007
  */
 public abstract class ValueContainer<Value> {
-  interface IntIterator {
+  public interface IntIterator {
     boolean hasNext();
 
     int next();
 
     int size();
+
+    boolean hasAscendingOrder();
+
+    IntIterator createCopyInInitialState();
   }
 
-  abstract static class IntPredicate {
-    abstract boolean contains(int id);
+  public interface IntPredicate {
+    boolean contains(int id);
   }
 
   @NotNull
   public abstract IntIterator getInputIdsIterator(Value value);
 
-  public abstract boolean isAssociated(Value value, int inputId);
-
   @NotNull
   public abstract IntPredicate getValueAssociationPredicate(Value value);
 
   @NotNull
-  public abstract Iterator<Value> getValueIterator();
+  public abstract ValueIterator<Value> getValueIterator();
+
+  public interface ValueIterator<Value> extends Iterator<Value> {
+    @NotNull
+    IntIterator getInputIdsIterator();
+
+    @NotNull
+    IntPredicate getValueAssociationPredicate();
+
+    Object getFileSetObject();
+  }
 
   @NotNull
   public abstract List<Value> toValueList();
@@ -63,9 +75,9 @@ public abstract class ValueContainer<Value> {
   }
 
   public final boolean forEach(@NotNull ContainerAction<Value> action) {
-    for (final Iterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext();) {
+    for (final ValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext();) {
       final Value value = valueIterator.next();
-      for (final IntIterator intIterator = getInputIdsIterator(value); intIterator.hasNext();) {
+      for (final IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext();) {
         if (!action.perform(intIterator.next(), value)) return false;
       }
     }

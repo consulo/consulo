@@ -16,18 +16,32 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.FileASTNode;
+import com.intellij.lang.*;
 import com.intellij.openapi.util.Getter;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.CharTableImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.IFileElementType;
+import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.util.CharTable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class FileElement extends LazyParseableElement implements FileASTNode, Getter<FileElement> {
   private volatile CharTable myCharTable = new CharTableImpl();
+  private volatile boolean myDetached;
+
+  @Override
+  protected PsiElement createPsiNoLock() {
+    return myDetached ? null : super.createPsiNoLock();
+  }
+
+  public void detachFromFile() {
+    myDetached = true;
+    clearPsi();
+  }
 
   @Override
   @NotNull
@@ -35,8 +49,29 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
     return myCharTable;
   }
 
+  @Nullable
+  @Override
+  public LighterAST getLighterAST() {
+    final IFileElementType contentType = (IFileElementType)getElementType();
+    assert contentType instanceof ILightStubFileElementType:contentType;
+
+    LighterAST tree;
+    if (!isParsed()) {
+      return new FCTSBackedLighterAST(getCharTable(), ((ILightStubFileElementType<?>)contentType).parseContentsLight(this));
+    }
+    else {
+      tree = new TreeBackedLighterAST(this);
+    }
+    return tree;
+  }
+
   public FileElement(IElementType type, CharSequence text) {
     super(type, text);
+  }
+
+  @Deprecated  // for 8.1 API compatibility
+  public FileElement(IElementType type) {
+    super(type, null);
   }
 
   @Override
@@ -53,7 +88,7 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
     return psiElementCopy.getTreeElement();
   }
 
-  public void setCharTable(CharTable table) {
+  public void setCharTable(@NotNull CharTable table) {
     myCharTable = table;
   }
 

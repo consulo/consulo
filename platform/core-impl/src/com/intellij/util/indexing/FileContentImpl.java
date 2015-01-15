@@ -16,6 +16,9 @@
 package com.intellij.util.indexing;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.LighterAST;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
@@ -25,9 +28,11 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
@@ -45,7 +50,7 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
   private byte[] myContent;
   private CharSequence myContentAsText;
   private final long myStamp;
-  private final byte[] myHash;
+  private byte[] myHash;
 
   @Override
   public Project getProject() {
@@ -74,6 +79,16 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     return psi;
   }
 
+  public @NotNull LighterAST getLighterASTForPsiDependentIndex() {
+    LighterAST lighterAST = getUserData(IndexingDataKeys.LIGHTER_AST_NODE_KEY);
+    if (lighterAST == null) {
+      lighterAST = getPsiFileForPsiDependentIndex().getNode().getLighterAST();
+      assert lighterAST != null;
+      putUserData(IndexingDataKeys.LIGHTER_AST_NODE_KEY, lighterAST);
+    }
+    return lighterAST;
+  }
+
   public PsiFile createFileFromText(@NotNull CharSequence text) {
     Project project = getProject();
     if (project == null) {
@@ -91,31 +106,26 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
   }
 
   public FileContentImpl(@NotNull final VirtualFile file, @NotNull final CharSequence contentAsText, final Charset charset) {
-    this(file, contentAsText, null, charset, -1, null);
+    this(file, contentAsText, null, charset, -1);
   }
 
   public FileContentImpl(@NotNull final VirtualFile file, @NotNull final CharSequence contentAsText, final Charset charset, long documentStamp) {
-    this(file, contentAsText, null, charset, documentStamp, null);
+    this(file, contentAsText, null, charset, documentStamp);
   }
 
   public FileContentImpl(@NotNull final VirtualFile file, @NotNull final byte[] content) {
-    this(file, content, null);
-  }
-
-  public FileContentImpl(@NotNull final VirtualFile file, @NotNull final byte[] content, byte[] hash) {
-    this(file, null, content, LoadTextUtil.detectCharsetAndSetBOM(file, content), -1, hash);
+    this(file, null, content, LoadTextUtil.detectCharsetAndSetBOM(file, content), -1);
   }
 
   public FileContentImpl(@NotNull final VirtualFile file) {
-    this(file, null, null, null, -1, null);
+    this(file, null, null, null, -1);
   }
 
   private FileContentImpl(@NotNull VirtualFile file,
                           CharSequence contentAsText,
                           byte[] content,
                           Charset charset,
-                          long stamp,
-                          byte[] hash
+                          long stamp
   ) {
     myFile = file;
     myContentAsText = contentAsText;
@@ -125,18 +135,11 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     // remember name explicitly because the file could be renamed afterwards
     myFileName = file.getName();
     myStamp = stamp;
-    myHash = hash;
-  }
-
-  @NotNull
-  private FileType substituteFileType(VirtualFile file, FileType fileType) {
-    Project project = getProject();
-    return SubstitutedFileType.substituteFileType(file, fileType, project);
   }
 
   @NotNull
   public FileType getSubstitutedFileType() {
-    return substituteFileType(myFile, myFileType);
+    return SubstitutedFileType.substituteFileType(myFile, myFileType, getProject());
   }
 
   @TestOnly
@@ -218,7 +221,30 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     return myFileName;
   }
 
-  public byte[] getHash() {
+  public @Nullable byte[] getHash() {
     return myHash;
   }
+
+  public void setHash(byte[] hash) {
+    myHash = hash;
+  }
+
+  public PsiFile getPsiFileForPsiDependentIndex() {
+    Document document = FileDocumentManager.getInstance().getCachedDocument(getFile());
+    PsiFile psi = null;
+    if (document != null) {
+      PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(getProject());
+      if (psiDocumentManager.isUncommited(document)) {
+        PsiFile existingPsi = psiDocumentManager.getPsiFile(document);
+        if(existingPsi != null) {
+          psi = existingPsi;
+        }
+      }
+    }
+    if (psi == null) {
+      psi = getPsiFile();
+    }
+    return psi;
+  }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,15 @@ import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
  * Makes some THashSet methods open to the public.
  * Adds {@link #get(Object)} method useful to intern objects.
  *
-* @author gregsh
-*/
+ * @author gregsh
+ */
 public class OpenTHashSet<T> extends THashSet<T> {
   public OpenTHashSet() {
     super();
@@ -60,13 +61,18 @@ public class OpenTHashSet<T> extends THashSet<T> {
     super(ts, strategy);
   }
 
+  public OpenTHashSet(final TObjectHashingStrategy<T> strategy, final T... ts) {
+    super(Arrays.asList(ts), strategy);
+  }
+
   @Override
   public int index(final T obj) {
     return super.index(obj);
   }
 
   public T get(final int index) {
-    return (T)_set[index];
+    @SuppressWarnings("unchecked") T t = (T)_set[index];
+    return t;
   }
 
   /**
@@ -77,5 +83,4 @@ public class OpenTHashSet<T> extends THashSet<T> {
     final int index = index(obj);
     return index < 0 ? null : get(index);
   }
-
 }

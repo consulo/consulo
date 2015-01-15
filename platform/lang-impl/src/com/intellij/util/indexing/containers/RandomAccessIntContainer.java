@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang;
+package com.intellij.util.indexing.containers;
 
-import com.intellij.util.CharTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.util.indexing.ValueContainer;
 
 /**
- * Top-level node in AST, corresponds to PsiFile.
- *
- * @see com.intellij.psi.PsiFile
+ * Created by Maxim.Mossienko on 5/27/2014.
  */
-public interface FileASTNode extends ASTNode {
-  @NotNull
-  CharTable getCharTable();
+interface RandomAccessIntContainer {
+  Object clone();
+  boolean add(int value);
+  boolean remove(int value);
+  ValueContainer.IntIterator intIterator();
+  ValueContainer.IntPredicate intPredicate();
+  void compact();
+  int size();
 
-  boolean isParsed();
+  boolean contains(int value);
 
-  @Nullable
-  LighterAST getLighterAST();
+  RandomAccessIntContainer ensureContainerCapacity(int diff);
 }

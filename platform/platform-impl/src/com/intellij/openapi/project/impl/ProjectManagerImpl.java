@@ -732,7 +732,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   public void saveChangedProjectFile(@NotNull VirtualFile file, @NotNull Project project) {
     StateStorageManager storageManager = ((ProjectEx)project).getStateStore().getStateStorageManager();
     String fileSpec = storageManager.collapseMacros(file.getPath());
-    Couple<Collection<FileBasedStorage>> storages = storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec), Collections.<String>emptyList());
+    Couple<Collection<FileBasedStorage>> storages = storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec),
+                                                                                              Collections.<String>emptyList());
     FileBasedStorage storage = ContainerUtil.getFirstItem(storages.first);
     // if empty, so, storage is not yet loaded, so, we don't have to reload
     if (storage != null) {

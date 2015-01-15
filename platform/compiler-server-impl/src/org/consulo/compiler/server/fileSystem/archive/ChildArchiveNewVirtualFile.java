@@ -160,6 +160,12 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
   public void setTimeStamp(long time) throws IOException {
   }
 
+  @NotNull
+  @Override
+  public CharSequence getNameSequence() {
+    return myName;
+  }
+
   @Override
   public int getId() {
     return 0;

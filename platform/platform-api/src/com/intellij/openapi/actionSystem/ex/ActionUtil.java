@@ -15,16 +15,16 @@
  */
 package com.intellij.openapi.actionSystem.ex;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,6 +61,11 @@ public class ActionUtil {
       return;
     }
 
+    DumbService.getInstance(project).showDumbModeNotification(getActionUnavailableMessage(actionNames));
+  }
+
+  @NotNull
+  public static String getActionUnavailableMessage(@NotNull List<String> actionNames) {
     String message;
     final String beAvailableUntil = " available while " + ApplicationNamesInfo.getInstance().getProductName() + " is updating indices";
     if (actionNames.isEmpty()) {
@@ -70,8 +75,13 @@ public class ActionUtil {
     } else {
       message = "None of the following actions are" + beAvailableUntil + ": " + StringUtil.join(actionNames, ", ");
     }
+    return message;
+  }
 
-    DumbService.getInstance(project).showDumbModeNotification(message);
+  @NotNull
+  public static String getUnavailableMessage(@NotNull String action, boolean plural) {
+    return action + (plural ? " are" : " is")
+           + " not available while " + ApplicationNamesInfo.getInstance().getProductName() + " is updating indices";
   }
 
   /**
@@ -86,8 +96,7 @@ public class ActionUtil {
   public static boolean performDumbAwareUpdate(AnAction action, AnActionEvent e, boolean beforeActionPerformed) {
     final Presentation presentation = e.getPresentation();
     final Boolean wasEnabledBefore = (Boolean)presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
-    final boolean dumbMode = project != null && DumbService.getInstance(project).isDumb();
+    final boolean dumbMode = isDumbMode(CommonDataKeys.PROJECT.getData(e.getDataContext()));
     if (wasEnabledBefore != null && !dumbMode) {
       presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, null);
       presentation.setEnabled(wasEnabledBefore.booleanValue());
@@ -98,15 +107,6 @@ public class ActionUtil {
     final boolean notAllowed = dumbMode && !action.isDumbAware();
 
     try {
-      boolean enabled = checkModuleExtensions(action, e);
-      //FIXME [VISTALL] hack
-      if(enabled && action instanceof ActionGroup) {
-        presentation.setEnabledAndVisibleSilent(true);
-      }
-      else if(!enabled) {
-        presentation.setEnabledAndVisible(enabled);
-      }
-
       if (beforeActionPerformed) {
         action.beforeActionPerformedUpdate(e);
       }
@@ -130,62 +130,25 @@ public class ActionUtil {
         presentation.setEnabled(false);
       }
     }
-    
+
     return false;
   }
 
-  private static boolean checkModuleExtensions(AnAction action, AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    if(project == null) {
-      return true;
+  /**
+   * @return whether a dumb mode is in progress for the passed project or, if the argument is null, for any open project.
+   * @see DumbService
+   */
+  public static boolean isDumbMode(@Nullable Project project) {
+    if (project != null) {
+      return DumbService.getInstance(project).isDumb();
     }
-    String[] moduleExtensionIds = action.getModuleExtensionIds();
-    if(moduleExtensionIds.length == 0) {
-      return true;
-    }
-    if(action.isCanUseProjectAsDefault()) {
-      for (Module temp : ModuleManager.getInstance(project).getModules()) {
-        boolean b = checkModuleForModuleExtensions(temp, moduleExtensionIds);
-        if(b) {
-          return true;
-        }
-      }
-    }
-    else {
-      Module module = e.getData(LangDataKeys.MODULE);
-      if(module != null) {
-        boolean result = checkModuleForModuleExtensions(module, moduleExtensionIds);
-        if(result) {
-          return true;
-        }
-      }
-
-      VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
-      if(virtualFiles != null) {
-        for (VirtualFile virtualFile : virtualFiles) {
-          Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
-          if(moduleForFile != null) {
-            boolean b = checkModuleForModuleExtensions(moduleForFile, moduleExtensionIds);
-            if(b) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  private static boolean checkModuleForModuleExtensions(@Nullable Module module, @NotNull String[] array) {
-    if(module == null) {
-      return false;
-    }
-    for (String moduleExtensionId : array) {
-      if(ModuleUtilCore.getExtension(module, moduleExtensionId) != null) {
+    for (Project proj : ProjectManager.getInstance().getOpenProjects()) {
+      if (DumbService.getInstance(proj).isDumb()) {
         return true;
       }
     }
     return false;
+
   }
 
   public static boolean lastUpdateAndCheckDumb(AnAction action, AnActionEvent e, boolean visibilityMatters) {

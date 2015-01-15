@@ -138,6 +138,12 @@ public class CompilerServerNewVirtualFileImpl extends NewVirtualFile {
   public void setTimeStamp(long time) throws IOException {
   }
 
+  @NotNull
+  @Override
+  public CharSequence getNameSequence() {
+    return getName();
+  }
+
   @Override
   public int getId() {
     return 0;

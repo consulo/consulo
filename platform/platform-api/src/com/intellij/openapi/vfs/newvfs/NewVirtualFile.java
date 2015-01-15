@@ -69,6 +69,10 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   public abstract void setTimeStamp(final long time) throws IOException;
 
   @Override
+  @NotNull
+  public abstract CharSequence getNameSequence();
+
+  @Override
   public abstract int getId();
 
   @Nullable @Deprecated

@@ -15,10 +15,13 @@
  */
 package com.intellij.openapi.vfs.newvfs.persistent;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
@@ -27,15 +30,11 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.openapi.vfs.newvfs.*;
 import com.intellij.openapi.vfs.newvfs.events.*;
-import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
-import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
-import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
-import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
+import com.intellij.openapi.vfs.newvfs.impl.*;
 import com.intellij.util.*;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.EmptyIntHashSet;
-import com.intellij.util.containers.StripedLockIntObjectConcurrentHashMap;
 import com.intellij.util.io.ReplicatorInputStream;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBus;
@@ -50,7 +49,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.zip.ZipFile;
 
 /**
  * @author max
@@ -64,19 +62,20 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   private final Map<String, VirtualFileSystemEntry> myRoots = ContainerUtil.newTroveMap(FileUtil.PATH_HASHING_STRATEGY);
   private final TIntObjectHashMap<VirtualFileSystemEntry> myRootsById = new TIntObjectHashMap<VirtualFileSystemEntry>();
 
-  private final ConcurrentIntObjectMap<VirtualFileSystemEntry> myIdToDirCache = new StripedLockIntObjectConcurrentHashMap<VirtualFileSystemEntry>();
+  private final ConcurrentIntObjectMap<VirtualFileSystemEntry> myIdToDirCache = ContainerUtil.createConcurrentIntObjectMap();
   private final Object myInputLock = new Object();
 
   private final AtomicBoolean myShutDown = new AtomicBoolean(false);
+  @SuppressWarnings("FieldCanBeLocal")
+  private final LowMemoryWatcher myWatcher = LowMemoryWatcher.register(new Runnable() {
+    @Override
+    public void run() {
+      clearIdCache();
+    }
+  });
 
   public PersistentFSImpl(@NotNull MessageBus bus) {
     myEventBus = bus;
-    LowMemoryWatcher.register(new Runnable() {
-      @Override
-      public void run() {
-        clearIdCache();
-      }
-    });
     ShutDownTracker.getInstance().registerShutdownTask(new Runnable() {
       @Override
       public void run() {
@@ -223,13 +222,13 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   @Override
   @Nullable
   public DataInputStream readAttribute(@NotNull final VirtualFile file, @NotNull final FileAttribute att) {
-    return FSRecords.readAttributeWithLock(getFileId(file), att.getId());
+    return FSRecords.readAttributeWithLock(getFileId(file), att);
   }
 
   @Override
   @NotNull
   public DataOutputStream writeAttribute(@NotNull final VirtualFile file, @NotNull final FileAttribute att) {
-    return FSRecords.writeAttribute(getFileId(file), att.getId(), att.isFixedSize());
+    return FSRecords.writeAttribute(getFileId(file), att);
   }
 
   @Nullable
@@ -414,6 +413,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     return len;
   }
 
+  @NotNull
   @Override
   public VirtualFile copyFile(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile parent, @NotNull String name) throws IOException {
     getDelegate(file).copyFile(requestor, file, parent, name);
@@ -426,6 +426,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     return child;
   }
 
+  @NotNull
   @Override
   public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile parent, @NotNull String dir) throws IOException {
     getDelegate(parent).createChildDirectory(requestor, parent, dir);
@@ -438,6 +439,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     return child;
   }
 
+  @NotNull
   @Override
   public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile parent, @NotNull String file) throws IOException {
     getDelegate(parent).createChildFile(requestor, parent, file);
@@ -792,7 +794,6 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     TIntArrayList childrenIdsUpdated = new TIntArrayList();
     List<VirtualFile> childrenToBeUpdated = new SmartList<VirtualFile>();
 
-    assert parent != null;
     final int parentId = getFileId(parent);
     assert parentId != 0;
     TIntHashSet parentChildrenIds = new TIntHashSet(FSRecords.list(parentId));
@@ -869,21 +870,36 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
       myRootsLock.readLock().unlock();
     }
 
-    VirtualFileSystemEntry newRoot;
+    final VirtualFileSystemEntry newRoot;
     int rootId = FSRecords.findRootRecord(rootUrl);
 
+    VfsData.Segment segment = VfsData.getSegment(rootId, true);
+    VfsData.DirectoryData directoryData = new VfsData.DirectoryData();
     if (fs instanceof JarFileSystem) {
-      // optimization: for jar roots do not store base path in the myName field, use local FS file's getPath()
-      String parentPath = basePath.substring(0, basePath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR));
+      String parentPath = basePath.substring(0, basePath.indexOf(JarFileSystem.JAR_SEPARATOR));
       VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(parentPath);
-      if (parentFile == null || !isValidJar(parentPath)) return null;
-      newRoot = new JarRoot(fs, rootId, parentFile);
+      if (parentFile == null) return null;
+      FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(parentFile.getName());
+      if (!(type instanceof ArchiveFileType)) return null;
+      newRoot = new JarRoot(fs, rootId, segment, directoryData, parentFile);
     }
     else {
-      newRoot = new FsRoot(fs, rootId, basePath);
+      newRoot = new FsRoot(fs, rootId, segment, directoryData, basePath);
     }
 
-    FileAttributes attributes = fs.getAttributes(newRoot);
+    FileAttributes attributes = fs.getAttributes(new StubVirtualFile() {
+      @NotNull
+      @Override
+      public String getPath() {
+        return newRoot.getPath();
+      }
+
+      @Nullable
+      @Override
+      public VirtualFile getParent() {
+        return null;
+      }
+    });
     if (attributes == null || !attributes.isDirectory()) {
       return null;
     }
@@ -895,6 +911,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
       VirtualFileSystemEntry root = myRoots.get(rootUrl);
       if (root != null) return root;
 
+      VfsData.initFile(rootId, segment, -1, directoryData);
       mark = writeAttributesToRecord(rootId, 0, newRoot, fs, attributes);
 
       myRoots.put(rootUrl, newRoot);
@@ -911,18 +928,6 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     LOG.assertTrue(rootId == newRoot.getId(), "root=" + newRoot + " expected=" + rootId + " actual=" + newRoot.getId());
 
     return newRoot;
-  }
-
-  @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
-  private static boolean isValidJar(@NotNull String path) {
-    try {
-      new ZipFile(path).close();
-      return true;
-    }
-    catch (IOException e) {
-      LOG.warn("invalid .jar: " + path);
-      return false;
-    }
   }
 
   @NotNull
@@ -1283,18 +1288,13 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
 
   private abstract static class AbstractRoot extends VirtualDirectoryImpl {
-    protected AbstractRoot(@NotNull NewVirtualFileSystem fs, int id) {
-      super(-1, null, fs, id, 0);
+    public AbstractRoot(int id, VfsData.Segment segment, VfsData.DirectoryData data, NewVirtualFileSystem fs) {
+      super(id, segment, data, null, fs);
     }
 
     @NotNull
     @Override
     public abstract CharSequence getNameSequence();
-
-    @Override
-    public int compareNameTo(@NotNull CharSequence name, boolean ignoreCase) {
-      return VirtualFileSystemEntry.compareNames(getName(), name, ignoreCase);
-    }
 
     @Override
     protected abstract char[] appendPathOnFileSystem(int accumulatedPathLength, int[] positionRef);
@@ -1314,8 +1314,8 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     private final VirtualFile myParentLocalFile;
     private final String myParentPath;
 
-    private JarRoot(@NotNull NewVirtualFileSystem fs, int rootId, @NotNull VirtualFile parentLocalFile) {
-      super(fs, rootId);
+    private JarRoot(@NotNull NewVirtualFileSystem fs, int id, VfsData.Segment segment, VfsData.DirectoryData data, VirtualFile parentLocalFile) {
+      super(id, segment, data, fs);
       myParentLocalFile = parentLocalFile;
       myParentPath = myParentLocalFile.getPath();
     }
@@ -1328,9 +1328,9 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
     @Override
     protected char[] appendPathOnFileSystem(int accumulatedPathLength, int[] positionRef) {
-      char[] chars = new char[myParentPath.length() + ArchiveFileSystem.ARCHIVE_SEPARATOR.length() + accumulatedPathLength];
+      char[] chars = new char[myParentPath.length() + JarFileSystem.JAR_SEPARATOR.length() + accumulatedPathLength];
       positionRef[0] = copyString(chars, positionRef[0], myParentPath);
-      positionRef[0] = copyString(chars, positionRef[0], ArchiveFileSystem.ARCHIVE_SEPARATOR);
+      positionRef[0] = copyString(chars, positionRef[0], JarFileSystem.JAR_SEPARATOR);
       return chars;
     }
   }
@@ -1338,8 +1338,8 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   private static class FsRoot extends AbstractRoot {
     private final String myName;
 
-    private FsRoot(@NotNull NewVirtualFileSystem fs, int rootId, @NotNull String basePath) {
-      super(fs, rootId);
+    private FsRoot(@NotNull NewVirtualFileSystem fs, int id, VfsData.Segment segment, VfsData.DirectoryData data, @NotNull String basePath) {
+      super(id, segment, data, fs);
       myName = FileUtil.toSystemIndependentName(basePath);
     }
 
