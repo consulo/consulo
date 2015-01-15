@@ -1430,6 +1430,11 @@
         <option name="FONT_TYPE" value="2" />
       </value>
     </option>
+    <option name="DO_NOT_SHOW">
+      <value>
+        <option name="ERROR_STRIPE_COLOR" value="266109" />
+      </value>
+    </option>
     <option name="Scala Type Alias">
       <value>
         <option name="FOREGROUND" value="4e807d" />

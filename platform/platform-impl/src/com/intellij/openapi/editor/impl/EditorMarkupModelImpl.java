@@ -25,7 +25,6 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.codeInsight.hint.*;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
@@ -55,6 +54,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ButtonlessScrollBarUI;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
@@ -76,11 +76,19 @@ import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
+  private static int getErrorIconWidth() {
+    return JBUI.scale(12);
+  }
+
+  private static int getErrorIconHeight() {
+    return JBUI.scale(12);
+  }
+
+  private static int getThinGap() {
+    return JBUI.scale(4);
+  }
+
   private static final TooltipGroup ERROR_STRIPE_TOOLTIP_GROUP = new TooltipGroup("ERROR_STRIPE_TOOLTIP_GROUP", 0);
-  private static final Icon ERRORS_FOUND_ICON = AllIcons.General.ErrorsFound;
-  private static final int ERROR_ICON_WIDTH = ERRORS_FOUND_ICON.getIconWidth();
-  private static final int ERROR_ICON_HEIGHT = ERRORS_FOUND_ICON.getIconHeight();
-  private static final int PREFERRED_WIDTH = ERROR_ICON_WIDTH + 3;
   private final EditorImpl myEditor;
   // null renderer means we should not show traffic light icon
   private ErrorStripeRenderer myErrorStripeRenderer;
@@ -408,14 +416,15 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       myDirtyYPositions = WHOLE_DOCUMENT;
     }
 
-    myEditor.getVerticalScrollBar().repaint(0, range.getStartOffset(), PREFERRED_WIDTH, range.getLength() + myMinMarkHeight);
+    myEditor.getVerticalScrollBar().repaint(0, range.getStartOffset(), getErrorIconWidth() + JBUI.scale(3), range.getLength() + myMinMarkHeight);
   }
 
   private boolean isMirrored() {
     return myEditor.isMirrored();
   }
 
-  private static final Dimension STRIPE_BUTTON_PREFERRED_SIZE = new Dimension(ERROR_ICON_WIDTH + 4, ERROR_ICON_HEIGHT + 4);
+  private static final Dimension STRIPE_BUTTON_PREFERRED_SIZE = new Dimension(getErrorIconWidth() + getThinGap(), getErrorIconHeight() +
+                                                                                                                  getThinGap());
 
   private class ErrorStripeButton extends JButton {
     private ErrorStripeButton() {
@@ -427,7 +436,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       ((ApplicationImpl)ApplicationManager.getApplication()).editorPaintStart();
 
       final Rectangle bounds = getBounds();
-      final Rectangle errorIconBounds = new Rectangle(0, 0, ERROR_ICON_WIDTH, ERROR_ICON_HEIGHT);
+      final Rectangle errorIconBounds = new Rectangle(0, 0, getErrorIconWidth(), getErrorIconHeight());
       errorIconBounds.x = bounds.width / 2 - errorIconBounds.width / 2 + 1;
       errorIconBounds.y = bounds.height / 2 - errorIconBounds.height / 2;
 
@@ -555,7 +564,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
         try {
           myDirtyYPositions = myDirtyYPositions.intersection(docRange);
           if (myDirtyYPositions == null) myDirtyYPositions = docRange;
-          repaint(imageGraphics, componentBounds.width, ERROR_ICON_WIDTH - 1, myDirtyYPositions);
+          repaint(imageGraphics, componentBounds.width, getErrorIconHeight() - JBUI.scale(1), myDirtyYPositions);
           myDirtyYPositions = null;
         }
         finally {

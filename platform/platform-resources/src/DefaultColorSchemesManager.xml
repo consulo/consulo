@@ -898,6 +898,11 @@
           <option name="ERROR_STRIPE_COLOR" value="ff"/>
         </value>
       </option>
+      <option name="DO_NOT_SHOW">
+        <value>
+          <option name="ERROR_STRIPE_COLOR" value="71B262" />
+        </value>
+      </option>
       <option name="BOOKMARKS_ATTRIBUTES">
         <value>
           <option name="ERROR_STRIPE_COLOR" value="0" />
