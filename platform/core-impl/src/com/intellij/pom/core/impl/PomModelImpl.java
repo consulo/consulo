@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.PomModel;
 import com.intellij.pom.PomModelAspect;
 import com.intellij.pom.PomTransaction;
@@ -144,7 +143,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
       startTransaction(transaction);
       try{
         DebugUtil.startPsiModification(null);
-        myBlockedAspects.push(new Pair<PomModelAspect, PomTransaction>(aspect, transaction));
+        myBlockedAspects.push(Pair.create(aspect, transaction));
 
         final PomModelEvent event;
         try{
@@ -213,7 +212,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
       final ListIterator<Pair<PomModelAspect, PomTransaction>> blocksIterator = myBlockedAspects.listIterator(myBlockedAspects.size());
       while (blocksIterator.hasPrevious()) {
         final Pair<PomModelAspect, PomTransaction> pair = blocksIterator.previous();
-        if (pomModelAspect == pair.getFirst() && // aspect dependance
+        if (pomModelAspect == pair.getFirst() && // aspect dependence
             PsiTreeUtil.isAncestor(pair.getSecond().getChangeScope(), transaction.getChangeScope(), false) &&
             // target scope contain current
             getContainingFileByTree(pair.getSecond().getChangeScope()) != null  // target scope physical
@@ -235,7 +234,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
       final int oldLength = containingFileByTree.getTextLength();
       boolean success = synchronizer.commitTransaction(document);
       if (success) {
-        BlockSupportImpl.sendAfterChildrenChangedEvent((PsiManagerImpl)PsiManager.getInstance(myProject), (PsiFileImpl)containingFileByTree, oldLength, true);
+        BlockSupportImpl.sendAfterChildrenChangedEvent((PsiManagerImpl)PsiManager.getInstance(myProject), containingFileByTree, oldLength, true);
       }
     }
     if (containingFileByTree != null) {
@@ -255,25 +254,22 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
       return;
     }
 
-    String newText = changedFile.getNode().getText();
+    CharSequence newText = changedFile.getNode().getChars();
     for (final PsiFile file : allFiles) {
       if (file != changedFile) {
         FileElement fileElement = ((PsiFileImpl)file).getTreeElement();
         if (fileElement != null) {
-          String oldText = fileElement.getText();
-          reparseFile(file, newText, oldText);
+          reparseFile(file, fileElement, newText);
         }
       }
     }
   }
 
-  private void reparseFile(final PsiFile file, String newText, String oldText) {
-    if (oldText.equals(newText)) return;
-
+  private void reparseFile(final PsiFile file, FileElement treeElement, CharSequence newText) {
     PsiToDocumentSynchronizer synchronizer =((PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject)).getSynchronizer();
-    int changeStart = StringUtil.commonPrefixLength(oldText, newText);
-    int changeEnd = oldText.length() - StringUtil.commonSuffixLength(oldText, newText);
-    TextRange changedPsiRange = DocumentCommitProcessor.getChangedPsiRange(file, changeStart, changeEnd, newText.length());
+    TextRange changedPsiRange = DocumentCommitProcessor.getChangedPsiRange(file, treeElement, newText);
+    if (changedPsiRange == null) return;
+
     final DiffLog log = BlockSupport.getInstance(myProject).reparseRange(file, changedPsiRange, newText, new EmptyProgressIndicator());
     synchronizer.setIgnorePsiEvents(true);
     try {
@@ -295,20 +291,38 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     }
   }
 
-  private void startTransaction(final PomTransaction transaction) {
+  private void startTransaction(@NotNull PomTransaction transaction) {
     final ProgressIndicator progressIndicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     if(progressIndicator != null) progressIndicator.startNonCancelableSection();
     final PsiDocumentManagerBase manager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject);
     final PsiToDocumentSynchronizer synchronizer = manager.getSynchronizer();
     final PsiElement changeScope = transaction.getChangeScope();
-    BlockSupportImpl.sendBeforeChildrenChangeEvent((PsiManagerImpl)PsiManager.getInstance(myProject), transaction.getChangeScope(), true);
     LOG.assertTrue(changeScope != null);
-    final PsiFile containingFileByTree = getContainingFileByTree(changeScope);
 
-    Document document = containingFileByTree == null ? null : manager.getCachedDocument(containingFileByTree);
-    if(document != null) {
-      synchronizer.startTransaction(myProject, document, transaction.getChangeScope());
+    final PsiFile containingFileByTree = getContainingFileByTree(changeScope);
+    boolean physical = changeScope.isPhysical();
+    if (physical && synchronizer.toProcessPsiEvent() && isDocumentUncommitted(containingFileByTree)) {
+      // fail-fast to prevent any psi modifications that would cause psi/document text mismatch
+      // PsiToDocumentSynchronizer assertions happen inside event processing and are logged by PsiManagerImpl.fireEvent instead of being rethrown
+      // so it's important to throw something outside event processing
+      throw new IllegalStateException("Attempt to modify PSI for non-committed Document!");
     }
+
+    BlockSupportImpl.sendBeforeChildrenChangeEvent((PsiManagerImpl)PsiManager.getInstance(myProject), changeScope, true);
+    Document document = containingFileByTree == null ? null :
+                        physical ? manager.getDocument(containingFileByTree) :
+                        manager.getCachedDocument(containingFileByTree);
+    if(document != null) {
+      synchronizer.startTransaction(myProject, document, changeScope);
+    }
+  }
+
+  private boolean isDocumentUncommitted(@Nullable PsiFile file) {
+    if (file == null) return false;
+
+    PsiDocumentManager manager = PsiDocumentManager.getInstance(myProject);
+    Document cachedDocument = manager.getCachedDocument(file);
+    return cachedDocument != null && manager.isUncommited(cachedDocument);
   }
 
   @Nullable

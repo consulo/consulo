@@ -15,6 +15,7 @@
  */
 package com.intellij.util.ui;
 
+import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -58,9 +59,14 @@ public class ColorIcon extends EmptyIcon {
     g.fillRect(x, y, myColorSize, myColorSize);
     
     if (myBorder) {
-      g.setColor(Color.BLACK);
+      g.setColor(getBorderColor());
       g.drawRect(x, y, myColorSize, myColorSize);
     }
+  }
+
+  @NotNull
+  public Color getBorderColor() {
+    return JBColor.BLACK;
   }
 
   @Override

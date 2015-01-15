@@ -53,6 +53,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.List;
@@ -68,7 +69,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   private final boolean myPhysical;
   private final AtomicReference<PsiFile> myPsiFile = new AtomicReference<PsiFile>();
   private volatile Content myContent;
-  private volatile SoftReference<Document> myDocument;
+  private volatile Reference<Document> myDocument;
   @NotNull private final Language myBaseLanguage;
 
   public SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile file) {
@@ -105,10 +106,6 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     }
 
     FileType fileType = file.getFileType();
-    // Do not load content
-    if (fileType == UnknownFileType.INSTANCE) {
-      fileType = FileTypeRegistry.getInstance().detectFileTypeFromContent(file);
-    }
     if (fileType.isBinary()) return Language.ANY;
     if (isTooLargeForIntelligence(file)) return PlainTextLanguage.INSTANCE;
 
@@ -168,7 +165,6 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
 
   @Override
   public void beforeContentsSynchronized() {
-    unsetPsiContent();
   }
 
   @Override
@@ -217,10 +213,11 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
 
-  public PsiFile getCachedPsi(Language target) {
+  public PsiFile getCachedPsi(@NotNull Language target) {
     return myPsiFile.get();
   }
 
+  @NotNull
   public FileElement[] getKnownTreeRoots() {
     PsiFile psiFile = myPsiFile.get();
     if (psiFile == null || !(psiFile instanceof PsiFileImpl)) return new FileElement[0];
@@ -235,7 +232,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
       if (isIgnored()) return null;
 
       final Project project = myManager.getProject();
-      if (isPhysical()) { // check directories consistency
+      if (isPhysical() && vFile.isInLocalFileSystem()) { // check directories consistency
         final VirtualFile parent = vFile.getParent();
         if (parent == null) return null;
         final PsiDirectory psiDir = getManager().findDirectory(parent);
@@ -261,8 +258,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
 
   protected boolean isIgnored() {
     final VirtualFile file = getVirtualFile();
-    if (file instanceof LightVirtualFile) return false;
-    return FileTypeRegistry.getInstance().isFileIgnored(file);
+    return !(file instanceof LightVirtualFile) && FileTypeRegistry.getInstance().isFileIgnored(file);
   }
 
   @Nullable
@@ -361,7 +357,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     Document document = com.intellij.reference.SoftReference.dereference(myDocument);
     if (document == null/* TODO[ik] make this change && isEventSystemEnabled()*/) {
       document = FileDocumentManager.getInstance().getDocument(getVirtualFile());
-      myDocument = new SoftReference<Document>(document);
+      myDocument = document == null ? null : new SoftReference<Document>(document);
     }
     if (document != null && getContent() instanceof VirtualFileContent) {
       setContent(new DocumentContent());
@@ -387,7 +383,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
 
   @Override
   public PsiReference findReferenceAt(final int offset) {
-    final PsiFileImpl psiFile = (PsiFileImpl)getPsi(getBaseLanguage());
+    final PsiFile psiFile = getPsi(getBaseLanguage());
     return findReferenceAt(psiFile, offset);
   }
 
@@ -450,16 +446,17 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     return null;
   }
 
-  public void forceCachedPsi(final PsiFile psiFile) {
+  public void forceCachedPsi(@NotNull PsiFile psiFile) {
     myPsiFile.set(psiFile);
     ((PsiManagerEx)myManager).getFileManager().setViewProvider(getVirtualFile(), this);
   }
 
+  @NotNull
   private Content getContent() {
     return myContent;
   }
 
-  private void setContent(final Content content) {
+  private void setContent(@NotNull Content content) {
     // temporarily commented
     //if (myPhysical) {
     //  final Content oldContent = myContent;
@@ -503,7 +500,20 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
 
     @Override
     public long getModificationStamp() {
-      return getVirtualFile().getModificationStamp();
+      final VirtualFile virtualFile = getVirtualFile();
+      if (virtualFile instanceof LightVirtualFile) {
+        Document doc = getCachedDocument();
+        if (doc != null) return getLastCommittedStamp(doc);
+        return virtualFile.getModificationStamp();
+      }
+
+      final Document document = getDocument();
+      if (document == null) {
+        return virtualFile.getModificationStamp();
+      }
+      else {
+        return getLastCommittedStamp(document);
+      }
     }
 
     @NonNls
@@ -515,6 +525,9 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
 
   private CharSequence getLastCommittedText(Document document) {
     return PsiDocumentManager.getInstance(myManager.getProject()).getLastCommittedText(document);
+  }
+  private long getLastCommittedStamp(Document document) {
+    return PsiDocumentManager.getInstance(myManager.getProject()).getLastCommittedStamp(document);
   }
 
   private class DocumentContent implements Content {
@@ -535,8 +548,8 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
 
     @Override
     public long getModificationStamp() {
-      Document document = com.intellij.reference.SoftReference.dereference(myDocument);
-      if (document != null) return document.getModificationStamp();
+      Document document = getCachedDocument();
+      if (document != null) return getLastCommittedStamp(document);
       return myVirtualFile.getModificationStamp();
     }
   }

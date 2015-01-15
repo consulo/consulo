@@ -628,6 +628,7 @@
                     interface="com.intellij.codeInspection.InspectionToolProvider"/>
     <extensionPoint name="inspectionToolsFactory"
                     interface="com.intellij.codeInspection.InspectionToolsFactory"/>
+    <extensionPoint name="inspectionElementsMerger" interface="com.intellij.codeInspection.ex.InspectionElementsMerger"/>
     <extensionPoint name="codeInspection.InspectionExtension" interface="com.intellij.codeInspection.lang.InspectionExtensionsFactory"/>
 
     <extensionPoint name="customPasteProvider" interface="com.intellij.ide.PasteProvider"/>
@@ -812,6 +813,8 @@
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.IndentStrategy"/>
     </extensionPoint>
+
+    <extensionPoint name="disabledIndentRangesProvider" interface="com.intellij.psi.impl.source.DisabledIndentRangesProvider" />
 
     <extensionPoint name="gotoDeclarationHandler"
                     interface="com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler"/>
@@ -1726,6 +1729,7 @@
 
     <applicationService serviceInterface="com.intellij.find.FindSettings"
                         serviceImplementation="com.intellij.find.impl.FindSettingsImpl"/>
+    <applicationService serviceImplementation="com.intellij.find.impl.FindSettingsImpl$FindRecents"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.CodeInsightSettings"
                         serviceImplementation="com.intellij.codeInsight.CodeInsightSettings"/>

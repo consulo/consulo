@@ -4,6 +4,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.UnfairTextRange;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
@@ -54,7 +55,7 @@ public class ParagraphFillHandler {
         document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(),
                                replacementText);
         final CodeFormatterFacade codeFormatter = new CodeFormatterFacade(
-                                        CodeStyleSettingsManager.getSettings(element.getProject()));
+                CodeStyleSettingsManager.getSettings(element.getProject()), element.getLanguage());
         codeFormatter.doWrapLongLinesIfNecessary(editor, element.getProject(), document,
                                                  textRange.getStartOffset(),
                                                  textRange.getStartOffset() + replacementText.length() + 1);
@@ -82,14 +83,14 @@ public class ParagraphFillHandler {
   private TextRange getTextRange(@NotNull final PsiElement element, @NotNull final Editor editor) {
     int startOffset = getStartOffset(element, editor);
     int endOffset = getEndOffset(element, editor);
-    return TextRange.create(startOffset, endOffset);
+    return new UnfairTextRange(startOffset, endOffset);
   }
 
   private int getStartOffset(@NotNull final PsiElement element, @NotNull final Editor editor) {
     if (isBunchOfElement(element)) {
       final PsiElement firstElement = getFirstElement(element);
       return firstElement != null? firstElement.getTextRange().getStartOffset()
-                                        : element.getTextRange().getStartOffset();
+                                 : element.getTextRange().getStartOffset();
     }
     final int offset = editor.getCaretModel().getOffset();
     final int elementTextOffset = element.getTextOffset();
@@ -105,9 +106,9 @@ public class ParagraphFillHandler {
       }
       lineNumber -= 1;
     }
-    final int lineStartOffset = document.getLineStartOffset(lineNumber);
+    final int lineStartOffset = lineNumber == document.getLineNumber(elementTextOffset) ? elementTextOffset : document.getLineStartOffset(lineNumber);
     final String lineText = document
-      .getText(TextRange.create(lineStartOffset, document.getLineEndOffset(lineNumber)));
+            .getText(TextRange.create(lineStartOffset, document.getLineEndOffset(lineNumber)));
     int shift = StringUtil.findFirst(lineText, CharFilter.NOT_WHITESPACE_FILTER);
 
     return lineStartOffset + shift;
@@ -147,7 +148,7 @@ public class ParagraphFillHandler {
     PsiElement result = element;
     while (prevSibling != null && (prevSibling.getNode().getElementType().equals(elementType) ||
                                    (atWhitespaceToken(prevSibling) &&
-                                   StringUtil.countChars(prevSibling.getText(), '\n') <= 1))) {
+                                    StringUtil.countChars(prevSibling.getText(), '\n') <= 1))) {
       String text = prevSibling.getText();
       final String prefix = getPrefix(element);
       final String postfix = getPostfix(element);
@@ -172,7 +173,7 @@ public class ParagraphFillHandler {
     PsiElement result = element;
     while (nextSibling != null && (nextSibling.getNode().getElementType().equals(elementType) ||
                                    (atWhitespaceToken(nextSibling) &&
-                                   StringUtil.countChars(nextSibling.getText(), '\n') <= 1))) {
+                                    StringUtil.countChars(nextSibling.getText(), '\n') <= 1))) {
       String text = nextSibling.getText();
       final String prefix = getPrefix(element);
       final String postfix = getPostfix(element);

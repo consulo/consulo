@@ -78,7 +78,7 @@ public class WebServer implements Disposable {
   }
 
   private static boolean checkPort(final InetSocketAddress remoteAddress) {
-    final ClientBootstrap bootstrap = new ClientBootstrap(new OioClientSocketChannelFactory(PooledThreadExecutor.INSTANCE));
+    final ClientBootstrap bootstrap = new ClientBootstrap(new OioClientSocketChannelFactory());
     bootstrap.setOption("child.tcpNoDelay", true);
 
     final AtomicBoolean result = new AtomicBoolean(false);

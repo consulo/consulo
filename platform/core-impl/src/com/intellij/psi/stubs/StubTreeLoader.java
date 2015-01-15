@@ -35,10 +35,12 @@ public abstract class StubTreeLoader {
 
   @Nullable
   public abstract ObjectStubTree readFromVFile(Project project, final VirtualFile vFile);
-  
+
   public abstract void rebuildStubTree(VirtualFile virtualFile);
 
   public abstract long getStubTreeTimestamp(VirtualFile vFile);
 
   public abstract boolean canHaveStub(VirtualFile file);
+
+  public abstract String getIndexingStampDebugInfo(VirtualFile file);
 }

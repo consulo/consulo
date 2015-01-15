@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,6 +55,7 @@ import com.intellij.ui.ComponentWithMnemonics;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBOptionButton;
 import com.intellij.ui.popup.list.ListPopupImpl;
+import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.Alarm;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
@@ -137,6 +138,10 @@ public final class IdeKeyEventDispatcher implements Disposable {
     if (myDisposed) return false;
 
     if(e.isConsumed()){
+      return false;
+    }
+
+    if (isSpeedSearchEditing(e)) {
       return false;
     }
 
@@ -226,18 +231,25 @@ public final class IdeKeyEventDispatcher implements Disposable {
     }
   }
 
+  private static boolean isSpeedSearchEditing(KeyEvent e) {
+    int keyCode = e.getKeyCode();
+    if (keyCode == KeyEvent.VK_BACK_SPACE) {
+      Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+      if (owner instanceof JComponent) {
+        SpeedSearchSupply supply = SpeedSearchSupply.getSupply((JComponent)owner);
+        return supply != null && supply.isPopupActive();
+      }
+    }
+    return false;
+  }
+
   /**
    * @return <code>true</code> if and only if the <code>component</code> represents
    * modal context.
    * @throws IllegalArgumentException if <code>component</code> is <code>null</code>.
    */
   public static boolean isModalContext(@NotNull Component component) {
-    Window window;
-    if (component instanceof Window) {
-      window = (Window)component;
-    } else {
-      window = SwingUtilities.getWindowAncestor(component);
-    }
+    Window window = UIUtil.getWindow(component);
 
     if (window instanceof IdeFrameImpl) {
       final Component pane = ((IdeFrameImpl) window).getGlassPane();
@@ -472,7 +484,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
         if (shortcut instanceof KeyboardShortcut) {
           KeyboardShortcut keyShortcut = (KeyboardShortcut)shortcut;
           if (keyShortcut.getFirstKeyStroke().equals(myFirstKeyStroke)) {
-            secondKeyStrokes.add(new Pair<AnAction, KeyStroke>(action, keyShortcut.getSecondKeyStroke()));
+            secondKeyStrokes.add(Pair.create(action, keyShortcut.getSecondKeyStroke()));
           }
         }
       }
@@ -601,7 +613,9 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
       processor.onUpdatePassed(e, action, actionEvent);
 
-      ((DataManagerImpl.MyDataContext)myContext.getDataContext()).setEventCount(IdeEventQueue.getInstance().getEventCount(), this);
+      if (myContext.getDataContext() instanceof DataManagerImpl.MyDataContext) { // this is not true for test data contexts
+        ((DataManagerImpl.MyDataContext)myContext.getDataContext()).setEventCount(IdeEventQueue.getInstance().getEventCount(), this);
+      }
       actionManager.fireBeforeActionPerformed(action, actionEvent.getDataContext(), actionEvent);
       Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(actionEvent.getDataContext());
       if (component != null && !component.isShowing()) {
@@ -816,15 +830,17 @@ public final class IdeKeyEventDispatcher implements Disposable {
           };
 
           final KeyStroke keyStroke = pair.getSecond();
-          registerAction(actionText, keyStroke, a);
+          if (keyStroke != null) {
+            registerAction(actionText, keyStroke, a);
 
-          if (keyStroke.getModifiers() == 0) {
-            // do a little trick here, so if I will press Command+R and the second keystroke is just 'R',
-            // I want to be able to hold the Command while pressing 'R'
+            if (keyStroke.getModifiers() == 0) {
+              // do a little trick here, so if I will press Command+R and the second keystroke is just 'R',
+              // I want to be able to hold the Command while pressing 'R'
 
-            final KeyStroke additionalKeyStroke = KeyStroke.getKeyStroke(keyStroke.getKeyCode(), firstKeyStroke.getModifiers());
-            final String _existing = getActionForKeyStroke(additionalKeyStroke);
-            if (_existing == null) registerAction("__additional__" + actionText, additionalKeyStroke, a);
+              final KeyStroke additionalKeyStroke = KeyStroke.getKeyStroke(keyStroke.getKeyCode(), firstKeyStroke.getModifiers());
+              final String _existing = getActionForKeyStroke(additionalKeyStroke);
+              if (_existing == null) registerAction("__additional__" + actionText, additionalKeyStroke, a);
+            }
           }
 
           return true;

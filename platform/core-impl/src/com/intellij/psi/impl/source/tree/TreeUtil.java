@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,16 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.stubs.*;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubBase;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.StubTree;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStrongWhitespaceHolderElementType;
 import com.intellij.psi.tree.IStubFileElementType;
@@ -54,13 +57,11 @@ public class TreeUtil {
   public static void ensureParsedRecursively(@NotNull ASTNode node) {
     ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() { });
   }
-  public static void ensureParsedRecursivelyCheckingProgress(@NotNull ASTNode node, final ProgressIndicator indicator) {
+  public static void ensureParsedRecursivelyCheckingProgress(@NotNull ASTNode node, @NotNull final ProgressIndicator indicator) {
     ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
       @Override
       public void visitLeaf(LeafElement leaf) {
-        if (indicator != null) {
-          indicator.checkCanceled();
-        }
+        indicator.checkCanceled();
       }
     });
   }
@@ -121,12 +122,16 @@ public class TreeUtil {
 
   @Nullable
   public static LeafElement findFirstLeaf(ASTNode element) {
-    if (element instanceof LeafElement) {
-      return (LeafElement)element;
+    return (LeafElement)findFirstLeaf(element, true);
+  }
+
+  public static ASTNode findFirstLeaf(ASTNode element, boolean expandChameleons) {
+    if (element instanceof LeafElement || !expandChameleons && isCollapsedChameleon(element)) {
+      return element;
     }
     else {
       for (ASTNode child = element.getFirstChildNode(); child != null; child = child.getTreeNext()) {
-        LeafElement leaf = findFirstLeaf(child);
+        ASTNode leaf = findFirstLeaf(child, expandChameleons);
         if (leaf != null) return leaf;
       }
       return null;
@@ -159,7 +164,11 @@ public class TreeUtil {
 
   @Nullable
   public static ASTNode findLastLeaf(ASTNode element) {
-    if (element instanceof LeafElement) {
+    return findLastLeaf(element, true);
+  }
+
+  public static ASTNode findLastLeaf(ASTNode element, boolean expandChameleons) {
+    if (element instanceof LeafElement || !expandChameleons && isCollapsedChameleon(element)) {
       return element;
     }
     for (ASTNode child = element.getLastChildNode(); child != null; child = child.getTreePrev()) {
@@ -180,11 +189,32 @@ public class TreeUtil {
   }
 
   @Nullable
+  public static ASTNode findSibling(ASTNode start, TokenSet types) {
+    ASTNode child = start;
+    while (true) {
+      if (child == null) return null;
+      if (types.contains(child.getElementType())) return child;
+      child = child.getTreeNext();
+    }
+  }
+
+  @Nullable
   public static ASTNode findSiblingBackward(ASTNode start, IElementType elementType) {
     ASTNode child = start;
     while (true) {
       if (child == null) return null;
       if (child.getElementType() == elementType) return child;
+      child = child.getTreePrev();
+    }
+  }
+
+
+  @Nullable
+  public static ASTNode findSiblingBackward(ASTNode start, TokenSet types) {
+    ASTNode child = start;
+    while (true) {
+      if (child == null) return null;
+      if (types.contains(child.getElementType())) return child;
       child = child.getTreePrev();
     }
   }
@@ -205,8 +235,8 @@ public class TreeUtil {
     return null;
   }
 
-  public static Pair<ASTNode, ASTNode> findTopmostSiblingParents(ASTNode one, ASTNode two) {
-    if (one == two) return Pair.create(null, null);
+  public static Couple<ASTNode> findTopmostSiblingParents(ASTNode one, ASTNode two) {
+    if (one == two) return Couple.of(null, null);
 
     LinkedList<ASTNode> oneParents = new LinkedList<ASTNode>();
     LinkedList<ASTNode> twoParents = new LinkedList<ASTNode>();
@@ -225,7 +255,7 @@ public class TreeUtil {
     }
     while (one == two && one != null);
 
-    return new Pair<ASTNode, ASTNode>(one, two);
+    return Couple.of(one, two);
   }
 
   public static void clearCaches(@NotNull final TreeElement tree) {
@@ -366,6 +396,30 @@ public class TreeUtil {
   }
 
   @Nullable
+  public static ASTNode nextLeaf(@Nullable ASTNode start, boolean expandChameleons) {
+    while (start != null) {
+      for (ASTNode each = start.getTreeNext(); each != null; each = each.getTreeNext()) {
+        ASTNode leaf = findFirstLeaf(each, expandChameleons);
+        if (leaf != null) return leaf;
+      }
+      start = start.getTreeParent();
+    }
+    return null;
+  }
+
+  @Nullable
+  public static ASTNode prevLeaf(@Nullable ASTNode start, boolean expandChameleons) {
+    while (start != null) {
+      for (ASTNode each = start.getTreePrev(); each != null; each = each.getTreePrev()) {
+        ASTNode leaf = findLastLeaf(each, expandChameleons);
+        if (leaf != null) return leaf;
+      }
+      start = start.getTreeParent();
+    }
+    return null;
+  }
+
+  @Nullable
   public static ASTNode getLastChild(ASTNode element) {
     ASTNode child = element;
     while (child != null) {
@@ -395,7 +449,9 @@ public class TreeUtil {
     FileElement tree = file.getTreeElement();
     assert tree != null : file;
 
-    final StubBuilder builder = ((IStubFileElementType)file.getContentElementType()).getBuilder();
+    final IStubFileElementType type = file.getElementTypeForStubBuilder();
+    assert type != null;
+    final StubBuilder builder = type.getBuilder();
     tree.acceptTree(new RecursiveTreeElementWalkingVisitor() {
       @Override
       protected void visitNode(TreeElement node) {

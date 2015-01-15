@@ -431,7 +431,19 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @NotNull
   @Override
-  public <T> Future<T> executeOnPooledThread(@NotNull final Callable<T> action) {
+  public <T> Future<T> executeOnPooledThread(@NotNull final Callable<T> c) {
+    final Callable<T> action = new Callable<T>() {
+      @Override
+      public T call() throws Exception {
+        try {
+          return c.call();
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+          return null;
+        }
+      }
+    }  ;
     return ourThreadExecutorsService.submit(new Callable<T>() {
       @Override
       public T call() {

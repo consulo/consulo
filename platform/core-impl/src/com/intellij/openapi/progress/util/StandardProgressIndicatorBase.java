@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.openapi.progress.util;
 
-/*
- * @author max
- */
-package com.intellij.psi.stubs;
+import com.intellij.openapi.progress.StandardProgressIndicator;
 
-import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IStubFileElementType;
-import org.jetbrains.annotations.NotNull;
+public class StandardProgressIndicatorBase extends AbstractProgressIndicatorBase implements StandardProgressIndicator {
+  @Override
+  public final void cancel() {
+    super.cancel();
+  }
 
-public interface PsiFileStub<T extends PsiFile> extends StubElement<T>, UserDataHolder {
-  IStubFileElementType getType();
-
-  @NotNull
-  PsiFileStub[] getStubRoots();
+  @Override
+  public final boolean isCanceled() {
+    return super.isCanceled();
+  }
 }

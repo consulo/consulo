@@ -23,6 +23,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;
@@ -48,29 +49,14 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       return fromIndices;
     }
 
-    if (!canHaveStub(vFile)) {
-      return null;
-    }
-
     try {
       final FileContent fc = new FileContentImpl(vFile, vFile.contentsToByteArray());
       fc.putUserData(IndexingDataKeys.PROJECT, project);
-      if (psiFile != null) {
-        fc.putUserData(IndexingDataKeys.PSI_FILE, psiFile);
-        if (!vFile.getFileType().isBinary()) {
-          fc.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, psiFile.getViewProvider().getContents());
-        }
-        psiFile.putUserData(PsiFileImpl.BUILDING_STUB, true);
+      if (psiFile != null && !vFile.getFileType().isBinary()) {
+        fc.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, psiFile.getViewProvider().getContents());
+        // but don't reuse psiFile itself to avoid loading its contents. If we load AST, the stub will be thrown out anyway.
       }
-      Stub element;
-      try {
-        element = StubTreeBuilder.buildStubTree(fc);
-      }
-      finally {
-        if (psiFile != null) {
-          psiFile.putUserData(PsiFileImpl.BUILDING_STUB, null);
-        }
-      }
+      Stub element = StubTreeBuilder.buildStubTree(fc);
       if (element instanceof PsiFileStub) {
         StubTree tree = new StubTree((PsiFileStub)element);
         tree.setDebugInfo("created from file content");
@@ -101,20 +87,21 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     Document document = FileDocumentManager.getInstance().getCachedDocument(vFile);
     boolean saved = document == null || !FileDocumentManager.getInstance().isDocumentUnsaved(document);
 
-    final List<SerializedStubTree> datas =
-            FileBasedIndex.getInstance().getValues(StubUpdatingIndex.INDEX_ID, id, GlobalSearchScope.fileScope(project, vFile));
+    final List<SerializedStubTree> datas = FileBasedIndex.getInstance().getValues(StubUpdatingIndex.INDEX_ID, id, GlobalSearchScope
+            .fileScope(project, vFile));
     final int size = datas.size();
 
     if (size == 1) {
       SerializedStubTree stubTree = datas.get(0);
 
       if (!stubTree.contentLengthMatches(vFile.getLength(), getCurrentTextContentLength(project, vFile, document))) {
-        //todo find another way of early stub-ast mismatch prevention
-        //return processError(vFile,
-        //                    "Outdated stub in index: " + StubUpdatingIndex.getIndexingStampInfo(vFile) +
-        //                    ", docSaved=" + saved +
-        //                    ", queried at " + vFile.getTimeStamp(),
-        //                    null);
+        return processError(vFile,
+                            "Outdated stub in index: " + StubUpdatingIndex.getIndexingStampInfo(vFile) +
+                            ", doc=" + document +
+                            ", docSaved=" + saved +
+                            ", wasIndexedAlready=" + wasIndexedAlready +
+                            ", queried at " + vFile.getTimeStamp(),
+                            null);
       }
 
       Stub stub;
@@ -129,8 +116,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       return tree;
     }
     else if (size != 0) {
-      return processError(vFile,
-                          "Twin stubs: " + vFile.getPresentableUrl() + " has " + size + " stub versions. Should only have one. id=" + id,
+      return processError(vFile, "Twin stubs: " + vFile.getPresentableUrl() + " has " + size + " stub versions. Should only have one. id=" + id,
                           null);
     }
 
@@ -147,7 +133,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     }
 
     if (document != null) {
-      return document.getTextLength();
+      return PsiDocumentManager.getInstance(project).getLastCommittedText(document).length();
     }
     return -1;
   }
@@ -182,5 +168,10 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   @Override
   public boolean canHaveStub(VirtualFile file) {
     return StubUpdatingIndex.canHaveStub(file);
+  }
+
+  @Override
+  public String getIndexingStampDebugInfo(VirtualFile file) {
+    return StubUpdatingIndex.getIndexingStampInfo(file);
   }
 }
