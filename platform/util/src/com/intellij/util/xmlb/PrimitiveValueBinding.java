@@ -15,15 +15,18 @@
  */
 package com.intellij.util.xmlb;
 
-import com.intellij.openapi.util.JDOMUtil;
+import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-class PrimitiveValueBinding implements Binding {
+class PrimitiveValueBinding extends Binding {
   private final Class<?> myType;
 
-  public PrimitiveValueBinding(@NotNull Class<?> myType) {
+  public PrimitiveValueBinding(@NotNull Class<?> myType, @Nullable Accessor accessor) {
+    super(accessor);
+
     this.myType = myType;
   }
 
@@ -34,20 +37,13 @@ class PrimitiveValueBinding implements Binding {
 
   @Override
   @Nullable
-  public Object deserialize(Object o, @NotNull Object... nodes) {
-    if (nodes.length == 0) {
-      return convertString("");
-    }
+  public Object deserialize(Object o, @NotNull Object node) {
+    return convertString(node instanceof Attribute ? ((Attribute)node).getValue() : ((Content)node).getValue());
+  }
 
-    String value;
-    if (nodes.length > 1) {
-      value = JDOMUtil.concatTextNodesValues(nodes);
-    }
-    else {
-      assert nodes[0] != null;
-      value = JDOMUtil.getValue(nodes[0]);
-    }
-    return convertString(value);
+  @Override
+  public Object deserializeEmpty(Object context) {
+    return convertString("");
   }
 
   @Nullable
@@ -63,9 +59,5 @@ class PrimitiveValueBinding implements Binding {
   @Override
   public Class getBoundNodeType() {
     return Text.class;
-  }
-
-  @Override
-  public void init() {
   }
 }

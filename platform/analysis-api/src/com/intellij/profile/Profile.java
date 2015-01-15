@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,28 @@ import org.jetbrains.annotations.NotNull;
  * Date: 20-Nov-2005
  */
 public interface Profile extends JDOMExternalizable, Comparable, Named {
-
   void copyFrom(@NotNull Profile profile);
 
   void setLocal(boolean isLocal);
+
+  @Deprecated
+  /**
+   * @deprecated Use !{@link #isProjectLevel()}
+   */
   boolean isLocal();
 
+  boolean isProjectLevel();
+
+  void setProjectLevel(boolean isProjectLevel);
+
   void setName(@NotNull String name);
+
+  @Override
   @NotNull
   String getName();
 
   void setProfileManager(@NotNull ProfileManager profileManager);
+
   @NotNull
   ProfileManager getProfileManager();
 }

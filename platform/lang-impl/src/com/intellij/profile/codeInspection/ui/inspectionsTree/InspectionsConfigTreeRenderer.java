@@ -18,7 +18,7 @@
  * User: anna
  * Date: 14-May-2009
  */
-package com.intellij.profile.codeInspection.ui;
+package com.intellij.profile.codeInspection.ui.inspectionsTree;
 
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.Descriptor;
@@ -26,44 +26,39 @@ import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.ide.ui.search.SearchUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.ui.CheckboxTree;
-import com.intellij.ui.JBColor;
+import com.intellij.profile.codeInspection.ui.ToolDescriptors;
+import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
+import org.jdesktop.swingx.renderer.DefaultTreeRenderer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-abstract class InspectionsConfigTreeRenderer extends CheckboxTree.CheckboxTreeCellRenderer {
-  private final Project myProject;
-
-  public InspectionsConfigTreeRenderer(Project project) {
-    myProject = project;
-  }
-
+public abstract class InspectionsConfigTreeRenderer extends DefaultTreeRenderer {
   protected abstract String getFilter();
 
   @Override
-  public void customizeRenderer(final JTree tree,
-                                final Object value,
-                                final boolean selected,
-                                final boolean expanded,
-                                final boolean leaf,
-                                final int row,
-                                final boolean hasFocus) {
-    if (!(value instanceof InspectionConfigTreeNode)) return;
+  public Component getTreeCellRendererComponent(JTree tree,
+                                                Object value,
+                                                boolean selected,
+                                                boolean expanded,
+                                                boolean leaf,
+                                                int row,
+                                                boolean hasFocus) {
+    final SimpleColoredComponent component = new SimpleColoredComponent();
+    if (!(value instanceof InspectionConfigTreeNode)) return component;
     InspectionConfigTreeNode node = (InspectionConfigTreeNode)value;
 
     Object object = node.getUserObject();
 
     final Color background = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
-    UIUtil.changeBackGround(this, background);
+    UIUtil.changeBackGround(component, background);
     Color foreground =
-      selected ? UIUtil.getTreeSelectionForeground() : node.isProperSetting() ? PlatformColors.BLUE : UIUtil.getTreeTextForeground();
+            selected ? UIUtil.getTreeSelectionForeground() : node.isProperSetting() ? PlatformColors.BLUE : UIUtil.getTreeTextForeground();
 
     @NonNls String text;
     int style = SimpleTextAttributes.STYLE_PLAIN;
@@ -73,41 +68,26 @@ abstract class InspectionsConfigTreeRenderer extends CheckboxTree.CheckboxTreeCe
       style = SimpleTextAttributes.STYLE_BOLD;
     }
     else {
-      final Descriptor descriptor = node.getDescriptor();
-      final String scopeName = node.getScopeName();
-      if (scopeName != null) {
-        if (node.isByDefault()) {
-          text = "Everywhere else";
-        }
-        else {
-          text = "In scope \'" + scopeName + "\'";
-          if (node.getScope(myProject) == null) {
-            foreground = JBColor.RED;
-          }
-        }
-      } else {
-        text = descriptor.getText();
-      }
-      hint = getHint(descriptor);
+      final ToolDescriptors descriptors = node.getDescriptors();
+      assert descriptors != null;
+      final Descriptor defaultDescriptor = descriptors.getDefaultDescriptor();
+      text = defaultDescriptor.getText();
+      hint = getHint(defaultDescriptor);
     }
 
     if (text != null) {
-      SearchUtil.appendFragments(getFilter(), text, style, foreground, background,
-                                 getTextRenderer());
+      SearchUtil.appendFragments(getFilter(), text, style, foreground, background, component);
     }
     if (hint != null) {
-      getTextRenderer()
-        .append(" " + hint, selected ? new SimpleTextAttributes(Font.PLAIN, foreground) : SimpleTextAttributes.GRAYED_ATTRIBUTES);
+      component.append(" " + hint, selected ? new SimpleTextAttributes(Font.PLAIN, foreground) : SimpleTextAttributes.GRAYED_ATTRIBUTES);
     }
-    setForeground(foreground);
+    component.setForeground(foreground);
+    return component;
   }
 
   @Nullable
-  private static String getHint(Descriptor descriptor) {
+  private static String getHint(final Descriptor descriptor) {
     final InspectionToolWrapper toolWrapper = descriptor.getToolWrapper();
-    if (toolWrapper == null) {
-      return InspectionsBundle.message("inspection.tool.availability.in.tree.node");
-    }
     if (toolWrapper instanceof LocalInspectionToolWrapper ||
         toolWrapper instanceof GlobalInspectionToolWrapper && !((GlobalInspectionToolWrapper)toolWrapper).worksInBatchModeOnly()) {
       return null;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -54,14 +55,15 @@ public final class SimpleTextAttributes {
 
   public static final SimpleTextAttributes GRAYED_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, UIUtil.getInactiveTextColor());
   public static final SimpleTextAttributes GRAYED_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_BOLD, UIUtil.getInactiveTextColor());
+  public static final SimpleTextAttributes GRAYED_ITALIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, UIUtil.getInactiveTextColor());
 
   public static final SimpleTextAttributes SYNTHETIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, JBColor.blue);
   public static final SimpleTextAttributes GRAY_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, Color.GRAY);
   public static final SimpleTextAttributes GRAY_ITALIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, Color.GRAY);
   public static final SimpleTextAttributes DARK_TEXT = new SimpleTextAttributes(STYLE_PLAIN, new Color(112, 112, 164));
-  public static final SimpleTextAttributes SIMPLE_CELL_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, UIUtil.getListForeground());
+  public static final SimpleTextAttributes SIMPLE_CELL_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, new JBColor(Gray._0, Gray._187));
   public static final SimpleTextAttributes SELECTED_SIMPLE_CELL_ATTRIBUTES =
-    new SimpleTextAttributes(STYLE_PLAIN, UIUtil.getListSelectionForeground());
+          new SimpleTextAttributes(STYLE_PLAIN, UIUtil.getListSelectionForeground());
   public static final SimpleTextAttributes EXCLUDED_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, Color.GRAY);
 
   public static final SimpleTextAttributes LINK_ATTRIBUTES = new SimpleTextAttributes(STYLE_UNDERLINE, JBColor.blue);
@@ -74,7 +76,7 @@ public final class SimpleTextAttributes {
   private final int myStyle;
 
   /**
-   * @param style   style of the text fragment.
+   * @param style   style of the text fragment.                                       5
    * @param fgColor color of the text fragment. <code>color</code> can be
    *                <code>null</code>. In that case <code>SimpleColoredComponent</code> will
    *                use its foreground to paint the text fragment.
@@ -162,7 +164,7 @@ public final class SimpleTextAttributes {
   public boolean isSearchMatch() {
     return (myStyle & STYLE_SEARCH_MATCH) != 0;
   }
-  
+
   public boolean isSmaller() {
     return (myStyle & STYLE_SMALLER) != 0;
   }
@@ -171,6 +173,7 @@ public final class SimpleTextAttributes {
     return (myStyle & STYLE_OPAQUE) != 0;
   }
 
+  @NotNull
   public static SimpleTextAttributes fromTextAttributes(TextAttributes attributes) {
     if (attributes == null) return REGULAR_ATTRIBUTES;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.reference.SoftReference;
+import com.intellij.util.ReflectionUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.VolatileImage;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
@@ -39,7 +39,6 @@ public class IdeRepaintManager extends RepaintManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.HackyRepaintManager");
 
   private Map<GraphicsConfiguration, VolatileImage> myImagesMap;
-  @NonNls private static final String FAULTY_FIELD_NAME = "volatileMap";
 
   WeakReference<JComponent> myLastComponent;
 
@@ -52,19 +51,12 @@ public class IdeRepaintManager extends RepaintManager {
   // sync here is to avoid data race when two(!) AWT threads on startup try to compete for the single myImagesMap
   private synchronized void clearLeakyImages(boolean force) {
     if (myImagesMap == null) {
-      try {
-        Field volMapField = RepaintManager.class.getDeclaredField(FAULTY_FIELD_NAME);
-        volMapField.setAccessible(true);
-        myImagesMap = (Map<GraphicsConfiguration, VolatileImage>)volMapField.get(this);
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
+      myImagesMap = ReflectionUtil.getField(RepaintManager.class, this, Map.class, "volatileMap");
     }
 
     if (force ||
         myImagesMap.size() > 3 /*leave no more than 3 images (usually one per screen) if DisplayChangedListener is not available */
-       ) {
+            ) {
       //Force the RepaintManager to clear out all of the VolatileImage back-buffers that it has cached.
       //	See Sun bug 6209673.
       Dimension size = getDoubleBufferMaximumSize();
@@ -89,25 +81,26 @@ public class IdeRepaintManager extends RepaintManager {
 
   // We must keep a strong reference to the DisplayChangedListener,
   //  since SunDisplayChanger keeps only a WeakReference to it.
-  private Object displayChangeHack;
-  
+  private DisplayChangeHandler displayChangeHack;
+
   {
     try {
       GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      GraphicsDevice[] devices = env.getScreenDevices();    // init
+      env.getScreenDevices();    // init
       Class<?> aClass = Class.forName("sun.awt.DisplayChangedListener"); // might be absent
       displayChangeHack = new DisplayChangeHandler();
-      
+
       if (aClass.isInstance(env)) { // Headless env does not implement sun.awt.DisplayChangedListener (and lacks addDisplayChangedListener)
         env.getClass()
-          .getMethod("addDisplayChangedListener", new Class[]{aClass})
-          .invoke(env, displayChangeHack);
+                .getMethod("addDisplayChangedListener", new Class[]{aClass})
+                .invoke(env, displayChangeHack);
       }
-    } catch (Throwable t) {
+    }
+    catch (Throwable t) {
       if (!(t instanceof HeadlessException)) LOG.error("Cannot setup display change listener", t);
     }
   }
-  
+
   @Override
   public void validateInvalidComponents() {
     super.validateInvalidComponents();
@@ -135,19 +128,23 @@ public class IdeRepaintManager extends RepaintManager {
       final Exception exception = new Exception();
       StackTraceElement[] stackTrace = exception.getStackTrace();
       for (StackTraceElement st : stackTrace) {
-        if (repaint && st.getClassName().startsWith("javax.swing.")) {
+        String className = st.getClassName();
+        String methodName = st.getMethodName();
+
+        if (repaint && className.startsWith("javax.swing.")) {
           fromSwing = true;
         }
-        if (repaint && "imageUpdate".equals(st.getMethodName())) {
+        if (repaint && "imageUpdate".equals(methodName)) {
           swingKnownNonAwtOperations = true;
         }
 
-        if (st.getClassName().startsWith("javax.swing.JEditorPane") && st.getMethodName().equals("read")) {
+        if ("read".equals(methodName) && className.startsWith("javax.swing.JEditorPane") ||
+            "setCharacterAttributes".equals(methodName) && className.startsWith("javax.swing.text.DefaultStyledDocument")) {
           swingKnownNonAwtOperations = true;
           break;
         }
 
-        if ("repaint".equals(st.getMethodName())) {
+        if ("repaint".equals(methodName)) {
           repaint = true;
           fromSwing = false;
         }
@@ -160,7 +157,7 @@ public class IdeRepaintManager extends RepaintManager {
         return;
       }
       //ignore the last processed component
-      if (myLastComponent != null && c == myLastComponent.get()) {
+      if (SoftReference.dereference(myLastComponent) == c) {
         return;
       }
       myLastComponent = new WeakReference<JComponent>(c);

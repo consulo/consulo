@@ -16,8 +16,7 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.profile.codeInspection.ui.InspectionConfigTreeNode;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
+import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
@@ -106,7 +105,7 @@ public class VisibleTreeState{
   }
 
   private static State getState(InspectionConfigTreeNode node) {
-    Descriptor descriptor = node.getDescriptor();
+    Descriptor descriptor = node.getDefaultDescriptor();
     final State expandedNode;
     if (descriptor != null) {
       expandedNode = new State(descriptor);
@@ -176,11 +175,9 @@ public class VisibleTreeState{
       final State other = (State)o;
       if (myKey.equals(other.myKey)) {
         if (myDescriptor != null && other.myDescriptor != null) {
-          final NamedScope scope1 = myDescriptor.getScope();
-          final NamedScope scope2 = other.myDescriptor.getScope();
-          if (scope1 != null && scope2 != null) {
-            return scope1.getName().compareTo(scope2.getName());
-          }
+          final String scope1 = myDescriptor.getScopeName();
+          final String scope2 = other.myDescriptor.getScopeName();
+          return scope1.compareTo(scope2);
         }
       }
       return myKey.compareTo(other.myKey);

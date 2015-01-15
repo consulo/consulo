@@ -40,10 +40,12 @@ public class Descriptor {
   private final InspectionToolWrapper myToolWrapper;
   private final HighlightDisplayLevel myLevel;
   private boolean myEnabled = false;
+  @Nullable
   private final NamedScope myScope;
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.Descriptor");
   private final ScopeToolState myState;
   private final InspectionProfileImpl myInspectionProfile;
+  private final String myScopeName;
 
   public Descriptor(@NotNull ScopeToolState state, @NotNull InspectionProfileImpl inspectionProfile, @NotNull Project project) {
     myState = state;
@@ -53,6 +55,7 @@ public class Descriptor {
     final String[] groupPath = tool.getGroupPath();
     myGroup = groupPath.length == 0 ? new String[]{InspectionProfileEntry.GENERAL_GROUP_NAME} : groupPath;
     myKey = HighlightDisplayKey.find(tool.getShortName());
+    myScopeName = state.getScopeName();
     myScope = state.getScope(project);
     myLevel = inspectionProfile.getErrorLevel(myKey, myScope, project);
     myEnabled = inspectionProfile.isToolEnabled(myKey, myScope, project);
@@ -99,6 +102,13 @@ public class Descriptor {
     return myConfig;
   }
 
+  public void loadConfig() {
+    if (myConfig == null) {
+      InspectionToolWrapper toolWrapper = getToolWrapper();
+      myConfig = createConfigElement(toolWrapper);
+    }
+  }
+
   @NotNull
   public InspectionToolWrapper getToolWrapper() {
     return myToolWrapper;
@@ -106,11 +116,7 @@ public class Descriptor {
 
   @Nullable
   public String loadDescription() {
-    if (myConfig == null) {
-      InspectionToolWrapper toolWrapper = getToolWrapper();
-      myConfig = createConfigElement(toolWrapper);
-    }
-
+    loadConfig();
     return myToolWrapper.loadDescription();
   }
 
@@ -133,6 +139,12 @@ public class Descriptor {
     return myGroup;
   }
 
+  @NotNull
+  public String getScopeName() {
+    return myScopeName;
+  }
+
+  @Nullable
   public NamedScope getScope() {
     return myScope;
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.intellij.find;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.find.editorHeaderActions.*;
-import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.find.impl.livePreview.LivePreviewController;
 import com.intellij.find.impl.livePreview.SearchResults;
 import com.intellij.icons.AllIcons;
@@ -37,7 +36,10 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.*;
+import com.intellij.ui.IdeBorderFactory;
+import com.intellij.ui.JBSplitter;
+import com.intellij.ui.LightColors;
+import com.intellij.ui.SearchTextField;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.labels.LinkLabel;
@@ -48,6 +50,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -68,11 +71,12 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
   private final Project myProject;
   private ActionToolbar myActionsToolbar;
 
-
+  @NotNull
   public Editor getEditor() {
     return myEditor;
   }
 
+  @NotNull
   private final Editor myEditor;
 
   public JTextComponent getSearchField() {
@@ -107,9 +111,6 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
 
   private JTextComponent myReplaceField;
   private JComponent myReplaceRootComponent;
-
-  private MyUndoProvider mySearchUndo;
-  private MyUndoProvider myReplaceUndo;
 
   private final Getter<JTextComponent> mySearchFieldGetter = new Getter<JTextComponent>() {
     @Override
@@ -173,7 +174,7 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     return findModel;
   }
 
-  public EditorSearchComponent(Editor editor, Project project) {
+  public EditorSearchComponent(@NotNull Editor editor, Project project) {
     this(editor, project, createDefaultFindModel(project, editor));
   }
 
@@ -225,7 +226,7 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
   }
 
   @Override
-  public void cursorMoved(boolean toChangeSelection) {
+  public void cursorMoved() {
     updateExcludeStatus();
   }
 
@@ -233,10 +234,7 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
   public void updateFinished() {
   }
 
-  @Override
-  public void editorChanged(SearchResults sr, Editor oldEditor) {  }
-
-  public EditorSearchComponent(final Editor editor, final Project project, FindModel findModel) {
+  public EditorSearchComponent(@NotNull final Editor editor, final Project project, FindModel findModel) {
     myFindModel = findModel;
 
     myProject = project;
@@ -276,10 +274,6 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     JPanel myLeadPanel = createLeadPane();
     myRightComponent.add(myLeadPanel, BorderLayout.WEST);
 
-    if (mySearchUndo != null) {
-      mySearchUndo.dispose();
-    }
-
     Ref<JComponent> ref = Ref.create();
     mySearchField = createTextField(BorderLayout.NORTH, ref);
     mySearchRootComponent = ref.get();
@@ -289,7 +283,7 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
       setupHistoryToSearchField(searchTextField, FindSettings.getInstance().getRecentFindStrings());
     }
 
-    mySearchUndo = new MyUndoProvider(mySearchField);
+    UIUtil.addUndoRedoActions(mySearchField);
 
     setupSearchFieldListener();
 
@@ -303,12 +297,9 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
 
     myRightComponent.add(centerPanel, BorderLayout.CENTER);
 
-    if (secondaryActionsAvailable()) {
-      if (myToolbarComponent instanceof ActionToolbarImpl) {
-        new ShowMoreOptions(myToolbarComponent, mySearchField);
-      }
+    if (myToolbarComponent instanceof ActionToolbarImpl) {
+      new ShowMoreOptions(myToolbarComponent, mySearchField);
     }
-
 
     JPanel tailPanel = new NonOpaquePanel(new BorderLayout(5, 0));
     JPanel tailContainer = new NonOpaquePanel(new BorderLayout(5, 0));
@@ -357,7 +348,7 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     Utils.setSmallerFontForChildren(myToolbarComponent);
   }
 
-  private static void setupHistoryToSearchField(SearchTextField field, String[] strings) {
+  private void setupHistoryToSearchField(SearchTextField field, String[] strings) {
     field.setHistorySize(20);
     field.setHistory(ContainerUtil.reverse(Arrays.asList(strings)));
   }
@@ -367,6 +358,9 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     actionGroup.add(new ShowHistoryAction(mySearchFieldGetter, this));
     actionGroup.add(new PrevOccurrenceAction(this, mySearchFieldGetter));
     actionGroup.add(new NextOccurrenceAction(this, mySearchFieldGetter));
+    actionGroup.add(new AddOccurrenceAction(this));
+    actionGroup.add(new RemoveOccurrenceAction(this));
+    actionGroup.add(new SelectAllAction(this));
     actionGroup.add(new FindAllAction(this));
     actionGroup.add(new ToggleMultiline(this));
     actionGroup.add(new ToggleMatchCase(this));
@@ -387,10 +381,13 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     myActionsToolbar.setSecondaryActionsTooltip("More Options(" + ShowMoreOptions.SHORT_CUT + ")");
 
     actionGroup.addAction(new ToggleWholeWordsOnlyAction(this));
-    if (secondaryActionsAvailable()) {
-      actionGroup.addAction(new ToggleInCommentsAction(this)).setAsSecondary(true);
-      actionGroup.addAction(new ToggleInLiteralsOnlyAction(this)).setAsSecondary(true);
-    }
+
+    actionGroup.addAction(new ToggleInCommentsAction(this)).setAsSecondary(true);
+    actionGroup.addAction(new ToggleInLiteralsOnlyAction(this)).setAsSecondary(true);
+    actionGroup.addAction(new ToggleExceptCommentsAction(this)).setAsSecondary(true);
+    actionGroup.addAction(new ToggleExceptLiteralsAction(this)).setAsSecondary(true);
+    actionGroup.addAction(new ToggleExceptCommentsAndLiteralsAction(this)).setAsSecondary(true);
+
     actionGroup.addAction(new TogglePreserveCaseAction(this));
     actionGroup.addAction(new ToggleSelectionOnlyAction(this));
 
@@ -420,8 +417,8 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     myToolbarComponent.setOpaque(false);
   }
 
-  private boolean secondaryActionsAvailable() {
-    return FindManagerImpl.ourHasSearchInCommentsAndLiterals;
+  public void selectAllText() {
+    mySearchField.selectAll();
   }
 
   private void setupSearchFieldListener() {
@@ -471,18 +468,18 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     to.setCaseSensitive(from.isCaseSensitive());
     to.setWholeWordsOnly(from.isWholeWordsOnly());
     to.setRegularExpressions(from.isRegularExpressions());
-    to.setInCommentsOnly(from.isInCommentsOnly());
-    to.setInStringLiteralsOnly(from.isInStringLiteralsOnly());
+    to.setSearchContext(from.getSearchContext());
     if (from.isReplaceState()) {
       to.setPreserveCase(from.isPreserveCase());
     }
   }
 
   private void updateUIWithFindModel() {
-
+    boolean needToResetFocus = false;
     myActionsToolbar.updateActionsImmediately();
 
     if ((myFindModel.isMultiline() && mySearchField instanceof JTextField) || (!myFindModel.isMultiline() && mySearchField instanceof JTextArea)) {
+      needToResetFocus = mySearchField.hasFocus();
       myLeftComponent.removeAll();
       myRightComponent.removeAll();
       myReplaceRootComponent = null;
@@ -525,6 +522,7 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     updateReplaceButton();
     Utils.setSmallerFontForChildren(myToolbarComponent);
     revalidate();
+    if (needToResetFocus) mySearchField.requestFocusInWindow();
   }
 
   private static boolean wholeWordsApplicable(String stringToFind) {
@@ -541,10 +539,6 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
   private void configureReplacementPane() {
     myReplacementPane = new NonOpaquePanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-    if (myReplaceUndo != null) {
-      myReplaceUndo.dispose();
-    }
-
     Ref<JComponent> ref = Ref.create();
     myReplaceField = createTextField(BorderLayout.SOUTH, ref);
     myReplaceRootComponent = ref.get();
@@ -553,7 +547,7 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     if (searchTextField != null) {
       setupHistoryToSearchField(searchTextField, FindSettings.getInstance().getRecentReplaceStrings());
     }
-    myReplaceUndo = new MyUndoProvider(myReplaceField);
+    UIUtil.addUndoRedoActions(myReplaceField);
 
     revalidate();
 
@@ -803,20 +797,9 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
   }
 
   public void close() {
-    if (myEditor.getSelectionModel().hasSelection()) {
-      myEditor.getCaretModel().moveToOffset(myEditor.getSelectionModel().getSelectionStart());
-      myEditor.getSelectionModel().removeSelection();
-    }
     IdeFocusManager.getInstance(myProject).requestFocus(myEditor.getContentComponent(), false);
 
     myLivePreviewController.dispose();
-
-    if (mySearchUndo != null) {
-      mySearchUndo.dispose();
-    }
-    if (myReplaceUndo != null){
-      myReplaceUndo.dispose();
-    }
     myEditor.setHeaderComponent(null);
   }
 
@@ -937,36 +920,20 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     return insets;
   }
 
-  private static class MyUndoProvider extends TextComponentUndoProvider {
-    private boolean myEnabled = true;
-    public MyUndoProvider(JTextComponent textComponent) {
-      super(textComponent);
-      textComponent.getDocument().addDocumentListener(new com.intellij.ui.DocumentAdapter() {
-        @Override
-        protected void textChanged(javax.swing.event.DocumentEvent e) {
-          myEnabled = true;
-        }
-      });
-    }
+  public void selectAllOccurrences() {
+    FindUtil.selectSearchResultsInEditor(myEditor, mySearchResults.getOccurrences().iterator(), -1);
+  }
 
-    @Override
-    protected boolean canUndo() {
-      return super.canUndo() && myEnabled;
-    }
+  public void removeOccurrence() {
+    mySearchResults.prevOccurrence(true);
+  }
 
-    @Override
-    protected boolean canRedo() {
-      return super.canRedo() && myEnabled;
-    }
-
-    public void disable() {
-      myEnabled = false;
-      myUndoManager.discardAllEdits();
-    }
+  public void addNextOccurrence() {
+    mySearchResults.nextOccurrence(true);
   }
 
   public void clearUndoInTextFields() {
-    myReplaceUndo.disable();
-    mySearchUndo.disable();
+    UIUtil.resetUndoRedoActions(mySearchField);
+    UIUtil.resetUndoRedoActions(myReplaceField);
   }
 }

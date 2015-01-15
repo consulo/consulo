@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,19 @@ package com.intellij.find.impl;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.util.MinimizeButton;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.labels.LinkLabel;
+import com.intellij.ui.components.labels.LinkListener;
+import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -52,8 +60,10 @@ public class RegExHelpPopup extends JPanel {
                          "  summary=\"Regular expression constructs, and what they match\"> \n" +
                          " \n" +
                          " <tr align=\"left\"> \n" +
-                         " <th bgcolor=\"#CCCCFF\" align=\"left\" id=\"construct\">Construct</th> \n" +
-                         " <th bgcolor=\"#CCCCFF\" align=\"left\" id=\"matches\">Matches</th> \n" +
+                         " <th bgcolor=\"" + toHTMLColor(UIUtil.getLabelBackground()) +
+                         "\" align=\"left\" id=\"construct\">Construct</th> \n" +
+                         " <th bgcolor=\"" + toHTMLColor(UIUtil.getLabelBackground()) +
+                         "\" align=\"left\" id=\"matches\">Matches</th> \n" +
                          " </tr> \n" +
                          " \n" +
                          " <tr><th>&nbsp;</th></tr> \n" +
@@ -328,6 +338,36 @@ public class RegExHelpPopup extends JPanel {
     add(myScrollPane, BorderLayout.CENTER);
   }
 
+  @NotNull
+  public static LinkLabel createRegExLink(@NotNull String title, @Nullable final Component owner, @Nullable final Logger logger) {
+    return new LinkLabel(title, null, new LinkListener() {
+      JBPopup helpPopup;
+      @Override
+      public void linkSelected(LinkLabel aSource, Object aLinkData) {
+        try {
+          if (helpPopup != null && !helpPopup.isDisposed() && helpPopup.isVisible()) {
+            return;
+          }
+          helpPopup = createRegExHelpPopup();
+          Disposer.register(helpPopup, new Disposable() {
+            @Override
+            public void dispose() {
+              destroyPopup();
+            }
+          });
+          helpPopup.showInCenterOf(owner);
+        }
+        catch (BadLocationException e) {
+          if (logger != null) logger.info(e);
+        }
+      }
+
+      private void destroyPopup() {
+        helpPopup = null;
+      }
+    });
+  }
+
   @Override
   public Dimension getPreferredSize() {
     return new Dimension(600, 300);
@@ -336,8 +376,11 @@ public class RegExHelpPopup extends JPanel {
   public static JBPopup createRegExHelpPopup() throws BadLocationException {
     final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(new RegExHelpPopup(), null);
     return builder.setCancelOnClickOutside(false).setBelongsToGlobalPopupStack(true).setFocusable(true).setRequestFocus(true).setMovable(true).setResizable(true)
-      .setCancelOnOtherWindowOpen(false).setCancelButton(new MinimizeButton("Hide"))
-      .setTitle("Regular expressions syntax").setDimensionServiceKey(null, "RegExHelpPopup", true).createPopup();
+            .setCancelOnOtherWindowOpen(false).setCancelButton(new MinimizeButton("Hide"))
+            .setTitle("Regular expressions syntax").setDimensionServiceKey(null, "RegExHelpPopup", true).createPopup();
   }
 
+  private static String toHTMLColor(Color color) {
+    return "#" + Integer.toHexString(color.getRGB() & 0xffffff);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public interface SchemesManager <T extends Named, E extends ExternalizableScheme
     }
 
     @Override
-    public void exportScheme(final ExternalizableScheme scheme, final String name, final String description) {
+    public void exportScheme(@NotNull ExternalizableScheme scheme, String name, String description) {
     }
 
     @Override
@@ -55,13 +55,12 @@ public interface SchemesManager <T extends Named, E extends ExternalizableScheme
     }
 
     @Override
-    public boolean isShared(final Named scheme) {
+    public boolean isShared(@NotNull Named scheme) {
       return false;
     }
 
     @Override
     public void addNewScheme(@NotNull final Named scheme, final boolean replaceExisting) {
-
     }
 
     @Override
@@ -75,7 +74,7 @@ public interface SchemesManager <T extends Named, E extends ExternalizableScheme
     }
 
     @Override
-    public Named findSchemeByName(final String schemeName) {
+    public Named findSchemeByName(@NotNull String schemeName) {
       return null;
     }
 
@@ -84,8 +83,7 @@ public interface SchemesManager <T extends Named, E extends ExternalizableScheme
     }
 
     @Override
-    public void setCurrentSchemeName(final String schemeName) {
-
+    public void setCurrentSchemeName(String schemeName) {
     }
 
     @Override
@@ -94,8 +92,7 @@ public interface SchemesManager <T extends Named, E extends ExternalizableScheme
     }
 
     @Override
-    public void removeScheme(final Named scheme) {
-
+    public void removeScheme(@NotNull Named scheme) {
     }
 
     @Override
@@ -106,7 +103,7 @@ public interface SchemesManager <T extends Named, E extends ExternalizableScheme
 
     @Override
     @NotNull
-    public Collection loadSharedSchemes(final Collection currentSchemeList) {
+    public Collection loadSharedSchemes(Collection currentSchemeList) {
       return loadSharedSchemes();
     }
 
@@ -116,18 +113,33 @@ public interface SchemesManager <T extends Named, E extends ExternalizableScheme
     }
   };
 
-  @NotNull Collection<E> loadSchemes();
+  @NotNull
+  Collection<E> loadSchemes();
 
-  @NotNull Collection<SharedScheme<E>> loadSharedSchemes();
-  @NotNull Collection<SharedScheme<E>> loadSharedSchemes(Collection<T> currentSchemeList);
+  @Deprecated
+  @SuppressWarnings({"unused", "deprecation"})
+  @NotNull
+  Collection<SharedScheme<E>> loadSharedSchemes();
 
-  void exportScheme(final E scheme, final String name, final String description) throws WriteExternalException, IOException;
+  @SuppressWarnings({"unused", "deprecation"})
+  @NotNull
+  @Deprecated
+  Collection<SharedScheme<E>> loadSharedSchemes(Collection<T> currentSchemeList);
 
+  @SuppressWarnings("unused")
+  @Deprecated
+  void exportScheme(@NotNull E scheme, final String name, final String description) throws WriteExternalException, IOException;
+
+  @SuppressWarnings("unused")
+  @Deprecated
   boolean isImportAvailable();
 
+  @SuppressWarnings("unused")
+  @Deprecated
   boolean isExportAvailable();
 
-  boolean isShared(final Named scheme);
+  @Deprecated
+  boolean isShared(@NotNull Named scheme);
 
   void addNewScheme(@NotNull T scheme, final boolean replaceExisting);
 
@@ -137,18 +149,19 @@ public interface SchemesManager <T extends Named, E extends ExternalizableScheme
   List<T> getAllSchemes();
 
   @Nullable
-  T findSchemeByName(final String schemeName);
+  T findSchemeByName(@NotNull String schemeName);
 
-  void save() throws WriteExternalException;
+  void save();
 
   void setCurrentSchemeName(final String schemeName);
 
   @Nullable
   T getCurrentScheme();
 
-  void removeScheme(final T scheme);
+  void removeScheme(@NotNull T scheme);
 
-  @NotNull Collection<String> getAllSchemeNames();
+  @NotNull
+  Collection<String> getAllSchemeNames();
 
   File getRootDirectory();
 }

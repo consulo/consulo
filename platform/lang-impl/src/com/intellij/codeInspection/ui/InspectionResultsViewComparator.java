@@ -36,7 +36,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.profile.codeInspection.ui.InspectionsConfigTreeComparator;
+import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionsConfigTreeComparator;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
@@ -69,7 +69,7 @@ public class InspectionResultsViewComparator implements Comparator {
 
     if (node1 instanceof InspectionNode && node2 instanceof InspectionNode)
       return InspectionsConfigTreeComparator.getDisplayTextToSort(node1.toString())
-        .compareToIgnoreCase(InspectionsConfigTreeComparator.getDisplayTextToSort(node2.toString()));
+              .compareToIgnoreCase(InspectionsConfigTreeComparator.getDisplayTextToSort(node2.toString()));
     if (node1 instanceof InspectionNode) return -1;
     if (node2 instanceof InspectionNode) return 1;
 

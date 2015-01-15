@@ -20,6 +20,7 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class FindUsagesProcessPresentation {
   private Factory<ProgressIndicator> myProgressIndicatorFactory;
   private Collection<PsiFile> myLargeFiles;
   private boolean myShowFindOptionsPrompt = true;
+  private Runnable mySearchWithProjectFiles;
+  private boolean myCanceled;
 
   public FindUsagesProcessPresentation(@NotNull UsageViewPresentation presentation) {
     myUsageViewPresentation = presentation;
@@ -80,6 +83,15 @@ public class FindUsagesProcessPresentation {
     myProgressIndicatorFactory = progressIndicatorFactory;
   }
 
+  @Nullable
+  public Runnable searchIncludingProjectFileUsages() {
+    return mySearchWithProjectFiles;
+  }
+
+  public void projectFileUsagesFound(@NotNull Runnable searchWithProjectFiles) {
+    mySearchWithProjectFiles = searchWithProjectFiles;
+  }
+
   public void setLargeFilesWereNotScanned(@NotNull Collection<PsiFile> largeFiles) {
     myLargeFiles = largeFiles;
   }
@@ -100,6 +112,15 @@ public class FindUsagesProcessPresentation {
 
   public void setShowFindOptionsPrompt(boolean showFindOptionsPrompt) {
     myShowFindOptionsPrompt = showFindOptionsPrompt;
+  }
+
+
+  public void setCanceled(boolean canceled) {
+    myCanceled = canceled;
+  }
+
+  public boolean isCanceled() {
+    return myCanceled;
   }
 }
 

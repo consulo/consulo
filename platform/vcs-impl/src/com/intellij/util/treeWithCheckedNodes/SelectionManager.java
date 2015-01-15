@@ -32,12 +32,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
-* @author irengrig
-*         Date: 2/7/11
-*         Time: 10:43 AM
+ * @author irengrig
+ *         Date: 2/7/11
+ *         Time: 10:43 AM
  *
  * see {@link SelectedState}
-*/
+ */
 public class SelectionManager {
   private final SelectedState<VirtualFile> myState;
   private final Convertor<DefaultMutableTreeNode, VirtualFile> myNodeConvertor;
@@ -61,7 +61,7 @@ public class SelectionManager {
     final HashSet<VirtualFile> old = new HashSet<VirtualFile>(myState.getSelected());
 
     final TreeNodeState futureState =
-      myState.putAndPass(vf, TreeNodeState.SELECTED.equals(state) ? TreeNodeState.CLEAR : TreeNodeState.SELECTED);
+            myState.putAndPass(vf, TreeNodeState.SELECTED.equals(state) ? TreeNodeState.CLEAR : TreeNodeState.SELECTED);
 
     // for those possibly duplicate nodes (i.e. when we have root for module and root for VCS root, each file is shown twice in a tree ->
     // clear all suspicious cached)

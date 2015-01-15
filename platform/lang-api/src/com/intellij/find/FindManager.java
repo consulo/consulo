@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.SearchScope;
 import com.intellij.util.messages.Topic;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
@@ -171,6 +172,18 @@ public abstract class FindManager {
   public abstract void setFindWasPerformed();
 
   /**
+   * Gets the flag indicating that 'Add Selection for Next Occurrence' action was performed recently,
+   * so "Find Next" and "Find Previous" actions should work in its context.
+   */
+  public abstract boolean selectNextOccurrenceWasPerformed();
+
+  /**
+   * Sets the flag indicating that 'Add Selection for Next Occurrence' action was performed recently,
+   * so "Find Next" and "Find Previous" actions should work in its context.
+   */
+  public abstract void setSelectNextOccurrenceWasPerformed();
+
+  /**
    * Explicitly tell FindManager that "Find Next" and "Find Previous" actions should not use
    * find usages previous results.
    */
@@ -217,6 +230,7 @@ public abstract class FindManager {
    * @param element the element to find the usages for.
    */
   public abstract void findUsages(@NotNull PsiElement element);
+  public abstract void findUsagesInScope(@NotNull PsiElement element, @NotNull SearchScope searchScope);
 
   /**
    * Shows the Find Usages dialog (if {@code showDialog} is true} and performs the Find Usages operation for the
@@ -271,5 +285,6 @@ public abstract class FindManager {
     int ALL = 3;
     int ALL_IN_THIS_FILE = 4;
     int ALL_FILES = 5;
+    int SKIP_ALL_IN_THIS_FILE = 6;
   }
 }

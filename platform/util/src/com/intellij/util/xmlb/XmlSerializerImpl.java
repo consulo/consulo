@@ -15,10 +15,11 @@
  */
 package com.intellij.util.xmlb;
 
+import com.intellij.openapi.util.JDOMExternalizableStringList;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ReflectionUtil;
 import org.jdom.*;
+import org.jdom.filter.Filter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +27,7 @@ import java.lang.annotation.Annotation;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,7 +35,28 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author mike
  */
 class XmlSerializerImpl {
+  private static final Filter<Content> CONTENT_FILTER = new Filter<Content>() {
+    @Override
+    public boolean matches(Object obj) {
+      return !isIgnoredNode(obj);
+    }
+  };
+
   private static SoftReference<Map<Pair<Type, Accessor>, Binding>> ourBindings;
+
+  @NotNull
+  static List<Content> getFilteredContent(@NotNull Element element) {
+    List<Content> content = element.getContent();
+    if (content.isEmpty()) {
+      return content;
+    }
+    else if (content.size() == 1) {
+      return isIgnoredNode(content.get(0)) ? Collections.<Content>emptyList() : content;
+    }
+    else {
+      return element.getContent(CONTENT_FILTER);
+    }
+  }
 
   @NotNull
   static Element serialize(@NotNull Object object, @NotNull SerializationFilter filter) throws XmlSerializationException {
@@ -72,9 +95,21 @@ class XmlSerializerImpl {
   }
 
   static Binding getTypeBinding(@NotNull Type type, @Nullable Accessor accessor) {
-    return _getClassBinding(type instanceof Class ? (Class<?>)type : (Class<?>)((ParameterizedType)type).getRawType(), type, accessor);
+    Class<?> aClass;
+    if (type instanceof Class) {
+      aClass = (Class<?>)type;
+    }
+    else if (type instanceof TypeVariable) {
+      Type bound = ((TypeVariable)type).getBounds()[0];
+      aClass = bound instanceof Class ? (Class)bound : (Class<?>)((ParameterizedType)bound).getRawType();
+    }
+    else {
+      aClass = (Class<?>)((ParameterizedType)type).getRawType();
+    }
+    return _getClassBinding(aClass, type, accessor);
   }
 
+  @NotNull
   private static synchronized Binding _getClassBinding(@NotNull Class<?> aClass, @NotNull Type originalType, @Nullable Accessor accessor) {
     Pair<Type, Accessor> key = Pair.create(originalType, accessor);
     Map<Pair<Type, Accessor>, Binding> map = getBindingCacheMap();
@@ -82,7 +117,12 @@ class XmlSerializerImpl {
     if (binding == null) {
       binding = _getNonCachedClassBinding(aClass, accessor, originalType);
       map.put(key, binding);
-      binding.init();
+      try {
+        binding.init();
+      } catch (XmlSerializationException e) {
+        map.remove(key);
+        throw e;
+      }
     }
     return binding;
   }
@@ -97,26 +137,46 @@ class XmlSerializerImpl {
     return map;
   }
 
+  @NotNull
   private static Binding _getNonCachedClassBinding(@NotNull Class<?> aClass, @Nullable Accessor accessor, @NotNull Type originalType) {
-    if (aClass.isPrimitive()) return new PrimitiveValueBinding(aClass);
+    if (aClass.isPrimitive()) {
+      return new PrimitiveValueBinding(aClass, accessor);
+    }
     if (aClass.isArray()) {
       return Element.class.isAssignableFrom(aClass.getComponentType())
              ? new JDOMElementBinding(accessor) : new ArrayBinding(aClass, accessor);
     }
-    if (Number.class.isAssignableFrom(aClass)) return new PrimitiveValueBinding(aClass);
-    if (Boolean.class.isAssignableFrom(aClass)) return new PrimitiveValueBinding(aClass);
-    if (String.class.isAssignableFrom(aClass)) return new PrimitiveValueBinding(aClass);
+    if (Number.class.isAssignableFrom(aClass)) {
+      return new PrimitiveValueBinding(aClass, accessor);
+    }
+    if (Boolean.class.isAssignableFrom(aClass)) {
+      return new PrimitiveValueBinding(aClass, accessor);
+    }
+    if (String.class.isAssignableFrom(aClass)) {
+      return new PrimitiveValueBinding(aClass, accessor);
+    }
     if (Collection.class.isAssignableFrom(aClass) && originalType instanceof ParameterizedType) {
       return new CollectionBinding((ParameterizedType)originalType, accessor);
     }
-    if (Map.class.isAssignableFrom(aClass) && originalType instanceof ParameterizedType) {
-      return new MapBinding((ParameterizedType)originalType, accessor);
+    if (accessor != null) {
+      if (Map.class.isAssignableFrom(aClass) && originalType instanceof ParameterizedType) {
+        return new MapBinding((ParameterizedType)originalType, accessor);
+      }
+      if (Element.class.isAssignableFrom(aClass)) {
+        return new JDOMElementBinding(accessor);
+      }
+      //noinspection deprecation
+      if (JDOMExternalizableStringList.class == aClass) {
+        return new JDOMExternalizableStringListBinding(accessor);
+      }
     }
-    if (Element.class.isAssignableFrom(aClass)) return new JDOMElementBinding(accessor);
-    if (Date.class.isAssignableFrom(aClass)) return new DateBinding();
-    if (aClass.isEnum()) return new PrimitiveValueBinding(aClass);
-
-    return new BeanBinding(aClass);
+    if (Date.class.isAssignableFrom(aClass)) {
+      return new DateBinding(accessor);
+    }
+    if (aClass.isEnum()) {
+      return new PrimitiveValueBinding(aClass, accessor);
+    }
+    return new BeanBinding(aClass, accessor);
   }
 
   @Nullable
@@ -188,28 +248,5 @@ class XmlSerializerImpl {
       }
     }
     return false;
-  }
-
-  public static Content[] getNotIgnoredContent(final Element m) {
-    List<Content> result = new ArrayList<Content>();
-    final List content = m.getContent();
-
-    for (Object o : content) {
-      if (!isIgnoredNode(o)) result.add((Content)o);
-    }
-
-    return result.toArray(new Content[result.size()]);
-  }
-
-  /**
-   * {@link Class#newInstance()} cannot instantiate private classes
-   */
-  static <T> T newInstance(@NotNull Class<T> aClass) {
-    try {
-      return ReflectionUtil.newInstance(aClass);
-    }
-    catch (Exception e) {
-      throw new XmlSerializationException(e);
-    }
   }
 }

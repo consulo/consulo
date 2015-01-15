@@ -50,6 +50,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.font.FontRenderContext;
@@ -83,6 +84,28 @@ public class UIUtil {
     }
     return 500;
   }
+
+  private static Key<UndoManager> UNDO_MANAGER = Key.create("undoManager");
+  private static final AbstractAction REDO_ACTION = new AbstractAction() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      Object source = e.getSource();
+      UndoManager manager = source instanceof JComponent ? getClientProperty((JComponent)source, UNDO_MANAGER) : null;
+      if (manager != null && manager.canRedo()) {
+        manager.redo();
+      }
+    }
+  };
+  private static final AbstractAction UNDO_ACTION = new AbstractAction() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      Object source = e.getSource();
+      UndoManager manager = source instanceof JComponent ? getClientProperty((JComponent)source, UNDO_MANAGER) : null;
+      if (manager != null && manager.canUndo()) {
+        manager.undo();
+      }
+    }
+  };
 
   private static final AtomicNotNullLazyValue<Boolean> X_RENDER_ACTIVE = new AtomicNotNullLazyValue<Boolean>() {
     @NotNull
@@ -298,6 +321,14 @@ public class UIUtil {
     for (PropertyChangeListener each : toolkit.getPropertyChangeListeners(name)) {
       toolkit.removePropertyChangeListener(name, each);
     }
+  }
+
+  public static <T> T getClientProperty(@NotNull JComponent component, @NotNull Key<T> key) {
+    return (T)component.getClientProperty(key);
+  }
+
+  public static <T> void putClientProperty(@NotNull JComponent component, @NotNull Key<T> key, T value) {
+    component.putClientProperty(key, value);
   }
 
   public static String getHtmlBody(String text) {
@@ -2045,7 +2076,7 @@ public class UIUtil {
    * Invoke and wait in the event dispatch thread
    * or in the current thread if the current thread
    * is event queue thread.
-   *
+   * DO NOT INVOKE THIS METHOD FROM UNDER READ ACTION.
    * @param runnable a runnable to invoke
    * @see #invokeAndWaitIfNeeded(com.intellij.util.ThrowableRunnable)
    */
@@ -2840,5 +2871,22 @@ public class UIUtil {
    */
   public static Window getWindow(Component component) {
     return component instanceof Window ? (Window)component : SwingUtilities.getWindowAncestor(component);
+  }
+
+  public static void resetUndoRedoActions(@NotNull JTextComponent textComponent) {
+    UndoManager undoManager = getClientProperty(textComponent, UNDO_MANAGER);
+    if (undoManager != null) {
+      undoManager.discardAllEdits();
+    }
+  }
+
+  public static void addUndoRedoActions(@NotNull final JTextComponent textComponent) {
+    UndoManager undoManager = new UndoManager();
+    textComponent.putClientProperty(UNDO_MANAGER, undoManager);
+    textComponent.getDocument().addUndoableEditListener(undoManager);
+    textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, SystemInfo.isMac? InputEvent.META_MASK : InputEvent.CTRL_MASK), "undoKeystroke");
+    textComponent.getActionMap().put("undoKeystroke", UNDO_ACTION);
+    textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, (SystemInfo.isMac? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK), "redoKeystroke");
+    textComponent.getActionMap().put("redoKeystroke", REDO_ACTION);
   }
 }

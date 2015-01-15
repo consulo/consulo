@@ -20,25 +20,26 @@
 package com.intellij.util.messages.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.util.SmartFMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.MessageHandler;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Queue;
 
 public class MessageBusConnectionImpl implements MessageBusConnection {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.messages.impl.MessageBusConnectionImpl");
 
   private final MessageBusImpl myBus;
+  @SuppressWarnings("SSBasedInspection")
   private final ThreadLocal<Queue<Message>> myPendingMessages = MessageBusImpl.createThreadLocalQueue();
 
   private MessageHandler myDefaultHandler;
-  private final List<Pair<Topic, Object>> mySubscriptions = ContainerUtil.createLockFreeCopyOnWriteList();
+  private volatile SmartFMap<Topic, Object> mySubscriptions = SmartFMap.emptyMap();
 
   public MessageBusConnectionImpl(@NotNull MessageBusImpl bus) {
     myBus = bus;
@@ -46,9 +47,11 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
 
   @Override
   public <L> void subscribe(@NotNull Topic<L> topic, @NotNull L handler) throws IllegalStateException {
-    mySubscriptions.add(Pair.<Topic, Object>create(topic, handler));
-    if (getHandler(topic) != handler) {
-      throw new IllegalStateException("Subscription to " + topic + " already exists");
+    synchronized (myPendingMessages) {
+      if (mySubscriptions.get(topic) != null) {
+        throw new IllegalStateException("Subscription to " + topic + " already exists");
+      }
+      mySubscriptions = mySubscriptions.plus(topic, handler);
     }
     myBus.notifyOnSubscription(this, topic);
   }
@@ -62,7 +65,7 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
     }
     if (topic.getListenerClass().isInstance(myDefaultHandler)) {
       throw new IllegalStateException("Can't subscribe to the topic '" + topic +"'. Default handler has incompatible type - expected: '" +
-        topic.getListenerClass() + "', actual: '" + myDefaultHandler.getClass() + "'");
+                                      topic.getListenerClass() + "', actual: '" + myDefaultHandler.getClass() + "'");
     }
 
     subscribe(topic, (L)myDefaultHandler);
@@ -96,19 +99,12 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
     }
   }
 
-  private Object getHandler(@NotNull Topic topic) {
-    for (Pair<Topic, Object> subscription : mySubscriptions) {
-      if (topic == subscription.first) return subscription.second;
-    }
-    return null;
-  }
-
   void deliverMessage(@NotNull Message message) {
     final Message messageOnLocalQueue = myPendingMessages.get().poll();
     assert messageOnLocalQueue == message;
 
     final Topic topic = message.getTopic();
-    final Object handler = getHandler(topic);
+    final Object handler = mySubscriptions.get(topic);
 
     try {
       Method listenerMethod = message.getListenerMethod();
@@ -123,7 +119,16 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
     catch (AbstractMethodError e) {
       //Do nothing. This listener just does not implement something newly added yet.
     }
-    catch(Throwable e) {
+    catch (ProcessCanceledException e) {
+      throw e;
+    }
+    catch (InvocationTargetException e) {
+      if (e.getCause() instanceof ProcessCanceledException) {
+        throw (ProcessCanceledException)e.getCause();
+      }
+      LOG.error(e.getCause() == null ? e : e.getCause());
+    }
+    catch (Throwable e) {
       LOG.error(e.getCause() == null ? e : e.getCause());
     }
   }
@@ -134,5 +139,9 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
 
   public String toString() {
     return mySubscriptions.toString();
+  }
+
+  MessageBusImpl getBus() {
+    return myBus;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,21 +26,20 @@ import java.awt.event.KeyEvent;
 import java.util.Collections;
 
 /**
-* Created by IntelliJ IDEA.
-* User: zajac
-* Date: 05.03.11
-* Time: 10:40
-* To change this template use File | Settings | File Templates.
-*/
+ * Created by IntelliJ IDEA.
+ * User: zajac
+ * Date: 05.03.11
+ * Time: 10:40
+ * To change this template use File | Settings | File Templates.
+ */
 public class RestorePreviousSettingsAction extends EditorHeaderAction implements DumbAware {
-  private JTextComponent myTextField;
+  private final JTextComponent myTextField;
   private static final KeyboardShortcut SHORTCUT = new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), null);
 
   public RestorePreviousSettingsAction(EditorSearchComponent editorSearchComponent, JTextComponent textField) {
     super(editorSearchComponent);
     myTextField = textField;
-    registerShortcutsForComponent(Collections.<Shortcut>singletonList(SHORTCUT),
-                                  textField, this);
+    registerShortcutsForComponent(Collections.<Shortcut>singletonList(SHORTCUT), textField);
   }
 
   @Override

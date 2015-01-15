@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.profile.codeInspection.ui;
+package com.intellij.profile.codeInspection.ui.inspectionsTree;
 
+import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.Descriptor;
-import com.intellij.codeInspection.ex.ScopeToolState;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.ui.CheckedTreeNode;
+import com.intellij.profile.codeInspection.ui.ToolDescriptors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * @author anna
  * @since 14-May-2009
  */
-public class InspectionConfigTreeNode extends CheckedTreeNode {
-  private final ScopeToolState myState;
-  private boolean myByDefault;
-  private boolean myInspectionNode;
+public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
   private final ClearableLazyValue<Boolean> myProperSetting = new ClearableLazyValue<Boolean>() {
     @NotNull
     @Override
     protected Boolean compute() {
-      Descriptor descriptor = getDescriptor();
-      if (descriptor != null) return descriptor.getInspectionProfile().isProperSetting(descriptor.getToolWrapper().getShortName());
+      ToolDescriptors descriptors = getDescriptors();
+      if (descriptors != null) {
+        final Descriptor defaultDescriptor = descriptors.getDefaultDescriptor();
+        return defaultDescriptor.getInspectionProfile().isProperSetting(defaultDescriptor.getToolWrapper().getShortName());
+      }
       for (int i = 0; i < getChildCount(); i++) {
         InspectionConfigTreeNode node = (InspectionConfigTreeNode)getChildAt(i);
         if (node.isProperSetting()) {
@@ -48,35 +48,24 @@ public class InspectionConfigTreeNode extends CheckedTreeNode {
     }
   };
 
-  public InspectionConfigTreeNode(@NotNull Object userObject, ScopeToolState state, boolean byDefault, boolean inspectionNode) {
+  public InspectionConfigTreeNode(@NotNull Object userObject) {
     super(userObject);
-    myState = state;
-    myByDefault = byDefault;
-    myInspectionNode = inspectionNode;
-    if (state != null) {
-      setChecked(state.isEnabled());
-    }
   }
 
-  public InspectionConfigTreeNode(@NotNull Descriptor descriptor, ScopeToolState state, boolean byDefault, boolean isEnabled,
-                                  boolean inspectionNode) {
-    this(descriptor, state, byDefault, inspectionNode);
-    setChecked(isEnabled);
+  public HighlightDisplayKey getKey() {
+    return getDefaultDescriptor().getKey();
   }
 
   @Nullable
-  public Descriptor getDescriptor() {
+  public Descriptor getDefaultDescriptor() {
+    final ToolDescriptors descriptors = getDescriptors();
+    return descriptors == null ? null : descriptors.getDefaultDescriptor();
+  }
+
+  @Nullable
+  public ToolDescriptors getDescriptors() {
     if (userObject instanceof String) return null;
-    return (Descriptor)userObject;
-  }
-
-  @Nullable
-  public NamedScope getScope(Project project) {
-    return myState == null ? null : myState.getScope(project);
-  }
-
-  public boolean isByDefault() {
-    return myByDefault;
+    return (ToolDescriptors)userObject;
   }
 
   @Nullable
@@ -84,21 +73,10 @@ public class InspectionConfigTreeNode extends CheckedTreeNode {
     return userObject instanceof String ? (String)userObject : null;
   }
 
-  public boolean isInspectionNode() {
-    return myInspectionNode;
-  }
-
-  public void setInspectionNode(boolean inspectionNode) {
-    myInspectionNode = inspectionNode;
-  }
-
-  public void setByDefault(boolean byDefault) {
-    myByDefault = byDefault;
-  }
-
   @Nullable
   public String getScopeName() {
-    return myState != null ? myState.getScopeName() : null;
+    final ToolDescriptors descriptors = getDescriptors();
+    return descriptors != null ? descriptors.getDefaultScopeToolState().getScopeName() : null;
   }
 
   public boolean isProperSetting() {
@@ -111,6 +89,9 @@ public class InspectionConfigTreeNode extends CheckedTreeNode {
 
   @Override
   public String toString() {
+    if (userObject instanceof ToolDescriptors) {
+      return ((ToolDescriptors)userObject).getDefaultDescriptor().getText();
+    }
     if (userObject instanceof Descriptor) {
       return ((Descriptor)userObject).getText();
     }

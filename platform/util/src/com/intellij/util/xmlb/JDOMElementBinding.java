@@ -22,13 +22,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
-class JDOMElementBinding implements Binding {
-  private final Accessor myAccessor;
+class JDOMElementBinding extends Binding implements MultiNodeBinding {
   private final String myTagName;
 
   public JDOMElementBinding(@NotNull Accessor accessor) {
-    myAccessor = accessor;
+    super(accessor);
+
     Tag tag = myAccessor.getAnnotation(Tag.class);
     assert tag != null : "jdom.Element property without @Tag annotation: " + accessor;
 
@@ -62,18 +63,28 @@ class JDOMElementBinding implements Binding {
     throw new XmlSerializationException("org.jdom.Element expected but " + value + " found");
   }
 
-  @Override
   @Nullable
-  public Object deserialize(Object context, @NotNull Object... nodes) {
+  @Override
+  public Object deserializeList(Object context, @NotNull List<?> nodes) {
     if (myAccessor.getValueClass().isArray()) {
-      Element[] result = new Element[nodes.length];
-      System.arraycopy(nodes, 0, result, 0, nodes.length);
-      myAccessor.write(context, result);
+      //noinspection SuspiciousToArrayCall
+      myAccessor.write(context, nodes.toArray(new Element[nodes.size()]));
     }
     else {
-      assert nodes.length == 1;
-      myAccessor.write(context, nodes[0]);
+      myAccessor.write(context, nodes.get(0));
     }
+    return context;
+  }
+
+  @Override
+  public boolean isMulti() {
+    return true;
+  }
+
+  @Override
+  @Nullable
+  public Object deserialize(Object context, @NotNull Object node) {
+    myAccessor.write(context, node);
     return context;
   }
 
@@ -85,9 +96,5 @@ class JDOMElementBinding implements Binding {
   @Override
   public Class getBoundNodeType() {
     throw new UnsupportedOperationException("Method getBoundNodeType is not supported in " + getClass());
-  }
-
-  @Override
-  public void init() {
   }
 }

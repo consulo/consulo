@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.psi.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.messages.MessageBus;
@@ -39,9 +40,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     final MessageBus bus = project.getMessageBus();
     myPublisher = bus.syncPublisher(TOPIC);
     bus.connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
-
-      @Override
-      public void enteredDumbMode() {
+      private void doIncCounter() {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
           public void run() {
@@ -51,8 +50,13 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
       }
 
       @Override
+      public void enteredDumbMode() {
+        doIncCounter();
+      }
+
+      @Override
       public void exitDumbMode() {
-        enteredDumbMode();
+        doIncCounter();
       }
     });
   }
@@ -60,10 +64,12 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   public void incCounter() {
     myModificationCount.getAndIncrement();
     myJavaStructureModificationCount.getAndIncrement();
-    incOutOfCodeBlockModificationCounter();
+    myOutOfCodeBlockModificationCount.getAndIncrement();
+    myPublisher.modificationCountChanged();
   }
 
   public void incOutOfCodeBlockModificationCounter() {
+    myModificationCount.getAndIncrement();
     myOutOfCodeBlockModificationCount.getAndIncrement();
     myPublisher.modificationCountChanged();
   }
@@ -72,7 +78,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   public void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
     myModificationCount.getAndIncrement();
     if (event.getParent() instanceof PsiDirectory) {
-      incOutOfCodeBlockModificationCounter();
+      myOutOfCodeBlockModificationCount.getAndIncrement();
     }
 
     myPublisher.modificationCountChanged();
@@ -88,8 +94,33 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     return myOutOfCodeBlockModificationCount.get();
   }
 
+  private final ModificationTracker myOutOfCodeBlockModificationTracker = new ModificationTracker() {
+    @Override
+    public long getModificationCount() {
+      return getOutOfCodeBlockModificationCount();
+    }
+  };
+
+  @NotNull
+  @Override
+  public ModificationTracker getOutOfCodeBlockModificationTracker() {
+    return myOutOfCodeBlockModificationTracker;
+  }
+
   @Override
   public long getJavaStructureModificationCount() {
     return myJavaStructureModificationCount.get();
+  }
+
+  private final ModificationTracker myJavaStructureModificationTracker = new ModificationTracker() {
+    @Override
+    public long getModificationCount() {
+      return getJavaStructureModificationCount();
+    }
+  };
+  @NotNull
+  @Override
+  public ModificationTracker getJavaStructureModificationTracker() {
+    return myJavaStructureModificationTracker;
   }
 }

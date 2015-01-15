@@ -83,10 +83,7 @@ public class IdeaApplication {
     boolean isInternal = Boolean.valueOf(System.getProperty(IDEA_IS_INTERNAL_PROPERTY)).booleanValue();
 
     boolean headless = Main.isHeadless();
-    if (!headless) {
-      patchSystem();
-    }
-
+    patchSystem(headless);
     if (Main.isCommandLine()) {
       new CommandLineApplication(isInternal, false, headless);
     }
@@ -108,10 +105,12 @@ public class IdeaApplication {
     myStarter.premain(args);
   }
 
-  private static void patchSystem() {
+  private static void patchSystem(boolean headless) {
     System.setProperty("sun.awt.noerasebackground", "true");
 
-    Toolkit.getDefaultToolkit().getSystemEventQueue().push(IdeEventQueue.getInstance());
+    IdeEventQueue.getInstance(); // replace system event queue
+
+    if (headless) return;
 
     if (Patches.SUN_BUG_ID_6209673) {
       RepaintManager.setCurrentManager(new IdeRepaintManager());

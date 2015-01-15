@@ -15,10 +15,10 @@
  */
 package com.intellij.lang.documentation;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * User: spLeaner
@@ -27,7 +27,7 @@ public interface ExternalDocumentationHandler {
   boolean handleExternal(PsiElement element, PsiElement originalElement);
   boolean handleExternalLink(PsiManager psiManager, String link, PsiElement context);
   boolean canFetchDocumentationLink(String link);
-  
+
   @NotNull
-  String fetchExternalDocumentation(String link, Project project);
+  String fetchExternalDocumentation(@NotNull String link, @Nullable PsiElement element);
 }

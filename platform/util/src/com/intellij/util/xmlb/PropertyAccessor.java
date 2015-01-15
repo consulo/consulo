@@ -110,6 +110,12 @@ class PropertyAccessor implements Accessor {
     return myGenericType;
   }
 
+  @Override
+  public boolean isFinal() {
+    return false;
+  }
+
+  @Override
   @NonNls
   public String toString() {
     return "PropertyAccessor[" + myReadMethod.getDeclaringClass().getName() + "." + getName() +"]";

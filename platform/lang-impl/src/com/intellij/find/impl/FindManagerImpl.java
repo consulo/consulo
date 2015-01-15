@@ -28,26 +28,17 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
-import com.intellij.lexer.LayeredLexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.navigation.NavigationItem;
+import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
-import com.intellij.openapi.editor.ex.util.LayeredHighlighterIterator;
-import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
@@ -55,24 +46,28 @@ import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.search.LexerEditorHighlighterLexer;
+import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.ReplacePromptDialog;
+import com.intellij.usages.ChunkExtractor;
 import com.intellij.usages.UsageViewManager;
+import com.intellij.usages.impl.SyntaxHighlighterOverEditorHighlighter;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.Predicate;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringSearcher;
 import gnu.trove.THashSet;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,18 +79,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-@State(
-        name = "FindManager",
-        storages = {
-                @Storage(
-                        file = StoragePathMacros.WORKSPACE_FILE
-                )}
-)
-public class FindManagerImpl extends FindManager implements PersistentStateComponent<Element> {
+public class FindManagerImpl extends FindManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.find.impl.FindManagerImpl");
 
   private final FindUsagesManager myFindUsagesManager;
   private boolean isFindWasPerformed = false;
+  private boolean isSelectNextOccurrenceWasPerformed = false;
   private Point myReplaceInFilePromptPos = new Point(-1, -1);
   private Point myReplaceInProjectPromptPos = new Point(-1, -1);
   private final FindModel myFindInProjectModel = new FindModel();
@@ -106,8 +95,7 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
   private final Project myProject;
   private final MessageBus myBus;
   private static final Key<Boolean> HIGHLIGHTER_WAS_NOT_FOUND_KEY = Key.create("com.intellij.find.impl.FindManagerImpl.HighlighterNotFoundKey");
-  @NonNls private static final String FIND_USAGES_MANAGER_ELEMENT = "FindUsagesManager";
-  public static final boolean ourHasSearchInCommentsAndLiterals = true;
+
   private FindDialog myFindDialog;
 
   public FindManagerImpl(Project project, FindSettings findSettings, UsageViewManager anotherManager, MessageBus bus) {
@@ -121,6 +109,8 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
 
     myFindUsagesManager = new FindUsagesManager(myProject, anotherManager);
     myFindInProjectModel.setMultipleFiles(true);
+
+    NotificationsConfigurationImpl.remove("FindInPath");
   }
 
   @Override
@@ -130,33 +120,6 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
     model.setReplaceState(true);
     model.setPromptOnReplace(false);
     return model;
-  }
-
-  @Override
-  public Element getState() {
-    Element element = new Element("FindManager");
-    final Element findUsages = new Element(FIND_USAGES_MANAGER_ELEMENT);
-    element.addContent(findUsages);
-    try {
-      myFindUsagesManager.writeExternal(findUsages);
-    }
-    catch (WriteExternalException e) {
-      LOG.error(e);
-    }
-    return element;
-  }
-
-  @Override
-  public void loadState(final Element state) {
-    final Element findUsages = state.getChild(FIND_USAGES_MANAGER_ELEMENT);
-    if (findUsages != null) {
-      try {
-        myFindUsagesManager.readExternal(findUsages);
-      }
-      catch (InvalidDataException e) {
-        LOG.error(e);
-      }
-    }
   }
 
   @Override
@@ -206,12 +169,9 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
         if (findModel.isReplaceState()) {
           FindSettings.getInstance().addStringToReplace(findModel.getStringToReplace());
         }
-        if (findModel.isMultipleFiles() && !findModel.isProjectScope()) {
+        if (findModel.isMultipleFiles() && !findModel.isProjectScope() && findModel.getDirectoryName() != null) {
           FindSettings.getInstance().addDirectory(findModel.getDirectoryName());
-
-          if (findModel.getDirectoryName() != null) {
-            myFindInProjectModel.setWithSubdirectories(findModel.isWithSubdirectories());
-          }
+          myFindInProjectModel.setWithSubdirectories(findModel.isWithSubdirectories());
         }
         okHandler.run();
       }
@@ -257,7 +217,18 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
   @Override
   public void setFindWasPerformed() {
     isFindWasPerformed = true;
-    //myFindUsagesManager.clearFindingNextUsageInFile();
+    isSelectNextOccurrenceWasPerformed = false;
+  }
+
+  @Override
+  public boolean selectNextOccurrenceWasPerformed() {
+    return isSelectNextOccurrenceWasPerformed;
+  }
+
+  @Override
+  public void setSelectNextOccurrenceWasPerformed() {
+    isSelectNextOccurrenceWasPerformed = true;
+    isFindWasPerformed = false;
   }
 
   @Override
@@ -270,7 +241,7 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
     if (myFindNextModel == null) return null;
 
     final JComponent header = editor.getHeaderComponent();
-    if (header instanceof EditorSearchComponent) {
+    if (header instanceof EditorSearchComponent && !isSelectNextOccurrenceWasPerformed) {
       final EditorSearchComponent searchComponent = (EditorSearchComponent)header;
       final String textInField = searchComponent.getTextInField();
       if (!Comparing.equal(textInField, myFindInFileModel.getStringToFind()) && !textInField.isEmpty()) {
@@ -305,24 +276,103 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
       LOG.debug(model.toString());
     }
 
-    final char[] textArray = CharArrayUtil.fromSequenceWithoutCopying(text);
+    return findStringLoop(text, offset, model, file, getFindContextPredicate(model, file, text));
+  }
 
+  private FindResult findStringLoop(CharSequence text, int offset, FindModel model, VirtualFile file, @Nullable Predicate<FindResult> filter) {
+    final char[] textArray = CharArrayUtil.fromSequenceWithoutCopying(text);
     while(true) {
       FindResult result = doFindString(text, textArray, offset, model, file);
-
-      if (!model.isWholeWordsOnly()) {
-        return result;
-      }
-      if (!result.isStringFound()){
-        return result;
-      }
-      if (isWholeWord(text, result.getStartOffset(), result.getEndOffset())){
-        return result;
+      if (filter == null || filter.apply(result)) {
+        if (!model.isWholeWordsOnly()) {
+          return result;
+        }
+        if (!result.isStringFound()) {
+          return result;
+        }
+        if (isWholeWord(text, result.getStartOffset(), result.getEndOffset())) {
+          return result;
+        }
       }
 
       offset = model.isForward() ? result.getStartOffset() + 1 : result.getEndOffset() - 1;
       if (offset > text.length() || offset < 0) return NOT_FOUND_RESULT;
     }
+  }
+
+  private class FindExceptCommentsOrLiteralsData implements Predicate<FindResult> {
+    private final VirtualFile myFile;
+    private final FindModel myFindModel;
+    private final TreeMap<Integer, Integer> mySkipRangesSet;
+
+    private FindExceptCommentsOrLiteralsData(VirtualFile file, FindModel model, CharSequence text) {
+      myFile = file;
+      myFindModel = model.clone();
+
+      TreeMap<Integer, Integer> result = new TreeMap<Integer, Integer>();
+
+      if (model.isExceptComments() || model.isExceptCommentsAndStringLiterals()) {
+        addRanges(file, model, text, result, FindModel.SearchContext.IN_COMMENTS);
+      }
+
+      if (model.isExceptStringLiterals() || model.isExceptCommentsAndStringLiterals()) {
+        addRanges(file, model, text, result, FindModel.SearchContext.IN_STRING_LITERALS);
+      }
+
+      mySkipRangesSet = result;
+    }
+
+    private void addRanges(VirtualFile file,
+                           FindModel model,
+                           CharSequence text,
+                           TreeMap<Integer, Integer> result,
+                           FindModel.SearchContext searchContext) {
+      FindModel clonedModel = model.clone();
+      clonedModel.setSearchContext(searchContext);
+      clonedModel.setForward(true);
+      int offset = 0;
+
+      while(true) {
+        FindResult customResult = findStringLoop(text, offset, clonedModel, file, null);
+        if (!customResult.isStringFound()) break;
+        result.put(customResult.getStartOffset(), customResult.getEndOffset());
+        offset = Math.max(customResult.getEndOffset(), offset + 1);  // avoid loop for zero size reg exps matches
+        if (offset >= text.length()) break;
+      }
+    }
+
+    boolean isAcceptableFor(FindModel model, VirtualFile file) {
+      return Comparing.equal(myFile, file) && myFindModel.equals(model);
+    }
+
+    @Override
+    public boolean apply(@Nullable FindResult input) {
+      if (input == null || !input.isStringFound()) return true;
+      NavigableMap<Integer, Integer> map = mySkipRangesSet.headMap(input.getStartOffset(), true);
+      for(Map.Entry<Integer, Integer> e:map.descendingMap().entrySet()) {
+        // [e.key, e.value] intersect with [input.start, input.end]
+        if (e.getKey() <= input.getStartOffset() && (input.getStartOffset() <= e.getValue() || e.getValue() >= input.getEndOffset())) return false;
+        if (e.getValue() <= input.getStartOffset()) break;
+      }
+      return true;
+    }
+  }
+  private static Key<FindExceptCommentsOrLiteralsData> ourExceptCommentsOrLiteralsDataKey = Key.create("except.comments.literals.search.data");
+
+  private Predicate<FindResult> getFindContextPredicate(@NotNull FindModel model, VirtualFile file, CharSequence text) {
+    if (file == null) return null;
+    FindModel.SearchContext context = model.getSearchContext();
+    if( context == FindModel.SearchContext.ANY || context == FindModel.SearchContext.IN_COMMENTS ||
+        context == FindModel.SearchContext.IN_STRING_LITERALS) {
+      return null;
+    }
+
+    FindExceptCommentsOrLiteralsData data = model.getUserData(ourExceptCommentsOrLiteralsDataKey);
+    if (data == null || !data.isAcceptableFor(model, file)) {
+      model.putUserData(ourExceptCommentsOrLiteralsDataKey, data = new FindExceptCommentsOrLiteralsData(file, model, text));
+    }
+
+    return data;
   }
 
   @Override
@@ -359,8 +409,16 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
       final FindModel model = new FindModel();
       model.copyFrom(findmodel);
       final String s = model.getStringToFind();
-      model.setStringToFind(StringUtil.escapeToRegexp(s));
-      model.setRegularExpressions(true);
+      String newStringToFind;
+
+      if (findmodel.isRegularExpressions()) {
+        newStringToFind = StringUtil.replace(s, "\n", "\\n\\s*"); // add \\s* for convenience
+      } else {
+        newStringToFind = StringUtil.escapeToRegexp(s);
+        model.setRegularExpressions(true);
+      }
+      model.setStringToFind(newStringToFind);
+
       return model;
     }
     return findmodel;
@@ -408,11 +466,15 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
     return new StringSearcher(model.getStringToFind(), model.isCaseSensitive(), model.isForward());
   }
 
+  public static void clearPreviousFindData(FindModel model) {
+    model.putUserData(ourCommentsLiteralsSearchDataKey, null);
+    model.putUserData(ourExceptCommentsOrLiteralsDataKey, null);
+  }
+
   private static class CommentsLiteralsSearchData {
     final VirtualFile lastFile;
     int startOffset = 0;
-    final SyntaxHighlighter highlighter;
-    final Lexer highlightingLexer;
+    final SyntaxHighlighterOverEditorHighlighter highlighter;
 
     TokenSet tokensOfInterest;
     final StringSearcher searcher;
@@ -420,8 +482,8 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
     final Set<Language> relevantLanguages;
     final FindModel model;
 
-    public CommentsLiteralsSearchData(VirtualFile lastFile, Set<Language> relevantLanguages, SyntaxHighlighter highlighter,
-                                      Lexer lexer, TokenSet tokensOfInterest,
+    public CommentsLiteralsSearchData(VirtualFile lastFile, Set<Language> relevantLanguages,
+                                      SyntaxHighlighterOverEditorHighlighter highlighter, TokenSet tokensOfInterest,
                                       StringSearcher searcher, Matcher matcher, FindModel model) {
       this.lastFile = lastFile;
       this.highlighter = highlighter;
@@ -429,12 +491,11 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
       this.searcher = searcher;
       this.matcher = matcher;
       this.relevantLanguages = relevantLanguages;
-      highlightingLexer = lexer;
       this.model = model;
     }
   }
 
-  public static final Key<CommentsLiteralsSearchData> ourCommentsLiteralsSearchDataKey = Key.create("comments.literals.search.data");
+  private static final Key<CommentsLiteralsSearchData> ourCommentsLiteralsSearchDataKey = Key.create("comments.literals.search.data");
 
   @NotNull
   private FindResult findInCommentsAndLiterals(@NotNull CharSequence text,
@@ -512,38 +573,15 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
 
       Matcher matcher = model.isRegularExpressions() ? compileRegExp(model, ""):null;
       StringSearcher searcher = matcher != null ? null: new StringSearcher(model.getStringToFind(), model.isCaseSensitive(), true);
-      LayeredLexer.ourDisableLayersFlag.set(Boolean.TRUE);
-      EditorHighlighter editorHighlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myProject, file);
-      Lexer lexer;
-
-      try {
-        if (editorHighlighter instanceof LayeredLexerEditorHighlighter) {
-          lexer = new LexerEditorHighlighterLexer(editorHighlighter, false);
-        } else {
-          lexer = highlighter.getHighlightingLexer();
-        }
-      }
-      finally {
-        LayeredLexer.ourDisableLayersFlag.set(null);
-      }
-
-      data = new CommentsLiteralsSearchData(file, relevantLanguages, highlighter, lexer, tokensOfInterest, searcher, matcher, (FindModel)model.clone());
-      lexer.start(text, 0, text.length(), 0);
+      SyntaxHighlighterOverEditorHighlighter highlighterAdapter = new SyntaxHighlighterOverEditorHighlighter(highlighter, file, myProject);
+      data = new CommentsLiteralsSearchData(file, relevantLanguages, highlighterAdapter, tokensOfInterest, searcher, matcher, model.clone());
+      data.highlighter.restart(text);
       model.putUserData(ourCommentsLiteralsSearchDataKey, data);
     }
 
     int initialStartOffset = model.isForward() && data.startOffset < offset ? data.startOffset : 0;
-    final Lexer lexer = data.highlightingLexer;
-    LayeredHighlighterIterator layeredHighlighterIterator = null;
-    if (lexer instanceof LexerEditorHighlighterLexer) {
-      ((LexerEditorHighlighterLexer)lexer).resetPosition(initialStartOffset);
-      HighlighterIterator iterator = ((LexerEditorHighlighterLexer)lexer).getHighlighterIterator();
-      if (iterator instanceof LayeredHighlighterIterator) {
-        layeredHighlighterIterator = (LayeredHighlighterIterator)iterator;
-      }
-    } else {
-      lexer.start(text, initialStartOffset, text.length(), 0);
-    }
+    data.highlighter.resetPosition(initialStartOffset);
+    final Lexer lexer = data.highlighter.getHighlightingLexer();
 
     IElementType tokenType;
     TokenSet tokens = data.tokensOfInterest;
@@ -555,13 +593,11 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
     while((tokenType = lexer.getTokenType()) != null) {
       if (lexer.getState() == 0) lastGoodOffset = lexer.getTokenStart();
 
-      final SyntaxHighlighter activeSyntaxHighlighter =
-              layeredHighlighterIterator != null ? layeredHighlighterIterator.getActiveSyntaxHighlighter() : data.highlighter;
-      final TextAttributesKey[] keys = activeSyntaxHighlighter.getTokenHighlights(tokenType);
+      final TextAttributesKey[] keys = data.highlighter.getTokenHighlights(tokenType);
 
       if (tokens.contains(tokenType) ||
-          (model.isInStringLiteralsOnly() && isHighlightedAsString(keys)) ||
-          (model.isInCommentsOnly() && isHighlightedAsDocComment(keys))
+          (model.isInStringLiteralsOnly() && ChunkExtractor.isHighlightedAsString(keys)) ||
+          (model.isInCommentsOnly() && ChunkExtractor.isHighlightedAsComment(keys))
               ) {
         int start = lexer.getTokenStart();
         int end = lexer.getTokenEnd();
@@ -632,32 +668,6 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
     }
 
     return prevFindResult;
-  }
-
-  private static boolean isHighlightedAsDocComment(TextAttributesKey... keys) {
-    for (TextAttributesKey key : keys) {
-      if (key == DefaultLanguageHighlighterColors.DOC_COMMENT || key == SyntaxHighlighterColors.DOC_COMMENT) {
-        return true;
-      }
-      final TextAttributesKey fallbackAttributeKey = key.getFallbackAttributeKey();
-      if (fallbackAttributeKey != null && isHighlightedAsDocComment(fallbackAttributeKey)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private static boolean isHighlightedAsString(TextAttributesKey... keys) {
-    for (TextAttributesKey key : keys) {
-      if (key == DefaultLanguageHighlighterColors.STRING || key == SyntaxHighlighterColors.STRING) {
-        return true;
-      }
-      final TextAttributesKey fallbackAttributeKey = key.getFallbackAttributeKey();
-      if (fallbackAttributeKey != null && isHighlightedAsString(fallbackAttributeKey)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private static TokenSet addTokenTypesForLanguage(FindModel model, Language lang, TokenSet tokensOfInterest) {
@@ -863,13 +873,18 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
   }
 
   @Override
+  public void findUsagesInScope(@NotNull PsiElement element, @NotNull SearchScope searchScope) {
+    myFindUsagesManager.findUsages(element, null, null, false, searchScope);
+  }
+
+  @Override
   public void findUsages(@NotNull PsiElement element, boolean showDialog) {
-    myFindUsagesManager.findUsages(element, null, null, showDialog);
+    myFindUsagesManager.findUsages(element, null, null, showDialog, null);
   }
 
   @Override
   public void showSettingsAndFindUsages(@NotNull NavigationItem[] targets) {
-    myFindUsagesManager.showSettingsAndFindUsages(targets);
+    FindUsagesManager.showSettingsAndFindUsages(targets);
   }
 
   @Override
@@ -885,7 +900,7 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
       Document document = editor.getDocument();
       PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
 
-      myFindUsagesManager.findUsages(element, psiFile, fileEditor, false);
+      myFindUsagesManager.findUsages(element, psiFile, fileEditor, false, null);
     }
   }
 

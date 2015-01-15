@@ -1,18 +1,37 @@
+/*
+ * Copyright 2000-2014 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.intellij.find.impl.livePreview;
 
 import com.intellij.find.*;
 import com.intellij.find.impl.FindResultImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.RangeMarker;
+import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.SelectionEvent;
 import com.intellij.openapi.editor.event.SelectionListener;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.util.Alarm;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -30,7 +49,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
   private final Alarm myLivePreviewAlarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
   protected SearchResults mySearchResults;
   private LivePreview myLivePreview;
-  private boolean myReplaceDenied = false;
+  private final boolean myReplaceDenied = false;
   private boolean mySuppressUpdate = false;
 
   private boolean myTrackingDocument;
@@ -38,7 +57,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
 
   private boolean myListeningSelection = false;
 
-  private SelectionListener mySelectionListener = new SelectionListener() {
+  private final SelectionListener mySelectionListener = new SelectionListener() {
     @Override
     public void selectionChanged(SelectionEvent e) {
       smartUpdate();
@@ -60,7 +79,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
   }
 
 
-  private DocumentAdapter myDocumentListener = new DocumentAdapter() {
+  private final DocumentAdapter myDocumentListener = new DocumentAdapter() {
     @Override
     public void documentChanged(final DocumentEvent e) {
       if (!myTrackingDocument) {
@@ -82,9 +101,9 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
 
   public void moveCursor(SearchResults.Direction direction) {
     if (direction == SearchResults.Direction.UP) {
-      mySearchResults.prevOccurrence();
+      mySearchResults.prevOccurrence(false);
     } else {
-      mySearchResults.nextOccurrence();
+      mySearchResults.nextOccurrence(false);
     }
   }
 
@@ -117,6 +136,9 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
     Runnable request = new Runnable() {
       @Override
       public void run() {
+        if (myDisposed) return;
+        Project project = mySearchResults.getProject();
+        if (project != null && project.isDisposed()) return;
         mySearchResults.updateThreadSafe(copy, allowedToChangedEditorSelection, null, stamp);
       }
     };
@@ -128,7 +150,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
   }
 
   @Override
-  public String getStringToReplace(Editor editor, FindResult findResult) {
+  public String getStringToReplace(@NotNull Editor editor, @Nullable FindResult findResult) {
     if (findResult == null) {
       return null;
     }
@@ -200,8 +222,8 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
   public boolean canReplace() {
     if (mySearchResults != null && mySearchResults.getCursor() != null &&
         !isReplaceDenied() && (mySearchResults.getFindModel().isGlobal() ||
-                                                       !mySearchResults.getEditor().getSelectionModel()
-                                                         .hasBlockSelection()) ) {
+                               !mySearchResults.getEditor().getSelectionModel()
+                                       .hasBlockSelection()) ) {
 
       final String replacement = getStringToReplace(getEditor(), mySearchResults.getCursor());
       return replacement != null;
