@@ -901,6 +901,11 @@ public class StringUtil extends StringUtilRt {
     }
   }
 
+  @Contract(pure = true)
+  public static String defaultIfEmpty(@Nullable String value, String defaultValue) {
+    return isEmpty(value) ? defaultValue : value;
+  }
+
   @Contract("null -> false")
   public static boolean isNotEmpty(@Nullable String s) {
     return s != null && !s.isEmpty();
