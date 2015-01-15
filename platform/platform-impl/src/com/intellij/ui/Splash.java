@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -41,6 +43,7 @@ import java.awt.*;
  */
 public class Splash extends JDialog implements StartupProgress {
   @Nullable public static Rectangle BOUNDS;
+
   private final Icon myImage;
   private int myProgressHeight = 2;
   private Color myProgressColor = null;
@@ -55,7 +58,9 @@ public class Splash extends JDialog implements StartupProgress {
     super((Frame)null, false);
 
     setUndecorated(true);
-    setResizable(false);
+    if (!(SystemInfo.isLinux && SystemInfo.isJavaVersionAtLeast("1.7"))) {
+      setResizable(false);
+    }
     setFocusableWindowState(false);
 
     Icon originalImage = IconLoader.getIcon(imageName);
@@ -75,7 +80,20 @@ public class Splash extends JDialog implements StartupProgress {
     Dimension size = getPreferredSize();
     setSize(size);
     pack();
-    setLocationRelativeTo(null);
+    setLocationInTheCenterOfScreen();
+  }
+
+  private void setLocationInTheCenterOfScreen() {
+    Rectangle bounds = getGraphicsConfiguration().getBounds();
+    if (SystemInfo.isWindows) {
+      Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+      int x = insets.left + (bounds.width - insets.left - insets.right - getWidth()) / 2;
+      int y = insets.top + (bounds.height - insets.top - insets.bottom - getHeight()) / 2;
+      setLocation(x, y);
+    }
+    else {
+      setLocation((bounds.width - getWidth()) / 2, (bounds.height - getHeight()) / 2);
+    }
   }
 
   public Splash(ApplicationInfoEx info) {
@@ -123,7 +141,8 @@ public class Splash extends JDialog implements StartupProgress {
     g.setColor(color);
     g.fillRect(1, getProgressY(), width, getProgressHeight());
     if (myProgressTail != null) {
-      myProgressTail.paintIcon(this, g, width - (myProgressTail.getIconWidth()/2), getProgressY() - (myProgressTail.getIconHeight() - getProgressHeight())/2);
+      myProgressTail.paintIcon(this, g, width - (myProgressTail.getIconWidth()/2),
+                               getProgressY() - (myProgressTail.getIconHeight() - getProgressHeight())/2);
     }
     myProgressLastPosition = progressWidth;
   }
@@ -137,7 +156,11 @@ public class Splash extends JDialog implements StartupProgress {
   }
 
   private int getProgressY() {
-    return myProgressY;
+    return JBUI.scale(myProgressY);
+  }
+
+  public static boolean showLicenseeInfo(Graphics g, int x, int y, final int height, final Color textColor) {
+    return false;
   }
 
   private static final class SplashImage implements Icon {
@@ -159,6 +182,8 @@ public class Splash extends JDialog implements StartupProgress {
       }
 
       myIcon.paintIcon(c, g, x, y);
+
+      showLicenseeInfo(g, x, y, getIconHeight(), myTextColor);
     }
 
     public int getIconWidth() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author max
@@ -37,14 +38,14 @@ public class DiffApplication extends ApplicationStarterBase {
     return DiffBundle.message("diff.application.usage.parameters.and.description", scriptName);
   }
 
-  public void processCommand(String[] args) throws OperationFailedException {
+  public void processCommand(String[] args, @Nullable String currentDirectory) throws OperationFailedException {
     final String path1 = args[1];
     final String path2 = args[2];
-    final VirtualFile file1 = findFile(path1);
-    final VirtualFile file2 = findFile(path2);
+    final VirtualFile file1 = findFile(path1, currentDirectory);
+    final VirtualFile file2 = findFile(path2, currentDirectory);
     final boolean areDirs = areDirs(file1, file2);
-    final boolean areArchives = areArchives(file1, file2);
-    if (areDirs || areArchives) {
+    final boolean areJars = areJars(file1, file2);
+    if (areDirs || areJars) {
       final DirDiffManager diffManager = DirDiffManager.getInstance(ProjectManager.getInstance().getDefaultProject());
       final DiffElement d1 = diffManager.createDiffElement(file1);
       final DiffElement d2 = diffManager.createDiffElement(file2);

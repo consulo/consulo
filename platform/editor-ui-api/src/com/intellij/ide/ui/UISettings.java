@@ -21,9 +21,10 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.EventDispatcher;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.Accessor;
@@ -35,7 +36,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.io.File;
 import java.util.Map;
@@ -44,14 +44,13 @@ import static com.intellij.util.ui.UIUtil.isValidFont;
 
 @State(
         name = "UISettings",
-        storages = {@Storage(
-                file = StoragePathMacros.APP_CONFIG + "/ui.lnf.xml"
-        )}
+        storages = {
+                @Storage(
+                        file = StoragePathMacros.APP_CONFIG + "/ui.lnf.xml"
+                )}
 )
-public class UISettings implements PersistentStateComponent<UISettings>, ExportableApplicationComponent {
-  /**
-   * Not tabbed pane.
-   */
+public class UISettings extends SimpleModificationTracker implements PersistentStateComponent<UISettings>, ExportableApplicationComponent {
+  /** Not tabbed pane. */
   public static final int TABS_NONE = 0;
 
   public static UISettings getInstance() {
@@ -60,23 +59,24 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
 
   /**
    * Use this method if you are not sure whether the application is initialized.
-   *
    * @return persisted UISettings instance or default values.
    */
   public static UISettings getShadowInstance() {
     Application application = ApplicationManager.getApplication();
-    return application != null ? getInstance() : new UISettings();
+    UISettings settings = application == null ? null : application.getComponent(UISettings.class);
+    return settings == null ? new UISettings() : settings;
   }
 
-  @Property(filter = FontFilter.class)
-  public String FONT_FACE;
-  @Property(filter = FontFilter.class)
-  public int FONT_SIZE;
+  @Property(filter = FontFilter.class) public String FONT_FACE;
+  @Property(filter = FontFilter.class) public int FONT_SIZE;
   public int RECENT_FILES_LIMIT = 50;
   public int CONSOLE_COMMAND_HISTORY_LIMIT = 300;
   public int EDITOR_TAB_LIMIT = 10;
+  public int EDITOR_TAB_TITLE_LIMIT = 100;
   public boolean ANIMATE_WINDOWS = true;
-  public int ANIMATION_SPEED = 2000; // Pixels per second
+  @Deprecated //todo remove in IDEA 16
+  public int ANIMATION_SPEED = 4000; // Pixels per second
+  public int ANIMATION_DURATION = 300; // Milliseconds
   public boolean SHOW_TOOL_WINDOW_NUMBERS = true;
   public boolean HIDE_TOOL_STRIPES = true;
   public boolean WIDESCREEN_SUPPORT = false;
@@ -90,7 +90,7 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   public boolean SHOW_NAVIGATION_BAR = true;
   public boolean ALWAYS_SHOW_WINDOW_BUTTONS = false;
   public boolean CYCLE_SCROLLING = true;
-  public boolean SCROLL_TAB_LAYOUT_IN_EDITOR = false;
+  public boolean SCROLL_TAB_LAYOUT_IN_EDITOR = true;
   public boolean SHOW_CLOSE_BUTTON = true;
   public int EDITOR_TAB_PLACEMENT = 1;
   public boolean HIDE_KNOWN_EXTENSION_IN_TABS = false;
@@ -121,13 +121,12 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   public int PRESENTATION_MODE_FONT_SIZE = 24;
   public boolean MARK_MODIFIED_TABS_WITH_ASTERISK = false;
   public boolean SHOW_TABS_TOOLTIPS = true;
-  public boolean SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = false;
+  public boolean SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = true;
+  public boolean NAVIGATE_TO_PREVIEW = false;
 
-  private final EventListenerList myListenerList;
+  private final EventDispatcher<UISettingsListener> myDispatcher = EventDispatcher.create(UISettingsListener.class);
 
   public UISettings() {
-    myListenerList = new EventListenerList();
-
     setSystemFontFaceAndSize();
   }
 
@@ -135,31 +134,24 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
    * @deprecated use {@link UISettings#addUISettingsListener(com.intellij.ide.ui.UISettingsListener, Disposable disposable)} instead.
    */
   public void addUISettingsListener(UISettingsListener listener) {
-    myListenerList.add(UISettingsListener.class, listener);
+    myDispatcher.addListener(listener);
   }
 
   public void addUISettingsListener(@NotNull final UISettingsListener listener, @NotNull Disposable parentDisposable) {
-    myListenerList.add(UISettingsListener.class, listener);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removeUISettingsListener(listener);
-      }
-    });
+    myDispatcher.addListener(listener, parentDisposable);
   }
 
   /**
    * Notifies all registered listeners that UI settings has been changed.
    */
   public void fireUISettingsChanged() {
-    UISettingsListener[] listeners = myListenerList.getListeners(UISettingsListener.class);
-    for (UISettingsListener listener : listeners) {
-      listener.uiSettingsChanged(this);
-    }
+    incModificationCount();
+    myDispatcher.getMulticaster().uiSettingsChanged(this);
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(UISettingsListener.TOPIC).uiSettingsChanged(this);
   }
 
   public void removeUISettingsListener(UISettingsListener listener) {
-    myListenerList.remove(UISettingsListener.class, listener);
+    myDispatcher.removeListener(listener);
   }
 
   private void setSystemFontFaceAndSize() {
@@ -171,7 +163,7 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   }
 
   private static Pair<String, Integer> getSystemFontFaceAndSize() {
-    final Pair<String, Integer> fontData = UIUtil.getSystemFontData();
+    final Pair<String,Integer> fontData = UIUtil.getSystemFontData();
     if (fontData != null) {
       return fontData;
     }
@@ -180,7 +172,8 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   }
 
   public static class FontFilter implements SerializationFilter {
-    public boolean accepts(Accessor accessor, Object bean) {
+    @Override
+    public boolean accepts(@NotNull Accessor accessor, Object bean) {
       UISettings settings = (UISettings)bean;
       return !hasDefaultFontSetting(settings);
     }
@@ -191,10 +184,12 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
     return fontData.first.equals(settings.FONT_FACE) && fontData.second.equals(settings.FONT_SIZE);
   }
 
+  @Override
   public UISettings getState() {
     return this;
   }
 
+  @Override
   public void loadState(UISettings object) {
     XmlSerializerUtil.copyBean(object, this);
 
@@ -246,8 +241,10 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
     fireUISettingsChanged();
   }
 
-  private static final boolean DEFAULT_ALIASING = SystemProperties.getBooleanProperty("idea.use.default.antialiasing.in.editor", false);
-  private static final boolean FORCE_USE_FRACTIONAL_METRICS = SystemProperties.getBooleanProperty("idea.force.use.fractional.metrics", false);
+  private static final boolean DEFAULT_ALIASING             =
+          SystemProperties.getBooleanProperty("idea.use.default.antialiasing.in.editor", false);
+  private static final boolean FORCE_USE_FRACTIONAL_METRICS =
+          SystemProperties.getBooleanProperty("idea.force.use.fractional.metrics", false);
 
   public static void setupAntialiasing(final Graphics g) {
     if (DEFAULT_ALIASING) return;
@@ -317,10 +314,8 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   }
 
   @Override
-  public void initComponent() {
-  }
+  public void initComponent() { }
 
   @Override
-  public void disposeComponent() {
-  }
+  public void disposeComponent() { }
 }

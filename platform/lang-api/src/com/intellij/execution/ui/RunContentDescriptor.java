@@ -15,11 +15,13 @@
  */
 package com.intellij.execution.ui;
 
+import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.ide.HelpIdProvider;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.content.Content;
@@ -35,6 +37,7 @@ public class RunContentDescriptor implements Disposable {
   private final String myDisplayName;
   private final Icon myIcon;
   private final String myHelpId;
+  private RunnerLayoutUi myRunnerLayoutUi = null;
 
   private boolean myActivateToolWindowWhenAdded = true;
   private boolean myReuseToolWindowActivation = false;
@@ -44,18 +47,33 @@ public class RunContentDescriptor implements Disposable {
 
   private Content myContent;
   private Runnable myRestarter;
+  @NotNull
+  private AnAction[] myRestartActions = AnAction.EMPTY_ARRAY;
+
+  @Nullable
+  private final Runnable myActivationCallback;
 
   public RunContentDescriptor(@Nullable ExecutionConsole executionConsole,
                               @Nullable ProcessHandler processHandler,
                               @NotNull JComponent component,
                               String displayName,
-                              @Nullable Icon icon) {
+                              @Nullable Icon icon,
+                              @Nullable Runnable activationCallback) {
     myExecutionConsole = executionConsole;
     myProcessHandler = processHandler;
     myComponent = component;
     myDisplayName = displayName;
     myIcon = icon;
     myHelpId = myExecutionConsole instanceof HelpIdProvider ? ((HelpIdProvider)myExecutionConsole).getHelpId() : null;
+    myActivationCallback = activationCallback;
+  }
+
+  public RunContentDescriptor(@Nullable ExecutionConsole executionConsole,
+                              @Nullable ProcessHandler processHandler,
+                              @NotNull JComponent component,
+                              String displayName,
+                              @Nullable Icon icon) {
+    this(executionConsole, processHandler, component, displayName, icon, null);
   }
 
   public RunContentDescriptor(@Nullable ExecutionConsole executionConsole,
@@ -66,7 +84,24 @@ public class RunContentDescriptor implements Disposable {
   }
 
   public RunContentDescriptor(@NotNull RunProfile profile, @NotNull ExecutionResult executionResult, @NotNull RunnerLayoutUi ui) {
-    this(executionResult.getExecutionConsole(), executionResult.getProcessHandler(), ui.getComponent(), profile.getName(), profile.getIcon());
+    this(executionResult.getExecutionConsole(), executionResult.getProcessHandler(), ui.getComponent(), profile.getName(),
+         profile.getIcon());
+    myRunnerLayoutUi = ui;
+    if (executionResult instanceof DefaultExecutionResult) {
+      myRestartActions = ((DefaultExecutionResult)executionResult).getRestartActions();
+    }
+  }
+
+  public Runnable getActivationCallback() {
+    return myActivationCallback;
+  }
+
+  /**
+   * @return actions to restart or rerun
+   */
+  @NotNull
+  public AnAction[] getRestartActions() {
+    return myRestartActions.clone();
   }
 
   public ExecutionConsole getExecutionConsole() {
@@ -192,5 +227,18 @@ public class RunContentDescriptor implements Disposable {
 
   public void setAutoFocusContent(boolean autoFocusContent) {
     myAutoFocusContent = autoFocusContent;
+  }
+
+  /**
+   * Returns the runner layout UI interface that can be used to manage the sub-tabs in this run/debug tab, if available.
+   * (The runner layout UI is used, for example, by debugger tabs which have multiple sub-tabs, but is not used by other tabs
+   * which only display a single piece of content.
+   *
+   * @since 14.1
+   * @return the RunnerLayoutUi instance or null if this tab does not use RunnerLayoutUi for managing its contents.
+   */
+  @Nullable
+  public RunnerLayoutUi getRunnerLayoutUi() {
+    return myRunnerLayoutUi;
   }
 }

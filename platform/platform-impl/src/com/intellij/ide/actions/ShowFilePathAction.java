@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,13 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -35,21 +36,24 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
-import com.intellij.openapi.vfs.IVirtualFileSystem;
+import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.util.Consumer;
 import com.intellij.util.ui.EmptyIcon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -57,12 +61,22 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ShowFilePathAction extends AnAction {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.ShowFilePathAction");
+
+  public static final NotificationListener FILE_SELECTING_LISTENER = new NotificationListener.Adapter() {
+    @Override
+    protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent e) {
+      URL url = e.getURL();
+      if (url != null) openFile(new File(url.getPath()));
+      notification.expire();
+    }
+  };
 
   private static NotNullLazyValue<Boolean> canUseNautilus = new NotNullLazyValue<Boolean>() {
     @NotNull
@@ -140,12 +154,14 @@ public class ShowFilePathAction extends AnAction {
     e.getPresentation().setEnabled(getFile(e) != null);
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
     show(getFile(e), new ShowAction() {
+      @Override
       public void show(final ListPopup popup) {
-        DataManager.getInstance().getDataContextFromFocus().doWhenDone(new AsyncResult.Handler<DataContext>() {
+        DataManager.getInstance().getDataContextFromFocus().doWhenDone(new Consumer<DataContext>() {
           @Override
-          public void run(DataContext context) {
+          public void consume(DataContext context) {
             popup.showInBestPositionFor(context);
           }
         });
@@ -155,6 +171,7 @@ public class ShowFilePathAction extends AnAction {
 
   public static void show(final VirtualFile file, final MouseEvent e) {
     show(file, new ShowAction() {
+      @Override
       public void show(final ListPopup popup) {
         if (e.getComponent().isShowing()) {
           popup.show(new RelativePoint(e));
@@ -174,7 +191,7 @@ public class ShowFilePathAction extends AnAction {
       files.add(index, eachParent);
       fileUrls.add(index, getPresentableUrl(eachParent));
       if (eachParent.getParent() == null && eachParent.getFileSystem() instanceof ArchiveFileSystem) {
-        eachParent = ArchiveVfsUtil.getVirtualFileForJar(eachParent);
+        eachParent = ArchiveVfsUtil.getVirtualFileForArchive(eachParent);
         if (eachParent == null) break;
       }
       eachParent = eachParent.getParent();
@@ -183,6 +200,7 @@ public class ShowFilePathAction extends AnAction {
 
     final ArrayList<Icon> icons = new ArrayList<Icon>();
     ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+      @Override
       public void run() {
         for (String each : fileUrls) {
           final File ioFile = new File(each);
@@ -197,7 +215,8 @@ public class ShowFilePathAction extends AnAction {
           icons.add(eachIcon);
         }
 
-        LaterInvocator.invokeLater(new Runnable() {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+          @Override
           public void run() {
             show.show(createPopup(files, icons));
           }
@@ -231,6 +250,7 @@ public class ShowFilePathAction extends AnAction {
         final File selectedFile = new File(getPresentableUrl(selectedValue));
         if (selectedFile.exists()) {
           ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
             public void run() {
               openFile(selectedFile);
             }
@@ -292,6 +312,9 @@ public class ShowFilePathAction extends AnAction {
   }
 
   private static void doOpen(@NotNull File dir, @Nullable File toSelect) throws IOException, ExecutionException {
+    dir = new File(FileUtil.toCanonicalPath(dir.getPath()));
+    toSelect = toSelect == null ? null : new File(FileUtil.toCanonicalPath(toSelect.getPath()));
+
     if (SystemInfo.isWindows) {
       String cmd;
       if (toSelect != null) {
@@ -308,10 +331,10 @@ public class ShowFilePathAction extends AnAction {
     if (SystemInfo.isMac) {
       if (toSelect != null) {
         final String script = String.format(
-          "tell application \"Finder\"\n" +
-          "\treveal {\"%s\"} as POSIX file\n" +
-          "\tactivate\n" +
-          "end tell", toSelect.getAbsolutePath());
+                "tell application \"Finder\"\n" +
+                "\treveal {\"%s\"} as POSIX file\n" +
+                "\tactivate\n" +
+                "end tell", toSelect.getAbsolutePath());
         new GeneralCommandLine(ExecUtil.getOsascriptPath(), "-e", script).createProcess();
       }
       else {
@@ -339,7 +362,7 @@ public class ShowFilePathAction extends AnAction {
 
   @Nullable
   private static VirtualFile getFile(final AnActionEvent e) {
-    return PlatformDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+    return CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
   }
 
   public static Boolean showDialog(Project project, String message, String title, File file) {
@@ -373,6 +396,7 @@ public class ShowFilePathAction extends AnAction {
         return true;
       }
 
+      @NotNull
       @Override
       public String getDoNotShowMessage() {
         return CommonBundle.message("dialog.options.do.not.ask");
@@ -384,7 +408,7 @@ public class ShowFilePathAction extends AnAction {
 
   public static void showDialog(Project project, String message, String title, File file, DialogWrapper.DoNotAskOption option) {
     if (Messages.showOkCancelDialog(project, message, title, RevealFileAction.getActionName(),
-                                    IdeBundle.message("action.close"), Messages.getInformationIcon(), option) == 0) {
+                                    IdeBundle.message("action.close"), Messages.getInformationIcon(), option) == Messages.OK) {
       openFile(file);
     }
   }
@@ -397,9 +421,9 @@ public class ShowFilePathAction extends AnAction {
       return file;
     }
 
-    IVirtualFileSystem fs = file.getFileSystem();
-    if (fs instanceof ArchiveFileSystem && file.getParent() == null) {
-      return  ((ArchiveFileSystem)fs).getLocalVirtualFileFor(file);
+    VirtualFileSystem fs = file.getFileSystem();
+    if (fs instanceof JarFileSystem && file.getParent() == null) {
+      return  ((JarFileSystem)fs).getLocalVirtualFileFor(file);
     }
 
     return null;

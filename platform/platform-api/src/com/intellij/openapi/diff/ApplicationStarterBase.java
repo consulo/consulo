@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
  */
 package com.intellij.openapi.diff;
 
-import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationStarterEx;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +37,7 @@ import java.util.Arrays;
  * @author Konstantin Bulenkov
  */
 @SuppressWarnings({"UseOfSystemOutOrSystemErr", "CallToPrintStackTrace"})
-public abstract class ApplicationStarterBase implements ApplicationStarterEx {
+public abstract class ApplicationStarterBase extends ApplicationStarterEx {
   private final String myCommandName;
   private final int[] myArgsCount;
 
@@ -52,13 +52,18 @@ public abstract class ApplicationStarterBase implements ApplicationStarterEx {
   }
 
   @Override
-  public void processExternalCommandLine(String[] args) {
+  public boolean isHeadless() {
+    return false;
+  }
+
+  @Override
+  public void processExternalCommandLine(String[] args, @Nullable String currentDirectory) {
     if (!checkArguments(args)) {
       Messages.showMessageDialog(getUsageMessage(), StringUtil.toTitleCase(getCommandName()), Messages.getInformationIcon());
       return;
     }
     try {
-      processCommand(args);
+      processCommand(args, currentDirectory);
     }
     catch (Exception e) {
       Messages.showMessageDialog(String.format("Error showing %s: %s", getCommandName(), e.getMessage()),
@@ -81,7 +86,7 @@ public abstract class ApplicationStarterBase implements ApplicationStarterEx {
 
   public abstract String getUsageMessage();
 
-  protected abstract void processCommand(String[] args) throws Exception;
+  protected abstract void processCommand(String[] args, @Nullable String currentDirectory) throws Exception;
 
   @Override
   public void premain(String[] args) {
@@ -94,7 +99,7 @@ public abstract class ApplicationStarterBase implements ApplicationStarterEx {
   @Override
   public void main(String[] args) {
     try {
-      processCommand(args);
+      processCommand(args, null);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -111,12 +116,12 @@ public abstract class ApplicationStarterBase implements ApplicationStarterEx {
     System.exit(0);
   }
 
-  public static VirtualFile findOrCreateFile(String path) throws IOException {
+  public static VirtualFile findOrCreateFile(String path, @Nullable String currentDirectory) throws IOException {
     final VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(path));
     if (file == null) {
       boolean result = new File(path).createNewFile();
       if (result) {
-        return findFile(path);
+        return findFile(path, currentDirectory);
       }
       else {
         throw new FileNotFoundException("Can't create file " + path);
@@ -147,8 +152,8 @@ public abstract class ApplicationStarterBase implements ApplicationStarterEx {
     return false;
   }
 
-  public static boolean areArchives(VirtualFile file1, VirtualFile file2) {
-    return file1.getFileType() instanceof ArchiveFileType && file2.getFileType() instanceof ArchiveFileType;
+  public static boolean areJars(VirtualFile file1, VirtualFile file2) {
+    return JarFileSystem.PROTOCOL.equalsIgnoreCase(file1.getExtension()) && JarFileSystem.PROTOCOL.equalsIgnoreCase(file2.getExtension());
   }
 
   public static boolean areDirs(VirtualFile file1, VirtualFile file2) {
@@ -162,16 +167,20 @@ public abstract class ApplicationStarterBase implements ApplicationStarterEx {
   }
 
   @NotNull
-  public static VirtualFile findFile(final String path) throws OperationFailedException {
+  public static VirtualFile findFile(final String path, @Nullable String currentDirectory) throws OperationFailedException {
     File ioFile = new File(path);
-    if (!ioFile.exists()) {
-      final String dir = PathManager.getOriginalWorkingDir();
-      ioFile = new File(dir + File.separator + path);
+    if (!ioFile.isAbsolute() && currentDirectory != null) {
+      ioFile = new File(currentDirectory, path);
     }
     final VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(ioFile);
     if (file == null) {
       throw new OperationFailedException("Can't find file " + path);
     }
     return file;
+  }
+
+  @Override
+  public boolean canProcessExternalCommandLine() {
+    return true;
   }
 }

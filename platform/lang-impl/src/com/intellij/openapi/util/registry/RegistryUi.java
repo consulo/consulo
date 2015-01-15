@@ -23,7 +23,6 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ShadowAction;
@@ -314,7 +313,7 @@ public class RegistryUi implements Disposable {
 
 
       if (r == 0) {
-        LaterInvocator.invokeLater(new Runnable() {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
               app.restart(true);

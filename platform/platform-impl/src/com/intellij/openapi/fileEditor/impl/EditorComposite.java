@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,11 @@ import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.NullUtils;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.FocusWatcher;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.PrevNextActionsDescriptor;
 import com.intellij.ui.SideBorder;
 import com.intellij.ui.TabbedPaneWrapper;
@@ -42,15 +44,15 @@ import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class hides internal structure of UI component which represent
@@ -65,7 +67,7 @@ public abstract class EditorComposite implements Disposable {
   /**
    * File for which composite is created
    */
-  private final VirtualFile myFile;
+  @NotNull private final VirtualFile myFile;
   /**
    * Whether the composite is pinned or not
    */
@@ -103,6 +105,7 @@ public abstract class EditorComposite implements Disposable {
                   @NotNull final FileEditorManagerEx fileEditorManager) {
     myFile = file;
     myEditors = editors;
+    if (NullUtils.hasNull(editors)) throw new IllegalArgumentException("Must not pass null editors in " + Arrays.asList(editors));
     myFileEditorManager = fileEditorManager;
     myInitialFileTimeStamp     = myFile.getTimeStamp();
 
@@ -118,6 +121,7 @@ public abstract class EditorComposite implements Disposable {
           return new UiDecoration(null, new Insets(0, 8, 0, 8));
         }
       });
+      wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
 
       myTabbedPaneWrapper=wrapper;
       myComponent=new MyComponent(wrapper.getComponent()){
@@ -265,6 +269,7 @@ public abstract class EditorComposite implements Disposable {
    * @return preferred focused component inside myEditor composite. Composite uses FocusWatcher to
    * track focus movement inside the myEditor.
    */
+  @Nullable
   public JComponent getPreferredFocusedComponent(){
     if (mySelectedEditor == null) return null;
 
@@ -465,7 +470,7 @@ public abstract class EditorComposite implements Disposable {
     @Override
     public Color getBackground() {
       Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.GUTTER_BACKGROUND);
-      return color == null ? Color.gray : color;
+      return color == null ? EditorColors.GUTTER_BACKGROUND.getDefaultColor() : color;
     }
   }
 
@@ -477,11 +482,11 @@ public abstract class EditorComposite implements Disposable {
       myWrappee = component;
       setOpaque(false);
 
-      setBorder(new SideBorder(null, top ? SideBorder.BOTTOM : SideBorder.TOP, true) {
+      setBorder(new SideBorder(null, top ? SideBorder.BOTTOM : SideBorder.TOP) {
         @Override
         public Color getLineColor() {
           Color result = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.TEARLINE_COLOR);
-          return result == null ? Color.black : result;
+          return result == null ? JBColor.BLACK : result;
         }
       });
 

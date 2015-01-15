@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,13 +25,13 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.NamedJDOMExternalizable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
@@ -65,7 +65,11 @@ import java.util.Set;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class WindowManagerImpl extends WindowManagerEx implements ApplicationComponent, NamedJDOMExternalizable {
+@State(
+        name = "WindowManager",
+        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/window.manager.xml", roamingType = RoamingType.DISABLED)}
+)
+public final class WindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.WindowManagerImpl");
 
   @NonNls public static final String FULL_SCREEN = "ide.frame.full.screen";
@@ -88,16 +92,11 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
   }
 
   private static final boolean ORACLE_BUG_8007219 = SystemInfo.isMac && SystemInfo.isJavaVersionAtLeast("1.7");
-  private static final int ORACLE_BUG_8007219_THRESHOLD = 10;
+  private static final int ORACLE_BUG_8007219_THRESHOLD = 5;
 
   private Boolean myAlphaModeSupported = null;
 
   private final EventDispatcher<WindowManagerListener> myEventDispatcher = EventDispatcher.create(WindowManagerListener.class);
-
-  /**
-   * Union of bounds of all available default screen devices.
-   */
-  private final Rectangle myScreenBounds;
 
   private final CommandProcessor myCommandProcessor;
   private final WindowWatcher myWindowWatcher;
@@ -123,10 +122,6 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
 
   /**
    * invoked by reflection
-   * @param dataManager
-   * @param applicationInfoEx
-   * @param actionManager
-   * @param uiSettings
    */
   public WindowManagerImpl(DataManager dataManager,
                            ActionManagerEx actionManager,
@@ -160,18 +155,6 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
     myProject2Frame = new HashMap<Project, IdeFrameImpl>();
     myDialogsToDispose = new HashMap<Project, Set<JDialog>>();
     myFrameExtendedState = Frame.NORMAL;
-
-    // Calculate screen bounds.
-
-    Rectangle screenBounds = new Rectangle();
-    if (!application.isHeadlessEnvironment()) {
-      final GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      final GraphicsDevice[] devices = env.getScreenDevices();
-      for (final GraphicsDevice device : devices) {
-        screenBounds = screenBounds.union(device.getDefaultConfiguration().getBounds());
-      }
-    }
-    myScreenBounds = screenBounds;
 
     myActivationListener = new WindowAdapter() {
       @Override
@@ -242,7 +225,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
 
   @Override
   public final Rectangle getScreenBounds() {
-    return myScreenBounds;
+    return ScreenUtil.getAllScreensRectangle();
   }
 
   @Override
@@ -262,16 +245,12 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
 
   @Override
   public final boolean isInsideScreenBounds(final int x, final int y, final int width) {
-    return
-      x >= myScreenBounds.x + 50 - width &&
-      y >= myScreenBounds.y - 50 &&
-      x <= myScreenBounds.x + myScreenBounds.width - 50 &&
-      y <= myScreenBounds.y + myScreenBounds.height - 50;
+    return ScreenUtil.getAllScreensShape().contains(x, y, width, 1);
   }
 
   @Override
   public final boolean isInsideScreenBounds(final int x, final int y) {
-    return myScreenBounds.contains(x, y);
+    return ScreenUtil.getAllScreensShape().contains(x, y);
   }
 
   @Override
@@ -414,19 +393,12 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
       if (popup != null) {
         if (oldSize.height < newSize.height) {
           Dimension size = popup.getSize();
-          size.height += (newSize.height - oldSize.height);
+          size.height += newSize.height - oldSize.height;
           popup.setSize(size);
           popup.moveToFitScreen();
         }
       }
     }
-  }
-
-  @Override
-  public final void disposeComponent() {}
-
-  @Override
-  public final void initComponent() {
   }
 
   @Override
@@ -549,7 +521,8 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
   }
 
   public void showFrame() {
-    final IdeFrameImpl frame = new IdeFrameImpl(myActionManager, myUiSettings, myDataManager,
+    final IdeFrameImpl frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(),
+                                                myActionManager, myUiSettings, myDataManager,
                                                 ApplicationManager.getApplication());
     myProject2Frame.put(null, frame);
 
@@ -570,25 +543,36 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
 
   private void fixForOracleBug8007219(IdeFrameImpl frame) {
     if ((myFrameExtendedState & Frame.MAXIMIZED_BOTH) > 0 && ORACLE_BUG_8007219) {
-      final Rectangle rect = ScreenUtil.getMainScreenBounds();
+      final Rectangle screenBounds = ScreenUtil.getMainScreenBounds();
       final Insets screenInsets = ScreenUtil.getScreenInsets(frame.getGraphicsConfiguration());
 
+      final int leftGap = myFrameBounds.x - screenInsets.left;
 
-      myFrameBounds.x = myFrameBounds.x - screenInsets.left > ORACLE_BUG_8007219_THRESHOLD ?
+      myFrameBounds.x = leftGap > ORACLE_BUG_8007219_THRESHOLD ?
                         myFrameBounds.x :
                         screenInsets.left + ORACLE_BUG_8007219_THRESHOLD + 1;
 
-      myFrameBounds.y = myFrameBounds.y - screenInsets.top > ORACLE_BUG_8007219_THRESHOLD ?
+      final int topGap = myFrameBounds.y - screenInsets.top;
+
+      myFrameBounds.y = topGap > ORACLE_BUG_8007219_THRESHOLD ?
                         myFrameBounds.y :
                         screenInsets.top + ORACLE_BUG_8007219_THRESHOLD + 1;
 
-      myFrameBounds.width = rect.width - (myFrameBounds.width + myFrameBounds.x) > ORACLE_BUG_8007219_THRESHOLD ?
-                            myFrameBounds.width :
-                            rect.width - ORACLE_BUG_8007219_THRESHOLD - 1;
+      final int maximumFrameWidth = screenBounds.width - screenInsets.right - myFrameBounds.x;
 
-      myFrameBounds.height = rect.height - (myFrameBounds.height + myFrameBounds.y) > ORACLE_BUG_8007219_THRESHOLD ?
-                             myFrameBounds.height :
-                             rect.height - ORACLE_BUG_8007219_THRESHOLD - 1;
+      final int rightGap = maximumFrameWidth - myFrameBounds.width;
+
+      myFrameBounds.width = rightGap > ORACLE_BUG_8007219_THRESHOLD ?
+                            myFrameBounds.width :
+                            maximumFrameWidth - ORACLE_BUG_8007219_THRESHOLD - 1;
+
+      final int maximumFrameHeight = screenBounds.height - screenInsets.bottom - myFrameBounds.y;
+
+      final int bottomGap = maximumFrameHeight - myFrameBounds.height;
+
+      myFrameBounds.height =  bottomGap > ORACLE_BUG_8007219_THRESHOLD ?
+                              myFrameBounds.height :
+                              - ORACLE_BUG_8007219_THRESHOLD - 1;
     }
   }
 
@@ -608,8 +592,8 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
       frame.setProject(project);
     }
     else {
-      frame = new IdeFrameImpl(ActionManagerEx.getInstanceEx(), UISettings.getInstance(),
-                               DataManager.getInstance(), ApplicationManager.getApplication());
+      frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(), myActionManager, myUiSettings,
+                               myDataManager, ApplicationManager.getApplication());
 
       final Rectangle bounds = ProjectFrameBounds.getInstance(project).getBounds();
 
@@ -628,7 +612,12 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
     }
 
     frame.addWindowListener(myActivationListener);
-
+    frame.addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentMoved(@NotNull ComponentEvent e) {
+        updateFrameBounds(frame);
+      }
+    });
     myEventDispatcher.getMulticaster().frameCreated(frame);
 
     return frame;
@@ -707,18 +696,14 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
    * Private part
    */
   @Override
+  @NotNull
   public final CommandProcessor getCommandProcessor() {
     return myCommandProcessor;
   }
 
   @Override
-  public final String getExternalFileName() {
-    return "window.manager";
-  }
-
-  @Override
-  public final void readExternal(final Element element) {
-    final Element frameElement = element.getChild(FRAME_ELEMENT);
+  public void loadState(Element state) {
+    final Element frameElement = state.getChild(FRAME_ELEMENT);
     if (frameElement != null) {
       myFrameBounds = loadFrameBounds(frameElement);
       try {
@@ -732,7 +717,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
       }
     }
 
-    final Element desktopElement = element.getChild(DesktopLayout.TAG);
+    final Element desktopElement = state.getChild(DesktopLayout.TAG);
     if (desktopElement != null) {
       myLayout.readExternal(desktopElement);
     }
@@ -767,44 +752,69 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
     return bounds;
   }
 
+  @Nullable
   @Override
-  public final void writeExternal(final Element element) {
-    // Save frame bounds
-    final Element frameElement = new Element(FRAME_ELEMENT);
-    element.addContent(frameElement);
-    final Project[] projects = ProjectManager.getInstance().getOpenProjects();
-    final Project project = projects.length > 0 ? projects[0] : null;
-
-    final IdeFrameImpl frame = getFrame(project);
-    if (frame != null) {
-      int extendedState = frame.getExtendedState();
-      if (SystemInfo.isMacOSLion) {
-        @SuppressWarnings("deprecation") ComponentPeer peer = frame.getPeer();
-        if (peer instanceof FramePeer) {
-          // frame.state is not updated by jdk so get it directly from peer
-          extendedState = ((FramePeer)peer).getState();
-        }
-      }
-      boolean isMaximized = extendedState == Frame.MAXIMIZED_BOTH ||
-                            isFullScreenSupportedInCurrentOS() && frame.isInFullScreen();
-      boolean usePreviousBounds = isMaximized &&
-                                  myFrameBounds != null &&
-                                  frame.getBounds().contains(new Point((int)myFrameBounds.getCenterX(), (int)myFrameBounds.getCenterY()));
-      Rectangle rectangle = usePreviousBounds ? myFrameBounds : frame.getBounds();
-      frameElement.setAttribute(X_ATTR, Integer.toString(rectangle.x));
-      frameElement.setAttribute(Y_ATTR, Integer.toString(rectangle.y));
-      frameElement.setAttribute(WIDTH_ATTR, Integer.toString(rectangle.width));
-      frameElement.setAttribute(HEIGHT_ATTR, Integer.toString(rectangle.height));
-
-      if (!(frame.isInFullScreen() && SystemInfo.isAppleJvm)) {
-        frameElement.setAttribute(EXTENDED_STATE_ATTR, Integer.toString(extendedState));
-      }
-
-      // Save default layout
-      final Element layoutElement = new Element(DesktopLayout.TAG);
-      element.addContent(layoutElement);
-      myLayout.writeExternal(layoutElement);
+  public Element getState() {
+    Element frameState = getFrameState();
+    if (frameState == null) {
+      return null;
     }
+
+    Element state = new Element("state");
+    state.addContent(frameState);
+
+    // Save default layout
+    Element layoutElement = new Element(DesktopLayout.TAG);
+    state.addContent(layoutElement);
+    myLayout.writeExternal(layoutElement);
+    return state;
+  }
+
+  private Element getFrameState() {
+    // Save frame bounds
+    final Project[] projects = ProjectManager.getInstance().getOpenProjects();
+    if (projects.length == 0) {
+      return null;
+    }
+
+    Project project = projects[0];
+    final IdeFrameImpl frame = getFrame(project);
+    if (frame == null) {
+      return null;
+    }
+
+    int extendedState = updateFrameBounds(frame);
+    Rectangle rectangle = myFrameBounds;
+    final Element frameElement = new Element(FRAME_ELEMENT);
+    frameElement.setAttribute(X_ATTR, Integer.toString(rectangle.x));
+    frameElement.setAttribute(Y_ATTR, Integer.toString(rectangle.y));
+    frameElement.setAttribute(WIDTH_ATTR, Integer.toString(rectangle.width));
+    frameElement.setAttribute(HEIGHT_ATTR, Integer.toString(rectangle.height));
+
+    if (!(frame.isInFullScreen() && SystemInfo.isAppleJvm)) {
+      frameElement.setAttribute(EXTENDED_STATE_ATTR, Integer.toString(extendedState));
+    }
+    return frameElement;
+  }
+
+  private int updateFrameBounds(IdeFrameImpl frame) {
+    int extendedState = frame.getExtendedState();
+    if (SystemInfo.isMacOSLion) {
+      @SuppressWarnings("deprecation") ComponentPeer peer = frame.getPeer();
+      if (peer instanceof FramePeer) {
+        // frame.state is not updated by jdk so get it directly from peer
+        extendedState = ((FramePeer)peer).getState();
+      }
+    }
+    boolean isMaximized = extendedState == Frame.MAXIMIZED_BOTH ||
+                          isFullScreenSupportedInCurrentOS() && frame.isInFullScreen();
+    boolean usePreviousBounds = isMaximized &&
+                                myFrameBounds != null &&
+                                frame.getBounds().contains(new Point((int)myFrameBounds.getCenterX(), (int)myFrameBounds.getCenterY()));
+    if (!usePreviousBounds) {
+      myFrameBounds = frame.getBounds();
+    }
+    return extendedState;
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,12 @@
  */
 package com.intellij.ide.ui;
 
+import com.intellij.util.messages.Topic;
+
 import java.util.EventListener;
 
 public interface UISettingsListener extends EventListener{
+  Topic<UISettingsListener> TOPIC = Topic.create("UI settings", UISettingsListener.class);
+
   void uiSettingsChanged(UISettings source);
 }
