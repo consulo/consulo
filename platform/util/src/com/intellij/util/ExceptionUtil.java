@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class ExceptionUtil {
     }
   }
 
-  public static <T extends Throwable> T findCause(Throwable e, Class<T> klass) {
+  public static <T> T findCause(Throwable e, Class<T> klass) {
     while (e != null && !klass.isInstance(e)) {
       e = e.getCause();
     }
@@ -45,7 +45,7 @@ public class ExceptionUtil {
   public static boolean causedBy(Throwable e, Class klass) {
     return findCause(e, klass) != null;
   }
-  
+
   @NotNull
   public static Throwable makeStackTraceRelative(@NotNull Throwable th, @NotNull Throwable relativeTo) {
     StackTraceElement[] trace = th.getStackTrace();
@@ -79,6 +79,7 @@ public class ExceptionUtil {
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
     final PrintWriter writer = new PrintWriter(stringWriter) {
       boolean skipping = false;
+      @Override
       public void println(final String x) {
         boolean curSkipping = skipping;
         if (x != null) {
@@ -144,5 +145,20 @@ public class ExceptionUtil {
       result = result.substring(result.lastIndexOf(errorPattern) + errorPattern.length());
     }
     return result;
+  }
+
+  public static void rethrowUnchecked(@Nullable Throwable t) {
+    if (t != null) {
+      if (t instanceof Error) throw (Error)t;
+      if (t instanceof RuntimeException) throw (RuntimeException)t;
+    }
+  }
+
+  public static void rethrowAll(@Nullable Throwable t) throws Exception {
+    if (t != null) {
+      if (t instanceof Error) throw (Error)t;
+      if (t instanceof RuntimeException) throw (RuntimeException)t;
+      throw (Exception)t;
+    }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,17 @@
  */
 package com.intellij.diagnostic;
 
+import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.Main;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.ErrorLogger;
+import com.intellij.openapi.diagnostic.ExceptionWithAttachments;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Priority;
+import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Mike
  */
 public class DialogAppender extends AppenderSkeleton {
-  private static final DefaultIdeaErrorLogger DEFAULT_LOGGER = new DefaultIdeaErrorLogger();
+  private static final ErrorLogger DEFAULT_LOGGER = new DefaultIdeaErrorLogger();
   private static final int MAX_ASYNC_LOGGING_EVENTS = 5;
 
   private volatile Runnable myDialogRunnable = null;
@@ -44,7 +48,11 @@ public class DialogAppender extends AppenderSkeleton {
 
   @Override
   protected synchronized void append(@NotNull final LoggingEvent event) {
-    if (!event.level.isGreaterOrEqual(Priority.ERROR)) return;
+    if (!event.level.isGreaterOrEqual(Level.ERROR) ||
+        Main.isCommandLine() ||
+        !IdeaApplication.isLoaded()) {
+      return;
+    }
 
     Runnable action = new Runnable() {
       @Override
@@ -69,11 +77,11 @@ public class DialogAppender extends AppenderSkeleton {
 
     if (myPendingAppendCounts.addAndGet(1) > MAX_ASYNC_LOGGING_EVENTS) {
       // Stop adding requests to the queue or we can get OOME on pending logging requests (IDEA-95327)
-      // Note, we MUST avoid SYNCHRONOUS invokeAndWait to prevent deadlocks
-      // UIUtil.invokeAndWaitIfNeeded(action);
-
       myPendingAppendCounts.decrementAndGet(); // number of pending logging events should not increase
-    } else {
+    }
+    else {
+      // Note, we MUST avoid SYNCHRONOUS invokeAndWait to prevent deadlocks
+      //noinspection SSBasedInspection
       SwingUtilities.invokeLater(action);
     }
   }
@@ -89,11 +97,11 @@ public class DialogAppender extends AppenderSkeleton {
       ideaEvent = (IdeaLoggingEvent)message;
     }
     else {
-      ThrowableInformation throwable = event.getThrowableInformation();
-      if (throwable == null) {
+      ThrowableInformation info = event.getThrowableInformation();
+      if (info == null) {
         return;
       }
-      ideaEvent = new IdeaLoggingEvent(message == null ? "<null> " : message.toString(), throwable.getThrowable());
+      ideaEvent = extractLoggingEvent(message, info.getThrowable());
     }
     for (int i = errorLoggers.length - 1; i >= 0; i--) {
       final ErrorLogger logger = errorLoggers[i];
@@ -121,6 +129,22 @@ public class DialogAppender extends AppenderSkeleton {
       }
       break;
     }
+  }
+
+  private static IdeaLoggingEvent extractLoggingEvent(Object message, Throwable throwable) {
+    //noinspection ThrowableResultOfMethodCallIgnored
+    Throwable rootCause = ExceptionUtil.getRootCause(throwable);
+    if (rootCause instanceof LogEventException) {
+      return ((LogEventException)rootCause).getLogMessage();
+    }
+
+    String strMessage = message == null ? "<null> " : message.toString();
+    ExceptionWithAttachments withAttachments = ExceptionUtil.findCause(throwable, ExceptionWithAttachments.class);
+    if (withAttachments != null) {
+      return LogMessageEx.createEvent(strMessage, ExceptionUtil.getThrowableText(throwable), withAttachments.getAttachments());
+    }
+
+    return new IdeaLoggingEvent(strMessage, throwable);
   }
 
   @TestOnly
