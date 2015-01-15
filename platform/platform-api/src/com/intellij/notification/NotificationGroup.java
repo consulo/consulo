@@ -15,15 +15,25 @@
  */
 package com.intellij.notification;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.MessageType;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 /**
  * @author peter
  */
-public class NotificationGroup {
-  private final String myDisplayId;
+public final class NotificationGroup {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.notification.NotificationGroup");
+  private static final Map<String, NotificationGroup> ourRegisteredGroups = ContainerUtil.newConcurrentMap();
+
+  @NotNull private final String myDisplayId;
+  @NotNull private final NotificationDisplayType myDisplayType;
+  private final boolean myLogByDefault;
+  @Nullable private final String myToolWindowId;
 
   public NotificationGroup(@NotNull String displayId, @NotNull NotificationDisplayType defaultDisplayType, boolean logByDefault) {
     this(displayId, defaultDisplayType, logByDefault, null);
@@ -34,26 +44,37 @@ public class NotificationGroup {
                            boolean logByDefault,
                            @Nullable String toolWindowId) {
     myDisplayId = displayId;
+    myDisplayType = defaultDisplayType;
+    myLogByDefault = logByDefault;
+    myToolWindowId = toolWindowId;
 
-    NotificationsConfiguration configuration = NotificationsConfiguration.getNotificationsConfiguration();
-    configuration.register(displayId, defaultDisplayType, logByDefault);
-    if (toolWindowId != null) {
-      configuration.registerToolWindowCapability(displayId, toolWindowId);
+    if (ourRegisteredGroups.containsKey(displayId)) {
+      LOG.info("Notification group " + displayId + " is already registered", new Throwable());
     }
+    ourRegisteredGroups.put(displayId, this);
   }
 
+  @NotNull
   public static NotificationGroup balloonGroup(@NotNull String displayId) {
     return new NotificationGroup(displayId, NotificationDisplayType.BALLOON, true);
   }
 
+  @NotNull
   public static NotificationGroup logOnlyGroup(@NotNull String displayId) {
     return new NotificationGroup(displayId, NotificationDisplayType.NONE, true);
   }
 
+  @NotNull
   public static NotificationGroup toolWindowGroup(@NotNull String displayId, @NotNull String toolWindowId, final boolean logByDefault) {
     return new NotificationGroup(displayId, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
   }
 
+  @NotNull
+  public static NotificationGroup toolWindowGroup(@NotNull String displayId, @NotNull String toolWindowId) {
+    return toolWindowGroup(displayId, toolWindowId, true);
+  }
+
+  @NotNull
   public String getDisplayId() {
     return myDisplayId;
   }
@@ -62,14 +83,41 @@ public class NotificationGroup {
     return createNotification(content, type.toNotificationType());
   }
 
+  @NotNull
   public Notification createNotification(@NotNull final String content, @NotNull final NotificationType type) {
     return createNotification("", content, type, null);
   }
 
+  @NotNull
   public Notification createNotification(@NotNull final String title,
                                          @NotNull final String content,
                                          @NotNull final NotificationType type,
                                          @Nullable NotificationListener listener) {
     return new Notification(myDisplayId, title, content, type, listener);
   }
+
+  @NotNull
+  public NotificationDisplayType getDisplayType() {
+    return myDisplayType;
+  }
+
+  public boolean isLogByDefault() {
+    return myLogByDefault;
+  }
+
+  @Nullable
+  public String getToolWindowId() {
+    return myToolWindowId;
+  }
+
+  @Nullable
+  public static NotificationGroup findRegisteredGroup(String displayId) {
+    return ourRegisteredGroups.get(displayId);
+  }
+
+  @NotNull
+  public static Iterable<NotificationGroup> getAllRegisteredGroups() {
+    return ourRegisteredGroups.values();
+  }
+
 }

@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.notification;
+package com.intellij.util;
 
-import com.intellij.openapi.application.ApplicationManager;
+public class EmptyConsumer {
 
-public abstract class NotificationsConfiguration extends NotificationsAdapter {
-  public abstract void changeSettings(String groupDisplayName, NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud);
-
-  public static NotificationsConfiguration getNotificationsConfiguration() {
-    return ApplicationManager.getApplication().getComponent(NotificationsConfiguration.class);
+  @SuppressWarnings("unchecked")
+  public static <T> Consumer<T> getInstance() {
+    return Consumer.EMPTY_CONSUMER;
   }
 }

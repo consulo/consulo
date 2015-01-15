@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,13 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import com.intellij.openapi.ui.StripeTable;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.TableSpeedSearch;
-import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.*;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -45,30 +44,39 @@ import java.util.List;
  * @author spleaner
  */
 public class NotificationsConfigurablePanel extends JPanel implements Disposable {
-  private NotificationsTable myTable;
   private static final String REMOVE_KEY = "REMOVE";
+
+  private NotificationsTable myTable;
   private final JCheckBox myDisplayBalloons;
+  private final JCheckBox mySystemNotifications;
 
   public NotificationsConfigurablePanel() {
-    setLayout(new BorderLayout());
+    setLayout(new BorderLayout(5, 5));
     myTable = new NotificationsTable();
 
-    JScrollPane scrollPane = new JBScrollPane(myTable);
-    scrollPane.setBorder(new LineBorder(UIUtil.getBorderColor()));
-    add(scrollPane, BorderLayout.CENTER);
     myDisplayBalloons = new JCheckBox("Display balloon notifications");
     myDisplayBalloons.setMnemonic('b');
-    add(myDisplayBalloons, BorderLayout.NORTH);
     myDisplayBalloons.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         myTable.repaint();
       }
-
     });
 
+    mySystemNotifications = new JCheckBox("Enable system notifications");
+    mySystemNotifications.setMnemonic('s');
+    mySystemNotifications.setVisible(SystemNotifications.getInstance().isAvailable());
+
+    JPanel boxes = new JPanel();
+    boxes.setLayout(new BoxLayout(boxes, BoxLayout.Y_AXIS));
+    boxes.add(myDisplayBalloons);
+    boxes.add(mySystemNotifications);
+    add(boxes, BorderLayout.NORTH);
+
+    add(ScrollPaneFactory.createScrollPane(myTable), BorderLayout.CENTER);
     myTable.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), REMOVE_KEY);
     myTable.getActionMap().put(REMOVE_KEY, new AbstractAction() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         removeSelected();
       }
@@ -91,7 +99,9 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       }
     }
 
-    return NotificationsConfigurationImpl.getNotificationsConfigurationImpl().SHOW_BALLOONS != myDisplayBalloons.isSelected();
+    NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
+    return configuration.SHOW_BALLOONS != myDisplayBalloons.isSelected() ||
+           configuration.SYSTEM_NOTIFICATIONS != mySystemNotifications.isSelected();
   }
 
   public void apply() {
@@ -100,7 +110,9 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       settingsWrapper.apply();
     }
 
-    NotificationsConfigurationImpl.getNotificationsConfigurationImpl().SHOW_BALLOONS = myDisplayBalloons.isSelected();
+    NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
+    configuration.SHOW_BALLOONS = myDisplayBalloons.isSelected();
+    configuration.SYSTEM_NOTIFICATIONS = mySystemNotifications.isSelected();
   }
 
   public void reset() {
@@ -109,7 +121,9 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       settingsWrapper.reset();
     }
 
-    myDisplayBalloons.setSelected(NotificationsConfigurationImpl.getNotificationsConfigurationImpl().SHOW_BALLOONS);
+    NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
+    myDisplayBalloons.setSelected(configuration.SHOW_BALLOONS);
+    mySystemNotifications.setSelected(configuration.SYSTEM_NOTIFICATIONS);
 
     myTable.invalidate();
     myTable.repaint();
@@ -123,9 +137,26 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
     public NotificationsTable() {
       super(new NotificationsTableModel());
+      setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
       final TableColumn idColumn = getColumnModel().getColumn(ID_COLUMN);
       idColumn.setPreferredWidth(200);
+      idColumn.setCellRenderer(new DefaultTableCellRenderer() {
+        @NotNull
+        @Override
+        public Component getTableCellRendererComponent(@NotNull JTable table,
+                                                       Object value,
+                                                       boolean isSelected,
+                                                       boolean hasFocus,
+                                                       int row,
+                                                       int column) {
+          Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+          if (component instanceof JComponent) {
+            ((JComponent)component).setBorder(IdeBorderFactory.createEmptyBorder(0, 4, 0, 4));
+          }
+          return component;
+        }
+      });
 
       final TableColumn displayTypeColumn = getColumnModel().getColumn(DISPLAY_TYPE_COLUMN);
       displayTypeColumn.setMaxWidth(300);
@@ -133,7 +164,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       displayTypeColumn.setCellRenderer(new ComboBoxTableRenderer<NotificationDisplayType>(NotificationDisplayType.values()) {
         @Override
         protected void customizeComponent(NotificationDisplayType value, JTable table, boolean isSelected) {
-          super.customizeComponent(value, table, isSelected);
+          super.customizeComponent(myDisplayBalloons.isSelected() ? value : NotificationDisplayType.NONE, table, isSelected);
           if (!myDisplayBalloons.isSelected() && !isSelected) {
             setBackground(UIUtil.getComboBoxDisabledBackground());
             setForeground(UIUtil.getComboBoxDisabledForeground());
@@ -166,7 +197,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
           if (value != NotificationDisplayType.TOOL_WINDOW) return true;
 
           String groupId = ((NotificationsTableModel)getModel()).getSettings(row).getGroupId();
-          return NotificationsConfigurationImpl.getNotificationsConfigurationImpl().hasToolWindowCapability(groupId);
+          return NotificationsConfigurationImpl.getInstanceImpl().hasToolWindowCapability(groupId);
         }
 
         @Override
@@ -236,20 +267,16 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     }
   }
 
-  private static class SettingsWrapper extends NotificationSettings {
-    private final NotificationSettings myOriginal;
+  private static class SettingsWrapper {
     private boolean myRemoved = false;
+    private NotificationSettings myVersion;
 
-    private SettingsWrapper(@NotNull final NotificationSettings original) {
-      super(original.getGroupId(), original.getDisplayType(), original.isShouldLog(), original.isShouldReadAloud());
-      myOriginal = original;
+    private SettingsWrapper(NotificationSettings settings) {
+      myVersion = settings;
     }
 
     public boolean hasChanged() {
-      return !getDisplayType().equals(myOriginal.getDisplayType())
-             || isShouldLog() != myOriginal.isShouldLog()
-             || isShouldReadAloud() != myOriginal.isShouldReadAloud()
-             || myRemoved;
+      return myRemoved || !getOriginalSettings().equals(myVersion);
     }
 
     public void remove() {
@@ -260,24 +287,27 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       return myRemoved;
     }
 
+    @NotNull
+    private NotificationSettings getOriginalSettings() {
+      return NotificationsConfigurationImpl.getSettings(getGroupId());
+    }
+
     public void apply() {
       if (myRemoved) {
-        NotificationsConfigurationImpl.remove(myOriginal.getGroupId());
+        NotificationsConfigurationImpl.remove(getGroupId());
       }
       else {
-        if (hasChanged()) {
-          myOriginal.setDisplayType(getDisplayType());
-          myOriginal.setShouldLog(isShouldLog());
-          myOriginal.setShouldReadAloud(isShouldReadAloud());
-        }
+        NotificationsConfigurationImpl.getInstanceImpl().changeSettings(myVersion);
       }
     }
 
     public void reset() {
-      if (hasChanged()) {
-        setDisplayType(myOriginal.getDisplayType());
-        myRemoved = false;
-      }
+      myVersion = getOriginalSettings();
+      myRemoved = false;
+    }
+
+    String getGroupId() {
+      return myVersion.getGroupId();
     }
   }
 
@@ -285,9 +315,8 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     private final List<SettingsWrapper> mySettings;
 
     public NotificationsTableModel() {
-      final NotificationSettings[] settings = NotificationsConfigurationImpl.getAllSettings();
       final List<SettingsWrapper> list = new ArrayList<SettingsWrapper>();
-      for (NotificationSettings setting : settings) {
+      for (NotificationSettings setting : NotificationsConfigurationImpl.getInstanceImpl().getAllSettings()) {
         list.add(new SettingsWrapper(setting));
       }
 
@@ -300,17 +329,17 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
     @Override
     public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
-      final NotificationSettings settings = getSettings(rowIndex);
+      final SettingsWrapper wrapper = getSettings(rowIndex);
 
       switch (columnIndex) {
         case NotificationsTable.DISPLAY_TYPE_COLUMN:
-          settings.setDisplayType((NotificationDisplayType)value);
+          wrapper.myVersion = wrapper.myVersion.withDisplayType((NotificationDisplayType)value);
           break;
         case NotificationsTable.LOG_COLUMN:
-          settings.setShouldLog((Boolean)value);
+          wrapper.myVersion = wrapper.myVersion.withShouldLog((Boolean)value);
           break;
         case NotificationsTable.READ_ALOUD_COLUMN:
-          settings.setShouldReadAloud((Boolean)value);
+          wrapper.myVersion = wrapper.myVersion.withShouldReadAloud((Boolean)value);
           break;
       }
     }
@@ -319,7 +348,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       return getSettings().size();
     }
 
-    public NotificationSettings getSettings(int row) {
+    public SettingsWrapper getSettings(int row) {
       return getSettings().get(row);
     }
 
@@ -366,12 +395,12 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
         case NotificationsTable.ID_COLUMN:
           return getSettings().get(rowIndex).getGroupId();
         case NotificationsTable.LOG_COLUMN:
-          return getSettings().get(rowIndex).isShouldLog();
+          return getSettings().get(rowIndex).myVersion.isShouldLog();
         case NotificationsTable.READ_ALOUD_COLUMN:
-          return getSettings().get(rowIndex).isShouldReadAloud();
+          return getSettings().get(rowIndex).myVersion.isShouldReadAloud();
         case NotificationsTable.DISPLAY_TYPE_COLUMN:
         default:
-          return getSettings().get(rowIndex).getDisplayType();
+          return getSettings().get(rowIndex).myVersion.getDisplayType();
       }
     }
 
