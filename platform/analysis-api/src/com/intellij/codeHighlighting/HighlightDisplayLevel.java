@@ -138,13 +138,26 @@ public class HighlightDisplayLevel {
     Color getColor();
   }
 
-  public static class SingleColorIcon implements Icon, ColoredIcon {
+  public static class SingleColorIcon extends ColorIcon implements Icon, ColoredIcon {
     private final TextAttributesKey myKey;
 
     public SingleColorIcon(final TextAttributesKey key) {
+      super(getEmptyIconDim(), JBColor.GRAY, true);
       myKey = key;
     }
 
+    @Override
+    public Color getIconColor() {
+      return getColor();
+    }
+
+    @NotNull
+    @Override
+    public Color getBorderColor() {
+      return JBColor.LIGHT_GRAY;
+    }
+
+    @Override
     @NotNull
     public Color getColor() {
       return ObjectUtils.notNull(getColorInner(), JBColor.GRAY);
@@ -162,24 +175,6 @@ public class HighlightDisplayLevel {
       TextAttributes defaultAttributes = myKey.getDefaultAttributes();
       if (defaultAttributes == null) defaultAttributes = TextAttributes.ERASE_MARKER;
       return defaultAttributes.getErrorStripeColor();
-    }
-
-    @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-      g.setColor(getColor());
-      g.translate(x, y);
-      g.fillPolygon(new int[]{0, getEmptyIconDim(), getEmptyIconDim()}, new int[]{0, 0, getEmptyIconDim()}, 3);
-      g.translate(-x, -y);
-    }
-
-    @Override
-    public int getIconWidth() {
-      return getEmptyIconDim();
-    }
-
-    @Override
-    public int getIconHeight() {
-      return getEmptyIconDim();
     }
   }
 }
