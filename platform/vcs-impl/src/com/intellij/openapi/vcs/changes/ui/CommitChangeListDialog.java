@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.BundleBase;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -461,7 +462,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
       myAdditionalOptionsPanel.add(optionsBox, BorderLayout.NORTH);
     }
 
-    myOkActionText = actionName;
+    myOkActionText = actionName.replace(BundleBase.MNEMONIC, '&');
 
     if (myShowVcsCommit) {
       setTitle(myActionName);
