@@ -27,10 +27,11 @@ import com.intellij.ide.actions.CopyReferenceAction;
 import com.intellij.ide.actions.GotoFileAction;
 import com.intellij.ide.actions.WindowAction;
 import com.intellij.ide.ui.UISettings;
+import com.intellij.ide.ui.laf.darcula.ui.DarculaTextBorder;
+import com.intellij.ide.ui.laf.darcula.ui.DarculaTextFieldUI;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
@@ -41,11 +42,13 @@ import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import com.intellij.openapi.progress.util.ReadTask;
+import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.*;
@@ -69,8 +72,8 @@ import com.intellij.ui.popup.PopupOwner;
 import com.intellij.ui.popup.PopupPositionManager;
 import com.intellij.ui.popup.PopupUpdateProcessor;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
+import com.intellij.usages.impl.UsageViewManagerImpl;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
@@ -100,7 +103,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class ChooseByNameBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.gotoByName.ChooseByNameBase");
@@ -465,7 +467,7 @@ public abstract class ChooseByNameBase {
     actionMap.setParent(myTextField.getActionMap());
     actionMap.put(DefaultEditorKit.copyAction, new AbstractAction() {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(@NotNull ActionEvent e) {
         if (myTextField.getSelectedText() != null) {
           actionMap.getParent().get(DefaultEditorKit.copyAction).actionPerformed(e);
           return;
@@ -489,7 +491,7 @@ public abstract class ChooseByNameBase {
       if (myCheckBox != null && myCheckBoxShortcut != null) {
         new AnAction("change goto check box", null, null) {
           @Override
-          public void actionPerformed(AnActionEvent e) {
+          public void actionPerformed(@NotNull AnActionEvent e) {
             myCheckBox.setSelected(!myCheckBox.isSelected());
           }
         }.registerCustomShortcutSet(myCheckBoxShortcut, myTextField);
@@ -561,7 +563,7 @@ public abstract class ChooseByNameBase {
     if (myCheckBox != null) {
       myCheckBox.addItemListener(new ItemListener() {
         @Override
-        public void itemStateChanged(ItemEvent e) {
+        public void itemStateChanged(@NotNull ItemEvent e) {
           rebuildList(false);
         }
       });
@@ -639,7 +641,7 @@ public abstract class ChooseByNameBase {
 
     myTextField.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent actionEvent) {
+      public void actionPerformed(@NotNull ActionEvent actionEvent) {
         doClose(true);
       }
     });
@@ -681,7 +683,7 @@ public abstract class ChooseByNameBase {
       private int myPreviousSelectionIndex = 0;
 
       @Override
-      public void valueChanged(ListSelectionEvent e) {
+      public void valueChanged(@NotNull ListSelectionEvent e) {
         if (myList.getSelectedValue() != NON_PREFIX_SEPARATOR) {
           myPreviousSelectionIndex = myList.getSelectedIndex();
           chosenElementMightChange();
@@ -772,6 +774,7 @@ public abstract class ChooseByNameBase {
   protected void doClose(final boolean ok) {
     if (checkDisposed()) return;
 
+    if (closeForbidden(ok)) return;
     if (postponeCloseWhenListReady(ok)) return;
 
     cancelListUpdater();
@@ -781,17 +784,18 @@ public abstract class ChooseByNameBase {
     myListModel.clear();
   }
 
+  protected boolean closeForbidden(boolean ok) {
+    return false;
+  }
+
   protected void cancelListUpdater() {
+    ApplicationManager.getApplication().assertIsDispatchThread();
+    if (checkDisposed()) return;
+
     final CalcElementsThread calcElementsThread = myCalcElementsThread;
-    if (calcElementsThread != null && calcElementsThread.cancel()) {
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          if (!checkDisposed() && calcElementsThread == myCalcElementsThread) {
-            backgroundCalculationFinished(Collections.emptyList(), 0);
-          }
-        }
-      });
+    if (calcElementsThread != null) {
+      calcElementsThread.cancel();
+      backgroundCalculationFinished(Collections.emptyList(), 0);
     }
     myListUpdater.cancelAll();
   }
@@ -943,6 +947,17 @@ public abstract class ChooseByNameBase {
     }
 
     myAlarm.cancelAllRequests();
+
+    if (delay > 0) {
+      myAlarm.addRequest(new Runnable() {
+        @Override
+        public void run() {
+          rebuildList(pos, 0, modalityState, postRunnable);
+        }
+      }, delay, ModalityState.stateForComponent(myTextField));
+      return;
+    }
+
     myListUpdater.cancelAll();
 
     final CalcElementsThread calcElementsThread = myCalcElementsThread;
@@ -970,32 +985,17 @@ public abstract class ChooseByNameBase {
       ((MatcherHolder)cellRenderer).setPatternMatcher(matcher);
     }
 
-    final Runnable request = new Runnable() {
+    scheduleCalcElements(text, myCheckBox.isSelected(), modalityState, new Consumer<Set<?>>() {
       @Override
-      public void run() {
-        scheduleCalcElements(text, myCheckBox.isSelected(), modalityState, new Consumer<Set<?>>() {
-          @Override
-          public void consume(Set<?> elements) {
-            ApplicationManager.getApplication().assertIsDispatchThread();
-            if (checkDisposed()) {
-              return;
-            }
-            backgroundCalculationFinished(elements, pos);
+      public void consume(Set<?> elements) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        backgroundCalculationFinished(elements, pos);
 
-            if (postRunnable != null) {
-              postRunnable.run();
-            }
-          }
-        });
+        if (postRunnable != null) {
+          postRunnable.run();
+        }
       }
-    };
-
-    if (delay > 0) {
-      myAlarm.addRequest(request, delay, ModalityState.stateForComponent(myTextField));
-    }
-    else {
-      request.run();
-    }
+    });
   }
 
   private void backgroundCalculationFinished(Collection<?> result, int toSelect) {
@@ -1013,12 +1013,7 @@ public abstract class ChooseByNameBase {
                                    boolean checkboxState,
                                    ModalityState modalityState,
                                    Consumer<Set<?>> callback) {
-    scheduleCalcElements(new CalcElementsThread(text, checkboxState, callback, modalityState, false));
-  }
-
-  private void scheduleCalcElements(final CalcElementsThread thread) {
-    myCalcElementsThread = thread;
-    ApplicationManager.getApplication().executeOnPooledThread(thread);
+    new CalcElementsThread(text, checkboxState, callback, modalityState, false).scheduleThread();
   }
 
   private boolean isShowListAfterCompletionKeyStroke() {
@@ -1197,6 +1192,10 @@ public abstract class ChooseByNameBase {
     myPostponedOkAction = null;
   }
 
+  public boolean hasPostponedAction() {
+    return myPostponedOkAction != null;
+  }
+
   protected abstract void showList();
 
   protected abstract void hideList();
@@ -1230,6 +1229,12 @@ public abstract class ChooseByNameBase {
 
     private MyTextField() {
       super(40);
+      if (!UIUtil.isUnderGTKLookAndFeel()) {
+        if (!(getUI() instanceof DarculaTextFieldUI)) {
+          setUI(DarculaTextFieldUI.createUI(this));
+        }
+        setBorder(new DarculaTextBorder());
+      }
       enableEvents(AWTEvent.KEY_EVENT_MASK);
       myCompletionKeyStroke = getShortcut(IdeActions.ACTION_CODE_COMPLETION);
       forwardStroke = getShortcut(IdeActions.ACTION_GOTO_FORWARD);
@@ -1463,14 +1468,14 @@ public abstract class ChooseByNameBase {
     return panel;
   }
 
-  private class CalcElementsThread implements Runnable {
+  private class CalcElementsThread implements ReadTask {
     private final String myPattern;
     private volatile boolean myCheckboxState;
     private volatile boolean myScopeExpanded;
     private final Consumer<Set<?>> myCallback;
     private final ModalityState myModalityState;
 
-    private final ProgressIndicator myCancelled = new ProgressIndicatorBase();
+    private final ProgressIndicator myProgress = new ProgressIndicatorBase();
 
     CalcElementsThread(String pattern,
                        boolean checkboxState,
@@ -1486,91 +1491,68 @@ public abstract class ChooseByNameBase {
 
     private final Alarm myShowCardAlarm = new Alarm();
 
-    private void scheduleRestart() {
-      scheduleCalcElements(new CalcElementsThread(myPattern, myCheckboxState, myCallback, myModalityState, myScopeExpanded));
+    void scheduleThread() {
+      ApplicationManager.getApplication().assertIsDispatchThread();
+      myCalcElementsThread = this;
+      showCard(SEARCHING_CARD, 200);
+      ProgressIndicatorUtils.scheduleWithWriteActionPriority(myProgress, this);
     }
 
     @Override
-    public void run() {
-      showCard(SEARCHING_CARD, 200);
+    public void computeInReadAction(@NotNull ProgressIndicator indicator) {
+      if (myProject != null && myProject.isDisposed()) return;
 
-      ProgressManager.getInstance().runProcess(new Runnable() {
+      final Set<Object> elements = new LinkedHashSet<Object>();
+
+      if (!ourLoadNamesEachTime) ensureNamesLoaded(myCheckboxState);
+      addElementsByPattern(myPattern, elements, myProgress, myCheckboxState);
+
+      if (myProgress.isCanceled()) {
+        myShowCardAlarm.cancelAllRequests();
+        return;
+      }
+
+      if (elements.isEmpty() && !myCheckboxState) {
+        myScopeExpanded = true;
+        myCheckboxState = true;
+        if (!ourLoadNamesEachTime) ensureNamesLoaded(true);
+        addElementsByPattern(myPattern, elements, myProgress, true);
+      }
+      final String cardToShow = elements.isEmpty() ? NOT_FOUND_CARD : myScopeExpanded ? NOT_FOUND_IN_PROJECT_CARD : CHECK_BOX_CARD;
+      showCard(cardToShow, 0);
+
+      final boolean edt = myModel instanceof EdtSortingModel;
+      final Set<Object> filtered = !edt ? filter(elements) : Collections.emptySet();
+      ApplicationManager.getApplication().invokeLater(new Runnable() {
         @Override
         public void run() {
-          final Set<Object> elements = new LinkedHashSet<Object>();
-          Runnable calculation = new Runnable() {
-            @Override
-            public void run() {
-              ApplicationManager.getApplication().runReadAction(new Runnable() {
-                @Override
-                public void run() {
-                  ApplicationAdapter listener = new ApplicationAdapter() {
-                    @Override
-                    public void beforeWriteActionStart(Object action) {
-                      cancel();
-                      scheduleRestart();
-                      ApplicationManager.getApplication().removeApplicationListener(this);
-                    }
-                  };
-                  ApplicationManager.getApplication().addApplicationListener(listener);
-                  try {
-                    boolean everywhere = myCheckboxState;
-                    if (!ourLoadNamesEachTime) ensureNamesLoaded(everywhere);
-                    addElementsByPattern(myPattern, elements, myCancelled, everywhere);
-                  }
-                  catch (ProcessCanceledException e) {
-                    //OK
-                  }
-                  finally {
-                    ApplicationManager.getApplication().removeApplicationListener(listener);
-                  }
-                }
-              });
-            }
-          };
-          calculation.run();
-
-          if (myCancelled.isCanceled()) {
-            myShowCardAlarm.cancelAllRequests();
-            return;
+          if (!checkDisposed() && !myProgress.isCanceled()) {
+            CalcElementsThread currentBgProcess = myCalcElementsThread;
+            LOG.assertTrue(currentBgProcess == CalcElementsThread.this, currentBgProcess);
+            myCallback.consume(edt ? filter(elements) : filtered);
           }
-
-          if (elements.isEmpty() && !myCheckboxState) {
-            myScopeExpanded = true;
-            myCheckboxState = true;
-            calculation.run();
-          }
-          final String cardToShow = elements.isEmpty() ? NOT_FOUND_CARD : myScopeExpanded ? NOT_FOUND_IN_PROJECT_CARD : CHECK_BOX_CARD;
-          showCard(cardToShow, 0);
-
-          final boolean edt = myModel instanceof EdtSortingModel;
-          final Set<Object> filtered = !edt ? filter(elements) : Collections.emptySet();
-          ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              if (!myCancelled.isCanceled()) {
-                LOG.assertTrue(myCalcElementsThread == CalcElementsThread.this);
-                myCallback.consume(edt ? filter(elements) : filtered);
-              }
-            }
-          }, myModalityState);
         }
-      }, myCancelled);
-
+      }, myModalityState);
     }
 
-    public void addElementsByPattern(@NotNull String pattern,
-                                     @NotNull final Set<Object> elements,
-                                     @NotNull final ProgressIndicator cancelled,
-                                     boolean everywhere) {
+    @Override
+    public void onCanceled(@NotNull ProgressIndicator indicator) {
+      LOG.assertTrue(myCalcElementsThread == this, myCalcElementsThread);
+      new CalcElementsThread(myPattern, myCheckboxState, myCallback, myModalityState, myScopeExpanded).scheduleThread();
+    }
+
+    private void addElementsByPattern(@NotNull String pattern,
+                                      @NotNull final Set<Object> elements,
+                                      @NotNull final ProgressIndicator indicator,
+                                      boolean everywhere) {
       long start = System.currentTimeMillis();
       myProvider.filterElements(
               ChooseByNameBase.this, pattern, everywhere,
-              cancelled,
+              indicator,
               new Processor<Object>() {
                 @Override
                 public boolean process(Object o) {
-                  if (cancelled.isCanceled()) return false;
+                  if (indicator.isCanceled()) return false;
                   elements.add(o);
 
                   if (isOverflow(elements)) {
@@ -1596,7 +1578,7 @@ public abstract class ChooseByNameBase {
       myShowCardAlarm.addRequest(new Runnable() {
         @Override
         public void run() {
-          if (!myCancelled.isCanceled()) {
+          if (!myProgress.isCanceled()) {
             myCard.show(myCardContainer, card);
           }
         }
@@ -1607,12 +1589,9 @@ public abstract class ChooseByNameBase {
       return elementsArray.size() >= myMaximumListSizeLimit;
     }
 
-    private boolean cancel() {
-      if (myCancelled.isCanceled()) {
-        return false;
-      }
-      myCancelled.cancel();
-      return true;
+    private void cancel() {
+      ApplicationManager.getApplication().assertIsDispatchThread();
+      myProgress.cancel();
     }
 
   }
@@ -1670,12 +1649,13 @@ public abstract class ChooseByNameBase {
     }
 
     @Override
-    public void actionPerformed(final AnActionEvent e) {
+    public void actionPerformed(@NotNull final AnActionEvent e) {
       cancelListUpdater();
 
       final UsageViewPresentation presentation = new UsageViewPresentation();
-      final String prefixPattern = myFindUsagesTitle + " \'" + myTextField.getText().trim() + "\'";
-      final String nonPrefixPattern = myFindUsagesTitle + " \'*" + myTextField.getText().trim() + "*\'";
+      final String text = myTextField.getText();
+      final String prefixPattern = myFindUsagesTitle + " \'" + text.trim() + "\'";
+      final String nonPrefixPattern = myFindUsagesTitle + " \'*" + text.trim() + "*\'";
       presentation.setCodeUsagesString(prefixPattern);
       presentation.setUsagesInGeneratedCodeString(prefixPattern + " in generated code");
       presentation.setDynamicUsagesString(nonPrefixPattern);
@@ -1688,45 +1668,38 @@ public abstract class ChooseByNameBase {
       fillUsages(Arrays.asList(elements[0]), usages, targets, false);
       fillUsages(Arrays.asList(elements[1]), usages, targets, true);
       if (myListModel.contains(EXTRA_ELEM)) { //start searching for the rest
-        final String text = myTextField.getText();
         final boolean everywhere = myCheckBox.isSelected();
-        final LinkedHashSet<Object> prefixMatchElementsArray = new LinkedHashSet<Object>();
-        final LinkedHashSet<Object> nonPrefixMatchElementsArray = new LinkedHashSet<Object>();
+        final Set<Object> prefixMatchElementsArray = new LinkedHashSet<Object>();
+        final Set<Object> nonPrefixMatchElementsArray = new LinkedHashSet<Object>();
         hideHint();
         ProgressManager.getInstance().run(new Task.Modal(myProject, prefixPattern, true) {
           private ChooseByNameBase.CalcElementsThread myCalcUsagesThread;
-
           @Override
           public void run(@NotNull final ProgressIndicator indicator) {
             ensureNamesLoaded(everywhere);
             indicator.setIndeterminate(true);
-            ApplicationManager.getApplication().runReadAction(new Runnable() {
+            final TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.createFor(indicator);
+            myCalcUsagesThread = new CalcElementsThread(text, everywhere, null, ModalityState.NON_MODAL, false) {
+              @Override
+              protected boolean isOverflow(@NotNull Set<Object> elementsArray) {
+                tooManyUsagesStatus.pauseProcessingIfTooManyUsages();
+                if (elementsArray.size() > UsageLimitUtil.USAGES_LIMIT - myMaximumListSizeLimit && tooManyUsagesStatus.switchTooManyUsagesStatus()) {
+                  int usageCount = elementsArray.size() + myMaximumListSizeLimit;
+                  UsageViewManagerImpl.showTooManyUsagesWarning(getProject(), tooManyUsagesStatus, indicator, presentation, usageCount, null);
+                }
+                return false;
+              }
+            };
 
+            ApplicationManager.getApplication().runReadAction(new Runnable() {
               @Override
               public void run() {
-                final boolean[] overFlow = {false};
-                myCalcUsagesThread = new CalcElementsThread(text, everywhere, null, ModalityState.NON_MODAL, false) {
-                  private final AtomicBoolean userAskedToAbort = new AtomicBoolean();
-                  @Override
-                  protected boolean isOverflow(@NotNull Set<Object> elementsArray) {
-                    if (elementsArray.size() > UsageLimitUtil.USAGES_LIMIT - myMaximumListSizeLimit && !userAskedToAbort.getAndSet(true)) {
-                      final UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(myProject, UsageViewBundle
-                              .message("find.excessive.usage.count.prompt", elementsArray.size() + myMaximumListSizeLimit, StringUtil.pluralize(presentation.getUsagesWord())), presentation);
-                      if (ret == UsageLimitUtil.Result.ABORT) {
-                        overFlow[0] = true;
-                        return true;
-                      }
-                    }
-                    return false;
-                  }
-                };
-
                 boolean anyPlace = isSearchInAnyPlace();
                 setSearchInAnyPlace(false);
                 myCalcUsagesThread.addElementsByPattern(text, prefixMatchElementsArray, indicator, everywhere);
                 setSearchInAnyPlace(anyPlace);
 
-                if (anyPlace && !overFlow[0]) {
+                if (anyPlace && !indicator.isCanceled()) {
                   myCalcUsagesThread.addElementsByPattern(text, nonPrefixMatchElementsArray, indicator, everywhere);
                   nonPrefixMatchElementsArray.removeAll(prefixMatchElementsArray);
                 }

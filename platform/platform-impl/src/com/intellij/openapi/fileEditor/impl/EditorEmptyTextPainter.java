@@ -34,6 +34,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.PairFunction;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -44,12 +45,12 @@ import java.awt.*;
  */
 public class EditorEmptyTextPainter {
 
-  public static void paintEmptyText(final EditorsSplitters splitters, Graphics g) {
+  public void paintEmptyText(final EditorsSplitters splitters, Graphics g) {
     boolean isDarkBackground = UIUtil.isUnderDarcula();
     UIUtil.applyRenderingHints(g);
     GraphicsUtil.setupAntialiasing(g, true, false);
     g.setColor(new JBColor(isDarkBackground ? Gray._230 : Gray._80, Gray._160));
-    g.setFont(UIUtil.getLabelFont().deriveFont(isDarkBackground ? 24f : 20f));
+    g.setFont(JBUI.Fonts.label(isDarkBackground ? 24f : 20f));
 
     UIUtil.TextPainter painter = new UIUtil.TextPainter().withLineSpacing(1.5f);
     painter.withShadow(true, new JBColor(Gray._200.withAlpha(100), Gray._0.withAlpha(255)));
@@ -67,7 +68,7 @@ public class EditorEmptyTextPainter {
     });
   }
 
-  protected static void advertiseActions(EditorsSplitters splitters, UIUtil.TextPainter painter) {
+  protected void advertiseActions(EditorsSplitters splitters, UIUtil.TextPainter painter) {
     appendSearchEverywhere(painter);
     appendToolWindow(painter, "Open Project View", ToolWindowId.PROJECT_VIEW, splitters);
     appendAction(painter, "Open a file by name", getActionShortcutText("GotoFile"));
@@ -76,7 +77,7 @@ public class EditorEmptyTextPainter {
     appendLine(painter, "Drag and Drop file(s) here from " + ShowFilePathAction.getFileManagerName());
   }
 
-  protected static void appendSearchEverywhere(UIUtil.TextPainter painter) {
+  protected void appendSearchEverywhere(UIUtil.TextPainter painter) {
     Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
     if (shortcuts.length == 0) {
       appendAction(painter, "Search Everywhere", "Double " + (SystemInfo.isMac ? MacKeymapUtil.SHIFT : "Shift"));
@@ -86,23 +87,23 @@ public class EditorEmptyTextPainter {
     }
   }
 
-  protected static void appendToolWindow(UIUtil.TextPainter painter, String action, String toolWindowId, EditorsSplitters splitters) {
+  protected void appendToolWindow(UIUtil.TextPainter painter, String action, String toolWindowId, EditorsSplitters splitters) {
     if (!isToolwindowVisible(splitters, toolWindowId)) {
       String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(toolWindowId);
       appendAction(painter, action, getActionShortcutText(activateActionId));
     }
   }
 
-  protected static void appendAction(UIUtil.TextPainter painter, String action, String shortcut) {
+  protected void appendAction(UIUtil.TextPainter painter, String action, String shortcut) {
     if (StringUtil.isEmpty(shortcut)) return;
     appendLine(painter, action + " with " + "<shortcut>" + shortcut + "</shortcut>");
   }
 
-  protected static void appendLine(UIUtil.TextPainter painter, String line) {
+  protected void appendLine(UIUtil.TextPainter painter, String line) {
     painter.appendLine(line).smaller().withBullet();
   }
 
-  protected static String getActionShortcutText(String actionId) {
+  protected String getActionShortcutText(String actionId) {
     return KeymapUtil.getFirstKeyboardShortcutText(actionId);
   }
 

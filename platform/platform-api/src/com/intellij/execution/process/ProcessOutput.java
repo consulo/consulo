@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.execution.process;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class ProcessOutput {
   private final StringBuilder myStderrBuilder = new StringBuilder();
   private int myExitCode;
   private boolean myTimeout;
+  private boolean myCancelled;
 
   public ProcessOutput() {
     myExitCode = -1; // until set explicitly, exit code denotes an error.
@@ -38,24 +40,57 @@ public class ProcessOutput {
     myExitCode = exitCode;
   }
 
-  public void appendStdout(String text) {
+  public void appendStdout(@Nullable String text) {
     myStdoutBuilder.append(text);
   }
 
-  public void appendStderr(String text) {
+  public void appendStderr(@Nullable String text) {
     myStderrBuilder.append(text);
   }
 
-  public void setExitCode(int exitCode) {
-    myExitCode = exitCode;
-  }
-
+  @NotNull
   public String getStdout() {
     return myStdoutBuilder.toString();
   }
 
+  @NotNull
   public String getStderr() {
     return myStderrBuilder.toString();
+  }
+
+  @NotNull
+  public List<String> getStdoutLines() {
+    return splitLines(getStdout());
+  }
+
+  @NotNull
+  public List<String> getStderrLines() {
+    return splitLines(getStderr());
+  }
+
+  @NotNull
+  private static List<String> splitLines(String s) {
+    String converted = StringUtil.convertLineSeparators(s);
+    return StringUtil.split(converted, "\n");
+  }
+
+  /**
+   * If exit code is nonzero or the process timed out, logs stderr and exit code and returns false,
+   * else just returns true.
+   *
+   * @param logger where to put error information
+   * @return true iff exit code is zero
+   */
+  public boolean checkSuccess(@NotNull final Logger logger) {
+    if (getExitCode() != 0 || isTimeout()) {
+      logger.info(getStderr() + (isTimeout()? "\nTimed out" : "\nExit code " + getExitCode()));
+      return false;
+    }
+    return true;
+  }
+
+  public void setExitCode(int exitCode) {
+    myExitCode = exitCode;
   }
 
   public int getExitCode() {
@@ -70,30 +105,11 @@ public class ProcessOutput {
     return myTimeout;
   }
 
-  public List<String> getStdoutLines() {
-    return splitLines(getStdout());
+  public void setCancelled() {
+    myCancelled = true;
   }
 
-  public List<String> getStderrLines() {
-    return splitLines(getStderr());
-  }
-
-  private static List<String> splitLines(String s) {
-    String converted = StringUtil.convertLineSeparators(s);
-    return StringUtil.split(converted, "\n");
-  }
-
-  /**
-   * If exit code is nonzero or the process timed out, logs stderr and exit code and returns false,
-   * else just returns true.
-   * @param logger where to put error information
-   * @return true iff exit code is zero
-   */
-  public boolean checkSuccess(@NotNull final Logger logger) {
-    if (getExitCode() != 0 || isTimeout()) {
-      logger.info(getStderr() + (isTimeout()? "\nTimed out" : "\nExit code " + getExitCode()));
-      return false;
-    }
-    return true;
+  public boolean isCancelled() {
+    return myCancelled;
   }
 }

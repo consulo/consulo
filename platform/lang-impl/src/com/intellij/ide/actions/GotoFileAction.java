@@ -33,6 +33,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +58,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.file");
     final Project project = e.getData(CommonDataKeys.PROJECT);
     final GotoFileModel gotoFileModel = new GotoFileModel(project);
-    showNavigationPopup(e, gotoFileModel, new GotoActionCallback<FileType>() {
+    GotoActionCallback<FileType> callback = new GotoActionCallback<FileType>() {
       @Override
       protected ChooseByNameFilter<FileType> createFilter(@NotNull ChooseByNamePopup popup) {
         return new GotoFileFilter(popup, gotoFileModel, project);
@@ -83,7 +84,9 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
           }
         }, ModalityState.NON_MODAL);
       }
-    }, "Files matching pattern", true);
+    };
+    PsiElement context = getPsiContext(e);
+    showNavigationPopup(e, gotoFileModel, callback, "Files matching pattern", true, true, new GotoFileItemProvider(project, context));
   }
 
   protected static class GotoFileFilter extends ChooseByNameFilter<FileType> {

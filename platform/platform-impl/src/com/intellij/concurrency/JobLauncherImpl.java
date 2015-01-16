@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 package com.intellij.concurrency;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
@@ -76,6 +77,7 @@ public class JobLauncherImpl extends JobLauncher {
   };
 
   private static final ForkJoinPool pool = new ForkJoinPool(JobSchedulerImpl.CORES_COUNT, FACTORY, null, false);
+  static final int CORES_FORK_THRESHOLD = 1;
 
   private static <T> boolean invokeConcurrentlyForAll(@NotNull final List<T> things,
                                                       boolean runInReadAction,
@@ -87,6 +89,11 @@ public class JobLauncherImpl extends JobLauncher {
       if (applier.throwable != null) throw applier.throwable;
     }
     catch (ApplierCompleter.ComputationAbortedException e) {
+      return false;
+    }
+    catch (ProcessCanceledException e) {
+      // task1.processor returns false and the task cancels the indicator
+      // then task2 calls checkCancel() and get here
       return false;
     }
     catch (RuntimeException e) {
@@ -119,23 +126,34 @@ public class JobLauncherImpl extends JobLauncher {
                                                      @NotNull final Processor<T> thingProcessor) throws ProcessCanceledException {
     if (things.isEmpty()) return true;
     // supply our own indicator even if we haven't given one - to support cancellation
-    final ProgressIndicator wrapper = progress == null ? new ProgressIndicatorBase() : new SensitiveProgressWrapper(progress);
+    final ProgressIndicator wrapper = progress == null ? new AbstractProgressIndicatorBase() : new SensitiveProgressWrapper(progress);
 
-    if (things.size() <= 1 || JobSchedulerImpl.CORES_COUNT <= 2) {
+    if (things.size() <= 1 || JobSchedulerImpl.CORES_COUNT <= CORES_FORK_THRESHOLD) {
       final AtomicBoolean result = new AtomicBoolean(true);
-      ProgressManager.getInstance().executeProcessUnderProgress(new Runnable() {
+      Runnable runnable = new Runnable() {
         @Override
         public void run() {
-          //noinspection ForLoopReplaceableByForEach
-          for (int i = 0; i < things.size(); i++) {
-            T thing = things.get(i);
-            if (!thingProcessor.process(thing)) {
-              result.set(false);
-              break;
+          ProgressManager.getInstance().executeProcessUnderProgress(new Runnable() {
+            @Override
+            public void run() {
+              //noinspection ForLoopReplaceableByForEach
+              for (int i = 0; i < things.size(); i++) {
+                T thing = things.get(i);
+                if (!thingProcessor.process(thing)) {
+                  result.set(false);
+                  break;
+                }
+              }
             }
-          }
+          }, wrapper);
         }
-      }, wrapper);
+      };
+      if (runInReadAction) {
+        if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(runnable)) return false;
+      }
+      else {
+        runnable.run();
+      }
       return result.get();
     }
 
@@ -145,19 +163,11 @@ public class JobLauncherImpl extends JobLauncher {
   // This implementation is not really async
   @NotNull
   @Override
-  public <T> AsyncFutureResult<Boolean> invokeConcurrentlyUnderProgressAsync(@NotNull List<? extends T> things,
-                                                                             ProgressIndicator progress,
-                                                                             boolean failFastOnAcquireReadAction,
-                                                                             @NotNull Processor<T> thingProcessor) {
-    final AsyncFutureResult<Boolean> asyncFutureResult = AsyncFutureFactory.getInstance().createAsyncFutureResult();
-    try {
-      final boolean result = invokeConcurrentlyUnderProgress(things, progress, failFastOnAcquireReadAction, thingProcessor);
-      asyncFutureResult.set(result);
-    }
-    catch (Throwable t) {
-      asyncFutureResult.setException(t);
-    }
-    return asyncFutureResult;
+  public <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@NotNull List<? extends T> things,
+                                                                       ProgressIndicator progress,
+                                                                       boolean failFastOnAcquireReadAction,
+                                                                       @NotNull Processor<T> thingProcessor) {
+    return AsyncUtil.wrapBoolean(invokeConcurrentlyUnderProgress(things, progress, failFastOnAcquireReadAction, thingProcessor));
   }
 
   @NotNull
@@ -184,7 +194,6 @@ public class JobLauncherImpl extends JobLauncher {
 
     @Override
     protected void setRawResult(Void value) {
-
     }
 
     @Override
@@ -246,7 +255,7 @@ public class JobLauncherImpl extends JobLauncher {
     }
 
     @Override
-    public void waitForCompletion(int millis) throws InterruptedException, ExecutionException, TimeoutException {
+    public void waitForCompletion(int millis) throws InterruptedException, ExecutionException, TimeoutException, CancellationException {
       get(millis, TimeUnit.MILLISECONDS);
     }
   }

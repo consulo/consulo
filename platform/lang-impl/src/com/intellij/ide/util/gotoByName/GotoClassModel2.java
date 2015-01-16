@@ -101,9 +101,13 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
 
   @Override
   public String getFullName(final Object element) {
-    for(ChooseByNameContributor c: getContributors()) {
+    if (element instanceof PsiElement && !((PsiElement)element).isValid()) {
+      return null;
+    }
+
+    for (ChooseByNameContributor c : getContributors()) {
       if (c instanceof GotoClassContributor) {
-        String result = ((GotoClassContributor) c).getQualifiedName((NavigationItem) element);
+        String result = ((GotoClassContributor)c).getQualifiedName((NavigationItem)element);
         if (result != null) return result;
       }
     }

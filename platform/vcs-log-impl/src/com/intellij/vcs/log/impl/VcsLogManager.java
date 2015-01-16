@@ -80,14 +80,14 @@ public class VcsLogManager implements Disposable {
     Consumer<VisiblePack> visiblePackConsumer = new Consumer<VisiblePack>() {
       @Override
       public void consume(final VisiblePack pack) {
-          UIUtil.invokeLaterIfNeeded(new Runnable() {
-            @Override
-            public void run() {
-              if (!Disposer.isDisposed(myUi)) {
-                myUi.setVisiblePack(pack);
-              }
+        UIUtil.invokeLaterIfNeeded(new Runnable() {
+          @Override
+          public void run() {
+            if (!Disposer.isDisposed(myUi)) {
+              myUi.setVisiblePack(pack);
             }
-          });
+          }
+        });
       }
     };
     final VcsLogDataHolder logDataHolder = new VcsLogDataHolder(myProject, this, logProviders, mySettings, myUiProperties, visiblePackConsumer);

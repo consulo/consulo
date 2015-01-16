@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui;
+package com.intellij.openapi.actionSystem;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class UISettingsOptionDescription extends PublicFieldBasedOptionDescription {
-  public UISettingsOptionDescription(String fieldName, String option, String configurableId) {
-    super(option, configurableId, fieldName);
-  }
-
-  @Override
-  public Object getInstance() {
-    return UISettings.getInstance();
-  }
-
-  @Override
-  protected void fireUpdated() {
-    UISettings.getInstance().fireUISettingsChanged();
-  }
+public interface RightAlignedToolbarAction {
 }

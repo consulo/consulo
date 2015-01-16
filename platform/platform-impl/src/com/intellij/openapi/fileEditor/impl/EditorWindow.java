@@ -33,17 +33,22 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,7 +72,31 @@ public class EditorWindow {
   protected JPanel myPanel;
   private EditorTabbedContainer myTabbedPane;
   private final EditorsSplitters myOwner;
-  private static final Icon MODIFIED_ICON = AllIcons.General.Modified;
+  private static final Icon MODIFIED_ICON = Registry.is("editor.use.compressible.tabs") ? new Icon() {
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+      GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
+      Font oldFont = g.getFont();
+      try {
+        g.setFont(UIUtil.getLabelFont());
+        g.setColor(JBColor.foreground());
+        g.drawString("*", 0, 10);
+      } finally {
+        config.restore();
+        g.setFont(oldFont);
+      }
+    }
+
+    @Override
+    public int getIconWidth() {
+      return 9;
+    }
+
+    @Override
+    public int getIconHeight() {
+      return 9;
+    }
+  } : AllIcons.General.Modified;
   private static final Icon GAP_ICON = new EmptyIcon(MODIFIED_ICON.getIconWidth(), MODIFIED_ICON.getIconHeight());
 
   private boolean myIsDisposed = false;
@@ -102,7 +131,7 @@ public class EditorWindow {
       setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
     }
 
-    getWindows().add(this);
+    myOwner.addWindow(this);
     if (myOwner.getCurrentWindow() == null) {
       myOwner.setCurrentWindow(this, false);
     }
@@ -236,14 +265,10 @@ public class EditorWindow {
     }
   }
 
-  private Set<EditorWindow> getWindows() {
-    return myOwner.myWindows;
-  }
-
-  private void dispose() {
+  void dispose() {
     try {
       disposeTabs();
-      getWindows ().remove(this);
+      myOwner.removeWindow(this);
     }
     finally {
       myIsDisposed = true;
@@ -286,7 +311,7 @@ public class EditorWindow {
     }
   }
 
-  public void closeFile(final VirtualFile file, final boolean disposeIfNeeded, final boolean transferFocus) {
+  public void closeFile(@NotNull final VirtualFile file, final boolean disposeIfNeeded, final boolean transferFocus) {
     final FileEditorManagerImpl editorManager = getManager();
     editorManager.runChange(new FileEditorManagerChange() {
       @Override
@@ -319,6 +344,16 @@ public class EditorWindow {
 
           if (disposeIfNeeded && getTabCount() == 0) {
             removeFromSplitter();
+            if (UISettings.getInstance().EDITOR_TAB_PLACEMENT == UISettings.TABS_NONE) {
+              final EditorsSplitters owner = getOwner();
+              if (owner != null) {
+                final ThreeComponentsSplitter splitter = UIUtil.getParentOfType(ThreeComponentsSplitter.class, owner);
+                if (splitter != null) {
+                  splitter.revalidate();
+                  splitter.repaint();
+                }
+              }
+            }
           }
           else {
             myPanel.revalidate();
@@ -453,6 +488,10 @@ public class EditorWindow {
     }
   }
 
+  private boolean isTitleShortenedAt(int index) {
+    return myTabbedPane != null && myTabbedPane.isTitleShortened(index);
+  }
+
   private void setBackgroundColorAt(final int index, final Color color) {
     if (myTabbedPane != null) {
       myTabbedPane.setBackgroundColorAt(index, color);
@@ -510,7 +549,7 @@ public class EditorWindow {
     myOwner.setCurrentWindow(this, requestFocus);
   }
 
-  public void updateFileBackgroundColor(final VirtualFile file) {
+  public void updateFileBackgroundColor(@NotNull VirtualFile file) {
     final int index = findEditorIndex(findFileComposite(file));
     if (index != -1) {
       final Color color = EditorTabbedContainer.calcTabColor(getManager().getProject(), file);
@@ -538,8 +577,11 @@ public class EditorWindow {
   public void requestFocus(boolean forced) {
     if (myTabbedPane != null) {
       myTabbedPane.requestFocus(forced);
-    } else {
-      IdeFocusManager.findInstanceByComponent(myPanel).requestFocus(myPanel, forced);
+    }
+    else {
+      EditorWithProviderComposite editor = getSelectedEditor();
+      JComponent preferred = editor == null ? null : editor.getPreferredFocusedComponent();
+      IdeFocusManager.findInstanceByComponent(preferred == null ? myPanel : preferred).requestFocus(myPanel, forced);
     }
   }
 
@@ -554,10 +596,10 @@ public class EditorWindow {
   }
 
   protected static class TComp extends JPanel implements DataProvider, EditorWindowHolder {
-    final EditorWithProviderComposite myEditor;
+    @NotNull final EditorWithProviderComposite myEditor;
     protected final EditorWindow myWindow;
 
-    TComp(final EditorWindow window, final EditorWithProviderComposite editor) {
+    TComp(@NotNull EditorWindow window, @NotNull EditorWithProviderComposite editor) {
       super(new BorderLayout());
       myEditor = editor;
       myWindow = window;
@@ -579,6 +621,7 @@ public class EditorWindow {
       });
     }
 
+    @NotNull
     @Override
     public EditorWindow getEditorWindow() {
       return myWindow;
@@ -598,7 +641,7 @@ public class EditorWindow {
   }
 
   protected static class TCompForTablessMode extends TComp implements CloseAction.CloseTarget {
-    TCompForTablessMode(final EditorWindow window, final EditorWithProviderComposite editor) {
+    TCompForTablessMode(@NotNull EditorWindow window, @NotNull EditorWithProviderComposite editor) {
       super(window, editor);
     }
 
@@ -621,7 +664,7 @@ public class EditorWindow {
   }
 
   private void checkConsistency() {
-    LOG.assertTrue(getWindows().contains(this), "EditorWindow not in collection");
+    LOG.assertTrue(myOwner.containsWindow(this), "EditorWindow not in collection");
   }
 
   public EditorWithProviderComposite getSelectedEditor() {
@@ -686,6 +729,7 @@ public class EditorWindow {
 
   public void setEditor(@Nullable final EditorWithProviderComposite editor, final boolean selectEditor, final boolean focusEditor) {
     if (editor != null) {
+      onBeforeSetEditor(editor.getFile());
       if (myTabbedPane == null) {
         myPanel.removeAll ();
         myPanel.add (new TCompForTablessMode(this, editor), BorderLayout.CENTER);
@@ -702,13 +746,17 @@ public class EditorWindow {
       else {
         Integer initialIndex = editor.getFile().getUserData(INITIAL_INDEX_KEY);
         int indexToInsert = 0;
-        if (initialIndex == null) {
-          int selectedIndex = myTabbedPane.getSelectedIndex();
-          if (selectedIndex >= 0) {
-            indexToInsert = selectedIndex + 1;
-          }
+        if (Registry.is("ide.editor.tabs.open.at.the.end")) {
+          indexToInsert = myTabbedPane.getTabCount();
         } else {
-          indexToInsert = initialIndex;
+          if (initialIndex == null) {
+            int selectedIndex = myTabbedPane.getSelectedIndex();
+            if (selectedIndex >= 0) {
+              indexToInsert = selectedIndex + 1;
+            }
+          } else {
+            indexToInsert = initialIndex;
+          }
         }
 
         final VirtualFile file = editor.getFile();
@@ -724,6 +772,9 @@ public class EditorWindow {
       myOwner.setCurrentWindow(this, false);
     }
     myOwner.validate();
+  }
+
+  protected void onBeforeSetEditor(VirtualFile file) {
   }
 
   private boolean splitAvailable() {
@@ -869,7 +920,7 @@ public class EditorWindow {
     final ArrayList<EditorWindow> res = new ArrayList<EditorWindow>();
     if (myPanel.getParent() instanceof Splitter) {
       final Splitter splitter = (Splitter)myPanel.getParent();
-      for (final EditorWindow win : getWindows()) {
+      for (final EditorWindow win : myOwner.getWindows()) {
         if (win != this && SwingUtilities.isDescendingFrom(win.myPanel, splitter)) {
           res.add(win);
         }
@@ -897,7 +948,9 @@ public class EditorWindow {
     final int index = findEditorIndex(findFileComposite(file));
     if (index != -1) {
       setTitleAt(index, EditorTabbedContainer.calcTabTitle(getManager().getProject(), file));
-      setToolTipTextAt(index, UISettings.getInstance().SHOW_TABS_TOOLTIPS ? getManager().getFileTooltipText(file) : null);
+      setToolTipTextAt(index, UISettings.getInstance().SHOW_TABS_TOOLTIPS || isTitleShortenedAt(index)
+                              ? getManager().getFileTooltipText(file)
+                              : null);
     }
   }
 
@@ -938,8 +991,9 @@ public class EditorWindow {
 
     int i = 0;
     final LayeredIcon result = new LayeredIcon(count);
-    result.setIcon(baseIcon, i++);
-    if (pinIcon != null) result.setIcon(pinIcon, i++);
+    int xShift = Registry.is("editor.use.compressible.tabs") ? 4 : 0;
+    result.setIcon(baseIcon, i++, xShift, 0);
+    if (pinIcon != null) result.setIcon(pinIcon, i++, xShift, 0);
     if (modifiedIcon != null) result.setIcon(modifiedIcon, i++);
 
     return result;

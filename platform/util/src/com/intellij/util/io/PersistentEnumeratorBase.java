@@ -227,7 +227,18 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
       myKeyStorage = null;
     }
     else {
-      myKeyStorage = new AppendableStorageBackedByResizableMappedFile(keystreamFile(), initialSize, myStorage.getPagedFileStorage().getStorageLockContext(), PagedFileStorage.MB, false);
+      try {
+        myKeyStorage = new AppendableStorageBackedByResizableMappedFile(keystreamFile(), initialSize, myStorage.getPagedFileStorage().getStorageLockContext(), PagedFileStorage.MB, false);
+      }
+      catch (IOException e) {
+        myStorage.close();
+        throw e;
+      }
+      catch (Throwable e) {
+        LOG.info(e);
+        myStorage.close();
+        throw new CorruptedException(file);
+      }
     }
     myAssumeDifferentSerializedBytesMeansObjectsInequality = myDataDescriptor instanceof DifferentSerializableBytesImplyNonEqualityPolicy;
   }
@@ -432,11 +443,13 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
 
     lockStorage(); // todo locking in key storage
     try {
-      return myKeyStorage.processAll(processor, myDataDescriptor);
+      myKeyStorage.force();
     }
     finally {
       unlockStorage();
     }
+
+    return myKeyStorage.processAll(processor, myDataDescriptor);
   }
 
   private File keystreamFile() {

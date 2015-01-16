@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,14 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -41,25 +46,33 @@ import java.util.List;
 
 public class ScheduleForAdditionAction extends AnAction implements DumbAware {
 
-  public void update(AnActionEvent e) {
+  @Override
+  public void update(@NotNull AnActionEvent e) {
     final boolean enabled = thereAreUnversionedFiles(e);
     e.getPresentation().setEnabled(enabled);
     final String place = e.getPlace();
-    if (ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION.equals(place) || ActionPlaces.CHANGES_VIEW_POPUP.equals(place) ) {
+    if (ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION.equals(place) || ActionPlaces.CHANGES_VIEW_POPUP.equals(place)) {
       e.getPresentation().setVisible(enabled);
     }
   }
 
-  public void actionPerformed(AnActionEvent e) {
+  @Override
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final List<VirtualFile> unversionedFiles = getUnversionedFiles(e);
     if (unversionedFiles.isEmpty()) {
       return;
     }
+    FileDocumentManager.getInstance().saveAllDocuments();
     final ChangeListManagerImpl changeListManager = ChangeListManagerImpl.getInstanceImpl(e.getData(CommonDataKeys.PROJECT));
-    changeListManager.addUnversionedFiles(changeListManager.getDefaultChangeList(), unversionedFiles);
+    changeListManager.addUnversionedFiles(changeListManager.getDefaultChangeList(), unversionedFiles, new Condition<FileStatus>() {
+      @Override
+      public boolean value(FileStatus status) {
+        return isStatusForAddition(status);
+      }
+    });
   }
 
-  private static boolean thereAreUnversionedFiles(AnActionEvent e) {
+  private boolean thereAreUnversionedFiles(AnActionEvent e) {
     List<VirtualFile> unversionedFiles = getFromChangesView(e);
     if (unversionedFiles != null && !unversionedFiles.isEmpty()) {
       return true;
@@ -80,7 +93,7 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
   }
 
   @NotNull
-  private static List<VirtualFile> getUnversionedFiles(final AnActionEvent e) {
+  private List<VirtualFile> getUnversionedFiles(final AnActionEvent e) {
     List<VirtualFile> unversionedFiles = getFromChangesView(e);
     if (unversionedFiles != null && !unversionedFiles.isEmpty()) {
       return unversionedFiles;
@@ -102,11 +115,13 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
     return unversionedFiles;
   }
 
-  private static boolean isFileUnversioned(@NotNull VirtualFile file,
-                                           @NotNull ProjectLevelVcsManager vcsManager, @NotNull FileStatusManager fileStatusManager) {
+  private boolean isFileUnversioned(@NotNull VirtualFile file, @NotNull ProjectLevelVcsManager vcsManager, @NotNull FileStatusManager fileStatusManager) {
     AbstractVcs vcs = vcsManager.getVcsFor(file);
-    return vcs != null && !vcs.areDirectoriesVersionedItems() && file.isDirectory() ||
-           fileStatusManager.getStatus(file) == FileStatus.UNKNOWN;
+    return vcs != null && !vcs.areDirectoriesVersionedItems() && file.isDirectory() || isStatusForAddition(fileStatusManager.getStatus(file));
+  }
+
+  protected boolean isStatusForAddition(FileStatus status) {
+    return status == FileStatus.UNKNOWN;
   }
 
   @Nullable
@@ -116,7 +131,7 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
 
   @Nullable
   private static VirtualFile[] getFromSelection(AnActionEvent e) {
-    return PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
+    return CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
   }
 
 }

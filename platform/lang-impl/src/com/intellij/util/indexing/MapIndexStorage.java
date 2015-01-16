@@ -59,7 +59,7 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
 
   private final Lock l = new ReentrantLock();
   private final DataExternalizer<Value> myDataExternalizer;
-  private final boolean myHighKeySelectivity;
+  private final boolean myKeyIsUniqueForIndexedFile;
 
   public MapIndexStorage(@NotNull File storageFile,
                          @NotNull KeyDescriptor<Key> keyDescriptor,
@@ -73,19 +73,20 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
                          @NotNull KeyDescriptor<Key> keyDescriptor,
                          @NotNull DataExternalizer<Value> valueExternalizer,
                          final int cacheSize,
-                         boolean highKeySelectivity,
+                         boolean keyIsUniqueForIndexedFile,
                          boolean buildKeyHashToVirtualFileMapping) throws IOException {
     myStorageFile = storageFile;
     myKeyDescriptor = keyDescriptor;
     myCacheSize = cacheSize;
     myDataExternalizer = valueExternalizer;
-    myHighKeySelectivity = highKeySelectivity;
+    myKeyIsUniqueForIndexedFile = keyIsUniqueForIndexedFile;
     myBuildKeyHashToVirtualFileMapping = buildKeyHashToVirtualFileMapping && FileBasedIndex.ourEnableTracingOfKeyHashToVirtualFileMapping;
     initMapAndCache();
   }
 
   private void initMapAndCache() throws IOException {
-    final ValueContainerMap<Key, Value> map = new ValueContainerMap<Key, Value>(myStorageFile, myKeyDescriptor, myDataExternalizer);
+    final ValueContainerMap<Key, Value> map = new ValueContainerMap<Key, Value>(myStorageFile, myKeyDescriptor, myDataExternalizer,
+                                                                                myKeyIsUniqueForIndexedFile);
     myCache = new SLRUCache<Key, ChangeTrackingValueContainer<Value>>(myCacheSize, (int)(Math.ceil(myCacheSize * 0.25)) /* 25% from the main cache size*/) {
       @Override
       @NotNull
@@ -384,7 +385,7 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
       }
 
       myMap.markDirty();
-      if (!myHighKeySelectivity) {
+      if (!myKeyIsUniqueForIndexedFile) {
         read(key).addValue(inputId, value);
         return;
       }
@@ -401,7 +402,7 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
         cached.addValue(inputId, value);
         return;
       }
-      // do not pollute the cache with highly selective data
+      // do not pollute the cache with keys unique to indexed file
       ChangeTrackingValueContainer<Value> valueContainer = new ChangeTrackingValueContainer<Value>(null);
       valueContainer.addValue(inputId, value);
       myMap.put(key, valueContainer);

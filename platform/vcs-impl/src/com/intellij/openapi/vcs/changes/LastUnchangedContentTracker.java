@@ -51,6 +51,9 @@ public class LastUnchangedContentTracker {
 
     Integer oldContentId = getSavedContentId(file);
     if (oldContentId != null && oldContentId > 0) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("releasing content for " + file + ", id = " + oldContentId);
+      }
       getFS().releaseContent(oldContentId);
     }
 
@@ -88,14 +91,16 @@ public class LastUnchangedContentTracker {
 
   private static void saveContentReference(VirtualFile file, int contentId) {
     if (contentId == 0) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("saveContentReference without content for file = " + file);
+      }
       return; // content not loaded yet, nothing to save
     }
 
     LOG.assertTrue(contentId > 0, contentId);
 
-    if (ChangeListManagerImpl.DEBUG) {
-      ChangeListManagerImpl.log("LastUnchangedContentTracker.saveContentReference");
-      ChangeListManagerImpl.log("file = " + file);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("saveContentReference file = " + file + ", id = " + contentId);
     }
 
     long stamp = file.getTimeStamp();
@@ -131,7 +136,7 @@ public class LastUnchangedContentTracker {
     saveContentReference(file, getFS().storeUnlinkedContent(content.getBytes(file.getCharset())));
   }
 
-    @Nullable
+  @Nullable
   private static Integer getSavedContentId(VirtualFile file) {
     if (!file.isValid()) {
       return null;
@@ -140,12 +145,18 @@ public class LastUnchangedContentTracker {
     Integer oldContentId = null;
     try {
       final DataInputStream stream = ACQUIRED_CONTENT_ATTR.readAttribute(file);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("getSavedContentId for " + file + "; stream=" + stream);
+      }
       if (stream != null) {
         try {
           oldContentId = stream.readInt();
         }
         finally {
           stream.close();
+        }
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("oldContentId=" + oldContentId);
         }
         LOG.assertTrue(oldContentId > 0, oldContentId);
       }

@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -72,6 +73,15 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
     return HolderType.IGNORED;
   }
 
+  @Nullable
+  public IgnoredFilesHolder getAppropriateIgnoredHolder() {
+    if (!myHolderMap.containsKey(myCurrentVcs)) {
+      LOG.error("current vcs: " + myCurrentVcs);
+      return null;
+    }
+    return myHolderMap.get(myCurrentVcs);
+  }
+
   @Override
   public void addFile(VirtualFile file) {
     if (!myHolderMap.containsKey(myCurrentVcs)) {
@@ -103,7 +113,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
     myCurrentVcs = vcs;
     if (! myHolderMap.containsKey(vcs)) {
       myHolderMap.put(vcs, vcs.reportsIgnoredDirectories() ? new RecursiveFileHolder(myProject, HolderType.IGNORED) :
-        new MapIgnoredFilesHolder(myProject));
+                           new MapIgnoredFilesHolder(myProject));
     }
   }
 

@@ -1101,6 +1101,8 @@
 
     <extensionPoint name="addModuleDependencyTabFactory"
                     interface="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory"/>
+
+    <extensionPoint name="actionFromOptionDescriptorProvider" interface="com.intellij.ide.ui.search.ActionFromOptionDescriptorProvider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">

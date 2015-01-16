@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ import java.util.List;
 
 public class GotoClassAction extends GotoActionBase implements DumbAware {
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@NotNull final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     assert project != null;
     if (!DumbService.getInstance(project).isDumb()) {
@@ -66,10 +66,10 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     }
     else {
       DumbService.getInstance(project)
-        .showDumbModeNotification("Goto Class action is not available until indices are built, using Goto File instead");
+              .showDumbModeNotification("Goto Class action is not available until indices are built, using Goto File instead");
       ActionManager.getInstance()
-        .tryToExecute(ActionManager.getInstance().getAction(GotoFileAction.ID), ActionCommand.getInputEvent(GotoFileAction.ID),
-                      e.getData(PlatformDataKeys.CONTEXT_COMPONENT), e.getPlace(), true);
+              .tryToExecute(ActionManager.getInstance().getAction(GotoFileAction.ID), ActionCommand.getInputEvent(GotoFileAction.ID),
+                            e.getData(PlatformDataKeys.CONTEXT_COMPONENT), e.getPlace(), true);
     }
   }
 
@@ -97,7 +97,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
             final VirtualFile file = PsiUtilCore.getVirtualFile(psiElement);
             if (popup.getLinePosition() != -1 && file != null) {
               Navigatable n = new OpenFileDescriptor(project, file, popup.getLinePosition(), popup.getColumnPosition()).setUseCurrentWindow(
-                popup.isOpenInCurrentWindowRequested());
+                      popup.isOpenInCurrentWindowRequested());
               if (n.canNavigate()) {
                 n.navigate(true);
                 return;
@@ -181,7 +181,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     return null;
   }
 
-  private static PsiElement getElement(PsiElement element, ChooseByNamePopup popup) {
+  private static PsiElement getElement(@NotNull PsiElement element, ChooseByNamePopup popup) {
     final String path = popup.getPathToAnonymous();
     if (path != null) {
       final String[] classes = path.split("\\$");
@@ -210,10 +210,11 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     return element;
   }
 
-  static PsiElement[] getAnonymousClasses(PsiElement element) {
+  @NotNull
+  private static PsiElement[] getAnonymousClasses(@NotNull PsiElement element) {
     for (AnonymousElementProvider provider : Extensions.getExtensions(AnonymousElementProvider.EP_NAME)) {
       final PsiElement[] elements = provider.getAnonymousElements(element);
-      if (elements != null && elements.length > 0) {
+      if (elements.length > 0) {
         return elements;
       }
     }

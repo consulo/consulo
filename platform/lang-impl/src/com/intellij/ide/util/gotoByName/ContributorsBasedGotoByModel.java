@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
@@ -49,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Contributor-based goto model
@@ -62,6 +62,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
   protected ContributorsBasedGotoByModel(@NotNull Project project, @NotNull ChooseByNameContributor[] contributors) {
     myProject = project;
     myContributors = contributors;
+    assert !Arrays.asList(contributors).contains(null);
   }
 
   @Override
@@ -84,7 +85,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     return !ChooseByNameBase.ourLoadNamesEachTime;
   }
 
-  private final ConcurrentHashMap<ChooseByNameContributor, TIntHashSet> myContributorToItsSymbolsMap = new ConcurrentHashMap<ChooseByNameContributor, TIntHashSet>();
+  private final ConcurrentMap<ChooseByNameContributor, TIntHashSet> myContributorToItsSymbolsMap = ContainerUtil.newConcurrentMap();
   private volatile IdFilter myIdFilter;
   private volatile boolean myIdFilterForLibraries;
 
@@ -95,7 +96,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     Processor<ChooseByNameContributor> processor = new ReadActionProcessor<ChooseByNameContributor>() {
       @Override
-      public boolean processInReadAction(ChooseByNameContributor contributor) {
+      public boolean processInReadAction(@NotNull ChooseByNameContributor contributor) {
         try {
           if (!myProject.isDisposed()) {
             long contributorStarted = System.currentTimeMillis();
@@ -185,13 +186,15 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
   }
 
   @NotNull
-  public Object[] getElementsByName(final String name, final FindSymbolParameters parameters, @NotNull final ProgressIndicator canceled) {
+  public Object[] getElementsByName(@NotNull final String name,
+                                    @NotNull final FindSymbolParameters parameters,
+                                    @NotNull final ProgressIndicator canceled) {
     long elementByNameStarted = System.currentTimeMillis();
     final List<NavigationItem> items = Collections.synchronizedList(new ArrayList<NavigationItem>());
 
     Processor<ChooseByNameContributor> processor = new Processor<ChooseByNameContributor>() {
       @Override
-      public boolean process(ChooseByNameContributor contributor) {
+      public boolean process(@NotNull ChooseByNameContributor contributor) {
         if (myProject.isDisposed()) {
           return true;
         }
@@ -202,9 +205,6 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
           long contributorStarted = System.currentTimeMillis();
 
           if (contributor instanceof ChooseByNameContributorEx) {
-            if (parameters.getIdFilter() == null) {
-              parameters.setIdFilter(getIdFilter(searchInLibraries));
-            }
             ((ChooseByNameContributorEx)contributor).processElementsWithName(name, new Processor<NavigationItem>() {
               @Override
               public boolean process(NavigationItem item) {

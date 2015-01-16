@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ public final class Presentation implements Cloneable {
     return myText;
   }
 
-  public void setText(String text, boolean mayContainMnemonic) {
+  public void setText(@Nullable String text, boolean mayContainMnemonic) {
     int oldMnemonic = myMnemonic;
     int oldDisplayedMnemonicIndex = myDisplayedMnemonicIndex;
     String oldText = myText;
@@ -214,6 +214,10 @@ public final class Presentation implements Cloneable {
 
   public void setIcon(@Nullable Icon icon) {
     Icon oldIcon = myIcon;
+    if (oldIcon == icon) {
+      return;
+    }
+
     myIcon = icon;
     myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, myIcon);
   }
@@ -293,11 +297,6 @@ public final class Presentation implements Cloneable {
     setVisible(enabled);
   }
 
-  public final void setEnabledAndVisibleSilent(boolean enabled) {
-    myEnabled = enabled;
-    myVisible = enabled;
-  }
-
   void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
     myChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
   }
@@ -354,5 +353,9 @@ public final class Presentation implements Cloneable {
   @Override
   public String toString() {
     return myText + " (" + myDescription + ")";
+  }
+
+  public boolean isEnabledAndVisible() {
+    return isEnabled() && isVisible();
   }
 }

@@ -66,7 +66,7 @@ public abstract class ChooseByNameFilter<T> {
   private final Project myProject;
 
   /**
-   * A constuctor
+   * A constructor
    *
    * @param popup               a parent popup
    * @param model               a model for popup
@@ -213,8 +213,8 @@ public abstract class ChooseByNameFilter<T> {
       return;
     }
     myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(myChooserPanel, myChooser).setModalContext(false).setFocusable(false)
-      .setResizable(true).setCancelOnClickOutside(false).setMinSize(new Dimension(200, 200))
-      .setDimensionServiceKey(myProject, "GotoFile_FileTypePopup", false).createPopup();
+            .setResizable(true).setCancelOnClickOutside(false).setMinSize(new Dimension(200, 200))
+            .setDimensionServiceKey(myProject, "GotoFile_FileTypePopup", false).createPopup();
     myPopup.addListener(new JBPopupListener.Adapter() {
       @Override
       public void onClosed(LightweightWindowEvent event) {

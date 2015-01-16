@@ -476,6 +476,7 @@
       </group>
       <separator/>
       <reference ref="HelpTopics"/>
+      <reference ref="SearchEverywhere"/>
     </group>
 
     <group id="NavBarVcsGroup"/>
@@ -940,6 +941,10 @@
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
     </action>
 
+    <action id="Vcs.CopyRevisionNumberAction" class="com.intellij.openapi.vcs.history.CopyRevisionNumberAction"
+            text="Copy Revision Number" description="Copy short revision numbers of selected commits to the clipboard"
+            icon="AllIcons.Actions.Copy" />
+
     <group id="DebuggerActions">
     </group>
 
@@ -1318,6 +1323,7 @@
       <separator/>
       <reference id="NavBarToolBarOthers"/>
       <separator/>
+      <reference ref="SearchEverywhere"/>
     </group>
 
     <group id="Bookmarks">

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.ui.tabs;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.ui.Queryable;
+import com.intellij.reference.SoftReference;
 import com.intellij.ui.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;
@@ -91,6 +92,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
    * out of its container. (IDEA-61536)
    */
   private WeakReference<TabInfo> myPreviousSelection = new WeakReference<TabInfo>(null);
+  private boolean myTitleShortened;
 
   public TabInfo(final JComponent component) {
     myComponent = component;
@@ -237,7 +239,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
 
   @Nullable
   public JComponent getLastFocusOwner() {
-    return myLastFocusOwner != null ? myLastFocusOwner.get() : null;
+    return SoftReference.dereference(myLastFocusOwner);
   }
 
   public TabInfo setAlertIcon(final AlertIcon alertIcon) {
@@ -331,6 +333,11 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     setText(getText());
   }
 
+  public void revalidate() {
+    myDefaultAttributes = null;
+    update();
+  }
+
   public TabInfo setTooltipText(final String text) {
     String old = myTooltipText;
     myTooltipText = text;
@@ -384,6 +391,14 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
   @Nullable
   public TabInfo getPreviousSelection() {
     return myPreviousSelection.get();
+  }
+
+  public boolean isTitleShortened() {
+    return myTitleShortened;
+  }
+
+  public void setTitleIsShortened(boolean titleIsShortened) {
+    myTitleShortened = titleIsShortened;
   }
 
   public interface DragOutDelegate {
