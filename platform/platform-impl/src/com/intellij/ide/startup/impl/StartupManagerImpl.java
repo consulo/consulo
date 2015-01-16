@@ -31,7 +31,6 @@ import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -200,8 +199,6 @@ public class StartupManagerImpl extends StartupManagerEx {
         }
       }
     });
-
-    Registry.get("ide.firstStartup").setValue(false);
   }
 
   public void scheduleInitialVfsRefresh() {

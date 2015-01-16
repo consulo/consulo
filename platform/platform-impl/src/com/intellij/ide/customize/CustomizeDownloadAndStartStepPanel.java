@@ -128,7 +128,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
             try {
               PluginDownloader downloader = PluginDownloader.createDownloader(ideaPluginDescriptor);
               downloader.prepareToInstall(indicator);
-              downloader.install();
+              downloader.install(false);
             }
             catch (UnsupportedEncodingException e) {
               e.printStackTrace();

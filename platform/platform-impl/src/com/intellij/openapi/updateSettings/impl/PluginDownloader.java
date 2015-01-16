@@ -90,7 +90,7 @@ public class PluginDownloader {
 
   public boolean prepareToInstall(ProgressIndicator pi) throws IOException {
     IdeaPluginDescriptor descriptor = null;
-    if (PluginManager.isPluginInstalled(PluginId.getId(myPluginId))) {
+    if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.isPluginInstalled(PluginId.getId(myPluginId))) {
       //store old plugins file
       descriptor = PluginManager.getPlugin(PluginId.getId(myPluginId));
       LOG.assertTrue(descriptor != null);
@@ -169,14 +169,14 @@ public class PluginDownloader {
     return descriptor;
   }
 
-  public void install() throws IOException {
+  public void install(boolean deleteTempFile) throws IOException {
     LOG.assertTrue(myFile != null);
     if (myOldFile != null) {
       // add command to delete the 'action script' file
       StartupActionScriptManager.ActionCommand deleteOld = new StartupActionScriptManager.DeleteCommand(myOldFile);
       StartupActionScriptManager.addActionCommand(deleteOld);
     }
-    install(myFile, getPluginName());
+    install(myFile, getPluginName(), deleteTempFile);
   }
 
   public static void install(final File fromFile, final String pluginName) throws IOException {

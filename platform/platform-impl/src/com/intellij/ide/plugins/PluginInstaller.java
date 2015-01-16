@@ -151,7 +151,7 @@ public class PluginInstaller {
         downloader = PluginDownloader.createDownloader(pluginNode);
       }
       if (downloader.prepareToInstall(ProgressManager.getInstance().getProgressIndicator())) {
-        downloader.install();
+        downloader.install(true);
         pluginNode.setStatus(PluginNode.STATUS_DOWNLOADED);
       }
       else {

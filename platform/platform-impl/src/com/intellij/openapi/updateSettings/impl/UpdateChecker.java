@@ -680,7 +680,7 @@ public final class UpdateChecker {
       if (descriptor != null) {
         try {
           InstalledPluginsTableModel.updateExistingPlugin(descriptor, PluginManager.getPlugin(descriptor.getPluginId()));
-          downloader.install();
+          downloader.install(true);
           installed = true;
         }
         catch (IOException e) {
