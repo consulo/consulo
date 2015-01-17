@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 /**
  * Provides functionality similar to the emacs
  * <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Setting-Mark.html">exchange-point-and-mark</a>.
- * 
+ *
  * @author Denis Zhdanov
  * @since 3/18/12 3:14 PM
  */
@@ -35,7 +35,7 @@ public class SwapSelectionBoundariesAction extends EditorAction {
   public SwapSelectionBoundariesAction() {
     super(new Handler());
   }
-  
+
   private static class Handler extends EditorActionHandler {
     public Handler() {
       super(true);
@@ -50,7 +50,7 @@ public class SwapSelectionBoundariesAction extends EditorAction {
       if (!selectionModel.hasSelection()) {
         return;
       }
-      
+
       EditorEx editorEx = (EditorEx)editor;
       final int start = selectionModel.getSelectionStart();
       final int end = selectionModel.getSelectionEnd();

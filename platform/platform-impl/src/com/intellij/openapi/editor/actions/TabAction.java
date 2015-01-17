@@ -24,22 +24,24 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.ui.MacUIUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class TabAction extends EditorAction {
   public TabAction() {
@@ -53,11 +55,14 @@ public class TabAction extends EditorAction {
     }
 
     @Override
-    public void executeWriteAction(Editor editor, DataContext dataContext) {
+    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+      if (caret == null) {
+        caret = editor.getCaretModel().getPrimaryCaret();
+      }
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.EDIT_COMMAND_GROUP);
       CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
       Project project = CommonDataKeys.PROJECT.getData(dataContext);
-      insertTabAtCaret(editor, project);
+      insertTabAtCaret(editor, caret, project);
     }
 
     @Override
@@ -66,23 +71,29 @@ public class TabAction extends EditorAction {
     }
   }
 
-  private static void insertTabAtCaret(Editor editor, Project project) {
+  private static void insertTabAtCaret(Editor editor, @NotNull Caret caret, Project project) {
     MacUIUtil.hideCursor();
-    int columnNumber = editor.getCaretModel().getLogicalPosition().column;
+    int columnNumber;
+    if (caret.hasSelection()) {
+      columnNumber = editor.visualToLogicalPosition(caret.getSelectionStartPosition()).column;
+    }
+    else {
+      columnNumber = editor.getCaretModel().getLogicalPosition().column;
+    }
 
-    CodeStyleFacade settings = CodeStyleFacade.getInstance(project);
+    CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(project);
 
     final Document doc = editor.getDocument();
-    VirtualFile vFile = FileDocumentManager.getInstance().getFile(doc);
-    final FileType fileType = vFile == null ? null : vFile.getFileType();
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(doc);
+    CommonCodeStyleSettings.IndentOptions indentOptions = settings.getIndentOptionsByFile(file);
 
-    int tabSize = settings.getIndentSize(fileType);
+    int tabSize = indentOptions.INDENT_SIZE;
     int spacesToAddCount = tabSize - columnNumber % Math.max(1,tabSize);
 
     boolean useTab = editor.getSettings().isUseTabCharacter(project);
 
     CharSequence chars = doc.getCharsSequence();
-    if (useTab && settings.isSmartTabs(fileType)) {
+    if (useTab && indentOptions.SMART_TABS) {
       int offset = editor.getCaretModel().getOffset();
       while (offset > 0) {
         offset--;

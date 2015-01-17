@@ -30,6 +30,8 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.ui.MacUIUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EnterAction extends EditorAction {
   public EnterAction() {
@@ -43,34 +45,39 @@ public class EnterAction extends EditorAction {
     }
 
     @Override
-    public void executeWriteAction(Editor editor, DataContext dataContext) {
+    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
       insertNewLineAtCaret(editor);
     }
 
     @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
+    public boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
       return !editor.isOneLineMode();
     }
   }
 
   public static void insertNewLineAtCaret(Editor editor) {
     MacUIUtil.hideCursor();
+    Document document = editor.getDocument();
+    int caretLine = editor.getCaretModel().getLogicalPosition().line;
     if(!editor.isInsertMode()) {
-      if(editor.getCaretModel().getLogicalPosition().line < editor.getDocument().getLineCount()-1) {
-        LogicalPosition pos = new LogicalPosition(editor.getCaretModel().getLogicalPosition().line+1, 0);
+      int lineCount = document.getLineCount();
+      if(caretLine < lineCount) {
+        if (caretLine == lineCount - 1) {
+          document.insertString(document.getTextLength(), "\n");
+        }
+        LogicalPosition pos = new LogicalPosition(caretLine + 1, 0);
         editor.getCaretModel().moveToLogicalPosition(pos);
         editor.getSelectionModel().removeSelection();
-        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+        EditorModificationUtil.scrollToCaret(editor);
       }
       return;
     }
     EditorModificationUtil.deleteSelectedText(editor);
     // Smart indenting here:
-    Document document = editor.getDocument();
     CharSequence text = document.getCharsSequence();
 
-    int indentLineNum = editor.getCaretModel().getLogicalPosition().line;
+    int indentLineNum = caretLine;
     int lineLength = 0;
     if (document.getLineCount() > 0) {
       for(;indentLineNum >= 0; indentLineNum--) {
@@ -101,7 +108,7 @@ public class EnterAction extends EditorAction {
     String s = "\n"+buf;
     document.insertString(caretOffset, s);
     editor.getCaretModel().moveToOffset(caretOffset + s.length());
-    editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+    EditorModificationUtil.scrollToCaret(editor);
     editor.getSelectionModel().removeSelection();
   }
 }

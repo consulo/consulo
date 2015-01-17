@@ -31,12 +31,10 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.ex.DocumentBulkUpdateListener;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.EventDispatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +45,6 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
   private final EditorImpl myEditor;
 
   private final EventDispatcher<CaretListener> myCaretListeners = EventDispatcher.create(CaretListener.class);
-  private final boolean mySupportsMultipleCarets = Registry.is("editor.allow.multiple.carets");
 
   private TextAttributes myTextAttributes;
 
@@ -61,28 +58,23 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
   public CaretModelImpl(EditorImpl editor) {
     myEditor = editor;
     myCarets.add(new CaretImpl(myEditor));
+  }
 
-    DocumentBulkUpdateListener bulkUpdateListener = new DocumentBulkUpdateListener() {
+  void onBulkDocumentUpdateStarted() {
+    for (CaretImpl caret : myCarets) {
+      caret.onBulkDocumentUpdateStarted();
+    }
+  }
+
+  void onBulkDocumentUpdateFinished() {
+    doWithCaretMerging(new Runnable() {
       @Override
-      public void updateStarted(@NotNull Document doc) {
+      public void run() {
         for (CaretImpl caret : myCarets) {
-          caret.onBulkDocumentUpdateStarted(doc);
+          caret.onBulkDocumentUpdateFinished();
         }
       }
-
-      @Override
-      public void updateFinished(@NotNull final Document doc) {
-        doWithCaretMerging(new Runnable() {
-          @Override
-          public void run() {
-            for (CaretImpl caret : myCarets) {
-              caret.onBulkDocumentUpdateFinished(doc);
-            }
-          }
-        });
-      }
-    };
-    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(DocumentBulkUpdateListener.TOPIC, bulkUpdateListener);
+    });
   }
 
   @Override
@@ -129,7 +121,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void moveCaretRelatively(final int columnShift, final int lineShift, final boolean withSelection, final boolean blockSelection, final boolean scrollToCaret) {
-    getCurrentCaret().moveCaretRelatively(columnShift, lineShift, withSelection, blockSelection, scrollToCaret);
+    getCurrentCaret().moveCaretRelatively(columnShift, lineShift, withSelection, scrollToCaret);
   }
 
   @Override
@@ -218,7 +210,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public boolean supportsMultipleCarets() {
-    return mySupportsMultipleCarets;
+    return true;
   }
 
   @Override
@@ -270,7 +262,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
   @Nullable
   @Override
   public Caret addCaret(@NotNull VisualPosition pos) {
-    myEditor.assertIsDispatchThread();
+    EditorImpl.assertIsDispatchThread();
     CaretImpl caret = new CaretImpl(myEditor);
     caret.moveToVisualPosition(pos, false);
     if (addCaret(caret)) {
@@ -297,7 +289,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public boolean removeCaret(@NotNull Caret caret) {
-    myEditor.assertIsDispatchThread();
+    EditorImpl.assertIsDispatchThread();
     if (myCarets.size() <= 1 || !(caret instanceof CaretImpl)) {
       return false;
     }
@@ -313,10 +305,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void removeSecondaryCarets() {
-    myEditor.assertIsDispatchThread();
-    if (!supportsMultipleCarets()) {
-      return;
-    }
+    EditorImpl.assertIsDispatchThread();
     ListIterator<CaretImpl> caretIterator = myCarets.listIterator(myCarets.size() - 1);
     while (caretIterator.hasPrevious()) {
       CaretImpl caret = caretIterator.previous();
@@ -335,15 +324,12 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void runForEachCaret(@NotNull final CaretAction action, final boolean reverseOrder) {
-    myEditor.assertIsDispatchThread();
-    if (!supportsMultipleCarets()) {
-      action.perform(getPrimaryCaret());
-      return;
-    }
+    EditorImpl.assertIsDispatchThread();
     if (myCurrentCaret != null) {
       throw new IllegalStateException("Current caret is defined, cannot operate on other ones");
     }
     doWithCaretMerging(new Runnable() {
+      @Override
       public void run() {
         try {
           List<Caret> sortedCarets = getAllCarets();
@@ -364,12 +350,12 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void runBatchCaretOperation(@NotNull Runnable runnable) {
-    myEditor.assertIsDispatchThread();
+    EditorImpl.assertIsDispatchThread();
     doWithCaretMerging(runnable);
   }
 
   private void mergeOverlappingCaretsAndSelections() {
-    if (!supportsMultipleCarets() || myCarets.size() <= 1) {
+    if (myCarets.size() <= 1) {
       return;
     }
     LinkedList<CaretImpl> carets = new LinkedList<CaretImpl>(myCarets);
@@ -448,11 +434,12 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void setCaretsAndSelections(@NotNull final List<CaretState> caretStates, final boolean updateSystemSelection) {
-    myEditor.assertIsDispatchThread();
+    EditorImpl.assertIsDispatchThread();
     if (caretStates.isEmpty()) {
       throw new IllegalArgumentException("At least one caret should exist");
     }
     doWithCaretMerging(new Runnable() {
+      @Override
       public void run() {
         int index = 0;
         int oldCaretCount = myCarets.size();

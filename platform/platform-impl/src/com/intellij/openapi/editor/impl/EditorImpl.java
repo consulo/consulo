@@ -5018,8 +5018,8 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     return myScheme;
   }
 
-  void assertIsDispatchThread() {
-    ApplicationManagerEx.getApplicationEx().assertIsDispatchThread(myEditorComponent);
+  static void assertIsDispatchThread() {
+    ApplicationManager.getApplication().assertIsDispatchThread();
   }
 
   private static void assertReadAccess() {
