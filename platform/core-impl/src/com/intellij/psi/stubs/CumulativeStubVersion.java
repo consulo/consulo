@@ -25,7 +25,7 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 
 public class CumulativeStubVersion {
-  private static final int VERSION = 29;
+  private static final int VERSION = 30;
 
   public static int getCumulativeVersion() {
     int version = VERSION;
