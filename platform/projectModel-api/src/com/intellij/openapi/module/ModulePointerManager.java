@@ -15,8 +15,19 @@
  */
 package com.intellij.openapi.module;
 
+import org.consulo.util.pointers.NamedPointer;
 import org.consulo.util.pointers.NamedPointerManager;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 public interface ModulePointerManager extends NamedPointerManager<Module> {
+  @NotNull
+  @Override
+  @RequiredReadAction
+  NamedPointer<Module> create(@NotNull String name);
 
+  @NotNull
+  @Override
+  @RequiredReadAction
+  NamedPointer<Module> create(@NotNull Module value);
 }

@@ -530,14 +530,19 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   protected abstract ModuleEx createModule(String name, String dirUrl);
 
-  protected ModuleEx createAndLoadModule(ModuleLoadItem moduleLoadItem, ModuleModelImpl moduleModel) throws IOException {
+  protected ModuleEx createAndLoadModule(final ModuleLoadItem moduleLoadItem, ModuleModelImpl moduleModel) throws IOException {
     final ModuleEx module = createModule(moduleLoadItem.getName(), moduleLoadItem.getDirUrl());
     moduleModel.initModule(module);
 
     collapseOrExpandMacros(module, moduleLoadItem.getElement(), false);
 
     final ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(module);
-    moduleRootManager.loadState(moduleLoadItem.getElement());
+    ApplicationManager.getApplication().runReadAction(new Runnable() {
+      @Override
+      public void run() {
+        moduleRootManager.loadState(moduleLoadItem.getElement());
+      }
+    });
 
     return module;
   }

@@ -34,6 +34,7 @@ import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.*;
 
@@ -283,12 +284,14 @@ public class ModuleUtilCore {
   }
 
   @NotNull
+  @RequiredReadAction
   public static NamedPointer<Module> createPointer(@NotNull Module module) {
     ModulePointerManager manager = ServiceManager.getService(module.getProject(), ModulePointerManager.class);
     return manager.create(module);
   }
 
   @NotNull
+  @RequiredReadAction
   public static NamedPointer<Module> createPointer(@NotNull Project project, @NotNull String name) {
     ModulePointerManager manager = ServiceManager.getService(project, ModulePointerManager.class);
     return manager.create(name);

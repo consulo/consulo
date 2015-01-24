@@ -20,6 +20,7 @@ import com.intellij.util.graph.Graph;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Comparator;
 import java.util.List;
@@ -64,6 +65,7 @@ public abstract class ModuleManager {
    * @return the array of modules.
    */
   @NotNull
+  @RequiredReadAction
   public abstract Module[] getModules();
 
   /**
@@ -73,6 +75,7 @@ public abstract class ModuleManager {
    * @return the module instance, or null if no module with such name exists.
    */
   @Nullable
+  @RequiredReadAction
   public abstract Module findModuleByName(@NonNls @NotNull String name);
 
   /**
@@ -83,6 +86,7 @@ public abstract class ModuleManager {
    * @return the sorted array of modules.
    */
   @NotNull
+  @RequiredReadAction
   public abstract Module[] getSortedModules();
 
   /**
@@ -93,6 +97,7 @@ public abstract class ModuleManager {
    * @return the module comparator instance.
    */
   @NotNull
+  @RequiredReadAction
   public abstract Comparator<Module> moduleDependencyComparator();
 
   /**
@@ -104,6 +109,7 @@ public abstract class ModuleManager {
    * @see ModuleUtil#getAllDependentModules(Module)
    */
   @NotNull
+  @RequiredReadAction
   public abstract List<Module> getModuleDependentModules(@NotNull Module module);
 
   /**
@@ -113,6 +119,7 @@ public abstract class ModuleManager {
    * @param onModule the module on which <code>module</code> may depend.
    * @return true if <code>module</code> directly depends on <code>onModule</code>, false otherwise.
    */
+  @RequiredReadAction
   public abstract boolean isModuleDependent(@NotNull Module module, @NotNull Module onModule);
 
   /**
@@ -121,6 +128,7 @@ public abstract class ModuleManager {
    * @return the module dependency graph.
    */
   @NotNull
+  @RequiredReadAction
   public abstract Graph<Module> moduleGraph();
 
   /**
@@ -131,6 +139,7 @@ public abstract class ModuleManager {
    * @since 11.0
    */
   @NotNull
+  @RequiredReadAction
   public abstract Graph<Module> moduleGraph(boolean includeTests);
 
   /**
@@ -140,6 +149,7 @@ public abstract class ModuleManager {
    * @return the modifiable model instance.
    */
   @NotNull
+  @RequiredReadAction
   public abstract ModifiableModuleModel getModifiableModel();
 
 
@@ -151,5 +161,6 @@ public abstract class ModuleManager {
    * @return the path to the group for the module, or null if the module does not belong to any group.
    */
   @Nullable
+  @RequiredReadAction
   public abstract String[] getModuleGroupPath(@NotNull Module module);
 }
