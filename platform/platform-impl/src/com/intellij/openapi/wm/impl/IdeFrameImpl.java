@@ -21,9 +21,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.internal.statistic.configurable.StatisticsConfigurable;
-import com.intellij.internal.statistic.updater.StatisticsNotificationManager;
-import com.intellij.notification.*;
 import com.intellij.notification.impl.IdeNotificationArea;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
@@ -37,7 +34,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -45,7 +41,6 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
@@ -54,7 +49,6 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.status.*;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.*;
@@ -63,10 +57,9 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.io.PowerSupplyKit;
-import org.jetbrains.io.PowerSupplyKitCallback;
+import org.mustbe.consulo.vfs.backgroundTask.ui.widget.BackgroundTaskWidget;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -423,7 +416,10 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     statusBar.addWidget(encodingPanel, "after Position");
 
     final LineSeparatorPanel lineSeparatorPanel = new LineSeparatorPanel(project);
-    statusBar.addWidget(lineSeparatorPanel, "before " + encodingPanel.ID());
+    statusBar.addWidget(lineSeparatorPanel, "before " + positionPanel.ID());
+
+    final ModuleLayerWidget moduleLayerWidget = new ModuleLayerWidget(project);
+    statusBar.addWidget(moduleLayerWidget, "after " + lineSeparatorPanel.ID());
 
     final ToggleReadOnlyAttributePanel readOnlyAttributePanel = new ToggleReadOnlyAttributePanel();
 
@@ -431,12 +427,19 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     statusBar.addWidget(insertOverwritePanel, "after Encoding");
     statusBar.addWidget(readOnlyAttributePanel, "after InsertOverwrite");
 
+    final BackgroundTaskWidget backgroundTaskWidget = new BackgroundTaskWidget(project);
+
+    statusBar.addWidget(backgroundTaskWidget, "after ReadOnlyAttribute");
+
     Disposer.register(project, new Disposable() {
+      @Override
       public void dispose() {
         statusBar.removeWidget(encodingPanel.ID());
+        statusBar.removeWidget(moduleLayerWidget.ID());
         statusBar.removeWidget(lineSeparatorPanel.ID());
         statusBar.removeWidget(positionPanel.ID());
         statusBar.removeWidget(notificationArea.ID());
+        statusBar.removeWidget(backgroundTaskWidget.ID());
         statusBar.removeWidget(readOnlyAttributePanel.ID());
         statusBar.removeWidget(insertOverwritePanel.ID());
 
@@ -445,6 +448,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     });
   }
 
+  @Override
   public Project getProject() {
     return myProject;
   }
