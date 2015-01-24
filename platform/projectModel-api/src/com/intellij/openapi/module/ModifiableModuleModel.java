@@ -20,6 +20,7 @@ import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.io.IOException;
 import java.util.Map;
@@ -97,6 +98,7 @@ public interface ModifiableModuleModel {
   /**
    * Disposes of all modules in the project.
    */
+  @RequiredWriteAction
   void dispose();
 
   /**
@@ -109,6 +111,7 @@ public interface ModifiableModuleModel {
   /**
    * Commits changes made in this model to the actual project structure.
    */
+  @RequiredWriteAction
   void commit();
 
   /**
