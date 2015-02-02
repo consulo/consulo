@@ -22,6 +22,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.DiffRequest;
+import com.intellij.openapi.diff.SimpleContent;
 import com.intellij.openapi.diff.impl.incrementalMerge.Change;
 import com.intellij.openapi.diff.impl.incrementalMerge.MergeList;
 import com.intellij.openapi.diff.impl.incrementalMerge.MergeSearchHelper;
@@ -31,9 +32,11 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.diff.FilesTooBigForDiffException;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,6 +47,39 @@ import java.awt.*;
  * The panel from the Settings, that allows to see changes to diff/merge coloring scheme right away.
  */
 public class DiffPreviewPanel implements PreviewPanel {
+
+  //TODO [VISTALL] review text
+  @NonNls
+  private static final String LEFT_TEXT = "class MyClass {\n" +
+                                          "  int value;\n" +
+                                          "\n" +
+                                          "  void leftOnly() {}\n" +
+                                          "\n" +
+                                          "  void foo() {\n" +
+                                          "   // Left changes\n" +
+                                          "  }\n" +
+                                          "}";
+  @NonNls
+  private static final String CENTER_TEXT = "class MyClass {\n" +
+                                            "  int value;\n" +
+                                            "\n" +
+                                            "  void foo() {\n" +
+                                            "  }\n" +
+                                            "\n" +
+                                            "  void removedFromLeft() {}\n" +
+                                            "}";
+  @NonNls
+  private static final String RIGHT_TEXT = "class MyClass {\n" +
+                                           "  long value;\n" +
+                                           "\n" +
+                                           "  void foo() {\n" +
+                                           "   // Right changes\n" +
+                                           "  }\n" +
+                                           "\n" +
+                                           "  void removedFromLeft() {}\n" +
+                                           "}";
+
+
   private final MergePanel2.AsComponent myMergePanelComponent;
   private final JPanel myPanel = new JPanel(new BorderLayout());
 
@@ -131,13 +167,22 @@ public class DiffPreviewPanel implements PreviewPanel {
     @Override
     @NotNull
     public DiffContent[] getContents() {
-      return DiffPreviewProvider.getContents();
+      return new DiffContent[]{
+              new SimpleContent(LEFT_TEXT, PlainTextFileType.INSTANCE),
+              new SimpleContent(CENTER_TEXT, PlainTextFileType.INSTANCE),
+              new SimpleContent(RIGHT_TEXT, PlainTextFileType.INSTANCE)
+      };
     }
 
     @Override
-    public String[] getContentTitles() { return new String[]{"", "", ""}; }
+    public String[] getContentTitles() {
+      return new String[]{"", "", ""};
+    }
+
     @Override
-    public String getWindowTitle() { return DiffBundle.message("merge.color.options.dialog.title"); }
+    public String getWindowTitle() {
+      return DiffBundle.message("merge.color.options.dialog.title");
+    }
   }
 
   @Override
@@ -160,7 +205,7 @@ public class DiffPreviewPanel implements PreviewPanel {
     private void select(Change change) {
       if (change == null) return;
       myDispatcher.getMulticaster().selectionInPreviewChanged(change.getType().getTextDiffType().getDisplayName());
-     }
+    }
 
     @Override
     public void caretPositionChanged(CaretEvent e) {
@@ -180,7 +225,7 @@ public class DiffPreviewPanel implements PreviewPanel {
 
   @Override
   public void blinkSelectedHighlightType(final Object selected) {
-    
+
   }
 
   @Override
