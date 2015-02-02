@@ -290,9 +290,16 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     myFilters = new CompositeFilter(project);
     if (usePredefinedMessageFilter) {
       for (ConsoleFilterProvider eachProvider : Extensions.getExtensions(ConsoleFilterProvider.FILTER_PROVIDERS)) {
-        Filter[] filters = eachProvider instanceof ConsoleFilterProviderEx
-                           ? ((ConsoleFilterProviderEx)eachProvider).getDefaultFilters(project, searchScope)
-                           : eachProvider.getDefaultFilters(project);
+        Filter[] filters;
+        if (eachProvider instanceof ConsoleDependentFilterProvider) {
+          filters = ((ConsoleDependentFilterProvider)eachProvider).getDefaultFilters(this, project, searchScope);
+        }
+        else if (eachProvider instanceof ConsoleFilterProviderEx) {
+          filters = ((ConsoleFilterProviderEx)eachProvider).getDefaultFilters(project, searchScope);
+        }
+        else {
+          filters = eachProvider.getDefaultFilters(project);
+        }
         for (Filter filter : filters) {
           myFilters.addFilter(filter);
         }
@@ -309,25 +316,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
       myInputMessageFilter = compositeInputFilter;
       for (ConsoleInputFilterProvider eachProvider : inputFilters) {
         InputFilter[] filters = eachProvider.getDefaultFilters(project);
-        for (final InputFilter filter : filters) {
-          compositeInputFilter.addFilter(new InputFilter() {
-            boolean isBroken;
-
-            @Nullable
-            @Override
-            public List<Pair<String, ConsoleViewContentType>> applyFilter(String text, ConsoleViewContentType contentType) {
-              if (!isBroken) {
-                try {
-                  return filter.applyFilter(text, contentType);
-                }
-                catch (Throwable e) {
-                  isBroken = true;
-                  LOG.error(e);
-                }
-              }
-              return null;
-            }
-          });
+        for (InputFilter filter : filters) {
+          compositeInputFilter.addFilter(filter);
         }
       }
     }
@@ -674,7 +664,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     final Document document = myEditor.getDocument();
     final RangeMarker lastProcessedOutput = document.createRangeMarker(document.getTextLength(), document.getTextLength());
     final int caretOffset = myEditor.getCaretModel().getOffset();
-    final boolean isAtLastLine = document.getLineNumber(caretOffset) >= document.getLineCount() - 1;
+    final boolean isAtLastLine = isCaretAtLastLine();
 
     CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
       @Override
@@ -1044,7 +1034,20 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     final int startLine = Math.max(0, line1);
     final List<FoldRegion> toAdd = new ArrayList<FoldRegion>();
     for (int line = startLine; line <= endLine; line++) {
-      addFolding(document, chars, line, toAdd);
+      boolean flushOnly = line == endLine;
+      /*
+      Grep Console plugin allows to fold empty lines. We need to handle this case in a special way.
+
+      Multiple lines are grouped into one folding, but to know when you can create the folding,
+      you need a line which does not belong to that folding.
+      When a new line, or a chunk of lines is printed, #addFolding is called for that lines + for an empty string
+      (which basically does only one thing, gets a folding displayed).
+      We do not want to process that empty string, but also we do not want to wait for another line
+      which will create and display the folding - we'd see an unfolded stacktrace until another text came and flushed it.
+      So therefore the condition, the last line(empty string) should still flush, but not be processed by
+      com.intellij.execution.ConsoleFolding.
+       */
+      addFolding(document, chars, line, toAdd, flushOnly);
     }
     if (!toAdd.isEmpty()) {
       doUpdateFolding(toAdd, immediately);
@@ -1092,18 +1095,26 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  private void addFolding(Document document, CharSequence chars, int line, List<FoldRegion> toAdd) {
-    String commandLinePlaceholder = myCommandLineFolding.getPlaceholder(line);
-    if (commandLinePlaceholder != null) {
-      FoldRegion region = myEditor.getFoldingModel().createFoldRegion(
-              document.getLineStartOffset(line), document.getLineEndOffset(line), commandLinePlaceholder, null, false
-      );
-      toAdd.add(region);
-      return;
-    }
-    ConsoleFolding current = foldingForLine(EditorHyperlinkSupport.getLineText(document, line, false));
-    if (current != null) {
-      myFolding.put(line, current);
+  private boolean isCaretAtLastLine() {
+    final Document document = myEditor.getDocument();
+    final int caretOffset = myEditor.getCaretModel().getOffset();
+    return document.getLineNumber(caretOffset) >= document.getLineCount() - 1;
+  }
+
+  private void addFolding(Document document, CharSequence chars, int line, List<FoldRegion> toAdd, boolean flushOnly) {
+    ConsoleFolding current = null;
+    if (!flushOnly) {
+      String commandLinePlaceholder = myCommandLineFolding.getPlaceholder(line);
+      if (commandLinePlaceholder != null) {
+        FoldRegion region = myEditor.getFoldingModel()
+                .createFoldRegion(document.getLineStartOffset(line), document.getLineEndOffset(line), commandLinePlaceholder, null, false);
+        toAdd.add(region);
+        return;
+      }
+      current = foldingForLine(EditorHyperlinkSupport.getLineText(document, line, false));
+      if (current != null) {
+        myFolding.put(line, current);
+      }
     }
 
     final ConsoleFolding prevFolding = myFolding.get(line - 1);

@@ -138,9 +138,9 @@ public class LineSet{
 
     if (newSegmentEnd != 0) {
       segments.setElementAt(
-        changedLineIndex,
-        oldSegmentStart, newSegmentEnd,
-        lastChangedData | MODIFIED_MASK
+              changedLineIndex,
+              oldSegmentStart, newSegmentEnd,
+              lastChangedData | MODIFIED_MASK
       );
     } else {
       segments.remove(changedLineIndex, changedLineIndex + 1);
@@ -150,8 +150,8 @@ public class LineSet{
     final int segmentCount = segments.getSegmentCount();
     for(int i = changedLineIndex + 1; i < segmentCount; ++i) {
       segments.setElementAt(i, segments.getSegmentStart(i) - lengthDiff,
-        segments.getSegmentEnd(i) - lengthDiff,
-        segments.getSegmentData(i)
+                            segments.getSegmentEnd(i) - lengthDiff,
+                            segments.getSegmentData(i)
       );
     }
 
@@ -188,8 +188,8 @@ public class LineSet{
     // update data after lineIndex, shifting with optimizedLineShift
     for(i = segments.getSegmentCount() - 1; i > changedLineIndex; --i) {
       segments.setElementAt(i + optimizedLineShift, segments.getSegmentStart(i) + lengthDiff,
-        segments.getSegmentEnd(i) + lengthDiff,
-        segments.getSegmentData(i)
+                            segments.getSegmentEnd(i) + lengthDiff,
+                            segments.getSegmentData(i)
       );
     }
 
@@ -199,9 +199,9 @@ public class LineSet{
 
     final int newChangedLineEnd = insertionPoint + tokenizer.getLineSeparatorLength() + tokenizer.getOffset() + tokenizer.getLength();
     segments.setElementAt(
-      changedLineIndex,
-      oldSegmentStart, newChangedLineEnd,
-      tokenizer.getLineSeparatorLength() | MODIFIED_MASK
+            changedLineIndex,
+            oldSegmentStart, newChangedLineEnd,
+            tokenizer.getLineSeparatorLength() | MODIFIED_MASK
     );
 
     tokenizer.advance();
@@ -211,19 +211,19 @@ public class LineSet{
     while(!tokenizer.atEnd()) {
       lastFragmentLength = tokenizer.getLineSeparatorLength() != 0 ? 0:tokenizer.getLength();
       segments.setElementAt(
-        changedLineIndex + i,
-        insertionPoint + tokenizer.getOffset(),
-        insertionPoint + tokenizer.getOffset() + tokenizer.getLength() + tokenizer.getLineSeparatorLength(),
-        tokenizer.getLineSeparatorLength() | MODIFIED_MASK
+              changedLineIndex + i,
+              insertionPoint + tokenizer.getOffset(),
+              insertionPoint + tokenizer.getOffset() + tokenizer.getLength() + tokenizer.getLineSeparatorLength(),
+              tokenizer.getLineSeparatorLength() | MODIFIED_MASK
       );
       i++;
       tokenizer.advance();
     }
 
     segments.setElementAt(
-      changedLineIndex + optimizedLineShift, insertionPoint + lengthDiff - lastFragmentLength,
-      oldSegmentEnd + lengthDiff,
-      oldSegmentData | MODIFIED_MASK
+            changedLineIndex + optimizedLineShift, insertionPoint + lengthDiff - lastFragmentLength,
+            oldSegmentEnd + lengthDiff,
+            oldSegmentData | MODIFIED_MASK
     );
 
     if (doTest) {
@@ -257,16 +257,16 @@ public class LineSet{
   private void fillSegments(final SegmentArrayWithData segments, final SegmentArrayWithData workingCopySegmentsForTesting) {
     for(int i = mySegments.getSegmentCount() - 1; i >=0; --i) {
       segments.setElementAt(
-        i,
-        mySegments.getSegmentStart(i),
-        mySegments.getSegmentEnd(i),
-        mySegments.getSegmentData(i)
+              i,
+              mySegments.getSegmentStart(i),
+              mySegments.getSegmentEnd(i),
+              mySegments.getSegmentData(i)
       );
       workingCopySegmentsForTesting.setElementAt(
-        i,
-        mySegments.getSegmentStart(i),
-        mySegments.getSegmentEnd(i),
-        mySegments.getSegmentData(i)
+              i,
+              mySegments.getSegmentStart(i),
+              mySegments.getSegmentEnd(i),
+              mySegments.getSegmentData(i)
       );
     }
   }
@@ -301,7 +301,7 @@ public class LineSet{
   }
 
   private void updateSegments(CharSequence newText, int oldStartLine, int oldEndLine, int offset1,
-                                              DocumentEventImpl e) {
+                              DocumentEventImpl e) {
     int count = 0;
     LineTokenizer lineTokenizer = new LineTokenizer(newText);
     for (int index = oldStartLine; index <= oldEndLine; index++) {
