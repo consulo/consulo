@@ -23,8 +23,8 @@ import com.intellij.openapi.vcs.VcsBundle;
 import java.awt.datatransfer.StringSelection;
 
 /**
-* @author irengrig
-*/
+ * @author irengrig
+ */
 public class CopyLineStatusRangeAction extends BaseLineStatusRangeAction {
   CopyLineStatusRangeAction(final LineStatusTracker lineStatusTracker, final Range range) {
     super(VcsBundle.message("action.name.copy.old.text"), AllIcons.Actions.Copy, lineStatusTracker, range);
@@ -37,7 +37,7 @@ public class CopyLineStatusRangeAction extends BaseLineStatusRangeAction {
 
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    final String content = myLineStatusTracker.getUpToDateContent(myRange);
+    final String content = myLineStatusTracker.getVcsContent(myRange) + "\n";
     CopyPasteManager.getInstance().setContents(new StringSelection(content));
   }
 }

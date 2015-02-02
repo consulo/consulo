@@ -43,6 +43,7 @@ public class IdeaTextPatchBuilder {
     final List<BeforeAfter<AirContentRevision>> result = new ArrayList<BeforeAfter<AirContentRevision>>(changes.size());
 
     final Convertor<Change, FilePath> beforePrefferingConvertor = new Convertor<Change, FilePath>() {
+      @Override
       public FilePath convert(Change o) {
         final FilePath before = ChangesUtil.getBeforePath(o);
         return before == null ? ChangesUtil.getAfterPath(o) : before;
@@ -94,6 +95,7 @@ public class IdeaTextPatchBuilder {
       }
     }
     return TextPatchBuilder.buildPatch(revisions, basePath, reversePatch, SystemInfo.isFileSystemCaseSensitive, new Runnable() {
+      @Override
       public void run() {
         ProgressManager.checkCanceled();
       }
@@ -113,18 +115,23 @@ public class IdeaTextPatchBuilder {
                                                                         ts == null ? fp.getIOFile().lastModified() : ts, fp.getPath());
     if (cr instanceof BinaryContentRevision) {
       return new AirContentRevision() {
+        @Override
         public boolean isBinary() {
           return true;
         }
+        @Override
         public String getContentAsString() {
           throw new IllegalStateException();
         }
+        @Override
         public byte[] getContentAsBytes() throws VcsException {
           return ((BinaryContentRevision) cr).getBinaryContent();
         }
+        @Override
         public String getRevisionNumber() {
           return ts != null ? null : cr.getRevisionNumber().asString();
         }
+        @Override
         @NotNull
         public PathDescription getPath() {
           return description;
@@ -137,18 +144,23 @@ public class IdeaTextPatchBuilder {
       };
     } else {
       return new AirContentRevision() {
+        @Override
         public boolean isBinary() {
           return false;
         }
+        @Override
         public String getContentAsString() throws VcsException {
           return cr.getContent();
         }
+        @Override
         public byte[] getContentAsBytes() throws VcsException {
           throw new IllegalStateException();
         }
+        @Override
         public String getRevisionNumber() {
           return ts != null ? null : cr.getRevisionNumber().asString();
         }
+        @Override
         @NotNull
         public PathDescription getPath() {
           return description;

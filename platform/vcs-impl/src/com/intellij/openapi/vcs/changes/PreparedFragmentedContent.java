@@ -18,6 +18,8 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.SimpleContent;
+import com.intellij.openapi.diff.impl.DiffHighlighterFactory;
+import com.intellij.openapi.diff.impl.DiffHighlighterFactoryImpl;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.highlighter.*;
@@ -35,6 +37,7 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.impl.ContentRevisionCache;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.BeforeAfter;
 import com.intellij.util.Consumer;
@@ -46,11 +49,11 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Irina.Chernushina
-* Date: 9/8/11
-* Time: 1:19 PM
-*/
+ * Created by IntelliJ IDEA.
+ * User: Irina.Chernushina
+ * Date: 9/8/11
+ * Time: 1:19 PM
+ */
 public class PreparedFragmentedContent {
   private LineNumberConvertor oldConvertor;
   private LineNumberConvertor newConvertor;
@@ -136,9 +139,12 @@ public class PreparedFragmentedContent {
         myOneSide = fragmentedContent.isOneSide();
         myIsAddition = fragmentedContent.isAddition();
         List<BeforeAfter<TextRange>> expandedRanges =
-          expand(fragmentedContent.getRanges(), VcsConfiguration.getInstance(myProject).SHORT_DIFF_EXTRA_LINES,
-                 fragmentedContent.getBefore(), fragmentedContent.getAfter());
+                expand(fragmentedContent.getRanges(), VcsConfiguration.getInstance(myProject).SHORT_DIFF_EXTRA_LINES,
+                       fragmentedContent.getBefore(), fragmentedContent.getAfter());
         // add "artificial" empty lines
+
+        final Document document = fragmentedContent.getBefore();
+        final Document document1 = fragmentedContent.getAfter();
 
         // line starts
         BeforeAfter<Integer> lines = new BeforeAfter<Integer>(0, 0);
@@ -155,7 +161,6 @@ public class PreparedFragmentedContent {
           oldConvertor.put(lines.getBefore(), lineNumbers.getBefore().getStartOffset());
           newConvertor.put(lines.getAfter(), lineNumbers.getAfter().getStartOffset());
 
-          final Document document = fragmentedContent.getBefore();
           if (sbOld.length() > 0) {
             sbOld.append('\n');
           }
@@ -164,7 +169,6 @@ public class PreparedFragmentedContent {
           myBeforeFragments.add(beforeRange);
           sbOld.append(document.getText(beforeRange));
 
-          final Document document1 = fragmentedContent.getAfter();
           if (sbNew.length() > 0) {
             sbNew.append('\n');
           }
@@ -180,7 +184,23 @@ public class PreparedFragmentedContent {
         myLineRanges.add(new BeforeAfter<Integer>(lines.getBefore() == 0 ? 0 : lines.getBefore() - 1,
                                                   lines.getAfter() == 0 ? 0 : lines.getAfter() - 1));
 
-        setHighlighters(fragmentedContent.getBefore(), fragmentedContent.getAfter(), expandedRanges);
+        if (!expandedRanges.isEmpty()) {
+          BeforeAfter<TextRange> last = expandedRanges.get(expandedRanges.size() - 1);
+          if (sbOld.length() > 0) {
+            if (document.getLineEndOffset(last.getBefore().getEndOffset()) != document.getTextLength()) {
+              sbOld.append('\n');
+              oldConvertor.emptyLine(lines.getBefore());
+            }
+          }
+          if (sbNew.length() > 0) {
+            if (document1.getLineEndOffset(last.getAfter().getEndOffset()) != document1.getTextLength()) {
+              sbNew.append('\n');
+              newConvertor.emptyLine(lines.getAfter());
+            }
+          }
+        }
+
+        setHighlighters(fragmentedContent.getBefore(), fragmentedContent.getAfter(), expandedRanges, fragmentedContent);
         setTodoHighlighting(fragmentedContent.getBefore(), fragmentedContent.getAfter());
       }
     });
@@ -323,51 +343,63 @@ public class PreparedFragmentedContent {
   }
 
   private void setHighlighters(final Document oldDocument, final Document document,
-                               List<BeforeAfter<TextRange>> ranges) {
-    EditorHighlighterFactory editorHighlighterFactory = EditorHighlighterFactory.getInstance();
-    final SyntaxHighlighter syntaxHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(myFileType, myProject, null);
-    final EditorHighlighter highlighter =
-      editorHighlighterFactory.createEditorHighlighter(syntaxHighlighter, EditorColorsManager.getInstance().getGlobalScheme());
-
+                               List<BeforeAfter<TextRange>> ranges, FragmentedContent fragmentedContent) {
+    EditorHighlighter highlighter = createHighlighter(fragmentedContent.getFileTypeBefore(),
+                                                      fragmentedContent.getFileBefore(),
+                                                      fragmentedContent.getFileAfter(), myProject).createHighlighter();
     highlighter.setEditor(new LightHighlighterClient(oldDocument, myProject));
     highlighter.setText(oldDocument.getText());
     HighlighterIterator iterator = highlighter.createIterator(ranges.get(0).getBefore().getStartOffset());
-    FragmentedEditorHighlighter beforeHighlighter =
-      new FragmentedEditorHighlighter(iterator, getBeforeFragments(), 1, true);
+    FragmentedEditorHighlighter beforeHighlighter = new FragmentedEditorHighlighter(iterator, getBeforeFragments(), 1, true);
     setBeforeHighlighter(beforeHighlighter);
 
-    final EditorHighlighter highlighter1 =
-      editorHighlighterFactory.createEditorHighlighter(syntaxHighlighter, EditorColorsManager.getInstance().getGlobalScheme());
+    EditorHighlighter highlighter1 = createHighlighter(fragmentedContent.getFileTypeAfter(),
+                                                       fragmentedContent.getFileAfter(),
+                                                       fragmentedContent.getFileBefore(), myProject).createHighlighter();
     highlighter1.setEditor(new LightHighlighterClient(document, myProject));
     highlighter1.setText(document.getText());
     HighlighterIterator iterator1 = highlighter1.createIterator(ranges.get(0).getAfter().getStartOffset());
-    FragmentedEditorHighlighter afterHighlighter =
-      new FragmentedEditorHighlighter(iterator1, getAfterFragments(), 1, true);
+    FragmentedEditorHighlighter afterHighlighter = new FragmentedEditorHighlighter(iterator1, getAfterFragments(), 1, true);
     setAfterHighlighter(afterHighlighter);
+  }
+
+  private DiffHighlighterFactory createHighlighter(FileType contentType,
+                                                   VirtualFile file,
+                                                   VirtualFile otherFile,
+                                                   Project project) {
+    VirtualFile baseFile = file;
+    if (baseFile == null) baseFile = otherFile;
+    if (contentType == null) contentType = myFileType;
+
+    return new DiffHighlighterFactoryImpl(contentType, baseFile, project);
   }
 
   private void setTodoHighlighting(final Document oldDocument, final Document document) {
     final ContentRevisionCache cache = ProjectLevelVcsManager.getInstance(myProject).getContentRevisionCache();
     final List<Pair<TextRange,TextAttributes>> beforeTodoRanges = myBeforeNumber == null ? Collections.<Pair<TextRange,TextAttributes>>emptyList() :
-      new TodoForBaseRevision(myProject, getBeforeFragments(), 1, myFileName, oldDocument.getText(), true, myFileType, new Getter<Object>() {
-      @Override
-      public Object get() {
-        return cache.getCustom(myFilePath, myBeforeNumber);
-      }
-    }, new Consumer<Object>() {
-      @Override
-      public void consume(Object items) {
-        cache.putCustom(myFilePath, myBeforeNumber, items);
-      }
-    }).execute();
+                                                                  new TodoForBaseRevision(myProject, getBeforeFragments(), 1, myFileName, oldDocument.getText(), true, myFileType, new Getter<Object>() {
+                                                                    @Override
+                                                                    public Object get() {
+                                                                      return cache.getCustom(myFilePath, myBeforeNumber);
+                                                                    }
+                                                                  }, new Consumer<Object>() {
+                                                                    @Override
+                                                                    public void consume(Object items) {
+                                                                      cache.putCustom(myFilePath, myBeforeNumber, items);
+                                                                    }
+                                                                  }).execute();
 
     final List<Pair<TextRange, TextAttributes>> afterTodoRanges = new TodoForExistingFile(myProject, getAfterFragments(), 1,
-      myFileName, document.getText(), false, myFileType, myFile).execute();
+                                                                                          myFileName, document.getText(), false, myFileType, myFile).execute();
     setBeforeTodoRanges(beforeTodoRanges);
     setAfterTodoRanges(afterTodoRanges);
   }
 
   public VirtualFile getFile() {
     return myFile;
+  }
+
+  public FileType getFileType() {
+    return myFileType;
   }
 }

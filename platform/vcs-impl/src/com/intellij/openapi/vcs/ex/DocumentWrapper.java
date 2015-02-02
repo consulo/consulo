@@ -17,6 +17,7 @@ package com.intellij.openapi.vcs.ex;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
 public class DocumentWrapper {
   private final Document myDocument;
 
-  public DocumentWrapper(Document document) {
+  public DocumentWrapper(@NotNull Document document) {
     myDocument = document;
   }
 
@@ -35,31 +36,31 @@ public class DocumentWrapper {
     return myDocument.getLineNumber(offset);
   }
 
+  @NotNull
   public List<String> getLines() {
-    return getLines(0, myDocument.getLineCount() - 1);
+    return getLines(0, getLineCount(myDocument) - 1);
   }
 
+  @NotNull
   public List<String> getLines(int from, int to) {
     ArrayList<String> result = new ArrayList<String>();
     for (int i = from; i <= to; i++) {
-      if (i >= myDocument.getLineCount()) break;
-      final String line = getLine(i);
-      /*
-      if (line.length() > 0 || i < to) {
-        result.add(line);
-      }
-      */
-      result.add(line);
+      result.add(getLine(i));
     }
     return result;
   }
 
+  @NotNull
   private String getLine(final int i) {
     TextRange range = new TextRange(myDocument.getLineStartOffset(i), myDocument.getLineEndOffset(i));
     if (range.getLength() < 0) {
       assert false : myDocument;
     }
     return myDocument.getText(range);
+  }
+
+  private static int getLineCount(@NotNull Document document) {
+    return Math.max(document.getLineCount(), 1);
   }
 }
 

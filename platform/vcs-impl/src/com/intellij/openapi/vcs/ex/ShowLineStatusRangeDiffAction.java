@@ -25,55 +25,73 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
-* @author irengrig
-*/
+ * @author irengrig
+ */
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
-  public ShowLineStatusRangeDiffAction(final LineStatusTracker lineStatusTracker, final Range range, final Editor editor) {
+  public ShowLineStatusRangeDiffAction(@NotNull LineStatusTracker lineStatusTracker, @NotNull Range range, @Nullable Editor editor) {
     super(VcsBundle.message("action.name.show.difference"), AllIcons.Actions.Diff, lineStatusTracker, range);
   }
 
+  @Override
   public boolean isEnabled() {
-    return isModifiedRange() || isDeletedRange();
+    return true;
   }
 
-  private boolean isDeletedRange() {
-    return Range.DELETED == myRange.getType();
-  }
-
-  private boolean isModifiedRange() {
-    return Range.MODIFIED == myRange.getType();
-  }
-
+  @Override
   public void actionPerformed(final AnActionEvent e) {
     DiffManager.getInstance().getDiffTool().show(createDiffData());
   }
 
   private DiffRequest createDiffData() {
     return new DiffRequest(myLineStatusTracker.getProject()) {
+      @Override
       @NotNull
       public DiffContent[] getContents() {
-        return new DiffContent[]{createDiffContent(myLineStatusTracker.getUpToDateDocument(),
-                                                   myLineStatusTracker.getUpToDateRangeWithEndSymbol(myRange), null),
-          createDiffContent(myLineStatusTracker.getDocument(), myLineStatusTracker.getCurrentTextRange(myRange),
-                            myLineStatusTracker.getVirtualFile())};
+        Range range = expand(myRange, myLineStatusTracker.getDocument(), myLineStatusTracker.getVcsDocument());
+        return new DiffContent[]{
+                createDiffContent(myLineStatusTracker.getVcsDocument(),
+                                  myLineStatusTracker.getVcsRange(range),
+                                  null),
+                createDiffContent(myLineStatusTracker.getDocument(),
+                                  myLineStatusTracker.getCurrentTextRange(range),
+                                  myLineStatusTracker.getVirtualFile())};
       }
 
+      @Override
       public String[] getContentTitles() {
         return new String[]{VcsBundle.message("diff.content.title.up.to.date"),
-          VcsBundle.message("diff.content.title.current.range")};
+                VcsBundle.message("diff.content.title.current.range")};
       }
 
+      @Override
       public String getWindowTitle() {
         return VcsBundle.message("dialog.title.diff.for.range");
       }
     };
   }
 
-  private DiffContent createDiffContent(final Document uDocument, final TextRange textRange, final VirtualFile file) {
+  @NotNull
+  private DiffContent createDiffContent(@NotNull Document uDocument, @NotNull TextRange textRange, @Nullable VirtualFile file) {
     final Project project = myLineStatusTracker.getProject();
     final DiffContent diffContent = new DocumentContent(project, uDocument);
     return new FragmentContent(diffContent, textRange, project, file);
+  }
+
+  @NotNull
+  private static Range expand(@NotNull Range range, @NotNull Document document, @NotNull Document uDocument) {
+    if (range.getType() == Range.MODIFIED) return range;
+    if (range.getType() == Range.INSERTED || range.getType() == Range.DELETED) {
+      boolean canExpandBefore = range.getLine1() != 0 && range.getVcsLine1() != 0;
+      boolean canExpandAfter = range.getLine2() < document.getLineCount() && range.getVcsLine2() < uDocument.getLineCount();
+      int offset1 = range.getLine1() - (canExpandBefore ? 1 : 0);
+      int uOffset1 = range.getVcsLine1() - (canExpandBefore ? 1 : 0);
+      int offset2 = range.getLine2() + (canExpandAfter ? 1 : 0);
+      int uOffset2 = range.getVcsLine2() + (canExpandAfter ? 1 : 0);
+      return new Range(offset1, offset2, uOffset1, uOffset2, range.getType());
+    }
+    throw new IllegalArgumentException("Unknown range type: " + range.getType());
   }
 }

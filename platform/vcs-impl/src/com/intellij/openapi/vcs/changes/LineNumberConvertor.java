@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,38 +15,37 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.util.containers.Convertor;
+import gnu.trove.TIntFunction;
+import gnu.trove.TIntHashSet;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Irina.Chernushina
-* Date: 9/8/11
-* Time: 1:11 PM
-*/
-public class LineNumberConvertor implements Convertor<Integer, Integer> {
+ * Created by IntelliJ IDEA.
+ * User: Irina.Chernushina
+ * Date: 9/8/11
+ * Time: 1:11 PM
+ */
+public class LineNumberConvertor implements TIntFunction {
   private final TreeMap<Integer, Integer> myFragmentStarts;
-  private final Set<Integer> myEmptyLines;
+  private final TIntHashSet myEmptyLines;
 
   public LineNumberConvertor() {
     myFragmentStarts = new TreeMap<Integer, Integer>();
-    myEmptyLines = new HashSet<Integer>();
+    myEmptyLines = new TIntHashSet();
   }
 
   public void put(final int start, final int offset) {
     myFragmentStarts.put(start, offset);
   }
-  
+
   public void emptyLine(final int line) {
     myEmptyLines.add(line); // real number
   }
 
   @Override
-  public Integer convert(Integer o) {
+  public int execute(int o) {
     if (myEmptyLines.contains(o)) return -1;
     final Map.Entry<Integer, Integer> floor = myFragmentStarts.floorEntry(o);
     return floor == null ? o : floor.getValue() + o - floor.getKey();

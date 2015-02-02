@@ -54,6 +54,7 @@ public class DiffPreviewPanel implements PreviewPanel {
     myPanel.add(myMergePanelComponent, BorderLayout.CENTER);
     myMergePanelComponent.setToolbarEnabled(false);
     MergePanel2 mergePanel = getMergePanel();
+    mergePanel.setScrollToFirstDiff(false);
 
     for (int i = 0; i < MergePanel2.EDITORS_COUNT; i++) {
       final EditorMouseListener motionListener = new EditorMouseListener(i);
@@ -159,7 +160,7 @@ public class DiffPreviewPanel implements PreviewPanel {
     private void select(Change change) {
       if (change == null) return;
       myDispatcher.getMulticaster().selectionInPreviewChanged(change.getType().getTextDiffType().getDisplayName());
-    }
+     }
 
     @Override
     public void caretPositionChanged(CaretEvent e) {
@@ -179,7 +180,7 @@ public class DiffPreviewPanel implements PreviewPanel {
 
   @Override
   public void blinkSelectedHighlightType(final Object selected) {
-
+    
   }
 
   @Override

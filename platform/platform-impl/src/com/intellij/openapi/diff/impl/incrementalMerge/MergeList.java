@@ -28,9 +28,11 @@ import com.intellij.openapi.diff.ex.DiffFragment;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.incrementalMerge.ui.MergePanel2;
 import com.intellij.openapi.diff.impl.processing.DiffPolicy;
+import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.diff.impl.util.ContextLogger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.util.containers.ContainerUtil;
@@ -40,30 +42,37 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public class MergeList implements UserDataHolder {
+  private static final Logger LOG = Logger.getInstance(MergeList.class);
 
   public static final FragmentSide BRANCH_SIDE = FragmentSide.SIDE2;
   public static final FragmentSide BASE_SIDE = FragmentSide.SIDE1;
 
   public static final DataKey<MergeList> DATA_KEY = DataKey.create("mergeList");
   public static final Condition<Change> NOT_CONFLICTS = new Condition<Change>() {
+    @Override
     public boolean value(Change change) {
       return !(change instanceof ConflictChange);
     }
   };
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.incrementalMerge.MergeList");
-
   @NotNull private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
   @NotNull private final ChangeList myBaseToLeftChangeList;
   @NotNull private final ChangeList myBaseToRightChangeList;
+  @Nullable private final String myErrorMessage;
 
-  private MergeList(@Nullable Project project, @NotNull Document left, @NotNull Document base, @NotNull Document right) {
+  private MergeList(@Nullable Project project,
+                    @NotNull Document left,
+                    @NotNull Document base,
+                    @NotNull Document right,
+                    @Nullable String errorMessage) {
     myBaseToLeftChangeList = new ChangeList(base, left, project);
     myBaseToRightChangeList = new ChangeList(base, right, project);
+    myErrorMessage = errorMessage;
   }
 
   @NotNull
@@ -76,48 +85,50 @@ public class MergeList implements UserDataHolder {
     return myBaseToRightChangeList;
   }
 
-  public static MergeList create(@Nullable Project project, @NotNull Document left, @NotNull Document base,
-                                 @NotNull Document right) throws FilesTooBigForDiffException {
-    MergeList mergeList = new MergeList(project, left, base, right);
+  @NotNull
+  public static MergeList create(@Nullable Project project, @NotNull Document left, @NotNull Document base, @NotNull Document right) {
+    MergeList mergeList;
     String leftText = left.getText();
     String baseText = base.getText();
     String rightText = right.getText();
     @NonNls final Object[] data = {
-      "Left\n", leftText,
-      "\nBase\n", baseText,
-      "\nRight\n", rightText
+            "Left\n", leftText,
+            "\nBase\n", baseText,
+            "\nRight\n", rightText
     };
     ContextLogger logger = new ContextLogger(LOG, new ContextLogger.SimpleContext(data));
-    List<MergeFragment> fragmentList = processText(leftText, baseText, rightText, logger);
+    List<MergeFragment> fragmentList;
+    try {
+      fragmentList = processText(leftText, baseText, rightText, logger);
+      mergeList = new MergeList(project, left, base, right, null);
+    }
+    catch (FilesTooBigForDiffException e) {
+      fragmentList = Collections.emptyList();
+      mergeList = new MergeList(project, left, base, right, e.getMessage());
+    }
 
     ArrayList<Change> leftChanges = new ArrayList<Change>();
     ArrayList<Change> rightChanges = new ArrayList<Change>();
-    for (Iterator<MergeFragment> fragmentIterator = fragmentList.iterator(); fragmentIterator.hasNext(); ) {
-      final MergeFragment mergeFragment = fragmentIterator.next();
+    for (MergeFragment mergeFragment : fragmentList) {
       TextRange baseRange = mergeFragment.getBase();
       TextRange leftRange = mergeFragment.getLeft();
       TextRange rightRange = mergeFragment.getRight();
 
-      if (leftRange == null) {
-        if (rightRange == null) {
-          if (!fragmentIterator.hasNext() && baseRange.getEndOffset() == baseText.length()) {
-            // the very end, both local and remote revisions does not contain latest base fragment
-            final int rightTextLength = rightText.length();
-            final int leftTextLength = leftText.length();
-            rightChanges.add(SimpleChange.fromRanges(baseRange, new TextRange(rightTextLength, rightTextLength), mergeList.myBaseToRightChangeList));
-            leftChanges.add(SimpleChange.fromRanges(baseRange, new TextRange(leftTextLength, leftTextLength), mergeList.myBaseToLeftChangeList));
-          } else {
-            LOG.error("Left Text: " + leftText + "\n" + "Right Text: " + rightText + "\nBase Text: " + baseText);
-          }
-        } else {
-          rightChanges.add(SimpleChange.fromRanges(baseRange, rightRange, mergeList.myBaseToRightChangeList));
-        }
+      if (compareSubstring(leftText, leftRange, rightText, rightRange)) {
+        MergeNoConflict conflict = new MergeNoConflict(baseRange, leftRange, rightRange, mergeList);
+        assert conflict.getLeftChange() != null;
+        assert conflict.getRightChange() != null;
+        leftChanges.add(conflict.getLeftChange());
+        rightChanges.add(conflict.getRightChange());
       }
-      else if (rightRange == null) {
+      else if (compareSubstring(baseText, baseRange, leftText, leftRange)) {
+        rightChanges.add(SimpleChange.fromRanges(baseRange, rightRange, mergeList.myBaseToRightChangeList));
+      }
+      else if (compareSubstring(baseText, baseRange, rightText, rightRange)) {
         leftChanges.add(SimpleChange.fromRanges(baseRange, leftRange, mergeList.myBaseToLeftChangeList));
       }
       else {
-        MergeConflict conflict = new MergeConflict(baseRange, mergeList, leftRange, rightRange);
+        MergeConflict conflict = new MergeConflict(baseRange, leftRange, rightRange, mergeList);
         assert conflict.getLeftChange() != null;
         assert conflict.getRightChange() != null;
         leftChanges.add(conflict.getLeftChange());
@@ -129,10 +140,29 @@ public class MergeList implements UserDataHolder {
     return mergeList;
   }
 
-  private static List<MergeFragment> processText(String leftText, String baseText, String rightText,
-                                                              ContextLogger logger) throws FilesTooBigForDiffException {
-    DiffFragment[] leftFragments = DiffPolicy.DEFAULT_LINES.buildFragments(baseText, leftText);
-    DiffFragment[] rightFragments = DiffPolicy.DEFAULT_LINES.buildFragments(baseText, rightText);
+  private static boolean compareSubstring(@NotNull String text1,
+                                          @NotNull TextRange range1,
+                                          @NotNull String text2,
+                                          @NotNull TextRange range2) {
+    if (range1.getLength() != range2.getLength()) return false;
+
+    int index1 = range1.getStartOffset();
+    int index2 = range2.getStartOffset();
+    while (index1 < range1.getEndOffset()) {
+      if (text1.charAt(index1) != text2.charAt(index2)) return false;
+      index1++;
+      index2++;
+    }
+    return true;
+  }
+
+  @NotNull
+  private static List<MergeFragment> processText(@NotNull String leftText,
+                                                 @NotNull String baseText,
+                                                 @NotNull String rightText,
+                                                 @NotNull ContextLogger logger) throws FilesTooBigForDiffException {
+    DiffFragment[] leftFragments = DiffPolicy.DEFAULT_LINES.buildFragments(DiffString.create(baseText), DiffString.create(leftText));
+    DiffFragment[] rightFragments = DiffPolicy.DEFAULT_LINES.buildFragments(DiffString.create(baseText), DiffString.create(rightText));
     int[] leftOffsets = {0, 0};
     int[] rightOffsets = {0, 0};
     int leftIndex = 0;
@@ -156,7 +186,7 @@ public class MergeList implements UserDataHolder {
     return builder.finish(leftText.length(), baseText.length(), rightText.length());
   }
 
-  private static void getEqualRanges(DiffFragment fragment, int[] leftOffsets, TextRange[] equalRanges) {
+  private static void getEqualRanges(@NotNull DiffFragment fragment, @NotNull int[] leftOffsets, @NotNull TextRange[] equalRanges) {
     int baseLength = getTextLength(fragment.getText1());
     int versionLength = getTextLength(fragment.getText2());
     if (fragment.isEqual()) {
@@ -170,11 +200,11 @@ public class MergeList implements UserDataHolder {
     leftOffsets[1] += versionLength;
   }
 
-  private static int getTextLength(String text1) {
+  private static int getTextLength(@Nullable DiffString text1) {
     return text1 != null ? text1.length() : 0;
   }
 
-  public static MergeList create(DiffRequest data) throws FilesTooBigForDiffException {
+  public static MergeList create(@NotNull DiffRequest data) {
     DiffContent[] contents = data.getContents();
     return create(data.getProject(), contents[0].getDocument(), contents[1].getDocument(), contents[2].getDocument());
   }
@@ -200,19 +230,21 @@ public class MergeList implements UserDataHolder {
     myBaseToRightChangeList.removeListener(listener);
   }
 
-  private void addActions(final FragmentSide side) {
+  private void addActions(@NotNull final FragmentSide side) {
     ChangeList changeList = getChanges(side);
     final FragmentSide originalSide = BRANCH_SIDE;
     for (int i = 0; i < changeList.getCount(); i++) {
       final Change change = changeList.getChange(i);
       if (!change.canHasActions(originalSide)) continue;
       AnAction applyAction = new AnAction(DiffBundle.message("merge.dialog.apply.change.action.name"), null, AllIcons.Diff.Arrow) {
-        public void actionPerformed(AnActionEvent e) {
+        @Override
+        public void actionPerformed(@Nullable AnActionEvent e) {
           apply(change);
         }
       };
       AnAction ignoreAction = new AnAction(DiffBundle.message("merge.dialog.ignore.change.action.name"), null, AllIcons.Diff.Remove) {
-        public void actionPerformed(AnActionEvent e) {
+        @Override
+        public void actionPerformed(@Nullable AnActionEvent e) {
           change.removeFromList();
         }
       };
@@ -257,10 +289,12 @@ public class MergeList implements UserDataHolder {
     return mergePanel == null ? null : mergePanel.getMergeList();
   }
 
+  @Override
   public <T> T getUserData(@NotNull Key<T> key) {
     return myDataHolder.getUserData(key);
   }
 
+  @Override
   public <T> void putUserData(@NotNull Key<T> key, T value) {
     myDataHolder.putUserData(key, value);
   }
@@ -280,4 +314,30 @@ public class MergeList implements UserDataHolder {
     myBaseToRightChangeList.updateMarkup();
   }
 
+  @Nullable
+  public String getErrorMessage() {
+    return myErrorMessage;
+  }
+
+  public void startBulkUpdate() {
+    Document document1 = myBaseToLeftChangeList.getDocument(BRANCH_SIDE);
+    Document document2 = myBaseToRightChangeList.getDocument(BRANCH_SIDE);
+    Document document3 = myBaseToLeftChangeList.getDocument(BASE_SIDE);
+    assert document3 == myBaseToRightChangeList.getDocument(BASE_SIDE);
+
+    ((DocumentEx)document1).setInBulkUpdate(true);
+    ((DocumentEx)document2).setInBulkUpdate(true);
+    ((DocumentEx)document3).setInBulkUpdate(true);
+  }
+
+  public void finishBulkUpdate() {
+    Document document1 = myBaseToLeftChangeList.getDocument(BRANCH_SIDE);
+    Document document2 = myBaseToRightChangeList.getDocument(BRANCH_SIDE);
+    Document document3 = myBaseToLeftChangeList.getDocument(BASE_SIDE);
+    assert document3 == myBaseToRightChangeList.getDocument(BASE_SIDE);
+
+    ((DocumentEx)document1).setInBulkUpdate(false);
+    ((DocumentEx)document2).setInBulkUpdate(false);
+    ((DocumentEx)document3).setInBulkUpdate(false);
+  }
 }
