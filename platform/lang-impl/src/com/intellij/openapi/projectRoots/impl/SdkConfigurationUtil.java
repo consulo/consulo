@@ -103,7 +103,7 @@ public class SdkConfigurationUtil {
 
       String sdkName = null;
       if (bundled) {
-        sdkName = sdkType.getName() + " (bundled)";
+        sdkName = sdkType.getName() + PREDEFINED_PREFIX;
       }
       else {
         sdkName = customSdkSuggestedName == null
