@@ -50,11 +50,6 @@ public class UnknownSdkType extends SdkType{
   }
 
   @Override
-  public String suggestHomePath() {
-    return null;
-  }
-
-  @Override
   public boolean isValidSdkHome(String path) {
     return false;
   }

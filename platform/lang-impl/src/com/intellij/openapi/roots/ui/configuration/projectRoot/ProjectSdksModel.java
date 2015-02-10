@@ -286,17 +286,17 @@ public class ProjectSdksModel implements SdkModel {
     }
   }
 
-  private void setupSdk(Sdk newJdk, Consumer<Sdk> callback) {
-    String home = newJdk.getHomePath();
-    SdkType sdkType = (SdkType)newJdk.getSdkType();
-    if (!sdkType.setupSdkPaths(newJdk, this)) return;
+  private void setupSdk(Sdk newSdk, Consumer<Sdk> callback) {
+    String home = newSdk.getHomePath();
+    SdkType sdkType = (SdkType)newSdk.getSdkType();
+    sdkType.setupSdkPaths(newSdk);
 
-    if (newJdk.getVersionString() == null) {
+    if (newSdk.getVersionString() == null) {
        Messages.showMessageDialog(ProjectBundle.message("sdk.java.corrupt.error", home),
                                   ProjectBundle.message("sdk.java.corrupt.title"), Messages.getErrorIcon());
     }
 
-    doAdd(newJdk, callback);
+    doAdd(newSdk, callback);
   }
 
   @Override

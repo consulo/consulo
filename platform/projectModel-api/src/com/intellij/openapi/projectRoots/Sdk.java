@@ -18,6 +18,7 @@ package com.intellij.openapi.projectRoots;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,9 +27,8 @@ import org.jetbrains.annotations.Nullable;
  * @author Eugene Zhuravlev
  *         Date: Sep 23, 2004
  */
+@ArrayFactoryFields
 public interface Sdk extends UserDataHolder, Named {
-  Sdk[] EMPTY_ARRAY = new Sdk[0];
-
   @NotNull
   SdkTypeId getSdkType();
 

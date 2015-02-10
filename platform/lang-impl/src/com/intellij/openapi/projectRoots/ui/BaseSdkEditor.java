@@ -308,7 +308,7 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
       sdkModificator.removeAllRoots();
       sdkModificator.commitChanges();
 
-      sdkType.setupSdkPaths(dummySdk, mySdkModel);
+      sdkType.setupSdkPaths(dummySdk);
 
       clearAllPaths();
       myVersionString = dummySdk.getVersionString();

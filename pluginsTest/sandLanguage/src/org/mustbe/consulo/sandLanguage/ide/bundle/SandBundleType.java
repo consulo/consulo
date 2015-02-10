@@ -30,12 +30,6 @@ public class SandBundleType extends SdkType {
     super("SAND_BUNDLE");
   }
 
-  @Nullable
-  @Override
-  public String suggestHomePath() {
-    return null;
-  }
-
   @Override
   public boolean isValidSdkHome(String path) {
     return true;

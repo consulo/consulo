@@ -19,8 +19,6 @@ package com.intellij.openapi.projectRoots.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
@@ -28,12 +26,10 @@ import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import com.intellij.util.NullableConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,41 +39,9 @@ import java.util.*;
  * @author yole
  */
 public class SdkConfigurationUtil {
+  public static final String PREDEFINED_PREFIX = " (predefined)";
+
   private SdkConfigurationUtil() {
-  }
-
-  public static void createSdk(@Nullable final Project project,
-                               final Sdk[] existingSdks,
-                               final NullableConsumer<Sdk> onSdkCreatedCallBack,
-                               final SdkType... sdkTypes) {
-    if (sdkTypes.length == 0) {
-      onSdkCreatedCallBack.consume(null);
-      return;
-    }
-    final FileChooserDescriptor descriptor = createCompositeDescriptor(sdkTypes);
-    if (SystemInfo.isMac) {
-      descriptor.putUserData(PathChooserDialog.NATIVE_MAC_CHOOSER_SHOW_HIDDEN_FILES, Boolean.TRUE);
-    }
-    String suggestedPath = sdkTypes[0].suggestHomePath();
-    VirtualFile suggestedDir =
-      suggestedPath == null ? null : LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(suggestedPath));
-    FileChooser.chooseFiles(descriptor, project, suggestedDir, new FileChooser.FileChooserConsumer() {
-      @Override
-      public void consume(List<VirtualFile> selectedFiles) {
-        for (SdkType sdkType : sdkTypes) {
-          if (sdkType.isValidSdkHome(selectedFiles.get(0).getPath())) {
-            onSdkCreatedCallBack.consume(setupSdk(existingSdks, selectedFiles.get(0), sdkType, false, false, null, null));
-            return;
-          }
-        }
-        onSdkCreatedCallBack.consume(null);
-      }
-
-      @Override
-      public void cancelled() {
-        onSdkCreatedCallBack.consume(null);
-      }
-    });
   }
 
   private static FileChooserDescriptor createCompositeDescriptor(final SdkType... sdkTypes) {
@@ -226,7 +190,7 @@ public class SdkConfigurationUtil {
       consumer.consume(sdk.getHomePath());
       return;
     }
-    FileChooser.chooseFiles(descriptor, null, getSuggestedSdkRoot(sdkType), new Consumer<List<VirtualFile>>() {
+    FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType), new Consumer<List<VirtualFile>>() {
       @Override
       public void consume(final List<VirtualFile> chosen) {
         final String path = chosen.get(0).getPath();
@@ -244,28 +208,16 @@ public class SdkConfigurationUtil {
   }
 
   @Nullable
-  public static VirtualFile getSuggestedSdkRoot(SdkType sdkType) {
-    final String homepath = sdkType.suggestHomePath();
-    if (homepath == null) return null;
-    return LocalFileSystem.getInstance().findFileByPath(homepath);
-  }
-
-  public static List<String> filterExistingPaths(SdkType sdkType, Collection<String> sdkHomes, final Sdk[] sdks) {
-    List<String> result = new ArrayList<String>();
-    for (String sdkHome : sdkHomes) {
-      if (findByPath(sdkType, sdks, sdkHome) == null) {
-        result.add(sdkHome);
-      }
+  public static VirtualFile getSuggestedSdkPath(SdkType sdkType) {
+    Collection<String> paths = sdkType.suggestHomePaths();
+    if(paths.isEmpty()) {
+      return null;
     }
-    return result;
-  }
 
-  @Nullable
-  private static Sdk findByPath(SdkType sdkType, Sdk[] sdks, String sdkHome) {
-    for (Sdk sdk : sdks) {
-      if (sdk.getSdkType() == sdkType &&
-          FileUtil.pathsEqual(FileUtil.toSystemIndependentName(sdk.getHomePath()), FileUtil.toSystemIndependentName(sdkHome))) {
-        return sdk;
+    for (String path : paths) {
+      VirtualFile maybeSdkHomePath = LocalFileSystem.getInstance().findFileByPath(path);
+      if(maybeSdkHomePath != null) {
+        return maybeSdkHomePath;
       }
     }
     return null;

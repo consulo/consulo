@@ -78,11 +78,6 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
   }
 
   @Override
-  public String suggestHomePath() {
-    return null;
-  }
-
-  @Override
   public boolean isValidSdkHome(String path) {
     return JdkUtil.checkForJdk(new File(path));
   }

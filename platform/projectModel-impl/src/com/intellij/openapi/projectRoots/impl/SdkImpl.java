@@ -36,7 +36,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -242,12 +241,6 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
   @NotNull
   public RootProvider getRootProvider() {
     return myRootProvider;
-  }
-
-  @Deprecated
-  @DeprecationInfo(value = "Use #setBundled(true)", until = "1.0")
-  public void setBundled() {
-    setBundled(true);
   }
 
   public void setBundled(boolean val) {

@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public abstract class SdkType implements SdkTypeId {
-  public static ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create("com.intellij.sdkType");
+  public static final ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create("com.intellij.sdkType");
 
   private final String myName;
 
@@ -44,11 +44,23 @@ public abstract class SdkType implements SdkTypeId {
    * @return path to set up file chooser to or null if not applicable
    */
   @Nullable
-  public abstract String suggestHomePath();
+  @Deprecated
+  @DeprecationInfo(value = "Please override #suggestHomePaths()", until = "1.0")
+  public String suggestHomePath() {
+    return null;
+  }
 
+  /**
+   * @return paths for select in file chooser. Selected path will exists on file system
+   */
+  @NotNull
   public Collection<String> suggestHomePaths() {
     String s = suggestHomePath();
     return s == null ? Collections.<String>emptyList() : Collections.singletonList(s);
+  }
+
+  public boolean canCreatePredefinedSdks() {
+    return false;
   }
 
   /**
@@ -77,11 +89,7 @@ public abstract class SdkType implements SdkTypeId {
 
   public abstract String suggestSdkName(String currentSdkName, String sdkHome);
 
-  public void setupSdkPaths(Sdk sdk) {}
-
-  public boolean setupSdkPaths(final Sdk sdk, final SdkModel sdkModel) {
-    setupSdkPaths(sdk);
-    return true;
+  public void setupSdkPaths(Sdk sdk) {
   }
 
   /**
@@ -158,10 +166,10 @@ public abstract class SdkType implements SdkTypeId {
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override
       public void validateSelectedFiles(VirtualFile[] files) throws Exception {
-        if (files.length != 0){
+        if (files.length != 0) {
           final String selectedPath = files[0].getPath();
           boolean valid = isValidSdkHome(selectedPath);
-          if (!valid){
+          if (!valid) {
             valid = isValidSdkHome(adjustSelectedSdkHome(selectedPath));
             if (!valid) {
               String message = files[0].isDirectory()
@@ -208,8 +216,8 @@ public abstract class SdkType implements SdkTypeId {
    * Shows the custom SDK create UI. The returned SDK needs to have the correct name and home path; the framework will call
    * setupSdkPaths() on the returned SDK.
    *
-   * @param sdkModel the list of SDKs currently displayed in the configuration dialog.
-   * @param parentComponent the parent component for showing the dialog.
+   * @param sdkModel           the list of SDKs currently displayed in the configuration dialog.
+   * @param parentComponent    the parent component for showing the dialog.
    * @param sdkCreatedCallback the callback to which the created SDK is passed.
    * @since 12.0
    */

@@ -15,8 +15,7 @@
  */
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.projectRoots.BundledSdkProvider;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -31,15 +30,14 @@ public class BundledSdkLoader implements ApplicationComponent {
 
   @Override
   public void initComponent() {
-    new WriteAction<Object>()
-    {
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
-      protected void run(Result<Object> result) throws Throwable {
+      public void run() {
         for (BundledSdkProvider bundledSdkProvider : BundledSdkProvider.EP_NAME.getExtensions()) {
           final Sdk[] bundledSdks = bundledSdkProvider.createBundledSdks();
 
           for (Sdk bundledSdk : bundledSdks) {
-            if(bundledSdk instanceof SdkImpl) {
+            if (bundledSdk instanceof SdkImpl) {
               ((SdkImpl)bundledSdk).setBundled(true);
             }
 
@@ -47,7 +45,7 @@ public class BundledSdkLoader implements ApplicationComponent {
           }
         }
       }
-    }.execute();
+    });
   }
 
   @Override
