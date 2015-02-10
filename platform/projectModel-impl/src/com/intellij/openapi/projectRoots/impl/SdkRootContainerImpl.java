@@ -17,15 +17,13 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.projectRoots.ProjectRootListener;
-import com.intellij.openapi.projectRoots.ex.ProjectRoot;
-import com.intellij.openapi.projectRoots.ex.ProjectRootContainer;
+import com.intellij.openapi.projectRoots.ex.SdkRoot;
+import com.intellij.openapi.projectRoots.ex.SdkRootContainer;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.OrderRootTypeWithConvert;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
@@ -40,9 +38,9 @@ import java.util.Map;
  * @author mike
  */
 @Logger
-public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRootContainer {
-  private final Map<OrderRootType, CompositeProjectRoot> myRoots = new HashMap<OrderRootType, CompositeProjectRoot>();
+public class SdkRootContainerImpl implements PersistentStateComponent<Element>, SdkRootContainer {
 
+  private final Map<OrderRootType, CompositeSdkRoot> myRoots = new HashMap<OrderRootType, CompositeSdkRoot>();
   private Map<OrderRootType, VirtualFile[]> myFiles = new HashMap<OrderRootType, VirtualFile[]>();
 
   private boolean myInsideChange = false;
@@ -50,11 +48,11 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
 
   private boolean myNoCopyArchive = false;
 
-  public ProjectRootContainerImpl(boolean noCopyArchive) {
+  public SdkRootContainerImpl(boolean noCopyArchive) {
     myNoCopyArchive = noCopyArchive;
 
     for (OrderRootType rootType : OrderRootType.getAllTypes()) {
-      myRoots.put(rootType, new CompositeProjectRoot());
+      myRoots.put(rootType, new CompositeSdkRoot());
       myFiles.put(rootType, VirtualFile.EMPTY_ARRAY);
     }
   }
@@ -67,7 +65,7 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
 
   @Override
   @NotNull
-  public ProjectRoot[] getRoots(@NotNull OrderRootType type) {
+  public SdkRoot[] getRoots(@NotNull OrderRootType type) {
     return myRoots.get(type).getProjectRoots();
   }
 
@@ -120,20 +118,20 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
 
 
   @Override
-  public void removeRoot(@NotNull ProjectRoot root, @NotNull OrderRootType type) {
+  public void removeRoot(@NotNull SdkRoot root, @NotNull OrderRootType type) {
     LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).remove(root);
   }
 
   @Override
   @NotNull
-  public ProjectRoot addRoot(@NotNull VirtualFile virtualFile, @NotNull OrderRootType type) {
+  public SdkRoot addRoot(@NotNull VirtualFile virtualFile, @NotNull OrderRootType type) {
     LOGGER.assertTrue(myInsideChange);
     return myRoots.get(type).add(virtualFile);
   }
 
   @Override
-  public void addRoot(@NotNull ProjectRoot root, @NotNull OrderRootType type) {
+  public void addRoot(@NotNull SdkRoot root, @NotNull OrderRootType type) {
     LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).add(root);
   }
@@ -153,7 +151,7 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
   @Override
   public void removeAllRoots() {
     LOGGER.assertTrue(myInsideChange);
-    for (CompositeProjectRoot myRoot : myRoots.values()) {
+    for (CompositeSdkRoot myRoot : myRoots.values()) {
       myRoot.clear();
     }
   }
@@ -161,13 +159,13 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
   @Override
   public void update() {
     LOGGER.assertTrue(myInsideChange);
-    for (CompositeProjectRoot myRoot : myRoots.values()) {
+    for (CompositeSdkRoot myRoot : myRoots.values()) {
       myRoot.update();
     }
   }
 
   @Override
-  public void readExternal(Element element) throws InvalidDataException {
+  public void loadState(Element element) {
     for (OrderRootType type : OrderRootType.getAllTypes()) {
       read(element, type);
     }
@@ -177,7 +175,7 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
       public void run() {
         myFiles = new HashMap<OrderRootType, VirtualFile[]>();
         for (OrderRootType rootType : myRoots.keySet()) {
-          CompositeProjectRoot root = myRoots.get(rootType);
+          CompositeSdkRoot root = myRoots.get(rootType);
           if (myNoCopyArchive) {
             addNoCopyArchiveForPaths(root);
           }
@@ -195,17 +193,20 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
     }
   }
 
+  @NotNull
   @Override
-  public void writeExternal(Element element) throws WriteExternalException {
+  public Element getState() {
+    Element element = new Element("state");
     OrderRootType[] allTypes = OrderRootType.getSortedRootTypes();
     for (OrderRootType type : allTypes) {
       write(element, type);
     }
+    return element;
   }
 
-  private static void addNoCopyArchiveForPaths(ProjectRoot root) {
-    if (root instanceof SimpleProjectRoot) {
-      String url = ((SimpleProjectRoot)root).getUrl();
+  private static void addNoCopyArchiveForPaths(SdkRoot root) {
+    if (root instanceof SimpleSdkRoot) {
+      String url = ((SimpleSdkRoot)root).getUrl();
       String protocolId = VirtualFileManager.extractProtocol(url);
       IVirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocolId);
       if (fileSystem instanceof ArchiveFileSystem) {
@@ -214,33 +215,30 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
         ((ArchiveCopyingFileSystem)fileSystem).addNoCopyArchiveForPath(path);
       }
     }
-    else if (root instanceof CompositeProjectRoot) {
-      ProjectRoot[] roots = ((CompositeProjectRoot)root).getProjectRoots();
-      for (ProjectRoot root1 : roots) {
+    else if (root instanceof CompositeSdkRoot) {
+      SdkRoot[] roots = ((CompositeSdkRoot)root).getProjectRoots();
+      for (SdkRoot root1 : roots) {
         addNoCopyArchiveForPaths(root1);
       }
     }
   }
 
-  private void read(Element element, OrderRootType type) throws InvalidDataException {
+  private void read(Element element, OrderRootType type) {
     Element child = OrderRootTypeWithConvert.findFirstElement(element, type);
     if (child == null) {
-      myRoots.put(type, new CompositeProjectRoot());
+      myRoots.put(type, new CompositeSdkRoot());
       return;
     }
 
     List<Element> children = child.getChildren();
     LOGGER.assertTrue(children.size() == 1);
-    CompositeProjectRoot root = (CompositeProjectRoot)ProjectRootUtil.read(children.get(0));
+    CompositeSdkRoot root = (CompositeSdkRoot)SdkRootStateUtil.readRoot(children.get(0));
     myRoots.put(type, root);
   }
 
-  private void write(Element roots, OrderRootType type) throws WriteExternalException {
+  private void write(Element roots, OrderRootType type) {
     Element e = new Element(type.getName());
     roots.addContent(e);
-    final Element root = ProjectRootUtil.write(myRoots.get(type));
-    if (root != null) {
-      e.addContent(root);
-    }
+    e.addContent(SdkRootStateUtil.writeRoot(myRoots.get(type)));
   }
 }

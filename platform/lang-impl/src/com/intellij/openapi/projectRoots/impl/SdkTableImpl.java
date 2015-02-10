@@ -21,10 +21,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.*;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTable;
+import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.messages.MessageBus;
 import org.consulo.lombok.annotations.Logger;
@@ -195,15 +196,11 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   public void loadState(Element element) {
     mySdks.clear();
 
-    final List<Element> children = element.getChildren(ELEMENT_SDK);
+    List<Element> children = element.getChildren(ELEMENT_SDK);
+
     for (final Element child : children) {
       final SdkImpl sdk = new SdkImpl(null, null);
-      try {
-        sdk.readExternal(child);
-      }
-      catch (InvalidDataException ex) {
-        SdkTableImpl.LOGGER.error(ex);
-      }
+      sdk.loadState(child);
       mySdks.add(sdk);
     }
   }
@@ -215,13 +212,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
       if (sdk.isBundled()) {
         continue;
       }
-      try {
-        final Element e = new Element(ELEMENT_SDK);
-        ((SdkImpl)sdk).writeExternal(e);
-        element.addContent(e);
-      }
-      catch (WriteExternalException e1) {
-      }
+      element.addContent(((SdkImpl)sdk).getState().setName(ELEMENT_SDK));
     }
     return element;
   }

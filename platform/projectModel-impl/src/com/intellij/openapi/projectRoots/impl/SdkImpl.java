@@ -18,17 +18,18 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.projectRoots.ex.ProjectRoot;
-import com.intellij.openapi.projectRoots.ex.ProjectRootContainer;
+import com.intellij.openapi.projectRoots.ex.SdkRoot;
+import com.intellij.openapi.projectRoots.ex.SdkRootContainer;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.consulo.lombok.annotations.Logger;
@@ -41,8 +42,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Logger
-public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, Sdk, SdkModificator {
-  private final ProjectRootContainerImpl myRootContainer;
+public class SdkImpl extends UserDataHolderBase implements PersistentStateComponent<Element>, Sdk, SdkModificator {
+  @NonNls
+  public static final String ELEMENT_NAME = "name";
+  @NonNls
+  public static final String ATTRIBUTE_VALUE = "value";
+  @NonNls
+  public static final String ELEMENT_TYPE = "type";
+  @NonNls
+  public static final String ELEMENT_VERSION = "version";
+  @NonNls
+  private static final String ELEMENT_ROOTS = "roots";
+  @NonNls
+  public static final String ELEMENT_HOMEPATH = "homePath";
+  @NonNls
+  private static final String ELEMENT_ADDITIONAL = "additional";
+
+
+  private final SdkRootContainerImpl myRootContainer;
   private String myName;
   private String myVersionString;
   private boolean myVersionDefined = false;
@@ -52,21 +69,10 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
   private SdkAdditionalData myAdditionalData = null;
   private SdkTypeId mySdkType;
   private boolean myIsBundled;
-  @NonNls public static final String ELEMENT_NAME = "name";
-  @NonNls public static final String ATTRIBUTE_VALUE = "value";
-  @NonNls public static final String ELEMENT_TYPE = "type";
-  @NonNls public static final String ELEMENT_VERSION = "version";
-  @NonNls private static final String ELEMENT_ROOTS = "roots";
-  @NonNls private static final String ELEMENT_ROOT = "root";
-  @NonNls private static final String ELEMENT_PROPERTY = "property";
-  @NonNls private static final String VALUE_JDKHOME = "jdkHome";
-  @NonNls private static final String ATTRIBUTE_FILE = "file";
-  @NonNls public static final String ELEMENT_HOMEPATH = "homePath";
-  @NonNls private static final String ELEMENT_ADDITIONAL = "additional";
 
   public SdkImpl(String name, SdkTypeId sdkType) {
     mySdkType = sdkType;
-    myRootContainer = new ProjectRootContainerImpl(true);
+    myRootContainer = new SdkRootContainerImpl(true);
     myName = name;
     myRootContainer.addProjectRootContainerListener(myRootProvider);
   }
@@ -138,7 +144,7 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
   }
 
   @Override
-  public void readExternal(Element element) throws InvalidDataException {
+  public void loadState(Element element) {
     myName = element.getChild(ELEMENT_NAME).getAttributeValue(ATTRIBUTE_VALUE);
     final Element typeChild = element.getChild(ELEMENT_TYPE);
     final String sdkTypeName = typeChild != null ? typeChild.getAttributeValue(ATTRIBUTE_VALUE) : null;
@@ -155,27 +161,12 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
     else {
       myVersionDefined = false;
     }
-
-    if (element.getAttribute(ELEMENT_VERSION) == null || !"2".equals(element.getAttributeValue(ELEMENT_VERSION))) {
-      myRootContainer.startChange();
-      final List<Element> children = element.getChild(ELEMENT_ROOTS).getChildren(ELEMENT_ROOT);
-      for (final Element root : children) {
-        for (final Element prop : root.getChildren(ELEMENT_PROPERTY)) {
-          if (ELEMENT_TYPE.equals(prop.getAttributeValue(ELEMENT_NAME)) && VALUE_JDKHOME.equals(prop.getAttributeValue(ATTRIBUTE_VALUE))) {
-            myHomePath = VirtualFileManager.extractPath(root.getAttributeValue(ATTRIBUTE_FILE));
-          }
-        }
-      }
-      myRootContainer.finishChange();
-    }
-    else {
-      myHomePath = element.getChild(ELEMENT_HOMEPATH).getAttributeValue(ATTRIBUTE_VALUE);
-      myRootContainer.readExternal(element.getChild(ELEMENT_ROOTS));
-    }
+    myHomePath = element.getChild(ELEMENT_HOMEPATH).getAttributeValue(ATTRIBUTE_VALUE);
+    myRootContainer.loadState(element.getChild(ELEMENT_ROOTS));
 
     final Element additional = element.getChild(ELEMENT_ADDITIONAL);
     if (additional != null) {
-      SdkImpl.LOGGER.assertTrue(mySdkType != null);
+      LOGGER.assertTrue(mySdkType != null);
       myAdditionalData = mySdkType.loadAdditionalData(this, additional);
     }
     else {
@@ -183,13 +174,14 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
     }
   }
 
+  @NotNull
   @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    element.setAttribute(ELEMENT_VERSION, "2");
+  public Element getState() {
+    Element element = new Element("state");
 
-    final Element name = new Element(ELEMENT_NAME);
-    name.setAttribute(ATTRIBUTE_VALUE, myName);
-    element.addContent(name);
+    final Element nameElement = new Element(ELEMENT_NAME);
+    nameElement.setAttribute(ATTRIBUTE_VALUE, myName);
+    element.addContent(nameElement);
 
     if (mySdkType != null) {
       final Element sdkType = new Element(ELEMENT_TYPE);
@@ -207,9 +199,7 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
     home.setAttribute(ATTRIBUTE_VALUE, myHomePath);
     element.addContent(home);
 
-    Element roots = new Element(ELEMENT_ROOTS);
-    myRootContainer.writeExternal(roots);
-    element.addContent(roots);
+    element.addContent(myRootContainer.getState().setName(ELEMENT_ROOTS));
 
     Element additional = new Element(ELEMENT_ADDITIONAL);
     if (myAdditionalData != null) {
@@ -217,6 +207,7 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
       mySdkType.saveAdditionalData(myAdditionalData, additional);
     }
     element.addContent(additional);
+    return element;
   }
 
   @Override
@@ -232,9 +223,9 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
   @Override
   @NotNull
   public Object clone() {
-    SdkImpl newJdk = new SdkImpl("", mySdkType);
-    copyTo(newJdk);
-    return newJdk;
+    SdkImpl newSdk = new SdkImpl("", mySdkType);
+    copyTo(newSdk);
+    return newSdk;
   }
 
   @Override
@@ -267,9 +258,9 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
     dest.myRootContainer.finishChange();
   }
 
-  private static void copyRoots(ProjectRootContainer srcContainer, ProjectRootContainer destContainer, OrderRootType type) {
-    final ProjectRoot[] newRoots = srcContainer.getRoots(type);
-    for (ProjectRoot newRoot : newRoots) {
+  private static void copyRoots(SdkRootContainer srcContainer, SdkRootContainer destContainer, OrderRootType type) {
+    final SdkRoot[] newRoots = srcContainer.getRoots(type);
+    for (SdkRoot newRoot : newRoots) {
       destContainer.addRoot(newRoot, type);
     }
   }
@@ -278,9 +269,9 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
     @Override
     @NotNull
     public String[] getUrls(@NotNull OrderRootType rootType) {
-      final ProjectRoot[] rootFiles = myRootContainer.getRoots(rootType);
+      final SdkRoot[] rootFiles = myRootContainer.getRoots(rootType);
       final ArrayList<String> result = new ArrayList<String>();
-      for (ProjectRoot rootFile : rootFiles) {
+      for (SdkRoot rootFile : rootFiles) {
         ContainerUtil.addAll(result, rootFile.getUrls());
       }
       return ArrayUtil.toStringArray(result);
@@ -363,9 +354,9 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
 
   @Override
   public VirtualFile[] getRoots(OrderRootType rootType) {
-    final ProjectRoot[] roots = myRootContainer.getRoots(rootType); // use getRoots() cause the data is most up-to-date there
+    final SdkRoot[] roots = myRootContainer.getRoots(rootType); // use getRoots() cause the data is most up-to-date there
     final List<VirtualFile> files = new ArrayList<VirtualFile>(roots.length);
-    for (ProjectRoot root : roots) {
+    for (SdkRoot root : roots) {
       ContainerUtil.addAll(files, root.getVirtualFiles());
     }
     return VfsUtilCore.toVirtualFileArray(files);

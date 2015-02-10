@@ -16,9 +16,7 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.projectRoots.ex.ProjectRoot;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.projectRoots.ex.SdkRoot;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -31,23 +29,25 @@ import java.io.File;
 /**
  * @author mike
  */
-public class SimpleProjectRoot implements ProjectRoot {
+public class SimpleSdkRoot implements SdkRoot {
+  @NonNls
+  private static final String ATTRIBUTE_URL = "url";
+
   private String myUrl;
   private VirtualFile myFile;
   private final VirtualFile[] myFileArray = new VirtualFile[1];
   private boolean myInitialized = false;
-  @NonNls private static final String ATTRIBUTE_URL = "url";
 
-  public SimpleProjectRoot(@NotNull VirtualFile file) {
+  public SimpleSdkRoot(@NotNull VirtualFile file) {
     myFile = file;
     myUrl = myFile.getUrl();
   }
 
-  public SimpleProjectRoot(@NotNull String url) {
+  public SimpleSdkRoot(@NotNull String url) {
     myUrl = url;
   }
 
-  SimpleProjectRoot() {
+  SimpleSdkRoot() {
   }
 
   public VirtualFile getFile() {
@@ -112,11 +112,11 @@ public class SimpleProjectRoot implements ProjectRoot {
     return myUrl;
   }
 
-  public void readExternal(Element element) throws InvalidDataException {
+  public void readExternal(Element element) {
     myUrl = element.getAttributeValue(ATTRIBUTE_URL);
   }
 
-  public void writeExternal(Element element) throws WriteExternalException {
+  public void writeExternal(Element element) {
     if (!myInitialized) {
       initialize();
     }

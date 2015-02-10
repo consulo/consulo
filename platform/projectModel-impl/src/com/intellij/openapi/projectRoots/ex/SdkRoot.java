@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author mike
  */
-public interface ProjectRoot {
+public interface SdkRoot {
   boolean isValid();
   @NotNull
   VirtualFile[] getVirtualFiles();

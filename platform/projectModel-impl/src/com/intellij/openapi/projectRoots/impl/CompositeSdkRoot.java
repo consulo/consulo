@@ -16,9 +16,7 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.projectRoots.ex.ProjectRoot;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.projectRoots.ex.SdkRoot;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
@@ -33,12 +31,12 @@ import java.util.List;
 /**
  * @author mike
  */
-class CompositeProjectRoot implements ProjectRoot {
-  private final List<ProjectRoot> myRoots = new ArrayList<ProjectRoot>();
+class CompositeSdkRoot implements SdkRoot {
+  private final List<SdkRoot> myRoots = new ArrayList<SdkRoot>();
 
   @NotNull 
-  ProjectRoot[] getProjectRoots() {
-    return myRoots.toArray(new ProjectRoot[myRoots.size()]);
+  SdkRoot[] getProjectRoots() {
+    return myRoots.toArray(new SdkRoot[myRoots.size()]);
   }
 
   @Override
@@ -51,7 +49,7 @@ class CompositeProjectRoot implements ProjectRoot {
   @NotNull
   public VirtualFile[] getVirtualFiles() {
     List<VirtualFile> result = new ArrayList<VirtualFile>();
-    for (ProjectRoot root : myRoots) {
+    for (SdkRoot root : myRoots) {
       ContainerUtil.addAll(result, root.getVirtualFiles());
     }
 
@@ -62,7 +60,7 @@ class CompositeProjectRoot implements ProjectRoot {
   @NotNull
   public String[] getUrls() {
     final List<String> result = new ArrayList<String>();
-    for (ProjectRoot root : myRoots) {
+    for (SdkRoot root : myRoots) {
       ContainerUtil.addAll(result, root.getUrls());
     }
     return ArrayUtil.toStringArray(result);
@@ -73,26 +71,26 @@ class CompositeProjectRoot implements ProjectRoot {
     return true;
   }
 
-  void remove(@NotNull ProjectRoot root) {
+  void remove(@NotNull SdkRoot root) {
     myRoots.remove(root);
   }
 
   @NotNull
-  ProjectRoot add(@NotNull VirtualFile virtualFile) {
-    final SimpleProjectRoot root = new SimpleProjectRoot(virtualFile);
+  SdkRoot add(@NotNull VirtualFile virtualFile) {
+    final SimpleSdkRoot root = new SimpleSdkRoot(virtualFile);
     myRoots.add(root);
     return root;
   }
 
-  void add(@NotNull ProjectRoot root) {
+  void add(@NotNull SdkRoot root) {
     myRoots.add(root);
   }
 
   void remove(@NotNull VirtualFile root) {
-    for (Iterator<ProjectRoot> iterator = myRoots.iterator(); iterator.hasNext();) {
-      ProjectRoot projectRoot = iterator.next();
-      if (projectRoot instanceof SimpleProjectRoot) {
-        SimpleProjectRoot r = (SimpleProjectRoot)projectRoot;
+    for (Iterator<SdkRoot> iterator = myRoots.iterator(); iterator.hasNext();) {
+      SdkRoot sdkRoot = iterator.next();
+      if (sdkRoot instanceof SimpleSdkRoot) {
+        SimpleSdkRoot r = (SimpleSdkRoot)sdkRoot;
         if (root.equals(r.getFile())) {
           iterator.remove();
         }
@@ -104,25 +102,23 @@ class CompositeProjectRoot implements ProjectRoot {
     myRoots.clear();
   }
 
-  public void readExternal(Element element) throws InvalidDataException {
+  public void readExternal(Element element) {
     final List<Element> children = element.getChildren();
     for (Element aChildren : children) {
-      myRoots.add(ProjectRootUtil.read(aChildren));
+      myRoots.add(SdkRootStateUtil.readRoot(aChildren));
     }
   }
 
-  public void writeExternal(Element element) throws WriteExternalException {
-    for (ProjectRoot root : myRoots) {
-      final Element e = ProjectRootUtil.write(root);
-      if (e != null) {
-        element.addContent(e);
-      }
+  public void writeExternal(Element element)  {
+    for (SdkRoot root : myRoots) {
+      final Element e = SdkRootStateUtil.writeRoot(root);
+      element.addContent(e);
     }
   }
 
   @Override
   public void update() {
-    for (ProjectRoot root : myRoots) {
+    for (SdkRoot root : myRoots) {
       root.update();
     }
   }
