@@ -2543,7 +2543,6 @@
     <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.WebResourcesFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider"/>
-    <contentFolderSupportPatcher implementation="org.mustbe.consulo.roots.DeprecatedContentFolderSupportPatcher"/>
 
     <contentFolderPropertyProvider implementation="org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
 
