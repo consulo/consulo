@@ -33,13 +33,6 @@ public class Couple<T> extends Pair<T, T> {
     return new Couple<T>(first, second);
   }
 
-  @NotNull
-  @Deprecated
-  @DeprecationInfo(value = "Use #of method", until = "1.0")
-  public static <T> Couple<T> newOne(T first, T second) {
-    return of(first, second);
-  }
-
   @SuppressWarnings("unchecked")
   public static <T> Couple<T> getEmpty() {
     return EMPTY_COUPLE;
