@@ -121,7 +121,8 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
         e.getPresentation().setEnabled(false);
       }
       else {
-        e.getPresentation().setEnabled(getSelectedObject() instanceof SdkImpl);
+        Object selectedObject = getSelectedObject();
+        e.getPresentation().setEnabled(selectedObject instanceof SdkImpl && !(((SdkImpl)selectedObject).getSdkType() instanceof UnknownSdkType));
       }
     }
   }
