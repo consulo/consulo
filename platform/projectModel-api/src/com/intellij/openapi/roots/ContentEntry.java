@@ -19,7 +19,6 @@ import com.google.common.base.Predicate;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
@@ -58,11 +57,6 @@ public interface ContentEntry extends Synthetic {
 
   @NotNull
   String[] getFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate);
-
-  @NotNull
-  @Deprecated
-  @DeprecationInfo(value = "Use ContentEntry#getFolders(ContentFolderScopes.all())", until = "1.0")
-  ContentFolder[] getFolders();
 
   @NotNull
   ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderTypeProvider contentFolderType);

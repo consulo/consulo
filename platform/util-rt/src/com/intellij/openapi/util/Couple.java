@@ -16,7 +16,6 @@
 package com.intellij.openapi.util;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author Konstantin Bulenkov

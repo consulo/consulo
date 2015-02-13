@@ -17,7 +17,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
@@ -119,13 +118,6 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
       list.add(contentFolder.getUrl());
     }
     return ArrayUtil.toStringArray(list);
-  }
-
-  @NotNull
-  @Override
-  public ContentFolder[] getFolders() {
-    final List<ContentFolder> contentFolders = getFolders0(Predicates.<ContentFolderTypeProvider>alwaysTrue());
-    return contentFolders.isEmpty() ? ContentFolder.EMPTY_ARRAY : contentFolders.toArray(new ContentFolder[contentFolders.size()]);
   }
 
   private List<ContentFolder> getFolders0(Predicate<ContentFolderTypeProvider> predicate) {
