@@ -35,17 +35,6 @@ public class ArtifactPointerImpl extends NamedPointerImpl<Artifact> implements A
 
   @Override
   @NotNull
-  public String getArtifactName() {
-    return getName();
-  }
-
-  @Override
-  public Artifact getArtifact() {
-    return get();
-  }
-
-  @Override
-  @NotNull
   public String getArtifactName(@NotNull ArtifactModel artifactModel) {
     final Artifact artifact = get();
     if (artifact != null) {

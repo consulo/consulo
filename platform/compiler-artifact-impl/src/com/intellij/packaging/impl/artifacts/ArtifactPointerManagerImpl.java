@@ -73,24 +73,6 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
     return create(artifactModel.getOriginalArtifact(artifact));
   }
 
-  @NotNull
-  @Override
-  public ArtifactPointer createPointer(@NotNull String name) {
-    return create(name);
-  }
-
-  @NotNull
-  @Override
-  public ArtifactPointer createPointer(@NotNull Artifact artifact) {
-    return create(artifact);
-  }
-
-  @NotNull
-  @Override
-  public ArtifactPointer createPointer(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel) {
-    return create(artifact, artifactModel);
-  }
-
   @Nullable
   @Override
   public Artifact findByName(@NotNull String name) {

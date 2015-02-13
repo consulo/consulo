@@ -25,7 +25,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -41,22 +40,11 @@ public abstract class SdkType implements SdkTypeId {
   }
 
   /**
-   * @return path to set up file chooser to or null if not applicable
-   */
-  @Nullable
-  @Deprecated
-  @DeprecationInfo(value = "Please override #suggestHomePaths()", until = "1.0")
-  public String suggestHomePath() {
-    return null;
-  }
-
-  /**
    * @return paths for select in file chooser. Selected path will exists on file system
    */
   @NotNull
   public Collection<String> suggestHomePaths() {
-    String s = suggestHomePath();
-    return s == null ? Collections.<String>emptyList() : Collections.singletonList(s);
+    return Collections.<String>emptyList();
   }
 
   public boolean canCreatePredefinedSdks() {
@@ -105,17 +93,10 @@ public abstract class SdkType implements SdkTypeId {
 
   }
 
-  @Nullable
-  @Deprecated
-  @DeprecationInfo(value = "Override loadAdditionalData(Sdk, Element)", until = "1.0")
-  public SdkAdditionalData loadAdditionalData(Element additional) {
-    return null;
-  }
-
   @Override
   @Nullable
   public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional) {
-    return loadAdditionalData(additional);
+    return null;
   }
 
   @Override
@@ -188,13 +169,6 @@ public abstract class SdkType implements SdkTypeId {
   @Nullable
   public String getDefaultDocumentationUrl(final @NotNull Sdk sdk) {
     return null;
-  }
-
-  @Nullable
-  @Deprecated
-  @DeprecationInfo(value = "Use SdkType.EP_NAME.findExtension()", until = "1.")
-  public static <T extends SdkType> T findInstance(final Class<T> sdkTypeClass) {
-    return EP_NAME.findExtension(sdkTypeClass);
   }
 
   public boolean isRootTypeApplicable(final OrderRootType type) {
