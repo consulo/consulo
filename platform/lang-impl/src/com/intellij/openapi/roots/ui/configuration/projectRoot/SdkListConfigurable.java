@@ -27,6 +27,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.UnknownSdkType;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
@@ -92,7 +93,8 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       final Object o = getSelectedObject();
       if (o instanceof SdkImpl) {
         final SdkImpl selected = (SdkImpl)o;
-        final String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, selected.getName() + "2", new NonEmptyInputValidator(){
+        String defaultNewName = SdkConfigurationUtil.createUniqueSdkName(selected.getName(), mySdksTreeModel.getProjectSdks().values()) ;
+        final String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, defaultNewName, new NonEmptyInputValidator(){
           @Override
           public boolean checkInput(String inputString) {
             return super.checkInput(inputString) && mySdksTreeModel.findSdk(inputString) == null;
