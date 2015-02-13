@@ -20,6 +20,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -282,7 +283,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
   public void reset() {
     // need this to ensure VFS operations will not block because of storage flushing
     // and other maintenance IO tasks run in background
-    HeavyProcessLatch.INSTANCE.processStarted();
+    AccessToken token = HeavyProcessLatch.INSTANCE.processStarted("Resetting Project Structure");
 
     try {
       myWasUiDisposed = false;
@@ -317,7 +318,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
       }
     }
     finally {
-      HeavyProcessLatch.INSTANCE.processFinished();
+      token.finish();
     }
   }
 
