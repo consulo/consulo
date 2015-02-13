@@ -293,7 +293,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   @Override
   public void apply() throws ConfigurationException {
-    boolean modifiedJdks = false;
+    boolean modifiedSdks = false;
     for (int i = 0; i < myRoot.getChildCount(); i++) {
       final TreeNode groupNode = myRoot.getChildAt(i);
 
@@ -302,12 +302,12 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
         final NamedConfigurable configurable = sdkNode.getConfigurable();
         if (configurable.isModified()) {
           configurable.apply();
-          modifiedJdks = true;
+          modifiedSdks = true;
         }
       }
     }
 
-    if (mySdksTreeModel.isModified() || modifiedJdks) mySdksTreeModel.apply(this);
+    if (mySdksTreeModel.isModified() || modifiedSdks) mySdksTreeModel.apply(this);
   }
 
   @Override
