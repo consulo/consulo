@@ -40,14 +40,13 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.util.containers.HashMap;
 import com.maddyhome.idea.copyright.actions.UpdateCopyrightProcessor;
-import com.maddyhome.idea.copyright.options.LanguageOptions;
-import com.maddyhome.idea.copyright.options.Options;
-import com.maddyhome.idea.copyright.util.FileTypeUtil;
 import com.maddyhome.idea.copyright.util.NewFileTracker;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.copyright.config.CopyrightFileConfig;
+import org.mustbe.consulo.copyright.config.CopyrightFileConfigManager;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -64,13 +63,12 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
   private CopyrightProfile myDefaultCopyright = null;
   private final LinkedHashMap<String, String> myModule2Copyrights = new LinkedHashMap<String, String>();
   private final Map<String, CopyrightProfile> myCopyrights = new HashMap<String, CopyrightProfile>();
-  private final Options myOptions = new Options();
+  private final CopyrightFileConfigManager myCopyrightFileConfigManager = new CopyrightFileConfigManager();
 
   public CopyrightManager(@NotNull Project project,
                           @NotNull final EditorFactory editorFactory,
                           @NotNull final Application application,
                           @NotNull final FileDocumentManager fileDocumentManager,
-                          @NotNull final FileTypeUtil fileTypeUtil,
                           @NotNull final ProjectRootManager projectRootManager,
                           @NotNull final PsiManager psiManager,
                           @NotNull StartupManager startupManager) {
@@ -93,7 +91,7 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
               final VirtualFile virtualFile = fileDocumentManager.getFile(document);
               if (virtualFile == null) return;
               if (!newFileTracker.poll(virtualFile)) return;
-              if (!fileTypeUtil.isSupportedFile(virtualFile)) return;
+              if (!CopyrightUpdaters.hasExtension(virtualFile)) return;
               final Module module = projectRootManager.getFileIndex().getModuleForFile(virtualFile);
               if (module == null) return;
               final PsiFile file = psiManager.findFile(virtualFile);
@@ -158,7 +156,7 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
       myCopyrights.put(copyrightProfile.getName(), copyrightProfile);
     }
     myDefaultCopyright = myCopyrights.get(element.getAttributeValue(DEFAULT));
-    myOptions.readExternal(element);
+    myCopyrightFileConfigManager.readExternal(element);
   }
 
   @Override
@@ -177,7 +175,7 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
     }
     element.addContent(map);
     element.setAttribute(DEFAULT, myDefaultCopyright != null ? myDefaultCopyright.getName() : "");
-    myOptions.writeExternal(element);
+    myCopyrightFileConfigManager.writeExternal(element);
   }
 
 
@@ -257,7 +255,7 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
   public CopyrightProfile getCopyrightOptions(@NotNull PsiFile file) {
     final VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null ||
-        myOptions.getOptions(virtualFile.getFileType().getName()).getFileTypeOverride() == LanguageOptions.NO_COPYRIGHT) {
+        myCopyrightFileConfigManager.getOptions(virtualFile.getFileType()).getFileTypeOverride() == CopyrightFileConfig.NO_COPYRIGHT) {
       return null;
     }
     final DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
@@ -278,8 +276,8 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
     return myDefaultCopyright != null ? myDefaultCopyright : null;
   }
 
-  public Options getOptions() {
-    return myOptions;
+  public CopyrightFileConfigManager getCopyrightFileConfigManager() {
+    return myCopyrightFileConfigManager;
   }
 
   public void replaceCopyright(String displayName, CopyrightProfile copyrightProfile) {

@@ -16,6 +16,7 @@
 package com.intellij.openapi.options;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -45,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @see SearchableConfigurable
  */
+@ArrayFactoryFields
 public interface Configurable extends UnnamedConfigurable {
 
   ExtensionPointName<ConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("com.intellij.applicationConfigurable");

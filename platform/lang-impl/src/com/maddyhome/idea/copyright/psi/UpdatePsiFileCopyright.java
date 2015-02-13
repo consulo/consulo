@@ -20,11 +20,11 @@ import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -34,220 +34,40 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.IncorrectOperationException;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
-import com.maddyhome.idea.copyright.options.LanguageOptions;
+import com.maddyhome.idea.copyright.pattern.EntityUtil;
+import com.maddyhome.idea.copyright.pattern.VelocityHelper;
 import com.maddyhome.idea.copyright.util.FileTypeUtil;
+import org.consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.copyright.config.CopyrightFileConfig;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class UpdatePsiFileCopyright extends AbstractUpdateCopyright {
-  private final CopyrightProfile myOptions;
+@Logger
+public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
+  private final T myFileConfig;
+  @NotNull
+  private final PsiFile myPsiFile;
+  @NotNull
+  private final CopyrightProfile myCopyrightProfile;
+  private final Set<CommentAction> myActions = new TreeSet<CommentAction>();
 
-  protected UpdatePsiFileCopyright(Project project, Module module, VirtualFile root, CopyrightProfile options) {
-    super(project, module, root, options);
-    myOptions = options;
+  private String myCommentText;
 
-    PsiManager manager = PsiManager.getInstance(project);
-    file = manager.findFile(root);
-    FileType type = FileTypeUtil.getInstance().getFileTypeByFile(root);
-    langOpts = CopyrightManager.getInstance(project).getOptions().getMergedOptions(type.getName());
-  }
+  private FileType myFileType;
 
-  @Override
-  public void prepare() {
-    if (file == null) {
-      logger.info("No file for root: " + getRoot());
-      return;
-    }
+  @SuppressWarnings("unchecked")
+  protected UpdatePsiFileCopyright(@NotNull PsiFile psiFile, @NotNull CopyrightProfile copyrightProfile) {
+    myPsiFile = psiFile;
+    myCopyrightProfile = copyrightProfile;
 
-    if (accept()) {
-      scanFile();
-    }
-  }
-
-  @Override
-  public void complete() throws Exception {
-    if (file == null) {
-      logger.info("No file for root: " + getRoot());
-      return;
-    }
-
-    if (accept()) {
-      processActions();
-    }
-  }
-
-  protected boolean accept() {
-    return !(file instanceof PsiPlainTextFile);
-  }
-
-  protected abstract void scanFile();
-
-  protected void checkComments(PsiElement first, PsiElement last, boolean commentHere) {
-    List<PsiComment> comments = new ArrayList<PsiComment>();
-    collectComments(first, last, comments);
-    checkComments(last, commentHere, comments);
-  }
-
-  protected void collectComments(PsiElement first, PsiElement last, List<PsiComment> comments) {
-    if (first == last && first instanceof PsiComment) {
-      comments.add((PsiComment)first);
-      return;
-    }
-    PsiElement elem = first;
-    while (elem != last && elem != null) {
-      if (elem instanceof PsiComment) {
-        comments.add((PsiComment)elem);
-        logger.debug("found comment");
-      }
-
-      elem = getNextSibling(elem);
-    }
-  }
-
-  protected void checkComments(PsiElement last, boolean commentHere, List<PsiComment> comments) {
-    try {
-      final String keyword = myOptions.getKeyword();
-      final LinkedHashSet<CommentRange> found = new LinkedHashSet<CommentRange>();
-      Document doc = null;
-      if (!StringUtil.isEmpty(keyword)) {
-        Pattern pattern = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE);
-        doc = FileDocumentManager.getInstance().getDocument(getFile().getVirtualFile());
-        for (int i = 0; i < comments.size(); i++) {
-          PsiComment comment = comments.get(i);
-          String text = comment.getText();
-          Matcher match = pattern.matcher(text);
-          if (match.find()) {
-            found.add(getLineCopyrightComments(comments, doc, i, comment));
-          }
-        }
-      }
-
-      // Default insertion point to just before user chosen marker (package, import, class)
-      PsiElement point = last;
-      if (commentHere && !comments.isEmpty() && langOpts.isRelativeBefore()) {
-        // Insert before first comment within this section of code.
-        point = comments.get(0);
-      }
-
-      if (commentHere && found.size() == 1) {
-        CommentRange range = found.iterator().next();
-        // Is the comment in the right place?
-        if (langOpts.isRelativeBefore() && range.getFirst() == comments.get(0) ||
-            !langOpts.isRelativeBefore() && range.getLast() == comments.get(comments.size() - 1)) {
-          // Check to see if current copyright comment matches new one.
-          String newComment = getCommentText("", "");
-          resetCommentText();
-          String oldComment = doc.getCharsSequence()
-            .subSequence(range.getFirst().getTextRange().getStartOffset(), range.getLast().getTextRange().getEndOffset()).toString().trim();
-          if (!StringUtil.isEmptyOrSpaces(myOptions.getAllowReplaceKeyword()) && !oldComment.contains(myOptions.allowReplaceKeyword)) {
-            return;
-          }
-          if (newComment.trim().equals(oldComment)) {
-            if (!getLanguageOptions().isAddBlankAfter()) {
-              // TODO - do we need option to remove blank line after?
-              return; // Nothing to do since the comment is the same
-            }
-            PsiElement next = getNextSibling(range.getLast());
-            if (next instanceof PsiWhiteSpace && countNewline(next.getText()) > 1) {
-              return;
-            }
-            point = range.getFirst();
-          }
-          else if (!newComment.isEmpty()) {
-            int start = range.getFirst().getTextRange().getStartOffset();
-            int end = range.getLast().getTextRange().getEndOffset();
-            addAction(new CommentAction(CommentAction.ACTION_REPLACE, start, end));
-
-            return;
-          }
-        }
-      }
-
-      for (CommentRange range : found) {
-        // Remove the old copyright
-        int start = range.getFirst().getTextRange().getStartOffset();
-        int end = range.getLast().getTextRange().getEndOffset();
-        // If this is the only comment then remove the whitespace after unless there is none before
-        if (range.getFirst() == comments.get(0) && range.getLast() == comments.get(comments.size() - 1)) {
-          int startLen = 0;
-          if (getPreviousSibling(range.getFirst()) instanceof PsiWhiteSpace) {
-            startLen = countNewline(getPreviousSibling(range.getFirst()).getText());
-          }
-          int endLen = 0;
-          if (getNextSibling(range.getLast()) instanceof PsiWhiteSpace) {
-            endLen = countNewline(getNextSibling(range.getLast()).getText());
-          }
-          if (startLen == 1 && getPreviousSibling(range.getFirst()).getTextRange().getStartOffset() > 0) {
-            start = getPreviousSibling(range.getFirst()).getTextRange().getStartOffset();
-          }
-          else if (endLen > 0) {
-            end = getNextSibling(range.getLast()).getTextRange().getEndOffset();
-          }
-        }
-        // If this is the last comment then remove the whitespace before the comment
-        else if (range.getLast() == comments.get(comments.size() - 1)) {
-          if (getPreviousSibling(range.getFirst()) instanceof PsiWhiteSpace &&
-              countNewline(getPreviousSibling(range.getFirst()).getText()) > 1) {
-            start = getPreviousSibling(range.getFirst()).getTextRange().getStartOffset();
-          }
-        }
-        // If this is the first or middle comment then remove the whitespace after the comment
-        else if (getNextSibling(range.getLast()) instanceof PsiWhiteSpace) {
-          end = getNextSibling(range.getLast()).getTextRange().getEndOffset();
-        }
-
-        addAction(new CommentAction(CommentAction.ACTION_DELETE, start, end));
-      }
-
-      // Finally add the comment if user chose this section.
-      if (commentHere) {
-        String suffix = "\n";
-        if (point != last && getPreviousSibling(point) != null && getPreviousSibling(point) instanceof PsiWhiteSpace) {
-          suffix = getPreviousSibling(point).getText();
-          if (countNewline(suffix) == 1) {
-            suffix = '\n' + suffix;
-          }
-        }
-        if (point != last && getPreviousSibling(point) == null) {
-          suffix = "\n\n";
-        }
-        if (getLanguageOptions().isAddBlankAfter() && countNewline(suffix) == 1) {
-          suffix += "\n";
-        }
-        String prefix = "";
-        if (getPreviousSibling(point) != null) {
-          if (getPreviousSibling(point) instanceof PsiComment) {
-            prefix = "\n\n";
-          }
-          if (getPreviousSibling(point) instanceof PsiWhiteSpace &&
-              getPreviousSibling(getPreviousSibling(point)) != null &&
-              getPreviousSibling(getPreviousSibling(point)) instanceof PsiComment) {
-            String ws = getPreviousSibling(point).getText();
-            int cnt = countNewline(ws);
-            if (cnt == 1) {
-              prefix = "\n";
-            }
-          }
-        }
-
-        int pos = 0;
-        if (point != null) {
-          final TextRange textRange = point.getTextRange();
-          if (textRange != null) {
-            pos = textRange.getStartOffset();
-          }
-        }
-        addAction(new CommentAction(pos, prefix, suffix));
-      }
-    }
-    catch (Exception e) {
-      logger.error(e);
-    }
+    VirtualFile virtualFile = psiFile.getVirtualFile();
+    assert virtualFile != null;
+    myFileType = virtualFile.getFileType();
+    myFileConfig = (T)CopyrightManager.getInstance(psiFile.getProject()).getCopyrightFileConfigManager().getMergedOptions(myFileType);
   }
 
   private static CommentRange getLineCopyrightComments(List<PsiComment> comments, Document doc, int i, PsiComment comment) {
@@ -291,16 +111,214 @@ public abstract class UpdatePsiFileCopyright extends AbstractUpdateCopyright {
     return doc.getLineNumber(textRange.getStartOffset()) == doc.getLineNumber(textRange.getEndOffset());
   }
 
-  protected PsiFile getFile() {
-    return file;
+  public void process() throws Exception {
+    if (accept()) {
+      scanFile();
+
+      processActions();
+    }
   }
 
-  protected LanguageOptions getLanguageOptions() {
-    return langOpts;
+  protected boolean accept() {
+    return !(myPsiFile instanceof PsiPlainTextFile);
+  }
+
+  protected abstract void scanFile();
+
+  protected void checkComments(PsiElement first, PsiElement last, boolean commentHere) {
+    List<PsiComment> comments = new ArrayList<PsiComment>();
+    collectComments(first, last, comments);
+    checkComments(last, commentHere, comments);
+  }
+
+  protected void collectComments(PsiElement first, PsiElement last, List<PsiComment> comments) {
+    if (first == last && first instanceof PsiComment) {
+      comments.add((PsiComment)first);
+      return;
+    }
+    PsiElement elem = first;
+    while (elem != last && elem != null) {
+      if (elem instanceof PsiComment) {
+        comments.add((PsiComment)elem);
+        LOGGER.debug("found comment");
+      }
+
+      elem = getNextSibling(elem);
+    }
+  }
+
+  protected void checkComments(PsiElement last, boolean commentHere, List<PsiComment> comments) {
+    try {
+      final String keyword = myCopyrightProfile.getKeyword();
+      final LinkedHashSet<CommentRange> found = new LinkedHashSet<CommentRange>();
+      Document doc = null;
+      if (!StringUtil.isEmpty(keyword)) {
+        Pattern pattern = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE);
+        doc = FileDocumentManager.getInstance().getDocument(getFile().getVirtualFile());
+        for (int i = 0; i < comments.size(); i++) {
+          PsiComment comment = comments.get(i);
+          String text = comment.getText();
+          Matcher match = pattern.matcher(text);
+          if (match.find()) {
+            found.add(getLineCopyrightComments(comments, doc, i, comment));
+          }
+        }
+      }
+
+      // Default insertion point to just before user chosen marker (package, import, class)
+      PsiElement point = last;
+      if (commentHere && !comments.isEmpty() && myFileConfig.isRelativeBefore()) {
+        // Insert before first comment within this section of code.
+        point = comments.get(0);
+      }
+
+      if (commentHere && found.size() == 1) {
+        CommentRange range = found.iterator().next();
+        // Is the comment in the right place?
+        if (myFileConfig.isRelativeBefore() && range.getFirst() == comments.get(0) ||
+            !myFileConfig.isRelativeBefore() && range.getLast() == comments.get(comments.size() - 1)) {
+          // Check to see if current copyright comment matches new one.
+          String newComment = getCommentText("", "");
+          myCommentText = null;
+          String oldComment =
+                  doc.getCharsSequence().subSequence(range.getFirst().getTextRange().getStartOffset(), range.getLast().getTextRange().getEndOffset()).toString()
+                          .trim();
+          if (!StringUtil.isEmptyOrSpaces(myCopyrightProfile.getAllowReplaceKeyword()) && !oldComment.contains(myCopyrightProfile.allowReplaceKeyword)) {
+            return;
+          }
+          if (newComment.trim().equals(oldComment)) {
+            if (!getLanguageOptions().isAddBlankAfter()) {
+              // TODO - do we need option to remove blank line after?
+              return; // Nothing to do since the comment is the same
+            }
+            PsiElement next = getNextSibling(range.getLast());
+            if (next instanceof PsiWhiteSpace && StringUtil.countNewLines(next.getText()) > 1) {
+              return;
+            }
+            point = range.getFirst();
+          }
+          else if (!newComment.isEmpty()) {
+            int start = range.getFirst().getTextRange().getStartOffset();
+            int end = range.getLast().getTextRange().getEndOffset();
+            addAction(new CommentAction(CommentAction.ACTION_REPLACE, start, end));
+
+            return;
+          }
+        }
+      }
+
+      for (CommentRange range : found) {
+        // Remove the old copyright
+        int start = range.getFirst().getTextRange().getStartOffset();
+        int end = range.getLast().getTextRange().getEndOffset();
+        // If this is the only comment then remove the whitespace after unless there is none before
+        if (range.getFirst() == comments.get(0) && range.getLast() == comments.get(comments.size() - 1)) {
+          int startLen = 0;
+          if (getPreviousSibling(range.getFirst()) instanceof PsiWhiteSpace) {
+            startLen = StringUtil.countNewLines(getPreviousSibling(range.getFirst()).getText());
+          }
+          int endLen = 0;
+          if (getNextSibling(range.getLast()) instanceof PsiWhiteSpace) {
+            endLen = StringUtil.countNewLines(getNextSibling(range.getLast()).getText());
+          }
+          if (startLen == 1 && getPreviousSibling(range.getFirst()).getTextRange().getStartOffset() > 0) {
+            start = getPreviousSibling(range.getFirst()).getTextRange().getStartOffset();
+          }
+          else if (endLen > 0) {
+            end = getNextSibling(range.getLast()).getTextRange().getEndOffset();
+          }
+        }
+        // If this is the last comment then remove the whitespace before the comment
+        else if (range.getLast() == comments.get(comments.size() - 1)) {
+          if (getPreviousSibling(range.getFirst()) instanceof PsiWhiteSpace && StringUtil.countNewLines(getPreviousSibling(range.getFirst()).getText()) > 1) {
+            start = getPreviousSibling(range.getFirst()).getTextRange().getStartOffset();
+          }
+        }
+        // If this is the first or middle comment then remove the whitespace after the comment
+        else if (getNextSibling(range.getLast()) instanceof PsiWhiteSpace) {
+          end = getNextSibling(range.getLast()).getTextRange().getEndOffset();
+        }
+
+        addAction(new CommentAction(CommentAction.ACTION_DELETE, start, end));
+      }
+
+      // Finally add the comment if user chose this section.
+      if (commentHere) {
+        String suffix = "\n";
+        if (point != last && getPreviousSibling(point) != null && getPreviousSibling(point) instanceof PsiWhiteSpace) {
+          suffix = getPreviousSibling(point).getText();
+          if (StringUtil.countNewLines(suffix) == 1) {
+            suffix = '\n' + suffix;
+          }
+        }
+        if (point != last && getPreviousSibling(point) == null) {
+          suffix = "\n\n";
+        }
+        if (getLanguageOptions().isAddBlankAfter() && StringUtil.countNewLines(suffix) == 1) {
+          suffix += "\n";
+        }
+        String prefix = "";
+        if (getPreviousSibling(point) != null) {
+          if (getPreviousSibling(point) instanceof PsiComment) {
+            prefix = "\n\n";
+          }
+          if (getPreviousSibling(point) instanceof PsiWhiteSpace &&
+              getPreviousSibling(getPreviousSibling(point)) != null &&
+              getPreviousSibling(getPreviousSibling(point)) instanceof PsiComment) {
+            String ws = getPreviousSibling(point).getText();
+            int cnt = StringUtil.countNewLines(ws);
+            if (cnt == 1) {
+              prefix = "\n";
+            }
+          }
+        }
+
+        int pos = 0;
+        if (point != null) {
+          final TextRange textRange = point.getTextRange();
+          if (textRange != null) {
+            pos = textRange.getStartOffset();
+          }
+        }
+        addAction(new CommentAction(pos, prefix, suffix));
+      }
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+    }
+  }
+
+  @NotNull
+  public PsiFile getFile() {
+    return myPsiFile;
+  }
+
+  @NotNull
+  public CopyrightFileConfig getFileConfig() {
+    return myFileConfig;
+  }
+
+  @NotNull
+  public FileType getFileType() {
+    return myFileType;
+  }
+
+  @Nullable
+  public Module getModule() {
+    return ModuleUtilCore.findModuleForPsiElement(myPsiFile);
+  }
+
+  @NotNull
+  public Project getProject() {
+    return myPsiFile.getProject();
+  }
+
+  protected CopyrightFileConfig getLanguageOptions() {
+    return myFileConfig;
   }
 
   protected void addAction(CommentAction action) {
-    actions.add(action);
+    myActions.add(action);
   }
 
   protected PsiElement getPreviousSibling(PsiElement element) {
@@ -316,9 +334,9 @@ public abstract class UpdatePsiFileCopyright extends AbstractUpdateCopyright {
     app.runWriteAction(new Runnable() {
       @Override
       public void run() {
-        Document doc = FileDocumentManager.getInstance().getDocument(getRoot());
-        PsiDocumentManager.getInstance(file.getProject()).doPostponedOperationsAndUnblockDocument(doc);
-        for (CommentAction action : actions) {
+        Document doc = FileDocumentManager.getInstance().getDocument(myPsiFile.getVirtualFile());
+        PsiDocumentManager.getInstance(myPsiFile.getProject()).doPostponedOperationsAndUnblockDocument(doc);
+        for (CommentAction action : myActions) {
           int start = action.getStart();
           int end = action.getEnd();
 
@@ -341,7 +359,26 @@ public abstract class UpdatePsiFileCopyright extends AbstractUpdateCopyright {
     });
   }
 
+  protected String getCommentText(String prefix, String suffix) {
+    if (myCommentText == null) {
+      String base = EntityUtil.decode(myCopyrightProfile.getNotice());
+      if (base.isEmpty()) {
+        myCommentText = "";
+      }
+      else {
+        String expanded = VelocityHelper.evaluate(myPsiFile, getProject(), getModule(), base);
+        String cmt = FileTypeUtil.buildComment(myFileType, expanded, myFileConfig);
+        myCommentText = StringUtil.convertLineSeparators(prefix + cmt + suffix);
+      }
+    }
+
+    return myCommentText;
+  }
+
   private static class CommentRange {
+    private final PsiElement first;
+    private final PsiElement last;
+
     public CommentRange(PsiElement first, PsiElement last) {
       this.first = first;
       this.last = last;
@@ -354,9 +391,6 @@ public abstract class UpdatePsiFileCopyright extends AbstractUpdateCopyright {
     public PsiElement getLast() {
       return last;
     }
-
-    private final PsiElement first;
-    private final PsiElement last;
 
     @Override
     public boolean equals(Object o) {
@@ -383,6 +417,11 @@ public abstract class UpdatePsiFileCopyright extends AbstractUpdateCopyright {
     public static final int ACTION_INSERT = 1;
     public static final int ACTION_REPLACE = 2;
     public static final int ACTION_DELETE = 3;
+    private final int type;
+    private final int start;
+    private final int end;
+    private String prefix = null;
+    private String suffix = null;
 
     public CommentAction(int pos, String prefix, String suffix) {
       type = ACTION_INSERT;
@@ -428,17 +467,6 @@ public abstract class UpdatePsiFileCopyright extends AbstractUpdateCopyright {
 
       return diff;
     }
-
-    private final int type;
-    private final int start;
-    private final int end;
-    private String prefix = null;
-    private String suffix = null;
   }
 
-  private final PsiFile file;
-  private final LanguageOptions langOpts;
-  private final TreeSet<CommentAction> actions = new TreeSet<CommentAction>();
-
-  private static final Logger logger = Logger.getInstance(UpdatePsiFileCopyright.class.getName());
 }

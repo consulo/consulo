@@ -27,11 +27,13 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.log.SimpleLog4JLogSystem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.StringWriter;
 
 public class VelocityHelper {
-  public static String evaluate(PsiFile file, Project project, Module module, String template) {
+  public static String evaluate(@Nullable PsiFile file, @Nullable Project project, @Nullable Module module, @NotNull String template) {
     VelocityEngine engine = getEngine();
 
     VelocityContext vc = new VelocityContext();

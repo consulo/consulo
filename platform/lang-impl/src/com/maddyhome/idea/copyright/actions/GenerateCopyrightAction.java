@@ -26,8 +26,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.maddyhome.idea.copyright.CopyrightManager;
+import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.ui.CopyrightProjectConfigurable;
-import com.maddyhome.idea.copyright.util.FileTypeUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class GenerateCopyrightAction extends AnAction {
@@ -41,7 +41,7 @@ public class GenerateCopyrightAction extends AnAction {
     }
 
     PsiFile file = getFile(context, project);
-    if (file == null || !FileTypeUtil.isSupportedFile(file)) {
+    if (file == null || !CopyrightUpdaters.hasExtension(file)) {
       presentation.setEnabled(false);
     }
   }

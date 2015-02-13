@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,24 @@ package com.maddyhome.idea.copyright.psi;
 
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
-import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.ui.TemplateCommentPanel;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.copyright.config.CopyrightFileConfig;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 13.02.15
  */
-public abstract class UpdateCopyrightsProvider<T extends CopyrightFileConfig> {
+public abstract class BaseUpdateCopyrightsProvider extends UpdateCopyrightsProvider<CopyrightFileConfig> {
   @NotNull
-  public abstract UpdatePsiFileCopyright<T> createInstance(@NotNull PsiFile file, @NotNull CopyrightProfile copyrightProfile);
+  @Override
+  public CopyrightFileConfig createDefaultOptions() {
+    return new CopyrightFileConfig();
+  }
 
   @NotNull
-  public abstract T createDefaultOptions();
-
-  @NotNull
-  public abstract TemplateCommentPanel createConfigurable(@NotNull Project project, @NotNull TemplateCommentPanel parentPane, @NotNull FileType fileType);
-
-  public boolean isAllowSeparator() {
-    return true;
+  @Override
+  public TemplateCommentPanel createConfigurable(@NotNull Project project, @NotNull TemplateCommentPanel parentPane, @NotNull FileType fileType) {
+    return new TemplateCommentPanel(fileType, parentPane, project);
   }
 }

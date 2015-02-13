@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.maddyhome.idea.copyright.options;
+package org.mustbe.consulo.copyright.config;
 
 import com.intellij.openapi.util.*;
 import org.jdom.Element;
 
-public class LanguageOptions implements JDOMExternalizable, Cloneable {
+public class CopyrightFileConfig implements JDOMExternalizable, Cloneable {
+  public static final CopyrightFileConfig DEFAULT_SETTINGS_HOLDER = new CopyrightFileConfig();
+
   public static final int NO_COPYRIGHT = 1;
   public static final int USE_TEMPLATE = 2;
   public static final int USE_TEXT = 3;
@@ -28,9 +30,22 @@ public class LanguageOptions implements JDOMExternalizable, Cloneable {
   public static final int MAX_SEPARATOR_LENGTH = 300;
   public static final String DEFAULT_FILLER = " ";
 
-  private static final LanguageOptions DEFAULT_SETTINGS_HOLDER = new LanguageOptions();
+  public int fileTypeOverride;
+  public boolean relativeBefore;
+  public boolean addBlankAfter;
+  public int fileLocation;
 
-  public LanguageOptions() {
+  public boolean block;
+  public boolean separateBefore;
+  public boolean separateAfter;
+  public boolean prefixLines;
+  public int lenBefore;
+  public int lenAfter;
+  public boolean box;
+  public String filler;
+  public boolean trim;
+
+  public CopyrightFileConfig() {
     setBlock(true);
     setPrefixLines(true);
     setSeparateBefore(false);
@@ -45,7 +60,6 @@ public class LanguageOptions implements JDOMExternalizable, Cloneable {
     addBlankAfter = true;
     fileLocation = 1;
   }
-
 
   public int getFileTypeOverride() {
     return fileTypeOverride;
@@ -79,15 +93,17 @@ public class LanguageOptions implements JDOMExternalizable, Cloneable {
     this.fileLocation = fileLocation;
   }
 
-
+  @Override
   public void readExternal(Element element) throws InvalidDataException {
     DefaultJDOMExternalizer.readExternal(this, element);
   }
 
+  @Override
   public void writeExternal(Element element) throws WriteExternalException {
-    DefaultJDOMExternalizer.writeExternal(this, element, new DifferenceFilter<LanguageOptions>(this, DEFAULT_SETTINGS_HOLDER));
+    DefaultJDOMExternalizer.writeExternal(this, element, new DifferenceFilter<CopyrightFileConfig>(this, DEFAULT_SETTINGS_HOLDER));
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -96,7 +112,7 @@ public class LanguageOptions implements JDOMExternalizable, Cloneable {
       return false;
     }
 
-    final LanguageOptions that = (LanguageOptions)o;
+    final CopyrightFileConfig that = (CopyrightFileConfig)o;
 
     if (addBlankAfter != that.addBlankAfter) {
       return false;
@@ -135,6 +151,7 @@ public class LanguageOptions implements JDOMExternalizable, Cloneable {
 
   }
 
+  @Override
   public int hashCode() {
     int result;
     result = (block ? 1 : 0);
@@ -152,8 +169,9 @@ public class LanguageOptions implements JDOMExternalizable, Cloneable {
     return result;
   }
 
+  @Override
   public String toString() {
-    final StringBuffer sb = new StringBuffer();
+    final StringBuilder sb = new StringBuilder();
     sb.append("LanguageOptions");
 
     sb.append(", fileTypeOverride=").append(fileTypeOverride);
@@ -173,9 +191,9 @@ public class LanguageOptions implements JDOMExternalizable, Cloneable {
     return sb.toString();
   }
 
-  public LanguageOptions clone() throws CloneNotSupportedException {
-    LanguageOptions res = (LanguageOptions)super.clone();
-    return res;
+  @Override
+  public CopyrightFileConfig clone() throws CloneNotSupportedException {
+    return (CopyrightFileConfig)super.clone();
   }
 
   public boolean isBlock() {
@@ -249,19 +267,4 @@ public class LanguageOptions implements JDOMExternalizable, Cloneable {
   public void setTrim(boolean trim) {
     this.trim = trim;
   }
-
-  public int fileTypeOverride;
-  public boolean relativeBefore;
-  public boolean addBlankAfter;
-  public int fileLocation;
-
-  public boolean block;
-  public boolean separateBefore;
-  public boolean separateAfter;
-  public boolean prefixLines;
-  public int lenBefore;
-  public int lenAfter;
-  public boolean box;
-  public String filler;
-  public boolean trim;
 }

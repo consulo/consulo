@@ -18,38 +18,26 @@ package com.maddyhome.idea.copyright.util;
 
 import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.*;
-import com.intellij.openapi.project.ProjectCoreUtil;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.messages.MessageBus;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
-import com.maddyhome.idea.copyright.options.LanguageOptions;
+import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.copyright.config.CopyrightFileConfig;
 
 public class FileTypeUtil {
-  public static synchronized FileTypeUtil getInstance() {
-    return ServiceManager.getService(FileTypeUtil.class);
-  }
 
-  public FileTypeUtil(MessageBus bus) {
-    createMappings();
-    bus.connect().subscribe(FileTypeManager.TOPIC, new FileTypeListener.Adapter() {
-      @Override
-      public void fileTypesChanged(FileTypeEvent event) {
-        types = null;
-      }
-    });
-  }
-
-  public static String buildComment(FileType type, String template, LanguageOptions options) {
+  @NotNull
+  public static String buildComment(@NotNull FileType type, @NotNull String template, @NotNull CopyrightFileConfig options) {
     Commenter commenter = getCommenter(type);
+    UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(type);
+    return buildComment(commenter, updateCopyrightsProvider.isAllowSeparator(), template, options);
+  }
+
+  @NotNull
+  public static String buildComment(@Nullable Commenter commenter, boolean allowSeparator, @NotNull String template, @NotNull CopyrightFileConfig options) {
     if (commenter == null) {
       return "<No comments>";
     }
@@ -69,10 +57,9 @@ public class FileTypeUtil {
       be = ls;
     }
 
-    boolean allowSeparator = getInstance().allowSeparators(type);
     String filler = options.getFiller();
     if (!allowSeparator) {
-      if (options.getFiller() == LanguageOptions.DEFAULT_FILLER) {
+      if (options.getFiller() == CopyrightFileConfig.DEFAULT_FILLER) {
         filler = "~";
       }
     }
@@ -91,7 +78,7 @@ public class FileTypeUtil {
     StringBuilder pre = new StringBuilder(5);
     StringBuilder leader = new StringBuilder(5);
     StringBuilder post = new StringBuilder(5);
-    if (filler == LanguageOptions.DEFAULT_FILLER) {
+    if (filler == CopyrightFileConfig.DEFAULT_FILLER) {
       filler = open.substring(open.length() - 1);
     }
     int offset = 0;
@@ -198,48 +185,6 @@ public class FileTypeUtil {
     return preview.substring(0, preview.length() - 1);
   }
 
-  public boolean isSupportedFile(VirtualFile file) {
-    if (file == null || file.isDirectory()) {
-      return false;
-    }
-
-    if (ProjectCoreUtil.isProjectOrWorkspaceFile(file)) return false;
-    FileType type = file.getFileType();
-
-    return getMap().get(type.getName()) != null;
-  }
-
-  public static boolean isSupportedFile(PsiFile file) {
-    if (file == null || file instanceof PsiDirectory) {
-      return false;
-    }
-    final VirtualFile virtualFile = file.getVirtualFile();
-    if (virtualFile == null) return false;
-    if (ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile)) return false;
-    return isSupportedType(virtualFile.getFileType());
-  }
-
-  public FileType[] getSupportedTypes() {
-    HashSet<FileType> set = new HashSet<FileType>(getMap().values());
-    return set.toArray(new FileType[set.size()]);
-  }
-
-  public FileType getFileTypeByFile(VirtualFile file) {
-    FileType type = file.getFileType();
-
-    return getFileTypeByType(type);
-  }
-
-  public FileType getFileTypeByType(FileType type) {
-    return getMap().get(type.getName());
-  }
-
-  public String getFileTypeNameByName(String name) {
-    FileType type = getMap().get(name);
-
-    return type != null ? type.getName() : name;
-  }
-
   public static boolean hasBlockComment(FileType fileType) {
     Commenter commenter = getCommenter(fileType);
 
@@ -252,102 +197,10 @@ public class FileTypeUtil {
     return commenter != null && commenter.getLineCommentPrefix() != null;
   }
 
-  public boolean allowSeparators(FileType fileType) {
-    FileType type = getFileTypeByType(fileType);
-
-    return !noSeparators.contains(type);
-  }
-
-  private static Commenter getCommenter(FileType fileType) {
+  public static Commenter getCommenter(FileType fileType) {
     if (fileType instanceof LanguageFileType) {
       return LanguageCommenters.INSTANCE.forLanguage(((LanguageFileType)fileType).getLanguage());
     }
-
-
     return null;
   }
-
-  private void createMappings() {
-    Set<FileType> maps = new HashSet<FileType>();
-    maps.add(StdFileTypes.DTD);
-    maps.add(StdFileTypes.XML);
-
-    mappings.put(StdFileTypes.XML, maps);
-
-    maps = new HashSet<FileType>();
-    maps.add(StdFileTypes.HTML);
-    maps.add(StdFileTypes.XHTML);
-
-    mappings.put(StdFileTypes.HTML, maps);
-
-    maps = new HashSet<FileType>();
-    maps.add(StdFileTypes.JSP);
-
-    mappings.put(StdFileTypes.JSP, maps);
-
-    noSeparators.add(StdFileTypes.XML);
-    noSeparators.add(StdFileTypes.HTML);
-    noSeparators.add(StdFileTypes.JSP);
-    noSeparators.add(StdFileTypes.JSPX);
-  }
-
-  private static boolean isSupportedType(FileType type) {
-    Commenter commenter = getCommenter(type);
-    boolean hasComment = commenter != null && (commenter.getLineCommentPrefix() != null || commenter.getBlockCommentPrefix() != null);
-    if (!hasComment) {
-      return false;
-    }
-    return CopyrightUpdaters.INSTANCE.forFileType(type) != null;
-  }
-
-  private void loadFileTypes() {
-    logger.debug("loadFileTypes");
-    Map<String, FileType> map = new HashMap<String, FileType>();
-    for (FileType ftype : FileTypeManager.getInstance().getRegisteredFileTypes()) {
-      // Ignore binary files
-      // Ignore IDEA specific file types (PROJECT, MODULE, WORKSPACE)
-      // Ignore GUI Designer files
-      if (isSupportedType(ftype)) {
-        logger.debug("adding " + ftype.getName());
-        Iterator<FileType> iter = mappings.keySet().iterator();
-        FileType type = ftype;
-        while (iter.hasNext()) {
-          FileType fileType = iter.next();
-          Set<FileType> maps = mappings.get(fileType);
-          if (maps.contains(ftype)) {
-            type = fileType;
-            break;
-          }
-        }
-        map.put(ftype.getName(), type);
-      }
-      else {
-        logger.debug("ignoring " + ftype.getName());
-      }
-    }
-    types = map;
-  }
-
-  public FileType getFileTypeByName(String name) {
-    return getMap().get(name);
-  }
-
-  @NotNull
-  private Map<String, FileType> getMap() {
-    if (types == null) loadFileTypes();
-    return types;
-  }
-
-  public static class SortByName implements Comparator<FileType> {
-    @Override
-    public int compare(FileType a, FileType b) {
-      return a.getName().compareToIgnoreCase(b.getName());
-    }
-  }
-
-  private Map<String, FileType> types;
-  private final Map<FileType, Set<FileType>> mappings = new HashMap<FileType, Set<FileType>>();
-  private final Set<FileType> noSeparators = new HashSet<FileType>();
-
-  private static final Logger logger = Logger.getInstance(FileTypeUtil.class.getName());
 }

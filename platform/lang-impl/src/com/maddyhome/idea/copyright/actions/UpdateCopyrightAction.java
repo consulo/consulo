@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.maddyhome.idea.copyright.CopyrightManager;
+import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.pattern.FileUtil;
-import com.maddyhome.idea.copyright.util.FileTypeUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class UpdateCopyrightAction extends BaseAnalysisAction {
@@ -57,14 +57,14 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     final Editor editor = CommonDataKeys.EDITOR.getData(context);
     if (editor != null) {
       final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-      if (file == null || !FileTypeUtil.isSupportedFile(file)) {
+      if (file == null || !CopyrightUpdaters.hasExtension(file)) {
         return false;
       }
     }
     else if (files != null && FileUtil.areFiles(files)) {
       boolean copyrightEnabled  = false;
       for (VirtualFile vfile : files) {
-        if (FileTypeUtil.getInstance().isSupportedFile(vfile)) {
+        if (CopyrightUpdaters.hasExtension(vfile)) {
           copyrightEnabled = true;
           break;
         }
@@ -84,7 +84,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
         for (PsiElement elem : elems) {
           if (!(elem instanceof PsiDirectory)) {
             final PsiFile file = elem.getContainingFile();
-            if (file == null || !FileTypeUtil.getInstance().isSupportedFile(file.getVirtualFile())) {
+            if (file == null || !CopyrightUpdaters.hasExtension(file.getVirtualFile())) {
               copyrightEnabled = true;
               break;
             }

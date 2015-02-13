@@ -29,94 +29,88 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
-import com.maddyhome.idea.copyright.psi.UpdateCopyright;
-import com.maddyhome.idea.copyright.psi.UpdateCopyrightFactory;
-import com.maddyhome.idea.copyright.util.FileTypeUtil;
+import com.maddyhome.idea.copyright.CopyrightUpdaters;
+import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
+import com.maddyhome.idea.copyright.psi.UpdatePsiFileCopyright;
 
-public class UpdateCopyrightProcessor extends AbstractFileProcessor
-{
+public class UpdateCopyrightProcessor extends AbstractFileProcessor {
+  private static final Logger logger = Logger.getInstance(UpdateCopyrightProcessor.class.getName());
+
   public static final String TITLE = "Update Copyright";
   public static final String MESSAGE = "Updating copyrights...";
 
-  public UpdateCopyrightProcessor(Project project, Module module)
-  {
+  private Project project;
+  private Module module;
+
+  public UpdateCopyrightProcessor(Project project, Module module) {
     super(project, module, TITLE, MESSAGE);
     setup(project, module);
   }
 
-  public UpdateCopyrightProcessor(Project project, Module module, PsiDirectory dir, boolean subdirs)
-  {
+  public UpdateCopyrightProcessor(Project project, Module module, PsiDirectory dir, boolean subdirs) {
     super(project, dir, subdirs, TITLE, MESSAGE);
     setup(project, module);
   }
 
-  public UpdateCopyrightProcessor(Project project, Module module, PsiFile file)
-  {
+  public UpdateCopyrightProcessor(Project project, Module module, PsiFile file) {
     super(project, file, TITLE, MESSAGE);
     setup(project, module);
   }
 
-  public UpdateCopyrightProcessor(Project project, Module module, PsiFile[] files)
-  {
+  public UpdateCopyrightProcessor(Project project, Module module, PsiFile[] files) {
     super(project, files, TITLE, MESSAGE, null);
     setup(project, module);
   }
 
-  protected Runnable preprocessFile(final PsiFile file) throws IncorrectOperationException
-  {
+  @Override
+  protected Runnable preprocessFile(final PsiFile file) throws IncorrectOperationException {
     VirtualFile vfile = file.getVirtualFile();
-    if (vfile == null) return EmptyRunnable.getInstance();
+    if (vfile == null) {
+      return EmptyRunnable.getInstance();
+    }
     final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
     if (progressIndicator != null) {
       progressIndicator.setText2(vfile.getPresentableUrl());
     }
     Module mod = module;
-    if (module == null)
-    {
+    if (module == null) {
       mod = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(vfile);
     }
 
-    if (mod == null) return EmptyRunnable.getInstance();
+    if (mod == null) {
+      return EmptyRunnable.getInstance();
+    }
 
-    CopyrightProfile opts = CopyrightManager.getInstance(project).getCopyrightOptions(file);
+    UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(file.getFileType());
+    if(updateCopyrightsProvider == null) {
+      return EmptyRunnable.getInstance();
+    }
 
-    if (opts != null && FileTypeUtil.isSupportedFile(file))
-    {
+    CopyrightProfile copyrightProfile = CopyrightManager.getInstance(project).getCopyrightOptions(file);
+    if (copyrightProfile != null && CopyrightUpdaters.hasExtension(file)) {
       logger.debug("process " + file);
-      final UpdateCopyright update = UpdateCopyrightFactory.createUpdateCopyright(project, mod, file, opts);
-      if (update == null) return EmptyRunnable.getInstance();
-      update.prepare();
+      final UpdatePsiFileCopyright<?> updateCopyright = updateCopyrightsProvider.createInstance(file, copyrightProfile);
 
       return new Runnable() {
-        public void run()
-        {
-          try
-          {
-            update.complete();
+        @Override
+        public void run() {
+          try {
+            updateCopyright.process();
 
           }
-          catch (Exception e)
-          {
+          catch (Exception e) {
             logger.error(e);
           }
         }
       };
     }
-    else
-    {
+    else {
       return EmptyRunnable.getInstance();
     }
   }
 
-  private void setup(Project project, Module module)
-  {
+  private void setup(Project project, Module module) {
     this.project = project;
     this.module = module;
-
   }
-
-  private Project project;
-  private Module module;
-
-  private static final Logger logger = Logger.getInstance(UpdateCopyrightProcessor.class.getName());
 }

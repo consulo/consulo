@@ -37,7 +37,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.IncorrectOperationException;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
-import com.maddyhome.idea.copyright.util.FileTypeUtil;
+import com.maddyhome.idea.copyright.CopyrightUpdaters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -320,7 +320,7 @@ public abstract class AbstractFileProcessor {
     PsiFile[] locals = directory.getFiles();
     for (PsiFile local : locals) {
       CopyrightProfile opts = CopyrightManager.getInstance(project).getCopyrightOptions(local);
-      if (opts != null && FileTypeUtil.isSupportedFile(local)) {
+      if (opts != null && CopyrightUpdaters.hasExtension(local)) {
         files.add(local);
       }
 
