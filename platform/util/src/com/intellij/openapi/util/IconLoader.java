@@ -56,37 +56,6 @@ public final class IconLoader {
    * This cache contains mapping between icons and disabled icons.
    */
   private static final Map<Icon, Icon> ourIcon2DisabledIcon = new WeakHashMap<Icon, Icon>(200);
-  @Deprecated
-  @DeprecationInfo(value = "", until = "1.0")
-  @NonNls private static final Map<String, String> ourDeprecatedIconsReplacements = new HashMap<String, String>();
-
-  static {
-    ourDeprecatedIconsReplacements.put("/general/toolWindowDebugger.png", "AllIcons.Toolwindows.ToolWindowDebugger");
-    ourDeprecatedIconsReplacements.put("/general/toolWindowChanges.png", "AllIcons.Toolwindows.ToolWindowChanges");
-
-    ourDeprecatedIconsReplacements.put("/actions/showSettings.png", "AllIcons.General.ProjectSettings");
-    ourDeprecatedIconsReplacements.put("/general/ideOptions.png", "AllIcons.General.Settings");
-    ourDeprecatedIconsReplacements.put("/general/applicationSettings.png", "AllIcons.General.Settings");
-
-    ourDeprecatedIconsReplacements.put("/vcs/customizeView.png", "AllIcons.General.Settings");
-
-    ourDeprecatedIconsReplacements.put("/vcs/refresh.png", "AllIcons.Actions.Refresh");
-    ourDeprecatedIconsReplacements.put("/actions/sync.png", "AllIcons.Actions.Refresh");
-    ourDeprecatedIconsReplacements.put("/actions/refreshUsages.png", "AllIcons.Actions.Rerun");
-
-    ourDeprecatedIconsReplacements.put("/compiler/error.png", "AllIcons.General.Error");
-    ourDeprecatedIconsReplacements.put("/compiler/hideWarnings.png", "AllIcons.General.HideWarnings");
-    ourDeprecatedIconsReplacements.put("/compiler/information.png", "AllIcons.General.Information");
-    ourDeprecatedIconsReplacements.put("/compiler/warning.png", "AllIcons.General.Warning");
-    ourDeprecatedIconsReplacements.put("/ide/errorSign.png", "AllIcons.General.Error");
-
-    ourDeprecatedIconsReplacements.put("/ant/filter.png", "AllIcons.General.Filter");
-    ourDeprecatedIconsReplacements.put("/inspector/useFilter.png", "AllIcons.General.Filter");
-
-    ourDeprecatedIconsReplacements.put("/actions/showSource.png", "AllIcons.Actions.Preview");
-    ourDeprecatedIconsReplacements.put("/actions/consoleHistory.png", "AllIcons.General.MessageHistory");
-    ourDeprecatedIconsReplacements.put("/vcs/messageHistory.png", "AllIcons.General.MessageHistory");
-  }
 
   private static final ImageIcon EMPTY_ICON = new ImageIcon(UIUtil.createImage(1, 1, BufferedImage.TYPE_3BYTE_BGR)) {
     @NonNls
@@ -190,7 +159,6 @@ public final class IconLoader {
 
   @Nullable
   public static Icon findIcon(@NotNull String path, @NotNull final Class aClass, boolean computeNow) {
-    path = undeprecate(path);
     if (isReflectivePath(path)) return getReflectiveIcon(path, aClass.getClassLoader());
 
     URL myURL = aClass.getResource(path);
@@ -199,14 +167,6 @@ public final class IconLoader {
       return null;
     }
     return findIcon(myURL);
-  }
-
-  @NotNull
-  @Deprecated
-  private static String undeprecate(@NotNull String path) {
-    String replacement = ourDeprecatedIconsReplacements.get(path);
-    LOG.assertTrue(replacement == null, "Icon by path: " + path + " is not exists, please use new: " + replacement);
-    return replacement == null ? path : replacement;
   }
 
   private static boolean isReflectivePath(@NotNull String path) {
@@ -229,7 +189,6 @@ public final class IconLoader {
 
   @Nullable
   public static Icon findIcon(@NotNull String path, @NotNull ClassLoader classLoader) {
-    path = undeprecate(path);
     if (isReflectivePath(path)) return getReflectiveIcon(path, classLoader);
     if (!StringUtil.startsWithChar(path, '/')) return null;
 
