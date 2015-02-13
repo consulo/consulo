@@ -16,17 +16,10 @@
 package com.intellij.openapi.vcs;
 
 import org.consulo.lombok.annotations.Bundle;
-import org.jetbrains.annotations.PropertyKey;
-import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author lesya
  */
 @Bundle
 public class VcsBundle {
-  @Deprecated
-  @DeprecationInfo(value = "Use #message()", until = "1.0")
-  public static String getString(@PropertyKey(resourceBundle = "messages.VcsBundle") final String key) {
-    return message(key);
-  }
 }
