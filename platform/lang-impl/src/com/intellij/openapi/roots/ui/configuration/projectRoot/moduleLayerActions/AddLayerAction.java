@@ -17,10 +17,15 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.moduleLayerActio
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.text.StringUtil;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -39,23 +44,37 @@ public class AddLayerAction extends AnAction {
   public void actionPerformed(AnActionEvent e) {
     val modifiableRootModel = myModuleEditor.getModifiableRootModelProxy();
     String copyName = myCopy ? modifiableRootModel.getCurrentLayerName() : null;
-    String newName =
-            Messages.showInputDialog(modifiableRootModel.getModule().getProject(), "Name", "Enter Name", Messages.getQuestionIcon(), copyName,
-                                     new InputValidator() {
-              @Override
-              public boolean checkInput(String s) {
-                return modifiableRootModel.findLayerByName(s) == null;
-              }
+    String newName = Messages.showInputDialog(modifiableRootModel.getProject(), "Name", "Enter Name", Messages.getQuestionIcon(),
+                                              createUniqueSdkName(copyName, modifiableRootModel), new InputValidator() {
+      @Override
+      public boolean checkInput(String inputString) {
+        String trimString = inputString.trim();
+        return !StringUtil.isEmpty(trimString) && modifiableRootModel.findLayerByName(trimString) == null;
+      }
 
-              @Override
-              public boolean canClose(String s) {
-                return true;
-              }
-            });
+      @Override
+      public boolean canClose(String inputString) {
+        return true;
+      }
+    });
 
     if (newName != null) {
-      modifiableRootModel.addLayer(newName, copyName, true);
+      modifiableRootModel.addLayer(newName.trim(), copyName, true);
       modifiableRootModel.addContentEntry(modifiableRootModel.getModule().getModuleDirUrl());
     }
+  }
+
+  @NotNull
+  private static String createUniqueSdkName(String suggestedName, final ModifiableRootModel modifiableRootModel) {
+    if (suggestedName == null) {
+      suggestedName = ModifiableRootModel.DEFAULT_LAYER_NAME;
+    }
+    final Set<String> names = modifiableRootModel.getLayers().keySet();
+    String newSdkName = suggestedName;
+    int i = 0;
+    while (names.contains(newSdkName)) {
+      newSdkName = suggestedName + String.valueOf(++i);
+    }
+    return newSdkName;
   }
 }

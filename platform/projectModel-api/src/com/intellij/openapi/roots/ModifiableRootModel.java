@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +26,9 @@ import org.jetbrains.annotations.Nullable;
  * @see ModuleRootManager#getModifiableModel()
  */
 public interface ModifiableRootModel extends ModuleRootModel, ModifiableModuleRootLayer {
+  @NonNls
+  String DEFAULT_LAYER_NAME = "Default";
+
   @NotNull
   ModifiableModuleRootLayer addLayer(@NotNull String name, @Nullable String nameForCopy, boolean activate);
 

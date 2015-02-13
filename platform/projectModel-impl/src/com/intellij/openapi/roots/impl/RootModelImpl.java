@@ -92,7 +92,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   private void initDefaultLayer(Element element) throws InvalidDataException {
-    setCurrentLayerSafe("Default");
+    setCurrentLayerSafe(DEFAULT_LAYER_NAME);
 
     ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this);
     myLayers.put(myCurrentLayerName, moduleRootLayer);
