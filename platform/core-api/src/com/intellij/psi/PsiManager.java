@@ -22,6 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.util.PsiModificationTracker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * The main entry point for accessing the PSI services for a project.
@@ -55,6 +56,7 @@ public abstract class PsiManager extends UserDataHolderBase {
    * or the current project is a dummy or default project.
    */
   @Nullable
+  @RequiredReadAction
   public abstract PsiFile findFile(@NotNull VirtualFile file);
 
   @Nullable
@@ -67,6 +69,7 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @return the PSI directory, or null if there is no PSI for the specified directory in this project.
    */
   @Nullable
+  @RequiredReadAction
   public abstract PsiDirectory findDirectory(@NotNull VirtualFile file);
 
   /**

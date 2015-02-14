@@ -30,6 +30,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.CodeSmellDetector;
@@ -120,14 +121,19 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
 
             if (progress != null && progress.isCanceled()) throw new ProcessCanceledException();
 
-            VirtualFile file = filesToCheck.get(i);
+            final VirtualFile file = filesToCheck.get(i);
 
             if (progress != null) {
               progress.setText(VcsBundle.message("searching.for.code.smells.processing.file.progress.text", file.getPresentableUrl()));
               progress.setFraction((double)i / (double)filesToCheck.size());
             }
 
-            final PsiFile psiFile = manager.findFile(file);
+            final PsiFile psiFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
+              @Override
+              public PsiFile compute() {
+                return manager.findFile(file);
+              }
+            });
             if (psiFile != null) {
               final Document document = fileManager.getDocument(file);
               if (document != null) {

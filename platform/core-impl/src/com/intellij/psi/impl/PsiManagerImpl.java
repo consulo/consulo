@@ -39,6 +39,7 @@ import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collections;
 import java.util.List;
@@ -180,6 +181,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
+  @RequiredReadAction
   public PsiFile findFile(@NotNull VirtualFile file) {
     return myFileManager.findFile(file);
   }
@@ -197,6 +199,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
+  @RequiredReadAction
   public PsiDirectory findDirectory(@NotNull VirtualFile file) {
     ProgressIndicatorProvider.checkCanceled();
 

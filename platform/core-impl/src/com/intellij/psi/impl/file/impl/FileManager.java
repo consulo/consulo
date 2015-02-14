@@ -24,14 +24,17 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.List;
 
 public interface FileManager extends Disposable {
   @Nullable
+  @RequiredReadAction
   PsiFile findFile(@NotNull VirtualFile vFile);
 
   @Nullable
+  @RequiredReadAction
   PsiDirectory findDirectory(@NotNull VirtualFile vFile);
 
   void reloadFromDisk(@NotNull PsiFile file); //Q: move to PsiFile(Impl)?
