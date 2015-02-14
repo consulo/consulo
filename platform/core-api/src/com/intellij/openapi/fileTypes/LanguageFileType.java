@@ -62,17 +62,7 @@ public abstract class LanguageFileType implements FileType{
     return null;
   }
 
-  /**
-   * Callers: use {@link com.intellij.openapi.fileTypes.CharsetUtil#extractCharsetFromFileContent(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile, FileType, CharSequence)}
-   * Overriders: override {@link #extractCharsetFromFileContent(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile, CharSequence)} instead
-   * @deprecated
-   */
-  public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, @NotNull String content) {
-    return null;
-  }
-
   public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, @NotNull CharSequence content) {
-    //noinspection deprecation
-    return extractCharsetFromFileContent(project, file, content.toString());
+    return null;
   }
 }
