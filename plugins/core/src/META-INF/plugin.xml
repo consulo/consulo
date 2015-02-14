@@ -1481,9 +1481,6 @@
     <gotoRelatedProvider implementation="com.intellij.testIntegration.GotoTestRelatedProvider"/>
 
 
-    <applicationService serviceInterface="com.intellij.compiler.ant.BuildTargetsFactory"
-                        serviceImplementation="com.intellij.compiler.ant.BuildTargetsFactoryImpl"/>
-
 
     <applicationService serviceInterface="com.intellij.packaging.elements.PackagingElementFactory"
                         serviceImplementation="com.intellij.packaging.impl.elements.PackagingElementFactoryImpl"/>
@@ -1690,7 +1687,6 @@
                         serviceImplementation="com.intellij.codeInsight.template.impl.ExportableTemplateSettings"/>
     <applicationService serviceInterface="com.intellij.execution.ui.layout.impl.RunnerLayoutSettings"
                         serviceImplementation="com.intellij.execution.ui.layout.impl.RunnerLayoutSettings"/>
-    <exportable serviceInterface="com.intellij.codeInsight.template.impl.TemplateSettings"/>
 
     <applicationService serviceInterface="com.intellij.codeEditor.printing.PrintSettings"
                         serviceImplementation="com.intellij.codeEditor.printing.PrintSettings"/>
@@ -1743,7 +1739,6 @@
                         serviceImplementation="com.intellij.psi.impl.source.codeStyle.PersistableCodeStyleSchemes"/>
     <applicationService serviceInterface="com.intellij.psi.impl.source.codeStyle.LegacyCodeStyleSchemesSettings"
                         serviceImplementation="com.intellij.psi.impl.source.codeStyle.LegacyCodeStyleSchemesSettings"/>
-    <exportable serviceInterface="com.intellij.psi.codeStyle.CodeStyleSchemes"/>
     <schemeOwner serviceInterface="com.intellij.psi.codeStyle.CodeStyleSchemes"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.libraries.LibraryTablesRegistrar"
@@ -1781,9 +1776,6 @@
     <applicationService serviceInterface="com.intellij.ide.PowerSaveMode"
                         serviceImplementation="com.intellij.ide.PowerSaveMode"/>
 
-    <applicationService serviceInterface="com.intellij.util.download.DownloadableFileService"
-                        serviceImplementation="com.intellij.util.download.impl.DownloadableFileServiceImpl"/>
-
     <applicationService serviceInterface="com.intellij.psi.impl.DocumentCommitThread"
                         serviceImplementation="com.intellij.psi.impl.DocumentCommitThread"/>
 
@@ -1795,9 +1787,6 @@
 
     <applicationService serviceInterface="com.intellij.psi.impl.source.codeStyle.IndentHelper"
                         serviceImplementation="com.intellij.psi.impl.source.codeStyle.IndentHelperImpl"/>
-
-    <applicationService serviceInterface="com.intellij.lang.DefaultASTFactory"
-                        serviceImplementation="com.intellij.lang.DefaultASTFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.conversion.ConversionService"
                         serviceImplementation="com.intellij.conversion.impl.ConversionServiceImpl"/>
@@ -2518,7 +2507,6 @@
     <applicationService serviceInterface="com.intellij.execution.filters.HyperlinkInfoFactory"
                         serviceImplementation="com.intellij.execution.filters.impl.HyperlinkInfoFactoryImpl"/>
 
-    <exportable serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
     <schemeOwner serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager"
