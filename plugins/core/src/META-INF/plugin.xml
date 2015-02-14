@@ -2460,9 +2460,6 @@
     <refactoring.copyHandler implementation="com.intellij.refactoring.copy.CopyFilesOrDirectoriesHandler"/>
     <refactoring.moveHandler implementation="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler"
                              id="moveFileOrDir"/>
-    <applicationService serviceInterface="com.intellij.codeEditor.printing.FileSeparatorProvider"
-                        serviceImplementation="com.intellij.codeEditor.printing.FileSeparatorProvider"/>
-
     <programRunner implementation="com.intellij.execution.runners.BasicProgramRunner" order="last"/>
 
     <projectConfigurable provider="com.intellij.profile.codeInspection.ui.ProjectInspectionToolsConfigurableProvider"

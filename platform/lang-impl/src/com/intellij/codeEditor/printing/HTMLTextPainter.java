@@ -84,13 +84,10 @@ class HTMLTextPainter {
     PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
     Document document = psiDocumentManager.getDocument(psiFile);
 
-    ArrayList<LineMarkerInfo> methodSeparators = new ArrayList<LineMarkerInfo>();
+    List<LineMarkerInfo> methodSeparators = new ArrayList<LineMarkerInfo>();
     if (document != null) {
-      final List<LineMarkerInfo> separators = FileSeparatorProvider.getInstance().getFileSeparators(psiFile, document,
-                                                                                                    PsiUtilBase.findEditor(psiFile));
-      if (separators != null) {
-        methodSeparators.addAll(separators);
-      }
+      final List<LineMarkerInfo> separators = FileSeparatorUtil.getFileSeparators(psiFile, document, PsiUtilBase.findEditor(psiFile));
+      methodSeparators.addAll(separators);
     }
 
     myMethodSeparators = methodSeparators.toArray(new LineMarkerInfo[methodSeparators.size()]);

@@ -82,8 +82,7 @@ public class TextPainter implements Printable {
                      String fileName,
                      @NotNull final PsiFile psiFile,
                      final FileType fileType, final Editor editor) {
-    this(editorDocument, highlighter, fileName, psiFile.getProject(), fileType,
-         FileSeparatorProvider.getInstance().getFileSeparators(psiFile, editorDocument, editor));
+    this(editorDocument, highlighter, fileName, psiFile.getProject(), fileType, FileSeparatorUtil.getFileSeparators(psiFile, editorDocument, editor));
   }
 
   public TextPainter(DocumentEx editorDocument,
