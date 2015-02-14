@@ -67,7 +67,7 @@ public class XmlCharsetDetector {
   }
 
   @Nullable
-  public static String extractXmlEncodingFromProlog(@NotNull String text) {
+  public static String extractXmlEncodingFromProlog(@NotNull CharSequence text) {
     int index = 0;
 
     index = skipWhiteSpace(index, text);
@@ -108,7 +108,7 @@ public class XmlCharsetDetector {
     return start;
   }
 
-  private static int skipWhiteSpace(int start, @NotNull String text) {
+  private static int skipWhiteSpace(int start, @NotNull CharSequence text) {
     while (start < text.length()) {
       char c = text.charAt(start);
       if (!Character.isWhitespace(c)) break;
