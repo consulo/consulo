@@ -35,8 +35,6 @@ import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.ui.OptionsTopHitProvider;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.laf.darcula.ui.DarculaTextBorder;
-import com.intellij.ide.ui.laf.darcula.ui.DarculaTextFieldUI;
 import com.intellij.ide.ui.search.BooleanOptionDescription;
 import com.intellij.ide.ui.search.OptionDescription;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
@@ -994,11 +992,8 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     public MySearchTextField() {
       super(false);
       getTextEditor().setOpaque(false);
-      getTextEditor().setUI((DarculaTextFieldUI)DarculaTextFieldUI.createUI(getTextEditor()));
-      getTextEditor().setBorder(new DarculaTextBorder());
-
       getTextEditor().putClientProperty("JTextField.Search.noBorderRing", Boolean.TRUE);
-      if (UIUtil.isUnderDarcula()) {
+      if (UIUtil.isUnderDarkBuildInLaf()) {
         getTextEditor().setBackground(Gray._45);
         getTextEditor().setForeground(Gray._240);
       }
