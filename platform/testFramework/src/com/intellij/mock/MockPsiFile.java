@@ -6,7 +6,7 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -107,13 +107,13 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   @Override
   @NotNull
   public FileType getFileType() {
-    return StdFileTypes.JAVA;
+    return InternalStdFileTypes.JAVA;
   }
 
   @Override
   @NotNull
   public Language getLanguage() {
-    return StdFileTypes.JAVA.getLanguage();
+    return InternalStdFileTypes.JAVA.getLanguage();
   }
 
   @NotNull

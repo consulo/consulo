@@ -18,7 +18,7 @@ package com.intellij.refactoring.ui;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
@@ -42,7 +42,7 @@ public class StringTableCellEditor extends AbstractCellEditor implements TableCe
 
   @Override
   public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-    final EditorTextField editorTextField = new EditorTextField((String) value, myProject, StdFileTypes.JAVA) {
+    final EditorTextField editorTextField = new EditorTextField((String) value, myProject, InternalStdFileTypes.JAVA) {
             @Override
             protected boolean shouldHaveBorder() {
               return false;

@@ -23,7 +23,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
@@ -364,7 +364,7 @@ public class FileTemplateUtil{
           }
         });
       }
-    }, template.isTemplateOfType(StdFileTypes.JAVA)
+    }, template.isTemplateOfType(InternalStdFileTypes.JAVA)
        ? IdeBundle.message("command.create.class.from.template")
        : IdeBundle.message("command.create.file.from.template"), null);
     if(commandException[0] != null){

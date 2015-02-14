@@ -24,7 +24,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
@@ -215,7 +215,7 @@ public abstract class UsefulTestCase extends TestCase {
       result.add(error);
     }
 
-    currentCodeStyleSettings.getIndentOptions(StdFileTypes.JAVA);
+    currentCodeStyleSettings.getIndentOptions(InternalStdFileTypes.JAVA);
     try {
       checkSettingsEqual(oldCodeStyleSettings, currentCodeStyleSettings, "Code style settings damaged");
     }
@@ -245,7 +245,7 @@ public abstract class UsefulTestCase extends TestCase {
   protected void storeSettings() {
     if (!isPerformanceTest() && ApplicationManager.getApplication() != null) {
       myOldCodeStyleSettings = getCurrentCodeStyleSettings().clone();
-      myOldCodeStyleSettings.getIndentOptions(StdFileTypes.JAVA);
+      myOldCodeStyleSettings.getIndentOptions(InternalStdFileTypes.JAVA);
     }
   }
 

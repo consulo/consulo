@@ -29,7 +29,7 @@ import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -229,7 +229,7 @@ public abstract class BaseRefactoringAction extends AnAction {
   }
 
   protected boolean isAvailableForLanguage(Language language) {
-    return language.isKindOf(StdFileTypes.JAVA.getLanguage());
+    return language.isKindOf(InternalStdFileTypes.JAVA.getLanguage());
   }
 
   protected boolean isAvailableForFile(PsiFile file) {

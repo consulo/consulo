@@ -18,7 +18,7 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -69,7 +69,7 @@ public class ProjectBaseDirNavigationContributor implements ChooseByNameContribu
 
   private static boolean isEditable(VirtualFile file, final boolean checkboxState) {
     FileType type = file.getFileType();
-    if (!checkboxState && type == StdFileTypes.JAVA) return false;
-    return type != StdFileTypes.CLASS;
+    if (!checkboxState && type == InternalStdFileTypes.JAVA) return false;
+    return type != InternalStdFileTypes.CLASS;
   }
 }

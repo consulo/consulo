@@ -19,7 +19,7 @@ package com.intellij.ui;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.util.Function;
@@ -39,7 +39,7 @@ public class ReferenceEditorWithBrowseButton extends ComponentWithBrowseButton<E
                                          final Project project,
                                          final Function<String, Document> factory,
                                          String text) {
-    this(browseActionListener, new EditorTextField(factory.fun(text), project, StdFileTypes.JAVA), factory);
+    this(browseActionListener, new EditorTextField(factory.fun(text), project, InternalStdFileTypes.JAVA), factory);
   }
 
   public ReferenceEditorWithBrowseButton(final ActionListener browseActionListener,

@@ -17,7 +17,7 @@ package com.intellij.refactoring.ui;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiDocumentManager;
@@ -36,7 +36,7 @@ public class CodeFragmentTableCellRenderer implements TableCellRenderer {
   private final FileType myFileType;
 
   public CodeFragmentTableCellRenderer(Project project) {
-    this(project, StdFileTypes.JAVA);
+    this(project, InternalStdFileTypes.JAVA);
   }
 
   public CodeFragmentTableCellRenderer(Project project, FileType fileType) {

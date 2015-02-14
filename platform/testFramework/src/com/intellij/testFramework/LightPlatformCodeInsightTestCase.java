@@ -34,7 +34,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.impl.TrailingSpacesStripper;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.FileUtil;
@@ -216,7 +216,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
       int caretLine = StringUtil.offsetToLineNumber(fileText, caretMarker.getStartOffset());
       int caretCol = EditorUtil.calcColumnNumber(null, myEditor.getDocument().getText(),
                                                  myEditor.getDocument().getLineStartOffset(caretLine), caretMarker.getStartOffset(),
-                                                 CodeStyleSettingsManager.getSettings(getProject()).getIndentOptions(StdFileTypes.JAVA).TAB_SIZE);
+                                                 CodeStyleSettingsManager.getSettings(getProject()).getIndentOptions(InternalStdFileTypes.JAVA).TAB_SIZE);
       LogicalPosition pos = new LogicalPosition(caretLine, caretCol);
       myEditor.getCaretModel().moveToLogicalPosition(pos);
     }
@@ -459,7 +459,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
       int caretCol = EditorUtil.calcColumnNumber(null, newFileText,
                                                  StringUtil.lineColToOffset(newFileText, caretLine, 0),
                                                  caretMarker.getStartOffset(),
-                                                 CodeStyleSettingsManager.getSettings(getProject()).getIndentOptions(StdFileTypes.JAVA).TAB_SIZE);
+                                                 CodeStyleSettingsManager.getSettings(getProject()).getIndentOptions(InternalStdFileTypes.JAVA).TAB_SIZE);
 
       assertEquals(getMessage("caretLine", message), caretLine, myEditor.getCaretModel().getLogicalPosition().line);
       assertEquals(getMessage("caretColumn", message), caretCol, myEditor.getCaretModel().getLogicalPosition().column);

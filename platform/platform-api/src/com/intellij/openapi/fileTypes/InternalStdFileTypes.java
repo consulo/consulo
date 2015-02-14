@@ -18,9 +18,9 @@ package com.intellij.openapi.fileTypes;
 import org.mustbe.consulo.DeprecationInfo;
 
 @Deprecated
-@DeprecationInfo(value = "See field info", until = "1.0")
-public class StdFileTypes {
-  private StdFileTypes() { }
+@DeprecationInfo(value = "Platform should not about plugin file types", until = "1.0")
+public class InternalStdFileTypes {
+  private InternalStdFileTypes() { }
 
   public static final LanguageFileType JAVA = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("JAVA");
   public static final FileType CLASS = FileTypeManager.getInstance().getStdFileType("CLASS");

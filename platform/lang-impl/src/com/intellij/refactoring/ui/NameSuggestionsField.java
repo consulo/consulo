@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.TextRange;
@@ -59,11 +59,11 @@ public class NameSuggestionsField extends JPanel {
     final ComboBox comboBox = new ComboBox(myComboBoxModel,-1);
     myComponent = comboBox;
     add(myComponent, BorderLayout.CENTER);
-    setupComboBox(comboBox, StdFileTypes.JAVA);
+    setupComboBox(comboBox, InternalStdFileTypes.JAVA);
   }
 
   public NameSuggestionsField(String[] nameSuggestions, Project project) {
-    this(nameSuggestions, project, StdFileTypes.JAVA);
+    this(nameSuggestions, project, InternalStdFileTypes.JAVA);
   }
 
   public NameSuggestionsField(String[] nameSuggestions, Project project, FileType fileType) {

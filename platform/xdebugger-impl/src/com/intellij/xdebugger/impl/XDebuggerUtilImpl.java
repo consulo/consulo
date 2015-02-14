@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -334,7 +334,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
       result = file.findElementAt(startOffset);
     }
 
-    if (checkXml && result != null && StdFileTypes.XML.getLanguage().equals(result.getLanguage())) {
+    if (checkXml && result != null && InternalStdFileTypes.XML.getLanguage().equals(result.getLanguage())) {
       PsiLanguageInjectionHost parent = PsiTreeUtil.getParentOfType(result, PsiLanguageInjectionHost.class);
       if (parent != null) {
         result = InjectedLanguageUtil.findElementInInjected(parent, offset);

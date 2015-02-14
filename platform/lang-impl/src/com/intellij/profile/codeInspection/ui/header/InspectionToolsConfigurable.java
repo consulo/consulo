@@ -39,7 +39,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -279,7 +279,7 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable
         final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, false, false, false, false) {
           @Override
           public boolean isFileSelectable(VirtualFile file) {
-            return file.getFileType().equals(StdFileTypes.XML);
+            return file.getFileType().equals(InternalStdFileTypes.XML);
           }
         };
         descriptor.setDescription("Choose profile file");

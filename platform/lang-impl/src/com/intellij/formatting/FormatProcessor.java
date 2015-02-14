@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.TextChange;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.impl.BulkChangesMerger;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -1416,7 +1416,7 @@ class FormatProcessor {
 
       //for GeneralCodeFormatterTest
       if (myJavaIndentOptions == null) {
-        myJavaIndentOptions = mySettings.getIndentOptions(StdFileTypes.JAVA);
+        myJavaIndentOptions = mySettings.getIndentOptions(InternalStdFileTypes.JAVA);
       }
 
       myProgressCallback.beforeApplyingFormatChanges(myBlocksToModify);

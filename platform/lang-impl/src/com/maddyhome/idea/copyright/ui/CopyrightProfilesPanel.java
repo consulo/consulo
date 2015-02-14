@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
@@ -201,7 +201,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
           }
 
           private boolean canContainCopyright(VirtualFile file) {
-            return !file.isDirectory() && file.getFileType() == StdFileTypes.XML;
+            return !file.isDirectory() && file.getFileType() == InternalStdFileTypes.XML;
           }
         };
         descriptor.setTitle("Choose file containing copyright notice");

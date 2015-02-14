@@ -308,7 +308,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     }
     Language curLanguage = myCurrentFile != null ? myCurrentFile.getLanguage() : null;
     for (FileType fileType : allFileTypes) {
-      if (fileType != StdFileTypes.GUI_DESIGNER_FORM &&
+      if (fileType != InternalStdFileTypes.GUI_DESIGNER_FORM &&
           !(fileType instanceof ArchiveFileType) &
           fileType != UnknownFileType.INSTANCE &&
           fileType != PlainTextFileType.INSTANCE &&
