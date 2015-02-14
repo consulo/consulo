@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,12 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.lang.Language;
-import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -39,16 +40,16 @@ import java.util.Set;
 
 public class SlowLineMarkersPass extends TextEditorHighlightingPass implements LineMarkersProcessor, DumbAware {
   private final PsiFile myFile;
-  private final int myStartOffset;
-  private final int myEndOffset;
+  @NotNull private final Editor myEditor;
+  @NotNull private final TextRange myBounds;
 
   private volatile Collection<LineMarkerInfo> myMarkers = Collections.emptyList();
 
-  public SlowLineMarkersPass(@NotNull Project project, @NotNull PsiFile file, @NotNull Document document, int startOffset, int endOffset) {
-    super(project, document, false);
+  public SlowLineMarkersPass(@NotNull Project project, @NotNull PsiFile file, @NotNull Editor editor, @NotNull TextRange bounds) {
+    super(project, editor.getDocument(), false);
     myFile = file;
-    myStartOffset = startOffset;
-    myEndOffset = endOffset;
+    myEditor = editor;
+    myBounds = bounds;
   }
 
   @Override
@@ -59,13 +60,13 @@ public class SlowLineMarkersPass extends TextEditorHighlightingPass implements L
     for (Language language : relevantLanguages) {
       PsiElement psiRoot = viewProvider.getPsi(language);
       if (psiRoot == null || !HighlightingLevelManager.getInstance(myProject).shouldHighlight(psiRoot)) continue;
-      List<PsiElement> elements = CollectHighlightsUtil.getElementsInRange(psiRoot, myStartOffset, myEndOffset);
+      List<PsiElement> elements = CollectHighlightsUtil.getElementsInRange(psiRoot, myBounds.getStartOffset(), myBounds.getEndOffset());
       final List<LineMarkerProvider> providers = LineMarkersPass.getMarkerProviders(language, myProject);
       addLineMarkers(elements, providers, markers, progress);
       LineMarkersPass.collectLineMarkersForInjected(markers, elements, this, myFile, progress);
     }
 
-    myMarkers = markers;
+    myMarkers = LineMarkersPass.mergeLineMarkers(markers, myEditor);
   }
 
   @Override
@@ -80,7 +81,7 @@ public class SlowLineMarkersPass extends TextEditorHighlightingPass implements L
 
   @Override
   public void doApplyInformationToEditor() {
-    LineMarkersUtil.setLineMarkersToEditor(myProject, myDocument, myStartOffset, myEndOffset, myMarkers, getId());
+    LineMarkersUtil.setLineMarkersToEditor(myProject, myDocument, myBounds, myMarkers, getId());
 
     DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
     daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());

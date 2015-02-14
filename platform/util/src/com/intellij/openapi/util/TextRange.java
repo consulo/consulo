@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,17 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
+@ArrayFactoryFields
 public class TextRange implements Segment, Serializable {
   private static final Logger LOG = Logger.getInstance(TextRange.class);
   private static final long serialVersionUID = -670091356599757430L;
   public static final TextRange EMPTY_RANGE = new TextRange(0,0);
-  public static final TextRange[] EMPTY_ARRAY = new TextRange[0];
-
   private final int myStartOffset;
   private final int myEndOffset;
 
@@ -60,28 +60,38 @@ public class TextRange implements Segment, Serializable {
     return myEndOffset - myStartOffset;
   }
 
+  @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof TextRange)) return false;
     TextRange range = (TextRange)obj;
     return myStartOffset == range.myStartOffset && myEndOffset == range.myEndOffset;
   }
 
+  @Override
   public int hashCode() {
     return myStartOffset + myEndOffset;
   }
 
   public boolean contains(@NotNull TextRange range) {
+    return contains((Segment)range);
+  }
+  public boolean contains(@NotNull Segment range) {
     return containsRange(range.getStartOffset(), range.getEndOffset());
   }
 
   public boolean containsRange(int startOffset, int endOffset) {
-    return myStartOffset <= startOffset && myEndOffset >= endOffset;
+    return getStartOffset() <= startOffset && getEndOffset() >= endOffset;
+  }
+
+  public static boolean containsRange(@NotNull Segment outer, @NotNull Segment inner) {
+    return outer.getStartOffset() <= inner.getStartOffset() && inner.getEndOffset() <= outer.getEndOffset();
   }
 
   public boolean containsOffset(int offset) {
     return myStartOffset <= offset && offset <= myEndOffset;
   }
 
+  @Override
   public String toString() {
     return "(" + myStartOffset + "," + myEndOffset + ")";
   }
@@ -97,6 +107,16 @@ public class TextRange implements Segment, Serializable {
     }
     catch (StringIndexOutOfBoundsException e) {
       throw new StringIndexOutOfBoundsException("Can't extract " + this + " range from " + str);
+    }
+  }
+
+  @NotNull
+  public CharSequence subSequence(@NotNull CharSequence str) {
+    try {
+      return str.subSequence(myStartOffset, myEndOffset);
+    }
+    catch (IndexOutOfBoundsException e) {
+      throw new IndexOutOfBoundsException("Can't extract " + this + " range from " + str);
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author cdr
-*/
+ */
 public class VisibleLineMarkersPassFactory extends VisibleHighlightingPassFactory implements TextEditorHighlightingPassFactory {
   public VisibleLineMarkersPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
     super(project);
@@ -50,6 +50,6 @@ public class VisibleLineMarkersPassFactory extends VisibleHighlightingPassFactor
     TextRange textRange = calculateRangeToProcess(editor);
     if (textRange == null) return null;
 
-    return new LineMarkersPass(file.getProject(), file, editor, editor.getDocument(), textRange.getStartOffset(), textRange.getEndOffset(), false);
+    return new LineMarkersPass(file.getProject(), file, editor, editor.getDocument(), textRange);
   }
 }
