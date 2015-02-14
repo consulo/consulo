@@ -363,12 +363,12 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   }
 
   @Override
-  public void addRoot(VirtualFile root, OrderRootType rootType) {
+  public void addRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType) {
     myRootContainer.addRoot(root, rootType);
   }
 
   @Override
-  public void removeRoot(VirtualFile root, OrderRootType rootType) {
+  public void removeRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType) {
     myRootContainer.removeRoot(root, rootType);
   }
 

@@ -427,12 +427,12 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
     }
 
     @Override
-    public void addRoot(VirtualFile root, OrderRootType rootType) {
+    public void addRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType) {
       myPathEditors.get(rootType).addPaths(root);
     }
 
     @Override
-    public void removeRoot(VirtualFile root, OrderRootType rootType) {
+    public void removeRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType) {
       myPathEditors.get(rootType).removePaths(root);
     }
 

@@ -17,6 +17,7 @@ package com.intellij.openapi.projectRoots;
 
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface SdkModificator {
@@ -39,9 +40,9 @@ public interface SdkModificator {
 
   VirtualFile[] getRoots(OrderRootType rootType);
 
-  void addRoot(VirtualFile root, OrderRootType rootType);
+  void addRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType);
 
-  void removeRoot(VirtualFile root, OrderRootType rootType);
+  void removeRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType);
 
   void removeRoots(OrderRootType rootType);
 
