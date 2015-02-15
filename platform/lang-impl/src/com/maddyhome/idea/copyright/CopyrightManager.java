@@ -54,16 +54,28 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @State(name = "CopyrightManager",
-       storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
-         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/", scheme = StorageScheme.DIRECTORY_BASED,
-                  stateSplitter = CopyrightManager.CopyrightStateSplitter.class)})
-public class CopyrightManager extends AbstractProjectComponent implements JDOMExternalizable, PersistentStateComponent<Element> {
+       storages = {
+               @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/",
+                        scheme = StorageScheme.DIRECTORY_BASED,
+                        stateSplitter = CopyrightManager.CopyrightStateSplitter.class)
+       })
+public class CopyrightManager extends AbstractProjectComponent implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#" + CopyrightManager.class.getName());
-  @Nullable
-  private CopyrightProfile myDefaultCopyright = null;
+  @NonNls
+  private static final String COPYRIGHT = "copyright";
+  @NonNls
+  private static final String MODULE2COPYRIGHT = "module2copyright";
+  @NonNls
+  private static final String ELEMENT = "element";
+  @NonNls
+  private static final String MODULE = "module";
+  @NonNls
+  private static final String DEFAULT = "default";
   private final LinkedHashMap<String, String> myModule2Copyrights = new LinkedHashMap<String, String>();
   private final Map<String, CopyrightProfile> myCopyrights = new HashMap<String, CopyrightProfile>();
   private final CopyrightFileConfigManager myCopyrightFileConfigManager = new CopyrightFileConfigManager();
+  @Nullable
+  private CopyrightProfile myDefaultCopyright = null;
 
   public CopyrightManager(@NotNull Project project,
                           @NotNull final EditorFactory editorFactory,
@@ -116,17 +128,6 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
     }
   }
 
-  @NonNls
-  private static final String COPYRIGHT = "copyright";
-  @NonNls
-  private static final String MODULE2COPYRIGHT = "module2copyright";
-  @NonNls
-  private static final String ELEMENT = "element";
-  @NonNls
-  private static final String MODULE = "module";
-  @NonNls
-  private static final String DEFAULT = "default";
-
   public static CopyrightManager getInstance(Project project) {
     return project.getComponent(CopyrightManager.class);
   }
@@ -138,29 +139,26 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
     return "CopyrightManager";
   }
 
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
+  private void readExternal(Element element) throws InvalidDataException {
     clearCopyrights();
     final Element module2copyright = element.getChild(MODULE2COPYRIGHT);
     if (module2copyright != null) {
-      for (Object o : module2copyright.getChildren(ELEMENT)) {
-        final Element el = (Element)o;
-        final String moduleName = el.getAttributeValue(MODULE);
-        final String copyrightName = el.getAttributeValue(COPYRIGHT);
+      for (Element o : module2copyright.getChildren(ELEMENT)) {
+        final String moduleName = o.getAttributeValue(MODULE);
+        final String copyrightName = o.getAttributeValue(COPYRIGHT);
         myModule2Copyrights.put(moduleName, copyrightName);
       }
     }
-    for (Object o : element.getChildren(COPYRIGHT)) {
+    for (Element o : element.getChildren(COPYRIGHT)) {
       final CopyrightProfile copyrightProfile = new CopyrightProfile();
-      copyrightProfile.readExternal((Element)o);
+      copyrightProfile.readExternal(o);
       myCopyrights.put(copyrightProfile.getName(), copyrightProfile);
     }
     myDefaultCopyright = myCopyrights.get(element.getAttributeValue(DEFAULT));
     myCopyrightFileConfigManager.readExternal(element);
   }
 
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
+  private void writeExternal(Element element) throws WriteExternalException {
     for (CopyrightProfile copyright : myCopyrights.values()) {
       final Element copyrightElement = new Element(COPYRIGHT);
       copyright.writeExternal(copyrightElement);
@@ -177,7 +175,6 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
     element.setAttribute(DEFAULT, myDefaultCopyright != null ? myDefaultCopyright.getName() : "");
     myCopyrightFileConfigManager.writeExternal(element);
   }
-
 
   @Override
   public Element getState() {
@@ -206,13 +203,13 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
     return myModule2Copyrights;
   }
 
-  public void setDefaultCopyright(@Nullable CopyrightProfile copyright) {
-    myDefaultCopyright = copyright;
-  }
-
   @Nullable
   public CopyrightProfile getDefaultCopyright() {
     return myDefaultCopyright;
+  }
+
+  public void setDefaultCopyright(@Nullable CopyrightProfile copyright) {
+    myDefaultCopyright = copyright;
   }
 
   public void addCopyright(CopyrightProfile copyrightProfile) {
@@ -254,8 +251,7 @@ public class CopyrightManager extends AbstractProjectComponent implements JDOMEx
   @Nullable
   public CopyrightProfile getCopyrightOptions(@NotNull PsiFile file) {
     final VirtualFile virtualFile = file.getVirtualFile();
-    if (virtualFile == null ||
-        myCopyrightFileConfigManager.getOptions(virtualFile.getFileType()).getFileTypeOverride() == CopyrightFileConfig.NO_COPYRIGHT) {
+    if (virtualFile == null || myCopyrightFileConfigManager.getOptions(virtualFile.getFileType()).getFileTypeOverride() == CopyrightFileConfig.NO_COPYRIGHT) {
       return null;
     }
     final DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
