@@ -64,10 +64,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;
 import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Alarm;
-import com.intellij.util.CommonProcessors;
-import com.intellij.util.Processor;
-import com.intellij.util.SmartList;
+import com.intellij.util.*;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
@@ -620,11 +617,11 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements JDOM
     return false;
   }
 
-  @Nullable
+  @NotNull
   public static List<LineMarkerInfo> getLineMarkers(@NotNull Document document, Project project) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     MarkupModel markup = DocumentMarkupModel.forDocument(document, project, true);
-    return markup.getUserData(MARKERS_IN_EDITOR_DOCUMENT_KEY);
+    return ObjectUtils.notNull(markup.getUserData(MARKERS_IN_EDITOR_DOCUMENT_KEY), Collections.<LineMarkerInfo>emptyList());
   }
 
   static void setLineMarkers(@NotNull Document document, List<LineMarkerInfo> lineMarkers, Project project) {
