@@ -18,16 +18,19 @@ package com.intellij.codeInsight.actions;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine;
+import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
@@ -36,36 +39,59 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
   public static final String COMMAND_NAME = "Rearrange code";
   public static final String PROGRESS_TEXT = "Rearranging code...";
 
-  @Nullable private Condition<PsiFile> myAcceptCondition;
+  @Nullable private SelectionModel mySelectionModel;
 
-  public RearrangeCodeProcessor(@NotNull AbstractLayoutCodeProcessor previousProcessor,
-                                @Nullable Condition<PsiFile> acceptCondition) {
+  public RearrangeCodeProcessor(@NotNull AbstractLayoutCodeProcessor previousProcessor) {
     super(previousProcessor, COMMAND_NAME, PROGRESS_TEXT);
-    myAcceptCondition = acceptCondition;
   }
 
-  public boolean shouldRearrangeFile(@NotNull PsiFile file) {
-    return myAcceptCondition == null || myAcceptCondition.value(file);
+  public RearrangeCodeProcessor(@NotNull AbstractLayoutCodeProcessor previousProcessor, @NotNull SelectionModel selectionModel) {
+    super(previousProcessor, COMMAND_NAME, PROGRESS_TEXT);
+    mySelectionModel = selectionModel;
+  }
+
+  public RearrangeCodeProcessor(@NotNull Project project,
+                                @NotNull PsiFile file,
+                                @Nullable SelectionModel selectionModel) {
+    super(project, file, PROGRESS_TEXT, COMMAND_NAME, false);
+    mySelectionModel = selectionModel;
+  }
+
+  public RearrangeCodeProcessor(@NotNull Project project,
+                                @NotNull PsiFile[] files,
+                                @NotNull String commandName,
+                                @Nullable Runnable postRunnable) {
+    super(project, files, PROGRESS_TEXT, commandName, postRunnable, false);
   }
 
   @NotNull
   @Override
-  protected FutureTask<Boolean> prepareTask(@NotNull final PsiFile file, boolean processChangedTextOnly) {
+  protected FutureTask<Boolean> prepareTask(@NotNull final PsiFile file, final boolean processChangedTextOnly) {
     return new FutureTask<Boolean>(new Callable<Boolean>() {
       @Override
       public Boolean call() throws Exception {
-        if (!shouldRearrangeFile(file)) return true;
+        Collection<TextRange> ranges = processChangedTextOnly ? FormatChangedTextUtil.getChangedTextRanges(myProject, file)
+                                                              : getRangesToFormat(file);
 
-        RearrangeCommand rearranger = new RearrangeCommand(myProject, file, COMMAND_NAME);
+        RearrangeCommand rearranger = new RearrangeCommand(myProject, file, COMMAND_NAME, ranges);
         if (rearranger.couldRearrange()) {
           rearranger.run();
-          return true;
         }
-        return false;
+        return true;
       }
     });
   }
 
+  public Collection<TextRange> getRangesToFormat(@NotNull PsiFile file) {
+    final List<TextRange> ranges = new SmartList<TextRange>();
+    if (mySelectionModel != null && mySelectionModel.hasSelection()) {
+      ranges.add(TextRange.create(mySelectionModel.getSelectionStart(), mySelectionModel.getSelectionEnd()));
+    }
+    else {
+      ranges.add(TextRange.create(0, file.getTextLength()));
+    }
+    return ranges;
+  }
 }
 
 
@@ -75,10 +101,12 @@ class RearrangeCommand {
   @NotNull private Project myProject;
   private Document myDocument;
   private Runnable myCommand;
+  private final Collection<TextRange> myRanges;
 
-  RearrangeCommand(@NotNull Project project, @NotNull PsiFile file, @NotNull String commandName) {
+  RearrangeCommand(@NotNull Project project, @NotNull PsiFile file, @NotNull String commandName, @NotNull Collection<TextRange> ranges) {
     myProject = project;
     myFile = file;
+    myRanges = ranges;
     myCommandName = commandName;
     myDocument = PsiDocumentManager.getInstance(project).getDocument(file);
   }
@@ -103,7 +131,7 @@ class RearrangeCommand {
     myCommand = new Runnable() {
       @Override
       public void run() {
-        engine.arrange(myFile, Collections.singleton(myFile.getTextRange()));
+        engine.arrange(myFile, myRanges);
       }
     };
     PsiDocumentManager.getInstance(myProject).doPostponedOperationsAndUnblockDocument(myDocument);

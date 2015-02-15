@@ -68,7 +68,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
       public JComponent getComponent() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(checkBox);
-        refreshEnable(checkBox);
+        CheckinHandlerUtil.disableWhenDumb(myProject, checkBox, "Code analysis is impossible until indices are up-to-date");
         return panel;
       }
 
@@ -86,16 +86,6 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
         checkBox.setSelected(getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT);
       }
     };
-  }
-
-  private void refreshEnable(JCheckBox checkBox) {
-    if (DumbService.getInstance(myProject).isDumb()) {
-      checkBox.setEnabled(false);
-      checkBox.setToolTipText("Code analysis is impossible until indices are up-to-date");
-    } else {
-      checkBox.setEnabled(true);
-      checkBox.setToolTipText("");
-    }
   }
 
   private VcsConfiguration getSettings() {
