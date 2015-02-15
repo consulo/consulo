@@ -27,9 +27,9 @@ public class CopyrightProfile extends ProfileEx {
                       "Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. \n" +
                       "Vestibulum commodo. Ut rhoncus gravida arcu. ");
 
-  public String notice = DEFAULT_COPYRIGHT_NOTICE;
-  public String keyword = EntityUtil.encode("Copyright");
-  public String allowReplaceKeyword = "";
+  private String notice = DEFAULT_COPYRIGHT_NOTICE;
+  private String keyword = EntityUtil.encode("Copyright");
+  private String allowReplaceKeyword = "";
 
   //read external
   public CopyrightProfile() {

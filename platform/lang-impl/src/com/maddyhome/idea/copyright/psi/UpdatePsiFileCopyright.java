@@ -183,7 +183,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
           String oldComment =
                   doc.getCharsSequence().subSequence(range.getFirst().getTextRange().getStartOffset(), range.getLast().getTextRange().getEndOffset()).toString()
                           .trim();
-          if (!StringUtil.isEmptyOrSpaces(myCopyrightProfile.getAllowReplaceKeyword()) && !oldComment.contains(myCopyrightProfile.allowReplaceKeyword)) {
+          if (!StringUtil.isEmptyOrSpaces(myCopyrightProfile.getAllowReplaceKeyword()) && !oldComment.contains(myCopyrightProfile.getAllowReplaceKeyword())) {
             return;
           }
           if (newComment.trim().equals(oldComment)) {
