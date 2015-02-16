@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiModificationTracker;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
@@ -33,7 +34,11 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
   }
 
   @Override
-  public void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
+  public final void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
+    PsiFile file = event.getFile();
+    if(file == null || !isMyFile(file)) {
+      return;
+    }
     boolean changedInsideCodeBlock = false;
 
     switch (event.getCode()) {
@@ -78,5 +83,7 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
     }
   }
 
-  protected abstract boolean isInsideCodeBlock(PsiElement element);
+  protected abstract boolean isMyFile(@NotNull PsiFile file);
+
+  protected abstract boolean isInsideCodeBlock(@Nullable PsiElement element);
 }
