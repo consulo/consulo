@@ -47,28 +47,22 @@ import java.awt.event.ActionListener;
 
 public class TemplateCommentPanel implements SearchableConfigurable {
   private final CopyrightManager myManager;
-
   private final TemplateCommentPanel parentPanel;
   private final String myOptionName;
+  private final EventListenerList listeners = new EventListenerList();
   private JRadioButton[] fileLocations = null;
-
   private JTextArea preview;
   private JPanel mainPanel;
-
   private JRadioButton rbBefore;
   private JRadioButton rbAfter;
-
   private JPanel fileLocationPanel;
-
   private JRadioButton myUseDefaultSettingsRadioButton;
   private JRadioButton myUseCustomFormattingOptionsRadioButton;
   private JRadioButton myNoCopyright;
-
   private JRadioButton rbLineComment;
   private JCheckBox cbPrefixLines;
   private JRadioButton rbBlockComment;
   private JPanel myCommentTypePanel;
-
   private JCheckBox cbSeparatorBefore;
   private JTextField txtLengthBefore;
   private JTextField txtLengthAfter;
@@ -81,10 +75,7 @@ public class TemplateCommentPanel implements SearchableConfigurable {
   private JLabel lblLengthAfter;
   private JLabel mySeparatorCharLabel;
   private JPanel myAdditionalPanel;
-
-  private final EventListenerList listeners = new EventListenerList();
   private boolean myAllowBlock;
-
   private Commenter myCommenter;
   private boolean myAllowSeparator;
   private FileType myFileType;
@@ -243,7 +234,7 @@ public class TemplateCommentPanel implements SearchableConfigurable {
 
   }
 
-  public void addLocationInFile(@NotNull String[] locations)  {
+  public void addLocationInFile(@NotNull String[] locations) {
     fileLocationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Location in File"));
     fileLocations = new JRadioButton[locations.length];
     ButtonGroup group = new ButtonGroup();
@@ -373,10 +364,22 @@ public class TemplateCommentPanel implements SearchableConfigurable {
   }
 
   private void showPreview(CopyrightFileConfig options) {
-    final String defaultCopyrightText = myNoCopyright.isSelected()
-                                        ? ""
-                                        : FileTypeUtil.buildComment(myCommenter, myAllowSeparator, VelocityHelper
-                                                .evaluate(null, null, null, EntityUtil.decode(CopyrightProfile.DEFAULT_COPYRIGHT_NOTICE)), options);
+    final String defaultCopyrightText;
+
+    if (myNoCopyright.isSelected()) {
+      defaultCopyrightText = "";
+    }
+    else {
+      String evaluate;
+      try {
+        evaluate = VelocityHelper.evaluate(null, null, null, EntityUtil.decode(CopyrightProfile.DEFAULT_COPYRIGHT_NOTICE));
+      }
+      catch (Exception e) {
+        evaluate = "";
+      }
+      defaultCopyrightText = FileTypeUtil.buildComment(myCommenter, myAllowSeparator, evaluate, options);
+    }
+
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -414,7 +417,7 @@ public class TemplateCommentPanel implements SearchableConfigurable {
   @Override
   public void apply() throws ConfigurationException {
     final CopyrightFileConfigManager copyrightFileConfigManager = myManager.getCopyrightFileConfigManager();
-    if(myFileType == null) {
+    if (myFileType == null) {
       copyrightFileConfigManager.setTemplateOptions(getOptions());
     }
     else {

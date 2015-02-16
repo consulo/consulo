@@ -33,7 +33,13 @@ import org.jetbrains.annotations.Nullable;
 import java.io.StringWriter;
 
 public class VelocityHelper {
-  public static String evaluate(@Nullable PsiFile file, @Nullable Project project, @Nullable Module module, @NotNull String template) {
+  private static VelocityEngine instance;
+
+  private VelocityHelper() {
+  }
+
+  @NotNull
+  public static String evaluate(@Nullable PsiFile file, @Nullable Project project, @Nullable Module module, @NotNull String template) throws Exception {
     VelocityEngine engine = getEngine();
 
     VelocityContext vc = new VelocityContext();
@@ -43,36 +49,20 @@ public class VelocityHelper {
     if (module != null) vc.put("module", new ModuleInfo(module));
     vc.put("username", System.getProperty("user.name"));
 
-    try {
-      StringWriter sw = new StringWriter();
-      boolean stripLineBreak = false;
-      if (template.endsWith("$")) {
-        template += getVelocitySuffix();
-        stripLineBreak = true;
-      }
-      engine.evaluate(vc, sw, CopyrightManager.class.getName(), template);
-      final String result = sw.getBuffer().toString();
-      return stripLineBreak ? StringUtil.trimEnd(result, getVelocitySuffix()) : result;
+
+    StringWriter sw = new StringWriter();
+    boolean stripLineBreak = false;
+    if (template.endsWith("$")) {
+      template += getVelocitySuffix();
+      stripLineBreak = true;
     }
-    catch (Exception e) {
-      return "";
-    }
+    engine.evaluate(vc, sw, CopyrightManager.class.getName(), template);
+    final String result = sw.getBuffer().toString();
+    return stripLineBreak ? StringUtil.trimEnd(result, getVelocitySuffix()) : result;
   }
 
   private static String getVelocitySuffix() {
     return "\n";
-  }
-
-  public static void verify(String text) throws Exception {
-    VelocityEngine engine = getEngine();
-
-    VelocityContext vc = new VelocityContext();
-    vc.put("today", new DateInfo());
-    StringWriter sw = new StringWriter();
-    if (text.endsWith("$")) {
-      text += getVelocitySuffix();
-    }
-    engine.evaluate(vc, sw, CopyrightManager.class.getName(), text);
   }
 
   private static synchronized VelocityEngine getEngine() {
@@ -101,9 +91,4 @@ public class VelocityHelper {
 
     return instance;
   }
-
-  private VelocityHelper() {
-  }
-
-  private static VelocityEngine instance;
 }

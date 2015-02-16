@@ -366,7 +366,13 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
         myCommentText = "";
       }
       else {
-        String expanded = VelocityHelper.evaluate(myPsiFile, getProject(), getModule(), base);
+        String expanded = null;
+        try {
+          expanded = VelocityHelper.evaluate(myPsiFile, getProject(), getModule(), base);
+        }
+        catch (Exception e) {
+          expanded = "";
+        }
         String cmt = FileTypeUtil.buildComment(myFileType, expanded, myFileConfig);
         myCommentText = StringUtil.convertLineSeparators(prefix + cmt + suffix);
       }
