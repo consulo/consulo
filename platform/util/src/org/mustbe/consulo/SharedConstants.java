@@ -21,5 +21,5 @@ package org.mustbe.consulo;
  */
 public interface SharedConstants {
   String PATCH_FILE_NAME = "mustbe.patch.jar.consulo";
-  String BUG_TRACKER_URL = "http://napile.myjetbrains.com/youtrack/";
+  String BUG_TRACKER_URL = "https://github.com/consulo/consulo/issues";
 }
