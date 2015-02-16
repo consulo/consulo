@@ -16,8 +16,10 @@
 
 package com.intellij.psi.impl;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.util.PsiModificationTracker;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,8 +28,8 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePreprocessor {
   private final PsiModificationTrackerImpl myModificationTracker;
 
-  public PsiTreeChangePreprocessorBase(PsiManagerImpl psiManager) {
-    myModificationTracker = (PsiModificationTrackerImpl) psiManager.getModificationTracker();
+  public PsiTreeChangePreprocessorBase(@NotNull Project project) {
+    myModificationTracker = (PsiModificationTrackerImpl)PsiModificationTracker.SERVICE.getInstance(project);
   }
 
   @Override
