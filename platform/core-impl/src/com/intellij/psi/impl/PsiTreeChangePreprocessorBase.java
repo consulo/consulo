@@ -28,7 +28,6 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
 
   public PsiTreeChangePreprocessorBase(PsiManagerImpl psiManager) {
     myModificationTracker = (PsiModificationTrackerImpl) psiManager.getModificationTracker();
-    psiManager.addTreeChangePreprocessor(this);
   }
 
   @Override
