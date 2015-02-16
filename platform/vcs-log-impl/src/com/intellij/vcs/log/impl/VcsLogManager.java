@@ -18,7 +18,6 @@ package com.intellij.vcs.log.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -70,12 +69,13 @@ public class VcsLogManager implements Disposable {
     myProject = project;
     mySettings = settings;
     myUiProperties = uiProperties;
-    Disposer.register(myProject, this);
   }
 
   @NotNull
   public JComponent initContent(@NotNull Collection<VcsRoot> roots, @Nullable String contentTabName) {
-    final Map<VirtualFile, VcsLogProvider> logProviders = findLogProviders(roots);
+    Disposer.register(myProject, this);
+
+    final Map<VirtualFile, VcsLogProvider> logProviders = findLogProviders(roots, myProject);
 
     Consumer<VisiblePack> visiblePackConsumer = new Consumer<VisiblePack>() {
       @Override
@@ -133,9 +133,9 @@ public class VcsLogManager implements Disposable {
   }
 
   @NotNull
-  public Map<VirtualFile, VcsLogProvider> findLogProviders(@NotNull Collection<VcsRoot> roots) {
+  public static Map<VirtualFile, VcsLogProvider> findLogProviders(@NotNull Collection<VcsRoot> roots, @NotNull Project project) {
     Map<VirtualFile, VcsLogProvider> logProviders = ContainerUtil.newHashMap();
-    VcsLogProvider[] allLogProviders = Extensions.getExtensions(LOG_PROVIDER_EP, myProject);
+    VcsLogProvider[] allLogProviders = LOG_PROVIDER_EP.getExtensions(project);
     for (VcsRoot root : roots) {
       AbstractVcs vcs = root.getVcs();
       VirtualFile path = root.getPath();
