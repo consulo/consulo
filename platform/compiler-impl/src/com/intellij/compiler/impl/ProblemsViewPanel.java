@@ -51,7 +51,7 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanel {
   }
 
   @Override
-  protected boolean canHideWarnings() {
+  protected boolean canHideWarningsOrInfos() {
     return true;
   }
 }

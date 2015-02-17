@@ -40,7 +40,7 @@ import java.util.StringTokenizer;
 public abstract class ProblemsView {
   public static final String PROBLEMS_TOOLWINDOW_ID = "Problems";
 
-  private final Project myProject;
+  protected final Project myProject;
 
   protected ProblemsView(Project project) {
     myProject = project;

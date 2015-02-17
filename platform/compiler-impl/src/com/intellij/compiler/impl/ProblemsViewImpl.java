@@ -19,6 +19,7 @@ import com.intellij.compiler.ProblemsView;
 import com.intellij.ide.errorTreeView.ErrorTreeElement;
 import com.intellij.ide.errorTreeView.ErrorViewStructure;
 import com.intellij.ide.errorTreeView.GroupingElement;
+import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileScope;
@@ -150,7 +151,7 @@ public class ProblemsViewImpl extends ProblemsView {
 
   @Override
   public boolean isHideWarnings() {
-    return myPanel.isHideWarnings();
+    return !ErrorTreeViewConfiguration.getInstance(myProject).SHOW_WARNINGS;
   }
 
   @Override

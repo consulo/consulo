@@ -366,7 +366,7 @@ public class ExecutionHelper {
     }
 
     @Override
-    protected boolean canHideWarnings() {
+    protected boolean canHideWarningsOrInfos() {
       return false;
     }
   }

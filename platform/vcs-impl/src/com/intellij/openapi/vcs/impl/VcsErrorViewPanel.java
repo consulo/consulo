@@ -26,7 +26,7 @@ class VcsErrorViewPanel extends NewErrorTreeViewPanel {
     super(project, null);
   }
 
-  protected boolean canHideWarnings() {
+  protected boolean canHideWarningsOrInfos() {
     return false;
   }
 }
