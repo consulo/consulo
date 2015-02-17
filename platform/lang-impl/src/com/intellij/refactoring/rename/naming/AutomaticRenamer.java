@@ -25,6 +25,7 @@ import com.intellij.refactoring.rename.UnresolvableCollisionUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.*;
 
@@ -48,10 +49,12 @@ public abstract class AutomaticRenamer {
     return false;
   }
 
+  @RequiredReadAction
   public void findUsages(List<UsageInfo> result, final boolean searchInStringsAndComments, final boolean searchInNonJavaFiles) {
     findUsages(result, searchInStringsAndComments, searchInNonJavaFiles, null);
   }
 
+  @RequiredReadAction
   public void findUsages(List<UsageInfo> result,
                          final boolean searchInStringsAndComments,
                          final boolean searchInNonJavaFiles,
@@ -59,6 +62,7 @@ public abstract class AutomaticRenamer {
     findUsages(result, searchInStringsAndComments, searchInNonJavaFiles, unresolvedUsages, null);
   }
 
+  @RequiredReadAction
   public void findUsages(List<UsageInfo> result,
                          final boolean searchInStringsAndComments,
                          final boolean searchInNonJavaFiles,
@@ -74,6 +78,7 @@ public abstract class AutomaticRenamer {
     }
   }
 
+  @RequiredReadAction
   private boolean findUsagesForElement(PsiNamedElement element,
                                        List<UsageInfo> result,
                                        final boolean searchInStringsAndComments,

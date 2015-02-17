@@ -219,9 +219,14 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     final Runnable runnable = new Runnable() {
       @Override
       public void run() {
-        for (final AutomaticRenamer renamer : myRenamers) {
-          renamer.findUsages(variableUsages, mySearchInComments, mySearchTextOccurrences, mySkippedUsages, myAllRenames);
-        }
+        ApplicationManager.getApplication().runReadAction(new Runnable() {
+          @Override
+          public void run() {
+            for (final AutomaticRenamer renamer : myRenamers) {
+              renamer.findUsages(variableUsages, mySearchInComments, mySearchTextOccurrences, mySkippedUsages, myAllRenames);
+            }
+          }
+        });
       }
     };
 
