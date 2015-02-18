@@ -505,7 +505,6 @@
           <orderEntry type="module" module-name="core-api" exported="" />
           <orderEntry type="library" exploded="" name="picocontainer" level="project" />
           <orderEntry type="module" module-name="bootstrap" />
-          <orderEntry type="library" exploded="" name="jgoodies-forms" level="project" />
           <orderEntry type="module" module-name="forms_rt" exported="" />
           <orderEntry type="library" exploded="" name="commons-codec" level="project" />
           <orderEntry type="module" module-name="platform-resources-en" exported="" />
