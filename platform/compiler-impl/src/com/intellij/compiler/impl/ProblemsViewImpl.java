@@ -16,6 +16,7 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.compiler.ProblemsView;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.errorTreeView.ErrorTreeElement;
 import com.intellij.ide.errorTreeView.ErrorViewStructure;
 import com.intellij.ide.errorTreeView.GroupingElement;
@@ -26,6 +27,7 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.EmptyRunnable;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.pom.Navigatable;
@@ -71,6 +73,7 @@ public class ProblemsViewImpl extends ProblemsView {
       public void run() {
         cleanupChildrenRecursively(myPanel.getErrorViewStructure().getRootElement(), scope);
         myPanel.reload();
+        updateIcon();
       }
     });
   }
@@ -115,6 +118,7 @@ public class ProblemsViewImpl extends ProblemsView {
         else {
           myPanel.addMessage(type, text, null, -1, -1, null);
         }
+        updateIcon();
       }
     });
   }
@@ -123,7 +127,7 @@ public class ProblemsViewImpl extends ProblemsView {
   public void showOrHide(final boolean hide) {
 
     val toolWindow = myToolWindowManager.getToolWindow(PROBLEMS_TOOLWINDOW_ID);
-    if(toolWindow.isActive() == !hide) {
+    if (toolWindow.isActive() == !hide) {
       return;
     }
     UIUtil.invokeLaterIfNeeded(new Runnable() {
@@ -135,6 +139,16 @@ public class ProblemsViewImpl extends ProblemsView {
         else {
           toolWindow.show(EmptyRunnable.INSTANCE);
         }
+      }
+    });
+  }
+
+  private void updateIcon() {
+    val toolWindow = myToolWindowManager.getToolWindow(PROBLEMS_TOOLWINDOW_ID);
+    UIUtil.invokeLaterIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        toolWindow.setIcon(myPanel.containsErrorMessages() ? AllIcons.Toolwindows.Problems : IconLoader.getDisabledIcon(AllIcons.Toolwindows.Problems));
       }
     });
   }

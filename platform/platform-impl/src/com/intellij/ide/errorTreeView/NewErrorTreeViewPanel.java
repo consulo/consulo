@@ -251,6 +251,10 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
     }
   }
 
+  public boolean containsErrorMessages() {
+    return myErrorViewStructure.getFirstMessage(ErrorTreeElementKind.ERROR) != null;
+  }
+
   private void selectElement(final ErrorTreeElement element, final Runnable onDone) {
     myBuilder.select(element, onDone);
   }
@@ -341,7 +345,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   @Nullable
   public ErrorTreeElement getSelectedErrorTreeElement() {
     final ErrorTreeNodeDescriptor treeNodeDescriptor = getSelectedNodeDescriptor();
-    return treeNodeDescriptor == null? null : treeNodeDescriptor.getElement();
+    return treeNodeDescriptor == null ? null : treeNodeDescriptor.getElement();
   }
 
   @Nullable
@@ -415,7 +419,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       messageView.getContentManager().removeContent(content, true);
     }
   }
-  
+
   public void setProgress(final String s, float fraction) {
     initProgressPanel();
     myProgressText = s;
@@ -428,7 +432,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
     myProgressText = s;
     updateProgress();
   }
-  
+
   public void setFraction(final float fraction) {
     initProgressPanel();
     myFraction = fraction;
@@ -464,7 +468,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
   }
 
-  
+
   private void initProgressPanel() {
     if (myProgressPanel == null) {
       myProgressPanel = new JPanel(new GridLayout(1, 2));
@@ -528,11 +532,9 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
     JPanel toolbarPanel = new JPanel(new GridLayout(1, 2));
     final ActionManager actionManager = ActionManager.getInstance();
-    myLeftToolbar =
-      actionManager.createActionToolbar(ActionPlaces.COMPILER_MESSAGES_TOOLBAR, leftUpdateableActionGroup, false);
+    myLeftToolbar = actionManager.createActionToolbar(ActionPlaces.COMPILER_MESSAGES_TOOLBAR, leftUpdateableActionGroup, false);
     toolbarPanel.add(myLeftToolbar.getComponent());
-    myRightToolbar =
-      actionManager.createActionToolbar(ActionPlaces.COMPILER_MESSAGES_TOOLBAR, rightUpdateableActionGroup, false);
+    myRightToolbar = actionManager.createActionToolbar(ActionPlaces.COMPILER_MESSAGES_TOOLBAR, rightUpdateableActionGroup, false);
     toolbarPanel.add(myRightToolbar.getComponent());
 
     return toolbarPanel;
