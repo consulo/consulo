@@ -30,7 +30,8 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 )
 public class ErrorTreeViewConfiguration implements PersistentStateComponent<ErrorTreeViewConfiguration> {
   public boolean IS_AUTOSCROLL_TO_SOURCE = false;
-  public boolean HIDE_WARNINGS = false;
+  public boolean SHOW_WARNINGS = true;
+  public boolean SHOW_INFOS = true;
 
   public static ErrorTreeViewConfiguration getInstance(Project project) {
     return ServiceManager.getService(project, ErrorTreeViewConfiguration.class);
@@ -44,18 +45,12 @@ public class ErrorTreeViewConfiguration implements PersistentStateComponent<Erro
     IS_AUTOSCROLL_TO_SOURCE = autoscroll;
   }
 
-  public boolean isHideWarnings() {
-    return HIDE_WARNINGS;
-  }
-
-  public void setHideWarnings(boolean value) {
-    HIDE_WARNINGS = value;
-  }
-
+  @Override
   public ErrorTreeViewConfiguration getState() {
     return this;
   }
 
+  @Override
   public void loadState(final ErrorTreeViewConfiguration state) {
     XmlSerializerUtil.copyBean(state, this);
   }

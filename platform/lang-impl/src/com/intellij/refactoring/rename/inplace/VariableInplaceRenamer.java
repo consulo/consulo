@@ -232,7 +232,12 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
             final Runnable runnable = new Runnable() {
               @Override
               public void run() {
-                renamer.findUsages(usages, false, false);
+                ApplicationManager.getApplication().runReadAction(new Runnable() {
+                  @Override
+                  public void run() {
+                    renamer.findUsages(usages, false, false);
+                  }
+                });
               }
             };
 

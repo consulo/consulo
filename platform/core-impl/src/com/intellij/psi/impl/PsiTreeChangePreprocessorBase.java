@@ -16,9 +16,12 @@
 
 package com.intellij.psi.impl;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.util.PsiModificationTracker;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
@@ -26,13 +29,16 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePreprocessor {
   private final PsiModificationTrackerImpl myModificationTracker;
 
-  public PsiTreeChangePreprocessorBase(PsiManagerImpl psiManager) {
-    myModificationTracker = (PsiModificationTrackerImpl) psiManager.getModificationTracker();
-    psiManager.addTreeChangePreprocessor(this);
+  public PsiTreeChangePreprocessorBase(@NotNull Project project) {
+    myModificationTracker = (PsiModificationTrackerImpl)PsiModificationTracker.SERVICE.getInstance(project);
   }
 
   @Override
-  public void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
+  public final void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
+    PsiFile file = event.getFile();
+    if(file == null || !isMyFile(file)) {
+      return;
+    }
     boolean changedInsideCodeBlock = false;
 
     switch (event.getCode()) {
@@ -77,5 +83,7 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
     }
   }
 
-  protected abstract boolean isInsideCodeBlock(PsiElement element);
+  protected abstract boolean isMyFile(@NotNull PsiFile file);
+
+  protected abstract boolean isInsideCodeBlock(@Nullable PsiElement element);
 }

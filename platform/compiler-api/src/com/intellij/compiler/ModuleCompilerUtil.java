@@ -30,6 +30,7 @@ import com.intellij.util.Chunk;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.graph.*;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.*;
 
@@ -56,6 +57,7 @@ public final class ModuleCompilerUtil {
     }));
   }
 
+  @RequiredReadAction
   public static List<Chunk<Module>> getSortedModuleChunks(Project project, List<Module> modules) {
     final Module[] allModules = ModuleManager.getInstance(project).getModules();
     final List<Chunk<Module>> chunks = getSortedChunks(createModuleGraph(allModules));
@@ -132,6 +134,7 @@ public final class ModuleCompilerUtil {
    * @return pair of modules which become circular after adding dependency, or null if all remains OK
    */
   @Nullable
+  @RequiredReadAction
   public static Pair<Module, Module> addingDependencyFormsCircularity(final Module currentModule, Module toDependOn) {
     assert currentModule != toDependOn;
     // whatsa lotsa of @&#^%$ codes-a!

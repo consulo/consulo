@@ -16,9 +16,11 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.compiler.ProblemsView;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
+import com.intellij.openapi.wm.ToolWindowFactoryEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 
@@ -26,7 +28,12 @@ import com.intellij.ui.content.ContentFactory;
  * @author VISTALL
  * @since 02.06.14
  */
-public class ProblemsToolWindowFactory implements ToolWindowFactory {
+public class ProblemsToolWindowFactory implements ToolWindowFactoryEx {
+  @Override
+  public void init(ToolWindow toolWindow) {
+    toolWindow.setIcon(IconLoader.getDisabledIcon(AllIcons.Toolwindows.Problems));
+  }
+
   @Override
   public void createToolWindowContent(Project project, ToolWindow toolWindow) {
     ProblemsViewImpl problemsView = (ProblemsViewImpl)ProblemsView.getInstance(project);

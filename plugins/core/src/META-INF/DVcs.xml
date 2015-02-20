@@ -1,13 +1,23 @@
 <idea-plugin>
+  <project-components>
+    <component>
+      <implementation-class>com.intellij.dvcs.repo.VcsRepositoryManager</implementation-class>
+    </component>
+  </project-components>
+
   <extensionPoints>
     <extensionPoint name="pushSupport"
                     interface="com.intellij.dvcs.push.PushSupport" area="CONSULO_PROJECT"/>
     <extensionPoint name="cherryPicker"
                     interface="com.intellij.dvcs.cherrypick.VcsCherryPicker" area="CONSULO_PROJECT"/>
+    <extensionPoint name="vcsRepositoryCreator" interface="com.intellij.dvcs.repo.VcsRepositoryCreator" area="CONSULO_PROJECT"/>
   </extensionPoints>
   <actions>
     <action id="Vcs.CherryPick" class="com.intellij.dvcs.cherrypick.VcsCherryPickAction" icon="DvcsImplIcons.CherryPick"/>
     <group id="Dvcs.Log.ContextMenu">
+      <action id="Vcs.Push" class="com.intellij.dvcs.push.VcsPushAction" icon="AllIcons.Actions.Commit" text="Push...">
+        <keyboard-shortcut first-keystroke="control shift K" keymap="$default"/>
+      </action>
       <separator/>
       <reference id="Vcs.CherryPick"/>
       <add-to-group group-id="Vcs.Log.ContextMenu"/>
