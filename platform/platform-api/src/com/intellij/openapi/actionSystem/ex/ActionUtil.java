@@ -15,19 +15,21 @@
  */
 package com.intellij.openapi.actionSystem.ex;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -107,6 +109,15 @@ public class ActionUtil {
     final boolean notAllowed = dumbMode && !action.isDumbAware();
 
     try {
+      boolean enabled = checkModuleExtensions(action, e);
+      //FIXME [VISTALL] hack
+      if(enabled && action instanceof ActionGroup) {
+        presentation.setEnabledAndVisible(true);
+      }
+      else if(!enabled) {
+        presentation.setEnabledAndVisible(enabled);
+      }
+
       if (beforeActionPerformed) {
         action.beforeActionPerformedUpdate(e);
       }
@@ -131,6 +142,61 @@ public class ActionUtil {
       }
     }
 
+    return false;
+  }
+
+  @RequiredReadAction
+  private static boolean checkModuleExtensions(AnAction action, AnActionEvent e) {
+    Project project = e.getData(CommonDataKeys.PROJECT);
+    if(project == null) {
+      return true;
+    }
+    String[] moduleExtensionIds = action.getModuleExtensionIds();
+    if(moduleExtensionIds.length == 0) {
+      return true;
+    }
+    if(action.isCanUseProjectAsDefault()) {
+      for (Module temp : ModuleManager.getInstance(project).getModules()) {
+        boolean b = checkModuleForModuleExtensions(temp, moduleExtensionIds);
+        if(b) {
+          return true;
+        }
+      }
+    }
+    else {
+      Module module = e.getData(LangDataKeys.MODULE);
+      if(module != null) {
+        boolean result = checkModuleForModuleExtensions(module, moduleExtensionIds);
+        if(result) {
+          return true;
+        }
+      }
+
+      VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      if(virtualFiles != null) {
+        for (VirtualFile virtualFile : virtualFiles) {
+          Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
+          if(moduleForFile != null) {
+            boolean b = checkModuleForModuleExtensions(moduleForFile, moduleExtensionIds);
+            if(b) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  private static boolean checkModuleForModuleExtensions(@Nullable Module module, @NotNull String[] array) {
+    if(module == null) {
+      return false;
+    }
+    for (String moduleExtensionId : array) {
+      if(ModuleUtilCore.getExtension(module, moduleExtensionId) != null) {
+        return true;
+      }
+    }
     return false;
   }
 
