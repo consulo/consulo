@@ -162,9 +162,7 @@ public class Main {
 
   public static void showMessage(String title, Throwable t) {
     StringWriter message = new StringWriter();
-    message.append("Internal error. Please report to ");
-    message.append(SharedConstants.BUG_TRACKER_URL);
-    message.append("\n\n");
+    message.append("Internal error. Please report to https://github.com/consulo/consulo/issues\n\n");
     t.printStackTrace(new PrintWriter(message));
     showMessage(title, message.toString(), true);
   }
