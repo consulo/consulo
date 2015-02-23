@@ -102,7 +102,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
 
   /**
    * @deprecated
-   * use {@link com.intellij.util.containers.StringInterner#intern(Object)} directly instead
+   * use {@link com.intellij.util.containers.StringInterner#intern(String)} directly instead
    */
   @NotNull
   @Deprecated
@@ -229,6 +229,10 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
 
     // preserve items order as specified in xml (filterBadPlugins will not fail if module comes first)
     Set<PluginId> dependentPlugins = new LinkedHashSet<PluginId>();
+    // we always depend to core plugin, but prevent recursion
+    if(!PluginManagerCore.CORE_PLUGIN.equals(myId)) {
+      dependentPlugins.add(PluginManagerCore.CORE_PLUGIN);
+    }
     Set<PluginId> optionalDependentPlugins = new LinkedHashSet<PluginId>();
     if (pluginBean.dependencies != null) {
       myOptionalConfigs = new THashMap<PluginId, String>();
@@ -561,13 +565,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
 
     return CommonBundle.messageOrDefault(bundle, createDescriptionKey(myId), myDescriptionChildText == null ? "" : myDescriptionChildText);
-  }
-
-  public void insertDependency(final IdeaPluginDescriptor d) {
-    PluginId[] deps = new PluginId[getDependentPluginIds().length + 1];
-    deps[0] = d.getPluginId();
-    System.arraycopy(myDependencies, 0, deps, 1, deps.length - 1);
-    myDependencies = deps;
   }
 
   @Override

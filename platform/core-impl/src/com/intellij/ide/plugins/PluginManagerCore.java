@@ -57,18 +57,26 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class PluginManagerCore {
-  @NonNls public static final String DISABLED_PLUGINS_FILENAME = "disabled_plugins.txt";
-  @NonNls public static final String CORE_PLUGIN_ID = "com.intellij";
-  @NonNls public static final String META_INF = "META-INF";
-  @NonNls public static final String PLUGIN_XML = "plugin.xml";
+  @NonNls
+  public static final String DISABLED_PLUGINS_FILENAME = "disabled_plugins.txt";
+  @NonNls
+  public static final String CORE_PLUGIN_ID = "com.intellij";
+  @NonNls
+  public static final PluginId CORE_PLUGIN = PluginId.getId(CORE_PLUGIN_ID);
+  @NonNls
+  public static final String META_INF = "META-INF";
+  @NonNls
+  public static final String PLUGIN_XML = "plugin.xml";
   public static final float PLUGINS_PROGRESS_MAX_VALUE = 0.3f;
   static final Map<PluginId, Integer> ourId2Index = new THashMap<PluginId, Integer>();
   static final PluginClassCache ourPluginClasses = new PluginClassCache();
-  @NonNls static final String SPECIAL_IDEA_PLUGIN = "IDEA CORE";
+  @NonNls
+  static final String SPECIAL_IDEA_PLUGIN = "IDEA CORE";
   static final String DISABLE = "disable";
   static final String ENABLE = "enable";
   static final String EDIT = "edit";
-  @NonNls private static final String PROPERTY_PLUGIN_PATH = "plugin.path";
+  @NonNls
+  private static final String PROPERTY_PLUGIN_PATH = "plugin.path";
   static List<String> ourDisabledPlugins = null;
   static IdeaPluginDescriptor[] ourPlugins;
   static String myPluginError = null;
@@ -947,14 +955,6 @@ public class PluginManagerCore {
     final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap = new THashMap<PluginId, IdeaPluginDescriptorImpl>();
     for (IdeaPluginDescriptorImpl descriptor : result) {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
-    }
-
-    final IdeaPluginDescriptor corePluginDescriptor = idToDescriptorMap.get(PluginId.getId(CORE_PLUGIN_ID));
-    assert corePluginDescriptor != null : CORE_PLUGIN_ID + " not found;";
-    for (IdeaPluginDescriptorImpl descriptor : result) {
-      if (descriptor != corePluginDescriptor) {
-        descriptor.insertDependency(corePluginDescriptor);
-      }
     }
 
     mergeOptionalConfigs(idToDescriptorMap);

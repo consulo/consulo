@@ -36,7 +36,7 @@ public class PluginId implements Comparable<PluginId> {
   }
 
   @Override
-  public int compareTo(PluginId o) {
+  public int compareTo(@NotNull PluginId o) {
     return myIdString.compareTo(o.myIdString);
   }
 
@@ -62,5 +62,22 @@ public class PluginId implements Comparable<PluginId> {
 
   public static Map<String, PluginId> getRegisteredIds() {
     return ourRegisteredIds;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    PluginId pluginId = (PluginId)o;
+
+    if (myIdString != null ? !myIdString.equals(pluginId.myIdString) : pluginId.myIdString != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return myIdString != null ? myIdString.hashCode() : 0;
   }
 }
