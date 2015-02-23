@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="httpmime-4.3.6">
+  <library name="httpmime">
     <binaries>
       <root url="jar://$PROJECT_DIR$/lib/httpmime-4.3.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/httpclient-4.3.6.jar!/" />

@@ -33,14 +33,16 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.PathUtil;
-import com.intellij.util.io.UrlConnectionUtil;
+import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
-import com.intellij.util.net.NetUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -212,54 +214,27 @@ public class PluginDownloader {
     }
   }
 
-  private File downloadPlugin(final ProgressIndicator pi) throws IOException {
-    final File pluginsTemp = new File(PathManager.getPluginTempPath());
+  private File downloadPlugin(final ProgressIndicator indicator) throws IOException {
+    File pluginsTemp = new File(PathManager.getPluginTempPath());
     if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
       throw new IOException(IdeBundle.message("error.cannot.create.temp.dir", pluginsTemp));
     }
     final File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
 
-    pi.setText(IdeBundle.message("progress.connecting"));
+    indicator.checkCanceled();
+    indicator.setText2(IdeBundle.message("progress.downloading.plugin", getPluginName()));
 
-    URLConnection connection = null;
-    try {
-      connection = openConnection(myPluginUrl);
+    return HttpRequests.request(myPluginUrl).gzip(false).connect(new HttpRequests.RequestProcessor<File>() {
+      @Override
+      public File process(@NotNull HttpRequests.Request request) throws IOException {
+        request.saveToFile(file, indicator);
 
-      final InputStream is = UrlConnectionUtil.getConnectionInputStream(connection, pi);
-      if (is == null) {
-        throw new IOException("Failed to open connection");
+        String fileName = guessFileName(request.getConnection(), file);
+        File newFile = new File(file.getParentFile(), fileName);
+        FileUtil.rename(file, newFile);
+        return newFile;
       }
-
-      pi.setText(IdeBundle.message("progress.downloading.plugin", getPluginName()));
-      final int contentLength = connection.getContentLength();
-      pi.setIndeterminate(contentLength == -1);
-
-      try {
-        final OutputStream fos = new BufferedOutputStream(new FileOutputStream(file, false));
-        try {
-          NetUtils.copyStreamContent(pi, is, fos, contentLength);
-        }
-        finally {
-          fos.close();
-        }
-      }
-      finally {
-        is.close();
-      }
-
-      if (myFileName == null) {
-        myFileName = guessFileName(connection, file);
-      }
-
-      final File newFile = new File(file.getParentFile(), myFileName);
-      FileUtil.rename(file, newFile);
-      return newFile;
-    }
-    finally {
-      if (connection instanceof HttpURLConnection) {
-        ((HttpURLConnection)connection).disconnect();
-      }
-    }
+    });
   }
 
   private URLConnection openConnection(final String url) throws IOException {
