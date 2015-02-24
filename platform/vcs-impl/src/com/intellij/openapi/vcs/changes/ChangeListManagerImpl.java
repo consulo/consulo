@@ -62,6 +62,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import javax.swing.*;
 import java.io.File;
@@ -332,7 +333,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     ProjectFileIndex fileIndex = ProjectFileIndex.SERVICE.getInstance(myProject);
     VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
     for (Module module : ModuleManager.getInstance(myProject).getModules()) {
-      for (String url : ModuleRootManager.getInstance(module).getExcludeRootUrls()) {
+      for (String url : ModuleRootManager.getInstance(module).getContentFolderUrls(ContentFolderScopes.excluded())) {
         VirtualFile file = virtualFileManager.findFileByUrl(url);
         if (file != null && !fileIndex.isExcluded(file)) {
           //root is included into some inner module so it shouldn't be ignored

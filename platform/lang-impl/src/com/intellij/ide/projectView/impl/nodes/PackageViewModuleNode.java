@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +41,7 @@ public class PackageViewModuleNode extends AbstractModuleNode{
   @NotNull
   public Collection<AbstractTreeNode> getChildren() {
     final Collection<AbstractTreeNode> result = PackageNodeUtil
-      .createPackageViewChildrenOnFiles(Arrays.asList(ModuleRootManager.getInstance(getValue()).getSourceRoots()), myProject, getSettings(),
+      .createPackageViewChildrenOnFiles(Arrays.asList(ModuleRootManager.getInstance(getValue()).getContentFolderFiles(ContentFolderScopes.productionAndTest())), myProject, getSettings(),
                                         getValue(), false);
     if (getSettings().isShowLibraryContents()) {
       result.add(new PackageViewLibrariesNode(getProject(), getValue(),getSettings()));

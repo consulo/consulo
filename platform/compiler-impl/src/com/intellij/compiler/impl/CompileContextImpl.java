@@ -55,6 +55,7 @@ import org.consulo.compiler.server.rmi.CompilerClientConnector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.compiler.roots.CompilerPathsImpl;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
@@ -417,7 +418,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     Set<VirtualFile> additionalRoots = myModuleToRootsMap.get(module);
-    VirtualFile[] moduleRoots = ModuleRootManager.getInstance(module).getSourceRoots();
+    VirtualFile[] moduleRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.productionAndTest());
     if (additionalRoots == null || additionalRoots.isEmpty()) {
       myModuleToRootsCache.put(module, moduleRoots);
       return moduleRoots;

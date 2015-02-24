@@ -27,6 +27,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Query;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 @Logger
 public class ResourceFileUtil {
@@ -35,7 +36,7 @@ public class ResourceFileUtil {
 
   @Nullable
   public static VirtualFile findResourceFile(final String name, final Module inModule) {
-    final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(inModule).getSourceRoots();
+    final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(inModule).getContentFolderFiles(ContentFolderScopes.productionAndTest());
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(inModule.getProject()).getFileIndex();
     for (final VirtualFile sourceRoot : sourceRoots) {
       final String packagePrefix = fileIndex.getPackageNameByDirectory(sourceRoot);

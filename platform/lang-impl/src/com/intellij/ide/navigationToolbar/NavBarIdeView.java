@@ -22,6 +22,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.ArrayList;
 
@@ -69,7 +70,7 @@ public final class NavBarIdeView implements IdeView {
     final Module module = myPanel.getSelectedElement(Module.class);
     if (module != null && !module.isDisposed()) {
       ArrayList<PsiDirectory> dirs = new ArrayList<PsiDirectory>();
-      final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getSourceRoots();
+      final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.productionAndTest());
       final PsiManager psiManager = PsiManager.getInstance(myPanel.getProject());
       for (VirtualFile virtualFile : sourceRoots) {
         final PsiDirectory directory = psiManager.findDirectory(virtualFile);

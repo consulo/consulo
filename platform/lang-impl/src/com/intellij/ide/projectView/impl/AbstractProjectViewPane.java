@@ -61,6 +61,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -524,7 +525,7 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
       final Module module = ((AbstractModuleNode)userObject).getValue();
       if (module != null) {
         final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-        final VirtualFile[] sourceRoots = moduleRootManager.getSourceRoots();
+        final VirtualFile[] sourceRoots = moduleRootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest());
         List<PsiDirectory> dirs = new ArrayList<PsiDirectory>(sourceRoots.length);
         final PsiManager psiManager = PsiManager.getInstance(myProject);
         for (final VirtualFile sourceRoot : sourceRoots) {

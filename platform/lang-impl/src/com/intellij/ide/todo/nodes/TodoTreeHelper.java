@@ -36,6 +36,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.*;
 
@@ -53,7 +54,7 @@ public class TodoTreeHelper {
     }
     else {
       ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-      ContainerUtil.addAll(sourceRoots, moduleRootManager.getSourceRoots());
+      ContainerUtil.addAll(sourceRoots, moduleRootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest()));
     }
 
     final Set<PsiPackage> topLevelPackages = new HashSet<PsiPackage>();
@@ -140,7 +141,7 @@ public class TodoTreeHelper {
     else {
       ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
       ContainerUtil.addAll(roots, moduleRootManager.getContentRoots());
-      ContainerUtil.addAll(sourceRoots, moduleRootManager.getSourceRoots());
+      ContainerUtil.addAll(sourceRoots, moduleRootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest()));
     }
     roots.removeAll(sourceRoots);
     for (VirtualFile dir : roots) {

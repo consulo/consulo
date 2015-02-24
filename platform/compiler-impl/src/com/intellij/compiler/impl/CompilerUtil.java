@@ -40,6 +40,7 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -215,7 +216,7 @@ public class CompilerUtil {
                                               final Collection<VirtualFile> result) {
     for (Module module : ModuleManager.getInstance(project).getModules()) {
       final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-      final VirtualFile[] sourceRoots = rootManager.getSourceRoots();
+      final VirtualFile[] sourceRoots = rootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest());
       for (final VirtualFile outputPath : outputPaths) {
         for (VirtualFile sourceRoot : sourceRoots) {
           if (VfsUtilCore.isAncestor(outputPath, sourceRoot, true) || VfsUtilCore.isAncestor(sourceRoot, outputPath, false)) {

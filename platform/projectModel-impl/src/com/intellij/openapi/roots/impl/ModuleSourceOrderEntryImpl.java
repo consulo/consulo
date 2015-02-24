@@ -68,7 +68,7 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   @NotNull
   public VirtualFile[] getFiles(OrderRootType type) {
     if (type == SourcesOrderRootType.getInstance()) {
-      return myModuleRootLayer.getSourceRoots();
+      return myModuleRootLayer.getContentFolderFiles(ContentFolderScopes.productionAndTest());
     }
     return VirtualFile.EMPTY_ARRAY;
   }

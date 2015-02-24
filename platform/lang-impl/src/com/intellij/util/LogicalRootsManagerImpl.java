@@ -34,6 +34,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.*;
 
@@ -69,7 +70,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
       @Override
       @NotNull
       public List<VirtualFileLogicalRoot> fun(final Module module) {
-        return ContainerUtil.map2List(ModuleRootManager.getInstance(module).getSourceRoots(), new Function<VirtualFile, VirtualFileLogicalRoot>() {
+        return ContainerUtil.map2List(ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.productionAndTest()), new Function<VirtualFile, VirtualFileLogicalRoot>() {
           @Override
           public VirtualFileLogicalRoot fun(final VirtualFile s) {
             return new VirtualFileLogicalRoot(s);

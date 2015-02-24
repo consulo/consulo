@@ -50,6 +50,7 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.*;
 
@@ -139,7 +140,7 @@ public class FormatChangedTextUtil {
    */
   public static boolean hasChanges(@NotNull Module module) {
     final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-    for (VirtualFile root : rootManager.getSourceRoots()) {
+    for (VirtualFile root : rootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest())) {
       if (hasChanges(root, module.getProject())) {
         return true;
       }

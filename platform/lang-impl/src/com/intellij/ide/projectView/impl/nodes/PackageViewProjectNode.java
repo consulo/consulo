@@ -30,6 +30,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -46,7 +47,7 @@ public class PackageViewProjectNode extends AbstractProjectNode {
       final List<Module> allModules = new ArrayList<Module>(Arrays.asList(ModuleManager.getInstance(getProject()).getModules()));
       for (Iterator<Module> it = allModules.iterator(); it.hasNext();) {
         final Module module = it.next();
-        final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getSourceRoots();
+        final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.productionAndTest());
         if (sourceRoots.length == 0) {
           // do not show modules with no source roots configured
           it.remove();
