@@ -33,6 +33,7 @@ import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.ArrayList;
@@ -380,10 +381,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     myRootModel.putState(parent);
   }
 
+  @RequiredReadAction
   public void loadState(Element parent) {
     loadState(parent, myRootModel != null);
   }
 
+  @RequiredReadAction
   protected void loadState(Element element, boolean throwEvent) {
     try {
       final RootModelImpl newModel = new RootModelImpl(element, this, throwEvent);

@@ -23,6 +23,7 @@ import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -101,12 +102,14 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   }
 
   @Override
+  @RequiredReadAction
   public final void loadState(Element state) {
     myIsEnabled = true;
 
     loadStateImpl(state);
   }
 
+  @RequiredReadAction
   protected void loadStateImpl(@NotNull Element element) {
 
   }

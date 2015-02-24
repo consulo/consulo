@@ -33,6 +33,7 @@ import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.*;
 
@@ -65,6 +66,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     myConfigurationAccessor = new RootConfigurationAccessor();
   }
 
+  @RequiredReadAction
   RootModelImpl(@NotNull Element element, @NotNull ModuleRootManagerImpl moduleRootManager, boolean writable) throws InvalidDataException {
     myModuleRootManager = moduleRootManager;
 
