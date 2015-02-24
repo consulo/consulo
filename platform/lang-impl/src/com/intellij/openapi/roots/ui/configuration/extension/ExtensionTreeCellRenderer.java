@@ -17,6 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.extension;
 
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.CheckboxTree;
+import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 
@@ -34,16 +35,23 @@ public class ExtensionTreeCellRenderer extends CheckboxTree.CheckboxTreeCellRend
   @Override
   public void customizeRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     if (value instanceof ExtensionCheckedTreeNode) {
-      final ModuleExtensionProviderEP providerEP = ((ExtensionCheckedTreeNode)value).getProviderEP();
+      ExtensionCheckedTreeNode extensionCheckedTreeNode = (ExtensionCheckedTreeNode)value;
+
+      final ModuleExtensionProviderEP providerEP = extensionCheckedTreeNode.getProviderEP();
       if (providerEP == null) {
         return;
       }
 
-      final boolean enabled = ((ExtensionCheckedTreeNode)value).isEnabled();
+      ColoredTreeCellRenderer textRenderer = getTextRenderer();
 
-      getTextRenderer().setIcon(enabled ? providerEP.getIcon() : IconLoader.getTransparentIcon(providerEP.getIcon()));
-      getTextRenderer()
-        .append(providerEP.getName(), enabled ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.GRAY_ATTRIBUTES);
+      boolean enabled = extensionCheckedTreeNode.isEnabled();
+      textRenderer.setIcon(enabled ? providerEP.getIcon() : IconLoader.getTransparentIcon(providerEP.getIcon()));
+      if (enabled) {
+        textRenderer.append(providerEP.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+      }
+      else {
+        textRenderer.append(providerEP.getName(), SimpleTextAttributes.GRAY_ATTRIBUTES);
+      }
     }
   }
 }

@@ -94,12 +94,16 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
   @Override
   public boolean isChecked() {
-    return myExtension == null || myExtension.isEnabled();
+    return myExtension != null && myExtension.isEnabled();
   }
 
   @Override
   public boolean isEnabled() {
-    if (myExtension == null || myProviderEP != null && myProviderEP.allowMixin) {
+    // if extension not found dont allow manage it
+    if(myExtension == null) {
+      return false;
+    }
+    if (myProviderEP != null && myProviderEP.allowMixin) {
       return true;
     }
 
@@ -146,10 +150,12 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     throw new IllegalArgumentException("Cant find for id: " + id);
   }
 
+  @Nullable
   public ModuleExtensionProviderEP getProviderEP() {
     return myProviderEP;
   }
 
+  @Nullable
   public ModuleExtension getExtension() {
     return myExtension;
   }
