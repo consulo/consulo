@@ -84,13 +84,12 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
 
   @Nullable
   @Override
-  public Element getState() {
+  public final Element getState() {
     if (!isEnabled()) {
       return null;
     }
     Element element = new Element("extension");
     element.setAttribute("id", myId);
-
 
     getStateImpl(element);
 
@@ -102,7 +101,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   }
 
   @Override
-  public void loadState(Element state) {
+  public final void loadState(Element state) {
     myIsEnabled = true;
 
     loadStateImpl(state);
