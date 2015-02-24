@@ -154,6 +154,10 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
 
   @NotNull
   public String getName() {
+    if(StringUtil.isEmpty(name)) {
+      LOGGER.error("Name is empty for extension '" + key + "'. Capitalized 'key' used as name. Please define 'name' attribute for ep");
+      name = StringUtil.capitalize(key);
+    }
     return name;
   }
 
