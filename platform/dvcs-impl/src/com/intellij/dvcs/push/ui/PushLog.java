@@ -62,6 +62,7 @@ public class PushLog extends JPanel implements TypeSafeDataProvider {
     myTreeCellRenderer = new MyTreeCellRenderer();
     myTree = new CheckboxTree(myTreeCellRenderer, root) {
 
+      @Override
       public boolean isPathEditable(TreePath path) {
         return isEditable() && path.getLastPathComponent() instanceof DefaultMutableTreeNode;
       }
@@ -443,6 +444,7 @@ public class PushLog extends JPanel implements TypeSafeDataProvider {
       return treeNode instanceof EditableTreeNode;
     }
 
+    @Override
     public Object getCellEditorValue() {
       return myValue;
     }

@@ -37,6 +37,7 @@ import java.awt.event.MouseListener;
  * @author Konstantin Bulenkov
  */
 public class WideSelectionTreeUI extends BasicTreeUI {
+  public static final String TREE_TABLE_TREE_KEY = "TreeTableTree";
 
   @NonNls public static final String SOURCE_LIST_CLIENT_PROPERTY = "mac.ui.source.list";
   @NonNls public static final String STRIPED_CLIENT_PROPERTY = "mac.ui.striped";
@@ -353,7 +354,8 @@ public class WideSelectionTreeUI extends BasicTreeUI {
         }
       }
       else {
-        if (selected && (UIUtil.isUnderAquaBasedLookAndFeel() || UIUtil.isUnderBuildInLaF())) {
+        if (selected && (UIUtil.isUnderAquaBasedLookAndFeel() || UIUtil.isUnderBuildInLaF() || Boolean.TRUE.equals(tree.getClientProperty
+                (TREE_TABLE_TREE_KEY)))) {
           Color bg = UIUtil.getTreeSelectionBackground(tree.hasFocus());
 
           if (myWideSelectionCondition.value(row)) {

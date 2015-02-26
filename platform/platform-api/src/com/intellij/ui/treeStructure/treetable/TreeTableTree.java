@@ -17,6 +17,7 @@ package com.intellij.ui.treeStructure.treetable;
 
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.tree.WideSelectionTreeUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -40,12 +41,14 @@ public class TreeTableTree extends Tree {
     super(model);
     myTreeTable = treeTable;
     setCellRenderer(getCellRenderer());
+    putClientProperty(WideSelectionTreeUI.TREE_TABLE_TREE_KEY, Boolean.TRUE);
   }
 
   public TreeTable getTreeTable() {
     return myTreeTable;
   }
 
+  @Override
   public void updateUI() {
     super.updateUI();
     TreeCellRenderer tcr = super.getCellRenderer();
@@ -58,9 +61,10 @@ public class TreeTableTree extends Tree {
 
   @Override
   protected final boolean isWideSelection() {
-    return false;
+    return UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF();
   }
 
+  @Override
   public void setRowHeight(int rowHeight) {
     if (rowHeight > 0) {
       super.setRowHeight(rowHeight);
@@ -70,21 +74,24 @@ public class TreeTableTree extends Tree {
     }
   }
 
+  @Override
   public void setBounds(int x, int y, int w, int h) {
     super.setBounds(x, 0, w, myTreeTable.getHeight());
   }
 
+  @Override
   public void paint(Graphics g) {
     putClientProperty("JTree.lineStyle", "None");
     Graphics g1 = g.create();
     g1.translate(0, -myVisibleRow * getRowHeight());
     super.paint(g1);
     g1.dispose();
-    if (myBorder != null){
+    if (myBorder != null) {
       myBorder.paintBorder(this, g, 0, 0, myTreeTable.getWidth(), getRowHeight());
     }
   }
 
+  @Override
   public void setBorder(Border border) {
     super.setBorder(border);
     myBorder = border;
@@ -95,11 +102,13 @@ public class TreeTableTree extends Tree {
   }
 
   public void setVisibleRow(int row) {
-    myVisibleRow  = row;
-    setPreferredSize(new Dimension(getPreferredSize().height, getRowBounds(myVisibleRow).width));
+    myVisibleRow = row;
+    final Rectangle rowBounds = getRowBounds(myVisibleRow);
+    final int indent = rowBounds.x - getVisibleRect().x;
+    setPreferredSize(new Dimension(getRowBounds(myVisibleRow).width + indent, getPreferredSize().height));
   }
 
-  public void _processKeyEvent(KeyEvent e){
+  public void _processKeyEvent(KeyEvent e) {
     super.processKeyEvent(e);
   }
 
@@ -107,16 +116,13 @@ public class TreeTableTree extends Tree {
     myCellFocused = focused;
   }
 
+  @Override
   public void setCellRenderer(final TreeCellRenderer x) {
-    super.setCellRenderer(
-        new TreeCellRenderer() {
-          public Component getTreeCellRendererComponent(JTree tree, Object value,
-                                                        boolean selected, boolean expanded,
-                                                        boolean leaf, int row, boolean hasFocus) {
-            return x.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, myCellFocused);
-          }
-        }
-    );
+    super.setCellRenderer(new TreeCellRenderer() {
+      @Override
+      public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+        return x.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, myCellFocused);
+      }
+    });
   }
-
 }
