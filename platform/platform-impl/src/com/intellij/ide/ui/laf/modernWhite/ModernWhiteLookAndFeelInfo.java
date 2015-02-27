@@ -26,17 +26,17 @@ import javax.swing.*;
  * @since 02.03.14
  */
 public class ModernWhiteLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
-  public ModernWhiteLookAndFeelInfo(){
+  public ModernWhiteLookAndFeelInfo() {
     super(IdeBundle.message("modern.white.intellij.look.and.feel"), ModernWhiteLaf.class.getName());
   }
 
   @Override
-  public boolean equals(Object obj){
+  public boolean equals(Object obj) {
     return (obj instanceof ModernWhiteLookAndFeelInfo);
   }
 
   @Override
-  public int hashCode(){
+  public int hashCode() {
     return getName().hashCode();
   }
 
