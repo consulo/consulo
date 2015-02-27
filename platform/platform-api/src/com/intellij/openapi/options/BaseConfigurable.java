@@ -18,7 +18,7 @@ package com.intellij.openapi.options;
 import javax.swing.*;
 
 
-public abstract class BaseConfigurable implements Configurable {
+public abstract class BaseConfigurable implements Configurable, Configurable.HoldPreferredFocusedComponent {
   protected boolean myModified;
 
   @Override
@@ -34,6 +34,7 @@ public abstract class BaseConfigurable implements Configurable {
    * @return component which should be focused when the dialog appears
    *         on the screen.
    */
+  @Override
   public JComponent getPreferredFocusedComponent() {
     return null;
   }

@@ -40,7 +40,6 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
-import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -75,8 +74,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public abstract class InspectionToolsConfigurable extends BaseConfigurable
-        implements ErrorsConfigurable, SearchableConfigurable, Configurable.NoScroll {
+public abstract class InspectionToolsConfigurable
+        implements ErrorsConfigurable, SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, Configurable.NoScroll {
   public static final String ID = "Errors";
   public static final String DISPLAY_NAME = "Inspections";
   private static final String HEADER_TITLE = "Profile:";
@@ -86,16 +85,14 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable
   protected final InspectionProjectProfileManager myProjectProfileManager;
   private final CardLayout myLayout = new CardLayout();
   private final AuxiliaryRightPanel myAuxiliaryRightPanel;
-  private final Map<Profile, SingleInspectionProfilePanel> myPanels =
-          new HashMap<Profile, SingleInspectionProfilePanel>();
+  private final Map<Profile, SingleInspectionProfilePanel> myPanels = new HashMap<Profile, SingleInspectionProfilePanel>();
   private final List<Profile> myDeletedProfiles = new ArrayList<Profile>();
   protected ProfilesConfigurableComboBox myProfiles;
   private JPanel myPanel;
   private JPanel myWholePanel;
   private Alarm mySelectionAlarm;
 
-  public InspectionToolsConfigurable(@NotNull final InspectionProjectProfileManager projectProfileManager,
-                                     InspectionProfileManager profileManager) {
+  public InspectionToolsConfigurable(@NotNull final InspectionProjectProfileManager projectProfileManager, InspectionProfileManager profileManager) {
     myWholePanel = new JPanel();
 
     myWholePanel.setLayout(new BorderLayout());
@@ -253,11 +250,9 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable
               final InspectionProfileImpl profile = getSelectedObject();
               LOG.assertTrue(true);
               profile.writeExternal(element);
-              final String filePath =
-                      FileUtil.toSystemDependentName(file.getPath()) + File.separator + FileUtil.sanitizeFileName(profile.getName()) + ".xml";
+              final String filePath = FileUtil.toSystemDependentName(file.getPath()) + File.separator + FileUtil.sanitizeFileName(profile.getName()) + ".xml";
               if (new File(filePath).isFile()) {
-                if (Messages
-                            .showOkCancelDialog(myWholePanel, "File \'" + filePath + "\' already exist. Do you want to overwrite it?", "Warning",
+                if (Messages.showOkCancelDialog(myWholePanel, "File \'" + filePath + "\' already exist. Do you want to overwrite it?", "Warning",
                                                 Messages.getQuestionIcon()) != Messages.OK) {
                   return;
                 }
@@ -287,8 +282,7 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable
           @Override
           public void consume(VirtualFile file) {
             if (file == null) return;
-            InspectionProfileImpl profile =
-                    new InspectionProfileImpl("TempProfile", InspectionToolRegistrar.getInstance(), myProfileManager);
+            InspectionProfileImpl profile = new InspectionProfileImpl("TempProfile", InspectionToolRegistrar.getInstance(), myProfileManager);
             try {
               Element rootElement = JDOMUtil.loadDocument(VfsUtilCore.virtualToIoFile(file)).getRootElement();
               if (Comparing.strEqual(rootElement.getName(), "component")) {//import right from .idea/inspectProfiles/xxx.xml
@@ -311,17 +305,13 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable
               if (!levels.isEmpty()) {
                 if (Messages.showYesNoDialog(myWholePanel, "Undefined severities detected: " +
                                                            StringUtil.join(levels, ", ") +
-                                                           ". Do you want to create them?", "Warning", Messages.getWarningIcon()) ==
-                    Messages.YES) {
+                                                           ". Do you want to create them?", "Warning", Messages.getWarningIcon()) == Messages.YES) {
                   for (String level : levels) {
                     final TextAttributes textAttributes = CodeInsightColors.WARNINGS_ATTRIBUTES.getDefaultAttributes();
                     HighlightInfoType.HighlightInfoTypeImpl info =
-                            new HighlightInfoType.HighlightInfoTypeImpl(new HighlightSeverity(level, 50),
-                                                                        TextAttributesKey
-                                                                                .createTextAttributesKey(level));
-                    myProfileManager.getOwnSeverityRegistrar()
-                            .registerSeverity(new SeverityRegistrar.SeverityBasedTextAttributes(textAttributes.clone(), info),
-                                              textAttributes.getErrorStripeColor());
+                            new HighlightInfoType.HighlightInfoTypeImpl(new HighlightSeverity(level, 50), TextAttributesKey.createTextAttributesKey(level));
+                    myProfileManager.getOwnSeverityRegistrar().registerSeverity(new SeverityRegistrar.SeverityBasedTextAttributes(textAttributes.clone(), info),
+                                                                                textAttributes.getErrorStripeColor());
                   }
                 }
               }
@@ -331,8 +321,8 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable
               if (getProfilePanel(profile) != null) {
                 if (Messages.showOkCancelDialog(myWholePanel, "Profile with name \'" +
                                                               profile.getName() +
-                                                              "\' already exists. Do you want to overwrite it?", "Warning",
-                                                Messages.getInformationIcon()) != Messages.OK) {
+                                                              "\' already exists. Do you want to overwrite it?", "Warning", Messages.getInformationIcon()) !=
+                    Messages.OK) {
                   return;
                 }
               }
@@ -375,15 +365,19 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable
     });
 
     toolbar.setLayout(new GridBagLayout());
-    toolbar.add(new JLabel(HEADER_TITLE), new GridBagConstraints(0, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0));
+    toolbar.add(new JLabel(HEADER_TITLE),
+                new GridBagConstraints(0, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0));
 
-    toolbar.add(myProfiles.getHintLabel(), new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(0, 6, 6, 0), 0, 0));
+    toolbar.add(myProfiles.getHintLabel(),
+                new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(0, 6, 6, 0), 0, 0));
     toolbar.add(myProfiles, new GridBagConstraints(1, 1, 1, 1, 0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(0, 6, 0, 0), 0, 0));
 
     toolbar.add(manageButton, new GridBagConstraints(2, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(0, 10, 0, 0), 0, 0));
 
-    toolbar.add(myAuxiliaryRightPanel.getHintLabel(), new GridBagConstraints(3, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(0, 15, 6, 0), 0, 0));
-    toolbar.add(myAuxiliaryRightPanel, new GridBagConstraints(3, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 15, 0, 0), 0, 0));
+    toolbar.add(myAuxiliaryRightPanel.getHintLabel(),
+                new GridBagConstraints(3, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(0, 15, 6, 0), 0, 0));
+    toolbar.add(myAuxiliaryRightPanel,
+                new GridBagConstraints(3, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 15, 0, 0), 0, 0));
 
 
     ((InspectionManagerEx)InspectionManager.getInstance(projectProfileManager.getProject())).buildInspectionSearchIndexIfNecessary();
@@ -404,8 +398,7 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable
     while (hasName(profileDefaultName, myPanels.get(selectedProfile).isProfileShared()));
 
     final ProfileManager profileManager = selectedProfile.getProfileManager();
-    InspectionProfileImpl inspectionProfile =
-            new InspectionProfileImpl(profileDefaultName, InspectionToolRegistrar.getInstance(), profileManager);
+    InspectionProfileImpl inspectionProfile = new InspectionProfileImpl(profileDefaultName, InspectionToolRegistrar.getInstance(), profileManager);
 
     inspectionProfile.copyFrom(selectedProfile);
     inspectionProfile.setName(profileDefaultName);

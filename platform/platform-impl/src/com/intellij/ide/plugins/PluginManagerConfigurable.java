@@ -19,7 +19,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -38,7 +37,7 @@ import java.util.List;
  * @author stathik
  * @since 9:30:44 PM Oct 26, 2003
  */
-public class PluginManagerConfigurable extends BaseConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+public class PluginManagerConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent {
 
   @NonNls private static final String POSTPONE = "&Postpone";
   public static final String ID = "preferences.pluginManager";

@@ -95,6 +95,6 @@ public interface Configurable extends UnnamedConfigurable {
 
   interface HoldPreferredFocusedComponent {
     @Nullable
-    JComponent getComponent();
+    JComponent getPreferredFocusedComponent();
   }
 }

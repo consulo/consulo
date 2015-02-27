@@ -24,6 +24,7 @@ import java.util.List;
 public abstract class BaseConfigurableWithChangeSupport extends BaseConfigurable {
   private final List<ChangeListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
+  @Override
   public void setModified(final boolean modified) {
     fireStateChanged();
     super.setModified(modified);

@@ -20,7 +20,7 @@ import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.ide.util.scopeChooser.PackageSetChooserCombo;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.BaseConfigurable;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.packageDependencies.DefaultScopesProvider;
@@ -42,7 +42,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class DependencyConfigurable extends BaseConfigurable {
+public class DependencyConfigurable implements Configurable, Configurable.HoldPreferredFocusedComponent {
   private final Project myProject;
   private MyTableModel myDenyRulesModel;
   private MyTableModel myAllowRulesModel;

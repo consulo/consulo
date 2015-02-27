@@ -24,7 +24,6 @@ import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -60,7 +59,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectStructureConfigurable extends BaseConfigurable implements SearchableConfigurable, Place.Navigator {
+public class ProjectStructureConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, Place.Navigator {
 
   public static final DataKey<ProjectStructureConfigurable> KEY = DataKey.create("ProjectStructureConfiguration");
 
@@ -68,7 +67,6 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
   private JBSplitter mySplitter;
   @NonNls public static final String CATEGORY = "category";
   private JComponent myToFocus;
-  private boolean myWasUiDisposed;
   private ConfigurationErrorsComponent myErrorsComponent;
 
   public static class UIState {
@@ -286,8 +284,6 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
     AccessToken token = HeavyProcessLatch.INSTANCE.processStarted("Resetting Project Structure");
 
     try {
-      myWasUiDisposed = false;
-
       myContext.reset();
 
       myProjectSdksModel.reset(myProject);
@@ -333,8 +329,6 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
     propertiesComponent.setValue("project.structure.last.edited", myUiState.lastEditedConfigurable);
     propertiesComponent.setValue("project.structure.proportion", String.valueOf(myUiState.proportion));
     propertiesComponent.setValue("project.structure.side.proportion", String.valueOf(myUiState.sideProportion));
-
-    myWasUiDisposed = true;
 
     myUiState.proportion = mySplitter.getProportion();
     saveSideProportion();

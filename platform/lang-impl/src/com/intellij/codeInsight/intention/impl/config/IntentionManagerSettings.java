@@ -24,6 +24,7 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
+import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
@@ -176,7 +177,8 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
           final Set<String> words = registrar.getProcessedWordsWithoutStemming(descriptionText);
           words.addAll(registrar.getProcessedWords(metaData.getFamily()));
           for (String word : words) {
-            registrar.addOption(word, metaData.getFamily(), metaData.getFamily(), IntentionSettingsConfigurable.HELP_ID, IntentionSettingsConfigurable.DISPLAY_NAME);
+            registrar.addOption(word, metaData.getFamily(), metaData.getFamily(), IntentionSettingsConfigurable.HELP_ID, CodeInsightBundle
+                    .message("intention.settings"));
           }
         }
         catch (IOException e) {
