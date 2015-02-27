@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CodeStyleSettingsManager implements PersistentStateComponent<Element> {
-  private static final Logger LOG = Logger.getInstance("#" + CodeStyleSettingsManager.class.getName());
+  private static final Logger LOG = Logger.getInstance(CodeStyleSettingsManager.class.getName());
 
   public volatile CodeStyleSettings PER_PROJECT_SETTINGS = null;
   public volatile boolean USE_PER_PROJECT_SETTINGS = false;
@@ -40,20 +40,10 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   private volatile boolean myIsLoaded = false;
 
   public static CodeStyleSettingsManager getInstance(@Nullable Project project) {
-    if (project == null || project.isDefault()) return getInstance();
-    ProjectCodeStyleSettingsManager projectSettingsManager = ServiceManager.getService(project, ProjectCodeStyleSettingsManager.class);
-    if (!projectSettingsManager.isLoaded()) {
-      synchronized (projectSettingsManager) {
-        if (!projectSettingsManager.isLoaded()) {
-          LegacyCodeStyleSettingsManager legacySettingsManager = ServiceManager.getService(project, LegacyCodeStyleSettingsManager.class);
-          if (legacySettingsManager != null && legacySettingsManager.getState() != null) {
-            projectSettingsManager.loadState(legacySettingsManager.getState());
-            LOG.info("Imported old project code style settings.");
-          }
-        }
-      }
+    if (project == null || project.isDefault()) {
+      return getInstance();
     }
-    return projectSettingsManager;
+    return ProjectCodeStyleSettingsManager.getInstance(project);
   }
 
   public static CodeStyleSettingsManager getInstance() {
@@ -63,7 +53,9 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   @SuppressWarnings({"UnusedDeclaration"})
   public CodeStyleSettingsManager(Project project) {
   }
-  public CodeStyleSettingsManager() {}
+
+  public CodeStyleSettingsManager() {
+  }
 
   @NotNull
   public static CodeStyleSettings getSettings(@Nullable final Project project) {
@@ -130,6 +122,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
    * Updates document's indent options from indent options providers.
    * <p><b>Note:</b> Calling this method directly when there is an editor associated with the document may cause the editor work
    * incorrectly. To keep consistency with the editor call <code>EditorEx.reinitSettings()</code> instead.
+   *
    * @param project  The project of the document.
    * @param document The document to update indent options for.
    */
