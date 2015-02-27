@@ -17,7 +17,6 @@
 package com.intellij.application.options;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class CodeCompletionOptions extends BaseConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+public class CodeCompletionOptions implements SearchableConfigurable, Configurable.NoScroll {
   private CodeCompletionPanel myPanel;
 
   @Override

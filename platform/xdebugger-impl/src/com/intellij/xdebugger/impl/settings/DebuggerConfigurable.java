@@ -51,6 +51,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     return myRootConfigurable != null ? myRootConfigurable.getHelpTopic() : null;
   }
 
+  @NotNull
   @Override
   public Configurable[] getConfigurables() {
     compute();

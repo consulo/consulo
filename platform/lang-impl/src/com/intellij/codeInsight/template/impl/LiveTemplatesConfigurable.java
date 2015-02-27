@@ -17,7 +17,6 @@
 package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -27,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class LiveTemplatesConfigurable extends BaseConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+public class LiveTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll {
   private TemplateListPanel myPanel;
 
   @Override
@@ -85,5 +84,4 @@ public class LiveTemplatesConfigurable extends BaseConfigurable implements Searc
   public TemplateListPanel getTemplateListPanel() {
     return myPanel;
   }
-
 }

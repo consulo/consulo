@@ -16,7 +16,6 @@
 package com.intellij.ide.ui.customization;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -29,9 +28,10 @@ import javax.swing.*;
  * User: anna
  * Date: Mar 17, 2005
  */
-public class CustomizationConfigurable extends BaseConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+public class CustomizationConfigurable implements SearchableConfigurable, Configurable.NoScroll {
   private CustomizableActionsPanel myPanel;
 
+  @Override
   public JComponent createComponent() {
     if (myPanel == null) {
       myPanel = new CustomizableActionsPanel();
@@ -39,34 +39,42 @@ public class CustomizationConfigurable extends BaseConfigurable implements Searc
     return myPanel.getPanel();
   }
 
+  @Override
   public String getDisplayName() {
     return IdeBundle.message("title.customizations");
   }
 
+  @Override
   public String getHelpTopic() {
     return "preferences.customizations";
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     myPanel.apply();
   }
 
+  @Override
   public void reset() {
     myPanel.reset();
   }
 
+  @Override
   public boolean isModified() {
     return myPanel.isModified();
   }
 
+  @Override
   public void disposeUIResources() {
   }
 
+  @Override
   @NotNull
   public String getId() {
     return getHelpTopic();
   }
 
+  @Override
   @Nullable
   public Runnable enableSearch(String option) {
     return null;

@@ -20,7 +20,6 @@ import com.intellij.ide.ui.laf.LafWithColorScheme;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Comparing;
@@ -42,7 +41,7 @@ import java.util.Hashtable;
 /**
  * @author Eugene Belyaev
  */
-public class AppearanceConfigurable extends BaseConfigurable implements SearchableConfigurable {
+public class AppearanceConfigurable implements SearchableConfigurable {
   private MyComponent myComponent;
 
   @Override
@@ -58,7 +57,6 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     if (myComponent == null)  {
       myComponent = new MyComponent();
     }
-
   }
 
   @Override

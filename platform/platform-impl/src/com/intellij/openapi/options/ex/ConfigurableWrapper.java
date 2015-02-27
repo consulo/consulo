@@ -194,6 +194,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
       myKids = kids;
     }
 
+    @NotNull
     @Override
     public Configurable[] getConfigurables() {
       return myKids;

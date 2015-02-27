@@ -19,7 +19,10 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * Named component which provides a configuration user interface.
@@ -79,6 +82,7 @@ public interface Configurable extends UnnamedConfigurable {
   }
 
   interface Composite {
+    @NotNull
     Configurable[] getConfigurables();
   }
 
@@ -89,4 +93,8 @@ public interface Configurable extends UnnamedConfigurable {
   interface NoScroll {
   }
 
+  interface HoldPreferredFocusedComponent {
+    @Nullable
+    JComponent getComponent();
+  }
 }

@@ -16,7 +16,7 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.options.BaseConfigurable;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.ui.InputValidator;
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class PluginHostsConfigurable extends BaseConfigurable {
+public class PluginHostsConfigurable implements Configurable {
   private CustomPluginRepositoriesPanel myUpdatesSettingsPanel;
 
   @Override

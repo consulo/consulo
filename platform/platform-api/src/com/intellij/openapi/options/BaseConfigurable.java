@@ -21,6 +21,7 @@ import javax.swing.*;
 public abstract class BaseConfigurable implements Configurable {
   protected boolean myModified;
 
+  @Override
   public boolean isModified() {
     return myModified;
   }

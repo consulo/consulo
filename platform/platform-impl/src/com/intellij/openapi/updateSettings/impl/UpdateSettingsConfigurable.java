@@ -19,7 +19,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
@@ -35,19 +34,22 @@ import java.awt.event.ActionListener;
 /**
  * @author pti
  */
-public class UpdateSettingsConfigurable extends BaseConfigurable implements SearchableConfigurable {
+public class UpdateSettingsConfigurable implements SearchableConfigurable {
   private UpdatesSettingsPanel myUpdatesSettingsPanel;
   private boolean myCheckNowEnabled = true;
 
+  @Override
   public JComponent createComponent() {
     myUpdatesSettingsPanel = new UpdatesSettingsPanel();
     return myUpdatesSettingsPanel.myPanel;
   }
 
+  @Override
   public String getDisplayName() {
     return IdeBundle.message("updates.settings.title");
   }
 
+  @Override
   public String getHelpTopic() {
     return "preferences.updates";
   }
@@ -56,6 +58,7 @@ public class UpdateSettingsConfigurable extends BaseConfigurable implements Sear
     myCheckNowEnabled = enabled;
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     UpdateSettings settings = UpdateSettings.getInstance();
     settings.CHECK_NEEDED = myUpdatesSettingsPanel.myCbCheckForUpdates.isSelected();
@@ -63,6 +66,7 @@ public class UpdateSettingsConfigurable extends BaseConfigurable implements Sear
     settings.UPDATE_CHANNEL_TYPE = myUpdatesSettingsPanel.getSelectedChannelType().getCode();
   }
 
+  @Override
   public void reset() {
     UpdateSettings settings = UpdateSettings.getInstance();
     myUpdatesSettingsPanel.myCbCheckForUpdates.setSelected(settings.CHECK_NEEDED);
@@ -70,6 +74,7 @@ public class UpdateSettingsConfigurable extends BaseConfigurable implements Sear
     myUpdatesSettingsPanel.setSelectedChannelType(ChannelStatus.fromCode(settings.UPDATE_CHANNEL_TYPE));
   }
 
+  @Override
   public boolean isModified() {
     if (myUpdatesSettingsPanel == null) return false;
     UpdateSettings settings = UpdateSettings.getInstance();
@@ -78,6 +83,7 @@ public class UpdateSettingsConfigurable extends BaseConfigurable implements Sear
     return (channelsBox.getSelectedItem() != null && !channelsBox.getSelectedItem().equals(ChannelStatus.fromCode(settings.UPDATE_CHANNEL_TYPE)));
   }
 
+  @Override
   public void disposeUIResources() {
     myUpdatesSettingsPanel = null;
   }
@@ -111,6 +117,7 @@ public class UpdateSettingsConfigurable extends BaseConfigurable implements Sear
       myBuildNumber.setText(appInfo.getBuild().asString());
 
       myBtnCheckNow.addActionListener(new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myBtnCheckNow));
           UpdateSettings settings = new UpdateSettings();
@@ -143,11 +150,13 @@ public class UpdateSettingsConfigurable extends BaseConfigurable implements Sear
     }
   }
 
+  @Override
   @NotNull
   public String getId() {
     return getHelpTopic();
   }
 
+  @Override
   @Nullable
   public Runnable enableSearch(String option) {
     return null;

@@ -72,8 +72,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     );
   }
 
-
-
   @Override
   public void reset() {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
@@ -100,7 +98,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     try {
       editorSettings.setBlinkPeriod(Integer.parseInt(myBlinkIntervalField.getText()));
     }
-    catch (NumberFormatException e) {
+    catch (NumberFormatException ignored) {
     }
 
     editorSettings.setBlockCursor(myCbBlockCursor.isSelected());

@@ -46,6 +46,7 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     myComponent = new MyComponent();
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     super.apply();
     GeneralSettings settings = GeneralSettings.getInstance();
@@ -79,6 +80,7 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     }
   }
 
+  @Override
   public boolean isModified() {
     if (super.isModified()) return true;
     boolean isModified = false;
@@ -102,12 +104,14 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     return isModified;
   }
 
+  @Override
   public JComponent createComponent() {
     if (myComponent == null) {
       myComponent = new MyComponent();
     }
 
     myComponent.myChkAutoSaveIfInactive.addChangeListener(new ChangeListener() {
+      @Override
       public void stateChanged(ChangeEvent e) {
         myComponent.myTfInactiveTimeout.setEditable(myComponent.myChkAutoSaveIfInactive.isSelected());
       }
@@ -124,10 +128,12 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     return myComponent.myPanel;
   }
 
+  @Override
   public String getDisplayName() {
     return IdeBundle.message("title.general");
   }
 
+  @Override
   public void reset() {
     super.reset();
     GeneralSettings settings = GeneralSettings.getInstance();
@@ -152,11 +158,13 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     }
   }
 
+  @Override
   public void disposeUIResources() {
     super.disposeUIResources();
     myComponent = null;
   }
 
+  @Override
   @NotNull
   public String getHelpTopic() {
     return "preferences.general";
@@ -179,16 +187,19 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     public MyComponent() { }
   }
 
+  @Override
   @NotNull
   public String getId() {
     return getHelpTopic();
   }
 
+  @Override
   @Nullable
   public Runnable enableSearch(String option) {
     return null;
   }
 
+  @Override
   protected List<SearchableConfigurable> createConfigurables() {
     return ConfigurableWrapper.createConfigurables(EP_NAME);
   }

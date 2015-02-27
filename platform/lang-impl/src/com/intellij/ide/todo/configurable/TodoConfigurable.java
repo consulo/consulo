@@ -20,7 +20,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.todo.TodoConfiguration;
 import com.intellij.ide.todo.TodoFilter;
-import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -46,7 +45,7 @@ import java.util.List;
 /**
  * @author Vladimir Kondratyev
  */
-public class TodoConfigurable extends BaseConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+public class TodoConfigurable implements SearchableConfigurable, Configurable.NoScroll {
   /*
    * UI resources
    */

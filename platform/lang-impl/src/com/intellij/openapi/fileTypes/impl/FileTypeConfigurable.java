@@ -53,7 +53,7 @@ import java.util.List;
 /**
  * @author Eugene Belyaev
  */
-public class FileTypeConfigurable extends BaseConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+public class FileTypeConfigurable implements SearchableConfigurable, Configurable.NoScroll {
   private RecognizedFileTypes myRecognizedFileType;
   private PatternsPanel myPatterns;
   private FileTypePanel myFileTypePanel;
