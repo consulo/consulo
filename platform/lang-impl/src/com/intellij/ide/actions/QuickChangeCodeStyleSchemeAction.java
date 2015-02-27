@@ -75,12 +75,13 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     group.add(new AnAction(scheme.getName(), "",
                            scheme == currentScheme && !manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction) {
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         if (addScheme) {
           CodeStyleSchemes.getInstance().addScheme(scheme);
         }
         CodeStyleSchemes.getInstance().setCurrentScheme(scheme);
         manager.USE_PER_PROJECT_SETTINGS = false;
+        manager.PREFERRED_PROJECT_CODE_STYLE = scheme.getName();
         EditorFactory.getInstance().refreshAllEditors();
       }
     });
