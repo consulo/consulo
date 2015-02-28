@@ -34,6 +34,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.ArrayList;
@@ -153,6 +154,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getOrderEntries();
   }
 
+  @RequiredWriteAction
   void commitModel(RootModelImpl rootModel) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     LOGGER.assertTrue(rootModel.myModuleRootManager == this);
@@ -160,11 +162,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     final Project project = myModule.getProject();
     final ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
     ModifiableModelCommitter.multiCommit(new ModifiableRootModel[]{rootModel}, moduleModel);
-  }
-
-  static void doCommit(RootModelImpl rootModel) {
-    rootModel.doCommit();
-    rootModel.dispose();
   }
 
   @Override
@@ -395,7 +392,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
         makeRootsChange(new Runnable() {
           @Override
           public void run() {
-            doCommit(newModel);
+            newModel.doCommitAndDispose(false);
           }
         });
       }

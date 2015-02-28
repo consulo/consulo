@@ -18,6 +18,7 @@ package com.intellij.openapi.roots;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * Model of roots that should be used by clients to modify module roots.
@@ -42,9 +43,9 @@ public interface ModifiableRootModel extends ModuleRootModel, ModifiableModuleRo
 
   /**
    * Commits changes to a <code>{@link ModuleRootManager}</code>.
-   * Should be invoked in a write action. After <code>commit()<code>, the model
-   * becomes read-only.
+   * After <code>commit()<code>, the model becomes read-only.
    */
+  @RequiredWriteAction
   void commit();
 
   boolean isChanged();
