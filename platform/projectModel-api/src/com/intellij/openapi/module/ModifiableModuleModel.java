@@ -45,7 +45,8 @@ public interface ModifiableModuleModel {
    * bring the changes in effect.
    *
    *
-   * @param filePath the path at which the module is created.
+   * @param name name of module
+   * @param dirPath the path at which the module is created.
    * @return the module instance.
    */
   @NotNull Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath);
@@ -57,7 +58,8 @@ public interface ModifiableModuleModel {
    *
    *
    *
-   * @param filePath the path at which the module is created.
+   * @param name name of module
+   * @param dirPath the path at which the module is created.
    * @param options map of module options to be used when creating the module
    * @return the module instance.
    */
@@ -73,7 +75,6 @@ public interface ModifiableModuleModel {
    * @throws IOException if an I/O error occurred when loading the module file.
    * @throws JDOMException if the file contains invalid XML data.
    * @throws ModuleWithNameAlreadyExists if a module with such a name already exists in the project.
-   * @throws LoadCancelledException if loading the module was cancelled by some of the components.
    */
   @NotNull
   @Deprecated
