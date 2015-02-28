@@ -134,7 +134,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
       throw new IllegalArgumentException("CreateFromTemplateMode");
     }
     else {
-      myWizardMode = new ImportMode(myImportProviders);
+      myWizardMode = new ImportMode();
       StepSequence sequence = myWizardMode.getSteps(myWizardContext, DefaultModulesProvider.createForProject(project));
       appendSteps(sequence);
       for (ProjectImportProvider provider : myImportProviders) {

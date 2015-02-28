@@ -670,12 +670,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       return null;
     }
 
-    @Override
-    @NotNull
-    public Module loadModule(@NotNull String filePath) throws InvalidDataException, IOException, ModuleWithNameAlreadyExists {
-      throw new UnsupportedOperationException();
-    }
-
     private Module loadModuleInternal(@NotNull ModuleLoadItem item, @Nullable ProgressIndicator progressIndicator)
       throws ModuleWithNameAlreadyExists, IOException, StateStorageException {
 

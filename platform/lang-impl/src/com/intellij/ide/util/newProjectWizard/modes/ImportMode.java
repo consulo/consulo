@@ -29,7 +29,6 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.projectImport.ImportChooserStep;
-import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.projectImport.ProjectImportProvider;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
@@ -38,33 +37,33 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 public class ImportMode extends WizardMode {
-  private ProjectImportBuilder myBuilder;
   private final ProjectImportProvider[] myProviders;
 
   public ImportMode() {
-    this(Extensions.getExtensions(ProjectImportProvider.EP_NAME));
-  }
-  public ImportMode(ProjectImportProvider[] providers) {
-    myProviders = providers;
+    myProviders = ProjectImportProvider.EP_NAME.getExtensions();
   }
 
+  @Override
   @NotNull
   public String getDisplayName(final WizardContext context) {
     return ProjectBundle.message("project.new.wizard.import.title", context.getPresentationName());
   }
 
+  @Override
   @NotNull
   public String getDescription(final WizardContext context) {
     final String productName = ApplicationNamesInfo.getInstance().getFullProductName();
     return ProjectBundle.message("project.new.wizard.import.description", productName, context.getPresentationName(), StringUtil.join(
       Arrays.asList(Extensions.getExtensions(ProjectImportProvider.EP_NAME)),
       new Function<ProjectImportProvider, String>() {
+        @Override
         public String fun(final ProjectImportProvider provider) {
           return provider.getName();
         }
       }, ", "));
   }
 
+  @Override
   @Nullable
   protected StepSequence createSteps(final WizardContext context, @NotNull final ModulesProvider modulesProvider) {
     final StepSequence stepSequence = new StepSequence();
@@ -80,15 +79,18 @@ public class ImportMode extends WizardMode {
     return stepSequence;
   }
 
+  @Override
   public boolean isAvailable(WizardContext context) {
     return Extensions.getExtensions(ProjectImportProvider.EP_NAME).length > 0;
   }
 
+  @Override
   @Nullable
   public ProjectBuilder getModuleBuilder() {
-    return myBuilder;
+    return null;
   }
 
+  @Override
   public void onChosen(final boolean enabled) {}
 
   @Override
