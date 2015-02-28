@@ -21,7 +21,6 @@
 package com.intellij.ide.util.newProjectWizard.modes;
 
 import com.intellij.ide.util.newProjectWizard.StepSequence;
-import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.extensions.Extensions;
@@ -81,13 +80,7 @@ public class ImportMode extends WizardMode {
 
   @Override
   public boolean isAvailable(WizardContext context) {
-    return Extensions.getExtensions(ProjectImportProvider.EP_NAME).length > 0;
-  }
-
-  @Override
-  @Nullable
-  public ProjectBuilder getModuleBuilder() {
-    return null;
+    return myProviders.length > 0;
   }
 
   @Override

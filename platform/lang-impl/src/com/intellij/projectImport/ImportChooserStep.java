@@ -43,7 +43,6 @@ import java.util.List;
 public class ImportChooserStep extends ProjectImportWizardStep {
   private static final String PREFERRED = "create.project.preferred.importer";
 
-  private final ProjectImportProvider[] myProviders;
   private final StepSequence mySequence;
 
   private JBList myList;
@@ -52,7 +51,6 @@ public class ImportChooserStep extends ProjectImportWizardStep {
 
   public ImportChooserStep(final ProjectImportProvider[] providers, final StepSequence sequence, final WizardContext context) {
     super(context);
-    myProviders = providers;
     mySequence = sequence;
 
     myImportTitleLabel.setText(ProjectBundle.message("project.new.wizard.import.title", context.getPresentationName()));
