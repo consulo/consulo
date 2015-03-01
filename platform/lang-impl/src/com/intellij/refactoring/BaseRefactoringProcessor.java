@@ -63,6 +63,7 @@ import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -92,6 +93,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
    * Is called inside atomic action.
    */
   @NotNull
+  @RequiredReadAction
   protected abstract UsageInfo[] findUsages();
 
   /**

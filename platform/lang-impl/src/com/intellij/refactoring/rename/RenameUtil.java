@@ -47,6 +47,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.*;
 
@@ -57,6 +58,7 @@ public class RenameUtil {
   }
 
   @NotNull
+  @RequiredReadAction
   public static UsageInfo[] findUsages(final PsiElement element,
                                        final String newName,
                                        boolean searchInStringsAndComments,
