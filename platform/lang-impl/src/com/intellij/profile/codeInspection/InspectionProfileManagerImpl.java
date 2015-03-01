@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,9 +100,10 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         return profile;
       }
 
+      @NotNull
       @Override
-      public boolean shouldBeSaved(@NotNull InspectionProfileImpl scheme) {
-        return !scheme.isProjectLevel() && scheme.wasInitialized();
+      public State getState(@NotNull InspectionProfileImpl scheme) {
+        return scheme.isProjectLevel() ? State.NON_PERSISTENT : (scheme.wasInitialized() ? State.POSSIBLY_CHANGED : State.UNCHANGED);
       }
 
       @Override
