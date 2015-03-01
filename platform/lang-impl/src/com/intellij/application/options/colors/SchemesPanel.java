@@ -16,24 +16,18 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.application.options.ExportSchemeAction;
 import com.intellij.application.options.SaveSchemeDialog;
-import com.intellij.application.options.SchemesToImportPopup;
 import com.intellij.application.options.SkipSelfSearchComponent;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl;
-import com.intellij.openapi.editor.colors.impl.EditorColorsSchemeImpl;
-import com.intellij.openapi.options.SchemesManager;
 import com.intellij.util.EventDispatcher;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.util.containers.ContainerUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.List;
 
 public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
   private final ColorAndFontOptions myOptions;
@@ -42,9 +36,7 @@ public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
 
   private JButton myDeleteButton;
 
-  private JButton myExportButton;
   private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
-
 
   public SchemesPanel(ColorAndFontOptions options) {
     super(new BorderLayout());
@@ -64,21 +56,12 @@ public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
           EditorColorsScheme selected = myOptions.selectScheme((String)mySchemeComboBox.getSelectedItem());
           if (ColorAndFontOptions.isReadOnly(selected)) {
             myDeleteButton.setEnabled(false);
-            if (myExportButton != null) {
-              myExportButton.setEnabled(false);
-            }
           }
           else if (ColorSettingsUtil.isSharedScheme(selected)) {
             myDeleteButton.setEnabled(true);
-            if (myExportButton != null) {
-              myExportButton.setEnabled(false);
-            }
           }
           else {
             myDeleteButton.setEnabled(true);
-            if (myExportButton != null) {
-              myExportButton.setEnabled(true);
-            }
           }
 
           if (areSchemesLoaded()) {
@@ -96,13 +79,6 @@ public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
   }
 
   public void clearSearch() {
-  }
-
-  @Nullable
-  @SuppressWarnings({"unchecked"})
-  public static <T> T safeCast(final Object obj, final Class<T> expectedClass) {
-    if (expectedClass.isInstance(obj)) return (T)obj;
-    return null;
   }
 
   private JPanel createSchemePanel() {
@@ -140,66 +116,14 @@ public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
     panel.add(myDeleteButton,
               new GridBagConstraints(3, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
 
-    SchemesManager<EditorColorsScheme, EditorColorsSchemeImpl> schemesManager =
-      ((EditorColorsManagerImpl)EditorColorsManager.getInstance()).getSchemesManager();
-    if (schemesManager.isExportAvailable()) {
-      myExportButton = new JButton("Share...");
-      myExportButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-          EditorColorsScheme selected = myOptions.getOriginalSelectedScheme();
-          ExportSchemeAction
-            .doExport((EditorColorsSchemeImpl)selected, ((EditorColorsManagerImpl)EditorColorsManager.getInstance()).getSchemesManager());
-        }
-      });
-
-      panel.add(myExportButton,
-                new GridBagConstraints(4, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 5), 0, 0));
-      myExportButton.setMnemonic('S');
-
-    }
-
-    if (schemesManager.isImportAvailable()) {
-      JButton myImportButton = new JButton("Import Shared...");
-      myImportButton.setMnemonic('I');
-      myImportButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-          SchemesToImportPopup<EditorColorsScheme, EditorColorsSchemeImpl> popup =
-            new SchemesToImportPopup<EditorColorsScheme, EditorColorsSchemeImpl>(SchemesPanel.this) {
-              @Override
-              protected void onSchemeSelected(final EditorColorsSchemeImpl scheme) {
-                if (scheme != null) {
-                  myOptions.addImportedScheme(scheme);
-                  //changeToScheme(myOptions.getSelectedScheme());
-                }
-
-              }
-            };
-          popup.show(((EditorColorsManagerImpl)EditorColorsManager.getInstance()).getSchemesManager(), myOptions.getSchemes());
-
-        }
-      });
-
-      panel.add(myImportButton,
-                new GridBagConstraints(5, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 5), 0, 0));
-
-    }
-
     return panel;
   }
 
   private void showSaveAsDialog() {
-    ArrayList<String> names = new ArrayList<String>();
-    EditorColorsScheme[] allSchemes = EditorColorsManager.getInstance().getAllSchemes();
-
-    for (EditorColorsScheme scheme : allSchemes) {
-      names.add(scheme.getName());
-    }
-
-    SaveSchemeDialog dialog = new SaveSchemeDialog(this, ApplicationBundle.message("title.save.color.scheme.as"), names);
-    dialog.show();
-    if (dialog.isOK()) {
+    List<String> names = ContainerUtil.newArrayList(myOptions.getSchemeNames());
+    String selectedName = myOptions.getSelectedScheme().getName();
+    SaveSchemeDialog dialog = new SaveSchemeDialog(this, ApplicationBundle.message("title.save.color.scheme.as"), names, selectedName);
+    if (dialog.showAndGet()) {
       myOptions.saveSchemeAs(dialog.getSchemeName());
     }
   }

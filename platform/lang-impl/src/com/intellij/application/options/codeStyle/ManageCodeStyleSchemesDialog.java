@@ -334,11 +334,12 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
     }
     else {
       CodeStyleScheme[] schemes = CodeStyleSchemes.getInstance().getSchemes();
-      ArrayList<String> names = new ArrayList<String>();
+      List<String> names = new ArrayList<String>();
       for (CodeStyleScheme scheme : schemes) {
         names.add(scheme.getName());
       }
-      SaveSchemeDialog saveDialog = new SaveSchemeDialog(myParent, ApplicationBundle.message("title.save.code.style.scheme.as"), names);
+      String selectedName = getSelectedScheme().getName();
+      SaveSchemeDialog saveDialog = new SaveSchemeDialog(myParent, ApplicationBundle.message("title.save.code.style.scheme.as"), names, selectedName);
       saveDialog.show();
       if (saveDialog.isOK()) {
         int row = mySchemesTableModel.createNewScheme(getSelectedScheme(), saveDialog.getSchemeName());
