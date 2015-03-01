@@ -48,7 +48,6 @@ import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.ui.CustomProtocolHandler;
 import com.intellij.ui.Splash;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.SandboxUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -307,7 +306,7 @@ public class IdeaApplication {
         }
       }, ModalityState.NON_MODAL);
 
-      if(Registry.is("ide.firstStartup") && !SandboxUtil.isInsideSandbox()) {
+      if(Registry.is("ide.firstStartup")) {
         CustomizeUtil.show(true);
       }
 

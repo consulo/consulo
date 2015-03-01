@@ -47,28 +47,9 @@ public class StartupUtil {
   @NonNls public static final String NO_SPLASH = "nosplash";
 
   private static SocketLock ourLock;
-  private static String myDefaultLAF;
-  private static String myWizardLAF;
   private static String myWizardMacKeymap;
-  private static Set<String> myFeaturedPluginsToInstall = new HashSet<String>();
 
   private StartupUtil() { }
-
-  public static void setDefaultLAF(String laf) {
-    myDefaultLAF = laf;
-  }
-
-  public static String getDefaultLAF() {
-    return myDefaultLAF;
-  }
-
-  public static void setWizardLAF(String myWizardLAF) {
-    StartupUtil.myWizardLAF = myWizardLAF;
-  }
-
-  public static String getWizardLAF() {
-    return myWizardLAF;
-  }
 
   public static void setMyWizardMacKeymap(String myWizardMacKeymap) {
     StartupUtil.myWizardMacKeymap = myWizardMacKeymap;
@@ -76,15 +57,6 @@ public class StartupUtil {
 
   public static String getMyWizardMacKeymap() {
     return myWizardMacKeymap;
-  }
-
-  public static Set<String> getMyFeaturedPluginsToInstall() {
-    return Collections.unmodifiableSet(myFeaturedPluginsToInstall);
-  }
-
-  public static void setFeaturedPluginsToInstall(Set<String> pluginsToInstall) {
-    myFeaturedPluginsToInstall.clear();
-    myFeaturedPluginsToInstall.addAll(pluginsToInstall);
   }
 
   public static boolean shouldShowSplash(final String[] args) {
