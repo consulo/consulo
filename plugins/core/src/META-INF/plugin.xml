@@ -740,6 +740,11 @@
                     area="CONSULO_PROJECT"/>
     <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="CONSULO_PROJECT"/>
 
+    <extensionPoint name="schemeImporter" beanClass="com.intellij.openapi.options.SchemeImporterEP">
+      <with attribute="schemeClass" implements="com.intellij.openapi.options.Scheme"/>
+      <with attribute="implementationClass" implements="com.intellij.openapi.options.SchemeImporter"/>
+    </extensionPoint>
+
     <extensionPoint name="lang.elementManipulator" beanClass="com.intellij.openapi.util.ClassExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.psi.ElementManipulator"/>
     </extensionPoint>
@@ -1938,6 +1943,8 @@
 
     <!-- Global Code Style -->
     <projectConfigurable instance="com.intellij.application.options.CodeStyleSchemesConfigurable" order="after colors"/>
+    <applicationService serviceInterface="com.intellij.application.options.codeStyle.CodeStyleSchemesUIConfiguration"
+                        serviceImplementation="com.intellij.application.options.codeStyle.CodeStyleSchemesUIConfiguration"/>
 
     <!-- File Types -->
     <applicationConfigurable instance="com.intellij.openapi.fileTypes.impl.FileTypeConfigurable" id="preferences.fileTypes"

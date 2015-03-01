@@ -112,6 +112,28 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
   @Override
   @NotNull
+  public VirtualFile[] choose(@Nullable final Project project, @NotNull final VirtualFile... toSelect) {
+    init();
+    if ((myProject == null) && (project != null)) {
+      myProject = project;
+    }
+    if (toSelect.length == 1) {
+      restoreSelection(toSelect[0]);
+    }
+    else if (toSelect.length == 0) {
+      restoreSelection(null); // select last opened file
+    }
+    else {
+      selectInTree(toSelect, true);
+    }
+
+    show();
+    return myChosenFiles;
+  }
+
+  @Override
+  @NotNull
+  @Deprecated
   public VirtualFile[] choose(@Nullable VirtualFile toSelect, Project project) {
     init();
     if (myProject == null && project != null) {
