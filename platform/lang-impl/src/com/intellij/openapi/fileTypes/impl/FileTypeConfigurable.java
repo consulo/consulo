@@ -17,17 +17,15 @@
 package com.intellij.openapi.fileTypes.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.application.options.ExportSchemeAction;
-import com.intellij.application.options.SchemesToImportPopup;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
-import com.intellij.ide.highlighter.custom.impl.ReadFileType;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.*;
-import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
-import com.intellij.openapi.options.*;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -226,7 +224,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
   }
 
   private static boolean canBeModified(FileType fileType) {
-    return fileType instanceof AbstractFileType && !(fileType instanceof ImportedFileType); //todo: add API for canBeModified
+    return fileType instanceof AbstractFileType;
   }
 
   private void addFileType() {
@@ -421,45 +419,10 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
           public boolean isEnabled(AnActionEvent e) {
             final FileType fileType = getSelectedFileType();
             final boolean modified = canBeModified(fileType);
-            final boolean shared = getSchemesManager().isShared(fileType);
-            return shared || modified;
+            return modified;
           }
         })
         .disableUpDownActions();
-
-      if (getSchemesManager().isImportAvailable()) {
-        toolbarDecorator.addExtraAction(new AnActionButton("Import Shared...", AllIcons.ToolbarDecorator.Import) {
-          @Override
-          public void actionPerformed(AnActionEvent e) {
-            new SchemesToImportPopup<FileType, AbstractFileType>(myFileTypesList) {
-              @Override
-              protected void onSchemeSelected(final AbstractFileType scheme) {
-                myController.importFileType(scheme);
-              }
-            }.show(getSchemesManager(), collectRegisteredFileTypes());
-          }
-        });
-      }
-
-      if (getSchemesManager().isExportAvailable()) {
-        toolbarDecorator.addExtraAction(new AnActionButton("Share...", AllIcons.ToolbarDecorator.Export) {
-          @Override
-          public void actionPerformed(AnActionEvent e) {
-            FileType selected = (FileType)myFileTypesList.getSelectedValue();
-            if (selected instanceof AbstractFileType) {
-              ExportSchemeAction.doExport((AbstractFileType)selected, getSchemesManager());
-            }
-          }
-
-          @Override
-          public void updateButton(AnActionEvent e) {
-            FileType fileType = getSelectedFileType();
-            boolean b = canBeModified(fileType);
-            boolean shared = getSchemesManager().isShared(fileType);
-            setEnabled(b && !shared);
-          }
-        });
-      }
 
       add(toolbarDecorator.createPanel(), BorderLayout.CENTER);
       setBorder(IdeBorderFactory.createTitledBorder(FileTypesBundle.message("filetypes.recognized.group"), false));
@@ -525,9 +488,6 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       }
     }
 
-    private SchemesManager<FileType, AbstractFileType> getSchemesManager() {
-      return ((FileTypeManagerEx)FileTypeManager.getInstance()).getSchemesManager();
-    }
 
     public void attachActions(final FileTypeConfigurable controller) {
       myController = controller;
@@ -573,21 +533,6 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       myFileTypesList.setSelectedValue(fileType, true);
       myFileTypesList.requestFocus();
     }
-  }
-
-  private void importFileType(final FileType type) {
-    ReadFileType readFileType = (ReadFileType)type;
-    ImportedFileType actualType = new ImportedFileType(readFileType.getSyntaxTable(), readFileType.getExternalInfo());
-    actualType.setDescription(readFileType.getDescription());
-    actualType.setName(readFileType.getName());
-    actualType.readOriginalMatchers(readFileType.getElement());
-    for (FileNameMatcher matcher : actualType.getOriginalPatterns()) {
-      myTempPatternsTable.addAssociation(matcher, actualType);
-    }
-    myTempFileTypes.add(actualType);
-    updateFileTypeList();
-    updateExtensionList();
-    myRecognizedFileType.selectFileType(type);
   }
 
   public static class PatternsPanel extends JPanel {

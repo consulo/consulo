@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,23 @@
  */
 package com.intellij.openapi.editor.colors.ex;
 
-import com.intellij.openapi.components.NamedComponent;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.impl.DefaultColorsScheme;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author max
- */
-public class DefaultColorSchemesManager implements JDOMExternalizable, NamedComponent {
+@State(
+        name = "DefaultColorSchemesManager",
+        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")
+)
+public class DefaultColorSchemesManager implements PersistentStateComponent<Element> {
   private final List<DefaultColorsScheme> mySchemes;
   @NonNls private static final String SCHEME_ELEMENT = "scheme";
-
-  @Override
-  @NotNull
-  public String getComponentName() {
-    return "DefaultColorSchemesManager";
-  }
 
   public DefaultColorSchemesManager() {
     mySchemes = new ArrayList<DefaultColorsScheme>();
@@ -51,20 +41,19 @@ public class DefaultColorSchemesManager implements JDOMExternalizable, NamedComp
     return ServiceManager.getService(DefaultColorSchemesManager.class);
   }
 
+  @Nullable
   @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    List schemes = element.getChildren(SCHEME_ELEMENT);
-    for (Object scheme : schemes) {
-      Element schemeElement = (Element)scheme;
-      DefaultColorsScheme newScheme = new DefaultColorsScheme(this);
-      newScheme.readExternal(schemeElement);
-      mySchemes.add(newScheme);
-    }
+  public Element getState() {
+    return null;
   }
 
   @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    throw new WriteExternalException();
+  public void loadState(Element state) {
+    for (Element schemeElement : state.getChildren(SCHEME_ELEMENT)) {
+      DefaultColorsScheme newScheme = new DefaultColorsScheme();
+      newScheme.readExternal(schemeElement);
+      mySchemes.add(newScheme);
+    }
   }
 
   public DefaultColorsScheme[] getAllSchemes() {
@@ -76,7 +65,6 @@ public class DefaultColorSchemesManager implements JDOMExternalizable, NamedComp
     for (DefaultColorsScheme scheme : mySchemes) {
       if (name.equals(scheme.getName())) return scheme;
     }
-
     return null;
   }
 }

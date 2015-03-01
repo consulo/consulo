@@ -15,27 +15,25 @@
  */
 package com.intellij.application.options.codeStyle;
 
-import com.intellij.application.options.ExportSchemeAction;
 import com.intellij.application.options.SaveSchemeDialog;
-import com.intellij.application.options.SchemesToImportPopup;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
-import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
 import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -98,44 +96,8 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
       }
     });
 
-    final SchemesManager<CodeStyleScheme, CodeStyleSchemeImpl> schemesManager = CodeStyleSchemesModel.getSchemesManager();
-
-    if (schemesManager.isExportAvailable()) {
-      myExportButton.setVisible(true);
-      myExportButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-          CodeStyleScheme selected = getSelectedScheme();
-          ExportSchemeAction.doExport((CodeStyleSchemeImpl)selected, schemesManager);
-        }
-      });
-      myExportButton.setMnemonic('S');
-    }
-    else {
-      myExportButton.setVisible(false);
-    }
-
-    if (schemesManager.isImportAvailable()) {
-      myImportButton.setVisible(true);
-      myImportButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-          SchemesToImportPopup<CodeStyleScheme, CodeStyleSchemeImpl> popup =
-            new SchemesToImportPopup<CodeStyleScheme, CodeStyleSchemeImpl>(parent) {
-              @Override
-              protected void onSchemeSelected(final CodeStyleSchemeImpl scheme) {
-                if (scheme != null) {
-                  myModel.addScheme(scheme, true);
-                }
-              }
-            };
-          popup.show(schemesManager, myModel.getSchemes());
-        }
-      });
-    }
-    else {
-      myImportButton.setVisible(false);
-    }
+    myExportButton.setVisible(false);
+    myImportButton.setVisible(false);
 
     init();
   }

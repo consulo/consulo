@@ -18,12 +18,12 @@ package com.intellij.openapi.editor.colors.impl;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.colors.ex.DefaultColorSchemesManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.util.Comparing;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -33,13 +33,13 @@ import java.awt.*;
 public class EditorColorsSchemeImpl extends AbstractColorsScheme implements ExternalizableScheme {
   private final ExternalInfo myExternalInfo = new ExternalInfo();
 
-  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme, DefaultColorSchemesManager defaultColorSchemesManager) {
-    super(parentScheme, defaultColorSchemesManager);
+  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme) {
+    super(parentScheme);
   }
 
   @Override
   public void setAttributes(TextAttributesKey key, TextAttributes attributes) {
-    if (!Comparing.equal(attributes, getAttributes(key))) {
+    if (attributes != getAttributes(key)) {
       myAttributesMap.put(key, attributes);
     }
   }
@@ -68,11 +68,11 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
     return myParentScheme.getAttributes(key);
   }
 
-
   public boolean containsKey(TextAttributesKey key) {
     return myAttributesMap.containsKey(key);
   }
 
+  @Nullable
   @Override
   public Color getColor(ColorKey key) {
     if (myColorsMap.containsKey(key)) {
@@ -85,7 +85,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
 
   @Override
   public Object clone() {
-    EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(myParentScheme, DefaultColorSchemesManager.getInstance());
+    EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(myParentScheme);
     copyTo(newScheme);
     newScheme.setName(getName());
     return newScheme;

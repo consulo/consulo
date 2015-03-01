@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl;
-import com.intellij.openapi.editor.colors.impl.EditorColorsSchemeImpl;
-import com.intellij.openapi.options.SharedScheme;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author max
@@ -32,32 +31,19 @@ import java.util.Collection;
 public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
   @Override
   protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
-    final EditorColorsScheme[] schemes = EditorColorsManager.getInstance().getAllSchemes();
     EditorColorsScheme current = EditorColorsManager.getInstance().getGlobalScheme();
-    for (final EditorColorsScheme scheme : schemes) {
+    for (EditorColorsScheme scheme : EditorColorsManager.getInstance().getAllSchemes()) {
       addScheme(group, current, scheme, false);
     }
-
-
-    Collection<SharedScheme<EditorColorsSchemeImpl>> sharedSchemes = ((EditorColorsManagerImpl)EditorColorsManager.getInstance()).getSchemesManager().loadSharedSchemes();
-
-    if (!sharedSchemes.isEmpty()) {
-      group.add(AnSeparator.getInstance());
-
-      for (SharedScheme<EditorColorsSchemeImpl> sharedScheme : sharedSchemes) {
-        addScheme(group, current, sharedScheme.getScheme(), true);
-      }
-    }
-
   }
 
   private static void addScheme(final DefaultActionGroup group,
                                 final EditorColorsScheme current,
                                 final EditorColorsScheme scheme,
                                 final boolean addScheme) {
-    group.add(new AnAction(scheme.getName(), "", scheme == current ? ourCurrentAction : ourNotCurrentAction) {
+    group.add(new DumbAwareAction(scheme.getName(), "", scheme == current ? ourCurrentAction : ourNotCurrentAction) {
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@Nullable AnActionEvent e) {
         if (addScheme) {
           EditorColorsManager.getInstance().addColorsScheme(scheme);
         }
@@ -68,6 +54,6 @@ public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
 
   @Override
   protected boolean isEnabled() {
-    return EditorColorsManager.getInstance().getAllSchemes().length > 1 || ((EditorColorsManagerImpl)EditorColorsManager.getInstance()).getSchemesManager().isImportAvailable();
+    return EditorColorsManager.getInstance().getAllSchemes().length > 1;
   }
 }

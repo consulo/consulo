@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.Semaphore;
 import gnu.trove.Equality;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -80,7 +82,7 @@ public class TransferToEDTQueue<T> {
         runnable.run();
         return true;
       }
-    }, Condition.FALSE, maxUnitOfWorkThresholdMs);
+    }, Conditions.alwaysFalse(), maxUnitOfWorkThresholdMs);
   }
 
   private boolean isEmpty() {
@@ -114,6 +116,10 @@ public class TransferToEDTQueue<T> {
     return true;
   }
 
+  public boolean offerIfAbsent(@NotNull T thing) {
+    return offerIfAbsent(thing, Equality.CANONICAL);
+  }
+
   public boolean offerIfAbsent(@NotNull final T thing, @NotNull final Equality<T> equality) {
     synchronized (myQueue) {
       boolean absent = myQueue.process(new Processor<T>() {
@@ -144,6 +150,18 @@ public class TransferToEDTQueue<T> {
     stopped = true;
     synchronized (myQueue) {
       myQueue.clear();
+    }
+  }
+
+  public int size() {
+    synchronized (myQueue) {
+      return myQueue.size();
+    }
+  }
+
+  public Collection<T> dump() {
+    synchronized (myQueue) {
+      return myQueue.toList();
     }
   }
 

@@ -16,8 +16,6 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.application.options.ExportSchemeAction;
-import com.intellij.application.options.SchemesToImportPopup;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.icons.AllIcons;
@@ -346,18 +344,6 @@ public class TemplateListPanel extends JPanel implements Disposable {
     return result;
   }
 
-  private void exportCurrentGroup() {
-    int selected = getSingleSelectedIndex();
-    if (selected < 0) return;
-
-    ExportSchemeAction.doExport(getGroup(selected), getSchemesManager());
-
-  }
-
-  private static SchemesManager<TemplateGroup, TemplateGroup> getSchemesManager() {
-    return (TemplateSettings.getInstance()).getSchemesManager();
-  }
-
   private JPanel createExpandByPanel() {
     JPanel panel = new JPanel(new GridBagLayout());
     GridBagConstraints gbConstraints = new GridBagConstraints();
@@ -658,8 +644,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
           @SuppressWarnings("unchecked") Set<String> oldGroupNames = getAllGroups((Map<TemplateImpl, DefaultMutableTreeNode>)event.getAttachedObject());
           TemplateGroup group = getDropGroup(event);
           boolean differentGroup = group != null && !oldGroupNames.contains(group.getName());
-          boolean possible = differentGroup && !getSchemesManager().isShared(group);
-          event.setDropPossible(possible, differentGroup && !possible ? "Cannot modify a shared group" : "");
+          event.setDropPossible(differentGroup, "");
           return true;
         }
       })
@@ -716,50 +701,6 @@ public class TemplateListPanel extends JPanel implements Disposable {
           e.getPresentation().setEnabled(getTemplate(getSingleSelectedIndex()) != null);
         }
       });
-    if (getSchemesManager().isExportAvailable()) {
-      decorator.addExtraAction(new AnActionButton("Share...", AllIcons.ToolbarDecorator.Export) {
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-          exportCurrentGroup();
-        }
-
-        @Override
-        public void updateButton(AnActionEvent e) {
-          TemplateGroup group = getGroup(getSingleSelectedIndex());
-          e.getPresentation().setEnabled(group != null && !getSchemesManager().isShared(group));
-        }
-      });
-    }
-    if (getSchemesManager().isImportAvailable()) {
-      decorator.addExtraAction(new AnActionButton("Import Shared...", AllIcons.ToolbarDecorator.Import) {
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-          new SchemesToImportPopup<TemplateGroup, TemplateGroup>(TemplateListPanel.this){
-            @Override
-            protected void onSchemeSelected(final TemplateGroup scheme) {
-              for (TemplateImpl newTemplate : scheme.getElements()) {
-                for (TemplateImpl existingTemplate : collectAllTemplates()) {
-                  if (existingTemplate.getKey().equals(newTemplate.getKey())) {
-                    Messages.showMessageDialog(
-                      TemplateListPanel.this,
-                      CodeInsightBundle
-                        .message("dialog.edit.template.error.already.exists", existingTemplate.getKey(), existingTemplate.getGroupName()),
-                      CodeInsightBundle.message("dialog.edit.template.error.title"),
-                      Messages.getErrorIcon()
-                    );
-                    return;
-                  }
-                }
-              }
-              insertNewGroup(scheme);
-              for (TemplateImpl template : scheme.getElements()) {
-                registerTemplate(template);
-              }
-            }
-          }.show(getSchemesManager(), myTemplateGroups);
-        }
-      });
-    }
     return decorator.setToolbarPosition(ActionToolbarPosition.RIGHT);
   }
 
@@ -805,7 +746,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
           for (TemplateGroup group : getTemplateGroups()) {
             final String newGroupName = group.getName();
-            if (!oldGroups.contains(newGroupName) && !schemesManager.isShared(group)) {
+            if (!oldGroups.contains(newGroupName)) {
               add(new DumbAwareAction(newGroupName) {
                 @Override
                 public void actionPerformed(AnActionEvent e) {

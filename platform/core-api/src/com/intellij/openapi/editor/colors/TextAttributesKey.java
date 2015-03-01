@@ -52,7 +52,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
   }
 
   //read external only
-  public TextAttributesKey(@NotNull Element element) throws InvalidDataException {
+  public TextAttributesKey(@NotNull Element element) {
     this(JDOMExternalizerUtil.readField(element, "myExternalName"));
     Element myDefaultAttributesElement = JDOMExternalizerUtil.getOption(element, "myDefaultAttributes");
     if (myDefaultAttributesElement != null) {
