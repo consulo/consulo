@@ -17,6 +17,9 @@ package com.intellij.ide.customize;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.ui.LafManager;
+import com.intellij.ide.ui.laf.LafWithColorScheme;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.IconUtil;
@@ -134,6 +137,13 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
 
       if (!myInitial) {
         LafManager.getInstance().setCurrentLookAndFeel(info);
+        if(info instanceof LafWithColorScheme) {
+          EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
+          EditorColorsScheme scheme = editorColorsManager.getScheme(((LafWithColorScheme)info).getColorSchemeName());
+          if(scheme != null) {
+            editorColorsManager.setGlobalScheme(scheme);
+          }
+        }
       }
       Window window = SwingUtilities.getWindowAncestor(component);
       if (window != null) {
