@@ -457,6 +457,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Nullable
   @Override
   public ModifiableModuleRootLayer setCurrentLayer(@NotNull String name) {
+    assertWritable();
     ModuleRootLayerImpl moduleRootLayer = myLayers.get(name);
     if(moduleRootLayer == null) {
       return null;
@@ -466,11 +467,13 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return moduleRootLayer;
   }
 
-  @Nullable
   @Override
-  public ModifiableModuleRootLayer removeLayer(@NotNull String name, boolean initDefault) {
-    ModuleRootLayerImpl remove = myLayers.remove(name);
-    if(remove != null) {
+  public boolean removeLayer(@NotNull String name, boolean initDefault) {
+    assertWritable();
+    ModuleRootLayerImpl removedLayer = myLayers.remove(name);
+    if(removedLayer != null) {
+      Disposer.dispose(removedLayer);
+
       if(initDefault && myLayers.isEmpty()) {
         try {
           initDefaultLayer(null);
@@ -484,7 +487,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         setCurrentLayerSafe(myLayers.isEmpty() ? null : ContainerUtil.getFirstItem(myLayers.keySet()));
       }
     }
-    return remove;
+    return removedLayer != null;
   }
 
   @NotNull

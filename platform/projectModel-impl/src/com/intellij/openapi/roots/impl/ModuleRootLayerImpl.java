@@ -869,6 +869,11 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public void dispose() {
     removeAllContentEntries();
     removeAllOrderEntries();
+    for (ModuleExtension<?> extension : myExtensions) {
+      if(extension instanceof Disposable) {
+        Disposer.dispose((Disposable)extension);
+      }
+    }
     myExtensions.clear();
   }
 
