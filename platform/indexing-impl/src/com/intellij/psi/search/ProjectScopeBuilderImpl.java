@@ -16,7 +16,6 @@
 package com.intellij.psi.search;
 
 import com.intellij.core.CoreProjectScopeBuilder;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
@@ -53,15 +52,11 @@ public class ProjectScopeBuilderImpl extends ProjectScopeBuilder {
   @Override
   public GlobalSearchScope buildAllScope() {
     final ProjectRootManager projectRootManager = ProjectRootManager.getInstance(myProject);
-    if (projectRootManager == null) return new EverythingGlobalScope(myProject);
-
-    boolean searchOutsideRootModel = false;
-    for (SearchScopeEnlarger each : Extensions.getExtensions(SearchScopeEnlarger.EXTENSION)) {
-      searchOutsideRootModel = each.allScopeSearchesOutsideRootModel(myProject);
-      if (searchOutsideRootModel) break;
+    if (projectRootManager == null) {
+      return new EverythingGlobalScope(myProject);
     }
 
-    return new ProjectAndLibrariesScope(myProject, searchOutsideRootModel);
+    return new ProjectAndLibrariesScope(myProject, false);
   }
 
   @Override
