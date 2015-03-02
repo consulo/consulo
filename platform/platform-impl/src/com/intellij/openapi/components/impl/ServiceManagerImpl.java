@@ -69,10 +69,13 @@ public class ServiceManagerImpl implements BaseComponent {
       @Override
       public void extensionAdded(@NotNull final ServiceDescriptor descriptor, final PluginDescriptor pluginDescriptor) {
         if (descriptor.overrides) {
-          ComponentAdapter oldAdapter =
-                  picoContainer.unregisterComponent(descriptor.getInterface());// Allow to re-define service implementations in plugins.
+          ComponentAdapter oldAdapter = picoContainer.unregisterComponent(descriptor.getInterface());// Allow to re-define service implementations in plugins.
           if (oldAdapter == null) {
             throw new RuntimeException("Service: " + descriptor.getInterface() + " doesn't override anything");
+          }
+          else {
+            LOGGER.error("`overrides` attribute will later deleted. Require api change. Interface: " + descriptor.getInterface() + ". Plugin: " +
+                         pluginDescriptor.getPluginId());
           }
         }
 
@@ -92,7 +95,8 @@ public class ServiceManagerImpl implements BaseComponent {
     return Arrays.asList(extensions);
   }
 
-  public static void processAllImplementationClasses(@NotNull ComponentManagerImpl componentManager, @NotNull PairProcessor<Class<?>, PluginDescriptor> processor) {
+  public static void processAllImplementationClasses(@NotNull ComponentManagerImpl componentManager,
+                                                     @NotNull PairProcessor<Class<?>, PluginDescriptor> processor) {
     Collection adapters = componentManager.getPicoContainer().getComponentAdapters();
     if (adapters.isEmpty()) {
       return;
@@ -253,7 +257,12 @@ public class ServiceManagerImpl implements BaseComponent {
 
     @Override
     public String toString() {
-      return "ServiceComponentAdapter[" + myDescriptor.getInterface() + "]: implementation=" + myDescriptor.getImplementation() + ", plugin=" + myPluginDescriptor;
+      return "ServiceComponentAdapter[" +
+             myDescriptor.getInterface() +
+             "]: implementation=" +
+             myDescriptor.getImplementation() +
+             ", plugin=" +
+             myPluginDescriptor;
     }
   }
 }
