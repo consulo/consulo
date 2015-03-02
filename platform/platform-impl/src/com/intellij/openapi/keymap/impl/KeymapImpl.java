@@ -535,9 +535,6 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     if (!KEY_MAP.equals(keymapElement.getName())) {
       throw new InvalidDataException("unknown element: " + keymapElement);
     }
-    if (keymapElement.getAttributeValue(VERSION_ATTRIBUTE) == null) {
-      Converter01.convert(keymapElement);
-    }
     //
     String parentName = keymapElement.getAttributeValue(PARENT_ATTRIBUTE);
     if (parentName != null) {

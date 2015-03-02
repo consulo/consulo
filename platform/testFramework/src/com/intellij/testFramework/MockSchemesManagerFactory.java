@@ -8,7 +8,7 @@ public class MockSchemesManagerFactory extends SchemesManagerFactory {
   @Override
   public <T extends Named,E extends ExternalizableScheme> SchemesManager<T,E> createSchemesManager(final String fileSpec,
                                                                    final SchemeProcessor<E> processor, final RoamingType roamingType) {
-    return SchemesManager.EMPTY;
+    return new EmptySchemesManager();
   }
 
   @Override

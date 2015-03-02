@@ -17,6 +17,7 @@ package com.intellij.refactoring;
 
 import com.intellij.openapi.util.Ref;
 import com.intellij.usageView.UsageInfo;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author dsl
@@ -49,6 +50,7 @@ public abstract class RefactoringImpl<T extends BaseRefactoringProcessor> implem
   }
 
   @Override
+  @RequiredReadAction
   public UsageInfo[] findUsages() {
     return myProcessor.findUsages();
   }

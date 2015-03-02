@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package com.intellij.openapi.editor.colors.impl;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.FontSize;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,6 +70,7 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
     return myDelegate.getDefaultForeground();
   }
 
+  @Nullable
   @Override
   public Color getColor(ColorKey key) {
     return myDelegate.getColor(key);
@@ -144,13 +143,10 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
   }
 
   @Override
-  public void readExternal(Element element) throws InvalidDataException {
+  public void readExternal(Element element) {
   }
 
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-  }
-
+  @NotNull
   @Override
   public String getName() {
     return myDelegate.getName();
@@ -201,5 +197,4 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
   public void setConsoleLineSpacing(float lineSpacing) {
     myDelegate.setConsoleLineSpacing(lineSpacing);
   }
-
 }

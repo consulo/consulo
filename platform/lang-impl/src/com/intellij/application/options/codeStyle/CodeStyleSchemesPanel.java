@@ -20,6 +20,7 @@ package com.intellij.application.options.codeStyle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.ui.ListCellRendererWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -29,7 +30,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CodeStyleSchemesPanel{
+public class CodeStyleSchemesPanel {
   private JComboBox myCombo;
 
   private final CodeStyleSchemesModel myModel;
@@ -37,7 +38,6 @@ public class CodeStyleSchemesPanel{
   private JButton myManageButton;
 
   private boolean myIsReset = false;
-  private NewCodeStyleSettingsPanel mySettingsPanel;
   private final Font myDefaultComboFont;
   private final Font myBoldComboFont;
 
@@ -48,14 +48,14 @@ public class CodeStyleSchemesPanel{
     myBoldComboFont = myDefaultComboFont.deriveFont(Font.BOLD);
     myCombo.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(@NotNull ActionEvent e) {
         if (!myIsReset) {
           ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                  onCombo();
-                }
-              });
+            @Override
+            public void run() {
+              onCombo();
+            }
+          });
         }
       }
     });
@@ -72,10 +72,10 @@ public class CodeStyleSchemesPanel{
         setFont(font);
       }
     });
-    
+
     myManageButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(@NotNull ActionEvent e) {
         showManageSchemesDialog();
       }
     });
@@ -124,10 +124,7 @@ public class CodeStyleSchemesPanel{
     finally {
       myIsReset = false;
     }
-
-
   }
-
 
   public void onSelectedSchemeChanged() {
     myIsReset = true;
@@ -146,10 +143,6 @@ public class CodeStyleSchemesPanel{
 
   public JComponent getPanel() {
     return myPanel;
-  }
-
-  public void setCodeStyleSettingsPanel(NewCodeStyleSettingsPanel settingsPanel) {
-    mySettingsPanel = settingsPanel;
   }
 
   private void showManageSchemesDialog() {

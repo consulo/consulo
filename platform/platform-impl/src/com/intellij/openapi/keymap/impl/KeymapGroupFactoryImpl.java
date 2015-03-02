@@ -25,10 +25,12 @@ import javax.swing.*;
  * @author yole
  */
 public class KeymapGroupFactoryImpl extends KeymapGroupFactory {
+  @Override
   public KeymapGroup createGroup(final String name) {
     return new Group(name, null, null);
   }
 
+  @Override
   public KeymapGroup createGroup(final String name, final Icon icon) {
     return new Group(name, icon);
   }

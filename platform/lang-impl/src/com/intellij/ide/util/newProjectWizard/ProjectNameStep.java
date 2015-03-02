@@ -18,7 +18,6 @@ package com.intellij.ide.util.newProjectWizard;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.newProjectWizard.modes.WizardMode;
 import com.intellij.ide.util.projectWizard.*;
-import com.intellij.ide.util.projectWizard.importSources.impl.ProjectFromSourcesBuilderImpl;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.Nullable;
@@ -65,6 +64,7 @@ public class ProjectNameStep extends ModuleWizardStep {
     myPanel.add(myAdditionalContentPanel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
   }
   
+  @Override
   public JComponent getComponent() {
     return myPanel;
   }
@@ -74,6 +74,7 @@ public class ProjectNameStep extends ModuleWizardStep {
     return myWizardContext.getProject() == null;
   }
 
+  @Override
   public void updateDataModel() {
     myWizardContext.setProjectName(getProjectName());
     final String projectFileDirectory = getProjectFileDirectory();
@@ -84,20 +85,20 @@ public class ProjectNameStep extends ModuleWizardStep {
       if (moduleBuilder instanceof ModuleBuilder) { // no SourcePathsBuilder here !
         ((ModuleBuilder)moduleBuilder).setContentEntryPath(projectFileDirectory);
       }
-      else if (moduleBuilder instanceof ProjectFromSourcesBuilderImpl) {
-        ((ProjectFromSourcesBuilderImpl)moduleBuilder).setBaseProjectPath(projectFileDirectory);
-      }
     }
   }
 
+  @Override
   public Icon getIcon() {
     return myWizardContext.getStepIcon();
   }
 
+  @Override
   public JComponent getPreferredFocusedComponent() {
     return myNamePathComponent.getNameComponent();
   }
 
+  @Override
   public String getHelpId() {
     return "reference.dialogs.new.project.fromCode.name";
   }
@@ -110,6 +111,7 @@ public class ProjectNameStep extends ModuleWizardStep {
     return myNamePathComponent.getNameValue();
   }
 
+  @Override
   public boolean validate() throws ConfigurationException {
     return myNamePathComponent.validateNameAndPath(myWizardContext, true);
   }

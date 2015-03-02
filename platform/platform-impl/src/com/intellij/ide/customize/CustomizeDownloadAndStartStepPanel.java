@@ -53,7 +53,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
     }
 
     @Override
-    public void setText(final String text) {
+    public void setText2(final String text) {
       UIUtil.invokeLaterIfNeeded(new Runnable() {
         @Override
         public void run() {

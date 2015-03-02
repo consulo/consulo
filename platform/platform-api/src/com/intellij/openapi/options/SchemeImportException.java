@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.highlighter.custom.impl;
+package com.intellij.openapi.options;
 
-import com.intellij.ide.highlighter.custom.SyntaxTable;
-import com.intellij.openapi.fileTypes.impl.AbstractFileType;
-import org.jdom.Element;
-
-public class ReadFileType extends AbstractFileType {
-
-  private final Element myElement;
-
-  public ReadFileType(final SyntaxTable syntaxTable, Element element) {
-    super(syntaxTable);
-    myElement = element;
+/**
+ * Thrown from SchemeImporter when a scheme can't be read for some reason.
+ *
+ * @see com.intellij.openapi.options.SchemeImporter
+ * @author Rustam Vishnyakov
+ */
+public class SchemeImportException extends Exception {
+  public SchemeImportException(String message) {
+    super(message);
   }
 
-  public Element getElement() {
-    return myElement;
+  public SchemeImportException(Throwable cause) {
+    super(cause);
   }
-
 }

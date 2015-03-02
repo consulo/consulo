@@ -28,12 +28,14 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.*;
 
 public class ModifiableModelCommitter {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.module.impl.ModifiableModelCommitter");
 
+  @RequiredWriteAction
   public static void multiCommit(ModifiableRootModel[] rootModels, ModifiableModuleModel moduleModel) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
@@ -46,7 +48,7 @@ public class ModifiableModelCommitter {
       @Override
       public void run() {
         for (RootModelImpl rootModel : modelsToCommit) {
-          commitModelWithoutEvents(rootModel);
+          rootModel.doCommitAndDispose(true);
         }
 
         for (ModifiableRootModel model : modelsToDispose) {
@@ -55,11 +57,6 @@ public class ModifiableModelCommitter {
       }
     };
     ModuleManagerImpl.commitModelWithRunnable(moduleModel, runnable);
-
-  }
-
-  private static void commitModelWithoutEvents(RootModelImpl rootModel) {
-    ModuleRootManagerImpl.doCommit(rootModel);
   }
 
   private static List<RootModelImpl> getSortedChangedModels(ModifiableRootModel[] _rootModels,

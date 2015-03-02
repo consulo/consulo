@@ -16,13 +16,15 @@
 package com.intellij.ide.customize;
 
 import com.intellij.CommonBundle;
-import com.intellij.ide.ui.laf.darcula.DarculaLaf;
-import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
-import com.intellij.idea.StartupUtil;
+import com.intellij.ide.ui.LafManager;
+import com.intellij.ide.ui.laf.LafWithColorScheme;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -132,10 +134,16 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
     if (info == null) return;
     try {
       UIManager.setLookAndFeel(info.getClassName());
-      String className = info.getClassName();
 
       if (!myInitial) {
-        StartupUtil.setWizardLAF(className);
+        LafManager.getInstance().setCurrentLookAndFeel(info);
+        if(info instanceof LafWithColorScheme) {
+          EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
+          EditorColorsScheme scheme = editorColorsManager.getScheme(((LafWithColorScheme)info).getColorSchemeName());
+          if(scheme != null) {
+            editorColorsManager.setGlobalScheme(scheme);
+          }
+        }
       }
       Window window = SwingUtilities.getWindowAncestor(component);
       if (window != null) {
@@ -162,10 +170,12 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   }
 
   @Nullable
-  private static UIManager.LookAndFeelInfo getLookAndFeelInfo(String name) {
-    if (DEFAULT.equals(name)) return new UIManager.LookAndFeelInfo(DEFAULT, "com.apple.laf.AquaLookAndFeel");
-    if (DARCULA.equals(name)) return new UIManager.LookAndFeelInfo(DARCULA, DarculaLaf.class.getName());
-    if (INTELLIJ.equals(name)) return new UIManager.LookAndFeelInfo(INTELLIJ, IntelliJLaf.class.getName());
+  private static UIManager.LookAndFeelInfo getLookAndFeelInfo(@NotNull String name) {
+    for (UIManager.LookAndFeelInfo lookAndFeelInfo : LafManager.getInstance().getInstalledLookAndFeels()) {
+      if(name.equals(lookAndFeelInfo.getName())) {
+        return lookAndFeelInfo;
+      }
+    }
     return null;
   }
 }

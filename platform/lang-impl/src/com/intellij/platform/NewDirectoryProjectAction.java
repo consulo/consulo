@@ -73,11 +73,10 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
     baseDir.refresh(false, true);
 
     if (childCount > 0) {
-      int rc = Messages.showYesNoDialog(project, "The directory '" + location +
-                                                 "' is not empty. Would you like to create a project from existing sources instead?", "Create New Project",
+      int rc = Messages.showYesNoDialog(project, "The directory '" + location + "' is not empty. Continue?", "Create New Project",
                                         Messages.getQuestionIcon());
-      if (rc == Messages.YES) {
-        return PlatformProjectOpenProcessor.getInstance().doOpenProject(baseDir, null, false);
+      if (rc == Messages.NO) {
+        return null;
       }
     }
 

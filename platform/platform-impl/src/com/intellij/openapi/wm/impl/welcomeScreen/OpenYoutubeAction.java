@@ -18,30 +18,11 @@ package com.intellij.openapi.wm.impl.welcomeScreen;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.ui.UIBundle;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
-public class JetBrainsTvAction extends AnAction implements DumbAware {
-  public static final String JETBRAINS_TV_URL = "http://tv.jetbrains.net/";
-
-  private final String myUrl;
-
-  public JetBrainsTvAction() {
-    myUrl = JETBRAINS_TV_URL;
-  }
-
-  protected JetBrainsTvAction(@NotNull @NonNls final String channel) {
-    final String fullProductName = ApplicationNamesInfo.getInstance().getFullProductName();
-    getTemplatePresentation().setText(fullProductName + " TV");
-    getTemplatePresentation().setDescription(UIBundle.message("welcome.screen.jetbrains.tv.action.description", fullProductName));
-    myUrl = JETBRAINS_TV_URL + "channel/" + channel;
-  }
-
+public class OpenYoutubeAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    BrowserUtil.launchBrowser(myUrl);
+    BrowserUtil.launchBrowser("http://www.youtube.com/user/ConsuloIDE");
   }
 }

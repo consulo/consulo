@@ -34,6 +34,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.*;
 
@@ -237,13 +238,14 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @Override
+  @RequiredWriteAction
   public void commit() {
     myModuleRootManager.commitModel(this);
     myWritable = false;
   }
 
   @SuppressWarnings("unchecked")
-  public void doCommit() {
+  public void doCommitAndDispose(boolean notifyEvents) {
     assert isWritable();
 
     RootModelImpl sourceModel = getSourceModel();
@@ -257,8 +259,10 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
       sourceModel.setCurrentLayerSafe(myCurrentLayerName);
 
-      layerListener.currentLayerChanged(getModule(), oldName, oldLayer, myCurrentLayerName, getCurrentLayer());
-      extensionListenerAlreadyCalled = true;
+      if(notifyEvents) {
+        layerListener.currentLayerChanged(getModule(), oldName, oldLayer, myCurrentLayerName, getCurrentLayer());
+        extensionListenerAlreadyCalled = true;
+      }
     }
 
     // first we commit changed and new layers
@@ -272,7 +276,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         sourceModel.myLayers.put(entry.getKey(), toCommit);
       }
 
-      if(entry.getValue().copy(toCommit, !extensionListenerAlreadyCalled && myCurrentLayerName.equals(entry.getKey()))) {
+      if(entry.getValue().copy(toCommit, notifyEvents && !extensionListenerAlreadyCalled && myCurrentLayerName.equals(entry.getKey())) && notifyEvents) {
         if(sourceModuleLayer == null) {
           layerListener.layerAdded(getModule(), toCommit);
         }
@@ -294,10 +298,14 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     for (String layerName : toRemove) {
       ModuleRootLayerImpl removed = sourceModel.myLayers.remove(layerName);
       assert removed != null;
-      layerListener.layerRemove(getModule(), removed);
+      if(notifyEvents) {
+        layerListener.layerRemove(getModule(), removed);
+      }
 
       Disposer.dispose(removed);
     }
+
+    dispose();
   }
 
   @Override

@@ -65,12 +65,12 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
     myProject = project;
     myColorManager = manager;
     myUiProperties = uiProperties;
-    Disposer.register(logDataHolder, this);
 
     myFilterer = filterer;
     myLog = new VcsLogImpl(logDataHolder, this);
     myVisiblePack = VisiblePack.EMPTY;
     myMainFrame = new MainFrame(logDataHolder, this, project, settings, uiProperties, myLog, myVisiblePack);
+    Disposer.register(logDataHolder, this);
   }
 
   public void setVisiblePack(@NotNull VisiblePack pack) {

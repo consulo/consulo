@@ -54,6 +54,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.io.IOException;
 import java.util.*;
@@ -669,12 +670,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       return null;
     }
 
-    @Override
-    @NotNull
-    public Module loadModule(@NotNull String filePath) throws InvalidDataException, IOException, ModuleWithNameAlreadyExists {
-      throw new UnsupportedOperationException();
-    }
-
     private Module loadModuleInternal(@NotNull ModuleLoadItem item, @Nullable ProgressIndicator progressIndicator)
       throws ModuleWithNameAlreadyExists, IOException, StateStorageException {
 
@@ -773,6 +768,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Override
+    @RequiredWriteAction
     public void commit() {
       ModifiableRootModel[] rootModels = new ModifiableRootModel[0];
       ModifiableModelCommitter.multiCommit(rootModels, this);

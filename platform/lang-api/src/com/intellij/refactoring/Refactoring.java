@@ -17,6 +17,7 @@ package com.intellij.refactoring;
 
 import com.intellij.openapi.util.Ref;
 import com.intellij.usageView.UsageInfo;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * Represents refactoring of IntelliJ IDEA.<br>
@@ -65,6 +66,7 @@ public interface Refactoring {
    * This method should be best invoked in the process with progress and it does
    * all the lengthy code analysis operations.
    */
+  @RequiredReadAction
   UsageInfo[] findUsages();
 
   /**

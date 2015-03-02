@@ -22,20 +22,15 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
 import com.intellij.openapi.components.impl.stores.StreamProvider;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
+@Logger
 public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements SettingsSavingComponent {
-
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.options.SchemesManagerFactoryImpl");
-
   private final List<SchemesManagerImpl> myRegisteredManagers = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @Override
@@ -46,64 +41,11 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
     if (!(application instanceof ApplicationEx2)) return null;
     String baseDirPath = ((ApplicationEx2)application).getStateStore().getStateStorageManager().expandMacros(fileSpec);
 
-    if (baseDirPath != null) {
-      StreamProvider
-              provider = ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProvider();
-      SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<T, E>(fileSpec, processor, roamingType, provider, new File(baseDirPath));
-      myRegisteredManagers.add(manager);
-      return manager;
-    }
-    else {
-      return new AbstractSchemesManager<T, E>() {
-        @Override
-        @NotNull
-        public Collection<E> loadSchemes() {
-          return Collections.emptyList();
-        }
-
-        @Override
-        @NotNull
-        public Collection<SharedScheme<E>> loadSharedSchemes(final Collection<T> currentSchemeList) {
-          return Collections.emptyList();
-        }
-
-        @Override
-        public void exportScheme(final E scheme, final String name, final String description) {
-        }
-
-        @Override
-        public boolean isImportAvailable() {
-          return false;
-        }
-
-        @Override
-        public boolean isShared(final Named scheme) {
-          return false;
-        }
-
-        @Override
-        public void save() {
-        }
-
-        @Override
-        protected void onSchemeDeleted(final Named toDelete) {
-        }
-
-        @Override
-        protected void onSchemeAdded(final T scheme) {
-        }
-
-        @Override
-        public boolean isExportAvailable() {
-          return false;
-        }
-
-        @Override
-        public File getRootDirectory() {
-          return null;
-        }
-      };
-    }
+    StreamProvider
+            provider = ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProvider();
+    SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<T, E>(fileSpec, processor, roamingType, provider, new File(baseDirPath));
+    myRegisteredManagers.add(manager);
+    return manager;
   }
 
   @Override
@@ -114,7 +56,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
         registeredManager.updateConfigFilesFromStreamProviders();
       }
       catch (Throwable e) {
-        LOG.info("Cannot save settings for " + registeredManager.getClass().getName(), e);
+        LOGGER.info("Cannot save settings for " + registeredManager.getClass().getName(), e);
       }
     }
   }
@@ -127,7 +69,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
         registeredManager.save();
       }
       catch (Throwable e) {
-        LOG.info("Cannot save settings for " + registeredManager.getClass().getName(), e);
+        LOGGER.info("Cannot save settings for " + registeredManager.getClass().getName(), e);
       }
     }
   }

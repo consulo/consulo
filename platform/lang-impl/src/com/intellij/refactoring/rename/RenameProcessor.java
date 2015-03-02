@@ -25,6 +25,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
@@ -53,6 +54,7 @@ import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -180,9 +182,14 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         final Runnable runnable = new Runnable() {
           @Override
           public void run() {
-            for (Map.Entry<PsiElement, String> entry : renames.entrySet()) {
+            for (final Map.Entry<PsiElement, String> entry : renames.entrySet()) {
               final UsageInfo[] usages =
-                RenameUtil.findUsages(entry.getKey(), entry.getValue(), mySearchInComments, mySearchTextOccurrences, myAllRenames);
+                ApplicationManager.getApplication().runReadAction(new Computable<UsageInfo[]>() {
+                  @Override
+                  public UsageInfo[] compute() {
+                    return RenameUtil.findUsages(entry.getKey(), entry.getValue(), mySearchInComments, mySearchTextOccurrences, myAllRenames);
+                  }
+                });
               Collections.addAll(variableUsages, usages);
             }
           }
@@ -271,6 +278,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
   @Override
   @NotNull
+  @RequiredReadAction
   public UsageInfo[] findUsages() {
     myRenamers.clear();
     ArrayList<UsageInfo> result = new ArrayList<UsageInfo>();
