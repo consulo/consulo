@@ -27,6 +27,7 @@ import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -269,6 +270,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param e Carries information on the invocation place
    */
+  @RequiredDispatchThread
   public abstract void actionPerformed(AnActionEvent e);
 
   protected void setShortcutSet(ShortcutSet shortcutSet) {
