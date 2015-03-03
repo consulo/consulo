@@ -24,15 +24,16 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
-import java.util.Arrays;
 
 /**
  * @author Dmitry Avdeev
  *         Date: 12/5/12
  */
 @Deprecated
+@DeprecationInfo(value = "DependentSdkType is legacy from IDEA, where modules cant hold more than one Sdk", until = "2.0")
 public abstract class DependentSdkType extends SdkType {
 
   public DependentSdkType(@NonNls String name) {
@@ -87,7 +88,7 @@ public abstract class DependentSdkType extends SdkType {
     SdkConfigurationUtil.selectSdkHome(sdkType, new Consumer<String>() {
       @Override
       public void consume(final String home) {
-        String newSdkName = SdkConfigurationUtil.createUniqueSdkName(sdkType, home, Arrays.asList(sdkModel.getSdks()));
+        String newSdkName = SdkConfigurationUtil.createUniqueSdkName(sdkType, home, sdkModel.getSdks());
         final SdkImpl newJdk = new SdkImpl(newSdkName, sdkType);
         newJdk.setHomePath(home);
 
