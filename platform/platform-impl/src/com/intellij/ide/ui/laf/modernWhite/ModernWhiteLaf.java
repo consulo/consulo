@@ -17,14 +17,41 @@ package com.intellij.ide.ui.laf.modernWhite;
 
 import com.intellij.ide.ui.laf.ideaOld.IdeaBlueMetalTheme;
 import com.intellij.ide.ui.laf.modernDark.ModernDarkLaf;
+import org.mustbe.consulo.jna.DwmApi;
 
+import javax.swing.*;
 import javax.swing.plaf.metal.DefaultMetalTheme;
+import java.awt.*;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 02.03.14
  */
 public class ModernWhiteLaf extends ModernDarkLaf {
+
+  @Override
+  public UIDefaults getDefaults() {
+    UIDefaults defaults = super.getDefaults();
+    if (DwmApi.Wrapper.DwmIsCompositionEnabled()) {
+      int[] colorWithAlpha = DwmApi.Wrapper.DwmGetColorizationColor();
+
+      Color value = new Color(colorWithAlpha[0], colorWithAlpha[1] == 1);
+      for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
+        String key = entry.getKey().toString();
+        if(key.endsWith(".selectionBackground"))  {
+          defaults.put(key, value);
+        }
+      }
+      defaults.put("Color.SelectionBackground", value);
+      defaults.put("Hyperlink.linkColor", new Color(value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha() + 10));
+      defaults.put("ProgressBar.stepColor1", value);
+      defaults.put("ProgressBar.stepColor2", new Color(value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha() + 10));
+    }
+
+    return defaults;
+  }
+
   @Override
   public String getName() {
     return "Modern White";

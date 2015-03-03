@@ -133,9 +133,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
       public void actionPerformed(AnActionEvent e) {
         sideHidden();
       }
-    },
-                                    AllIcons.General.HideLeft, null, null
-    ) {
+    }, AllIcons.General.HideLeft, null, null) {
       @Override
       protected Icon getActiveIcon() {
         return getHideToolWindowIcon(myToolWindow);
@@ -161,12 +159,14 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
     myButtonPanel = eastPanel;
 
     addMouseListener(new PopupHandler() {
+      @Override
       public void invokePopup(final Component comp, final int x, final int y) {
         toolWindow.getContentUI().showContextMenu(comp, x, y, toolWindow.getPopupGroup(), toolWindow.getContentManager().getSelectedContent());
       }
     });
     
     addMouseListener(new MouseAdapter() {
+      @Override
       public void mouseReleased(final MouseEvent e) {
         if (!e.isPopupTrigger()) {
           if (UIUtil.isCloseClick(e, MouseEvent.MOUSE_RELEASED)) {
@@ -473,6 +473,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
       this(action, activeIcon, activeIcon);
     }
 
+    @Override
     public void actionPerformed(final ActionEvent e) {
       AnAction action =
         myAlternativeAction != null && (e.getModifiers() & InputEvent.ALT_MASK) == InputEvent.ALT_MASK ? myAlternativeAction : myAction;
@@ -500,6 +501,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
       myButton.setIcons(active, inactive, hovered);
     }
 
+    @Override
     public void setToolTipText(final String text) {
       myButton.setToolTipText(text);
     }
@@ -538,8 +540,10 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
       getTemplatePresentation().setText(UIBundle.message("tool.window.hideSide.action.name"));
     }
 
+    @Override
     public abstract void actionPerformed(final AnActionEvent e);
 
+    @Override
     public final void update(final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(myInfo.isVisible());
@@ -554,6 +558,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
       getTemplatePresentation().setText(UIBundle.message("tool.window.hide.action.name"));
     }
 
+    @Override
     public final void update(final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(myInfo.isVisible());
