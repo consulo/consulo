@@ -15,33 +15,34 @@
  */
 package com.intellij.ide.ui.laf.modernWhite;
 
-import com.intellij.ide.ui.laf.ideaOld.IdeaBlueMetalTheme;
-import com.intellij.ide.ui.laf.modernDark.ModernDarkLaf;
+import com.intellij.ide.IdeBundle;
+import com.intellij.ide.ui.laf.LafWithColorScheme;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.plaf.metal.DefaultMetalTheme;
+import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 02.03.14
  */
-public class ModernWhiteLaf extends ModernDarkLaf {
-  @Override
-  public String getName() {
-    return "Modern White";
+public class NativeModernWhiteLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
+  public NativeModernWhiteLookAndFeelInfo() {
+    super(IdeBundle.message("native.modern.white.intellij.look.and.feel"), NativeModernWhiteLaf.class.getName());
   }
 
   @Override
-  protected String getPrefix() {
-    return "modernWhite";
+  public boolean equals(Object obj) {
+    return (obj instanceof NativeModernWhiteLookAndFeelInfo);
   }
 
   @Override
-  public boolean isDark() {
-    return false;
+  public int hashCode() {
+    return getName().hashCode();
   }
 
+  @NotNull
   @Override
-  protected DefaultMetalTheme createMetalTheme() {
-    return new IdeaBlueMetalTheme();
+  public String getColorSchemeName() {
+    return getName();
   }
 }

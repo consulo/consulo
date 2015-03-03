@@ -26,6 +26,7 @@ import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
 import com.intellij.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import com.intellij.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
+import com.intellij.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -145,6 +146,9 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
 
     if(!SystemInfo.isMac) {
+      if(SystemInfo.isWinVistaOrNewer) {
+        lafList.add(new NativeModernWhiteLookAndFeelInfo());
+      }
       lafList.add(new ModernWhiteLookAndFeelInfo());
       lafList.add(new ModernDarkLookAndFeelInfo());
     }
