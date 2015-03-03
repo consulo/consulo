@@ -221,7 +221,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   public void initializeComponent(@NotNull Object component, boolean service) {
   }
 
-  protected void handleInitComponentError(Throwable ex, String componentClassName, ComponentConfig config) {
+  protected void handleInitComponentError(@NotNull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
     LOG.error(ex);
   }
 
@@ -429,7 +429,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       myClassesLoaded = true;
     }
 
-    private void loadClasses(final ComponentConfig config) {
+    private void loadClasses(@NotNull ComponentConfig config) {
       ClassLoader loader = config.getClassLoader();
 
       try {

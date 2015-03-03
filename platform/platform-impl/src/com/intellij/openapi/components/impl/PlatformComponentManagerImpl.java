@@ -19,6 +19,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl {
   private boolean myHandlingInitComponentError;
@@ -32,11 +33,11 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
   }
 
   @Override
-  protected void handleInitComponentError(Throwable t, String componentClassName, ComponentConfig config) {
+  protected void handleInitComponentError(@NotNull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
     if (!myHandlingInitComponentError) {
       myHandlingInitComponentError = true;
       try {
-        PluginManager.handleComponentError(t, componentClassName, config);
+        PluginManager.handleComponentError(ex, componentClassName, config);
       }
       finally {
         myHandlingInitComponentError = false;
