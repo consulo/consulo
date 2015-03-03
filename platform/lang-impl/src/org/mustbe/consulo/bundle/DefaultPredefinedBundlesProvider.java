@@ -15,29 +15,22 @@
  */
 package org.mustbe.consulo.bundle;
 
-import com.intellij.openapi.projectRoots.BundledSdkProvider;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 10.02.15
  */
-public class DefaultBundledSdkProvider implements BundledSdkProvider {
-  @NotNull
+public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider {
   @Override
-  public Sdk[] createBundledSdks() {
-    List<Sdk> sdks = new ArrayList<Sdk>();
+  public void createBundles(@NotNull Consumer<SdkImpl> consumer) {
     for (SdkType sdkType : SdkType.EP_NAME.getExtensions()) {
       if(sdkType.canCreatePredefinedSdks()) {
         Collection<String> paths = sdkType.suggestHomePaths();
@@ -49,16 +42,15 @@ public class DefaultBundledSdkProvider implements BundledSdkProvider {
               continue;
             }
 
-            String name = sdkType.suggestSdkName(null, path);
-            SdkImpl sdk = new SdkImpl(name + SdkConfigurationUtil.PREDEFINED_PREFIX, sdkType);
+            SdkImpl sdk = createSdk(sdkType, path);
             sdk.setHomePath(path);
             sdk.setVersionString(sdkType.getVersionString(sdk));
             sdkType.setupSdkPaths(sdk);
-            sdks.add(sdk);
+
+            consumer.consume(sdk);
           }
         }
       }
     }
-    return ContainerUtil.toArray(sdks, Sdk.ARRAY_FACTORY);
   }
 }

@@ -17,35 +17,34 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.projectRoots.BundledSdkProvider;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
+import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.bundle.PredefinedBundlesProvider;
 
 /**
  * @author VISTALL
  * @since 15:05/22.11.13
  */
-public class BundledSdkLoader implements ApplicationComponent {
-
+public class PredefinedBundlesLoader implements ApplicationComponent {
   @Override
   public void initComponent() {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+    Consumer<SdkImpl> consumer = new Consumer<SdkImpl>() {
       @Override
-      public void run() {
-        for (BundledSdkProvider bundledSdkProvider : BundledSdkProvider.EP_NAME.getExtensions()) {
-          final Sdk[] bundledSdks = bundledSdkProvider.createBundledSdks();
-
-          for (Sdk bundledSdk : bundledSdks) {
-            if (bundledSdk instanceof SdkImpl) {
-              ((SdkImpl)bundledSdk).setBundled(true);
-            }
-
-            SdkTable.getInstance().addSdk(bundledSdk);
+      public void consume(final SdkImpl sdk) {
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+          @Override
+          public void run() {
+            sdk.setBundled(true);
+            SdkTable.getInstance().addSdk(sdk);
           }
-        }
+        });
       }
-    });
+    };
+
+    for (PredefinedBundlesProvider predefinedBundlesProvider : PredefinedBundlesProvider.EP_NAME.getExtensions()) {
+      predefinedBundlesProvider.createBundles(consumer);
+    }
   }
 
   @Override

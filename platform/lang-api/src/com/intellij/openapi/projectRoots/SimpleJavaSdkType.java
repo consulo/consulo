@@ -21,7 +21,9 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.io.File;
 
 /**
@@ -49,6 +51,12 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
   @Override
   public String getPresentableName() {
     return ProjectBundle.message("sdk.java.name");
+  }
+
+  @Nullable
+  @Override
+  public Icon getIcon() {
+    return null;
   }
 
   @Override

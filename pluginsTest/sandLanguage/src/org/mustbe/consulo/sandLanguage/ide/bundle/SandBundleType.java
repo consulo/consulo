@@ -15,11 +15,14 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.bundle;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -55,5 +58,11 @@ public class SandBundleType extends SdkType {
   @Override
   public String getPresentableName() {
     return "Sand Bundle";
+  }
+
+  @Nullable
+  @Override
+  public Icon getIcon() {
+    return AllIcons.Nodes.Static;
   }
 }

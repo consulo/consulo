@@ -108,9 +108,7 @@ public abstract class SdkType implements SdkTypeId {
   public abstract String getPresentableName();
 
   @Nullable
-  public Icon getIcon() {
-    return null;
-  }
+  public abstract Icon getIcon();
 
   @Nullable
   public Icon getGroupIcon() {

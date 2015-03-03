@@ -95,8 +95,6 @@ public class SdkConfigurationUtil {
                              boolean bundled,
                              @Nullable final SdkAdditionalData additionalData,
                              @Nullable final String customSdkSuggestedName) {
-    final List<Sdk> sdksList = Arrays.asList(allSdks);
-
     final SdkImpl sdk;
     try {
       String sdkPath = sdkType.sdkPath(homeDir);
@@ -107,8 +105,8 @@ public class SdkConfigurationUtil {
       }
       else {
         sdkName = customSdkSuggestedName == null
-                  ? createUniqueSdkName(sdkType, sdkPath, sdksList)
-                  : createUniqueSdkName(customSdkSuggestedName, sdksList);
+                  ? createUniqueSdkName(sdkType, sdkPath, allSdks)
+                  : createUniqueSdkName(customSdkSuggestedName, allSdks);
       }
 
       sdk = new SdkImpl(sdkName, sdkType);
@@ -165,11 +163,11 @@ public class SdkConfigurationUtil {
     return null;
   }
 
-  public static String createUniqueSdkName(SdkType type, String home, final Collection<Sdk> sdks) {
+  public static String createUniqueSdkName(SdkType type, String home, final Sdk[] sdks) {
     return createUniqueSdkName(type.suggestSdkName(null, home), sdks);
   }
 
-  public static String createUniqueSdkName(final String suggestedName, final Collection<Sdk> sdks) {
+  public static String createUniqueSdkName(final String suggestedName, final Sdk[] sdks) {
     final Set<String> names = new HashSet<String>();
     for (Sdk jdk : sdks) {
       names.add(jdk.getName());

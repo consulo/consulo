@@ -791,7 +791,7 @@
     <extensionPoint name="elementsToHighlightFilter" interface="com.intellij.openapi.util.Condition"/>
 
     <extensionPoint name="sdkType" interface="com.intellij.openapi.projectRoots.SdkType"/>
-    <extensionPoint name="bundledSdkProvider" interface="com.intellij.openapi.projectRoots.BundledSdkProvider"/>
+    <extensionPoint name="predefinedBundlesProvider" interface="org.mustbe.consulo.bundle.PredefinedBundlesProvider"/>
 
     <extensionPoint name="library.presentationProvider" interface="com.intellij.openapi.roots.libraries.LibraryPresentationProvider"/>
     <extensionPoint name="library.type" interface="com.intellij.openapi.roots.libraries.LibraryType"/>
@@ -2550,6 +2550,6 @@
 
     <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectableIndentOptionsProvider" order="last"/>
 
-    <bundledSdkProvider implementation="org.mustbe.consulo.bundle.DefaultBundledSdkProvider" order="first" />
+    <predefinedBundlesProvider implementation="org.mustbe.consulo.bundle.DefaultPredefinedBundlesProvider" order="first" />
   </extensions>
 </idea-plugin>

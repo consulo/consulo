@@ -93,7 +93,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       final Object o = getSelectedObject();
       if (o instanceof SdkImpl) {
         final SdkImpl selected = (SdkImpl)o;
-        String defaultNewName = SdkConfigurationUtil.createUniqueSdkName(selected.getName(), mySdksTreeModel.getProjectSdks().values()) ;
+        String defaultNewName = SdkConfigurationUtil.createUniqueSdkName(selected.getName(), mySdksTreeModel.getSdks());
         final String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, defaultNewName, new NonEmptyInputValidator(){
           @Override
           public boolean checkInput(String inputString) {

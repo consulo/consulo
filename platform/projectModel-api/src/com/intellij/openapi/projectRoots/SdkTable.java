@@ -21,6 +21,7 @@ import com.intellij.util.messages.Topic;
 import org.consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.EventListener;
 import java.util.List;
@@ -68,8 +69,10 @@ public abstract class SdkTable {
     return found;
   }
 
+  @RequiredWriteAction
   public abstract void addSdk(@NotNull Sdk sdk);
 
+  @RequiredWriteAction
   public abstract void removeSdk(@NotNull Sdk sdk);
 
   public abstract void updateSdk(Sdk originalSdk, Sdk modifiedSdk);

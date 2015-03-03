@@ -33,6 +33,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -141,6 +142,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   }
 
   @Override
+  @RequiredWriteAction
   public void addSdk(@NotNull Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     mySdks.add(sdk);
@@ -148,6 +150,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   }
 
   @Override
+  @RequiredWriteAction
   public void removeSdk(@NotNull Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(sdk);
@@ -155,15 +158,15 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   }
 
   @Override
-  public void updateSdk(Sdk originalJdk, Sdk modifiedJdk) {
-    final String previousName = originalJdk.getName();
-    final String newName = modifiedJdk.getName();
+  public void updateSdk(Sdk originalSdk, Sdk modifiedSdk) {
+    final String previousName = originalSdk.getName();
+    final String newName = modifiedSdk.getName();
 
-    ((SdkImpl)modifiedJdk).copyTo((SdkImpl)originalJdk);
+    ((SdkImpl)modifiedSdk).copyTo((SdkImpl)originalSdk);
 
     if (!previousName.equals(newName)) {
       // fire changes because after renaming JDK its name may match the associated sdk name of modules/project
-      myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkNameChanged(originalJdk, previousName);
+      myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkNameChanged(originalSdk, previousName);
     }
   }
 
