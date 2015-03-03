@@ -40,11 +40,6 @@ public class ServiceDescriptor {
   @Attribute("serviceImplementationForCompilerServer")
   public String serviceImplementationForCompilerServer;
 
-  @Attribute("overrides")
-  @Deprecated
-  public boolean overrides = false;
-
-
   public String getInterface() {
     return serviceInterface != null ? serviceInterface : getImplementation();
   }
