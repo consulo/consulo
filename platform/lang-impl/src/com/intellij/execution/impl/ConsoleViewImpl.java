@@ -631,6 +631,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
               myInDocumentUpdate = true;
               myDocumentClearing = true;
               document.deleteString(0, documentTextLength);
+              //FIXME [VISTALL] temp fix of CEP-561, due dont known where i lose changes, after document cleanup, caret model dont refreshed
+              myEditor.getCaretModel().moveToOffset(0);
             }
             finally {
               document.setInBulkUpdate(false);
