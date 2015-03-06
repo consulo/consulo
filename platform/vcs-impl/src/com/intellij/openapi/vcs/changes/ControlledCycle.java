@@ -42,6 +42,7 @@ public class ControlledCycle {
     myActive = new AtomicBoolean(false);
     myRunnable = new Runnable() {
       boolean shouldBeContinued = true;
+      @Override
       public void run() {
         if (! myActive.get() || project.isDisposed()) return;
         try {

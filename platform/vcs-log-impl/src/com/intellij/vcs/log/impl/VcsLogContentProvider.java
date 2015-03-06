@@ -29,10 +29,12 @@ import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.vcs.log.VcsLogSettings;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,6 +98,7 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
   }
 
   @Override
+  @RequiredDispatchThread
   public JComponent initContent() {
     myConnection = myProject.getMessageBus().connect();
     myConnection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, new MyVcsListener());
@@ -103,6 +106,7 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
     return myContainer;
   }
 
+  @RequiredDispatchThread
   private void initContentInternal() {
     myContainer.add(myLogManager.initContent(Arrays.asList(myVcsManager.getAllVcsRoots()), TAB_NAME), BorderLayout.CENTER);
   }
@@ -120,7 +124,12 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
       myContainer.removeAll();
       Disposer.dispose(myLogManager);
 
-      initContentInternal();
+      UIUtil.invokeLaterIfNeeded(new Runnable() {
+        @Override
+        public void run() {
+          initContentInternal();
+        }
+      });
     }
   }
 

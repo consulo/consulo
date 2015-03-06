@@ -15,12 +15,16 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import org.mustbe.consulo.RequiredDispatchThread;
+
 import javax.swing.*;
 
 /**
  * @author yole
  */
 public interface ChangesViewContentProvider {
+  @RequiredDispatchThread
   JComponent initContent();
+
   void disposeContent();
 }
