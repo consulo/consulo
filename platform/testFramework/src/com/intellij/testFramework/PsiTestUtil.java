@@ -40,7 +40,7 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import junit.framework.Assert;
-import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -370,12 +370,12 @@ public class PsiTestUtil {
   }
 
   public static void setCompilerOutputPath(Module module, String url, boolean forTests) {
-    CompilerPathsManager manager = CompilerPathsManager.getInstance(module.getProject());
-    manager.setCompilerOutputUrl(module, forTests ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance(), url);
+    ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
+    manager.setCompilerOutputUrl(forTests ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance(), url);
   }
 
   public static void setExcludeCompileOutput(Module module, boolean exclude) {
-    CompilerPathsManager manager = CompilerPathsManager.getInstance(module.getProject());
-    manager.setExcludeOutput(module, exclude);
+    ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
+    manager.setExcludeOutput(exclude);
   }
 }

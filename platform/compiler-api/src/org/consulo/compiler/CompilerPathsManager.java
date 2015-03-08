@@ -30,7 +30,7 @@ import org.mustbe.consulo.roots.ContentFolderTypeProvider;
  * @since 17:03/26.05.13
  */
 @Deprecated
-@DeprecationInfo(value = "Use CompilerConfiguration for projects, and ModuleCompilerPathsManager for modules", until = "3.0")
+@DeprecationInfo(value = "Use CompilerConfiguration for projects, and ModuleCompilerPathsManager for modules", until = "2.0")
 public class CompilerPathsManager {
   @NotNull
   public static CompilerPathsManager getInstance(@NotNull final Project project) {

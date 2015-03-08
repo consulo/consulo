@@ -50,7 +50,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.OrderedSet;
 import com.intellij.util.indexing.FileBasedIndex;
 import gnu.trove.TIntHashSet;
-import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.consulo.compiler.server.rmi.CompilerClientConnector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -116,15 +116,16 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     final Set<VirtualFile> testOutputDirs = new java.util.HashSet<VirtualFile>();
     final Set<VirtualFile> productionOutputDirs = new java.util.HashSet<VirtualFile>();
 
-    CompilerPathsManager pathsManager = CompilerPathsManager.getInstance(getProject());
     for (Module module : allModules) {
-      final VirtualFile output = pathsManager.getCompilerOutput(module, ProductionContentFolderTypeProvider.getInstance());
+      ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+
+      final VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
       if (output != null && output.isValid()) {
         allDirs.add(output);
         productionOutputDirs.add(output);
       }
 
-      final VirtualFile testsOutput = pathsManager.getCompilerOutput(module, TestContentFolderTypeProvider.getInstance());
+      final VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
       if (testsOutput != null && testsOutput.isValid()) {
         allDirs.add(testsOutput);
         testOutputDirs.add(testsOutput);
@@ -477,7 +478,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   @Nullable
   @Override
   public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
-    return CompilerPathsManager.getInstance(myProject).getCompilerOutput(module, contentFolderType);
+    return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
   }
 
   @Override

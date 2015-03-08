@@ -57,7 +57,7 @@ import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.*;
 import lombok.val;
-import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
@@ -611,12 +611,13 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   private TIntObjectHashMap<Pair<Integer, Integer>> buildOutputRootsLayout(ProjectRef projRef) {
-    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(projRef.get());
     final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<Pair<Integer, Integer>>();
     for (Module module : ModuleManager.getInstance(projRef.get()).getModules()) {
-      final VirtualFile output = compilerPathsManager.getCompilerOutput(module, ProductionContentFolderTypeProvider.getInstance());
+      ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+
+      final VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
       final int first = output != null ? Math.abs(getFileId(output)) : -1;
-      final VirtualFile testsOutput = compilerPathsManager.getCompilerOutput(module, TestContentFolderTypeProvider.getInstance());
+      final VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
       final int second = testsOutput != null ? Math.abs(getFileId(testsOutput)) : -1;
       map.put(getModuleId(module), new Pair<Integer, Integer>(first, second));
     }

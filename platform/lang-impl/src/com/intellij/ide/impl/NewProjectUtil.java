@@ -19,6 +19,7 @@
  */
 package com.intellij.ide.impl;
 
+import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;
@@ -40,7 +41,6 @@ import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.compiler.CompilerPathsManager;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,7 +127,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
                 //file doesn't exist
               }
               canonicalPath = FileUtil.toSystemIndependentName(canonicalPath);
-              CompilerPathsManager.getInstance(newProject).setCompilerOutputUrl(VfsUtilCore.pathToUrl(canonicalPath));
+              CompilerConfiguration.getInstance(newProject).setCompilerOutputUrl(VfsUtilCore.pathToUrl(canonicalPath));
             }
           });
         }
