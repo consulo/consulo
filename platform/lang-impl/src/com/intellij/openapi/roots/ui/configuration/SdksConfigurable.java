@@ -30,8 +30,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.NamedConfigurable;
@@ -98,8 +99,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
     myRoot.removeAllChildren();
     final Map<Sdk, Sdk> sdks = myProjectSdksModel.getProjectSdks();
     for (Sdk sdk : sdks.keySet()) {
-      final SdkConfigurable
-        configurable = new SdkConfigurable((SdkImpl)sdks.get(sdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject);
+      final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdks.get(sdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject);
       addNode(new MyNode(configurable), myRoot);
     }
 
@@ -167,12 +167,10 @@ public class SdksConfigurable extends MasterDetailsComponent {
     myProjectSdksModel.createAddActions(group, myTree, new Consumer<Sdk>() {
       @Override
       public void consume(final Sdk projectJdk) {
-        addNode(
-          new MyNode(new SdkConfigurable(((SdkImpl)projectJdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject), false),
-          myRoot);
+        addNode(new MyNode(new SdkConfigurable(((SdkImpl)projectJdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject), false), myRoot);
         selectNodeInTree(findNodeByObject(myRoot, projectJdk));
       }
-    });
+    }, SdkListConfigurable.ADD_SDK_FILTER);
     actions.add(new MyActionGroupWrapper(group));
     actions.add(new MyDeleteAction(forAll(Conditions.alwaysTrue())));
     return actions;
@@ -180,15 +178,15 @@ public class SdksConfigurable extends MasterDetailsComponent {
 
   @Override
   protected void processRemovedItems() {
-    final Set<Sdk> jdks = new HashSet<Sdk>();
-    for(int i = 0; i < myRoot.getChildCount(); i++){
+    final Set<Sdk> sdks = new HashSet<Sdk>();
+    for (int i = 0; i < myRoot.getChildCount(); i++) {
       final DefaultMutableTreeNode node = (DefaultMutableTreeNode)myRoot.getChildAt(i);
       final NamedConfigurable namedConfigurable = (NamedConfigurable)node.getUserObject();
-      jdks.add(((SdkConfigurable)namedConfigurable).getEditableObject());
+      sdks.add(((SdkConfigurable)namedConfigurable).getEditableObject());
     }
-    final HashMap<Sdk, Sdk> sdks = new HashMap<Sdk, Sdk>(myProjectSdksModel.getProjectSdks());
-    for (Sdk sdk : sdks.values()) {
-      if (!jdks.contains(sdk)) {
+    final HashMap<Sdk, Sdk> map = new HashMap<Sdk, Sdk>(myProjectSdksModel.getProjectSdks());
+    for (Sdk sdk : map.values()) {
+      if (!sdks.contains(sdk)) {
         myProjectSdksModel.removeSdk(sdk);
       }
     }

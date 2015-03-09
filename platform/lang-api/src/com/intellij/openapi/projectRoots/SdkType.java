@@ -174,6 +174,15 @@ public abstract class SdkType implements SdkTypeId {
   }
 
   /**
+   * If this method return true, user can add Sdk via configuration. If false - required canCreatePredefinedSdks() = true,
+   * and user can copy sdk with custom name
+   * @return true if user add is supported
+   */
+  public boolean supportsUserAdd() {
+    return true;
+  }
+
+  /**
    * If this method returns true, instead of showing the standard file path chooser when a new SDK of the type is created,
    * the {@link #showCustomCreateUI} method is called.
    *

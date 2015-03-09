@@ -27,6 +27,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.UnknownSdkType;
@@ -37,6 +38,7 @@ import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.ui.NonEmptyInputValidator;
+import com.intellij.openapi.util.Condition;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nls;
@@ -51,6 +53,13 @@ import javax.swing.tree.TreePath;
 import java.util.*;
 
 public class SdkListConfigurable extends BaseStructureConfigurable {
+  public static final Condition<SdkTypeId> ADD_SDK_FILTER = new Condition<SdkTypeId>() {
+    @Override
+    public boolean value(SdkTypeId sdkTypeId) {
+      return sdkTypeId instanceof SdkType && ((SdkType)sdkTypeId).supportsUserAdd();
+    }
+  };
+
   private static final UnknownSdkType ourUnknownSdkType = UnknownSdkType.getInstance("UNKNOWN_BUNDLE");
   private final ProjectSdksModel mySdksTreeModel;
   private final SdkModel.Listener myListener = new SdkModel.Listener() {
@@ -94,7 +103,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       if (o instanceof SdkImpl) {
         final SdkImpl selected = (SdkImpl)o;
         String defaultNewName = SdkConfigurationUtil.createUniqueSdkName(selected.getName(), mySdksTreeModel.getSdks());
-        final String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, defaultNewName, new NonEmptyInputValidator(){
+        final String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, defaultNewName, new NonEmptyInputValidator() {
           @Override
           public boolean checkInput(String inputString) {
             return super.checkInput(inputString) && mySdksTreeModel.findSdk(inputString) == null;
@@ -335,10 +344,10 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
         DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.new.jdk.text"), true);
         mySdksTreeModel.createAddActions(group, myTree, new Consumer<Sdk>() {
           @Override
-          public void consume(final Sdk projectJdk) {
-            addSdkNode(projectJdk, true);
+          public void consume(final Sdk sdk) {
+            addSdkNode(sdk, true);
           }
-        });
+        }, ADD_SDK_FILTER);
         return group.getChildren(null);
       }
     };
