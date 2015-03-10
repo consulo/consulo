@@ -119,7 +119,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Override
   public boolean isEquivalentTo(@NotNull OrderEntry other) {
     if (other instanceof ModuleExtensionWithSdkOrderEntry) {
-      String name1 = this.getSdkName();
+      String name1 = getSdkName();
       String name2 = ((ModuleExtensionWithSdkOrderEntry)other).getSdkName();
       return Comparing.strEqual(name1, name2);
     }
