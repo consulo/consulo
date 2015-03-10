@@ -170,7 +170,9 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   }
 
   @Override
-  public void updateSdk(Sdk originalSdk, Sdk modifiedSdk) {
+  @RequiredWriteAction
+  public void updateSdk(@NotNull Sdk originalSdk, @NotNull Sdk modifiedSdk) {
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     final String previousName = originalSdk.getName();
     final String newName = modifiedSdk.getName();
 

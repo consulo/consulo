@@ -132,13 +132,13 @@ public class ProjectSdksModel implements SdkModel {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        final SdkTable jdkTable = SdkTable.getInstance();
+        final SdkTable sdkTable = SdkTable.getInstance();
         for (final Sdk tableItem : allFromTable) {
           if (mySdks.containsKey(tableItem)) {
             itemsInTable.add(tableItem);
           }
           else {
-            jdkTable.removeSdk(tableItem);
+            sdkTable.removeSdk(tableItem);
           }
         }
       }
@@ -147,18 +147,18 @@ public class ProjectSdksModel implements SdkModel {
       @Override
       public void run() {
         // Now all removed items are deleted from table, itemsInTable contains all items in table
-        final SdkTable jdkTable = SdkTable.getInstance();
-        for (Sdk originalJdk : itemsInTable) {
-          final Sdk modifiedJdk = mySdks.get(originalJdk);
-          LOG.assertTrue(modifiedJdk != null);
-          jdkTable.updateSdk(originalJdk, modifiedJdk);
+        final SdkTable sdkTable = SdkTable.getInstance();
+        for (Sdk originalSdk : itemsInTable) {
+          final Sdk modifiedSdk = mySdks.get(originalSdk);
+          LOG.assertTrue(modifiedSdk != null);
+          sdkTable.updateSdk(originalSdk, modifiedSdk);
         }
         // Add new items to table
-        final Sdk[] allJdks = jdkTable.getAllSdks();
-        for (final Sdk projectJdk : mySdks.keySet()) {
-          LOG.assertTrue(projectJdk != null);
-          if (ArrayUtilRt.find(allJdks, projectJdk) == -1) {
-            jdkTable.addSdk(projectJdk);
+        final Sdk[] allSdks = sdkTable.getAllSdks();
+        for (final Sdk projectSdk : mySdks.keySet()) {
+          LOG.assertTrue(projectSdk != null);
+          if (ArrayUtilRt.find(allSdks, projectSdk) == -1) {
+            sdkTable.addSdk(projectSdk);
           }
         }
       }

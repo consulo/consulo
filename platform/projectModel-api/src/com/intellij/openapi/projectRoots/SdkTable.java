@@ -76,7 +76,8 @@ public abstract class SdkTable {
   @RequiredWriteAction
   public abstract void removeSdk(@NotNull Sdk sdk);
 
-  public abstract void updateSdk(Sdk originalSdk, Sdk modifiedSdk);
+  @RequiredWriteAction
+  public abstract void updateSdk(@NotNull Sdk originalSdk, @NotNull Sdk modifiedSdk);
 
   public abstract SdkTypeId getDefaultSdkType();
 

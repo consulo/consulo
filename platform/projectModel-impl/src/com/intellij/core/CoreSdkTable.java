@@ -79,7 +79,7 @@ public class CoreSdkTable extends SdkTable {
   }
 
   @Override
-  public void updateSdk(Sdk originalJdk, Sdk modifiedJdk) {
+  public void updateSdk(@NotNull Sdk originalJdk, @NotNull Sdk modifiedJdk) {
     throw new UnsupportedOperationException();
   }
 
