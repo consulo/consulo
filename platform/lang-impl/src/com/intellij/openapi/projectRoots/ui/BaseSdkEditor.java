@@ -144,7 +144,7 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
 
     myHomeComponent = createHomeComponent();
     myHomeComponent.getTextField().setEditable(false);
-    myHomeComponent.getButton().setVisible(!mySdk.isPredefined());
+    myHomeComponent.getButton().setVisible(false);
 
     myHomeFieldLabel = new JLabel(getHomeFieldLabelValue());
     myMainPanel.add(myHomeFieldLabel,
@@ -212,11 +212,11 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
     myInitialName = mySdk.getName();
     myInitialPath = mySdk.getHomePath();
     final SdkModificator sdkModificator = mySdk.getSdkModificator();
-    sdkModificator.setHomePath(getHomeValue().replace(File.separatorChar, '/'));
+    // sdkModificator.setHomePath(getHomeValue().replace(File.separatorChar, '/'));
     for (SdkPathEditor pathEditor : myPathEditors.values()) {
       pathEditor.apply(sdkModificator);
     }
-    ApplicationManager.getApplication().runWriteAction(new Runnable() { // fix SCR #29193
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
         sdkModificator.commitChanges();
