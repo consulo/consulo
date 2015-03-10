@@ -177,7 +177,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     ((SdkImpl)modifiedSdk).copyTo((SdkImpl)originalSdk);
 
     if (!previousName.equals(newName)) {
-      // fire changes because after renaming JDK its name may match the associated sdk name of modules/project
+      // fire changes because after renaming ADK its name may match the associated sdk name of modules/project
       myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkNameChanged(originalSdk, previousName);
     }
   }
