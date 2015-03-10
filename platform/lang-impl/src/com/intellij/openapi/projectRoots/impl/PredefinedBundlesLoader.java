@@ -35,7 +35,7 @@ public class PredefinedBundlesLoader implements ApplicationComponent {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
           public void run() {
-            sdk.setBundled(true);
+            sdk.setPredefined(true);
             SdkTable.getInstance().addSdk(sdk);
           }
         });

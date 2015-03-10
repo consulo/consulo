@@ -127,6 +127,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Nullable
   @Override
+  @Deprecated
   public Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass) {
     SdkType sdkType = SdkType.EP_NAME.findExtension(sdkTypeClass);
     if(sdkType == null) {
@@ -134,7 +135,18 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     }
 
     for (Sdk sdk : mySdks) {
-      if(sdk.isBundled() && sdk.getSdkType() == sdkType) {
+      if(sdk.isPredefined() && sdk.getSdkType() == sdkType) {
+        return sdk;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  @Nullable
+  public Sdk findPredefinedSdkByType(@NotNull SdkTypeId sdkType) {
+    for (Sdk sdk : mySdks) {
+      if(sdk.isPredefined() && sdk.getSdkType() == sdkType) {
         return sdk;
       }
     }
@@ -190,6 +202,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     return UnknownSdkType.getInstance(sdkTypeName);
   }
 
+  @NotNull
   @Override
   public Sdk createSdk(final String name, final SdkTypeId sdkType) {
     return new SdkImpl(name, sdkType);
@@ -212,10 +225,9 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   public Element getState() {
     Element element = new Element("SdkTable");
     for (Sdk sdk : mySdks) {
-      if (sdk.isBundled()) {
-        continue;
+      if (!sdk.isPredefined()) {
+        element.addContent(((SdkImpl)sdk).getState().setName(ELEMENT_SDK));
       }
-      element.addContent(((SdkImpl)sdk).getState().setName(ELEMENT_SDK));
     }
     return element;
   }

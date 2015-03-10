@@ -22,6 +22,7 @@ import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author Eugene Zhuravlev
@@ -32,7 +33,11 @@ public interface Sdk extends UserDataHolder, Named {
   @NotNull
   SdkTypeId getSdkType();
 
+  @Deprecated
+  @DeprecationInfo(value = "Use #isPredefined()", until = "1.0")
   boolean isBundled();
+
+  boolean isPredefined();
 
   @NotNull
   @Override

@@ -28,7 +28,7 @@ public class SdkPathEditor extends PathEditor {
   private final boolean myImmutable;
 
   public SdkPathEditor(String displayName, OrderRootType orderRootType, FileChooserDescriptor descriptor, Sdk sdk) {
-    this(displayName, orderRootType, descriptor, sdk.isBundled());
+    this(displayName, orderRootType, descriptor, sdk.isPredefined());
   }
 
   public SdkPathEditor(String displayName, OrderRootType orderRootType, FileChooserDescriptor descriptor, boolean immutable) {

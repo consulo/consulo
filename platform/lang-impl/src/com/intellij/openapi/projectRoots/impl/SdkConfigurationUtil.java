@@ -92,7 +92,7 @@ public class SdkConfigurationUtil {
                              final VirtualFile homeDir,
                              final SdkType sdkType,
                              final boolean silent,
-                             boolean bundled,
+                             boolean predefined,
                              @Nullable final SdkAdditionalData additionalData,
                              @Nullable final String customSdkSuggestedName) {
     final SdkImpl sdk;
@@ -100,7 +100,7 @@ public class SdkConfigurationUtil {
       String sdkPath = sdkType.sdkPath(homeDir);
 
       String sdkName = null;
-      if (bundled) {
+      if (predefined) {
         sdkName = sdkType.getName() + PREDEFINED_PREFIX;
       }
       else {
@@ -110,9 +110,7 @@ public class SdkConfigurationUtil {
       }
 
       sdk = new SdkImpl(sdkName, sdkType);
-      if(bundled) {
-        sdk.setBundled(true);
-      }
+      sdk.setPredefined(predefined);
 
       if (additionalData != null) {
         // additional initialization.
@@ -142,11 +140,11 @@ public class SdkConfigurationUtil {
    *
    * @param path    identifies the SDK
    * @param sdkType
-   * @param bundled
+   * @param predefined
    * @return newly created SDK, or null.
    */
   @Nullable
-  public static Sdk createAndAddSDK(final String path, SdkType sdkType, boolean bundled) {
+  public static Sdk createAndAddSDK(final String path, SdkType sdkType, boolean predefined) {
     VirtualFile sdkHome = ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
       @Override
       public VirtualFile compute() {
@@ -154,7 +152,7 @@ public class SdkConfigurationUtil {
       }
     });
     if (sdkHome != null) {
-      final Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, bundled, null, null);
+      final Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, predefined, null, null);
       if (newSdk != null) {
         addSdk(newSdk);
       }

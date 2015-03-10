@@ -52,7 +52,7 @@ public class SdkUtil {
     }
     SdkType sdkType = (SdkType)sdk.getSdkType();
     Icon icon = ObjectUtils.notNull(sdkType.getIcon(), AllIcons.Toolbar.Unknown);
-    if(sdk.isBundled()) {
+    if(sdk.isPredefined()) {
       return new IconDescriptor(icon).addLayerIcon(AllIcons.Nodes.Locked).toIcon();
     }
     else {

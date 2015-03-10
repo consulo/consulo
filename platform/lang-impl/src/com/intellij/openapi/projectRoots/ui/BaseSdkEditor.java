@@ -144,7 +144,7 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
 
     myHomeComponent = createHomeComponent();
     myHomeComponent.getTextField().setEditable(false);
-    myHomeComponent.getButton().setVisible(!mySdk.isBundled());
+    myHomeComponent.getButton().setVisible(!mySdk.isPredefined());
 
     myHomeFieldLabel = new JLabel(getHomeFieldLabelValue());
     myMainPanel.add(myHomeFieldLabel,

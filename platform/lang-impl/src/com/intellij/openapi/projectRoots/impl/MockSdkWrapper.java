@@ -64,8 +64,14 @@ public final class MockSdkWrapper implements Sdk {
   }
 
   @Override
+  @Deprecated
   public boolean isBundled() {
     return myDelegate.isBundled();
+  }
+
+  @Override
+  public boolean isPredefined() {
+    return myDelegate.isPredefined();
   }
 
   @Override

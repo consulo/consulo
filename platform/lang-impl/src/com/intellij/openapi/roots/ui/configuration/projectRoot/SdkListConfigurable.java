@@ -113,7 +113,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
         SdkImpl sdk = (SdkImpl)selected.clone();
         sdk.setName(newName);
-        sdk.setBundled(false);
+        sdk.setPredefined(false);
 
         mySdksTreeModel.doAdd(sdk, new Consumer<Sdk>() {
           @Override
@@ -265,7 +265,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   @Override
   protected boolean canBeRemoved(Object[] editableObjects) {
     for (Object editableObject : editableObjects) {
-      if (editableObject instanceof Sdk && ((Sdk)editableObject).isBundled()) {
+      if (editableObject instanceof Sdk && ((Sdk)editableObject).isPredefined()) {
         return false;
       }
     }

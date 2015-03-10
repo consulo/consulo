@@ -96,14 +96,20 @@ public class CoreSdkTable extends SdkTable {
   @Nullable
   @Override
   public Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Sdk findPredefinedSdkByType(@NotNull SdkTypeId sdkType) {
     for (Sdk sdk : mySdks) {
-      if(sdk.isBundled()) {
+      if(sdk.isPredefined() && sdk.getSdkType() == sdkType) {
         return sdk;
       }
     }
     return null;
   }
 
+  @NotNull
   @Override
   public Sdk createSdk(String name, SdkTypeId sdkType) {
     throw new UnsupportedOperationException();
