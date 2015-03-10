@@ -67,7 +67,7 @@
       <string>$APP_PACKAGE/lib/bootstrap.jar:$APP_PACKAGE/lib/extensions.jar:$APP_PACKAGE/lib/util.jar:$APP_PACKAGE/lib/jdom.jar:$APP_PACKAGE/lib/log4j.jar:$APP_PACKAGE/lib/trove4j.jar:$APP_PACKAGE/lib/jna.jar</string>
 
       <key>JVMVersion</key>
-      <string>1.6*</string>
+      <string>1.6+</string>
 
       <key>MainClass</key>
       <string>com.intellij.idea.Main</string>
