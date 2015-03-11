@@ -57,7 +57,7 @@ import java.util.Set;
 @Logger
 public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
   @NotNull
-  protected Sdk mySdk;
+  protected final Sdk mySdk;
   private final Map<OrderRootType, SdkPathEditor> myPathEditors = new HashMap<OrderRootType, SdkPathEditor>();
 
   private TextFieldWithBrowseButton myHomeComponent;
@@ -78,7 +78,6 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
   private String myInitialName;
   private String myInitialPath;
 
-
   protected final Disposable myDisposable = Disposer.newDisposable();
 
   public BaseSdkEditor(@NotNull SdkModel sdkModel, @NotNull SdkImpl sdk) {
@@ -88,16 +87,10 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
     initSdk(sdk);
   }
 
-  private void initSdk(Sdk sdk) {
-    mySdk = sdk;
-    if (mySdk != null) {
-      myInitialName = mySdk.getName();
-      myInitialPath = mySdk.getHomePath();
-    }
-    else {
-      myInitialName = "";
-      myInitialPath = "";
-    }
+  private void initSdk(@NotNull Sdk sdk) {
+    myInitialName = mySdk.getName();
+    myInitialPath = mySdk.getHomePath();
+
     final AdditionalDataConfigurable additionalDataConfigurable = getAdditionalDataConfigurable();
     if (additionalDataConfigurable != null) {
       additionalDataConfigurable.setSdk(sdk);
@@ -144,7 +137,7 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
 
     myHomeComponent = createHomeComponent();
     myHomeComponent.getTextField().setEditable(false);
-    myHomeComponent.getButton().setVisible(false);
+    myHomeComponent.getButton().setVisible(!mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd());
 
     myHomeFieldLabel = new JLabel(getHomeFieldLabelValue());
     myMainPanel.add(myHomeFieldLabel,
@@ -212,7 +205,11 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
     myInitialName = mySdk.getName();
     myInitialPath = mySdk.getHomePath();
     final SdkModificator sdkModificator = mySdk.getSdkModificator();
-    // sdkModificator.setHomePath(getHomeValue().replace(File.separatorChar, '/'));
+    SdkType sdkType = (SdkType)mySdk.getSdkType();
+    // we can change home path only when user can add sdk via interface
+    if(sdkType.supportsUserAdd()) {
+      sdkModificator.setHomePath(getHomeValue().replace(File.separatorChar, '/'));
+    }
     for (SdkPathEditor pathEditor : myPathEditors.values()) {
       pathEditor.apply(sdkModificator);
     }
