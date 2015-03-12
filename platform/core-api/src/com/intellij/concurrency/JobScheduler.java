@@ -21,12 +21,11 @@ package com.intellij.concurrency;
 
 import com.intellij.Patches;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ReflectionUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
@@ -35,36 +34,37 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Logger
 public abstract class JobScheduler {
   private static final ScheduledThreadPoolExecutor ourScheduledExecutorService;
-  private static final int TASK_LIMIT = 50;
-  private static final Logger LOG = Logger.getInstance("#com.intellij.concurrency.JobScheduler");
-  private static final ThreadLocal<AtomicLong> START = new ThreadLocal<AtomicLong>()
+  private static final boolean ourDoTiming = true;
+  private static final int ourTaskLimit = 50;
+
+  private static final ThreadLocal<AtomicLong> ourStartTime = new ThreadLocal<AtomicLong>()
   {
     @Override
     protected AtomicLong initialValue() {
       return new AtomicLong();
     }
   };
-  private static final boolean DO_TIMING = true;
 
   static {
     ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, ConcurrencyUtil.newNamedThreadFactory("Periodic tasks thread", true, Thread.NORM_PRIORITY)) {
       @Override
       protected void beforeExecute(Thread t, Runnable r) {
-        if (DO_TIMING) {
-          START.get().set(System.currentTimeMillis());
+        if (ourDoTiming) {
+          ourStartTime.get().set(System.currentTimeMillis());
         }
       }
 
       @Override
       protected void afterExecute(Runnable r, Throwable t) {
-        if (DO_TIMING) {
-          long elapsed = System.currentTimeMillis() - START.get().get();
+        if (ourDoTiming) {
+          long elapsed = System.currentTimeMillis() - ourStartTime.get().get();
           Object unwrapped;
-          if (elapsed > TASK_LIMIT && (unwrapped = info(r)) != null) {
-            @NonNls String msg = TASK_LIMIT + " ms execution limit failed for: " + unwrapped + "; elapsed time was " + elapsed +"ms";
-            LOG.info(msg);
+          if (elapsed > ourTaskLimit && (unwrapped = info(r)) != null) {
+            @NonNls String msg = ourTaskLimit + " ms execution limit failed for: " + unwrapped + "; elapsed time was " + elapsed +"ms";
+            LOGGER.info(msg);
           }
         }
       }
