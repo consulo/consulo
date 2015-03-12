@@ -33,19 +33,16 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class JobScheduler {
-  private static final class StartTimeHolder {
-    private volatile long time;
-  }
-
   private static final ScheduledThreadPoolExecutor ourScheduledExecutorService;
   private static final int TASK_LIMIT = 50;
   private static final Logger LOG = Logger.getInstance("#com.intellij.concurrency.JobScheduler");
-  private static final ThreadLocal<StartTimeHolder> START = new ThreadLocal<StartTimeHolder>() {
+  private static final ThreadLocal<AtomicLong> START = new ThreadLocal<AtomicLong>() {
     @Override
-    protected StartTimeHolder initialValue() {
-      return new StartTimeHolder();
+    protected AtomicLong initialValue() {
+      return new AtomicLong();
     }
   };
   private static final boolean DO_TIMING = true;
@@ -55,14 +52,14 @@ public abstract class JobScheduler {
       @Override
       protected void beforeExecute(Thread t, Runnable r) {
         if (DO_TIMING) {
-          START.get().time = System.currentTimeMillis();
+          START.get().set(System.currentTimeMillis());
         }
       }
 
       @Override
       protected void afterExecute(Runnable r, Throwable t) {
         if (DO_TIMING) {
-          long elapsed = System.currentTimeMillis() - START.get().time;
+          long elapsed = System.currentTimeMillis() - START.get().get();
           Object unwrapped;
           if (elapsed > TASK_LIMIT && (unwrapped = info(r)) != null) {
             @NonNls String msg = TASK_LIMIT + " ms execution limit failed for: " + unwrapped + "; elapsed time was " + elapsed +"ms";
