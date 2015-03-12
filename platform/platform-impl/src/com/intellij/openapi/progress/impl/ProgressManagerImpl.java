@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.progress.impl;
 
-import com.google.common.collect.ConcurrentHashMultiset;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -38,6 +37,8 @@ import com.intellij.util.containers.ConcurrentLongObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import gnu.trove.THashMap;
+import gnu.trove.THashSet;
+import gnu.trove.TObjectProcedure;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -73,23 +73,31 @@ public class ProgressManagerImpl extends ProgressManager implements Disposable {
 
   // active (i.e. which have executeProcessUnderProgress() method running) indicators which are not inherited from StandardProgressIndicator.
   // for them an extra processing thread (see myCheckCancelledFuture) has to be run to call their non-standard checkCanceled() method
-  private static final Collection<ProgressIndicator> nonStandardIndicators = ConcurrentHashMultiset.create();
+  private static final THashSet<ProgressIndicator> nonStandardIndicators = new THashSet<ProgressIndicator>();
+  private final TObjectProcedure<ProgressIndicator> nonStandardIndicatorCheckLambda = new TObjectProcedure<ProgressIndicator>() {
+    @Override
+    public boolean execute(ProgressIndicator indicator) {
+      try {
+        indicator.checkCanceled();
+      }
+      catch (ProcessCanceledException e) {
+        indicatorCanceled(indicator);
+      }
+      return true;
+    }
+  };
 
   public ProgressManagerImpl() {
     myCheckCancelledFuture = JobScheduler.getScheduler().scheduleWithFixedDelay(new Runnable() {
       @Override
       public void run() {
-        for (ProgressIndicator indicator : nonStandardIndicators) {
-          try {
-            indicator.checkCanceled();
-          }
-          catch (ProcessCanceledException e) {
-            indicatorCanceled(indicator);
-          }
+        THashSet<ProgressIndicator> nonStandardIndicatorsFlushed;
+        synchronized (threadsUnderIndicator) {
+          nonStandardIndicatorsFlushed = nonStandardIndicators;
         }
+        nonStandardIndicatorsFlushed.forEach(nonStandardIndicatorCheckLambda);
       }
     }, 0, CHECK_CANCELED_DELAY_MILLIS, TimeUnit.MILLISECONDS);
-
   }
 
   @Override
