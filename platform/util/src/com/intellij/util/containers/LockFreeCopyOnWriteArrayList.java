@@ -18,6 +18,7 @@ package com.intellij.util.containers;
 
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -885,6 +886,21 @@ class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, Concurre
     if (elements.length == 0) return EmptyIterator.getInstance();
 
     return new COWIterator(elements, 0);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public void forEach(@NotNull Processor<E> processor) {
+    Object[] elements = array;
+    if(elements.length == 0) {
+      return;
+    }
+
+    for (Object element : elements) {
+      if (!processor.process((E)element)) {
+        break;
+      }
+    }
   }
 
   /**
