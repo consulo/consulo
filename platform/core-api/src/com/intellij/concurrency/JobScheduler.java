@@ -40,8 +40,7 @@ public abstract class JobScheduler {
   private static final boolean ourDoTiming = true;
   private static final int ourTaskLimit = 50;
 
-  private static final ThreadLocal<AtomicLong> ourStartTime = new ThreadLocal<AtomicLong>()
-  {
+  private static final ThreadLocal<AtomicLong> ourStartTime = new ThreadLocal<AtomicLong>() {
     @Override
     protected AtomicLong initialValue() {
       return new AtomicLong();
