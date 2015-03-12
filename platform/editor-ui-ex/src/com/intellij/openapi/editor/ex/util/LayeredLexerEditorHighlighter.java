@@ -522,6 +522,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
       return myBaseIterator.getTextAttributes();
     }
 
+    @Override
     public SyntaxHighlighter getActiveSyntaxHighlighter() {
       if (myCurrentMapper != null) {
         return myCurrentMapper.mySyntaxHighlighter;
