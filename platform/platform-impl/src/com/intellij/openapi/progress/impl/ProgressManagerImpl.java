@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.progress.impl;
 
-import com.google.common.collect.ConcurrentHashMultiset;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -34,6 +33,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.psi.PsiLock;
 import com.intellij.ui.SystemNotifications;
+import com.intellij.util.Processor;
+import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ConcurrentLongObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
@@ -45,7 +46,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -73,20 +73,26 @@ public class ProgressManagerImpl extends ProgressManager implements Disposable {
 
   // active (i.e. which have executeProcessUnderProgress() method running) indicators which are not inherited from StandardProgressIndicator.
   // for them an extra processing thread (see myCheckCancelledFuture) has to be run to call their non-standard checkCanceled() method
-  private static final Collection<ProgressIndicator> nonStandardIndicators = ConcurrentHashMultiset.create();
+  private static final ConcurrentList<ProgressIndicator> nonStandardIndicators = ContainerUtil.createConcurrentList();
+
+  private final Processor<ProgressIndicator> myNonStandardIndicatorProcessor = new Processor<ProgressIndicator>() {
+    @Override
+    public boolean process(ProgressIndicator indicator) {
+      try {
+        indicator.checkCanceled();
+      }
+      catch (ProcessCanceledException e) {
+        indicatorCanceled(indicator);
+      }
+      return false;
+    }
+  };
 
   public ProgressManagerImpl() {
     myCheckCancelledFuture = JobScheduler.getScheduler().scheduleWithFixedDelay(new Runnable() {
       @Override
       public void run() {
-        for (ProgressIndicator indicator : nonStandardIndicators) {
-          try {
-            indicator.checkCanceled();
-          }
-          catch (ProcessCanceledException e) {
-            indicatorCanceled(indicator);
-          }
-        }
+        nonStandardIndicators.forEach(myNonStandardIndicatorProcessor);
       }
     }, 0, CHECK_CANCELED_DELAY_MILLIS, TimeUnit.MILLISECONDS);
 
@@ -261,7 +267,7 @@ public class ProgressManagerImpl extends ProgressManager implements Disposable {
       alreadyUnder = !underIndicator.add(currentThread);
       isStandard = indicator instanceof StandardProgressIndicator;
       if (!isStandard) {
-        nonStandardIndicators.add(indicator);
+        nonStandardIndicators.addIfAbsent(indicator);
       }
 
       if (indicator.isCanceled()) {
