@@ -343,7 +343,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     myFileTypeComboBox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        updateDialectsCombo(null);
+        updateVersionsCombo(null);
         updateExtensionsCombo();
         updateEditor();
       }
@@ -421,7 +421,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
       token.finish();
     }
 
-    updateDialectsCombo(settings.dialect);
+    updateVersionsCombo(settings.dialect);
     updateExtensionsCombo();
 
     registerCustomKeyboardActions();
@@ -581,7 +581,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     return null;
   }
 
-  private void updateDialectsCombo(@Nullable final String lastUsed) {
+  private void updateVersionsCombo(@Nullable final String lastUsed) {
     final Object source = getSource();
     List<LanguageVersion> items = new ArrayList<LanguageVersion>();
     if (source instanceof LanguageFileType) {
@@ -597,9 +597,9 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     myDialectLabel.setVisible(visible);
     myDialectComboBox.setVisible(visible);
     if (visible && (myCurrentFile != null || lastUsed != null)) {
-      String curLanguage = myCurrentFile != null ? myCurrentFile.getLanguageVersion().getName() : lastUsed;
+      String currentLaversion = myCurrentFile != null ? myCurrentFile.getLanguageVersion().getName() : lastUsed;
       for (int i = 0; i < size; ++i) {
-        if (curLanguage.equals(items.get(i).toString())) {
+        if (currentLaversion.equals(items.get(i).getName())) {
           myDialectComboBox.setSelectedIndex(i);
           return;
         }
@@ -1133,7 +1133,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     @Override
     public void valueChanged(ListSelectionEvent e) {
       clearSelection();
-      updateDialectsCombo(null);
+      updateVersionsCombo(null);
       updateExtensionsCombo();
       final int ind = myRefs.getSelectedIndex();
       final PsiElement element = getPsiElement();
