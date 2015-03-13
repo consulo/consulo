@@ -28,6 +28,7 @@ import org.consulo.annotations.Immutable;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 
@@ -210,6 +211,7 @@ public abstract class CompilerManager {
    *
    * @param callback a notification callback, or null if no notifications needed
    */
+  @RequiredReadAction
   public abstract void rebuild(@Nullable CompileStatusNotification callback);
 
   /**
@@ -252,14 +254,16 @@ public abstract class CompilerManager {
    */
   @NotNull
   public abstract CompileScope createFilesCompileScope(@NotNull VirtualFile[] files);
+
+  @NotNull
+  @RequiredReadAction
+  public abstract CompileScope createProjectCompileScope();
   @NotNull
   public abstract CompileScope createModuleCompileScope(@NotNull Module module, final boolean includeDependentModules);
   @NotNull
   public abstract CompileScope createModulesCompileScope(@NotNull Module[] modules, final boolean includeDependentModules);
   @NotNull
   public abstract CompileScope createModuleGroupCompileScope(@NotNull Project project, @NotNull Module[] modules, final boolean includeDependentModules);
-  @NotNull
-  public abstract CompileScope createProjectCompileScope(@NotNull Project project);
 
   public abstract boolean isValidationEnabled(Module moduleType);
 }

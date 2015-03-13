@@ -148,7 +148,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
           final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
           if (Comparing.equal(Boolean.TRUE.toString(), System.getProperty(MAKE_PROJECT_ON_RUN_KEY))) {
             // user explicitly requested whole-project make
-            scope = compilerManager.createProjectCompileScope(myProject);
+            scope = compilerManager.createProjectCompileScope();
           }
           else {
             final Module[] modules = runConfiguration.getModules();
@@ -162,7 +162,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
               scope = compilerManager.createModulesCompileScope(modules, true);
             }
             else {
-              scope = compilerManager.createProjectCompileScope(myProject);
+              scope = compilerManager.createProjectCompileScope();
             }
           }
 

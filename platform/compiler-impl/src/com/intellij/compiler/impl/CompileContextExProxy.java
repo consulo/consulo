@@ -120,11 +120,6 @@ public class CompileContextExProxy implements CompileContextEx {
   }
 
   @Override
-  public CompileScope getProjectCompileScope() {
-    return myDelegate.getProjectCompileScope();
-  }
-
-  @Override
   public void requestRebuildNextTime(final String message) {
     myDelegate.requestRebuildNextTime(message);
   }

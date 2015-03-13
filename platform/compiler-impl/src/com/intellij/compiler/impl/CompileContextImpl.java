@@ -85,7 +85,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private Set<VirtualFile> myTestOutputDirectories;
   private final TIntHashSet myGeneratedSources = new TIntHashSet();
   private final ProjectFileIndex myProjectFileIndex; // cached for performance reasons
-  private final ProjectCompileScope myProjectCompileScope;
   private final long myStartCompilationStamp;
   private final UUID mySessionId = UUID.randomUUID();
 
@@ -103,7 +102,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     myIsRebuild = isRebuild;
     myStartCompilationStamp = System.currentTimeMillis();
     myProjectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-    myProjectCompileScope = new ProjectCompileScope(myProject);
 
     recalculateOutputDirs();
   }
@@ -323,11 +321,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   @Override
   public CompileScope getCompileScope() {
     return myCompileScope;
-  }
-
-  @Override
-  public CompileScope getProjectCompileScope() {
-    return myProjectCompileScope;
   }
 
   @Override

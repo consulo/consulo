@@ -25,6 +25,7 @@ import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
@@ -43,6 +44,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -269,7 +271,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   public void make(CompileStatusNotification callback) {
-    new CompileDriver(myProject).make(createProjectCompileScope(myProject), new ListenerNotificator(callback));
+    new CompileDriver(myProject).make(createProjectCompileScope(), new ListenerNotificator(callback));
   }
 
   @Override
@@ -300,6 +302,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
+  @RequiredReadAction
   public void rebuild(CompileStatusNotification callback) {
     new CompileDriver(myProject).rebuild(new ListenerNotificator(callback));
   }
@@ -354,6 +357,14 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     return new CompositeScope(scopes);
   }
 
+  @NotNull
+  @Override
+  @RequiredReadAction
+  public CompileScope createProjectCompileScope() {
+    Module[] modules = ModuleManager.getInstance(myProject).getModules();
+    return createModulesCompileScope(modules, false);
+  }
+
   @Override
   @NotNull
   public CompileScope createModuleCompileScope(@NotNull final Module module, final boolean includeDependentModules) {
@@ -386,12 +397,6 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
       list.add(createModuleCompileScope(module, includeDependentModules));
     }
     return new CompositeScope(list);
-  }
-
-  @Override
-  @NotNull
-  public CompileScope createProjectCompileScope(@NotNull final Project project) {
-    return new ProjectCompileScope(project);
   }
 
   @Override

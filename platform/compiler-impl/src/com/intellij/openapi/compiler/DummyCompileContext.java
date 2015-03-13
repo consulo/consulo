@@ -79,11 +79,6 @@ public class DummyCompileContext implements CompileContext {
   }
 
   @Override
-  public CompileScope getProjectCompileScope() {
-    return null;
-  }
-
-  @Override
   public void requestRebuildNextTime(String message) {
   }
 

@@ -185,7 +185,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
   }
 
   protected void assertModulesUpToDate() {
-    boolean upToDate = getCompilerManager().isUpToDate(getCompilerManager().createProjectCompileScope(myProject));
+    boolean upToDate = getCompilerManager().isUpToDate(getCompilerManager().createProjectCompileScope());
     assertTrue("Modules are not up to date", upToDate);
   }
 

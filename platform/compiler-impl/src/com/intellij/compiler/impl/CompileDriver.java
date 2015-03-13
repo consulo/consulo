@@ -86,6 +86,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.compiler.roots.CompilerPathsImpl;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
@@ -189,9 +190,10 @@ public class CompileDriver {
     myCompilerFilter = compilerFilter == null ? Conditions.<Compiler>alwaysTrue() : compilerFilter;
   }
 
+  @RequiredReadAction
   public void rebuild(CompileStatusNotification callback) {
     final CompileScope compileScope;
-    ProjectCompileScope projectScope = new ProjectCompileScope(myProject);
+    CompileScope projectScope = CompilerManager.getInstance(myProject).createProjectCompileScope();
     CompileScope scopeWithArtifacts =
       ArtifactCompileScope.createScopeWithArtifacts(projectScope, ArtifactUtil.getArtifactWithOutputPaths(myProject), false);
     compileScope = addAdditionalRoots(scopeWithArtifacts, ALL_EXCEPT_SOURCE_PROCESSING);
@@ -1422,7 +1424,7 @@ public class CompileDriver {
       @Override
       public void run() {
         //final boolean isTestMode = ApplicationManager.getApplication().isUnitTestMode();
-        final VirtualFile[] allSources = context.getProjectCompileScope().getFiles(null, true);
+        final VirtualFile[] allSources = CompilerManager.getInstance(myProject).createProjectCompileScope().getFiles(null, true);
         if (myShouldClearOutputDirectory) {
           CompilerUtil.clearOutputDirectories(myAllOutputDirectories);
         }
