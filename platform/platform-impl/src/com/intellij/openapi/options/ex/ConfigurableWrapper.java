@@ -66,13 +66,37 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   }
 
   public static boolean isNoScroll(Configurable configurable) {
-    return configurable instanceof NoScroll ||
-           (configurable instanceof ConfigurableWrapper && ((ConfigurableWrapper)configurable).getConfigurable() instanceof NoScroll);
+    return cast(configurable, NoScroll.class) != null;
+  }
+
+  public static boolean hasOwnContent(Configurable configurable) {
+    Parent asParent = cast(configurable, Parent.class);
+    return asParent != null && asParent.hasOwnContent();
+  }
+
+  public static <T> T cast(Configurable configurable, Class<T> clazz) {
+    if(configurable == null) {
+      return null;
+    }
+
+    if(clazz.isInstance(configurable)) {
+      return clazz.cast(configurable);
+    }
+
+    if(configurable instanceof ConfigurableWrapper) {
+      UnnamedConfigurable unnamedConfigurable = ((ConfigurableWrapper)configurable).getConfigurable();
+      if(clazz.isInstance(unnamedConfigurable)) {
+        return clazz.cast(unnamedConfigurable);
+      }
+    }
+    return null;
   }
 
   public static boolean isNonDefaultProject(Configurable configurable) {
-    return configurable instanceof NonDefaultProjectConfigurable ||
-           (configurable instanceof ConfigurableWrapper && ((ConfigurableWrapper)configurable).myEp.nonDefaultProject);
+    if(cast(configurable, NonDefaultProjectConfigurable.class) != null) {
+      return true;
+    }
+    return configurable instanceof ConfigurableWrapper && ((ConfigurableWrapper)configurable).myEp.nonDefaultProject;
   }
 
   private final ConfigurableEP myEp;
