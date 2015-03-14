@@ -511,24 +511,6 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     Dimension preferredSize = getPreferredSize();
     myEditorComponent.setSize(preferredSize);
 
-    if (Patches.APPLE_BUG_ID_3716835) {
-      myScrollingModel.addVisibleAreaListener(new VisibleAreaListener() {
-        @Override
-        public void visibleAreaChanged(VisibleAreaEvent e) {
-          if (myAppleRepaintAlarm == null) {
-            myAppleRepaintAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
-          }
-          myAppleRepaintAlarm.cancelAllRequests();
-          myAppleRepaintAlarm.addRequest(new Runnable() {
-            @Override
-            public void run() {
-              repaint(0, myDocument.getTextLength());
-            }
-          }, 50, ModalityState.stateForComponent(myEditorComponent));
-        }
-      });
-    }
-
     updateCaretCursor();
 
     // This hacks context layout problem where editor appears scrolled to the right just after it is created.
@@ -857,8 +839,6 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     myEditorComponent.addKeyListener(new KeyAdapter() {
       @Override
       public void keyTyped(@NotNull KeyEvent event) {
-        if (Patches.APPLE_BUG_ID_3337563)
-          return; // Everything is going through InputMethods under MacOS X in JDK releases earlier than 1.4.2_03-117.1
         if (event.isConsumed()) {
           return;
         }

@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.table;
 
-import com.intellij.Patches;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
@@ -128,10 +127,6 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
         }
       }
     });
-
-
-    //noinspection UnusedDeclaration
-    boolean marker = Patches.SUN_BUG_ID_4503845; // Don't remove. It's a marker for find usages
   }
 
   @Override

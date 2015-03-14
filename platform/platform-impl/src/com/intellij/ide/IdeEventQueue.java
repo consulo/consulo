@@ -15,7 +15,6 @@
  */
 package com.intellij.ide;
 
-import com.intellij.Patches;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.dnd.DnDManagerImpl;
 import com.intellij.ide.plugins.PluginManager;
@@ -532,12 +531,7 @@ public class IdeEventQueue extends EventQueue {
         return;
       }
     }
-    if (e instanceof InputEvent && Patches.SPECIAL_INPUT_METHOD_PROCESSING) {
-      final InputEvent inputEvent = (InputEvent)e;
-      if (!inputEvent.getComponent().isShowing()) {
-        return;
-      }
-    }
+
     if (e instanceof ComponentEvent && myWindowManager != null) {
       myWindowManager.dispatchComponentEvent((ComponentEvent)e);
     }
