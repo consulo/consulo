@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Perfroms additional analyses on file with {@link InternalStdFileTypes#CLASS} filetype (e. g. classfile,
+ * Perfroms additional analyses on binary file (e. g. classfile,
  * compiled from other than Java source language).
  *
  * @author ilyas
