@@ -35,6 +35,7 @@ import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -144,6 +145,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   }
 
   @Nullable
+  @RequiredDispatchThread
   private JComponent createConfigurationPanel(final @NotNull MutableModuleExtension<?> extension) {
     myConfigurablePanelExtension = extension;
     return extension.createConfigurablePanel(new Runnable() {
@@ -154,6 +156,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     });
   }
 
+  @RequiredDispatchThread
   public void extensionChanged(MutableModuleExtension<?> extension) {
     final JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
     if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
