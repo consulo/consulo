@@ -27,6 +27,7 @@ import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -36,6 +37,8 @@ import java.awt.event.ItemListener;
  * @author VISTALL
  * @since 14:43/19.05.13
  */
+@Deprecated
+@DeprecationInfo(value = "Use ModuleExtensionSdkBoxBuilder", until = "2.0")
 public class ModuleExtensionWithSdkPanel extends JPanel {
   private final MutableModuleExtensionWithSdk<?> myExtensionWithSdk;
   @Nullable

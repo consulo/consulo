@@ -19,9 +19,10 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
-import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
+import org.consulo.module.extension.ui.ModuleExtensionSdkBoxBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -42,8 +43,9 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
 
   @Nullable
   @Override
+  @RequiredDispatchThread
   public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
-    return wrapToNorth(new ModuleExtensionWithSdkPanel(this, updateOnCheck));
+    return wrapToNorth(ModuleExtensionSdkBoxBuilder.createAndDefine(this, updateOnCheck).build());
   }
 
   @Override

@@ -37,12 +37,17 @@ import com.intellij.openapi.util.Conditions;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
+import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleExtension;
+import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,18 +93,17 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             final String str = value.toString();
             append(str, SimpleTextAttributes.ERROR_ATTRIBUTES);
           }
-          else if(value instanceof ModuleExtensionSdkComboBoxItem) {
-            final ModuleExtensionWithSdk moduleExtensionWithSdk = ((ModuleExtensionSdkComboBoxItem)value).getModuleExtensionWithSdk();
+          else if (value instanceof ModuleExtensionSdkComboBoxItem) {
+            ModuleExtensionSdkComboBoxItem extensionSdkComboBoxItem = (ModuleExtensionSdkComboBoxItem)value;
             setIcon(AllIcons.Nodes.Module);
+            append(extensionSdkComboBoxItem.getModule().getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
 
-            append(moduleExtensionWithSdk.getModule().getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
-
-            final String sdkName = moduleExtensionWithSdk.getSdkName();
-            if(sdkName != null) {
-              append(" (" + moduleExtensionWithSdk.getSdkName() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
+            final String sdkName = extensionSdkComboBoxItem.getSdkName();
+            if (sdkName != null) {
+              append(" (" + extensionSdkComboBoxItem.getSdkName() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
             }
           }
-          else if(value instanceof InvalidModuleComboBoxItem) {
+          else if (value instanceof InvalidModuleComboBoxItem) {
             setIcon(AllIcons.Nodes.Module);
             append(((InvalidModuleComboBoxItem)value).getModuleName(), SimpleTextAttributes.ERROR_BOLD_ATTRIBUTES);
           }
@@ -108,8 +112,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             append(value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
           }
           else {
-            super
-              .doCustomize(list, value != null ? ((SdkComboBoxItem)value).getSdk() : new NoneSdkComboBoxItem(), index, selected, hasFocus);
+            super.doCustomize(list, value != null ? ((SdkComboBoxItem)value).getSdk() : new NoneSdkComboBoxItem(), index, selected, hasFocus);
           }
         }
       }
@@ -159,15 +162,15 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         DefaultActionGroup group = new DefaultActionGroup();
         jdksModel.createAddActions(group, SdkComboBox.this, new Consumer<Sdk>() {
           @Override
-          public void consume(final Sdk jdk) {
+          public void consume(final Sdk sdk) {
             if (project != null) {
               final SdkListConfigurable configurable = SdkListConfigurable.getInstance(project);
-              configurable.addSdkNode(jdk, false);
+              configurable.addSdkNode(sdk, false);
             }
-            reloadModel(new SdkComboBoxItem(jdk), project);
-            setSelectedSdk(jdk); //restore selection
+            reloadModel(new SdkComboBoxItem(sdk), project);
+            setSelectedSdk(sdk); //restore selection
             if (additionalSetup != null) {
-              if (additionalSetup.value(jdk)) { //leave old selection
+              if (additionalSetup.value(sdk)) { //leave old selection
                 setSelectedSdk(firstItem.getSdk());
               }
             }
@@ -175,13 +178,11 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         }, myCreationFilter);
         final DataContext dataContext = DataManager.getInstance().getDataContext(SdkComboBox.this);
         if (group.getChildrenCount() > 1) {
-          JBPopupFactory.getInstance()
-            .createActionGroupPopup(actionGroupTitle, group, dataContext, JBPopupFactory.ActionSelectionAid.MNEMONICS, false)
-            .showUnderneathOf(setUpButton);
+          JBPopupFactory.getInstance().createActionGroupPopup(actionGroupTitle, group, dataContext, JBPopupFactory.ActionSelectionAid.MNEMONICS, false)
+                  .showUnderneathOf(setUpButton);
         }
         else {
-          final AnActionEvent event =
-            new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, new Presentation(""), ActionManager.getInstance(), 0);
+          final AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, new Presentation(""), ActionManager.getInstance(), 0);
           group.getChildren(event)[0].actionPerformed(event);
         }
       }
@@ -212,21 +213,49 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     return (SdkComboBoxItem)super.getSelectedItem();
   }
 
+  @Deprecated
+  @DeprecationInfo(
+          value = "Use #insertModuleItems(MutableModuleExtension<?>, NullableFunction<MutableModuleExtension<?>, MutableModuleInheritableNamedPointer<Sdk>>)",
+          until = "1.0")
+  @RequiredReadAction
   public void insertModuleItems(@NotNull ModuleExtension<?> moduleExtension) {
-    for(Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
+    for (Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
       // dont add self module
-      if(module == moduleExtension.getModule()) {
+      if (module == moduleExtension.getModule()) {
         continue;
       }
 
       final ModuleExtension extension = ModuleUtilCore.getExtension(module, moduleExtension.getId());
-      if(extension instanceof ModuleExtensionWithSdk) {
-        final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
+      if (extension instanceof MutableModuleExtensionWithSdk) {
+        final MutableModuleExtensionWithSdk sdkExtension = (MutableModuleExtensionWithSdk)extension;
         // recursive depend
-        if(sdkExtension.getInheritableSdk().getModule() == moduleExtension.getModule())  {
+        if (sdkExtension.getInheritableSdk().getModule() == moduleExtension.getModule()) {
           continue;
         }
-        addItem(new ModuleExtensionSdkComboBoxItem(sdkExtension));
+        addItem(new ModuleExtensionSdkComboBoxItemOld(sdkExtension));
+      }
+    }
+  }
+
+  @RequiredReadAction
+  @SuppressWarnings("unchecked")
+  public <T extends MutableModuleExtension<?>> void insertModuleItems(@NotNull T moduleExtension,
+                                                                      @NotNull NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction) {
+
+    for (Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
+      // dont add self module
+      if (module == moduleExtension.getModule()) {
+        continue;
+      }
+
+      ModuleExtension extension = ModuleUtilCore.getExtension(module, moduleExtension.getId());
+      MutableModuleInheritableNamedPointer<Sdk> sdkPointer = sdkPointerFunction.fun((T)extension);
+      if (sdkPointer != null) {
+        // recursive depend
+        if (sdkPointer.getModule() == moduleExtension.getModule()) {
+          continue;
+        }
+        addItem(new ModuleExtensionSdkComboBoxItem(extension, sdkPointer));
       }
     }
   }
@@ -240,7 +269,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   @Nullable
   public String getSelectedSdkName() {
     final SdkComboBoxItem selectedItem = (SdkComboBoxItem)super.getSelectedItem();
-    if(selectedItem != null) {
+    if (selectedItem != null) {
       return selectedItem.getSdkName();
     }
     return null;
@@ -249,17 +278,17 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   @Nullable
   public String getSelectedModuleName() {
     final SdkComboBoxItem selectedItem = (SdkComboBoxItem)super.getSelectedItem();
-    if(selectedItem instanceof ModuleExtensionSdkComboBoxItem) {
-      return ((ModuleExtensionSdkComboBoxItem)selectedItem).getModuleExtensionWithSdk().getModule().getName();
+    if (selectedItem instanceof ModuleExtensionSdkComboBoxItem) {
+      return ((ModuleExtensionSdkComboBoxItem)selectedItem).getModule().getName();
     }
-    else if(selectedItem instanceof InvalidModuleComboBoxItem) {
+    else if (selectedItem instanceof InvalidModuleComboBoxItem) {
       return ((InvalidModuleComboBoxItem)selectedItem).getModuleName();
     }
     return null;
   }
 
-  public void setSelectedSdk(Sdk jdk) {
-    final int index = indexOf(jdk);
+  public void setSelectedSdk(Sdk sdk) {
+    final int index = indexOf(sdk);
     if (index >= 0) {
       setSelectedIndex(index);
     }
@@ -334,14 +363,14 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     final int count = model.getSize();
     for (int idx = 0; idx < count; idx++) {
       final SdkComboBoxItem elementAt = model.getElementAt(idx);
-      if(elementAt instanceof ModuleExtensionSdkComboBoxItem) {
-        final String name = ((ModuleExtensionSdkComboBoxItem)elementAt).getModuleExtensionWithSdk().getModule().getName();
-        if(name.equals(moduleName)) {
+      if (elementAt instanceof ModuleExtensionSdkComboBoxItem) {
+        final String name = ((ModuleExtensionSdkComboBoxItem)elementAt).getModule().getName();
+        if (name.equals(moduleName)) {
           return idx;
         }
       }
-      else if(elementAt instanceof InvalidModuleComboBoxItem) {
-        if(((InvalidModuleComboBoxItem)elementAt).getModuleName().equals(moduleName)) {
+      else if (elementAt instanceof InvalidModuleComboBoxItem) {
+        if (((InvalidModuleComboBoxItem)elementAt).getModuleName().equals(moduleName)) {
           return idx;
         }
       }
@@ -446,32 +475,46 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     }
   }
 
-  public static class ModuleExtensionSdkComboBoxItem extends SdkComboBoxItem {
-    private final ModuleExtensionWithSdk myModuleExtensionWithSdk;
+  @Deprecated
+  public static class ModuleExtensionSdkComboBoxItemOld extends ModuleExtensionSdkComboBoxItem {
+    public ModuleExtensionSdkComboBoxItemOld(MutableModuleExtensionWithSdk<?> moduleExtensionWithSdk) {
+      super(moduleExtensionWithSdk, moduleExtensionWithSdk.getInheritableSdk());
+    }
+  }
 
-    public ModuleExtensionSdkComboBoxItem(ModuleExtensionWithSdk moduleExtensionWithSdk) {
+  public static class ModuleExtensionSdkComboBoxItem extends SdkComboBoxItem {
+    private final ModuleExtension<?> myModuleExtension;
+    private final MutableModuleInheritableNamedPointer<Sdk> mySdkPointer;
+
+    public ModuleExtensionSdkComboBoxItem(ModuleExtension<?> moduleExtension, MutableModuleInheritableNamedPointer<Sdk> sdkPointer) {
       super(null);
-      myModuleExtensionWithSdk = moduleExtensionWithSdk;
+      myModuleExtension = moduleExtension;
+      mySdkPointer = sdkPointer;
     }
 
     @Override
     public Sdk getSdk() {
-      return myModuleExtensionWithSdk.getSdk();
+      return mySdkPointer.get();
     }
 
     @Nullable
     @Override
     public String getSdkName() {
-      return myModuleExtensionWithSdk.getSdkName();
+      return mySdkPointer.getName();
     }
 
     @Override
     public String toString() {
-      return "module extension: " + myModuleExtensionWithSdk;
+      return "module extension: " + myModuleExtension;
     }
 
-    public ModuleExtensionWithSdk getModuleExtensionWithSdk() {
-      return myModuleExtensionWithSdk;
+    public Module getModule() {
+      return myModuleExtension.getModule();
+    }
+
+    @NotNull
+    public MutableModuleInheritableNamedPointer<Sdk> getSdkPointer() {
+      return mySdkPointer;
     }
   }
 
