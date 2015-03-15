@@ -24,8 +24,8 @@ import com.intellij.openapi.roots.ui.configuration.SdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Condition;
-import com.intellij.util.Consumer;
 import com.intellij.util.NullableFunction;
+import com.intellij.util.PairConsumer;
 import lombok.val;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
@@ -73,7 +73,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
   private Runnable myLaterUpdater;
 
-  private Consumer<Sdk> myPostConsumer;
+  private PairConsumer<Sdk, Sdk> myPostConsumer;
 
   private ModuleExtensionSdkBoxBuilder(@NotNull T mutableModuleExtension) {
     myMutableModuleExtension = mutableModuleExtension;
@@ -109,7 +109,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   }
 
   @NotNull
-  public ModuleExtensionSdkBoxBuilder<T> postConsumer(@NotNull Consumer<Sdk> consumer) {
+  public ModuleExtensionSdkBoxBuilder<T> postConsumer(@NotNull PairConsumer<Sdk, Sdk> consumer) {
     myPostConsumer = consumer;
     return this;
   }
@@ -151,11 +151,13 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
       @Override
       public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
+          Sdk oldValue = inheritableSdk.get();
+
           inheritableSdk.set(comboBox.getSelectedModuleName(), comboBox.getSelectedSdkName());
 
           if (myPostConsumer != null) {
             Sdk sdk = inheritableSdk.get();
-            myPostConsumer.consume(sdk);
+            myPostConsumer.consume(oldValue, sdk);
           }
 
           if (myLaterUpdater != null) {
