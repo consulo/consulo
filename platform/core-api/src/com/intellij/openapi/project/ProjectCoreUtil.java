@@ -1,7 +1,6 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.InternalFileType;
 import com.intellij.openapi.vfs.VirtualFile;
 
 /**
@@ -17,7 +16,6 @@ public class ProjectCoreUtil {
 
   public static boolean isProjectOrWorkspaceFile(final VirtualFile file,
                                                  final FileType fileType) {
-    if (fileType instanceof InternalFileType) return true;
     return file.getPath().contains(PROJECT_DIR_PATTERN);
   }
 }

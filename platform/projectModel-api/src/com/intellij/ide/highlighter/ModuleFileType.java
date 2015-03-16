@@ -17,7 +17,7 @@ package com.intellij.ide.highlighter;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.fileTypes.InternalFileType;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
@@ -28,7 +28,7 @@ import javax.swing.*;
 
 @Deprecated
 @DeprecationInfo(value = "Module file type is not supported anymore", until = "2.0")
-public class ModuleFileType implements InternalFileType {
+public class ModuleFileType implements FileType {
   @NonNls public static final String DEFAULT_EXTENSION = "cxmf";
   @NonNls public static final String DOT_DEFAULT_EXTENSION = "." + DEFAULT_EXTENSION;
 

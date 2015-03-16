@@ -19,8 +19,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.InternalFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.OrderEntry;
@@ -117,16 +115,6 @@ public class ProjectUtil {
   @Nullable
   public static Project guessProjectForFile(VirtualFile file) {
     return ProjectLocator.getInstance().guessProjectForFile(file);
-  }
-
-  public static boolean isProjectOrWorkspaceFile(final VirtualFile file) {
-    return isProjectOrWorkspaceFile(file, file.getFileType());
-  }
-
-  public static boolean isProjectOrWorkspaceFile(final VirtualFile file,
-                                                 final FileType fileType) {
-    if (fileType instanceof InternalFileType) return true;
-    return file.getPath().contains("/"+ Project.DIRECTORY_STORE_FOLDER +"/");
   }
 
   @NotNull

@@ -24,7 +24,6 @@ import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.InternalFileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
@@ -125,8 +124,7 @@ public abstract class PlatformIdTableBuilding {
 
   public static boolean isTodoIndexerRegistered(@NotNull FileType fileType) {
     return ourTodoIndexers.containsKey(fileType) ||
-           TodoIndexers.INSTANCE.forFileType(fileType) != null ||
-           fileType instanceof InternalFileType;
+           TodoIndexers.INSTANCE.forFileType(fileType) != null;
   }
 
   private static class CompositeTodoIndexer implements DataIndexer<TodoIndexEntry, Integer, FileContent> {
