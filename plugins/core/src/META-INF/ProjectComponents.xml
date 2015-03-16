@@ -85,14 +85,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.ide.impl.convert.ProjectFileVersion</interface-class>
-      <implementation-class>com.intellij.ide.impl.convert.ProjectFileVersionImpl</implementation-class>
-    </component>
-
-    <!--<component>-->
-    <!--<implementation-class>com.intellij.jsp.impl.browserprofile.BrowserProfileProvider</implementation-class>-->
-    <!--</component>-->
-    <component>
       <implementation-class>com.intellij.openapi.editor.impl.DocumentMarkupModelManager</implementation-class>
     </component>
     <component>

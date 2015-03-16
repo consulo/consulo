@@ -16,14 +16,11 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.CommonBundle;
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
@@ -36,7 +33,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
-import com.intellij.util.PathUtilRt;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
@@ -214,44 +210,30 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @NotNull
   @Override
   public String getProjectName() {
-    if (myScheme == StorageScheme.DIRECTORY_BASED) {
-      final VirtualFile baseDir = getProjectBaseDir();
-      assert baseDir != null : "scheme=" + myScheme + " project file=" + getProjectFilePath();
+    final VirtualFile baseDir = getProjectBaseDir();
+    assert baseDir != null : "scheme=" + myScheme + " project file=" + getProjectFilePath();
 
-      final VirtualFile ideaDir = baseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
-      if (ideaDir != null && ideaDir.isValid()) {
-        final VirtualFile nameFile = ideaDir.findChild(ProjectImpl.NAME_FILE);
-        if (nameFile != null && nameFile.isValid()) {
+    final VirtualFile ideaDir = baseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
+    if (ideaDir != null && ideaDir.isValid()) {
+      final VirtualFile nameFile = ideaDir.findChild(ProjectImpl.NAME_FILE);
+      if (nameFile != null && nameFile.isValid()) {
+        try {
+          BufferedReader in = new BufferedReader(new InputStreamReader(nameFile.getInputStream(), CharsetToolkit.UTF8_CHARSET));
           try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(nameFile.getInputStream(), CharsetToolkit.UTF8_CHARSET));
-            try {
-              final String name = in.readLine();
-              if (name != null && name.length() > 0) {
-                return name.trim();
-              }
-            }
-            finally {
-              in.close();
+            final String name = in.readLine();
+            if (name != null && name.length() > 0) {
+              return name.trim();
             }
           }
-          catch (IOException ignored) { }
+          finally {
+            in.close();
+          }
         }
+        catch (IOException ignored) { }
       }
+    }
 
-      return baseDir.getName().replace(":", "");
-    }
-    else {
-      String temp = PathUtilRt.getFileName(((FileBasedStorage)getProjectFileStorage()).getFilePath());
-      FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(temp);
-      if (fileType instanceof ProjectFileType) {
-        temp = temp.substring(0, temp.length() - fileType.getDefaultExtension().length() - 1);
-      }
-      final int i = temp.lastIndexOf(File.separatorChar);
-      if (i >= 0) {
-        temp = temp.substring(i + 1, temp.length() - i + 1);
-      }
-      return temp;
-    }
+    return baseDir.getName().replace(":", "");
   }
 
   @NotNull

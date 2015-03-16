@@ -15,58 +15,14 @@
  */
 package com.intellij.ide.highlighter;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.DeprecationInfo;
 
-import javax.swing.*;
-
 @Deprecated
-@DeprecationInfo(value = "Project file type is not supported anymore", until = "2.0")
-public class ProjectFileType implements FileType {
-  @NonNls public static final String DEFAULT_EXTENSION = "ipr";
-  @NonNls public static final String DOT_DEFAULT_EXTENSION = ".ipr";
-
-  @Override
-  @NotNull
-  public String getName() {
-    return "CONSULO_PROJECT";
-  }
-
-  @Override
-  @NotNull
-  public String getDescription() {
-    return IdeBundle.message("filetype.description.idea.project");
-  }
-
-  @Override
-  @NotNull
-  public String getDefaultExtension() {
-    return DEFAULT_EXTENSION;
-  }
-
-  @Override
-  public Icon getIcon() {
-    return AllIcons.Icon16;
-  }
-
-  @Override
-  public boolean isBinary() {
-    return false;
-  }
-
-  @Override
-  public boolean isReadOnly() {
-    return true;
-  }
-
-  @Override
-  public String getCharset(@NotNull VirtualFile file, final byte[] content) {
-    return CharsetToolkit.UTF8;
-  }
+@DeprecationInfo(value = "Project file type is not supported anymore", until = "1.0")
+public class ProjectFileType  {
+  @NonNls
+  public static final String DEFAULT_EXTENSION = "ipr";
+  @NonNls
+  public static final String DOT_DEFAULT_EXTENSION = ".ipr";
 }
