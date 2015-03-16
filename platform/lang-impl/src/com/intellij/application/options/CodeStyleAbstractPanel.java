@@ -16,7 +16,6 @@
 package com.intellij.application.options;
 
 import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
-import com.intellij.application.options.codeStyle.LanguageSelector;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.lang.Language;
 import com.intellij.openapi.Disposable;
@@ -35,6 +34,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
+import com.intellij.openapi.ui.OnePixelDivider;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -44,6 +44,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
+import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.Alarm;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
@@ -87,7 +88,6 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   private long myEndHighlightPreviewChangesTimeMillis = -1;
   private boolean myShowsPreviewHighlighters;
   private boolean mySkipPreviewHighlighting;
-  private LanguageSelector myLanguageSelector;
   private final CodeStyleSettings myCurrentSettings;
   private final Language myDefaultLanguage;
 
@@ -465,9 +465,10 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     }
   }
 
-  protected void installPreviewPanel(final JPanel previewPanel) {
+  protected void installPreviewPanel(JPanel previewPanel) {
     previewPanel.setLayout(new BorderLayout());
-    previewPanel.add(myEditor.getComponent(), BorderLayout.CENTER);
+    previewPanel.add(getEditor().getComponent(), BorderLayout.CENTER);
+    previewPanel.setBorder(new CustomLineBorder(OnePixelDivider.BACKGROUND, 0, 1, 0, 0));
   }
 
   @NonNls
@@ -613,22 +614,8 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     return myDefaultLanguage;
   }
 
-  public void setLanguageSelector(LanguageSelector langSelector) {
-    if (myLanguageSelector == null) {
-      myLanguageSelector = langSelector;
-    }
-  }
-
-  public LanguageSelector getLanguageSelector() {
-    return myLanguageSelector;
-  }
-
   protected String getTabTitle() {
     return "Other";
-  }
-
-  public boolean setPanelLanguage(Language language) {
-    return false;
   }
 
   protected CodeStyleSettings getCurrentSettings() {
@@ -642,5 +629,4 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   public boolean isCopyFromMenuAvailable() {
     return false;
   }
-
 }

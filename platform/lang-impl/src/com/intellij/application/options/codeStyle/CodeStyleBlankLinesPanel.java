@@ -15,7 +15,6 @@
  */
 package com.intellij.application.options.codeStyle;
 
-import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Trinity;
@@ -38,7 +37,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
 
-public class CodeStyleBlankLinesPanel extends MultilanguageCodeStyleAbstractPanel {
+public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.codeStyle.CodeStyleBlankLinesPanel");
 
@@ -85,8 +84,8 @@ public class CodeStyleBlankLinesPanel extends MultilanguageCodeStyleAbstractPane
                      new GridBagConstraints(0, 2, 1, 1, 0, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
                                             0));
 
-    JScrollPane scroll = ScrollPaneFactory.createScrollPane(optionsPanel);
-    scroll.setBorder(null);
+    JScrollPane scroll = ScrollPaneFactory.createScrollPane(optionsPanel, true);
+    scroll.getVerticalScrollBar().setUnitIncrement(10);
     scroll.setMinimumSize(new Dimension(optionsPanel.getPreferredSize().width + scroll.getVerticalScrollBar().getPreferredSize().width + 5, -1));
     scroll.setPreferredSize(scroll.getMinimumSize());
 
@@ -259,11 +258,6 @@ public class CodeStyleBlankLinesPanel extends MultilanguageCodeStyleAbstractPane
     }
   }
 
-  @Override
-  protected void onLanguageChange(Language language) {
-    resetImpl(getSettings());
-  }
-
   private class IntOption {
     private final JTextField myTextField;
     private final Field myTarget;
@@ -295,7 +289,7 @@ public class CodeStyleBlankLinesPanel extends MultilanguageCodeStyleAbstractPane
         if (myTargetClass != null) {
           return myTarget.getInt(settings.getCustomSettings(myTargetClass));
         }
-        CommonCodeStyleSettings commonSettings = settings.getCommonSettings(getSelectedLanguage());
+        CommonCodeStyleSettings commonSettings = settings.getCommonSettings(getDefaultLanguage());
         return myTarget.getInt(commonSettings);
       }
       catch (IllegalAccessException e) {
@@ -309,7 +303,7 @@ public class CodeStyleBlankLinesPanel extends MultilanguageCodeStyleAbstractPane
           myTarget.setInt(settings.getCustomSettings(myTargetClass), value);
         }
         else {
-          CommonCodeStyleSettings commonSettings = settings.getCommonSettings(getSelectedLanguage());
+          CommonCodeStyleSettings commonSettings = settings.getCommonSettings(getDefaultLanguage());
           myTarget.setInt(commonSettings, value);
         }
       }

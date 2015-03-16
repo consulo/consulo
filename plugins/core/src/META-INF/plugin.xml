@@ -740,7 +740,7 @@
     <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="CONSULO_PROJECT"/>
 
     <extensionPoint name="schemeImporter" beanClass="com.intellij.openapi.options.SchemeImporterEP">
-      <with attribute="schemeClass" implements="com.intellij.openapi.options.Scheme"/>
+      <with attribute="schemeClass" implements="org.consulo.util.pointers.Named"/>
       <with attribute="implementationClass" implements="com.intellij.openapi.options.SchemeImporter"/>
     </extensionPoint>
 
@@ -1556,8 +1556,6 @@
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
     <vcsAwareCheckoutListener implementation="com.intellij.openapi.vcs.checkout.NewProjectCheckoutListener"/>
 
-    <codeStyleSettingsProvider implementation="com.intellij.application.options.CommonCodeStyleSettingsProvider"/>
-
     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 
     <orderRootType implementation="com.intellij.openapi.roots.types.BinariesOrderRootType"/>
@@ -2276,7 +2274,6 @@
     <dynamicContextProvider implementation="com.intellij.openapi.paths.GenericDynamicContextProvider"/>
 
     <codeStyleSettingsProvider implementation="com.intellij.application.options.GeneralCodeStyleSettingsProvider"/>
-    <codeStyleSettingsProvider implementation="com.intellij.application.options.OtherTabsAndIndentsProvider"/>
 
     <projectService serviceInterface="com.intellij.ide.todo.TodoView"
                     serviceImplementation="com.intellij.ide.todo.TodoView"/>
