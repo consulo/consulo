@@ -17,7 +17,6 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.highlighter.ProjectFileType;
-import com.intellij.ide.highlighter.WorkspaceFileType;
 import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.components.*;
@@ -35,7 +34,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.PathUtilRt;
@@ -48,7 +46,10 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,81 +151,26 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     final LocalFileSystem fs = LocalFileSystem.getInstance();
 
     final File file = new File(filePath);
-    if (!isIprPath(file)) {
-      myScheme = StorageScheme.DIRECTORY_BASED;
 
-      final File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER)
-                                               : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
-      stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, new File(dirStore, "misc.xml").getPath());
+    myScheme = StorageScheme.DIRECTORY_BASED;
 
-      final File ws = new File(dirStore, "workspace.xml");
-      stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
-      if (!ws.exists() && !file.isDirectory()) {
-        useOldWsContent(filePath, ws);
+    final File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER)
+                                             : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
+    stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, new File(dirStore, "misc.xml").getPath());
+
+    final File ws = new File(dirStore, "workspace.xml");
+    stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
+
+    stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
+
+    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+      @Override
+      public void run() {
+        VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore));
       }
-
-      stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
-
-      ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-        @Override
-        public void run() {
-          VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore));
-        }
-      }, ModalityState.defaultModalityState());
-    }
-    else {
-      myScheme = StorageScheme.DEFAULT;
-
-      stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, filePath);
-
-      final String workspacePath = composeWsPath(filePath);
-      stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, workspacePath);
-
-      ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-        @Override
-        public void run() {
-          VfsUtil.markDirtyAndRefresh(false, true, false, fs.refreshAndFindFileByPath(filePath), fs.refreshAndFindFileByPath(workspacePath));
-        }
-      }, ModalityState.defaultModalityState());
-    }
+    }, ModalityState.defaultModalityState());
 
     myPresentableUrl = null;
-  }
-
-  private static boolean isIprPath(final File file) {
-    return FileUtilRt.extensionEquals(file.getName(), ProjectFileType.DEFAULT_EXTENSION);
-  }
-
-  private static String composeWsPath(String filePath) {
-    final int lastDot = filePath.lastIndexOf(".");
-    final String filePathWithoutExt = lastDot > 0 ? filePath.substring(0, lastDot) : filePath;
-    return filePathWithoutExt + WorkspaceFileType.DOT_DEFAULT_EXTENSION;
-  }
-
-  private static void useOldWsContent(final String filePath, final File ws) {
-    final File oldWs = new File(composeWsPath(filePath));
-    if (oldWs.exists()) {
-      try {
-        final InputStream is = new FileInputStream(oldWs);
-        try {
-          final byte[] bytes = FileUtil.loadBytes(is, (int)oldWs.length());
-
-          final OutputStream os = new FileOutputStream(ws);
-          try {
-            os.write(bytes);
-          }
-          finally {
-            os.close();
-          }
-        }
-        finally {
-          is.close();
-        }
-      }
-      catch (IOException e) {
-        LOG.error(e);
-      }
-    }
   }
 
   @Override
