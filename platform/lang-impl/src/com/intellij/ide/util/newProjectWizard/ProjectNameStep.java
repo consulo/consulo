@@ -113,6 +113,6 @@ public class ProjectNameStep extends ModuleWizardStep {
 
   @Override
   public boolean validate() throws ConfigurationException {
-    return myNamePathComponent.validateNameAndPath(myWizardContext, true);
+    return myNamePathComponent.validateNameAndPath(myWizardContext);
   }
 }

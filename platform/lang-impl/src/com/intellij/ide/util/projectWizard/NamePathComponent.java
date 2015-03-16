@@ -16,7 +16,6 @@
 package com.intellij.ide.util.projectWizard;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
@@ -101,6 +100,7 @@ public class NamePathComponent extends JPanel{
     final FileChooserDescriptor chooserDescriptor = (FileChooserDescriptor)BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR.clone();
     chooserDescriptor.setHideIgnored(hideIgnored);
     final BrowseFilesListener browseButtonActionListener = new BrowseFilesListener(myTfPath, pathChooserTitle, pathChooserDescription, chooserDescriptor) {
+      @Override
       public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         myIsPathChangedByUser = true;
@@ -118,17 +118,7 @@ public class NamePathComponent extends JPanel{
                                                  insets, 0, 0));
   }
 
-  private String getProjectFilePath(boolean isDefault) {
-    if (isDefault) {
-      return getPath() + "/" + getNameValue() + ProjectFileType.DOT_DEFAULT_EXTENSION;
-    }
-    else {
-      return getPath() + "/" + Project.DIRECTORY_STORE_FOLDER;
-    }
-  }
-
-  public boolean validateNameAndPath(WizardContext context, boolean defaultFormat) throws
-                                                                                    ConfigurationException {
+  public boolean validateNameAndPath(WizardContext context) throws ConfigurationException {
     final String name = getNameValue();
     if (name.length() == 0) {
       final ApplicationInfo info = ApplicationManager.getApplication().getComponent(ApplicationInfo.class);
@@ -154,12 +144,12 @@ public class NamePathComponent extends JPanel{
     }
 
     boolean shouldContinue = true;
-    final File projectFile = new File(getProjectFilePath(defaultFormat));
-    if (projectFile.exists()) {
+    final File projectDir = new File(getPath(), Project.DIRECTORY_STORE_FOLDER);
+    if (projectDir.exists()) {
       int answer = Messages.showYesNoDialog(
-        IdeBundle.message("prompt.overwrite.project.file", projectFile.getAbsolutePath(), context.getPresentationName()),
+        IdeBundle.message("prompt.overwrite.project.folder", projectDir.getAbsolutePath(), context.getPresentationName()),
         IdeBundle.message("title.file.already.exists"), Messages.getQuestionIcon());
-      shouldContinue = (answer == 0);
+      shouldContinue = (answer == Messages.YES);
     }
 
     return shouldContinue;
@@ -281,6 +271,7 @@ public class NamePathComponent extends JPanel{
   private class NameFieldDocument extends PlainDocument {
     public NameFieldDocument() {
       addDocumentListener(new DocumentAdapter() {
+        @Override
         public void textChanged(DocumentEvent event) {
           myIsNameChangedByUser = true;
           syncNameAndPath();
@@ -288,6 +279,7 @@ public class NamePathComponent extends JPanel{
       });
     }
 
+    @Override
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
       boolean ok = true;
       for (int idx = 0; idx < str.length() && ok; idx++) {
@@ -323,6 +315,7 @@ public class NamePathComponent extends JPanel{
   private class PathFieldDocument extends PlainDocument {
     public PathFieldDocument() {
       addDocumentListener(new DocumentAdapter() {
+        @Override
         public void textChanged(DocumentEvent event) {
           myIsPathChangedByUser = true;
           syncPathAndName();
