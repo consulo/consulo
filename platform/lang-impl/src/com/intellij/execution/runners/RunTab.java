@@ -95,7 +95,7 @@ public abstract class RunTab implements DataProvider, Disposable {
       logConsoleManager = new LogConsoleManagerBase(myProject, mySearchScope) {
         @Override
         protected Icon getDefaultIcon() {
-          return AllIcons.Debugger.Console;
+          return AllIcons.Debugger.Console_log;
         }
 
         @Override
