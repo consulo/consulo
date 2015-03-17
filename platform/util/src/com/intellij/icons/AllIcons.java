@@ -621,45 +621,6 @@ public class AllIcons {
 
   }
 
-  public static class Javaee {
-    public static final Icon Application_xml = IconLoader.getIcon("/javaee/application_xml.png"); // 16x16
-    public static final Icon BuildOnFrameDeactivation = IconLoader.getIcon("/javaee/buildOnFrameDeactivation.png"); // 16x16
-    public static final Icon DataSourceImport = IconLoader.getIcon("/javaee/dataSourceImport.png"); // 16x16
-    public static final Icon DbSchemaImportBig = IconLoader.getIcon("/javaee/dbSchemaImportBig.png"); // 32x32
-    public static final Icon Ejb_jar_xml = IconLoader.getIcon("/javaee/ejb-jar_xml.png"); // 16x16
-    public static final Icon EjbClass = IconLoader.getIcon("/javaee/ejbClass.png"); // 16x16
-    public static final Icon EjbModule = IconLoader.getIcon("/javaee/ejbModule.png"); // 16x16
-    public static final Icon EmbeddedAttributeOverlay = IconLoader.getIcon("/javaee/embeddedAttributeOverlay.png"); // 16x16
-    public static final Icon EntityBean = IconLoader.getIcon("/javaee/entityBean.png"); // 16x16
-    public static final Icon EntityBeanBig = IconLoader.getIcon("/javaee/entityBeanBig.png"); // 24x24
-    public static final Icon Home = IconLoader.getIcon("/javaee/home.png"); // 16x16
-    public static final Icon InheritedAttributeOverlay = IconLoader.getIcon("/javaee/inheritedAttributeOverlay.png"); // 16x16
-    public static final Icon InterceptorClass = IconLoader.getIcon("/javaee/interceptorClass.png"); // 16x16
-    public static final Icon InterceptorMethod = IconLoader.getIcon("/javaee/interceptorMethod.png"); // 16x16
-    public static final Icon JavaeeAppModule = IconLoader.getIcon("/javaee/JavaeeAppModule.png"); // 16x16
-    public static final Icon JpaFacet = IconLoader.getIcon("/javaee/jpaFacet.png"); // 16x16
-    public static final Icon Local = IconLoader.getIcon("/javaee/local.png"); // 16x16
-    public static final Icon LocalHome = IconLoader.getIcon("/javaee/localHome.png"); // 16x16
-    public static final Icon MessageBean = IconLoader.getIcon("/javaee/messageBean.png"); // 16x16
-    public static final Icon PersistenceAttribute = IconLoader.getIcon("/javaee/persistenceAttribute.png"); // 16x16
-    public static final Icon PersistenceEmbeddable = IconLoader.getIcon("/javaee/persistenceEmbeddable.png"); // 16x16
-    public static final Icon PersistenceEntity = IconLoader.getIcon("/javaee/persistenceEntity.png"); // 16x16
-    public static final Icon PersistenceEntityListener = IconLoader.getIcon("/javaee/persistenceEntityListener.png"); // 16x16
-    public static final Icon PersistenceId = IconLoader.getIcon("/javaee/persistenceId.png"); // 16x16
-    public static final Icon PersistenceIdRelationship = IconLoader.getIcon("/javaee/persistenceIdRelationship.png"); // 16x16
-    public static final Icon PersistenceMappedSuperclass = IconLoader.getIcon("/javaee/persistenceMappedSuperclass.png"); // 16x16
-    public static final Icon PersistenceRelationship = IconLoader.getIcon("/javaee/persistenceRelationship.png"); // 16x16
-    public static final Icon PersistenceUnit = IconLoader.getIcon("/javaee/persistenceUnit.png"); // 16x16
-    public static final Icon Remote = IconLoader.getIcon("/javaee/remote.png"); // 16x16
-    public static final Icon SessionBean = IconLoader.getIcon("/javaee/sessionBean.png"); // 16x16
-    public static final Icon UpdateRunningApplication = IconLoader.getIcon("/javaee/updateRunningApplication.png"); // 16x16
-    public static final Icon Web_xml = IconLoader.getIcon("/javaee/web_xml.png"); // 16x16
-    public static final Icon WebModule = IconLoader.getIcon("/javaee/webModule.png"); // 16x16
-    public static final Icon WebModuleGroup = IconLoader.getIcon("/javaee/webModuleGroup.png"); // 16x16
-    public static final Icon WebService = IconLoader.getIcon("/javaee/WebService.png"); // 16x16
-    public static final Icon WebServiceClient = IconLoader.getIcon("/javaee/WebServiceClient.png"); // 16x16
-
-  }
   public static final Icon Logo_welcomeScreen = IconLoader.getIcon("/Logo_welcomeScreen.png"); // 80x80
   
   public static class Mac {
@@ -685,11 +646,9 @@ public class AllIcons {
     public static final Icon Library = IconLoader.getIcon("/modules/library.png"); // 16x16
     public static final Icon Merge = IconLoader.getIcon("/modules/merge.png"); // 16x16
     public static final Icon ModulesNode = IconLoader.getIcon("/modules/modulesNode.png"); // 16x16
-    public static final Icon Output = IconLoader.getIcon("/modules/output.png"); // 16x16
     public static final Icon SourceRoot = IconLoader.getIcon("/modules/sourceRoot.png"); // 16x16
     public static final Icon ResourcesRoot = IconLoader.getIcon("/modules/resourcesRoot.png"); // 16x16
     public static final Icon TestResourcesRoot = IconLoader.getIcon("/modules/testResourcesRoot.png"); // 16x16
-    public static final Icon Sources = IconLoader.getIcon("/modules/sources.png"); // 16x16
     public static final Icon Split = IconLoader.getIcon("/modules/split.png"); // 16x16
     public static final Icon TestRoot = IconLoader.getIcon("/modules/testRoot.png"); // 16x16
     public static final Icon WebRoot = IconLoader.getIcon("/modules/webRoot.png"); // 16x16
@@ -757,21 +716,6 @@ public class AllIcons {
     public static final Icon J2eeParameter = IconLoader.getIcon("/nodes/j2eeParameter.png"); // 16x16
     public static final Icon JarDirectory = IconLoader.getIcon("/nodes/jarDirectory.png"); // 16x16
     public static final Icon JavaDocFolder = IconLoader.getIcon("/nodes/javaDocFolder.png"); // 16x16
-    
-    public static class Jsf {
-      public static final Icon Component = IconLoader.getIcon("/nodes/jsf/component.png"); // 16x16
-      public static final Icon Converter = IconLoader.getIcon("/nodes/jsf/converter.png"); // 16x16
-      public static final Icon General = IconLoader.getIcon("/nodes/jsf/general.png"); // 16x16
-      public static final Icon GenericValue = IconLoader.getIcon("/nodes/jsf/genericValue.png"); // 18x18
-      public static final Icon ManagedBean = IconLoader.getIcon("/nodes/jsf/managedBean.png"); // 16x16
-      public static final Icon NavigationCase = IconLoader.getIcon("/nodes/jsf/navigationCase.png"); // 18x18
-      public static final Icon NavigationRule = IconLoader.getIcon("/nodes/jsf/navigationRule.png"); // 16x16
-      public static final Icon Renderer = IconLoader.getIcon("/nodes/jsf/renderer.png"); // 16x16
-      public static final Icon RenderKit = IconLoader.getIcon("/nodes/jsf/renderKit.png"); // 16x16
-      public static final Icon Validator = IconLoader.getIcon("/nodes/jsf/validator.png"); // 16x16
-
-    }
-    public static final Icon Jsr45 = IconLoader.getIcon("/nodes/jsr45.png"); // 16x16
     public static final Icon JunitTestMark = IconLoader.getIcon("/nodes/junitTestMark.png"); // 16x16
     public static final Icon KeymapEditor = IconLoader.getIcon("/nodes/keymapEditor.png"); // 16x16
     public static final Icon KeymapMainMenu = IconLoader.getIcon("/nodes/keymapMainMenu.png"); // 16x16
