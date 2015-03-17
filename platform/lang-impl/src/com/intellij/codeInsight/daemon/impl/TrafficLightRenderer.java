@@ -296,7 +296,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     if (PowerSaveMode.isEnabled() || status.reasonWhySuspended != null || status.reasonWhyDisabled != null || status.errorAnalyzingFinished) {
       return icon;
     }
-    return AllIcons.General.Eye;
+    return AllIcons.General.InspectionsEye;
   }
 
   // return true if panel needs to be rebuilt
