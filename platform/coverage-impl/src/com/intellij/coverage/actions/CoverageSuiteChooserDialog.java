@@ -13,7 +13,6 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.IconUtil;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.text.DateFormatUtil;
@@ -334,7 +333,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
   private class DeleteSuiteAction extends AnAction {
     public DeleteSuiteAction() {
-      super("Delete", "Delete", PlatformIcons.DELETE_ICON);
+      super("Delete", "Delete", IconUtil.getRemoveIcon());
       registerCustomShortcutSet(CommonShortcuts.getDelete(), mySuitesTree);
     }
 

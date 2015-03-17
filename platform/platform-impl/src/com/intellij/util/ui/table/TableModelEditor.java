@@ -15,6 +15,7 @@
  */
 package com.intellij.util.ui.table;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.util.Comparing;
@@ -26,7 +27,6 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ElementProducer;
@@ -355,7 +355,7 @@ public class TableModelEditor<T> implements ElementProducer<T> {
   @NotNull
   public JComponent createComponent() {
     return toolbarDecorator.addExtraAction(
-            new ToolbarDecorator.ElementActionButton(IdeBundle.message("button.copy"), PlatformIcons.COPY_ICON) {
+            new ToolbarDecorator.ElementActionButton(IdeBundle.message("button.copy"), AllIcons.Actions.Copy) {
               @Override
               public void actionPerformed(AnActionEvent e) {
                 TableUtil.stopEditing(table);

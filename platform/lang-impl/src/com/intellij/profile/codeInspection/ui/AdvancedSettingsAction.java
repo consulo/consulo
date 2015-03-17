@@ -28,7 +28,6 @@ import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTr
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
@@ -58,7 +57,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     final InspectionProfileImpl inspectionProfile = getInspectionProfile();
     final Icon icon = AllIcons.General.Gear;
     e.getPresentation().setIcon(
-            (inspectionProfile != null && inspectionProfile.isProfileLocked()) ? LayeredIcon.create(icon, PlatformIcons.LOCKED_ICON) : icon);
+            (inspectionProfile != null && inspectionProfile.isProfileLocked()) ? LayeredIcon.create(icon, AllIcons.Nodes.Locked) : icon);
   }
 
   @Override

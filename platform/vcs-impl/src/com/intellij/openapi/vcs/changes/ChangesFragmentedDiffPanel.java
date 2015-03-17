@@ -53,7 +53,6 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.BeforeAfter;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -430,8 +429,6 @@ public class ChangesFragmentedDiffPanel implements Disposable {
     myNextDiff.registerCustomShortcutSet(myNextDiff.getShortcutSet(), myParent);
   }
 
-  private static final Icon ourIcon = PlatformIcons.CHECK_ICON;
-
   private class PopupAction extends DumbAwareAction {
     private final AnAction myUsual;
     private final AnAction myNumbered;
@@ -592,11 +589,8 @@ public class ChangesFragmentedDiffPanel implements Disposable {
   }
 
   private class MyUseSoftWrapsAction extends ToggleAction implements DumbAware {
-    private final Icon myIcon;
-
     private MyUseSoftWrapsAction() {
-      super("Use soft wraps", "", ourIcon);
-      myIcon = ourIcon;
+      super("Use soft wraps", "", AllIcons.Actions.Checked);
     }
 
     @Override
@@ -613,7 +607,7 @@ public class ChangesFragmentedDiffPanel implements Disposable {
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
-      e.getPresentation().setIcon(myConfiguration.SOFT_WRAPS_IN_SHORT_DIFF ? myIcon : null);
+      e.getPresentation().setIcon(myConfiguration.SOFT_WRAPS_IN_SHORT_DIFF ? AllIcons.Actions.Checked : null);
     }
   }
 

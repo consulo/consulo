@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindow;
@@ -22,7 +23,6 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.SpeedSearchBase;
 import com.intellij.util.IconUtil;
-import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +80,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer {
   private static Icon getIcon(ToolWindow toolWindow) {
     Icon icon = toolWindow.getIcon();
     if (icon == null) {
-      return PlatformIcons.UI_FORM_ICON;
+      return AllIcons.FileTypes.UiForm;
     }
 
     icon = IconUtil.toSize(icon, 16, 16);

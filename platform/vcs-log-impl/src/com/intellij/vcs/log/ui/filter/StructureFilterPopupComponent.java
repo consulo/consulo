@@ -15,6 +15,7 @@
  */
 package com.intellij.vcs.log.ui.filter;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
@@ -22,7 +23,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SizedIcon;
 import com.intellij.util.Function;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColorIcon;
 import com.intellij.util.ui.EmptyIcon;
@@ -270,7 +270,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     public CheckboxColorIcon(int size, @NotNull Color color) {
       super(size, color);
       mySize = size;
-      mySizedIcon = new SizedIcon(PlatformIcons.CHECK_ICON_SMALL, mySize, mySize);
+      mySizedIcon = new SizedIcon(AllIcons.Actions.Checked_small, mySize, mySize);
     }
 
     public void prepare(boolean selected) {
@@ -319,7 +319,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     private SelectFromHistoryAction(@NotNull VcsLogStructureFilter filter) {
       super(getStructureActionText(filter), getTooltipTextForFiles(filter.getFiles(), false).replace("\n", " "), null);
       myFilter = filter;
-      myIcon = new SizedIcon(PlatformIcons.CHECK_ICON_SMALL, CHECKBOX_ICON_SIZE, CHECKBOX_ICON_SIZE);
+      myIcon = new SizedIcon(AllIcons.Actions.Checked_small, CHECKBOX_ICON_SIZE, CHECKBOX_ICON_SIZE);
       myEmptyIcon = EmptyIcon.create(CHECKBOX_ICON_SIZE);
     }
 

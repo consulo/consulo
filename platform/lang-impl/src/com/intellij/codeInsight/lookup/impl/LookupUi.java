@@ -45,7 +45,6 @@ import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Alarm;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.ButtonlessScrollBarUI;
@@ -453,7 +452,7 @@ class LookupUi {
     private AnAction createSortingAction(boolean checked) {
       boolean currentSetting = UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY;
       final boolean newSetting = checked ? currentSetting : !currentSetting;
-      return new DumbAwareAction(newSetting ? "Sort lexicographically" : "Sort by relevance", null, checked ? PlatformIcons.CHECK_ICON : null) {
+      return new DumbAwareAction(newSetting ? "Sort lexicographically" : "Sort by relevance", null, checked ? AllIcons.Actions.Checked : null) {
         @Override
         public void actionPerformed(AnActionEvent e) {
           FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CHANGE_SORTING);

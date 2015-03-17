@@ -15,6 +15,7 @@
  */
 package com.intellij.vcs.log.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.AbstractTreeUi;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.application.ApplicationManager;
@@ -37,7 +38,6 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.PlusMinus;
 import com.intellij.util.TreeNodeState;
 import com.intellij.util.containers.ContainerUtil;
@@ -408,11 +408,11 @@ public class VcsStructureChooser extends DialogWrapper {
     protected void renderIcon(FilePath path) {
       final String module = myModules.get(path.getVirtualFile());
       if (module != null) {
-        setIcon(PlatformIcons.CONTENT_ROOT_ICON_CLOSED);
+        setIcon(AllIcons.Nodes.Module);
       }
       else {
         if (path.isDirectory()) {
-          setIcon(PlatformIcons.DIRECTORY_CLOSED_ICON);
+          setIcon(AllIcons.Nodes.TreeClosed);
         }
         else {
           setIcon(path.getFileType().getIcon());

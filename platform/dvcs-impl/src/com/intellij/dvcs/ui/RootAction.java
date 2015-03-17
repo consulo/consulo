@@ -17,10 +17,10 @@ package com.intellij.dvcs.ui;
 
 import com.intellij.dvcs.DvcsUtil;
 import com.intellij.dvcs.repo.Repository;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +48,7 @@ public class RootAction<T extends Repository> extends ActionGroup {
     myGroup = actionsGroup;
     myBranchText = branchText;
     if (repository.equals(currentRepository)) {
-      getTemplatePresentation().setIcon(PlatformIcons.CHECK_ICON);
+      getTemplatePresentation().setIcon(AllIcons.Actions.Checked);
     }
     getTemplatePresentation().setText(DvcsUtil.getShortRepositoryName(repository), false);
   }
