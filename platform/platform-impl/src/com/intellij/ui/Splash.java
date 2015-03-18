@@ -64,7 +64,7 @@ public class Splash extends JDialog implements StartupProgress {
     setFocusableWindowState(false);
 
     Icon originalImage = IconLoader.getIcon(imageName);
-    myImage = new SplashImage(originalImage, textColor);
+    myImage = new SplashImage(originalImage);
     myLabel = new JLabel(myImage) {
       @Override
       protected void paintComponent(Graphics g) {
@@ -107,6 +107,7 @@ public class Splash extends JDialog implements StartupProgress {
     }
   }
 
+  @Override
   @SuppressWarnings("deprecation")
   public void show() {
     super.show();
@@ -159,20 +160,15 @@ public class Splash extends JDialog implements StartupProgress {
     return JBUI.scale(myProgressY);
   }
 
-  public static boolean showLicenseeInfo(Graphics g, int x, int y, final int height, final Color textColor) {
-    return false;
-  }
-
   private static final class SplashImage implements Icon {
     private final Icon myIcon;
-    private final Color myTextColor;
     private boolean myRedrawing;
 
-    public SplashImage(Icon originalIcon, Color textColor) {
+    public SplashImage(Icon originalIcon) {
       myIcon = originalIcon;
-      myTextColor = textColor;
     }
 
+    @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
       if (!myRedrawing) {
         try {
@@ -182,14 +178,14 @@ public class Splash extends JDialog implements StartupProgress {
       }
 
       myIcon.paintIcon(c, g, x, y);
-
-      showLicenseeInfo(g, x, y, getIconHeight(), myTextColor);
     }
 
+    @Override
     public int getIconWidth() {
       return myIcon.getIconWidth();
     }
 
+    @Override
     public int getIconHeight() {
       return myIcon.getIconHeight();
     }
