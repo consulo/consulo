@@ -21,16 +21,13 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.BuildNumber;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -58,12 +55,10 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private Color myProgressColor = null;
   private Color myAboutForeground = Color.black;
   private Color myAboutLinkColor = null;
-  private Icon myProgressTailIcon = null;
 
   private int myProgressY = 350;
   private String mySplashImageUrl = null;
   private String myAboutImageUrl = null;
-  private Color mySplashTextColor = new Color(0, 35, 135);  // idea blue
   private String myEditorBackgroundImageUrl = null;
 
   private Calendar myBuildDate = null;
@@ -91,7 +86,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
 
   private Rectangle myAboutLogoRect;
 
-  @NonNls private static final String IDEA_PATH = "/idea/";
   @NonNls private static final String ELEMENT_VERSION = "version";
   @NonNls private static final String ATTRIBUTE_MAJOR = "major";
   @NonNls private static final String ATTRIBUTE_MINOR = "minor";
@@ -104,12 +98,10 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ATTRIBUTE_MAJOR_RELEASE_DATE = "majorReleaseDate";
   @NonNls private static final String ELEMENT_LOGO = "logo";
   @NonNls private static final String ATTRIBUTE_URL = "url";
-  @NonNls private static final String ATTRIBUTE_TEXT_COLOR = "textcolor";
   @NonNls private static final String ATTRIBUTE_PROGRESS_COLOR = "progressColor";
   @NonNls private static final String ATTRIBUTE_ABOUT_FOREGROUND_COLOR = "foreground";
   @NonNls private static final String ATTRIBUTE_ABOUT_LINK_COLOR = "linkColor";
   @NonNls private static final String ATTRIBUTE_PROGRESS_Y = "progressY";
-  @NonNls private static final String ATTRIBUTE_PROGRESS_TAIL_ICON = "progressTailIcon";
   @NonNls private static final String ELEMENT_ABOUT = "about";
   @NonNls private static final String ELEMENT_EDITOR = "editor";
   @NonNls private static final String BACKGROUND_URL_ATTR = "background-url";
@@ -196,11 +188,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   }
 
   @Override
-  public Color getSplashTextColor() {
-    return mySplashTextColor;
-  }
-
-  @Override
   public String getAboutImageUrl() {
     return myAboutImageUrl;
   }
@@ -211,11 +198,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
 
   public int getProgressY() {
     return myProgressY;
-  }
-
-  @Nullable
-  public Icon getProgressTailIcon() {
-    return myProgressTailIcon;
   }
 
   @Override
@@ -423,15 +405,9 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
     Element logoElement = parentNode.getChild(ELEMENT_LOGO);
     if (logoElement != null) {
       mySplashImageUrl = logoElement.getAttributeValue(ATTRIBUTE_URL);
-      mySplashTextColor = parseColor(logoElement.getAttributeValue(ATTRIBUTE_TEXT_COLOR));
       String v = logoElement.getAttributeValue(ATTRIBUTE_PROGRESS_COLOR);
       if (v != null) {
         myProgressColor = parseColor(v);
-      }
-
-      v = logoElement.getAttributeValue(ATTRIBUTE_PROGRESS_TAIL_ICON);
-      if (v != null) {
-        myProgressTailIcon = IconLoader.getIcon(v);
       }
 
       v = logoElement.getAttributeValue(ATTRIBUTE_PROGRESS_Y);

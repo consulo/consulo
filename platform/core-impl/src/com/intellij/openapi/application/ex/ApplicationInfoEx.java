@@ -44,8 +44,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public abstract String getSplashImageUrl();
 
-  public abstract Color getSplashTextColor();
-
   public abstract String getAboutImageUrl();
 
   public String getIconUrl() {

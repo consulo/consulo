@@ -45,16 +45,14 @@ public class Splash extends JDialog implements StartupProgress {
   @Nullable public static Rectangle BOUNDS;
 
   private final Icon myImage;
-  private int myProgressHeight = 2;
   private Color myProgressColor = null;
   private int myProgressY;
   private float myProgress;
   private boolean mySplashIsVisible;
   private int myProgressLastPosition = 0;
   private final JLabel myLabel;
-  private Icon myProgressTail;
 
-  public Splash(String imageName, final Color textColor) {
+  public Splash(String imageName) {
     super((Frame)null, false);
 
     setUndecorated(true);
@@ -97,13 +95,11 @@ public class Splash extends JDialog implements StartupProgress {
   }
 
   public Splash(ApplicationInfoEx info) {
-    this(info.getSplashImageUrl(), info.getSplashTextColor());
+    this(info.getSplashImageUrl());
     if (info instanceof ApplicationInfoImpl) {
       final ApplicationInfoImpl appInfo = (ApplicationInfoImpl)info;
-      myProgressHeight = 2;
       myProgressColor = appInfo.getProgressColor();
       myProgressY = appInfo.getProgressY();
-      myProgressTail = appInfo.getProgressTailIcon();
     }
   }
 
@@ -137,19 +133,11 @@ public class Splash extends JDialog implements StartupProgress {
       mySplashIsVisible = true;
     }
 
-    final int progressWidth = (int)((myImage.getIconWidth() - 2) * myProgress);
+    final int progressWidth = (int)(myImage.getIconWidth() * myProgress);
     final int width = progressWidth - myProgressLastPosition;
     g.setColor(color);
-    g.fillRect(1, getProgressY(), width, getProgressHeight());
-    if (myProgressTail != null) {
-      myProgressTail.paintIcon(this, g, width - (myProgressTail.getIconWidth()/2),
-                               getProgressY() - (myProgressTail.getIconHeight() - getProgressHeight())/2);
-    }
+    g.fillRect(0, getProgressY(), width, 4);
     myProgressLastPosition = progressWidth;
-  }
-
-  private int getProgressHeight() {
-    return myProgressHeight;
   }
 
   private Color getProgressColor() {
@@ -173,7 +161,8 @@ public class Splash extends JDialog implements StartupProgress {
       if (!myRedrawing) {
         try {
           Thread.sleep(10);
-        } catch (InterruptedException ignore) {}
+        }
+        catch (InterruptedException ignore) {}
         myRedrawing = true;
       }
 

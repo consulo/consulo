@@ -17,8 +17,10 @@ package com.intellij.ui;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
+import com.intellij.util.ui.UIUtil;
 
 import java.awt.event.*;
 
@@ -29,11 +31,34 @@ public class ShowSplashAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final ApplicationInfoEx app = ApplicationInfoImpl.getShadowInstance();
-    final Splash splash = new Splash(app.getSplashImageUrl(), app.getSplashTextColor());
+    final Splash splash = new Splash(app);
     final SplashListener listener = new SplashListener(splash);
     splash.addFocusListener(listener);
     splash.addKeyListener(listener);
     splash.addMouseListener(listener);
+    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+      @Override
+      public void run() {
+        for(int i = 0; i <= 100; i++) {
+          if(!splash.isVisible()) {
+            break;
+          }
+          final float progress = i / 100f;
+          UIUtil.invokeLaterIfNeeded(new Runnable() {
+            @Override
+            public void run() {
+              splash.showProgress("", progress);
+            }
+          });
+          try {
+            Thread.sleep(100L);
+          }
+          catch (InterruptedException e1) {
+            ///
+          }
+        }
+      }
+    });
     splash.show();
   }
 
