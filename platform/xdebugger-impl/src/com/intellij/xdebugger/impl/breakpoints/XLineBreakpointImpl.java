@@ -41,6 +41,7 @@ import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import com.intellij.xdebugger.breakpoints.XLineBreakpointResolverExtension;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +56,8 @@ import java.util.List;
 /**
  * @author nik
  */
-public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreakpointBase<XLineBreakpoint<P>, P, LineBreakpointState<P>> implements XLineBreakpoint<P> {
+public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreakpointBase<XLineBreakpoint<P>, P, LineBreakpointState<P>>
+        implements XLineBreakpoint<P> {
   @Nullable private RangeHighlighterEx myHighlighter;
   private final XLineBreakpointType<P> myType;
   private XSourcePosition mySourcePosition;
@@ -63,14 +65,13 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
 
   public XLineBreakpointImpl(final XLineBreakpointType<P> type,
                              XBreakpointManagerImpl breakpointManager,
-                             @Nullable final P properties, LineBreakpointState<P> state) {
+                             @Nullable final P properties,
+                             LineBreakpointState<P> state) {
     super(type, breakpointManager, properties, state);
     myType = type;
   }
 
-  XLineBreakpointImpl(final XLineBreakpointType<P> type,
-                      XBreakpointManagerImpl breakpointManager,
-                      final LineBreakpointState<P> breakpointState) {
+  XLineBreakpointImpl(final XLineBreakpointType<P> type, XBreakpointManagerImpl breakpointManager, final LineBreakpointState<P> breakpointState) {
     super(type, breakpointManager, breakpointState);
     myType = type;
   }
@@ -89,10 +90,9 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     TextAttributes attributes = scheme.getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
 
     RangeHighlighterEx highlighter = myHighlighter;
-    if (highlighter != null &&
-        (!highlighter.isValid() ||
-         highlighter.getStartOffset() >= document.getTextLength() ||
-         document.getLineNumber(highlighter.getStartOffset()) != getLine())) {
+    if (highlighter != null && (!highlighter.isValid() ||
+                                highlighter.getStartOffset() >= document.getTextLength() ||
+                                document.getLineNumber(highlighter.getStartOffset()) != getLine())) {
       highlighter.dispose();
       myHighlighter = null;
       highlighter = null;
@@ -227,7 +227,9 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   }
 
   private boolean canMoveTo(int line, VirtualFile file) {
-    return file != null && myType.canPutAt(file, line, getProject()) && getBreakpointManager().findBreakpointAtLine(myType, file, line) == null;
+    return file != null &&
+           XLineBreakpointResolverExtension.INSTANCE.resolveBreakpointType(getProject(), file, line) != null &&
+           getBreakpointManager().findBreakpointAtLine(myType, file, line) == null;
   }
 
   public void updatePosition() {

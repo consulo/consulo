@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -52,6 +53,8 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   /**
    * Return <code>true<code> if breakpoint can be put on <code>line</code> in <code>file</code>
    */
+  @Deprecated
+  @DeprecationInfo(value = "Use XLineBreakpointResolver", until = "1.0")
   public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project) {
     return false;
   }
@@ -99,13 +102,5 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
 
   public Icon getTemporaryIcon() {
     return AllIcons.Debugger.Db_temporary_breakpoint;
-  }
-
-  /**
-   * Priority is considered when several breakpoint types can be set on the same code line,
-   * in this case we choose type with the highest priority
-   */
-  public int getPriority() {
-    return 0;
   }
 }

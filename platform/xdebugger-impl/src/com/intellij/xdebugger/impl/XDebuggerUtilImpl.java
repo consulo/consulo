@@ -80,25 +80,15 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   public void toggleLineBreakpoint(@NotNull final Project project, @NotNull final VirtualFile file, final int line, boolean temporary) {
-    XLineBreakpointType<?> typeWinner = null;
-    for (XLineBreakpointType<?> type : getLineBreakpointTypes()) {
-      if (type.canPutAt(file, line, project) && (typeWinner == null || type.getPriority() > typeWinner.getPriority())) {
-        typeWinner = type;
-      }
-    }
-    if (typeWinner != null) {
-      toggleLineBreakpoint(project, typeWinner, file, line, temporary);
+    XLineBreakpointType<?> breakpointType = XLineBreakpointResolverExtension.INSTANCE.resolveBreakpointType(project, file, line);
+    if (breakpointType != null) {
+      toggleLineBreakpoint(project, breakpointType, file, line, temporary);
     }
   }
 
   @Override
   public boolean canPutBreakpointAt(@NotNull Project project, @NotNull VirtualFile file, int line) {
-    for (XLineBreakpointType<?> type : getLineBreakpointTypes()) {
-      if (type.canPutAt(file, line, project)) {
-        return true;
-      }
-    }
-    return false;
+    return XLineBreakpointResolverExtension.INSTANCE.resolveBreakpointType(project, file, line) != null;
   }
 
   @Override

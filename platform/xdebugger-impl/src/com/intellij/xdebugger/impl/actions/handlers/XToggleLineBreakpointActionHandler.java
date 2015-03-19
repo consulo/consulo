@@ -25,6 +25,7 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
+import com.intellij.xdebugger.breakpoints.XLineBreakpointResolverExtension;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.actions.DebuggerActionHandler;
@@ -52,7 +53,8 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
       for (XLineBreakpointType<?> breakpointType : breakpointTypes) {
         final VirtualFile file = position.getFile();
         final int line = position.getLine();
-        if (breakpointType.canPutAt(file, line, project) || breakpointManager.findBreakpointAtLine(breakpointType, file, line) != null) {
+        if (XLineBreakpointResolverExtension.INSTANCE.resolveBreakpointType(project, file, line) != null ||
+            breakpointManager.findBreakpointAtLine(breakpointType, file, line) != null) {
           return true;
         }
       }
