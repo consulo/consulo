@@ -15,6 +15,8 @@
  */
 package com.intellij.ui.tabs;
 
+import org.mustbe.consulo.DeprecationInfo;
+
 import javax.swing.*;
 
 /**
@@ -23,7 +25,9 @@ import javax.swing.*;
 public class TabsUtil {
   public static final int TAB_VERTICAL_PADDING = 2;
   public static final int TABS_BORDER = 1;
-  
+
+  @Deprecated
+  @DeprecationInfo(value = "Use com.intellij.ui.tabs.impl.JBTabsImpl#getActiveTabUnderlineHeight()")
   public static final int ACTIVE_TAB_UNDERLINE_HEIGHT = 4;
 
   private TabsUtil() {

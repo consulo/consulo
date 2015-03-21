@@ -26,21 +26,12 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
-public class DefaultEditorTabsPainter implements JBEditorTabsPainter {
+public class DefaultEditorTabsPainter extends JBEditorTabsPainter {
 
   private static final int ACTIVE_TAB_SHADOW_HEIGHT = 3;
 
   @Override
-  public void doPaintInactive(Graphics2D g2d,
-                              Rectangle effectiveBounds,
-                              int x,
-                              int y,
-                              int w,
-                              int h,
-                              Color tabColor,
-                              int row,
-                              int column,
-                              boolean vertical) {
+  public void doPaintInactiveImpl(Graphics2D g2d, Rectangle effectiveBounds, int x, int y, int w, int h, Color tabColor, int row, int column, boolean vertical) {
     if (tabColor != null) {
       g2d.setPaint(UIUtil.getGradientPaint(x, y, Gray._200, x, y + effectiveBounds.height, Gray._130));
       g2d.fillRect(x, y, w, h);
@@ -101,12 +92,13 @@ public class DefaultEditorTabsPainter implements JBEditorTabsPainter {
     return new Color(c.getRed() * c.getRed() / 255, c.getGreen() * c.getGreen() / 255, c.getBlue() * c.getBlue() / 255);
   }
 
-  public void paintSelectionAndBorder(Graphics2D g2d,
-                                      Rectangle rect,
-                                      JBTabsImpl.ShapeInfo selectedShape,
-                                      Insets insets,
-                                      Color tabColor,
-                                      boolean horizontalTabs) {
+  @Override
+  public void paintSelectionAndBorderImpl(Graphics2D g2d,
+                                          Rectangle rect,
+                                          JBTabsImpl.ShapeInfo selectedShape,
+                                          Insets insets,
+                                          Color tabColor,
+                                          boolean horizontalTabs) {
     Insets i = selectedShape.path.transformInsets(insets);
     int _x = rect.x;
     int _y = rect.y;

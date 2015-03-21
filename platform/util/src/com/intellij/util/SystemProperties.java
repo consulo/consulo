@@ -130,4 +130,12 @@ public class SystemProperties {
 
     return defaultValue;
   }
+
+  public static boolean is(String key) {
+    return getBooleanProperty(key, false);
+  }
+
+  public static boolean has(String key) {
+    return System.getProperty(key) != null;
+  }
 }

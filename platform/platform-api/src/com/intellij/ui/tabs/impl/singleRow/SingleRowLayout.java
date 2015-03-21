@@ -15,19 +15,16 @@
  */
 package com.intellij.ui.tabs.impl.singleRow;
 
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
-import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.ui.tabs.impl.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class SingleRowLayout extends TabLayout {
@@ -51,8 +48,8 @@ public class SingleRowLayout extends TabLayout {
     protected int getIconY(Rectangle iconRec) {
       final int shift;
       switch (myTabs.getTabsPosition()) {
-        case bottom: shift = TabsUtil.ACTIVE_TAB_UNDERLINE_HEIGHT; break;
-        case top: shift = -(TabsUtil.ACTIVE_TAB_UNDERLINE_HEIGHT / 2); break;
+        case bottom: shift = myTabs.getActiveTabUnderlineHeight(); break;
+        case top: shift = -(myTabs.getActiveTabUnderlineHeight() / 2); break;
         default: shift = 0;
       }
       return super.getIconY(iconRec) + shift;
@@ -81,7 +78,7 @@ public class SingleRowLayout extends TabLayout {
   }
 
   @Override
-  public boolean isDragOut(TabLabel tabLabel, int deltaX, int deltaY) {
+  public boolean isDragOut(@NotNull TabLabel tabLabel, int deltaX, int deltaY) {
     return getStrategy().isDragOut(tabLabel, deltaX, deltaY);
   }
 
@@ -148,15 +145,6 @@ public class SingleRowLayout extends TabLayout {
   }
 
   public LayoutPassInfo layoutSingleRow(List<TabInfo> visibleInfos)  {
-    if (myTabs.isAlphabeticalMode()) {
-      Collections.sort(visibleInfos, new Comparator<TabInfo>() {
-        @Override
-        public int compare(TabInfo o1, TabInfo o2) {
-          return StringUtil.naturalCompare(o1.getText(), o2.getText());
-        }
-      });
-    }
-
     SingleRowPassInfo data = new SingleRowPassInfo(this, visibleInfos);
 
     final boolean layoutLabels = checkLayoutLabels(data);
@@ -236,7 +224,7 @@ public class SingleRowLayout extends TabLayout {
     }
   }
 
-  private void layoutLabelsAndGhosts(final SingleRowPassInfo data) {
+  protected void layoutLabelsAndGhosts(final SingleRowPassInfo data) {
     if (data.firstGhostVisible || myTabs.isGhostsAlwaysVisible()) {
       data.firstGhost = getStrategy().getLayoutRect(data, data.position, myTabs.getGhostTabLength());
       myTabs.layout(myLeftGhost, data.firstGhost);

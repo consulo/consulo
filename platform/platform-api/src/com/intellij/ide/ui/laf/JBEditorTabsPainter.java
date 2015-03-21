@@ -16,32 +16,60 @@
 package com.intellij.ide.ui.laf;
 
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
  */
-public interface JBEditorTabsPainter {
-  void doPaintInactive(Graphics2D g2d,
-                       Rectangle effectiveBounds,
-                       int x,
-                       int y,
-                       int w,
-                       int h,
-                       Color tabColor,
-                       int row,
-                       int column,
-                       boolean vertical);
+public abstract class JBEditorTabsPainter {
+  private Color myModifyTabColor;
 
-  void doPaintBackground(Graphics2D g, Rectangle clip, boolean vertical, Rectangle rectangle);
+  public void doPaintInactive(Graphics2D g2d, Rectangle effectiveBounds, int x, int y, int w, int h, Color tabColor, int row, int column, boolean vertical) {
+    doPaintInactiveImpl(g2d, effectiveBounds, x, y, w, h, modifyTabColor(tabColor), row, column, vertical);
+  }
 
-  void paintSelectionAndBorder(Graphics2D g2d,
-                               Rectangle rect,
-                               JBTabsImpl.ShapeInfo selectedShape,
-                               Insets insets,
-                               Color tabColor,
-                               boolean horizontalTabs);
+  protected abstract void doPaintInactiveImpl(Graphics2D g2d,
+                                              Rectangle effectiveBounds,
+                                              int x,
+                                              int y,
+                                              int w,
+                                              int h,
+                                              Color tabColor,
+                                              int row,
+                                              int column,
+                                              boolean vertical);
 
-  Color getBackgroundColor();
+  public abstract void doPaintBackground(Graphics2D g, Rectangle clip, boolean vertical, Rectangle rectangle);
+
+  public void paintSelectionAndBorder(Graphics2D g2d,
+                                      Rectangle rect,
+                                      JBTabsImpl.ShapeInfo selectedShape,
+                                      Insets insets,
+                                      Color tabColor,
+                                      boolean horizontalTabs) {
+    paintSelectionAndBorderImpl(g2d, rect, selectedShape, insets, modifyTabColor(tabColor), horizontalTabs);
+  }
+
+  protected abstract void paintSelectionAndBorderImpl(Graphics2D g2d,
+                                                   Rectangle rect,
+                                                   JBTabsImpl.ShapeInfo selectedShape,
+                                                   Insets insets,
+                                                   Color tabColor,
+                                                   boolean horizontalTabs);
+
+  public abstract Color getBackgroundColor();
+
+  @Nullable
+  private Color modifyTabColor(@Nullable Color tabColor) {
+    if(myModifyTabColor != null) {
+      return myModifyTabColor;
+    }
+    return tabColor;
+  }
+
+  public void setModifyTabColor(Color modifyTabColor) {
+    myModifyTabColor = modifyTabColor;
+  }
 }

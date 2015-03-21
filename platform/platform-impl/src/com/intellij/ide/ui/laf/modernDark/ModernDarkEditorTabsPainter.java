@@ -25,18 +25,9 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
-public class ModernDarkEditorTabsPainter implements JBEditorTabsPainter {
+public class ModernDarkEditorTabsPainter extends JBEditorTabsPainter {
   @Override
-  public void doPaintInactive(Graphics2D g2d,
-                              Rectangle effectiveBounds,
-                              int x,
-                              int y,
-                              int w,
-                              int h,
-                              Color tabColor,
-                              int row,
-                              int column,
-                              boolean vertical) {
+  public void doPaintInactiveImpl(Graphics2D g2d, Rectangle effectiveBounds, int x, int y, int w, int h, Color tabColor, int row, int column, boolean vertical) {
     if (tabColor != null) {
       g2d.setColor(tabColor);
       g2d.fillRect(x, y, w, h);
@@ -70,12 +61,13 @@ public class ModernDarkEditorTabsPainter implements JBEditorTabsPainter {
     }
   }
 
-  public void paintSelectionAndBorder(Graphics2D g2d,
-                                      Rectangle rect,
-                                      JBTabsImpl.ShapeInfo selectedShape,
-                                      Insets insets,
-                                      Color tabColor,
-                                      boolean horizontalTabs) {
+  @Override
+  public void paintSelectionAndBorderImpl(Graphics2D g2d,
+                                          Rectangle rect,
+                                          JBTabsImpl.ShapeInfo selectedShape,
+                                          Insets insets,
+                                          Color tabColor,
+                                          boolean horizontalTabs) {
     Insets i = selectedShape.path.transformInsets(insets);
 
     if (!horizontalTabs) {

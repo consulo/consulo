@@ -309,7 +309,6 @@ public class JBTabsImpl extends JComponent
     return new SingleRowLayout(this);
   }
 
-
   @Override
   public JBTabs setNavigationActionBinding(String prevActionId, String nextActionId) {
     if (myNextAction != null) {
@@ -322,7 +321,15 @@ public class JBTabsImpl extends JComponent
     return this;
   }
 
+  public int getActiveTabUnderlineHeight() {
+    return TabsUtil.ACTIVE_TAB_UNDERLINE_HEIGHT;
+  }
+
   public boolean isEditorTabs() {
+    return false;
+  }
+
+  public boolean supportsCompression() {
     return false;
   }
 
@@ -486,6 +493,10 @@ public class JBTabsImpl extends JComponent
 
   public void setFirstTabOffset(int firstTabOffset) {
     myFirstTabOffset = firstTabOffset;
+  }
+
+  public int tabMSize() {
+    return 20;
   }
 
   class TabActionsAutoHideListener extends MouseMotionAdapter implements Weighted {
@@ -1499,14 +1510,6 @@ public class JBTabsImpl extends JComponent
     final Insets insets = getLayoutInsets();
 
     final Insets border = isHideTabs() ? new Insets(0, 0, 0, 0) : myBorder.getEffectiveBorder();
-    final boolean noTabsVisible = isStealthModeEffective() || isHideTabs();
-
-    if (noTabsVisible) {
-      border.top = getBorder(-1);
-      border.bottom = getBorder(-1);
-      border.left = getBorder(-1);
-      border.right = getBorder(-1);
-    }
 
     final Insets inner = getInnerInsets();
     border.top += inner.top;
@@ -1519,11 +1522,6 @@ public class JBTabsImpl extends JComponent
     int y = insets.top + componentY + border.top;
     int width = getWidth() - insets.left - insets.right - componentX - border.left - border.right;
     int height = getHeight() - insets.top - insets.bottom - componentY - border.top - border.bottom;
-
-    if (!noTabsVisible) {
-      width += deltaWidth;
-      height += deltaHeight;
-    }
 
     return layout(comp, x, y, width, height);
   }
