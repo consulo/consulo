@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableModuleRootLayer;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
@@ -22,10 +23,12 @@ import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTre
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.CheckboxTreeNoPolicy;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
@@ -57,7 +60,6 @@ public class ExtensionEditor extends ModuleElementsEditor {
   private final OutputEditor myOutputEditor;
   private final ClasspathEditor myClasspathEditor;
   private final ContentEntriesEditor myContentEntriesEditor;
-  private JPanel myRootPane;
   private CheckboxTreeNoPolicy myTree;
   private Splitter mySplitter;
 
@@ -81,7 +83,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   @NotNull
   @Override
   protected JComponent createComponentImpl() {
-    myRootPane = new JPanel(new BorderLayout());
+    JPanel rootPane = new JPanel(new BorderLayout());
 
     mySplitter = new OnePixelSplitter();
 
@@ -121,27 +123,19 @@ public class ExtensionEditor extends ModuleElementsEditor {
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     myTree.addTreeSelectionListener(new TreeSelectionListener() {
       @Override
+      @RequiredDispatchThread
       public void valueChanged(final TreeSelectionEvent e) {
         final List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
-        mySplitter.setSecondComponent(null);
-
-        if (!selected.isEmpty()) {
-          final MutableModuleExtension extension = selected.get(0);
-          if (!extension.isEnabled()) {
-            return;
-          }
-
-          mySplitter.setSecondComponent(createConfigurationPanel(extension));
-        }
+        updateSecondComponent(ContainerUtil.getFirstItem(selected));
       }
     });
     TreeUtil.expandAll(myTree);
 
     mySplitter.setFirstComponent(myTree);
 
-    myRootPane.add(new JBScrollPane(mySplitter), BorderLayout.CENTER);
+    rootPane.add(new JBScrollPane(mySplitter), BorderLayout.CENTER);
 
-    return myRootPane;
+    return rootPane;
   }
 
   @Nullable
@@ -151,21 +145,32 @@ public class ExtensionEditor extends ModuleElementsEditor {
     return extension.createConfigurablePanel(new Runnable() {
       @Override
       public void run() {
+        //noinspection RequiredXAction
         extensionChanged(extension);
       }
     });
   }
 
   @RequiredDispatchThread
+  private void updateSecondComponent(@Nullable MutableModuleExtension<?> extension) {
+    JComponent secondComponent = mySplitter.getSecondComponent();
+    if(secondComponent instanceof Disposable) {
+      Disposer.dispose((Disposable)secondComponent);
+    }
+
+    if (extension == null || !extension.isEnabled()) {
+      mySplitter.setSecondComponent(null);
+    }
+    else {
+      mySplitter.setSecondComponent(createConfigurationPanel(extension));
+    }
+  }
+
+  @RequiredDispatchThread
   public void extensionChanged(MutableModuleExtension<?> extension) {
     final JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
     if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
-      if (!extension.isEnabled()) {
-        mySplitter.setSecondComponent(null);
-      }
-      else {
-        mySplitter.setSecondComponent(createConfigurationPanel(extension));
-      }
+      updateSecondComponent(!extension.isEnabled() ? null : extension);
     }
 
     if (extension instanceof ModuleExtensionWithSdk) {
