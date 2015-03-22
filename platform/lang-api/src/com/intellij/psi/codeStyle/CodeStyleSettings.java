@@ -67,7 +67,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
   private void initImportsByDefault() {
     PACKAGES_TO_USE_IMPORT_ON_DEMAND.addEntry(new PackageEntry(false, "java.awt", false));
-    PACKAGES_TO_USE_IMPORT_ON_DEMAND.addEntry(new PackageEntry(false,"javax.swing", false));
+    PACKAGES_TO_USE_IMPORT_ON_DEMAND.addEntry(new PackageEntry(false, "javax.swing", false));
     IMPORT_LAYOUT_TABLE.addEntry(PackageEntry.ALL_OTHER_IMPORTS_ENTRY);
     IMPORT_LAYOUT_TABLE.addEntry(PackageEntry.BLANK_LINE_ENTRY);
     IMPORT_LAYOUT_TABLE.addEntry(new PackageEntry(false, "javax", true));
@@ -165,16 +165,9 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
   public boolean AUTODETECT_INDENTS = true;
 
-  @Deprecated
-  public final IndentOptions JAVA_INDENT_OPTIONS = new IndentOptions();
-  @Deprecated
-  public final IndentOptions JSP_INDENT_OPTIONS = new IndentOptions();
-  @Deprecated
-  public final IndentOptions XML_INDENT_OPTIONS = new IndentOptions();
-
   public final IndentOptions OTHER_INDENT_OPTIONS = new IndentOptions();
 
-  private final Map<FileType,IndentOptions> myAdditionalIndentOptions = new LinkedHashMap<FileType, IndentOptions>();
+  private final Map<FileType, IndentOptions> myAdditionalIndentOptions = new LinkedHashMap<FileType, IndentOptions>();
 
   private static final String ourSystemLineSeparator = SystemProperties.getLineSeparator();
 
@@ -290,65 +283,6 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
   public boolean JD_PRESERVE_LINE_FEEDS = false;
   public boolean JD_PARAM_DESCRIPTION_ON_NEW_LINE = false;
-
-  // ---------------------------------------------------------------------------------------
-
-
-  // ---------------------------------- Legacy(!) XML formatting options -------------------
-
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public boolean XML_KEEP_WHITESPACES = false;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public int XML_ATTRIBUTE_WRAP = WRAP_AS_NEEDED;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public int XML_TEXT_WRAP = WRAP_AS_NEEDED;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public boolean XML_KEEP_LINE_BREAKS = true;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public boolean XML_KEEP_LINE_BREAKS_IN_TEXT = true;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public int XML_KEEP_BLANK_LINES = 2;
-
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public boolean XML_ALIGN_ATTRIBUTES = true;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public boolean XML_ALIGN_TEXT = false;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public boolean XML_SPACE_AROUND_EQUALITY_IN_ATTRIBUTE = false;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public boolean XML_SPACE_AFTER_TAG_NAME = false;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public boolean XML_SPACE_INSIDE_EMPTY_TAG = false;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public boolean XML_KEEP_WHITE_SPACES_INSIDE_CDATA = false;
-  /**
-   * @deprecated Use XmlCodeStyleSettings.
-   */
-  public int XML_WHITE_SPACE_AROUND_CDATA = 0;
 
   // ---------------------------------------------------------------------------------------
 
@@ -469,114 +403,29 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
         IMPORT_LAYOUT_TABLE.addEntry(PackageEntry.ALL_OTHER_STATIC_IMPORTS_ENTRY);
       }
     }
-    boolean oldOptionsImported = importOldIndentOptions(element);
     for (final CustomCodeStyleSettings settings : getCustomSettingsValues()) {
       settings.readExternal(element);
       settings.importLegacySettings();
     }
 
-    final List list = element.getChildren(ADDITIONAL_INDENT_OPTIONS);
-    if (list != null) {
-      for(Object o:list) {
-        if (o instanceof Element) {
-          final Element additionalIndentElement = (Element)o;
-          final String fileTypeId = additionalIndentElement.getAttributeValue(FILETYPE);
+    final List<Element> list = element.getChildren(ADDITIONAL_INDENT_OPTIONS);
+    for (Element o : list) {
+      final String fileTypeId = o.getAttributeValue(FILETYPE);
 
-          if (fileTypeId != null && !fileTypeId.isEmpty()) {
-            FileType target = FileTypeManager.getInstance().getFileTypeByExtension(fileTypeId);
-            if (target == UnknownFileType.INSTANCE || target == PlainTextFileType.INSTANCE || target.getDefaultExtension().isEmpty()) {
-              target = new TempFileType(fileTypeId);
-            }
-
-            final IndentOptions options = getDefaultIndentOptions(target);
-            options.readExternal(additionalIndentElement);
-            registerAdditionalIndentOptions(target, options);
-          }
+      if (fileTypeId != null && !fileTypeId.isEmpty()) {
+        FileType target = FileTypeManager.getInstance().getFileTypeByExtension(fileTypeId);
+        if (target == UnknownFileType.INSTANCE || target == PlainTextFileType.INSTANCE || target.getDefaultExtension().isEmpty()) {
+          target = new TempFileType(fileTypeId);
         }
+
+        final IndentOptions options = getDefaultIndentOptions(target);
+        options.readExternal(o);
+        registerAdditionalIndentOptions(target, options);
       }
     }
-
     myCommonSettingsManager.readExternal(element);
 
-    if (oldOptionsImported) {
-      copyOldIndentOptions("java", JAVA_INDENT_OPTIONS);
-      copyOldIndentOptions("jsp", JSP_INDENT_OPTIONS);
-      copyOldIndentOptions("xml", XML_INDENT_OPTIONS);
-    }
-
     if (USE_SAME_INDENTS) IGNORE_SAME_INDENTS_FOR_LANGUAGES = true;
-  }
-
-  private void copyOldIndentOptions(@NonNls final String extension, final IndentOptions options) {
-    final FileType fileType = FileTypeManager.getInstance().getFileTypeByExtension(extension);
-    if (fileType != UnknownFileType.INSTANCE && fileType != PlainTextFileType.INSTANCE && !myAdditionalIndentOptions.containsKey(fileType) &&
-        !fileType.getDefaultExtension().isEmpty()) {
-      registerAdditionalIndentOptions(fileType, options);
-      //
-      // Upgrade to version 11
-      //
-      if (fileType instanceof LanguageFileType) {
-        Language lang = ((LanguageFileType)fileType).getLanguage();
-        CommonCodeStyleSettings langSettings = myCommonSettingsManager.getCommonSettings(lang);
-        if (langSettings != this && langSettings.getIndentOptions() != null) {
-          langSettings.importOldIndentOptions(this);
-        }
-      }
-    }
-  }
-
-  private boolean importOldIndentOptions(@NonNls Element element) {
-    final List options = element.getChildren("option");
-    boolean optionsImported = false;
-    for (Object option1 : options) {
-      @NonNls Element option = (Element)option1;
-      @NonNls final String name = option.getAttributeValue("name");
-      if ("TAB_SIZE".equals(name)) {
-        final int value = Integer.parseInt(option.getAttributeValue("value"));
-        JAVA_INDENT_OPTIONS.TAB_SIZE = value;
-        JSP_INDENT_OPTIONS.TAB_SIZE = value;
-        XML_INDENT_OPTIONS.TAB_SIZE = value;
-        OTHER_INDENT_OPTIONS.TAB_SIZE = value;
-        optionsImported = true;
-      }
-      else if ("INDENT_SIZE".equals(name)) {
-        final int value = Integer.parseInt(option.getAttributeValue("value"));
-        JAVA_INDENT_OPTIONS.INDENT_SIZE = value;
-        JSP_INDENT_OPTIONS.INDENT_SIZE = value;
-        XML_INDENT_OPTIONS.INDENT_SIZE = value;
-        OTHER_INDENT_OPTIONS.INDENT_SIZE = value;
-        optionsImported = true;
-      }
-      else if ("CONTINUATION_INDENT_SIZE".equals(name)) {
-        final int value = Integer.parseInt(option.getAttributeValue("value"));
-        JAVA_INDENT_OPTIONS.CONTINUATION_INDENT_SIZE = value;
-        JSP_INDENT_OPTIONS.CONTINUATION_INDENT_SIZE = value;
-        XML_INDENT_OPTIONS.CONTINUATION_INDENT_SIZE = value;
-        OTHER_INDENT_OPTIONS.CONTINUATION_INDENT_SIZE = value;
-        optionsImported = true;
-      }
-      else if ("USE_TAB_CHARACTER".equals(name)) {
-        final boolean value = Boolean.parseBoolean(option.getAttributeValue("value"));
-        JAVA_INDENT_OPTIONS.USE_TAB_CHARACTER = value;
-        JSP_INDENT_OPTIONS.USE_TAB_CHARACTER = value;
-        XML_INDENT_OPTIONS.USE_TAB_CHARACTER = value;
-        OTHER_INDENT_OPTIONS.USE_TAB_CHARACTER = value;
-        optionsImported = true;
-      }
-      else if ("SMART_TABS".equals(name)) {
-        final boolean value = Boolean.parseBoolean(option.getAttributeValue("value"));
-        JAVA_INDENT_OPTIONS.SMART_TABS = value;
-        JSP_INDENT_OPTIONS.SMART_TABS = value;
-        XML_INDENT_OPTIONS.SMART_TABS = value;
-        OTHER_INDENT_OPTIONS.SMART_TABS = value;
-        optionsImported = true;
-      }
-      else if ("SPACE_AFTER_UNARY_OPERATOR".equals(name)) {
-        SPACE_AROUND_UNARY_OPERATOR = Boolean.parseBoolean(option.getAttributeValue("value"));
-        optionsImported = true;
-      }
-    }
-    return optionsImported;
   }
 
   @Override
@@ -585,7 +434,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     DefaultJDOMExternalizer.writeExternal(this, element, new DifferenceFilter<CodeStyleSettings>(this, parentSettings));
     List<CustomCodeStyleSettings> customSettings = new ArrayList<CustomCodeStyleSettings>(getCustomSettingsValues());
 
-    Collections.sort(customSettings, new Comparator<CustomCodeStyleSettings>(){
+    Collections.sort(customSettings, new Comparator<CustomCodeStyleSettings>() {
       @Override
       public int compare(final CustomCodeStyleSettings o1, final CustomCodeStyleSettings o2) {
         return o1.getTagName().compareTo(o2.getTagName());
@@ -611,8 +460,8 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     for (FileType fileType : fileTypes) {
       final IndentOptions indentOptions = myAdditionalIndentOptions.get(fileType);
       Element additionalIndentOptions = new Element(ADDITIONAL_INDENT_OPTIONS);
-      indentOptions.serialize(additionalIndentOptions, getDefaultIndentOptions(fileType)) ;
-      additionalIndentOptions.setAttribute(FILETYPE,fileType.getDefaultExtension());
+      indentOptions.serialize(additionalIndentOptions, getDefaultIndentOptions(fileType));
+      additionalIndentOptions.setAttribute(FILETYPE, fileType.getDefaultExtension());
       if (!additionalIndentOptions.getChildren().isEmpty()) {
         element.addContent(additionalIndentOptions);
       }
@@ -641,9 +490,9 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   /**
    * If the file type has an associated language and language indent options are defined, returns these options. Otherwise attempts to find
    * indent options from <code>FileTypeIndentOptionsProvider</code>. If none are found, other indent options are returned.
+   *
    * @param fileType The file type to search indent options for.
    * @return File type indent options or <code>OTHER_INDENT_OPTIONS</code>.
-   *
    * @see FileTypeIndentOptionsProvider
    * @see LanguageCodeStyleSettingsProvider
    */
@@ -675,10 +524,11 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   /**
    * Retrieves indent options for PSI file from an associated document or (if not defined in the document) from file indent options
    * providers.
-   * @param file  The PSI file to retrieve options for.
-   * @param formatRange The text range within the file for formatting purposes or null if there is either no specific range or multiple
-   *                    ranges. If the range covers the entire file (full reformat), options stored in the document are ignored and
-   *                    indent options are taken from file indent options providers.
+   *
+   * @param file             The PSI file to retrieve options for.
+   * @param formatRange      The text range within the file for formatting purposes or null if there is either no specific range or multiple
+   *                         ranges. If the range covers the entire file (full reformat), options stored in the document are ignored and
+   *                         indent options are taken from file indent options providers.
    * @param ignoreDocOptions Ignore options stored in the document and use file indent options providers even if there is no text range
    *                         or the text range doesn't cover the entire file.
    * @return Indent options from the associated document or file indent options providers.
@@ -704,19 +554,16 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
       }
       return getIndentOptions(file.getFileType());
     }
-    else
+    else {
       return OTHER_INDENT_OPTIONS;
+    }
   }
 
   private static boolean isFileFullyCoveredByRange(@NotNull PsiFile file, @Nullable TextRange formatRange) {
-    return
-            formatRange != null &&
-            file.getTextRange().equals(formatRange);
+    return formatRange != null && file.getTextRange().equals(formatRange);
   }
 
-  private static void logIndentOptions(@NotNull PsiFile file,
-                                       @NotNull FileIndentOptionsProvider provider,
-                                       @NotNull IndentOptions options) {
+  private static void logIndentOptions(@NotNull PsiFile file, @NotNull FileIndentOptionsProvider provider, @NotNull IndentOptions options) {
     LOG.debug("Indent options returned by " + provider.getClass().getName() +
               " for " + file.getName() +
               ": indent size=" + options.INDENT_SIZE +
@@ -952,7 +799,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   }
 
   /**
-   * @param langName The language name. 
+   * @param langName The language name.
    * @return Language-specific code style settings or shared settings if not found.
    * @see CommonCodeStyleSettingsManager#getCommonSettings
    */
@@ -965,8 +812,8 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
    * in language's CommonCodeStyleSettings instance.
    *
    * @param language The language to get right margin for or null if root (default) right margin is requested.
-   * @return The right margin for the language if it is defined (not null) and its settings contain non-negative margin. Root (default) 
-   *         margin otherwise (CodeStyleSettings.RIGHT_MARGIN).
+   * @return The right margin for the language if it is defined (not null) and its settings contain non-negative margin. Root (default)
+   * margin otherwise (CodeStyleSettings.RIGHT_MARGIN).
    */
   public int getRightMargin(@Nullable Language language) {
     if (language != null) {
@@ -981,7 +828,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   /**
    * Assigns another right margin for the language or (if it is null) to root (default) margin.
    *
-   * @param language The language to assign the right margin to or null if root (default) right margin is to be changed.
+   * @param language    The language to assign the right margin to or null if root (default) right margin is to be changed.
    * @param rightMargin New right margin.
    */
   public void setRightMargin(@Nullable Language language, int rightMargin) {
