@@ -21,12 +21,15 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -40,10 +43,24 @@ public abstract class LanguageCodeStyleSettingsProvider {
     BLANK_LINES_SETTINGS, SPACING_SETTINGS, WRAPPING_AND_BRACES_SETTINGS, INDENT_SETTINGS, LANGUAGE_SPECIFIC
   }
 
+  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+  private Map<SettingsType, String> myCodeSampleCache = new FactoryMap<SettingsType, String>() {
+    @Nullable
+    @Override
+    protected String create(SettingsType key) {
+      return ObjectUtils.notNull(getCodeSample(key), "");
+    }
+  };
+
   @NotNull
   public abstract Language getLanguage();
 
-  public abstract String getCodeSample(@NotNull SettingsType settingsType);
+  @NotNull
+  public String getNotNullCodeSample(@NotNull SettingsType settingsType) {
+    return myCodeSampleCache.get(settingsType);
+  }
+
+  protected abstract String getCodeSample(@NotNull SettingsType settingsType);
 
   public int getRightMargin(@NotNull SettingsType settingsType) {
     return settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS ? 30 : -1;
@@ -119,16 +136,15 @@ public abstract class LanguageCodeStyleSettingsProvider {
   }
 
   @Nullable
-  public static String getCodeSample(Language lang, @NotNull SettingsType settingsType) {
+  public static String getNotNullCodeSample(Language lang, @NotNull SettingsType settingsType) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
-    return provider != null ? provider.getCodeSample(settingsType) : null;
+    return provider != null ? provider.getNotNullCodeSample(settingsType) : "";
   }
 
   public static int getRightMargin(Language lang, @NotNull SettingsType settingsType) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
     return provider != null ? provider.getRightMargin(settingsType) : -1;
   }
-
 
   @Nullable
   public static Language getLanguage(String langName) {

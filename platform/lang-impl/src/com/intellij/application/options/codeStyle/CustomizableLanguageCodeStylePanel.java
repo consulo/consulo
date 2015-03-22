@@ -80,9 +80,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
   @Override
   protected String getPreviewText() {
     if (getDefaultLanguage() == null) return "";
-    String sample = LanguageCodeStyleSettingsProvider.getCodeSample(getDefaultLanguage(), getSettingsType());
-    if (sample == null) return "";
-    return sample;
+    return LanguageCodeStyleSettingsProvider.getNotNullCodeSample(getDefaultLanguage(), getSettingsType());
   }
 
   @Override
