@@ -23,6 +23,7 @@ import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
@@ -34,6 +35,8 @@ import java.awt.*;
  */
 public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements ModuleExtension<T> {
   @NotNull
+  @Deprecated
+  @DeprecationInfo(value = "Create custom panel with layout #com.intellij.openapi.ui.VerticalFlowLayout(true, true)", until = "1.0")
   protected static JComponent wrapToNorth(@NotNull JComponent component) {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(component, BorderLayout.NORTH);
