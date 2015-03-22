@@ -256,6 +256,12 @@ public class FileUtil extends FileUtilRt {
   }
 
   @NotNull
+  public static String loadTextAndClose(@NotNull InputStream inputStream, boolean convertLineSeparators) throws IOException {
+    String text = loadTextAndClose(inputStream);
+    return convertLineSeparators ? StringUtil.convertLineSeparators(text) : text;
+  }
+
+  @NotNull
   public static String loadTextAndClose(@NotNull Reader reader) throws IOException {
     try {
       return StringFactory.createShared(adaptiveLoadText(reader));

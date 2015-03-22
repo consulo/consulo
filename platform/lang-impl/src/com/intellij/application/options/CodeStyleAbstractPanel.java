@@ -37,6 +37,7 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.OnePixelDivider;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
@@ -57,8 +58,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -440,25 +439,11 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     wrapCombo.addItem(ApplicationBundle.message("wrapping.wrap.always"));
   }
 
+  @NotNull
   public static String readFromFile(final Class resourceContainerClass, @NonNls final String fileName) {
     try {
       final InputStream stream = resourceContainerClass.getClassLoader().getResourceAsStream("codeStyle/preview/" + fileName);
-      final InputStreamReader reader = new InputStreamReader(stream);
-      final StringBuffer result;
-      final LineNumberReader lineNumberReader = new LineNumberReader(reader);
-      try {
-        result = new StringBuffer();
-        String line;
-        while ((line = lineNumberReader.readLine()) != null) {
-          result.append(line);
-          result.append("\n");
-        }
-      }
-      finally {
-        lineNumberReader.close();
-      }
-
-      return result.toString();
+      return FileUtil.loadTextAndClose(stream, true);
     }
     catch (IOException e) {
       return "";
