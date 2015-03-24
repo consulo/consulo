@@ -36,10 +36,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.ui.LightColors;
-import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.SearchTextField;
+import com.intellij.ui.*;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.navigation.History;
@@ -663,7 +660,7 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
     private JComponent myToolbar;
     private DetailsComponent myDetails;
 
-    private final Splitter mySplitter = new Splitter(false);
+    private final Splitter mySplitter = new OnePixelSplitter(false);
     private JPanel myLeft = new JPanel(new BorderLayout());
     public float myLastSplitterProportion;
 
