@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 
 public class DetailsComponent {
@@ -60,54 +59,7 @@ public class DetailsComponent {
   public DetailsComponent(boolean detailsEnabled, boolean paintBorder) {
     myDetailsEnabled = detailsEnabled;
     myPaintBorder = paintBorder;
-    myComponent = new JPanel(new BorderLayout()) {
-      @Override
-      protected void paintComponent(final Graphics g) {
-        if (NullableComponent.Check.isNull(myContent) || !myDetailsEnabled) return;
-
-        GraphicsConfig c = new GraphicsConfig(g);
-        c.setAntialiasing(true);
-
-        Insets insets = getInsets();
-        if (insets == null) {
-          insets = new Insets(0, 0, 0, 0);
-        }
-
-        g.setColor(UIUtil.getFocusedFillColor());
-
-        final Rectangle banner = myBanner.getBounds();
-        final GeneralPath header = new GeneralPath();
-
-        final int leftX = insets.left;
-        final int leftY = insets.top;
-        final int rightX = insets.left + getWidth() - 1 - insets.right;
-        final int rightY = banner.y + banner.height;
-
-        header.moveTo(leftX, rightY);
-        int arc = 8;
-        header.lineTo(leftX, leftY + arc);
-        header.quadTo(leftX, leftY, leftX + arc, leftY);
-        header.lineTo(rightX - arc, leftY);
-        header.quadTo(rightX, leftY, rightX, leftY + arc);
-        header.lineTo(rightX, rightY);
-        header.closePath();
-
-        c.getG().fill(header);
-
-        g.setColor(UIUtil.getFocusedBoundsColor());
-
-        c.getG().draw(header);
-
-        if (myPaintBorder) {
-          final int down = getHeight() - insets.top - insets.bottom - 1;
-          g.drawLine(leftX, rightY, leftX, down);
-          g.drawLine(rightX, rightY, rightX, down);
-          g.drawLine(leftX, down, rightX, down);
-        }
-
-        c.restore();
-      }
-    };
+    myComponent = new JPanel(new BorderLayout());
 
     myComponent.setOpaque(false);
     myContentGutter.setOpaque(false);
