@@ -85,7 +85,7 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
   private final Splitter myMainSplitter;
   //[back/forward] JComponent myToolbarComponent;
 
-  private final DetailsComponent myOwnDetails = new DetailsComponent(true, false).setEmptyContentText(
+  private final DetailsComponent myOwnDetails = new DetailsComponent(false, false).setEmptyContentText(
           "Select configuration element in the tree to edit its settings");
   private final ContentWrapper myContentWrapper = new ContentWrapper();
 
