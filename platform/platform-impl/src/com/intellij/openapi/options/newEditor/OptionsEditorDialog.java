@@ -105,6 +105,7 @@ public class OptionsEditorDialog extends DialogWrapper implements DataProvider{
     return true;
   }
 
+  @Override
   protected JComponent createCenterPanel() {
     myEditor = new OptionsEditor(myProject, myGroups, myPreselected);
     myEditor.getContext().addColleague(new OptionsEditorColleague.Adapter() {
@@ -277,6 +278,7 @@ public class OptionsEditorDialog extends DialogWrapper implements DataProvider{
     return myEditor.getPreferredFocusedComponent();
   }
 
+  @Override
   public Object getData(@NonNls String dataId) {
     if (OptionsEditor.KEY.is(dataId)) {
       return myEditor;
@@ -290,6 +292,7 @@ public class OptionsEditorDialog extends DialogWrapper implements DataProvider{
       setEnabled(false);
     }
 
+    @Override
     public void actionPerformed(final ActionEvent e) {
       myEditor.apply();
       myEditor.revalidate();

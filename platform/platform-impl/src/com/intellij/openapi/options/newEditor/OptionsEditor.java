@@ -209,7 +209,7 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
 
     setLayout(new BorderLayout());
 
-    myMainSplitter = new Splitter(false);
+    myMainSplitter = new OnePixelSplitter(false);
     myMainSplitter.setFirstComponent(myLeftSide);
 
     myLoadingDecorator = new LoadingDecorator(myOwnDetails.getComponent(), this, 150);
