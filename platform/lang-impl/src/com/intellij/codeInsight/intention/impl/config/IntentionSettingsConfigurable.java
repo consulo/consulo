@@ -18,16 +18,13 @@ package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.MasterDetails;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.ui.DetailsComponent;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 
-public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, MasterDetails {
+public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent {
   @NonNls
   public static final String HELP_ID = "preferences.intentionPowerPack";
   private IntentionSettingsPanel myPanel;
@@ -37,32 +34,7 @@ public class IntentionSettingsConfigurable implements SearchableConfigurable, Co
     if (myPanel == null) {
       myPanel = new IntentionSettingsPanel();
     }
-    JPanel component = myPanel.getComponent();
-    component.setPreferredSize(new Dimension(800, 600));
-    return component;
-  }
-
-  @Override
-  public void initUi() {
-    if (myPanel == null) {
-      myPanel = new IntentionSettingsPanel();
-    }
-    myPanel.initUi();
-  }
-
-  @Override
-  public JComponent getToolbar() {
-    return myPanel.getToolbar();
-  }
-
-  @Override
-  public JComponent getMaster() {
-    return myPanel.getMaster();
-  }
-
-  @Override
-  public DetailsComponent getDetails() {
-    return myPanel.getDetails();
+    return myPanel.getComponent();
   }
 
   @Override

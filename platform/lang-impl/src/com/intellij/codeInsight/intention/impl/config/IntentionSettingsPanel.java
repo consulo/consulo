@@ -18,31 +18,24 @@ package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
-import com.intellij.openapi.options.MasterDetails;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.ui.DetailsComponent;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.GuiUtils;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.util.Alarm;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class IntentionSettingsPanel implements MasterDetails {
-  private JPanel myPanel;
+public class IntentionSettingsPanel {
+  private final OnePixelSplitter myComponent;
   private final IntentionSettingsTree myIntentionSettingsTree;
   private final IntentionDescriptionPanel myIntentionDescriptionPanel = new IntentionDescriptionPanel();
 
-  private JPanel myTreePanel;
-  private JPanel myDescriptionPanel;
-  private DetailsComponent myDetailsComponent;
-  
   private Alarm myResetAlarm = new Alarm();
 
   public IntentionSettingsPanel() {
@@ -55,12 +48,6 @@ public class IntentionSettingsPanel implements MasterDetails {
             @Override
             public void run() {
               intentionSelected(actionMetaData);
-              if (myDetailsComponent != null) {
-                String[] text = new String[actionMetaData.myCategory.length + 1];
-                System.arraycopy(actionMetaData.myCategory, 0, text,0,actionMetaData.myCategory.length);
-                text[text.length - 1] = actionMetaData.getFamily();
-                myDetailsComponent.setText(text);
-              }
             }
           };
           myResetAlarm.cancelAllRequests();
@@ -68,9 +55,6 @@ public class IntentionSettingsPanel implements MasterDetails {
         }
         else {
           categorySelected((String)selected);
-          if (myDetailsComponent != null) {
-            myDetailsComponent.setText((String)selected);
-          }
         }
       }
 
@@ -95,13 +79,10 @@ public class IntentionSettingsPanel implements MasterDetails {
         return result;
       }
     };
-    myTreePanel.setLayout(new BorderLayout());
-    myTreePanel.add(myIntentionSettingsTree.getComponent(), BorderLayout.CENTER);
+    myComponent = new OnePixelSplitter(false, 0.4f);
 
-    GuiUtils.replaceJSplitPaneWithIDEASplitter(myPanel);
-
-    myDescriptionPanel.setLayout(new BorderLayout());
-    myDescriptionPanel.add(myIntentionDescriptionPanel.getComponent(), BorderLayout.CENTER);
+    myComponent.setFirstComponent(myIntentionSettingsTree.getComponent());
+    myComponent.setSecondComponent(myIntentionDescriptionPanel.getComponent());
   }
 
   private void intentionSelected(IntentionActionMetaData actionMetaData) {
@@ -117,38 +98,17 @@ public class IntentionSettingsPanel implements MasterDetails {
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
-        myIntentionDescriptionPanel.init(myPanel.getWidth() / 2);
+        myIntentionDescriptionPanel.init(myComponent.getWidth() / 2);
       }
     });
-  }
-
-  @Override
-  public void initUi() {
-    myDetailsComponent = new DetailsComponent();
-    myDetailsComponent.setContent(myDescriptionPanel);
-  }
-
-  @Override
-  public JComponent getToolbar() {
-    return myIntentionSettingsTree.getToolbarPanel();
-  }
-
-  @Override
-  public JComponent getMaster() {
-    return myTreePanel;
-  }
-
-  @Override
-  public DetailsComponent getDetails() {
-    return myDetailsComponent;
   }
 
   public void apply() {
     myIntentionSettingsTree.apply();
   }
 
-  public JPanel getComponent() {
-    return myPanel;
+  public JComponent getComponent() {
+    return myComponent;
   }
 
   public JTree getIntentionTree(){
