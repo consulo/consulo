@@ -33,6 +33,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
@@ -318,7 +319,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     });
 
     myMainPanel = new JPanel(new BorderLayout());
-    Splitter splitter = new Splitter();
+    Splitter splitter = new OnePixelSplitter();
     JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.add(myToolBar, BorderLayout.NORTH);
     leftPanel.add(myTabbedPane.getComponent(), BorderLayout.CENTER);

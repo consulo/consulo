@@ -54,9 +54,11 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -161,9 +163,10 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
   @Override
   public JComponent createComponent() {
     myMainPanel = new JPanel(new GridBagLayout());
+    myMainPanel.setBorder(JBUI.Borders.emptyLeft(5));
     myNameField = new JTextField();
     myExtensionField = new JTextField();
-    mySplitter = new Splitter(true, 0.66f);
+    mySplitter = new OnePixelSplitter(true, 0.66f);
 
     myTemplateEditor = createEditor();
 
