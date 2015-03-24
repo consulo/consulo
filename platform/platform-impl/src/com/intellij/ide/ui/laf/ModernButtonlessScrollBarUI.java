@@ -255,12 +255,12 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     int w = adjustThumbWidth(thumbBounds.width - hGap * 2);
     int h = thumbBounds.height - vGap * 2;
 
-    // leave one pixel between thumb and right or bottom edge
     if (vertical) {
       h -= 1;
     }
     else {
       w -= 1;
+      h -= 1;
     }
 
     final Paint paint;
