@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.options;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.components.JBTabbedPane;
+import com.intellij.ui.TabbedPaneWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,35 +34,38 @@ public class GroupSettingsBuilder<T> implements CompositeSettingsBuilder<T> {
     myGroup = group;
   }
 
+  @NotNull
+  @Override
   public Collection<SettingsEditor<T>> getEditors() {
     List<SettingsEditor<T>> result = new ArrayList<SettingsEditor<T>>();
     List<Pair<String,SettingsEditor<T>>> editors = myGroup.getEditors();
-    for (int i = 0; i < editors.size(); i++) {
-      result.add(editors.get(i).getSecond());
+    for (Pair<String, SettingsEditor<T>> editor : editors) {
+      result.add(editor.getSecond());
     }
     return result;
   }
 
-  public JComponent createCompoundEditor() {
+  @NotNull
+  @Override
+  public JComponent createCompoundEditor(@NotNull Disposable disposable) {
     if (myComponent == null) {
-      myComponent = doCreateComponent();
+      myComponent = doCreateComponent(disposable);
     }
     return myComponent;
   }
 
-  private JComponent doCreateComponent() {
+  @NotNull
+  private JComponent doCreateComponent(@NotNull Disposable disposable) {
     List<Pair<String,SettingsEditor<T>>> editors = myGroup.getEditors();
     if (editors.size() == 0) return new JPanel();
     if (editors.size() == 1) return editors.get(0).getSecond().getComponent();
 
-    JTabbedPane tabs = new JBTabbedPane();
-    for (int i = 0; i < editors.size(); i++) {
-      Pair<String, SettingsEditor<T>> pair = editors.get(i);
+    TabbedPaneWrapper tabbedPaneWrapper = new TabbedPaneWrapper(disposable);
+    for (Pair<String, SettingsEditor<T>> pair : editors) {
       JPanel panel = new JPanel(new BorderLayout());
       panel.add(pair.getSecond().getComponent(), BorderLayout.CENTER);
-      tabs.add(pair.getFirst(), panel);
+      tabbedPaneWrapper.addTab(pair.getFirst(), panel);
     }
-
-    return tabs;
+    return tabbedPaneWrapper.getComponent();
   }
 }

@@ -42,26 +42,31 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
 
   public abstract CompositeSettingsBuilder<Settings> getBuilder();
 
+  @Override
   public void resetEditorFrom(Settings settings) {
     for (final SettingsEditor<Settings> myEditor : myEditors) {
       myEditor.resetEditorFrom(settings);
     }
   }
 
+  @Override
   public void applyEditorTo(Settings settings) throws ConfigurationException {
     for (final SettingsEditor<Settings> myEditor : myEditors) {
       myEditor.applyTo(settings);
     }
   }
 
+  @Override
   public void uninstallWatcher() {
     for (SettingsEditor<Settings> editor : myEditors) {
       editor.removeSettingsEditorListener(myChildSettingsListener);
     }
   }
 
+  @Override
   public void installWatcher(JComponent c) {
     myChildSettingsListener = new SettingsEditorListener<Settings>() {
+      @Override
       public void stateChanged(SettingsEditor<Settings> editor) {
         fireEditorStateChanged();
         if (mySyncConroller != null) mySyncConroller.handleStateChange(editor);
@@ -73,6 +78,7 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
     }
   }
 
+  @Override
   @NotNull
   protected final JComponent createEditor() {
     CompositeSettingsBuilder<Settings> builder = getBuilder();
@@ -81,9 +87,10 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
       Disposer.register(this, editor);
       editor.setOwner(this);
     }
-    return builder.createCompoundEditor();
+    return builder.createCompoundEditor(this);
   }
 
+  @Override
   public void disposeEditor() {
     Disposer.dispose(this);
     myIsDisposed = true;
@@ -99,6 +106,7 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
       myChangedEditors.add(editor);
       mySyncAlarm.cancelAllRequests();
       mySyncAlarm.addRequest(new Runnable() {
+        @Override
         public void run() {
           if (!myIsDisposed) {
             sync();

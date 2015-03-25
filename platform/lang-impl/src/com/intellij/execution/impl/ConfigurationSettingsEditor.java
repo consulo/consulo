@@ -21,6 +21,7 @@ import com.intellij.execution.configurations.ConfigurationPerRunnerSettings;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.runners.ProgramRunner;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
@@ -95,13 +96,15 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
                                @Override
                                public CompositeSettingsBuilder<RunnerAndConfigurationSettings> getBuilder() {
                                  return new CompositeSettingsBuilder<RunnerAndConfigurationSettings>() {
+                                   @NotNull
                                    @Override
                                    public Collection<SettingsEditor<RunnerAndConfigurationSettings>> getEditors() {
                                      return myRunnerEditors;
                                    }
 
+                                   @NotNull
                                    @Override
-                                   public JComponent createCompoundEditor() {
+                                   public JComponent createCompoundEditor(@NotNull Disposable disposable) {
                                      return myRunnersComponent.getComponent();
                                    }
                                  };

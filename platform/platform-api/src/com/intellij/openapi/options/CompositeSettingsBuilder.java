@@ -15,10 +15,16 @@
  */
 package com.intellij.openapi.options;
 
+import com.intellij.openapi.Disposable;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.util.Collection;
 
 public interface CompositeSettingsBuilder<Settings> {
+  @NotNull
   Collection<SettingsEditor<Settings>> getEditors();
-  JComponent createCompoundEditor();
+
+  @NotNull
+  JComponent createCompoundEditor(@NotNull Disposable disposable);
 }
