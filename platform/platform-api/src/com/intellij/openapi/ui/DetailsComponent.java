@@ -50,15 +50,12 @@ public class DetailsComponent {
 
   private final Wrapper myContentGutter = new Wrapper();
 
-  private boolean myPaintBorder;
-
   public DetailsComponent() {
     this(true, true);
   }
 
   public DetailsComponent(boolean detailsEnabled, boolean paintBorder) {
     myDetailsEnabled = detailsEnabled;
-    myPaintBorder = paintBorder;
     myComponent = new JPanel(new BorderLayout());
 
     myComponent.setOpaque(false);
@@ -171,7 +168,6 @@ public class DetailsComponent {
   }
 
   public void setPaintBorder(final boolean paintBorder) {
-    myPaintBorder = paintBorder;
   }
 
   public DetailsComponent setEmptyContentText(@Nullable final String emptyContentText) {
