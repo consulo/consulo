@@ -21,7 +21,6 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -122,7 +121,7 @@ public class DetailsComponent {
 
   private void invalidateContentBorder() {
     if (myDetailsEnabled) {
-      myContent.setBorder(new EmptyBorder(UIUtil.PANEL_REGULAR_INSETS));
+      myContent.setBorder(new EmptyBorder(0, 8, 0, 8));
     }
     else {
       myContent.setBorder(null);
