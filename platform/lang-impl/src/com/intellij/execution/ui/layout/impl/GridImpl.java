@@ -27,6 +27,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.switcher.SwitchTarget;
+import com.intellij.ui.tabs.JBTabsPresentation;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -219,6 +220,20 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
     private JComponent myContent;
 
+    @Override
+    public void doLayout() {
+      super.doLayout();
+      Component child = getComponentCount() == 1 ? getComponent(0) : null;
+      if (child instanceof JBTabsPresentation) {
+        if (!((JBTabsPresentation)child).isHideTabs()) {
+          Rectangle bounds = child.getBounds();
+          bounds.y--;
+          bounds.height++;
+          child.setBounds(bounds);
+        }
+      }
+    }
+
     public CellTransform.Restore detach() {
       if (getComponentCount() == 1) {
         myContent = (JComponent)getComponent(0);
@@ -324,8 +339,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
   float getBottomPropertion() {
     final float totalSize = mySplitter.getOrientation() ? mySplitter.getHeight() : mySplitter.getWidth();
-    final float componentSize =
-      mySplitter.getOrientation() ? mySplitter.getFirstComponent().getHeight() : mySplitter.getFirstComponent().getWidth();
+    final float componentSize = mySplitter.getOrientation() ? mySplitter.getFirstComponent().getHeight() : mySplitter.getFirstComponent().getWidth();
 
     return componentSize / (totalSize - mySplitter.getDividerWidth());
   }
