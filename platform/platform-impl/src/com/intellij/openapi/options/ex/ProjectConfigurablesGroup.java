@@ -31,11 +31,13 @@ public class ProjectConfigurablesGroup extends ConfigurablesGroupBase implements
     myProject = project;
   }
 
+  @Override
   public String getDisplayName() {
     if (isDefault()) return OptionsBundle.message("template.project.settings.display.name");
     return OptionsBundle.message("project.settings.display.name", myProject.getName());
   }
 
+  @Override
   public String getShortName() {
     return isDefault() ? OptionsBundle.message("template.project.settings.short.name") : OptionsBundle
       .message("project.settings.short.name");
@@ -48,6 +50,7 @@ public class ProjectConfigurablesGroup extends ConfigurablesGroupBase implements
   @Override
   public ConfigurableFilter getConfigurableFilter() {
     return new ConfigurableFilter() {
+      @Override
       public boolean isIncluded(final Configurable configurable) {
         return !isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable);
       }

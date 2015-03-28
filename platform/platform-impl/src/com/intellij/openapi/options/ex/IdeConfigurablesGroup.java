@@ -32,10 +32,12 @@ public class IdeConfigurablesGroup extends ConfigurablesGroupBase implements Con
     super(ApplicationManager.getApplication(), Configurable.APPLICATION_CONFIGURABLE);
   }
 
+  @Override
   public String getDisplayName() {
     return OptionsBundle.message("ide.settings.display.name");
   }
 
+  @Override
   public String getShortName() {
     return OptionsBundle.message("ide.settings.short.name");
   }

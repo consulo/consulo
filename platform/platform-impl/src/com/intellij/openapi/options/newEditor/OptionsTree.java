@@ -74,6 +74,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
 
     myRoot = new Root();
     final SimpleTreeStructure structure = new SimpleTreeStructure() {
+      @Override
       public Object getRootElement() {
         return myRoot;
       }
@@ -119,6 +120,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
 
     mySelection = new MergingUpdateQueue("OptionsTree", 150, false, this, this, this).setRestartTimerOnAdd(true);
     myTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+      @Override
       public void valueChanged(final TreeSelectionEvent e) {
         final TreePath path = e.getNewLeadSelectionPath();
         if (path == null) {
@@ -131,14 +133,17 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       }
     });
     myTree.addKeyListener(new KeyListener() {
+      @Override
       public void keyTyped(final KeyEvent e) {
         _onTreeKeyEvent(e);
       }
 
+      @Override
       public void keyPressed(final KeyEvent e) {
         _onTreeKeyEvent(e);
       }
 
+      @Override
       public void keyReleased(final KeyEvent e) {
         _onTreeKeyEvent(e);
       }
@@ -184,6 +189,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
 
     myQueuedConfigurable = configurable;
     final Update update = new Update(this) {
+      @Override
       public void run() {
         if (configurable != myQueuedConfigurable) return;
 
@@ -203,12 +209,14 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
 
               if (!myBuilder.getSelectedElements().contains(editorUiNode)) {
                 myBuilder.select(editorUiNode, new Runnable() {
+                  @Override
                   public void run() {
                     fireSelected(configurable, callback);
                   }
                 });
               } else {
                 myBuilder.scrollSelectionToVisible(new Runnable() {
+                  @Override
                   public void run() {
                     fireSelected(configurable, callback);
                   }
@@ -307,6 +315,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       myRendererComponent.add(content, BorderLayout.CENTER);
     }
 
+    @Override
     public Component getTreeCellRendererComponent(final JTree tree,
                                                   final Object value,
                                                   final boolean selected,
@@ -397,6 +406,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       return result;
     }
 
+    @Override
     protected JComponent createItemComponent() {
       myTextLabel = new ErrorLabel();
       return myTextLabel;
@@ -451,6 +461,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       super(null);
     }
 
+    @Override
     protected SimpleNode[] buildChildren() {
       List<SimpleNode> result = new ArrayList<SimpleNode>();
       for (ConfigurableGroup eachGroup : myGroups) {
@@ -485,6 +496,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   private static List<EditorNode> sort(List<EditorNode> c) {
     List<EditorNode> cc = new ArrayList<EditorNode>(c);
     Collections.sort(cc, new Comparator<EditorNode>() {
+      @Override
       public int compare(final EditorNode o1, final EditorNode o2) {
         return getConfigurableDisplayName(o1.getConfigurable()).compareToIgnoreCase(getConfigurableDisplayName(o2.getConfigurable()));
       }
@@ -528,6 +540,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       addPlainText(getConfigurableDisplayName(configurable));
     }
 
+    @Override
     protected EditorNode[] buildChildren() {
       List<EditorNode> list = OptionsTree.this.buildChildren(myConfigurable, this, null);
       return list.isEmpty() ? EMPTY_EN_ARRAY : list.toArray(new EditorNode[list.size()]);
@@ -579,24 +592,29 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     }
   }
 
+  @Override
   public void dispose() {
     myQueuedConfigurable = null;
   }
 
+  @Override
   public ActionCallback onSelected(final Configurable configurable, final Configurable oldConfigurable) {
     return queueSelection(configurable);
   }
 
+  @Override
   public ActionCallback onModifiedAdded(final Configurable colleague) {
     myTree.repaint();
     return new ActionCallback.Done();
   }
 
+  @Override
   public ActionCallback onModifiedRemoved(final Configurable configurable) {
     myTree.repaint();
     return new ActionCallback.Done();
   }
 
+  @Override
   public ActionCallback onErrorsChanged() {
     return new ActionCallback.Done();
   }
@@ -756,10 +774,12 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     public MyBuilder(SimpleTreeStructure structure) {
       super(OptionsTree.this.myTree, myContext.getFilter(), structure, new WeightBasedComparator(false));
       myTree.addTreeExpansionListener(new TreeExpansionListener() {
+        @Override
         public void treeExpanded(TreeExpansionEvent event) {
           invalidateExpansions();
         }
 
+        @Override
         public void treeCollapsed(TreeExpansionEvent event) {
           invalidateExpansions();
         }
@@ -802,6 +822,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       ActionCallback result = super.refilterNow(preferredSelection, adjustSelection);
       myRefilteringNow = true;
       return result.doWhenDone(new Runnable() {
+        @Override
         public void run() {
           myRefilteringNow = false;
           if (!myContext.isHoldingFilter() && getSelectedElements().isEmpty()) {
