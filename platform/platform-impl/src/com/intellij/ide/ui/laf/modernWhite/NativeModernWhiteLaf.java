@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.ui.laf.modernWhite;
 
+import com.intellij.ide.ui.laf.LafManagerImpl;
 import org.mustbe.consulo.jna.DwmApi;
 
 import javax.swing.*;
@@ -45,6 +46,7 @@ public class NativeModernWhiteLaf extends ModernWhiteLaf {
       defaults.put("ProgressBar.stepColor2", new Color(value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha() + 10));
     }
 
+    LafManagerImpl.initFontDefaults(defaults, "Segoe UI", 12);
     return defaults;
   }
 

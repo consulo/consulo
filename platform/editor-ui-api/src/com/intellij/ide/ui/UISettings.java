@@ -163,7 +163,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     }
   }
 
-  private static Pair<String, Integer> getSystemFontFaceAndSize() {
+  public static Pair<String, Integer> getSystemFontFaceAndSize() {
     final Pair<String,Integer> fontData = UIUtil.getSystemFontData();
     if (fontData != null) {
       return fontData;

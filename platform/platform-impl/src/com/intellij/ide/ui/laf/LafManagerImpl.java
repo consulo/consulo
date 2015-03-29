@@ -146,7 +146,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
 
     if(!SystemInfo.isMac) {
-      if(SystemInfo.isWinVistaOrNewer) {
+      if(SystemInfo.isWin8OrNewer) {
         lafList.add(new NativeModernWhiteLookAndFeelInfo());
       }
       lafList.add(new ModernWhiteLookAndFeelInfo());
