@@ -249,6 +249,9 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
       }
 
       ModuleExtension extension = ModuleUtilCore.getExtension(module, moduleExtension.getId());
+      if(extension == null) {
+        continue;
+      }
       MutableModuleInheritableNamedPointer<Sdk> sdkPointer = sdkPointerFunction.fun((T)extension);
       if (sdkPointer != null) {
         // recursive depend
