@@ -739,6 +739,8 @@
                     area="CONSULO_PROJECT"/>
     <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="CONSULO_PROJECT"/>
 
+    <extensionPoint name="ui.suitableFontProvider" interface="com.intellij.ui.SuitableFontProvider"/>
+
     <extensionPoint name="schemeImporter" beanClass="com.intellij.openapi.options.SchemeImporterEP">
       <with attribute="schemeClass" implements="org.consulo.util.pointers.Named"/>
       <with attribute="implementationClass" implements="com.intellij.openapi.options.SchemeImporter"/>
@@ -2542,5 +2544,7 @@
     <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectableIndentOptionsProvider" order="last"/>
 
     <predefinedBundlesProvider implementation="org.mustbe.consulo.bundle.DefaultPredefinedBundlesProvider" order="first" />
+
+    <ui.suitableFontProvider implementation="com.intellij.ui.SuitableFontProviderImpl"/>
   </extensions>
 </idea-plugin>

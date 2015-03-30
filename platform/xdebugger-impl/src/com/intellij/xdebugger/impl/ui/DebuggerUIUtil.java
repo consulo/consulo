@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.EditorTextField;
+import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -38,6 +39,7 @@ import com.intellij.xdebugger.frame.XFullValueEvaluator;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;
 import com.intellij.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPanel;
+import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -112,24 +114,39 @@ public class DebuggerUIUtil {
 
     textArea.setPreferredSize(size);
 
-    JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(textArea, null)
-            .setResizable(true)
-            .setMovable(true)
-            .setDimensionServiceKey(project, FULL_VALUE_POPUP_DIMENSION_KEY, false)
-            .setRequestFocus(false)
-            .setCancelCallback(new Computable<Boolean>() {
-              @Override
-              public Boolean compute() {
-                callback.setObsolete();
-                return true;
-              }
-            }).createPopup();
+    JBPopup popup = createValuePopup(project, textArea, callback);
     if (editor == null) {
-      popup.show(new RelativePoint(event.getComponent(), new Point(event.getX() - size.width, event.getY() - size.height)));
+      Rectangle bounds = new Rectangle(event.getLocationOnScreen(), size);
+      ScreenUtil.fitToScreenVertical(bounds, 5, 5, true);
+      if (size.width != bounds.width || size.height != bounds.height) {
+        size = bounds.getSize();
+        textArea.setPreferredSize(size);
+      }
+      popup.showInScreenCoordinates(event.getComponent(), bounds.getLocation());
     }
     else {
       popup.showInBestPositionFor(editor);
     }
+  }
+
+  public static JBPopup createValuePopup(Project project,
+                                         JComponent component,
+                                         @Nullable final FullValueEvaluationCallbackImpl callback) {
+    ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(component, null);
+    builder.setResizable(true)
+            .setMovable(true)
+            .setDimensionServiceKey(project, FULL_VALUE_POPUP_DIMENSION_KEY, false)
+            .setRequestFocus(false);
+    if (callback != null) {
+      builder.setCancelCallback(new Computable<Boolean>() {
+        @Override
+        public Boolean compute() {
+          callback.setObsolete();
+          return true;
+        }
+      });
+    }
+    return builder.createPopup();
   }
 
   public static void showXBreakpointEditorBalloon(final Project project,
@@ -305,6 +322,16 @@ public class DebuggerUIUtil {
     @Override
     public boolean isObsolete() {
       return myObsolete.get();
+    }
+  }
+
+  @Nullable
+  public static String getNodeRawValue(@NotNull XValueNodeImpl valueNode) {
+    if (valueNode.getValueContainer() instanceof XValueTextProvider) {
+      return ((XValueTextProvider)valueNode.getValueContainer()).getValueText();
+    }
+    else {
+      return valueNode.getRawValue();
     }
   }
 }

@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.impl.ui.tree.nodes;
+package com.intellij.ui;
 
-import com.intellij.xdebugger.XNamedTreeNode;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
+import org.intellij.lang.annotations.JdkConstants;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.tree.TreePath;
+import java.awt.*;
 
 /**
- * @author nik
+ * @author egor
  */
-public interface RestorableStateNode extends XNamedTreeNode {
-  @Nullable
-  String getRawValue();
-
-  boolean isComputed();
-
-  TreePath getPath();
-
-  void markChanged();
+public class SuitableFontProviderImpl implements SuitableFontProvider {
+  @Override
+  public Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @NotNull String defaultFontFamily) {
+    return ComplementaryFontsRegistry.getFontAbleToDisplay(c, size, style, defaultFontFamily).getFont();
+  }
 }

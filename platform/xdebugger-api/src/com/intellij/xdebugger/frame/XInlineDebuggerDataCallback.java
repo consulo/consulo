@@ -15,8 +15,10 @@
  */
 package com.intellij.xdebugger.frame;
 
-/**
- * @author Konstantin Bulenkov
- */
-public interface XNearestSourcePosition extends XInlineSourcePosition {
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
+
+public abstract class XInlineDebuggerDataCallback {
+  public abstract void computed(@NotNull VirtualFile file, @NotNull Document document, int line);
 }

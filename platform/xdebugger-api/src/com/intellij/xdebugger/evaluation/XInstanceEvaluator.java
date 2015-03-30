@@ -13,10 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.frame;
+package com.intellij.xdebugger.evaluation;
+
+import com.intellij.xdebugger.frame.XStackFrame;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * @author Konstantin Bulenkov
+ * Subclass to allow to recalculate instance value in a different context
+ *
+ * @author egor
  */
-public interface XNearestSourcePosition extends XInlineSourcePosition {
+public interface XInstanceEvaluator {
+  /**
+   * Recalculates instance value in the context of the provided stack frame
+   * @see XDebuggerEvaluator
+   */
+  void evaluate(@NotNull XDebuggerEvaluator.XEvaluationCallback callback, @NotNull XStackFrame frame);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,57 +36,43 @@ import java.util.List;
 
 public class OpenFileDescriptor implements Navigatable {
   /**
-   * Tells descriptor to navigate in specific editor rather than file editor
-   * in main IDEA window.
-   * For example if you want to navigate in editor embedded into modal dialog,
-   * you should provide this data.
+   * Tells descriptor to navigate in specific editor rather than file editor in main IDEA window.
+   * For example if you want to navigate in editor embedded into modal dialog, you should provide this data.
    */
   public static final DataKey<Editor> NAVIGATE_IN_EDITOR = DataKey.create("NAVIGATE_IN_EDITOR");
 
-  @NotNull
+  private final Project myProject;
   private final VirtualFile myFile;
-  private final int myOffset;
   private final int myLogicalLine;
   private final int myLogicalColumn;
+  private final int myOffset;
   private final RangeMarker myRangeMarker;
-  @NotNull
-  private final Project myProject;
 
   private boolean myUseCurrentWindow = false;
 
   public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file, int offset) {
-    this(project, file, -1, -1, offset, null, false);
+    this(project, file, -1, -1, offset, false);
   }
 
   public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file, int logicalLine, int logicalColumn) {
-    this(project, file, logicalLine, logicalColumn, -1, null, false);
+    this(project, file, logicalLine, logicalColumn, -1, false);
   }
 
-  public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file,
-                            int logicalLine, int logicalColumn, boolean persistent) {
-    this(project, file, logicalLine, logicalColumn, -1, null, persistent);
+  public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file, int logicalLine, int logicalColumn, boolean persistent) {
+    this(project, file, logicalLine, logicalColumn, -1, persistent);
   }
 
   public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file) {
-    this(project, file, -1, -1, -1, null, false);
+    this(project, file, -1, -1, -1, false);
   }
 
-  public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file, @NotNull RangeMarker rangeMarker) {
-    this(project, file, -1, -1, -1, rangeMarker, false);
-  }
-
-  private OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file,
-                             int logicalLine, int logicalColumn, int offset, @Nullable RangeMarker rangeMarker, boolean persistent) {
+  private OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file, int logicalLine, int logicalColumn, int offset, boolean persistent) {
     myProject = project;
-
     myFile = file;
     myLogicalLine = logicalLine;
     myLogicalColumn = logicalColumn;
     myOffset = offset;
-    if (rangeMarker != null) {
-      myRangeMarker = rangeMarker;
-    }
-    else if (offset >= 0) {
+    if (offset >= 0) {
       myRangeMarker = LazyRangeMarkerFactory.getInstance(project).createRangeMarker(file, offset);
     }
     else if (logicalLine >= 0 ){
@@ -146,7 +132,7 @@ public class OpenFileDescriptor implements Navigatable {
   }
 
   private boolean navigateInRequestedEditor() {
-    DataContext ctx = DataManager.getInstance().getDataContext();
+    @SuppressWarnings("deprecation") DataContext ctx = DataManager.getInstance().getDataContext();
     Editor e = NAVIGATE_IN_EDITOR.getData(ctx);
     if (e == null) return false;
     if (!Comparing.equal(FileDocumentManager.getInstance().getFile(e.getDocument()), myFile)) return false;
@@ -231,11 +217,7 @@ public class OpenFileDescriptor implements Navigatable {
 
   private static void unfoldCurrentLine(@NotNull final Editor editor) {
     final FoldRegion[] allRegions = editor.getFoldingModel().getAllFoldRegions();
-    final int offset = editor.getCaretModel().getOffset();
-    int line = editor.getDocument().getLineNumber(offset);
-    int start = editor.getDocument().getLineStartOffset(line);
-    int end = editor.getDocument().getLineEndOffset(line);
-    final TextRange range = new TextRange(start, end);
+    final TextRange range = getRangeToUnfoldOnNavigation(editor);
     editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
       @Override
       public void run() {
@@ -246,6 +228,15 @@ public class OpenFileDescriptor implements Navigatable {
         }
       }
     });
+  }
+
+  @NotNull
+  public static TextRange getRangeToUnfoldOnNavigation(@NotNull Editor editor) {
+    final int offset = editor.getCaretModel().getOffset();
+    int line = editor.getDocument().getLineNumber(offset);
+    int start = editor.getDocument().getLineStartOffset(line);
+    int end = editor.getDocument().getLineEndOffset(line);
+    return new TextRange(start, end);
   }
 
   private static void scrollToCaret(@NotNull Editor e) {
@@ -274,5 +265,11 @@ public class OpenFileDescriptor implements Navigatable {
 
   public boolean isUseCurrentWindow() {
     return myUseCurrentWindow;
+  }
+
+  public void dispose() {
+    if (myRangeMarker != null) {
+      myRangeMarker.dispose();
+    }
   }
 }

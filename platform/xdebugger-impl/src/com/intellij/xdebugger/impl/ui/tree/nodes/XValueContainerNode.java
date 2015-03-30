@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SortedList;
+import com.intellij.xdebugger.evaluation.InlineDebuggerHelper;
 import com.intellij.xdebugger.frame.*;
 import com.intellij.xdebugger.impl.evaluate.XDebuggerInlineEapDescriptor;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
@@ -79,33 +80,42 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     invokeNodeUpdate(new Runnable() {
       @Override
       public void run() {
-        if (myValueChildren == null) {
-          if (!myAlreadySorted && XDebuggerSettingsManager.getInstance().getDataViewSettings().isSortValues()) {
-            myValueChildren = new SortedList<XValueNodeImpl>(XValueNodeImpl.COMPARATOR);
+        List<XValueContainerNode<?>> newChildren;
+        if (children.size() > 0) {
+          newChildren = new ArrayList<XValueContainerNode<?>>(children.size());
+          if (myValueChildren == null) {
+            if (!myAlreadySorted && XDebuggerSettingsManager.getInstance().getDataViewSettings().isSortValues()) {
+              myValueChildren = new SortedList<XValueNodeImpl>(XValueNodeImpl.COMPARATOR);
+            }
+            else {
+              myValueChildren = new ArrayList<XValueNodeImpl>(children.size());
+            }
           }
-          else {
-            myValueChildren = new ArrayList<XValueNodeImpl>();
-          }
-        }
-        List<XValueContainerNode<?>> newChildren = new ArrayList<XValueContainerNode<?>>(children.size());
-        for (int i = 0; i < children.size(); i++) {
-          XValueNodeImpl node = new XValueNodeImpl(myTree, XValueContainerNode.this, children.getName(i), children.getValue(i));
-          myValueChildren.add(node);
-          newChildren.add(node);
+          final InlineDebuggerHelper inlineHelper = getTree().getEditorsProvider().getInlineDebuggerHelper();
+          for (int i = 0; i < children.size(); i++) {
+            XValueNodeImpl node = new XValueNodeImpl(myTree, XValueContainerNode.this, children.getName(i), children.getValue(i));
+            myValueChildren.add(node);
+            newChildren.add(node);
 
-          //todo[kb]: try to generify this dirty hack
-          if (EarlyAccessProgramManager.is(XDebuggerInlineEapDescriptor.class) && "this".equals(node.getName())) {
-            //initialize "this" fields to display in inline view
-            node.getChildren();
+            if (EarlyAccessProgramManager.is(XDebuggerInlineEapDescriptor.class) && inlineHelper.shouldEvaluateChildrenByDefault(node) && isUseGetChildrenHack(myTree)) { //todo[kb]: try to generify this dirty hack
+              node.getChildren();
+            }
           }
         }
+        else {
+          newChildren = new SmartList<XValueContainerNode<?>>();
+          if (myValueChildren == null) {
+            myValueChildren = last ? Collections.<XValueNodeImpl>emptyList() : new SmartList<XValueNodeImpl>();
+          }
+        }
+
         myTopGroups = createGroupNodes(children.getTopGroups(), myTopGroups, newChildren);
         myBottomGroups = createGroupNodes(children.getBottomGroups(), myBottomGroups, newChildren);
         myCachedAllChildren = null;
         fireNodesInserted(newChildren);
-        if (last) {
+        if (last && myTemporaryMessageChildren != null) {
           final int[] ints = getNodesIndices(myTemporaryMessageChildren);
-          final TreeNode[] removed = getChildNodes(ints);
+          final TreeNode[] removed = myTemporaryMessageChildren.toArray(new TreeNode[myTemporaryMessageChildren.size()]);
           myCachedAllChildren = null;
           myTemporaryMessageChildren = null;
           fireNodesRemoved(ints, removed);
@@ -113,6 +123,10 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
         myTree.childrenLoaded(XValueContainerNode.this, newChildren, last);
       }
     });
+  }
+
+  private static boolean isUseGetChildrenHack(@NotNull XDebuggerTree tree) {
+    return !tree.isUnderRemoteDebug();
   }
 
   @Nullable
@@ -188,15 +202,15 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     List<MessageTreeNode> allMessageChildren = ContainerUtil.concat(myMessageChildren != null ? myMessageChildren : Collections.<MessageTreeNode>emptyList(),
                                                                     myTemporaryMessageChildren != null ? myTemporaryMessageChildren : Collections.<MessageTreeNode>emptyList());
     final int[] indices = getNodesIndices(allMessageChildren);
-    final TreeNode[] nodes = getChildNodes(indices);
-    myMessageChildren = null;
-    myTemporaryMessageChildren = null;
+    final TreeNode[] nodes = allMessageChildren.toArray(new TreeNode[allMessageChildren.size()]);
     fireNodesRemoved(indices, nodes);
     if (!temporary) {
       myMessageChildren = messages;
+      myTemporaryMessageChildren = null;
     }
     else {
       myTemporaryMessageChildren = messages;
+      myMessageChildren = null;
     }
     myCachedAllChildren = null;
     fireNodesInserted(messages);

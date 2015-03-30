@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.frame;
+package com.intellij.ui;
+
+import com.intellij.openapi.extensions.ExtensionPointName;
+import org.intellij.lang.annotations.JdkConstants;
+import org.jetbrains.annotations.NotNull;
+
+import java.awt.*;
 
 /**
- * @author Konstantin Bulenkov
+ * @author egor
  */
-public interface XNearestSourcePosition extends XInlineSourcePosition {
+interface SuitableFontProvider {
+  ExtensionPointName<SuitableFontProvider> EP_NAME = ExtensionPointName.create("com.intellij.ui.suitableFontProvider");
+
+  Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @NotNull String defaultFontFamily);
 }
