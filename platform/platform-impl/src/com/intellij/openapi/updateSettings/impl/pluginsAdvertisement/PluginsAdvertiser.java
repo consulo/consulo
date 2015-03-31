@@ -147,7 +147,7 @@ public class PluginsAdvertiser implements StartupActivity {
 
   @Override
   public void runActivity(@NotNull final Project project) {
-    if (!UpdateSettings.getInstance().CHECK_NEEDED) return;
+    if (!UpdateSettings.getInstance().isCheckNeeded()) return;
     final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(project);
     final Set<UnknownFeature> unknownFeatures = collectorSuggester.getUnknownFeatures();
     final KnownExtensions extensions = loadExtensions();

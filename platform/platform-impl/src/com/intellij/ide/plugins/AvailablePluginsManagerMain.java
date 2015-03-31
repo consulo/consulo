@@ -29,7 +29,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableUtil;
-import com.intellij.util.net.HTTPProxySettingsDialog;
+import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +39,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -65,7 +64,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
         @Override
         public void actionPerformed(ActionEvent e) {
           if (ShowSettingsUtil.getInstance().editConfigurable(myActionsPanel, new PluginHostsConfigurable())) {
-            final ArrayList<String> pluginHosts = UpdateSettings.getInstance().myPluginHosts;
+            final List<String> pluginHosts = UpdateSettings.getInstance().getStoredPluginHosts();
             if (!pluginHosts.contains(((AvailablePluginsTableModel)pluginsModel).getRepository())) {
               ((AvailablePluginsTableModel)pluginsModel).setRepository(AvailablePluginsTableModel.ALL, myFilter.getFilter().toLowerCase());
             }
@@ -80,10 +79,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     httpProxySettingsButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        HTTPProxySettingsDialog settingsDialog = new HTTPProxySettingsDialog();
-        settingsDialog.pack();
-        settingsDialog.show();
-        if (settingsDialog.isOK()) {
+        if (HttpConfigurable.editConfigurable(getMainPanel())) {
           loadAvailablePlugins();
         }
       }
@@ -253,7 +249,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
-      e.getPresentation().setVisible(!UpdateSettings.getInstance().myPluginHosts.isEmpty());
+      e.getPresentation().setVisible(!UpdateSettings.getInstance().getStoredPluginHosts().isEmpty());
       String repository = ((AvailablePluginsTableModel)pluginsModel).getRepository();
       if (repository.length() > LENGTH) {
         repository = repository.substring(0, LENGTH) + "...";
@@ -266,7 +262,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
       final DefaultActionGroup gr = new DefaultActionGroup();
       gr.add(createFilterByRepositoryAction(AvailablePluginsTableModel.ALL));
-      for (final String host : UpdateSettings.getInstance().myPluginHosts) {
+      for (final String host : UpdateSettings.getInstance().getStoredPluginHosts()) {
         gr.add(createFilterByRepositoryAction(host));
       }
       return gr;

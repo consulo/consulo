@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,14 @@
 package com.intellij.util.xmlb;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 
 class CollectionBinding extends AbstractCollectionBinding  {
-  public CollectionBinding(ParameterizedType type, final Accessor accessor) {
-    super(getComponentClass(type), Constants.COLLECTION, accessor);
-  }
-
-  private static Class getComponentClass(ParameterizedType type) {
-    Type arg = type.getActualTypeArguments()[0];
-    if (arg instanceof ParameterizedType) {
-      return (Class)((ParameterizedType)arg).getRawType();
-    }
-    return (Class)arg;
+  public CollectionBinding(@NotNull ParameterizedType type, @Nullable MutableAccessor accessor) {
+    super(XmlSerializerImpl.typeToClass(type.getActualTypeArguments()[0]), accessor);
   }
 
   @Override
@@ -58,14 +50,16 @@ class CollectionBinding extends AbstractCollectionBinding  {
   }
 
   @Override
-  protected String getCollectionTagName(final Object target) {
+  protected String getCollectionTagName(@Nullable final Object target) {
     if (target instanceof Set) {
       return Constants.SET;
     }
     else if (target instanceof List) {
       return Constants.LIST;
     }
-    return super.getCollectionTagName(target);
+    else {
+      return "collection";
+    }
   }
 
   @Override

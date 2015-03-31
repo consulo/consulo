@@ -67,20 +67,20 @@ public class PluginHostsConfigurable implements Configurable {
   public void apply() throws ConfigurationException {
     UpdateSettings settings = UpdateSettings.getInstance();
 
-    settings.myPluginHosts.clear();
-    settings.myPluginHosts.addAll(myUpdatesSettingsPanel.getPluginsHosts());
+    settings.getStoredPluginHosts().clear();
+    settings.getStoredPluginHosts().addAll(myUpdatesSettingsPanel.getPluginsHosts());
   }
 
   @Override
   public void reset() {
-    myUpdatesSettingsPanel.setPluginHosts(UpdateSettings.getInstance().myPluginHosts);
+    myUpdatesSettingsPanel.setPluginHosts(UpdateSettings.getInstance().getStoredPluginHosts());
   }
 
   @Override
   public boolean isModified() {
     if (myUpdatesSettingsPanel == null) return false;
     UpdateSettings settings = UpdateSettings.getInstance();
-    return !settings.myPluginHosts.equals(myUpdatesSettingsPanel.getPluginsHosts());
+    return !settings.getStoredPluginHosts().equals(myUpdatesSettingsPanel.getPluginsHosts());
   }
 
   @Override
@@ -105,12 +105,9 @@ public class PluginHostsConfigurable implements Configurable {
         .setAddAction(new AnActionButtonRunnable() {
           @Override
           public void run(AnActionButton button) {
-            final HostMessages.InputHostDialog dlg =
-              new HostMessages.InputHostDialog(myPanel,
-                                               IdeBundle.message("update.plugin.host.url.message"),
-                                               IdeBundle.message("update.add.new.plugin.host.title"),
-                                               Messages.getQuestionIcon(), "",
-                                               new NonEmptyInputValidator());
+            final HostMessages.InputHostDialog dlg = new HostMessages.InputHostDialog(myPanel, IdeBundle.message("update.plugin.host.url.message"),
+                                                                                      IdeBundle.message("update.add.new.plugin.host.title"),
+                                                                                      Messages.getQuestionIcon(), "", new NonEmptyInputValidator());
             dlg.show();
             String input = dlg.getInputString();
             if (input != null) {

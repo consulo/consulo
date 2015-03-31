@@ -61,26 +61,26 @@ public class UpdateSettingsConfigurable implements SearchableConfigurable {
   @Override
   public void apply() throws ConfigurationException {
     UpdateSettings settings = UpdateSettings.getInstance();
-    settings.CHECK_NEEDED = myUpdatesSettingsPanel.myCbCheckForUpdates.isSelected();
+    settings.setCheckNeeded(myUpdatesSettingsPanel.myCbCheckForUpdates.isSelected());
 
-    settings.UPDATE_CHANNEL_TYPE = myUpdatesSettingsPanel.getSelectedChannelType().getCode();
+    settings.setUpdateChannelType(myUpdatesSettingsPanel.getSelectedChannelType().getCode());
   }
 
   @Override
   public void reset() {
     UpdateSettings settings = UpdateSettings.getInstance();
-    myUpdatesSettingsPanel.myCbCheckForUpdates.setSelected(settings.CHECK_NEEDED);
+    myUpdatesSettingsPanel.myCbCheckForUpdates.setSelected(settings.isCheckNeeded());
     myUpdatesSettingsPanel.updateLastCheckedLabel();
-    myUpdatesSettingsPanel.setSelectedChannelType(ChannelStatus.fromCode(settings.UPDATE_CHANNEL_TYPE));
+    myUpdatesSettingsPanel.setSelectedChannelType(ChannelStatus.fromCode(settings.getUpdateChannelType()));
   }
 
   @Override
   public boolean isModified() {
     if (myUpdatesSettingsPanel == null) return false;
     UpdateSettings settings = UpdateSettings.getInstance();
-    if (settings.CHECK_NEEDED != myUpdatesSettingsPanel.myCbCheckForUpdates.isSelected()) return true;
+    if (settings.isCheckNeeded() != myUpdatesSettingsPanel.myCbCheckForUpdates.isSelected()) return true;
     final JComboBox channelsBox = myUpdatesSettingsPanel.myUpdateChannelsBox;
-    return (channelsBox.getSelectedItem() != null && !channelsBox.getSelectedItem().equals(ChannelStatus.fromCode(settings.UPDATE_CHANNEL_TYPE)));
+    return (channelsBox.getSelectedItem() != null && !channelsBox.getSelectedItem().equals(ChannelStatus.fromCode(settings.getUpdateChannelType())));
   }
 
   @Override
@@ -122,7 +122,7 @@ public class UpdateSettingsConfigurable implements SearchableConfigurable {
           Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myBtnCheckNow));
           UpdateSettings settings = new UpdateSettings();
           settings.loadState(UpdateSettings.getInstance().getState());
-          settings.UPDATE_CHANNEL_TYPE = getSelectedChannelType().getCode();
+          settings.setUpdateChannelType(getSelectedChannelType().getCode());
           CheckForUpdateAction.actionPerformed(project, false, null, settings);  //todo load configured hosts on the fly
           updateLastCheckedLabel();
         }
@@ -132,11 +132,11 @@ public class UpdateSettingsConfigurable implements SearchableConfigurable {
       LabelTextReplacingUtil.replaceText(myPanel);
 
       final UpdateSettings settings = UpdateSettings.getInstance();
-      myUpdateChannelsBox.setModel(new CollectionComboBoxModel(ChannelStatus.all(), ChannelStatus.fromCode(settings.UPDATE_CHANNEL_TYPE)));
+      myUpdateChannelsBox.setModel(new CollectionComboBoxModel(ChannelStatus.all(), ChannelStatus.fromCode(settings.getUpdateChannelType())));
     }
 
     private void updateLastCheckedLabel() {
-      final long lastChecked = UpdateSettings.getInstance().LAST_TIME_CHECKED;
+      final long lastChecked = UpdateSettings.getInstance().getLastTimeChecked();
       myLastCheckedDate
         .setText(lastChecked == 0 ? IdeBundle.message("updates.last.check.never") : DateFormatUtil.formatPrettyDateTime(lastChecked));
     }

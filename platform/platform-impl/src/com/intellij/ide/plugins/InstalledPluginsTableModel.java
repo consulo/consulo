@@ -146,7 +146,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
   public void updateRepositoryPlugins() {
     myPlugin2host.clear();
-    final JDOMExternalizableStringList pluginHosts = UpdateSettings.getInstance().myPluginHosts;
+    final List<String> pluginHosts = UpdateSettings.getInstance().getStoredPluginHosts();
     for (String host : pluginHosts) {
       try {
         final ArrayList<PluginDownloader> downloaded = new ArrayList<PluginDownloader>();

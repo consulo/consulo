@@ -310,7 +310,7 @@ public abstract class PluginManagerMain implements Disposable {
           LOG.info(e);
           errorMessages.add(e.getMessage());
         }
-        for (String host : UpdateSettings.getInstance().myPluginHosts) {
+        for (String host : UpdateSettings.getInstance().getStoredPluginHosts()) {
           if (!acceptHost(host)) continue;
           final ArrayList<PluginDownloader> downloaded = new ArrayList<PluginDownloader>();
           try {

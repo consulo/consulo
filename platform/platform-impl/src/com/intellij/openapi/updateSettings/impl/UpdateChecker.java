@@ -119,17 +119,17 @@ public final class UpdateChecker {
     final UpdateSettings settings = UpdateSettings.getInstance();
     if (settings == null) return false;
 
-    final long timeDelta = System.currentTimeMillis() - settings.LAST_TIME_CHECKED;
+    final long timeDelta = System.currentTimeMillis() - settings.getLastTimeChecked();
     if (Math.abs(timeDelta) < DateFormatUtil.DAY) return false;
 
-    return settings.CHECK_NEEDED;
+    return settings.isCheckNeeded();
   }
 
   public static ActionCallback updateAndShowResult() {
     final ActionCallback result = new ActionCallback();
     final Application app = ApplicationManager.getApplication();
     final UpdateSettings updateSettings = UpdateSettings.getInstance();
-    if (!updateSettings.CHECK_NEEDED) {
+    if (!updateSettings.isCheckNeeded()) {
       result.setDone();
       return result;
     }
@@ -258,7 +258,7 @@ public final class UpdateChecker {
       hosts.addAll(hostsConfigurable.getPluginsHosts());
     }
     else {
-      hosts.addAll(UpdateSettings.getInstance().myPluginHosts);
+      hosts.addAll(UpdateSettings.getInstance().getStoredPluginHosts());
     }
     final String pluginHosts = System.getProperty("idea.plugin.hosts");
     if (pluginHosts != null) {

@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.xmlb;
+package com.intellij.util.xmlb.annotations;
 
-import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.List;
-
-interface MultiNodeBinding {
-  @Nullable
-  Object deserializeList(Object context, @NotNull List<Element> elements);
-
-  boolean isMulti();
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD})
+/**
+ * Can read serialized JDOMExternalizableStringList, but in any case will be written in this bean format.
+ * It is useful for application-level config, but for project-level consider to use ConverterProvider.
+ *
+ * Currently, only string element type supported.
+ */
+public @interface CollectionBean {
 }

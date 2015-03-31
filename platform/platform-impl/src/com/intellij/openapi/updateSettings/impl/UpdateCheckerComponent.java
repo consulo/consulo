@@ -41,7 +41,7 @@ public class UpdateCheckerComponent implements ApplicationComponent {
 
   @Override
   public void initComponent() {
-    final long interval = UpdateSettings.getInstance().LAST_TIME_CHECKED + CHECK_INTERVAL - System.currentTimeMillis();
+    final long interval = UpdateSettings.getInstance().getLastTimeChecked() + CHECK_INTERVAL - System.currentTimeMillis();
     queueNextUpdateCheck(UpdateChecker.checkNeeded()
                          ? CHECK_INTERVAL
                          : Math.max(interval, DateFormatUtil.MINUTE));

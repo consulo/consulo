@@ -15,15 +15,5 @@
  */
 package com.intellij.util.xmlb;
 
-import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-
-interface MultiNodeBinding {
-  @Nullable
-  Object deserializeList(Object context, @NotNull List<Element> elements);
-
-  boolean isMulti();
+public interface MainBinding {
 }
