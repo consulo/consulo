@@ -452,6 +452,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     final AbstractMessage message = getSelectedMessage();
     updateInfoLabel(message);
     updateCredentialsPane(message);
+    myCredentialsPanel.setVisible(false);
     updateAssigneePane(message);
     updateAttachmentWarning(message);
     myDisableLink.setVisible(canDisablePlugin(message));
@@ -531,7 +532,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
   private void updateAssigneePane(AbstractMessage message) {
     final ErrorReportSubmitter submitter = message != null ? getSubmitter(message.getThrowable()) : null;
-    myDetailsTabForm.setAssigneeVisible(submitter instanceof ITNReporter && myInternalMode);
+    myDetailsTabForm.setAssigneeVisible(false);
   }
 
   private void updateInfoLabel(AbstractMessage message) {
