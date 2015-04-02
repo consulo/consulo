@@ -29,6 +29,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 /**
@@ -47,22 +49,24 @@ public abstract class NewProjectOrModuleDialog extends DialogWrapper {
   public abstract String getNameText();
 
   @NotNull
+  @RequiredReadAction
   public Module doCreate(@NotNull final Project project, @NotNull final VirtualFile baseDir) {
-    return doCreate(ModuleManager.getInstance(project).getModifiableModel(), baseDir);
+    return doCreate(ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
   }
 
   @NotNull
-  public Module doCreate(@NotNull final ModifiableModuleModel modifiableModel, @NotNull final VirtualFile baseDir) {
+  public Module doCreate(@NotNull final ModifiableModuleModel modifiableModel, @NotNull final VirtualFile baseDir, final boolean requireModelCommit) {
     return new WriteAction<Module>() {
       @Override
       protected void run(Result<Module> result) throws Throwable {
-        result.setResult(doCreateImpl(modifiableModel, baseDir));
+        result.setResult(doCreateImpl(modifiableModel, baseDir, requireModelCommit));
       }
     }.execute().getResultObject();
   }
 
   @NotNull
-  private Module doCreateImpl(@NotNull final ModifiableModuleModel modifiableModel, @NotNull final VirtualFile baseDir) {
+  @RequiredWriteAction
+  private Module doCreateImpl(@NotNull final ModifiableModuleModel modifiableModel, @NotNull final VirtualFile baseDir, boolean requireModelCommit) {
     String name = StringUtil.notNullize(getNameText(), baseDir.getName());
 
     Module newModule = modifiableModel.newModule(name, baseDir.getPath());
@@ -79,7 +83,9 @@ public abstract class NewProjectOrModuleDialog extends DialogWrapper {
 
     modifiableModelForModule.commit();
 
-    modifiableModel.commit();
+    if(requireModelCommit) {
+      modifiableModel.commit();
+    }
 
     baseDir.refresh(true, true);
     return newModule;

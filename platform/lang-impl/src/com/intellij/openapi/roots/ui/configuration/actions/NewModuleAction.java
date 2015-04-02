@@ -38,6 +38,7 @@ import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
 
 import java.util.List;
@@ -52,6 +53,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredDispatchThread
   public void actionPerformed(AnActionEvent e) {
     final Project project = getEventProject(e);
     if (project == null) {
