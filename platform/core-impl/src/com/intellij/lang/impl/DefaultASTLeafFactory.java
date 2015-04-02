@@ -17,6 +17,7 @@ package com.intellij.lang.impl;
 
 import com.intellij.lang.ASTLeafFactory;
 import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.LeafElement;
@@ -33,12 +34,17 @@ import org.jetbrains.annotations.Nullable;
  * @since 2:22/02.04.13
  */
 public class DefaultASTLeafFactory implements ASTLeafFactory {
+  @Override
+  public boolean apply(@Nullable IElementType input) {
+    return true;
+  }
+
   @NotNull
   @Override
-  public LeafElement createLeaf(IElementType type, CharSequence text) {
+  public LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion<?> languageVersion, @NotNull CharSequence text) {
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(type.getLanguage());
     if(parserDefinition != null) {
-      if(parserDefinition.getCommentTokens(type.getLanguageVersion()).contains(type)) {
+      if(parserDefinition.getCommentTokens(languageVersion).contains(type)) {
         return new PsiCoreCommentImpl(type, text);
       }
     }
@@ -52,10 +58,5 @@ public class DefaultASTLeafFactory implements ASTLeafFactory {
       return (LeafElement)((ILeafElementType)type).createLeafNode(text);
     }
     return new LeafPsiElement(type, text);
-  }
-
-  @Override
-  public boolean apply(@Nullable IElementType input) {
-    return true;
   }
 }

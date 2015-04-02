@@ -85,7 +85,7 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
                                   @NotNull final Lexer lexer,
                                   @NotNull LanguageVersion languageVersion,
                                   @NotNull final CharSequence seq) {
-    return new PsiBuilderImpl(null, null, parserDefinition.getWhitespaceTokens(languageVersion),
+    return new PsiBuilderImpl(null, null, languageVersion, parserDefinition.getWhitespaceTokens(languageVersion),
                               parserDefinition.getCommentTokens(languageVersion), lexer, null, seq, null, null);
   }
 }

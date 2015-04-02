@@ -67,6 +67,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
           CUSTOM_COMPARATOR = Key.create("CUSTOM_COMPARATOR");
 
   private final Project myProject;
+  private final LanguageVersion<?> myLanguageVersion;
   private PsiFile myFile;
 
   private int[] myLexStarts;
@@ -125,7 +126,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
   }
 
   public PsiBuilderImpl(@NotNull Project project,
-                        PsiFile containingFile,
+                        @Nullable PsiFile containingFile,
                         @NotNull ParserDefinition parserDefinition,
                         @NotNull Lexer lexer,
                         @NotNull LanguageVersion languageVersion,
@@ -133,21 +134,23 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
                         @NotNull final CharSequence text,
                         @Nullable ASTNode originalTree,
                         @Nullable MyTreeStructure parentLightTree) {
-    this(project, containingFile, parserDefinition.getWhitespaceTokens(languageVersion), parserDefinition.getCommentTokens(languageVersion),
+    this(project, containingFile, languageVersion, parserDefinition.getWhitespaceTokens(languageVersion), parserDefinition.getCommentTokens(languageVersion),
          lexer, charTable, text, originalTree, parentLightTree);
   }
 
-  public PsiBuilderImpl(Project project,
-                        PsiFile containingFile,
+  public PsiBuilderImpl(@Nullable Project project,
+                        @Nullable PsiFile containingFile,
+                        @NotNull LanguageVersion<?> languageVersion,
                         @NotNull TokenSet whiteSpaces,
                         @NotNull TokenSet comments,
                         @NotNull Lexer lexer,
-                        CharTable charTable,
-                        @NotNull final CharSequence text,
+                        @Nullable CharTable charTable,
+                        @NotNull CharSequence text,
                         @Nullable ASTNode originalTree,
                         @Nullable MyTreeStructure parentLightTree) {
     myProject = project;
     myFile = containingFile;
+    myLanguageVersion = languageVersion;
 
     myText = text;
     myTextArray = CharArrayUtil.fromSequenceWithoutCopying(text);
@@ -203,8 +206,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
       if (tokenStart < offset) {
         final StringBuilder sb = new StringBuilder();
         final IElementType tokenType = myLexer.getTokenType();
-        sb.append("Token sequence broken")
-                .append("\n  this: '").append(myLexer.getTokenText()).append("' (").append(tokenType).append(':')
+        sb.append("Token sequence broken").append("\n  this: '").append(myLexer.getTokenText()).append("' (").append(tokenType).append(':')
                 .append(tokenType != null ? tokenType.getLanguage() : null).append(") ").append(tokenStart).append(":").append(myLexer.getTokenEnd());
         if (i > 0) {
           final int prevStart = myLexStarts[i - 1];
@@ -213,8 +215,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
         }
         final int quoteStart = Math.max(tokenStart - 256, 0);
         final int quoteEnd = Math.min(tokenStart + 256, myText.length());
-        sb.append("\n  quote: [").append(quoteStart).append(':').append(quoteEnd)
-                .append("] '").append(myText.subSequence(quoteStart, quoteEnd)).append('\'');
+        sb.append("\n  quote: [").append(quoteStart).append(':').append(quoteEnd).append("] '").append(myText.subSequence(quoteStart, quoteEnd)).append('\'');
         LOG.error(sb);
       }
       myLexStarts[i] = offset = tokenStart;
@@ -1652,7 +1653,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
       return ASTFactory.lazy((ILazyParseableElementType)type, text);
     }
 
-    return ASTFactory.leaf(type, text);
+    return ASTFactory.leaf(type, myLanguageVersion, text);
   }
 
   /**

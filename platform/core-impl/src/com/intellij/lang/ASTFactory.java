@@ -24,6 +24,7 @@ import com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.util.CharTable;
+import com.intellij.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -45,7 +46,12 @@ public final class ASTFactory {
 
   @NotNull
   public static LeafElement leaf(@NotNull final IElementType type, final CharSequence text) {
-    return ASTLeafFactory.EP.getValue(type).createLeaf(type, text);
+    return leaf(type, LanguageVersionUtil.findDefaultVersion(type.getLanguage()), text);
+  }
+
+  @NotNull
+  public static LeafElement leaf(@NotNull final IElementType type, @NotNull LanguageVersion<?> languageVersion, final CharSequence text) {
+    return ASTLeafFactory.EP.getValue(type).createLeaf(type, languageVersion, text);
   }
 
   @NotNull

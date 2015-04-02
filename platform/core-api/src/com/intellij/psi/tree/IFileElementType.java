@@ -17,7 +17,6 @@ package com.intellij.psi.tree;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -34,13 +33,8 @@ public class IFileElementType extends ILazyParseableElementType {
 
   public IFileElementType(@NotNull @NonNls String debugName,
                           @Nullable Language language,
-                          @Nullable LanguageVersion languageVersion,
                           boolean register) {
-    super(debugName, language, languageVersion, register);
-  }
-
-  public IFileElementType(@NotNull @NonNls String debugName, @Nullable Language language, @Nullable LanguageVersion languageVersion) {
-    super(debugName, language, languageVersion);
+    super(debugName, language, register);
   }
 
   @Nullable

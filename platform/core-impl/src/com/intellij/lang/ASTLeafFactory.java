@@ -28,5 +28,5 @@ public interface ASTLeafFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<ASTLeafFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.leafFactory");
 
   @NotNull
-  LeafElement createLeaf(final IElementType type, final CharSequence text);
+  LeafElement createLeaf(@NotNull final IElementType type, @NotNull final LanguageVersion<?> languageVersion, @NotNull final CharSequence text);
 }

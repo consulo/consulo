@@ -17,7 +17,6 @@ package com.intellij.psi.tree;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ReflectionUtil;
@@ -37,22 +36,14 @@ public class ElementTypeAsPsiFactory extends IElementType implements IElementTyp
   private Constructor<? extends PsiElement> myConstructor;
 
   public ElementTypeAsPsiFactory(@NotNull @NonNls String debugName, @Nullable Language language, @NotNull Class<? extends PsiElement> clazz) {
-    this(debugName, language, null, true, clazz);
+    this(debugName, language, true, clazz);
   }
 
   public ElementTypeAsPsiFactory(@NotNull @NonNls String debugName,
                                  @Nullable Language language,
-                                 @Nullable LanguageVersion languageVersion,
-                                 @NotNull Class<? extends PsiElement> clazz) {
-    this(debugName, language, languageVersion, true, clazz);
-  }
-
-  public ElementTypeAsPsiFactory(@NotNull @NonNls String debugName,
-                                 @Nullable Language language,
-                                 @Nullable LanguageVersion languageVersion,
                                  boolean register,
                                  @NotNull Class<? extends PsiElement> clazz) {
-    super(debugName, language, languageVersion, register);
+    super(debugName, language, register);
 
     try {
       myConstructor = clazz.getConstructor(ASTNode.class);

@@ -41,15 +41,8 @@ public class ILazyParseableElementType extends IElementType {
 
   public ILazyParseableElementType(@NotNull @NonNls String debugName,
                                    @Nullable Language language,
-                                   @Nullable LanguageVersion languageVersion,
                                    boolean register) {
-    super(debugName, language, languageVersion, register);
-  }
-
-  public ILazyParseableElementType(@NotNull @NonNls String debugName,
-                                   @Nullable Language language,
-                                   @Nullable LanguageVersion languageVersion) {
-    super(debugName, language, languageVersion);
+    super(debugName, language, register);
   }
 
   /**

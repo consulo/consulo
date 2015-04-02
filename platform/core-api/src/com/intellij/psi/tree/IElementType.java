@@ -16,9 +16,7 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,8 +60,6 @@ public class IElementType {
   private final String myDebugName;
   @NotNull
   private final Language myLanguage;
-  @NotNull
-  private final LanguageVersion myLanguageVersion;
 
   /**
    * Creates and registers a new element type for the specified language.
@@ -72,20 +68,14 @@ public class IElementType {
    * @param language  the language with which the element type is associated.
    */
   public IElementType(@NotNull @NonNls String debugName, @Nullable Language language) {
-    this(debugName, language, null, true);
-  }
-
-  public IElementType(@NotNull @NonNls String debugName, @Nullable Language language, @Nullable LanguageVersion languageVersion) {
-    this(debugName, language, languageVersion, true);
+    this(debugName, language, true);
   }
 
   protected IElementType(@NotNull @NonNls String debugName,
                          @Nullable Language language,
-                         @Nullable LanguageVersion languageVersion,
                          boolean register) {
     myDebugName = debugName;
     myLanguage = language == null ? Language.ANY : language;
-    myLanguageVersion = languageVersion == null ? LanguageVersionUtil.findDefaultVersion(myLanguage) : languageVersion;
     if (register) {
       //noinspection AssignmentToStaticFieldFromInstanceMethod
       myIndex = ourCounter++;
@@ -164,11 +154,6 @@ public class IElementType {
       if (idx >= ourRegistry.size() + FIRST_TOKEN_INDEX) return null;
       return ourRegistry.get(idx - FIRST_TOKEN_INDEX);
     }
-  }
-
-  @Deprecated
-  public LanguageVersion getLanguageVersion() {
-    return myLanguageVersion;
   }
 
   /**
