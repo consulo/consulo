@@ -1,6 +1,5 @@
 package com.intellij.openapi.externalSystem.service.project.manage;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.externalSystem.model.DataNode;
@@ -23,6 +22,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtilRt;
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
@@ -86,9 +86,8 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
   private void createModules(@NotNull final Collection<DataNode<ModuleData>> toCreate, @NotNull final Project project) {
 
-    Application application = ApplicationManager.getApplication();
     final Map<DataNode<ModuleData>, Module> moduleMappings = ContainerUtilRt.newHashMap();
-    application.runWriteAction(new Runnable() {
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
         final ModuleManager moduleManager = ModuleManager.getInstance(project);
@@ -97,6 +96,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
         }
       }
 
+      @RequiredWriteAction
       private void importModule(@NotNull ModuleManager moduleManager, @NotNull DataNode<ModuleData> module) {
         ModuleData data = module.getData();
         final Module created = moduleManager.newModule(data.getExternalName(), data.getModuleDirPath());
