@@ -48,7 +48,7 @@ public interface ModifiableModuleModel {
    * @return the module instance.
    */
   @NotNull
-  Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath);
+  Module newModule(@NotNull @NonNls String name, @Nullable @NonNls String dirPath);
 
   /**
    * Creates a module of the specified type at the specified path and adds it to the project
@@ -63,7 +63,7 @@ public interface ModifiableModuleModel {
    * @return the module instance.
    */
   @NotNull
-  Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath, @Nullable Map<String, String> options);
+  Module newModule(@NotNull @NonNls String name, @Nullable @NonNls String dirPath, @Nullable Map<String, String> options);
 
   /**
    * Disposes of the specified module and removes it from the project. {@link #commit()}

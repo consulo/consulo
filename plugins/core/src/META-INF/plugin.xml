@@ -2546,5 +2546,7 @@
     <predefinedBundlesProvider implementation="org.mustbe.consulo.bundle.DefaultPredefinedBundlesProvider" order="first" />
 
     <ui.suitableFontProvider implementation="com.intellij.ui.SuitableFontProviderImpl"/>
+
+    <moduleRootsProcessor implementation="com.intellij.openapi.roots.impl.NullModuleDirModuleRootsProcessor" order="last" />
   </extensions>
 </idea-plugin>

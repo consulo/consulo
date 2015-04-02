@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,50 +17,35 @@ package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
 import gnu.trove.TObjectIntHashMap;
-import gnu.trove.TObjectProcedure;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 /**
  * @author VISTALL
- * @since 08.12.14
+ * @since 02.04.2015
  */
-@Deprecated
-public abstract class ModuleRootsProcessorFromModuleDir extends ModuleRootsProcessor {
+public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   @Override
-  public boolean containsFile(@NotNull TObjectIntHashMap<VirtualFile> roots, @NotNull final VirtualFile virtualFile) {
-    return !roots.forEachKey(new TObjectProcedure<VirtualFile>() {
-      @Override
-      public boolean execute(VirtualFile object) {
-        return !VfsUtil.isAncestor(object, virtualFile, false);
-      }
-    });
+  public boolean canHandle(@NotNull ModuleRootModel moduleRootModel) {
+    return moduleRootModel.getModule().getModuleDirUrl() == null;
+  }
+
+  @Override
+  public boolean containsFile(@NotNull TObjectIntHashMap<VirtualFile> roots, @NotNull VirtualFile virtualFile) {
+    return roots.contains(virtualFile);
   }
 
   @NotNull
   @Override
   public VirtualFile[] getFiles(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    if (predicate.apply(ProductionContentFolderTypeProvider.getInstance())) {
-      VirtualFile moduleDir = moduleRootModel.getModule().getModuleDir();
-      if (moduleDir == null) {
-        return VirtualFile.EMPTY_ARRAY;
-      }
-      return new VirtualFile[]{moduleDir};
-    }
-    return VirtualFile.EMPTY_ARRAY;
+    return moduleRootModel.getContentRoots();
   }
 
   @NotNull
   @Override
   public String[] getUrls(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    if (predicate.apply(ProductionContentFolderTypeProvider.getInstance())) {
-      return new String[]{moduleRootModel.getModule().getModuleDirUrl()};
-    }
-    return ArrayUtil.EMPTY_STRING_ARRAY;
+    return moduleRootModel.getContentRootUrls();
   }
 }
