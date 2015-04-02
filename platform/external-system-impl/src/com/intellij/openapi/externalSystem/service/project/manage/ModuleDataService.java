@@ -57,6 +57,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     return ProjectKeys.MODULE;
   }
 
+  @Override
   public void importData(@NotNull final Collection<DataNode<ModuleData>> toImport,
                          @NotNull final Project project,
                          final boolean synchronous) {
@@ -176,6 +177,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
       @Override
+      @RequiredWriteAction
       public void execute() {
         ModuleManager moduleManager = ModuleManager.getInstance(project);
 
