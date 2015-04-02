@@ -408,6 +408,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @Override
   @NotNull
+  @RequiredWriteAction
   public Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath) {
     myModificationCount++;
     final ModifiableModuleModel modifiableModel = getModifiableModel();
@@ -417,15 +418,11 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   }
 
   @Override
+  @RequiredWriteAction
   public void disposeModule(@NotNull final Module module) {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        final ModifiableModuleModel modifiableModel = getModifiableModel();
-        modifiableModel.disposeModule(module);
-        modifiableModel.commit();
-      }
-    });
+    final ModifiableModuleModel modifiableModel = getModifiableModel();
+    modifiableModel.disposeModule(module);
+    modifiableModel.commit();
   }
 
   @Override

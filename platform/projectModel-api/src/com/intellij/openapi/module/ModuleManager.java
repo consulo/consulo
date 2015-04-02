@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.Comparator;
 import java.util.List;
@@ -50,6 +51,7 @@ public abstract class ModuleManager {
    * @return the module instance.
    */
   @NotNull
+  @RequiredWriteAction
   public abstract Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath);
 
   /**
@@ -57,6 +59,7 @@ public abstract class ModuleManager {
    *
    * @param module the module to remove.
    */
+  @RequiredWriteAction
   public abstract void disposeModule(@NotNull Module module);
 
   /**
