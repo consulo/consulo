@@ -49,21 +49,23 @@ import java.util.*;
  */
 @Logger
 public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx {
-  @NotNull
-  private final Project myProject;
-  private boolean isModuleAdded;
-
   @NonNls
   private static final String OPTION_WORKSPACE = "workspace";
 
+  @NotNull
+  private final Project myProject;
+  private boolean isModuleAdded;
+  @NotNull
+  @NonNls
   private String myName;
-
+  @NotNull
   private final ModuleScopeProvider myModuleScopeProvider;
-  private VirtualFilePointer myDirVirtualFilePointer;
+  @Nullable
+  private final VirtualFilePointer myDirVirtualFilePointer;
+  @NotNull
+  private final Map<String, String> myOptions = new LinkedHashMap<String, String>();
 
-  private Map<String, String> myOptions = new LinkedHashMap<String, String>();
-
-  public ModuleImpl(@NotNull String name, @NotNull String dirUrl, @NotNull Project project) {
+  public ModuleImpl(@NotNull String name, @Nullable String dirUrl, @NotNull Project project) {
     super(project, "Module " + name);
 
     getPicoContainer().registerComponentInstance(Module.class, this);
@@ -71,8 +73,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     myName = name;
     myProject = project;
     myModuleScopeProvider = new ModuleScopeProviderImpl(this);
-
-    myDirVirtualFilePointer = VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
+    myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
   }
 
   @Override
@@ -120,19 +121,19 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Nullable
   @Override
   public VirtualFile getModuleDir() {
-    return myDirVirtualFilePointer.getFile();
+    return myDirVirtualFilePointer == null ? null : myDirVirtualFilePointer.getFile();
   }
 
-  @NotNull
+  @Nullable
   @Override
   public String getModuleDirPath() {
-    return VirtualFileManager.extractPath(getModuleDirUrl());
+    return myDirVirtualFilePointer == null ? null : VirtualFileManager.extractPath(myDirVirtualFilePointer.getUrl());
   }
 
-  @NotNull
+  @Nullable
   @Override
   public String getModuleDirUrl() {
-    return myDirVirtualFilePointer.getUrl();
+    return myDirVirtualFilePointer == null ? null : myDirVirtualFilePointer.getUrl();
   }
 
   @Override
@@ -208,51 +209,61 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     return myOptions.get(optionName);
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleScope() {
     return myModuleScopeProvider.getModuleScope();
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleScope(boolean includeTests) {
     return myModuleScopeProvider.getModuleScope(includeTests);
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleWithLibrariesScope() {
     return myModuleScopeProvider.getModuleWithLibrariesScope();
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleWithDependenciesScope() {
     return myModuleScopeProvider.getModuleWithDependenciesScope();
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleContentScope() {
     return myModuleScopeProvider.getModuleContentScope();
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleContentWithDependenciesScope() {
     return myModuleScopeProvider.getModuleContentWithDependenciesScope();
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests) {
     return myModuleScopeProvider.getModuleWithDependenciesAndLibrariesScope(includeTests);
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleWithDependentsScope() {
     return myModuleScopeProvider.getModuleWithDependentsScope();
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleTestsWithDependentsScope() {
     return myModuleScopeProvider.getModuleTestsWithDependentsScope();
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleRuntimeScope(boolean includeTests) {
     return myModuleScopeProvider.getModuleRuntimeScope(includeTests);
@@ -265,7 +276,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   public String toString() {
-    if (myName == null) return "Module (not initialized)";
     return "Module: '" + getName() + "'";
   }
 

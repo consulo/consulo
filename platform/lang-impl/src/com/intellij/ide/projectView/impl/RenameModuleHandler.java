@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleWithNameAlreadyExists;
+import com.intellij.openapi.module.ModuleWithNameAlreadyExistsException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
@@ -118,7 +118,7 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
       try {
         modifiableModel.renameModule(myModule, inputString);
       }
-      catch (ModuleWithNameAlreadyExists moduleWithNameAlreadyExists) {
+      catch (ModuleWithNameAlreadyExistsException moduleWithNameAlreadyExists) {
         Messages.showErrorDialog(myProject, IdeBundle.message("error.module.already.exists", inputString),
                                  IdeBundle.message("title.rename.module"));
         return null;

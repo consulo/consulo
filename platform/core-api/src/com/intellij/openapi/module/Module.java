@@ -21,6 +21,7 @@ import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +32,8 @@ import org.jetbrains.annotations.Nullable;
  * @see ModuleManager#getModules()
  * @see ModuleComponent
  */
+@ArrayFactoryFields
 public interface Module extends ComponentManager, AreaInstance, Disposable, Named {
-  /**
-   * The empty array of modules which cab be reused to avoid unnecessary allocations.
-   */
-  Module[] EMPTY_ARRAY = new Module[0];
-
   /**
    * Returns the <code>VirtualFile</code> to the module dir
    *
@@ -50,7 +47,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return the path to the module dir
    */
-  @NotNull
+  @Nullable
   String getModuleDirPath();
 
   /**
@@ -58,7 +55,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return the path to the module url
    */
-  @NotNull
+  @Nullable
   String getModuleDirUrl();
 
   /**
@@ -66,7 +63,8 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return the project instance.
    */
-  @NotNull Project getProject();
+  @NotNull
+  Project getProject();
 
   /**
    * Returns the name of this module.
@@ -116,8 +114,9 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
+  @NotNull
   GlobalSearchScope getModuleScope();
-
+  @NotNull
   GlobalSearchScope getModuleScope(boolean includeTests);
 
   /**
@@ -125,6 +124,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
+  @NotNull
   GlobalSearchScope getModuleWithLibrariesScope();
 
   /**
@@ -132,13 +132,18 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
+  @NotNull
   GlobalSearchScope getModuleWithDependenciesScope();
-
+  @NotNull
   GlobalSearchScope getModuleContentScope();
+  @NotNull
   GlobalSearchScope getModuleContentWithDependenciesScope();
-
+  @NotNull
   GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests);
+  @NotNull
   GlobalSearchScope getModuleWithDependentsScope();
+  @NotNull
   GlobalSearchScope getModuleTestsWithDependentsScope();
+  @NotNull
   GlobalSearchScope getModuleRuntimeScope(boolean includeTests);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,12 @@
  */
 package com.intellij.openapi.module;
 
-public class ModuleWithNameAlreadyExists extends Exception {
-  private final String myModuleName;
-
-  /**
-   * @deprecated use constructor which allows passing of localized message
-   */
-  public ModuleWithNameAlreadyExists(String moduleName) {
-    //noinspection HardCodedStringLiteral
-    super("Module \'" + moduleName + "\' already exists in the project.");
-    myModuleName = moduleName;
-  }
-
-  public ModuleWithNameAlreadyExists(final String message, final String moduleName) {
+/**
+ * @author VISTALL
+ * @since 02.04.2015
+ */
+public class ModuleDirIsNotExistsException extends Exception {
+  public ModuleDirIsNotExistsException(final String message) {
     super(message);
-    myModuleName = moduleName;
-  }
-
-  public String getModuleName() {
-    return myModuleName;
   }
 }

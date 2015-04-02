@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.impl.ModuleEx;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author yole
@@ -31,8 +32,9 @@ public class CoreModuleManager extends ModuleManagerImpl {
     myParentDisposable = parentDisposable;
   }
 
+  @NotNull
   @Override
-  protected ModuleEx createModule(String name, String dirUrl) {
+  protected ModuleEx createModule(@NotNull String name, String dirUrl) {
     return new CoreModule(myParentDisposable, myProject, name, dirUrl);
   }
 

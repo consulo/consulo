@@ -34,7 +34,8 @@ public interface ModifiableModuleModel {
    *
    * @return the array of modules.
    */
-  @NotNull Module[] getModules();
+  @NotNull
+  Module[] getModules();
 
   /**
    * Creates a module of the specified type at the specified path and adds it to the project
@@ -46,7 +47,8 @@ public interface ModifiableModuleModel {
    * @param dirPath the path at which the module is created.
    * @return the module instance.
    */
-  @NotNull Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath);
+  @NotNull
+  Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath);
 
   /**
    * Creates a module of the specified type at the specified path and adds it to the project
@@ -60,7 +62,8 @@ public interface ModifiableModuleModel {
    * @param options map of module options to be used when creating the module
    * @return the module instance.
    */
-  @NotNull Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath, @Nullable Map<String, String> options);
+  @NotNull
+  Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath, @Nullable Map<String, String> options);
 
   /**
    * Disposes of the specified module and removes it from the project. {@link #commit()}
@@ -76,7 +79,8 @@ public interface ModifiableModuleModel {
    * @param name the name of the module to find.
    * @return the module instance, or null if no module with such name exists.
    */
-  @Nullable Module findModuleByName(@NotNull String name);
+  @Nullable
+  Module findModuleByName(@NotNull String name);
 
   /**
    * Disposes of all modules in the project.
@@ -102,9 +106,9 @@ public interface ModifiableModuleModel {
    *
    * @param module the module to rename.
    * @param newName the new name to rename the module to.
-   * @throws ModuleWithNameAlreadyExists if a module with such a name already exists in the project.
+   * @throws ModuleWithNameAlreadyExistsException if a module with such a name already exists in the project.
    */
-  void renameModule(@NotNull Module module, @NotNull String newName) throws ModuleWithNameAlreadyExists;
+  void renameModule(@NotNull Module module, @NotNull String newName) throws ModuleWithNameAlreadyExistsException;
 
   /**
    * Returns the project module which has been renamed to the specified name.
@@ -128,6 +132,4 @@ public interface ModifiableModuleModel {
   boolean hasModuleGroups();
 
   void setModuleGroupPath(Module module, String[] groupPath);
-
-  void setModuleFilePath(Module module, String oldPath, String newFilePath);
 }

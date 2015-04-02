@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleWithNameAlreadyExists;
+import com.intellij.openapi.module.ModuleWithNameAlreadyExistsException;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
@@ -68,8 +68,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     try {
       modifiableModuleModel.renameModule(myModule, name);
     }
-    catch (ModuleWithNameAlreadyExists moduleWithNameAlreadyExists) {
-      //do nothing
+    catch (ModuleWithNameAlreadyExistsException ignored) {
     }
     myConfigurator.moduleRenamed(myModule, myModuleName, name);
     myModuleName = name;

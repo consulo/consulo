@@ -31,6 +31,8 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.MessageHandler;
 import org.consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 
@@ -73,15 +75,16 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
   }
 
+  @NotNull
   @Override
-  protected ModuleEx createModule(String name, String dirUrl) {
+  protected ModuleEx createModule(@NotNull String name, @Nullable String dirUrl) {
     return new ModuleImpl(name, dirUrl, myProject);
   }
 
   @Override
   protected void fireModulesAdded() {
     if(ApplicationManager.getApplication().isCompilerServerMode()) {
-      for (final Module module : myModuleModel.myPathToModule.values()) {
+      for (final Module module : myModuleModel.getModules()) {
         fireModuleAdded(module);
       }
       return;
@@ -90,7 +93,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     Runnable runnableWithProgress = new Runnable() {
       @Override
       public void run() {
-        for (final Module module : myModuleModel.myPathToModule.values()) {
+        for (final Module module : myModuleModel.getModules()) {
           final Application app = ApplicationManager.getApplication();
           final Runnable swingRunnable = new Runnable() {
             @Override

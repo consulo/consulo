@@ -120,7 +120,7 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
   private static String getInvalidElementsString(ConfigurationErrorType type, Collection<ConfigurationErrorDescription> descriptions) {
     if (descriptions.size() == 1) {
       final ConfigurationErrorDescription description = ContainerUtil.getFirstItem(descriptions);
-      return type.getElementKind() + " " + description.getElementName();
+      return type.getElementKind() + " <b>" + description.getElementName() + "</b>";
     }
 
     return descriptions.size() + " " + StringUtil.pluralize(type.getElementKind());

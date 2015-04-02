@@ -28,6 +28,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jdom.Element;
@@ -41,7 +42,7 @@ import java.util.*;
 /**
  * @author dsl
  */
-@org.consulo.lombok.annotations.Logger
+@Logger
 public class RootModelImpl extends RootModelBase implements ModifiableRootModel {
   protected final ModuleRootManagerImpl myModuleRootManager;
   private boolean myWritable;

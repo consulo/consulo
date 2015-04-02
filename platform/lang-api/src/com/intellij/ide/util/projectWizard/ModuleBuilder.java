@@ -24,7 +24,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleWithNameAlreadyExists;
+import com.intellij.openapi.module.ModuleWithNameAlreadyExistsException;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -195,7 +195,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
 
   @NotNull
   public Module createModule(@NotNull ModifiableModuleModel moduleModel)
-    throws InvalidDataException, IOException, ModuleWithNameAlreadyExists, JDOMException, ConfigurationException {
+    throws InvalidDataException, IOException, ModuleWithNameAlreadyExistsException, JDOMException, ConfigurationException {
     LOG.assertTrue(myName != null);
     LOG.assertTrue(moduleDirPath != null);
 
@@ -224,7 +224,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
 
   @NotNull
   public Module createAndCommitIfNeeded(@NotNull Project project, @Nullable ModifiableModuleModel model, boolean runFromProjectWizard)
-    throws InvalidDataException, ConfigurationException, IOException, JDOMException, ModuleWithNameAlreadyExists {
+    throws InvalidDataException, ConfigurationException, IOException, JDOMException, ModuleWithNameAlreadyExistsException {
     final ModifiableModuleModel moduleModel = model != null ? model : ModuleManager.getInstance(project).getModifiableModel();
     final Module module = createModule(moduleModel);
     if (model == null) moduleModel.commit();

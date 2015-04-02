@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.module.impl;
+package com.intellij.openapi.module;
 
-import com.intellij.openapi.module.Module;
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * @author yole
- */
-@ArrayFactoryFields
-public interface ModuleEx extends Module {
-  void init();
-  void loadModuleComponents();
-  void moduleAdded();
-  void projectOpened();
-  void projectClosed();
-  void rename(String newName);
+public class ModuleWithNameAlreadyExistsException extends Exception {
+  private final String myModuleName;
 
-  void clearScopesCache();
+  public ModuleWithNameAlreadyExistsException(final String message, final String moduleName) {
+    super(message);
+    myModuleName = moduleName;
+  }
+
+  @NotNull
+  public String getModuleName() {
+    return myModuleName;
+  }
 }
