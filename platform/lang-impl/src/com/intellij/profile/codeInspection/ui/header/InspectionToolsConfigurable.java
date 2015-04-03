@@ -93,9 +93,7 @@ public abstract class InspectionToolsConfigurable
   private Alarm mySelectionAlarm;
 
   public InspectionToolsConfigurable(@NotNull final InspectionProjectProfileManager projectProfileManager, InspectionProfileManager profileManager) {
-    myWholePanel = new JPanel();
-
-    myWholePanel.setLayout(new BorderLayout());
+    myWholePanel = new JPanel(new BorderLayout());
 
     final JPanel toolbar = new JPanel();
     toolbar.setBorder(BorderFactory.createEmptyBorder(0, 0, 7, 0));
