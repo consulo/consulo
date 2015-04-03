@@ -72,8 +72,6 @@ public class HectorComponent extends JPanel {
   private final Map<Language, JSlider> mySliders;
   private final PsiFile myFile;
 
-  private final String myTitle = EditorBundle.message("hector.highlighting.level.title");
-
   public HectorComponent(@NotNull PsiFile file) {
     super(new GridBagLayout());
     setBorder(BorderFactory.createEmptyBorder(0, 0, 7, 0));
@@ -130,7 +128,7 @@ public class HectorComponent extends JPanel {
                                                    GridBagConstraints.NONE, new Insets(0, 5, 0, 0), 0, 0);
 
     JPanel panel = new JPanel(new GridBagLayout());
-    panel.setBorder(IdeBorderFactory.createTitledBorder(myTitle, false));
+    panel.setBorder(IdeBorderFactory.createTitledBorder(EditorBundle.message("hector.highlighting.level.title"), false));
     final boolean addLabel = mySliders.size() > 1;
     if (addLabel) {
       layoutVertical(panel);
@@ -204,11 +202,13 @@ public class HectorComponent extends JPanel {
   }
 
   private void layoutVertical(final JPanel panel) {
-    for (Language language : mySliders.keySet()) {
-      JSlider slider = mySliders.get(language);
+    for (Map.Entry<Language, JSlider> entry : mySliders.entrySet()) {
+      Language language = entry.getKey();
+      JSlider slider = entry.getValue();
+
       JPanel borderPanel = new JPanel(new BorderLayout());
       slider.setPreferredSize(new Dimension(100, 100));
-      borderPanel.add(new JLabel(language.getID()), BorderLayout.NORTH);
+      borderPanel.add(new JLabel(language.getDisplayName()), BorderLayout.NORTH);
       borderPanel.add(slider, BorderLayout.CENTER);
       panel.add(borderPanel, new GridBagConstraints(GridBagConstraints.RELATIVE, 1, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
                                                     new Insets(0, 5, 0, 5), 0, 0));
