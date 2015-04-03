@@ -129,7 +129,7 @@ public class ImportModuleAction extends AnAction {
     if (lastLocation != null) {
       toSelect = LocalFileSystem.getInstance().refreshAndFindFileByPath(lastLocation);
     }
-    VirtualFile[] files = chooser.choose(toSelect, project);
+    VirtualFile[] files = chooser.choose(project, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[] {toSelect});
     if (files.length == 0) {
       return null;
     }
