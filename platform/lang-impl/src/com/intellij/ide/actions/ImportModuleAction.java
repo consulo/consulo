@@ -146,21 +146,19 @@ public class ImportModuleAction extends AnAction {
     });
     StringBuilder builder = new StringBuilder("<html>Select ");
     boolean first = true;
-    if (list.size() > 1) {
-      for (ProjectImportProvider provider : list) {
-        String sample = provider.getFileSample();
-        if (sample != null) {
-          if (!first) {
-            builder.append(", <br>");
-          }
-          else {
-            first = false;
-          }
-          builder.append(sample);
+    for (ProjectImportProvider provider : list) {
+      String sample = provider.getFileSample();
+      if (sample != null) {
+        if (!first) {
+          builder.append(", <br>");
         }
+        else {
+          first = false;
+        }
+        builder.append(sample);
       }
     }
-    builder.append(".</html>");
+    builder.append("</html>");
     return builder.toString();
   }
 
