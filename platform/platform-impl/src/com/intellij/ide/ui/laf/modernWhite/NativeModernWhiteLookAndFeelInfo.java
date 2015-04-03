@@ -43,6 +43,6 @@ public class NativeModernWhiteLookAndFeelInfo extends UIManager.LookAndFeelInfo 
   @NotNull
   @Override
   public String getColorSchemeName() {
-    return getName();
+    return "Consulo Light";
   }
 }
