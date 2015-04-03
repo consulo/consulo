@@ -15,37 +15,25 @@
  */
 package com.intellij.ui;
 
-import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class GotItPanel {
-  JPanel myButton;
+  JButton myButton;
   JPanel myRoot;
   JLabel myTitle;
   JEditorPane myMessage;
 
 
   private void createUIComponents() {
-    myButton = new JPanel(new BorderLayout()) {
-      {
-        enableEvents(AWTEvent.MOUSE_EVENT_MASK);
-      }
+    myButton = new JButton() {
       @Override
-      protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        GraphicsUtil.setupAAPainting(g);
-        ((Graphics2D)g).setPaint(new GradientPaint(0, 0, new JBColor(new Color(77, 143, 253), new Color(52, 74, 100)), 0, getHeight(),
-                                                   new JBColor(new Color(71, 135, 237), new Color(38, 53, 73))));
-        g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
-        ((Graphics2D)g).setStroke(new BasicStroke(UIUtil.isUnderDarcula() ? 2f : 1f));
-        g.setColor(new JBColor(new Color(71, 91, 167), new Color(78, 120, 161)));
-        g.drawRoundRect(0,0,getWidth()-1, getHeight()-1, 5,5);
+      public boolean isDefaultButton() {
+        return true;
       }
     };
     myMessage = new JEditorPane("text/html", "<html></html>");
