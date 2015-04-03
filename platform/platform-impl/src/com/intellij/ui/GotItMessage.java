@@ -38,16 +38,16 @@ public class GotItMessage {
   private boolean myShowCallout = true;
 
   private GotItMessage(@NotNull String title,
-                       @NotNull String message                       ) {
+                       @NotNull String message) {
     myTitle = title;
     final String[] lines = message.split("\n");
 
-    StringBuffer buf = new StringBuffer("<html><body><div align='center' style=\"font-family: ")
-            .append(UIUtil.getLabelFont().getFontName()).append("; ")
-            .append("font-size: 12pt;\">")
-            .append(lines.length > 1 ? message.replace("\n", "<br>") : message)
-            .append("</div></body></html>");
-    myMessage = buf.toString();
+    myMessage = "<html><body><div align='center' style=\"font-family: " +
+                 UIUtil.getLabelFont().getFontName() +
+                 "; " +
+                 "font-size: 12pt;\">" +
+                 (lines.length > 1 ? message.replace("\n", "<br>") : message) +
+                 "</div></body></html>";
   }
 
   public static GotItMessage createMessage(@NotNull String title,
