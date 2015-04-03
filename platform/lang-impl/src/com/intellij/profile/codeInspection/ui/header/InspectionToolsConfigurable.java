@@ -95,7 +95,7 @@ public abstract class InspectionToolsConfigurable
   public InspectionToolsConfigurable(@NotNull final InspectionProjectProfileManager projectProfileManager, InspectionProfileManager profileManager) {
     myWholePanel = new JPanel(new BorderLayout());
 
-    final JPanel toolbar = new JPanel();
+    final JPanel toolbar = new JPanel(new GridBagLayout());
     toolbar.setBorder(BorderFactory.createEmptyBorder(0, 0, 7, 0));
 
     myPanel = new JPanel();
@@ -362,7 +362,6 @@ public abstract class InspectionToolsConfigurable
       }
     });
 
-    toolbar.setLayout(new GridBagLayout());
     toolbar.add(new JLabel(HEADER_TITLE),
                 new GridBagConstraints(0, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0));
 
