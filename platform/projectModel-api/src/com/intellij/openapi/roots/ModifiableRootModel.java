@@ -35,6 +35,8 @@ public interface ModifiableRootModel extends ModuleRootModel, ModifiableModuleRo
 
   boolean removeLayer(@NotNull String name, boolean initDefault);
 
+  void removeAllLayers(boolean initDefault);
+
   @Nullable()
   ModifiableModuleRootLayer setCurrentLayer(@NotNull String name);
 

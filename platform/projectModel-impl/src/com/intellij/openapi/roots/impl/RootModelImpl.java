@@ -491,6 +491,28 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return removedLayer != null;
   }
 
+  @Override
+  public void removeAllLayers(boolean initDefault) {
+    assertWritable();
+
+    for (ModuleRootLayerImpl layer : myLayers.values()) {
+      Disposer.dispose(layer);
+    }
+    myLayers.clear();
+
+    if (initDefault) {
+      try {
+        initDefaultLayer(null);
+      }
+      catch (InvalidDataException ignored) {
+        //
+      }
+    }
+    else {
+      setCurrentLayerSafe(null);
+    }
+  }
+
   @NotNull
   @Override
   public String getCurrentLayerName() {
