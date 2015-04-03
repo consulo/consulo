@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.NewProjectUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
@@ -31,9 +32,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectImportProvider;
+import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -144,22 +147,12 @@ public class ImportModuleAction extends AnAction {
         return project != null || provider.canCreateNewProject();
       }
     });
-    StringBuilder builder = new StringBuilder("<html>Select ");
-    boolean first = true;
-    for (ProjectImportProvider provider : list) {
-      String sample = provider.getFileSample();
-      if (sample != null) {
-        if (!first) {
-          builder.append(", <br>");
-        }
-        else {
-          first = false;
-        }
-        builder.append(sample);
+    return IdeBundle.message("import.project.chooser.header", StringUtil.join(list, new Function<ProjectImportProvider, String>() {
+      @Override
+      public String fun(ProjectImportProvider projectImportProvider) {
+        return projectImportProvider.getFileSample();
       }
-    }
-    builder.append("</html>");
-    return builder.toString();
+    }, ", <br>"));
   }
 
   @Nullable
