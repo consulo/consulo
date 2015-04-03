@@ -53,8 +53,12 @@ public class OpenProjectAction extends AnAction implements DumbAware {
         }
       }
     }
-    descriptor.setDescription(IdeBundle.message("filter.project.files", StringUtil.join(extensions, ", ")));
-
+    if(extensions.isEmpty()) {
+      descriptor.setDescription(IdeBundle.message("filter.project.directories"));
+    }
+    else {
+      descriptor.setDescription(IdeBundle.message("filter.project.files", StringUtil.join(extensions, ", ")));
+    }
     VirtualFile userHomeDir = null;
     if (SystemInfo.isUnix) {
       userHomeDir = VfsUtil.getUserHomeDir();
