@@ -42,13 +42,6 @@ import java.util.Map;
  */
 public class ContentFolderImpl extends BaseModuleRootLayerChild
   implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
-  private static Map<Key, ContentFolderPropertyProvider> ourPropertiesToKeyCache = new HashMap<Key, ContentFolderPropertyProvider>();
-
-  static {
-    for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
-      ourPropertiesToKeyCache.put(propertyProvider.getKey(), propertyProvider);
-    }
-  }
 
   @NonNls
   public static final String URL_ATTRIBUTE = "url";
@@ -60,7 +53,9 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
   private final VirtualFilePointer myFilePointer;
   protected final ContentEntryImpl myContentEntry;
   private final ContentFolderTypeProvider myContentFolderType;
-  private Map<Key, Object> myProperties;
+  private Map<String, Object> myProperties;
+
+  private Map<Key, Object> myPropertiesByKeyCache;
 
   ContentFolderImpl(@NotNull VirtualFile file,
                     @NotNull ContentFolderTypeProvider contentFolderType,
@@ -73,12 +68,12 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
 
   ContentFolderImpl(@NotNull String url,
                     @NotNull ContentFolderTypeProvider contentFolderType,
-                    @Nullable Map<Key, Object> map,
+                    @Nullable Map<String, Object> map,
                     @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getModuleRootLayer());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
-    myProperties = map == null ? null : new HashMap<Key, Object>(map);
+    myProperties = map == null ? null : new HashMap<String, Object>(map);
     myFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
   }
 
@@ -87,17 +82,17 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
   }
 
   ContentFolderImpl(@NotNull Element element, @NotNull ContentEntryImpl contentEntry) throws InvalidDataException {
-    this(getUrlFrom(element), getType(element), getProperties(element), contentEntry);
+    this(getUrlFrom(element), getType(element), readProperties(element), contentEntry);
   }
 
   protected ContentFolderImpl(@NotNull VirtualFilePointer filePointer,
-                              @Nullable Map<Key, Object> properties,
+                              @Nullable Map<String, Object> properties,
                               @NotNull ContentFolderTypeProvider contentFolderType,
                               @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getModuleRootLayer());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
-    myProperties = properties == null ? null : new HashMap<Key, Object>(properties);
+    myProperties = properties;
     myFilePointer = VirtualFilePointerManager.getInstance().duplicate(filePointer, this, null);
   }
 
@@ -110,26 +105,24 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
   }
 
   @Nullable
-  private static Map<Key, Object> getProperties(Element element) throws InvalidDataException {
+  private static Map<String, Object> readProperties(Element element) throws InvalidDataException {
     List<Element> elementChildren = element.getChildren("property");
     if (elementChildren.isEmpty()) {
       return null;
     }
-    Map<Key, Object> map = new HashMap<Key, Object>();
+    Map<String, Object> map = new HashMap<String, Object>();
 
     for (Element elementChild : elementChildren) {
       String key = elementChild.getAttributeValue("key");
       String value = elementChild.getAttributeValue("value");
 
-      Key<?> keyAsKey = Key.findKeyByName(key);
-
-      ContentFolderPropertyProvider propertyProvider = keyAsKey != null ? ourPropertiesToKeyCache.get(keyAsKey) : null;
+      ContentFolderPropertyProvider propertyProvider = ContentFolderPropertyProvider.findProvider(key);
       if(propertyProvider != null) {
         Object b = propertyProvider.fromString(value);
-        map.put(keyAsKey, b);
+        map.put(key, b);
       }
       else {
-        map.put(keyAsKey, value);
+        map.put(key, value);
       }
     }
     return map;
@@ -172,13 +165,14 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     if(myProperties == null) {
       return;
     }
-    for (Map.Entry<Key, Object> entry : myProperties.entrySet()) {
-      Key key = entry.getKey();
+    for (Map.Entry<String, Object> entry : myProperties.entrySet()) {
+      String key = entry.getKey();
       Object value = entry.getValue();
 
       Element child = new Element("property");
-      child.setAttribute("key", key.toString());
-      ContentFolderPropertyProvider propertiesProvider = ourPropertiesToKeyCache.get(key);
+      child.setAttribute("key", key);
+
+      ContentFolderPropertyProvider propertiesProvider = ContentFolderPropertyProvider.findProvider(key);
       if(propertiesProvider != null) {
         child.setAttribute("value", propertiesProvider.toString(value));
       }
@@ -198,33 +192,57 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
   @NotNull
   @Override
   public Map<Key, Object> getProperties() {
-    return myProperties == null ? Collections.<Key, Object>emptyMap() : myProperties;
+    initPropertiesByKeyCache();
+    return myPropertiesByKeyCache;
+  }
+
+  private void initPropertiesByKeyCache() {
+    if (myPropertiesByKeyCache != null) {
+      return;
+    }
+
+    if(myProperties == null) {
+      myPropertiesByKeyCache = Collections.emptyMap();
+    }
+    else {
+      myPropertiesByKeyCache = new HashMap<Key, Object>(myProperties.size());
+      for (Map.Entry<String, Object> entry : myProperties.entrySet()) {
+        ContentFolderPropertyProvider<?> provider = ContentFolderPropertyProvider.findProvider(entry.getKey());
+        if(provider == null) {
+          continue;
+        }
+        myPropertiesByKeyCache.put(provider.getKey(), entry.getValue());
+      }
+    }
   }
 
   @Nullable
   @Override
+  @SuppressWarnings("unchecked")
   public <T> T getPropertyValue(@NotNull Key<T> key) {
     if (myProperties == null) {
       return null;
     }
-    return key.get(myProperties);
+    return (T)myProperties.get(key.toString());
   }
 
   @Override
   public <T> void setPropertyValue(@NotNull Key<T> key, @Nullable T value) {
+    myPropertiesByKeyCache = null;
+
     if (value == null && myProperties == null) {
       return;
     }
 
     if (value == null) {
-      myProperties.remove(key);
+      myProperties.remove(key.toString());
     }
     else {
       if (myProperties == null) {
-        myProperties = new HashMap<Key, Object>();
+        myProperties = new HashMap<String, Object>();
       }
 
-      key.set(myProperties, value);
+      myProperties.put(key.toString(), value);
     }
   }
 

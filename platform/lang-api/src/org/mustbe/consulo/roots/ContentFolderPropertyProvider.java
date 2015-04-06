@@ -42,4 +42,14 @@ public abstract class ContentFolderPropertyProvider<T> {
 
   @NotNull
   public abstract T[] getValues();
+
+  @Nullable
+  public static ContentFolderPropertyProvider<?> findProvider(@NotNull String key) {
+    for (ContentFolderPropertyProvider provider : EP_NAME.getExtensions()) {
+      if(key.equals(provider.getKey().toString())) {
+        return provider;
+      }
+    }
+    return null;
+  }
 }
