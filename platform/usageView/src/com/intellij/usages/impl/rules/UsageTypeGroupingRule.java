@@ -62,13 +62,15 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
   private static UsageType getUsageType(PsiElement element, @NotNull UsageTarget[] targets) {
     if (element == null) return null;
 
-    if (PsiTreeUtil.getParentOfType(element, PsiComment.class, false) != null) { return UsageType.COMMENT_USAGE; }
+    if (PsiTreeUtil.getParentOfType(element, PsiComment.class, false) != null) {
+      return UsageType.COMMENT_USAGE;
+    }
 
     UsageTypeProvider[] providers = Extensions.getExtensions(UsageTypeProvider.EP_NAME);
-    for(UsageTypeProvider provider: providers) {
+    for (UsageTypeProvider provider : providers) {
       UsageType usageType;
       if (provider instanceof UsageTypeProviderEx) {
-        usageType = ((UsageTypeProviderEx) provider).getUsageType(element, targets);
+        usageType = ((UsageTypeProviderEx)provider).getUsageType(element, targets);
       }
       else {
         usageType = provider.getUsageType(element);
@@ -100,7 +102,7 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
     @Override
     @NotNull
     public String getText(UsageView view) {
-      return myUsageType.toString();
+      return view == null ? myUsageType.toString() : myUsageType.toString(view.getPresentation());
     }
 
     @Override
@@ -109,11 +111,18 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
     }
 
     @Override
-    public boolean isValid() { return true; }
+    public boolean isValid() {
+      return true;
+    }
+
     @Override
-    public void navigate(boolean focus) { }
+    public void navigate(boolean focus) {
+    }
+
     @Override
-    public boolean canNavigate() { return false; }
+    public boolean canNavigate() {
+      return false;
+    }
 
     @Override
     public boolean canNavigateToSource() {
@@ -129,12 +138,12 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
       if (this == o) return true;
       if (!(o instanceof UsageTypeGroup)) return false;
       final UsageTypeGroup usageTypeGroup = (UsageTypeGroup)o;
-      if (myUsageType != null ? !myUsageType.equals(usageTypeGroup.myUsageType) : usageTypeGroup.myUsageType != null) return false;
+      if (!myUsageType.equals(usageTypeGroup.myUsageType)) return false;
       return true;
     }
 
     public int hashCode() {
-      return myUsageType != null ? myUsageType.hashCode() : 0;
+      return myUsageType.hashCode();
     }
   }
 }
