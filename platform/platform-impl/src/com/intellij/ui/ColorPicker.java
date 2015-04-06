@@ -81,8 +81,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     public Dimension getPreferredSize() {
       Dimension size = super.getPreferredSize();
       UIManager.LookAndFeelInfo info = LafManager.getInstance().getCurrentLookAndFeel();
-      if (info != null && info.getName().contains("Windows"))
-        size.width += 10;
+      if (info != null && info.getName().contains("Windows")) size.width += 10;
       return size;
     }
   };
@@ -166,9 +165,8 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     final NumberDocument doc = new NumberDocument(hex);
     int lafFix = UIUtil.isUnderWindowsLookAndFeel() || UIUtil.isUnderDarcula() ? 1 : 0;
     UIManager.LookAndFeelInfo info = LafManager.getInstance().getCurrentLookAndFeel();
-    if (info != null && (info.getName().startsWith("IDEA") || info.getName().equals("Windows Classic")))
-      lafFix = 1;
-    final JTextField field = new JTextField(doc, "", (hex ? 5:2) + lafFix);
+    if (info != null && (info.getName().startsWith("IDEA") || info.getName().equals("Windows Classic"))) lafFix = 1;
+    final JTextField field = new JTextField(doc, "", (hex ? 5 : 2) + lafFix);
     field.setSize(50, -1);
     doc.setSource(field);
     field.getDocument().addDocumentListener(this);
@@ -232,7 +230,8 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     if (myHex.hasFocus()) {
       Color c = ColorUtil.fromHex(myHex.getText(), null);
       color = c != null ? ColorUtil.toAlpha(c, myColorWheelPanel.myColorWheel.myOpacity) : null;
-    } else {
+    }
+    else {
       color = gatherRGB();
     }
     if (color != null) {
@@ -252,7 +251,8 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
 
       if (fromHex) {
         applyColor(color);
-      } else {
+      }
+      else {
         applyColorToHEX(color);
       }
 
@@ -297,7 +297,8 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
       final int b = Integer.parseInt(myBlue.getText());
 
       return isRGBMode() ? new Color(r, g, b) : new Color(Color.HSBtoRGB(((float)r) / 360f, ((float)g) / 100f, ((float)b) / 100f));
-    } catch (Exception ignore) {
+    }
+    catch (Exception ignore) {
     }
     return null;
   }
@@ -322,7 +323,8 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
   private void applyColor(final Color color) {
     if (isRGBMode()) {
       applyColorToRGB(color);
-    } else {
+    }
+    else {
       applyColorToHSB(color);
     }
   }
@@ -682,12 +684,13 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     void setSource(JTextField field) {
       mySrc = field;
     }
+
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
       final boolean rgb = isRGBMode();
       char[] source = str.toCharArray();
       if (mySrc != null) {
         final int selected = mySrc.getSelectionEnd() - mySrc.getSelectionStart();
-        int newLen = mySrc.getText().length() -  selected + str.length();
+        int newLen = mySrc.getText().length() - selected + str.length();
         if (newLen > (myHex ? 6 : 3)) {
           Toolkit.getDefaultToolkit().beep();
           return;
@@ -713,9 +716,9 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
               Toolkit.getDefaultToolkit().beep();
               return;
             }
-          } else {
-            if ((mySrc == myRed && num > 359)
-              || ((mySrc == myGreen || mySrc == myBlue) && num > 100)) {
+          }
+          else {
+            if ((mySrc == myRed && num > 359) || ((mySrc == myGreen || mySrc == myBlue) && num > 100)) {
               Toolkit.getDefaultToolkit().beep();
               return;
             }
@@ -763,9 +766,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
           if (color.contains("-")) {
             List<String> components = StringUtil.split(color, "-");
             if (components.size() == 4) {
-              myRecentColors.add(new Color(Integer.parseInt(components.get(0)),
-                                           Integer.parseInt(components.get(1)),
-                                           Integer.parseInt(components.get(2)),
+              myRecentColors.add(new Color(Integer.parseInt(components.get(0)), Integer.parseInt(components.get(1)), Integer.parseInt(components.get(2)),
                                            Integer.parseInt(components.get(3))));
             }
           }
@@ -780,8 +781,8 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     public String getToolTipText(MouseEvent event) {
       Color color = getColor(event);
       if (color != null) {
-        return String.format("R: %d G: %d B: %d A: %s", color.getRed(), color.getGreen(), color.getBlue(),
-                             String.format("%.2f", (float)(color.getAlpha() / 255.0)));
+        return String
+                .format("R: %d G: %d B: %d A: %s", color.getRed(), color.getGreen(), color.getBlue(), String.format("%.2f", (float)(color.getAlpha() / 255.0)));
       }
 
       return super.getToolTipText(event);
@@ -804,8 +805,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
       final List<String> values = new ArrayList<String>();
       for (Color recentColor : myRecentColors) {
         if (recentColor == null) break;
-        values
-          .add(String.format("%d-%d-%d-%d", recentColor.getRed(), recentColor.getGreen(), recentColor.getBlue(), recentColor.getAlpha()));
+        values.add(String.format("%d-%d-%d-%d", recentColor.getRed(), recentColor.getGreen(), recentColor.getBlue(), recentColor.getAlpha()));
       }
 
       PropertiesComponent.getInstance().setValue(COLOR_CHOOSER_COLORS_KEY, StringUtil.join(values, ",,,"));
@@ -999,15 +999,12 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
           int ky = cy - y; // Kartesian coordinates of y
 
           int index = x + y * myWidth;
-          mySat[index] = (float)Math.sqrt(squarekx + ky
-                                                     * ky)
-                         / radius;
+          mySat[index] = (float)Math.sqrt(squarekx + ky * ky) / radius;
           if (mySat[index] <= 1f) {
             myAlphas[index] = 0xff000000;
           }
           else {
-            myAlphas[index] = (int)((blend - Math.min(blend,
-                                                      mySat[index] - 1f)) * 255 / blend) << 24;
+            myAlphas[index] = (int)((blend - Math.min(blend, mySat[index] - 1f)) * 255 / blend) << 24;
             mySat[index] = 1f;
           }
           if (myAlphas[index] != 0) {
@@ -1020,10 +1017,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     public void generateColorWheel() {
       for (int index = 0; index < myPixels.length; index++) {
         if (myAlphas[index] != 0) {
-          myPixels[index] = myAlphas[index]
-                            | 0xffffff
-                              & Color.HSBtoRGB(myHues[index],
-                                               mySat[index], myBrightness);
+          myPixels[index] = myAlphas[index] | 0xffffff & Color.HSBtoRGB(myHues[index], mySat[index], myBrightness);
         }
       }
       newPixels();
@@ -1173,8 +1167,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
 
         graphics.dispose();
 
-        myImage = myParent.getGraphicsConfiguration().createCompatibleImage(myMagnifierImage.getWidth(), myMagnifierImage.getHeight(),
-                                                                            Transparency.TRANSLUCENT);
+        myImage = myParent.getGraphicsConfiguration().createCompatibleImage(myMagnifierImage.getWidth(), myMagnifierImage.getHeight(), Transparency.TRANSLUCENT);
 
         myGraphics = (Graphics2D)myImage.getGraphics();
         myGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
@@ -1236,7 +1229,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
           myPreviousColor = c;
           myPreviousLocation = mouseLoc;
           myCaptureRect.setLocation(mouseLoc.x - 2/*+ myCaptureOffset.x*/, mouseLoc.y - 2/*+ myCaptureOffset.y*/);
-          myCaptureRect.setBounds(mouseLoc.x -2, mouseLoc.y -2, 5, 5);
+          myCaptureRect.setBounds(mouseLoc.x - 2, mouseLoc.y - 2, 5, 5);
 
           BufferedImage capture = myRobot.createScreenCapture(myCaptureRect);
 
@@ -1291,15 +1284,6 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
         return false;
       }
     }
-  }
-
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        showDialog(null, "", null, true, null, false);
-      }
-    });
   }
 }
 interface ColorListener {
