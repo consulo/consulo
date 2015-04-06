@@ -26,6 +26,11 @@
     </component>
 
     <component>
+      <implementation-class>org.mustbe.consulo.roots.ContentEntryFileListener</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+
+    <component>
       <interface-class>com.intellij.openapi.command.undo.UndoManager</interface-class>
       <implementation-class>com.intellij.openapi.command.impl.UndoManagerImpl</implementation-class>
     </component>
