@@ -45,6 +45,7 @@ public interface Project extends ComponentManager, AreaInstance {
    *
    * @return project base directory, or <code>null</code> for default project
    */
+  @Nullable
   VirtualFile getBaseDir();
 
   /**

@@ -170,6 +170,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
+  @Nullable
   public VirtualFile getProjectBaseDir() {
     if (myProject.isDefault()) return null;
 

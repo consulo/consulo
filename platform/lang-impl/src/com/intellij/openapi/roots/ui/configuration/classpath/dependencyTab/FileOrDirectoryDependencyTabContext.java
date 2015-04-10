@@ -43,6 +43,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,13 +86,15 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     myFileSystemTree = new FileSystemTreeImpl(module.getProject(), myFileChooserDescriptor);
     Disposer.register(parent, myFileSystemTree);
     myFileSystemTree.showHiddens(true);
-    final VirtualFile moduleDir = module.getModuleDir();
-    myFileSystemTree.select(moduleDir, new Runnable() {
-      @Override
-      public void run() {
-        myFileSystemTree.expand(moduleDir, null);
-      }
-    });
+    final VirtualFile dirForSelect = ObjectUtils.chooseNotNull(module.getModuleDir(), module.getProject().getBaseDir());
+    if(dirForSelect != null) {
+      myFileSystemTree.select(dirForSelect, new Runnable() {
+        @Override
+        public void run() {
+          myFileSystemTree.expand(dirForSelect, null);
+        }
+      });
+    }
   }
 
   private FileChooserDescriptor createFileChooserDescriptor() {
