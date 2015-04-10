@@ -137,7 +137,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     TreeUtil.installActions(myTree);
 
     myTree.getSelectionModel().setSelectionMode(
-      descriptor.getChooseMultiple() ? TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION : TreeSelectionModel.SINGLE_TREE_SELECTION
+      descriptor.isChooseMultiple() ? TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION : TreeSelectionModel.SINGLE_TREE_SELECTION
     );
     registerTreeActions();
 
@@ -276,7 +276,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     VirtualFile selectFile;
 
     if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
-      selectFile = ArchiveVfsUtil.getVirtualFileForJar(file);
+      selectFile = ArchiveVfsUtil.getVirtualFileForArchive(file);
       if (selectFile == null) {
         return null;
       }
