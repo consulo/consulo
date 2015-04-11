@@ -23,6 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStubFileElementType;
+import com.intellij.util.Processor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +48,9 @@ public abstract class SerializationManager {
       for (StubElementTypeHolderEP holderEP : Extensions.getExtensions(StubElementTypeHolderEP.EP_NAME)) {
         holderEP.initialize();
       }
-      final IElementType[] stubElementTypes = IElementType.enumerate(new IElementType.Predicate() {
+      final IElementType[] stubElementTypes = IElementType.enumerate(new Processor<IElementType>() {
         @Override
-        public boolean matches(final IElementType type) {
+        public boolean process(final IElementType type) {
           return type instanceof StubSerializer;
         }
       });

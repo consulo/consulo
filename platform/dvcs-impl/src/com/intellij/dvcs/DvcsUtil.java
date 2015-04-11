@@ -46,9 +46,9 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.status.StatusBarUtil;
+import com.intellij.util.CommonProcessors;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.text.DateFormatUtil;
@@ -292,8 +292,7 @@ public class DvcsUtil {
 
   public static void ensureAllChildrenInVfs(@Nullable VirtualFile dir) {
     if (dir != null) {
-      //noinspection unchecked
-      VfsUtilCore.processFilesRecursively(dir, Processor.TRUE);
+      VfsUtilCore.processFilesRecursively(dir, CommonProcessors.<VirtualFile>alwaysTrue());
     }
   }
 

@@ -17,6 +17,8 @@ package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.Processor;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,22 +34,9 @@ import java.util.List;
  * @see com.intellij.lexer.Lexer#getTokenType()
  * @see com.intellij.lang.ASTNode#getElementType()
  */
+@ArrayFactoryFields
 public class IElementType {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.tree.IElementType");
-
-  public static final IElementType[] EMPTY_ARRAY = new IElementType[0];
-
-  /**
-   * Default enumeration predicate which matches all token types.
-   *
-   * @see #enumerate(Predicate)
-   */
-  public static final Predicate TRUE = new Predicate() {
-    @Override
-    public boolean matches(IElementType type) {
-      return true;
-    }
-  };
 
   public static final short FIRST_TOKEN_INDEX = 1;
   public static final short MAX_INDEXED_TYPES = 15000;
@@ -156,15 +145,6 @@ public class IElementType {
     }
   }
 
-  /**
-   * Predicate for matching element types.
-   *
-   * @see IElementType#enumerate(Predicate)
-   */
-  public interface Predicate {
-    boolean matches(IElementType type);
-  }
-
   static short getAllocatedTypesCount() {
     return ourCounter;
   }
@@ -176,7 +156,7 @@ public class IElementType {
    * @return the array of matching element types.
    */
   @NotNull
-  public static IElementType[] enumerate(@NotNull Predicate p) {
+  public static IElementType[] enumerate(@NotNull Processor<IElementType> p) {
     IElementType[] copy;
     synchronized (ourRegistry) {
       copy = ourRegistry.toArray(new IElementType[ourRegistry.size()]);
@@ -184,7 +164,7 @@ public class IElementType {
 
     List<IElementType> matches = new ArrayList<IElementType>();
     for (IElementType value : copy) {
-      if (p.matches(value)) {
+      if (p.process(value)) {
         matches.add(value);
       }
     }

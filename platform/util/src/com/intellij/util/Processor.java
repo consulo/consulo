@@ -15,11 +15,15 @@
  */
 package com.intellij.util;
 
+import org.mustbe.consulo.DeprecationInfo;
+
 /**
  * @param <T> Input value type.
  * @see com.intellij.util.CommonProcessors
  */
 public interface Processor<T> {
+  @Deprecated
+  @DeprecationInfo(value = "Use CommonProcessors#alwaysTrue()", until = "2.0")
   Processor TRUE = new Processor() {
     @Override
     public boolean process(Object o) {

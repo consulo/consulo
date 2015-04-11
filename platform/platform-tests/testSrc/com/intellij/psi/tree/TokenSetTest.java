@@ -18,6 +18,7 @@ package com.intellij.psi.tree;
 import com.intellij.lang.Language;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.CommonProcessors;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -127,7 +128,7 @@ public class TokenSetTest {
 
   @Test
   public void performance() throws Exception {
-    final IElementType[] elementTypes = IElementType.enumerate(IElementType.TRUE);
+    final IElementType[] elementTypes = IElementType.enumerate(CommonProcessors.<IElementType>alwaysTrue());
     final TokenSet set = TokenSet.create();
     final int shift = new Random().nextInt(500000);
 
