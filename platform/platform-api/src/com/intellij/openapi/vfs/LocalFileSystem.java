@@ -19,7 +19,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.util.Processor;
-import com.intellij.util.io.fs.IFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,13 +60,7 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
   public abstract VirtualFile findFileByIoFile(@NotNull File file);
 
   @Nullable
-  public abstract VirtualFile findFileByIoFile(@NotNull IFile file);
-
-  @Nullable
   public abstract VirtualFile refreshAndFindFileByIoFile(@NotNull File file);
-
-  @Nullable
-  public abstract VirtualFile refreshAndFindFileByIoFile(@NotNull IFile ioFile);
 
   /**
    * Performs a non-recursive synchronous refresh of specified files.

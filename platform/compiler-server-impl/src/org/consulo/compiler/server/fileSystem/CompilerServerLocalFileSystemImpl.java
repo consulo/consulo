@@ -25,7 +25,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.local.CoreLocalVirtualFile;
 import com.intellij.util.Processor;
-import com.intellij.util.io.fs.IFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,20 +54,8 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
 
   @Nullable
   @Override
-  public VirtualFile findFileByIoFile(@NotNull IFile file) {
-    return findFileByPath(file.getAbsolutePath());
-  }
-
-  @Nullable
-  @Override
   public VirtualFile refreshAndFindFileByIoFile(@NotNull File file) {
     return findFileByIoFile(file);
-  }
-
-  @Nullable
-  @Override
-  public VirtualFile refreshAndFindFileByIoFile(@NotNull IFile ioFile) {
-    return findFileByIoFile(ioFile);
   }
 
   @Override

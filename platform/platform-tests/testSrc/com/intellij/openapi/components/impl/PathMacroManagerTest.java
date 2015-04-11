@@ -17,7 +17,6 @@ package com.intellij.openapi.components.impl;
 
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.application.options.ReplacePathToMacroMap;
-import com.intellij.mock.MockFileSystem;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.PathMacros;
@@ -29,8 +28,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.io.fs.FileSystem;
-import com.intellij.util.io.fs.IFileSystem;
 import org.hamcrest.Description;
 import org.jetbrains.annotations.Nullable;
 import org.jmock.Expectations;
@@ -40,7 +37,6 @@ import org.jmock.api.Invocation;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,8 +58,6 @@ public class PathMacroManagerTest {
   private Mockery context;
 
   protected ApplicationEx myApplication;
-  private IFileSystem myOldFileSystem;
-  protected MockFileSystem myFileSystem;
 
   @Before
   public final void setupApplication() throws Exception {
@@ -98,18 +92,6 @@ public class PathMacroManagerTest {
         });
       }
     });
-  }
-
-  @Before
-  public final void setupFileSystem() {
-    myOldFileSystem = FileSystem.FILE_SYSTEM;
-    myFileSystem = new MockFileSystem();
-    FileSystem.FILE_SYSTEM = myFileSystem;
-  }
-
-  @After
-  public final void restoreFilesystem() {
-    FileSystem.FILE_SYSTEM = myOldFileSystem;
   }
 
   private void setUpMocks(final String projectPath) {

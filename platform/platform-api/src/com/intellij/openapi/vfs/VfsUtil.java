@@ -28,12 +28,13 @@ import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.util.*;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.Function;
+import com.intellij.util.Processor;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.io.URLUtil;
-import com.intellij.util.io.fs.FileSystem;
-import com.intellij.util.io.fs.IFile;
 import com.intellij.util.lang.UrlClassLoader;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
@@ -407,11 +408,6 @@ public class VfsUtil extends VfsUtilCore {
 
     path = URLUtil.unescapePercentSequences(path);
     return protocol + "://" + path;
-  }
-
-  @NotNull
-  public static IFile virtualToIFile(@NotNull VirtualFile file) {
-    return FileSystem.FILE_SYSTEM.createFile(PathUtil.toPresentableUrl(file.getUrl()));
   }
 
   public static VirtualFile copyFileRelative(Object requestor,
