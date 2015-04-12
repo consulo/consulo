@@ -25,6 +25,7 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.idea.IdeaApplication;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -67,6 +68,10 @@ public class MacOSApplicationProvider implements ApplicationComponent {
   }
 
   public MacOSApplicationProvider() {
+    if(ApplicationManager.getApplication().isUnitTestMode()) {
+      return;
+    }
+
     if (SystemInfo.isMac) {
       try {
         Worker.initMacApplication();

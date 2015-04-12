@@ -270,7 +270,6 @@ public class PluginManagerCore {
     File pluginRoot = pluginDescriptor.getPath();
 
     //if (classPath.length == 0) return null;
-    if (isUnitTestMode()) return null;
     try {
       final List<URL> urls = new ArrayList<URL>(classPath.length);
       for (File aClassPath : classPath) {
@@ -332,7 +331,6 @@ public class PluginManagerCore {
   }
 
   static ClassLoader[] getParentLoaders(Map<PluginId, ? extends IdeaPluginDescriptor> idToDescriptorMap, PluginId[] pluginIds) {
-    if (isUnitTestMode()) return new ClassLoader[0];
     final List<ClassLoader> classLoaders = new ArrayList<ClassLoader>();
     for (final PluginId id : pluginIds) {
       IdeaPluginDescriptor pluginDescriptor = idToDescriptorMap.get(id);
@@ -779,17 +777,9 @@ public class PluginManagerCore {
 
     int pluginsCount = countPlugins(PathManager.getPluginsPath()) + countPlugins(PathManager.getPreInstalledPluginsPath());
     loadDescriptors(PathManager.getPluginsPath(), result, progress, pluginsCount);
-    Application application = ApplicationManager.getApplication();
-    boolean fromSources = false;
-    if (application == null || !application.isUnitTestMode()) {
-      int size = result.size();
-      loadDescriptors(PathManager.getPreInstalledPluginsPath(), result, progress, pluginsCount);
-      fromSources = size == result.size();
-    }
-
+    loadDescriptors(PathManager.getPreInstalledPluginsPath(), result, progress, pluginsCount);
     loadDescriptorsFromProperty(result);
-
-    loadDescriptorsFromClassPath(result, fromSources ? progress : null);
+    loadDescriptorsFromClassPath(result, progress);
 
     IdeaPluginDescriptorImpl[] pluginDescriptors = result.toArray(new IdeaPluginDescriptorImpl[result.size()]);
     final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap = new THashMap<PluginId, IdeaPluginDescriptorImpl>();

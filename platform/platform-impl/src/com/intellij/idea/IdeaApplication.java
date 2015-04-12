@@ -66,19 +66,19 @@ public class IdeaApplication {
   private static final Logger LOG = Logger.getInstance("#com.intellij.idea.IdeaApplication");
 
   private static IdeaApplication ourInstance;
+  public volatile static boolean ourLoaded;
 
   public static IdeaApplication getInstance() {
     return ourInstance;
   }
 
   public static boolean isLoaded() {
-    return ourInstance != null && ourInstance.myLoaded;
+    return ourLoaded;
   }
 
   private final String[] myArgs;
   private boolean myPerformProjectLoad = true;
   private ApplicationStarter myStarter;
-  private volatile boolean myLoaded = false;
 
   public IdeaApplication(String[] args) {
     LOG.assertTrue(ourInstance == null);
@@ -97,7 +97,7 @@ public class IdeaApplication {
         new CommandLineApplication(isInternal, isUnitTest, headless);
       }
       if (isUnitTest) {
-        myLoaded = true;
+        ourLoaded = true;
       }
     }
     else {
@@ -171,7 +171,7 @@ public class IdeaApplication {
       myStarter.main(myArgs);
       myStarter = null; //GC it
 
-      myLoaded = true;
+      ourLoaded = true;
     }
     catch (Exception e) {
       throw new RuntimeException(e);

@@ -58,7 +58,7 @@ public class StartupUtil {
     ourLock.setActivateListener(consumer);
   }
 
-  interface AppStarter {
+  public interface AppStarter {
     void start(boolean newConfigFolder);
   }
 
@@ -66,7 +66,7 @@ public class StartupUtil {
     return ourLock.getAcquiredPort();
   }
 
-  static void prepareAndStart(String[] args, AppStarter appStarter) {
+  public static void prepareAndStart(String[] args, AppStarter appStarter) {
     boolean newConfigFolder = false;
 
     if (!Main.isHeadless()) {
