@@ -131,6 +131,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     final KeyStroke shiftEnterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK);
     SMRunnerUtil.registerAsAction(shiftEnterKey, "show-statistics-for-test-proxy",
                                   new Runnable() {
+                                    @Override
                                     public void run() {
                                       showStatisticsForSelectedProxy();
                                     }
@@ -138,10 +139,12 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
                                   myTreeView);
   }
 
+  @Override
   protected ToolbarPanel createToolbarPanel() {
     return new SMTRunnerToolbarPanel(myConsoleProperties, myEnvironment, this, this);
   }
 
+  @Override
   protected JComponent createTestTreeView() {
     myTreeView = new SMTRunnerTestTreeView();
 
@@ -171,6 +174,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     return myTreeView;
   }
 
+  @Override
   protected JComponent createStatisticsPanel() {
     // Statistics tab
     final StatisticsPanel statisticsPane = new StatisticsPanel(myProject, this);
@@ -196,6 +200,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
    *
    * @param handler
    */
+  @Override
   public void setShowStatisticForProxyHandler(final PropagateSelectionHandler handler) {
     myShowStatisticForProxyHandler = handler;
   }
@@ -206,6 +211,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
    * @param testsRoot
    * @return
    */
+  @Override
   public void onTestingStarted(@NotNull SMTestProxy.SMRootTestProxy testsRoot) {
     myAnimator.setCurrentTestCase(myTestsRootNode);
 
@@ -227,6 +233,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     fireOnTestingStarted();
   }
 
+  @Override
   public void onTestingFinished(@NotNull SMTestProxy.SMRootTestProxy testsRoot) {
     myEndTime = System.currentTimeMillis();
 
@@ -251,6 +258,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     fireOnTestingFinished();
   }
 
+  @Override
   public void onTestsCountInSuite(final int count) {
     updateCountersAndProgressOnTestCount(count, false);
   }
@@ -261,6 +269,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
    *
    * @param testProxy Proxy
    */
+  @Override
   public void onTestStarted(@NotNull final SMTestProxy testProxy) {
     updateCountersAndProgressOnTestStarted(false);
 
@@ -269,11 +278,13 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     fireOnTestNodeAdded(testProxy);
   }
 
+  @Override
   public void onTestFailed(@NotNull final SMTestProxy test) {
     updateCountersAndProgressOnTestFailed(false);
     updateIconProgress();
   }
 
+  @Override
   public void onTestIgnored(@NotNull final SMTestProxy test) {
     updateOnTestIgnored();
   }
@@ -285,40 +296,49 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
    *
    * @param newSuite Tests suite
    */
+  @Override
   public void onSuiteStarted(@NotNull final SMTestProxy newSuite) {
     _addTestOrSuite(newSuite);
   }
 
+  @Override
   public void onCustomProgressTestsCategory(@Nullable String categoryName, int testCount) {
     myCurrentCustomProgressCategory = categoryName;
     updateCountersAndProgressOnTestCount(testCount, true);
   }
 
+  @Override
   public void onCustomProgressTestStarted() {
     updateCountersAndProgressOnTestStarted(true);
   }
 
+  @Override
   public void onCustomProgressTestFailed() {
     updateCountersAndProgressOnTestFailed(true);
   }
 
+  @Override
   public void onTestFinished(@NotNull final SMTestProxy test) {
     //Do nothing
     updateIconProgress();
   }
 
+  @Override
   public void onSuiteFinished(@NotNull final SMTestProxy suite) {
     //Do nothing
   }
 
+  @Override
   public SMTestProxy.SMRootTestProxy getTestsRootNode() {
     return myTestsRootNode;
   }
 
+  @Override
   public TestConsoleProperties getProperties() {
     return myConsoleProperties;
   }
 
+  @Override
   public void setFilter(final Filter filter) {
     // is used by Test Runner actions, e.g. hide passed, etc
     final SMTRunnerTreeStructure treeStructure = myTreeBuilder.getSMRunnerTreeStructure();
@@ -331,10 +351,12 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     myTreeBuilder.queueUpdate();
   }
 
+  @Override
   public boolean isRunning() {
     return getRoot().isInProgress();
   }
 
+  @Override
   public TestTreeView getTreeView() {
     return myTreeView;
   }
@@ -344,10 +366,12 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     return myTreeBuilder;
   }
 
+  @Override
   public boolean hasTestSuites() {
     return getRoot().getChildren().size() > 0;
   }
 
+  @Override
   @NotNull
   public AbstractTestProxy getRoot() {
     return myTestsRootNode;
@@ -363,6 +387,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
    *
    * @param testProxy Test or suite
    */
+  @Override
   public void selectAndNotify(@Nullable final AbstractTestProxy testProxy) {
     selectWithoutNotify(testProxy);
 
@@ -371,9 +396,11 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     showStatisticsForSelectedProxy(testProxy, false);
   }
 
+  @Override
   public void addEventsListener(final EventsListener listener) {
     myEventListeners.add(listener);
     addTestsTreeSelectionListener(new TreeSelectionListener() {
+      @Override
       public void valueChanged(final TreeSelectionEvent e) {
         //We should fire event only if it was generated by this component,
         //e.g. it is focused. Otherwise it is side effect of selecting proxy in
@@ -386,6 +413,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     });
   }
 
+  @Override
   public void dispose() {
     super.dispose();
     myShowStatisticForProxyHandler = null;
@@ -393,6 +421,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     myStatisticsPane.doDispose();
   }
 
+  @Override
   public void showStatisticsForSelectedProxy() {
     TestConsoleProperties.SHOW_STATISTICS.set(myProperties, true);
     final AbstractTestProxy selectedProxy = myTreeView.getSelectedTest();
@@ -470,6 +499,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
     }
 
     SMRunnerUtil.runInEventDispatchThread(new Runnable() {
+      @Override
       public void run() {
         if (myTreeBuilder.isDisposed()) {
           return;
@@ -527,9 +557,11 @@ public class SMTestRunnerResultsForm extends TestResultsPanel
    */
   public PropagateSelectionHandler createSelectMeListener() {
     return new PropagateSelectionHandler() {
+      @Override
       public void handlePropagateSelectionRequest(@Nullable final SMTestProxy selectedTestProxy, @NotNull final Object sender,
                                                   final boolean requestFocus) {
         SMRunnerUtil.addToInvokeLater(new Runnable() {
+          @Override
           public void run() {
             selectWithoutNotify(selectedTestProxy);
 
