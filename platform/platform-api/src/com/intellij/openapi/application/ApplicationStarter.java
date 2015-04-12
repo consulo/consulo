@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import org.jetbrains.annotations.NonNls;
 
 /**
- * Implementers of the interface declared via {@link com.intellij.ExtensionPoints#APPLICATION_STARTER}
+ * Implementers of the interface declared via {@link ApplicationStarter#EP_NAME}
  * contribute to a command-line processing capability of an application.
  *
  * @author max
