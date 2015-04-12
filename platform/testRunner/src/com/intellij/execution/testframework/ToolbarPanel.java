@@ -146,30 +146,37 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     }, model, true);
   }
 
+  @Override
   public boolean hasNextOccurence() {
     return myOccurenceNavigator.hasNextOccurence();
   }
 
+  @Override
   public boolean hasPreviousOccurence() {
     return myOccurenceNavigator.hasPreviousOccurence();
   }
 
+  @Override
   public OccurenceInfo goNextOccurence() {
     return myOccurenceNavigator.goNextOccurence();
   }
 
+  @Override
   public OccurenceInfo goPreviousOccurence() {
     return myOccurenceNavigator.goPreviousOccurence();
   }
 
+  @Override
   public String getNextOccurenceActionName() {
     return myOccurenceNavigator.getNextOccurenceActionName();
   }
 
+  @Override
   public String getPreviousOccurenceActionName() {
     return myOccurenceNavigator.getPreviousOccurenceActionName();
   }
 
+  @Override
   public void dispose() {
     myScrollToSource.setModel(null);
     myExportAction.setModel(null);
