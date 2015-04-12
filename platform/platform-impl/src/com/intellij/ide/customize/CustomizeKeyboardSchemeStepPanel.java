@@ -16,28 +16,29 @@
 package com.intellij.ide.customize;
 
 import com.intellij.CommonBundle;
-import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.openapi.keymap.ex.KeymapManagerEx;
+import com.intellij.openapi.keymap.impl.DefaultKeymap;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardStep {
+  private boolean myInitial = true;
 
-  private final JPanel myMacPanel;
-  private final JPanel myDefaultPanel;
-
-  public CustomizeKeyboardSchemeStepPanel() {//&#8997; alt
+  public CustomizeKeyboardSchemeStepPanel() {
     setLayout(new GridLayout(1, 2, GAP, GAP));
     final JRadioButton macRadioButton =
             new JRadioButton("I've never used " + ApplicationNamesInfo.getInstance().getProductName());
     macRadioButton.setOpaque(false);
-    myMacPanel = createBigButtonPanel(new VerticalFlowLayout(), macRadioButton, new Runnable() {
+    JPanel macPanel = createBigButtonPanel(new VerticalFlowLayout(), macRadioButton, new Runnable() {
       @Override
       public void run() {
-        StartupUtil.setMyWizardMacKeymap(KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP);
+        applyKeymap(KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP);
       }
     });
     String style = "<style type=\"text/css\">" +
@@ -45,41 +46,54 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
                    "table {margin:0px; cell-padding:0px; border:none;}"+
                    "</style>";
 
-    myMacPanel.add(macRadioButton);
-    myMacPanel.add(
-            new JLabel("<html><head>"+style+"</head><body><h3>" + KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP + " keymap</h3>" +
-                       "Adapted for Mac<br><br><table><tr><td align=\"left\" colspan=\"2\">EXAMPLES</td></tr>" +
-                       "<tr><td style=\"text-align:right;\">&#8984;N</td><td style=\"text-align:left;\">Generate</td></tr>" +
-                       "<tr><td style=\"text-align:right;\">&#8984;O</td><td style=\"text-align:left;\">Go to class</td></tr>" +
-                       "<tr><td style=\"text-align:right;\">&#8984;&#9003;</td><td style=\"text-align:left;\">Delete line</td></tr>" +
-                       "</table></body></html>"
-            ));
+    macPanel.add(macRadioButton);
+    macPanel.add(new JLabel("<html><head>" + style + "</head><body><h3>" + KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP + " keymap</h3>" +
+                            "Adapted for Mac<br><br><table><tr><td align=\"left\" colspan=\"2\">EXAMPLES</td></tr>" +
+                            "<tr><td style=\"text-align:right;\">&#8984;N</td><td style=\"text-align:left;\">Generate</td></tr>" +
+                            "<tr><td style=\"text-align:right;\">&#8984;O</td><td style=\"text-align:left;\">Go to class</td></tr>" +
+                            "<tr><td style=\"text-align:right;\">&#8984;&#9003;</td><td style=\"text-align:left;\">Delete line</td></tr>" +
+                            "</table></body></html>"));
 
-    add(myMacPanel);
+    add(macPanel);
     final JRadioButton defaultRadioButton =
             new JRadioButton("I used " + ApplicationNamesInfo.getInstance().getProductName() + " before");
     defaultRadioButton.setOpaque(false);
-    myDefaultPanel = createBigButtonPanel(new VerticalFlowLayout(),defaultRadioButton, new Runnable() {
+    JPanel defaultPanel = createBigButtonPanel(new VerticalFlowLayout(), defaultRadioButton, new Runnable() {
       @Override
       public void run() {
-        StartupUtil.setMyWizardMacKeymap(KeymapManager.MAC_OS_X_KEYMAP);
+        applyKeymap(KeymapManager.MAC_OS_X_KEYMAP);
       }
-    } );
-    myDefaultPanel.add(defaultRadioButton);
-    myDefaultPanel.add(new JLabel("<html><head>" + style + "</head><body><h3>" + KeymapManager.MAC_OS_X_KEYMAP + " keymap</h3>" +
-                                  "Default for all platforms<br><br><table><tr><td align=\"left\" colspan=\"2\">EXAMPLES</td></tr>" +
-                                  "<tr><td style=\"text-align:right;\">^N</td><td style=\"text-align:left;\">Generate</td></tr>" +
-                                  "<tr><td style=\"text-align:right;\">&#8984;N</td><td style=\"text-align:left;\">Go to class</td></tr>" +
-                                  "<tr><td style=\"text-align:right;\">&#8984;Y</td><td style=\"text-align:left;\">Delete line</td></tr>" +
-                                  "</table></body></html>"
-    ));
+    });
+    defaultPanel.add(defaultRadioButton);
+    defaultPanel.add(new JLabel("<html><head>" + style + "</head><body><h3>" + KeymapManager.MAC_OS_X_KEYMAP + " keymap</h3>" +
+                                "Default for all platforms<br><br><table><tr><td align=\"left\" colspan=\"2\">EXAMPLES</td></tr>" +
+                                "<tr><td style=\"text-align:right;\">^N</td><td style=\"text-align:left;\">Generate</td></tr>" +
+                                "<tr><td style=\"text-align:right;\">&#8984;N</td><td style=\"text-align:left;\">Go to class</td></tr>" +
+                                "<tr><td style=\"text-align:right;\">&#8984;Y</td><td style=\"text-align:left;\">Delete line</td></tr>" +
+                                "</table></body></html>"));
 
-    add(myMacPanel);
-    add(myDefaultPanel);
+    add(macPanel);
+    add(defaultPanel);
     ButtonGroup group = new ButtonGroup();
     group.add(macRadioButton);
     group.add(defaultRadioButton);
     defaultRadioButton.setSelected(true);
+    myInitial = false;
+  }
+
+  private void applyKeymap(@NotNull String keymapName) {
+    if(myInitial) {
+      return;
+    }
+
+    KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
+    DefaultKeymap defaultKeymap = DefaultKeymap.getInstance();
+    Keymap[] keymaps = defaultKeymap.getKeymaps();
+    for (Keymap keymap : keymaps) {
+      if (keymapName.equals(keymap.getName())) {
+        keymapManager.setActiveKeymap(keymap);
+      }
+    }
   }
 
   @Override

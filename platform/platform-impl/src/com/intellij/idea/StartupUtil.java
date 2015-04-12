@@ -47,17 +47,8 @@ public class StartupUtil {
   @NonNls public static final String NO_SPLASH = "nosplash";
 
   private static SocketLock ourLock;
-  private static String myWizardMacKeymap;
 
   private StartupUtil() { }
-
-  public static void setMyWizardMacKeymap(String myWizardMacKeymap) {
-    StartupUtil.myWizardMacKeymap = myWizardMacKeymap;
-  }
-
-  public static String getMyWizardMacKeymap() {
-    return myWizardMacKeymap;
-  }
 
   public static boolean shouldShowSplash(final String[] args) {
     return !Arrays.asList(args).contains(NO_SPLASH);

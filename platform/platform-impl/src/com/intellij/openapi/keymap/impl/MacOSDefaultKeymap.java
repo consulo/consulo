@@ -27,14 +27,17 @@ import java.awt.event.InputEvent;
  * @author max
  */
 public class MacOSDefaultKeymap extends DefaultKeymapImpl {
+  @Override
   protected String[] getParentActionIds(KeyStroke firstKeyStroke) {
     return super.getParentActionIds(convertKeyStroke(firstKeyStroke));
   }
 
+  @Override
   protected String[] getParentActionIds(MouseShortcut shortcut) {
     return super.getParentActionIds(convertMouseShortcut(shortcut));
   }
 
+  @Override
   protected Shortcut[] getParentShortcuts(String actionId) {
     Shortcut[] parentShortcuts = super.getParentShortcuts(actionId);
     Shortcut[] macShortcuts = new Shortcut[parentShortcuts.length];

@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.keymap.impl;
 
-import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.keymap.Keymap;
@@ -26,6 +25,7 @@ import com.intellij.openapi.util.SystemInfo;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -84,9 +84,10 @@ public class DefaultKeymap {
     return myKeymaps.toArray(new Keymap[myKeymaps.size()]);
   }
 
+  @NotNull
   public String getDefaultKeymapName() {
     if (SystemInfo.isMac) {
-      return StartupUtil.getMyWizardMacKeymap() != null ? StartupUtil.getMyWizardMacKeymap() : KeymapManager.MAC_OS_X_KEYMAP;
+      return KeymapManager.MAC_OS_X_KEYMAP;
     }
     else if (SystemInfo.isXWindow) {
       return KeymapManager.X_WINDOW_KEYMAP;
