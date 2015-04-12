@@ -15,165 +15,68 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.ide.startup.impl.StartupManagerImpl;
-import com.intellij.lang.*;
-import com.intellij.lang.impl.*;
-import com.intellij.mock.*;
-import com.intellij.openapi.Disposable;
+import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.PathManagerEx;
-import com.intellij.openapi.components.ExtensionAreas;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.LoadingOrder;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.options.SchemesManagerFactory;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.impl.ProgressManagerImpl;
-import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.project.ex.ProjectEx;
+import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.PsiCachedValuesFactory;
 import com.intellij.psi.impl.PsiFileFactoryImpl;
-import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
-import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistryImpl;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.util.CachedValuesManagerImpl;
 import com.intellij.util.FileComparisonFailure;
-import com.intellij.util.Function;
 import com.intellij.util.LanguageVersionUtil;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusFactory;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.picocontainer.*;
-import org.picocontainer.defaults.AbstractComponentAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Set;
 
-public abstract class ParsingTestCase extends PlatformLiteFixture {
-
+public abstract class ParsingTestCase extends UsefulTestCase {
   protected String myFilePrefix = "";
-  protected String myFileExt;
-  @NonNls protected final String myFullDataPath;
+  protected String myExtension;
+  @NonNls
+  protected final String myFullDataPath;
   protected PsiFile myFile;
-  private MockPsiManager myPsiManager;
+  private PsiManager myPsiManager;
   private PsiFileFactoryImpl myFileFactory;
-  protected Language myLanguage;
-  @NotNull private final ParserDefinition[] myDefinitions;
+  private ProjectEx myProject;
 
-  public ParsingTestCase(@NonNls @NotNull String dataPath, @NotNull String fileExt, @NotNull ParserDefinition... definitions) {
-    myDefinitions = definitions;
-    myFullDataPath = getTestDataPath() + "/" + dataPath;
-    myFileExt = fileExt;
+  public ParsingTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
+    myFullDataPath = PathManagerEx.getTestDataPath(getTestDataPath() + "/" + dataPath);
+    myExtension = ext;
   }
 
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    initApplication();
-    ComponentAdapter component = getApplication().getPicoContainer().getComponentAdapter(ProgressManager.class.getName());
-    if (component == null) {
-      getApplication().getPicoContainer().registerComponent(new AbstractComponentAdapter(ProgressManager.class.getName(), Object.class) {
-        @Override
-        public Object getComponentInstance(PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
-          return new ProgressManagerImpl();
-        }
 
-        @Override
-        public void verify(PicoContainer container) throws PicoIntrospectionException {
-        }
-      });
-    }
-    Extensions.registerAreaClass(ExtensionAreas.IDEA_PROJECT, null);
-    myProject = new MockProjectEx(getTestRootDisposable());
-    myPsiManager = new MockPsiManager(myProject);
-    myFileFactory = new PsiFileFactoryImpl(myPsiManager);
-    final MutablePicoContainer appContainer = getApplication().getPicoContainer();
-    registerComponentInstance(appContainer, MessageBus.class, MessageBusFactory.newMessageBus(getApplication()));
-    registerComponentInstance(appContainer, SchemesManagerFactory.class, new MockSchemesManagerFactory());
-    final MockEditorFactory editorFactory = new MockEditorFactory();
-    registerComponentInstance(appContainer, EditorFactory.class, editorFactory);
-    registerComponentInstance(appContainer, FileDocumentManager.class, new MockFileDocumentManagerImpl(new Function<CharSequence, Document>() {
-      @Override
-      public Document fun(CharSequence charSequence) {
-        return editorFactory.createDocument(charSequence);
-      }
-    }, FileDocumentManagerImpl.DOCUMENT_KEY));
-    registerComponentInstance(appContainer, PsiDocumentManager.class, new MockPsiDocumentManager());
-    myLanguage = myLanguage == null && myDefinitions.length > 0? myDefinitions[0].getFileNodeType().getLanguage() : myLanguage;
-    registerComponentInstance(appContainer, FileTypeManager.class, new MockFileTypeManager(new MockLanguageFileType(myLanguage, myFileExt)));
-    registerApplicationService(PsiBuilderFactory.class, new PsiBuilderFactoryImpl());
-    registerApplicationService(ReferenceProvidersRegistry.class, new ReferenceProvidersRegistryImpl());
-    myProject.registerService(CachedValuesManager.class, new CachedValuesManagerImpl(myProject, new PsiCachedValuesFactory(myPsiManager)));
-    myProject.registerService(PsiManager.class, myPsiManager);
-    myProject.registerService(StartupManager.class, new StartupManagerImpl(myProject));
-    registerExtensionPoint(FileTypeFactory.FILE_TYPE_FACTORY_EP, FileTypeFactory.class);
-
-    registerExtensionPoint(ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
-    registerExtensionPoint(ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
-    registerExtensionPoint(ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
-    registerExtensionPoint(PsiElementFactory.EP.getExtensionPointName(), PsiElementFactory.class);
-
-    registerExtension(ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory(), LoadingOrder.LAST);
-    registerExtension(ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory(), LoadingOrder.LAST);
-    registerExtension(ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory(), LoadingOrder.LAST);
-    registerExtension(PsiElementFactory.EP.getExtensionPointName(), new DefaultPsiElementFactory(), LoadingOrder.LAST);
-
-    for (ParserDefinition definition : myDefinitions) {
-      addExplicitExtension(LanguageParserDefinitions.INSTANCE, definition.getFileNodeType().getLanguage(), definition);
-    }
+    File tempDirectory = FileUtil.createTempDirectory("consulo", "test_project", true);
+    ProjectManagerEx projectManagerEx = ProjectManagerEx.getInstanceEx();
+    myProject = (ProjectEx)projectManagerEx.newProject(tempDirectory.getName(), tempDirectory.getPath(), true, false);
+    assert myProject != null;
+    projectManagerEx.openTestProject(myProject);
+    myPsiManager = PsiManager.getInstance(myProject);
+    myFileFactory = (PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject);
   }
 
-  protected <T> void addExplicitExtension(final LanguageExtension<T> instance, final Language language, final T object) {
-    instance.addExplicitExtension(language, object);
-    Disposer.register(myProject, new Disposable() {
-      @Override
-      public void dispose() {
-        instance.removeExplicitExtension(language, object);
-      }
-    });
-  }
-
-  @Override
-  protected <T> void registerExtensionPoint(final ExtensionPointName<T> extensionPointName, Class<T> aClass) {
-    super.registerExtensionPoint(extensionPointName, aClass);
-    Disposer.register(myProject, new Disposable() {
-      @Override
-      public void dispose() {
-        Extensions.getRootArea().unregisterExtensionPoint(extensionPointName.getName());
-      }
-    });
-  }
-
-  protected <T> void registerApplicationService(final Class<T> aClass, T object) {
-    getApplication().registerService(aClass, object);
-    Disposer.register(myProject, new Disposable() {
-      @Override
-      public void dispose() {
-        getApplication().getPicoContainer().unregisterComponent(aClass.getName());
-      }
-    });
-  }
-
-  public MockProjectEx getProject() {
+  public ProjectEx getProject() {
     return myProject;
   }
 
-  public MockPsiManager getPsiManager() {
+  public PsiManager getPsiManager() {
     return myPsiManager;
   }
 
@@ -181,12 +84,19 @@ public abstract class ParsingTestCase extends PlatformLiteFixture {
   protected void tearDown() throws Exception {
     super.tearDown();
     myFile = null;
+    ProjectManagerEx.getInstanceEx().closeTestProject(myProject);
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+      @Override
+      public void run() {
+        Disposer.dispose(myProject);
+      }
+    });
     myProject = null;
     myPsiManager = null;
   }
 
   protected String getTestDataPath() {
-    return PathManagerEx.getTestDataPath();
+    return "";
   }
 
   protected boolean includeRanges() {
@@ -204,17 +114,21 @@ public abstract class ParsingTestCase extends PlatformLiteFixture {
   protected void doTest(boolean checkResult) {
     String name = getTestName(false);
     try {
-      String text = loadFile(name + "." + myFileExt);
+      String text = loadFile(name + "." + myExtension);
       myFile = createPsiFile(name, text);
       ensureParsed(myFile);
-      assertEquals("light virtual file text mismatch", text, ((LightVirtualFile)myFile.getVirtualFile()).getContent().toString());
-      assertEquals("virtual file text mismatch", text, LoadTextUtil.loadText(myFile.getVirtualFile()));
-      assertEquals("doc text mismatch", text, myFile.getViewProvider().getDocument().getText());
+      FileViewProvider viewProvider = myFile.getViewProvider();
+      VirtualFile virtualFile = viewProvider.getVirtualFile();
+      if (virtualFile instanceof LightVirtualFile) {
+        assertEquals("light virtual file text mismatch", text, ((LightVirtualFile)virtualFile).getContent());
+      }
+      assertEquals("virtual file text mismatch", text, LoadTextUtil.loadText(virtualFile));
+      assertEquals("doc text mismatch", text, viewProvider.getDocument().getText());
       assertEquals("psi text mismatch", text, myFile.getText());
-      if (checkResult){
+      if (checkResult) {
         checkResult(name, myFile);
       }
-      else{
+      else {
         toParseTreeText(myFile, skipSpaces(), includeRanges());
       }
     }
@@ -225,7 +139,7 @@ public abstract class ParsingTestCase extends PlatformLiteFixture {
 
   protected void doTest(String suffix) throws IOException {
     String name = getTestName(false);
-    String text = loadFile(name + "." + myFileExt);
+    String text = loadFile(name + "." + myExtension);
     myFile = createPsiFile(name, text);
     ensureParsed(myFile);
     assertEquals(text, myFile.getText());
@@ -241,17 +155,23 @@ public abstract class ParsingTestCase extends PlatformLiteFixture {
   }
 
   protected PsiFile createPsiFile(String name, String text) {
-    return createFile(name + "." + myFileExt, text);
+    String fileName = name + "." + myExtension;
+    FileType fileTypeByFileName = FileTypeManager.getInstance().getFileTypeByFileName(fileName);
+    return createFile(fileName, fileTypeByFileName, text);
   }
 
-  protected PsiFile createFile(@NonNls String name, String text) {
-    LightVirtualFile virtualFile = new LightVirtualFile(name, myLanguage, text);
-    virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
-    return createFile(virtualFile);
+  @NotNull
+  public LanguageVersion<?> resolveLanguageVersion(@NotNull FileType fileType) {
+    if(fileType instanceof LanguageFileType) {
+      return LanguageVersionUtil.findDefaultVersion(((LanguageFileType)fileType).getLanguage());
+    }
+    throw new IllegalArgumentException(fileType.getName() + " is not extends 'LanguageFileType'");
   }
 
-  protected PsiFile createFile(LightVirtualFile virtualFile) {
-    return myFileFactory.trySetupPsiForFile(virtualFile, myLanguage, LanguageVersionUtil.findDefaultVersion(myLanguage), true, false);
+  protected PsiFile createFile(@NonNls String name, @NotNull FileType fileType, String text) {
+    LanguageVersion<?> languageVersion = resolveLanguageVersion(fileType);
+
+    return myFileFactory.createFileFromText(name, languageVersion.getLanguage(), languageVersion, text);
   }
 
   protected void checkResult(@NonNls @TestDataFile String targetDataName, final PsiFile file) throws IOException {
@@ -296,13 +216,13 @@ public abstract class ParsingTestCase extends PlatformLiteFixture {
         throw new FileComparisonFailure(targetDataName, expectedText, text, expectedFileName);
       }
     }
-    catch(FileNotFoundException e){
+    catch (FileNotFoundException e) {
       VfsTestUtil.overwriteTestData(expectedFileName, text);
       fail("No output text found. File " + expectedFileName + " created.");
     }
   }
 
-  protected static String toParseTreeText(final PsiElement file,  boolean skipSpaces, boolean printRanges) {
+  protected static String toParseTreeText(final PsiElement file, boolean skipSpaces, boolean printRanges) {
     return DebugUtil.psiToString(file, skipSpaces, printRanges);
   }
 
