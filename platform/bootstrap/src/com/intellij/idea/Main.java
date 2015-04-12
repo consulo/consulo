@@ -101,6 +101,7 @@ public class Main {
     String firstArg = args[0];
     return Comparing.strEqual(firstArg, "ant") ||
            Comparing.strEqual(firstArg, "duplocate") ||
+           Comparing.strEqual(firstArg, "testrun") ||
            Comparing.strEqual(firstArg, "traverseUI") ||
            (firstArg.length() < 20 && firstArg.endsWith("inspect"));
   }
