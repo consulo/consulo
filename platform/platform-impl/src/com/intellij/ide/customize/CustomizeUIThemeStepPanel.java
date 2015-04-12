@@ -61,16 +61,16 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
     myColumnMode = myLafNames.size() > 2;
     JPanel buttonsPanel = new JPanel(new GridLayout(myColumnMode ? myLafNames.size() : 1, myColumnMode ? 1 : myLafNames.size(), 5, 5));
     ButtonGroup group = new ButtonGroup();
-    String myDefaultLafName = null;
+    String defaultLafName = null;
 
     for (Map.Entry<String, Icon> entry : myLafNames.entrySet()) {
       final String lafName = entry.getKey();
       Icon icon = entry.getValue();
-      final JRadioButton radioButton = new JRadioButton(lafName, myDefaultLafName == null);
+      final JRadioButton radioButton = new JRadioButton(lafName, defaultLafName == null);
       radioButton.setOpaque(false);
-      if (myDefaultLafName == null) {
+      if (defaultLafName == null) {
         radioButton.setSelected(true);
-        myDefaultLafName = lafName;
+        defaultLafName = lafName;
       }
       final JPanel panel = createBigButtonPanel(new BorderLayout(10, 10), radioButton, new Runnable() {
         @Override
@@ -102,7 +102,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
       add(buttonsPanel, BorderLayout.WEST);
       add(myPreviewLabel, BorderLayout.CENTER);
     }
-    applyLaf(myDefaultLafName, this);
+    applyLaf(defaultLafName, this);
     myInitial = false;
   }
 
