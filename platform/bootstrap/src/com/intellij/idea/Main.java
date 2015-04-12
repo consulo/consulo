@@ -36,8 +36,7 @@ public class Main {
   public static final int UPDATE_FAILED = 1;
   public static final int STARTUP_EXCEPTION = 2;
   public static final int STARTUP_IMPOSSIBLE = 3;
-  public static final int LICENSE_ERROR = 4;
-  public static final int PLUGIN_ERROR = 5;
+  public static final int PLUGIN_ERROR = 4;
 
   private static final String AWT_HEADLESS = "java.awt.headless";
 
