@@ -38,6 +38,7 @@ public class MockResolveScopeManager extends ResolveScopeManager {
     return GlobalSearchScope.allScope(element.getProject());
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getDefaultResolveScope(VirtualFile vFile) {
     return GlobalSearchScope.allScope(myProject);

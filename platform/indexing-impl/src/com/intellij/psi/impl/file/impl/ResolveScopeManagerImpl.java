@@ -31,6 +31,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,6 +174,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
   }
 
 
+  @NotNull
+  @RequiredReadAction
   @Override
   public GlobalSearchScope getDefaultResolveScope(final VirtualFile vFile) {
     final PsiFile psiFile = myManager.findFile(vFile);
@@ -192,9 +195,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     else {
       final PsiFile containingFile = element.getContainingFile();
       if (containingFile == null) return allScope;
-      final VirtualFile virtualFile = containingFile.getVirtualFile();
-      if (virtualFile == null) return allScope;
-      vFile = virtualFile.getParent();
+      vFile = containingFile.getVirtualFile();
     }
 
     if (vFile == null) return allScope;

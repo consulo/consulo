@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author yole
@@ -29,6 +30,8 @@ public abstract class ResolveScopeManager {
   @NotNull
   public abstract GlobalSearchScope getResolveScope(@NotNull PsiElement element);
 
+  @RequiredReadAction
+  @NotNull
   public abstract GlobalSearchScope getDefaultResolveScope(VirtualFile vFile);
 
   @NotNull
