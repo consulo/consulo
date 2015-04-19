@@ -266,7 +266,7 @@ public abstract class UsefulTestCase extends TestCase {
       @Override
       public void run() {
         try {
-          UsefulTestCase.super.runTest();
+          runTestInternal();
         }
         catch (InvocationTargetException e) {
           e.fillInStackTrace();
@@ -287,6 +287,10 @@ public abstract class UsefulTestCase extends TestCase {
     if (throwables[0] != null) {
       throw throwables[0];
     }
+  }
+
+  protected void runTestInternal() throws Throwable{
+    UsefulTestCase.super.runTest();
   }
 
   protected boolean shouldRunTest() {
