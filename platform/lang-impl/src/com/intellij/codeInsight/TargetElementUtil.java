@@ -234,7 +234,7 @@ public class TargetElementUtil {
     PsiReference ref = findReference(editor, offset);
     if (ref == null) return null;
 
-    PsiElement referenceOrReferencedElement = TargetElementUtilEx.EP_NAME.composite().getReferenceOrReferencedElement(file, editor, flags, offset);
+    PsiElement referenceOrReferencedElement = TargetElementUtilEx.EP_NAME.composite().getReferenceOrReferencedElement(ref, flags);
     if (referenceOrReferencedElement != null) {
       return referenceOrReferencedElement;
     }

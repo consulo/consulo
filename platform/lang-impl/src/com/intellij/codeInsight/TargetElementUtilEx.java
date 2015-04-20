@@ -76,7 +76,7 @@ public interface TargetElementUtilEx {
 
     @Nullable
     @Override
-    public PsiElement getReferenceOrReferencedElement(@NotNull PsiFile file, @NotNull Editor editor, @NotNull Set<String> flags, int offset) {
+    public PsiElement getReferenceOrReferencedElement(@NotNull PsiReference reference, @NotNull Set<String> flags) {
       return null;
     }
 
@@ -149,7 +149,7 @@ public interface TargetElementUtilEx {
   PsiElement adjustReference(@NotNull PsiReference ref);
 
   @Nullable
-  PsiElement getReferenceOrReferencedElement(@NotNull PsiFile file, @NotNull Editor editor, @NotNull Set<String> flags, int offset);
+  PsiElement getReferenceOrReferencedElement(@NotNull PsiReference reference, @NotNull Set<String> flags);
 
   @Nullable
   PsiElement modifyReferenceOrReferencedElement(@Nullable PsiElement refElement,
