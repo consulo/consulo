@@ -16,11 +16,11 @@
 
 package com.intellij.refactoring.rename;
 
+import com.intellij.codeInsight.TargetElementUtil;
+import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.util.NonCodeUsageInfo;
 import com.intellij.refactoring.util.TextOccurrencesUtil;
-import com.intellij.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.codeInsight.TargetElementUtilBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +36,7 @@ public class NonCodeUsageInfoFactory implements TextOccurrencesUtil.UsageInfoFac
   @Override
   @Nullable
   public UsageInfo createUsageInfo(@NotNull PsiElement usage, int startOffset, int endOffset) {
-    final PsiElement namedElement = TargetElementUtilBase.getInstance().getNamedElement(usage, startOffset);
+    final PsiElement namedElement = TargetElementUtil.getNamedElement(usage, startOffset);
     if (namedElement != null) {
       return null;
     }

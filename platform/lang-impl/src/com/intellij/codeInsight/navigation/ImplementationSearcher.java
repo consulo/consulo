@@ -17,12 +17,13 @@
 package com.intellij.codeInsight.navigation;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.TargetElementUtilBase;
+import com.intellij.codeInsight.TargetElementUtil;
+import com.intellij.codeInsight.TargetElementUtilEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.PsiElementProcessor;
@@ -30,26 +31,32 @@ import com.intellij.psi.search.PsiElementProcessorAdapter;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import com.intellij.util.CommonProcessors;
+import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class ImplementationSearcher {
 
   public static final String SEARCHING_FOR_IMPLEMENTATIONS = CodeInsightBundle.message("searching.for.implementations");
 
   public PsiElement[] searchImplementations(final Editor editor, final PsiElement element, final int offset) {
-    final TargetElementUtilBase targetElementUtil = TargetElementUtilBase.getInstance();
     boolean onRef = ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
       @Override
       public Boolean compute() {
-        return targetElementUtil.findTargetElement(editor, getFlags() & ~(TargetElementUtilBase.REFERENCED_ELEMENT_ACCEPTED | TargetElementUtilBase.LOOKUP_ITEM_ACCEPTED), offset) == null;
+        HashSet<String> flags = ContainerUtil.newHashSet(getFlags());
+        flags.remove(TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED);
+        flags.remove(TargetElementUtilEx.LOOKUP_ITEM_ACCEPTED);
+        return TargetElementUtil.findTargetElement(editor, flags, offset) == null;
       }
     });
     return searchImplementations(element, editor, offset, onRef && ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
       @Override
       public Boolean compute() {
-        return targetElementUtil.includeSelfInGotoImplementation(element);
+        return TargetElementUtil.includeSelfInGotoImplementation(element);
       }
     }), onRef);
   }
@@ -84,7 +91,7 @@ public class ImplementationSearcher {
     return ApplicationManager.getApplication().runReadAction(new Computable<SearchScope>() {
       @Override
       public SearchScope compute() {
-        return TargetElementUtilBase.getInstance().getSearchScope(editor, element);
+        return TargetElementUtil.getSearchScope(editor, element);
       }
     });
   }
@@ -117,8 +124,9 @@ public class ImplementationSearcher {
     return targetElements;
   }
 
-  public static int getFlags() {
-    return TargetElementUtilBase.getInstance().getDefinitionSearchFlags();
+  @NotNull
+  public static Set<String> getFlags() {
+    return TargetElementUtil.getDefinitionSearchFlags();
   }
 
   public static class FirstImplementationsSearcher extends ImplementationSearcher {

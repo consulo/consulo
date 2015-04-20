@@ -18,7 +18,8 @@ package com.intellij.codeInsight.navigation.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.TargetElementUtilBase;
+import com.intellij.codeInsight.TargetElementUtil;
+import com.intellij.codeInsight.TargetElementUtilEx;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -31,6 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +43,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
   @NotNull
   @Override
-  protected CodeInsightActionHandler getHandler(){
+  protected CodeInsightActionHandler getHandler() {
     return this;
   }
 
@@ -77,7 +79,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
   private static void navigate(@NotNull Project project, @NotNull PsiElement symbolType) {
     PsiElement element = symbolType.getNavigationElement();
-    assert element != null : "SymbolType :"+symbolType+"; file: "+symbolType.getContainingFile();
+    assert element != null : "SymbolType :" + symbolType + "; file: " + symbolType.getContainingFile();
     VirtualFile file = element.getContainingFile().getVirtualFile();
     if (file != null) {
       OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file, element.getTextOffset());
@@ -99,23 +101,21 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
   @Nullable
   public static PsiElement[] findSymbolTypes(Editor editor, int offset) {
-    PsiElement targetElement = TargetElementUtilBase.getInstance().findTargetElement(editor,
-      TargetElementUtilBase.REFERENCED_ELEMENT_ACCEPTED |
-      TargetElementUtilBase.ELEMENT_NAME_ACCEPTED |
-      TargetElementUtilBase.LOOKUP_ITEM_ACCEPTED,
-      offset);
+    Set<String> flags = ContainerUtil.newHashSet(TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED, TargetElementUtilEx.ELEMENT_NAME_ACCEPTED,
+                                                 TargetElementUtilEx.LOOKUP_ITEM_ACCEPTED);
+    PsiElement targetElement = TargetElementUtil.findTargetElement(editor, flags, offset);
 
     if (targetElement != null) {
       final PsiElement[] symbolType = getSymbolTypeDeclarations(targetElement, editor, offset);
       return symbolType == null ? PsiElement.EMPTY_ARRAY : symbolType;
     }
 
-    final PsiReference psiReference = TargetElementUtilBase.findReference(editor, offset);
+    final PsiReference psiReference = TargetElementUtil.findReference(editor, offset);
     if (psiReference instanceof PsiPolyVariantReference) {
       final ResolveResult[] results = ((PsiPolyVariantReference)psiReference).multiResolve(false);
       Set<PsiElement> types = new THashSet<PsiElement>();
 
-      for(ResolveResult r: results) {
+      for (ResolveResult r : results) {
         final PsiElement[] declarations = getSymbolTypeDeclarations(r.getElement(), editor, offset);
         if (declarations != null) {
           for (PsiElement declaration : declarations) {
@@ -133,7 +133,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
   @Nullable
   private static PsiElement[] getSymbolTypeDeclarations(final PsiElement targetElement, Editor editor, int offset) {
-    for(TypeDeclarationProvider provider: Extensions.getExtensions(TypeDeclarationProvider.EP_NAME)) {
+    for (TypeDeclarationProvider provider : Extensions.getExtensions(TypeDeclarationProvider.EP_NAME)) {
       PsiElement[] result;
       if (provider instanceof TypeDeclarationPlaceAwareProvider) {
         result = ((TypeDeclarationPlaceAwareProvider)provider).getSymbolTypeDeclarations(targetElement, editor, offset);

@@ -993,9 +993,7 @@
     <extensionPoint name="templateCompletionProcessor"
                     interface="com.intellij.codeInsight.template.macro.TemplateCompletionProcessor"/>
 
-    <extensionPoint name="targetElementEvaluator" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.TargetElementEvaluator"/>
-    </extensionPoint>
+    <extensionPoint name="targetElementUtilEx" interface="com.intellij.codeInsight.TargetElementUtilEx" />
 
     <extensionPoint name="statementUpDownMover" interface="com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover"/>
 
@@ -2415,8 +2413,6 @@
                         serviceImplementation="com.intellij.packageDependencies.DependenciesVisitorFactory"/>
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.SdkTable"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.SdkTableImpl"/>
-    <applicationService serviceInterface="com.intellij.codeInsight.TargetElementUtilBase"
-                        serviceImplementation="com.intellij.codeInsight.TargetElementUtilBase"/>
 
     <exportable serviceInterface="com.intellij.openapi.projectRoots.SdkTable"/>
 
@@ -2549,5 +2545,7 @@
     <ui.suitableFontProvider implementation="com.intellij.ui.SuitableFontProviderImpl"/>
 
     <moduleRootsProcessor implementation="com.intellij.openapi.roots.impl.NullModuleDirModuleRootsProcessor" order="last" />
+
+    <targetElementUtilEx implementation="com.intellij.codeInsight.TargetElementUtilExImpl" />
   </extensions>
 </idea-plugin>

@@ -26,6 +26,7 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class HighlightUsagesAction extends AnAction implements DumbAware {
   public HighlightUsagesAction() {
@@ -52,6 +53,7 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
       project,
       new Runnable() {
         @Override
+        @RequiredDispatchThread
         public void run() {
           PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
           try {

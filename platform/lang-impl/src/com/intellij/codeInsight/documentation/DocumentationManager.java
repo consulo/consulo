@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.documentation;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.TargetElementUtilBase;
+import com.intellij.codeInsight.TargetElementUtil;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.ParameterInfoController;
 import com.intellij.codeInsight.lookup.Lookup;
@@ -96,8 +96,6 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
   public static final Key<SmartPsiElementPointer> ORIGINAL_ELEMENT_KEY = Key.create("Original element");
 
   private final ActionManagerEx myActionManagerEx;
-
-  private static final int ourFlagsForTargetElements = TargetElementUtilBase.getInstance().getAllAccepted();
 
   private boolean myCloseOnSneeze;
 
@@ -557,7 +555,8 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
    */
   @Nullable
   private PsiElement findTargetElementUnsafe(final Editor editor, int offset, @Nullable final PsiFile file, PsiElement contextElement) {
-    TargetElementUtilBase util = TargetElementUtilBase.getInstance();
+    Set<String> allAccepted = TargetElementUtil.getAllAccepted();
+
     PsiElement element = assertSameProject(getElementFromLookup(editor, file));
     if (element == null && file != null) {
       final DocumentationProvider documentationProvider = getProviderFromElement(file);
@@ -567,11 +566,11 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     }
 
     if (element == null) {
-      element = assertSameProject(util.findTargetElement(editor, ourFlagsForTargetElements, offset));
+      element = assertSameProject(TargetElementUtil.findTargetElement(editor, allAccepted, offset));
 
       // Allow context doc over xml tag content
       if (element != null || contextElement != null) {
-        final PsiElement adjusted = assertSameProject(util.adjustElement(editor, ourFlagsForTargetElements, element, contextElement));
+        final PsiElement adjusted = assertSameProject(TargetElementUtil.adjustElement(editor, allAccepted, element, contextElement));
         if (adjusted != null) {
           element = adjusted;
         }
@@ -579,9 +578,9 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     }
 
     if (element == null) {
-      final PsiReference ref = TargetElementUtilBase.findReference(editor, offset);
+      final PsiReference ref = TargetElementUtil.findReference(editor, offset);
       if (ref != null) {
-        element = assertSameProject(util.adjustReference(ref));
+        element = assertSameProject(TargetElementUtil.adjustReference(ref));
         if (ref instanceof PsiPolyVariantReference) {
           element = assertSameProject(ref.getElement());
         }
@@ -605,7 +604,7 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
 
         int offset = editor.getCaretModel().getOffset();
         if (offset > 0 && offset == editor.getDocument().getTextLength()) offset--;
-        PsiReference ref = TargetElementUtilBase.findReference(editor, offset);
+        PsiReference ref = TargetElementUtil.findReference(editor, offset);
         PsiElement contextElement = file == null? null : file.findElementAt(offset);
         PsiElement targetElement = ref != null ? ref.getElement() : contextElement;
         if (targetElement != null) {

@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.navigation;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.TargetElementUtilBase;
+import com.intellij.codeInsight.TargetElementUtil;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
@@ -46,16 +46,15 @@ public class GotoImplementationHandler extends GotoTargetHandler {
   @Nullable
   public GotoData getSourceAndTargetElements(Editor editor, PsiFile file) {
     int offset = editor.getCaretModel().getOffset();
-    PsiElement source = TargetElementUtilBase.getInstance().findTargetElement(editor, ImplementationSearcher.getFlags(), offset);
+    PsiElement source = TargetElementUtil.findTargetElement(editor, ImplementationSearcher.getFlags(), offset);
     if (source == null) return null;
     final GotoData gotoData;
-    final PsiReference reference = TargetElementUtilBase.findReference(editor, offset);
-    final TargetElementUtilBase instance = TargetElementUtilBase.getInstance();
+    final PsiReference reference = TargetElementUtil.findReference(editor, offset);
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       gotoData = new GotoData(source, new ImplementationSearcher.FirstImplementationsSearcher(){
         @Override
         protected boolean accept(PsiElement element) {
-          return instance.acceptImplementationForReference(reference, element);
+          return TargetElementUtil.acceptImplementationForReference(reference, element);
         }
 
         @Override
@@ -71,7 +70,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         protected PsiElement[] filterElements(PsiElement element, PsiElement[] targetElements, int offset) {
           final List<PsiElement> result = new ArrayList<PsiElement>();
           for (PsiElement targetElement : targetElements) {
-            if (instance.acceptImplementationForReference(reference, targetElement)) {
+            if (TargetElementUtil.acceptImplementationForReference(reference, targetElement)) {
               result.add(targetElement);
             }
           }
@@ -125,7 +124,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         @Override
         protected void processElement(PsiElement element) {
           indicator.checkCanceled();
-          if (!TargetElementUtilBase.getInstance().acceptImplementationForReference(myReference, element)) return;
+          if (!TargetElementUtil.acceptImplementationForReference(myReference, element)) return;
           if (myGotoData.addTarget(element)) {
             if (!updateComponent(element, createComparator(renderers, myGotoData))) {
               indicator.cancel();
