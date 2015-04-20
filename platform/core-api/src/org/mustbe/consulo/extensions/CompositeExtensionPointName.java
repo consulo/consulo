@@ -133,16 +133,16 @@ public abstract class CompositeExtensionPointName<T> {
     private Boolean invokeBooleanMethod(@NotNull Method method, Object[] args) {
       method.setAccessible(true);
 
-      Boolean result = Boolean.TRUE;
+      Boolean breakValue = Boolean.TRUE;
       BooleanBreakResult annotation = method.getAnnotation(BooleanBreakResult.class);
       if(annotation != null) {
-        result = annotation.breakValue();
+        breakValue = annotation.breakValue();
       }
 
       for (T listener : myExtensions) {
         try {
           Boolean value = (Boolean)method.invoke(listener, args);
-          if(value == result) {
+          if(breakValue.equals(value)) {
             return value;
           }
         }
@@ -164,7 +164,7 @@ public abstract class CompositeExtensionPointName<T> {
           }
         }
       }
-      return !result;
+      return !breakValue;
     }
 
     private Object invokeVoidMethod(@NotNull Method method, Object[] args) {
