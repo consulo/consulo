@@ -15,16 +15,17 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.extensions.CompositeExtensionPointName;
 
 /**
  * @author VISTALL
  * @since 0:20/19.07.13
  */
 public interface IconDescriptorUpdater {
-  ExtensionPointName<IconDescriptorUpdater> EP_NAME = ExtensionPointName.create("com.intellij.iconDescriptorUpdater");
+  CompositeExtensionPointName<IconDescriptorUpdater> EP_NAME =
+          CompositeExtensionPointName.applicationPoint("com.intellij.iconDescriptorUpdater", IconDescriptorUpdater.class);
 
   void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags);
 }

@@ -26,12 +26,10 @@ import javax.swing.*;
  * @since 0:25/19.07.13
  */
 public class IconDescriptorUpdaters {
-  private static final IconDescriptorUpdater[] ourCache = IconDescriptorUpdater.EP_NAME.getExtensions();
-
   @NotNull
   public static Icon getIcon(@NotNull final PsiElement element, @Iconable.IconFlags final int flags) {
     Icon icon = Iconable.LastComputedIcon.get(element, flags);
-    if(icon == null) {
+    if (icon == null) {
       icon = getIconWithoutCache(element, flags);
 
       Iconable.LastComputedIcon.put(element, icon, flags);
@@ -42,15 +40,11 @@ public class IconDescriptorUpdaters {
   @NotNull
   public static Icon getIconWithoutCache(@NotNull PsiElement element, int flags) {
     IconDescriptor iconDescriptor = new IconDescriptor(null);
-    for (IconDescriptorUpdater iconDescriptorUpdater : ourCache) {
-      iconDescriptorUpdater.updateIcon(iconDescriptor, element, flags);
-    }
+    IconDescriptorUpdater.EP_NAME.composite().updateIcon(iconDescriptor, element, flags);
     return iconDescriptor.toIcon();
   }
 
-  public static void processExistingDescriptor(@NotNull IconDescriptor descriptor, @NotNull PsiElement element, int flags) {
-    for (IconDescriptorUpdater iconDescriptorUpdater : ourCache) {
-      iconDescriptorUpdater.updateIcon(descriptor, element, flags);
-    }
+  public static void processExistingDescriptor(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+    IconDescriptorUpdater.EP_NAME.composite().updateIcon(iconDescriptor, element, flags);
   }
 }
