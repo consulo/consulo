@@ -11,6 +11,10 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -23,6 +27,12 @@ import java.lang.reflect.Proxy;
  */
 @Logger
 public abstract class CompositeExtensionPointName<T> {
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface BooleanBreakResult {
+    boolean breakValue();
+  }
+
   @NotNull
   public static <E> CompositeExtensionPointName<E> modulePoint(@NotNull String epName, @NotNull Class<E> clazz) {
     return new CompositeExtensionPointNameWithArea<E>(epName, clazz) {
@@ -123,11 +133,17 @@ public abstract class CompositeExtensionPointName<T> {
     private Boolean invokeBooleanMethod(@NotNull Method method, Object[] args) {
       method.setAccessible(true);
 
+      Boolean result = Boolean.TRUE;
+      BooleanBreakResult annotation = method.getAnnotation(BooleanBreakResult.class);
+      if(annotation != null) {
+        result = annotation.breakValue();
+      }
+
       for (T listener : myExtensions) {
         try {
           Boolean value = (Boolean)method.invoke(listener, args);
-          if(value == Boolean.TRUE) {
-            return Boolean.TRUE;
+          if(value == result) {
+            return value;
           }
         }
         catch (AbstractMethodError ignored) {
@@ -148,7 +164,7 @@ public abstract class CompositeExtensionPointName<T> {
           }
         }
       }
-      return Boolean.FALSE;
+      return !result;
     }
 
     private Object invokeVoidMethod(@NotNull Method method, Object[] args) {
