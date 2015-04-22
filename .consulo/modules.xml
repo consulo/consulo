@@ -978,27 +978,6 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/coverage-agent.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/instrumenter.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/coverage-util.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
           <orderEntry type="module" module-name="testRunner" />
         </module-layer>
       </module>

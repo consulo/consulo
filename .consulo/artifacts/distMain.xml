@@ -101,9 +101,6 @@
           <element id="module-output" name="util-rt" />
           <element id="module-production-resource-output" name="util" />
         </element>
-        <element id="file-copy" path="$PROJECT_DIR$/platform/coverage-impl/lib/coverage-agent.jar" />
-        <element id="file-copy" path="$PROJECT_DIR$/platform/coverage-impl/lib/instrumenter.jar" />
-        <element id="file-copy" path="$PROJECT_DIR$/platform/coverage-impl/lib/coverage-util.jar" />
       </element>
       <element id="directory" name="bin">
         <element id="file-copy" path="$PROJECT_DIR$/bin/appletviewer.policy" />
