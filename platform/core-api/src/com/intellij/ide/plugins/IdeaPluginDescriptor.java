@@ -29,6 +29,7 @@ import java.util.List;
  * @author max
  */
 public interface IdeaPluginDescriptor extends PluginDescriptor {
+  @Nullable
   File getPath();
 
   @Nullable

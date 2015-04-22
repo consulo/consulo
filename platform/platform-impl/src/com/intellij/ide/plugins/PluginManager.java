@@ -17,6 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.intellij.ide.ClassUtilCore;
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.idea.IdeaApplication;
 import com.intellij.idea.Main;
 import com.intellij.notification.Notification;
@@ -41,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -195,6 +197,17 @@ public class PluginManager extends PluginManagerCore {
       }
     }
     return null;
+  }
+
+  @Nullable
+  public static File getPluginPath(@NotNull Class<?> pluginClass) {
+    ClassLoader temp = pluginClass.getClassLoader();
+    assert temp instanceof PluginClassLoader : "classloader is not plugin";
+    PluginClassLoader classLoader = (PluginClassLoader)temp;
+    PluginId pluginId = classLoader.getPluginId();
+    IdeaPluginDescriptor plugin = getPlugin(pluginId);
+    assert plugin != null : "plugin is not found";
+    return plugin.getPath();
   }
 
   public static void handleComponentError(@NotNull Throwable t, @Nullable String componentClassName, @Nullable ComponentConfig config) {
