@@ -31,6 +31,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.updateSettings.impl.UpdateSettings;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -158,7 +159,7 @@ public class PluginsAdvertiser implements StartupActivity {
         final Application application = ApplicationManager.getApplication();
         if (application.isUnitTestMode() || application.isHeadlessEnvironment()) return;
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-          private final Set<PluginDownloader> myPlugins = new HashSet<PluginDownloader>();
+          private final Set<Couple<IdeaPluginDescriptor>> myPlugins = new HashSet<Couple<IdeaPluginDescriptor>>();
           private List<IdeaPluginDescriptor> myAllPlugins;
 
           @Override
@@ -185,7 +186,7 @@ public class PluginsAdvertiser implements StartupActivity {
               myAllPlugins = RepositoryHelper.loadPluginsFromRepository(null);
               for (IdeaPluginDescriptor loadedPlugin : myAllPlugins) {
                 if (ids.contains(loadedPlugin.getPluginId())) {
-                  myPlugins.add(PluginDownloader.createDownloader(loadedPlugin));
+                  myPlugins.add(Couple.of(null, loadedPlugin));
                 }
               }
 
@@ -220,7 +221,7 @@ public class PluginsAdvertiser implements StartupActivity {
                       } else if ("configure".equals(description)) {
                         LOG.assertTrue(myAllPlugins != null);
                         notification.expire();
-                        new PluginsAdvertiserDialog(project, myPlugins.toArray(new PluginDownloader[myPlugins.size()]), myAllPlugins).show();
+                        new PluginsAdvertiserDialog(project, myPlugins, myAllPlugins).show();
                       }
                     }
                   }

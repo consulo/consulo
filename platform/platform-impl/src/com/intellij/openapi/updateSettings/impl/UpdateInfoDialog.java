@@ -17,9 +17,11 @@ package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BrowserHyperlinkListener;
@@ -41,7 +43,7 @@ class UpdateInfoDialog extends AbstractUpdateDialog {
 
   protected UpdateInfoDialog(final boolean canBeParent,
                              UpdateChannel channel,
-                             final List<PluginDownloader> uploadedPlugins,
+                             final List<Couple<IdeaPluginDescriptor>> uploadedPlugins,
                              final boolean enableLink) {
     super(canBeParent, enableLink, uploadedPlugins);
     myUpdatedChannel = channel;

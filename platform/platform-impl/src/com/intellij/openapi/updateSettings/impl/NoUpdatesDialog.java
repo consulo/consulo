@@ -17,8 +17,11 @@ package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerConfigurable;
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Couple;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -28,12 +31,13 @@ import java.util.List;
  * @author pti
  */
 class NoUpdatesDialog extends AbstractUpdateDialog {
-  protected NoUpdatesDialog(final boolean canBeParent, final List<PluginDownloader> updatePlugins, boolean enableLink) {
+  protected NoUpdatesDialog(final boolean canBeParent, final List<Couple<IdeaPluginDescriptor>> updatePlugins, boolean enableLink) {
     super(canBeParent, enableLink, updatePlugins);
     setTitle(IdeBundle.message("updates.info.dialog.title"));
     init();
   }
 
+  @Override
   protected JComponent createCenterPanel() {
     return new NoUpdatesPanel().myPanel;
   }
@@ -43,6 +47,7 @@ class NoUpdatesDialog extends AbstractUpdateDialog {
     return myUploadedPlugins == null ? CommonBundle.getCloseButtonText() : IdeBundle.message("update.plugins.update.action");
   }
 
+  @Override
   @NotNull
   protected Action[] createActions() {
     final Action cancelAction = getCancelAction();
@@ -55,7 +60,7 @@ class NoUpdatesDialog extends AbstractUpdateDialog {
   @Override
   protected boolean doDownloadAndPrepare() {
     boolean hasSmthToUpdate = super.doDownloadAndPrepare();
-    if (hasSmthToUpdate && isShowConfirmation() && PluginManagerConfigurable.showRestartIDEADialog() != 0) {
+    if (hasSmthToUpdate && isShowConfirmation() && PluginManagerConfigurable.showRestartIDEADialog() != Messages.YES) {
       hasSmthToUpdate = false;
     }
     return hasSmthToUpdate;

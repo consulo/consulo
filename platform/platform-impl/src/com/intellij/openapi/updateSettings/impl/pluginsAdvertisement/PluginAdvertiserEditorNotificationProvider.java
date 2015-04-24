@@ -24,7 +24,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.updateSettings.impl.PluginDownloader;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
@@ -32,10 +32,7 @@ import com.intellij.ui.EditorNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: anna
@@ -99,7 +96,7 @@ public class PluginAdvertiserEditorNotificationProvider extends EditorNotificati
         @Override
         public void run() {
           ProgressManager.getInstance().run(new Task.Modal(null, "Search for plugins in repository", true) {
-            private final Set<PluginDownloader> myPlugins = new HashSet<PluginDownloader>();
+            private final Set<Couple<IdeaPluginDescriptor>> myPlugins = new LinkedHashSet<Couple<IdeaPluginDescriptor>>();
             private List<IdeaPluginDescriptor> myAllPlugins;
 
             @Override
@@ -108,7 +105,7 @@ public class PluginAdvertiserEditorNotificationProvider extends EditorNotificati
                 myAllPlugins = RepositoryHelper.loadPluginsFromRepository(indicator);
                 for (IdeaPluginDescriptor loadedPlugin : myAllPlugins) {
                   if (plugins.contains(loadedPlugin.getPluginId().getIdString())) {
-                    myPlugins.add(PluginDownloader.createDownloader(loadedPlugin));
+                    myPlugins.add(Couple.of(null, loadedPlugin));
                   }
                 }
               }
@@ -118,7 +115,7 @@ public class PluginAdvertiserEditorNotificationProvider extends EditorNotificati
 
             @Override
             public void onSuccess() {
-              final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, myPlugins.toArray(new PluginDownloader[myPlugins.size()]), myAllPlugins);
+              final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, myPlugins, myAllPlugins);
               advertiserDialog.show();
               if (advertiserDialog.isOK()) {
                 myEnabledExtensions.add(extension);

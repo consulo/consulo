@@ -17,11 +17,10 @@ package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginHeaderPanel;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Couple;
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.OrderPanel;
 import com.intellij.ui.ScrollPaneFactory;
@@ -38,20 +37,21 @@ import java.util.Set;
 
 /**
  * @author anna
- * Date: 04-Dec-2007
+ *         Date: 04-Dec-2007
  */
-public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
+public class DetectedPluginsPanel extends OrderPanel<Couple> {
   private final List<Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   private JEditorPane myDescriptionPanel = new JEditorPane();
   private PluginHeaderPanel myHeader;
 
   public DetectedPluginsPanel() {
-    super(PluginDownloader.class);
+    super(Couple.class);
     final JTable entryTable = getEntryTable();
     myHeader = new PluginHeaderPanel(null, entryTable);
     entryTable.setTableHeader(null);
-    entryTable.setDefaultRenderer(PluginDownloader.class, new ColoredTableCellRenderer() {
+    entryTable.setDefaultRenderer(Couple.class, new ColoredTableCellRenderer() {
+      @Override
       protected void customizeCellRenderer(final JTable table,
                                            final Object value,
                                            final boolean selected,
@@ -59,21 +59,24 @@ public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
                                            final int row,
                                            final int column) {
         setBorder(null);
-        final PluginDownloader downloader = (PluginDownloader)value;
-        if (downloader != null) {
-          final String pluginName = downloader.getPluginName();
+        final Couple<IdeaPluginDescriptor> targetForUpdate = (Couple<IdeaPluginDescriptor>)value;
+        if (targetForUpdate != null) {
+          IdeaPluginDescriptor targetPluginDescriptor = targetForUpdate.getSecond();
+          final String pluginName = targetPluginDescriptor.getName();
           append(pluginName, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-          final IdeaPluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(PluginId.getId(downloader.getPluginId()));
-          if (ideaPluginDescriptor != null) {
-            final String oldPluginName = ideaPluginDescriptor.getName();
+          final IdeaPluginDescriptor installedPluginDescriptor = targetForUpdate.getFirst();
+          if (installedPluginDescriptor != null) {
+            final String oldPluginName = installedPluginDescriptor.getName();
             if (!Comparing.strEqual(pluginName, oldPluginName)) {
               append(" - " + oldPluginName, SimpleTextAttributes.REGULAR_ATTRIBUTES);
             }
           }
-          final String loadedVersion = downloader.getPluginVersion();
-          if (loadedVersion != null || (ideaPluginDescriptor != null && ideaPluginDescriptor.getVersion() != null)) {
-            final String installedVersion = ideaPluginDescriptor != null && ideaPluginDescriptor.getVersion() != null
-                                            ? "v. " + ideaPluginDescriptor.getVersion() + (loadedVersion != null ? " -> " : "")
+          final String loadedVersion = targetPluginDescriptor.getVersion();
+          if (loadedVersion != null || (installedPluginDescriptor != null && installedPluginDescriptor.getVersion() != null)) {
+            final String installedVersion = installedPluginDescriptor != null && installedPluginDescriptor.getVersion() != null
+                                            ? "v. " +
+                                              installedPluginDescriptor.getVersion() +
+                                              (loadedVersion != null ? " -> " : "")
                                             : "";
             final String availableVersion = loadedVersion != null ? loadedVersion : "";
             append(" (" + installedVersion + availableVersion + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
@@ -82,13 +85,15 @@ public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
       }
     });
     entryTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
+      @SuppressWarnings("unchecked")
       public void valueChanged(ListSelectionEvent e) {
         final int selectedRow = entryTable.getSelectedRow();
         if (selectedRow != -1) {
-          final PluginDownloader selection = getValueAt(selectedRow);
-          final IdeaPluginDescriptor descriptor = selection.getDescriptor();
+          final Couple<IdeaPluginDescriptor> selection = getValueAt(selectedRow);
+          final IdeaPluginDescriptor descriptor = selection.getSecond();
           if (descriptor != null) {
-            PluginManagerMain.pluginInfoUpdate(descriptor, null, myDescriptionPanel, myHeader , null);
+            PluginManagerMain.pluginInfoUpdate(descriptor, null, myDescriptionPanel, myHeader, null);
           }
         }
       }
@@ -106,23 +111,34 @@ public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
     add(splitter, BorderLayout.CENTER);
   }
 
+  @Override
   public String getCheckboxColumnName() {
     return "";
   }
 
-  public boolean isCheckable(final PluginDownloader downloader) {
+  @Override
+  public boolean isCheckable(final Couple downloader) {
     return true;
   }
 
-  public boolean isChecked(final PluginDownloader downloader) {
-    return !getSkippedPlugins().contains(downloader.getPluginId());
+  @Override
+  @SuppressWarnings("unchecked")
+  public boolean isChecked(final Couple temp) {
+    Couple<IdeaPluginDescriptor> couple = temp;
+    return !getSkippedPlugins().contains(couple.getFirst().getPluginId().getIdString());
   }
 
-  public void setChecked(final PluginDownloader downloader, final boolean checked) {
+  @Override
+  @SuppressWarnings("unchecked")
+  public void setChecked(final Couple temp, final boolean checked) {
+    Couple<IdeaPluginDescriptor> couple = temp;
+    String idString = couple.getFirst().getPluginId().getIdString();
+
     if (checked) {
-      getSkippedPlugins().remove(downloader.getPluginId());
-    } else {
-      getSkippedPlugins().add(downloader.getPluginId());
+      getSkippedPlugins().remove(idString);
+    }
+    else {
+      getSkippedPlugins().add(idString);
     }
     for (Listener listener : myListeners) {
       listener.stateChanged();

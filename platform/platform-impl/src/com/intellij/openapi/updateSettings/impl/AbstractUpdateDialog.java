@@ -22,27 +22,39 @@ package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManagerConfigurable;
+import com.intellij.ide.plugins.PluginManagerUISettings;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Couple;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TableUtil;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+@Logger
 public abstract class AbstractUpdateDialog extends DialogWrapper {
   private final boolean myEnableLink;
-  protected final List<PluginDownloader> myUploadedPlugins;
+  protected final List<Couple<IdeaPluginDescriptor>> myUploadedPlugins;
   protected boolean myShowConfirmation = true;
 
-  protected AbstractUpdateDialog(boolean canBeParent, boolean enableLink, final List<PluginDownloader> updatePlugins) {
+  protected AbstractUpdateDialog(boolean canBeParent, boolean enableLink, final List<Couple<IdeaPluginDescriptor>> updatePlugins) {
     super(canBeParent);
     myEnableLink = enableLink;
     myUploadedPlugins = updatePlugins;
@@ -60,11 +72,12 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
       final DetectedPluginsPanel foundPluginsPanel = new DetectedPluginsPanel();
 
       foundPluginsPanel.addStateListener(new DetectedPluginsPanel.Listener() {
+        @Override
         public void stateChanged() {
           setButtonsText();
         }
       });
-      for (PluginDownloader uploadedPlugin : myUploadedPlugins) {
+      for (Couple<IdeaPluginDescriptor> uploadedPlugin : myUploadedPlugins) {
         foundPluginsPanel.add(uploadedPlugin);
       }
       TableUtil.ensureSelectionExists(foundPluginsPanel.getEntryTable());
@@ -82,6 +95,7 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
 
     if (myEnableLink) {
       updateLinkPane.addHyperlinkListener(new HyperlinkListener() {
+        @Override
         public void hyperlinkUpdate(final HyperlinkEvent e) {
           if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
             final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
@@ -107,6 +121,7 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
     return CommonBundle.getOkButtonText();
   }
 
+  @Override
   protected void doOKAction() {
     if (doDownloadAndPrepare() && isShowConfirmation()) {
       final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
@@ -124,9 +139,46 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
   protected boolean doDownloadAndPrepare() {
     if (myUploadedPlugins != null) {
       UpdateChecker.saveDisabledToUpdatePlugins();
-      if (UpdateChecker.install(myUploadedPlugins)) {
-        return true;
+
+      final List<IdeaPluginDescriptor> pluginsForDownload = new ArrayList<IdeaPluginDescriptor>();
+      Set<String> disabledToUpdatePlugins = UpdateChecker.getDisabledToUpdatePlugins();
+      for (Couple<IdeaPluginDescriptor> uploadedPlugin : myUploadedPlugins) {
+        IdeaPluginDescriptor second = uploadedPlugin.getSecond();
+        if (disabledToUpdatePlugins.contains(second.getPluginId().getIdString())) {
+          continue;
+        }
+
+        pluginsForDownload.add(uploadedPlugin.getSecond());
       }
+      if(pluginsForDownload.isEmpty()) {
+        return false;
+      }
+
+      new Task.Backgroundable(null, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance()) {
+        @Override
+        public void run(@NotNull ProgressIndicator indicator) {
+          for (IdeaPluginDescriptor pluginDescriptor : pluginsForDownload) {
+            try {
+              PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor);
+              if (downloader.prepareToInstall(indicator)) {
+                downloader.install(true);
+              }
+            }
+            catch (Exception e) {
+              LOGGER.error(e);
+            }
+          }
+
+          UIUtil.invokeLaterIfNeeded(new Runnable() {
+            @Override
+            public void run() {
+              if (PluginManagerConfigurable.showRestartIDEADialog() == Messages.YES) {
+                ApplicationManagerEx.getApplicationEx().restart(true);
+              }
+            }
+          });
+        }
+      }.queue();
     }
     return false;
   }

@@ -16,20 +16,16 @@
 package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.ide.plugins.PluginNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.updateSettings.impl.DetectedPluginsPanel;
-import com.intellij.openapi.updateSettings.impl.PluginDownloader;
+import com.intellij.openapi.util.Couple;
 import com.intellij.ui.TableUtil;
-import com.intellij.util.Consumer;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,11 +36,11 @@ import java.util.Set;
 public class PluginsAdvertiserDialog extends DialogWrapper {
   private static final Logger LOG = Logger.getInstance("#" + PluginsAdvertiserDialog.class.getName());
 
-  private final PluginDownloader[] myUploadedPlugins;
+  private final Collection<Couple<IdeaPluginDescriptor>> myUploadedPlugins;
   private final List<IdeaPluginDescriptor> myAllPlugins;
   private final HashSet<String> mySkippedPlugins = new HashSet<String>();
 
-  PluginsAdvertiserDialog(@Nullable Project project, PluginDownloader[] plugins, List<IdeaPluginDescriptor> allPlugins) {
+  PluginsAdvertiserDialog(@Nullable Project project, Collection<Couple<IdeaPluginDescriptor>> plugins, List<IdeaPluginDescriptor> allPlugins) {
     super(project);
     myUploadedPlugins = plugins;
     myAllPlugins = allPlugins;
@@ -62,7 +58,7 @@ public class PluginsAdvertiserDialog extends DialogWrapper {
       }
     };
 
-    for (PluginDownloader uploadedPlugin : myUploadedPlugins) {
+    for (Couple<IdeaPluginDescriptor> uploadedPlugin : myUploadedPlugins) {
       foundPluginsPanel.add(uploadedPlugin);
     }
     TableUtil.ensureSelectionExists(foundPluginsPanel.getEntryTable());
@@ -71,9 +67,9 @@ public class PluginsAdvertiserDialog extends DialogWrapper {
 
   @Override
   protected void doOKAction() {
-    final List<PluginNode> nodes = new ArrayList<PluginNode>();
-    for (PluginDownloader downloader : myUploadedPlugins) {
-      if (!mySkippedPlugins.contains(downloader.getPluginId())) {
+   /* final List<PluginNode> nodes = new ArrayList<PluginNode>();
+    for (Couple<IdeaPluginDescriptor> downloader : myUploadedPlugins) {
+      if (!mySkippedPlugins.contains(downloader.getSecond().getPluginId().toString())) {
         final PluginNode pluginNode = PluginDownloader.createPluginNode(null, downloader);
         if (pluginNode != null) {
           nodes.add(pluginNode);
@@ -90,7 +86,7 @@ public class PluginsAdvertiserDialog extends DialogWrapper {
     }
     catch (IOException e) {
       LOG.error(e);
-    }
+    }   */
     super.doOKAction();
   }
 }
