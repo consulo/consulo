@@ -1,17 +1,17 @@
 package org.mustbe.consulo.sandLanguage.lang.lexer;
 
 import java.util.*;
-import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
 import org.mustbe.consulo.sandLanguage.lang.psi.Sand2Tokens;
 
 %%
 
 %public
-%class _Sand2Lexer
-%implements FlexLexer
+%class Sand2Lexer
+%extends LexerBase
 %unicode
-%function advance
+%function advanceImpl
 %type IElementType
 %eof{  return;
 %eof}

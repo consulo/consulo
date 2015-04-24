@@ -16,12 +16,15 @@
 package com.intellij.lexer;
 
 import com.intellij.psi.tree.IElementType;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.io.IOException;
 
 /**
  * @author max
  */
+@Deprecated
+@DeprecationInfo(value = "Please regenerate lexer with new skeleton, avoid using IDEA jflex skeleton", until = "2.0")
 public class FlexAdapter extends LexerBase {
   private FlexLexer myFlex = null;
   private IElementType myTokenType = null;

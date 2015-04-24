@@ -1,21 +1,15 @@
 /* It's an automatically generated code. Do not modify it. */
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
 
 %%
 
-%{
-   public _TemplateTextLexer() {
-     this((java.io.Reader)null);
-   }
-%}
-
 %unicode
-%class _TemplateTextLexer
-%implements FlexLexer
-%function advance
+%class TemplateTextLexer
+%extends LexerBase
+%function advanceImpl
 %type IElementType
 %eof{  return;
 %eof}

@@ -22,7 +22,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.lexer.CompositeLexer;
-import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -99,7 +98,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
   private URL myDefaultDescriptionUrl;
   private final Project myProject = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
 
-  private final List<ChangeListener> myChangeListeners = ContainerUtil.createLockFreeCopyOnWriteList();;
+  private final List<ChangeListener> myChangeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private Splitter mySplitter;
 
   public FileTemplate getTemplate() {
@@ -411,7 +410,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     public TemplateHighlighter(SyntaxHighlighter original) {
       myOriginalHighlighter = original;
       Lexer originalLexer = original.getHighlightingLexer();
-      Lexer templateLexer = new FlexAdapter(new FileTemplateTextLexer());
+      Lexer templateLexer = new FileTemplateTextLexer();
       templateLexer = new MergingLexerAdapter(templateLexer, TOKENS_TO_MERGE);
 
       myLexer = new CompositeLexer(originalLexer, templateLexer) {

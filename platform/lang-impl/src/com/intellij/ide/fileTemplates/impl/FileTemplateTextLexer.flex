@@ -1,21 +1,16 @@
 /* It's an automatically generated code. Do not modify it. */
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
 
 %%
 
-%{
-   public FileTemplateTextLexer() {
-     this((java.io.Reader)null);
-   }
-%}
-
 %unicode
+%public
 %class FileTemplateTextLexer
-%implements FlexLexer
-%function advance
+%extends LexerBase
+%function advanceImpl
 %type IElementType
 %eof{  return;
 %eof}

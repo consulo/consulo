@@ -1,7 +1,8 @@
 /* It's an automatically generated code. Do not modify it. */
 package com.intellij.psi.search.scope.packageSet.lexer;
+
 import com.intellij.psi.tree.IElementType;
-import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.LexerBase;
 
 %%
 
@@ -14,9 +15,10 @@ import com.intellij.lexer.FlexLexer;
 %}
 
 %unicode
-%class _ScopesLexer
-%implements FlexLexer
-%function advance
+%public
+%class ScopesLexer
+%extends LexerBase
+%function advanceImpl
 %type IElementType
 %eof{  return;
 %eof}

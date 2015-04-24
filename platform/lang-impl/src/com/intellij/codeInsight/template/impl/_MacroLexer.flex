@@ -3,20 +3,15 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.LexerBase;
 
 %%
 
-%{
-   public _MacroLexer() {
-     this((java.io.Reader)null);
-   }
-%}
-
 %unicode
-%class _MacroLexer
-%implements FlexLexer
-%function advance
+%public
+%class MacroLexer
+%extends LexerBase
+%function advanceImpl
 %type IElementType
 %eof{  return;
 %eof}

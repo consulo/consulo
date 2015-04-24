@@ -15,7 +15,6 @@
  */
 package org.mustbe.consulo.sandLanguage.lang.version;
 
-import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -26,12 +25,11 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.sandLanguage.lang.Sand2FileType;
-import org.mustbe.consulo.sandLanguage.lang.lexer._Sand2Lexer;
+import org.mustbe.consulo.sandLanguage.lang.lexer.Sand2Lexer;
 import org.mustbe.consulo.sandLanguage.lang.psi.Sand2Tokens;
 import org.mustbe.consulo.sandLanguage.lang.psi.SandElements;
 import org.mustbe.consulo.sandLanguage.lang.psi.SandTokens;
 
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +58,7 @@ public class Sand2LanguageVersion extends BaseSandLanguageVersion {
   @NotNull
   @Override
   public Lexer createLexer(@Nullable Project project) {
-    return new FlexAdapter(new _Sand2Lexer((Reader)null));
+    return new Sand2Lexer();
   }
 
   @NotNull

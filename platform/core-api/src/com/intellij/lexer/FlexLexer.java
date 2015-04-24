@@ -16,14 +16,16 @@
 package com.intellij.lexer;
 
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.io.IOException;
 
 /**
  * @author max
  */
-@NonNls public interface FlexLexer {
+@Deprecated
+@DeprecationInfo(value = "Please regenerate lexer with new skeleton, avoid using IDEA jflex skeleton", until = "2.0")
+public interface FlexLexer {
   void yybegin(int state);
   int yystate();
   int getTokenStart();
