@@ -100,25 +100,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     myPath = pluginPath;
   }
 
-  /**
-   * @deprecated
-   * use {@link com.intellij.util.containers.StringInterner#intern(String)} directly instead
-   */
-  @NotNull
-  @Deprecated
-  public static String intern(@NotNull String s) {
-    return s;
-  }
-
-  /**
-   * @deprecated
-   * use {@link com.intellij.openapi.util.JDOMUtil#internElement(org.jdom.Element, com.intellij.util.containers.StringInterner)}
-   */
-  @SuppressWarnings("unused")
-  @Deprecated
-  public static void internJDOMElement(@NotNull Element rootElement) {
-  }
-
   @Nullable
   private static List<Element> copyElements(@Nullable Element[] elements, StringInterner interner) {
     if (elements == null || elements.length == 0) {
@@ -230,7 +211,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     // preserve items order as specified in xml (filterBadPlugins will not fail if module comes first)
     Set<PluginId> dependentPlugins = new LinkedHashSet<PluginId>();
     // we always depend to core plugin, but prevent recursion
-    if(!PluginManagerCore.CORE_PLUGIN.equals(myId)) {
+    if (!PluginManagerCore.CORE_PLUGIN.equals(myId)) {
       dependentPlugins.add(PluginManagerCore.CORE_PLUGIN);
     }
     Set<PluginId> optionalDependentPlugins = new LinkedHashSet<PluginId>();
@@ -252,7 +233,8 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
 
     myDependencies = dependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : dependentPlugins.toArray(new PluginId[dependentPlugins.size()]);
-    myOptionalDependencies = optionalDependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependentPlugins.toArray(new PluginId[optionalDependentPlugins.size()]);
+    myOptionalDependencies =
+            optionalDependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependentPlugins.toArray(new PluginId[optionalDependentPlugins.size()]);
 
     if (pluginBean.helpSets == null || pluginBean.helpSets.length == 0) {
       myHelpSets = HelpSetPath.EMPTY;
@@ -343,8 +325,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myVendor;
   }
 
-  public void setVendor( final String val )
-  {
+  public void setVendor(final String val) {
     myVendor = val;
   }
 
@@ -370,17 +351,17 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
      category in its .xml file so to be consistent in plugins representation
      (e.g. in the Plugins form) we have to set this value outside.
   */
-  public void setCategory( String category ){
+  public void setCategory(String category) {
     myCategory = category;
   }
 
-  @SuppressWarnings("UnusedDeclaration") // Used in Upsource
+  @SuppressWarnings("UnusedDeclaration")
   @Nullable
   public MultiMap<String, Element> getExtensionsPoints() {
     return myExtensionsPoints;
   }
 
-  @SuppressWarnings("UnusedDeclaration") // Used in Upsource
+  @SuppressWarnings("UnusedDeclaration")
   @Nullable
   public MultiMap<String, Element> getExtensions() {
     return myExtensions;
@@ -448,8 +429,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myVendorEmail;
   }
 
-  public void setVendorEmail( final String val )
-  {
+  public void setVendorEmail(final String val) {
     myVendorEmail = val;
   }
 
@@ -458,8 +438,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myVendorUrl;
   }
 
-  public void setVendorUrl( final String val )
-  {
+  public void setVendorUrl(final String val) {
     myVendorUrl = val;
   }
 
@@ -468,8 +447,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return url;
   }
 
-  public void setUrl( final String val )
-  {
+  public void setUrl(final String val) {
     url = val;
   }
 
@@ -527,11 +505,11 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   }
 
   @Override
-  public String getDownloads(){
+  public String getDownloads() {
     return myDownloadCounter;
   }
 
-  public long getDate(){
+  public long getDate() {
     return myDate;
   }
 
@@ -540,7 +518,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
      descriptor outside its loading from the xml file since this information
      is available only from the site.
   */
-  public void setDate( long date ){
+  public void setDate(long date) {
     myDate = date;
   }
 
@@ -642,15 +620,10 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     try {
       //to avoid paths like this /home/kb/IDEA/bin/../config/plugins/APlugin
       path = getPath().getCanonicalPath();
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       path = getPath().getAbsolutePath();
     }
-    if (ApplicationManager.getApplication() != null && ApplicationManager.getApplication().isInternal()) {
-      if (path.startsWith(PathManager.getHomePath() + File.separator + "out" + File.separator + "classes")) {
-        return true;
-      }
-    }
-
     return path.startsWith(PathManager.getPreInstalledPluginsPath());
   }
 
