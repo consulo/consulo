@@ -15,15 +15,19 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 
-public class ToggleFloatingModeAction extends ToggleAction implements DumbAware {
+public class ToggleWindowedModeAction extends ToggleAction implements DumbAware {
 
   @Override
   public boolean isSelected(AnActionEvent event) {
@@ -36,7 +40,7 @@ public class ToggleFloatingModeAction extends ToggleAction implements DumbAware 
     if (id == null) {
       return false;
     }
-    return ToolWindowType.FLOATING == windowManager.getToolWindow(id).getType();
+    return ToolWindowType.WINDOWED == windowManager.getToolWindow(id).getType();
   }
 
   @Override
@@ -52,11 +56,11 @@ public class ToggleFloatingModeAction extends ToggleAction implements DumbAware 
     ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
     ToolWindowEx toolWindow = (ToolWindowEx)mgr.getToolWindow(id);
     ToolWindowType type = toolWindow.getType();
-    if (ToolWindowType.FLOATING == type) {
+    if (ToolWindowType.WINDOWED == type) {
       toolWindow.setType(toolWindow.getInternalType(), null);
     }
     else {
-      toolWindow.setType(ToolWindowType.FLOATING, null);
+      toolWindow.setType(ToolWindowType.WINDOWED, null);
     }
   }
 
@@ -64,6 +68,10 @@ public class ToggleFloatingModeAction extends ToggleAction implements DumbAware 
   public void update(AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();
+    if (SystemInfo.isMac) {
+      presentation.setEnabledAndVisible(false);
+      return;
+    }
     Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
     if (project == null) {
       presentation.setEnabled(false);

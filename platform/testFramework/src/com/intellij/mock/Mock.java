@@ -589,6 +589,17 @@ public class Mock {
       return null;
     }
 
+    @NotNull
+    @Override
+    public ToolWindow registerToolWindow(@NotNull String id,
+                                         boolean canCloseContent,
+                                         @NotNull ToolWindowAnchor anchor,
+                                         Disposable parentDisposable,
+                                         boolean canWorkInDumbMode,
+                                         boolean secondary) {
+      return null;
+    }
+
     @Override
     public ToolWindow registerToolWindow(@NotNull final String id, final boolean canCloseContent, @NotNull final ToolWindowAnchor anchor, final boolean secondary) {
       return null;
@@ -651,6 +662,16 @@ public class Mock {
     @Override
     public Balloon getToolWindowBalloon(String id) {
       return null;
+    }
+
+    @Override
+    public boolean isMaximized(@NotNull ToolWindow wnd) {
+      return false;
+    }
+
+    @Override
+    public void setMaximized(@NotNull ToolWindow wnd, boolean maximized) {
+
     }
 
     @Override

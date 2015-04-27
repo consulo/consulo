@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
+import com.intellij.ide.ui.UISettings;
+import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
-import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import com.intellij.openapi.actionSystem.impl.*;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.SystemInfo;
@@ -29,16 +30,18 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
-import com.intellij.ui.InplaceButton;
-import com.intellij.ui.PopupHandler;
-import com.intellij.ui.UIBundle;
+import com.intellij.ui.*;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabsUtil;
+import com.intellij.util.BitUtil;
 import com.intellij.util.Producer;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.plaf.PanelUI;
@@ -47,11 +50,12 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 /**
  * @author pegov
  */
-public abstract class ToolWindowHeader extends JPanel implements Disposable {
+public abstract class ToolWindowHeader extends JPanel implements Disposable, UISettingsListener {
   @NonNls private static final String HIDE_ACTIVE_WINDOW_ACTION_ID = "HideActiveWindow";
   @NonNls private static final String HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID = "HideSideWindows";
 
@@ -61,10 +65,15 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
   private BufferedImage myImage;
   private BufferedImage myActiveImage;
   private ToolWindowType myImageType;
-  private JPanel myButtonPanel;
+  private final JPanel myButtonPanel;
   private final ToolWindowHeader.ActionButton myGearButton;
 
-  public ToolWindowHeader(final ToolWindowImpl toolWindow, WindowInfoImpl info, @NotNull final Producer<ActionGroup> gearProducer) {
+  private final PresentationFactory myPresentationFactory = new PresentationFactory();
+  private final ToolbarUpdater myUpdater;
+  private final DefaultActionGroup myActionGroup = new DefaultActionGroup();
+  private List<AnAction> myVisibleActions = ContainerUtil.newArrayListWithCapacity(2);
+
+  public ToolWindowHeader(final ToolWindowImpl toolWindow, @NotNull WindowInfoImpl info, @NotNull final Producer<ActionGroup> gearProducer) {
     setLayout(new BorderLayout());
 
     myToolWindow = toolWindow;
@@ -80,7 +89,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
           Component c = getComponent(0);
           Dimension size = c.getPreferredSize();
           if (size.width < (r.width - insets.left - insets.right)) {
-            c.setBounds(insets.left, insets.top, r.width, r.height - insets.top - insets.bottom);
+            c.setBounds(insets.left, insets.top, size.width, r.height - insets.top - insets.bottom);
           } else {
             c.setBounds(insets.left, insets.top, r.width - insets.left - insets.right, r.height - insets.top - insets.bottom);
           }
@@ -92,6 +101,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
     add(westPanel, BorderLayout.CENTER);
 
     westPanel.add(toolWindow.getContentUI().getTabComponent());
+    toolWindow.getContentUI().initMouseListeners(westPanel, toolWindow.getContentUI());
 
     JPanel eastPanel = new JPanel();
     eastPanel.setOpaque(false);
@@ -101,11 +111,11 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
 
     myGearButton = new ActionButton(new AnAction() {
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         final InputEvent inputEvent = e.getInputEvent();
         final ActionPopupMenu popupMenu =
-          ((ActionManagerImpl)ActionManager.getInstance())
-            .createActionPopupMenu(ToolWindowContentUi.POPUP_PLACE, gearProducer.produce(), new MenuItemPresentationFactory(true));
+                ((ActionManagerImpl)ActionManager.getInstance())
+                        .createActionPopupMenu(ToolWindowContentUi.POPUP_PLACE, gearProducer.produce(), new MenuItemPresentationFactory(true));
 
         int x = 0;
         int y = 0;
@@ -125,12 +135,12 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
 
     myHideButton = new ActionButton(new HideAction() {
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         hideToolWindow();
       }
     }, new HideSideAction() {
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         sideHidden();
       }
     }, AllIcons.General.HideLeft, null, null) {
@@ -158,13 +168,19 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
     addDefaultActions(eastPanel);
     myButtonPanel = eastPanel;
 
-    addMouseListener(new PopupHandler() {
+    westPanel.addMouseListener(new PopupHandler() {
       @Override
       public void invokePopup(final Component comp, final int x, final int y) {
         toolWindow.getContentUI().showContextMenu(comp, x, y, toolWindow.getPopupGroup(), toolWindow.getContentManager().getSelectedContent());
       }
     });
-    
+    westPanel.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        toolWindow.fireActivated();
+      }
+    });
+
     addMouseListener(new MouseAdapter() {
       @Override
       public void mouseReleased(final MouseEvent e) {
@@ -186,6 +202,47 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
 
     setOpaque(true);
     setBorder(BorderFactory.createEmptyBorder(TabsUtil.TABS_BORDER, 1, TabsUtil.TABS_BORDER, 1));
+
+    UISettings.getInstance().addUISettingsListener(this, toolWindow.getContentUI());
+    myUpdater = new ToolbarUpdater(this) {
+      @Override
+      protected void updateActionsImpl(boolean transparentOnly, boolean forced) {
+        ToolWindowHeader.this.updateActionsImpl(transparentOnly, forced);
+      }
+
+      @Override
+      protected void updateActionTooltips() {
+        for (ActionButton actionButton : JBSwingUtilities.uiTraverser().preOrderTraversal(myButtonPanel).filter(ActionButton.class)) {
+          actionButton.updateTooltip();
+        }
+      }
+    };
+    new DoubleClickListener(){
+      @Override
+      protected boolean onDoubleClick(MouseEvent event) {
+        ToolWindowManagerImpl mgr = toolWindow.getToolWindowManager();
+        mgr.setMaximized(myToolWindow, !mgr.isMaximized(myToolWindow));
+        return true;
+      }
+    }.installOn(westPanel);
+    westPanel.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseReleased(final MouseEvent e) {
+        Runnable runnable = new Runnable() {
+          @Override
+          public void run() {
+            ToolWindowHeader.this.dispatchEvent(SwingUtilities.convertMouseEvent(e.getComponent(), e, ToolWindowHeader.this));
+          }
+        };
+        //noinspection SSBasedInspection
+        SwingUtilities.invokeLater(runnable);
+      }
+    });
+  }
+
+  @Override
+  public void uiSettingsChanged(UISettings source) {
+    clearCaches();
   }
 
   private void addDefaultActions(JPanel eastPanel) {
@@ -202,41 +259,46 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
     myInfo = null;
   }
 
-  public void updateTooltips() {
-    if (myHideButton != null) {
-      myHideButton.updateTooltip();
-    }
+  public void setAdditionalTitleActions(AnAction[] actions) {
+    myActionGroup.removeAll();
+    myActionGroup.addAll(actions);
+    myUpdater.updateActions(false, true);
   }
 
-  public void setAdditionalTitleActions(AnAction[] actions) {
-    myButtonPanel.removeAll();
-    boolean actionAdded = false;
-    for (final AnAction action : actions) {
-      if (action == null) {
-        continue;
-      }
+  private void updateActionsImpl(boolean transparentOnly, boolean forced) {
+    List<AnAction> newVisibleActions = ContainerUtil.newArrayListWithCapacity(myVisibleActions.size());
+    DataContext dataContext = DataManager.getInstance().getDataContext(this);
 
-      if(action == AnSeparator.getInstance()) {
-        myButtonPanel.add(new JLabel(AllIcons.General.Divider));
-      }
-      else {
-        myButtonPanel.add(new ActionButton(action, action.getTemplatePresentation().getIcon()) {
+    Utils.expandActionGroup(myActionGroup, newVisibleActions, myPresentationFactory, dataContext,
+                            ActionPlaces.TOOLWINDOW_TITLE, myUpdater.getActionManager(), transparentOnly);
+
+    if (forced || !newVisibleActions.equals(myVisibleActions)) {
+      myVisibleActions = newVisibleActions;
+
+      myButtonPanel.removeAll();
+      boolean actionAdded = false;
+      for (final AnAction action : newVisibleActions) {
+        if (action == null) continue;
+        final Presentation presentation = myPresentationFactory.getPresentation(action);
+        myButtonPanel.add(new ActionButton(action, presentation.getIcon()) {
           @Override
           protected Icon getActiveHoveredIcon() {
-            final Icon icon = action.getTemplatePresentation().getHoveredIcon();
+            Icon icon = presentation.getHoveredIcon();
             return icon != null ? icon : super.getActiveHoveredIcon();
           }
         });
+        myButtonPanel.add(Box.createHorizontalStrut(9));
+        actionAdded = true;
       }
+      if (actionAdded) {
+        myButtonPanel.add(new JLabel(AllIcons.General.Divider));
+        myButtonPanel.add(Box.createHorizontalStrut(6));
+      }
+      addDefaultActions(myButtonPanel);
 
-      myButtonPanel.add(Box.createHorizontalStrut(9));
-      actionAdded = true;
+      revalidate();
+      repaint();
     }
-    if (actionAdded) {
-      myButtonPanel.add(new JLabel(AllIcons.General.Divider));
-      myButtonPanel.add(Box.createHorizontalStrut(6));
-    }
-    addDefaultActions(myButtonPanel);
   }
 
   private static Icon getHideToolWindowIcon(ToolWindow toolWindow) {
@@ -297,44 +359,48 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
 
     Image image;
     if (isActive()) {
-      if (myActiveImage == null || myActiveImage.getHeight() != r.height || type != myImageType) {
+      if (myActiveImage == null || /*myActiveImage.getHeight() != r.height ||*/ type != myImageType) {
         myActiveImage = drawToBuffer(true, r.height, myToolWindow.getType() == ToolWindowType.FLOATING);
       }
-      
+
       image = myActiveImage;
     } else {
-      if (myImage == null || myImage.getHeight() != r.height || type != myImageType) {
+      if (myImage == null || /*myImage.getHeight() != r.height ||*/ type != myImageType) {
         myImage = drawToBuffer(false, r.height, myToolWindow.getType() == ToolWindowType.FLOATING);
       }
-      
+
       image = myImage;
     }
-    
+
     myImageType = myToolWindow.getType();
 
     Rectangle clipBounds = clip.getBounds();
     for (int x = clipBounds.x; x < clipBounds.x + clipBounds.width; x+=150) {
-      g2d.drawImage(image, x, 0, null);
+      UIUtil.drawImage(g, image, x, 0, null);
     }
   }
-  
+
   private static BufferedImage drawToBuffer(boolean active, int height, boolean floating) {
     final int width = 150;
-    
+
     BufferedImage image = UIUtil.createImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = image.createGraphics();
     UIUtil.drawHeader(g, 0, width, height, active, true, !floating, true);
     g.dispose();
 
-    return image; 
+    return image;
   }
 
   @Override
   public void setUI(PanelUI ui) {
+    clearCaches();
+
+    super.setUI(ui);
+  }
+
+  public void clearCaches() {
     myImage = null;
     myActiveImage = null;
-    
-    super.setUI(ui);
   }
 
   @Override
@@ -349,7 +415,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
       graphics.setColor(new Color(255, 255, 255, 30));
       graphics.fill(r);
     }
-    
+
     graphics.dispose();
   }
 
@@ -376,10 +442,10 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
   private class ActionButton extends Wrapper implements ActionListener, AltStateManager.AltListener {
     private final InplaceButton myButton;
     private final AnAction myAction;
-    private AnAction myAlternativeAction;
-    private Icon myActiveIcon;
-    private Icon myInactiveIcon;
-    private Icon myAlternativeIcon;
+    private final AnAction myAlternativeAction;
+    private final Icon myActiveIcon;
+    private final Icon myInactiveIcon;
+    private final Icon myAlternativeIcon;
 
     private AnAction myCurrentAction;
 
@@ -426,7 +492,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
 
       addPropertyChangeListener(listener);
     }
-    
+
     public void updateTooltip() {
       myButton.setToolTipText(getToolTipTextByAction(myCurrentAction));
     }
@@ -474,16 +540,17 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
     }
 
     @Override
+    @RequiredDispatchThread
     public void actionPerformed(final ActionEvent e) {
       AnAction action =
-        myAlternativeAction != null && (e.getModifiers() & InputEvent.ALT_MASK) == InputEvent.ALT_MASK ? myAlternativeAction : myAction;
+              myAlternativeAction != null && BitUtil.isSet(e.getModifiers(), InputEvent.ALT_MASK) ? myAlternativeAction : myAction;
       final DataContext dataContext = DataManager.getInstance().getDataContext(this);
       final ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-      InputEvent inputEvent = e.getSource() instanceof InputEvent ? (InputEvent) e.getSource() : null; 
+      InputEvent inputEvent = e.getSource() instanceof InputEvent ? (InputEvent) e.getSource() : null;
       final AnActionEvent event =
-        new AnActionEvent(inputEvent, dataContext, ActionPlaces.UNKNOWN, action.getTemplatePresentation(),
-                          ActionManager.getInstance(),
-                          0);
+              new AnActionEvent(inputEvent, dataContext, ActionPlaces.TOOLWINDOW_TITLE, action.getTemplatePresentation(),
+                                ActionManager.getInstance(),
+                                0);
       actionManager.fireBeforeActionPerformed(action, dataContext, event);
       final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
       if (component != null && !component.isShowing()) {
@@ -523,12 +590,12 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
   }
 
   private static String getToolTipTextByAction(AnAction action) {
-    String text = AnAction.createTooltipText(action.getTemplatePresentation().getText(), action);
+    String text = KeymapUtil.createTooltipText(action.getTemplatePresentation().getText(), action);
 
     if (action instanceof HideAction) {
       text += String.format(" (Click with %s to Hide Side)", KeymapUtil.getShortcutText(KeyboardShortcut.fromString("pressed ALT")));
-    } 
-     
+    }
+
     return text;
   }
 
@@ -541,10 +608,10 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
     }
 
     @Override
-    public abstract void actionPerformed(final AnActionEvent e);
+    public abstract void actionPerformed(@NotNull final AnActionEvent e);
 
     @Override
-    public final void update(final AnActionEvent event) {
+    public final void update(@NotNull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(myInfo.isVisible());
     }
@@ -559,7 +626,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
     }
 
     @Override
-    public final void update(final AnActionEvent event) {
+    public final void update(@NotNull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(myInfo.isVisible());
     }
