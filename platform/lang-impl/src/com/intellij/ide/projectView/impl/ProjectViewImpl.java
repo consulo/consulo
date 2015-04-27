@@ -86,6 +86,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import org.consulo.psi.PsiPackageSupportProviders;
 import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
 import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jdom.Attribute;
@@ -93,6 +94,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -636,6 +638,18 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
 
         selectionInfo.apply(viewPane);
       }
+
+      @Override
+      @RequiredDispatchThread
+      public void update(AnActionEvent e) {
+        super.update(e);
+        Project project = e.getProject();
+        assert project != null;
+        final Presentation presentation = e.getPresentation();
+        if(!PsiPackageSupportProviders.isPackageSupported(project)) {
+          presentation.setVisible(false);
+        }
+      }
     }).setAsSecondary(true);
 
     class FlattenPackagesDependableAction extends PaneOptionAction {
@@ -648,10 +662,18 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
       }
 
       @Override
+      @RequiredDispatchThread
       public void update(AnActionEvent e) {
         super.update(e);
+        Project project = e.getProject();
+        assert project != null;
         final Presentation presentation = e.getPresentation();
-        presentation.setVisible(isFlattenPackages(myCurrentViewId));
+        if(!PsiPackageSupportProviders.isPackageSupported(project)) {
+          presentation.setVisible(false);
+        }
+        else {
+          presentation.setVisible(isFlattenPackages(myCurrentViewId));
+        }
       }
     }
     myActionGroup.addAction(new HideEmptyMiddlePackagesAction()).setAsSecondary(true);
@@ -667,6 +689,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
 
 
       @Override
+      @RequiredDispatchThread
       public void update(AnActionEvent e) {
         super.update(e);
         if (ScopeViewPane.ID.equals(myCurrentViewId)) {
@@ -1534,9 +1557,16 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
     }
 
     @Override
+    @RequiredDispatchThread
     public void update(AnActionEvent e) {
       super.update(e);
       final Presentation presentation = e.getPresentation();
+      Project project = e.getProject();
+      assert project != null;
+      if(!PsiPackageSupportProviders.isPackageSupported(project)) {
+        presentation.setVisible(false);
+        return;
+      }
       if (isFlattenPackages(myCurrentViewId)) {
         presentation.setText(IdeBundle.message("action.hide.empty.middle.packages"));
         presentation.setDescription(IdeBundle.message("action.show.hide.empty.middle.packages"));

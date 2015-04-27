@@ -24,7 +24,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.project.Project;
 import com.intellij.packageDependencies.DependencyUISettings;
+import org.consulo.psi.PsiPackageSupportProviders;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public final class FlattenPackagesAction extends ToggleAction {
   private final Runnable myUpdate;
@@ -33,6 +36,19 @@ public final class FlattenPackagesAction extends ToggleAction {
     super(IdeBundle.message("action.flatten.packages"),
           IdeBundle.message("action.flatten.packages"), AllIcons.ObjectBrowser.FlattenPackages);
     myUpdate = update;
+  }
+
+  @Override
+  @RequiredDispatchThread
+  public void update(AnActionEvent e) {
+    super.update(e);
+    Project project = e.getProject();
+    if(project == null) {
+      return;
+    }
+    if(!PsiPackageSupportProviders.isPackageSupported(project)) {
+      e.getPresentation().setVisible(false);
+    }
   }
 
   @Override

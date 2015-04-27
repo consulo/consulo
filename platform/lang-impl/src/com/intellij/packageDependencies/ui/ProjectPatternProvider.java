@@ -34,9 +34,11 @@ import com.intellij.packageDependencies.DependencyUISettings;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
+import org.consulo.psi.PsiPackageSupportProviders;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.Set;
@@ -54,7 +56,9 @@ public class ProjectPatternProvider extends PatternDialectProvider {
   }
 
   @Override
-  public TreeModel createTreeModel(final Project project, final Set<PsiFile> deps, final Marker marker,
+  public TreeModel createTreeModel(final Project project,
+                                   final Set<PsiFile> deps,
+                                   final Marker marker,
                                    final DependenciesPanel.DependencyPanelSettings settings) {
     return FileTreeModelBuilder.createTreeModel(project, false, deps, marker, settings);
   }
@@ -125,8 +129,8 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     private final Runnable myUpdate;
 
     CompactEmptyMiddlePackagesAction(Runnable update) {
-      super(IdeBundle.message("action.compact.empty.middle.packages"),
-            IdeBundle.message("action.compact.empty.middle.packages"), AllIcons.ObjectBrowser.CompactEmptyPackages);
+      super(IdeBundle.message("action.compact.empty.middle.packages"), IdeBundle.message("action.compact.empty.middle.packages"),
+            AllIcons.ObjectBrowser.CompactEmptyPackages);
       myUpdate = update;
     }
 
@@ -142,9 +146,15 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     }
 
     @Override
+    @RequiredDispatchThread
     public void update(final AnActionEvent e) {
       super.update(e);
-      e.getPresentation().setVisible(DependencyUISettings.getInstance().SCOPE_TYPE == FILE);
+      Project eventProject = getEventProject(e);
+      if(eventProject == null) {
+        return;
+      }
+      e.getPresentation()
+              .setVisible(FILE.equals(DependencyUISettings.getInstance().SCOPE_TYPE) && PsiPackageSupportProviders.isPackageSupported(eventProject));
     }
   }
 }

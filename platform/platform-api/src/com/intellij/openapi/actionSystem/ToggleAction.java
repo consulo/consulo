@@ -16,6 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -60,6 +61,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
   public abstract void setSelected(AnActionEvent e, boolean state);
 
   @Override
+  @RequiredDispatchThread
   public void update(final AnActionEvent e){
     final Boolean selected = isSelected(e) ? Boolean.TRUE : Boolean.FALSE;
     final Presentation presentation = e.getPresentation();
