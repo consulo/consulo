@@ -29,4 +29,16 @@ public abstract class CompilerClientConnector {
   public abstract void setClientConnection(@Nullable CompilerClientInterface clientConnection);
 
   public abstract void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum);
+
+  public void showOrHide(boolean hide) {
+    // ignored
+  }
+
+  public void updateIcon() {
+    // ignored
+  }
+
+  public void selectFirstMessage() {
+    // ignored
+  }
 }

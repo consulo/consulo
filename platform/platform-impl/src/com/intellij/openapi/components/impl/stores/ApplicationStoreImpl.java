@@ -17,7 +17,7 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StateStorageOperation;
 import com.intellij.openapi.components.StoragePathMacros;
@@ -39,14 +39,14 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   private static final String DEFAULT_STORAGE_SPEC = StoragePathMacros.APP_CONFIG + "/" + PathManager.DEFAULT_OPTIONS_FILE_NAME + DirectoryStorageData.DEFAULT_EXT;
   private static final String ROOT_ELEMENT_NAME = "application";
 
-  private final ApplicationImpl myApplication;
+  private final ApplicationEx2 myApplication;
   private final StateStorageManager myStateStorageManager;
 
   private String myConfigPath;
 
   // created from PicoContainer
   @SuppressWarnings({"UnusedDeclaration"})
-  public ApplicationStoreImpl(final ApplicationImpl application, PathMacroManager pathMacroManager) {
+  public ApplicationStoreImpl(final ApplicationEx2 application, PathMacroManager pathMacroManager) {
     myApplication = application;
     myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application.getPicoContainer()) {
       private boolean myConfigDirectoryRefreshed;

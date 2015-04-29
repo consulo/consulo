@@ -52,9 +52,10 @@ public class CoreLocalVirtualFile extends VirtualFile {
     return myFileSystem;
   }
 
+  @NotNull
   @Override
   public String getPath() {
-    return myIoFile.getAbsolutePath();
+    return FileUtil.toSystemIndependentName(myIoFile.getAbsolutePath());
   }
 
   @Override

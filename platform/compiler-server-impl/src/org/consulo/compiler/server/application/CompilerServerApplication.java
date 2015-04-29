@@ -218,12 +218,23 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @Override
   public void runReadAction(@NotNull Runnable action) {
-    action.run();
+    try {
+      action.run();
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+    }
   }
 
   @Override
   public <T> T runReadAction(@NotNull Computable<T> computation) {
-    return computation.compute();
+    try {
+      return computation.compute();
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+      return null;
+    }
   }
 
   @Override
@@ -233,12 +244,23 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @Override
   public void runWriteAction(@NotNull Runnable action) {
-    action.run();
+    try {
+      action.run();
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+    }
   }
 
   @Override
   public <T> T runWriteAction(@NotNull Computable<T> computation) {
-    return computation.compute();
+    try {
+      return computation.compute();
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+      return null;
+    }
   }
 
   @Override
@@ -310,27 +332,52 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @Override
   public void invokeLater(@NotNull Runnable runnable) {
-    runnable.run();
+    try {
+      runnable.run();
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+    }
   }
 
   @Override
   public void invokeLater(@NotNull Runnable runnable, @NotNull Condition expired) {
-    runnable.run();
+    try {
+      runnable.run();
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+    }
   }
 
   @Override
   public void invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state) {
-    runnable.run();
+    try {
+      runnable.run();
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+    }
   }
 
   @Override
   public void invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state, @NotNull Condition expired) {
-    runnable.run();
+    try {
+      runnable.run();
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+    }
   }
 
   @Override
   public void invokeAndWait(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
-    runnable.run();
+    try {
+      runnable.run();
+    }
+    catch (Exception e) {
+      LOGGER.error(e);
+    }
   }
 
   @NotNull

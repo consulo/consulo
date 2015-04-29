@@ -34,6 +34,8 @@ import com.intellij.pom.Navigatable;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
+import org.consulo.compiler.server.rmi.CompilerClientConnector;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,6 +45,7 @@ import java.util.concurrent.Executor;
  * @author Eugene Zhuravlev
  *         Date: 9/18/12
  */
+@Logger
 public class ProblemsViewImpl extends ProblemsView {
 
   private final ProblemsViewPanel myPanel;
@@ -125,6 +128,10 @@ public class ProblemsViewImpl extends ProblemsView {
 
   @Override
   public void showOrHide(final boolean hide) {
+    if(ApplicationManager.getApplication().isCompilerServerMode()) {
+      CompilerClientConnector.getInstance(myProject).showOrHide(hide);
+      return;
+    }
 
     val toolWindow = myToolWindowManager.getToolWindow(PROBLEMS_TOOLWINDOW_ID);
     if (toolWindow.isActive() == !hide) {
@@ -144,6 +151,10 @@ public class ProblemsViewImpl extends ProblemsView {
   }
 
   private void updateIcon() {
+    if(ApplicationManager.getApplication().isCompilerServerMode()) {
+      CompilerClientConnector.getInstance(myProject).updateIcon();
+      return;
+    }
     val toolWindow = myToolWindowManager.getToolWindow(PROBLEMS_TOOLWINDOW_ID);
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
@@ -155,6 +166,10 @@ public class ProblemsViewImpl extends ProblemsView {
 
   @Override
   public void selectFirstMessage() {
+    if(ApplicationManager.getApplication().isCompilerServerMode()) {
+      CompilerClientConnector.getInstance(myProject).selectFirstMessage();
+      return;
+    }
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
       public void run() {
