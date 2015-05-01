@@ -15,7 +15,10 @@
  */
 package com.intellij.codeInsight.navigation.actions;
 
-import com.intellij.codeInsight.*;
+import com.intellij.codeInsight.CodeInsightActionHandler;
+import com.intellij.codeInsight.CodeInsightBundle;
+import com.intellij.codeInsight.TargetElementUtil;
+import com.intellij.codeInsight.TargetElementUtilEx;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.navigation.NavigationUtil;
@@ -23,6 +26,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.find.actions.ShowUsagesAction;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.EditSourceUtil;
+import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -38,15 +42,18 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +86,8 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     DumbService.getInstance(project).setAlternativeResolveEnabled(true);
     try {
       int offset = editor.getCaretModel().getOffset();
-      PsiElement[] elements = findAllTargetElements(project, editor, offset);
+      Pair<PsiElement[], GotoDeclarationHandler> elementsInfo = findAllTargetElementsInfo(project, editor, offset);
+      PsiElement[] elements = elementsInfo.getFirst();
       FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.goto.declaration");
 
       if (elements.length != 1) {
@@ -92,7 +100,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
             return;
           }
         }
-        chooseAmbiguousTarget(editor, offset, elements);
+        chooseAmbiguousTarget(editor, offset, elements, calcElementRender(elementsInfo.getSecond(), elements));
         return;
       }
 
@@ -111,6 +119,14 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
   }
 
+  @Nullable
+  private static PsiElementListCellRenderer<PsiElement> calcElementRender(@Nullable GotoDeclarationHandler declarationHandler, @NotNull PsiElement[] elements) {
+    if(declarationHandler instanceof GotoDeclarationHandlerEx) {
+      return ((GotoDeclarationHandlerEx)declarationHandler).createRender(elements);
+    }
+    return null;
+  }
+
   public static PsiNameIdentifierOwner findElementToShowUsagesOf(@NotNull Editor editor, @NotNull PsiFile file, int offset) {
     PsiElement elementAt = TargetElementUtil.findTargetElement(editor, ContainerUtil.newHashSet(TargetElementUtilEx.ELEMENT_NAME_ACCEPTED), offset);
     if (elementAt instanceof PsiNameIdentifierOwner) {
@@ -119,7 +135,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return null;
   }
 
-  private static void chooseAmbiguousTarget(final Editor editor, int offset, PsiElement[] elements) {
+  private static void chooseAmbiguousTarget(final Editor editor, int offset, PsiElement[] elements, @Nullable PsiElementListCellRenderer<PsiElement> render) {
     PsiElementProcessor<PsiElement> navigateProcessor = new PsiElementProcessor<PsiElement>() {
       @Override
       public boolean execute(@NotNull final PsiElement element) {
@@ -127,8 +143,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         return true;
       }
     };
-    boolean found =
-            chooseAmbiguousTarget(editor, offset, navigateProcessor, CodeInsightBundle.message("declaration.navigation.title"), elements);
+    boolean found = chooseAmbiguousTarget(editor, offset, navigateProcessor, CodeInsightBundle.message("declaration.navigation.title"), elements, render);
     if (!found) {
       HintManager.getInstance().showErrorHint(editor, "Cannot find declaration to go to");
     }
@@ -141,12 +156,21 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
   }
 
-  // returns true if processor is run or is going to be run after showing popup
   public static boolean chooseAmbiguousTarget(@NotNull Editor editor,
                                               int offset,
                                               @NotNull PsiElementProcessor<PsiElement> processor,
                                               @NotNull String titlePattern,
                                               @Nullable PsiElement[] elements) {
+    return chooseAmbiguousTarget(editor, offset, processor, titlePattern, elements, null);
+  }
+
+  // returns true if processor is run or is going to be run after showing popup
+  public static boolean chooseAmbiguousTarget(@NotNull Editor editor,
+                                              int offset,
+                                              @NotNull PsiElementProcessor<PsiElement> processor,
+                                              @NotNull String titlePattern,
+                                              @Nullable PsiElement[] elements,
+                                              @Nullable PsiElementListCellRenderer<PsiElement> renderer) {
     if (TargetElementUtil.inVirtualSpace(editor, offset)) {
       return false;
     }
@@ -178,7 +202,10 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         title = MessageFormat.format(titlePattern, refText);
       }
 
-      NavigationUtil.getPsiElementPopup(elements, new DefaultPsiElementCellRenderer(), title, processor).showInBestPositionFor(editor);
+      if(renderer == null) {
+        renderer = new DefaultPsiElementCellRenderer();
+      }
+      NavigationUtil.getPsiElementPopup(elements, renderer, title, processor).showInBestPositionFor(editor);
       return true;
     }
     return false;
@@ -198,25 +225,34 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
 
   @Nullable
   public static PsiElement findTargetElement(Project project, Editor editor, int offset) {
-    final PsiElement[] targets = findAllTargetElements(project, editor, offset);
+    final Pair<PsiElement[], GotoDeclarationHandler> pair = findAllTargetElementsInfo(project, editor, offset);
+    PsiElement[] targets = pair.getFirst();
     return targets.length == 1 ? targets[0] : null;
   }
 
   @NotNull
-  public static PsiElement[] findAllTargetElements(Project project, Editor editor, int offset) {
+  public static Pair<PsiElement[], GotoDeclarationHandler> findAllTargetElementsInfo(Project project, Editor editor, int offset) {
     if (TargetElementUtil.inVirtualSpace(editor, offset)) {
-      return PsiElement.EMPTY_ARRAY;
+      return Pair.create(PsiElement.EMPTY_ARRAY, null);
     }
 
-    final PsiElement[] targets = findTargetElementsNoVS(project, editor, offset, true);
-    return targets != null ? targets : PsiElement.EMPTY_ARRAY;
+    Pair<PsiElement[], GotoDeclarationHandler> pair = findTargetElementsNoVSWithHandler(project, editor, offset, true);
+    return Pair.create(ObjectUtils.notNull(pair.getFirst(), PsiElement.EMPTY_ARRAY), pair.getSecond());
   }
 
   @Nullable
   public static PsiElement[] findTargetElementsNoVS(Project project, Editor editor, int offset, boolean lookupAccepted) {
+    return findTargetElementsNoVSWithHandler(project, editor, offset, lookupAccepted).getFirst();
+  }
+
+  @NotNull
+  public static Pair<PsiElement[], GotoDeclarationHandler> findTargetElementsNoVSWithHandler(Project project,
+                                                                                             Editor editor,
+                                                                                             int offset,
+                                                                                             boolean lookupAccepted) {
     final Document document = editor.getDocument();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
-    if (file == null) return null;
+    if (file == null) return Pair.empty();
 
     if (file instanceof PsiCompiledElement) {
       PsiElement mirror = ((PsiCompiledElement)file).getMirror();
@@ -231,10 +267,10 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
           for (PsiElement element : result) {
             if (element == null) {
               LOG.error("Null target element is returned by " + handler.getClass().getName());
-              return null;
+              return Pair.empty();
             }
           }
-          return result;
+          return Pair.create(result, handler);
         }
       }
       catch (AbstractMethodError e) {
@@ -249,16 +285,16 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
     PsiElement element = TargetElementUtil.findTargetElement(editor, flags, offset);
     if (element != null) {
-      return new PsiElement[]{element};
+      return Pair.create(new PsiElement[] {element}, null);
     }
 
     // if no references found in injected fragment, try outer document
     if (editor instanceof EditorWindow) {
       EditorWindow window = (EditorWindow)editor;
-      return findTargetElementsNoVS(project, window.getDelegate(), window.getDocument().injectedToHost(offset), lookupAccepted);
+      return findTargetElementsNoVSWithHandler(project, window.getDelegate(), window.getDocument().injectedToHost(offset), lookupAccepted);
     }
 
-    return null;
+    return Pair.empty();
   }
 
   @Override
