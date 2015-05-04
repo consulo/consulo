@@ -28,6 +28,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.consulo.lombok.annotations.Logger;
@@ -451,6 +452,16 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public ContentEntry[] getContentEntries() {
     final Collection<ContentEntry> content = getContent();
     return content.toArray(new ContentEntry[content.size()]);
+  }
+
+  @Override
+  public boolean iterateContentEntries(@NotNull Processor<ContentEntry> processor) {
+    for (ContentEntry contentEntry : myContent) {
+      if(!processor.process(contentEntry)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @NotNull

@@ -19,9 +19,13 @@ import com.google.common.base.Predicate;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.Processor;
+import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
@@ -45,9 +49,29 @@ public abstract class ModuleRootsProcessor {
 
   public abstract boolean containsFile(@NotNull TObjectIntHashMap<VirtualFile> roots, @NotNull VirtualFile virtualFile);
 
-  @NotNull
-  public abstract VirtualFile[] getFiles(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate);
+  public void processFiles(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate,
+                           @NotNull Processor<VirtualFile> processor) {
+    VirtualFile[] files = getFiles(moduleRootModel, predicate);
+    ContainerUtil.process(files, processor);
+  }
+
+  public void processFileUrls(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate,
+                           @NotNull Processor<String> processor) {
+    String[] files = getUrls(moduleRootModel, predicate);
+    ContainerUtil.process(files, processor);
+  }
 
   @NotNull
-  public abstract String[] getUrls(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate);
+  @Deprecated
+  @DeprecationInfo(value = "Override #processFiles()")
+  public VirtualFile[] getFiles(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    return VirtualFile.EMPTY_ARRAY;
+  }
+
+  @NotNull
+  @Deprecated
+  @DeprecationInfo(value = "Override #processFileUrls()")
+  public String[] getUrls(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    return ArrayUtil.EMPTY_STRING_ARRAY;
+  }
 }

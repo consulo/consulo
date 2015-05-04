@@ -277,7 +277,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       if (includeProduction) {
         Predicate<ContentFolderTypeProvider> predicate = includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production();
         if(rootsProcessor != null) {
-          Collections.addAll(result, rootsProcessor.getFiles(rootModel, predicate));
+          rootsProcessor.processFiles(rootModel, predicate, new CommonProcessors.CollectProcessor<VirtualFile>(result));
         }
         else {
           for (ContentEntry entry : rootModel.getContentEntries()) {
@@ -287,7 +287,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
       else {
         if(rootsProcessor != null) {
-          Collections.addAll(result, rootsProcessor.getFiles(rootModel, ContentFolderScopes.test()));
+          rootsProcessor.processFiles(rootModel, ContentFolderScopes.test(), new CommonProcessors.CollectProcessor<VirtualFile>(result));
         }
         else {
           for (ContentEntry entry : rootModel.getContentEntries()) {
@@ -322,7 +322,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       if (includeProduction) {
         Predicate<ContentFolderTypeProvider> predicate = includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production();
         if(rootsProcessor != null) {
-          Collections.addAll(result, rootsProcessor.getUrls(rootModel, predicate));
+          rootsProcessor.processFileUrls(rootModel, predicate, new CommonProcessors.CollectProcessor<String>(result));
         }
         else {
           for (ContentEntry entry : rootModel.getContentEntries()) {
@@ -332,7 +332,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
       else {
         if(rootsProcessor != null) {
-          Collections.addAll(result, rootsProcessor.getUrls(rootModel, ContentFolderScopes.test()));
+          rootsProcessor.processFileUrls(rootModel, ContentFolderScopes.test(), new CommonProcessors.CollectProcessor<String>(result));
         }
         else {
           for (ContentEntry entry : rootModel.getContentEntries()) {

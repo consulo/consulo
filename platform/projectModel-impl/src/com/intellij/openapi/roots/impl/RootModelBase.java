@@ -19,6 +19,7 @@ import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Processor;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +51,11 @@ public abstract class RootModelBase implements ModuleRootModel {
   @NotNull
   public VirtualFile[] getExcludeRoots() {
     return getCurrentLayer().getExcludeRoots();
+  }
+
+  @Override
+  public boolean iterateContentEntries(@NotNull Processor<ContentEntry> processor) {
+    return getCurrentLayer().iterateContentEntries(processor);
   }
 
   @NotNull

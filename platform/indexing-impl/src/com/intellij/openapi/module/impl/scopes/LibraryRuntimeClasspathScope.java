@@ -27,6 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
@@ -111,7 +112,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
       public LinkedHashSet<VirtualFile> visitModuleSourceOrderEntry(final ModuleSourceOrderEntry moduleSourceOrderEntry,
                                                                     final LinkedHashSet<VirtualFile> value) {
         processedModules.add(moduleSourceOrderEntry.getOwnerModule());
-        ContainerUtil.addAll(value, getModuleScopeFiles(moduleSourceOrderEntry.getOwnerModule()));
+        collectScopeFiles(moduleSourceOrderEntry.getOwnerModule(), value);
         return value;
       }
 
@@ -119,21 +120,20 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
       public LinkedHashSet<VirtualFile> visitModuleOrderEntry(ModuleOrderEntry moduleOrderEntry, LinkedHashSet<VirtualFile> value) {
         final Module depModule = moduleOrderEntry.getModule();
         if (depModule != null) {
-          ContainerUtil.addAll(value, getModuleScopeFiles(depModule));
+          collectScopeFiles(depModule, value);
         }
         return value;
       }
 
-      @NotNull
-      private VirtualFile[] getModuleScopeFiles(@NotNull final Module module) {
+      private void collectScopeFiles(@NotNull final Module module, Set<VirtualFile> set) {
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
         ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(moduleRootManager);
-        if(rootsProcessor != null) {
-          return rootsProcessor.getFiles(moduleRootManager, ContentFolderScopes.productionAndTest());
+        if (rootsProcessor != null) {
+          rootsProcessor.processFiles(moduleRootManager, ContentFolderScopes.productionAndTest(), new CommonProcessors.CollectProcessor<VirtualFile>(set));
         }
         else {
-          return moduleRootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest());
+          Collections.addAll(set, moduleRootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest()));
         }
       }
 
@@ -149,7 +149,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
 
       @Override
       public LinkedHashSet<VirtualFile> visitOrderEntry(OrderEntry orderEntry, LinkedHashSet<VirtualFile> value) {
-        if(orderEntry instanceof OrderEntryWithTracking) {
+        if (orderEntry instanceof OrderEntryWithTracking) {
           ContainerUtil.addAll(value, orderEntry.getFiles(BinariesOrderRootType.getInstance()));
         }
         return value;

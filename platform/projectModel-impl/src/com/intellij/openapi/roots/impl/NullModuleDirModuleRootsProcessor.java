@@ -16,8 +16,10 @@
 package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
+import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Processor;
 import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
@@ -37,15 +39,28 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
     return roots.contains(virtualFile);
   }
 
-  @NotNull
   @Override
-  public VirtualFile[] getFiles(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    return moduleRootModel.getContentRoots();
+  public void processFiles(@NotNull final ModuleRootModel moduleRootModel,
+                           @NotNull final Predicate<ContentFolderTypeProvider> predicate,
+                           @NotNull final Processor<VirtualFile> processor) {
+    moduleRootModel.iterateContentEntries(new Processor<ContentEntry>() {
+      @Override
+      public boolean process(ContentEntry contentEntry) {
+        VirtualFile file = contentEntry.getFile();
+        return file == null || processor.process(file);
+      }
+    });
   }
 
-  @NotNull
   @Override
-  public String[] getUrls(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    return moduleRootModel.getContentRootUrls();
+  public void processFileUrls(@NotNull final ModuleRootModel moduleRootModel,
+                              @NotNull final Predicate<ContentFolderTypeProvider> predicate,
+                              @NotNull final Processor<String> processor) {
+    moduleRootModel.iterateContentEntries(new Processor<ContentEntry>() {
+      @Override
+      public boolean process(ContentEntry contentEntry) {
+        return processor.process(contentEntry.getUrl());
+      }
+    });
   }
 }

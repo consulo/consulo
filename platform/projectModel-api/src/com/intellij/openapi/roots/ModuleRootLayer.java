@@ -19,6 +19,7 @@ import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Processor;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +50,13 @@ public interface ModuleRootLayer {
    * @see ContentEntry
    */
   ContentEntry[] getContentEntries();
+
+  /**
+   * Iterate content entries without creating array
+   * @param processor for iterate
+   * @return true if iteration finished normally
+   */
+  boolean iterateContentEntries(@NotNull Processor<ContentEntry> processor);
 
   /**
    * Use this method to obtain order of roots of a module. Order of entries is important.
