@@ -6,12 +6,18 @@
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/out/artifacts/distForRuntime" />
     <java-sdk name="1.6" />
     <predefined_log_file id="IDEA_LOG" enabled="true" />
+    <RunnerSettings RunnerId="ConsuloDebuggerRunner">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
     <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
     <method>

@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -65,8 +66,8 @@ import java.util.ArrayList;
  * @see Presentation
  * @see ActionPlaces
  */
+@ArrayFactoryFields
 public abstract class AnAction implements PossiblyDumbAware {
-  public static final AnAction[] EMPTY_ARRAY = new AnAction[0];
   @NonNls public static final String ourClientProperty = "AnAction.shortcutSet";
 
   private Presentation myTemplatePresentation;
