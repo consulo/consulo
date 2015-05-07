@@ -34,6 +34,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author peter
@@ -104,6 +105,7 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
     }
   }
 
+  @RequiredDispatchThread
   public static void runLaterWithCommitted(@NotNull final Project project,
                                            @NotNull final Document document,
                                            @NotNull final Runnable runnable) {

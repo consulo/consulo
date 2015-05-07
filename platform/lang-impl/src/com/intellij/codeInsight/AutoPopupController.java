@@ -44,6 +44,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.Alarm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class AutoPopupController implements Disposable {
   private final Project myProject;
@@ -84,10 +85,12 @@ public class AutoPopupController implements Disposable {
     }, this);
   }
 
+  @RequiredDispatchThread
   public void autoPopupMemberLookup(final Editor editor, @Nullable final Condition<PsiFile> condition){
     scheduleAutoPopup(editor, condition);
   }
 
+  @RequiredDispatchThread
   public void scheduleAutoPopup(final Editor editor, @Nullable final Condition<PsiFile> condition) {
     if (ApplicationManager.getApplication().isUnitTestMode() && !CompletionAutoPopupHandler.ourTestingAutopopup) {
       return;
@@ -129,6 +132,7 @@ public class AutoPopupController implements Disposable {
     });
   }
 
+  @RequiredDispatchThread
   public void scheduleAutoPopup(final Editor editor) {
     scheduleAutoPopup(editor, null);
   }
@@ -151,6 +155,7 @@ public class AutoPopupController implements Disposable {
     myAlarm.cancelAllRequests();
   }
 
+  @RequiredDispatchThread
   public void autoPopupParameterInfo(@NotNull final Editor editor, @Nullable final PsiElement highlightedMethod){
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
     if (DumbService.isDumb(myProject)) return;

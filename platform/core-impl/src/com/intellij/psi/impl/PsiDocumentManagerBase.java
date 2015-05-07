@@ -51,6 +51,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.util.*;
@@ -99,6 +101,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
   @Override
   @Nullable
+  @RequiredReadAction
   public PsiFile getPsiFile(@NotNull Document document) {
     final PsiFile userData = document.getUserData(HARD_REF_TO_PSI);
     if (userData != null) return userData;
@@ -122,6 +125,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   @Override
+  @RequiredReadAction
   public PsiFile getCachedPsiFile(@NotNull Document document) {
     final PsiFile userData = document.getUserData(HARD_REF_TO_PSI);
     if (userData != null) return userData;
@@ -149,11 +153,13 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   @Nullable
+  @RequiredReadAction
   protected PsiFile getCachedPsiFile(@NotNull VirtualFile virtualFile) {
     return ((PsiManagerEx)myPsiManager).getFileManager().getCachedPsiFile(virtualFile);
   }
 
   @Nullable
+  @RequiredReadAction
   private PsiFile getPsiFile(@NotNull VirtualFile virtualFile) {
     return ((PsiManagerEx)myPsiManager).getFileManager().findFile(virtualFile);
   }
@@ -203,6 +209,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   @Override
+  @RequiredDispatchThread
   public void commitAllDocuments() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myUncommittedDocuments.isEmpty()) return;
@@ -244,6 +251,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
    *               The action will be executed in EDT.
    * @return true if action has been run immediately, or false if action was scheduled for execution later.
    */
+  @RequiredDispatchThread
   public boolean cancelAndRunWhenAllCommitted(@NonNls @NotNull Object key, @NotNull final Runnable action) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myProject.isDisposed()) {
@@ -347,6 +355,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return success;
   }
 
+  @RequiredReadAction
   private void checkAllElementsValid(@NotNull Document document, @NotNull final Object reason) {
     final PsiFile psiFile = getCachedPsiFile(document);
     if (psiFile != null) {
@@ -466,6 +475,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
    * @return true if action has been run immediately, or false if action was scheduled for execution later.
    */
   @Override
+  @RequiredDispatchThread
   public boolean performWhenAllCommitted(@NotNull final Runnable action) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     assert !myProject.isDisposed() : "Already disposed: " + myProject;
@@ -492,6 +502,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
   }
 
+  @RequiredDispatchThread
   private void runAfterCommitActions(@NotNull Document document) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     List<Runnable> list;
@@ -569,6 +580,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
   @Override
   @NotNull
+  @RequiredDispatchThread
   public Document[] getUncommittedDocuments() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     Document[] documents = myUncommittedDocuments.toArray(new Document[myUncommittedDocuments.size()]);
@@ -718,6 +730,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     mySmartPointerManager.unfastenBelts(virtualFile, 0);
   }
 
+  @RequiredReadAction
   public void handleCommitWithoutPsi(@NotNull Document document) {
     final Pair<CharSequence, Long> prevPair = myLastCommittedTexts.remove(document);
     if (prevPair == null) {

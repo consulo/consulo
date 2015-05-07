@@ -22,6 +22,9 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -109,16 +112,19 @@ public interface Application extends ComponentManager {
   /**
    * Asserts whether the read access is allowed.
    */
+  @RequiredReadAction
   void assertReadAccessAllowed();
 
   /**
    * Asserts whether the write access is allowed.
    */
+  @RequiredWriteAction
   void assertWriteAccessAllowed();
 
   /**
    * Asserts whether the method is being called from the event dispatch thread.
    */
+  @RequiredDispatchThread
   void assertIsDispatchThread();
 
   /**

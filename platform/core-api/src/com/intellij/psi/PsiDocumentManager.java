@@ -21,6 +21,8 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.EventListener;
@@ -48,6 +50,7 @@ public abstract class PsiDocumentManager {
    * @return the PSI file instance.
    */
   @Nullable
+  @RequiredReadAction
   public abstract PsiFile getPsiFile(@NotNull Document document);
 
   /**
@@ -57,6 +60,7 @@ public abstract class PsiDocumentManager {
    * @return the PSI file instance, or <code>null</code> if there is currently no cached PSI tree for the file.
    */
   @Nullable
+  @RequiredReadAction
   public abstract PsiFile getCachedPsiFile(@NotNull Document document);
 
   /**
@@ -82,6 +86,7 @@ public abstract class PsiDocumentManager {
    * Before a modified document is committed, accessing its PSI may return elements
    * corresponding to original (unmodified) state of the document.
    */
+  @RequiredDispatchThread
   public abstract void commitAllDocuments();
 
   /**
@@ -125,6 +130,7 @@ public abstract class PsiDocumentManager {
    * @see #commitDocument(com.intellij.openapi.editor.Document)
    */
   @NotNull
+  @RequiredDispatchThread
   public abstract Document[] getUncommittedDocuments();
 
   /**
@@ -212,10 +218,10 @@ public abstract class PsiDocumentManager {
 
   /**
    * Defer action until all documents are committed.
-   * Must be called from the EDT only.
    *
    * @param action to run when all documents committed
    * @return true if action was run immediately (i.e. all documents are already committed)
    */
+  @RequiredDispatchThread
   public abstract boolean performWhenAllCommitted(@NotNull Runnable action);
 }

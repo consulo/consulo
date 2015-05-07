@@ -52,6 +52,8 @@ import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -149,6 +151,7 @@ public class FileManagerImpl implements FileManager {
   }
 
   @Override
+  @RequiredWriteAction
   public void dispose() {
     if (myInitialized) {
       myConnection.disconnect();
@@ -302,6 +305,7 @@ public class FileManagerImpl implements FileManager {
   }
 
   @TestOnly
+  @RequiredReadAction
   public void checkConsistency() {
     HashMap<VirtualFile, FileViewProvider> fileToViewProvider = new HashMap<VirtualFile, FileViewProvider>(myVFileToViewProviderMap);
     myVFileToViewProviderMap.clear();
@@ -334,6 +338,7 @@ public class FileManagerImpl implements FileManager {
 
   @Override
   @Nullable
+  @RequiredReadAction
   public PsiFile findFile(@NotNull VirtualFile vFile) {
     if (vFile.isDirectory()) return null;
     final Project project = myManager.getProject();
@@ -352,6 +357,7 @@ public class FileManagerImpl implements FileManager {
 
   @Override
   @Nullable
+  @RequiredReadAction
   public PsiFile getCachedPsiFile(@NotNull VirtualFile vFile) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     LOG.assertTrue(vFile.isValid(), "Invalid file");
@@ -367,6 +373,7 @@ public class FileManagerImpl implements FileManager {
 
   @Override
   @Nullable
+  @RequiredReadAction
   public PsiDirectory findDirectory(@NotNull VirtualFile vFile) {
     LOG.assertTrue(myInitialized, "Access to psi files should be performed only after startup activity");
     if (myDisposed) {
@@ -439,6 +446,7 @@ public class FileManagerImpl implements FileManager {
     return files;
   }
 
+  @RequiredReadAction
   void removeInvalidFilesAndDirs(boolean useFind) {
     Map<VirtualFile, PsiDirectory> fileToPsiDirMap = new THashMap<VirtualFile, PsiDirectory>(myVFileToPsiDirMap);
     if (useFind) {

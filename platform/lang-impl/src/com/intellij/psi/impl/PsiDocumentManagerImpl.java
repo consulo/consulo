@@ -45,6 +45,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.List;
@@ -85,6 +86,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
 
   @Nullable
   @Override
+  @RequiredReadAction
   public PsiFile getPsiFile(@NotNull Document document) {
     final PsiFile psiFile = super.getPsiFile(document);
     if (myUnitTestMode) {

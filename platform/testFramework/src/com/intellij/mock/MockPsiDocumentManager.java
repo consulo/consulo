@@ -11,6 +11,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 
@@ -26,6 +28,7 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
 
   @Override
   @Nullable
+  @RequiredReadAction
   public PsiFile getCachedPsiFile(@NotNull Document document) {
     throw new UnsupportedOperationException("Method getCachedPsiFile is not yet implemented in " + getClass().getName());
   }
@@ -69,6 +72,7 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
 
   @Override
   @NotNull
+  @RequiredDispatchThread
   public Document[] getUncommittedDocuments() {
     throw new UnsupportedOperationException("Method getUncommittedDocuments is not yet implemented in " + getClass().getName());
   }

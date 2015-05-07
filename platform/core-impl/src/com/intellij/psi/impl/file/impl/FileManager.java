@@ -40,6 +40,7 @@ public interface FileManager extends Disposable {
   void reloadFromDisk(@NotNull PsiFile file); //Q: move to PsiFile(Impl)?
 
   @Nullable
+  @RequiredReadAction
   PsiFile getCachedPsiFile(@NotNull VirtualFile vFile);
 
   @TestOnly
