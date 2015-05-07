@@ -80,7 +80,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return app;
   }
 
-  private IApplicationStore myComponentStore;
   private boolean myDisposeInProgress;
 
   public CompilerServerApplication() {
@@ -124,11 +123,8 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @NotNull
   @Override
-  public synchronized IApplicationStore getStateStore() {
-    if (myComponentStore == null) {
-      myComponentStore = (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
-    }
-    return myComponentStore;
+  public IApplicationStore getStateStore() {
+    return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
   }
 
   @NotNull
@@ -144,8 +140,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     disposeComponents();
 
     ExecutorServiceHolder.ourThreadExecutorsService.shutdownNow();
-
-    myComponentStore = null;
 
     super.dispose();
   }

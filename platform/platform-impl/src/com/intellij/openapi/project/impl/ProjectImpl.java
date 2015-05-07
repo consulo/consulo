@@ -72,8 +72,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   private ProjectManager myManager;
 
-  private volatile IProjectStore myComponentStore;
-
   private MyProjectManagerListener myProjectManagerListener;
 
   private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
@@ -179,15 +177,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @NotNull
   @Override
   public IProjectStore getStateStore() {
-    IProjectStore componentStore = myComponentStore;
-    if (componentStore != null) return componentStore;
-    synchronized (this) {
-      componentStore = myComponentStore;
-      if (componentStore == null) {
-        myComponentStore = componentStore = (IProjectStore)getPicoContainer().getComponentInstance(IComponentStore.class);
-      }
-      return componentStore;
-    }
+    return (IProjectStore)getPicoContainer().getComponentInstance(IComponentStore.class);
   }
 
   @Override
@@ -368,8 +358,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     Extensions.disposeArea(this);
     myManager = null;
     myProjectManagerListener = null;
-
-    myComponentStore = null;
 
     super.dispose();
 
