@@ -18,6 +18,8 @@ package com.intellij.ide.favoritesTreeView;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.PropertyName;
+import com.intellij.openapi.util.KeyWithDefaultValue;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Konstantin Bulenkov
@@ -103,6 +105,12 @@ public class FavoritesViewSettings implements ViewSettings {
   @Override
   public boolean isShowLibraryContents() {
     return false;
+  }
+
+  @NotNull
+  @Override
+  public <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option) {
+    return option.getDefaultValue();
   }
 
   public boolean isAutoScrollToSource() {

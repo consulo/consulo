@@ -1020,6 +1020,7 @@
     <extensionPoint name="uiDebuggerExtension" interface="com.intellij.ui.debugger.UiDebuggerExtension"/>
 
     <extensionPoint name="projectViewPane" interface="com.intellij.ide.projectView.impl.AbstractProjectViewPane" area="CONSULO_PROJECT"/>
+    <extensionPoint name="projectViewOptionProvider" interface="com.intellij.ide.projectView.impl.ProjectViewPaneOptionProvider" />
 
     <extensionPoint name="inlineActionHandler" interface="com.intellij.lang.refactoring.InlineActionHandler"/>
 
@@ -1463,6 +1464,7 @@
 
     <!--Rich-->
     <projectViewPane implementation="com.intellij.ide.projectView.impl.ProjectViewPane"/>
+    <projectViewOptionProvider implementation="com.intellij.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider" />
     <projectViewPane implementation="com.intellij.ide.projectView.impl.PackageViewPane"/>
 
     <renameHandler implementation="com.intellij.ide.projectView.impl.RenameModuleHandler"/>

@@ -77,7 +77,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractProjectViewPane implements DataProvider, Disposable, BusyObject {
+public abstract class AbstractProjectViewPane extends UserDataHolderBase implements DataProvider, Disposable, BusyObject {
   public static ExtensionPointName<AbstractProjectViewPane> EP_NAME = ExtensionPointName.create("com.intellij.projectViewPane");
 
   @NotNull
@@ -244,6 +244,13 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
   }
 
   public void addToolbarActions(DefaultActionGroup actionGroup) {
+  }
+
+  public void addToolbarActionsImpl(DefaultActionGroup actionGroup) {
+    addToolbarActions(actionGroup);
+    for (ProjectViewPaneOptionProvider provider : ProjectViewPaneOptionProvider.EX_NAME.getExtensions()) {
+      provider.addToolbarActions(this, actionGroup);
+    }
   }
 
   @NotNull
@@ -443,6 +450,15 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
       treeState.readExternal(subPane);
       myReadTreeState.put(subId, treeState);
     }
+
+    for (ProjectViewPaneOptionProvider provider : ProjectViewPaneOptionProvider.EX_NAME.getExtensions()) {
+      KeyWithDefaultValue key = provider.getKey();
+
+      String valueOfKey = JDOMExternalizerUtil.readField(element, key.toString());
+      if(valueOfKey != null) {
+        putUserData(key, provider.parseValue(valueOfKey));
+      }
+    }
   }
 
   public void writeExternal(Element element) throws WriteExternalException {
@@ -456,6 +472,26 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
       treeState.writeExternal(subPane);
       element.addContent(subPane);
     }
+
+    for (ProjectViewPaneOptionProvider provider : ProjectViewPaneOptionProvider.EX_NAME.getExtensions()) {
+      KeyWithDefaultValue key = provider.getKey();
+      Object value = getUserData(key);
+      //noinspection unchecked
+      String stringValue = provider.toString(value);
+      if(stringValue != null) {
+        JDOMExternalizerUtil.writeField(element, key.toString(), stringValue);
+      }
+    }
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T> T getUserData(@NotNull Key<T> key) {
+    T value = super.getUserData(key);
+    if(value == null && key instanceof KeyWithDefaultValue) {
+      return (T)((KeyWithDefaultValue)key).getDefaultValue();
+    }
+    return value;
   }
 
   protected void saveExpandedPaths() {
@@ -671,6 +707,11 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
       }
     }
     return dragAction == DnDConstants.ACTION_MOVE && MoveHandler.canMove(dataContext);
+  }
+
+  @NotNull
+  public Project getProject() {
+    return myProject;
   }
 
   @NotNull

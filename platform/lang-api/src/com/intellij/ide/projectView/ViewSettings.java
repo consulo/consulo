@@ -16,6 +16,8 @@
 package com.intellij.ide.projectView;
 
 import com.intellij.ide.util.treeView.NodeOptions;
+import com.intellij.openapi.util.KeyWithDefaultValue;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The view settings for the project view.
@@ -49,6 +51,12 @@ public interface ViewSettings extends NodeOptions {
     @Override
     public boolean isShowLibraryContents() {
       return false;
+    }
+
+    @NotNull
+    @Override
+    public <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option) {
+      return option.getDefaultValue();
     }
 
     @Override

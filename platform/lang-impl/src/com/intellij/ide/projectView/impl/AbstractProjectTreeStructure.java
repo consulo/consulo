@@ -22,6 +22,7 @@ import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.psi.PsiDocumentManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +36,12 @@ public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeSt
 
   protected AbstractTreeNode createRoot(final Project project, ViewSettings settings) {
     return new ProjectViewProjectNode(myProject, this);
+  }
+
+  @NotNull
+  @Override
+  public <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option) {
+    return option.getDefaultValue();
   }
 
   @Override

@@ -21,7 +21,7 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.ProjectViewNode;
-import com.intellij.ide.projectView.ProjectViewSettings;
+import com.intellij.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -222,7 +222,7 @@ public class BaseProjectViewDirectoryHelper {
     DirectoryInfo directoryInfo = directoryIndex.getInfoForFile(dir);
     if (directoryInfo.isInProject()) return true;
 
-    return settings instanceof ProjectViewSettings && ((ProjectViewSettings)settings).isShowExcludedFiles() && directoryInfo.isExcluded();
+    return settings.getViewOption(ShowExcludedFilesProjectViewPaneOptionProvider.KEY) == Boolean.TRUE && directoryInfo.isExcluded();
   }
 
   // used only for non-flatten packages mode

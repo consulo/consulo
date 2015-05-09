@@ -23,24 +23,15 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.impl.ProjectPaneSelectInTarget;
-import com.intellij.ide.projectView.ProjectView;
-import com.intellij.ide.projectView.ProjectViewSettings;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizerUtil;
-import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.psi.PsiDirectory;
-import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,9 +42,6 @@ import javax.swing.tree.DefaultTreeModel;
 public class ProjectViewPane extends AbstractProjectViewPSIPane {
   @NonNls
   public static final String ID = "ProjectPane";
-  public static final String SHOW_EXCLUDED_FILES_OPTION = "show-excluded-files";
-
-  private boolean myShowExcludedFiles = true;
 
   public ProjectViewPane(Project project) {
     super(project);
@@ -74,7 +62,6 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
   public Icon getIcon() {
     return AllIcons.General.ProjectTab;
   }
-
 
   @Override
   public SelectInTarget createSelectInTarget() {
@@ -104,26 +91,6 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
         return ProjectViewPane.this.getSelectedNode();
       }
     };
-  }
-
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    super.readExternal(element);
-    String showExcludedOption = JDOMExternalizerUtil.readField(element, SHOW_EXCLUDED_FILES_OPTION);
-    myShowExcludedFiles = showExcludedOption == null || Boolean.parseBoolean(showExcludedOption);
-  }
-
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    super.writeExternal(element);
-    if (!myShowExcludedFiles) {
-      JDOMExternalizerUtil.writeField(element, SHOW_EXCLUDED_FILES_OPTION, String.valueOf(false));
-    }
-  }
-
-  @Override
-  public void addToolbarActions(DefaultActionGroup actionGroup) {
-    actionGroup.addAction(new ShowExcludedFilesAction()).setAsSecondary(true);
   }
 
   @NotNull
@@ -168,7 +135,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
     }
   }
 
-  private class ProjectViewPaneTreeStructure extends ProjectTreeStructure implements ProjectViewSettings {
+  private class ProjectViewPaneTreeStructure extends ProjectTreeStructure{
     public ProjectViewPaneTreeStructure() {
       super(ProjectViewPane.this.myProject, ID);
     }
@@ -178,36 +145,12 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
       return new ProjectViewProjectNode(project, settings);
     }
 
+    @NotNull
     @Override
-    public boolean isShowExcludedFiles() {
-      return myShowExcludedFiles;
-    }
-  }
-
-  private final class ShowExcludedFilesAction extends ToggleAction {
-    private ShowExcludedFilesAction() {
-      super(IdeBundle.message("action.show.excluded.files"), IdeBundle.message("action.show.hide.excluded.files"), null);
-    }
-
-    @Override
-    public boolean isSelected(AnActionEvent event) {
-      return myShowExcludedFiles;
-    }
-
-    @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
-      if (myShowExcludedFiles != flag) {
-        myShowExcludedFiles = flag;
-        updateFromRoot(true);
-      }
-    }
-
-    @Override
-    public void update(AnActionEvent e) {
-      super.update(e);
-      final Presentation presentation = e.getPresentation();
-      final ProjectView projectView = ProjectView.getInstance(myProject);
-      presentation.setVisible(projectView.getCurrentProjectViewPane() == ProjectViewPane.this);
+    public <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option) {
+      T value = ProjectViewPane.this.getUserData(option);
+      assert value != null;
+      return value;
     }
   }
 }
