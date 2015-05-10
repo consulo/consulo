@@ -68,7 +68,6 @@ public interface PlatformIcons {
   Icon ADVICE_ICON = AllIcons.Nodes.Advice;
   Icon ERROR_INTRODUCTION_ICON = AllIcons.Nodes.ErrorIntroduction;
   Icon WARNING_INTRODUCTION_ICON = AllIcons.Nodes.WarningIntroduction;
-  Icon JAVA_OUTSIDE_SOURCE_ICON = AllIcons.FileTypes.JavaOutsideSource;
   Icon EXCLUDED_FROM_COMPILE_ICON = AllIcons.Nodes.ExcludedFromCompile;
   Icon PROJECT_ICON = AllIcons.Icon16;
   Icon UI_FORM_ICON = AllIcons.FileTypes.UiForm;
