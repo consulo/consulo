@@ -311,9 +311,6 @@ public class AllIcons {
     public static final Icon Htaccess = IconLoader.getIcon("/fileTypes/htaccess.png"); // 16x16
     public static final Icon Html = IconLoader.getIcon("/fileTypes/html.png"); // 16x16
     public static final Icon Idl = IconLoader.getIcon("/fileTypes/idl.png"); // 16x16
-    public static final Icon Java = IconLoader.getIcon("/fileTypes/java.png"); // 16x16
-    public static final Icon JavaClass = IconLoader.getIcon("/fileTypes/javaClass.png"); // 16x16
-    public static final Icon JavaOutsideSource = IconLoader.getIcon("/fileTypes/javaOutsideSource.png"); // 16x16
     public static final Icon Properties = IconLoader.getIcon("/fileTypes/properties.png"); // 16x16
     public static final Icon Text = IconLoader.getIcon("/fileTypes/text.png"); // 16x16
     public static final Icon TypeScript = IconLoader.getIcon("/fileTypes/typeScript.png"); // 16x16
