@@ -51,6 +51,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -241,14 +242,14 @@ public class DirectoryChooser extends DialogWrapper {
   @Nullable
   private static String concat(String[] strings, int headLimit, int tailLimit) {
     if (strings.length <= headLimit + tailLimit) return null;
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder builder = new StringBuilder();
     String separator = "";
     for (int i = headLimit; i < strings.length - tailLimit; i++) {
-      buffer.append(separator);
-      buffer.append(strings[i]);
+      builder.append(separator);
+      builder.append(strings[i]);
       separator = File.separator;
     }
-    return buffer.toString();
+    return builder.toString();
   }
 
   private static PathFragment[] createFragments(String head, String special, String tail) {
@@ -394,14 +395,17 @@ public class DirectoryChooser extends DialogWrapper {
     return myView.getComponent();
   }
 
+  @RequiredReadAction
   public void fillList(PsiDirectory[] directories, @Nullable PsiDirectory defaultSelection, Project project, String postfixToShow) {
     fillList(directories, defaultSelection, project, postfixToShow, null);
   }
 
+  @RequiredReadAction
   public void fillList(PsiDirectory[] directories, @Nullable PsiDirectory defaultSelection, Project project, Map<PsiDirectory,String> postfixes) {
     fillList(directories, defaultSelection, project, null, postfixes);
   }
 
+  @RequiredReadAction
   private void fillList(PsiDirectory[] directories, @Nullable PsiDirectory defaultSelection, Project project, String postfixToShow, Map<PsiDirectory,String> postfixes) {
     if (myView.getItemsSize() > 0){
       myView.clearItems();
@@ -484,6 +488,7 @@ public class DirectoryChooser extends DialogWrapper {
   }
 
   @Nullable
+  @RequiredReadAction
   private static PsiDirectory getDefaultSelection(PsiDirectory[] directories, Project project) {
     final String defaultSelectionPath = PropertiesComponent.getInstance(project).getValue(DEFAULT_SELECTION);
     if (defaultSelectionPath != null) {
