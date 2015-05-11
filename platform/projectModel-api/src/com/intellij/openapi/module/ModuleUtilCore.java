@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.module;
 
+import com.google.common.base.Predicates;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.components.ServiceManager;
@@ -35,6 +36,7 @@ import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;
 
@@ -86,6 +88,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
+  @RequiredReadAction
   public static Module findModuleForPsiElement(@NotNull PsiElement element) {
     if (!element.isValid()) return null;
 
@@ -163,6 +166,7 @@ public class ModuleUtilCore {
    * @param module to find dependencies on
    * @param result resulted set
    */
+  @RequiredReadAction
   public static void collectModulesDependsOn(@NotNull final Module module, final Set<Module> result) {
     if (result.contains(module)) return;
     result.add(module);
@@ -188,6 +192,7 @@ public class ModuleUtilCore {
   }
 
   @NotNull
+  @RequiredReadAction
   public static List<Module> getAllDependentModules(@NotNull Module module) {
     final ArrayList<Module> list = new ArrayList<Module>();
     final Graph<Module> graph = ModuleManager.getInstance(module.getProject()).moduleGraph();
@@ -197,6 +202,7 @@ public class ModuleUtilCore {
     return list;
   }
 
+  @RequiredReadAction
   public static boolean visitMeAndDependentModules(@NotNull final Module module, final Processor<Module> visitor) {
     if (!visitor.process(module)) {
       return false;
@@ -222,6 +228,24 @@ public class ModuleUtilCore {
     }
   }
 
+  @RequiredReadAction
+  @NotNull
+  public static List<ContentFolder> getContentFolders(@NotNull Project project) {
+    ModuleManager moduleManager = ModuleManager.getInstance(project);
+    final List<ContentFolder> contentFolders = new ArrayList<ContentFolder>();
+    for (Module module : moduleManager.getModules()) {
+      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+      moduleRootManager.iterateContentEntries(new Processor<ContentEntry>() {
+        @Override
+        public boolean process(ContentEntry contentEntry) {
+          Collections.addAll(contentFolders, contentEntry.getFolders(Predicates.<ContentFolderTypeProvider>alwaysTrue()));
+          return false;
+        }
+      });
+    }
+    return contentFolders;
+  }
+
   @Nullable
   public static <E extends ModuleExtension<E>> E getExtension(@NotNull Module module, @NotNull Class<E> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -235,6 +259,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
+  @RequiredReadAction
   public static <E extends ModuleExtension<E>> E getExtension(@NotNull PsiElement element, @NotNull Class<E> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {
@@ -266,6 +291,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
+  @RequiredReadAction
   public static Sdk getSdk(@NotNull PsiElement element, @NotNull Class<? extends ModuleExtensionWithSdk> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {

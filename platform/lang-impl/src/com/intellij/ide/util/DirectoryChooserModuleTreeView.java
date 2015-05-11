@@ -38,6 +38,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -241,6 +242,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
 
   private class MyTreeCellRenderer extends ColoredTreeCellRenderer {
     @Override
+    @RequiredDispatchThread
     public void customizeCellRenderer(JTree tree, Object nodeValue, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       final Object value = ((DefaultMutableTreeNode)nodeValue).getUserObject();
       if (value instanceof DirectoryChooser.ItemWrapper) {
@@ -250,7 +252,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
           append(fragment.getText(),
                  fragment.isCommon() ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
         }
-        setIcon(wrapper.getIcon(myFileIndex));
+        setIcon(wrapper.getIcon());
       }
       else if (value instanceof Module) {
         final Module module = (Module)value;

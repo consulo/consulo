@@ -20,6 +20,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
@@ -46,6 +47,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
   private boolean myOpaque = true;
 
   @Override
+  @RequiredDispatchThread
   public final Component getTreeCellRendererComponent(
     JTree tree,
     Object value,
@@ -166,6 +168,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
    * This method is invoked only for customization of component.
    * All component attributes are cleared when this method is being invoked.
    */
+  @RequiredDispatchThread
   public abstract void customizeCellRenderer(
     JTree tree,
     Object value,

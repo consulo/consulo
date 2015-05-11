@@ -22,8 +22,10 @@ import com.intellij.ide.util.gotoByName.ChooseByNamePopupComponent;
 import com.intellij.ide.util.gotoByName.GotoClassModel2;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -33,6 +35,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -46,7 +49,8 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.DeprecationInfo;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -324,12 +328,28 @@ public class DirectoryChooser extends DialogWrapper {
       myFragments = fragments;
     }
 
-    public Icon getIcon(ProjectFileIndex fileIndex) {
+    @RequiredDispatchThread
+    @NotNull
+    @Deprecated
+    @DeprecationInfo(value = "Use #getIcon()")
+    public Icon getIcon(@NotNull ProjectFileIndex fileIndex) {
+      return getIcon();
+    }
+
+    @RequiredDispatchThread
+    @NotNull
+    public Icon getIcon() {
       if (myDirectory != null) {
         VirtualFile virtualFile = myDirectory.getVirtualFile();
-        ContentFolderTypeProvider contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(virtualFile);
-        if(contentFolderTypeForFile != null) {
-          return contentFolderTypeForFile.getIcon();
+        List<ContentFolder> contentFolders = ModuleUtilCore.getContentFolders(myDirectory.getProject());
+        for (ContentFolder contentFolder : contentFolders) {
+          VirtualFile file = contentFolder.getFile();
+          if(file == null) {
+            continue;
+          }
+          if(VfsUtil.isAncestor(file, virtualFile, false)) {
+            return contentFolder.getType().getIcon(contentFolder.getProperties());
+          }
         }
       }
       return AllIcons.Nodes.Folder;
