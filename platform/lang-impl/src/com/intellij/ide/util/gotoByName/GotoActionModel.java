@@ -27,9 +27,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
@@ -392,7 +392,7 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
   String getGroupName(@NotNull OptionDescription description) {
     String id = description.getConfigurableId();
     String name = myConfigurablesNames.get(id);
-    String settings = SystemInfo.isMac ? "Preferences" : "Settings";
+    String settings = ShowSettingsUtil.getSettingsMenuName();
     if (name == null) return settings;
     return settings + " > " + name;
   }

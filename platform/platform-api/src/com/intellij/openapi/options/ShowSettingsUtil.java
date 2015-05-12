@@ -59,6 +59,7 @@ public abstract class ShowSettingsUtil {
    */
   public abstract <T extends Configurable> T findApplicationConfigurable(Class<T> confClass);
 
+  @NotNull
   public static String getSettingsMenuName() {
     return SystemInfo.isMac ? "Preferences" : "Settings";
   }
