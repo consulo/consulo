@@ -21,19 +21,27 @@ import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.ScopeToolState;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.Toggleable;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.profile.codeInspection.SeverityProvider;
 import com.intellij.profile.codeInspection.ui.LevelChooserAction;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * @author Dmitry Batkovich
@@ -75,27 +83,20 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
 
     final Set<String> languageIds = new HashSet<String>();
     for (ScopeToolState state : profile.getDefaultStates(project)) {
-      final String languageId = state.getTool().getLanguage();
-      languageIds.add(languageId);
+      ContainerUtil.addIfNotNull(languageIds, state.getTool().getLanguage());
     }
 
-    final List<Language> languages = new ArrayList<Language>();
+    final Set<Language> languages = new TreeSet<Language>(LanguageUtil.LANGUAGE_COMPARATOR);
     for (String id : languageIds) {
-      if (id != null) {
-        final Language language = Language.findLanguageByID(id);
-        if (language != null) {
-          languages.add(language);
-        }
+      final Language language = Language.findLanguageByID(id);
+      if (language != null) {
+        languages.add(language);
       }
     }
+    // if we dont have inspections for this languages, show it anyway
+    languages.addAll(myInspectionsFilter.getSuitableLanguages());
 
     if (!languages.isEmpty()) {
-      Collections.sort(languages, new Comparator<Language>() {
-        @Override
-        public int compare(Language l1, Language l2) {
-          return l1.getDisplayName().compareTo(l2.getDisplayName());
-        }
-      });
       for (Language language : languages) {
         add(new LanguageFilterAction(language));
       }
@@ -207,24 +208,24 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
 
   private class LanguageFilterAction extends CheckboxAction implements DumbAware {
 
-    private final String myLanguageId;
+    private final Language myLanguage;
 
     public LanguageFilterAction(final Language language) {
-      super(language.getDisplayName());
-      myLanguageId = language.getID();
+      super(StringUtil.notNullizeIfEmpty(language.getDisplayName(), language.getID()));
+      myLanguage = language;
     }
 
     @Override
     public boolean isSelected(AnActionEvent e) {
-      return myInspectionsFilter.containsLanguageId(myLanguageId);
+      return myInspectionsFilter.containsLanguage(myLanguage);
     }
 
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
       if (state) {
-        myInspectionsFilter.addLanguageId(myLanguageId);
+        myInspectionsFilter.addLanguage(myLanguage);
       } else {
-        myInspectionsFilter.removeLanguageId(myLanguageId);
+        myInspectionsFilter.removeLanguage(myLanguage);
       }
     }
   }

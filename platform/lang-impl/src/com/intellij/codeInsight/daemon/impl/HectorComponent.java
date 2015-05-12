@@ -21,12 +21,12 @@ import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightLevelUtil;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.editor.HectorComponentPanel;
 import com.intellij.openapi.editor.HectorComponentPanelsProvider;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -41,7 +41,6 @@ import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.awt.RelativePoint;
@@ -58,7 +57,6 @@ import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.util.List;
 
 /**
  * User: anna
@@ -85,8 +83,8 @@ public class HectorComponent extends JPanel {
     final boolean notInLibrary =
       !fileIndex.isInLibrarySource(virtualFile) && !fileIndex.isInLibraryClasses(virtualFile) || fileIndex.isInContent(virtualFile);
     final FileViewProvider viewProvider = myFile.getViewProvider();
-    List<Language> languages = new ArrayList<Language>(viewProvider.getLanguages());
-    Collections.sort(languages, PsiUtilBase.LANGUAGE_COMPARATOR);
+    final Set<Language> languages = new TreeSet<Language>(LanguageUtil.LANGUAGE_COMPARATOR);
+    languages.addAll(viewProvider.getLanguages());
     for (Language language : languages) {
       @SuppressWarnings("UseOfObsoleteCollectionType")
       final Hashtable<Integer, JLabel> sliderLabels = new Hashtable<Integer, JLabel>();
@@ -163,6 +161,7 @@ public class HectorComponent extends JPanel {
         final Project project = myFile.getProject();
         final ErrorsConfigurable errorsConfigurable = ErrorsConfigurable.SERVICE.createConfigurable(project);
         assert errorsConfigurable != null;
+        errorsConfigurable.setFilterLanguages(languages);
         ShowSettingsUtil.getInstance().editConfigurable(project, errorsConfigurable);
       }
     });
@@ -172,7 +171,7 @@ public class HectorComponent extends JPanel {
     gc.insets.right = 0;
     gc.fill = GridBagConstraints.HORIZONTAL;
     myAdditionalPanels = new ArrayList<HectorComponentPanel>();
-    for (HectorComponentPanelsProvider provider : Extensions.getExtensions(HectorComponentPanelsProvider.EP_NAME, project)) {
+    for (HectorComponentPanelsProvider provider : HectorComponentPanelsProvider.EP_NAME.getExtensions(project)) {
       final HectorComponentPanel componentPanel = provider.createConfigurable(file);
       if (componentPanel != null) {
         myAdditionalPanels.add(componentPanel);

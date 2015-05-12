@@ -19,10 +19,13 @@ import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.ScopeToolState;
 import com.intellij.codeInspection.ex.Tools;
+import com.intellij.lang.Language;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.util.containers.HashSet;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -31,7 +34,7 @@ import java.util.Set;
 public abstract class InspectionsFilter {
 
   private final Set<HighlightSeverity> mySuitableSeverities = new HashSet<HighlightSeverity>();
-  private final Set<String> mySuitableLanguageIds = new HashSet<String>();
+  private final Set<Language> mySuitableLanguages = new HashSet<Language>();
   private Boolean mySuitableInspectionsStates;
   private boolean myAvailableOnlyForAnalyze;
   private boolean myShowOnlyCleanupInspections;
@@ -52,8 +55,8 @@ public abstract class InspectionsFilter {
     return mySuitableSeverities.contains(severity);
   }
 
-  public boolean containsLanguageId(final String languageId) {
-    return mySuitableLanguageIds.contains(languageId);
+  public boolean containsLanguage(final Language languageId) {
+    return mySuitableLanguages.contains(languageId);
   }
 
   public void setShowOnlyCleanupInspections(final boolean showOnlyCleanupInspections) {
@@ -81,14 +84,24 @@ public abstract class InspectionsFilter {
     filterChanged();
   }
 
-  public void addLanguageId(String languageId) {
-    mySuitableLanguageIds.add(languageId);
+  public void addLanguage(@NotNull Language language) {
+    mySuitableLanguages.add(language);
     filterChanged();
   }
 
-  public void removeLanguageId(String languageId) {
-    mySuitableLanguageIds.remove(languageId);
+  public void addLanguages(@NotNull Collection<Language> language) {
+    mySuitableLanguages.addAll(language);
     filterChanged();
+  }
+
+  public void removeLanguage(@NotNull Language language) {
+    mySuitableLanguages.remove(language);
+    filterChanged();
+  }
+
+  @NotNull
+  public Set<Language> getSuitableLanguages() {
+    return mySuitableLanguages;
   }
 
   public void reset() {
@@ -96,7 +109,7 @@ public abstract class InspectionsFilter {
     myAvailableOnlyForAnalyze = false;
     myShowOnlyCleanupInspections = false;
     mySuitableSeverities.clear();
-    mySuitableLanguageIds.clear();
+    mySuitableLanguages.clear();
     filterChanged();
   }
 
@@ -105,7 +118,7 @@ public abstract class InspectionsFilter {
            && !myAvailableOnlyForAnalyze
            && !myShowOnlyCleanupInspections
            && mySuitableSeverities.isEmpty()
-           && mySuitableLanguageIds.isEmpty();
+           && mySuitableLanguages.isEmpty();
   }
 
   public boolean matches(final Tools tools) {
@@ -137,8 +150,12 @@ public abstract class InspectionsFilter {
       }
     }
 
+    if(mySuitableLanguages.isEmpty()) {
+      return true;
+    }
     final String languageId = tools.getDefaultState().getTool().getLanguage();
-    return mySuitableLanguageIds.isEmpty() || mySuitableLanguageIds.contains(languageId);
+    Language language  = languageId == null ? null : Language.findLanguageByID(languageId);
+    return language != null && mySuitableLanguages.contains(language);
   }
 
   protected abstract void filterChanged();

@@ -16,12 +16,15 @@
 
 package com.intellij.profile.codeInspection.ui;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.profile.Profile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
 
 /**
  * Marker interface for the configurable which is used to configure the current inspection profile. 
@@ -30,7 +33,11 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ErrorsConfigurable extends Configurable {
   void selectProfile(final Profile profile);
+
   void selectInspectionTool(final String selectedToolShortName);
+
+  void setFilterLanguages(@NotNull Collection<Language> languages);
+
   @Nullable
   Object getSelectedObject();
 

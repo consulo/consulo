@@ -118,6 +118,10 @@ public class SingleInspectionProfilePanel extends JPanel {
   private final InspectionsFilter myInspectionsFilter = new InspectionsFilter() {
     @Override
     protected void filterChanged() {
+      // dont change if we dont visible
+      if(myProfileFilter == null) {
+        return;
+      }
       filterTree(myProfileFilter.getFilter());
     }
   };
@@ -766,6 +770,11 @@ public class SingleInspectionProfilePanel extends JPanel {
     group.add(AnSeparator.getInstance());
     ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group);
     return menu.getComponent();
+  }
+
+  @NotNull
+  public InspectionsFilter getInspectionsFilter() {
+    return myInspectionsFilter;
   }
 
   private void fillTreeData(@Nullable String filter, boolean forceInclude) {

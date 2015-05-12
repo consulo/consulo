@@ -24,6 +24,7 @@ package com.intellij.profile.codeInspection.ui.header;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.ModifiableModel;
 import com.intellij.codeInspection.ex.InspectionManagerEx;
@@ -31,6 +32,7 @@ import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolRegistrar;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.icons.AllIcons;
+import com.intellij.lang.Language;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
@@ -87,6 +89,7 @@ public abstract class InspectionToolsConfigurable
   private final AuxiliaryRightPanel myAuxiliaryRightPanel;
   private final Map<Profile, SingleInspectionProfilePanel> myPanels = new HashMap<Profile, SingleInspectionProfilePanel>();
   private final List<Profile> myDeletedProfiles = new ArrayList<Profile>();
+  private final Set<Language> myFilterLanguages = new SmartHashSet<Language>();
   protected ProfilesConfigurableComboBox myProfiles;
   private JPanel myPanel;
   private JPanel myWholePanel;
@@ -561,13 +564,17 @@ public abstract class InspectionToolsConfigurable
     return (inspectionProfile.isProjectLevel() ? "s" : "a") + inspectionProfile.getName();
   }
 
+  @NotNull
   private SingleInspectionProfilePanel createPanel(InspectionProfileImpl profile, String profileName) {
-    return new SingleInspectionProfilePanel(myProjectProfileManager, profileName, profile) {
+    SingleInspectionProfilePanel panel = new SingleInspectionProfilePanel(myProjectProfileManager, profileName, profile) {
       @Override
       protected boolean accept(InspectionToolWrapper entry) {
         return super.accept(entry) && acceptTool(entry);
       }
     };
+
+    panel.getInspectionsFilter().addLanguages(myFilterLanguages);
+    return panel;
   }
 
   private boolean isDeleteEnabled(@NotNull InspectionProfileImpl inspectionProfile) {
@@ -612,6 +619,12 @@ public abstract class InspectionToolsConfigurable
   @Override
   public void selectProfile(Profile profile) {
     myProfiles.selectProfile(profile);
+  }
+
+  @Override
+  public void setFilterLanguages(@NotNull Collection<Language> languages) {
+    myFilterLanguages.clear();
+    myFilterLanguages.addAll(languages);
   }
 
   @Override
