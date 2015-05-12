@@ -18,9 +18,11 @@ package com.intellij.psi.util;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -30,8 +32,10 @@ import com.intellij.psi.meta.PsiMetaOwner;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.TimeoutUtil;
 import lombok.val;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -486,6 +490,26 @@ public class PsiUtilCore {
       next = PsiTreeUtil.getParentOfType(next, elementClass, true);
     }
     return parent;
+  }
+
+  @NotNull
+  public static Project getProjectInReadAction(@NotNull final PsiElement element) {
+    return ApplicationManager.getApplication().runReadAction(new Computable<Project>() {
+      @Override
+      public Project compute() {
+        return element.getProject();
+      }
+    });
+  }
+
+  @Contract("null -> null;!null -> !null")
+  public static IElementType getElementType(@Nullable ASTNode node) {
+    return node == null ? null : node.getElementType();
+  }
+
+  @Contract("null -> null;!null -> !null")
+  public static IElementType getElementType(@Nullable PsiElement element) {
+    return element == null ? null : getElementType(element.getNode());
   }
 
   @NotNull
