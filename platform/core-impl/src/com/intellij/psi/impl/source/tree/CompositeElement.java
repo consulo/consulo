@@ -45,6 +45,7 @@ import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.List;
 
@@ -254,11 +255,14 @@ public class CompositeElement extends TreeElement {
 
   @Override
   @NotNull
+  @RequiredReadAction
   public String getText() {
     return StringFactory.createShared(textToCharArray());
   }
 
   @Override
+  @RequiredReadAction
+  @NotNull
   public CharSequence getChars() {
     return getText();
     //return new CharArrayCharSequence(textToCharArray());
@@ -283,6 +287,7 @@ public class CompositeElement extends TreeElement {
 
   @Override
   @NotNull
+  @RequiredReadAction
   public char[] textToCharArray() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     int startStamp = myModificationsCount;

@@ -24,6 +24,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * A node in the AST tree. The AST is an intermediate parsing tree created by {@link PsiBuilder},
@@ -41,6 +42,7 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the element type.
    */
+  @Nullable
   IElementType getElementType();
 
   /**
@@ -48,6 +50,7 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the node text.
    */
+  @RequiredReadAction
   String getText();
 
   /**
@@ -55,6 +58,8 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the node text.
    */
+  @NotNull
+  @RequiredReadAction
   CharSequence getChars();
 
   /**
@@ -70,6 +75,7 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the start offset.
    */
+  @RequiredReadAction
   int getStartOffset();
 
   /**
@@ -84,6 +90,8 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the text range.
    */
+  @RequiredReadAction
+  @NotNull
   TextRange getTextRange();
 
   /**
@@ -283,6 +291,7 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the PSI element.
    */
+  @Nullable
   PsiElement getPsi();
 
   /**

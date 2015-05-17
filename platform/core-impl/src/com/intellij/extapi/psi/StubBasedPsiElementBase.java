@@ -47,6 +47,7 @@ import com.intellij.util.ArrayFactory;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.lang.reflect.Array;
 
@@ -71,6 +72,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
 
   @Override
   @NotNull
+  @RequiredReadAction
   public ASTNode getNode() {
     ASTNode node = myNode;
     if (node == null) {
@@ -282,6 +284,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
   }
 
   @Nullable
+  @RequiredReadAction
   public <Psi extends PsiElement> Psi getStubOrPsiChild(final IStubElementType<? extends StubElement, Psi> elementType) {
     T stub = myStub;
     if (stub != null) {
@@ -300,6 +303,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
   }
 
   @NotNull
+  @RequiredReadAction
   public <Stub extends StubElement, Psi extends PsiElement> Psi getRequiredStubOrPsiChild(final IStubElementType<Stub, Psi> elementType) {
     Psi result = getStubOrPsiChild(elementType);
     assert result != null: "Missing required child of type " + elementType + "; tree: "+DebugUtil.psiToString(this, false);
@@ -307,6 +311,8 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
   }
 
 
+  @RequiredReadAction
+  @NotNull
   public <Stub extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(final IStubElementType<Stub, Psi> elementType, Psi[] array) {
     T stub = myStub;
     if (stub != null) {

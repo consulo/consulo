@@ -30,6 +30,7 @@ import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * The common base interface for all elements of the PSI tree.
@@ -55,11 +56,12 @@ public interface PsiElement extends UserDataHolder {
    * @return the language instance.
    */
   @NotNull
+  @RequiredReadAction
   Language getLanguage();
 
   /**
    * Return the language version of the PSI element.
-   * @return
+   * @return language version
    */
   @NotNull
   LanguageVersion getLanguageVersion();
@@ -78,6 +80,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the array of child elements.
    */
   @NotNull
+  @RequiredReadAction
   PsiElement[] getChildren();
 
   /**
@@ -92,6 +95,8 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the first child, or null if the element has no children.
    */
+  @RequiredReadAction
+  @Nullable
   PsiElement getFirstChild();
 
   /**
@@ -99,6 +104,8 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the last child, or null if the element has no children.
    */
+  @RequiredReadAction
+  @Nullable
   PsiElement getLastChild();
 
   /**
@@ -106,6 +113,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the next sibling, or null if the node is the last in the list of siblings.
    */
+  @RequiredReadAction
   @Nullable
   PsiElement getNextSibling();
 
@@ -114,6 +122,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the previous sibling, or null if the node is the first in the list of siblings.
    */
+  @RequiredReadAction
   @Nullable
   PsiElement getPrevSibling();
 
@@ -132,6 +141,8 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the text range.
    */
+  @RequiredReadAction
+  @NotNull
   TextRange getTextRange();
 
   /**
@@ -139,6 +150,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the relative offset.
    */
+  @RequiredReadAction
   int getStartOffsetInParent();
 
   /**
@@ -146,6 +158,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the text length.
    */
+  @RequiredReadAction
   int getTextLength();
 
   /**
@@ -155,6 +168,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the element at the offset, or null if none is found.
    */
   @Nullable
+  @RequiredReadAction
   PsiElement findElementAt(int offset);
 
   /**
@@ -164,6 +178,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the reference at the offset, or null if none is found.
    */
   @Nullable
+  @RequiredReadAction
   PsiReference findReferenceAt(int offset);
 
   /**
@@ -182,6 +197,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the element text.
    */
   @NonNls
+  @RequiredReadAction
   String getText();
 
   /**
@@ -190,6 +206,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the element text as a character array.
    */
   @NotNull
+  @RequiredReadAction
   char[] textToCharArray();
 
   /**
@@ -239,6 +256,7 @@ public interface PsiElement extends UserDataHolder {
    * @param c the character to search for.
    * @return true if the character is found, false otherwise.
    */
+  @RequiredReadAction
   boolean textContains(char c);
 
   /**

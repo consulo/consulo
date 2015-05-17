@@ -30,6 +30,7 @@ import com.intellij.util.CharTable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 public abstract class TreeElement extends UserDataHolderBase implements ASTNode, Cloneable {
   public static final TreeElement[] EMPTY_ARRAY = new TreeElement[0];
@@ -83,6 +84,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   public abstract LeafElement findLeafElementAt(int offset);
 
   @NotNull
+  @RequiredReadAction
   public abstract char[] textToCharArray();
 
   @Override
@@ -96,12 +98,15 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   public abstract int getCachedLength();
 
   @Override
+  @NotNull
+  @RequiredReadAction
   public TextRange getTextRange() {
     int start = getStartOffset();
     return new TextRange(start, start + getTextLength());
   }
 
   @Override
+  @RequiredReadAction
   public int getStartOffset() {
     int result = 0;
     TreeElement current = this;
@@ -113,6 +118,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     return result;
   }
 
+  @RequiredReadAction
   public final int getStartOffsetInParent() {
     if (myParent == null) return -1;
     int offsetInParent = myStartOffsetInParent;
@@ -142,6 +148,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     return offsetInParent;
   }
 
+  @RequiredReadAction
   public int getTextOffset() {
     return getStartOffset();
   }

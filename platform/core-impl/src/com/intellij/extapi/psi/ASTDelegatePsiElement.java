@@ -43,6 +43,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,6 +71,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
   @Override
   @NotNull
+  @RequiredReadAction
   public PsiElement[] getChildren() {
     PsiElement psiChild = getFirstChild();
     if (psiChild == null) return PsiElement.EMPTY_ARRAY;
@@ -85,63 +87,80 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
+  @RequiredReadAction
+  @Nullable
   public PsiElement getFirstChild() {
     return SharedImplUtil.getFirstChild(getNode());
   }
 
   @Override
+  @RequiredReadAction
+  @Nullable
   public PsiElement getLastChild() {
     return SharedImplUtil.getLastChild(getNode());
   }
 
   @Override
+  @RequiredReadAction
+  @Nullable
   public PsiElement getNextSibling() {
     return SharedImplUtil.getNextSibling(getNode());
   }
 
   @Override
+  @RequiredReadAction
+  @Nullable
   public PsiElement getPrevSibling() {
     return SharedImplUtil.getPrevSibling(getNode());
   }
 
   @Override
+  @RequiredReadAction
+  @NotNull
   public TextRange getTextRange() {
     return getNode().getTextRange();
   }
 
   @Override
+  @RequiredReadAction
   public int getStartOffsetInParent() {
     return getNode().getStartOffset() - getNode().getTreeParent().getStartOffset();
   }
 
   @Override
+  @RequiredReadAction
   public int getTextLength() {
     return getNode().getTextLength();
   }
 
   @Override
+  @RequiredReadAction
   public PsiElement findElementAt(int offset) {
     ASTNode treeElement = getNode().findLeafElementAt(offset);
     return SourceTreeToPsiMap.treeElementToPsi(treeElement);
   }
 
   @Override
+  @RequiredReadAction
   public int getTextOffset() {
     return getNode().getStartOffset();
   }
 
   @Override
+  @RequiredReadAction
   public String getText() {
     return getNode().getText();
   }
 
   @Override
   @NotNull
+  @RequiredReadAction
   public char[] textToCharArray() {
     return getNode().getText().toCharArray();
   }
 
   @Override
+  @RequiredReadAction
   public boolean textContains(char c) {
     return getNode().textContains(c);
   }
@@ -158,6 +177,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
   @Override
   @NotNull
+  @RequiredReadAction
   public abstract ASTNode getNode();
 
   @Override
@@ -167,11 +187,13 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
   @Override
   @NotNull
+  @RequiredReadAction
   public Language getLanguage() {
     return getNode().getElementType().getLanguage();
   }
 
   @Nullable
+  @RequiredReadAction
   protected PsiElement findChildByType(IElementType type) {
     ASTNode node = getNode().findChildByType(type);
     return node == null ? null : node.getPsi();
@@ -179,6 +201,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
 
   @Nullable
+  @RequiredReadAction
   protected PsiElement findLastChildByType(IElementType type) {
     PsiElement child = getLastChild();
     while (child != null) {
@@ -192,32 +215,39 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
 
   @NotNull
+  @RequiredReadAction
   protected PsiElement findNotNullChildByType(IElementType type) {
     return notNullChild(findChildByType(type));
   }
 
   @Nullable
+  @RequiredReadAction
   protected PsiElement findChildByType(TokenSet type) {
     ASTNode node = getNode().findChildByType(type);
     return node == null ? null : node.getPsi();
   }
 
   @NotNull
+  @RequiredReadAction
   protected PsiElement findNotNullChildByType(TokenSet type) {
     return notNullChild(findChildByType(type));
   }
 
   @Nullable
+  @RequiredReadAction
   protected PsiElement findChildByFilter(TokenSet tokenSet) {
     ASTNode[] nodes = getNode().getChildren(tokenSet);
     return nodes == null || nodes.length == 0 ? null : nodes[0].getPsi();
   }
 
   @NotNull
+  @RequiredReadAction
   protected PsiElement findNotNullChildByFilter(TokenSet tokenSet) {
     return notNullChild(findChildByFilter(tokenSet));
   }
 
+  @NotNull
+  @RequiredReadAction
   protected <T extends PsiElement> T[] findChildrenByType(IElementType elementType, Class<T> arrayClass) {
     return ContainerUtil.map2Array(SharedImplUtil.getChildrenOfType(getNode(), elementType), arrayClass, new Function<ASTNode, T>() {
       @Override
@@ -227,6 +257,8 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     });
   }
 
+  @RequiredReadAction
+  @NotNull
   protected <T extends PsiElement> List<T> findChildrenByType(TokenSet elementType) {
     List<T> result = EMPTY;
     ASTNode child = getNode().getFirstChildNode();
@@ -243,6 +275,8 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     return result;
   }
 
+  @NotNull
+  @RequiredReadAction
   protected <T extends PsiElement> List<T> findChildrenByType(IElementType elementType) {
     List<T> result = EMPTY;
     ASTNode child = getNode().getFirstChildNode();
@@ -258,6 +292,8 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     return result;
   }
 
+  @NotNull
+  @RequiredReadAction
   protected <T extends PsiElement> T[] findChildrenByType(TokenSet elementType, Class<T> arrayClass) {
     return (T[])ContainerUtil.map2Array(getNode().getChildren(elementType), arrayClass, new Function<ASTNode, PsiElement>() {
       @Override
@@ -268,6 +304,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
+  @RequiredReadAction
   public PsiElement copy() {
     return getNode().copyElement().getPsi();
   }
@@ -311,6 +348,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     CheckUtil.checkWritable(this);
   }
 
+  @RequiredReadAction
   public ASTNode addInternal(ASTNode first, ASTNode last, ASTNode anchor, Boolean before) {
     return CodeEditUtil.addChildren(getNode(), first, last, getAnchorNode(anchor, before));
   }
