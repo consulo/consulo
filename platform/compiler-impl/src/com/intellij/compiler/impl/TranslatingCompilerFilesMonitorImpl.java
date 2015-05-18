@@ -1272,7 +1272,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 final Module[] modules = ModuleManager.getInstance(projRef.get()).getModules();
                 for (IntermediateOutputCompiler compiler : compilers) {
                   for (Module module : modules) {
-                    if (module.isDisposed()) {
+                    if (module.isDisposed() || module.getModuleDirUrl() == null) {
                       continue;
                     }
                     final VirtualFile outputRoot = LocalFileSystem.getInstance()
