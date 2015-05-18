@@ -144,14 +144,14 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
           model.addRoot(virtualFile, entry.getKey());
         }
         else {
-          VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(virtualFile);
-          if (jarRoot == null) {
+          VirtualFile archiveRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(virtualFile);
+          if (archiveRoot == null) {
             LOG.warn(String.format(
               "Can't parse contents of the jar file at path '%s' for the library '%s''", file.getAbsolutePath(), libraryName
             ));
             continue;
           }
-          model.addRoot(jarRoot, entry.getKey());
+          model.addRoot(archiveRoot, entry.getKey());
         }
       }
     }

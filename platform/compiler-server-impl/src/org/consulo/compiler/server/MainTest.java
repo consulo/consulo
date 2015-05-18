@@ -75,9 +75,9 @@ public class MainTest {
 
     VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
 
-    VirtualFile jarRootForLocalFile = ArchiveVfsUtil.getJarRootForLocalFile(virtualFile);
+    VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(virtualFile);
 
-    System.out.println(jarRootForLocalFile.findFileByRelativePath("org/consulo/module/extension/ui"));
+    System.out.println(archiveRootForLocalFile.findFileByRelativePath("org/consulo/module/extension/ui"));
   }
 
   private static void printTree(VirtualFile virtualFile, int indent, StringBuilder builder) {

@@ -80,9 +80,9 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
             if (element instanceof FileCopyPackagingElement) {
               final VirtualFile file = ((FileCopyPackagingElement)element).findFile();
               if (file != null) {
-                final VirtualFile jarRoot = ArchiveVfsUtil.getVirtualFileForJar(file);
-                if (jarRoot != null) {
-                  extracted.add(PackagingElementFactory.getInstance().createExtractedDirectory(jarRoot));
+                final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
+                if (archiveRoot != null) {
+                  extracted.add(PackagingElementFactory.getInstance().createExtractedDirectory(archiveRoot));
                 }
               }
             }

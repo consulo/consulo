@@ -146,7 +146,7 @@ public class BasicsTest extends IntegrationTestCase {
     VirtualFile vfile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(f);
     assertNotNull(vfile);
 
-    VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(vfile);
+    VirtualFile jarRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(vfile);
     assertEquals(1, jarRoot.findChild("file.txt").contentsToByteArray()[0]);
 
     assertEquals(2, getRevisionsFor(myRoot).size());
@@ -163,7 +163,7 @@ public class BasicsTest extends IntegrationTestCase {
 
     LocalFileSystem.getInstance().refreshWithoutFileWatcher(false);
     StandardFileSystems.jar().refreshWithoutFileWatcher(false);
-    jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(vfile);
+    jarRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(vfile);
     assertEquals(2, jarRoot.findChild("file.txt").contentsToByteArray()[0]);
 
     assertEquals(2, getRevisionsFor(myRoot).size());

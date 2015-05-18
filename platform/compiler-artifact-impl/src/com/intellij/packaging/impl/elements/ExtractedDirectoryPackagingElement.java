@@ -73,9 +73,9 @@ public class ExtractedDirectoryPackagingElement extends FileOrDirectoryCopyPacka
     final VirtualFile jarFile = super.findFile();
     if (jarFile == null) return null;
 
-    final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(jarFile);
-    if ("/".equals(myPathInJar)) return jarRoot;
-    return jarRoot != null ? jarRoot.findFileByRelativePath(myPathInJar) : null;
+    final VirtualFile archiveRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(jarFile);
+    if ("/".equals(myPathInJar)) return archiveRoot;
+    return archiveRoot != null ? archiveRoot.findFileByRelativePath(myPathInJar) : null;
   }
 
   @Override

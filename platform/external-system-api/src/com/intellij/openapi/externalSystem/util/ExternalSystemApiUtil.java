@@ -210,9 +210,9 @@ public class ExternalSystemApiUtil {
 
   @NotNull
   public static String getLocalFileSystemPath(@NotNull VirtualFile file) {
-    final VirtualFile jar = ArchiveVfsUtil.getVirtualFileForJar(file);
-    if (jar != null) {
-      return jar.getPath();
+    final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
+    if (archiveRoot != null) {
+      return archiveRoot.getPath();
     }
     return toCanonicalPath(file.getPath());
   }

@@ -47,8 +47,8 @@ public class FileTypeBasedRootFilter extends RootFilter {
       }
       for (VirtualFile child : rootCandidate.getChildren()) {
         if (!child.isDirectory() && child.getFileType() instanceof ArchiveFileType) {
-          final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(child);
-          if (jarRoot != null && containsFileOfType(jarRoot, progressIndicator)) {
+          final VirtualFile archiveRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(child);
+          if (archiveRoot != null && containsFileOfType(archiveRoot, progressIndicator)) {
             return true;
           }
         }

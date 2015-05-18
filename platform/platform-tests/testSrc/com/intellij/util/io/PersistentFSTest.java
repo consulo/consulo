@@ -82,7 +82,7 @@ public class PersistentFSTest extends PlatformTestCase {
     VirtualFile vx = lfs.refreshAndFindFileByIoFile(x);
     assertNotNull(vx);
     ArchiveFileSystem jfs = StandardFileSystems.jar();
-    VirtualFile root = ArchiveVfsUtil.getJarRootForLocalFile(vx);
+    VirtualFile root = ArchiveVfsUtil.getArchiveRootForLocalFile(vx);
 
     PersistentFS fs = PersistentFS.getInstance();
 
