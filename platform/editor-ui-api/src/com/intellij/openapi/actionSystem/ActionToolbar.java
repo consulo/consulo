@@ -18,6 +18,7 @@ package com.intellij.openapi.actionSystem;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.ui.switcher.SwitchProvider;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,6 +104,7 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
   /**
    * Forces update of the all actions in the toolbars. Actions, however, normally updated automatially every 500msec.
    */
+  @RequiredDispatchThread
   void updateActionsImmediately();
 
   boolean hasVisibleActions();

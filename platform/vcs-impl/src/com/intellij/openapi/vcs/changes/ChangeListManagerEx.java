@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.vcs.CalledInAwt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,12 +39,12 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
   /**
    * Blocks modal dialogs that we don't want to popup during some process, for example, above the commit dialog.
    */
-  @CalledInAwt
+  @RequiredDispatchThread
   public abstract void blockModalNotifications();
 
   /**
    * Unblocks modal dialogs showing and shows the ones which were queued.
    */
-  @CalledInAwt
+  @RequiredDispatchThread
   public abstract void unblockModalNotifications();
 }

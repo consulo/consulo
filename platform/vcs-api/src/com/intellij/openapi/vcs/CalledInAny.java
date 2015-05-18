@@ -22,5 +22,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.METHOD})
+@Deprecated
 public @interface CalledInAny {
 }

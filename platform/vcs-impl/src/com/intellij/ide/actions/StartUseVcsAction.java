@@ -23,6 +23,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class StartUseVcsAction extends AnAction implements DumbAware {
   public StartUseVcsAction() {
@@ -30,6 +31,7 @@ public class StartUseVcsAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredDispatchThread
   public void update(final AnActionEvent e) {
     final VcsDataWrapper data = new VcsDataWrapper(e);
     final boolean enabled = data.enabled();
@@ -43,6 +45,7 @@ public class StartUseVcsAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredDispatchThread
   public void actionPerformed(final AnActionEvent e) {
     final VcsDataWrapper data = new VcsDataWrapper(e);
     final boolean enabled = data.enabled();

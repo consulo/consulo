@@ -242,6 +242,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param e Carries information on the invocation place and data available
    */
+  @RequiredDispatchThread
   public void beforeActionPerformedUpdate(@NotNull AnActionEvent e) {
     boolean worksInInjected = isInInjectedContext();
     e.setInjectedContext(worksInInjected);

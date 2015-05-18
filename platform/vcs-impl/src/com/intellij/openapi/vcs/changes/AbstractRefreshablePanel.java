@@ -31,6 +31,7 @@ import com.intellij.util.Ticket;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -82,14 +83,14 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     return false;
   }
 
-  @CalledInAwt
+  @RequiredDispatchThread
   @Override
   public void dataChanged() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myTicket.increment();
   }
 
-  @CalledInAwt
+  @RequiredDispatchThread
   @Override
   public void refresh() {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -106,13 +107,14 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
 
   protected abstract void refreshPresentation();
 
-  @CalledInBackground
   protected abstract T loadImpl() throws VcsException;
-  @CalledInAwt
+
+  @RequiredDispatchThread
   protected abstract JPanel dataToPresentation(final T t);
+
   protected abstract void disposeImpl();
   
-  @CalledInAwt
+  @RequiredDispatchThread
   private void acceptData(final T t) {
     final JPanel panel = dataToPresentation(t);
     myDetailsPanel.data(panel);
@@ -139,6 +141,7 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     }
 
     @Override
+    @RequiredDispatchThread
     protected void doInAwtIfFail(Exception e) {
       final Exception cause;
       if (e instanceof MyRuntime && e.getCause() != null) {
@@ -153,10 +156,12 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     }
 
     @Override
+    @RequiredDispatchThread
     protected void doInAwtIfCancel() {
     }
 
     @Override
+    @RequiredDispatchThread
     protected void doInAwtIfSuccess() {
       if (myDisposed) return;
       try {

@@ -51,6 +51,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -922,6 +923,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
   }
 
   @Override
+  @RequiredDispatchThread
   public void updateActionsImmediately() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     updateActions(true, false, false);

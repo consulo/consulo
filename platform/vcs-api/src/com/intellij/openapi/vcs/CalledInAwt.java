@@ -16,6 +16,8 @@
 
 package com.intellij.openapi.vcs;
 
+import org.mustbe.consulo.DeprecationInfo;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -27,5 +29,7 @@ import java.lang.annotation.ElementType;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.METHOD})
+@Deprecated
+@DeprecationInfo(value = "Use @RequiredDispatchThread")
 public @interface CalledInAwt {
 }

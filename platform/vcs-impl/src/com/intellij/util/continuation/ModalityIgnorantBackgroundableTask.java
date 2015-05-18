@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -54,8 +55,11 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
     super(project, title);
   }
 
+  @RequiredDispatchThread
   protected abstract void doInAwtIfFail(final Exception e);
+  @RequiredDispatchThread
   protected abstract void doInAwtIfCancel();
+  @RequiredDispatchThread
   protected abstract void doInAwtIfSuccess();
   protected abstract void runImpl(@NotNull ProgressIndicator indicator);
 

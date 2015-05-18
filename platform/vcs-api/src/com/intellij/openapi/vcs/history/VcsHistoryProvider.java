@@ -16,7 +16,6 @@
 package com.intellij.openapi.vcs.history;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.vcs.CalledInBackground;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsProviderMarker;
@@ -52,7 +51,6 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
    * @throws VcsException if an error occurred when loading the revisions
    */
   @Nullable
-  @CalledInBackground
   VcsHistorySession createSessionFor(FilePath filePath) throws VcsException;
 
   void reportAppendableHistory(final FilePath path, final VcsAppendableHistorySessionPartner partner) throws VcsException;

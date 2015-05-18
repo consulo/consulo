@@ -46,6 +46,7 @@ import com.intellij.util.ui.VcsSynchronousProgressWrapper;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -265,7 +266,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
    * This method is called when user invokes "Enable VCS Integration" and selects a particular VCS.
    * By default it sets up a single mapping {@code <Project> -> selected VCS}.
    */
-  @CalledInAwt
+  @RequiredDispatchThread
   public void enableIntegration() {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
     if (vcsManager != null) {

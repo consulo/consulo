@@ -61,6 +61,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import javax.swing.*;
@@ -244,13 +246,13 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   }
 
   @Override
-  @CalledInAwt
+  @RequiredDispatchThread
   public void blockModalNotifications() {
     myModalNotificationsBlocked = true;
   }
 
   @Override
-  @CalledInAwt
+  @RequiredDispatchThread
   public void unblockModalNotifications() {
     myModalNotificationsBlocked = false;
     if (myListsToBeDeleted.isEmpty()) {
@@ -320,6 +322,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     });
   }
 
+  @RequiredReadAction
   void convertExcludedToIgnored() {
     for (DirectoryIndexExcludePolicy policy : DirectoryIndexExcludePolicy.EP_NAME.getExtensions(myProject)) {
       for (VirtualFile file : policy.getExcludeRootsForProject()) {

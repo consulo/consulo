@@ -36,6 +36,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -208,14 +209,17 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
             VcsDescriptor probableVcs = null;
 
             @Override
+            @RequiredDispatchThread
             protected void doInAwtIfFail(Exception e) {
             }
 
             @Override
+            @RequiredDispatchThread
             protected void doInAwtIfCancel() {
             }
 
             @Override
+            @RequiredDispatchThread
             protected void doInAwtIfSuccess() {
               if (probableVcs != null) {
                 // todo none

@@ -22,10 +22,10 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -43,12 +43,14 @@ public class SeparatePiecesRunner extends GeneralRunner {
     myCurrentWrapper = new AtomicReference<TaskWrapper>();
   }
 
-  @CalledInAwt
+  @Override
+  @RequiredDispatchThread
   public void ping() {
     clearSuspend();
     final Application application = ApplicationManager.getApplication();
     if (! application.isDispatchThread()) {
       Runnable command = new Runnable() {
+        @Override
         public void run() {
           pingImpl();
         }
@@ -59,7 +61,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
     }
   }
 
-  @CalledInAwt
+  @RequiredDispatchThread
   private void pingImpl() {
     while (true) {
       myCurrentWrapper.set(null);
@@ -118,16 +120,19 @@ public class SeparatePiecesRunner extends GeneralRunner {
     }
 
     @Override
+    @RequiredDispatchThread
     protected void doInAwtIfFail(Exception e) {
       doInAwtIfCancel();
     }
 
     @Override
+    @RequiredDispatchThread
     protected void doInAwtIfCancel() {
       onCancel();
     }
 
     @Override
+    @RequiredDispatchThread
     protected void doInAwtIfSuccess() {
       if (! mySuspended) {
         ping();

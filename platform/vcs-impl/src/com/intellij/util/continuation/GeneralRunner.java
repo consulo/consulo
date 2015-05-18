@@ -17,11 +17,10 @@ package com.intellij.util.continuation;
 
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.CalledInAny;
-import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.*;
 
@@ -52,6 +51,7 @@ abstract class GeneralRunner implements ContinuationContext {
     myTriggerSuspend = false;
   }
 
+  @Override
   public <T extends Exception> void addExceptionHandler(final Class<T> clazz, final Consumer<T> consumer) {
     synchronized (myQueueLock) {
       myHandlersMap.put(clazz, new Consumer<Exception>() {
@@ -116,7 +116,7 @@ abstract class GeneralRunner implements ContinuationContext {
     return false;
   }
 
-  @CalledInAny
+  @Override
   public void cancelEverything() {
     synchronized (myQueueLock) {
       for (TaskDescriptor descriptor : myQueue) {
@@ -127,6 +127,7 @@ abstract class GeneralRunner implements ContinuationContext {
     }
   }
 
+  @Override
   public void cancelCurrent() {
     synchronized (myQueueLock) {
       if (myIndicator != null) {
@@ -135,6 +136,7 @@ abstract class GeneralRunner implements ContinuationContext {
     }
   }
 
+  @Override
   public void suspend() {
     synchronized (myQueueLock) {
       myTriggerSuspend = true;
@@ -205,7 +207,7 @@ abstract class GeneralRunner implements ContinuationContext {
     }
   }
 
-  @CalledInAny
+  @Override
   public void next(TaskDescriptor... next) {
     synchronized (myQueueLock) {
       final List<TaskDescriptor> asList = Arrays.asList(next);
@@ -214,6 +216,7 @@ abstract class GeneralRunner implements ContinuationContext {
     }
   }
 
+  @Override
   public void next(List<TaskDescriptor> next) {
     synchronized (myQueueLock) {
       patchTasks(next);
@@ -244,6 +247,7 @@ abstract class GeneralRunner implements ContinuationContext {
     }
   }
 
+  @Override
   public abstract void ping();
 
   @Override
@@ -261,7 +265,7 @@ abstract class GeneralRunner implements ContinuationContext {
   }
 
 
-  @CalledInAwt
+  @RequiredDispatchThread
   public void onCancel() {
     // left only "final" tasks
     synchronized (myQueueLock) {

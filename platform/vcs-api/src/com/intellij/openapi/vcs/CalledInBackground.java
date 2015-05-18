@@ -26,5 +26,6 @@ import java.lang.annotation.ElementType;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.METHOD})
+@Deprecated
 public @interface CalledInBackground {
 }

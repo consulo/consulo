@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.IOException;
 import java.util.*;
@@ -114,9 +115,8 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     }
   }
 
-  @CalledInAwt
+  @RequiredDispatchThread
   public boolean nonWriteActionPreCheck() {
-    final List<CheckPath> checkers = new ArrayList<CheckPath>(myPatches.size());
     myDelayedPrecheckContext = new DelayedPrecheckContext(myProject);
     for (FilePatch patch : myPatches) {
       final CheckPath checker = getChecker(patch);

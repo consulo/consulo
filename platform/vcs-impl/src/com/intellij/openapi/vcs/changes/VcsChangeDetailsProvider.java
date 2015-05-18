@@ -15,12 +15,9 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.BackgroundTaskQueue;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vcs.CalledInAwt;
-import com.intellij.openapi.vcs.CalledInBackground;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -34,8 +31,8 @@ public interface VcsChangeDetailsProvider {
 
   String getName();
 
-  @CalledInAwt
+  @RequiredDispatchThread
   boolean canComment(final Change change);
-  @CalledInAwt
+  @RequiredDispatchThread
   RefreshablePanel comment(final Change change, JComponent parent, BackgroundTaskQueue queue);
 }

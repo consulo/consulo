@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -45,7 +46,7 @@ public class GenericDetailsLoader<Id, Data> implements Details<Id,Data>, Disposa
     myCurrentlySelected = new AtomicReference<Id>(null);
   }
 
-  @CalledInAwt
+  @RequiredDispatchThread
   public void updateSelection(@Nullable final Id id, boolean force) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myIsDisposed) return;
@@ -61,7 +62,7 @@ public class GenericDetailsLoader<Id, Data> implements Details<Id,Data>, Disposa
     myValueConsumer.setCacheConsumer(cacheConsumer);
   }
 
-  @CalledInAwt
+  @RequiredDispatchThread
   @Override
   public void take(Id id, Data data) throws AlreadyDisposedException {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -73,7 +74,6 @@ public class GenericDetailsLoader<Id, Data> implements Details<Id,Data>, Disposa
     myValueConsumer.reset();
   }
 
-  @CalledInAny
   @Override
   public Id getCurrentlySelected() {
     return myCurrentlySelected.get();
