@@ -17,7 +17,7 @@
 package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.SdkOrderEntry;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.types.SourcesOrderRootType;
 
@@ -27,7 +27,7 @@ import com.intellij.openapi.roots.types.SourcesOrderRootType;
 public class SdkScope extends LibraryScopeBase {
   private final String mySdkName;
 
-  public SdkScope(Project project, SdkOrderEntry sdkOrderEntry) {
+  public SdkScope(Project project, ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
     super(project, sdkOrderEntry.getFiles(BinariesOrderRootType.getInstance()), sdkOrderEntry.getFiles(SourcesOrderRootType.getInstance()));
     mySdkName = sdkOrderEntry.getSdkName();
   }

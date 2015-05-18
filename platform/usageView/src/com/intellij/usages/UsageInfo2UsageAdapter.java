@@ -307,7 +307,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
     if (psiFile instanceof PsiCompiledElement || fileIndex.isInLibrarySource(virtualFile)) {
       List<OrderEntry> orders = fileIndex.getOrderEntriesForFile(virtualFile);
       for (OrderEntry order : orders) {
-        if (order instanceof LibraryOrderEntry || order instanceof SdkOrderEntry) {
+        if (order instanceof LibraryOrderEntry || order instanceof ModuleExtensionWithSdkOrderEntry) {
           return order;
         }
       }

@@ -27,8 +27,8 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.LibraryOrderEntry;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ModuleOrderEntry;
-import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -84,8 +84,8 @@ public class NavBarPresentation {
     catch (IndexNotReadyException e) {
       return null;
     }
-    if (object instanceof SdkOrderEntry) {
-      return SdkUtil.getIcon(((SdkOrderEntry)object).getSdk());
+    if (object instanceof ModuleExtensionWithSdkOrderEntry) {
+      return SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)object).getSdk());
     }
     if (object instanceof LibraryOrderEntry) return AllIcons.Nodes.PpLibFolder;
     if (object instanceof ModuleOrderEntry) return AllIcons.Nodes.Module;

@@ -205,7 +205,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
     for (OrderEntry entry : rootModel.getOrderEntries()) {
       if (myCondition != null && !myCondition.value(entry)) continue;
 
-      if (myWithoutJdk && entry instanceof SdkOrderEntry) continue;
+      if (myWithoutJdk && entry instanceof ModuleExtensionWithSdkOrderEntry) continue;
       if (myWithoutLibraries && entry instanceof LibraryOrderEntry) continue;
       if (myWithoutDepModules) {
         if (!myRecursively && entry instanceof ModuleOrderEntry) continue;
@@ -220,7 +220,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
       }
       if (shouldAdd == OrderEnumerationHandler.AddDependencyType.DO_NOT_ADD) continue;
 
-      boolean exported = !(entry instanceof SdkOrderEntry);
+      boolean exported = !(entry instanceof ModuleExtensionWithSdkOrderEntry);
 
       if (entry instanceof ExportableOrderEntry) {
         ExportableOrderEntry exportableEntry = (ExportableOrderEntry)entry;

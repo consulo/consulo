@@ -30,9 +30,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.LibraryOrderEntry;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
@@ -343,7 +343,7 @@ public class DvcsUtil {
     List<OrderEntry> entries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
     Set<VirtualFile> libraryRoots = new HashSet<VirtualFile>();
     for (OrderEntry entry : entries) {
-      if (entry instanceof LibraryOrderEntry || entry instanceof SdkOrderEntry) {
+      if (entry instanceof LibraryOrderEntry || entry instanceof ModuleExtensionWithSdkOrderEntry) {
         VirtualFile moduleRoot = vcsManager.getVcsRootFor(entry.getOwnerModule().getModuleDir());
         if (moduleRoot != null) {
           libraryRoots.add(moduleRoot);

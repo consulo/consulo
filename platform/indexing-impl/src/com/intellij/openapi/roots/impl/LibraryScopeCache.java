@@ -17,10 +17,10 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.impl.scopes.SdkScope;
 import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
+import com.intellij.openapi.module.impl.scopes.SdkScope;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.SdkOrderEntry;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
@@ -51,7 +51,8 @@ public class LibraryScopeCache {
     mySdkScopes.clear();
   }
 
-  public GlobalSearchScope getScopeForLibraryUsedIn(List<Module> modulesLibraryIsUsedIn) {
+  @NotNull
+  public GlobalSearchScope getScopeForLibraryUsedIn(@NotNull List<Module> modulesLibraryIsUsedIn) {
     GlobalSearchScope scope = myLibraryScopes.get(modulesLibraryIsUsedIn);
     if (scope != null) {
       return scope;
@@ -62,7 +63,8 @@ public class LibraryScopeCache {
     return ConcurrencyUtil.cacheOrGet(myLibraryScopes, modulesLibraryIsUsedIn, newScope);
   }
 
-  public GlobalSearchScope getScopeForSdk(final SdkOrderEntry sdkOrderEntry) {
+  @NotNull
+  public GlobalSearchScope getScopeForSdk(@NotNull final ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
     final String jdkName = sdkOrderEntry.getSdkName();
     if (jdkName == null) return GlobalSearchScope.allScope(myProject);
     GlobalSearchScope scope = mySdkScopes.get(jdkName);

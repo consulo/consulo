@@ -17,8 +17,8 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileProvider;
@@ -45,8 +45,8 @@ public class ProjectUtilCore {
       if (fileForJar != null) {
         final OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
         if (libraryEntry != null) {
-          if (libraryEntry instanceof SdkOrderEntry) {
-            url = url + " - [" + ((SdkOrderEntry)libraryEntry).getSdkName() + "]";
+          if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+            url = url + " - [" + ((ModuleExtensionWithSdkOrderEntry)libraryEntry).getSdkName() + "]";
           }
           else {
             url = url + " - [" + libraryEntry.getPresentableName() + "]";

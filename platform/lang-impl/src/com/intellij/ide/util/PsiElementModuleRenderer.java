@@ -111,14 +111,14 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer{
   private void showLibraryLocation(ProjectFileIndex fileIndex, VirtualFile vFile) {
     setIcon(AllIcons.Nodes.PpLibFolder);
     for (OrderEntry order : fileIndex.getOrderEntriesForFile(vFile)) {
-      if (order instanceof LibraryOrderEntry || order instanceof SdkOrderEntry) {
+      if (order instanceof LibraryOrderEntry || order instanceof ModuleExtensionWithSdkOrderEntry) {
         myText = getPresentableName(order, vFile);
         break;
       }
     }
 
     myText = myText.substring(myText.lastIndexOf(File.separatorChar) + 1);
-    VirtualFile archiveFile = ArchiveVfsUtil.getVirtualFileForJar(vFile);
+    VirtualFile archiveFile = ArchiveVfsUtil.getVirtualFileForArchive(vFile);
     if (archiveFile != null && !myText.equals(archiveFile.getName())) {
       myText += " (" + archiveFile.getName() + ")";
     }

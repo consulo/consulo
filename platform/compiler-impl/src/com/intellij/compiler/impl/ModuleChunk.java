@@ -22,9 +22,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderEnumerator;
-import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -299,7 +299,7 @@ public class ModuleChunk extends Chunk<Module> {
   }
 
   private static class BeforeSdkOrderEntryCondition implements Condition<OrderEntry> {
-    private boolean myJdkFound;
+    private boolean mySdkFound;
     private final SdkType mySdkType;
     private final Module myOwnerModule;
 
@@ -310,15 +310,15 @@ public class ModuleChunk extends Chunk<Module> {
 
     @Override
     public boolean value(OrderEntry orderEntry) {
-      if (orderEntry instanceof SdkOrderEntry && myOwnerModule.equals(orderEntry.getOwnerModule())) {
-        final Sdk sdk = ((SdkOrderEntry)orderEntry).getSdk();
+      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry && myOwnerModule.equals(orderEntry.getOwnerModule())) {
+        final Sdk sdk = ((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk();
         if(sdk == null || sdk.getSdkType() != mySdkType) {
           return true;
         }
 
-        myJdkFound = true;
+        mySdkFound = true;
       }
-      return !myJdkFound;
+      return !mySdkFound;
     }
   }
 
@@ -332,8 +332,8 @@ public class ModuleChunk extends Chunk<Module> {
 
     @Override
     public boolean value(OrderEntry orderEntry) {
-      if (orderEntry instanceof SdkOrderEntry) {
-        final Sdk sdk = ((SdkOrderEntry)orderEntry).getSdk();
+      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+        final Sdk sdk = ((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk();
         if(sdk == null || sdk.getSdkType() != mySdkType) {
           return true;
         }

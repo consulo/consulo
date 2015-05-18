@@ -88,7 +88,7 @@ public class PackageNodeUtil {
     @Override
     public boolean contains(@NotNull VirtualFile file) {
       final OrderEntry orderEntry = ModuleRootManager.getInstance(myModule).getFileIndex().getOrderEntryForFile(file);
-      return orderEntry instanceof SdkOrderEntry || orderEntry instanceof LibraryOrderEntry;
+      return orderEntry instanceof ModuleExtensionWithSdkOrderEntry || orderEntry instanceof LibraryOrderEntry;
     }
 
     @Override

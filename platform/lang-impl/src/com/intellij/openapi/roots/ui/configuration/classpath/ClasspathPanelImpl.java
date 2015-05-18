@@ -253,8 +253,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         myEditButton.actionPerformed(null);
       }
     }
-    else if (entry instanceof SdkOrderEntry) {
-      Sdk jdk = ((SdkOrderEntry)entry).getSdk();
+    else if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
+      Sdk jdk = ((ModuleExtensionWithSdkOrderEntry)entry).getSdk();
       if (jdk != null) {
         rootConfigurable.select(jdk, true);
       }
@@ -585,10 +585,10 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
           return new ModuleProjectStructureElement(getContext(), module);
         }
       }
-      else if (entry instanceof SdkOrderEntry) {
-        final Sdk jdk = ((SdkOrderEntry)entry).getSdk();
-        if (jdk != null) {
-          return new SdkProjectStructureElement(getContext(), jdk);
+      else if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
+        final Sdk sdk = ((ModuleExtensionWithSdkOrderEntry)entry).getSdk();
+        if (sdk != null) {
+          return new SdkProjectStructureElement(getContext(), sdk);
         }
       }
       return null;

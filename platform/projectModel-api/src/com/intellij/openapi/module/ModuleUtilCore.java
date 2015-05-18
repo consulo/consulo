@@ -48,8 +48,7 @@ public class ModuleUtilCore {
     if (isLibraryElement) {
       List<OrderEntry> orders = projectRootManager.getFileIndex().getOrderEntriesForFile(file);
       for (OrderEntry orderEntry : orders) {
-        if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry || orderEntry instanceof SdkOrderEntry ||
-            orderEntry instanceof LibraryOrderEntry) {
+        if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry || orderEntry instanceof LibraryOrderEntry) {
           return true;
         }
       }
@@ -220,8 +219,7 @@ public class ModuleUtilCore {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     if (isLibraryElement) {
       OrderEntry orderEntry = moduleRootManager.getFileIndex().getOrderEntryForFile(file);
-      return orderEntry instanceof ModuleExtensionWithSdkOrderEntry || orderEntry instanceof SdkOrderEntry ||
-             orderEntry instanceof LibraryOrderEntry;
+      return orderEntry instanceof ModuleExtensionWithSdkOrderEntry || orderEntry instanceof LibraryOrderEntry;
     }
     else {
       return moduleRootManager.getFileIndex().isInContent(file);
