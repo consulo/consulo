@@ -24,9 +24,11 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubTree;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 public interface PsiFileWithStubSupport extends PsiFile {
   @Nullable
+  @RequiredReadAction
   StubTree getStubTree();
 
   @Nullable

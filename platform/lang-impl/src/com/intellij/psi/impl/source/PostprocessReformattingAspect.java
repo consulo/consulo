@@ -54,6 +54,7 @@ import com.intellij.util.text.TextRangeUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.*;
 
@@ -124,6 +125,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }
   }
 
+  @RequiredDispatchThread
   public void postponeFormattingInside(@NotNull final Runnable runnable) {
     postponeFormattingInside(new NullableComputable<Object>() {
       @Override
@@ -134,6 +136,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     });
   }
 
+  @RequiredDispatchThread
   public <T> T postponeFormattingInside(@NotNull Computable<T> computable) {
     Application application = ApplicationManager.getApplication();
     application.assertIsDispatchThread();
@@ -150,6 +153,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     getContext().myPostponedCounter++;
   }
 
+  @RequiredDispatchThread
   private void decrementPostponedCounter() {
     Application application = ApplicationManager.getApplication();
     application.assertIsDispatchThread();

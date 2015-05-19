@@ -31,6 +31,7 @@ import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.*;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.List;
 public class StubTreeLoaderImpl extends StubTreeLoader {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.StubTreeLoaderImpl");
 
+  @RequiredReadAction
   @Override
   @Nullable
   public ObjectStubTree readOrBuild(Project project, final VirtualFile vFile, @Nullable PsiFile psiFile) {

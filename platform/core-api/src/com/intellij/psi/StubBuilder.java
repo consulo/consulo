@@ -18,11 +18,13 @@ package com.intellij.psi;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author max
  */
 public interface StubBuilder {
+  @RequiredReadAction
   StubElement buildStubTree(@NotNull PsiFile file);
 
   boolean skipChildProcessingWhenBuildingStubs(@NotNull ASTNode parent, @NotNull ASTNode node);

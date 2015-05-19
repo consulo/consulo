@@ -53,6 +53,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.lang.ref.Reference;
@@ -172,6 +173,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @NotNull
+  @RequiredReadAction
   private FileElement loadTreeElement() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
@@ -232,6 +234,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return null;
   }
 
+  @RequiredReadAction
   private static void switchFromStubToAst(List<Pair<StubBasedPsiElementBase, CompositeElement>> pairs) {
     for (Pair<StubBasedPsiElementBase, CompositeElement> pair : pairs) {
       pair.second.setPsi(pair.first);
@@ -669,6 +672,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return stubHolder != null ? stubHolder.getRoot() : null;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public StubTree getStubTree() {
@@ -981,6 +985,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   private static final Key<SoftReference<StubTree>> STUB_TREE_IN_PARSED_TREE = Key.create("STUB_TREE_IN_PARSED_TREE");
   private final Object myStubFromTreeLock = new Object();
 
+  @RequiredReadAction
   public StubTree calcStubTree() {
     FileElement fileElement = calcTreeElement();
     synchronized (myStubFromTreeLock) {

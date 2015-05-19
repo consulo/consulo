@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author yole
@@ -31,6 +32,7 @@ public abstract class StubTreeLoader {
   }
 
   @Nullable
+  @RequiredReadAction
   public abstract ObjectStubTree readOrBuild(Project project, final VirtualFile vFile, @Nullable final PsiFile psiFile);
 
   @Nullable

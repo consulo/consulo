@@ -40,6 +40,7 @@ import com.intellij.util.indexing.IndexingDataKeys;
 import com.intellij.util.indexing.SubstitutedFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -51,6 +52,7 @@ public class StubTreeBuilder {
   private StubTreeBuilder() { }
 
   @Nullable
+  @RequiredReadAction
   public static Stub buildStubTree(final FileContent inputData) {
     Stub data = inputData.getUserData(stubElementKey);
     if (data != null) return data;
