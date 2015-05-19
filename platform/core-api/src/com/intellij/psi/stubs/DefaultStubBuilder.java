@@ -24,6 +24,7 @@ import com.intellij.psi.StubBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.Stack;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author max
@@ -31,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class DefaultStubBuilder implements StubBuilder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.DefaultStubBuilder");
 
+  @RequiredReadAction
   @Override
   public StubElement buildStubTree(@NotNull PsiFile file) {
     return buildStubTreeFor(file, createStubForFile(file));
@@ -43,6 +45,7 @@ public class DefaultStubBuilder implements StubBuilder {
   }
 
   @NotNull
+  @RequiredReadAction
   private StubElement buildStubTreeFor(@NotNull PsiElement root, @NotNull StubElement parentStub) {
     Stack<StubElement> parentStubs = new Stack<StubElement>();
     Stack<PsiElement> parentElements = new Stack<PsiElement>();
@@ -87,6 +90,7 @@ public class DefaultStubBuilder implements StubBuilder {
   }
 
   @NotNull
+  @RequiredReadAction
   protected StubElement buildStubTreeFor(@NotNull ASTNode root, @NotNull StubElement parentStub) {
     Stack<StubElement> parentStubs = new Stack<StubElement>();
     Stack<ASTNode> parentNodes = new Stack<ASTNode>();

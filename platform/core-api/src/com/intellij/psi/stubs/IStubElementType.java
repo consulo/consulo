@@ -26,6 +26,7 @@ import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 public abstract class IStubElementType<StubT extends StubElement, PsiT extends PsiElement> extends IElementType implements StubSerializer<StubT> {
   public IStubElementType(@NotNull @NonNls final String debugName, @Nullable final Language language) {
@@ -34,6 +35,7 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
 
   public abstract PsiT createPsi(@NotNull StubT stub);
 
+  @RequiredReadAction
   public abstract StubT createStub(@NotNull PsiT psi, final StubElement parentStub);
 
   public boolean shouldCreateStub(ASTNode node) {

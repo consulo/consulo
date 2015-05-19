@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.IOException;
 
@@ -16,6 +17,7 @@ public abstract class EmptyStubElementType<T extends PsiElement> extends IStubEl
     super(debugName, language);
   }
 
+  @RequiredReadAction
   @Override
   public final EmptyStub createStub(@NotNull T psi, StubElement parentStub) {
     return createStub(parentStub);
