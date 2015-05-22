@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.startup.impl;
 
-import com.intellij.ide.caches.CacheUpdater;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
@@ -58,7 +57,6 @@ public class StartupManagerImpl extends StartupManagerEx {
   private final List<Runnable> myNotDumbAwarePostStartupActivities = Collections.synchronizedList(new LinkedList<Runnable>());
   private boolean myPostStartupActivitiesPassed = false; // guarded by this
 
-  private final List<CacheUpdater> myCacheUpdaters = new LinkedList<CacheUpdater>();
   private volatile boolean myPreStartupActivitiesPassed = false;
   private volatile boolean myStartupActivitiesRunning = false;
   private volatile boolean myStartupActivitiesPassed = false;
@@ -85,12 +83,6 @@ public class StartupManagerImpl extends StartupManagerEx {
   public synchronized void registerPostStartupActivity(@NotNull Runnable runnable) {
     LOG.assertTrue(!myPostStartupActivitiesPassed, "Registering post-startup activity that will never be run");
     (DumbService.isDumbAware(runnable) ? myDumbAwarePostStartupActivities : myNotDumbAwarePostStartupActivities).add(runnable);
-  }
-
-  @Override
-  public void registerCacheUpdater(@NotNull CacheUpdater updater) {
-    LOG.assertTrue(!myStartupActivitiesPassed, CacheUpdater.class.getSimpleName() + " must be registered before startup activity finished");
-    myCacheUpdaters.add(updater);
   }
 
   @Override
@@ -282,10 +274,6 @@ public class StartupManagerImpl extends StartupManagerEx {
           }
         });
       }
-
-      if (!myCacheUpdaters.isEmpty()) {
-        dumbService.queueCacheUpdateInDumbMode(myCacheUpdaters);
-      }
     }
     catch (ProcessCanceledException e) {
       throw e;
@@ -347,7 +335,6 @@ public class StartupManagerImpl extends StartupManagerEx {
     myStartupActivities.clear();
     myDumbAwarePostStartupActivities.clear();
     myNotDumbAwarePostStartupActivities.clear();
-    myCacheUpdaters.clear();
   }
 
   @TestOnly
