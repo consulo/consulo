@@ -23,7 +23,6 @@ import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTre
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.CheckboxTreeNoPolicy;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.OnePixelSplitter;
@@ -142,22 +141,21 @@ public class ExtensionEditor extends ModuleElementsEditor {
   @RequiredDispatchThread
   private JComponent createConfigurationPanel(final @NotNull MutableModuleExtension<?> extension) {
     myConfigurablePanelExtension = extension;
-    return extension.createConfigurablePanel(new Runnable() {
+    JComponent configurablePanel = extension.createConfigurablePanel(new Runnable() {
       @Override
       public void run() {
         //noinspection RequiredXAction
         extensionChanged(extension);
       }
     });
+    if(configurablePanel instanceof Disposable) {
+      registerDisposable((Disposable)configurablePanel);
+    }
+    return configurablePanel;
   }
 
   @RequiredDispatchThread
   private void updateSecondComponent(@Nullable MutableModuleExtension<?> extension) {
-    JComponent secondComponent = mySplitter.getSecondComponent();
-    if(secondComponent instanceof Disposable) {
-      Disposer.dispose((Disposable)secondComponent);
-    }
-
     if (extension == null || !extension.isEnabled()) {
       mySplitter.setSecondComponent(null);
     }
