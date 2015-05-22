@@ -41,6 +41,7 @@ import com.intellij.util.indexing.IdFilter;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,6 +96,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     List<ChooseByNameContributor> liveContribs = filterDumb(myContributors);
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     Processor<ChooseByNameContributor> processor = new ReadActionProcessor<ChooseByNameContributor>() {
+      @RequiredReadAction
       @Override
       public boolean processInReadAction(@NotNull ChooseByNameContributor contributor) {
         try {

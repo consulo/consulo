@@ -491,7 +491,7 @@ class FindInProjectTask {
     });
 
     // in case our word splitting is incorrect
-    CacheManager cacheManager = CacheManager.SERVICE.getInstance(myProject);
+    CacheManager cacheManager = CacheManager.getInstance(myProject);
     PsiFile[] filesWithWord = cacheManager.getFilesWithWord(stringToFind, UsageSearchContext.ANY, scope, myFindModel.isCaseSensitive());
     for (PsiFile file : filesWithWord) {
       if (myFileMask.value(file.getVirtualFile())) {

@@ -37,6 +37,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -112,6 +113,7 @@ public abstract class FindUsagesHandler {
                                       @NotNull final Processor<UsageInfo> processor,
                                       @NotNull final FindUsagesOptions options) {
     final ReadActionProcessor<PsiReference> refProcessor = new ReadActionProcessor<PsiReference>() {
+      @RequiredReadAction
       @Override
       public boolean processInReadAction(final PsiReference ref) {
         TextRange rangeInElement = ref.getRangeInElement();

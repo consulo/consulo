@@ -20,6 +20,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.Processor;
 import com.intellij.util.Query;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author peter
@@ -36,6 +37,7 @@ public class QuerySearchRequest {
     this.collector = collector;
     if (inReadAction) {
       this.processor = new ReadActionProcessor<PsiReference>() {
+        @RequiredReadAction
         @Override
         public boolean processInReadAction(PsiReference psiReference) {
               return processor.process(psiReference, collector);

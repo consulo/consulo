@@ -18,7 +18,6 @@ package com.intellij.psi.impl.cache.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadActionProcessor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -36,6 +35,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,7 @@ import java.util.List;
  * @author Eugene Zhuravlev
  *         Date: Jan 16, 2008
  */
-public class IndexCacheManagerImpl implements CacheManager{
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.cache.impl.IndexCacheManagerImpl");
+public class IndexCacheManagerImpl extends CacheManager{
   private final Project myProject;
   private final PsiManager myPsiManager;
 
@@ -107,6 +106,7 @@ public class IndexCacheManagerImpl implements CacheManager{
     if (vFiles.isEmpty()) return true;
 
     final Processor<VirtualFile> virtualFileProcessor = new ReadActionProcessor<VirtualFile>() {
+      @RequiredReadAction
       @Override
       public boolean processInReadAction(VirtualFile virtualFile) {
         if (virtualFile.isValid()) {

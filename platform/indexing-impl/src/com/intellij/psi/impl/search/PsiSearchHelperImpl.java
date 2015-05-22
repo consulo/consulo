@@ -490,7 +490,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
   @Override
   @NotNull
   public PsiFile[] findFilesWithPlainTextWords(@NotNull String word) {
-    return CacheManager.SERVICE.getInstance(myManager.getProject()).getFilesWithWord(word, UsageSearchContext.IN_PLAIN_TEXT,
+    return CacheManager.getInstance(myManager.getProject()).getFilesWithWord(word, UsageSearchContext.IN_PLAIN_TEXT,
                                                                                      GlobalSearchScope.projectScope(myManager.getProject()),
                                                                                      true);
   }
@@ -529,7 +529,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     PsiFile[] files = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile[]>() {
       @Override
       public PsiFile[] compute() {
-        return CacheManager.SERVICE.getInstance(myManager.getProject()).getFilesWithWord(wordToSearch, UsageSearchContext.IN_PLAIN_TEXT, theSearchScope, true);
+        return CacheManager.getInstance(myManager.getProject()).getFilesWithWord(wordToSearch, UsageSearchContext.IN_PLAIN_TEXT, theSearchScope, true);
       }
     });
 
@@ -602,7 +602,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                                          @NotNull GlobalSearchScope scope,
                                          @NotNull Processor<PsiFile> processor,
                                          final boolean caseSensitively) {
-    return CacheManager.SERVICE.getInstance(myManager.getProject()).processFilesWithWord(processor, word, UsageSearchContext.IN_CODE, scope, caseSensitively);
+    return CacheManager.getInstance(myManager.getProject()).processFilesWithWord(processor, word, UsageSearchContext.IN_CODE, scope, caseSensitively);
   }
 
   @Override
@@ -610,21 +610,21 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                                                @NotNull final GlobalSearchScope scope,
                                                @NotNull final Processor<PsiFile> processor,
                                                final boolean caseSensitively) {
-    return CacheManager.SERVICE.getInstance(myManager.getProject()).processFilesWithWord(processor, word, UsageSearchContext.IN_PLAIN_TEXT, scope, caseSensitively);
+    return CacheManager.getInstance(myManager.getProject()).processFilesWithWord(processor, word, UsageSearchContext.IN_PLAIN_TEXT, scope, caseSensitively);
   }
 
   @Override
   public boolean processAllFilesWithWordInComments(@NotNull String word,
                                                    @NotNull GlobalSearchScope scope,
                                                    @NotNull Processor<PsiFile> processor) {
-    return CacheManager.SERVICE.getInstance(myManager.getProject()).processFilesWithWord(processor, word, UsageSearchContext.IN_COMMENTS, scope, true);
+    return CacheManager.getInstance(myManager.getProject()).processFilesWithWord(processor, word, UsageSearchContext.IN_COMMENTS, scope, true);
   }
 
   @Override
   public boolean processAllFilesWithWordInLiterals(@NotNull String word,
                                                    @NotNull GlobalSearchScope scope,
                                                    @NotNull Processor<PsiFile> processor) {
-    return CacheManager.SERVICE.getInstance(myManager.getProject()).processFilesWithWord(processor, word, UsageSearchContext.IN_STRINGS, scope, true);
+    return CacheManager.getInstance(myManager.getProject()).processFilesWithWord(processor, word, UsageSearchContext.IN_STRINGS, scope, true);
   }
 
   private static class RequestWithProcessor {

@@ -16,24 +16,22 @@
 
 package com.intellij.psi.impl.cache;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
+import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
-public interface CacheManager {
-  class SERVICE {
-    private SERVICE() {
-    }
+@ProjectService
+public abstract class CacheManager {
 
-    public static CacheManager getInstance(Project project) {
-      return ServiceManager.getService(project, CacheManager.class);
-    }
-  }
+  @NotNull
+  public abstract PsiFile[] getFilesWithWord(@NotNull String word, short occurenceMask, @NotNull GlobalSearchScope scope, final boolean caseSensitively);
 
-  @NotNull PsiFile[] getFilesWithWord(@NotNull String word, short occurenceMask, @NotNull GlobalSearchScope scope, final boolean caseSensitively);
-  boolean processFilesWithWord(@NotNull Processor<PsiFile> processor,@NotNull String word, short occurenceMask, @NotNull GlobalSearchScope scope, final boolean caseSensitively);
+  public abstract boolean processFilesWithWord(@NotNull Processor<PsiFile> processor,
+                                               @NotNull String word,
+                                               short occurenceMask,
+                                               @NotNull GlobalSearchScope scope,
+                                               final boolean caseSensitively);
 }
 
