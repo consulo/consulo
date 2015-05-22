@@ -37,7 +37,6 @@ import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.util.PathUtil;
-import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
 import com.intellij.util.indexing.UnindexedFilesUpdater;
@@ -56,13 +55,10 @@ import java.util.Set;
  */
 public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.ProjectManagerComponent");
-  private static final boolean ourScheduleCacheUpdateInDumbMode = SystemProperties.getBooleanProperty("idea.schedule.cache.update.in.dumb.mode", true);
   private boolean myPointerChangesDetected = false;
   private int myInsideRefresh = 0;
   private final BatchUpdateListener myHandler;
   private final MessageBusConnection myConnection;
-
-
   private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new THashSet<LocalFileSystem.WatchRequest>();
   private final boolean myDoLogCachesUpdate;
 
