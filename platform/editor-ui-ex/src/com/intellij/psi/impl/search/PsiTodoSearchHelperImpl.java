@@ -17,7 +17,6 @@
 package com.intellij.psi.impl.search;
 
 import com.intellij.ide.todo.TodoIndexPatternProvider;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
@@ -35,9 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class PsiTodoSearchHelperImpl implements PsiTodoSearchHelper {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.search.PsiTodoSearchHelperImpl");
-
+public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
   private final PsiManagerEx myManager;
   private static final TodoItem[] EMPTY_TODO_ITEMS = new TodoItem[0];
 

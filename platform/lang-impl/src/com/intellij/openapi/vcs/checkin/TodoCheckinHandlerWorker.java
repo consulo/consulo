@@ -86,7 +86,7 @@ public class TodoCheckinHandlerWorker {
     myTodoFilter = todoFilter;
     myIncludePattern = includePattern;
     myPsiManager = PsiManager.getInstance(project);
-    mySearchHelper = PsiTodoSearchHelper.SERVICE.getInstance(project);
+    mySearchHelper = PsiTodoSearchHelper.getInstance(project);
     myAddedOrEditedTodos = new ArrayList<TodoItem>();
     myInChangedTodos = new ArrayList<TodoItem>();
     mySkipped = new SmartList<Pair<FilePath,String>>();

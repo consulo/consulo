@@ -52,7 +52,7 @@ public class TodoForBaseRevision extends TodoForRanges {
   protected TodoItemData[] getTodoItems() {
     final TodoItemData[] items = (TodoItemData[])myGetter.get();
     if (items != null) return items;
-    final TodoItem[] todoItems = getTodoForText(PsiTodoSearchHelper.SERVICE.getInstance(myProject));
+    final TodoItem[] todoItems = getTodoForText(PsiTodoSearchHelper.getInstance(myProject));
     if (todoItems != null) {
       final TodoItemData[] arr = convertTodo(todoItems);
       mySaver.consume(arr);

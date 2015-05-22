@@ -437,7 +437,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                                        @NotNull ProperTextRange priorityRange,
                                        @NotNull Collection<HighlightInfo> insideResult,
                                        @NotNull Collection<HighlightInfo> outsideResult) {
-    PsiTodoSearchHelper helper = PsiTodoSearchHelper.SERVICE.getInstance(file.getProject());
+    PsiTodoSearchHelper helper = PsiTodoSearchHelper.getInstance(file.getProject());
     if (helper == null) return;
     TodoItem[] todoItems = helper.findTodoItems(file, startOffset, endOffset);
     if (todoItems.length == 0) return;

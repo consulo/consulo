@@ -24,15 +24,17 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.fileChooser.FileSystemTreeFactory;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
-public class FileSystemTreeFactoryImpl implements FileSystemTreeFactory{
-  public FileSystemTreeFactoryImpl() {
-  }
-
+public class FileSystemTreeFactoryImpl extends FileSystemTreeFactory{
+  @Override
+  @NotNull
   public FileSystemTree createFileSystemTree(Project project, FileChooserDescriptor fileChooserDescriptor) {
     return new FileSystemTreeImpl(project, fileChooserDescriptor);
   }
 
+  @Override
+  @NotNull
   public DefaultActionGroup createDefaultFileSystemActions(FileSystemTree fileSystemTree) {
     DefaultActionGroup group = new DefaultActionGroup();
     final ActionManager actionManager = ActionManager.getInstance();

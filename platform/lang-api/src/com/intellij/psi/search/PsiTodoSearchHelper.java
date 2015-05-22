@@ -15,9 +15,8 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,23 +24,15 @@ import org.jetbrains.annotations.NotNull;
  *         Date: 2/24/11
  *         Time: 10:08 AM
  */
-public interface PsiTodoSearchHelper {
-  class SERVICE {
-    private SERVICE() {
-    }
-
-    public static PsiTodoSearchHelper getInstance(Project project) {
-      return ServiceManager.getService(project, PsiTodoSearchHelper.class);
-    }
-  }
-
+@ProjectService
+public abstract class PsiTodoSearchHelper {
   /**
    * Returns the list of all files in the project which have to do items.
    *
    * @return the list of files with to do items.
    */
   @NotNull
-  PsiFile[] findFilesWithTodoItems();
+  public abstract PsiFile[] findFilesWithTodoItems();
 
   /**
    * Searches the specified file for to do items.
@@ -50,7 +41,7 @@ public interface PsiTodoSearchHelper {
    * @return the array of found items.
    */
   @NotNull
-  TodoItem[] findTodoItems(@NotNull PsiFile file);
+  public abstract TodoItem[] findTodoItems(@NotNull PsiFile file);
 
   /**
    * Searches the specified range of text in the specified file for to do items.
@@ -61,12 +52,12 @@ public interface PsiTodoSearchHelper {
    * @return the array of found items.
    */
   @NotNull
-  TodoItem[] findTodoItems(@NotNull PsiFile file, int startOffset, int endOffset);
+  public abstract TodoItem[] findTodoItems(@NotNull PsiFile file, int startOffset, int endOffset);
 
   @NotNull
-  TodoItem[] findTodoItemsLight(@NotNull PsiFile file);
+  public abstract TodoItem[] findTodoItemsLight(@NotNull PsiFile file);
   @NotNull
-  TodoItem[] findTodoItemsLight(@NotNull PsiFile file, int startOffset, int endOffset);
+  public abstract TodoItem[] findTodoItemsLight(@NotNull PsiFile file, int startOffset, int endOffset);
 
   /**
    * Returns the number of to do items in the specified file.
@@ -74,7 +65,7 @@ public interface PsiTodoSearchHelper {
    * @param file the file to return the to do count for.
    * @return the count of to do items in the file.
    */
-  int getTodoItemsCount(@NotNull PsiFile file);
+  public abstract int getTodoItemsCount(@NotNull PsiFile file);
 
   /**
    * Returns the number of to do items matching the specified pattern in the specified file.
@@ -83,5 +74,5 @@ public interface PsiTodoSearchHelper {
    * @param pattern the pattern of to do items to find.
    * @return the count of to do items in the file.
    */
-  int getTodoItemsCount(@NotNull PsiFile file, @NotNull TodoPattern pattern);
+  public abstract int getTodoItemsCount(@NotNull PsiFile file, @NotNull TodoPattern pattern);
 }
