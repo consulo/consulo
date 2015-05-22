@@ -29,8 +29,13 @@ import com.intellij.openapi.module.impl.ModuleEx;
 import com.intellij.openapi.project.DumbModeTask;
 import com.intellij.openapi.project.DumbServiceImpl;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTable;
+import com.intellij.openapi.projectRoots.SdkTableListener;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
@@ -44,10 +49,13 @@ import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -62,17 +70,19 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
   private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new THashSet<LocalFileSystem.WatchRequest>();
   private final boolean myDoLogCachesUpdate;
 
-  public ProjectRootManagerComponent(Project project, DirectoryIndex directoryIndex, StartupManager startupManager) {
+  public ProjectRootManagerComponent(Project project, StartupManager startupManager) {
     super(project);
 
     myConnection = project.getMessageBus().connect(project);
     myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
       @Override
+      @RequiredWriteAction
       public void beforeFileTypesChanged(@NotNull FileTypeEvent event) {
         beforeRootsChange(true);
       }
 
       @Override
+      @RequiredWriteAction
       public void fileTypesChanged(@NotNull FileTypeEvent event) {
         rootsChanged(true);
       }
@@ -100,12 +110,63 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
       }
 
       @Override
+      @RequiredWriteAction
       public void onBatchUpdateFinished() {
         myRootsChanged.levelDown();
         myFileTypesChanged.levelDown();
       }
     };
 
+    myConnection.subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTableListener() {
+      private Map<ModuleExtensionWithSdkOrderEntry, Sdk> myMap = new HashMap<ModuleExtensionWithSdkOrderEntry, Sdk>();
+
+      @Override
+      public void beforeSdkAdded(@NotNull Sdk sdk) {
+        beforeSdkChanged();
+      }
+
+      @Override
+      public void sdkAdded(@NotNull Sdk sdk) {
+        afterSdkChanged();
+      }
+
+      @Override
+      public void beforeSdkRemoved(@NotNull Sdk sdk) {
+        beforeSdkChanged();
+      }
+
+      @Override
+      public void sdkRemoved(@NotNull Sdk sdk) {
+        afterSdkChanged();
+      }
+
+      @Override
+      public void beforeSdkNameChanged(@NotNull Sdk sdk, @NotNull String previousName) {
+        beforeSdkChanged();
+      }
+
+      @Override
+      public void sdkNameChanged(@NotNull Sdk sdk, @NotNull String previousName) {
+        afterSdkChanged();
+      }
+
+      private void beforeSdkChanged() {
+        for (ModuleExtensionWithSdkOrderEntry orderEntry : myModuleExtensionWithSdkOrderEntries) {
+          myMap.put(orderEntry, orderEntry.getSdk());
+        }
+      }
+
+      private void afterSdkChanged() {
+        for (ModuleExtensionWithSdkOrderEntry orderEntry : myModuleExtensionWithSdkOrderEntries) {
+          Sdk sdk = orderEntry.getSdk();
+
+          Sdk oldSdk = myMap.get(orderEntry);
+          if(!Comparing.equal(sdk, oldSdk)) {
+            makeRootsChange(EmptyRunnable.INSTANCE, false, true);
+          }
+        }
+      }
+    });
     myConnection.subscribe(VirtualFilePointerListener.TOPIC, new MyVirtualFilePointerListener());
     myDoLogCachesUpdate = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();
   }
@@ -137,11 +198,13 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
     myRootsToWatch = LocalFileSystem.getInstance().replaceWatchedRoots(myRootsToWatch, roots.first, roots.second);
   }
 
+  @RequiredWriteAction
   private void beforeRootsChange(boolean fileTypes) {
     if (myProject.isDisposed()) return;
     getBatchSession(fileTypes).beforeRootsChanged();
   }
 
+  @RequiredWriteAction
   private void rootsChanged(boolean fileTypes) {
     getBatchSession(fileTypes).rootsChanged();
   }
@@ -261,7 +324,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
         }
         else {
           IVirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocol);
-          if(fileSystem instanceof ArchiveFileSystem) {
+          if (fileSystem instanceof ArchiveFileSystem) {
             flat.add(extractLocalPath(url));
           }
         }

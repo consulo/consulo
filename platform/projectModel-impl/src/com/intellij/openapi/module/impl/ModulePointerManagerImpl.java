@@ -27,6 +27,7 @@ import org.consulo.util.pointers.NamedPointerImpl;
 import org.consulo.util.pointers.NamedPointerManagerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.List;
 
@@ -72,6 +73,7 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
 
   @Nullable
   @Override
+  @RequiredReadAction
   public Module findByName(@NotNull String name) {
     return ModuleManager.getInstance(myProject).findModuleByName(name);
   }

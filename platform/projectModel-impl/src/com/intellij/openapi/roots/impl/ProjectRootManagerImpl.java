@@ -40,6 +40,7 @@ import com.intellij.util.containers.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.*;
@@ -58,6 +59,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   private final OrderRootsCache myRootsCache;
 
   private final Map<RootProvider, Set<OrderEntry>> myRegisteredRootProviders = new HashMap<RootProvider, Set<OrderEntry>>();
+  protected final List<ModuleExtensionWithSdkOrderEntry> myModuleExtensionWithSdkOrderEntries = ContainerUtil.newArrayList();
   protected boolean myStartupActivityPerformed = false;
   private final RootProviderChangeListener myRootProviderChangeListener = new RootProviderChangeListener();
 
@@ -78,6 +80,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
       myBatchLevel += 1;
     }
 
+    @RequiredWriteAction
     protected void levelDown() {
       myBatchLevel -= 1;
       if (myChanged && myBatchLevel == 0) {
@@ -90,10 +93,12 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
       }
     }
 
+    @RequiredWriteAction
     private boolean fireChange() {
       return fireRootsChanged(myFileTypes);
     }
 
+    @RequiredWriteAction
     protected void beforeRootsChanged() {
       if (myBatchLevel == 0 || !myChanged) {
         if (fireBeforeRootsChanged(myFileTypes)) {
@@ -102,6 +107,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
       }
     }
 
+    @RequiredWriteAction
     protected void rootsChanged() {
       if (myBatchLevel == 0) {
         if (fireChange()) {
@@ -292,6 +298,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   protected boolean isFiringEvent = false;
 
+  @RequiredWriteAction
   private boolean fireBeforeRootsChanged(boolean filetypes) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
@@ -316,6 +323,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   protected void fireBeforeRootsChangeEvent(boolean filetypes) {
   }
 
+  @RequiredWriteAction
   private boolean fireRootsChanged(boolean filetypes) {
     if (myProject.isDisposed()) return false;
 
@@ -401,6 +409,14 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
       multilistener = new LibraryTableMultilistener(libraryTable);
     }
     multilistener.addListener(libraryListener);
+  }
+
+  void addModuleExtensionWithSdkOrderEntry(@NotNull ModuleExtensionWithSdkOrderEntry orderEntry) {
+    myModuleExtensionWithSdkOrderEntries.add(orderEntry);
+  }
+
+  void removeModuleExtensionWithSdkOrderEntry(@NotNull ModuleExtensionWithSdkOrderEntry orderEntry) {
+    myModuleExtensionWithSdkOrderEntries.remove(orderEntry);
   }
 
   void removeListenerForTable(LibraryTable.Listener libraryListener,

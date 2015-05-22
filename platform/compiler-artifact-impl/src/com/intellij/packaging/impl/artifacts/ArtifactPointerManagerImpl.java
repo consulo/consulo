@@ -45,7 +45,7 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
 
       @Override
       public void artifactChanged(@NotNull Artifact artifact, @NotNull String oldName) {
-        updatePointers(artifact);
+        updatePointers(artifact, oldName);
       }
     });
   }

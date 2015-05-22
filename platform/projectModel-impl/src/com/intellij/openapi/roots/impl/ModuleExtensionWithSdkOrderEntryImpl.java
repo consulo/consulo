@@ -43,6 +43,8 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     myModuleExtensionId = moduleExtensionId;
     if (init) {
       init();
+
+      myProjectRootManagerImpl.addModuleExtensionWithSdkOrderEntry(this);
     }
   }
 
@@ -104,6 +106,13 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     }
 
     return builder.toString();
+  }
+
+  @Override
+  public void dispose() {
+    super.dispose();
+
+    myProjectRootManagerImpl.removeModuleExtensionWithSdkOrderEntry(this);
   }
 
   @Override

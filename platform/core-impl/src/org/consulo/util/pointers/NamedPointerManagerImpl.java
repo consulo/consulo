@@ -36,7 +36,11 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   public abstract T findByName(@NotNull String name);
 
   protected void updatePointers(T value) {
-    NamedPointerImpl<T> pointer = myUnresolved.remove(value.getName());
+    updatePointers(value, value.getName());
+  }
+
+  protected void updatePointers(T value, @NotNull String name) {
+    NamedPointerImpl<T> pointer = myUnresolved.remove(name);
     if (pointer != null && pointer.get() == null) {
       pointer.setValue(value);
       registerPointer(value, pointer);

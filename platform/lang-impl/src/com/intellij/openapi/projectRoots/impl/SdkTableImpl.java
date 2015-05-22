@@ -157,6 +157,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @RequiredWriteAction
   public void addSdk(@NotNull Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
+    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).beforeSdkAdded(sdk);
     mySdks.add(sdk);
     myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkAdded(sdk);
   }
@@ -165,8 +166,9 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @RequiredWriteAction
   public void removeSdk(@NotNull Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(sdk);
+    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).beforeSdkRemoved(sdk);
     mySdks.remove(sdk);
+    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(sdk);
   }
 
   @Override
@@ -176,10 +178,14 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     final String previousName = originalSdk.getName();
     final String newName = modifiedSdk.getName();
 
+    boolean nameChanged = !previousName.equals(newName);
+    if(nameChanged) {
+      myMessageBus.syncPublisher(SDK_TABLE_TOPIC).beforeSdkNameChanged(originalSdk, previousName);
+    }
+
     ((SdkImpl)modifiedSdk).copyTo((SdkImpl)originalSdk);
 
-    if (!previousName.equals(newName)) {
-      // fire changes because after renaming ADK its name may match the associated sdk name of modules/project
+    if (nameChanged) {
       myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkNameChanged(originalSdk, previousName);
     }
   }

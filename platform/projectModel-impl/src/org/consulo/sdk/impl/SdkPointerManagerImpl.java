@@ -18,6 +18,7 @@ package org.consulo.sdk.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTableListener;
 import org.consulo.sdk.SdkPointerManager;
 import org.consulo.util.pointers.NamedPointerManagerImpl;
 import org.jetbrains.annotations.NotNull;
@@ -29,20 +30,20 @@ import org.jetbrains.annotations.Nullable;
  */
 public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implements SdkPointerManager {
   public SdkPointerManagerImpl() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTable.Listener() {
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTableListener.Adapter() {
       @Override
-      public void sdkAdded(Sdk sdk) {
+      public void sdkAdded(@NotNull Sdk sdk) {
         updatePointers(sdk);
       }
 
       @Override
-      public void sdkRemoved(Sdk sdk) {
+      public void sdkRemoved(@NotNull Sdk sdk) {
         unregisterPointer(sdk);
       }
 
       @Override
-      public void sdkNameChanged(Sdk sdk, String previousName) {
-        updatePointers(sdk);
+      public void sdkNameChanged(@NotNull Sdk sdk, @NotNull String previousName) {
+        updatePointers(sdk, previousName);
       }
     });
   }

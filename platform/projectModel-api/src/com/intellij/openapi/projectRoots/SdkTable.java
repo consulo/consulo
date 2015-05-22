@@ -24,20 +24,11 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.RequiredWriteAction;
 
-import java.util.EventListener;
 import java.util.List;
 
 @ApplicationService
 public abstract class SdkTable {
-  public static Topic<Listener> SDK_TABLE_TOPIC = Topic.create("Sdk table", Listener.class);
-
-  public interface Listener extends EventListener {
-    void sdkAdded(Sdk sdk);
-
-    void sdkRemoved(Sdk sdk);
-
-    void sdkNameChanged(Sdk sdk, String previousName);
-  }
+  public static Topic<SdkTableListener> SDK_TABLE_TOPIC = Topic.create("Sdk table", SdkTableListener.class);
 
   @Nullable
   public abstract Sdk findSdk(String name);
