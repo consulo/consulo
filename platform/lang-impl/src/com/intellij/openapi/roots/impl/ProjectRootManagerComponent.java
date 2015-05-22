@@ -157,14 +157,15 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
       }
 
       private void afterSdkChanged() {
-        for (ModuleExtensionWithSdkOrderEntry orderEntry : myModuleExtensionWithSdkOrderEntries) {
-          Sdk sdk = orderEntry.getSdk();
-
-          Sdk oldSdk = myMap.get(orderEntry);
-          if(!Comparing.equal(sdk, oldSdk)) {
+        for (Map.Entry<ModuleExtensionWithSdkOrderEntry, Sdk> entry : myMap.entrySet()) {
+          ModuleExtensionWithSdkOrderEntry key = entry.getKey();
+          Sdk oldSdk = entry.getValue();
+          Sdk currentSdk = key.getSdk();
+          if(!Comparing.equal(currentSdk, oldSdk)) {
             makeRootsChange(EmptyRunnable.INSTANCE, false, true);
           }
         }
+        myMap.clear();
       }
     });
     myConnection.subscribe(VirtualFilePointerListener.TOPIC, new MyVirtualFilePointerListener());
