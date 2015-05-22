@@ -539,7 +539,6 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
   }
 
   public void testManyPointersUpdatePerformance() throws IOException {
-    FilePointerPartNode.pushDebug(false, disposable);
     LoggingListener listener = new LoggingListener();
     final List<VFileEvent> events = new ArrayList<VFileEvent>();
     final File ioTempDir = createTempDirectory();
@@ -560,7 +559,6 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     }).assertTiming();
   }
   public void testMultipleCreationOfTheSamePointerPerformance() throws IOException {
-    FilePointerPartNode.pushDebug(false, disposable);
     final LoggingListener listener = new LoggingListener();
     final VirtualFilePointer thePointer = myVirtualFilePointerManager.create(VfsUtilCore.pathToUrl("/a/b/c/d/e"), disposable, listener);
     TempFileSystem.getInstance();

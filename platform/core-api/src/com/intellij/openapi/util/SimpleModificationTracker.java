@@ -16,18 +16,21 @@
 package com.intellij.openapi.util;
 
 import com.intellij.Patches;
+import com.intellij.util.xmlb.annotations.Transient;
 
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 /**
  * Created by Max Medvedev on 28/03/14
  */
+@Transient
 public class SimpleModificationTracker implements ModificationTracker {
   static {
     // field made public to workaround bug in JDK7 when AtomicIntegerFieldUpdater can't be created for private field, even from within its own class
     // fixed in JDK8
     assert Patches.JDK_BUG_ID_7103570;
   }
+
   public volatile int myCounter;
 
   @Override

@@ -18,6 +18,7 @@ package com.intellij.openapi.vfs;
 import org.jetbrains.annotations.NonNls;
 import org.mustbe.consulo.DeprecationInfo;
 
+@Deprecated
 public interface JarFileSystem extends ArchiveFileSystem {
   @NonNls
   String PROTOCOL = "jar";
