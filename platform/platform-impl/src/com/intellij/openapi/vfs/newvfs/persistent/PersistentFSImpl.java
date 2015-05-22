@@ -43,6 +43,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.io.*;
 import java.util.*;
@@ -674,6 +675,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     processEvent(new VFileMoveEvent(requestor, file, newParent));
   }
 
+  @RequiredWriteAction
   private void processEvent(@NotNull VFileEvent event) {
     processEvents(Collections.singletonList(event));
   }
@@ -742,6 +744,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     return filtered;
   }
 
+  @RequiredWriteAction
   @Override
   public void processEvents(@NotNull List<VFileEvent> events) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
@@ -875,13 +878,13 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
     VfsData.Segment segment = VfsData.getSegment(rootId, true);
     VfsData.DirectoryData directoryData = new VfsData.DirectoryData();
-    if (fs instanceof JarFileSystem) {
-      String parentPath = basePath.substring(0, basePath.indexOf(JarFileSystem.JAR_SEPARATOR));
+    if (fs instanceof ArchiveFileSystem) {
+      String parentPath = basePath.substring(0, basePath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR));
       VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(parentPath);
       if (parentFile == null) return null;
       FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(parentFile.getName());
       if (!(type instanceof ArchiveFileType)) return null;
-      newRoot = new JarRoot(fs, rootId, segment, directoryData, parentFile);
+      newRoot = new ArchiveRoot(fs, rootId, segment, directoryData, parentFile);
     }
     else {
       newRoot = new FsRoot(fs, rootId, segment, directoryData, basePath);
@@ -1310,11 +1313,11 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     }
   }
 
-  private static class JarRoot extends AbstractRoot {
+  private static class ArchiveRoot extends AbstractRoot {
     private final VirtualFile myParentLocalFile;
     private final String myParentPath;
 
-    private JarRoot(@NotNull NewVirtualFileSystem fs, int id, VfsData.Segment segment, VfsData.DirectoryData data, VirtualFile parentLocalFile) {
+    private ArchiveRoot(@NotNull NewVirtualFileSystem fs, int id, VfsData.Segment segment, VfsData.DirectoryData data, VirtualFile parentLocalFile) {
       super(id, segment, data, fs);
       myParentLocalFile = parentLocalFile;
       myParentPath = myParentLocalFile.getPath();
@@ -1328,9 +1331,9 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
     @Override
     protected char[] appendPathOnFileSystem(int accumulatedPathLength, int[] positionRef) {
-      char[] chars = new char[myParentPath.length() + JarFileSystem.JAR_SEPARATOR.length() + accumulatedPathLength];
+      char[] chars = new char[myParentPath.length() + ArchiveFileSystem.ARCHIVE_SEPARATOR.length() + accumulatedPathLength];
       positionRef[0] = copyString(chars, positionRef[0], myParentPath);
-      positionRef[0] = copyString(chars, positionRef[0], JarFileSystem.JAR_SEPARATOR);
+      positionRef[0] = copyString(chars, positionRef[0], ArchiveFileSystem.ARCHIVE_SEPARATOR);
       return chars;
     }
   }

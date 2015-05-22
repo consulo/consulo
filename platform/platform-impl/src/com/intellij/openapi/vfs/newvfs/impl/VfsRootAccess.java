@@ -136,7 +136,7 @@ public class VfsRootAccess {
         allowed.add(root.getPath());
       }
       for (VirtualFile root : getAllRoots(project)) {
-        allowed.add(StringUtil.trimEnd(root.getPath(), JarFileSystem.JAR_SEPARATOR));
+        allowed.add(StringUtil.trimEnd(root.getPath(), ArchiveFileSystem.ARCHIVE_SEPARATOR));
       }
       String location = project.getBasePath();
       assert location != null : project;

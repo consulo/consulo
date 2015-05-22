@@ -28,6 +28,7 @@ import com.intellij.util.PathUtil;
 import org.consulo.compiler.server.fileSystem.archive.ArchiveNewVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.io.*;
 import java.util.List;
@@ -218,6 +219,7 @@ public class CompilerServerManagingFSImpl extends PersistentFS {
     throw new UnsupportedOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public void processEvents(@NotNull List<VFileEvent> events) {
     throw new UnsupportedOperationException();

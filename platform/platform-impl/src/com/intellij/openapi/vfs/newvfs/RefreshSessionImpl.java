@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.newvfs.persistent.RefreshWorker;
 import com.intellij.util.concurrency.Semaphore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -180,6 +181,7 @@ public class RefreshSessionImpl extends RefreshSession {
     }
   }
 
+  @RequiredWriteAction
   protected void fireEventsInWriteAction() {
     final VirtualFileManagerEx manager = (VirtualFileManagerEx)VirtualFileManager.getInstance();
 

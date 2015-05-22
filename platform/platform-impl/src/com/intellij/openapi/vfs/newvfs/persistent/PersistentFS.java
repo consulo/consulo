@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.io.IOException;
 import java.util.List;
@@ -94,6 +95,7 @@ public abstract class PersistentFS extends ManagingFS {
 
   public abstract int getCurrentContentId(@NotNull VirtualFile file);
 
+  @RequiredWriteAction
   public abstract void processEvents(@NotNull List<VFileEvent> events);
 
   @NotNull
