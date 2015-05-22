@@ -30,9 +30,11 @@ public interface ModuleExtensionWithSdkOrderEntry extends SdkOrderEntry, OrderEn
   @Nullable
   ModuleExtensionWithSdk<?> getModuleExtension();
 
+  @Override
   @Nullable
   Sdk getSdk();
 
+  @Override
   @Nullable
   String getSdkName();
 }
