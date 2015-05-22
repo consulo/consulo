@@ -15,38 +15,28 @@
  */
 package com.intellij.psi.impl.cache;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
+import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
-public interface TodoCacheManager {
-  class SERVICE {
-    private SERVICE() {
-    }
-
-    public static TodoCacheManager getInstance(Project project) {
-      return ServiceManager.getService(project, TodoCacheManager.class);
-    }
-  }
-
-
+@ProjectService
+public abstract class TodoCacheManager {
   /**
-   * @return all VirtualFile's that contain todo-items under project roots
+   * @return all files that contains todoitems under project
    */
   @NotNull
-  PsiFile[] getFilesWithTodoItems();
+  public abstract PsiFile[] getFilesWithTodoItems();
 
   /**
    * @return -1 if it's not known
    */
-  int getTodoCount(@NotNull VirtualFile file, IndexPatternProvider patternProvider);
+  public abstract int getTodoCount(@NotNull VirtualFile file, IndexPatternProvider patternProvider);
 
   /**
    * @return -1 if it's not known
    */
-  int getTodoCount(@NotNull VirtualFile file, IndexPattern pattern);
+  public abstract int getTodoCount(@NotNull VirtualFile file, IndexPattern pattern);
 }

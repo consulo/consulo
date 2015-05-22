@@ -48,7 +48,7 @@ public class PsiTodoSearchHelperImpl implements PsiTodoSearchHelper {
   @Override
   @NotNull
   public PsiFile[] findFilesWithTodoItems() {
-    return TodoCacheManager.SERVICE.getInstance(myManager.getProject()).getFilesWithTodoItems();
+    return TodoCacheManager.getInstance(myManager.getProject()).getFilesWithTodoItems();
   }
 
   @Override
@@ -103,14 +103,14 @@ public class PsiTodoSearchHelperImpl implements PsiTodoSearchHelper {
 
   @Override
   public int getTodoItemsCount(@NotNull PsiFile file) {
-    int count = TodoCacheManager.SERVICE.getInstance(myManager.getProject()).getTodoCount(file.getVirtualFile(), TodoIndexPatternProvider.getInstance());
+    int count = TodoCacheManager.getInstance(myManager.getProject()).getTodoCount(file.getVirtualFile(), TodoIndexPatternProvider.getInstance());
     if (count != -1) return count;
     return findTodoItems(file).length;
   }
 
   @Override
   public int getTodoItemsCount(@NotNull PsiFile file, @NotNull TodoPattern pattern) {
-    int count = TodoCacheManager.SERVICE.getInstance(myManager.getProject()).getTodoCount(file.getVirtualFile(), pattern.getIndexPattern());
+    int count = TodoCacheManager.getInstance(myManager.getProject()).getTodoCount(file.getVirtualFile(), pattern.getIndexPattern());
     if (count != -1) return count;
     TodoItem[] items = findTodoItems(file);
     count = 0;

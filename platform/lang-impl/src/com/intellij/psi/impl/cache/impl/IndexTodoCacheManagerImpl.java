@@ -18,7 +18,6 @@ package com.intellij.psi.impl.cache.impl;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -44,8 +43,7 @@ import java.util.Set;
  * @author Eugene Zhuravlev
  *         Date: Jan 16, 2008
  */
-public class IndexTodoCacheManagerImpl implements TodoCacheManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.cache.impl.IndexTodoCacheManagerImpl");
+public class IndexTodoCacheManagerImpl extends TodoCacheManager {
   private final Project myProject;
   private final PsiManager myPsiManager;
 

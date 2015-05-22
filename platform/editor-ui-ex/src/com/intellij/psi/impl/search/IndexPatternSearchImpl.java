@@ -33,14 +33,14 @@ public class IndexPatternSearchImpl extends IndexPatternSearch {
 
   @Override
   protected int getOccurrencesCountImpl(@NotNull PsiFile file, @NotNull IndexPatternProvider provider) {
-    int count = TodoCacheManager.SERVICE.getInstance(file.getProject()).getTodoCount(file.getVirtualFile(), provider);
+    int count = TodoCacheManager.getInstance(file.getProject()).getTodoCount(file.getVirtualFile(), provider);
     if (count != -1) return count;
     return search(file, provider).findAll().size();
   }
 
   @Override
   protected int getOccurrencesCountImpl(@NotNull PsiFile file, @NotNull IndexPattern pattern) {
-    int count = TodoCacheManager.SERVICE.getInstance(file.getProject()).getTodoCount(file.getVirtualFile(), pattern);
+    int count = TodoCacheManager.getInstance(file.getProject()).getTodoCount(file.getVirtualFile(), pattern);
     if (count != -1) return count;
     return search(file, pattern).findAll().size();
   }

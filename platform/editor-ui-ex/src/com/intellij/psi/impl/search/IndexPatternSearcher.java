@@ -61,7 +61,7 @@ public class IndexPatternSearcher implements QueryExecutor<IndexPatternOccurrenc
       return true;
     }
 
-    final TodoCacheManager cacheManager = TodoCacheManager.SERVICE.getInstance(file.getProject());
+    final TodoCacheManager cacheManager = TodoCacheManager.getInstance(file.getProject());
     final IndexPatternProvider patternProvider = queryParameters.getPatternProvider();
     int count = patternProvider != null
                 ? cacheManager.getTodoCount(virtualFile, patternProvider)
