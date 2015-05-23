@@ -44,11 +44,6 @@ public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
     }
 
     @Override
-    public boolean isShowNotification() {
-        return false;
-    }
-
-    @Override
     public long getLastTimeSent() {
         return mySentTime;
     }
@@ -57,6 +52,7 @@ public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
         mySentTime = time;
     }
 
+    @Override
     public void persistPatch(@NotNull Map<GroupDescriptor, Set<PatchedUsage>> patchedDescriptorMap) {
         for (Map.Entry<GroupDescriptor, Set<PatchedUsage>> entry : patchedDescriptorMap.entrySet()) {
             final GroupDescriptor groupDescriptor = entry.getKey();
@@ -77,6 +73,7 @@ public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
     }
 
 
+    @Override
     @NotNull
     public Map<GroupDescriptor, Set<UsageDescriptor>> getSentUsages () {
         return mySentDescriptors;

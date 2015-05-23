@@ -21,9 +21,9 @@ import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.internal.statistic.configurable.SendPeriod;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.SandboxUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -44,8 +44,7 @@ import java.util.Set;
 public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersistenceComponent
   implements ApplicationComponent, PersistentStateComponent<Element> {
 
-  @NonNls private boolean isAllowed = false;
-  @NonNls private boolean isShowNotification = true;
+  @NonNls private boolean myAllowed = true;
   @NotNull private SendPeriod myPeriod = SendPeriod.WEEKLY;
 
   @NonNls private static final String DATA_ATTR = "data";
@@ -56,22 +55,22 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
   @NonNls private static final String LAST_TIME_ATTR = "time";
   @NonNls private static final String IS_ALLOWED_ATTR = "allowed";
   @NonNls private static final String PERIOD_ATTR = "period";
-  @NonNls private static final String SHOW_NOTIFICATION_ATTR = "show-notification";
 
+  public UsageStatisticsPersistenceComponent() {
+    if(SandboxUtil.isInsideSandbox() || ApplicationManager.getApplication().isInternal()) {
+      myAllowed = false;
+    }
+  }
+
+  @NotNull
   public static UsageStatisticsPersistenceComponent getInstance() {
     return ApplicationManager.getApplication().getComponent(UsageStatisticsPersistenceComponent.class);
   }
 
-  public UsageStatisticsPersistenceComponent() {
-    if (ApplicationManagerEx.getApplicationEx().isInternal()) {
-      isShowNotification = false;
-    }
-  }
-
+  @Override
   public void loadState(final Element element) {
-    List groupsList = element.getChildren(GROUP_TAG);
-    for (Object project : groupsList) {
-      Element groupElement = (Element)project;
+    List<Element> groupsList = element.getChildren(GROUP_TAG);
+    for (Element groupElement : groupsList) {
       String groupId = groupElement.getAttributeValue(GROUP_ID_ATTR);
       double groupPriority = getPriority(groupElement.getAttributeValue(GROUP_PRIORITY_ATTR));
 
@@ -93,14 +92,11 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
     }
 
     final String isAllowedValue = element.getAttributeValue(IS_ALLOWED_ATTR);
-    setAllowed(StringUtil.isEmptyOrSpaces(isAllowedValue) ? false : Boolean.parseBoolean(isAllowedValue));
-
-    final String isShowNotificationValue = element.getAttributeValue(SHOW_NOTIFICATION_ATTR);
-    setShowNotification(StringUtil.isEmptyOrSpaces(isShowNotificationValue) ? true : Boolean.parseBoolean(isShowNotificationValue));
-
+    setAllowed(!StringUtil.isEmptyOrSpaces(isAllowedValue) && Boolean.parseBoolean(isAllowedValue));
     setPeriod(parsePeriod(element.getAttributeValue(PERIOD_ATTR)));
   }
 
+  @Override
   public Element getState() {
     Element element = new Element("state");
 
@@ -116,7 +112,6 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
 
     element.setAttribute(LAST_TIME_ATTR, String.valueOf(getLastTimeSent()));
     element.setAttribute(IS_ALLOWED_ATTR, String.valueOf(isAllowed()));
-    element.setAttribute(SHOW_NOTIFICATION_ATTR, String.valueOf(isShowNotification()));
     element.setAttribute(PERIOD_ATTR, myPeriod.getName());
 
     return element;
@@ -140,21 +135,12 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
   }
 
   public void setAllowed(boolean allowed) {
-    isAllowed = allowed;
+    myAllowed = allowed;
   }
 
   @Override
   public boolean isAllowed() {
-    return isAllowed;
-  }
-
-  public void setShowNotification(boolean showNotification) {
-    isShowNotification = showNotification;
-  }
-
-  @Override
-  public boolean isShowNotification() {
-    return isShowNotification;
+    return myAllowed;
   }
 
   private static double getPriority(String priority) {
@@ -163,6 +149,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
     return Double.parseDouble(priority);
   }
 
+  @Override
   @NonNls
   @NotNull
   public String getComponentName() {
@@ -173,6 +160,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
   public void initComponent() {
   }
 
+  @Override
   public void disposeComponent() {
   }
 }

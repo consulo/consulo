@@ -15,34 +15,28 @@
  */
 package com.intellij.internal.statistic.updater;
 
+import com.intellij.featureStatistics.FeatureUsageTracker;
+import com.intellij.featureStatistics.FeatureUsageTrackerImpl;
 import com.intellij.internal.statistic.StatisticsUploadAssistant;
 import com.intellij.internal.statistic.connect.StatisticsService;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationsConfiguration;
-import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.util.Alarm;
+import com.intellij.util.Time;
 import org.jetbrains.annotations.NotNull;
 
 public class SendStatisticsProjectComponent implements ProjectComponent {
   private static final int DELAY_IN_MIN = 10;
 
   private Project myProject;
-  private Alarm   myAlarm;
+  private Alarm myAlarm;
 
   public SendStatisticsProjectComponent(Project project) {
     myProject = project;
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, myProject);
-
-    NotificationsConfigurationImpl.remove("SendUsagesStatistics");
-    NotificationsConfiguration.getNotificationsConfiguration().register(
-            StatisticsNotificationManager.GROUP_DISPLAY_ID,
-            NotificationDisplayType.STICKY_BALLOON,
-            false);
   }
 
   @Override
@@ -60,10 +54,11 @@ public class SendStatisticsProjectComponent implements ProjectComponent {
   private void runStatisticsService() {
     StatisticsService statisticsService = StatisticsUploadAssistant.getStatisticsService();
 
-    if (StatisticsUploadAssistant.showNotification()) {
-      StatisticsNotificationManager.showNotification(statisticsService, myProject);
+    if (System.currentTimeMillis() - Time.DAY > ((FeatureUsageTrackerImpl)FeatureUsageTracker.getInstance()).getFirstRunTime()) {
+      return;
     }
-    else if (StatisticsUploadAssistant.isSendAllowed() && StatisticsUploadAssistant.isTimeToSend()) {
+
+    if (StatisticsUploadAssistant.isSendAllowed() && StatisticsUploadAssistant.isTimeToSend()) {
       runWithDelay(statisticsService);
     }
   }

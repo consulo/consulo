@@ -33,9 +33,5 @@ public abstract class SentUsagesPersistence {
 
   public abstract boolean isAllowed();
 
-  public abstract boolean isShowNotification();
-
   public abstract long getLastTimeSent();
-
-
 }

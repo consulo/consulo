@@ -26,56 +26,47 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public class StatisticsConfigurable implements SearchableConfigurable {
+  private StatisticsConfigurationComponent myConfig;
 
-    private boolean modifiedByDefault;
-
-    public StatisticsConfigurable() {
-        this(false);
-    }
-
-    public StatisticsConfigurable(boolean isModifiedByDefault) {
-        modifiedByDefault = isModifiedByDefault;
-    }
-
-
-    private StatisticsConfigurationComponent myConfig;
-
+  @Override
   @Nls
   public String getDisplayName() {
     return "Usage Statistics";
   }
 
+  @Override
   @Nullable
   @NonNls
   public String getHelpTopic() {
     return "preferences.usage.statictics";
   }
 
+  @Override
   public JComponent createComponent() {
     myConfig = new StatisticsConfigurationComponent();
     return myConfig.getJComponent();
   }
 
+  @Override
   public boolean isModified() {
     final UsageStatisticsPersistenceComponent persistenceComponent = UsageStatisticsPersistenceComponent.getInstance();
-    return myConfig.isAllowed() != persistenceComponent.isAllowed() ||
-           myConfig.getPeriod() != persistenceComponent.getPeriod() ||
-           modifiedByDefault;
+    return myConfig.isAllowed() != persistenceComponent.isAllowed() || myConfig.getPeriod() != persistenceComponent.getPeriod();
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     final UsageStatisticsPersistenceComponent persistenceComponent = UsageStatisticsPersistenceComponent.getInstance();
 
     persistenceComponent.setPeriod(myConfig.getPeriod());
     persistenceComponent.setAllowed(myConfig.isAllowed());
-    persistenceComponent.setShowNotification(false);
-    modifiedByDefault = false;
   }
 
+  @Override
   public void reset() {
     myConfig.reset();
   }
 
+  @Override
   public void disposeUIResources() {
     myConfig = null;
   }
