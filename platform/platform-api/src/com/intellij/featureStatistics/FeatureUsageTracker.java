@@ -24,8 +24,6 @@ import org.jetbrains.annotations.NonNls;
  * Date: Jan 28, 2005
  */
 public abstract class FeatureUsageTracker {
-  public boolean SHOW_IN_COMPILATION_PROGRESS = true;
-  public boolean SHOW_IN_OTHER_PROGRESS = true;
 
   public static FeatureUsageTracker getInstance() {
     return ServiceManager.getService(FeatureUsageTracker.class);

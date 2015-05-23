@@ -44,8 +44,6 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
   private final ProductivityFeaturesRegistry myRegistry;
 
   @NonNls private static final String FEATURE_TAG = "feature";
-  @NonNls private static final String ATT_SHOW_IN_OTHER = "show-in-other";
-  @NonNls private static final String ATT_SHOW_IN_COMPILATION = "show-in-compilation";
   @NonNls private static final String ATT_ID = "id";
   @NonNls private static final String ATT_FIRST_RUN = "first-run";
   @NonNls private static final String COMPLETION_STATS_TAG = "completionStatsTag";
@@ -56,6 +54,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
     myRegistry = productivityFeaturesRegistry;
   }
 
+  @Override
   public boolean isToBeShown(String featureId, Project project) {
     return isToBeShown(featureId, project, DAY);
   }
@@ -114,6 +113,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
     return FIRST_RUN_TIME;
   }
 
+  @Override
   public void loadState(final Element element) {
     List featuresList = element.getChildren(FEATURE_TAG);
     for (Object aFeaturesList : featuresList) {
@@ -142,11 +142,10 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
       myFixesStats = XmlSerializer.deserialize(fStats, CumulativeStatistics.class);
     }
 
-    HAVE_BEEN_SHOWN = Boolean.valueOf(element.getAttributeValue(ATT_HAVE_BEEN_SHOWN)).booleanValue();
-    SHOW_IN_OTHER_PROGRESS = Boolean.valueOf(element.getAttributeValue(ATT_SHOW_IN_OTHER, Boolean.toString(true))).booleanValue();
-    SHOW_IN_COMPILATION_PROGRESS = Boolean.valueOf(element.getAttributeValue(ATT_SHOW_IN_COMPILATION, Boolean.toString(true))).booleanValue();
+    HAVE_BEEN_SHOWN = Boolean.valueOf(element.getAttributeValue(ATT_HAVE_BEEN_SHOWN));
   }
 
+  @Override
   public Element getState() {
     Element element = new Element("state");
     ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
@@ -169,12 +168,11 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
 
     element.setAttribute(ATT_FIRST_RUN, String.valueOf(getFirstRunTime()));
     element.setAttribute(ATT_HAVE_BEEN_SHOWN, String.valueOf(HAVE_BEEN_SHOWN));
-    element.setAttribute(ATT_SHOW_IN_OTHER, String.valueOf(SHOW_IN_OTHER_PROGRESS));
-    element.setAttribute(ATT_SHOW_IN_COMPILATION, String.valueOf(SHOW_IN_COMPILATION_PROGRESS));
 
     return element;
   }
 
+  @Override
   public void triggerFeatureUsed(String featureId) {
     ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
     FeatureDescriptor descriptor = registry.getFeatureDescriptor(featureId);
@@ -186,6 +184,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
     }
   }
 
+  @Override
   public void triggerFeatureShown(String featureId) {
     FeatureDescriptor descriptor = ProductivityFeaturesRegistry.getInstance().getFeatureDescriptor(featureId);
     if (descriptor != null) {
