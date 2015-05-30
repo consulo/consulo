@@ -34,10 +34,10 @@ import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.frame.XDebugView;
 import com.intellij.xdebugger.impl.frame.XVariablesView;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueTextRendererImpl;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +57,8 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   @Nullable
   @Override
   public Collection<LineExtensionInfo> getLineExtensions(@NotNull Project project, @NotNull VirtualFile file, int lineNumber) {
-    if (!EarlyAccessProgramManager.is(XDebuggerInlineEapDescriptor.class)) {
+    com.intellij.xdebugger.settings.XDebuggerSettingsManager debuggerSettingsManager = XDebuggerSettingsManager.getInstance();
+    if(!debuggerSettingsManager.getDataViewSettings().isShowVariablesInEditor()) {
       return null;
     }
 

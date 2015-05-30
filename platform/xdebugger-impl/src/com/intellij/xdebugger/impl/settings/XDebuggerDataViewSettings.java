@@ -26,6 +26,7 @@ public class XDebuggerDataViewSettings implements XDebuggerSettingsManager.DataV
   static final int DEFAULT_VALUE_TOOLTIP_DELAY = 700;
 
   private boolean mySortValues;
+  private boolean myShowVariablesInEditor = true;
 
   private boolean autoExpressions = true;
   private int valueLookupDelay = DEFAULT_VALUE_TOOLTIP_DELAY;
@@ -49,9 +50,19 @@ public class XDebuggerDataViewSettings implements XDebuggerSettingsManager.DataV
     valueLookupDelay = value;
   }
 
+  public void setShowVariablesInEditor(boolean showVariablesInEditor) {
+    myShowVariablesInEditor = showVariablesInEditor;
+  }
+
   @Override
   public boolean isAutoExpressions() {
     return autoExpressions;
+  }
+
+  @Override
+  @Tag("show-variables-in-editor")
+  public boolean isShowVariablesInEditor() {
+    return myShowVariablesInEditor;
   }
 
   public void setAutoExpressions(boolean autoExpressions) {

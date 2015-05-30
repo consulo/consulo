@@ -26,6 +26,7 @@ public class DataViewsConfigurableUi {
   private JFormattedTextField valueTooltipDelayTextField;
   private JPanel panel;
   private JCheckBox sortAlphabeticallyCheckBox;
+  private JCheckBox myShowVariablesInsideEditorCheckBox;
 
   public DataViewsConfigurableUi() {
     UIUtil.configureNumericFormattedTextField(valueTooltipDelayTextField);
@@ -44,18 +45,21 @@ public class DataViewsConfigurableUi {
   public boolean isModified(@NotNull XDebuggerDataViewSettings settings) {
     return getValueTooltipDelay() != settings.getValueLookupDelay() ||
            sortAlphabeticallyCheckBox.isSelected() != settings.isSortValues() ||
-           enableAutoExpressionsCheckBox.isSelected() != settings.isAutoExpressions();
+           enableAutoExpressionsCheckBox.isSelected() != settings.isAutoExpressions() ||
+           myShowVariablesInsideEditorCheckBox.isSelected() != settings.isShowVariablesInEditor();
   }
 
   public void reset(@NotNull XDebuggerDataViewSettings settings) {
     valueTooltipDelayTextField.setValue(settings.getValueLookupDelay());
     sortAlphabeticallyCheckBox.setSelected(settings.isSortValues());
     enableAutoExpressionsCheckBox.setSelected(settings.isAutoExpressions());
+    myShowVariablesInsideEditorCheckBox.setSelected(settings.isShowVariablesInEditor());
   }
 
   public void apply(@NotNull XDebuggerDataViewSettings settings) {
     settings.setValueLookupDelay(getValueTooltipDelay());
     settings.setSortValues(sortAlphabeticallyCheckBox.isSelected());
     settings.setAutoExpressions(enableAutoExpressionsCheckBox.isSelected());
+    settings.setShowVariablesInEditor(myShowVariablesInsideEditorCheckBox.isSelected());
   }
 }

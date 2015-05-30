@@ -22,11 +22,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SortedList;
 import com.intellij.xdebugger.evaluation.InlineDebuggerHelper;
 import com.intellij.xdebugger.frame.*;
-import com.intellij.xdebugger.impl.evaluate.XDebuggerInlineEapDescriptor;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,11 +78,12 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     invokeNodeUpdate(new Runnable() {
       @Override
       public void run() {
+        XDebuggerSettingsManager.DataViewSettings dataViewSettings = XDebuggerSettingsManager.getInstance().getDataViewSettings();
         List<XValueContainerNode<?>> newChildren;
         if (children.size() > 0) {
           newChildren = new ArrayList<XValueContainerNode<?>>(children.size());
           if (myValueChildren == null) {
-            if (!myAlreadySorted && XDebuggerSettingsManager.getInstance().getDataViewSettings().isSortValues()) {
+            if (!myAlreadySorted && dataViewSettings.isSortValues()) {
               myValueChildren = new SortedList<XValueNodeImpl>(XValueNodeImpl.COMPARATOR);
             }
             else {
@@ -97,7 +96,8 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
             myValueChildren.add(node);
             newChildren.add(node);
 
-            if (EarlyAccessProgramManager.is(XDebuggerInlineEapDescriptor.class) && inlineHelper.shouldEvaluateChildrenByDefault(node) && isUseGetChildrenHack(myTree)) { //todo[kb]: try to generify this dirty hack
+            //todo[kb]: try to generify this dirty hack
+            if (dataViewSettings.isShowVariablesInEditor() && inlineHelper.shouldEvaluateChildrenByDefault(node) && isUseGetChildrenHack(myTree)) {
               node.getChildren();
             }
           }

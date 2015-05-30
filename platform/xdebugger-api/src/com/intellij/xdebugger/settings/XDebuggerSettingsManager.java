@@ -15,18 +15,17 @@
  */
 package com.intellij.xdebugger.settings;
 
-import com.intellij.openapi.components.ServiceManager;
+import org.consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
+@ApplicationService
 public abstract class XDebuggerSettingsManager {
-  public static XDebuggerSettingsManager getInstance() {
-    return ServiceManager.getService(XDebuggerSettingsManager.class);
-  }
-
   public interface DataViewSettings {
     boolean isSortValues();
 
     boolean isAutoExpressions();
+
+    boolean isShowVariablesInEditor();
 
     int getValueLookupDelay();
   }

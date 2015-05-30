@@ -65,7 +65,6 @@
 
     <xdebugger.configurableProvider implementation="com.intellij.xdebugger.impl.settings.XDebuggerConfigurableProvider" order="first"/>
 
-    <eapDescriptor implementation="com.intellij.xdebugger.impl.evaluate.XDebuggerInlineEapDescriptor" />
     <eapDescriptor implementation="com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerWatchersInVariablesEapDescriptor" />
     <editor.linePainter implementation="com.intellij.xdebugger.impl.evaluate.XDebuggerEditorLinePainter" />
   </extensions>

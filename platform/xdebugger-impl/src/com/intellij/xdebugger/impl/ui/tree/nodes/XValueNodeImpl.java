@@ -29,16 +29,15 @@ import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.*;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
-import com.intellij.xdebugger.impl.evaluate.XDebuggerInlineEapDescriptor;
 import com.intellij.xdebugger.impl.frame.XDebugView;
 import com.intellij.xdebugger.impl.frame.XValueMarkers;
 import com.intellij.xdebugger.impl.frame.XVariablesView;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.ValueMarkup;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import gnu.trove.TObjectLongHashMap;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -128,7 +127,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue> implements XValu
     setIcon(icon);
     myValuePresentation = valuePresentation;
     myRawValue = XValuePresentationUtil.computeValueText(valuePresentation);
-    if (EarlyAccessProgramManager.is(XDebuggerInlineEapDescriptor.class)) {
+    if (XDebuggerSettingsManager.getInstance().getDataViewSettings().isShowVariablesInEditor()) {
       updateInlineDebuggerData();
     }
     updateText();
