@@ -60,6 +60,7 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.frame.XValueMarkerProvider;
 import com.intellij.xdebugger.impl.breakpoints.*;
+import com.intellij.xdebugger.impl.evaluate.XDebuggerEditorLinePainter;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
 import com.intellij.xdebugger.impl.frame.XValueMarkers;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
@@ -898,6 +899,7 @@ public class XDebugSessionImpl implements XDebugSession {
     myStopped = true;
     myDebuggerManager.removeSession(this);
     myDispatcher.getMulticaster().sessionStopped();
+    myProject.putUserData(XDebuggerEditorLinePainter.CACHE, null);
   }
 
   public boolean isInactiveSlaveBreakpoint(final XBreakpoint<?> breakpoint) {
