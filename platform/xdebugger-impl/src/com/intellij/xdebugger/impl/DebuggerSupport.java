@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.impl;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
@@ -25,20 +26,19 @@ import com.intellij.xdebugger.impl.actions.DebuggerToggleActionHandler;
 import com.intellij.xdebugger.impl.actions.EditBreakpointActionHandler;
 import com.intellij.xdebugger.impl.actions.MarkObjectActionHandler;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
+import com.intellij.xdebugger.impl.evaluate.quick.common.AbstractValueHint;
 import com.intellij.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;
-import com.intellij.xdebugger.impl.settings.DebuggerSettingsPanelProvider;
+import com.intellij.xdebugger.impl.evaluate.quick.common.ValueHintType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 
 /**
  * @author nik
  */
 public abstract class DebuggerSupport {
   private static final ExtensionPointName<DebuggerSupport> EXTENSION_POINT = ExtensionPointName.create("com.intellij.xdebugger.debuggerSupport");
-
-  @SuppressWarnings("deprecation")
-  private static final DebuggerSettingsPanelProvider EMPTY_SETTINGS_PANEL_PROVIDER = new DebuggerSettingsPanelProvider() {
-  };
 
   protected static final class DisabledActionHandler extends DebuggerActionHandler {
     public static final DisabledActionHandler INSTANCE = new DisabledActionHandler();
@@ -60,16 +60,6 @@ public abstract class DebuggerSupport {
 
   @NotNull
   public abstract BreakpointPanelProvider<?> getBreakpointPanelProvider();
-
-  /**
-   * @deprecated Use {@link com.intellij.xdebugger.settings.DebuggerConfigurableProvider}
-   */
-  @Deprecated
-  @SuppressWarnings("deprecation")
-  @NotNull
-  public DebuggerSettingsPanelProvider getSettingsPanelProvider() {
-    return EMPTY_SETTINGS_PANEL_PROVIDER;
-  }
 
   @NotNull
   public abstract DebuggerActionHandler getStepOverHandler();
@@ -117,8 +107,33 @@ public abstract class DebuggerSupport {
   @NotNull
   public abstract DebuggerActionHandler getEvaluateHandler();
 
+  private static final QuickEvaluateHandler DISABLED_QUICK_EVALUATE = new QuickEvaluateHandler() {
+    @Override
+    public boolean isEnabled(@NotNull Project project) {
+      return false;
+    }
+
+    @Nullable
+    @Override
+    public AbstractValueHint createValueHint(@NotNull Project project, @NotNull Editor editor, @NotNull Point point, ValueHintType type) {
+      return null;
+    }
+
+    @Override
+    public boolean canShowHint(@NotNull Project project) {
+      return false;
+    }
+
+    @Override
+    public int getValueLookupDelay(Project project) {
+      return 0;
+    }
+  };
+
   @NotNull
-  public abstract QuickEvaluateHandler getQuickEvaluateHandler();
+  public QuickEvaluateHandler getQuickEvaluateHandler() {
+    return DISABLED_QUICK_EVALUATE;
+  }
 
   @NotNull
   public abstract DebuggerActionHandler getAddToWatchesActionHandler();

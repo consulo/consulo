@@ -24,6 +24,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.content.Content;
+import com.intellij.util.containers.hash.LinkedHashMap;
+import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -38,7 +40,7 @@ public class RunnerLayout  {
   public static final Key<Integer> DROP_INDEX = Key.create("RunnerLayoutDropIndex");
   private final String myID;
 
-  protected Map<String, ViewImpl> myViews = new HashMap<String, ViewImpl>();
+  protected Map<String, ViewImpl> myViews = new LinkedHashMap<String, ViewImpl>();
   private final Map<String, ViewImpl.Default> myDefaultViews = new HashMap<String, ViewImpl.Default>();
 
   protected Set<TabImpl> myTabs = new TreeSet<TabImpl>(new Comparator<TabImpl>() {
@@ -51,6 +53,7 @@ public class RunnerLayout  {
 
   protected General myGeneral = new General();
   private final Map<String, Pair<String, LayoutAttractionPolicy>> myDefaultFocus = new HashMap<String, Pair<String, LayoutAttractionPolicy>>();
+  private Set<String> myLightWeightIds = null;
 
 
   public RunnerLayout(@NotNull String ID) {
@@ -95,19 +98,7 @@ public class RunnerLayout  {
 
   @NotNull
   public TabImpl createNewTab() {
-    int index = 0;
-    for (TabImpl each : myTabs) {
-      if (!isUsed(each)) return each;
-
-      if (each.getIndex() < Integer.MAX_VALUE) {
-        index = each.getIndex() + 1;
-      }
-      else {
-        break;
-      }
-    }
-
-    return createNewTab(index);
+    return createNewTab(myTabs.size());
   }
 
   private boolean isUsed(@NotNull TabImpl tab) {
@@ -138,10 +129,11 @@ public class RunnerLayout  {
 
   @NotNull
   public Element read(@NotNull Element parentNode) {
-    List tabs = parentNode.getChildren(StringUtil.getShortName(TabImpl.class.getName()));
-    for (Object eachTabElement : tabs) {
-      TabImpl eachTab = new TabImpl((Element)eachTabElement);
-      getOrCreateTab(eachTab.getIndex()).read((Element)eachTabElement);
+    List<Element> tabs = parentNode.getChildren(StringUtil.getShortName(TabImpl.class.getName()));
+    for (Element eachTabElement : tabs) {
+      TabImpl eachTab = XmlSerializer.deserialize(eachTabElement, TabImpl.class);
+      assert eachTab != null;
+      XmlSerializer.deserializeInto(getOrCreateTab(eachTab.getIndex()), eachTabElement);
     }
 
     final List views = parentNode.getChildren(StringUtil.getShortName(ViewImpl.class.getName()));
@@ -158,16 +150,20 @@ public class RunnerLayout  {
   @NotNull
   public Element write(@NotNull Element parentNode) {
     for (ViewImpl eachState : myViews.values()) {
-      eachState.write(parentNode);
+      if (myLightWeightIds != null && myLightWeightIds.contains(eachState.getID())) {
+        continue;
+      }
+      parentNode.addContent(XmlSerializer.serialize(eachState));
     }
 
+    SkipDefaultValuesSerializationFilters filter = new SkipDefaultValuesSerializationFilters();
     for (TabImpl eachTab : myTabs) {
       if (isUsed(eachTab)) {
-        eachTab.write(parentNode);
+        parentNode.addContent(XmlSerializer.serialize(eachTab, filter));
       }
     }
 
-    parentNode.addContent(XmlSerializer.serialize(myGeneral));
+    parentNode.addContent(XmlSerializer.serialize(myGeneral, filter));
 
     return parentNode;
   }
@@ -192,7 +188,9 @@ public class RunnerLayout  {
   }
 
   public void clearStateFor(@NotNull Content content) {
-    final ViewImpl view = myViews.remove(getOrCreateContentId(content));
+    String id = getOrCreateContentId(content);
+    myDefaultViews.remove(id);
+    final ViewImpl view = myViews.remove(id);
     if (view != null) {
       final Tab tab = view.getTab();
       if (tab instanceof TabImpl) {
@@ -213,12 +211,11 @@ public class RunnerLayout  {
 
   @NotNull
   private ViewImpl getOrCreateView(@NotNull String id) {
-    if (myViews.containsKey(id)) {
-      return myViews.get(id);
+    ViewImpl view = myViews.get(id);
+    if (view == null) {
+      view = getOrCreateDefault(id).createView(this);
+      myViews.put(id, view);
     }
-    final ViewImpl.Default defaultView = getOrCreateDefault(id);
-    final ViewImpl view = defaultView.createView(this);
-    myViews.put(id, view);
     return view;
   }
 
@@ -272,6 +269,16 @@ public class RunnerLayout  {
   public LayoutAttractionPolicy getAttractionPolicy(@NotNull String condition) {
     final Pair<String, LayoutAttractionPolicy> pair = myDefaultFocus.get(condition);
     return pair == null ? new LayoutAttractionPolicy.FocusOnce() : pair.getSecond();
+  }
+
+  /**
+   *   States of contents marked as "lightweight" won't be persisted
+   */
+  public void setLightWeight(Content content) {
+    if (myLightWeightIds == null) {
+      myLightWeightIds = new HashSet<String>();
+    }
+    myLightWeightIds.add(getOrCreateContentId(content));
   }
 
   public static class General {

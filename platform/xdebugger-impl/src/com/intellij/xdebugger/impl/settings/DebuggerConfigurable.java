@@ -22,7 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
-import com.intellij.xdebugger.impl.DebuggerSupport;
+import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.settings.DebuggerConfigurableProvider;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import org.jetbrains.annotations.NonNls;
@@ -48,7 +48,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
 
   @Override
   public String getHelpTopic() {
-    return myRootConfigurable != null ? myRootConfigurable.getHelpTopic() : null;
+    return "reference.idesettings.debugger";
   }
 
   @NotNull
@@ -74,16 +74,6 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
 
     DebuggerConfigurableProvider[] providers = DebuggerConfigurableProvider.EXTENSION_POINT.getExtensions();
     computeMergedConfigurables(providers, configurables);
-
-    //noinspection deprecation
-    for (DebuggerSettingsPanelProvider provider : getSortedProviders()) {
-      configurables.addAll(provider.getConfigurables());
-      @SuppressWarnings("deprecation")
-      Configurable providerRootConfigurable = provider.getRootConfigurable();
-      if (providerRootConfigurable != null) {
-        configurables.add(providerRootConfigurable);
-      }
-    }
 
     for (DebuggerConfigurableProvider provider : providers) {
       configurables.addAll(provider.getConfigurables(DebuggerSettingsCategory.ROOT));
@@ -160,7 +150,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
 
   @Override
   public boolean isVisible() {
-    return true;
+    return XBreakpointType.EXTENSION_POINT_NAME.getExtensions().length != 0;
   }
 
   @Override
@@ -198,33 +188,6 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
   @NonNls
   public String getId() {
     return "project.propDebugger";
-  }
-
-  @SuppressWarnings("deprecation")
-  @NotNull
-  private static List<DebuggerSettingsPanelProvider> getSortedProviders() {
-    List<DebuggerSettingsPanelProvider> providers = null;
-    for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
-      DebuggerSettingsPanelProvider provider = support.getSettingsPanelProvider();
-      if (providers == null) {
-        providers = new SmartList<DebuggerSettingsPanelProvider>();
-      }
-      providers.add(provider);
-    }
-
-    if (ContainerUtil.isEmpty(providers)) {
-      return Collections.emptyList();
-    }
-
-    if (providers.size() > 1) {
-      Collections.sort(providers, new Comparator<DebuggerSettingsPanelProvider>() {
-        @Override
-        public int compare(@NotNull DebuggerSettingsPanelProvider o1, @NotNull DebuggerSettingsPanelProvider o2) {
-          return o2.getPriority() - o1.getPriority();
-        }
-      });
-    }
-    return providers;
   }
 
   @NotNull
