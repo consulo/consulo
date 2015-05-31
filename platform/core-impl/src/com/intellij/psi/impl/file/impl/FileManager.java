@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public interface FileManager extends Disposable {
   @RequiredReadAction
   PsiDirectory findDirectory(@NotNull VirtualFile vFile);
 
+  @RequiredWriteAction
   void reloadFromDisk(@NotNull PsiFile file); //Q: move to PsiFile(Impl)?
 
   @Nullable
@@ -46,8 +48,13 @@ public interface FileManager extends Disposable {
   @TestOnly
   void cleanupForNextTest();
 
+  @RequiredReadAction
   FileViewProvider findViewProvider(@NotNull VirtualFile file);
+
+  @RequiredReadAction
   FileViewProvider findCachedViewProvider(@NotNull VirtualFile file);
+
+  @RequiredReadAction
   void setViewProvider(@NotNull VirtualFile virtualFile, FileViewProvider fileViewProvider);
 
   @NotNull

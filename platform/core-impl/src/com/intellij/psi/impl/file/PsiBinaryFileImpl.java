@@ -33,6 +33,7 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.IOException;
 import java.util.Map;
@@ -42,7 +43,6 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   private String myName; // for myFile == null only
   private byte[] myContents; // for myFile == null only
   private final long myModificationStamp;
-  private final FileType myFileType;
   private final FileViewProvider myViewProvider;
 
   public PsiBinaryFileImpl(PsiManagerImpl manager, FileViewProvider viewProvider) {
@@ -50,7 +50,6 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     myManager = manager;
     final VirtualFile virtualFile = myViewProvider.getVirtualFile();
     myModificationStamp = virtualFile.getModificationStamp();
-    myFileType = viewProvider.getVirtualFile().getFileType();
   }
 
   @Override
@@ -114,6 +113,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     return myModificationStamp;
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public Language getLanguage() {
@@ -125,6 +125,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     return myManager;
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public PsiElement[] getChildren() {
@@ -141,21 +142,25 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     return this;
   }
 
+  @RequiredReadAction
   @Override
   public TextRange getTextRange() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public int getStartOffsetInParent() {
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   public int getTextLength() {
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement findElementAt(int offset) {
     return null;
@@ -166,11 +171,13 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   public String getText() {
     return ""; // TODO[max] throw new UnsupportedOperationException()
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public char[] textToCharArray() {
@@ -277,7 +284,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   @Override
   @NotNull
   public FileType getFileType() {
-    return myFileType;
+    return myViewProvider.getFileType();
   }
 
   @Override

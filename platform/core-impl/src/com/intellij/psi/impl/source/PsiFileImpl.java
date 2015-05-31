@@ -71,6 +71,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   protected PsiFile myOriginalFile = null;
   private final FileViewProvider myViewProvider;
   private volatile Reference<StubTree> myStub;
+  private boolean myInvalidated;
   protected final PsiManagerEx myManager;
   private volatile Getter<FileElement> myTreeElementPointer; // SoftReference/WeakReference to ASTNode or a strong reference to a tree if the file is a DummyHolder
   public static final Key<Boolean> BUILDING_STUB = new Key<Boolean>("Don't use stubs mark!");
@@ -149,12 +150,21 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @Override
   public boolean isValid() {
-    FileViewProvider provider = getViewProvider();
-    final VirtualFile vFile = provider.getVirtualFile();
-    if (!vFile.isValid()) return false;
-    if (!provider.isEventSystemEnabled()) return true; // "dummy" file
-    if (myManager.getProject().isDisposed()) return false;
-    return isPsiUpToDate(vFile);
+    if (myManager.getProject().isDisposed()) {
+      // normally FileManager.dispose would call markInvalidated
+      // but there's temporary disposed project in tests, which doesn't actually dispose its components :(
+      return false;
+    }
+    if (!myViewProvider.getVirtualFile().isValid()) {
+      // PSI listeners receive VFS deletion events and do markInvalidated
+      // but some VFS listeners receive the same events before that and ask PsiFile.isValid
+      return false;
+    }
+    return !myInvalidated;
+  }
+
+  public void markInvalidated() {
+    myInvalidated = true;
   }
 
   protected boolean isPsiUpToDate(@NotNull VirtualFile vFile) {
@@ -207,6 +217,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     }
   }
 
+  @RequiredReadAction
   @Override
   public ASTNode findTreeForStub(StubTree tree, StubElement<?> stub) {
     final Iterator<StubElement<?>> stubs = tree.getPlainList().iterator();
@@ -411,11 +422,13 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     myModificationStamp ++;
   }
 
+  @RequiredReadAction
   @Override
   public String getText() {
     return getViewProvider().getContents().toString();
   }
 
+  @RequiredReadAction
   @Override
   public int getTextLength() {
     final ASTNode tree = derefTreeElement();
@@ -424,16 +437,19 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return getViewProvider().getContents().length();
   }
 
+  @RequiredReadAction
   @Override
   public TextRange getTextRange() {
     return new TextRange(0, getTextLength());
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getNextSibling() {
     return SharedPsiElementImplUtil.getNextSibling(this);
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getPrevSibling() {
     return SharedPsiElementImplUtil.getPrevSibling(this);
@@ -594,6 +610,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return getViewProvider().isEventSystemEnabled();
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public Language getLanguage() {
@@ -616,16 +633,19 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     myTreeElementPointer = element;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement findElementAt(int offset) {
     return getViewProvider().findElementAt(offset);
   }
 
+  @RequiredReadAction
   @Override
   public PsiReference findReferenceAt(int offset) {
     return getViewProvider().findReferenceAt(offset);
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public char[] textToCharArray() {
@@ -633,6 +653,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @NotNull
+  @RequiredReadAction
   public <T> T[] findChildrenByClass(Class<T> aClass) {
     List<T> result = new ArrayList<T>();
     for (PsiElement child : getChildren()) {
@@ -642,6 +663,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Nullable
+  @RequiredReadAction
   public <T> T findChildByClass(Class<T> aClass) {
     for (PsiElement child : getChildren()) {
       if (aClass.isInstance(child)) return (T)child;
@@ -761,6 +783,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @NotNull
+  @RequiredReadAction
   public final FileElement calcTreeElement() {
     // Attempt to find (loaded) tree element without taking lock first.
     FileElement treeElement = getTreeElement();
@@ -769,17 +792,20 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return loadTreeElement();
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public PsiElement[] getChildren() {
     return calcTreeElement().getChildrenAsPsiElements((TokenSet)null, PsiElement.ARRAY_FACTORY);
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getFirstChild() {
     return SharedImplUtil.getFirstChild(getNode());
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getLastChild() {
     return SharedImplUtil.getLastChild(getNode());
@@ -790,6 +816,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     SharedImplUtil.acceptChildren(visitor, getNode());
   }
 
+  @RequiredReadAction
   @Override
   public int getStartOffsetInParent() {
     return calcTreeElement().getStartOffsetInParent();
@@ -810,6 +837,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return calcTreeElement().textMatches(element);
   }
 
+  @RequiredReadAction
   @Override
   public boolean textContains(char c) {
     return calcTreeElement().textContains(c);

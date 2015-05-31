@@ -3,9 +3,11 @@ package com.intellij.openapi.diagnostic;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Base64Converter;
 import com.intellij.util.PathUtilRt;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 
 import java.io.UnsupportedEncodingException;
 
+@ArrayFactoryFields
 public class Attachment {
   private final String myPath;
   private final byte[] myBytes;

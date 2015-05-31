@@ -24,6 +24,8 @@ import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.util.containers.ConcurrentWeakValueHashMap;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,20 +45,24 @@ class EmptyFileManager implements FileManager {
   public void dispose() {
   }
 
+  @RequiredReadAction
   @Override
   public PsiFile findFile(@NotNull VirtualFile vFile) {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public PsiDirectory findDirectory(@NotNull VirtualFile vFile) {
     return null;
   }
 
+  @RequiredWriteAction
   @Override
   public void reloadFromDisk(@NotNull PsiFile file) {
   }
 
+  @RequiredReadAction
   @Override
   public PsiFile getCachedPsiFile(@NotNull VirtualFile vFile) {
     return null;
@@ -66,11 +72,13 @@ class EmptyFileManager implements FileManager {
   public void cleanupForNextTest() {
   }
 
+  @RequiredReadAction
   @Override
   public FileViewProvider findViewProvider(@NotNull VirtualFile file) {
     return myVFileToViewProviderMap.get(file);
   }
 
+  @RequiredReadAction
   @Override
   public FileViewProvider findCachedViewProvider(@NotNull VirtualFile file) {
     return myVFileToViewProviderMap.get(file);
@@ -82,6 +90,7 @@ class EmptyFileManager implements FileManager {
     return new SingleRootFileViewProvider(myManager, file, physical);
   }
 
+  @RequiredReadAction
   @Override
   public void setViewProvider(@NotNull final VirtualFile virtualFile, final FileViewProvider singleRootFileViewProvider) {
     if (!(virtualFile instanceof VirtualFileWindow)) {

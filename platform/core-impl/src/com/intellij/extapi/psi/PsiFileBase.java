@@ -19,6 +19,7 @@ package com.intellij.extapi.psi;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.PsiFileImpl;
@@ -57,6 +58,12 @@ public abstract class PsiFileBase extends PsiFileImpl {
     }
     throw new AssertionError(
         "Language " + baseLanguage + " doesn't participate in view provider " + viewProvider + ": " + new ArrayList<Language>(languages));
+  }
+
+  @NotNull
+  @Override
+  public FileType getFileType() {
+    return getViewProvider().getFileType();
   }
 
   @Override
