@@ -20,6 +20,7 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.xdebugger.Obsolescent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.util.List;
@@ -81,9 +82,20 @@ public abstract class XExecutionStack {
   /**
    * Start computing stack frames top-down starting from <code>firstFrameIndex</code>. This method is called from the Event Dispatch Thread
    * so it should return quickly
+   * @param container callback
+   */
+  public void computeStackFrames(XStackFrameContainer container) {
+    computeStackFrames(0, container);
+  }
+
+  /**
+   * Start computing stack frames top-down starting from <code>firstFrameIndex</code>. This method is called from the Event Dispatch Thread
+   * so it should return quickly
    * @param firstFrameIndex frame index to start from (<code>1</code> corresponds to the frame just under the top frame)
    * @param container callback
    */
+  @DeprecationInfo(value = "Please override #computeStackFrames(XStackFrameContainer container)", until = "1.0")
+  @Deprecated
   public abstract void computeStackFrames(int firstFrameIndex, XStackFrameContainer container);
 
   public interface XStackFrameContainer extends Obsolescent, XValueCallback {

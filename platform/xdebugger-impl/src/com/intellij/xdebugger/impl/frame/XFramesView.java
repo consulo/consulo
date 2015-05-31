@@ -284,8 +284,13 @@ public class XFramesView extends XDebugView {
     if (executionStack != null) {
       StackFramesListBuilder builder = getOrCreateBuilder(executionStack, session);
       myListenersEnabled = false;
-      builder.initModel(myFramesList.getModel());
-      myListenersEnabled = !builder.start();
+
+      if(builder.start()) {
+        builder.initModel(myFramesList.getModel());
+      }
+      else {
+        myListenersEnabled = true;
+      }
     }
   }
 
@@ -317,7 +322,6 @@ public class XFramesView extends XDebugView {
     private XExecutionStack myExecutionStack;
     private final List<XStackFrame> myStackFrames;
     private String myErrorMessage;
-    private int myNextFrameIndex = 0;
     private boolean myRunning;
     private boolean myAllFramesLoaded;
     private final XDebugSession mySession;
@@ -336,7 +340,6 @@ public class XFramesView extends XDebugView {
           myStackFrames.addAll(stackFrames);
           addFrameListElements(stackFrames, last);
           selectCurrentFrame();
-          myNextFrameIndex += stackFrames.size();
           myAllFramesLoaded = last;
           if (last) {
             myRunning = false;
@@ -401,7 +404,8 @@ public class XFramesView extends XDebugView {
         return false;
       }
       myRunning = true;
-      myExecutionStack.computeStackFrames(myNextFrameIndex, this);
+      myStackFrames.clear();
+      myExecutionStack.computeStackFrames(this);
       return true;
     }
 

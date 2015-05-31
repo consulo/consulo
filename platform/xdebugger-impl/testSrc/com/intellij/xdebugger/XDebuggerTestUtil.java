@@ -121,7 +121,7 @@ public class XDebuggerTestUtil {
 
   public static List<XStackFrame> collectStacks(XExecutionStack thread, long timeout) throws InterruptedException {
     XTestStackFrameContainer container = new XTestStackFrameContainer();
-    thread.computeStackFrames(0, container);
+    thread.computeStackFrames(container);
     return container.waitFor(timeout).first;
   }
 
