@@ -20,6 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import org.slf4j.helpers.MarkerIgnoringBase;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author VISTALL
@@ -74,17 +75,22 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public void debug(String format, Object arg) {
-    myLogger.debug(BundleBase.format(format, arg));
+    try {
+      myLogger.debug(buildMessage(format, arg));
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public void debug(String format, Object arg1, Object arg2) {
-    debug(BundleBase.format(format, arg1, arg2));
+    debug(buildMessage(format, arg1, arg2));
   }
 
   @Override
   public void debug(String format, Object... arguments) {
-    debug(BundleBase.format(format, arguments));
+    debug(buildMessage(format, arguments));
   }
 
   @Override
@@ -104,17 +110,17 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public void info(String format, Object arg) {
-    info(BundleBase.format(format, arg));
+    info(buildMessage(format, arg));
   }
 
   @Override
   public void info(String format, Object arg1, Object arg2) {
-    info(BundleBase.format(format, arg1, arg2));
+    info(buildMessage(format, arg1, arg2));
   }
 
   @Override
   public void info(String format, Object... arguments) {
-    info(BundleBase.format(format, arguments));
+    info(buildMessage(format, arguments));
   }
 
   @Override
@@ -134,17 +140,26 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public void warn(String format, Object arg) {
-    warn(BundleBase.format(format, arg));
+    warn(buildMessage(format, arg));
   }
 
   @Override
   public void warn(String format, Object... arguments) {
-    warn(BundleBase.format(format, arguments));
+    warn(buildMessage(format, arguments));
   }
 
   @Override
   public void warn(String format, Object arg1, Object arg2) {
-    warn(BundleBase.format(format, arg1, arg2));
+    warn(buildMessage(format, arg1, arg2));
+  }
+
+  private String buildMessage(String format, Object... args) {
+    try {
+      return BundleBase.format(format, args);
+    }
+    catch (Exception e) {
+      return "Fail to build '" + format + "' args: " + Arrays.asList(args);
+    }
   }
 
   @Override
@@ -164,17 +179,17 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public void error(String format, Object arg) {
-    error(BundleBase.format(format, arg));
+    error(buildMessage(format, arg));
   }
 
   @Override
   public void error(String format, Object arg1, Object arg2) {
-    error(BundleBase.format(format, arg1, arg2));
+    error(buildMessage(format, arg1, arg2));
   }
 
   @Override
   public void error(String format, Object... arguments) {
-    error(BundleBase.format(format, arguments));
+    error(buildMessage(format, arguments));
   }
 
   @Override
