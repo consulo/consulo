@@ -1051,14 +1051,6 @@ public class UIUtil {
     return SystemInfo.isMac && UIManager.getLookAndFeel().getName().contains("Mac OS X");
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  @Deprecated
-  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
-  public static boolean isUnderJGoodiesLookAndFeel() {
-    return UIManager.getLookAndFeel().getName().contains("JGoodies");
-  }
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isUnderAquaBasedLookAndFeel() {
     return SystemInfo.isMac && (isUnderAquaLookAndFeel() || isUnderDarcula());
   }

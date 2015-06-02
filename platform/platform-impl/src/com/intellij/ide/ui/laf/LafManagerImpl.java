@@ -64,7 +64,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -448,8 +447,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     fixGtkPopupStyle();
 
-    fixTreeWideSelection(uiDefaults);
-
     fixMenuIssues(uiDefaults);
 
     if (UIUtil.isUnderAquaLookAndFeel()) {
@@ -506,24 +503,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       uiDefaults.put("Menu.invertedArrowIcon", getAquaMenuInvertedIcon());
       uiDefaults.put("Menu.disabledArrowIcon", getAquaMenuDisabledIcon());
     }
-    else if (UIUtil.isUnderJGoodiesLookAndFeel()) {
-      uiDefaults.put("Menu.opaque", true);
-      uiDefaults.put("MenuItem.opaque", true);
-    }
-    uiDefaults.put("MenuItem.background", UIManager.getColor("Menu.background"));
-  }
 
-  private static void fixTreeWideSelection(UIDefaults uiDefaults) {
-    if (UIUtil.isUnderJGoodiesLookAndFeel()) {
-      final Color bg = new ColorUIResource(56, 117, 215);
-      final Color fg = new ColorUIResource(Color.WHITE);
-      uiDefaults.put("info", bg);
-      uiDefaults.put("textHighlight", bg);
-      for (String key : ourAlloyComponentsToPatchSelection) {
-        uiDefaults.put(key + ".selectionBackground", bg);
-        uiDefaults.put(key + ".selectionForeground", fg);
-      }
-    }
+    uiDefaults.put("MenuItem.background", UIManager.getColor("Menu.background"));
   }
 
   private static void fixSeparatorColor(UIDefaults uiDefaults) {

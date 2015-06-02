@@ -541,8 +541,8 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
       final Container parent = getParent();
       if (parent instanceof JTable || parent instanceof CellRendererPane) return;
 
-      if (UIUtil.isUnderAquaLookAndFeel() || UIUtil.isUnderDarcula()) {
-        editor.setBorder(UIUtil.isUnderDarcula() ?  new DarculaEditorTextFieldBorder() : new MacUIUtil.EditorTextFieldBorder(this));
+      if (UIUtil.isUnderAquaLookAndFeel() || UIUtil.isUnderDarkBuildInLaf()) {
+        editor.setBorder(UIUtil.isUnderDarkBuildInLaf() ?  new DarculaEditorTextFieldBorder() : new MacUIUtil.EditorTextFieldBorder(this));
         editor.addFocusListener(new FocusChangeListener() {
           @Override
           public void focusGained(Editor editor) {
@@ -554,9 +554,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
             repaint();
           }
         });
-      }
-      else if (UIUtil.isUnderJGoodiesLookAndFeel()) {
-        editor.setBorder(BorderFactory.createCompoundBorder(UIUtil.getTextFieldBorder(), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
       }
       else {
         editor.setBorder(BorderFactory.createCompoundBorder(UIUtil.getTextFieldBorder(), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
@@ -593,11 +590,11 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
   private Color getBackgroundColor(boolean enabled, final EditorColorsScheme colorsScheme){
     if (myEnforcedBgColor != null) return myEnforcedBgColor;
-    if (UIUtil.getParentOfType(CellRendererPane.class, this) != null && UIUtil.isUnderDarcula()) {
+    if (UIUtil.getParentOfType(CellRendererPane.class, this) != null && UIUtil.isUnderDarkBuildInLaf()) {
       return getParent().getBackground();
     }
 
-    if (UIUtil.isUnderDarcula()) return UIUtil.getTextFieldBackground();
+    if (UIUtil.isUnderDarkBuildInLaf()) return UIUtil.getTextFieldBackground();
 
     return enabled
            ? colorsScheme.getDefaultBackground()
