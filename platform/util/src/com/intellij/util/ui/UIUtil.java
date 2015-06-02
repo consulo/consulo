@@ -179,7 +179,7 @@ public class UIUtil {
   private static final GrayFilter DARCULA_GRAY_FILTER = new GrayFilter(true, 30);
 
   public static GrayFilter getGrayFilter() {
-    return isUnderDarcula() ? DARCULA_GRAY_FILTER : DEFAULT_GRAY_FILTER;
+    return isUnderDarkBuildInLaf() ? DARCULA_GRAY_FILTER : DEFAULT_GRAY_FILTER;
   }
 
   public static boolean isAppleRetina() {
@@ -826,7 +826,7 @@ public class UIUtil {
     if(color != null) {
       return color;
     }
-    return isUnderDarcula() ? Gray._52 : UNFOCUSED_SELECTION_COLOR;
+    return isUnderDarkBuildInLaf() ? Gray._52 : UNFOCUSED_SELECTION_COLOR;
   }
 
   public static Color getTreeSelectionBackground(boolean focused) {
@@ -974,7 +974,7 @@ public class UIUtil {
   }
 
   public static Icon getTreeNodeIcon(boolean expanded, boolean selected, boolean focused) {
-    boolean white = (selected && focused) || isUnderDarcula();
+    boolean white = (selected && focused) || isUnderDarkBuildInLaf();
 
     Icon selectedIcon = getTreeSelectedExpandedIcon();
     Icon notSelectedIcon = getTreeExpandedIcon();
@@ -1052,7 +1052,7 @@ public class UIUtil {
   }
 
   public static boolean isUnderAquaBasedLookAndFeel() {
-    return SystemInfo.isMac && (isUnderAquaLookAndFeel() || isUnderDarcula());
+    return SystemInfo.isMac && (isUnderAquaLookAndFeel() || isUnderDarkBuildInLaf());
   }
 
   @Deprecated
@@ -1138,7 +1138,7 @@ public class UIUtil {
   }
 
   public static boolean isUnderNativeMacLookAndFeel() {
-    return isUnderAquaLookAndFeel() || isUnderDarcula();
+    return isUnderAquaLookAndFeel() || isUnderDarkBuildInLaf();
   }
 
   public static int getListCellHPadding() {
@@ -1416,7 +1416,7 @@ public class UIUtil {
     if (drawTopLine) g.drawLine(x, 0, width, 0);
     if (drawBottomLine) g.drawLine(x, height - 1, width, height - 1);
 
-    g.setColor(isUnderDarcula() ? Gray._255.withAlpha(30) : new Color(255, 255, 255, 100));
+    g.setColor(isUnderDarkBuildInLaf() ? Gray._255.withAlpha(30) : new Color(255, 255, 255, 100));
     g.drawLine(x, drawTopLine ? 1 : 0, width, drawTopLine ? 1 : 0);
 
     if (active) {
@@ -1918,7 +1918,7 @@ public class UIUtil {
   }
 
   public static Color getBorderColor() {
-    return isUnderDarcula() ? Gray._50 : BORDER_COLOR;
+    return isUnderDarkBuildInLaf() ? Gray._50 : BORDER_COLOR;
   }
 
   public static Font getTitledBorderFont() {
@@ -2398,8 +2398,8 @@ public class UIUtil {
     private float myLineSpacing;
 
     public TextPainter() {
-      myDrawShadow = /*isUnderAquaLookAndFeel() ||*/ isUnderDarcula();
-      myShadowColor = isUnderDarcula() ? Gray._0.withAlpha(100) : Gray._220;
+      myDrawShadow = /*isUnderAquaLookAndFeel() ||*/ isUnderDarkBuildInLaf();
+      myShadowColor = isUnderDarkBuildInLaf() ? Gray._0.withAlpha(100) : Gray._220;
       myLineSpacing = 1.0f;
     }
 
@@ -2532,7 +2532,7 @@ public class UIUtil {
           }
 
           if (myDrawShadow) {
-            int xOff = isUnderDarcula() ? 1 : 0;
+            int xOff = isUnderDarkBuildInLaf() ? 1 : 0;
             int yOff = 1;
             Color oldColor = g.getColor();
             g.setColor(myShadowColor);
@@ -2552,10 +2552,10 @@ public class UIUtil {
           g.drawString(text, xOffset, yOffset[0]);
           if (!StringUtil.isEmpty(shortcut)) {
             Color oldColor = g.getColor();
-            if (isUnderDarcula()) {
+            if (isUnderDarkBuildInLaf()) {
               g.setColor(new Color(60, 118, 249));
             }
-            g.drawString(shortcut, xOffset + fm.stringWidth(text + (isUnderDarcula() ? " " : "")), yOffset[0]);
+            g.drawString(shortcut, xOffset + fm.stringWidth(text + (isUnderDarkBuildInLaf() ? " " : "")), yOffset[0]);
             g.setColor(oldColor);
           }
 
