@@ -1063,12 +1063,12 @@ public class UIUtil {
     return SystemInfo.isMac && (isUnderAquaLookAndFeel() || isUnderDarcula());
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
+  @DeprecationInfo(value = "Use #isUnderDarkBuildInLaf", until = "2.0")
   public static boolean isUnderDarcula() {
     return isUnderDarkBuildInLaf();
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isUnderIntelliJLaF() {
     return !isUnderDarkBuildInLaf();
   }
