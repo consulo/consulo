@@ -42,6 +42,7 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.ui.MacUIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 public class TabAction extends EditorAction {
   public TabAction() {
@@ -56,12 +57,17 @@ public class TabAction extends EditorAction {
 
     @Override
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      if(project == null) {
+        return;
+      }
+
       if (caret == null) {
         caret = editor.getCaretModel().getPrimaryCaret();
       }
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.EDIT_COMMAND_GROUP);
       CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+
       insertTabAtCaret(editor, caret, project);
     }
 
@@ -71,7 +77,8 @@ public class TabAction extends EditorAction {
     }
   }
 
-  private static void insertTabAtCaret(Editor editor, @NotNull Caret caret, Project project) {
+  @RequiredReadAction
+  private static void insertTabAtCaret(Editor editor, @NotNull Caret caret, @NotNull Project project) {
     MacUIUtil.hideCursor();
     int columnNumber;
     if (caret.hasSelection()) {
