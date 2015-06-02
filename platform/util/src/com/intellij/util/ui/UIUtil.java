@@ -900,9 +900,6 @@ public class UIUtil {
 
   public static Color getSeparatorColor() {
     Color separatorColor = getSeparatorForeground();
-    if (isUnderAlloyLookAndFeel()) {
-      separatorColor = getSeparatorShadow();
-    }
     if (isUnderNimbusLookAndFeel()) {
       separatorColor = getSeparatorColorUnderNimbus();
     }
@@ -1026,20 +1023,6 @@ public class UIUtil {
 
   public static Color getOptionPaneBackground() {
     return UIManager.getColor("OptionPane.background");
-  }
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  @Deprecated
-  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
-  public static boolean isUnderAlloyLookAndFeel() {
-    return UIManager.getLookAndFeel().getName().contains("Alloy");
-  }
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  @Deprecated
-  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
-  public static boolean isUnderAlloyIDEALookAndFeel() {
-    return isUnderAlloyLookAndFeel() && UIManager.getLookAndFeel().getName().contains("IDEA");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})

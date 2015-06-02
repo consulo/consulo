@@ -76,7 +76,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public short getSelectionAlpha() {
-    return (short)(UIUtil.isUnderAlloyLookAndFeel() && !UIUtil.isUnderAlloyIDEALookAndFeel() ? 255 : 150);
+    return 150;
   }
 
   @Override
@@ -133,7 +133,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
     BufferedImage result = UIUtil.createImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
-    Color defaultBg = UIUtil.isUnderDarcula() ? Gray._100 : Color.WHITE;
+    Color defaultBg = UIUtil.isUnderDarkBuildInLaf() ? Gray._100 : Color.WHITE;
     final Paint bg = floating ? defaultBg : null;/*UIUtil.getGradientPaint(0, 0, new Color(255, 255, 255, 30), 0, h, new Color(255, 255, 255, 10));*/
     final Color selection = UIUtil.getListSelectionBackground();
 
@@ -222,12 +222,12 @@ public abstract class AbstractNavBarUI implements NavBarUI {
     if (!floating || !item.isLastElement()) {
       if (toolbarVisible || floating) {
         if (!selected && (!navbar.hasFocus() | !item.isNextSelected())) {
-          Color hl = UIUtil.isUnderDarcula()? Gray._128.withAlpha(100) : UIUtil.isUnderAlloyLookAndFeel() ? new Color(255, 255, 255, 200) : Gray._205;
+          Color hl = UIUtil.isUnderDarkBuildInLaf()? Gray._128.withAlpha(100) : Gray._205;
           drawArrow(g2, new Color(0, 0, 0, 70), hl, off, h, !selected && !floating, false);
         }
       } else {
         if (!selected && (!navbar.hasFocus() | !item.isNextSelected())) {
-          Color hl = UIUtil.isUnderDarcula() ? Gray._128.withAlpha(100) : Gray._255.withAlpha(200);
+          Color hl = UIUtil.isUnderDarkBuildInLaf() ? Gray._128.withAlpha(100) : Gray._255.withAlpha(200);
           drawArrow(g2, new Color(0, 0, 0, 150), hl, off, h, !selected && !floating, true);
         }
       }

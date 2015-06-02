@@ -40,7 +40,6 @@ import com.intellij.ui.PopupHandler;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -139,6 +138,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   /**
    * Invoked when enclosed frame is being shown.
    */
+  @Override
   public final void addNotify(){
     super.addNotify();
     myUISettings.addUISettingsListener(myUISettingsListener, myDisposable);
@@ -147,6 +147,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   /**
    * Invoked when enclosed frame is being disposed.
    */
+  @Override
   public final void removeNotify(){
     super.removeNotify();
   }
@@ -170,6 +171,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     contentPane.revalidate();
   }
 
+  @Override
   protected JLayeredPane createLayeredPane() {
     JLayeredPane p = new JBLayeredPane();
     p.setName(this.getName()+".layeredPane");
@@ -177,12 +179,6 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   }
 
   @Override
-  public void setLayout(LayoutManager mgr) {
-    //First time mgr comes from createRootLayout(), it's OK. But then Alloy spoils it and breaks FullScreen mode under Windows
-    if (getLayout() != null && UIUtil.isUnderAlloyLookAndFeel()) return;
-    super.setLayout(mgr);
-  }
-
   protected final Container createContentPane(){
     return myContentPane = new IdePanePanel(new BorderLayout());
   }
@@ -238,22 +234,27 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
       for (final StatusBarCustomComponentFactory<JComponent> componentFactory : myStatusBarCustomComponentFactories) {
         final JComponent c = componentFactory.createComponent(myStatusBar);
         myStatusBar.addWidget(new CustomStatusBarWidget() {
+          @Override
           public JComponent getComponent() {
             return c;
           }
 
+          @Override
           @NotNull
           public String ID() {
             return c.getClass().getSimpleName();
           }
 
+          @Override
           public WidgetPresentation getPresentation(@NotNull PlatformType type) {
             return null;
           }
 
+          @Override
           public void install(@NotNull StatusBar statusBar) {
           }
 
+          @Override
           public void dispose() {
             componentFactory.disposeComponent(myStatusBar, c);
           }
@@ -314,11 +315,13 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     return null;
   }
 
+  @Override
   public void uiSettingsChanged(UISettings source) {
     setMemoryIndicatorVisible(source.SHOW_MEMORY_INDICATOR);
   }
 
   private final class MyUISettingsListenerImpl implements UISettingsListener{
+    @Override
     public final void uiSettingsChanged(final UISettings source){
       updateToolbarVisibility();
       updateStatusBarVisibility();
@@ -328,6 +331,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     }
   }
 
+  @Override
   public boolean isOptimizedDrawingEnabled() {
     return !myGlassPane.hasPainters() && myGlassPane.getComponentCount() == 0;
   }
@@ -337,6 +341,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   }
 
   private class MyRootLayout extends RootLayout {
+    @Override
     public Dimension preferredLayoutSize(Container parent) {
       Dimension rd, mbd;
       Insets i = getInsets();
@@ -357,6 +362,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
                            rd.height + mbd.height + i.top + i.bottom);
     }
 
+    @Override
     public Dimension minimumLayoutSize(Container parent) {
       Dimension rd, mbd;
       Insets i = getInsets();
@@ -376,6 +382,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
                            rd.height + mbd.height + i.top + i.bottom);
     }
 
+    @Override
     public Dimension maximumLayoutSize(Container target) {
       Dimension rd, mbd;
       Insets i = getInsets();
@@ -396,6 +403,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
                            rd.height + mbd.height + i.top + i.bottom);
     }
 
+    @Override
     public void layoutContainer(Container parent) {
       Rectangle b = parent.getBounds();
       Insets i = getInsets();

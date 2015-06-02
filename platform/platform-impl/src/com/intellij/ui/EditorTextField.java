@@ -555,7 +555,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
           }
         });
       }
-      else if (UIUtil.isUnderAlloyLookAndFeel() || UIUtil.isUnderJGoodiesLookAndFeel()) {
+      else if (UIUtil.isUnderJGoodiesLookAndFeel()) {
         editor.setBorder(BorderFactory.createCompoundBorder(UIUtil.getTextFieldBorder(), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
       }
       else {

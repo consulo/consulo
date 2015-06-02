@@ -514,7 +514,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   private static void fixTreeWideSelection(UIDefaults uiDefaults) {
-    if (UIUtil.isUnderAlloyIDEALookAndFeel() || UIUtil.isUnderJGoodiesLookAndFeel()) {
+    if (UIUtil.isUnderJGoodiesLookAndFeel()) {
       final Color bg = new ColorUIResource(56, 117, 215);
       final Color fg = new ColorUIResource(Color.WHITE);
       uiDefaults.put("info", bg);

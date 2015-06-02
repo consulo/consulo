@@ -173,11 +173,6 @@ public class FrameWrapper implements Disposable, DataProvider {
     myFocusWatcher.install(myComponent);
     myShown = true;
     frame.setVisible(true);
-
-    if (UIUtil.isUnderAlloyLookAndFeel() && frame instanceof JFrame) {
-      //please ask [kb] before remove it
-      ((JFrame)frame).setMaximizedBounds(null);
-    }
   }
 
   public void close() {

@@ -455,8 +455,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
   }
 
   private static boolean isTableDecorationSupported() {
-    return UIUtil.isUnderAlloyLookAndFeel()
-           || UIUtil.isUnderNativeMacLookAndFeel()
+    return UIUtil.isUnderNativeMacLookAndFeel()
            || UIUtil.isUnderDarcula()
            || UIUtil.isUnderIntelliJLaF()
            || UIUtil.isUnderNimbusLookAndFeel()
