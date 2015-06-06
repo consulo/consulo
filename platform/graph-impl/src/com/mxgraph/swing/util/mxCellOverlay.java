@@ -18,7 +18,7 @@ public class mxCellOverlay extends JComponent implements mxICellOverlay {
   /**
    *
    */
-  protected ImageIcon imageIcon;
+  protected Icon imageIcon;
 
   /**
    * Holds the horizontal alignment for the overlay.
@@ -44,7 +44,7 @@ public class mxCellOverlay extends JComponent implements mxICellOverlay {
   /**
    *
    */
-  public mxCellOverlay(ImageIcon icon, String warning) {
+  public mxCellOverlay(Icon icon, String warning) {
     this.imageIcon = icon;
     setToolTipText(warning);
     setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -82,7 +82,7 @@ public class mxCellOverlay extends JComponent implements mxICellOverlay {
    *
    */
   public void paint(Graphics g) {
-    g.drawImage(imageIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+    imageIcon.paintIcon(this, g, 0, 0);
   }
 
   /*

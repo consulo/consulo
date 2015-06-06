@@ -112,6 +112,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getId()
    */
+  @Override
   public String getId() {
     return id;
   }
@@ -119,6 +120,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#setId(String)
    */
+  @Override
   public void setId(String id) {
     this.id = id;
   }
@@ -126,6 +128,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getValue()
    */
+  @Override
   public Object getValue() {
     return value;
   }
@@ -133,6 +136,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#setValue(Object)
    */
+  @Override
   public void setValue(Object value) {
     this.value = value;
   }
@@ -140,6 +144,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getGeometry()
    */
+  @Override
   public mxGeometry getGeometry() {
     return geometry;
   }
@@ -147,6 +152,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#setGeometry(com.mxgraph.model.mxGeometry)
    */
+  @Override
   public void setGeometry(mxGeometry geometry) {
     this.geometry = geometry;
   }
@@ -154,6 +160,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getStyle()
    */
+  @Override
   public String getStyle() {
     return style;
   }
@@ -161,6 +168,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#setStyle(String)
    */
+  @Override
   public void setStyle(String style) {
     this.style = style;
   }
@@ -168,6 +176,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#isVertex()
    */
+  @Override
   public boolean isVertex() {
     return vertex;
   }
@@ -182,6 +191,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#isEdge()
    */
+  @Override
   public boolean isEdge() {
     return edge;
   }
@@ -196,6 +206,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#isConnectable()
    */
+  @Override
   public boolean isConnectable() {
     return connectable;
   }
@@ -210,6 +221,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#isVisible()
    */
+  @Override
   public boolean isVisible() {
     return visible;
   }
@@ -217,6 +229,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#setVisible(boolean)
    */
+  @Override
   public void setVisible(boolean visible) {
     this.visible = visible;
   }
@@ -224,6 +237,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#isCollapsed()
    */
+  @Override
   public boolean isCollapsed() {
     return collapsed;
   }
@@ -231,6 +245,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#setCollapsed(boolean)
    */
+  @Override
   public void setCollapsed(boolean collapsed) {
     this.collapsed = collapsed;
   }
@@ -238,6 +253,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getParent()
    */
+  @Override
   public mxICell getParent() {
     return parent;
   }
@@ -245,6 +261,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#setParent(com.mxgraph.model.mxICell)
    */
+  @Override
   public void setParent(mxICell parent) {
     this.parent = parent;
   }
@@ -284,6 +301,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getTerminal(boolean)
    */
+  @Override
   public mxICell getTerminal(boolean source) {
     return (source) ? getSource() : getTarget();
   }
@@ -291,6 +309,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#setTerminal(com.mxgraph.model.mxICell, boolean)
    */
+  @Override
   public mxICell setTerminal(mxICell terminal, boolean isSource) {
     if (isSource) {
       setSource(terminal);
@@ -305,6 +324,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getChildCount()
    */
+  @Override
   public int getChildCount() {
     return (children != null) ? children.size() : 0;
   }
@@ -312,6 +332,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getIndex(com.mxgraph.model.mxICell)
    */
+  @Override
   public int getIndex(mxICell child) {
     return (children != null) ? children.indexOf(child) : -1;
   }
@@ -319,6 +340,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getChildAt(int)
    */
+  @Override
   public mxICell getChildAt(int index) {
     return (children != null) ? (mxICell)children.get(index) : null;
   }
@@ -326,6 +348,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#insert(com.mxgraph.model.mxICell)
    */
+  @Override
   public mxICell insert(mxICell child) {
     int index = getChildCount();
 
@@ -339,6 +362,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#insert(com.mxgraph.model.mxICell, int)
    */
+  @Override
   public mxICell insert(mxICell child, int index) {
     if (child != null) {
       child.removeFromParent();
@@ -359,6 +383,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#remove(int)
    */
+  @Override
   public mxICell remove(int index) {
     mxICell child = null;
 
@@ -373,6 +398,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#remove(com.mxgraph.model.mxICell)
    */
+  @Override
   public mxICell remove(mxICell child) {
     if (child != null && children != null) {
       children.remove(child);
@@ -385,6 +411,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#removeFromParent()
    */
+  @Override
   public void removeFromParent() {
     if (parent != null) {
       parent.remove(this);
@@ -394,6 +421,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getEdgeCount()
    */
+  @Override
   public int getEdgeCount() {
     return (edges != null) ? edges.size() : 0;
   }
@@ -401,6 +429,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getEdgeIndex(com.mxgraph.model.mxICell)
    */
+  @Override
   public int getEdgeIndex(mxICell edge) {
     return (edges != null) ? edges.indexOf(edge) : -1;
   }
@@ -408,6 +437,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#getEdgeAt(int)
    */
+  @Override
   public mxICell getEdgeAt(int index) {
     return (edges != null) ? (mxICell)edges.get(index) : null;
   }
@@ -415,6 +445,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#insertEdge(com.mxgraph.model.mxICell, boolean)
    */
+  @Override
   public mxICell insertEdge(mxICell edge, boolean isOutgoing) {
     if (edge != null) {
       edge.removeFromTerminal(isOutgoing);
@@ -435,6 +466,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#removeEdge(com.mxgraph.model.mxICell, boolean)
    */
+  @Override
   public mxICell removeEdge(mxICell edge, boolean isOutgoing) {
     if (edge != null) {
       if (edge.getTerminal(!isOutgoing) != this && edges != null) {
@@ -450,6 +482,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /* (non-Javadoc)
    * @see com.mxgraph.model.mxICell#removeFromTerminal(boolean)
    */
+  @Override
   public void removeFromTerminal(boolean isSource) {
     mxICell terminal = getTerminal(isSource);
 
@@ -511,6 +544,7 @@ public class mxCell implements mxICell, Cloneable, Serializable {
   /**
    * Returns a clone of the cell.
    */
+  @Override
   public Object clone() throws CloneNotSupportedException {
     mxCell clone = (mxCell)super.clone();
 

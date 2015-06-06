@@ -1,5 +1,6 @@
 package com.mxgraph.swing.handler;
 
+import com.intellij.icons.AllIcons;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMouseAdapter;
 import com.mxgraph.util.*;
@@ -19,18 +20,6 @@ import java.awt.event.MouseEvent;
  * perimeter points etc. Feel free to contribute a fix!
  */
 public class mxRotationHandler extends mxMouseAdapter {
-  /**
-   *
-   */
-  public static ImageIcon ROTATE_ICON = null;
-
-  /**
-   * Loads the collapse and expand icons.
-   */
-  static {
-    ROTATE_ICON = new ImageIcon(mxRotationHandler.class.getResource("/com/mxgraph/swing/images/rotate.gif"));
-  }
-
   /**
    *
    */
@@ -121,8 +110,9 @@ public class mxRotationHandler extends mxMouseAdapter {
    *
    */
   protected JComponent createHandle() {
-    JLabel label = new JLabel(ROTATE_ICON);
-    label.setSize(ROTATE_ICON.getIconWidth(), ROTATE_ICON.getIconHeight());
+    Icon refresh = AllIcons.Actions.Refresh;
+    JLabel label = new JLabel(refresh);
+    label.setSize(refresh.getIconWidth(), refresh.getIconHeight());
     label.setOpaque(false);
 
     return label;

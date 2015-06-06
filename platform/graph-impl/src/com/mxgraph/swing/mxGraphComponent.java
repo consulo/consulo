@@ -4,6 +4,7 @@
  */
 package com.mxgraph.swing;
 
+import com.intellij.icons.AllIcons;
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.model.mxGraphModel;
@@ -108,33 +109,9 @@ public class mxGraphComponent extends JScrollPane implements Printable {
   public static final int ZOOM_POLICY_WIDTH = 2;
 
   /**
-   *
-   */
-  public static ImageIcon DEFAULT_EXPANDED_ICON = null;
-
-  /**
-   *
-   */
-  public static ImageIcon DEFAULT_COLLAPSED_ICON = null;
-
-  /**
-   *
-   */
-  public static ImageIcon DEFAULT_WARNING_ICON = null;
-
-  /**
    * Specifies the default page scale. Default is 1.4
    */
   public static final double DEFAULT_PAGESCALE = 1.4;
-
-  /**
-   * Loads the collapse and expand icons.
-   */
-  static {
-    DEFAULT_EXPANDED_ICON = new ImageIcon(mxGraphComponent.class.getResource("/com/mxgraph/swing/images/expanded.gif"));
-    DEFAULT_COLLAPSED_ICON = new ImageIcon(mxGraphComponent.class.getResource("/com/mxgraph/swing/images/collapsed.gif"));
-    DEFAULT_WARNING_ICON = new ImageIcon(mxGraphComponent.class.getResource("/com/mxgraph/swing/images/warning.gif"));
-  }
 
   /**
    *
@@ -337,17 +314,17 @@ public class mxGraphComponent extends JScrollPane implements Printable {
   /**
    *
    */
-  protected ImageIcon expandedIcon = DEFAULT_EXPANDED_ICON;
+  protected Icon expandedIcon = AllIcons.Nodes.TreeDownArrow;
 
   /**
    *
    */
-  protected ImageIcon collapsedIcon = DEFAULT_COLLAPSED_ICON;
+  protected Icon collapsedIcon = AllIcons.Nodes.TreeRightArrow;
 
   /**
    *
    */
-  protected ImageIcon warningIcon = DEFAULT_WARNING_ICON;
+  protected Icon warningIcon = AllIcons.General.Warning;
 
   /**
    *
@@ -1775,7 +1752,7 @@ public class mxGraphComponent extends JScrollPane implements Printable {
    * Returns the icon used to display the collapsed state of the specified
    * cell state. This returns null for all edges.
    */
-  public ImageIcon getFoldingIcon(mxCellState state) {
+  public Icon getFoldingIcon(mxCellState state) {
     if (state != null && isFoldingEnabled() && !getGraph().getModel().isEdge(state.getCell())) {
       Object cell = state.getCell();
       boolean tmp = graph.isCellCollapsed(cell);
@@ -1791,7 +1768,7 @@ public class mxGraphComponent extends JScrollPane implements Printable {
   /**
    *
    */
-  public Rectangle getFoldingIconBounds(mxCellState state, ImageIcon icon) {
+  public Rectangle getFoldingIconBounds(mxCellState state, Icon icon) {
     mxIGraphModel model = graph.getModel();
     boolean isEdge = model.isEdge(state.getCell());
     double scale = getGraph().getView().getScale();
@@ -1825,7 +1802,7 @@ public class mxGraphComponent extends JScrollPane implements Printable {
         mxCellState state = graph.getView().getState(cell);
 
         if (state != null) {
-          ImageIcon icon = getFoldingIcon(state);
+          Icon icon = getFoldingIcon(state);
 
           if (icon != null) {
             return getFoldingIconBounds(state, icon).contains(x, y);
@@ -2866,7 +2843,7 @@ public class mxGraphComponent extends JScrollPane implements Printable {
    * @param select  Optional boolean indicating if a click on the overlay should
    *                select the corresponding cell. Default is false.
    */
-  public mxICellOverlay setCellWarning(final Object cell, String warning, ImageIcon icon, boolean select) {
+  public mxICellOverlay setCellWarning(final Object cell, String warning, Icon icon, boolean select) {
     if (warning != null && warning.length() > 0) {
       icon = (icon != null) ? icon : warningIcon;
 
@@ -3740,11 +3717,11 @@ public class mxGraphComponent extends JScrollPane implements Printable {
         boolean isEdge = model.isEdge(state.getCell());
 
         if (state.getCell() != graph.getCurrentRoot() && (model.isVertex(state.getCell()) || isEdge)) {
-          ImageIcon icon = getFoldingIcon(state);
+          Icon icon = getFoldingIcon(state);
 
           if (icon != null) {
             Rectangle bounds = getFoldingIconBounds(state, icon);
-            g2.drawImage(icon.getImage(), bounds.x, bounds.y, bounds.width, bounds.height, this);
+            icon.paintIcon(this, g2, bounds.x, bounds.y);
           }
         }
       }
