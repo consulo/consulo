@@ -36,6 +36,8 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Set;
 
@@ -63,6 +65,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
   }
 
   @Override
+  @RequiredDispatchThread
   public void invoke(@NotNull final Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
@@ -93,6 +96,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
   }
 
   @Nullable
+  @RequiredReadAction
   public static PsiElement findSymbolType(Editor editor, int offset) {
     final PsiElement[] psiElements = findSymbolTypes(editor, offset);
     if (psiElements != null && psiElements.length > 0) return psiElements[0];
@@ -100,9 +104,10 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
   }
 
   @Nullable
+  @RequiredReadAction
   public static PsiElement[] findSymbolTypes(Editor editor, int offset) {
-    Set<String> flags = ContainerUtil.newHashSet(TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED, TargetElementUtilEx.ELEMENT_NAME_ACCEPTED,
-                                                 TargetElementUtilEx.LOOKUP_ITEM_ACCEPTED);
+    Set<String> flags = ContainerUtil
+            .newHashSet(TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED, TargetElementUtilEx.ELEMENT_NAME_ACCEPTED, TargetElementUtilEx.LOOKUP_ITEM_ACCEPTED);
     PsiElement targetElement = TargetElementUtil.findTargetElement(editor, flags, offset);
 
     if (targetElement != null) {
@@ -132,19 +137,14 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
   }
 
   @Nullable
+  @RequiredReadAction
   private static PsiElement[] getSymbolTypeDeclarations(final PsiElement targetElement, Editor editor, int offset) {
     for (TypeDeclarationProvider provider : Extensions.getExtensions(TypeDeclarationProvider.EP_NAME)) {
-      PsiElement[] result;
-      if (provider instanceof TypeDeclarationPlaceAwareProvider) {
-        result = ((TypeDeclarationPlaceAwareProvider)provider).getSymbolTypeDeclarations(targetElement, editor, offset);
+      PsiElement[] result = provider.getSymbolTypeDeclarations(targetElement, editor, offset);
+      if (result != null) {
+        return result;
       }
-      else {
-        result = provider.getSymbolTypeDeclarations(targetElement);
-      }
-      if (result != null) return result;
     }
-
     return null;
   }
-
 }

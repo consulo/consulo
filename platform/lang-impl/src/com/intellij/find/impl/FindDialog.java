@@ -64,6 +64,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -339,6 +340,7 @@ public class FindDialog extends DialogWrapper {
       final AtomicInteger resultsCount = new AtomicInteger();
 
       ProgressIndicatorUtils.scheduleWithWriteActionPriority(myResultsPreviewSearchProgress, new ReadTask() {
+        @RequiredReadAction
         @Override
         public void computeInReadAction(@NotNull ProgressIndicator indicator) {
           final UsageViewPresentation presentation =

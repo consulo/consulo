@@ -16,16 +16,26 @@
 
 package com.intellij.codeInsight.navigation.actions;
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author yole
  */
-public interface TypeDeclarationProvider {
-  ExtensionPointName<TypeDeclarationProvider> EP_NAME = ExtensionPointName.create("com.intellij.typeDeclarationProvider");
+public abstract class TypeDeclarationProvider {
+  public static final ExtensionPointName<TypeDeclarationProvider> EP_NAME = ExtensionPointName.create("com.intellij.typeDeclarationProvider");
 
   @Nullable
-  PsiElement[] getSymbolTypeDeclarations(PsiElement symbol);
+  @RequiredReadAction
+  public PsiElement[] getSymbolTypeDeclarations(PsiElement symbol, @Nullable Editor editor, int offset) {
+    return getSymbolTypeDeclarations(symbol);
+  }
+
+  @Nullable
+  @RequiredReadAction
+  public abstract PsiElement[] getSymbolTypeDeclarations(@NotNull PsiElement symbol);
 }

@@ -90,6 +90,7 @@ import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -474,6 +475,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
   }
 
   @Nullable
+  @RequiredReadAction
   private Info getInfoAt(@NotNull final Editor editor, @NotNull PsiFile file, int offset, @NotNull BrowseMode browseMode) {
     PsiElement targetElement = null;
 
@@ -781,6 +783,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       if (offset >= selStart && offset < selEnd) return;
 
       ProgressIndicatorUtils.scheduleWithWriteActionPriority(myProgress, new ReadTask() {
+        @RequiredReadAction
         @Override
         public void computeInReadAction(@NotNull ProgressIndicator indicator) {
           doExecute(file, offset);
@@ -792,6 +795,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       });
     }
 
+    @RequiredReadAction
     private void doExecute(@NotNull PsiFile file, int offset) {
       final Info info;
       try {

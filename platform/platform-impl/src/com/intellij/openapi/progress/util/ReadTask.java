@@ -17,6 +17,7 @@ package com.intellij.openapi.progress.util;
 
 import com.intellij.openapi.progress.ProgressIndicator;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * A computation that needs to be run in background and inside a read action, and canceled whenever a write action is about to occur. 
@@ -29,6 +30,7 @@ public interface ReadTask {
    * Performs the computation.
    * Is invoked inside a read action and under a progress indicator that's canceled when a write action is about to occur.
    */
+  @RequiredReadAction
   void computeInReadAction(@NotNull ProgressIndicator indicator);
 
   /**

@@ -86,6 +86,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -1490,6 +1491,7 @@ public abstract class ChooseByNameBase {
       ProgressIndicatorUtils.scheduleWithWriteActionPriority(myProgress, this);
     }
 
+    @RequiredReadAction
     @Override
     public void computeInReadAction(@NotNull ProgressIndicator indicator) {
       if (myProject != null && myProject.isDisposed()) return;
