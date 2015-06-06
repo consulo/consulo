@@ -32,10 +32,12 @@ public abstract class TypeDeclarationProvider {
   @Nullable
   @RequiredReadAction
   public PsiElement[] getSymbolTypeDeclarations(@NotNull PsiElement symbol, @Nullable Editor editor, int offset) {
-    return getSymbolTypeDeclarations(symbol);
+    return null;
   }
 
   @Nullable
   @RequiredReadAction
-  public abstract PsiElement[] getSymbolTypeDeclarations(@NotNull PsiElement symbol);
+  public PsiElement[] getSymbolTypeDeclarations(@NotNull PsiElement symbol) {
+    return getSymbolTypeDeclarations(symbol, null, -1);
+  }
 }
