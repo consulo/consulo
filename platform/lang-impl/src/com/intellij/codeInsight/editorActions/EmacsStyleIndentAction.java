@@ -36,6 +36,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class EmacsStyleIndentAction extends BaseCodeInsightAction implements DumbAware {
 
@@ -56,6 +57,7 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
   //----------------------------------------------------------------------
   private static class Handler implements CodeInsightActionHandler {
 
+    @RequiredDispatchThread
     @Override
     public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file) {
       if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;

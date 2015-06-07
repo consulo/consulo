@@ -25,13 +25,15 @@ import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author Dmitry Avdeev
  */
 public abstract class CodeInsightAction extends AnAction {
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
@@ -43,10 +45,12 @@ public abstract class CodeInsightAction extends AnAction {
   }
 
   @Nullable
+  @RequiredDispatchThread
   protected Editor getEditor(@NotNull DataContext dataContext, @NotNull Project project) {
     return PlatformDataKeys.EDITOR.getData(dataContext);
   }
 
+  @RequiredDispatchThread
   public void actionPerformedImpl(@NotNull final Project project, final Editor editor) {
     if (editor == null) return;
     //final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -74,6 +78,7 @@ public abstract class CodeInsightAction extends AnAction {
   }
 
   @Override
+  @RequiredDispatchThread
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();

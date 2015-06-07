@@ -48,6 +48,7 @@ import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ public class CommentByBlockCommentHandler implements CodeInsightActionHandler {
   private Document myDocument;
   private CommenterDataHolder mySelfManagedCommenterData;
 
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;

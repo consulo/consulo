@@ -18,7 +18,10 @@ package com.intellij.codeInsight.actions;
 
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupManager;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
@@ -26,6 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public abstract class BaseCodeInsightAction extends CodeInsightAction {
   private final boolean myLookForInjectedEditor;
@@ -38,6 +42,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     myLookForInjectedEditor = lookForInjectedEditor;
   }
 
+  @RequiredDispatchThread
   @Override
   @Nullable
   protected Editor getEditor(@NotNull final DataContext dataContext, @NotNull final Project project) {
@@ -46,10 +51,12 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     return getInjectedEditor(project, editor);
   }
 
+  @RequiredDispatchThread
   public static Editor getInjectedEditor(@NotNull Project project, final Editor editor) {
     return getInjectedEditor(project, editor, true);
   }
 
+  @RequiredDispatchThread
   public static Editor getInjectedEditor(@NotNull Project project, final Editor editor, boolean commit) {
     Editor injectedEditor = editor;
     if (editor != null) {

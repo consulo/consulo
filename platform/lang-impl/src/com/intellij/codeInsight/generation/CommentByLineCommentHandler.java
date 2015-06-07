@@ -52,6 +52,7 @@ import com.intellij.util.text.CharArrayUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.Map;
 
@@ -71,6 +72,7 @@ public class CommentByLineCommentHandler implements CodeInsightActionHandler {
   private Map<SelfManagingCommenter, CommenterDataHolder> myCommenterStateMap;
   private CodeStyleManager                                myCodeStyleManager;
 
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;

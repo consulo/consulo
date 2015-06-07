@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * User : ktisha
@@ -25,6 +26,7 @@ public class FillParagraphAction extends BaseCodeInsightAction {
   }
   private static class Handler implements CodeInsightActionHandler {
 
+    @RequiredDispatchThread
     @Override
     public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file) {
 

@@ -27,8 +27,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class OverrideMethodsHandler implements CodeInsightActionHandler{
+  @RequiredDispatchThread
   @Override
   public final void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;

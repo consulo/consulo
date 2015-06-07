@@ -28,10 +28,12 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class AutoIndentLinesHandler implements CodeInsightActionHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.generation.AutoIndentLinesHandler");
 
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;

@@ -25,8 +25,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class MethodDownHandler implements CodeInsightActionHandler {
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     LookupManager.getInstance(project).hideActiveLookup();

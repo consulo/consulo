@@ -36,6 +36,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.*;
 
@@ -50,6 +51,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     myForward = forward;
   }
 
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
     if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;

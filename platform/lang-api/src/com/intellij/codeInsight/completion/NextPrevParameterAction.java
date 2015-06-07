@@ -29,6 +29,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public abstract class NextPrevParameterAction extends CodeInsightAction {
   private final boolean myNext;
@@ -63,6 +64,7 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
   }
 
   private class Handler implements CodeInsightActionHandler {
+    @RequiredDispatchThread
     @Override
     public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
       TemplateParameterTraversalPolicy policy = findSuitableTraversalPolicy(editor, file);

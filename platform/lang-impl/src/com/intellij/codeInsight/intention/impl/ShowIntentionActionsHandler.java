@@ -47,6 +47,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PairProcessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author mike
@@ -54,6 +55,7 @@ import org.jetbrains.annotations.Nullable;
 public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.ShowIntentionActionsHandler");
 
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull final Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();

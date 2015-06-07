@@ -23,6 +23,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class HippieCompletionAction extends BaseCodeInsightAction implements DumbAware {
   public HippieCompletionAction() {
@@ -30,6 +31,7 @@ public class HippieCompletionAction extends BaseCodeInsightAction implements Dum
     setEnabledInModalContext(true);
   }
 
+  @RequiredDispatchThread
   @Override
   public void actionPerformedImpl(@NotNull Project project, Editor editor) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("editing.completion.hippie");

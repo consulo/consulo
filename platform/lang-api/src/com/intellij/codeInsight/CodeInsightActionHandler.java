@@ -20,8 +20,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public interface CodeInsightActionHandler {
+  @RequiredDispatchThread
   void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file);
 
   boolean startInWriteAction();

@@ -35,11 +35,13 @@ import com.intellij.ui.LightweightHint;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.awt.*;
 import java.util.Set;
 
 public class ShowParameterInfoHandler implements CodeInsightActionHandler {
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     invoke(project, editor, file, -1, null);

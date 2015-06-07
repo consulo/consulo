@@ -32,6 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
   @NonNls public static final String CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE = "codeassists.quickjavadoc.lookup";
@@ -46,6 +47,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new CodeInsightActionHandler() {
+      @RequiredDispatchThread
       @Override
       public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
         DocumentationManager.getInstance(project).showJavaDocInfo(editor, file, LookupManager.getActiveLookup(editor) == null);
@@ -65,6 +67,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
   }
 
   @Override
+  @RequiredDispatchThread
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
@@ -116,6 +119,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();

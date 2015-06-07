@@ -53,6 +53,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
 
 import javax.swing.*;
@@ -79,6 +80,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return true;
   }
 
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull final Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();

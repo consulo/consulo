@@ -50,6 +50,7 @@ import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,6 +66,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed(getFeatureUsedKey());

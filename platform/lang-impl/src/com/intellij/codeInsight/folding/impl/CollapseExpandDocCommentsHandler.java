@@ -25,6 +25,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandler {
   private final boolean myExpand;
@@ -33,6 +34,7 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
     myExpand = isExpand;
   }
 
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull Project project, @NotNull final Editor editor, @NotNull PsiFile file){
     PsiDocumentManager.getInstance(project).commitAllDocuments();

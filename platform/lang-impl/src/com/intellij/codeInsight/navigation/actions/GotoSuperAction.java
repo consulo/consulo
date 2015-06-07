@@ -29,6 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
 
@@ -40,6 +41,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
     return this;
   }
 
+  @RequiredDispatchThread
   @Override
   public void invoke(@NotNull final Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
