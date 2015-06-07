@@ -25,18 +25,18 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredWriteAction;
 
-public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandler {
+public class CollapseExpandDocCommentsHandler extends CodeInsightActionHandler.WriteActionAdapter {
   private final boolean myExpand;
 
   public CollapseExpandDocCommentsHandler(boolean isExpand) {
     myExpand = isExpand;
   }
 
-  @RequiredDispatchThread
+  @RequiredWriteAction
   @Override
-  public void invoke(@NotNull Project project, @NotNull final Editor editor, @NotNull PsiFile file){
+  public void invokeInWriteAction(@NotNull Project project, @NotNull final Editor editor, @NotNull PsiFile file){
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(project);
@@ -54,10 +54,5 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
       }
     };
     editor.getFoldingModel().runBatchFoldingOperation(processor);
-  }
-
-  @Override
-  public boolean startInWriteAction() {
-    return true;
   }
 }

@@ -48,21 +48,22 @@ import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentByBlockCommentHandler implements CodeInsightActionHandler {
+public class CommentByBlockCommentHandler extends CodeInsightActionHandler.WriteActionAdapter {
   private Project myProject;
   private Editor myEditor;
   private PsiFile myFile;
   private Document myDocument;
   private CommenterDataHolder mySelfManagedCommenterData;
 
-  @RequiredDispatchThread
+  @RequiredWriteAction
   @Override
-  public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  public void invokeInWriteAction(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
     myProject = project;
     myEditor = editor;
@@ -189,6 +190,7 @@ public class CommentByBlockCommentHandler implements CodeInsightActionHandler {
     return s == null ? null : s.trim();
   }
 
+  @RequiredReadAction
   private boolean testSelectionForNonComments() {
     SelectionModel model = myEditor.getSelectionModel();
     if (!model.hasSelection()) {
@@ -212,6 +214,7 @@ public class CommentByBlockCommentHandler implements CodeInsightActionHandler {
     return true;
   }
 
+  @RequiredReadAction
   private boolean isInjectedWhiteSpace(@NotNull TextRange range, @NotNull OuterLanguageElement element) {
     PsiElement psi = element.getContainingFile().getViewProvider().getPsi(element.getLanguage());
     if (psi == null) {
@@ -244,6 +247,7 @@ public class CommentByBlockCommentHandler implements CodeInsightActionHandler {
   }
 
   @Nullable
+  @RequiredReadAction
   private TextRange findCommentedRange(final Commenter commenter) {
     final CharSequence text = myDocument.getCharsSequence();
     final FileType fileType = myFile.getFileType();
@@ -390,11 +394,6 @@ public class CommentByBlockCommentHandler implements CodeInsightActionHandler {
     }
 
     return comment;
-  }
-
-  @Override
-  public boolean startInWriteAction() {
-    return true;
   }
 
   public void commentRange(int startOffset, int endOffset, String commentPrefix, String commentSuffix, Commenter commenter) {

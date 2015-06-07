@@ -176,6 +176,7 @@ public class AutoPopupController implements Disposable {
       final PsiFile file1 = file;
       final Runnable request = new Runnable(){
         @Override
+        @RequiredDispatchThread
         public void run(){
           if (myProject.isDisposed() || DumbService.isDumb(myProject)) return;
           documentManager.commitAllDocuments();
