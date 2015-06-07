@@ -20,6 +20,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -81,6 +82,7 @@ public interface ApplicationEx extends Application {
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
+  @RequiredDispatchThread
   boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
                                               @NotNull String progressTitle,
                                               boolean canBeCanceled,
@@ -89,6 +91,7 @@ public interface ApplicationEx extends Application {
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
+  @RequiredDispatchThread
   boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
                                               @NotNull String progressTitle,
                                               boolean canBeCanceled,
@@ -98,6 +101,7 @@ public interface ApplicationEx extends Application {
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
+  @RequiredDispatchThread
   boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
                                               @NotNull String progressTitle,
                                               boolean canBeCanceled,
@@ -105,6 +109,7 @@ public interface ApplicationEx extends Application {
                                               JComponent parentComponent,
                                               final String cancelText);
 
+  @RequiredDispatchThread
   void assertIsDispatchThread(@Nullable JComponent component);
 
   void assertTimeConsuming();

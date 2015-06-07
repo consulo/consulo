@@ -69,6 +69,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.*;
@@ -269,6 +272,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
         }
         ShutDownTracker.invokeAndWait(isUnitTestMode(), true, new Runnable() {
           @Override
+          @RequiredDispatchThread
           public void run() {
             if (ApplicationManager.getApplication() != ApplicationImpl.this) return;
             try {
@@ -286,6 +290,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     });
   }
 
+  @RequiredDispatchThread
   private boolean disposeSelf(final boolean checkCanCloseProject) {
     final ProjectManagerImpl manager = (ProjectManagerImpl)ProjectManagerEx.getInstanceEx();
     if (manager != null) {
@@ -570,6 +575,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     Disposer.dispose(myLastDisposable); // dispose it last
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process,
                                                      @NotNull String progressTitle,
@@ -578,6 +584,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, null);
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process,
                                                      @NotNull final String progressTitle,
@@ -587,6 +594,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, parentComponent, null);
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process,
                                                      @NotNull final String progressTitle,
@@ -708,6 +716,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return myStartTime;
   }
 
+  @RequiredDispatchThread
   @Override
   public long getIdleTime() {
     assertIsDispatchThread();
@@ -758,6 +767,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
       Runnable runnable = new Runnable() {
         @Override
+        @RequiredDispatchThread
         public void run() {
           if (!force && !confirmExitIfNeeded(exitConfirmed)) {
             saveAll();
@@ -783,6 +793,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
   }
 
+  @RequiredDispatchThread
   private boolean doExit(boolean allowListenersToCancel, boolean restart) {
     saveSettings();
 
@@ -936,6 +947,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     myLock.readLock().unlock();
   }
 
+  @RequiredDispatchThread
   @Override
   public void runWriteAction(@NotNull final Runnable action) {
     Class<? extends Runnable> clazz = action.getClass();
@@ -948,6 +960,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public <T> T runWriteAction(@NotNull final Computable<T> computation) {
     Class<? extends Computable> clazz = computation.getClass();
@@ -960,6 +973,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public <T, E extends Throwable> T runWriteAction(@NotNull ThrowableComputable<T, E> computation) throws E {
     Class<? extends ThrowableComputable> clazz = computation.getClass();
@@ -972,6 +986,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean hasWriteAction(@Nullable Class<?> actionClass) {
     assertIsDispatchThread();
@@ -983,6 +998,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return false;
   }
 
+  @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
     if (!isReadAccessAllowed()) {
@@ -1020,11 +1036,13 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return (status.flags & (IS_EDT_FLAG | IS_READ_LOCK_ACQUIRED_FLAG)) != 0;
   }
 
+  @RequiredDispatchThread
   @Override
   public void assertIsDispatchThread() {
     assertIsDispatchThread(getStatus());
   }
 
+  @RequiredDispatchThread
   private static void assertIsDispatchThread(Status status) {
     if (isDispatchThread(status)) return;
     if (ShutDownTracker.isShutdownHookRunning()) return;
@@ -1038,6 +1056,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return status.flags & 0x1fffffff;
   }
 
+  @RequiredDispatchThread
   private static void assertIsDispatchThread(Status status, @NotNull String message) {
     if (isDispatchThread(status)) return;
     LOG.error(message, "EventQueue.isDispatchThread()=" + EventQueue.isDispatchThread(), "isDispatchThread()=" + isDispatchThread(getStatus()),
@@ -1059,6 +1078,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void assertIsDispatchThread(@Nullable final JComponent component) {
     if (component == null) return;
@@ -1206,6 +1226,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
   }
 
+  @RequiredDispatchThread
   @NotNull
   @Override
   public AccessToken acquireWriteActionLock(Class clazz) {
@@ -1295,6 +1316,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
   }
 
+  @RequiredWriteAction
   @Override
   public void assertWriteAccessAllowed() {
     LOG.assertTrue(isWriteAccessAllowed(),

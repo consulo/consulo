@@ -22,6 +22,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -72,12 +73,14 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process, @NotNull final String progressTitle, final boolean canBeCanceled, @Nullable final Project project,
                                                      final JComponent parentComponent) {
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
                                                      @NotNull String progressTitle,
@@ -88,6 +91,7 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
                                                      @NotNull String progressTitle,
@@ -102,6 +106,7 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
     return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();
   }
 
+  @RequiredDispatchThread
   @Override
   public void assertIsDispatchThread(@Nullable final JComponent component) {
   }

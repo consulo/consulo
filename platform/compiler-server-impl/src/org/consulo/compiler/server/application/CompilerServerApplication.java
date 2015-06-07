@@ -40,6 +40,9 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.*;
@@ -236,6 +239,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return computation.compute();
   }
 
+  @RequiredDispatchThread
   @Override
   public void runWriteAction(@NotNull Runnable action) {
     try {
@@ -246,6 +250,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public <T> T runWriteAction(@NotNull Computable<T> computation) {
     try {
@@ -257,24 +262,29 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public <T, E extends Throwable> T runWriteAction(@NotNull ThrowableComputable<T, E> computation) throws E {
     return computation.compute();
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean hasWriteAction(@Nullable Class<?> actionClass) {
     return true;
   }
 
+  @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
   }
 
+  @RequiredWriteAction
   @Override
   public void assertWriteAccessAllowed() {
   }
 
+  @RequiredDispatchThread
   @Override
   public void assertIsDispatchThread() {
   }
@@ -409,6 +419,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return 0;
   }
 
+  @RequiredDispatchThread
   @Override
   public long getIdleTime() {
     return 0;
@@ -471,6 +482,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
+  @RequiredDispatchThread
   @NotNull
   @Override
   public AccessToken acquireWriteActionLock(@Nullable Class marker) {
@@ -543,6 +555,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   public void restart(boolean force) {
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
                                                      @NotNull String progressTitle,
@@ -552,6 +565,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
                                                      @NotNull String progressTitle,
@@ -562,6 +576,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
                                                      @NotNull String progressTitle,
@@ -573,6 +588,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
+  @RequiredDispatchThread
   @Override
   public void assertIsDispatchThread(@Nullable JComponent component) {
   }

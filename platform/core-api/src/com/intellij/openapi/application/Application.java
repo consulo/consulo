@@ -78,6 +78,7 @@ public interface Application extends ComponentManager {
    *
    * @param action the action to run
    */
+  @RequiredDispatchThread
   void runWriteAction(@NotNull Runnable action);
 
   /**
@@ -88,6 +89,7 @@ public interface Application extends ComponentManager {
    * @param computation the computation to run
    * @return the result returned by the computation.
    */
+  @RequiredDispatchThread
   <T> T runWriteAction(@NotNull Computable<T> computation);
 
   /**
@@ -99,6 +101,7 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    * @exception E re-frown from ThrowableComputable
    */
+  @RequiredDispatchThread
   <T, E extends Throwable> T runWriteAction(@NotNull ThrowableComputable<T, E> computation) throws E;
 
   /**
@@ -107,6 +110,7 @@ public interface Application extends ComponentManager {
    * @param actionClass the class of the write action to return.
    * @return true if the action is running, or false if no action of the specified class is currently executing.
    */
+  @RequiredDispatchThread
   boolean hasWriteAction(@Nullable Class<?> actionClass);
 
   /**
@@ -304,6 +308,7 @@ public interface Application extends ComponentManager {
    *
    * @return the idle time of IDEA.
    */
+  @RequiredDispatchThread
   long getIdleTime();
 
   /**
@@ -394,6 +399,7 @@ public interface Application extends ComponentManager {
    * Returns lock used for write operations, should be closed in finally block
    */
   @NotNull
+  @RequiredDispatchThread
   AccessToken acquireWriteActionLock(@Nullable Class marker);
 
   boolean isInternal();

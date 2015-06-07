@@ -24,6 +24,9 @@ import com.intellij.openapi.util.ThrowableComputable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -59,14 +62,17 @@ public class MockApplication extends MockComponentManager implements Application
     return true;
   }
 
+  @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
   }
 
+  @RequiredWriteAction
   @Override
   public void assertWriteAccessAllowed() {
   }
 
+  @RequiredDispatchThread
   @Override
   public void assertIsDispatchThread() {
   }
@@ -142,16 +148,19 @@ public class MockApplication extends MockComponentManager implements Application
     return computation.compute();
   }
 
+  @RequiredDispatchThread
   @Override
   public void runWriteAction(@NotNull Runnable action) {
     action.run();
   }
 
+  @RequiredDispatchThread
   @Override
   public <T> T runWriteAction(@NotNull Computable<T> computation) {
     return computation.compute();
   }
 
+  @RequiredDispatchThread
   @Override
   public <T, E extends Throwable> T runWriteAction(@NotNull ThrowableComputable<T, E> computation) throws E {
     return computation.compute();
@@ -163,12 +172,14 @@ public class MockApplication extends MockComponentManager implements Application
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
+  @RequiredDispatchThread
   @NotNull
   @Override
   public AccessToken acquireWriteActionLock(@Nullable Class marker) {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean hasWriteAction(@Nullable Class<?> actionClass) {
     return false;
@@ -191,6 +202,7 @@ public class MockApplication extends MockComponentManager implements Application
     return 0;
   }
 
+  @RequiredDispatchThread
   @Override
   public long getIdleTime() {
     return 0;
