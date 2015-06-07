@@ -28,6 +28,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class OverrideMethodsAction extends BaseCodeInsightAction {
 
@@ -47,6 +48,7 @@ public class OverrideMethodsAction extends BaseCodeInsightAction {
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(final AnActionEvent event) {
     if (CodeInsightActions.OVERRIDE_METHOD.hasAnyExtensions()) {

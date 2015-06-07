@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class GotoImplementationAction extends BaseCodeInsightAction implements DumbAware {
   @NotNull
@@ -36,6 +37,7 @@ public class GotoImplementationAction extends BaseCodeInsightAction implements D
     return true;
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(final AnActionEvent event) {
     if (!DefinitionsScopedSearch.INSTANCE.hasAnyExecutors()) {

@@ -54,6 +54,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
     return true;
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(final AnActionEvent event) {
     if (Extensions.getExtensions(TypeDeclarationProvider.EP_NAME).length == 0) {

@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class DelegateMethodsAction extends BaseCodeInsightAction {
 
@@ -47,6 +48,7 @@ public class DelegateMethodsAction extends BaseCodeInsightAction {
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(final AnActionEvent event) {
     if (CodeInsightActions.DELEGATE_METHODS.hasAnyExtensions()) {

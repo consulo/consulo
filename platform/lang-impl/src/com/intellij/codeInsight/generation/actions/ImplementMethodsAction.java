@@ -28,6 +28,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class ImplementMethodsAction extends BaseCodeInsightAction {
   @NotNull
@@ -43,6 +44,7 @@ public class ImplementMethodsAction extends BaseCodeInsightAction {
     return codeInsightActionHandler != null && codeInsightActionHandler.isValidFor(editor, file);
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(final AnActionEvent event) {
     if (CodeInsightActions.IMPLEMENT_METHOD.hasAnyExtensions()) {

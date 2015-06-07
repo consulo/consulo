@@ -60,6 +60,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(final AnActionEvent event) {
     if (CodeInsightActions.GOTO_SUPER.hasAnyExtensions()) {

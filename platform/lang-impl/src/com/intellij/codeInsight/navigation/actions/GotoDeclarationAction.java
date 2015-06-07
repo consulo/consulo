@@ -299,6 +299,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return Pair.empty();
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(final AnActionEvent event) {
     InputEvent inputEvent = event.getInputEvent();

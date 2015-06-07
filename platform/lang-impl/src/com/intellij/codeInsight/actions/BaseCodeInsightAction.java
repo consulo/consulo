@@ -75,6 +75,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     return super.getEditor(dataContext, project);
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
