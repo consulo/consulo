@@ -28,14 +28,14 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredWriteAction;
 
-public class AutoIndentLinesHandler implements CodeInsightActionHandler {
+public class AutoIndentLinesHandler extends CodeInsightActionHandler.WriteActionAdapter {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.generation.AutoIndentLinesHandler");
 
-  @RequiredDispatchThread
+  @RequiredWriteAction
   @Override
-  public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  public void invokeInWriteAction(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
@@ -96,10 +96,5 @@ public class AutoIndentLinesHandler implements CodeInsightActionHandler {
     } else {
       codeStyleManager.adjustLineIndent(file, new TextRange(startOffset, endOffset));
     }
-  }
-
-  @Override
-  public boolean startInWriteAction() {
-    return true;
   }
 }

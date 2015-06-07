@@ -16,15 +16,41 @@
 
 package com.intellij.codeInsight;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public interface CodeInsightActionHandler {
+  abstract class WriteActionAdapter implements CodeInsightActionHandler{
+    @Override
+    @RequiredDispatchThread
+    public final void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file) {
+      ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
+        public void run() {
+          invokeInWriteAction(project, editor, file);
+        }
+      });
+    }
+
+    @RequiredWriteAction
+    public abstract void invokeInWriteAction(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file);
+
+    @Override
+    public final boolean startInWriteAction() {
+      return false;
+    }
+  }
+
   @RequiredDispatchThread
   void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file);
 
+  @Deprecated
+  @DeprecationInfo("Please return 'false' always, if u need wrap into write action - use WriteActionAdapter")
   boolean startInWriteAction();
 }
