@@ -24,9 +24,9 @@ import com.intellij.openapi.roots.ui.configuration.SdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.PairConsumer;
-import lombok.val;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
@@ -37,6 +37,8 @@ import org.mustbe.consulo.RequiredReadAction;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -65,7 +67,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   @NotNull
   private NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
   @NotNull
-  private Class<? extends SdkType> mySdkTypeClass;
+  private Condition<SdkTypeId> mySdkFilter = Conditions.alwaysTrue();
 
   private final T myMutableModuleExtension;
 
@@ -80,14 +82,30 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   }
 
   @NotNull
-  public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@NotNull Class<? extends SdkType> clazz) {
-    mySdkTypeClass = clazz;
+  public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@NotNull final Class<? extends SdkType> clazz) {
+    mySdkFilter = new Condition<SdkTypeId>() {
+      @Override
+      public boolean value(SdkTypeId sdkTypeId) {
+        return clazz.isAssignableFrom(sdkTypeId.getClass());
+      }
+    };
     return this;
   }
 
   @NotNull
-  public ModuleExtensionSdkBoxBuilder<T> sdkType(@NotNull SdkType clazz) {
-    return sdkTypeClass(clazz.getClass());
+  public ModuleExtensionSdkBoxBuilder<T> sdkTypes(@NotNull final Set<SdkType> sdkTypes) {
+    mySdkFilter = new Condition<SdkTypeId>() {
+      @Override
+      public boolean value(SdkTypeId sdkTypeId) {
+        return sdkTypes.contains(sdkTypeId);
+      }
+    };
+    return this;
+  }
+
+  @NotNull
+  public ModuleExtensionSdkBoxBuilder<T> sdkType(@NotNull final SdkType sdkType) {
+    return sdkTypes(Collections.singleton(sdkType));
   }
 
   @NotNull
@@ -119,12 +137,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   public JComponent build() {
     final ProjectSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(myMutableModuleExtension.getProject()).getProjectSdksModel();
 
-    val comboBox = new SdkComboBox(projectSdksModel, new Condition<SdkTypeId>() {
-      @Override
-      public boolean value(SdkTypeId sdkTypeId) {
-        return mySdkTypeClass.isAssignableFrom(sdkTypeId.getClass());
-      }
-    }, true);
+    final SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, true);
 
     comboBox.insertModuleItems(myMutableModuleExtension, mySdkPointerFunction);
 
