@@ -17,8 +17,10 @@ package com.intellij.ide.ui.laf.ideaOld;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.laf.LafManagerImpl;
+import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredSideBorder;
 import com.intellij.ui.plaf.beg.*;
+import com.intellij.util.ui.UIUtil;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsTreeUI;
 
@@ -35,11 +37,19 @@ public final class IdeaLaf extends MetalLookAndFeel {
 
   public static final ColorUIResource TOOLTIP_BACKGROUND_COLOR = new ColorUIResource(255, 255, 231);
 
+  @Override
   public void initComponentDefaults(UIDefaults defaults) {
     super.initComponentDefaults(defaults);
     LafManagerImpl.initInputMapDefaults(defaults);
     initIdeaDefaults(defaults);
-    LafManagerImpl.initFontDefaults(defaults, "Tahoma", 11);
+
+    Pair<String, Integer> systemFont = UIUtil.getSystemFontData();
+    if (systemFont != null) {
+      LafManagerImpl.initFontDefaults(defaults, systemFont.getFirst(), systemFont.getSecond());
+    }
+    else {
+      LafManagerImpl.initFontDefaults(defaults, "Tahoma", 11);
+    }
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
