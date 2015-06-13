@@ -22,14 +22,6 @@ import org.jetbrains.annotations.NotNull;
  * @author peter
  */
 public abstract class CompletionProvider<V extends CompletionParameters> {
-
-  protected CompletionProvider() {
-  }
-
-  @Deprecated
-  protected CompletionProvider(final boolean startInReadAction) {
-  }
-
   protected abstract void addCompletions(@NotNull V parameters, final ProcessingContext context, @NotNull CompletionResultSet result);
 
   public final void addCompletionVariants(@NotNull final V parameters, final ProcessingContext context, @NotNull final CompletionResultSet result) {
