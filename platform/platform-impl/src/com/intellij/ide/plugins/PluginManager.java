@@ -118,7 +118,8 @@ public class PluginManager extends PluginManagerCore {
             getLogger().error(t);
           }
         }
-        catch (Throwable ignore) { }
+        catch (Throwable ignore) {
+        }
 
         Main.showMessage("Start Failed", t);
       }
@@ -143,44 +144,47 @@ public class PluginManager extends PluginManagerCore {
   }
 
   public static void reportPluginError() {
-    if (myPluginError != null) {
-      String title = IdeBundle.message("title.plugin.error");
-      Notifications.Bus.notify(new Notification(title, title, myPluginError, NotificationType.ERROR, new NotificationListener() {
-        @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
-        @Override
-        public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
-          notification.expire();
+    if (ourPluginErrors != null) {
+      for (String pluginError : ourPluginErrors) {
+        String message = IdeBundle.message("title.plugin.notification.title");
+        Notifications.Bus.notify(new Notification(message, message, pluginError, NotificationType.ERROR, new NotificationListener() {
+          @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
+          @Override
+          public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+            notification.expire();
 
-          String description = event.getDescription();
-          if (EDIT.equals(description)) {
-            PluginManagerConfigurable configurable = new PluginManagerConfigurable(PluginManagerUISettings.getInstance());
-            IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-            ShowSettingsUtil.getInstance().editConfigurable((JFrame)ideFrame, configurable);
-            return;
-          }
+            String description = event.getDescription();
+            if (EDIT.equals(description)) {
+              PluginManagerConfigurable configurable = new PluginManagerConfigurable(PluginManagerUISettings.getInstance());
+              IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
+              ShowSettingsUtil.getInstance().editConfigurable((JFrame)ideFrame, configurable);
+              return;
+            }
 
-          List<String> disabledPlugins = getDisabledPlugins();
-          if (myPlugins2Disable != null && DISABLE.equals(description)) {
-            for (String pluginId : myPlugins2Disable) {
-              if (!disabledPlugins.contains(pluginId)) {
-                disabledPlugins.add(pluginId);
+            List<String> disabledPlugins = getDisabledPlugins();
+            if (myPlugins2Disable != null && DISABLE.equals(description)) {
+              for (String pluginId : myPlugins2Disable) {
+                if (!disabledPlugins.contains(pluginId)) {
+                  disabledPlugins.add(pluginId);
+                }
               }
             }
-          }
-          else if (myPlugins2Enable != null && ENABLE.equals(description)) {
-            disabledPlugins.removeAll(myPlugins2Enable);
-          }
+            else if (myPlugins2Enable != null && ENABLE.equals(description)) {
+              disabledPlugins.removeAll(myPlugins2Enable);
+            }
 
-          try {
-            saveDisabledPlugins(disabledPlugins, false);
-          }
-          catch (IOException ignore) { }
+            try {
+              saveDisabledPlugins(disabledPlugins, false);
+            }
+            catch (IOException ignore) {
+            }
 
-          myPlugins2Enable = null;
-          myPlugins2Disable = null;
-        }
-      }));
-      myPluginError = null;
+            myPlugins2Enable = null;
+            myPlugins2Disable = null;
+          }
+        }));
+      }
+      ourPluginErrors = null;
     }
   }
 

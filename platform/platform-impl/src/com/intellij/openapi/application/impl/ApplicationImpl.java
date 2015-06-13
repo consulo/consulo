@@ -341,6 +341,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   private void loadApplicationComponents() {
+    PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
     PluginManagerCore.initPlugins(mySplash);
     IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor plugin : plugins) {

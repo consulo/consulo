@@ -68,7 +68,7 @@ public class PluginInstaller {
         }
       }
       catch (IOException e) {
-        String title = IdeBundle.message("title.plugin.error");
+        String title = IdeBundle.message("title.plugin.notification.title");
         Notifications.Bus.notify(new Notification(title, title, pluginNode.getName() + ": " + e.getMessage(), NotificationType.ERROR));
         return null;
       }
