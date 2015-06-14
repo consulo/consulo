@@ -606,7 +606,6 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
   @Override
   public void setSoftWrapAppliancePlace(@NotNull SoftWrapAppliancePlaces place) {
-    getSoftWrapModel().setPlace(place);
     mySettings.setSoftWrapAppliancePlace(place);
   }
 

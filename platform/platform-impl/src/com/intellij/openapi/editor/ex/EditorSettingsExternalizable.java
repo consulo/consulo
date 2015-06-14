@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,35 +15,32 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.ExportableApplicationComponent;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
-import com.intellij.openapi.options.OptionsBundle;
-import com.intellij.openapi.util.DefaultJDOMExternalizer;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.NamedJDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.text.StringUtil;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class EditorSettingsExternalizable implements NamedJDOMExternalizable, ExportableApplicationComponent, Cloneable {
+@State(
+        name = "EditorSettings",
+        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml")}
+)
+public class EditorSettingsExternalizable implements PersistentStateComponent<EditorSettingsExternalizable.OptionSet> {
   //Q: make it interface?
-  public static class OptionSet implements Cloneable {
+  public static final class OptionSet {
     public String LINE_SEPARATOR;
     public String USE_SOFT_WRAPS;
     public boolean USE_CUSTOM_SOFT_WRAP_INDENT = false;
     public int CUSTOM_SOFT_WRAP_INDENT = 0;
-    public boolean IS_VIRTUAL_SPACE = true;
+    public boolean IS_VIRTUAL_SPACE = false;
     public boolean IS_CARET_INSIDE_TABS;
     @NonNls public String STRIP_TRAILING_SPACES = STRIP_TRAILING_SPACES_CHANGED;
     public boolean IS_ENSURE_NEWLINE_AT_EOF = false;
@@ -60,6 +57,10 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
 
     public boolean IS_BLOCK_CURSOR = false;
     public boolean IS_WHITESPACES_SHOWN = false;
+    public boolean IS_LEADING_WHITESPACES_SHOWN = true;
+    public boolean IS_INNER_WHITESPACES_SHOWN = true;
+    public boolean IS_TRAILING_WHITESPACES_SHOWN = true;
+    @SuppressWarnings("SpellCheckingInspection")
     public boolean IS_ALL_SOFTWRAPS_SHOWN = false;
     public boolean IS_INDENT_GUIDES_SHOWN = true;
     public boolean IS_ANIMATED_SCROLLING = true;
@@ -67,24 +68,18 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
     public boolean ADDITIONAL_PAGE_AT_BOTTOM = false;
 
     public boolean IS_DND_ENABLED = true;
+    @SuppressWarnings("SpellCheckingInspection")
     public boolean IS_WHEEL_FONTCHANGE_ENABLED = false;
     public boolean IS_MOUSE_CLICK_SELECTION_HONORS_CAMEL_WORDS = true;
 
     public boolean RENAME_VARIABLES_INPLACE = true;
     public boolean PRESELECT_RENAME = true;
+    public boolean SHOW_INLINE_DIALOG = true;
+
     public boolean REFRAIN_FROM_SCROLLING = false;
 
     public boolean SHOW_REFORMAT_DIALOG = true;
     public boolean SHOW_OPIMIZE_IMPORTS_DIALOG = true;
-
-    @Override
-    public Object clone() {
-      try {
-        return super.clone();
-      } catch (CloneNotSupportedException e) {
-        return null;
-      }
-    }
   }
 
   private static final String COMPOSITE_PROPERTY_SEPARATOR = ":";
@@ -98,7 +93,7 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
   //private boolean myUseTabCharacter = false;
 
   private int myAdditionalLinesCount = 10;
-  private int myAdditinalColumnsCount = 20;
+  private int myAdditionalColumnsCount = 20;
   private boolean myLineMarkerAreaShown = true;
 
   @NonNls public static final String STRIP_TRAILING_SPACES_NONE = "None";
@@ -106,21 +101,17 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
   @NonNls public static final String STRIP_TRAILING_SPACES_WHOLE = "Whole";
 
   @MagicConstant(stringValues = {STRIP_TRAILING_SPACES_NONE, STRIP_TRAILING_SPACES_CHANGED, STRIP_TRAILING_SPACES_WHOLE})
-  @interface StripTrailingSpaces {}
+  public @interface StripTrailingSpaces {}
 
   @NonNls public static final String DEFAULT_FONT_NAME = "Courier";
 
   public static EditorSettingsExternalizable getInstance() {
-    final Application app = ApplicationManager.getApplication();
-    if (app.isDisposed()) return new EditorSettingsExternalizable();
-    return app.getComponent(EditorSettingsExternalizable.class);
-  }
-
-  @Override
-  public void initComponent() { }
-
-  @Override
-  public void disposeComponent() {
+    if (ApplicationManager.getApplication().isDisposed()) {
+      return new EditorSettingsExternalizable();
+    }
+    else {
+      return ServiceManager.getService(EditorSettingsExternalizable.class);
+    }
   }
 
   public void addPropertyChangeListener(PropertyChangeListener listener){
@@ -131,19 +122,20 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
     myPropertyChangeSupport.removePropertyChangeListener(listener);
   }
 
+  @Nullable
   @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    DefaultJDOMExternalizer.readExternal(myOptions, element);
+  public OptionSet getState() {
+    return myOptions;
+  }
+
+  @Override
+  public void loadState(OptionSet state) {
+    myOptions = state;
     parseRawSoftWraps();
   }
 
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    DefaultJDOMExternalizer.writeExternal(myOptions, element);
-  }
-
   private void parseRawSoftWraps() {
-    if (myOptions.USE_SOFT_WRAPS == null || myOptions.USE_SOFT_WRAPS.isEmpty()) {
+    if (StringUtil.isEmpty(myOptions.USE_SOFT_WRAPS)) {
       return;
     }
 
@@ -151,10 +143,6 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
     for (String placeName : placeNames) {
       try {
         SoftWrapAppliancePlaces place = SoftWrapAppliancePlaces.valueOf(placeName);
-        if (place == SoftWrapAppliancePlaces.VCS_DIFF) {
-          // Don't keep separate setting for vcs diff window for now and let it share the value for main editor.
-          continue;
-        }
         myPlacesToUseSoftWraps.add(place);
       }
       catch (IllegalArgumentException e) {
@@ -175,11 +163,6 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
       buffer.setLength(buffer.length() - 1);
     }
     myOptions.USE_SOFT_WRAPS = buffer.toString();
-  }
-
-  @Override
-  public String getExternalFileName() {
-    return "editor";
   }
 
   public OptionSet getOptions() {
@@ -210,12 +193,13 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
     myAdditionalLinesCount = additionalLinesCount;
   }
 
+  @SuppressWarnings({"UnusedDeclaration", "SpellCheckingInspection"})
   public int getAdditinalColumnsCount() {
-    return myAdditinalColumnsCount;
+    return myAdditionalColumnsCount;
   }
 
-  public void setAdditionalColumnsCount(int additinalColumnsCount) {
-    myAdditinalColumnsCount = additinalColumnsCount;
+  public void setAdditionalColumnsCount(int value) {
+    myAdditionalColumnsCount = value;
   }
 
   public boolean isLineMarkerAreaShown() {
@@ -263,12 +247,7 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
   }
 
   public boolean isUseSoftWraps(@NotNull SoftWrapAppliancePlaces place) {
-    if (myPlacesToUseSoftWraps.contains(place)) {
-      return true;
-    }
-
-    // For now use soft wraps at vcs diff if they are enabled for the main editors.
-    return place == SoftWrapAppliancePlaces.VCS_DIFF && myPlacesToUseSoftWraps.contains(SoftWrapAppliancePlaces.MAIN_EDITOR);
+    return myPlacesToUseSoftWraps.contains(place);
   }
 
   public void setUseSoftWraps(boolean use) {
@@ -371,8 +350,8 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
   public void setQuickDocOnMouseOverElementDelayMillis(long delay) throws IllegalArgumentException {
     if (delay <= 0) {
       throw new IllegalArgumentException(String.format(
-        "Non-positive delay for the 'show quick doc on mouse over element' value detected! Expected positive value but got %d",
-        delay
+              "Non-positive delay for the 'show quick doc on mouse over element' value detected! Expected positive value but got %d",
+              delay
       ));
     }
     myOptions.QUICK_DOC_ON_MOUSE_OVER_DELAY_MS = delay;
@@ -394,44 +373,36 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
     myOptions.REFRAIN_FROM_SCROLLING = b;
   }
 
-  @Override
-  public Object clone() {
-    EditorSettingsExternalizable copy = new EditorSettingsExternalizable();
-    copy.myOptions = (OptionSet) myOptions.clone();
-    copy.myBlockIndent = myBlockIndent;
-    //copy.myTabSize = myTabSize;
-    //copy.myUseTabCharacter = myUseTabCharacter;
-    copy.myAdditionalLinesCount = myAdditionalLinesCount;
-    copy.myAdditinalColumnsCount = myAdditinalColumnsCount;
-    copy.myLineMarkerAreaShown = myLineMarkerAreaShown;
-
-    return copy;
-  }
-
-  @Override
-  @NotNull
-  public String getComponentName() {
-    return "EditorSettings";
-  }
-
-  @Override
-  @NotNull
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile(this)};
-  }
-
-  @Override
-  @NotNull
-  public String getPresentableName() {
-    return OptionsBundle.message("options.editor.settings.presentable.name");
-  }
-
   public boolean isWhitespacesShown() {
     return myOptions.IS_WHITESPACES_SHOWN;
   }
 
   public void setWhitespacesShown(boolean val) {
     myOptions.IS_WHITESPACES_SHOWN = val;
+  }
+
+  public boolean isLeadingWhitespacesShown() {
+    return myOptions.IS_LEADING_WHITESPACES_SHOWN;
+  }
+
+  public void setLeadingWhitespacesShown(boolean val) {
+    myOptions.IS_LEADING_WHITESPACES_SHOWN = val;
+  }
+
+  public boolean isInnerWhitespacesShown() {
+    return myOptions.IS_INNER_WHITESPACES_SHOWN;
+  }
+
+  public void setInnerWhitespacesShown(boolean val) {
+    myOptions.IS_INNER_WHITESPACES_SHOWN = val;
+  }
+
+  public boolean isTrailingWhitespacesShown() {
+    return myOptions.IS_TRAILING_WHITESPACES_SHOWN;
+  }
+
+  public void setTrailingWhitespacesShown(boolean val) {
+    myOptions.IS_TRAILING_WHITESPACES_SHOWN = val;
   }
 
   public boolean isAllSoftWrapsShown() {
@@ -512,5 +483,13 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
 
   public void setPreselectRename(final boolean val) {
     myOptions.PRESELECT_RENAME = val;
+  }
+
+  public boolean isShowInlineLocalDialog() {
+    return myOptions.SHOW_INLINE_DIALOG;
+  }
+
+  public void setShowInlineLocalDialog(final boolean val) {
+    myOptions.SHOW_INLINE_DIALOG = val;
   }
 }

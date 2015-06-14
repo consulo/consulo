@@ -1109,8 +1109,11 @@
     <appStarter implementation="com.intellij.openapi.diff.DiffApplication"/>
     <appStarter implementation="com.intellij.openapi.diff.MergeApplication"/>
 
+
     <applicationService serviceInterface="com.intellij.openapi.application.ApplicationInfo"
                         serviceImplementation="com.intellij.openapi.application.impl.ApplicationInfoImpl"/>
+
+    <applicationService serviceImplementation="com.intellij.openapi.editor.ex.EditorSettingsExternalizable" />
 
     <applicationService serviceInterface="com.intellij.ide.util.PropertiesComponent"
                         serviceImplementation="com.intellij.ide.util.AppPropertiesComponentImpl"/>

@@ -30,7 +30,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
@@ -94,7 +93,6 @@ public class DiffUtil {
     EditorFactory factory = EditorFactory.getInstance();
     EditorEx editor = (EditorEx)(isViewer ? factory.createViewer(document, project) : factory.createEditor(document, project));
     editor.putUserData(DiffManagerImpl.EDITOR_IS_DIFF_KEY, Boolean.TRUE);
-    editor.setSoftWrapAppliancePlace(SoftWrapAppliancePlaces.VCS_DIFF);
     editor.getGutterComponentEx().revalidateMarkup();
 
     if (fileType != null && project != null && !project.isDisposed()) {

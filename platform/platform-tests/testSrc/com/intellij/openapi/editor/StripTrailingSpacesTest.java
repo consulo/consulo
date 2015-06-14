@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.TrailingSpacesStripper;
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
-import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import java.awt.event.FocusEvent;
@@ -18,21 +17,21 @@ import java.io.IOException;
  * User: cdr
  */
 public class StripTrailingSpacesTest extends LightPlatformCodeInsightTestCase {
-  private final Element oldSettings = new Element("temp");
+  private EditorSettingsExternalizable.OptionSet oldSettings;
 
   @Override
   protected void setUp() throws Exception {
     super.setUp();
     EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
-    settings.writeExternal(oldSettings);
+    oldSettings = settings.getState();
+    settings.loadState(new EditorSettingsExternalizable.OptionSet());
     settings.setStripTrailingSpaces(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED);
     settings.setVirtualSpace(false);
   }
 
   @Override
   protected void tearDown() throws Exception {
-    EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
-    settings.readExternal(oldSettings);
+    EditorSettingsExternalizable.getInstance().loadState(oldSettings);
     super.tearDown();
   }
 
