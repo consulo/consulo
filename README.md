@@ -4,9 +4,9 @@ This is IDE based on IntelliJ Platform. The main goal of our project is creating
 
 ## Building
 
-Need setup SDKs & plugins. See https://github.com/consulo/consulo/wiki/Before-developing
+First you need setup enviroment, please visit this [link](https://github.com/consulo/consulo/wiki/Plugin-Development-Starter-Guide)
 
-Use 'Build | Build Artifacts... | distForRuntime' to build the project
+Use 'Build | Build Artifacts... | dist' to build the project
 
 To run the project, use the "Consulo" shared run configuration.
 
