@@ -34,6 +34,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -103,6 +105,12 @@ public class OptionsEditorDialog extends DialogWrapper implements DataProvider{
   @Override
   public boolean isTypeAheadEnabled() {
     return true;
+  }
+
+  @Nullable
+  @Override
+  protected Border createContentPaneBorder() {
+    return new EmptyBorder(0, 0, 0, 0);
   }
 
   @Override

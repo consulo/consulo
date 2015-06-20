@@ -34,6 +34,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -252,6 +254,12 @@ public class SingleConfigurableEditor extends DialogWrapper {
         myPerformAction = false;
       }
     }
+  }
+
+  @Nullable
+  @Override
+  protected Border createContentPaneBorder() {
+    return new EmptyBorder(0, 0, 0, 0);
   }
 
   @Override
