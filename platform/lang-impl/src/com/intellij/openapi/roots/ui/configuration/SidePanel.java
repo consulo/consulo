@@ -43,13 +43,10 @@ public class SidePanel extends JPanel {
 
   private final Map<Integer, String> myIndex2Separator = new HashMap<Integer, String>();
   private final Map<Place, Presentation> myPlace2Presentation = new HashMap<Place, Presentation>();
-  private final History myHistory;
 
   public SidePanel(Place.Navigator navigator, History history) {
-    myHistory = history;
+    super(new BorderLayout());
     myNavigator = navigator;
-
-    setLayout(new BorderLayout());
 
     myModel = new DefaultListModel();
     myList = new JBList(myModel);

@@ -179,7 +179,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
       }
     };
 
-    left.add(mySidePanel, BorderLayout.NORTH);
+    left.add(mySidePanel, BorderLayout.CENTER);
 
     mySplitter.setFirstComponent(left);
     mySplitter.setSecondComponent(myDetails);
