@@ -108,11 +108,13 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
   @Override
   @NotNull
+  @RequiredReadAction
   public ModifiableRootModel getModifiableModel() {
     return getModifiableModel(new RootConfigurationAccessor());
   }
 
   @NotNull
+  @RequiredReadAction
   public ModifiableRootModel getModifiableModel(final RootConfigurationAccessor accessor) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     final RootModelImpl model = new RootModelImpl(myRootModel, this, accessor) {

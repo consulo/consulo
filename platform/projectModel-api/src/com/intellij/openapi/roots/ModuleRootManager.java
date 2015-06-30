@@ -17,6 +17,7 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * Interface for getting information about the contents and dependencies of a module.
@@ -49,6 +50,7 @@ public abstract class ModuleRootManager implements ModuleRootModel {
    * @return the modifiable root model.
    */
   @NotNull
+  @RequiredReadAction
   public abstract ModifiableRootModel getModifiableModel();
 
   /**
