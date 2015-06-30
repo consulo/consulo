@@ -23,8 +23,6 @@ import com.intellij.openapi.components.impl.stores.DirectoryStorageData;
 import com.intellij.openapi.components.impl.stores.StorageData;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.util.InvalidDataException;
@@ -65,15 +63,6 @@ public class CoreProjectLoader {
     }
     final CoreModuleManager moduleManager = (CoreModuleManager)ModuleManager.getInstance(project);
     moduleManager.loadState(moduleManagerState);
-
-    VirtualFile miscXml = dotIdea.findChild("misc.xml");
-    assert miscXml != null;
-    storageData = loadStorageFile(project, miscXml);
-    final Element projectRootManagerState = storageData.getState("ProjectRootManager");
-    if (projectRootManagerState == null) {
-      throw new JDOMException("cannot find ProjectRootManager state in misc.xml");
-    }
-    ((ProjectRootManagerImpl) ProjectRootManager.getInstance(project)).readExternal(projectRootManagerState);
 
     VirtualFile libraries = dotIdea.findChild("libraries");
     if (libraries != null) {

@@ -27,9 +27,6 @@ import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,8 +34,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredWriteAction;
 import org.mustbe.consulo.roots.ContentFolderScopes;
@@ -48,13 +43,12 @@ import java.util.*;
 /**
  * @author max
  */
-public class ProjectRootManagerImpl extends ProjectRootManagerEx implements ProjectComponent, JDOMExternalizable {
+public class ProjectRootManagerImpl extends ProjectRootManagerEx implements ProjectComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectRootManagerImpl");
 
   protected final Project myProject;
 
   private long myModificationCount = 0;
-  @NonNls private static final String ATTRIBUTE_VERSION = "version";
 
   private final OrderRootsCache myRootsCache;
 
@@ -227,15 +221,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   @Override
   public void disposeComponent() {
-  }
-
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-  }
-
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    element.setAttribute(ATTRIBUTE_VERSION, "2");
   }
 
   private boolean myMergedCallStarted = false;
