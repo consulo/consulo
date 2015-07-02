@@ -566,7 +566,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
 
     @Override
     public String toString() {
-      return ProjectBundle.message("jdk.combo.box.invalid.item", mySdkName);
+      return ProjectBundle.message("sdk.combo.box.invalid.item", mySdkName);
     }
   }
 }
