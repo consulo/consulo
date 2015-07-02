@@ -337,11 +337,11 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   @Override
   public AbstractAddGroup createAddAction() {
-    return new AbstractAddGroup(ProjectBundle.message("add.new.jdk.text")) {
+    return new AbstractAddGroup(ProjectBundle.message("add.action.name")) {
       @NotNull
       @Override
       public AnAction[] getChildren(@Nullable final AnActionEvent e) {
-        DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.new.jdk.text"), true);
+        DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.action.name"), true);
         mySdksTreeModel.createAddActions(group, myTree, new Consumer<Sdk>() {
           @Override
           public void consume(final Sdk sdk) {

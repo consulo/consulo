@@ -162,7 +162,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
   @Nullable
   protected ArrayList<AnAction> createActions(final boolean fromPopup) {
     final ArrayList<AnAction> actions = new ArrayList<AnAction>();
-    DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.new.jdk.text"), true);
+    DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.action.name"), true);
     group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
     myProjectSdksModel.createAddActions(group, myTree, new Consumer<Sdk>() {
       @Override
