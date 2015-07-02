@@ -57,6 +57,7 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -94,7 +95,7 @@ class RunConfigurable extends BaseConfigurable {
   final MyTreeModel myTreeModel = new MyTreeModel(myRoot);
   final Tree myTree = new Tree(myTreeModel);
   private final JPanel myRightPanel = new JPanel(new BorderLayout());
-  private final Splitter mySplitter = new Splitter(false);
+  private final Splitter mySplitter = new OnePixelSplitter(false);
   private JPanel myWholePanel;
   private final StorageAccessors myProperties = StorageAccessors.createGlobal("RunConfigurable");
   private Configurable mySelectedConfigurable = null;
@@ -149,6 +150,7 @@ class RunConfigurable extends BaseConfigurable {
       }
     });
     myTree.setCellRenderer(new ColoredTreeCellRenderer() {
+      @RequiredDispatchThread
       @Override
       public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row,
                                         boolean hasFocus) {
@@ -475,11 +477,11 @@ class RunConfigurable extends BaseConfigurable {
 
   private void drawPressAddButtonMessage(final ConfigurationType configurationType) {
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-    panel.setBorder(new EmptyBorder(30, 0, 0, 0));
+    panel.setBorder(new EmptyBorder(7, 10, 0, 0));
     panel.add(new JLabel("Press the"));
 
     ActionLink addIcon = new ActionLink("", ADD_ICON, myAddAction);
-    addIcon.setBorder(new EmptyBorder(0, 0, 0, 5));
+    addIcon.setBorder(new EmptyBorder(0, 5, 0, 5));
     panel.add(addIcon);
 
     final String configurationTypeDescription = configurationType != null
@@ -492,6 +494,7 @@ class RunConfigurable extends BaseConfigurable {
     myRightPanel.add(scrollPane, BorderLayout.CENTER);
     if (configurationType == null) {
       JPanel settingsPanel = new JPanel(new GridBagLayout());
+      settingsPanel.setBorder(new EmptyBorder(7, 10, 0, 0));
       GridBag grid = new GridBag().setDefaultAnchor(GridBagConstraints.NORTHWEST);
 
       for (Pair<UnnamedConfigurable, JComponent> each : myAdditionalSettings) {
@@ -514,10 +517,11 @@ class RunConfigurable extends BaseConfigurable {
     MyRemoveAction removeAction = new MyRemoveAction();
     MyMoveAction moveUpAction = new MyMoveAction(ExecutionBundle.message("move.up.action.name"), null, IconUtil.getMoveUpIcon(), -1);
     MyMoveAction moveDownAction = new MyMoveAction(ExecutionBundle.message("move.down.action.name"), null, IconUtil.getMoveDownIcon(), 1);
-    myToolbarDecorator = ToolbarDecorator.createDecorator(myTree).setAsUsualTopToolbar()
+    myToolbarDecorator = ToolbarDecorator.createDecorator(myTree)
             .setAddAction(myAddAction).setAddActionName(ExecutionBundle.message("add.new.run.configuration.acrtion.name"))
             .setRemoveAction(removeAction).setRemoveActionUpdater(removeAction)
             .setRemoveActionName(ExecutionBundle.message("remove.run.configuration.action.name"))
+            .setPanelBorder(new EmptyBorder(0, 0, 0, 0))
             .setMoveUpAction(moveUpAction).setMoveUpActionName(ExecutionBundle.message("move.up.action.name")).setMoveUpActionUpdater(moveUpAction)
             .setMoveDownAction(moveDownAction).setMoveDownActionName(ExecutionBundle.message("move.down.action.name")).setMoveDownActionUpdater(moveDownAction)
             .addExtraAction(AnActionButton.fromAction(new MyCopyAction()))
@@ -1071,6 +1075,7 @@ class RunConfigurable extends BaseConfigurable {
       registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       showAddPopup(true);
@@ -1217,6 +1222,7 @@ class RunConfigurable extends BaseConfigurable {
       registerCustomShortcutSet(CommonShortcuts.getDelete(), myTree);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       doRemove();
@@ -1322,6 +1328,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       boolean enabled = isEnabled(e);
@@ -1356,6 +1363,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
@@ -1379,6 +1387,7 @@ class RunConfigurable extends BaseConfigurable {
       }
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
@@ -1392,6 +1401,7 @@ class RunConfigurable extends BaseConfigurable {
       super(ExecutionBundle.message("action.name.save.configuration"), null, AllIcons.Actions.Menu_saveall);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(final AnActionEvent e) {
       final SingleConfigurationConfigurable<RunConfiguration> configurationConfigurable = getSelectedConfiguration();
@@ -1410,6 +1420,7 @@ class RunConfigurable extends BaseConfigurable {
       myTree.repaint();
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(final AnActionEvent e) {
       final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
@@ -1467,6 +1478,7 @@ class RunConfigurable extends BaseConfigurable {
       myDirection = direction;
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(final AnActionEvent e) {
       doMove();
@@ -1484,6 +1496,7 @@ class RunConfigurable extends BaseConfigurable {
       doMove();
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(final AnActionEvent e) {
       e.getPresentation().setEnabled(isEnabled(e));
@@ -1501,6 +1514,7 @@ class RunConfigurable extends BaseConfigurable {
             ExecutionBundle.message("run.configuration.edit.default.configuration.settings.description"), AllIcons.General.Settings);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(final AnActionEvent e) {
       TreeNode defaults = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot);
@@ -1520,6 +1534,7 @@ class RunConfigurable extends BaseConfigurable {
       }
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       boolean isEnabled = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot) != null;
@@ -1544,6 +1559,7 @@ class RunConfigurable extends BaseConfigurable {
             ExecutionBundle.message("run.configuration.create.folder.description"), AllIcons.Nodes.Folder);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       final ConfigurationType type = getSelectedConfigurationType();
@@ -1576,6 +1592,7 @@ class RunConfigurable extends BaseConfigurable {
       }
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       boolean isEnabled = false;
