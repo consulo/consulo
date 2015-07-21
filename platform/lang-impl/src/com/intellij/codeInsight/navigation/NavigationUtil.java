@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,17 @@ package com.intellij.codeInsight.navigation;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PsiElementListCellRenderer;
+import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ex.MarkupModelEx;
+import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
+import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -111,6 +115,9 @@ public final class NavigationUtil {
       }
     };
     list.setCellRenderer(renderer);
+
+    list.setFont(ChooseByNameBase.getEditorFont());
+
     if (selection != null) {
       list.setSelectedValue(selection, true);
     }
@@ -134,7 +141,12 @@ public final class NavigationUtil {
     }
     renderer.installSpeedSearch(builder, true);
 
-    return builder.setItemChoosenCallback(runnable).createPopup();
+    JBPopup popup = builder.setItemChoosenCallback(runnable).createPopup();
+
+    builder.getScrollPane().setBorder(null);
+    builder.getScrollPane().setViewportBorder(null);
+
+    return popup;
   }
 
   public static boolean activateFileWithPsiElement(@NotNull PsiElement elt) {
@@ -171,7 +183,6 @@ public final class NavigationUtil {
     element.putUserData(FileEditorManager.USE_CURRENT_WINDOW, null);
     return false;
   }
-
 
   private static boolean activatePsiElementIfOpen(@NotNull PsiElement elt, boolean searchForOpen, boolean requestFocus) {
     if (!elt.isValid()) return false;
@@ -214,24 +225,26 @@ public final class NavigationUtil {
    */
   @SuppressWarnings("UseJBColor")
   public static TextAttributes patchAttributesColor(TextAttributes attributes, @NotNull TextRange range, @NotNull Editor editor) {
-    int lineStart = editor.offsetToLogicalPosition(range.getStartOffset()).line;
-    int lineEnd = editor.offsetToLogicalPosition(range.getEndOffset()).line;
-    for (RangeHighlighter highlighter : editor.getMarkupModel().getAllHighlighters()) {
-      if (!highlighter.isValid()) continue;
-      if (highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) {
-        int line = editor.offsetToLogicalPosition(highlighter.getStartOffset()).line;
-        if (line >= lineStart && line <= lineEnd) {
-          TextAttributes textAttributes = highlighter.getTextAttributes();
-          if (textAttributes != null) {
-            Color color = textAttributes.getBackgroundColor();
-            if (color != null && color.getBlue() > 128 && color.getRed() < 128 && color.getGreen() < 128) {
-              TextAttributes clone = attributes.clone();
-              clone.setForegroundColor(Color.orange);
-              clone.setEffectColor(Color.orange);
-              return clone;
-            }
-          }
-        }
+    MarkupModel model = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
+    if (model != null) {
+      if (!((MarkupModelEx)model).processRangeHighlightersOverlappingWith(range.getStartOffset(), range.getEndOffset(),
+                                                                          new Processor<RangeHighlighterEx>() {
+                                                                            @Override
+                                                                            public boolean process(RangeHighlighterEx highlighter) {
+                                                                              if (highlighter.isValid() && highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) {
+                                                                                TextAttributes textAttributes = highlighter.getTextAttributes();
+                                                                                if (textAttributes != null) {
+                                                                                  Color color = textAttributes.getBackgroundColor();
+                                                                                  return !(color != null && color.getBlue() > 128 && color.getRed() < 128 && color.getGreen() < 128);
+                                                                                }
+                                                                              }
+                                                                              return true;
+                                                                            }
+                                                                          })) {
+        TextAttributes clone = attributes.clone();
+        clone.setForegroundColor(Color.orange);
+        clone.setEffectColor(Color.orange);
+        return clone;
       }
     }
     return attributes;

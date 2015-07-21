@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.intellij.codeInsight.navigation.ListBackgroundUpdaterTask;
 import com.intellij.find.FindUtil;
 import com.intellij.ide.PsiCopyPasteManager;
 import com.intellij.ide.util.PsiElementListCellRenderer;
+import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressManager;
@@ -33,8 +34,11 @@ import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.JBListWithHintProvider;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.AbstractPopup;
+import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.usages.UsageView;
+import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -72,10 +76,29 @@ public class PsiElementListNavigator {
                                                final String title,
                                                final String findUsagesTitle,
                                                final ListCellRenderer listRenderer,
-                                               final @Nullable ListBackgroundUpdaterTask listUpdaterTask) {
+                                               @Nullable final ListBackgroundUpdaterTask listUpdaterTask) {
+    return navigateOrCreatePopup(targets, title, findUsagesTitle, listRenderer, listUpdaterTask, new Consumer<Object[]>() {
+      @Override
+      public void consume(Object[] selectedElements) {
+        for (Object element : selectedElements) {
+          PsiElement selected = (PsiElement)element;
+          LOG.assertTrue(selected.isValid());
+          ((NavigatablePsiElement)selected).navigate(true);
+        }
+      }
+    });
+  }
+
+  @Nullable
+  public static JBPopup navigateOrCreatePopup(@NotNull final NavigatablePsiElement[] targets,
+                                              final String title,
+                                              final String findUsagesTitle,
+                                              final ListCellRenderer listRenderer,
+                                              @Nullable final ListBackgroundUpdaterTask listUpdaterTask,
+                                              @NotNull final Consumer<Object[]> consumer) {
     if (targets.length == 0) return null;
     if (targets.length == 1) {
-      targets[0].navigate(true);
+      consumer.consume(targets);
       return null;
     }
     final CollectionListModel<NavigatablePsiElement> model = new CollectionListModel<NavigatablePsiElement>(targets);
@@ -105,6 +128,7 @@ public class PsiElementListNavigator {
     });
 
     list.setCellRenderer(listRenderer);
+    list.setFont(ChooseByNameBase.getEditorFont());
 
     final PopupChooserBuilder builder = new PopupChooserBuilder(list);
     if (listRenderer instanceof PsiElementListCellRenderer) {
@@ -112,30 +136,25 @@ public class PsiElementListNavigator {
     }
 
     PopupChooserBuilder popupChooserBuilder = builder.
-      setTitle(title).
-      setMovable(true).
-      setResizable(true).
-      setItemChoosenCallback(new Runnable() {
-        @Override
-        public void run() {
-          int[] ids = list.getSelectedIndices();
-          if (ids == null || ids.length == 0) return;
-          Object[] selectedElements = list.getSelectedValues();
-          for (Object element : selectedElements) {
-            PsiElement selected = (PsiElement)element;
-            LOG.assertTrue(selected.isValid());
-            ((NavigatablePsiElement)selected).navigate(true);
-          }
-        }
-      }).
-      setCancelCallback(new Computable<Boolean>() {
-        @Override
-        public Boolean compute() {
-          list.hideHint();
-
-          return true;
-        }
-      });
+            setTitle(title).
+            setMovable(true).
+            setResizable(true).
+            setItemChoosenCallback(new Runnable() {
+              @Override
+              public void run() {
+                int[] ids = list.getSelectedIndices();
+                if (ids == null || ids.length == 0) return;
+                Object[] selectedElements = list.getSelectedValues();
+                consumer.consume(selectedElements);
+              }
+            }).
+            setCancelCallback(new Computable<Boolean>() {
+              @Override
+              public Boolean compute() {
+                HintUpdateSupply.hideHint(list);
+                return true;
+              }
+            });
     final Ref<UsageView> usageView = new Ref<UsageView>();
     if (findUsagesTitle != null) {
       popupChooserBuilder = popupChooserBuilder.setCouldPin(new Processor<JBPopup>() {
@@ -150,6 +169,10 @@ public class PsiElementListNavigator {
     }
 
     final JBPopup popup = popupChooserBuilder.createPopup();
+
+    builder.getScrollPane().setBorder(null);
+    builder.getScrollPane().setViewportBorder(null);
+
     if (listUpdaterTask != null) {
       listUpdaterTask.init((AbstractPopup)popup, list, usageView);
 

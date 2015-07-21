@@ -24,6 +24,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +50,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public Insets getElementIpad(boolean isPopupElement) {
-    return isPopupElement ? new Insets(1, 2, 1, 2) : JBInsets.NONE;
+    return isPopupElement ? new Insets(1, 2, 1, 2) : JBUI.emptyInsets();
   }
 
   @Override

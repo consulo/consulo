@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm.impl;
+package com.intellij.util.ui.components;
 
-import com.intellij.ui.components.JBPanel;
+import com.intellij.util.ui.JBFont;
 
-import java.awt.*;
+import javax.swing.border.Border;
 
-public class IdePanePanel extends JBPanel {
+/**
+ * @author Konstantin Bulenkov
+ */
+public interface JBComponent<T extends JBComponent> {
+  T withBorder(Border border);
 
-  public IdePanePanel(LayoutManager layout) {
-    super(layout);
-  }
+  T withFont(JBFont font);
 
-  @Override
-  public Color getBackground() {
-    return IdeBackgroundUtil.getIdeBackgroundColor();
-  }
+  T andTransparent();
+
+  T andOpaque();
 }

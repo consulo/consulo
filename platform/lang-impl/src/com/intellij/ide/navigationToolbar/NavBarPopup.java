@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.intellij.ide.navigationToolbar;
 import com.intellij.ide.navigationToolbar.ui.NavBarUIManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Disposer;
@@ -28,6 +27,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBList;
+import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
@@ -48,7 +48,7 @@ public class NavBarPopup extends LightweightHint implements Disposable{
   private static final String JBLIST_KEY = "OriginalList";
   private static final String NAV_BAR_POPUP = "NAV_BAR_POPUP";
   private final NavBarPanel myPanel;
-  private int myIndex;
+  private final int myIndex;
   private static final String DISPOSED_OBJECTS = "DISPOSED_OBJECTS";
 
   public NavBarPopup(final NavBarPanel panel, Object[] siblings, final int selectedIndex) {
@@ -93,10 +93,8 @@ public class NavBarPopup extends LightweightHint implements Disposable{
   protected void onPopupCancel() {
     final JComponent component = getComponent();
     if (component != null) {
-      final Object o = component.getClientProperty(JBLIST_KEY);
-      if (o instanceof JBListWithHintProvider) {
-        ((JBListWithHintProvider)o).hideHint();
-      }
+      Object o = component.getClientProperty(JBLIST_KEY);
+      if (o instanceof JComponent) HintUpdateSupply.hideHint((JComponent)o);
     }
     //noinspection unchecked
     for (Disposable disposable : ((List<Disposable>)getList().getClientProperty(DISPOSED_OBJECTS))) {
@@ -113,10 +111,18 @@ public class NavBarPopup extends LightweightHint implements Disposable{
     final RelativePoint point = new RelativePoint(item, new Point(0, item.getHeight()));
     final Point p = point.getPoint(myPanel);
     if (p.x == 0 && p.y == 0 && checkRepaint) { // need repaint of nav bar panel
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
+      //noinspection SSBasedInspection
+      SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
-          show(item, false); // end-less loop protection
+          myPanel.getUpdateQueue().rebuildUi();
+          //noinspection SSBasedInspection
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              show(item, false); // end-less loop protection
+            }
+          });
         }
       });
     } else {
@@ -124,7 +130,7 @@ public class NavBarPopup extends LightweightHint implements Disposable{
       show(myPanel, p.x - offset, p.y, myPanel, new HintHint(myPanel, p));
       final JBList list = getList();
       if (0 <= myIndex && myIndex < list.getItemsCount()) {
-       ListScrollingUtil.selectItem(list, myIndex);
+        ListScrollingUtil.selectItem(list, myIndex);
       }
     }
     if (myPanel.isInFloatingMode()) {
@@ -228,7 +234,7 @@ public class NavBarPopup extends LightweightHint implements Disposable{
   }
 
   private static class NavbarPopupList extends JBListWithHintProvider implements Queryable {
-    private NavBarPanel myPanel;
+    private final NavBarPanel myPanel;
 
     public NavbarPopupList(NavBarPanel panel, Object[] siblings) {
       super(siblings);

@@ -13,20 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm.impl;
 
-import com.intellij.ui.components.JBPanel;
+package com.intellij.ui;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
-public class IdePanePanel extends JBPanel {
+import static java.awt.Cursor.*;
 
-  public IdePanePanel(LayoutManager layout) {
-    super(layout);
+/**
+ * @author Sergey Malenkov
+ */
+public class WindowMoveListener extends WindowMouseListener {
+  public WindowMoveListener(Component content) {
+    super(content);
   }
 
   @Override
-  public Color getBackground() {
-    return IdeBackgroundUtil.getIdeBackgroundColor();
+  int getCursorType(Component view, Point location) {
+    return DEFAULT_CURSOR;
+  }
+
+  @Override
+  void updateBounds(Rectangle bounds, Component view, int dx, int dy) {
+    bounds.x += dx;
+    bounds.y += dy;
+  }
+
+  @Override
+  public void mouseMoved(MouseEvent event) {
+    // ignore cursor updating
   }
 }

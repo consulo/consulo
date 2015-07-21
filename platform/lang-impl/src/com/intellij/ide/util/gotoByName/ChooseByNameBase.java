@@ -86,6 +86,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
@@ -480,15 +481,13 @@ public abstract class ChooseByNameBase {
     myTextField.setActionMap(actionMap);
 
     myTextFieldPanel.add(myTextField);
-    EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    boolean presentationMode = UISettings.getInstance().PRESENTATION_MODE;
-    int size = presentationMode ? UISettings.getInstance().PRESENTATION_MODE_FONT_SIZE - 4 : scheme.getEditorFontSize();
-    Font editorFont = new Font(scheme.getEditorFontName(), Font.PLAIN, size);
+    Font editorFont = getEditorFont();
     myTextField.setFont(editorFont);
 
     if (checkBoxName != null) {
       if (myCheckBox != null && myCheckBoxShortcut != null) {
         new AnAction("change goto check box", null, null) {
+          @RequiredDispatchThread
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {
             myCheckBox.setSelected(!myCheckBox.isSelected());
@@ -1642,6 +1641,7 @@ public abstract class ChooseByNameBase {
       super(ACTION_NAME, ACTION_NAME, AllIcons.General.AutohideOff);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(@NotNull final AnActionEvent e) {
       cancelListUpdater();
@@ -1752,6 +1752,7 @@ public abstract class ChooseByNameBase {
       UsageViewManager.getInstance(myProject).showUsages(usageTargets, usages.toArray(new Usage[usages.size()]), presentation);
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(@NotNull AnActionEvent e) {
       if (myFindUsagesTitle == null || myProject == null) {
@@ -1767,5 +1768,12 @@ public abstract class ChooseByNameBase {
 
   public JTextField getTextField() {
     return myTextField;
+  }
+
+  public static Font getEditorFont() {
+    EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+    int size = UISettings.getInstance().PRESENTATION_MODE
+               ? UISettings.getInstance().PRESENTATION_MODE_FONT_SIZE - 4 : scheme.getEditorFontSize();
+    return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
   }
 }

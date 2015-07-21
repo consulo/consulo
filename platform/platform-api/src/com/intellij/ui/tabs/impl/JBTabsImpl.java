@@ -36,10 +36,7 @@ import com.intellij.ui.tabs.impl.table.TableLayout;
 import com.intellij.ui.tabs.impl.table.TablePassInfo;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.Animator;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.TimedDeadzone;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.LazyUiDisposable;
 import org.jetbrains.annotations.NonNls;
@@ -76,7 +73,7 @@ public class JBTabsImpl extends JComponent
   public final Map<TabInfo, Toolbar> myInfo2Toolbar = new HashMap<TabInfo, Toolbar>();
   public Dimension myHeaderFitSize;
 
-  private Insets myInnerInsets = JBInsets.NONE;
+  private Insets myInnerInsets = JBUI.emptyInsets();
 
   private final List<EventListener> myTabMouseListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private final List<TabsListener> myTabListeners = ContainerUtil.createLockFreeCopyOnWriteList();

@@ -1,6 +1,6 @@
 package com.intellij.ide.ui.laf.darcula;
 
-import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
@@ -17,7 +17,7 @@ public class DarculaTableHeaderBorder implements Border, UIResource {
 
   @Override
   public Insets getBorderInsets(Component c) {
-    return JBInsets.NONE;
+    return JBUI.emptyInsets();
   }
 
   @Override
