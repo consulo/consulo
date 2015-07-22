@@ -19,6 +19,7 @@ package com.intellij.xdebugger.breakpoints;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
@@ -102,5 +103,13 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
 
   public Icon getTemporaryIcon() {
     return AllIcons.Debugger.Db_temporary_breakpoint;
+  }
+
+  /**
+   * Return true if this breakpoint could be hit on lines other than the one specified,
+   * an example is method breakpoint in java - it could be hit on any method overriding the one specified
+   */
+  public boolean canBeHitInOtherPlaces() {
+    return false;
   }
 }
