@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,14 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.EditorImpl;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
+import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AppUIUtil;
+import com.intellij.util.DocumentUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
@@ -195,10 +196,23 @@ public class ExecutionPointHighlighter {
     if (myRangeHighlighter != null) return;
 
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    myRangeHighlighter = DocumentMarkupModel.forDocument(document, myProject, true).addLineHighlighter(line, DebuggerColors.EXECUTION_LINE_HIGHLIGHTERLAYER,
-                                                                                                       myNotTopFrame
-                                                                                                       ? scheme.getAttributes(DebuggerColors.NOT_TOP_FRAME_ATTRIBUTES)
-                                                                                                       : scheme.getAttributes(DebuggerColors.EXECUTIONPOINT_ATTRIBUTES));
+    TextAttributes attributes = myNotTopFrame ? scheme.getAttributes(DebuggerColors.NOT_TOP_FRAME_ATTRIBUTES)
+                                              : scheme.getAttributes(DebuggerColors.EXECUTIONPOINT_ATTRIBUTES);
+    MarkupModel markupModel = DocumentMarkupModel.forDocument(document, myProject, true);
+    if (mySourcePosition instanceof HighlighterProvider) {
+      TextRange range = ((HighlighterProvider)mySourcePosition).getHighlightRange();
+      if (range != null) {
+        range = range.intersection(DocumentUtil.getLineTextRange(document, line));
+        if (range != null && !range.isEmpty()) {
+          myRangeHighlighter = markupModel.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(),
+                                                               DebuggerColors.EXECUTION_LINE_HIGHLIGHTERLAYER, attributes,
+                                                               HighlighterTargetArea.EXACT_RANGE);
+        }
+      }
+    }
+    if (myRangeHighlighter == null) {
+      myRangeHighlighter = markupModel.addLineHighlighter(line, DebuggerColors.EXECUTION_LINE_HIGHLIGHTERLAYER, attributes);
+    }
     myRangeHighlighter.putUserData(EXECUTION_POINT_HIGHLIGHTER_KEY, true);
     myRangeHighlighter.setGutterIconRenderer(myGutterIconRenderer);
   }
@@ -216,5 +230,10 @@ public class ExecutionPointHighlighter {
         component.putClientProperty(EditorImpl.IGNORE_MOUSE_TRACKING, value > 0 ? value : null);
       }
     });
+  }
+
+  public interface HighlighterProvider {
+    @Nullable
+    TextRange getHighlightRange();
   }
 }

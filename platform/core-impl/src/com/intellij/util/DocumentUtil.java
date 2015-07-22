@@ -19,6 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
+import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -64,5 +65,10 @@ public final class DocumentUtil {
         ApplicationManager.getApplication().runWriteAction(runnable);
       }
     });
+  }
+
+  @NotNull
+  public static TextRange getLineTextRange(@NotNull Document document, int line) {
+    return TextRange.create(document.getLineStartOffset(line), document.getLineEndOffset(line));
   }
 }

@@ -25,17 +25,16 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import com.intellij.openapi.editor.markup.GutterDraggableObject;
-import com.intellij.openapi.editor.markup.MarkupEditorFilterFactory;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.util.DocumentUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
@@ -58,7 +57,8 @@ import java.util.List;
  */
 public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreakpointBase<XLineBreakpoint<P>, P, LineBreakpointState<P>>
         implements XLineBreakpoint<P> {
-  @Nullable private RangeHighlighterEx myHighlighter;
+  @Nullable
+  private RangeHighlighter myHighlighter;
   private final XLineBreakpointType<P> myType;
   private XSourcePosition mySourcePosition;
   private boolean myDisposed;
@@ -89,7 +89,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     TextAttributes attributes = scheme.getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
 
-    RangeHighlighterEx highlighter = myHighlighter;
+    RangeHighlighter highlighter = myHighlighter;
     if (highlighter != null && (!highlighter.isValid() ||
                                 highlighter.getStartOffset() >= document.getTextLength() ||
                                 document.getLineNumber(highlighter.getStartOffset()) != getLine())) {
@@ -101,7 +101,18 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     MarkupModelEx markupModel;
     if (highlighter == null) {
       markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, getProject(), true);
-      highlighter = markupModel.addPersistentLineHighlighter(getLine(), DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER, attributes);
+      TextRange range = myType.getHighlightRange(this);
+      if (range != null && !range.isEmpty()) {
+        range = range.intersection(DocumentUtil.getLineTextRange(document, getLine()));
+        if (range != null && !range.isEmpty()) {
+          highlighter = markupModel.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(),
+                                                        DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER, attributes,
+                                                        HighlighterTargetArea.EXACT_RANGE);
+        }
+      }
+      if (highlighter == null) {
+        highlighter = markupModel.addPersistentLineHighlighter(getLine(), DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER, attributes);
+      }
       if (highlighter == null) {
         return;
       }
@@ -115,13 +126,14 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
       markupModel = null;
     }
 
+
     updateIcon();
 
     if (markupModel == null) {
       markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, getProject(), false);
       if (markupModel != null) {
         // renderersChanged false — we don't change gutter size
-        markupModel.fireAttributesChanged(highlighter, false);
+        markupModel.fireAttributesChanged((RangeHighlighterEx)highlighter, false);
       }
     }
   }

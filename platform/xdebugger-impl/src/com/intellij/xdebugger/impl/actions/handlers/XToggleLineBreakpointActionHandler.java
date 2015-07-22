@@ -69,7 +69,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
     Set<Integer> processedLines = new HashSet<Integer>();
     for (XSourcePosition position : XDebuggerUtilImpl.getAllCaretsPositions(project, event.getDataContext())) {
       if (processedLines.add(position.getLine())) {
-        XBreakpointUtil.toggleLineBreakpoint(project, position.getFile(), editor, position.getLine(), myTemporary, true);
+        XBreakpointUtil.toggleLineBreakpoint(project, position, editor, myTemporary, true);
       }
     }
   }

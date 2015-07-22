@@ -18,6 +18,8 @@ package com.intellij.xdebugger.impl.breakpoints;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -37,6 +39,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -44,6 +47,7 @@ import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileUrlChangeAdapter;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.BidirectionalMap;
 import com.intellij.util.ui.update.MergingUpdateQueue;
@@ -52,6 +56,7 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NotNull;
@@ -79,6 +84,7 @@ public class XLineBreakpointManager {
       EditorEventMulticaster editorEventMulticaster = EditorFactory.getInstance().getEventMulticaster();
       editorEventMulticaster.addDocumentListener(new MyDocumentListener(), project);
       editorEventMulticaster.addEditorMouseListener(new MyEditorMouseListener(), project);
+      editorEventMulticaster.addEditorMouseMotionListener(new MyEditorMouseMotionListener(), project);
 
       final MyDependentBreakpointListener myDependentBreakpointListener = new MyDependentBreakpointListener();
       myDependentBreakpointManager.addListener(myDependentBreakpointListener);
@@ -248,18 +254,34 @@ public class XLineBreakpointManager {
     }
   }
 
+  private boolean myDragDetected = false;
+
+  private class MyEditorMouseMotionListener extends EditorMouseMotionAdapter {
+    @Override
+    public void mouseDragged(EditorMouseEvent e) {
+      myDragDetected = true;
+    }
+  }
+
   private class MyEditorMouseListener extends EditorMouseAdapter {
     @Override
-    public void mouseClicked(EditorMouseEvent e) {
+    public void mousePressed(EditorMouseEvent e) {
+      myDragDetected = false;
+    }
+
+    @Override
+    public void mouseClicked(final EditorMouseEvent e) {
       final Editor editor = e.getEditor();
       final MouseEvent mouseEvent = e.getMouseEvent();
       if (mouseEvent.isPopupTrigger()
           || mouseEvent.isMetaDown() || mouseEvent.isControlDown()
           || mouseEvent.getButton() != MouseEvent.BUTTON1
           || MarkupEditorFilterFactory.createIsDiffFilter().avaliableIn(editor)
-          || e.getArea() != EditorMouseEventArea.LINE_MARKERS_AREA
+          || !isInsideGutter(e, editor)
           || ConsoleViewUtil.isConsoleViewEditor(editor)
-          ||!isFromMyProject(editor)) {
+          || !isFromMyProject(editor)
+          || (editor.getSelectionModel().hasSelection() && myDragDetected)
+              ) {
         return;
       }
 
@@ -274,26 +296,40 @@ public class XLineBreakpointManager {
               @Override
               public void run() {
                 if (!myProject.isDisposed() && myProject.isInitialized() && file.isValid()) {
-                  XLineBreakpoint breakpoint =
-                          XBreakpointUtil.toggleLineBreakpoint(myProject, file, editor, line, mouseEvent.isAltDown(), false);
-                  if (!mouseEvent.isAltDown() && mouseEvent.isShiftDown() && breakpoint != null) {
-                    breakpoint.setSuspendPolicy(SuspendPolicy.NONE);
-                    String selection = editor.getSelectionModel().getSelectedText();
-                    if (selection != null) {
-                      breakpoint.setLogExpression(selection);
+                  ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT, e.getMouseEvent());
+
+                  AsyncResult<XLineBreakpoint> result = XBreakpointUtil.toggleLineBreakpoint(
+                          myProject, XSourcePositionImpl.create(file, line), editor, mouseEvent.isAltDown(), false);
+                  result.doWhenDone(new Consumer<XLineBreakpoint>() {
+                    @Override
+                    public void consume(XLineBreakpoint breakpoint) {
+                      if (!mouseEvent.isAltDown() && mouseEvent.isShiftDown() && breakpoint != null) {
+                        breakpoint.setSuspendPolicy(SuspendPolicy.NONE);
+                        String selection = editor.getSelectionModel().getSelectedText();
+                        if (selection != null) {
+                          breakpoint.setLogExpression(selection);
+                        }
+                        else {
+                          breakpoint.setLogMessage(true);
+                        }
+                        // edit breakpoint
+                        DebuggerUIUtil.showXBreakpointEditorBalloon(myProject, mouseEvent.getPoint(), ((EditorEx)editor).getGutterComponentEx(), false, breakpoint);
+                      }
                     }
-                    else {
-                      breakpoint.setLogMessage(true);
-                    }
-                    // edit breakpoint
-                    DebuggerUIUtil.showXBreakpointEditorBalloon(myProject, mouseEvent.getPoint(), ((EditorEx)editor).getGutterComponentEx(), false, breakpoint);
-                  }
+                  });
                 }
               }
             });
           }
         }
       });
+    }
+
+    private boolean isInsideGutter(EditorMouseEvent e, Editor editor) {
+      if (e.getArea() != EditorMouseEventArea.LINE_MARKERS_AREA && e.getArea() != EditorMouseEventArea.FOLDING_OUTLINE_AREA) {
+        return false;
+      }
+      return e.getMouseEvent().getX() <= ((EditorEx)editor).getGutterComponentEx().getWhitespaceSeparatorOffset();
     }
   }
 

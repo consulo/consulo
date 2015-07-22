@@ -32,6 +32,7 @@ import com.intellij.xdebugger.frame.XValueContainer;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Comparator;
 import java.util.List;
@@ -110,6 +111,7 @@ public abstract class XDebuggerUtil {
    * @param line 0-based line number
    * @param processor processor
    */
+  @RequiredReadAction
   public abstract void iterateLine(@NotNull Project project, @NotNull Document document, int line, @NotNull Processor<PsiElement> processor);
 
   /**
@@ -118,6 +120,7 @@ public abstract class XDebuggerUtil {
   public abstract void disableValueLookup(@NotNull Editor editor);
 
   @Nullable
+  @RequiredReadAction
   public abstract PsiElement findContextElement(@NotNull VirtualFile virtualFile, int offset, @NotNull Project project, boolean checkXml);
 
   @NotNull

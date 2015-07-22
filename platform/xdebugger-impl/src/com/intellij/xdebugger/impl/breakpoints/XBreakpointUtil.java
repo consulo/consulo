@@ -22,13 +22,16 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XDebuggerUtil;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.*;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
+import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import org.jetbrains.annotations.NonNls;
@@ -129,12 +132,14 @@ public class XBreakpointUtil {
    * - unfolds folded block on the line
    * - if folded, checks if line breakpoints could be toggled inside folded text
    */
-  public static XLineBreakpoint toggleLineBreakpoint(Project project,
-                                                     VirtualFile file,
-                                                     Editor editor,
-                                                     int lineStart,
-                                                     boolean temporary,
-                                                     boolean moveCarret) {
+  @NotNull
+  public static AsyncResult<XLineBreakpoint> toggleLineBreakpoint(@NotNull Project project,
+                                                                  @NotNull XSourcePosition position,
+                                                                  @Nullable Editor editor,
+                                                                  boolean temporary,
+                                                                  boolean moveCaret) {
+    int lineStart = position.getLine();
+    VirtualFile file = position.getFile();
     // for folded text check each line and find out type with the biggest priority
     int linesEnd = lineStart;
     if (editor != null) {
@@ -174,18 +179,22 @@ public class XBreakpointUtil {
     }
 
     if (typeWinner != null) {
-      XLineBreakpoint res = XDebuggerUtilImpl.toggleAndReturnLineBreakpoint(project, typeWinner, file, lineWinner, temporary);
+      XSourcePosition winPosition = (lineStart == lineWinner) ? position : XSourcePositionImpl.create(file, lineWinner);
+      if (winPosition != null) {
+        AsyncResult<XLineBreakpoint> res =
+                XDebuggerUtilImpl.toggleAndReturnLineBreakpoint(project, typeWinner, winPosition, temporary, editor);
 
-      if (editor != null && lineStart != lineWinner) {
-        int offset = editor.getDocument().getLineStartOffset(lineWinner);
-        ExpandRegionAction.expandRegionAtOffset(project, editor, offset);
-        if (moveCarret) {
-          editor.getCaretModel().moveToOffset(offset);
+        if (editor != null && lineStart != lineWinner) {
+          int offset = editor.getDocument().getLineStartOffset(lineWinner);
+          ExpandRegionAction.expandRegionAtOffset(project, editor, offset);
+          if (moveCaret) {
+            editor.getCaretModel().moveToOffset(offset);
+          }
         }
+        return res;
       }
-      return res;
     }
 
-    return null;
+    return AsyncResult.rejected();
   }
 }

@@ -112,4 +112,33 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   public boolean canBeHitInOtherPlaces() {
     return false;
   }
+
+  /**
+   * @return range to highlight on the line, null to highlight the whole line
+   */
+  @Nullable
+  public TextRange getHighlightRange(XLineBreakpoint<P> breakpoint) {
+    return null;
+  }
+
+  /**
+   * Return a list of variants if there can be more than one breakpoint on the line
+   */
+  @NotNull
+  public List<? extends XLineBreakpointVariant> computeVariants(@NotNull Project project, @NotNull XSourcePosition position) {
+    return Collections.emptyList();
+  }
+
+  public abstract class XLineBreakpointVariant {
+    public abstract String getText();
+
+    @Nullable
+    public abstract Icon getIcon();
+
+    @Nullable
+    public abstract TextRange getHighlightRange();
+
+    @Nullable
+    public abstract P createProperties();
+  }
 }
