@@ -16,24 +16,20 @@
 
 package com.intellij.execution;
 
-import com.intellij.execution.impl.RunManagerImpl;
-import com.intellij.execution.util.StoringPropertyContainer;
 import com.intellij.ide.util.PropertiesComponent;
 import org.jetbrains.annotations.NonNls;
 
 public class RunManagerConfig {
-  public static final String MAKE = ExecutionBundle.message("before.run.property.make");
-  private final StoringPropertyContainer myProperties;
   private final PropertiesComponent myPropertiesComponent;
   public static final int MIN_RECENT_LIMIT = 0;
-  @NonNls private static final String RECENTS_LIMIT = "recentsLimit";
-  @NonNls private static final String RESTART_REQUIRES_CONFIRMATION = "restartRequiresConfirmation";
-  @NonNls private static final String STOP_INCOMPATIBLE_REQUIRES_CONFIRMATION = "stopIncompatibleRequiresConfirmation";
 
-  public RunManagerConfig(PropertiesComponent propertiesComponent,
-                          RunManagerImpl manager) {
+  @NonNls
+  private static final String RECENTS_LIMIT = "recentsLimit";
+  @NonNls
+  private static final String RESTART_REQUIRES_CONFIRMATION = "restartRequiresConfirmation";
+
+  public RunManagerConfig(PropertiesComponent propertiesComponent) {
     myPropertiesComponent = propertiesComponent;
-    myProperties = new StoringPropertyContainer("RunManagerConfig.", propertiesComponent);
   }
 
   public int getRecentsLimit() {
@@ -55,13 +51,5 @@ public class RunManagerConfig {
 
   public void setRestartRequiresConfirmation(boolean restartRequiresConfirmation) {
     myPropertiesComponent.setValue(RESTART_REQUIRES_CONFIRMATION, String.valueOf(restartRequiresConfirmation));
-  }
-
-  public boolean isStopIncompatibleRequiresConfirmation() {
-    return myPropertiesComponent.getBoolean(STOP_INCOMPATIBLE_REQUIRES_CONFIRMATION, true);
-  }
-
-  public void setStopIncompatibleRequiresConfirmation(boolean stopIncompatibleRequiresConfirmation) {
-    myPropertiesComponent.setValue(STOP_INCOMPATIBLE_REQUIRES_CONFIRMATION, String.valueOf(stopIncompatibleRequiresConfirmation));
   }
 }

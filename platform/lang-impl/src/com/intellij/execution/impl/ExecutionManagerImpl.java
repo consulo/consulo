@@ -420,17 +420,17 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
                                                                        List<RunContentDescriptor> runningIncompatibleDescriptors) {
     RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
     final RunManagerConfig config = runManager.getConfig();
-    if (!config.isStopIncompatibleRequiresConfirmation()) return true;
+    if (!config.isRestartRequiresConfirmation()) return true;
 
     DialogWrapper.DoNotAskOption option = new DialogWrapper.DoNotAskOption() {
       @Override
       public boolean isToBeShown() {
-        return config.isStopIncompatibleRequiresConfirmation();
+        return config.isRestartRequiresConfirmation();
       }
 
       @Override
       public void setToBeShown(boolean value, int exitCode) {
-        config.setStopIncompatibleRequiresConfirmation(value);
+        config.setRestartRequiresConfirmation(value);
       }
 
       @Override
