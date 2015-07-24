@@ -476,7 +476,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     return getRunningDescriptors(new Condition<RunnerAndConfigurationSettings>() {
       @Override
       public boolean value(@Nullable RunnerAndConfigurationSettings runningConfigurationAndSettings) {
-        return runningConfigurationAndSettings != null && configurationAndSettings.isEquivalentTo(runningConfigurationAndSettings);
+        return configurationAndSettings == runningConfigurationAndSettings;
       }
     });
   }

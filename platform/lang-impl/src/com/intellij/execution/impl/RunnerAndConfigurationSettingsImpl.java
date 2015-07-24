@@ -200,11 +200,6 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
     return myFolderName;
   }
 
-  @Override
-  public boolean isEquivalentTo(@NotNull RunnerAndConfigurationSettings settings) {
-    return settings == this;
-  }
-
   @Nullable
   private ConfigurationFactory getFactory(final Element element) {
     final String typeName = element.getAttributeValue(CONFIGURATION_TYPE_ATTRIBUTE);

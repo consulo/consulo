@@ -184,13 +184,4 @@ public interface RunnerAndConfigurationSettings {
    * @return the folder name, or null if the configuration is displayed on the top level.
    */
   @Nullable String getFolderName();
-
-  /**
-   * Return is this settings is equivalent to another setting , it looks like {@see Object#equals(Object)} but we need check all variables for it
-   * Used when need to check for restart profile. Most of time - settings stored inside ExecutionManager, but if you create it dynamically, need to
-   * override this method
-   * @param settings another settings
-   * @return result of comparing
-   */
-  boolean isEquivalentTo(@NotNull RunnerAndConfigurationSettings settings);
 }
