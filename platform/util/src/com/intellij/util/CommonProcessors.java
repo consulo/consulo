@@ -20,6 +20,7 @@ import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,8 +54,16 @@ public class CommonProcessors {
       return true;
     }
 
-    public T[] toArray(T[] a) {
+    @NotNull
+    @Deprecated
+    @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)", until = "2.0")
+    public T[] toArray(@NotNull T[] a) {
       return myCollection.toArray(a);
+    }
+
+    @NotNull
+    public T[] toArray(@NotNull ArrayFactory<T> factory) {
+      return ContainerUtil.toArray(myCollection, factory);
     }
 
     public Collection<T> getResults() {
@@ -87,14 +96,23 @@ public class CommonProcessors {
       return true;
     }
 
-    public T[] toArray(T[] a) {
+    @NotNull
+    @Deprecated
+    @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)", until = "2.0")
+    public T[] toArray(@NotNull T[] a) {
       return myCollection.toArray(a);
+    }
+
+    @NotNull
+    public T[] toArray(@NotNull ArrayFactory<T> factory) {
+      return ContainerUtil.toArray(myCollection, factory);
     }
 
     public Collection<T> getResults() {
       return myCollection;
     }
   }
+
   public static class UniqueProcessor<T> implements Processor<T> {
     private final Set<T> processed;
     private final Processor<T> myDelegate;
@@ -167,6 +185,7 @@ public class CommonProcessors {
   public static <T> Processor<T> alwaysFalse() {
     return FALSE;
   }
+
   @SuppressWarnings({"unchecked"})
   public static <T> Processor<T> alwaysTrue() {
     return TRUE;
