@@ -15,6 +15,7 @@
  */
 package com.intellij.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -22,12 +23,8 @@ import org.jetbrains.annotations.Nullable;
  *
  * @see com.intellij.psi.PsiElementResolveResult
  */
+@ArrayFactoryFields
 public interface ResolveResult {
-  /**
-   * The empty array of PSI resolve results which can be reused to avoid unnecessary allocations.
-   */
-  ResolveResult[] EMPTY_ARRAY = new ResolveResult[0];
-
   /**
    * Returns the result of the resolve.
    *
