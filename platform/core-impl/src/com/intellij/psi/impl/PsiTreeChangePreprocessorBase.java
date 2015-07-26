@@ -35,10 +35,6 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
 
   @Override
   public final void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
-    PsiFile file = event.getFile();
-    if(file == null || !isMyFile(file)) {
-      return;
-    }
     boolean changedInsideCodeBlock = false;
 
     switch (event.getCode()) {
@@ -48,33 +44,33 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
           break; // May be caused by fake PSI event from PomTransaction. A real event will anyway follow.
         }
 
-      case CHILDREN_CHANGED :
+      case CHILDREN_CHANGED:
         if (event.isGenericChange()) {
           return;
         }
-        changedInsideCodeBlock = isInsideCodeBlock(event.getParent());
+        changedInsideCodeBlock = handleChange(event.getFile(), event.getParent());
         break;
 
       case BEFORE_CHILD_ADDITION:
       case BEFORE_CHILD_REMOVAL:
-      case CHILD_ADDED :
-      case CHILD_REMOVED :
-        changedInsideCodeBlock = isInsideCodeBlock(event.getParent());
+      case CHILD_ADDED:
+      case CHILD_REMOVED:
+        changedInsideCodeBlock = handleChange(event.getFile(), event.getParent());
         break;
 
       case BEFORE_PROPERTY_CHANGE:
-      case PROPERTY_CHANGED :
+      case PROPERTY_CHANGED:
         changedInsideCodeBlock = false;
         break;
 
       case BEFORE_CHILD_REPLACEMENT:
-      case CHILD_REPLACED :
-        changedInsideCodeBlock = isInsideCodeBlock(event.getParent());
+      case CHILD_REPLACED:
+        changedInsideCodeBlock = handleChange(event.getFile(), event.getParent());
         break;
 
       case BEFORE_CHILD_MOVEMENT:
-      case CHILD_MOVED :
-        changedInsideCodeBlock = isInsideCodeBlock(event.getOldParent()) && isInsideCodeBlock(event.getNewParent());
+      case CHILD_MOVED:
+        changedInsideCodeBlock = handleChange(event.getFile(), event.getOldParent()) && handleChange(event.getFile(), event.getNewParent());
         break;
     }
 
@@ -84,6 +80,20 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
   }
 
   protected abstract boolean isMyFile(@NotNull PsiFile file);
+
+  protected boolean isMaybeMyElement(@Nullable PsiElement element) {
+    return false;
+  }
+
+  protected boolean handleChange(@Nullable PsiFile file, @Nullable PsiElement element) {
+    if(file == null) {
+      return isMaybeMyElement(element);
+    }
+    else if(isMyFile(file)) {
+      return isInsideCodeBlock(element);
+    }
+    return false;
+  }
 
   protected abstract boolean isInsideCodeBlock(@Nullable PsiElement element);
 }
