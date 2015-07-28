@@ -113,7 +113,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       }
     });
 
-    final JScrollPane scrolls = ScrollPaneFactory.createScrollPane(myTree, SideBorder.LEFT | SideBorder.TOP | SideBorder.BOTTOM);
+    final JScrollPane scrolls = ScrollPaneFactory.createScrollPane(myTree, true);
     scrolls.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
     add(scrolls, BorderLayout.CENTER);
