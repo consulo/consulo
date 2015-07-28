@@ -52,6 +52,7 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -128,7 +129,7 @@ public abstract class DialogWrapper {
   /**
    * The shared instance of default border for dialog's content pane.
    */
-  public static final Border ourDefaultBorder = new EmptyBorder(UIUtil.PANEL_REGULAR_INSETS);
+  public static final Border ourDefaultBorder = new EmptyBorder(UIUtil.PANEL_SMALL_INSETS);
 
   private float myHorizontalStretch = 1.0f;
   private float myVerticalStretch = 1.0f;
@@ -180,7 +181,7 @@ public abstract class DialogWrapper {
   public void setDoNotAskOption(@Nullable DoNotAskOption doNotAsk) {
     myDoNotAsk = doNotAsk;
   }
-  private ErrorText myErrorText;
+  protected ErrorText myErrorText;
   private int myMaxErrorTextLength;
 
   private final Alarm myErrorTextAlarm = new Alarm();
@@ -291,7 +292,7 @@ public abstract class DialogWrapper {
   private boolean myDisposed = false;
   private boolean myValidationStarted = false;
   private final ErrorPainter myErrorPainter = new ErrorPainter();
-  private JComponent myErrorPane;
+  protected JComponent myErrorPane;
   private boolean myErrorPainterInstalled = false;
 
   /**
@@ -659,6 +660,7 @@ public abstract class DialogWrapper {
             new CustomShortcutSet(KeyStroke.getKeyStroke("alt pressed " + Character.valueOf((char)eachInfo.getMnemonic())));
 
           new AnAction() {
+            @RequiredDispatchThread
             @Override
             public void actionPerformed(AnActionEvent e) {
               final JBOptionButton buttonToActivate = eachInfo.getButton();
@@ -1160,6 +1162,7 @@ public abstract class DialogWrapper {
 
     final CustomShortcutSet sc = new CustomShortcutSet(SHOW_OPTION_KEYSTROKE);
     final AnAction toggleShowOptions = new AnAction() {
+      @RequiredDispatchThread
       @Override
       public void actionPerformed(AnActionEvent e) {
         expandNextOptionButton();
@@ -1167,6 +1170,22 @@ public abstract class DialogWrapper {
     };
     toggleShowOptions.registerCustomShortcutSet(sc, root);
 
+    initRootPanel(root);
+
+    if (myErrorPane == null) {
+      myErrorPane = root;
+    }
+
+    MnemonicHelper.init(root);
+    if (!postponeValidation()) {
+      startTrackingValidation();
+    }
+    if (SystemInfo.isWindows) {
+      installEnterHook(root);
+    }
+  }
+
+  protected void initRootPanel(@NotNull JPanel root) {
     final JPanel northSection = new JPanel(new BorderLayout());
     root.add(northSection, BorderLayout.NORTH);
 
@@ -1190,9 +1209,6 @@ public abstract class DialogWrapper {
       centerSection.add(c, BorderLayout.CENTER);
       myErrorPane = c;
     }
-    if (myErrorPane == null) {
-      myErrorPane = root;
-    }
 
     final JPanel southSection = new JPanel(new BorderLayout());
     root.add(southSection, BorderLayout.SOUTH);
@@ -1202,22 +1218,15 @@ public abstract class DialogWrapper {
     if (south != null) {
       southSection.add(south, BorderLayout.SOUTH);
     }
-
-    new MnemonicHelper().register(root);
-    if (!postponeValidation()) {
-      startTrackingValidation();
-    }
-    if (SystemInfo.isWindows) {
-      installEnterHook(root);
-    }
   }
 
   LayoutManager createRootLayout() {
     return new BorderLayout();
   }
 
-  private static void installEnterHook(JComponent root) {
+  protected static void installEnterHook(JComponent root) {
     new AnAction() {
+      @RequiredDispatchThread
       @Override
       public void actionPerformed(AnActionEvent e) {
         final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -1226,6 +1235,7 @@ public abstract class DialogWrapper {
         }
       }
 
+      @RequiredDispatchThread
       @Override
       public void update(AnActionEvent e) {
         final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -1234,7 +1244,7 @@ public abstract class DialogWrapper {
     }.registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER"), root);
   }
 
-  private void expandNextOptionButton() {
+  protected void expandNextOptionButton() {
     if (myCurrentOptionsButtonIndex > 0) {
       myOptionsButtons.get(myCurrentOptionsButtonIndex).closePopup();
       myCurrentOptionsButtonIndex++;

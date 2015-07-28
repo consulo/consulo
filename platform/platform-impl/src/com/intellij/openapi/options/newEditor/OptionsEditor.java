@@ -62,12 +62,12 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.List;
 
-public class OptionsEditor extends JPanel implements DataProvider, Place.Navigator, Disposable, AWTEventListener {
+public class OptionsEditor implements DataProvider, Place.Navigator, Disposable, AWTEventListener {
   public static DataKey<OptionsEditor> KEY = DataKey.create("options.editor");
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.options.newEditor.OptionsEditor");
 
-  @NonNls private static final String MAIN_SPLITTER_PROPORTION = "options.splitter.main.proportions";
+  @NonNls public static final String MAIN_SPLITTER_PROPORTION = "options.splitter.main.proportions";
   @NonNls private static final String DETAILS_SPLITTER_PROPORTION = "options.splitter.details.proportions";
 
   @NonNls private static final String SEARCH_VISIBLE = "options.searchVisible";
@@ -82,7 +82,7 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
 
   private final OptionsTree myTree;
   private final MySearchField mySearch;
-  private final Splitter myMainSplitter;
+  //private final Splitter myMainSplitter;
   //[back/forward] JComponent myToolbarComponent;
 
   private final DetailsComponent myOwnDetails = new DetailsComponent(false, false).setEmptyContentText(
@@ -95,6 +95,7 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
 
   private final MergingUpdateQueue myModificationChecker;
   private final ConfigurableGroup[] myGroups;
+  private JPanel myRootPanel;
 
   private final SpotlightPainter mySpotlightPainter = new SpotlightPainter();
   private final MergingUpdateQueue mySpotlightUpdate;
@@ -110,9 +111,10 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
   private final PropertiesComponent myProperties;
   private volatile boolean myDisposed;
 
-  public OptionsEditor(Project project, ConfigurableGroup[] groups, Configurable preselectedConfigurable) {
+  public OptionsEditor(Project project, ConfigurableGroup[] groups, Configurable preselectedConfigurable, final JPanel rootPanel) {
     myProject = project;
     myGroups = groups;
+    myRootPanel = rootPanel;
     myProperties = PropertiesComponent.getInstance(project);
 
     myFilter = new Filter();
@@ -208,24 +210,14 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
     myLeftSide.add(mySearchWrapper, BorderLayout.NORTH);
     myLeftSide.add(myTree, BorderLayout.CENTER);
 
-    setLayout(new BorderLayout());
-
-    myMainSplitter = new OnePixelSplitter(false);
-    myMainSplitter.setFirstComponent(myLeftSide);
-
     myLoadingDecorator = new LoadingDecorator(myOwnDetails.getComponent(), this, 150);
-    myMainSplitter.setSecondComponent(myLoadingDecorator.getComponent());
-
-
-    myMainSplitter.setProportion(readProportion(0.3f, MAIN_SPLITTER_PROPORTION));
+   //myMainSplitter.setProportion(readProportion(0.3f, MAIN_SPLITTER_PROPORTION));
     myContentWrapper.mySplitter.setProportion(readProportion(0.2f, DETAILS_SPLITTER_PROPORTION));
 
-    add(myMainSplitter, BorderLayout.CENTER);
-
-    MyColleague colleague = new MyColleague();
+   MyColleague colleague = new MyColleague();
     getContext().addColleague(colleague);
 
-    mySpotlightUpdate = new MergingUpdateQueue("OptionsSpotlight", 200, false, this, this, this);
+    mySpotlightUpdate = new MergingUpdateQueue("OptionsSpotlight", 200, false, rootPanel, this, rootPanel);
 
     if (preselectedConfigurable != null) {
       myTree.select(preselectedConfigurable);
@@ -251,7 +243,7 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
       }
     }, this);
 
-    myModificationChecker = new MergingUpdateQueue("OptionsModificationChecker", 1000, false, this, this, this);
+    myModificationChecker = new MergingUpdateQueue("OptionsModificationChecker", 1000, false, rootPanel, this, rootPanel);
 
     IdeGlassPaneUtil.installPainter(myOwnDetails.getContentGutter(), mySpotlightPainter, this);
 
@@ -264,16 +256,24 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
 
     setFilterFieldVisible(true, false, false);
 
-    new UiNotifyConnector.Once(this, new Activatable() {
+    new UiNotifyConnector.Once(myRootPanel, new Activatable() {
       @Override
       public void showNotify() {
-        myWindow = SwingUtilities.getWindowAncestor(OptionsEditor.this);
+        myWindow = SwingUtilities.getWindowAncestor(rootPanel);
       }
 
       @Override
       public void hideNotify() {
       }
     });
+  }
+
+  public JPanel getLeftSide() {
+    return myLeftSide;
+  }
+
+  public JComponent getRightSide() {
+    return myLoadingDecorator.getComponent();
   }
 
   /** @see #select(com.intellij.openapi.options.Configurable) */
@@ -628,6 +628,11 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
     return mySearch.getTextEditor().isFocusOwner();
   }
 
+  public void repaint() {
+    myRootPanel.invalidate();
+    myRootPanel.repaint();
+  }
+
   private class ResetAction extends AbstractAction {
     Configurable myConfigurable;
 
@@ -795,11 +800,6 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
 
   public JTree getPreferredFocusedComponent() {
     return myTree.getTree();
-  }
-
-  @Override
-  public Dimension getPreferredSize() {
-    return new Dimension(1200, 768);
   }
 
   private class Filter extends ElementFilter.Active.Impl<SimpleNode> {
@@ -978,7 +978,7 @@ public class OptionsEditor extends JPanel implements DataProvider, Place.Navigat
 
     myDisposed = true;
 
-    myProperties.setValue(MAIN_SPLITTER_PROPORTION, String.valueOf(myMainSplitter.getProportion()));
+    //myProperties.setValue(MAIN_SPLITTER_PROPORTION, String.valueOf(myMainSplitter.getProportion()));
     myProperties.setValue(DETAILS_SPLITTER_PROPORTION, String.valueOf(myContentWrapper.myLastSplitterProportion));
     myProperties.setValue(SEARCH_VISIBLE, Boolean.valueOf(isFilterFieldVisible()).toString());
 

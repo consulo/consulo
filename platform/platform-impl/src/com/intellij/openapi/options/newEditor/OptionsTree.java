@@ -82,7 +82,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
 
     myTree = new MyTree();
     TreeUtil.installActions(myTree);
-    myTree.setBorder(new EmptyBorder(0, 1, 0, 0));
+    myTree.setBorder(new EmptyBorder(0, 0, 0, 0));
 
     myTree.setRowHeight(-1);
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

@@ -26,16 +26,15 @@ import com.intellij.openapi.options.ConfigurableGroup;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.WholeWestDialogWrapper;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -43,7 +42,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class OptionsEditorDialog extends DialogWrapper implements DataProvider{
+public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataProvider{
 
   private Project myProject;
   private ConfigurableGroup[] myGroups;
@@ -107,15 +106,21 @@ public class OptionsEditorDialog extends DialogWrapper implements DataProvider{
     return true;
   }
 
-  @Nullable
+  @NotNull
   @Override
-  protected Border createContentPaneBorder() {
-    return new EmptyBorder(0, 0, 0, 0);
+  public String getSplitterKey() {
+    return OptionsEditor.MAIN_SPLITTER_PROPORTION;
   }
 
   @Override
-  protected JComponent createCenterPanel() {
-    myEditor = new OptionsEditor(myProject, myGroups, myPreselected);
+  public Dimension getDefaultSize() {
+    return new Dimension(1028, 786);
+  }
+
+  @NotNull
+  @Override
+  public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
+    myEditor = new OptionsEditor(myProject, myGroups, myPreselected, rootPanel);
     myEditor.getContext().addColleague(new OptionsEditorColleague.Adapter() {
       @Override
       public ActionCallback onModifiedAdded(final Configurable configurable) {
@@ -136,7 +141,7 @@ public class OptionsEditorDialog extends DialogWrapper implements DataProvider{
       }
     });
     Disposer.register(myDisposable, myEditor);
-    return myEditor;
+    return Couple.<JComponent>of(myEditor.getLeftSide(), myEditor.getRightSide());
   }
 
   public boolean updateStatus() {
@@ -303,7 +308,6 @@ public class OptionsEditorDialog extends DialogWrapper implements DataProvider{
     @Override
     public void actionPerformed(final ActionEvent e) {
       myEditor.apply();
-      myEditor.revalidate();
       myEditor.repaint();
     }
   }

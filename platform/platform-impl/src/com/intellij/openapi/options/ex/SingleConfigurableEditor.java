@@ -256,12 +256,6 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
   }
 
-  @Nullable
-  @Override
-  protected Border createContentPaneBorder() {
-    return new EmptyBorder(0, 0, 0, 0);
-  }
-
   @Override
   protected JComponent createCenterPanel() {
     myCenterPanel = myConfigurable.createComponent();
