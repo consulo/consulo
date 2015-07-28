@@ -892,6 +892,10 @@ class RunConfigurable extends BaseConfigurable {
     myRunDialog.setTitle(buffer.toString());
   }
 
+  public void setWholePanel(JPanel wholePanel) {
+    myWholePanel = wholePanel;
+  }
+
   private void setupDialogBounds() {
     SwingUtilities.invokeLater(new Runnable() {
       @Override

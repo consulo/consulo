@@ -47,13 +47,14 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     RunConfigurable configurable = getConfigurable();
     configurable.createComponent();
+    configurable.setWholePanel(rootPanel);
     Splitter splitter = configurable.getSplitter();
     return Couple.of(splitter.getFirstComponent(), splitter.getSecondComponent());
   }
 
   @Override
   protected void doOKAction() {
-    RunConfigurable configurable = (RunConfigurable)getConfigurable();
+    RunConfigurable configurable = getConfigurable();
     super.doOKAction();
     if (isOK()) {
       // if configurable was not modified, apply was not called and Run Configurable has not called 'updateActiveConfigurationFromSelected'
