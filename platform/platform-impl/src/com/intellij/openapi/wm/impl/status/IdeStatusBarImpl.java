@@ -36,6 +36,7 @@ import com.intellij.ui.popup.NotificationPopup;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -426,8 +427,8 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
       final boolean nextIcon = n instanceof IconPresentationWrapper || n instanceof IconLikeCustomStatusBarWidget;
 
       // 2peter: please do not touch it anymore :)
-      self.setBorder(prevIcon ? BorderFactory.createEmptyBorder(2, 2, 2, 2) : StatusBarWidget.WidgetBorder.INSTANCE);
-      if (nextIcon) n.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+      self.setBorder(prevIcon ? JBUI.Borders.empty(2) : StatusBarWidget.WidgetBorder.INSTANCE);
+      if (nextIcon) n.setBorder(JBUI.Borders.empty(2));
     }
   }
 
@@ -548,7 +549,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     }
     else if (presentation instanceof StatusBarWidget.MultipleTextValuesPresentation) {
       wrapper = new MultipleTextValuesPresentationWrapper((StatusBarWidget.MultipleTextValuesPresentation)presentation);
-      wrapper.setBorder(StatusBarWidget.WidgetBorder.INSTANCE);
+      wrapper.setBorder(StatusBarWidget.WidgetBorder.WIDE);
     }
     else {
       throw new IllegalArgumentException("Unable to find a wrapper for presentation: " + presentation.getClass().getSimpleName());

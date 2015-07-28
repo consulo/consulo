@@ -82,7 +82,7 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
         return true;
       }
     }.installOn(myComponent);
-    myComponent.setBorder(WidgetBorder.INSTANCE);
+    myComponent.setBorder(WidgetBorder.WIDE);
   }
 
   private void update() {

@@ -43,14 +43,17 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
     } else {
       hideNotify();
     }
+    if (isDisposed()) return;
     component.addHierarchyListener(this);
   }
 
-  public void hierarchyChanged(HierarchyEvent e) {
+  @Override
+  public void hierarchyChanged(@NotNull HierarchyEvent e) {
     if (isDisposed()) return;
 
     if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) > 0) {
       final Runnable runnable = new DumbAwareRunnable() {
+        @Override
         public void run() {
           final Component c = myComponent.get();
           if (isDisposed() || c == null) return;
@@ -81,6 +84,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
     myTarget.showNotify();
   }
 
+  @Override
   public void dispose() {
     if (isDisposed()) return;
 
@@ -107,12 +111,14 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
       super(component, target);
     }
 
+    @Override
     protected final void hideNotify() {
       super.hideNotify();
       myHidden = true;
       disposeIfNeeded();
     }
 
+    @Override
     protected final void showNotify() {
       super.showNotify();
       myShown = true;
@@ -127,14 +133,23 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
   }
 
   public static void doWhenFirstShown(@NotNull JComponent c, @NotNull final Runnable runnable) {
-    new Once(c, new Activatable() {
+    Activatable activatable = new Activatable() {
+      @Override
       public void showNotify() {
-        runnable.run();        
+        runnable.run();
       }
 
+      @Override
       public void hideNotify() {
       }
-    });
-  }
+    };
 
+    new UiNotifyConnector(c, activatable) {
+      @Override
+      protected void showNotify() {
+        super.showNotify();
+        Disposer.dispose(this);
+      }
+    };
+  }
 }

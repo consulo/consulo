@@ -95,7 +95,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
         return true;
       }
     }.installOn(myComponent);
-    myComponent.setBorder(WidgetBorder.INSTANCE);
+    myComponent.setBorder(WidgetBorder.WIDE);
   }
 
   @Nullable("returns null if charset set cannot be determined from content")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,17 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.concurrency.JobScheduler;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.UIBundle;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.update.Activatable;
+import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +57,6 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
 
   private long myLastTotal = -1;
   private long myLastUsed = -1;
-  private ScheduledFuture<?> myFuture;
   private Image myBufferedImage;
   private boolean myWasPressed;
 
@@ -71,12 +74,35 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
 
     setBorder(StatusBarWidget.WidgetBorder.INSTANCE);
     updateUI();
+
+    new UiNotifyConnector(this, new Activatable() {
+      private ScheduledFuture<?> myFuture;
+
+      @Override
+      public void showNotify() {
+        myFuture = JobScheduler.getScheduler().scheduleWithFixedDelay(new Runnable() {
+          @Override
+          public void run() {
+            if (isDisplayable()) {
+              updateState();
+            }
+          }
+        }, 1, 5, TimeUnit.SECONDS);
+      }
+
+      @Override
+      public void hideNotify() {
+        if (myFuture != null) {
+          myFuture.cancel(true);
+          myFuture = null;
+        }
+      }
+    });
+
   }
 
   @Override
   public void dispose() {
-    myFuture.cancel(true);
-    myFuture = null;
   }
 
   @Override
@@ -108,7 +134,7 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
   }
 
   private static Font getWidgetFont() {
-    return UIUtil.getLabelFont().deriveFont(11.0f);
+    return JBUI.Fonts.label(11);
   }
 
   @Override
@@ -138,7 +164,7 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
       final int totalBarLength = size.width - insets.left - insets.right;
       final int usedBarLength = (int)(totalBarLength * usedMem / maxMem);
       final int unusedBarLength = (int)(totalBarLength * unusedMem / maxMem);
-      final int barHeight = HEIGHT;
+      final int barHeight = Math.max(JBUI.scale(HEIGHT), getFont().getSize() + 2);
       final int yOffset = (size.height - barHeight) / 2;
       final int xOffset = insets.left;
 
@@ -163,12 +189,6 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
         g2.drawLine(xOffset + usedBarLength + unusedBarLength, yOffset, xOffset + usedBarLength + unusedBarLength, barHeight);
       }
 
-      // frame
-      if (!UIUtil.isUnderDarcula()) {
-        g2.setColor(USED_COLOR_2);
-        g2.drawRect(xOffset, yOffset, totalBarLength - 1, barHeight - 1);
-      }
-
       // label
       g2.setFont(getFont());
       final long used = usedMem / MEGABYTE;
@@ -177,7 +197,7 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
       final FontMetrics fontMetrics = g.getFontMetrics();
       final int infoWidth = fontMetrics.charsWidth(info.toCharArray(), 0, info.length());
       final int infoHeight = fontMetrics.getAscent();
-      UIUtil.applyRenderingHints(g2);
+      UISettings.setupAntialiasing(g2);
       g2.setColor(UIUtil.getLabelForeground());
       g2.drawString(info, xOffset + (totalBarLength - infoWidth) / 2, yOffset + infoHeight + (barHeight - infoHeight) / 2 - 1);
 
@@ -203,8 +223,8 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
   @Override
   public Dimension getPreferredSize() {
     final Insets insets = getInsets();
-    int width = getFontMetrics(getWidgetFont()).stringWidth(SAMPLE_STRING) + insets.left + insets.right + 2;
-    int height = getFontMetrics(getWidgetFont()).getHeight() + insets.top + insets.bottom + 2;
+    int width = getFontMetrics(getWidgetFont()).stringWidth(SAMPLE_STRING) + insets.left + insets.right + JBUI.scale(2);
+    int height = getFontMetrics(getWidgetFont()).getHeight() + insets.top + insets.bottom + JBUI.scale(2);
     return new Dimension(width, height);
   }
 
@@ -216,22 +236,6 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
   @Override
   public Dimension getMaximumSize() {
     return getPreferredSize();
-  }
-
-  /**
-   * Invoked when enclosed frame is being shown.
-   */
-  @Override
-  public void addNotify() {
-    myFuture = JobScheduler.getScheduler().scheduleWithFixedDelay(new Runnable() {
-      @Override
-      public void run() {
-        if (isDisplayable()) {
-          updateState();
-        }
-      }
-    }, 1, 5, TimeUnit.SECONDS);
-    super.addNotify();
   }
 
   private void updateState() {
