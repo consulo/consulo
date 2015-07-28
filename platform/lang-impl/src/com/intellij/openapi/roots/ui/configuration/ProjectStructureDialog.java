@@ -109,6 +109,11 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   }
 
   @Override
+  public float getSplitterDefaultValue() {
+    return 0.2f;
+  }
+
+  @Override
   protected String getDimensionServiceKey() {
     return OptionsEditorDialog.DIMENSION_KEY;
   }
