@@ -29,13 +29,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectStructureElementConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureDaemonAnalyzer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.DetailsComponent;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -55,7 +55,7 @@ import java.io.IOException;
  * @author Eugene Zhuravlev
  *         Date: Dec 15, 2003
  */
-public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements DetailsComponent.Facade {
+public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements DetailsComponent.Facade, WholeWestConfigurable {
 
   private final Project myProject;
 
@@ -73,10 +73,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   private DetailsComponent myDetailsComponent;
   private final GeneralProjectSettingsElement mySettingsElement;
 
-  public ProjectConfigurable(Project project,
-                             final StructureConfigurableContext context,
-                             ModulesConfigurator configurator,
-                             ProjectSdksModel model) {
+  public ProjectConfigurable(Project project, final StructureConfigurableContext context, ModulesConfigurator configurator) {
     myProject = project;
     myContext = context;
     myModulesConfigurator = configurator;
@@ -88,7 +85,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
         daemonAnalyzer.queueUpdate(mySettingsElement);
       }
     });
-    init(model);
+    init();
   }
 
   @Override
@@ -111,7 +108,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     return myDetailsComponent.getComponent();
   }
 
-  private void init(final ProjectSdksModel model) {
+  private void init() {
     myPanel = new JPanel(new GridBagLayout());
     myPanel.setPreferredSize(new Dimension(700, 500));
 
@@ -271,5 +268,10 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   public String getCompilerOutputUrl() {
     return VfsUtil.pathToUrl(myProjectCompilerOutput.getText().trim());
+  }
+
+  @Override
+  public Couple<JComponent> createSplitterComponents() {
+    return Couple.of(new JPanel(), createComponent());
   }
 }

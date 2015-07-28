@@ -53,6 +53,21 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
                                            Configurable configurable,
                                            @NonNls String dimensionKey,
                                            final boolean showApplyButton,
+                                           final IdeModalityType ideModalityType,
+                                           boolean doNotCallInit) {
+    super(project, true, ideModalityType);
+    myDimensionKey = dimensionKey;
+    myShowApplyButton = showApplyButton;
+    setTitle(createTitleString(configurable));
+
+    myProject = project;
+    myConfigurable = configurable;
+  }
+
+  public WholeWestSingleConfigurableEditor(@Nullable Project project,
+                                           Configurable configurable,
+                                           @NonNls String dimensionKey,
+                                           final boolean showApplyButton,
                                            final IdeModalityType ideModalityType) {
     super(project, true, ideModalityType);
     myDimensionKey = dimensionKey;

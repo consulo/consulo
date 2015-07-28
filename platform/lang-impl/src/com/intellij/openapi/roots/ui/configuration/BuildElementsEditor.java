@@ -201,7 +201,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
   private void updateOutputPathPresentation() {
     val moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
     if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
-      final String baseUrl = ProjectStructureConfigurable.getInstance(myProject).getProjectConfig().getCompilerOutputUrl();
+      final String baseUrl = ProjectStructureConfigurable.getInstance(myProject).getProjectConfigurable().getCompilerOutputUrl();
       moduleCompileOutputChanged(baseUrl, getModule().getName());
     }
     else {

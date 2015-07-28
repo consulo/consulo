@@ -56,7 +56,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   @Override
   @Nullable
   public Sdk getSdk(final Sdk sdk, final String sdkName) {
-    final ProjectSdksModel model = ProjectStructureConfigurable.getInstance(myProject).getSdkConfig().getSdksTreeModel();
+    final ProjectSdksModel model = ProjectStructureConfigurable.getInstance(myProject).getSdkConfigurable().getSdksTreeModel();
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }
 

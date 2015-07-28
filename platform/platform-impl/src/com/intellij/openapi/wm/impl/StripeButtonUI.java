@@ -29,147 +29,154 @@ import java.awt.geom.AffineTransform;
 /**
  * @author Vladimir Kondratyev
  */
-public final class StripeButtonUI extends MetalToggleButtonUI{
-  private static final StripeButtonUI ourInstance=new StripeButtonUI();
+public final class StripeButtonUI extends MetalToggleButtonUI {
+  private final Rectangle myIconRect = new Rectangle();
+  private final Rectangle myTextRect = new Rectangle();
+  private final Rectangle myViewRect = new Rectangle();
+  private Insets myViewInsets = new Insets(0, 0, 0, 0);
 
-  private static final Rectangle ourIconRect=new Rectangle();
-  private static final Rectangle ourTextRect=new Rectangle();
-  private static final Rectangle ourViewRect=new Rectangle();
-  private static Insets ourViewInsets=new Insets(0,0,0,0);
-
-  private StripeButtonUI(){}
-
-  /** Invoked by reflection */
-  public static ComponentUI createUI(final JComponent c){
-    return ourInstance;
+  private StripeButtonUI() {
   }
 
-  public Dimension getPreferredSize(final JComponent c){
-    final AnchoredButton button=(AnchoredButton)c;
-    final Dimension dim=super.getPreferredSize(button);
+  /**
+   * Invoked by reflection
+   */
+  public static ComponentUI createUI(final JComponent c) {
+    return new StripeButtonUI();
+  }
 
-    dim.width=(int)(4+dim.width*1.1f);
-    dim.height+=2;
+  @Override
+  public Dimension getPreferredSize(final JComponent c) {
+    final AnchoredButton button = (AnchoredButton)c;
+    final Dimension dim = super.getPreferredSize(button);
 
-    final ToolWindowAnchor anchor=button.getAnchor();
-    if(ToolWindowAnchor.LEFT==anchor||ToolWindowAnchor.RIGHT==anchor){
-      return new Dimension(dim.height,dim.width);
-    } else{
+    dim.width = (int)(4 + dim.width * 1.1f);
+    dim.height += 2;
+
+    final ToolWindowAnchor anchor = button.getAnchor();
+    if (ToolWindowAnchor.LEFT == anchor || ToolWindowAnchor.RIGHT == anchor) {
+      return new Dimension(dim.height, dim.width);
+    }
+    else {
       return dim;
     }
   }
 
-  public void paint(final Graphics g,final JComponent c){
-    final AnchoredButton button=(AnchoredButton)c;
+  @Override
+  public void paint(final Graphics g, final JComponent c) {
+    final AnchoredButton button = (AnchoredButton)c;
 
-    final String text=button.getText();
-    final Icon icon=(button.isEnabled()) ? button.getIcon() : button.getDisabledIcon();
+    final String text = button.getText();
+    final Icon icon = (button.isEnabled()) ? button.getIcon() : button.getDisabledIcon();
 
-    if((icon==null)&&(text==null)){
+    if (icon == null && text == null) {
       return;
     }
 
-    final FontMetrics fm=button.getFontMetrics(button.getFont());
-    ourViewInsets=c.getInsets(ourViewInsets);
+    final FontMetrics fm = button.getFontMetrics(button.getFont());
+    myViewInsets = c.getInsets(myViewInsets);
 
-    ourViewRect.x=ourViewInsets.left;
-    ourViewRect.y=ourViewInsets.top;
+    myViewRect.x = myViewInsets.left;
+    myViewRect.y = myViewInsets.top;
 
-    final ToolWindowAnchor anchor=button.getAnchor();
+    final ToolWindowAnchor anchor = button.getAnchor();
 
     // Use inverted height & width
-    if(ToolWindowAnchor.RIGHT==anchor||ToolWindowAnchor.LEFT==anchor){
-      ourViewRect.height=c.getWidth()-(ourViewInsets.left+ourViewInsets.right);
-      ourViewRect.width=c.getHeight()-(ourViewInsets.top+ourViewInsets.bottom);
-    } else{
-      ourViewRect.height=c.getHeight()-(ourViewInsets.left+ourViewInsets.right);
-      ourViewRect.width=c.getWidth()-(ourViewInsets.top+ourViewInsets.bottom);
+    if (ToolWindowAnchor.RIGHT == anchor || ToolWindowAnchor.LEFT == anchor) {
+      myViewRect.height = c.getWidth() - (myViewInsets.left + myViewInsets.right);
+      myViewRect.width = c.getHeight() - (myViewInsets.top + myViewInsets.bottom);
+    }
+    else {
+      myViewRect.height = c.getHeight() - (myViewInsets.left + myViewInsets.right);
+      myViewRect.width = c.getWidth() - (myViewInsets.top + myViewInsets.bottom);
     }
 
-    ourIconRect.x=ourIconRect.y=ourIconRect.width=ourIconRect.height=0;
-    ourTextRect.x=ourTextRect.y=ourTextRect.width=ourTextRect.height=0;
+    myIconRect.x = myIconRect.y = myIconRect.width = myIconRect.height = 0;
+    myTextRect.x = myTextRect.y = myTextRect.width = myTextRect.height = 0;
 
-    final String clippedText=SwingUtilities.layoutCompoundLabel(
-      c,fm,text,icon,
-      button.getVerticalAlignment(),button.getHorizontalAlignment(),
-      button.getVerticalTextPosition(),button.getHorizontalTextPosition(),
-      ourViewRect,ourIconRect,ourTextRect,
-      button.getText()==null ? 0 : button.getIconTextGap()
-    );
+    final String clippedText = SwingUtilities
+            .layoutCompoundLabel(c, fm, text, icon, button.getVerticalAlignment(), button.getHorizontalAlignment(), button.getVerticalTextPosition(),
+                                 button.getHorizontalTextPosition(), myViewRect, myIconRect, myTextRect,
+                                 button.getText() == null ? 0 : button.getIconTextGap());
 
     // Paint button's background
 
     final Graphics2D g2 = (Graphics2D)g.create();
 
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-    g2.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-    final ButtonModel model=button.getModel();
+    final ButtonModel model = button.getModel();
     final Color background = button.getBackground();
-    ourIconRect.x -= 2;
-    ourTextRect.x -= 2;
+    myIconRect.x -= 2;
+    myTextRect.x -= 2;
     if (model.isArmed() && model.isPressed() || model.isSelected() || model.isRollover()) {
-      if (anchor == ToolWindowAnchor.LEFT) g2.translate(-1, 0);
+      //if (anchor == ToolWindowAnchor.LEFT) g2.translate(-1, 0);
       if (anchor.isHorizontal()) g2.translate(0, -1);
       final boolean dark = UIUtil.isUnderDarcula();
-      g2.setColor(dark ? Gray._15.withAlpha(model.isSelected() ? 85: 40) : Gray._85.withAlpha(model.isSelected()? 85: 40));
+      g2.setColor(dark ? Gray._15.withAlpha(model.isSelected() ? 85 : 40) : Gray._85.withAlpha(model.isSelected() ? 85 : 40));
       g2.fillRect(0, 0, button.getWidth(), button.getHeight());
-      if (anchor == ToolWindowAnchor.LEFT) g2.translate(1, 0);
+      //if (anchor == ToolWindowAnchor.LEFT) g2.translate(1, 0);
       if (anchor.isHorizontal()) g2.translate(0, 1);
     }
 
 
-    AffineTransform tr=null;
-    if(ToolWindowAnchor.RIGHT==anchor||ToolWindowAnchor.LEFT==anchor){
-      tr=g2.getTransform();
-      if(ToolWindowAnchor.RIGHT==anchor){
-        if(icon != null){ // do not rotate icon
-          icon.paintIcon(c, g2, ourIconRect.y, ourIconRect.x);
+    AffineTransform tr = null;
+    if (ToolWindowAnchor.RIGHT == anchor || ToolWindowAnchor.LEFT == anchor) {
+      tr = g2.getTransform();
+      if (ToolWindowAnchor.RIGHT == anchor) {
+        if (icon != null) { // do not rotate icon
+          icon.paintIcon(c, g2, myIconRect.y, myIconRect.x);
         }
-        g2.rotate(Math.PI/2);
-        g2.translate(0,-c.getWidth());
-      } else {
-        if(icon != null){ // do not rotate icon
-          icon.paintIcon(c, g2, ourIconRect.y, c.getHeight() - ourIconRect.x - icon.getIconHeight());
+        g2.rotate(Math.PI / 2);
+        g2.translate(0, -c.getWidth());
+      }
+      else {
+        if (icon != null) { // do not rotate icon
+          icon.paintIcon(c, g2, myIconRect.y, c.getHeight() - myIconRect.x - icon.getIconHeight());
         }
-        g2.rotate(-Math.PI/2);
-        g2.translate(-c.getHeight(),0);
+        g2.rotate(-Math.PI / 2);
+        g2.translate(-c.getHeight(), 0);
       }
     }
-    else{
-      if(icon!=null){
-        icon.paintIcon(c,g2,ourIconRect.x,ourIconRect.y);
+    else {
+      if (icon != null) {
+        icon.paintIcon(c, g2, myIconRect.x, myIconRect.y);
       }
     }
 
     // paint text
 
-    if(text!=null){
-      if(model.isEnabled()){
-        if(model.isArmed()&&model.isPressed()||model.isSelected()){
+    if (text != null) {
+      if (model.isEnabled()) {
+        if (model.isArmed() && model.isPressed() || model.isSelected()) {
           g2.setColor(background);
-        } else{
+        }
+        else {
           g2.setColor(button.getForeground());
         }
-      } else{
+      }
+      else {
         g2.setColor(background.darker());
       }
       /* Draw the Text */
-      if(model.isEnabled()){
+      if (model.isEnabled()) {
         /*** paint the text normally */
         g2.setColor(UIUtil.isUnderDarcula() && model.isSelected() ? button.getForeground().brighter() : button.getForeground());
-        BasicGraphicsUtils.drawString(g2,clippedText,button.getMnemonic2(),ourTextRect.x,ourTextRect.y+fm.getAscent());
-      } else{
+        BasicGraphicsUtils.drawString(g2, clippedText, button.getMnemonic2(), myTextRect.x, myTextRect.y + fm.getAscent());
+      }
+      else {
         /*** paint the text disabled ***/
-        if(model.isSelected()){
+        if (model.isSelected()) {
           g2.setColor(c.getBackground());
-        } else{
+        }
+        else {
           g2.setColor(getDisabledTextColor());
         }
-        BasicGraphicsUtils.drawString(g2,clippedText,button.getMnemonic2(),ourTextRect.x,ourTextRect.y+fm.getAscent());
+        BasicGraphicsUtils.drawString(g2, clippedText, button.getMnemonic2(), myTextRect.x, myTextRect.y + fm.getAscent());
       }
     }
-    if(ToolWindowAnchor.RIGHT==anchor||ToolWindowAnchor.LEFT==anchor){
+    if (ToolWindowAnchor.RIGHT == anchor || ToolWindowAnchor.LEFT == anchor) {
       g2.setTransform(tr);
     }
 

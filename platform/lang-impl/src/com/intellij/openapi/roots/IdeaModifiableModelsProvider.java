@@ -86,6 +86,6 @@ public class IdeaModifiableModelsProvider implements ModifiableModelsProvider {
   @Nullable
   private static StructureConfigurableContext getProjectStructureContext(Project project) {
     final ProjectStructureConfigurable structureConfigurable = ProjectStructureConfigurable.getInstance(project);
-    return structureConfigurable.isUiInitialized() ? structureConfigurable.getContext() : null;
+    return structureConfigurable.getContext() ;
   }
 }

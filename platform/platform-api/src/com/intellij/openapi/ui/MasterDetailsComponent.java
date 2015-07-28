@@ -59,7 +59,7 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
   protected static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.MasterDetailsComponent");
 
   protected NamedConfigurable myCurrentConfigurable;
-  private final JBSplitter mySplitter;
+  protected final JBSplitter mySplitter;
 
   @NonNls public static final String TREE_OBJECT = "treeObject";
   @NonNls public static final String TREE_NAME = "treeName";
@@ -140,7 +140,7 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
     reInitWholePanelIfNeeded();
   }
 
-  private void reInitWholePanelIfNeeded() {
+  protected void reInitWholePanelIfNeeded() {
     if (!myToReInitWholePanel) return;
 
     myWholePanel = new JPanel(new BorderLayout()) {
@@ -174,7 +174,7 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
     };
 
     left.add(myNorthPanel, BorderLayout.NORTH);
-    myMaster = ScrollPaneFactory.createScrollPane(myTree, true);
+    myMaster = ScrollPaneFactory.createScrollPane(myTree, SideBorder.TOP);
     left.add(myMaster, BorderLayout.CENTER);
     mySplitter.setFirstComponent(left);
 
@@ -217,7 +217,7 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
     updateSelectionFromTree();
   }
 
-  private void updateSelectionFromTree() {
+  protected void updateSelectionFromTree() {
     TreePath[] treePaths = myTree.getSelectionPaths();
     if (treePaths != null) {
       List<NamedConfigurable> selectedConfigurables = new ArrayList<NamedConfigurable>();

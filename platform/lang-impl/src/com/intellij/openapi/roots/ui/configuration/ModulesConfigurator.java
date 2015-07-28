@@ -31,7 +31,6 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -53,6 +52,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
+import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import org.consulo.ide.eap.EarlyAccessProgramManager;
@@ -566,9 +566,9 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
   public static boolean showArtifactSettings(@NotNull Project project, @Nullable final Artifact artifact) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    return ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
+    return ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override
-      public void run() {
+      public void consume(ProjectStructureConfigurable config) {
         configurable.select(artifact, true);
       }
     });
@@ -576,19 +576,18 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
   public static boolean showSdkSettings(@NotNull Project project, @NotNull final Sdk sdk) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    return ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
+    return ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override
-      public void run() {
+      public void consume(ProjectStructureConfigurable config) {
         configurable.select(sdk, true);
       }
     });
   }
 
   public static boolean showDialog(Project project, @Nullable final String moduleToSelect, @Nullable final String editorNameToSelect) {
-    final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
-    return ShowSettingsUtil.getInstance().editConfigurable(project, config, new Runnable() {
+    return ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override
-      public void run() {
+      public void consume(ProjectStructureConfigurable config) {
         config.select(moduleToSelect, editorNameToSelect, true);
       }
     });
@@ -598,7 +597,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     for (ModuleEditor moduleEditor : myModuleEditors) {
       if (module == moduleEditor.getModule() && Comparing.strEqual(moduleEditor.getName(), oldName)) {
         moduleEditor.setModuleName(name);
-        moduleEditor.updateCompilerOutputPathChanged(ProjectStructureConfigurable.getInstance(myProject).getProjectConfig().getCompilerOutputUrl(), name);
+        moduleEditor.updateCompilerOutputPathChanged(ProjectStructureConfigurable.getInstance(myProject).getProjectConfigurable().getCompilerOutputUrl(), name);
         myContext.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(myContext, module));
         return;
       }

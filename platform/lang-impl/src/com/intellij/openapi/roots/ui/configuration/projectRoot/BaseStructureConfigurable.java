@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.ui.configuration.WholeWestConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureDaemonAnalyzerListener;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
@@ -36,6 +37,7 @@ import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.TreeSpeedSearch;
@@ -55,7 +57,8 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public abstract class BaseStructureConfigurable extends MasterDetailsComponent implements SearchableConfigurable, Disposable, Place.Navigator {
+public abstract class BaseStructureConfigurable extends MasterDetailsComponent
+        implements SearchableConfigurable, Disposable, Place.Navigator, WholeWestConfigurable {
 
   protected StructureConfigurableContext myContext;
 
@@ -90,6 +93,15 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
   }
 
   @Override
+  public Couple<JComponent> createSplitterComponents() {
+    reInitWholePanelIfNeeded();
+
+    updateSelectionFromTree();
+
+    return Couple.of(mySplitter.getFirstComponent(), mySplitter.getSecondComponent());
+  }
+
+  @Override
   protected MasterDetailsStateService getStateService() {
     return MasterDetailsStateService.getInstance(myProject);
   }
@@ -111,7 +123,8 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
     final NamedConfigurable config;
     if (node != null) {
       config = node.getConfigurable();
-    } else {
+    }
+    else {
       config = nodeByName.getConfigurable();
     }
 
@@ -228,10 +241,11 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
     @Override
     protected boolean isEnabled() {
       final TreePath selectionPath = myTree.getSelectionPath();
-      if (selectionPath != null){
+      if (selectionPath != null) {
         final MyNode node = (MyNode)selectionPath.getLastPathComponent();
         return !node.isDisplayInBold();
-      } else {
+      }
+      else {
         return false;
       }
     }
@@ -265,7 +279,8 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
       initTree();
       myTree.setShowsRootHandles(false);
       loadTree();
-    } else {
+    }
+    else {
       super.disposeUIResources();
       myTree.setShowsRootHandles(false);
       loadTree();
@@ -283,7 +298,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
   }
 
   protected abstract void loadTree();
- 
+
 
   @Override
   @NotNull
@@ -447,7 +462,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
 
     @Override
     public int getDefaultIndex() {
-        return 0;
-      }
+      return 0;
+    }
   }
 }
