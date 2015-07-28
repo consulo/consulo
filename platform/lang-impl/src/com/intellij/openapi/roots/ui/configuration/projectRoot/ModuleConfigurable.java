@@ -78,7 +78,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
 
   @Nullable
   @Override
-  protected JComponent createTopRightComponent() {
+  protected JComponent createTopRightComponent(JTextField nameField) {
     return new ModuleLayerPanel(getModuleEditor());
   }
 

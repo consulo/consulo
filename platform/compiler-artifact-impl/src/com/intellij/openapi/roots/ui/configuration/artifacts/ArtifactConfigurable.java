@@ -17,12 +17,12 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactType;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -62,7 +62,7 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
   }
 
   @Override
-  protected JComponent createTopRightComponent() {
+  protected JComponent createTopRightComponent(final JTextField nameField) {
     final ComboBox artifactTypeBox = new ComboBox();
     for (ArtifactType type : ArtifactType.EP_NAME.getExtensions()) {
       artifactTypeBox.addItem(type);
@@ -81,10 +81,7 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
       }
     });
 
-    final JPanel panel = new JPanel(new FlowLayout());
-    panel.add(new JLabel("Type: "));
-    panel.add(artifactTypeBox);
-    return panel;
+    return LabeledComponent.left(artifactTypeBox, "Type");
   }
 
   @Override

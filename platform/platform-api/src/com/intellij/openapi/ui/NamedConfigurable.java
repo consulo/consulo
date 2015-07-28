@@ -80,7 +80,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
   public final JComponent createComponent() {
     if (myOptionsComponent == null){
       myOptionsComponent = createOptionsPanel();
-      final JComponent component = createTopRightComponent();
+      final JComponent component = createTopRightComponent(myNameField);
       if (component == null) {
         myTopRightPanel.setVisible(false);
       }
@@ -99,7 +99,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
   }
 
   @Nullable
-  protected JComponent createTopRightComponent() {
+  protected JComponent createTopRightComponent(JTextField nameField) {
     return null;
   }
 
