@@ -35,12 +35,12 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
 
   @Override
   public final void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
-    boolean changedInsideCodeBlock = false;
+    boolean modifyOutOfCodeCounter = false;
 
     switch (event.getCode()) {
       case BEFORE_CHILDREN_CHANGE:
         if (event.getParent() instanceof PsiFile) {
-          changedInsideCodeBlock = true;
+          modifyOutOfCodeCounter = false;
           break; // May be caused by fake PSI event from PomTransaction. A real event will anyway follow.
         }
 
@@ -48,33 +48,33 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
         if (event.isGenericChange()) {
           return;
         }
-        changedInsideCodeBlock = modifyOutOfCodeCounter(event.getFile(), event.getParent());
+        modifyOutOfCodeCounter = modifyOutOfCodeCounter(event.getFile(), event.getParent());
         break;
 
       case BEFORE_CHILD_ADDITION:
       case BEFORE_CHILD_REMOVAL:
       case CHILD_ADDED:
       case CHILD_REMOVED:
-        changedInsideCodeBlock = modifyOutOfCodeCounter(event.getFile(), event.getParent());
+        modifyOutOfCodeCounter = modifyOutOfCodeCounter(event.getFile(), event.getParent());
         break;
 
       case BEFORE_PROPERTY_CHANGE:
       case PROPERTY_CHANGED:
-        changedInsideCodeBlock = false;
+        modifyOutOfCodeCounter = true;
         break;
 
       case BEFORE_CHILD_REPLACEMENT:
       case CHILD_REPLACED:
-        changedInsideCodeBlock = modifyOutOfCodeCounter(event.getFile(), event.getParent());
+        modifyOutOfCodeCounter = modifyOutOfCodeCounter(event.getFile(), event.getParent());
         break;
 
       case BEFORE_CHILD_MOVEMENT:
       case CHILD_MOVED:
-        changedInsideCodeBlock = modifyOutOfCodeCounter(event.getFile(), event.getOldParent()) && modifyOutOfCodeCounter(event.getFile(), event.getNewParent());
+        modifyOutOfCodeCounter = modifyOutOfCodeCounter(event.getFile(), event.getOldParent()) && modifyOutOfCodeCounter(event.getFile(), event.getNewParent());
         break;
     }
 
-    if (!changedInsideCodeBlock) {
+    if (modifyOutOfCodeCounter) {
       myModificationTracker.incOutOfCodeBlockModificationCounter();
     }
   }
@@ -90,9 +90,9 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
       return isMaybeMyElement(element);
     }
     else if(isMyFile(file)) {
-      return isInsideCodeBlock(element);
+      return !isInsideCodeBlock(element);
     }
-    return true;
+    return false;
   }
 
   protected abstract boolean isInsideCodeBlock(@Nullable PsiElement element);
