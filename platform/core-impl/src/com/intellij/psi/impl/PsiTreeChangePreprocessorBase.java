@@ -48,14 +48,14 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
         if (event.isGenericChange()) {
           return;
         }
-        changedInsideCodeBlock = handleChange(event.getFile(), event.getParent());
+        changedInsideCodeBlock = modifyOutOfCodeCounter(event.getFile(), event.getParent());
         break;
 
       case BEFORE_CHILD_ADDITION:
       case BEFORE_CHILD_REMOVAL:
       case CHILD_ADDED:
       case CHILD_REMOVED:
-        changedInsideCodeBlock = handleChange(event.getFile(), event.getParent());
+        changedInsideCodeBlock = modifyOutOfCodeCounter(event.getFile(), event.getParent());
         break;
 
       case BEFORE_PROPERTY_CHANGE:
@@ -65,12 +65,12 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
 
       case BEFORE_CHILD_REPLACEMENT:
       case CHILD_REPLACED:
-        changedInsideCodeBlock = handleChange(event.getFile(), event.getParent());
+        changedInsideCodeBlock = modifyOutOfCodeCounter(event.getFile(), event.getParent());
         break;
 
       case BEFORE_CHILD_MOVEMENT:
       case CHILD_MOVED:
-        changedInsideCodeBlock = handleChange(event.getFile(), event.getOldParent()) && handleChange(event.getFile(), event.getNewParent());
+        changedInsideCodeBlock = modifyOutOfCodeCounter(event.getFile(), event.getOldParent()) && modifyOutOfCodeCounter(event.getFile(), event.getNewParent());
         break;
     }
 
@@ -85,14 +85,14 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
     return false;
   }
 
-  protected boolean handleChange(@Nullable PsiFile file, @Nullable PsiElement element) {
+  protected boolean modifyOutOfCodeCounter(@Nullable PsiFile file, @Nullable PsiElement element) {
     if(file == null) {
       return isMaybeMyElement(element);
     }
     else if(isMyFile(file)) {
       return isInsideCodeBlock(element);
     }
-    return false;
+    return true;
   }
 
   protected abstract boolean isInsideCodeBlock(@Nullable PsiElement element);
