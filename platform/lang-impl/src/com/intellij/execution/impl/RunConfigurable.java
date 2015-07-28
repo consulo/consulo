@@ -79,7 +79,7 @@ class RunConfigurable extends BaseConfigurable {
   private static final Icon REMOVE_ICON = IconUtil.getRemoveIcon();
   private static final Icon SHARED_ICON = IconLoader.getTransparentIcon(AllIcons.Nodes.Symlink, .6f);
   private static final Icon NON_SHARED_ICON = EmptyIcon.ICON_16;
-  @NonNls private static final String DIVIDER_PROPORTION = "dividerProportion";
+  @NonNls public static final String DIVIDER_PROPORTION = "dividerProportion";
   @NonNls private static final Object DEFAULTS = new Object() {
     @Override
     public String toString() {
@@ -591,6 +591,10 @@ class RunConfigurable extends BaseConfigurable {
     mySplitter.setProportion(myProperties.getFloat(DIVIDER_PROPORTION, 0.3f));
 
     return myWholePanel;
+  }
+
+  public Splitter getSplitter() {
+    return mySplitter;
   }
 
   @Override

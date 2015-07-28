@@ -18,18 +18,37 @@ package com.intellij.execution.impl;
 
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.Executor;
-import com.intellij.openapi.options.ex.SingleConfigurableEditor;
+import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.util.Couple;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EditConfigurationsDialog extends SingleConfigurableEditor implements RunConfigurable.RunDialogBase {
+import javax.swing.*;
+
+public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor implements RunConfigurable.RunDialogBase {
   protected Executor myExecutor;
 
   public EditConfigurationsDialog(final Project project) {
     super(project, new RunConfigurable(project));
-    ((RunConfigurable)getConfigurable()).setRunDialog(this);
+    getConfigurable().setRunDialog(this);
     setTitle(ExecutionBundle.message("run.debug.dialog.title"));
     setHorizontalStretch(1.3F);
+  }
+
+  @Override
+  public RunConfigurable getConfigurable() {
+    return (RunConfigurable)super.getConfigurable();
+  }
+
+  @NotNull
+  @Override
+  public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
+    RunConfigurable configurable = getConfigurable();
+    configurable.createComponent();
+    Splitter splitter = configurable.getSplitter();
+    return Couple.of(splitter.getFirstComponent(), splitter.getSecondComponent());
   }
 
   @Override

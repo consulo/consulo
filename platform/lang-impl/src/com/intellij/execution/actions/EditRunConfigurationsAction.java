@@ -24,15 +24,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.util.ui.EmptyIcon;
+import org.mustbe.consulo.RequiredDispatchThread;
 
-public class EditRunConfigurationsAction extends AnAction{
+public class EditRunConfigurationsAction extends AnAction {
   public EditRunConfigurationsAction() {
     LayeredIcon icon = new LayeredIcon(2);
-    icon.setIcon(AllIcons.Actions.EditSource,0,2,2);
+    icon.setIcon(AllIcons.Actions.EditSource, 0, 2, 2);
     icon.setIcon(EmptyIcon.ICON_18, 1);
     getTemplatePresentation().setIcon(icon);
   }
 
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(final AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
@@ -47,6 +49,7 @@ public class EditRunConfigurationsAction extends AnAction{
     dialog.show();
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(final AnActionEvent e) {
     Presentation presentation = e.getPresentation();
