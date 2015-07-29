@@ -224,7 +224,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   @NotNull
   private static MyNode createSdkGroupNode(SdkType key) {
-    return new MyNode(new TextConfigurable<SdkType>(key, key.getPresentableName(), "", "", key.getGroupIcon()));
+    return new MyNode(new TextConfigurable<SdkType>(key, key.getPresentableName(), "", "", key.getGroupIcon()), true);
   }
 
   @NotNull
