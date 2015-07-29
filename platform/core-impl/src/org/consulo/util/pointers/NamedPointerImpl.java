@@ -26,28 +26,28 @@ import org.jetbrains.annotations.NotNull;
 public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
   private T myValue;
   @NotNull
-  private String myModuleName;
+  private String myName;
 
   public NamedPointerImpl(T value) {
     myValue = value;
-    myModuleName = value.getName();
+    myName = value.getName();
   }
 
   public NamedPointerImpl(@NotNull String name) {
     myValue = null;
-    myModuleName = name;
+    myName = name;
   }
 
-  public void setValue(@NotNull T module) {
+  public void setValue(@NotNull T value) {
     LOGGER.assertTrue(myValue == null);
-    LOGGER.assertTrue(myModuleName.equals(module.getName()));
-    myModuleName = module.getName();
-    myValue = module;
+    LOGGER.assertTrue(myName.equals(value.getName()));
+    myName = value.getName();
+    myValue = value;
   }
 
-  public void dropValue(@NotNull T module) {
-    LOGGER.assertTrue(myValue == module);
-    myModuleName = myValue.getName();
+  public void dropValue(@NotNull T value) {
+    LOGGER.assertTrue(myValue == value);
+    myName = myValue.getName();
     myValue = null;
   }
 
@@ -58,7 +58,7 @@ public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
       return myValue.getName();
     }
     else {
-      return myModuleName;
+      return myName;
     }
   }
 
@@ -74,13 +74,13 @@ public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
 
     NamedPointerImpl that = (NamedPointerImpl)o;
 
-    if (!myModuleName.equals(that.myModuleName)) return false;
+    if (!myName.equals(that.myName)) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return myModuleName.hashCode();
+    return myName.hashCode();
   }
 }

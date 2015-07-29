@@ -38,6 +38,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -166,6 +167,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
         ((BaseStructureConfigurable)each).checkCanApply();
       }
     }
+
     for (Configurable each : myName2Config) {
       if (each.isModified()) {
         each.apply();
@@ -184,7 +186,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     try {
       myContext.reset();
 
-      myProjectSdksModel.reset(myProject);
+      myProjectSdksModel.reset();
 
       Configurable toSelect = null;
       for (Configurable each : myName2Config) {
@@ -206,7 +208,6 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
       removeSelected();
 
       navigateTo(toSelect != null ? createPlaceFor(toSelect) : null, false);
-
 
     }
     finally {
@@ -403,13 +404,12 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return myProjectConfig;
   }
 
-  public List<Configurable> getName2Config() {
-    return myName2Config;
-  }
-
-  public void setName2Config(List<Configurable> name2Config) {
+  public void setConfigurablesForDispose(List<Configurable> name2Config) {
     myName2Config.clear();
     myName2Config.addAll(name2Config);
+    // we need up it
+    ContainerUtil.swapElements(myName2Config, ContainerUtil.indexOf(myName2Config, mySdkListConfigurable), 0);
+    ContainerUtil.swapElements(myName2Config, ContainerUtil.indexOf(myName2Config, myProjectLibrariesConfig), 1);
   }
 
   private static Place createPlaceFor(final Configurable configurable) {

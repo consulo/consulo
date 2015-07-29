@@ -95,7 +95,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
 
     addConfigurable(structureConfigurable.getSdkConfigurable());
 
-    structureConfigurable.setName2Config(myName2Config);
+    structureConfigurable.setConfigurablesForDispose(myName2Config);
 
     structureConfigurable.setProjectStructureDialog(this);
 

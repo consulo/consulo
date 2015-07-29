@@ -20,12 +20,18 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.util.List;
 
 public abstract class LibraryTablesRegistrar {
-  @NonNls public static final String PROJECT_LEVEL = "project";
-  @NonNls public static final String APPLICATION_LEVEL = "application";
+  @NonNls
+  public static final String PROJECT_LEVEL = "project";
+
+  @DeprecationInfo("Global libraries cant be configured via UI, and replaced by Bundles")
+  @Deprecated
+  @NonNls
+  public static final String APPLICATION_LEVEL = "application";
 
   public static LibraryTablesRegistrar getInstance() {
     return ServiceManager.getService(LibraryTablesRegistrar.class);

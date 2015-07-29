@@ -19,6 +19,7 @@ import com.intellij.openapi.roots.ModuleRootLayer;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -31,6 +32,7 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
     super(id, moduleRootLayer);
   }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {

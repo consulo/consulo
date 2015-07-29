@@ -25,7 +25,6 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
@@ -64,24 +63,27 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
 
   private static final Icon EMPTY_ICON = EmptyIcon.create(1, 16);
 
+  @NotNull
+  private ProjectSdksModel mySdksModel;
   @Nullable
   private final Condition<SdkTypeId> myFilter;
   @Nullable
   private final Condition<SdkTypeId> myCreationFilter;
 
-  public SdkComboBox(@NotNull final ProjectSdksModel jdkModel) {
-    this(jdkModel, null, false);
+  public SdkComboBox(@NotNull final ProjectSdksModel sdksModel) {
+    this(sdksModel, null, false);
   }
 
-  public SdkComboBox(@NotNull final ProjectSdksModel jdkModel, @Nullable Condition<SdkTypeId> filter, boolean withNoneItem) {
-    this(jdkModel, filter, filter, withNoneItem);
+  public SdkComboBox(@NotNull final ProjectSdksModel sdksModel, @Nullable Condition<SdkTypeId> filter, boolean withNoneItem) {
+    this(sdksModel, filter, filter, withNoneItem);
   }
 
-  public SdkComboBox(@NotNull final ProjectSdksModel jdkModel,
+  public SdkComboBox(@NotNull final ProjectSdksModel sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter,
                      boolean withNoneItem) {
-    super(new SdkComboBoxModel(jdkModel, getSdkFilter(filter), withNoneItem));
+    super(new SdkComboBoxModel(sdksModel, getSdkFilter(filter), withNoneItem));
+    mySdksModel = sdksModel;
     myFilter = filter;
     myCreationFilter = creationFilter;
     setRenderer(new ProjectSdkListRenderer() {
@@ -146,8 +148,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
                              final SdkComboBoxItem firstItem,
                              @Nullable final Condition<Sdk> additionalSetup,
                              final boolean moduleJdkSetup) {
-    setSetupButton(setUpButton, project, jdksModel, firstItem, additionalSetup,
-                   ProjectBundle.message("project.roots.set.up.jdk.title", moduleJdkSetup ? 1 : 2));
+    setSetupButton(setUpButton, project, jdksModel, firstItem, additionalSetup, ProjectBundle.message("project.roots.set.up.jdk.title", moduleJdkSetup ? 1 : 2));
   }
 
   public void setSetupButton(final JButton setUpButton,
@@ -322,8 +323,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
 
   public void setSelectedSdk(@Nullable String name) {
     if (name != null) {
-      SdkTable sdkTable = SdkTable.getInstance();
-      final Sdk sdk = sdkTable.findSdk(name);
+      final Sdk sdk = mySdksModel.findSdk(name);
       if (sdk != null) {
         setSelectedSdk(sdk);
       }

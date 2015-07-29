@@ -38,6 +38,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.*;
@@ -85,7 +87,13 @@ public class ProjectSdksModel implements SdkModel {
     mySdkEventsDispatcher.removeListener(listener);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #reset()")
   public void reset(@Nullable Project project) {
+    reset();
+  }
+
+  public void reset() {
     mySdks.clear();
     final Sdk[] projectSdks = SdkTable.getInstance().getAllSdks();
     for (Sdk sdk : projectSdks) {
@@ -113,14 +121,17 @@ public class ProjectSdksModel implements SdkModel {
     return myModified;
   }
 
+  @RequiredDispatchThread
   public void apply() throws ConfigurationException {
     apply(null);
   }
 
+  @RequiredDispatchThread
   public void apply(@Nullable MasterDetailsComponent configurable) throws ConfigurationException {
     apply(configurable, false);
   }
 
+  @RequiredDispatchThread
   public void apply(@Nullable MasterDetailsComponent configurable, boolean addedOnly) throws ConfigurationException {
     String[] errorString = new String[1];
     if (!canApply(errorString, configurable, addedOnly)) {
@@ -155,10 +166,10 @@ public class ProjectSdksModel implements SdkModel {
         }
         // Add new items to table
         final Sdk[] allSdks = sdkTable.getAllSdks();
-        for (final Sdk projectSdk : mySdks.keySet()) {
-          LOG.assertTrue(projectSdk != null);
-          if (ArrayUtilRt.find(allSdks, projectSdk) == -1) {
-            sdkTable.addSdk(projectSdk);
+        for (final Sdk sdk : mySdks.keySet()) {
+          LOG.assertTrue(sdk != null);
+          if (ArrayUtilRt.find(allSdks, sdk) == -1) {
+            sdkTable.addSdk(sdk);
           }
         }
       }
