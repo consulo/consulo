@@ -118,7 +118,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
     };
 
     myConnection.subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTableListener() {
-      private Map<ModuleExtensionWithSdkOrderEntry, Sdk> myMap = new HashMap<ModuleExtensionWithSdkOrderEntry, Sdk>();
+      private Map<OrderEntryWithTracking, Object> myMap = new HashMap<OrderEntryWithTracking, Object>();
 
       @Override
       public void beforeSdkAdded(@NotNull Sdk sdk) {
@@ -151,17 +151,17 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
       }
 
       private void beforeSdkChanged() {
-        for (ModuleExtensionWithSdkOrderEntry orderEntry : myModuleExtensionWithSdkOrderEntries) {
-          myMap.put(orderEntry, orderEntry.getSdk());
+        for (OrderEntryWithTracking orderEntry : myModuleExtensionWithSdkOrderEntries) {
+          myMap.put(orderEntry, orderEntry.getEqualObject());
         }
       }
 
       private void afterSdkChanged() {
-        for (Map.Entry<ModuleExtensionWithSdkOrderEntry, Sdk> entry : myMap.entrySet()) {
-          ModuleExtensionWithSdkOrderEntry key = entry.getKey();
-          Sdk oldSdk = entry.getValue();
-          Sdk currentSdk = key.getSdk();
-          if(!Comparing.equal(currentSdk, oldSdk)) {
+        for (Map.Entry<OrderEntryWithTracking, Object> entry : myMap.entrySet()) {
+          OrderEntryWithTracking key = entry.getKey();
+          Object oldValue = entry.getValue();
+          Object currentValue = key.getEqualObject();
+          if(!Comparing.equal(currentValue, oldValue)) {
             makeRootsChange(EmptyRunnable.INSTANCE, false, true);
           }
         }

@@ -53,7 +53,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   private final OrderRootsCache myRootsCache;
 
   private final Map<RootProvider, Set<OrderEntry>> myRegisteredRootProviders = new HashMap<RootProvider, Set<OrderEntry>>();
-  protected final List<ModuleExtensionWithSdkOrderEntry> myModuleExtensionWithSdkOrderEntries = ContainerUtil.newArrayList();
+  protected final List<OrderEntryWithTracking> myModuleExtensionWithSdkOrderEntries = ContainerUtil.newArrayList();
   protected boolean myStartupActivityPerformed = false;
   private final RootProviderChangeListener myRootProviderChangeListener = new RootProviderChangeListener();
 
@@ -396,11 +396,11 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     multilistener.addListener(libraryListener);
   }
 
-  void addModuleExtensionWithSdkOrderEntry(@NotNull ModuleExtensionWithSdkOrderEntry orderEntry) {
+  public void addOrderWithTracking(@NotNull OrderEntryWithTracking orderEntry) {
     myModuleExtensionWithSdkOrderEntries.add(orderEntry);
   }
 
-  void removeModuleExtensionWithSdkOrderEntry(@NotNull ModuleExtensionWithSdkOrderEntry orderEntry) {
+  public void removeOrderWithTracking(@NotNull OrderEntryWithTracking orderEntry) {
     myModuleExtensionWithSdkOrderEntries.remove(orderEntry);
   }
 

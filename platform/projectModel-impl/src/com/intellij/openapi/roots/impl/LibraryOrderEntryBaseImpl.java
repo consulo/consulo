@@ -34,20 +34,27 @@ import java.util.Arrays;
  * @author dsl
  */
 @Logger
-abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements OrderEntryWithTracking {
+public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements OrderEntryWithTracking {
   protected final ProjectRootManagerImpl myProjectRootManagerImpl;
   @NotNull
   protected DependencyScope myScope = DependencyScope.COMPILE;
   @Nullable
   private RootProvider myCurrentlySubscribedRootProvider = null;
 
-  LibraryOrderEntryBaseImpl(@NotNull OrderEntryTypeProvider<?> provider, @NotNull ModuleRootLayerImpl rootModel, @NotNull ProjectRootManagerImpl instanceImpl) {
+  public LibraryOrderEntryBaseImpl(@NotNull OrderEntryTypeProvider<?> provider, @NotNull ModuleRootLayerImpl rootModel,
+                                   @NotNull ProjectRootManagerImpl instanceImpl) {
     super(provider, rootModel);
     myProjectRootManagerImpl = instanceImpl;
   }
 
-  protected final void init() {
+  public final void init() {
     updateFromRootProviderAndSubscribe();
+  }
+
+  @Nullable
+  @Override
+  public Object getEqualObject() {
+    return null;
   }
 
   @Override
@@ -76,7 +83,6 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements O
 
   @Override
   public boolean isEquivalentTo(@NotNull OrderEntry other) {
-    // for ModuleExtensionWithSdkOrderEntry need override
     LOGGER.assertTrue(this instanceof LibraryOrderEntry);
 
     LibraryOrderEntry libraryOrderEntry1 = (LibraryOrderEntry)this;

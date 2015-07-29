@@ -44,7 +44,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     if (init) {
       init();
 
-      myProjectRootManagerImpl.addModuleExtensionWithSdkOrderEntry(this);
+      myProjectRootManagerImpl.addOrderWithTracking(this);
     }
   }
 
@@ -112,7 +112,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   public void dispose() {
     super.dispose();
 
-    myProjectRootManagerImpl.removeModuleExtensionWithSdkOrderEntry(this);
+    myProjectRootManagerImpl.removeOrderWithTracking(this);
   }
 
   @Override
