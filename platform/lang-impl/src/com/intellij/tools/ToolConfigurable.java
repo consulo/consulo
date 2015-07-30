@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.io.IOException;
 
-public class ToolConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+public class ToolConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
   private BaseToolsPanel myPanel;
 
   @Override

@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -82,7 +83,9 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myCheckBoxList, true));
 
     myPostfixDescriptionPanel = new PostfixDescriptionPanel();
-    splitter.setSecondComponent(myPostfixDescriptionPanel.getComponent());
+    JPanel component = myPostfixDescriptionPanel.getComponent();
+    component.setBorder(new EmptyBorder(0, 8, 0, 0));
+    splitter.setSecondComponent(component);
 
     myCheckBoxList.setItems(postfixTemplateProvider.getTemplates(), new Function<PostfixTemplate, String>() {
                               @Override

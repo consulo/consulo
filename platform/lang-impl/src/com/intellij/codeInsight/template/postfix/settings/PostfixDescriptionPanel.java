@@ -93,7 +93,7 @@ class PostfixDescriptionPanel implements Disposable {
     Disposer.register(this, actionUsagePanel);
   }
 
-  synchronized  JPanel getComponent() {
+  JPanel getComponent() {
     return myPanel;
   }
 

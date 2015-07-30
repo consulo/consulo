@@ -697,9 +697,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       if (component != null) {
         boolean noMargin = ConfigurableWrapper.isNoMargin(configurable);
         if(!noMargin) {
-          if(!(component instanceof JPanel)) {
-            component = JBUI.Panels.simplePanel().addToCenter(component);
-          }
+          component = JBUI.Panels.simplePanel().addToCenter(component);
           component.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
         }
 
