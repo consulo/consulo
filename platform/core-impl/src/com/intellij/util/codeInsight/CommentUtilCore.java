@@ -20,6 +20,7 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CommentUtilCore {
@@ -46,8 +47,11 @@ public class CommentUtilCore {
     return isComment(element);
   }
 
-  public static boolean isCommentToken(final IElementType tokenType, final LanguageVersion languageVersion) {
+  public static boolean isCommentToken(@NotNull  IElementType tokenType, @NotNull LanguageVersion languageVersion) {
     final Language language = tokenType.getLanguage();
+    if(language != languageVersion.getLanguage()) {
+      return false;
+    }
     boolean inComments = false;
 
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
