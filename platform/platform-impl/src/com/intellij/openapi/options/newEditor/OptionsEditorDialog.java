@@ -30,11 +30,13 @@ import com.intellij.openapi.ui.WholeWestDialogWrapper;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -115,6 +117,22 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   @Override
   public Dimension getDefaultSize() {
     return new Dimension(1028, 786);
+  }
+
+  @Nullable
+  @Override
+  protected Border createContentPaneBorder() {
+    return JBUI.Borders.empty();
+  }
+
+  @Nullable
+  @Override
+  protected JComponent createSouthPanel() {
+    JComponent southPanel = super.createSouthPanel();
+    if(southPanel != null) {
+      southPanel.setBorder(ourDefaultBorder);
+    }
+    return southPanel;
   }
 
   @NotNull

@@ -58,7 +58,7 @@ import java.util.List;
  * Time: 12:44:56 PM
  */
 
-public class AllFileTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+public class AllFileTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable");
 
   private static final String TEMPLATES_TITLE = IdeBundle.message("tab.filetemplates.templates");

@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
@@ -105,11 +106,12 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     addWaitCard();
 
     JLabel link = new SwingActionLink(mySetFromAction);
-    link.setVerticalAlignment(SwingConstants.BOTTOM);
+    link.setVerticalAlignment(SwingConstants.CENTER);
 
     JPanel top = new JPanel(new BorderLayout());
     top.add(BorderLayout.WEST, mySchemesPanel.getPanel());
     top.add(BorderLayout.EAST, link);
+    top.setBorder(new EmptyBorder(0, 0, 0, 8));
     add(top, BorderLayout.NORTH);
     add(mySettingsPanel, BorderLayout.CENTER);
 

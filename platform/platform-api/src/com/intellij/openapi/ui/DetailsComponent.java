@@ -44,6 +44,7 @@ public class DetailsComponent {
 
   private String[] myBannerText;
   private boolean myDetailsEnabled;
+  private boolean myPaintBorder;
   private String[] myPrefix;
   private String[] myText;
 
@@ -55,6 +56,7 @@ public class DetailsComponent {
 
   public DetailsComponent(boolean detailsEnabled, boolean paintBorder) {
     myDetailsEnabled = detailsEnabled;
+    myPaintBorder = paintBorder;
     myComponent = new JPanel(new BorderLayout());
 
     myComponent.setOpaque(false);
@@ -120,7 +122,7 @@ public class DetailsComponent {
   }
 
   private void invalidateContentBorder() {
-    if (myDetailsEnabled) {
+    if (myDetailsEnabled && myPaintBorder) {
       myContent.setBorder(new EmptyBorder(0, 8, 0, 8));
     }
     else {

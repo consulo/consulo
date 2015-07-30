@@ -69,6 +69,10 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return cast(configurable, NoScroll.class) != null;
   }
 
+  public static boolean isNoMargin(Configurable configurable) {
+    return cast(configurable, NoMargin.class) != null;
+  }
+
   public static boolean hasOwnContent(Configurable configurable) {
     Parent asParent = cast(configurable, Parent.class);
     return asParent != null && asParent.hasOwnContent();

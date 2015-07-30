@@ -20,10 +20,12 @@ package com.intellij.application.options.codeStyle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +45,6 @@ public class CodeStyleSchemesPanel {
 
   public CodeStyleSchemesPanel(CodeStyleSchemesModel model) {
     myModel = model;
-
     myDefaultComboFont = myCombo.getFont();
     myBoldComboFont = myDefaultComboFont.deriveFont(Font.BOLD);
     myCombo.addActionListener(new ActionListener() {
@@ -79,6 +80,8 @@ public class CodeStyleSchemesPanel {
         showManageSchemesDialog();
       }
     });
+
+    myPanel.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
   }
 
   private void onCombo() {

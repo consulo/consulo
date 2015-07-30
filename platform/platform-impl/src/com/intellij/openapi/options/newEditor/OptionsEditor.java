@@ -37,12 +37,14 @@ import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.*;
+import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.SimpleNode;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.MergingUpdateQueue;
@@ -54,6 +56,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.*;
@@ -686,21 +689,32 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       });
     }
 
-    void setContent(JComponent c, ConfigurationException e, boolean scrollable) {
-      if (c != null && mySimpleContent == c && myException == e) return;
+    void setContent(JComponent component, ConfigurationException e, @NotNull Configurable configurable) {
+      if (component != null && mySimpleContent == component && myException == e) return;
 
       removeAll();
 
-      if (c != null) {
-        if (scrollable) {
-          JScrollPane scroll = ScrollPaneFactory.createScrollPane(c);
+      if (component != null) {
+        boolean noMargin = ConfigurableWrapper.isNoMargin(configurable);
+        if(!noMargin) {
+          if(!(component instanceof JPanel)) {
+            component = JBUI.Panels.simplePanel().addToCenter(component);
+          }
+          component.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
+        }
+
+        component = JBUI.Panels.simplePanel().addToCenter(component);
+        component.setBorder(new CustomLineBorder(0, 0, 1, 0));
+
+        boolean noScroll = ConfigurableWrapper.isNoScroll(configurable);
+        if (!noScroll) {
+          JScrollPane scroll = ScrollPaneFactory.createScrollPane(component, true);
           scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
           scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-          scroll.setBorder(null);
           add(scroll, BorderLayout.CENTER);
         }
         else {
-          add(c, BorderLayout.CENTER);
+          add(component, BorderLayout.CENTER);
         }
       }
 
@@ -709,7 +723,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         add(myErrorLabel, BorderLayout.NORTH);
       }
 
-      mySimpleContent = c;
+      mySimpleContent = component;
       myException = e;
 
       myMaster = null;
@@ -1309,7 +1323,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     @Override
     void set(final ContentWrapper wrapper) {
       myOwnDetails.setDetailsModeEnabled(true);
-      wrapper.setContent(myComponent, getContext().getErrors().get(myConfigurable), !ConfigurableWrapper.isNoScroll(myConfigurable));
+      wrapper.setContent(myComponent, getContext().getErrors().get(myConfigurable), myConfigurable);
     }
 
     @Override

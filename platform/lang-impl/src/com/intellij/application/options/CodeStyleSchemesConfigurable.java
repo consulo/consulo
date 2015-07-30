@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.*;
 
-public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.Abstract implements OptionsContainingConfigurable {
+public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.Abstract implements OptionsContainingConfigurable, Configurable.NoMargin {
 
   private CodeStyleSchemesPanel myRootSchemesPanel;
   private CodeStyleSchemesModel myModel;
@@ -203,8 +203,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
   protected Configurable[] buildConfigurables() {
     myPanels = new ArrayList<CodeStyleConfigurableWrapper>();
 
-    final List<CodeStyleSettingsProvider> providers =
-      Arrays.asList(Extensions.getExtensions(CodeStyleSettingsProvider.EXTENSION_POINT_NAME));
+    final List<CodeStyleSettingsProvider> providers = Arrays.asList(Extensions.getExtensions(CodeStyleSettingsProvider.EXTENSION_POINT_NAME));
     Collections.sort(providers, new Comparator<CodeStyleSettingsProvider>() {
       @Override
       public int compare(CodeStyleSettingsProvider p1, CodeStyleSettingsProvider p2) {
@@ -238,7 +237,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
       myModel = new CodeStyleSchemesModel(myProject);
       myRootSchemesPanel = new CodeStyleSchemesPanel(myModel);
 
-      myModel.addListener(new CodeStyleSettingsListener(){
+      myModel.addListener(new CodeStyleSettingsListener() {
         @Override
         public void currentSchemeChanged(final Object source) {
           if (source != myRootSchemesPanel) {
@@ -253,7 +252,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
         @Override
         public void currentSettingsChanged() {
-          
+
         }
 
         @Override
@@ -314,7 +313,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     return result;
   }
 
-  private class CodeStyleConfigurableWrapper implements SearchableConfigurable, NoScroll, OptionsContainingConfigurable {
+  private class CodeStyleConfigurableWrapper implements SearchableConfigurable, NoScroll, NoMargin, OptionsContainingConfigurable {
     private boolean myInitialResetInvoked;
     private CodeStyleMainPanel myPanel;
     private final CodeStyleSettingsProvider myProvider;
@@ -331,7 +330,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     public String getDisplayName() {
       String displayName = myProvider.getConfigurableDisplayName();
       if (displayName != null) return displayName;
-      
+
       return ensurePanel().getDisplayName();  // fallback for 8.0 API compatibility
     }
 

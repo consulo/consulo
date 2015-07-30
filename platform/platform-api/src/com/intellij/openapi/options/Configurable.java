@@ -93,6 +93,13 @@ public interface Configurable extends UnnamedConfigurable {
   interface NoScroll {
   }
 
+  /**
+   * This marker interface notifies the Settings dialog to not add an empty border to the Swing form.
+   * Required when the Swing form is a tabbed pane.
+   */
+  interface NoMargin {
+  }
+
   interface HoldPreferredFocusedComponent {
     @Nullable
     JComponent getPreferredFocusedComponent();
