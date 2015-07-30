@@ -55,6 +55,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.IconUtil;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -289,7 +290,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     });
 
     final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myEntryTable);
-    decorator.setPanelBorder(IdeBorderFactory.createBorder(SideBorder.RIGHT));
+    decorator.setPanelBorder(JBUI.Borders.empty());
     decorator.setAddAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {

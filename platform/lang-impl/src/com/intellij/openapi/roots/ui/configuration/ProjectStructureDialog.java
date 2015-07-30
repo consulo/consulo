@@ -27,13 +27,16 @@ import com.intellij.openapi.wm.impl.StripeButtonUI;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.Consumer;
 import com.intellij.util.EmptyConsumer;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.ButtonUI;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -127,6 +130,22 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   @Override
   public Dimension getDefaultSize() {
     return new Dimension(1024, 768);
+  }
+
+  @Nullable
+  @Override
+  protected Border createContentPaneBorder() {
+    return JBUI.Borders.empty();
+  }
+
+  @Nullable
+  @Override
+  protected JComponent createSouthPanel() {
+    JComponent southPanel = super.createSouthPanel();
+    if(southPanel != null) {
+      southPanel.setBorder(ourDefaultBorder);
+    }
+    return southPanel;
   }
 
   @NotNull

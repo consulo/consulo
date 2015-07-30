@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.ui.border.CustomLineBorder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +31,7 @@ import java.awt.*;
 public class ToolbarPanel extends JPanel{
   public ToolbarPanel(JComponent contentComponent, ActionGroup actions) {
     super(new GridBagLayout());
-    setBorder(BorderFactory.createEtchedBorder());
+    setBorder(new CustomLineBorder(1, 0, 0, 0));
     if (contentComponent.getBorder() != null) {
       contentComponent.setBorder(BorderFactory.createEmptyBorder());
     }

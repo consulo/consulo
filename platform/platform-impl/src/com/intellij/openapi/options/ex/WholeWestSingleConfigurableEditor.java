@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogWrapper {
-  private static final Logger LOG = Logger.getInstance(SingleConfigurableEditor.class);
+  private static final Logger LOG = Logger.getInstance(WholeWestSingleConfigurableEditor.class);
   private Project myProject;
   private Component myParentComponent;
   private Configurable myConfigurable;
