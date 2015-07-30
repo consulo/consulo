@@ -102,6 +102,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     splitter.setFirstComponent(first);
 
     JPanel rightComponent = new JPanel(new BorderLayout());
+    rightComponent.setBorder(createContentPaneBorder());
     splitter.setSecondComponent(rightComponent);
 
     final JComponent second = splitterComponents.getSecond();
@@ -110,7 +111,6 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     myErrorPane = second;
 
     final JPanel southSection = new JPanel(new BorderLayout());
-    southSection.setBorder(createContentPaneBorder());
     rightComponent.add(southSection, BorderLayout.SOUTH);
 
     southSection.add(myErrorText, BorderLayout.CENTER);
