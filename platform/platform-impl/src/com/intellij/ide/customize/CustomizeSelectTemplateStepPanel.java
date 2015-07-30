@@ -70,7 +70,7 @@ public class CustomizeSelectTemplateStepPanel extends AbstractCustomizeWizardSte
 
   @Override
   protected String getHTMLHeader() {
-    return "<html><body><h2>Select predefined plugin sets</body></html>";
+    return "<html><body><h2>Select predefined plugin sets</h2></body></html>";
   }
 
   @Override

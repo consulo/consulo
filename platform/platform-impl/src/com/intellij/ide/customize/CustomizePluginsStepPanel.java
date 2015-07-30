@@ -191,7 +191,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
   @Override
   public String getHTMLHeader() {
-    return "<html><body><h2>Select Plugins For Download</body></html>";
+    return "<html><body><h2>Select Plugins For Download</h2></body></html>";
   }
 
   @Override

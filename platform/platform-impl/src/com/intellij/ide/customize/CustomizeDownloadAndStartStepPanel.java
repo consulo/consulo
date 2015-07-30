@@ -20,21 +20,20 @@ import com.intellij.mock.MockProgressIndicator;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Restarter;
 import com.intellij.util.ui.UIUtil;
-import lombok.val;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -42,6 +41,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 29.11.14
  */
+@Logger
 public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardStep {
   private static class MyProgressIndicator extends MockProgressIndicator {
     private final JBLabel myLabel;
@@ -108,7 +108,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
 
   @Override
   public boolean beforeShown(boolean forward) {
-    val pluginsForDownload = myPluginsStepPanel == null ? Collections.<IdeaPluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
+    final Set<IdeaPluginDescriptor> pluginsForDownload = myPluginsStepPanel == null ? Collections.<IdeaPluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
     if (pluginsForDownload.isEmpty()) {
       add(createStartButton());
     }
@@ -120,7 +120,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
       panel.add(progressBar);
       add(panel);
 
-      val indicator = new MyProgressIndicator(infoLabel, progressBar);
+      final ProgressIndicator indicator = new MyProgressIndicator(infoLabel, progressBar);
       ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
         @Override
         public void run() {
@@ -130,11 +130,8 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
               downloader.prepareToInstall(indicator);
               downloader.install(false);
             }
-            catch (UnsupportedEncodingException e) {
-              e.printStackTrace();
-            }
-            catch (IOException e) {
-              e.printStackTrace();
+            catch (Exception e) {
+              LOGGER.warn(e);
             }
           }
 
@@ -167,7 +164,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
   protected String getHTMLHeader() {
     Set<IdeaPluginDescriptor> pluginsForDownload =
             myPluginsStepPanel == null ? Collections.<IdeaPluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
-    return pluginsForDownload.isEmpty() || myDone ? "" : "<html><body><h2>Downloading plugins</body></html>";
+    return pluginsForDownload.isEmpty() || myDone ? "" : "<html><body><h2>Downloading plugins</h2></body></html>";
   }
 
   @Override
