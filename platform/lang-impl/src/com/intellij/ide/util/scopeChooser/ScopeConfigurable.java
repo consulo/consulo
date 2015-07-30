@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +46,6 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   private final JCheckBox mySharedCheckbox;
   private boolean myShareScope = false;
   private final Project myProject;
-  private Icon myIcon;
 
   public ScopeConfigurable(final NamedScope scope, final boolean shareScope, final Project project, final Runnable updateTree) {
     super(true, updateTree);
@@ -54,11 +54,9 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
     myProject = project;
     mySharedCheckbox = new JCheckBox(IdeBundle.message("share.scope.checkbox.title"), shareScope);
     myPanel = new ScopeEditorPanel(project, getHolder());
-    myIcon = getHolder(myShareScope).getIcon();
     mySharedCheckbox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        myIcon = getHolder().getIcon();
         myPanel.setHolder(getHolder());
       }
     });
@@ -93,9 +91,9 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   }
 
   private NamedScopesHolder getHolder(boolean local) {
-    return (NamedScopesHolder)(local
+    return local
             ? DependencyValidationManager.getInstance(myProject)
-            : NamedScopeManager.getInstance(myProject));
+            : NamedScopeManager.getInstance(myProject);
   }
 
   @Override
@@ -108,6 +106,7 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   @Override
   public JComponent createOptionsPanel() {
     final JPanel wholePanel = new JPanel(new BorderLayout());
+    wholePanel.setBorder(new EmptyBorder(0, 8, 0, 8));
     wholePanel.add(myPanel.getPanel(), BorderLayout.CENTER);
     wholePanel.add(mySharedCheckbox, BorderLayout.SOUTH);
     return wholePanel;
