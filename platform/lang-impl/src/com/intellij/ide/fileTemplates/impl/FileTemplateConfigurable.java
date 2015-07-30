@@ -179,7 +179,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     secondPanel.add(SeparatorFactory.createSeparator(IdeBundle.message("label.description"), null),
                     new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                                            new Insets(0, 0, 2, 0), 0, 0));
-    secondPanel.add(ScrollPaneFactory.createScrollPane(myDescriptionComponent),
+    secondPanel.add(ScrollPaneFactory.createScrollPane(myDescriptionComponent, true),
                     new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                                            new Insets(2, 0, 0, 0), 0, 0));
 
@@ -237,6 +237,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     });
 
     ((EditorEx)editor).setHighlighter(createHighlighter());
+    ((EditorEx)editor).getScrollPane().setBorder(null);
     mySplitter.setFirstComponent(editor.getComponent());
     return editor;
   }
