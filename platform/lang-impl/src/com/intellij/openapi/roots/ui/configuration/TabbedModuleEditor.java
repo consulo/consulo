@@ -6,7 +6,6 @@ import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.TabbedPaneWrapper;
-import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.navigation.Place;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,9 +57,7 @@ public abstract class TabbedModuleEditor extends ModuleEditor {
         }
       }
     });
-    JComponent component = myTabbedPane.getComponent();
-    component.setBorder(new CustomLineBorder(0, 0, 1, 0));
-    return component;
+    return myTabbedPane.getComponent();
   }
 
   @Override

@@ -29,6 +29,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.EmptyConsumer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
@@ -144,8 +145,11 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     JComponent southPanel = super.createSouthPanel();
     if(southPanel != null) {
       southPanel.setBorder(ourDefaultBorder);
+      BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
+      borderLayoutPanel.setBorder(new CustomLineBorder(1, 0, 0, 0));
+      return borderLayoutPanel;
     }
-    return southPanel;
+    return null;
   }
 
   @NotNull
