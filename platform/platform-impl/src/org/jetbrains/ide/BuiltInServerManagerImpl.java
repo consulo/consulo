@@ -29,7 +29,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
 
   @NonNls
   public static final String PROPERTY_RPC_PORT = "consulo.rpc.port";
-  private static final int FIRST_PORT_NUMBER = 63342;
+  private static final int FIRST_PORT_NUMBER = 62242;
   private static final int PORTS_COUNT = 20;
 
   private volatile int myDetectedPortNumber = -1;
