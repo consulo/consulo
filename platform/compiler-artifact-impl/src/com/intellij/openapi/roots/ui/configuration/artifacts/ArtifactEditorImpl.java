@@ -56,7 +56,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.HyperlinkEvent;
@@ -71,7 +70,7 @@ import java.util.Collections;
 public class ArtifactEditorImpl implements ArtifactEditorEx {
   private JPanel myMainPanel;
   private JCheckBox myBuildOnMakeCheckBox;
-  private TextFieldWithBrowseButton myOutputDirectoryField;    
+  private TextFieldWithBrowseButton myOutputDirectoryField;
   private JPanel myEditorPanel;
   private JPanel myErrorPanelPlace;
   private ThreeStateCheckBox myShowContentCheckBox;
@@ -90,7 +89,9 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   private final ArtifactValidationManagerImpl myValidationManager;
   private boolean myDisposed;
 
-  public ArtifactEditorImpl(final @NotNull ArtifactsStructureConfigurableContext context, @NotNull Artifact artifact, @NotNull ArtifactEditorSettings settings) {
+  public ArtifactEditorImpl(final @NotNull ArtifactsStructureConfigurableContext context,
+                            @NotNull Artifact artifact,
+                            @NotNull ArtifactEditorSettings settings) {
     myContext = createArtifactEditorContext(context);
     myOriginalArtifact = artifact;
     myProject = context.getProject();
@@ -103,15 +104,15 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     myTopPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
     myBuildOnMakeCheckBox.setSelected(artifact.isBuildOnMake());
     final String outputPath = artifact.getOutputPath();
-    myOutputDirectoryField.addBrowseFolderListener(CompilerBundle.message("dialog.title.output.directory.for.artifact"),
-                                                   CompilerBundle.message("chooser.description.select.output.directory.for.0.artifact",
-                                                                          getArtifact().getName()), myProject,
+    myOutputDirectoryField.addBrowseFolderListener(CompilerBundle.message("dialog.title.output.directory.for.artifact"), CompilerBundle
+            .message("chooser.description.select.output.directory.for.0.artifact", getArtifact().getName()), myProject,
                                                    FileChooserDescriptorFactory.createSingleFolderDescriptor());
     myShowSpecificContentOptionsGroup = createShowSpecificContentOptionsGroup();
     myShowSpecificContentOptionsButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, myShowSpecificContentOptionsGroup).getComponent().show(myShowSpecificContentOptionsButton, 0, 0);
+        ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, myShowSpecificContentOptionsGroup).getComponent()
+                .show(myShowSpecificContentOptionsButton, 0, 0);
       }
     });
     setOutputPath(outputPath);
@@ -200,19 +201,10 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     Splitter splitter = new OnePixelSplitter(false);
     final JPanel leftPanel = new JPanel(new BorderLayout());
     JPanel treePanel = myLayoutTreeComponent.getTreePanel();
-    if (UIUtil.isUnderDarcula()) {
-      treePanel.setBorder(new EmptyBorder(3, 0, 0, 0));
-    } else {
-      treePanel.setBorder(new LineBorder(UIUtil.getBorderColor()));
-    }
+    treePanel.setBorder(new LineBorder(UIUtil.getBorderColor()));
     leftPanel.add(treePanel, BorderLayout.CENTER);
-    if (UIUtil.isUnderDarcula()) {
-      CompoundBorder border =
-        new CompoundBorder(new CustomLineBorder(UIUtil.getBorderColor(), 0, 0, 0, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0));
-      leftPanel.setBorder(border);
-    } else {
-      leftPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 0));
-    }
+    leftPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 0));
+
     splitter.setFirstComponent(leftPanel);
 
     final JPanel rightPanel = new JPanel(new BorderLayout());
@@ -235,28 +227,19 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     });
     labelPanel.add(link);
     rightTopPanel.add(labelPanel, BorderLayout.CENTER);
+    rightTopPanel.setBorder(new CustomLineBorder(0, 0, 1, 0));
     rightPanel.add(rightTopPanel, BorderLayout.NORTH);
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(mySourceItemsTree, true);
     JPanel scrollPaneWrap = new JPanel(new BorderLayout());
     scrollPaneWrap.add(scrollPane, BorderLayout.CENTER);
-    if (UIUtil.isUnderDarcula()) {
-      scrollPaneWrap.setBorder(new EmptyBorder(3, 0, 0, 0));
-    } else {
-      scrollPaneWrap.setBorder(new LineBorder(UIUtil.getBorderColor()));
-    }
-
+    scrollPaneWrap.setBorder(new EmptyBorder(3, 0, 0, 0));
     rightPanel.add(scrollPaneWrap, BorderLayout.CENTER);
-    if (UIUtil.isUnderDarcula()) {
-      rightPanel.setBorder(new CompoundBorder(new CustomLineBorder(0, 1, 0, 0), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
-    } else {
-      rightPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 3));
-    }
+    rightPanel.setBorder(new CustomLineBorder(0, 1, 0, 0));
     splitter.setSecondComponent(rightPanel);
     treePanel.setBorder(new EmptyBorder(0, 0, 0, 0));
     rightPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
-    scrollPaneWrap.setBorder(new EmptyBorder(0,0,0,0));
-    leftPanel.setBorder(new EmptyBorder(0,0,0,0));
-
+    scrollPaneWrap.setBorder(new EmptyBorder(0, 0, 0, 0));
+    leftPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 
     myShowContentCheckBox.addActionListener(new ActionListener() {
       @Override
@@ -276,9 +259,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
 
     ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, createToolbarActionGroup(), true);
     JComponent toolbarComponent = toolbar.getComponent();
-    if (UIUtil.isUnderDarcula()) {
-      toolbarComponent.setBorder(new CustomLineBorder(0,0,1,0));
-    }
+    toolbarComponent.setBorder(new CustomLineBorder(0, 0, 1, 0));
     leftPanel.add(toolbarComponent, BorderLayout.NORTH);
     toolbar.updateActionsImmediately();
     rightTopPanel.setPreferredSize(new Dimension(-1, toolbarComponent.getPreferredSize().height));
@@ -287,6 +268,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     myTabbedPane.addTab("Output Layout", splitter);
     myPropertiesEditors.addTabs(myTabbedPane);
     myEditorPanel.add(myTabbedPane.getComponent(), BorderLayout.CENTER);
+    myEditorPanel.setBorder(new CustomLineBorder(0, 0, 1, 0));
 
     final LayoutTree tree = myLayoutTreeComponent.getLayoutTree();
     new ShowAddPackagingElementPopupAction(this).registerCustomShortcutSet(CommonShortcuts.getNew(), tree);
@@ -366,7 +348,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("artifacts.add.copy.action"), true);
     group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
     for (PackagingElementType<?> type : PackagingElementFactory.getInstance().getAllElementTypes()) {
-      if(type.isAvailableForAdd(getContext(), getArtifact())) {
+      if (type.isAvailableForAdd(getContext(), getArtifact())) {
         group.add(new AddNewPackagingElementAction(type, this));
       }
     }
@@ -432,10 +414,10 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   }
 
   public boolean isModified() {
-    return myBuildOnMakeCheckBox.isSelected() != myOriginalArtifact.isBuildOnMake()
-        || !Comparing.equal(getConfiguredOutputPath(), myOriginalArtifact.getOutputPath())
-        || myPropertiesEditors.isModified()
-        || myLayoutTreeComponent.isPropertiesModified();
+    return myBuildOnMakeCheckBox.isSelected() != myOriginalArtifact.isBuildOnMake() ||
+           !Comparing.equal(getConfiguredOutputPath(), myOriginalArtifact.getOutputPath()) ||
+           myPropertiesEditors.isModified() ||
+           myLayoutTreeComponent.isPropertiesModified();
   }
 
   @Override
