@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.keymap.impl.ui;
 
+import com.intellij.openapi.actionSystem.ActionToolbarPosition;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.actionSystem.ex.QuickListsManager;
 import com.intellij.openapi.application.ApplicationManager;
@@ -26,6 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +44,7 @@ import java.util.ArrayList;
  * User: anna
  * Date: 13-Apr-2006
  */
-public class QuickListsPanel extends JPanel implements SearchableConfigurable, Configurable.NoScroll {
+public class QuickListsPanel extends JPanel implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
   private final DefaultListModel myQuickListsModel = new DefaultListModel();
   private JBList myQuickListsList = new JBList(myQuickListsModel);
   private final JPanel myRightPanel = new JPanel(new BorderLayout());
@@ -53,7 +55,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
   public QuickListsPanel() {
     super(new BorderLayout());
     myKeymapListener = ApplicationManager.getApplication().getMessageBus().syncPublisher(KeymapListener.CHANGE_TOPIC);
-    Splitter splitter = new Splitter(false, 0.3f);
+    Splitter splitter = new OnePixelSplitter(false, 0.3f);
     splitter.setFirstComponent(createQuickListsPanel());
     splitter.setSecondComponent(myRightPanel);
     add(splitter, BorderLayout.CENTER);
@@ -128,7 +130,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
         myKeymapListener.processCurrentKeymapChanged(getCurrentQuickListIds());
       }
     }).disableUpDownActions();
-    return toolbarDecorator.createPanel();
+    return toolbarDecorator.setToolbarPosition(ActionToolbarPosition.TOP).setPanelBorder(JBUI.Borders.empty()).createPanel();
   }
 
   private void addDescriptionLabel() {
