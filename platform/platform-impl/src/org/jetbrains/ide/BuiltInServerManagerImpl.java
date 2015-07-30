@@ -32,16 +32,16 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
   private static final int FIRST_PORT_NUMBER = 63342;
   private static final int PORTS_COUNT = 20;
 
-  private volatile int detectedPortNumber = -1;
-  private final AtomicBoolean started = new AtomicBoolean(false);
+  private volatile int myDetectedPortNumber = -1;
+  private final AtomicBoolean myStarted = new AtomicBoolean(false);
 
   @Nullable
-  private WebServer server;
+  private WebServer myServer;
   private boolean myEnabledInUnitTestMode;
 
   @Override
   public int getPort() {
-    return detectedPortNumber == -1 ? getDefaultPort() : detectedPortNumber;
+    return myDetectedPortNumber == -1 ? getDefaultPort() : myDetectedPortNumber;
   }
 
   @Override
@@ -87,7 +87,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
       return null;
     }
 
-    if (!started.compareAndSet(false, true)) {
+    if (!myStarted.compareAndSet(false, true)) {
       return null;
     }
 
@@ -95,7 +95,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
       @Override
       public void run() {
         try {
-          server = new WebServer();
+          myServer = new WebServer();
         }
         catch (ChannelException e) {
           LOG.info(e);
@@ -108,23 +108,23 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
           return;
         }
 
-        Disposer.register(ApplicationManager.getApplication(), server);
+        Disposer.register(ApplicationManager.getApplication(), myServer);
         ShutDownTracker.getInstance().registerShutdownTask(new Runnable() {
           @Override
           public void run() {
-            if (!Disposer.isDisposed(server)) {
+            if (!Disposer.isDisposed(myServer)) {
               // something went wrong
-              Disposer.dispose(server);
+              Disposer.dispose(myServer);
             }
           }
         });
 
-        detectedPortNumber = server.start(getDefaultPort(), PORTS_COUNT, true);
-        if (detectedPortNumber == -1) {
+        myDetectedPortNumber = myServer.start(getDefaultPort(), PORTS_COUNT, true);
+        if (myDetectedPortNumber == -1) {
           LOG.info("web server cannot be started, cannot bind to port");
         }
         else {
-          LOG.info("web server started, port " + detectedPortNumber);
+          LOG.info("web server started, port " + myDetectedPortNumber);
         }
       }
     });
@@ -133,7 +133,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
   @Override
   @Nullable
   public Disposable getServerDisposable() {
-    return server;
+    return myServer;
   }
 
   /**
