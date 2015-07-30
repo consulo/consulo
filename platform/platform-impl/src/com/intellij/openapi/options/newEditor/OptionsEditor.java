@@ -37,7 +37,6 @@ import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.*;
-import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.navigation.History;
@@ -701,8 +700,6 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
           component.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
         }
 
-        component = JBUI.Panels.simplePanel().addToCenter(component);
-        component.setBorder(new CustomLineBorder(0, 0, 1, 0));
 
         boolean noScroll = ConfigurableWrapper.isNoScroll(configurable);
         if (!noScroll) {
