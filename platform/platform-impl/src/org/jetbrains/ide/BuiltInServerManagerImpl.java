@@ -28,7 +28,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
   private static final Logger LOG = Logger.getInstance(BuiltInServerManager.class);
 
   @NonNls
-  public static final String PROPERTY_RPC_PORT = "rpc.port";
+  public static final String PROPERTY_RPC_PORT = "consulo.rpc.port";
   private static final int FIRST_PORT_NUMBER = 63342;
   private static final int PORTS_COUNT = 20;
 
@@ -39,10 +39,12 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
   private WebServer server;
   private boolean myEnabledInUnitTestMode;
 
+  @Override
   public int getPort() {
     return detectedPortNumber == -1 ? getDefaultPort() : detectedPortNumber;
   }
 
+  @Override
   public BuiltInServerManager waitForStart() {
     Future<?> serverStartFuture = startServerInPooledThread();
     if (serverStartFuture != null) {
@@ -100,7 +102,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
           String groupDisplayId = "Web Server";
           Notifications.Bus.register(groupDisplayId, NotificationDisplayType.STICKY_BALLOON);
           new Notification(groupDisplayId, "Internal HTTP server disabled",
-                           "Cannot start internal HTTP server. Git integration, JavaScript debugger and LiveEdit may operate with errors. " +
+                           "Cannot start internal HTTP server. Some plugins may operate with errors. " +
                            "Please check your firewall settings and restart " + ApplicationNamesInfo.getInstance().getFullProductName(),
                            NotificationType.ERROR).notify(null);
           return;
