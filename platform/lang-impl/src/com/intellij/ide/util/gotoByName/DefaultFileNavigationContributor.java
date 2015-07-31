@@ -62,7 +62,7 @@ public class DefaultFileNavigationContributor implements ChooseByNameContributor
     CommonProcessors.CollectProcessor<NavigationItem> processor = new CommonProcessors.CollectProcessor<NavigationItem>();
     processElementsWithName(name, processor, FindSymbolParameters.wrap(pattern, project, includeNonProjectItems));
 
-    return processor.toArray(new NavigationItem[processor.getResults().size()]);
+    return processor.toArray(NavigationItem.ARRAY_FACTORY);
   }
 
   @Override

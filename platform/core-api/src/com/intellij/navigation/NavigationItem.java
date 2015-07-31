@@ -16,9 +16,14 @@
 package com.intellij.navigation;
 
 import com.intellij.pom.Navigatable;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
+@ArrayFactoryFields
 public interface NavigationItem extends Navigatable {
+  @Deprecated
+  @DeprecationInfo("Use NavigationItem#EMPTY_ARRAY")
   NavigationItem[] EMPTY_NAVIGATION_ITEM_ARRAY = new NavigationItem[0];
 
   @Nullable

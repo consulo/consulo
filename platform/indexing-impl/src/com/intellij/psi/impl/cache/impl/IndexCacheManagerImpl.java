@@ -61,7 +61,7 @@ public class IndexCacheManagerImpl extends CacheManager{
     }
     CommonProcessors.CollectProcessor<PsiFile> processor = new CommonProcessors.CollectProcessor<PsiFile>();
     processFilesWithWord(processor, word, occurenceMask, scope, caseSensitively);
-    return processor.getResults().isEmpty() ? PsiFile.EMPTY_ARRAY : processor.toArray(PsiFile.EMPTY_ARRAY);
+    return processor.getResults().isEmpty() ? PsiFile.EMPTY_ARRAY : processor.toArray(PsiFile.ARRAY_FACTORY);
   }
 
   // IMPORTANT!!!

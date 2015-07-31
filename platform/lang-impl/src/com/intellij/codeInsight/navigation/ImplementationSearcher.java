@@ -191,7 +191,7 @@ public class ImplementationSearcher {
         ImplementationSearcher.dumbModeNotification(element);
         return null;
       }
-      return processor.toArray(PsiElement.EMPTY_ARRAY);
+      return processor.toArray(PsiElement.ARRAY_FACTORY);
     }
 
     protected abstract void processElement(PsiElement element);

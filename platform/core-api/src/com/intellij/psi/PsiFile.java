@@ -18,6 +18,7 @@ package com.intellij.psi;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,16 +28,13 @@ import org.jetbrains.annotations.Nullable;
  * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA Architectural Overview </a>
  * for high-level overview.
  *
- * @see com.intellij.openapi.actionSystem.LangDataKeys#PSI_FILE
+ * @see com.intellij.openapi.actionSystem.CommonDataKeys#PSI_FILE
  * @see com.intellij.psi.PsiElement#getContainingFile()
  * @see PsiManager#findFile(com.intellij.openapi.vfs.VirtualFile)
  * @see PsiDocumentManager#getPsiFile(com.intellij.openapi.editor.Document)
  */
+@ArrayFactoryFields
 public interface PsiFile extends PsiFileSystemItem {
-  /**
-   * The empty array of PSI files which can be reused to avoid unnecessary allocations.
-   */
-  PsiFile[] EMPTY_ARRAY = new PsiFile[0];
 
   /**
    * Returns the virtual file corresponding to the PSI file.

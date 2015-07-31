@@ -42,7 +42,7 @@ public class OpenModuleSettingsAction extends EditSourceAction {
   protected Navigatable[] getNavigatables(DataContext dataContext) {
     Module data = LangDataKeys.MODULE.getData(dataContext);
     if(data == null) {
-      return NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY;
+      return NavigationItem.EMPTY_ARRAY;
     }
     return new Navigatable[]{new ModuleNavigatable(data)};
   }
