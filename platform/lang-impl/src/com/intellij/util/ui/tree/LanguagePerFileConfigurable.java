@@ -33,6 +33,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -157,6 +158,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
           myVirtualFile = o instanceof Project ? null : (VirtualFile)o;
 
           final ChooseSomethingAction changeAction = new ChooseSomethingAction(myVirtualFile) {
+            @RequiredDispatchThread
             @Override
             public void update(final AnActionEvent e) {
               boolean enabled = isValueEditableForFile(myVirtualFile);

@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.Iterator;
 
 /**
-* @author peter
-*/
+ * @author peter
+ */
 public abstract class FlatteningIterator<Group, Value> implements Iterator<Value> {
   private final Iterator<Group> valuesIterator;
   private Iterator<Value> groupIterator;

@@ -20,6 +20,7 @@ import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.runners.GenericProgramRunner;
 import com.intellij.execution.ui.layout.impl.DockableGridContainerFactory;
 import com.intellij.ide.DataManager;
@@ -52,6 +53,7 @@ import com.intellij.ui.docking.DockManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
@@ -67,6 +69,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
   private final Project myProject;
   private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new THashMap<String, ContentManager>();
+  private final Map<String, Icon> myToolwindowIdToBaseIconMap = new THashMap<String, Icon>();
 
   private final Map<RunContentListener, Disposable> myListeners = new THashMap<RunContentListener, Disposable>();
   private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<String>();
@@ -128,7 +131,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
       return;
     }
 
-    ToolWindow toolWindow = toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, this, true);
+    final ToolWindow toolWindow = toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, this, true);
     final ContentManager contentManager = toolWindow.getContentManager();
     contentManager.addDataProvider(new DataProvider() {
       private int myInsideGetData = 0;
@@ -151,12 +154,15 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     });
 
     toolWindow.setIcon(executor.getToolWindowIcon());
+    myToolwindowIdToBaseIconMap.put(toolWindowId, executor.getToolWindowIcon());
     new ContentManagerWatcher(toolWindow, contentManager);
     contentManager.addContentManagerListener(new ContentManagerAdapter() {
       @Override
       public void selectionChanged(final ContentManagerEvent event) {
-        Content content = event.getContent();
-        getSyncPublisher().contentSelected(content == null ? null : getRunContentDescriptorByContent(content), executor);
+        if (event.getOperation() == ContentManagerEvent.ContentOperation.add) {
+          Content content = event.getContent();
+          getSyncPublisher().contentSelected(content == null ? null : getRunContentDescriptorByContent(content), executor);
+        }
       }
     });
     myToolwindowIdToContentManagerMap.put(toolWindowId, contentManager);
@@ -165,6 +171,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
       public void dispose() {
         myToolwindowIdToContentManagerMap.remove(toolWindowId).removeAllContents(true);
         myToolwindowIdZBuffer.remove(toolWindowId);
+        myToolwindowIdToBaseIconMap.remove(toolWindowId);
       }
     });
     myToolwindowIdZBuffer.addLast(toolWindowId);
@@ -257,7 +264,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     showRunContent(executor, descriptor, descriptor.getExecutionId());
   }
 
-  public void showRunContent(@NotNull final Executor executor, @NotNull final RunContentDescriptor descriptor, long executionId) {
+  public void showRunContent(@NotNull final Executor executor, @NotNull final RunContentDescriptor descriptor, final long executionId) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return;
     }
@@ -281,16 +288,17 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     content.setComponent(descriptor.getComponent());
     content.setPreferredFocusedComponent(descriptor.getPreferredFocusComputable());
     content.putUserData(DESCRIPTOR_KEY, descriptor);
+    final ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(executor.getToolWindowId());
     final ProcessHandler processHandler = descriptor.getProcessHandler();
     if (processHandler != null) {
       final ProcessAdapter processAdapter = new ProcessAdapter() {
         @Override
         public void startNotified(final ProcessEvent event) {
-          ApplicationManager.getApplication().invokeLater(new Runnable() {
+          UIUtil.invokeLaterIfNeeded(new Runnable() {
             @Override
             public void run() {
-              final Icon icon = descriptor.getIcon();
-              content.setIcon(icon == null ? executor.getToolWindowIcon() : icon);
+              content.setIcon(ExecutionUtil.getLiveIndicator(descriptor.getIcon()));
+              toolWindow.setIcon(ExecutionUtil.getLiveIndicator(myToolwindowIdToBaseIconMap.get(executor.getToolWindowId())));
             }
           });
         }
@@ -300,7 +308,24 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
           ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-              final Icon icon = descriptor.getIcon();
+              boolean alive = false;
+              String toolWindowId = executor.getToolWindowId();
+              ContentManager manager = myToolwindowIdToContentManagerMap.get(toolWindowId);
+              if (manager == null) return;
+              for (Content content : manager.getContents()) {
+                RunContentDescriptor descriptor = getRunContentDescriptorByContent(content);
+                if (descriptor != null) {
+                  ProcessHandler handler = descriptor.getProcessHandler();
+                  if (handler != null && !handler.isProcessTerminated()) {
+                    alive = true;
+                    break;
+                  }
+                }
+              }
+              Icon base = myToolwindowIdToBaseIconMap.get(toolWindowId);
+              toolWindow.setIcon(alive ? ExecutionUtil.getLiveIndicator(base) : base);
+
+              Icon icon = descriptor.getIcon();
               content.setIcon(icon == null ? executor.getDisabledIcon() : IconLoader.getTransparentIcon(icon));
             }
           });

@@ -35,6 +35,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -55,7 +56,9 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ExecutionManagerImpl extends ExecutionManager implements Disposable {
   public static final Key<Object> EXECUTION_SESSION_ID_KEY = Key.create("EXECUTION_SESSION_ID_KEY");
@@ -69,6 +72,12 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   private final Alarm awaitingTerminationAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
   private final List<Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor>> myRunningConfigurations =
           ContainerUtil.createLockFreeCopyOnWriteList();
+
+  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+  @NotNull
+  public static ExecutionManagerImpl getInstance(@NotNull Project project) {
+    return (ExecutionManagerImpl)ServiceManager.getService(project, ExecutionManager.class);
+  }
 
   ExecutionManagerImpl(@NotNull Project project) {
     myProject = project;
@@ -110,8 +119,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void compileAndRun(@NotNull final Runnable startRunnable,
-                            @NotNull final ExecutionEnvironment environment,
+  public void compileAndRun(@NotNull final Runnable startRunnable, @NotNull final ExecutionEnvironment environment,
                             @Nullable final RunProfileState state,
                             @Nullable final Runnable onCancelRunnable) {
     long id = environment.getExecutionId();
@@ -294,8 +302,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void restartRunProfile(@Nullable ProgramRunner runner,
-                                @NotNull ExecutionEnvironment environment,
+  public void restartRunProfile(@Nullable ProgramRunner runner, @NotNull ExecutionEnvironment environment,
                                 @Nullable RunContentDescriptor currentDescriptor) {
     ExecutionEnvironmentBuilder builder = new ExecutionEnvironmentBuilder(environment).contentToReuse(currentDescriptor);
     if (runner != null) {
@@ -497,12 +504,12 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @NotNull
-  private List<RunContentDescriptor> getRunningDescriptors(@NotNull Condition<RunnerAndConfigurationSettings> condition) {
+  public List<RunContentDescriptor> getRunningDescriptors(@NotNull Condition<RunnerAndConfigurationSettings> condition) {
     List<RunContentDescriptor> result = new SmartList<RunContentDescriptor>();
     for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
       if (condition.value(trinity.getSecond())) {
         ProcessHandler processHandler = trinity.getFirst().getProcessHandler();
-        if (processHandler != null && !processHandler.isProcessTerminating() && !processHandler.isProcessTerminated()) {
+        if (processHandler != null /*&& !processHandler.isProcessTerminating()*/ && !processHandler.isProcessTerminated()) {
           result.add(trinity.getFirst());
         }
       }
@@ -529,6 +536,15 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
         processHandler.destroyProcess();
       }
     }
+  }
+
+  @NotNull
+  public Set<Executor> getExecutors(RunContentDescriptor descriptor) {
+    Set<Executor> result = new HashSet<Executor>();
+    for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
+      if (descriptor == trinity.first) result.add(trinity.third);
+    }
+    return result;
   }
 
   private static class ProcessExecutionListener extends ProcessAdapter {

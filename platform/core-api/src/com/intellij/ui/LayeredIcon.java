@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.diagnostic.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,27 +41,29 @@ public class LayeredIcon implements Icon {
     myVShifts = new int[layerCount];
   }
 
-  public LayeredIcon(Icon... icons) {
+  public LayeredIcon(@NotNull Icon... icons) {
     this(icons.length);
     for (int i = 0; i < icons.length; i++) {
       setIcon(icons[i], i);
     }
   }
 
-  public static LayeredIcon createHorizontalIcon(Icon... icons) {
-    LayeredIcon icon = new LayeredIcon(icons.length);
-    int hShift = 0;
+  @NotNull
+  public static LayeredIcon createHorizontalIcon(@NotNull Icon... icons) {
+    LayeredIcon result = new LayeredIcon(icons.length);
     int maxHeight = 0;
-    for (int i = 0; i < icons.length; i++) {
-      maxHeight = Math.max(maxHeight, icons[i].getIconHeight());
+    for (Icon icon : icons) {
+      maxHeight = Math.max(maxHeight, icon.getIconHeight());
     }
+    int hShift = 0;
     for (int i = 0; i < icons.length; i++) {
-      icon.setIcon(icons[i], i, hShift, (maxHeight - icons[i].getIconHeight()) / 2);
-      hShift +=icons[i].getIconWidth() + 1;
+      result.setIcon(icons[i], i, hShift, (maxHeight - icons[i].getIconHeight()) / 2);
+      hShift += icons[i].getIconWidth() + 1;
     }
-    return icon;
+    return result;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof LayeredIcon)) return false;
@@ -78,6 +81,7 @@ public class LayeredIcon implements Icon {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return 0;
   }
@@ -104,7 +108,58 @@ public class LayeredIcon implements Icon {
     recalculateSize();
   }
 
-  private void checkIHaventIconInsideMe(final Icon icon) {
+  public void setIcon(Icon icon, int layer, int constraint) {
+    int width = getIconWidth();
+    int height = getIconHeight();
+    int w = icon.getIconWidth();
+    int h = icon.getIconHeight();
+    if (width <= 1 || height <= 1) {
+      setIcon(icon, layer);
+      return;
+    }
+    int x;
+    int y;
+    switch (constraint) {
+      case SwingConstants.NORTH:
+        x = (width - w) / 2;
+        y = 0;
+        break;
+      case SwingConstants.NORTH_EAST:
+        x = width - w;
+        y = 0;
+        break;
+      case SwingConstants.EAST:
+        x = width - w;
+        y = (height - h) / 2;
+        break;
+      case SwingConstants.SOUTH_EAST:
+        x = width - w;
+        y = height - h;
+        break;
+      case SwingConstants.SOUTH:
+        x = (width - w) / 2;
+        y = height - h;
+        break;
+      case SwingConstants.SOUTH_WEST:
+        x = 0;
+        y = height - h;
+        break;
+      case SwingConstants.WEST:
+        x = 0;
+        y = (height - h) / 2;
+        break;
+      case SwingConstants.NORTH_WEST:
+        x = 0;
+        y = 0;
+        break;
+      default:
+        throw new IllegalArgumentException(
+                "The constraint should be one of SwingConstants [NORTH...NORTH_WEST], actual value is " + constraint);
+    }
+    setIcon(icon, layer, x, y);
+  }
+
+  private void checkIHaventIconInsideMe(Icon icon) {
     LOG.assertTrue(icon != this);
     for (Icon child : myIcons) {
       if (child instanceof LayeredIcon) ((LayeredIcon)child).checkIHaventIconInsideMe(icon);
@@ -113,7 +168,7 @@ public class LayeredIcon implements Icon {
 
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
-    for(int i = 0; i < myIcons.length; i++){
+    for (int i = 0; i < myIcons.length; i++) {
       Icon icon = myIcons[i];
       if (icon == null || myDisabledLayers[i]) continue;
       icon.paintIcon(c, g, myXShift + x + myHShifts[i], myYShift + y + myVShifts[i]);
@@ -149,9 +204,11 @@ public class LayeredIcon implements Icon {
     int maxX = Integer.MIN_VALUE;
     int minY = Integer.MAX_VALUE;
     int maxY = Integer.MIN_VALUE;
-    for(int i = 0; i < myIcons.length; i++){
+    boolean hasNotNullIcons = false;
+    for (int i = 0; i < myIcons.length; i++) {
       Icon icon = myIcons[i];
       if (icon == null) continue;
+      hasNotNullIcons = true;
       int hShift = myHShifts[i];
       int vShift = myVShifts[i];
       minX = Math.min(minX, hShift);
@@ -159,6 +216,7 @@ public class LayeredIcon implements Icon {
       minY = Math.min(minY, vShift);
       maxY = Math.max(maxY, vShift + icon.getIconHeight());
     }
+    if (!hasNotNullIcons) return;
     myWidth = maxX - minX;
     myHeight = maxY - minY;
 

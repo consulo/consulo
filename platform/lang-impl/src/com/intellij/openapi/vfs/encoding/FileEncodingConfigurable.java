@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,6 +92,7 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
   @NotNull
   private static ChooseFileEncodingAction installChooseEncodingCombo(@NotNull JPanel parentPanel, @NotNull final Ref<Charset> selected) {
     ChooseFileEncodingAction myAction = new ChooseFileEncodingAction(null) {
+      @RequiredDispatchThread
       @Override
       public void update(final AnActionEvent e) {
         getTemplatePresentation().setEnabled(true);

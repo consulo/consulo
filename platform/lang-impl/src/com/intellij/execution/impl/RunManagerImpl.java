@@ -25,6 +25,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
@@ -58,10 +59,9 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   private final Map<String, ConfigurationType> myTypesByName = new LinkedHashMap<String, ConfigurationType>();
 
-  private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap =
-          new THashMap<String, RunnerAndConfigurationSettings>();
-  private final Map<String, RunnerAndConfigurationSettings> myConfigurations =
-          new LinkedHashMap<String, RunnerAndConfigurationSettings>(); // template configurations are not included here
+  private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap = new THashMap<String, RunnerAndConfigurationSettings>();
+  private final Map<String, RunnerAndConfigurationSettings> myConfigurations = new LinkedHashMap<String, RunnerAndConfigurationSettings>();
+          // template configurations are not included here
   private final Map<String, Boolean> mySharedConfigurations = new THashMap<String, Boolean>();
   private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = new WeakHashMap<RunConfiguration, List<BeforeRunTask>>();
 
@@ -93,8 +93,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   private final EventDispatcher<RunManagerListener> myDispatcher = EventDispatcher.create(RunManagerListener.class);
 
-  public RunManagerImpl(final Project project,
-                        PropertiesComponent propertiesComponent) {
+  public RunManagerImpl(final Project project, PropertiesComponent propertiesComponent) {
     myConfig = new RunManagerConfig(propertiesComponent);
     myProject = project;
 
@@ -150,8 +149,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   @Override
   @NotNull
-  public RunnerAndConfigurationSettings createConfiguration(@NotNull final RunConfiguration runConfiguration,
-                                                            @NotNull final ConfigurationFactory factory) {
+  public RunnerAndConfigurationSettings createConfiguration(@NotNull final RunConfiguration runConfiguration, @NotNull final ConfigurationFactory factory) {
     RunnerAndConfigurationSettings template = getConfigurationTemplate(factory);
     myConfigurationToBeforeTasksMap.put(runConfiguration, getBeforeRunTasks(template.getConfiguration()));
     RunnerAndConfigurationSettingsImpl settings = new RunnerAndConfigurationSettingsImpl(this, runConfiguration, false);
@@ -327,9 +325,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   }
 
   @Override
-  public void addConfiguration(RunnerAndConfigurationSettings settings,
-                               boolean shared,
-                               List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent) {
+  public void addConfiguration(RunnerAndConfigurationSettings settings, boolean shared, List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent) {
     String existingId = findExistingConfigurationId(settings);
     String newId = settings.getUniqueID();
     RunnerAndConfigurationSettings existingSettings = null;
@@ -373,7 +369,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   }
 
   private void trimUsagesListToLimit() {
-    while(myRecentlyUsedTemporaries.size() > getConfig().getRecentsLimit()) {
+    while (myRecentlyUsedTemporaries.size() > getConfig().getRecentsLimit()) {
       myRecentlyUsedTemporaries.remove(myRecentlyUsedTemporaries.size() - 1);
     }
   }
@@ -456,8 +452,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
       return myConfigurations.values();
     }
 
-    List<Pair<String, RunnerAndConfigurationSettings>> order
-            = new ArrayList<Pair<String, RunnerAndConfigurationSettings>>(myConfigurations.size());
+    List<Pair<String, RunnerAndConfigurationSettings>> order = new ArrayList<Pair<String, RunnerAndConfigurationSettings>>(myConfigurations.size());
     final List<String> folderNames = new SmartList<String>();
     for (RunnerAndConfigurationSettings each : myConfigurations.values()) {
       order.add(Pair.create(each.getUniqueID(), each));
@@ -546,8 +541,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     writeContext(parentNode);
 
     for (RunnerAndConfigurationSettings configuration : myTemplateConfigurationsMap.values()) {
-      if (configuration.getConfiguration() instanceof UnknownRunConfiguration &&
-          ((UnknownRunConfiguration)configuration.getConfiguration()).isDoNotStore()) {
+      if (configuration.getConfiguration() instanceof UnknownRunConfiguration && ((UnknownRunConfiguration)configuration.getConfiguration()).isDoNotStore()) {
         continue;
       }
 
@@ -768,9 +762,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     for (Object aChildren : parentNode.getChildren()) {
       Element element = (Element)aChildren;
       RunnerAndConfigurationSettings config = loadConfiguration(element, false);
-      if (myLoadedSelectedConfigurationUniqueName == null
-          && config != null
-          && Boolean.valueOf(element.getAttributeValue(SELECTED_ATTR)).booleanValue()) {
+      if (myLoadedSelectedConfigurationUniqueName == null && config != null && Boolean.valueOf(element.getAttributeValue(SELECTED_ATTR)).booleanValue()) {
         myLoadedSelectedConfigurationUniqueName = config.getUniqueID();
       }
     }
@@ -947,8 +939,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
     tempConfiguration.setTemporary(true);
 
-    addConfiguration(tempConfiguration, isConfigurationShared(tempConfiguration),
-                     getBeforeRunTasks(tempConfiguration.getConfiguration()), false);
+    addConfiguration(tempConfiguration, isConfigurationShared(tempConfiguration), getBeforeRunTasks(tempConfiguration.getConfiguration()), false);
     setSelectedConfiguration(tempConfiguration);
   }
 
@@ -979,13 +970,12 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   @Override
   @NotNull
   public List<RunnerAndConfigurationSettings> getTempConfigurationsList() {
-    List<RunnerAndConfigurationSettings> configurations =
-            ContainerUtil.filter(myConfigurations.values(), new Condition<RunnerAndConfigurationSettings>() {
-              @Override
-              public boolean value(RunnerAndConfigurationSettings settings) {
-                return settings.isTemporary();
-              }
-            });
+    List<RunnerAndConfigurationSettings> configurations = ContainerUtil.filter(myConfigurations.values(), new Condition<RunnerAndConfigurationSettings>() {
+      @Override
+      public boolean value(RunnerAndConfigurationSettings settings) {
+        return settings.isTemporary();
+      }
+    });
     return Collections.unmodifiableList(configurations);
   }
 
@@ -1071,34 +1061,42 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     if (selectedId.equals(uniqueID)) {
       Long lastCheckTime = myIconCheckTimes.get(uniqueID);
       Long calcTime = myIconCalcTime.get(uniqueID);
-      if (calcTime == null || calcTime<150) calcTime = 150L;
-      if (lastCheckTime == null || System.currentTimeMillis() - lastCheckTime > calcTime*10) {
+      if (calcTime == null || calcTime < 150) calcTime = 150L;
+      if (lastCheckTime == null || System.currentTimeMillis() - lastCheckTime > calcTime * 10) {
         myIdToIcon.remove(uniqueID);//cache has expired
       }
     }
     Icon icon = myIdToIcon.get(uniqueID);
     if (icon == null) {
-      icon = IconDeferrer.getInstance().deferAutoUpdatable(settings.getConfiguration().getIcon(), myProject.hashCode() ^ settings.hashCode(),
-                                                           new Function<Integer, Icon>() {
-                                                             @Override
-                                                             public Icon fun(Integer param) {
-                                                               if (myProject.isDisposed()) return null;
+      icon = IconDeferrer.getInstance()
+              .deferAutoUpdatable(settings.getConfiguration().getIcon(), myProject.hashCode() ^ settings.hashCode(), new Function<Integer, Icon>() {
+                @Override
+                public Icon fun(Integer param) {
+                  if (myProject.isDisposed()) return null;
 
-                                                               myIconCalcTime.remove(uniqueID);
-                                                               long startTime = System.currentTimeMillis();
+                  myIconCalcTime.remove(uniqueID);
+                  long startTime = System.currentTimeMillis();
 
-                                                               Icon icon;
-                                                               try {
-                                                                 settings.checkSettings();
-                                                                 icon = ProgramRunnerUtil.getConfigurationIcon(settings, false);
-                                                               }
-                                                               catch (RuntimeConfigurationException ignored) {
-                                                                 icon = ProgramRunnerUtil.getConfigurationIcon(settings, true);
-                                                               }
-                                                               myIconCalcTime.put(uniqueID, System.currentTimeMillis() - startTime);
-                                                               return icon;
-                                                             }
-                                                           });
+                  Icon icon;
+                  if (DumbService.isDumb(myProject)) {
+                    icon = IconLoader.getDisabledIcon(ProgramRunnerUtil.getRawIcon(settings));
+                    if (settings.isTemporary()) {
+                      icon = ProgramRunnerUtil.getTemporaryIcon(icon);
+                    }
+                  }
+                  else {
+                    try {
+                      settings.checkSettings();
+                      icon = ProgramRunnerUtil.getConfigurationIcon(settings, false);
+                    }
+                    catch (RuntimeConfigurationException ignored) {
+                      icon = ProgramRunnerUtil.getConfigurationIcon(settings, true);
+                    }
+                  }
+                  myIconCalcTime.put(uniqueID, System.currentTimeMillis() - startTime);
+                  return icon;
+                }
+              });
 
       myIdToIcon.put(uniqueID, icon);
       myIconCheckTimes.put(uniqueID, System.currentTimeMillis());
@@ -1159,8 +1157,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   private List<BeforeRunTask> getHardcodedBeforeRunTasks(RunConfiguration settings) {
     final List<BeforeRunTask> _tasks = new ArrayList<BeforeRunTask>();
-    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions
-            .getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
+    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions.getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
       BeforeRunTask task = provider.createTask(settings);
       if (task != null && task.isEnabled()) {
         Key<? extends BeforeRunTask> providerID = provider.getId();
@@ -1178,8 +1175,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     List<BeforeRunTask> result = new ArrayList<BeforeRunTask>();
     if (original != null) {
       for (BeforeRunTask task : original) {
-        if (!task.isEnabled())
-          continue;
+        if (!task.isEnabled()) continue;
         result.add(task.clone());
       }
     }
@@ -1308,8 +1304,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private void initProviderMaps() {
     myBeforeStepsMap = new LinkedHashMap<Key<? extends BeforeRunTask>, BeforeRunTaskProvider>();
     myProviderKeysMap = new LinkedHashMap<String, Key<? extends BeforeRunTask>>();
-    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions
-            .getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
+    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions.getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
       final Key<? extends BeforeRunTask> id = provider.getId();
       myBeforeStepsMap.put(id, provider);
       myProviderKeysMap.put(id.toString(), id);

@@ -44,6 +44,7 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -703,6 +704,7 @@ public class ScopeEditorPanel {
       return group;
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(final AnActionEvent e) {
       super.update(e);

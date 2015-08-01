@@ -32,6 +32,7 @@ import com.intellij.ui.TableUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -205,6 +206,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   }
 
   private class MyFilterCategoryAction extends ComboBoxAction implements DumbAware{
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
@@ -246,6 +248,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
     private static final int LENGTH = 15;
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       super.update(e);

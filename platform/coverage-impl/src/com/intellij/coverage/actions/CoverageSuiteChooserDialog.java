@@ -20,6 +20,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -391,6 +392,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
       return engChooser;
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       super.update(e);

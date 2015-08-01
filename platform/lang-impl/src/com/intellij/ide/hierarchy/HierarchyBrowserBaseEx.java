@@ -49,6 +49,7 @@ import com.intellij.util.NullableFunction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -645,6 +646,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   }
 
   public class ChangeScopeAction extends ComboBoxAction {
+    @RequiredDispatchThread
     @Override
     public final void update(final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();

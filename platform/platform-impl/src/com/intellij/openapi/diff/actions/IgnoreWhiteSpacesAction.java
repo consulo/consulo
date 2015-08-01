@@ -28,6 +28,7 @@ import com.intellij.openapi.diff.impl.DiffPanelImpl;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,6 +66,7 @@ public class IgnoreWhiteSpacesAction extends ComboBoxAction implements DumbAware
     return actionGroup;
   }
 
+  @RequiredDispatchThread
   public void update(AnActionEvent e) {
     super.update(e);
     Presentation presentation = e.getPresentation();

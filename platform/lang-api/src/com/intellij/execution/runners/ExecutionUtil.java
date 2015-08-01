@@ -23,6 +23,7 @@ import com.intellij.execution.process.ProcessNotCreatedException;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -33,8 +34,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.ColorUtil;
+import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.Content;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +46,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
 
 public class ExecutionUtil {
   private static final Logger LOG = Logger.getInstance("com.intellij.execution.runners.ExecutionUtil");
@@ -100,7 +106,7 @@ public class ExecutionUtil {
     final String fullMessage = title + ":<br>" + description;
 
     if (ApplicationManager.getApplication().isUnitTestMode()) {
-      LOG.error(fullMessage);
+      LOG.error(fullMessage, e);
     }
 
     if (listener == null && e instanceof HyperlinkListener) {
@@ -124,7 +130,12 @@ public class ExecutionUtil {
         else {
           Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "");
         }
-        NotificationListener notificationListener = ObjectUtils.tryCast(finalListener, NotificationListener.class);
+        NotificationListener notificationListener = finalListener == null ? null : new NotificationListener() {
+          @Override
+          public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+            finalListener.hyperlinkUpdate(event);
+          }
+        };
         ourNotificationGroup.createNotification(title, finalDescription, NotificationType.ERROR, notificationListener).notify(project);
       }
     });
@@ -181,5 +192,38 @@ public class ExecutionUtil {
       handleExecutionError(settings.getConfiguration().getProject(), executor.getToolWindowId(), settings.getConfiguration().getName(), e);
       return null;
     }
+  }
+
+  public static Icon getLiveIndicator(@Nullable final Icon base) {
+    return new LayeredIcon(base, new Icon() {
+      @SuppressWarnings("UseJBColor")
+      @Override
+      public void paintIcon(Component c, Graphics g, int x, int y) {
+        int iSize = JBUI.scale(4);
+        Graphics2D g2d = (Graphics2D)g.create();
+        try {
+          GraphicsUtil.setupAAPainting(g2d);
+          g2d.setColor(Color.GREEN);
+          Ellipse2D.Double shape =
+                  new Ellipse2D.Double(x + getIconWidth() - JBUI.scale(iSize), y + getIconHeight() - iSize, iSize, iSize);
+          g2d.fill(shape);
+          g2d.setColor(ColorUtil.withAlpha(Color.BLACK, .40));
+          g2d.draw(shape);
+        }
+        finally {
+          g2d.dispose();
+        }
+      }
+
+      @Override
+      public int getIconWidth() {
+        return base != null ? base.getIconWidth() : 13;
+      }
+
+      @Override
+      public int getIconHeight() {
+        return base != null ? base.getIconHeight() : 13;
+      }
+    });
   }
 }

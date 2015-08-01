@@ -36,6 +36,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -113,6 +114,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     final String text = document == null ? null : document.getText();
 
     return new ChooseFileEncodingAction(myFile) {
+     @RequiredDispatchThread
      @Override
      public void update(final AnActionEvent e) {
      }

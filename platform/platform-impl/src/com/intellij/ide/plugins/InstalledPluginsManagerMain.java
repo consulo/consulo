@@ -39,6 +39,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.ui.StatusText;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -335,6 +336,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
   private class MyFilterEnabledAction extends ComboBoxAction implements DumbAware {
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       super.update(e);

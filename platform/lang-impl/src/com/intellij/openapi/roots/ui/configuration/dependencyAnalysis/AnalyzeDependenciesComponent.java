@@ -44,6 +44,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -749,6 +750,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     /**
      * {@inheritDoc}
      */
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       final Presentation presentation = e.getPresentation();

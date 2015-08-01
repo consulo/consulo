@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ public interface InternalIterator<T>{
       myCollection = collection;
     }
 
+    @Override
     public boolean visit(T value) {
       return myCollection.add(value);
     }
@@ -57,6 +58,7 @@ public interface InternalIterator<T>{
       myToKeyConvertor = toKeyConvertor;
     }
 
+    @Override
     public boolean visit(V value) {
       myMap.put(myToKeyConvertor.convert(value), value);
       return true;
@@ -68,14 +70,15 @@ public interface InternalIterator<T>{
   }
 
   class Filtering<T> implements InternalIterator<T> {
-    private final Condition<T> myFilter;
+    private final Condition<? super T> myFilter;
     private final InternalIterator<T> myIterator;
 
-    public Filtering(InternalIterator<T> iterator, Condition<T> filter) {
+    public Filtering(InternalIterator<T> iterator, Condition<? super T> filter) {
       myIterator = iterator;
       myFilter = filter;
     }
 
+    @Override
     public boolean visit(T value) {
       return !myFilter.value(value) || myIterator.visit(value);
     }
@@ -102,6 +105,7 @@ public interface InternalIterator<T>{
       myConvertor = convertor;
     }
 
+    @Override
     public boolean visit(Dom element) {
       return myIterator.visit(myConvertor.convert(element));
     }

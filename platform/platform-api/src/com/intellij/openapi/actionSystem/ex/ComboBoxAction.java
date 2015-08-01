@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,10 @@ package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -27,13 +30,17 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.*;
-import com.intellij.ui.awt.RelativePoint;
-import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.ui.ColorUtil;
+import com.intellij.ui.Gray;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.UserActivityProviderComponent;
+import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,13 +54,30 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
   private boolean mySmallVariant = true;
   private String myPopupTitle;
-  private DataContext myDataContext;
 
   protected ComboBoxAction() {
   }
 
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(AnActionEvent e) {
+    ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CUSTOM_COMPONENT_PROPERTY);
+    if (button == null) {
+      Component contextComponent = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      JRootPane rootPane = UIUtil.getParentOfType(JRootPane.class, contextComponent);
+      if (rootPane != null) {
+        button = (ComboBoxButton)
+                JBSwingUtilities.uiTraverser().bfsTraversal(rootPane).filter(new Condition<Component>() {
+                  @Override
+                  public boolean value(Component component) {
+                    return component instanceof ComboBoxButton && ((ComboBoxButton)component).getMyAction() == ComboBoxAction.this;
+                  }
+                }).first();
+      }
+      if (button == null) return;
+    }
+    if (!button.isShowing()) return;
+    button.showPopup();
   }
 
   @Override
@@ -81,10 +105,13 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
     myPopupTitle = popupTitle;
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(AnActionEvent e) {
-    super.update(e);
-    myDataContext = e.getDataContext();
+  }
+
+  protected boolean shouldShowDisabledActions() {
+    return false;
   }
 
   @NotNull
@@ -119,7 +146,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
       Insets margins = getMargin();
       setMargin(JBUI.insets(margins.top, 2, margins.bottom, 2));
       if (isSmallVariant()) {
-        setBorder(JBUI.Borders.empty(0, 2, 0, 2));
+        setBorder(JBUI.Borders.empty(0, 2));
         if (!UIUtil.isUnderGTKLookAndFeel()) {
           setFont(JBUI.Fonts.label(11));
         }
@@ -170,15 +197,12 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
       addMouseMotionListener(new MouseMotionListener() {
         @Override
         public void mouseDragged(MouseEvent e) {
-          mouseMoved(new MouseEvent(e.getComponent(),
-                                    MouseEvent.MOUSE_MOVED,
-                                    e.getWhen(),
-                                    e.getModifiers(),
-                                    e.getX(),
-                                    e.getY(),
-                                    e.getClickCount(),
-                                    e.isPopupTrigger(),
-                                    e.getButton()));
+          mouseMoved(MouseEventAdapter.convert(e, e.getComponent(),
+                                               MouseEvent.MOUSE_MOVED,
+                                               e.getWhen(),
+                                               e.getModifiers() | e.getModifiersEx(),
+                                               e.getX(),
+                                               e.getY()));
         }
 
         @Override
@@ -210,28 +234,26 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
       myForceTransparent = transparent;
     }
 
-    public void showPopup() {
+    @NotNull
+    private Runnable setForcePressed() {
       myForcePressed = true;
       repaint();
 
-      Runnable onDispose = new Runnable() {
+      return new Runnable() {
         @Override
         public void run() {
-          // give button chance to handle action listener
-          UIUtil.invokeLaterIfNeeded(new Runnable() {
+          // give the button a chance to handle action listener
+          ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
               myForcePressed = false;
               myPopup = null;
             }
-          });
+          }, ModalityState.any());
           repaint();
           fireStateChanged();
         }
       };
-
-      myPopup = createPopup(onDispose);
-      myPopup.show(new RelativePoint(this, new Point(0, getHeight() - 1)));
     }
 
     @Nullable
@@ -240,19 +262,26 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
       return myForcePressed ? null : super.getToolTipText();
     }
 
+    public void showPopup() {
+      createPopup(setForcePressed()).showUnderneathOf(this);
+    }
+
     protected JBPopup createPopup(Runnable onDispose) {
       DefaultActionGroup group = createPopupActionGroup(this);
 
       DataContext context = getDataContext();
-      myDataContext = null;
-      final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-              myPopupTitle, group, context, false, false, false, onDispose, getMaxRows(), getPreselectCondition());
+      ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+              myPopupTitle, group, context, false, shouldShowDisabledActions(), false, onDispose, getMaxRows(), getPreselectCondition());
       popup.setMinimumSize(new Dimension(getMinWidth(), getMinHeight()));
       return popup;
     }
 
+    private ComboBoxAction getMyAction() {
+      return ComboBoxAction.this;
+    }
+
     protected DataContext getDataContext() {
-      return myDataContext == null ? DataManager.getInstance().getDataContext(this) : myDataContext;
+      return DataManager.getInstance().getDataContext(this);
     }
 
     @Override
@@ -352,7 +381,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
       final boolean isEmpty = getIcon() == null && StringUtil.isEmpty(getText());
       int width = isEmpty ? JBUI.scale(10) + ARROW_ICON.getIconWidth() : super.getPreferredSize().width;
       if (isSmallVariant()) width += JBUI.scale(4);
-      return new Dimension(width, JBUI.scale(isSmallVariant() ? 19 : 21));
+      return new Dimension(width, isSmallVariant() ? JBUI.scale(19) : super.getPreferredSize().height);
     }
 
     @Override
@@ -367,8 +396,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
     @Override
     public void paint(Graphics g) {
-      GraphicsUtil.setupAntialiasing(g);
-      GraphicsUtil.setupAAPainting(g);
+      UISettings.setupAntialiasing(g);
       final Dimension size = getSize();
       final boolean isEmpty = getIcon() == null && StringUtil.isEmpty(getText());
 
@@ -425,7 +453,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
           }
         }
         else {
-          paintComponent(g);
+          super.paint(g);
         }
       }
       final Insets insets = super.getInsets();
