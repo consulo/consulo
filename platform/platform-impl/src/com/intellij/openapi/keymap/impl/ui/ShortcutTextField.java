@@ -22,14 +22,18 @@
  */
 package com.intellij.openapi.keymap.impl.ui;
 
+import com.intellij.openapi.util.registry.Registry;
+import com.intellij.ui.KeyStrokeAdapter;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class ShortcutTextField extends JTextField {
   private KeyStroke myKeyStroke;
 
   public ShortcutTextField() {
-    enableEvents(KeyEvent.KEY_EVENT_MASK);
+    enableEvents(AWTEvent.KEY_EVENT_MASK);
     setFocusTraversalKeysEnabled(false);
   }
 
@@ -37,15 +41,16 @@ public class ShortcutTextField extends JTextField {
   protected void processKeyEvent(KeyEvent e) {
     if (e.getID() == KeyEvent.KEY_PRESSED) {
       int keyCode = e.getKeyCode();
-      if (keyCode == KeyEvent.VK_SHIFT ||
-          keyCode == KeyEvent.VK_ALT ||
-          keyCode == KeyEvent.VK_CONTROL ||
-          keyCode == KeyEvent.VK_ALT_GRAPH ||
-          keyCode == KeyEvent.VK_META) {
+      if (
+              keyCode == KeyEvent.VK_SHIFT ||
+              keyCode == KeyEvent.VK_ALT ||
+              keyCode == KeyEvent.VK_CONTROL ||
+              keyCode == KeyEvent.VK_ALT_GRAPH ||
+              keyCode == KeyEvent.VK_META
+              ){
         return;
       }
-
-      setKeyStroke(KeyStroke.getKeyStroke(keyCode, e.getModifiers()));
+      setKeyStroke(KeyStrokeAdapter.getDefaultKeyStroke(e));
     }
   }
 
@@ -60,5 +65,10 @@ public class ShortcutTextField extends JTextField {
 
   public KeyStroke getKeyStroke() {
     return myKeyStroke;
+  }
+
+  @Override
+  public void enableInputMethods(boolean enable) {
+    super.enableInputMethods(enable && Registry.is("ide.settings.keymap.input.method.enabled"));
   }
 }

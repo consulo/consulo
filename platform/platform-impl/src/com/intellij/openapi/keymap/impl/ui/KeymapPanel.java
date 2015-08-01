@@ -26,10 +26,7 @@ import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.actionSystem.ex.QuickListsManager;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.keymap.KeyMapBundle;
-import com.intellij.openapi.keymap.Keymap;
-import com.intellij.openapi.keymap.KeymapManager;
-import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.keymap.*;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;
 import com.intellij.openapi.keymap.impl.KeymapImpl;
@@ -48,6 +45,8 @@ import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.DoubleClickListener;
@@ -86,6 +85,7 @@ public class KeymapPanel extends JPanel implements SearchableConfigurable, Confi
   private JButton myCopyButton;
   private JButton myDeleteButton;
   private JButton myResetToDefault;
+  private JCheckBox myNonEnglishKeyboardSupportOption;
 
   private JLabel myBaseKeymapLabel;
 
@@ -234,6 +234,20 @@ public class KeymapPanel extends JPanel implements SearchableConfigurable, Confi
     myDeleteButton.setMargin(insets);
     gc.weightx = 1;
     panel.add(myDeleteButton, gc);
+
+    IdeFrame ideFrame = IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
+    if (ideFrame != null && KeyboardSettingsExternalizable.isSupportedKeyboardLayout(ideFrame.getComponent()))
+    {
+      String displayLanguage = ideFrame.getComponent().getInputContext().getLocale().getDisplayLanguage();
+      myNonEnglishKeyboardSupportOption = new JCheckBox(new AbstractAction(displayLanguage + " " + KeyMapBundle.message("use.non.english.keyboard.layout.support")) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          KeyboardSettingsExternalizable.getInstance().setNonEnglishKeyboardSupportEnabled(myNonEnglishKeyboardSupportOption.isSelected());
+        }
+      });
+      myNonEnglishKeyboardSupportOption.setSelected(KeyboardSettingsExternalizable.getInstance().isNonEnglishKeyboardSupportEnabled());
+      panel.add(myNonEnglishKeyboardSupportOption, gc);
+    }
 
     myCopyButton.addActionListener(new ActionListener() {
       @Override
@@ -741,6 +755,11 @@ public class KeymapPanel extends JPanel implements SearchableConfigurable, Confi
 
   @Override
   public void reset() {
+    if (myNonEnglishKeyboardSupportOption != null) {
+      KeyboardSettingsExternalizable.getInstance().setNonEnglishKeyboardSupportEnabled(false);
+      myNonEnglishKeyboardSupportOption.setSelected(KeyboardSettingsExternalizable.getInstance().isNonEnglishKeyboardSupportEnabled());
+    }
+
     myKeymapListModel.removeAllElements();
     KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
     Keymap[] keymaps = keymapManager.getAllKeymaps();

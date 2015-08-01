@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.Patches;
 import com.intellij.application.options.OptionsConstants;
 import com.intellij.codeInsight.hint.DocumentFragmentTooltipRenderer;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
@@ -34,7 +33,6 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.diagnostic.Logger;
@@ -308,6 +306,9 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
   private boolean myMultiSelectionInProgress;
 
   private CaretImpl myPrimaryCaret;
+
+  private boolean myCharKeyPressed;
+  private boolean myNeedToSelectPreviousChar;
 
   static {
     ourCaretBlinkingCommand = new RepaintCursorCommand();
@@ -835,15 +836,29 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       myPanel.add(myScrollPane);
     }
 
-    myEditorComponent.addKeyListener(new KeyAdapter() {
+    myEditorComponent.addKeyListener(new KeyListener() {
+      @Override
+      public void keyPressed(@NotNull KeyEvent e) {
+        if (e.getKeyCode() >= KeyEvent.VK_A && e.getKeyCode() <= KeyEvent.VK_Z) {
+          myCharKeyPressed = true;
+        }
+        KeyboardInternationalizationNotificationManager.showNotification();
+      }
+
       @Override
       public void keyTyped(@NotNull KeyEvent event) {
+        myNeedToSelectPreviousChar = false;
         if (event.isConsumed()) {
           return;
         }
         if (processKeyTyped(event)) {
           event.consume();
         }
+      }
+
+      @Override
+      public void keyReleased(KeyEvent e) {
+        myCharKeyPressed = false;
       }
     });
 
@@ -5332,6 +5347,9 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     @Override
     @Nullable
     public AttributedCharacterIterator getSelectedText(AttributedCharacterIterator.Attribute[] attributes) {
+      if (myCharKeyPressed) {
+        myNeedToSelectPreviousChar = true;
+      }
       String text = getSelectionModel().getSelectedText();
       return text == null ? null : new AttributedString(text).getIterator();
     }
@@ -5376,6 +5394,25 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     }
 
     private void replaceInputMethodText(@NotNull InputMethodEvent e) {
+      if (myNeedToSelectPreviousChar && SystemInfo.isMac &&
+          (Registry.is("ide.mac.pressAndHold.brute.workaround") || Registry.is("ide.mac.pressAndHold.workaround") &&
+                                                                   (e.getCommittedCharacterCount() > 0 || e.getCaret() == null))) {
+        // This is required to support input of accented characters using press-and-hold method (http://support.apple.com/kb/PH11264).
+        // JDK currently properly supports this functionality only for TextComponent/JTextComponent descendants.
+        // For our editor component we need this workaround.
+        // After https://bugs.openjdk.java.net/browse/JDK-8074882 is fixed, this workaround should be replaced with a proper solution.
+        myNeedToSelectPreviousChar = false;
+        getCaretModel().runForEachCaret(new CaretAction() {
+          @Override
+          public void perform(Caret caret) {
+            int caretOffset = caret.getOffset();
+            if (caretOffset > 0) {
+              caret.setSelection(caretOffset - 1, caretOffset);
+            }
+          }
+        });
+      }
+
       int commitCount = e.getCommittedCharacterCount();
       AttributedCharacterIterator text = e.getText();
 
@@ -5389,7 +5426,9 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
             public void run() {
               int docLength = doc.getTextLength();
               ProperTextRange range = composedTextRange.intersection(new TextRange(0, docLength));
-              doc.deleteString(range.getStartOffset(), range.getEndOffset());
+              if (range != null) {
+                doc.deleteString(range.getStartOffset(), range.getEndOffset());
+              }
             }
           });
         }

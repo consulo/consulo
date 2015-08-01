@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,29 +25,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class PassThroughtIdeFocusManager extends IdeFocusManager {
+public class PassThroughIdeFocusManager extends IdeFocusManager {
 
-  private static final PassThroughtIdeFocusManager ourInstance = new PassThroughtIdeFocusManager();
+  private static final PassThroughIdeFocusManager ourInstance = new PassThroughIdeFocusManager();
 
-  public static PassThroughtIdeFocusManager getInstance() {
+  public static PassThroughIdeFocusManager getInstance() {
     return ourInstance;
   }
 
+  @Override
   @NotNull
   public ActionCallback requestFocus(@NotNull Component c, boolean forced) {
     c.requestFocus();
-    return new ActionCallback.Done();
+    return ActionCallback.DONE;
   }
 
+  @Override
   @NotNull
   public ActionCallback requestFocus(@NotNull FocusCommand command, boolean forced) {
     return command.run();
   }
 
+  @Override
   public JComponent getFocusTargetFor(@NotNull JComponent comp) {
     return comp;
   }
 
+  @Override
   public void doWhenFocusSettlesDown(@NotNull Runnable runnable) {
     runnable.run();
   }
@@ -59,6 +63,7 @@ public class PassThroughtIdeFocusManager extends IdeFocusManager {
     }
   }
 
+  @Override
   public Component getFocusedDescendantFor(Component comp) {
     final Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (focused == null) return null;
@@ -68,7 +73,8 @@ public class PassThroughtIdeFocusManager extends IdeFocusManager {
     return null;
   }
 
-  public boolean dispatch(KeyEvent e) {
+  @Override
+  public boolean dispatch(@NotNull KeyEvent e) {
     return false;
   }
 
@@ -76,8 +82,10 @@ public class PassThroughtIdeFocusManager extends IdeFocusManager {
   public void typeAheadUntil(ActionCallback done) {
   }
 
+  @Override
+  @NotNull
   public ActionCallback requestDefaultFocus(boolean forced) {
-    return new ActionCallback.Done();
+    return ActionCallback.DONE;
   }
 
   @Override
@@ -85,15 +93,18 @@ public class PassThroughtIdeFocusManager extends IdeFocusManager {
     return true;
   }
 
+  @NotNull
   @Override
   public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
     return new Expirable() {
+      @Override
       public boolean isExpired() {
         return false;
       }
     };
   }
 
+  @NotNull
   @Override
   public FocusRequestor getFurtherRequestor() {
     return this;
@@ -114,7 +125,7 @@ public class PassThroughtIdeFocusManager extends IdeFocusManager {
   }
 
   @Override
-  public void runOnOwnContext(DataContext context, Runnable runnable) {
+  public void runOnOwnContext(@NotNull DataContext context, @NotNull Runnable runnable) {
     runnable.run();
   }
 

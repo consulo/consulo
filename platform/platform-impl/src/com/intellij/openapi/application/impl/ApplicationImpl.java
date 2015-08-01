@@ -125,7 +125,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   private boolean myLoaded = false;
   @NonNls private static final String WAS_EVER_SHOWN = "was.ever.shown";
 
-  private Boolean myActive;
+  private volatile boolean myActive;
 
   private static final int IS_EDT_FLAG = 1<<30; // we don't mess with sign bit since we want to do arithmetic
   private static final int IS_READ_LOCK_ACQUIRED_FLAG = 1<<29;
@@ -1136,38 +1136,46 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return true;
   }
 
-  public boolean tryToApplyActivationState(boolean active, Window window) {
-    final Component frame = UIUtil.findUltimateParent(window);
-
-    if (frame instanceof IdeFrame) {
-      final IdeFrame ideFrame = (IdeFrame)frame;
-      if (isActive() != active) {
-        myActive = active;
-        System.setProperty("idea.active", myActive.toString());
-        ApplicationActivationListener publisher = getMessageBus().syncPublisher(ApplicationActivationListener.TOPIC);
-        if (active) {
-          publisher.applicationActivated(ideFrame);
-        }
-        else {
-          publisher.applicationDeactivated(ideFrame);
-        }
-        return true;
+  /**
+   * !!!!! CAUTION !!!!!
+   * !!!!! CAUTION !!!!!
+   * !!!!! CAUTION !!!!!
+   *
+   * THIS IS AN "ABSOLUTELY-GURU METHOD".
+   * NOBODY AND UNDER ANY CIRCUMSTANCES SHOULD ADD OTHER USAGES OF IT :)
+   * ONLY DENIS IS PERMITTED TO USE THIS METHOD!!!
+   *
+   * !!!!! CAUTION !!!!!
+   * !!!!! CAUTION !!!!!
+   * !!!!! CAUTION !!!!!
+   *
+   * There are no legitimate usages of the method outside of IdeEventQueue.processAppActivationEvents()
+   */
+  public void tryToApplyActivationState(Window window, boolean activation) {
+    if (activation && !isActive()) {
+      myActive = true;
+      IdeFrame ideFrame = getIdeFrameFromWindow(window);
+      if (ideFrame != null) {
+        getMessageBus().syncPublisher(ApplicationActivationListener.TOPIC).applicationActivated(ideFrame);
       }
     }
+    else if (!activation && isActive()) {
+      myActive = false;
+      IdeFrame ideFrame = getIdeFrameFromWindow(window);
+      if (ideFrame != null) {
+        getMessageBus().syncPublisher(ApplicationActivationListener.TOPIC).applicationDeactivated(ideFrame);
+      }
+    }
+  }
 
-    return false;
+  private static IdeFrame getIdeFrameFromWindow(Window window) {
+    Component frame = UIUtil.findUltimateParent(window);
+    return frame instanceof IdeFrame ? (IdeFrame)frame : null;
   }
 
   @Override
   public boolean isActive() {
-    if (isUnitTestMode()) return true;
-
-    if (myActive == null) {
-      Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-      return active != null;
-    }
-
-    return myActive;
+    return isUnitTestMode() || myActive;
   }
 
   @NotNull
