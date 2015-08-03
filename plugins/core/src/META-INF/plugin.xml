@@ -376,6 +376,12 @@
                     beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.highlighting.BraceMatcher"/>
     </extensionPoint>
+
+    <extensionPoint name="bidiRegionsSeparator"
+                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.openapi.editor.bidi.BidiRegionsSeparator"/>
+    </extensionPoint>
+
     <extensionPoint name="quoteHandler"
                     beanClass="com.intellij.codeInsight.editorActions.QuoteHandlerEP"/>
     <extensionPoint name="extendWordSelectionHandler"
@@ -2556,5 +2562,7 @@
     <moduleRootsProcessor implementation="com.intellij.openapi.roots.impl.NullModuleDirModuleRootsProcessor" order="last" />
 
     <targetElementUtilEx implementation="com.intellij.codeInsight.TargetElementUtilExImpl" />
+
+    <bidiRegionsSeparator language="" implementationClass="com.intellij.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
   </extensions>
 </idea-plugin>
