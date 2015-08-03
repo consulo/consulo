@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,18 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
+import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx, MutableInterval {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.RangeMarkerImpl");
 
-  protected final DocumentEx myDocument;
-  protected RangeMarkerTree.RMNode<RangeMarkerEx> myNode;
+  private final DocumentEx myDocument;
+  RangeMarkerTree.RMNode<RangeMarkerEx> myNode;
 
   private final long myId;
   private static final StripedIDGenerator counter = new StripedIDGenerator();
@@ -80,16 +82,16 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   @Override
   public int getStartOffset() {
     RangeMarkerTree.RMNode node = myNode;
-    return intervalStart() + (node == null ? 0 : node.computeDeltaUpToRoot());
+    return node == null ? -1 : node.intervalStart() + node.computeDeltaUpToRoot();
   }
 
   @Override
   public int getEndOffset() {
     RangeMarkerTree.RMNode node = myNode;
-    return intervalEnd() + (node == null ? 0 : node.computeDeltaUpToRoot());
+    return node == null ? -1 : node.intervalEnd() + node.computeDeltaUpToRoot();
   }
 
-  public void invalidate(@NotNull final Object reason) {
+  void invalidate(@NotNull final Object reason) {
     setValid(false);
     RangeMarkerTree.RMNode<RangeMarkerEx> node = myNode;
 
@@ -97,7 +99,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
       node.processAliveKeys(new Processor<RangeMarkerEx>() {
         @Override
         public boolean process(RangeMarkerEx markerEx) {
-          myNode.getTree().reportInvalidation(markerEx, reason);
+          myNode.getTree().beforeRemove(markerEx, reason);
           return true;
         }
       });
@@ -141,7 +143,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   }
 
   @Override
-  public final void documentChanged(DocumentEvent e) {
+  public final void documentChanged(@NotNull DocumentEvent e) {
     int oldStart = intervalStart();
     int oldEnd = intervalEnd();
     int docLength = myDocument.getTextLength();
@@ -166,13 +168,23 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     }
   }
 
-  protected void changedUpdateImpl(DocumentEvent e) {
+  protected void changedUpdateImpl(@NotNull DocumentEvent e) {
     if (!isValid()) return;
 
-    // Process if one point.
-    if (intervalStart() == intervalEnd()) {
-      processIfOnePoint(e);
+    ProperTextRange newRange = applyChange(e, intervalStart(), intervalEnd(), isGreedyToLeft(), isGreedyToRight());
+    if (newRange == null) {
+      invalidate(e);
       return;
+    }
+
+    setIntervalStart(newRange.getStartOffset());
+    setIntervalEnd(newRange.getEndOffset());
+  }
+
+  @Nullable
+  static ProperTextRange applyChange(@NotNull DocumentEvent e, int intervalStart, int intervalEnd, boolean isGreedyToLeft, boolean isGreedyToRight) {
+    if (intervalStart == intervalEnd) {
+      return processIfOnePoint(e, intervalStart, intervalEnd, isGreedyToRight);
     }
 
     final int offset = e.getOffset();
@@ -180,73 +192,74 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     final int newLength = e.getNewLength();
 
     // changes after the end.
-    if (intervalEnd() < offset || !isGreedyToRight() && intervalEnd() == offset) {
-      return;
+    if (intervalEnd < offset || !isGreedyToRight && intervalEnd == offset) {
+      return new ProperTextRange(intervalStart, intervalEnd);
     }
 
     // changes before start
-    if (intervalStart() > offset + oldLength || !isGreedyToLeft() && intervalStart() == offset + oldLength) {
-      setIntervalStart(intervalStart() + newLength - oldLength);
-      setIntervalEnd(intervalEnd() + newLength - oldLength);
-      return;
+    if (intervalStart > offset + oldLength || !isGreedyToLeft && intervalStart == offset + oldLength) {
+      return new ProperTextRange(intervalStart + newLength - oldLength, intervalEnd + newLength - oldLength);
     }
 
     // Changes inside marker's area. Expand/collapse.
-    if (intervalStart() <= offset && intervalEnd() >= offset + oldLength) {
-      setIntervalEnd(intervalEnd() + newLength - oldLength);
-      return;
+    if (intervalStart <= offset && intervalEnd >= offset + oldLength) {
+      return new ProperTextRange(intervalStart, intervalEnd + newLength - oldLength);
     }
 
     // At this point we either have (myStart xor myEnd inside changed area) or whole area changed.
 
     // Replacing prefix or suffix...
-    if (intervalStart() >= offset && intervalStart() <= offset + oldLength && intervalEnd() > offset + oldLength) {
-      setIntervalEnd(intervalEnd() + newLength - oldLength);
-      setIntervalStart(offset + newLength);
-      return;
+    if (intervalStart >= offset && intervalStart <= offset + oldLength && intervalEnd > offset + oldLength) {
+      return new ProperTextRange(offset + newLength, intervalEnd + newLength - oldLength);
     }
 
-    if (intervalEnd() >= offset && intervalEnd() <= offset + oldLength && intervalStart() < offset) {
-      setIntervalEnd(offset);
-      return;
+    if (intervalEnd >= offset && intervalEnd <= offset + oldLength && intervalStart < offset) {
+      return new ProperTextRange(intervalStart, offset);
     }
 
-    invalidate(e);
+    return null;
   }
 
-  private void processIfOnePoint(DocumentEvent e) {
+  @Nullable
+  private static ProperTextRange processIfOnePoint(@NotNull DocumentEvent e, int intervalStart, int intervalEnd, boolean greedyRight) {
     int offset = e.getOffset();
     int oldLength = e.getOldLength();
     int oldEnd = offset + oldLength;
-    if (offset < intervalStart() && intervalStart() < oldEnd) {
-      invalidate(e);
-      return;
+    if (offset < intervalStart && intervalStart < oldEnd) {
+      return null;
     }
 
-    if (offset == intervalStart() && oldLength == 0 && isGreedyToRight()) {
-      setIntervalEnd(intervalEnd() + e.getNewLength());
-      return;
+    if (offset == intervalStart && oldLength == 0 && greedyRight) {
+      return new ProperTextRange(intervalStart, intervalEnd + e.getNewLength());
     }
 
-    if (intervalStart() > oldEnd || intervalStart() == oldEnd  && oldLength > 0) {
-      setIntervalStart(intervalStart() + e.getNewLength() - oldLength);
-      setIntervalEnd(intervalEnd() + e.getNewLength() - oldLength);
+    if (intervalStart > oldEnd || intervalStart == oldEnd  && oldLength > 0) {
+      return new ProperTextRange(intervalStart + e.getNewLength() - oldLength, intervalEnd + e.getNewLength() - oldLength);
     }
+
+    return new ProperTextRange(intervalStart, intervalEnd);
   }
 
   @NonNls
   public String toString() {
-    return "RangeMarker" + (isGreedyToLeft() ? "[" : "(") + (isValid() ? "valid" : "invalid") + "," + getStartOffset() + "," + getEndOffset() + (
-      isGreedyToRight() ? "]" : ")") + " " + getId();
+    return "RangeMarker" + (isGreedyToLeft() ? "[" : "(")
+           + (isValid() ? "" : "invalid:") + getStartOffset() + "," + getEndOffset()
+           + (isGreedyToRight() ? "]" : ")") + " " + getId();
   }
 
   @Override
   public int setIntervalStart(int start) {
+    if (start < 0) {
+      LOG.error("Negative start: " + start);
+    }
     return myNode.setIntervalStart(start);
   }
 
   @Override
   public int setIntervalEnd(int end) {
+    if (end < 0) {
+      LOG.error("Negative end: "+end);
+    }
     return myNode.setIntervalEnd(end);
   }
 

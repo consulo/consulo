@@ -23,6 +23,9 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.TextAccessor;
+import com.intellij.ui.components.JBTextField;
+import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -38,19 +41,34 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
   }
 
   public TextFieldWithBrowseButton(JTextField field, @Nullable ActionListener browseActionListener) {
+    this(field, browseActionListener, null);
+  }
+
+  public TextFieldWithBrowseButton(JTextField field, @Nullable ActionListener browseActionListener, @Nullable Disposable parent) {
     super(field, browseActionListener);
-    if (ApplicationManager.getApplication() != null) {
-      installPathCompletion(FileChooserDescriptorFactory.createSingleLocalFileDescriptor());
+    if (!(field instanceof JBTextField)) {
+      UIUtil.addUndoRedoActions(field);
     }
+    installPathCompletion(FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), parent);
   }
 
   public TextFieldWithBrowseButton(ActionListener browseActionListener) {
-    this(new JTextField(10/* to prevent field to be infinitely resized in grid-box layouts */), browseActionListener);
+    this(browseActionListener, null);
+  }
+
+  public TextFieldWithBrowseButton(ActionListener browseActionListener, Disposable parent) {
+    this(new JBTextField(10/* to prevent field to be infinitely resized in grid-box layouts */), browseActionListener, parent);
   }
 
   public void addBrowseFolderListener(@Nullable String title, @Nullable String description, @Nullable Project project, FileChooserDescriptor fileChooserDescriptor) {
     addBrowseFolderListener(title, description, project, fileChooserDescriptor, TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT);
     installPathCompletion(fileChooserDescriptor);
+  }
+
+  public void addBrowseFolderListener(@NotNull TextBrowseFolderListener listener) {
+    listener.setOwnerComponent(this);
+    addBrowseFolderListener(null, listener, true);
+    installPathCompletion(listener.getFileChooserDescriptor());
   }
 
   protected void installPathCompletion(final FileChooserDescriptor fileChooserDescriptor) {
@@ -60,10 +78,10 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
   protected void installPathCompletion(final FileChooserDescriptor fileChooserDescriptor,
                                        @Nullable Disposable parent) {
     final Application application = ApplicationManager.getApplication();
-     if (application == null || application.isUnitTestMode() || application.isHeadlessEnvironment()) return;
-     FileChooserFactory.getInstance().installFileCompletion(getChildComponent(), fileChooserDescriptor, true, parent);
-   }
-        
+    if (application == null || application.isUnitTestMode() || application.isHeadlessEnvironment()) return;
+    FileChooserFactory.getInstance().installFileCompletion(getChildComponent(), fileChooserDescriptor, true, parent);
+  }
+
   public JTextField getTextField() {
     return getChildComponent();
   }
@@ -71,10 +89,12 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
   /**
    * @return trimmed text
    */
+  @Override
   public String getText(){
     return getTextField().getText();
   }
 
+  @Override
   public void setText(final String text){
     getTextField().setText(text);
   }
@@ -85,9 +105,7 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
 
   public void setEditable(boolean b) {
     getTextField().setEditable(b);
-
     getButton().setFocusable(!b);
-    getTextField().setFocusable(b);
   }
 
   public static class NoPathCompletion extends TextFieldWithBrowseButton {
@@ -106,6 +124,7 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
       super(browseActionListener);
     }
 
+    @Override
     protected void installPathCompletion(final FileChooserDescriptor fileChooserDescriptor) {
     }
   }

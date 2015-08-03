@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 package com.intellij.ide.diff;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Result;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diff.DiffRequest;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileChooser.FileChooser;
@@ -32,10 +32,8 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.openapi.vfs.*;
+import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -93,7 +91,17 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   }
 
   @Override
+  @Nullable
+  public OpenFileDescriptor getOpenFileDescriptor(@Nullable Project project) {
+    if (project == null || project.isDefault()) return null;
+    return new OpenFileDescriptor(project, myFile);
+  }
+
+  @Override
   public VirtualFileDiffElement[] getChildren() {
+    if (myFile.is(VFileProperty.SYMLINK)) {
+      return new VirtualFileDiffElement[0];
+    }
     final VirtualFile[] files = myFile.getChildren();
     final ArrayList<VirtualFileDiffElement> elements = new ArrayList<VirtualFileDiffElement>();
     for (VirtualFile file : files) {
@@ -116,7 +124,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
 
   @Override
   public Icon getIcon() {
-    return isContainer() ? AllIcons.Nodes.Folder : VirtualFilePresentation.getIcon(myFile);
+    return isContainer() ? PlatformIcons.FOLDER_ICON : VirtualFilePresentation.getIcon(myFile);
   }
 
   @Override
@@ -280,22 +288,17 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
       }
 
       if (!docsToSave.isEmpty()) {
-        UIUtil.invokeAndWaitIfNeeded(new Runnable() {
+        new WriteAction() {
           @Override
-          public void run() {
-            ApplicationManager.getApplication().runWriteAction(new Runnable() {
-              @Override
-              public void run() {
-                for (Document document : docsToSave) {
-                  manager.saveDocument(document);
-                }
-              }
-            });
+          protected void run(@NotNull Result result) throws Throwable {
+            for (Document document : docsToSave) {
+              manager.saveDocument(document);
+            }
           }
-        });
+        }.execute();
       }
 
-      virtualFile.refresh(true, true);
+      VfsUtil.markDirtyAndRefresh(true, true, true, virtualFile);
     }
   }
 }

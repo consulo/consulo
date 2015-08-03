@@ -238,7 +238,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     myTabs.getPresentation().setPaintBorder(border.top, border.left, border.right, border.bottom).setTabSidePaintBorder(5);
   }
 
-  public Component getComponent() {
+  public JComponent getComponent() {
     return myTabs.getComponent();
   }
 

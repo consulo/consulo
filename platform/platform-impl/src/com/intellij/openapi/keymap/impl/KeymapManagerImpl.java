@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.keymap.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.keymap.Keymap;
@@ -24,6 +25,7 @@ import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
@@ -224,6 +226,18 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   public void addKeymapManagerListener(@NotNull KeymapManagerListener listener) {
     pollQueue();
     myListeners.add(listener);
+  }
+
+  @Override
+  public void addKeymapManagerListener(@NotNull final KeymapManagerListener listener, @NotNull Disposable parentDisposable) {
+    pollQueue();
+    myListeners.add(listener);
+    Disposer.register(parentDisposable, new Disposable() {
+      @Override
+      public void dispose() {
+        removeKeymapManagerListener(listener);
+      }
+    });
   }
 
   private void pollQueue() {

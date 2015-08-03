@@ -16,10 +16,13 @@
 package com.intellij.psi.util;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
@@ -31,11 +34,14 @@ import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.meta.PsiMetaOwner;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.TimeoutUtil;
 import lombok.val;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +54,8 @@ import java.util.List;
  */
 public class PsiUtilCore {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.util.PsiUtilCore");
-  public static final PsiElement NULL_PSI_ELEMENT = new PsiElement() {
+  public static final PsiElement NULL_PSI_ELEMENT = new NullPsiElement();
+  private static class NullPsiElement implements PsiElement {
     @Override
     @NotNull
     public Project getProject() {
@@ -259,8 +266,8 @@ public class PsiUtilCore {
       throw createException();
     }
 
-    private PsiInvalidElementAccessException createException() {
-      return new PsiInvalidElementAccessException(this, "NULL_PSI_ELEMENT", null);
+    protected PsiInvalidElementAccessException createException() {
+      return new PsiInvalidElementAccessException(this, toString(), null);
     }
 
     @Override
@@ -339,7 +346,116 @@ public class PsiUtilCore {
     public String toString() {
       return "NULL_PSI_ELEMENT";
     }
-  };
+  }
+
+  public static final PsiFile NULL_PSI_FILE = new NullPsiFile();
+  private static class NullPsiFile extends NullPsiElement implements PsiFile, PsiElementWithSubtreeChangeNotifier {
+    @Override
+    public FileASTNode getNode() {
+      throw createException();
+    }
+
+    @Override
+    public PsiDirectory getParent() {
+      throw createException();
+    }
+
+    @Override
+    public VirtualFile getVirtualFile() {
+      throw createException();
+    }
+
+    @Override
+    public PsiDirectory getContainingDirectory() {
+      throw createException();
+    }
+
+    @Override
+    public long getModificationStamp() {
+      throw createException();
+    }
+
+    @NotNull
+    @Override
+    public PsiFile getOriginalFile() {
+      throw createException();
+    }
+
+    @NotNull
+    @Override
+    public FileType getFileType() {
+      throw createException();
+    }
+
+    @NotNull
+    @Override
+    public PsiFile[] getPsiRoots() {
+      throw createException();
+    }
+
+    @NotNull
+    @Override
+    public FileViewProvider getViewProvider() {
+      throw createException();
+    }
+
+    @Override
+    public void subtreeChanged() {
+      throw createException();
+    }
+
+    @Override
+    public boolean isDirectory() {
+      throw createException();
+    }
+
+    @NotNull
+    @Override
+    public String getName() {
+      throw createException();
+    }
+
+    @Override
+    public boolean processChildren(PsiElementProcessor<PsiFileSystemItem> processor) {
+      throw createException();
+    }
+
+    @Nullable
+    @Override
+    public ItemPresentation getPresentation() {
+      throw createException();
+    }
+
+    @Override
+    public void navigate(boolean requestFocus) {
+      throw createException();
+    }
+
+    @Override
+    public boolean canNavigate() {
+      throw createException();
+    }
+
+    @Override
+    public boolean canNavigateToSource() {
+      throw createException();
+    }
+
+    @Override
+    public void checkSetName(String name) throws IncorrectOperationException {
+      throw createException();
+    }
+
+    @Override
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+      throw createException();
+    }
+
+    @Override
+    public String toString() {
+      return "NULL_PSI_FILE";
+    }
+  }
 
   @NotNull
   public static PsiElement[] toPsiElementArray(@NotNull Collection<? extends PsiElement> collection) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import com.intellij.openapi.editor.EditorGutter;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import gnu.trove.TIntFunction;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -50,12 +51,18 @@ public abstract class EditorGutterComponentEx extends JComponent implements Edit
 
   public abstract int getLineMarkerAreaOffset();
 
+  public abstract int getLineMarkerFreePaintersAreaOffset();
+
   public abstract int getIconsAreaWidth();
 
   @Nullable
   public abstract Point getPoint(GutterIconRenderer renderer);
 
-  public abstract void setLineNumberConvertor(final TIntFunction lineNumberConvertor);
+  public abstract void setLineNumberConvertor(@NotNull TIntFunction lineNumberConvertor);
+
+  public abstract void setLineNumberConvertor(@NotNull TIntFunction lineNumberConvertor1, @Nullable TIntFunction lineNumberConvertor2);
 
   public abstract void setShowDefaultGutterPopup(boolean show);
+
+  public abstract void setPaintBackground(boolean value);
 }

@@ -27,7 +27,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
+import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -47,6 +47,7 @@ import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.*;
 
@@ -84,11 +85,12 @@ public class TargetElementUtil {
 
   @Nullable
   public static PsiReference findReference(Editor editor) {
-    PsiReference result = findReference(editor, editor.getCaretModel().getOffset());
+    int offset = editor.getCaretModel().getOffset();
+    PsiReference result = findReference(editor, offset);
     if (result == null) {
-      final Integer offset = editor.getUserData(EditorActionUtil.EXPECTED_CARET_OFFSET);
-      if (offset != null) {
-        result = findReference(editor, offset);
+      int expectedCaretOffset = editor instanceof EditorEx ? ((EditorEx)editor).getExpectedCaretOffset() : offset;
+      if (expectedCaretOffset != offset) {
+        result = findReference(editor, expectedCaretOffset);
       }
     }
     return result;
@@ -124,6 +126,7 @@ public class TargetElementUtil {
   }
 
   @Nullable
+  @RequiredReadAction
   public static PsiReference findReference(Editor editor, int offset) {
     Project project = editor.getProject();
     if (project == null) return null;
@@ -149,15 +152,15 @@ public class TargetElementUtil {
   public static PsiElement findTargetElement(Editor editor, @NotNull Set<String> flags) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-    final PsiElement result = findTargetElement(editor, flags, editor.getCaretModel().getOffset());
-    if (result != null) {
-      return result;
+    int offset = editor.getCaretModel().getOffset();
+    final PsiElement result = findTargetElement(editor, flags, offset);
+    if (result != null) return result;
+
+    int expectedCaretOffset = editor instanceof EditorEx ? ((EditorEx)editor).getExpectedCaretOffset() : offset;
+    if (expectedCaretOffset != offset) {
+      return findTargetElement(editor, flags, expectedCaretOffset);
     }
-    final Integer offset = editor.getUserData(EditorActionUtil.EXPECTED_CARET_OFFSET);
-    if (offset != null) {
-      return findTargetElement(editor, flags, offset);
-    }
-    return result;
+    return null;
   }
 
   @Nullable

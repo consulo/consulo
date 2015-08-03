@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,23 +104,27 @@ public class CachingSoftWrapDataMapperTest {
   private Mockery                            myMockery;
   private EditorEx                           myEditor;
   private DocumentEx                         myDocument;
+  private StringBuilder                      myChars;
   private SoftWrapsStorage                   myStorage;
   private SoftWrapModelEx                    mySoftWrapModel;
   private FoldingModelEx                     myFoldingModel;
   private MockEditorTextRepresentationHelper myRepresentationHelper;
-    
+
   @Before
   public void setUp() {
     myMockery = new JUnit4Mockery();
 
     myEditor = myMockery.mock(EditorEx.class);
     myDocument = myMockery.mock(DocumentEx.class);
+    myChars = new StringBuilder();
     myStorage = new SoftWrapsStorage();
     mySoftWrapModel = myMockery.mock(SoftWrapModelEx.class);
     myFoldingModel = myMockery.mock(FoldingModelEx.class);
     final EditorSettings settings = myMockery.mock(EditorSettings.class);
     final Project project = myMockery.mock(Project.class);
     final SoftWrapPainter painter = myMockery.mock(SoftWrapPainter.class);
+
+    myRepresentationHelper = new MockEditorTextRepresentationHelper(myChars, SPACE_SIZE, TAB_SIZE);
 
     myMockery.checking(new Expectations() {{
       // Document
@@ -165,6 +169,7 @@ public class CachingSoftWrapDataMapperTest {
           return getSoftWrap((Integer)invocation.getParameter(0));
         }
       });
+      allowing(mySoftWrapModel).getEditorTextRepresentationHelper(); will(returnValue(myRepresentationHelper));
 
       // Folding.
       allowing(myEditor).getFoldingModel();will(returnValue(myFoldingModel));
@@ -220,11 +225,9 @@ public class CachingSoftWrapDataMapperTest {
       allowing(painter).getMinDrawingWidth(SoftWrapDrawingType.AFTER_SOFT_WRAP); will(returnValue(SOFT_WRAP_DRAWING_WIDTH));
     }});
 
-    myRepresentationHelper = new MockEditorTextRepresentationHelper(SPACE_SIZE, TAB_SIZE);
-
     myMapper = new CachingSoftWrapDataMapper(myEditor, myStorage);
   }
-  
+
   @After
   public void checkExpectations() {
     myMockery.assertIsSatisfied();
@@ -233,209 +236,209 @@ public class CachingSoftWrapDataMapperTest {
   @Test
   public void noSoftWrapsAndFolding() {
     String document =
-      "class Test { \n" +
-      "  public void foo() {}  \n" +
-      "  \n" +
-      "}";
+            "class Test { \n" +
+            "  public void foo() {}  \n" +
+            "  \n" +
+            "}";
     test(document);
   }
 
   @Test
   public void singleSoftWrap() {
     String document =
-      "class Test { \n" +
-      "  public void <WRAP>\n" +
-      "    </WRAP>foo() {\n" +
-      "  }  \n" +
-      "  \n" +
-      "}";
+            "class Test { \n" +
+            "  public void <WRAP>\n" +
+            "    </WRAP>foo() {\n" +
+            "  }  \n" +
+            "  \n" +
+            "}";
     test(document);
   }
-  
+
   @Test
   public void multipleSoftWrappedLogicalLines() {
     String document =
-      "public class Test {\n" +
-      "  public void foo(int[] data) {\n" +
-      "    bar(data[0], <WRAP>\n" +
-      "       </WRAP>data[1] <WRAP>\n" +
-      "       </WRAP>data[2]     \n" +
-      "       data[3], \n" +
-      "       data[4], <WRAP>\n" +
-      "       </WRAP>data[5] <WRAP>\n" +
-      "       </WRAP>data[6]);     \n" +
-      "  }\n" +
-      "  public void bar(int ... i) {\n" +
-      "  }\n" +
-      "}";
+            "public class Test {\n" +
+            "  public void foo(int[] data) {\n" +
+            "    bar(data[0], <WRAP>\n" +
+            "       </WRAP>data[1] <WRAP>\n" +
+            "       </WRAP>data[2]     \n" +
+            "       data[3], \n" +
+            "       data[4], <WRAP>\n" +
+            "       </WRAP>data[5] <WRAP>\n" +
+            "       </WRAP>data[6]);     \n" +
+            "  }\n" +
+            "  public void bar(int ... i) {\n" +
+            "  }\n" +
+            "}";
     test(document);
   }
 
   @Test
   public void singleLineFolding() {
     String document =
-      "class Test {\n" +
-      "  Map<String, Integer> map = new HashMap<FOLD><String, Integer></FOLD>();  \n" +
-      "  \n" +
-      "}";
+            "class Test {\n" +
+            "  Map<String, Integer> map = new HashMap<FOLD><String, Integer></FOLD>();  \n" +
+            "  \n" +
+            "}";
     test(document);
   }
 
   @Test
   public void twoLinesFolding() {
     String document =
-      "class Test {\n" +
-      "  public void foo() {<FOLD>\n" +
-      "  }</FOLD>\n" +
-      "}";
+            "class Test {\n" +
+            "  public void foo() {<FOLD>\n" +
+            "  }</FOLD>\n" +
+            "}";
     test(document);
   }
 
   @Test
   public void threeLinesFolding() {
     String document =
-      "class Test {\n" +
-      "  public void foo() {<FOLD>\n" +
-      "    int i = 1; \n" +
-      "  }</FOLD>\n" +
-      "}";
+            "class Test {\n" +
+            "  public void foo() {<FOLD>\n" +
+            "    int i = 1; \n" +
+            "  }</FOLD>\n" +
+            "}";
     test(document);
   }
 
   @Test
   public void softWrappedSingleLineFolding() {
     String document =
-      "class Test {<WRAP>\n" +
-      "  </WRAP><FOLD>public void foo() {}</FOLD>  \n" +
-      "  \n" +
-      "}";
+            "class Test {<WRAP>\n" +
+            "  </WRAP><FOLD>public void foo() {}</FOLD>  \n" +
+            "  \n" +
+            "}";
     test(document);
   }
 
   @Test
   public void softWrappedMultiLineLineFolding() {
     String document =
-      "class Test {<WRAP>\n" +
-      "  </WRAP><FOLD>public void foo() {\n" +
-      "  }</FOLD>  \n" +
-      "}";
+            "class Test {<WRAP>\n" +
+            "  </WRAP><FOLD>public void foo() {\n" +
+            "  }</FOLD>  \n" +
+            "}";
     test(document);
   }
 
   @Test
   public void multipleFoldRegionsAfterSingleSoftWrap() {
     String document =
-      "class Test {<WRAP>\n" +
-      "  </WRAP><FOLD>public void foo() {\n" +
-      "  }</FOLD>  <FOLD>// comment</FOLD>  \n" +
-      "}";
+            "class Test {<WRAP>\n" +
+            "  </WRAP><FOLD>public void foo() {\n" +
+            "  }</FOLD>  <FOLD>// comment</FOLD>  \n" +
+            "}";
     test(document);
   }
 
   @Test
   public void softWrapAndFoldedLines() {
     String document =
-      "public class Test {\n" +
-      "  public void foo(int[] data) {\n" +
-      "    bar(data[0] <WRAP>\n" +
-      "    </WRAP>data[1], <WRAP>\n" +
-      "    </WRAP>data[2],  \n" +
-      "    data[3],  \n" +
-      "    <FOLD>data[4], \n" +
-      "    data[5], \n" +
-      "    data[6], </FOLD> \n" +
-      "    data[7], \n" +
-      "    data[8] <WRAP>\n" +
-      "    </WRAP>data[9], <WRAP>\n" +
-      "    </WRAP>data[10]);  \n" +
-      "  }\n" +
-      "  public void bar(int ... i) {\n" +
-      "  }\n" +
-      "}";
+            "public class Test {\n" +
+            "  public void foo(int[] data) {\n" +
+            "    bar(data[0] <WRAP>\n" +
+            "    </WRAP>data[1], <WRAP>\n" +
+            "    </WRAP>data[2],  \n" +
+            "    data[3],  \n" +
+            "    <FOLD>data[4], \n" +
+            "    data[5], \n" +
+            "    data[6], </FOLD> \n" +
+            "    data[7], \n" +
+            "    data[8] <WRAP>\n" +
+            "    </WRAP>data[9], <WRAP>\n" +
+            "    </WRAP>data[10]);  \n" +
+            "  }\n" +
+            "  public void bar(int ... i) {\n" +
+            "  }\n" +
+            "}";
     test(document);
   }
 
   @Test
   public void consecutiveFoldRegions() {
-    String document = 
-      "package org;\n" +
-      "\n" +
-      "import <FOLD>java.util.List;\n" +
-      "import java.util.ArrayList;\n" +
-      "import java.util.LinkedList;</FOLD>\n" +
-      "<FOLD>/**\n" +
-      " * @author Vasiliy\n" +
-      " */</FOLD>\n" +
-      "public class Test {\n" +
-      "    <FOLD>/**\n" +
-      "     * Method-level javadoc\n" +
-      "     */</FOLD>\n" +
-      "     public void test() {\n" +
-      "     }" +
-      "}";
+    String document =
+            "package org;\n" +
+            "\n" +
+            "import <FOLD>java.util.List;\n" +
+            "import java.util.ArrayList;\n" +
+            "import java.util.LinkedList;</FOLD>\n" +
+            "<FOLD>/**\n" +
+            " * @author Vasiliy\n" +
+            " */</FOLD>\n" +
+            "public class Test {\n" +
+            "    <FOLD>/**\n" +
+            "     * Method-level javadoc\n" +
+            "     */</FOLD>\n" +
+            "     public void test() {\n" +
+            "     }" +
+            "}";
     test(document);
   }
 
   @Test
   public void tabSymbolsBeforeSoftWrap() {
     String document =
-      "class Test\t\t{<WRAP>\n" +
-      "    </WRAP> \n}";
+            "class Test\t\t{<WRAP>\n" +
+            "    </WRAP> \n}";
     test(document);
   }
 
   @Test
   public void tabSymbolsAfterSoftWrap() {
     String document =
-      "class Test {<WRAP>\n" +
-      "    </WRAP> \t\t\n" +
-      "}";
+            "class Test {<WRAP>\n" +
+            "    </WRAP> \t\t\n" +
+            "}";
     test(document);
   }
 
   @Test
   public void multipleTabsAndSoftWraps() {
     String document =
-      "public class \tTest {\n" +
-      "  public void foo(int[] data) {\n" +
-      "    bar(data[0], data[1],\t\t <WRAP>\n" +
-      "       </WRAP>data[2], data[3], <WRAP>\n" +
-      "       </WRAP>data[4], data[5],\t \t    \n" +
-      "       data[6], data[7],\t \t \n" +
-      "       data[8], data[9],\t \t <WRAP>\n" +
-      "       </WRAP>data[10], data[11], <WRAP>\n" +
-      "       </WRAP>data[12],\t \t data[13]);     \n" +
-      "  }\n" +
-      "  public void bar(int ... i) {\n" +
-      "  }\n" +
-      "}";
+            "public class \tTest {\n" +
+            "  public void foo(int[] data) {\n" +
+            "    bar(data[0], data[1],\t\t <WRAP>\n" +
+            "       </WRAP>data[2], data[3], <WRAP>\n" +
+            "       </WRAP>data[4], data[5],\t \t    \n" +
+            "       data[6], data[7],\t \t \n" +
+            "       data[8], data[9],\t \t <WRAP>\n" +
+            "       </WRAP>data[10], data[11], <WRAP>\n" +
+            "       </WRAP>data[12],\t \t data[13]);     \n" +
+            "  }\n" +
+            "  public void bar(int ... i) {\n" +
+            "  }\n" +
+            "}";
     test(document);
   }
 
   @Test
   public void tabBeforeFolding() {
-    
+
     String document =
-      "class Test\t \t <FOLD>{\n" +
-      "    </FOLD> \t\t\n" +
-      "}";
+            "class Test\t \t <FOLD>{\n" +
+            "    </FOLD> \t\t\n" +
+            "}";
     test(document);
   }
 
   @Test
   public void multipleTabsAndFolding() {
     String document =
-      "public class \tTest {\n" +
-      "  public void foo(int[] data) {\n" +
-      "    bar(data[0], data[1],\t\t <FOLD>\n" +
-      " \t \t      </FOLD>data[2], data[3]\n" +
-      "       data[4], data[5],\t \t \n" +
-      "       data[6], data[7],\t \t <FOLD>\n" +
-      "\t   \t    </FOLD>);     \n" +
-      "  }\n" +
-      "  public void bar(int ... i) {\n" +
-      "  }\n" +
-      "}";
+            "public class \tTest {\n" +
+            "  public void foo(int[] data) {\n" +
+            "    bar(data[0], data[1],\t\t <FOLD>\n" +
+            " \t \t      </FOLD>data[2], data[3]\n" +
+            "       data[4], data[5],\t \t \n" +
+            "       data[6], data[7],\t \t <FOLD>\n" +
+            "\t   \t    </FOLD>);     \n" +
+            "  }\n" +
+            "  public void bar(int ... i) {\n" +
+            "  }\n" +
+            "}";
     test(document);
   }
 
@@ -471,7 +474,7 @@ public class CachingSoftWrapDataMapperTest {
   private SoftWrap getSoftWrap(int offset) {
     return myStorage.getSoftWrap(offset);
   }
-  
+
   @Nullable
   private FoldRegion getCollapsedFoldRegion(int offset) {
     for (FoldRegion region : myFoldRegions) {
@@ -519,8 +522,8 @@ public class CachingSoftWrapDataMapperTest {
   private static LogicalPosition toSoftWrapUnawareLogicalByVisual(DataEntry dataEntry) {
     LogicalPosition logical = dataEntry.logical;
     return new LogicalPosition(
-      logical.line + logical.softWrapLinesBeforeCurrentLogicalLine + logical.softWrapLinesOnCurrentLogicalLine,
-      logical.column
+            logical.line + logical.softWrapLinesBeforeCurrentLogicalLine + logical.softWrapLinesOnCurrentLogicalLine,
+            logical.column
     );
   }
 
@@ -539,9 +542,9 @@ public class CachingSoftWrapDataMapperTest {
       // the same logical position of the folding start.
       if (!data.foldedSpace && !data.insideTab && !equals(data.logical, actualLogicalByVisual)) {
         throw new AssertionError(
-          String.format("Detected unmatched logical position by visual (%s). Expected: '%s', actual: '%s'. Calculation was performed "
-                        + "against soft wrap-unaware logical: '%s'",
-                        data.visual, data.logical, actualLogicalByVisual, toSoftWrapUnawareLogicalByVisual(data))
+                String.format("Detected unmatched logical position by visual (%s). Expected: '%s', actual: '%s'. Calculation was performed "
+                              + "against soft wrap-unaware logical: '%s'",
+                              data.visual, data.logical, actualLogicalByVisual, toSoftWrapUnawareLogicalByVisual(data))
         );
       }
 
@@ -551,9 +554,9 @@ public class CachingSoftWrapDataMapperTest {
       // with the first document symbol after soft wrap, hence, examination always fails.
       if (!data.virtualSpace && !data.insideTab && !equals(data.logical, actualLogicalByOffset)) {
         throw new AssertionError(
-          String.format("Detected unmatched logical position by offset. Expected: '%s', actual: '%s'. Calculation was performed "
-                        + "against offset: '%d' and soft wrap-unaware logical: '%s'",
-                        data.logical, actualLogicalByOffset, data.offset, toVisualPositionUnawareLogical(data))
+                String.format("Detected unmatched logical position by offset. Expected: '%s', actual: '%s'. Calculation was performed "
+                              + "against offset: '%d' and soft wrap-unaware logical: '%s'",
+                              data.logical, actualLogicalByOffset, data.offset, toVisualPositionUnawareLogical(data))
         );
       }
 
@@ -583,19 +586,19 @@ public class CachingSoftWrapDataMapperTest {
       allowing(myDocument).getCharsSequence(); will(new CustomAction("getCharsSequence()") {
         @Override
         public Object invoke(Invocation invocation) throws Throwable {
-          return context.document;
+          return myChars;
         }
       });
       allowing(myDocument).getText(); will(new CustomAction("getCharsSequence()") {
         @Override
         public Object invoke(Invocation invocation) throws Throwable {
-          return context.document.toString();
+          return myChars.toString();
         }
       });
       allowing(myDocument).getTextLength(); will(new CustomAction("getTextLength()") {
         @Override
         public Object invoke(Invocation invocation) throws Throwable {
-          return context.document.length();
+          return myChars.length();
         }
       });
     }});
@@ -628,7 +631,7 @@ public class CachingSoftWrapDataMapperTest {
       context.onNewSymbol(c);
     }
 
-    myLineRanges.add(new TextRange(context.logicalLineStartOffset, context.document.length()));
+    myLineRanges.add(new TextRange(context.logicalLineStartOffset, myChars.length()));
   }
 
   private static boolean isSoftWrapStart(String document, int index) {
@@ -684,10 +687,9 @@ public class CachingSoftWrapDataMapperTest {
 
   private class TestEditorPosition extends EditorPosition {
     private final StringBuilder mySoftWrapBuffer = new StringBuilder();
-    final         StringBuilder document         = new StringBuilder();
 
     EditorPosition lineStartPosition;
-    
+
     boolean insideSoftWrap;
     boolean insideFolding;
     boolean insideTab;
@@ -695,10 +697,8 @@ public class CachingSoftWrapDataMapperTest {
     int     softWrapStartOffset;
     int     softWrapSymbolsOnCurrentVisualLine;
     int     foldingStartOffset;
-    int     foldingStartLogicalColumn;
     int     foldingStartVisualLine;
     int     foldingStartVisualColumn;
-    int     foldingStartX;
 
     TestEditorPosition() {
       super(myEditor);
@@ -713,13 +713,11 @@ public class CachingSoftWrapDataMapperTest {
 
     public void onSoftWrapEnd() {
       myStorage.storeOrReplace(
-        new SoftWrapImpl(
-          new TextChangeImpl('\n' + mySoftWrapBuffer.toString(), softWrapStartOffset),
-          mySoftWrapBuffer.length() + 1/* for 'after soft wrap' drawing */,
-          (mySoftWrapBuffer.length() * SPACE_SIZE) + SOFT_WRAP_DRAWING_WIDTH
-        ),
-        false
-      );
+              new SoftWrapImpl(
+                      new TextChangeImpl('\n' + mySoftWrapBuffer.toString(), softWrapStartOffset),
+                      mySoftWrapBuffer.length() + 1/* for 'after soft wrap' drawing */,
+                      (mySoftWrapBuffer.length() * SPACE_SIZE) + SOFT_WRAP_DRAWING_WIDTH
+              ));
       mySoftWrapBuffer.setLength(0);
       insideSoftWrap = false;
       x += SOFT_WRAP_DRAWING_WIDTH;
@@ -727,10 +725,8 @@ public class CachingSoftWrapDataMapperTest {
 
     public void onFoldingStart() {
       foldingStartOffset = offset;
-      foldingStartLogicalColumn = logicalColumn;
       foldingStartVisualLine = visualLine;
       foldingStartVisualColumn = visualColumn;
-      foldingStartX = x;
       insideFolding = true;
       myMapper.onVisualLineStart(lineStartPosition);
     }
@@ -738,12 +734,13 @@ public class CachingSoftWrapDataMapperTest {
     public void onFoldingEnd() {
       visualColumn += 3; // For '...' folding
       foldingColumnDiff += 3;
-      
-      x = foldingStartX + 3 * SPACE_SIZE;
+
+      int prevX = x;
+      x += 3 * SPACE_SIZE;
       insideFolding = false;
       MockFoldRegion foldRegion = new MockFoldRegion(foldingStartOffset, offset);
       myFoldRegions.add(foldRegion);
-      myMapper.onCollapsedFoldRegion(foldRegion, foldingStartX, foldingStartVisualLine);
+      myMapper.onCollapsedFoldRegion(foldRegion, myRepresentationHelper.toVisualColumnSymbolsNumber(foldingStartOffset, offset, prevX), foldingStartVisualLine);
     }
 
     public void onNewSymbol(char c) {
@@ -791,7 +788,7 @@ public class CachingSoftWrapDataMapperTest {
         if (c == '\n') {
 
           myMapper.beforeSoftWrapLineFeed(this);
-          
+
           // Emulate the situation when the user works with a virtual space after document line end (add such virtual
           // positions two symbols behind the end).
           visualColumn++;
@@ -870,7 +867,7 @@ public class CachingSoftWrapDataMapperTest {
     }
 
     private void onNonSoftWrapSymbol(char c) {
-      document.append(c);
+      myChars.append(c);
       if (c == '\n') {
         myLineRanges.add(new TextRange(logicalLineStartOffset, offset));
 
@@ -898,7 +895,7 @@ public class CachingSoftWrapDataMapperTest {
 
     private void addData(boolean virtualSpace) {
       myExpectedData.add(new DataEntry(
-        buildVisualPosition(), buildLogicalPosition(), offset, insideFolding && offset != foldingStartOffset, virtualSpace, insideTab
+              buildVisualPosition(), buildLogicalPosition(), offset, insideFolding && offset != foldingStartOffset, virtualSpace, insideTab
       ));
     }
   }

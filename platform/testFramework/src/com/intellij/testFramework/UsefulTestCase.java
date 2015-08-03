@@ -21,9 +21,9 @@ import com.intellij.mock.MockApplication;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.StartMarkAction;
-import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
@@ -128,8 +128,7 @@ public abstract class UsefulTestCase extends TestCase {
       myTempDir = FileUtil.toSystemDependentName(ORIGINAL_TEMP_DIR + "/" + TEMP_DIR_MARKER + testName + "_"+ RNG.nextInt(1000));
       FileUtil.resetCanonicalTempPathCache(myTempDir);
     }
-    //noinspection AssignmentToStaticFieldFromInstanceMethod
-    DocumentImpl.CHECK_DOCUMENT_CONSISTENCY = !isPerformanceTest();
+    ApplicationInfoImpl.setInPerformanceTest(isPerformanceTest());
   }
 
   @Override

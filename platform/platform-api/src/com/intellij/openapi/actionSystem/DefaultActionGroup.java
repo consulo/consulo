@@ -341,7 +341,7 @@ public class DefaultActionGroup extends ActionGroup {
     }
   }
 
-  public final void addAll(Collection<AnAction> actionList) {
+  public final void addAll(Collection<? extends AnAction> actionList) {
     for (AnAction each : actionList) {
       add(each);
     }

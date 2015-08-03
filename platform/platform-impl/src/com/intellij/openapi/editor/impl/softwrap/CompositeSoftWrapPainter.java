@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.ColorProvider;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import com.intellij.openapi.util.SystemInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,31 +71,34 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
       if (customAfterSymbol != null) {
         LOG.info(String.format("Picked up custom soft wrap drawing symbols: '%c' and '%c'", customBeforeSymbol, customAfterSymbol));
         SYMBOLS.add(asMap(
-          asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
-          asList(customBeforeSymbol,         customAfterSymbol))
+                asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
+                asList(customBeforeSymbol,         customAfterSymbol))
         );
       }
     }
 
+    if (!SystemInfo.isAppleJvm) {
+      // these characters are known to take a very long time to render when Apple's JDK is used (for the default color scheme)
+      SYMBOLS.add(asMap(
+              asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
+              asList('\u2926', '\u2925'))
+      );
+    }
     SYMBOLS.add(asMap(
-      asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
-      asList('\u2926',                   '\u2925'))
+            asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
+            asList('\u21B2',                   '\u21B3'))
     );
     SYMBOLS.add(asMap(
-      asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
-      asList('\u21B2',                   '\u21B3'))
+            asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
+            asList('\u2936',                   '\u2937'))
     );
     SYMBOLS.add(asMap(
-      asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
-      asList('\u2936',                   '\u2937'))
+            asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
+            asList('\u21A9',                   '\u21AA'))
     );
     SYMBOLS.add(asMap(
-      asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
-      asList('\u21A9',                   '\u21AA'))
-    );
-    SYMBOLS.add(asMap(
-      asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
-      asList('\uE48B',                   '\uE48C'))
+            asList(BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP),
+            asList('\uE48B',                   '\uE48C'))
     );
   }
 
@@ -131,7 +135,7 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
     }
     catch (NumberFormatException e) {
       LOG.info(String.format("Detected invalid code for system property '%s' - '%s'. Expected to find hex number there. " +
-                               "Custom soft wraps signs will not be applied", key, value));
+                             "Custom soft wraps signs will not be applied", key, value));
       return null;
     }
 
@@ -182,6 +186,11 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
     myDelegate = new ArrowSoftWrapPainter(myEditor);
   }
 
+  public void reinit() {
+    myDelegate = null;
+    mySymbolsDrawingIndex = -1;
+  }
+
   private static <K, V> Map<K, V> asMap(Iterable<K> keys, Iterable<V> values) throws IllegalArgumentException {
     Map<K, V> result = new HashMap<K,V>();
     Iterator<K> keyIterator = keys.iterator();
@@ -189,8 +198,8 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
     while (keyIterator.hasNext()) {
       if (!valueIterator.hasNext()) {
         throw new IllegalArgumentException(
-          String.format("Can't build for the given data. Reason: number of keys differs from number of values. "
-                        + "Keys: %s, values: %s", keys, values)
+                String.format("Can't build for the given data. Reason: number of keys differs from number of values. "
+                              + "Keys: %s, values: %s", keys, values)
         );
       }
       result.put(keyIterator.next(), valueIterator.next());
@@ -198,8 +207,8 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
 
     if (valueIterator.hasNext()) {
       throw new IllegalArgumentException(
-        String.format("Can't build for the given data. Reason: number of keys differs from number of values. "
-                      + "Keys: %s, values: %s", keys, values)
+              String.format("Can't build for the given data. Reason: number of keys differs from number of values. "
+                            + "Keys: %s, values: %s", keys, values)
       );
     }
     return result;

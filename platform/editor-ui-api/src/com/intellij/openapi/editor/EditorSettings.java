@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,15 @@ public interface EditorSettings {
   boolean isWhitespacesShown();
   void setWhitespacesShown(boolean val);
 
+  boolean isLeadingWhitespaceShown();
+  void setLeadingWhitespaceShown(boolean val);
+
+  boolean isInnerWhitespaceShown();
+  void setInnerWhitespaceShown(boolean val);
+
+  boolean isTrailingWhitespaceShown();
+  void setTrailingWhitespaceShown(boolean val);
+
   int getRightMargin(Project project);
   void setRightMargin(int myRightMargin);
 
@@ -37,13 +46,16 @@ public interface EditorSettings {
   void setAdditionalLinesCount(int additionalLinesCount);
 
   int getAdditionalColumnsCount();
-  void setAdditionalColumnsCount(int additinalColumnsCount);
+  void setAdditionalColumnsCount(int additionalColumnsCount);
 
   boolean isLineMarkerAreaShown();
   void setLineMarkerAreaShown(boolean lineMarkerAreaShown);
 
   boolean isFoldingOutlineShown();
   void setFoldingOutlineShown(boolean val);
+
+  boolean isAutoCodeFoldingEnabled();
+  void setAutoCodeFoldingEnabled(boolean val);
 
   boolean isUseTabCharacter(Project project);
   void setUseTabCharacter(boolean useTabCharacter);
@@ -68,6 +80,9 @@ public interface EditorSettings {
 
   boolean isBlockCursor();
   void setBlockCursor(boolean blockCursor);
+
+  boolean isCaretRowShown();
+  void setCaretRowShown(boolean caretRowShown);
 
   int getLineCursorWidth();
   void setLineCursorWidth(int width);
@@ -112,7 +127,7 @@ public interface EditorSettings {
 
   boolean isAllowSingleLogicalLineFolding();
   void setAllowSingleLogicalLineFolding(boolean allow);
-  
+
   boolean isPreselectRename();
   void setPreselectRename(final boolean val);
 

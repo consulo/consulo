@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package com.intellij.openapi.editor.markup;
 import com.intellij.codeInsight.daemon.GutterMark;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.PossiblyDumbAware;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,14 +28,17 @@ import javax.swing.*;
 /**
  * Interface which should be implemented in order to draw icons in the gutter area and handle events
  * for them. Gutter icons are drawn to the left of the folding area and can be used, for example,
- * to mark implemented or overridden methods.
+ * to mark implemented or overridden methods.<p/>
  *
  * Daemon code analyzer checks newly arrived gutter icon renderer against the old one and if they are equal, does not redraw the icon.
- * So it is highly advisable to override hashCode()/equals() methods to avoid icon flickering when old gutter renderer gets replaced with the new.
+ * So it is highly advisable to override hashCode()/equals() methods to avoid icon flickering when old gutter renderer gets replaced with the new.<p/>
+ *
+ * During indexing, methods are only invoked for renderers implementing {@link com.intellij.openapi.project.DumbAware}.
+ *
  * @author max
  * @see RangeHighlighter#setGutterIconRenderer(GutterIconRenderer)
  */
-public abstract class GutterIconRenderer implements GutterMark {
+public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAware {
 
 
   /**
@@ -41,6 +46,7 @@ public abstract class GutterIconRenderer implements GutterMark {
    *
    * @return the gutter icon.
    */
+  @Override
   @NotNull
   public abstract Icon getIcon();
 
@@ -60,6 +66,7 @@ public abstract class GutterIconRenderer implements GutterMark {
    *
    * @return the tooltip text, or null if no tooltip is required.
    */
+  @Override
   @Nullable
   public String getTooltipText() {
     return null;
@@ -106,6 +113,7 @@ public abstract class GutterIconRenderer implements GutterMark {
    *
    * @return the priority value.
    */
+  @NotNull
   public Alignment getAlignment() {
     return Alignment.CENTER;
   }
@@ -138,5 +146,11 @@ public abstract class GutterIconRenderer implements GutterMark {
 
   @Override
   public abstract boolean equals(Object obj);
+  @Override
   public abstract int hashCode();
+
+  @Override
+  public boolean isDumbAware() {
+    return this instanceof DumbAware;
+  }
 }

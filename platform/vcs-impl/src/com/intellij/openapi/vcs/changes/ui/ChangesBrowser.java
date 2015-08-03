@@ -18,32 +18,35 @@ package com.intellij.openapi.vcs.changes.ui;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.diff.DiffDialogHints;
+import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.*;
-import com.intellij.openapi.vcs.changes.actions.DiffExtendUIFactory;
-import com.intellij.openapi.vcs.changes.actions.ShowDiffAction;
-import com.intellij.openapi.vcs.changes.actions.ShowDiffUIContext;
+import com.intellij.openapi.vcs.changes.actions.diff.ShowDiffAction;
+import com.intellij.openapi.vcs.changes.actions.diff.ShowDiffContext;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.containers.ContainerUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 /**
  * @author max
  */
 public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
+  private static final Logger LOG = Logger.getInstance(ChangesBrowser.class);
   // for backgroundable rollback to mark
   private boolean myDataIsDirty;
   protected final ChangesTreeList<Change> myViewer;
@@ -54,8 +57,10 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
   protected final JPanel myHeaderPanel;
   private JComponent myBottomPanel;
   private DefaultActionGroup myToolBarGroup;
-  private DiffExtendUIFactory myDiffExtendUIFactory = new DiffToolbarActionsFactory();
   private String myToggleActionTitle = VcsBundle.message("commit.dialog.include.action.name");
+
+  private List<AnAction> myAdditionalDiffActions;
+  private JComponent myDiffBottomComponent;
 
   public static DataKey<ChangesBrowser> DATA_KEY = DataKey.create("com.intellij.openapi.vcs.changes.ui.ChangesBrowser");
   private ShowDiffAction myDiffAction;
@@ -85,15 +90,18 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
                                           RemoteRevisionsCache.getInstance(myProject).getChangesNodeDecorator() : null;
 
     myViewer = new ChangesTreeList<Change>(myProject, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, decorator) {
+      @Override
       protected DefaultTreeModel buildTreeModel(final List<Change> changes, ChangeNodeDecorator changeNodeDecorator) {
         TreeModelBuilder builder = new TreeModelBuilder(myProject, false);
         return builder.buildModel(changes, changeNodeDecorator);
       }
 
+      @Override
       protected List<Change> getSelectedObjects(final ChangesBrowserNode<Change> node) {
         return node.getAllChangesUnder();
       }
 
+      @Override
       @Nullable
       protected Change getLeadSelectedObject(final ChangesBrowserNode node) {
         final Object o = node.getUserObject();
@@ -124,6 +132,7 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
   @NotNull
   protected Runnable getDoubleClickHandler() {
     return new Runnable() {
+      @Override
       public void run() {
         showDiff();
       }
@@ -146,12 +155,20 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
     myToolBarGroup.add(group);
   }
 
-  public DiffExtendUIFactory getDiffExtendUIFactory() {
-    return myDiffExtendUIFactory;
+  public JComponent getDiffBottomComponent() {
+    return myDiffBottomComponent;
   }
 
-  public void setDiffExtendUIFactory(final DiffExtendUIFactory diffExtendUIFactory) {
-    myDiffExtendUIFactory = diffExtendUIFactory;
+  public void setDiffBottomComponent(JComponent diffBottomComponent) {
+    myDiffBottomComponent = diffBottomComponent;
+  }
+
+  public List<AnAction> getAdditionalDiffActions() {
+    return myAdditionalDiffActions;
+  }
+
+  public void setAdditionalDiffActions(List<AnAction> additionalDiffActions) {
+    myAdditionalDiffActions = additionalDiffActions;
   }
 
   public void setToggleActionTitle(final String toggleActionTitle) {
@@ -166,9 +183,11 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
     return myViewer;
   }
 
+  @Override
   public void calcData(DataKey key, DataSink sink) {
     if (key == VcsDataKeys.CHANGES) {
-      final List<Change> list = myViewer.getSelectedChanges();
+      List<Change> list = myViewer.getSelectedChanges();
+      if (list.isEmpty()) list = myViewer.getChanges();
       sink.put(VcsDataKeys.CHANGES, list.toArray(new Change [list.size()]));
     }
     else if (key == VcsDataKeys.CHANGE_LISTS) {
@@ -177,11 +196,11 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
     else if (key == VcsDataKeys.CHANGE_LEAD_SELECTION) {
       final Change highestSelection = myViewer.getHighestLeadSelection();
       sink.put(VcsDataKeys.CHANGE_LEAD_SELECTION, (highestSelection == null) ? new Change[]{} : new Change[] {highestSelection});
-    }    else if (key == PlatformDataKeys.VIRTUAL_FILE_ARRAY) {
-      sink.put(PlatformDataKeys.VIRTUAL_FILE_ARRAY, getSelectedFiles());
+    }    else if (key == CommonDataKeys.VIRTUAL_FILE_ARRAY) {
+      sink.put(CommonDataKeys.VIRTUAL_FILE_ARRAY, getSelectedFiles());
     }
-    else if (key == PlatformDataKeys.NAVIGATABLE_ARRAY) {
-      sink.put(PlatformDataKeys.NAVIGATABLE_ARRAY, ChangesUtil.getNavigatableArray(myProject, getSelectedFiles()));
+    else if (key == CommonDataKeys.NAVIGATABLE_ARRAY) {
+      sink.put(CommonDataKeys.NAVIGATABLE_ARRAY, ChangesUtil.getNavigatableArray(myProject, getSelectedFiles()));
     } else if (VcsDataKeys.IO_FILE_ARRAY.equals(key)) {
       sink.put(VcsDataKeys.IO_FILE_ARRAY, getSelectedIoFiles());
     }
@@ -202,31 +221,51 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
   }
 
   private class ToggleChangeAction extends CheckboxAction {
-    private final Change myChange;
-
-    public ToggleChangeAction(final Change change) {
+    public ToggleChangeAction() {
       super(myToggleActionTitle);
-      myChange = change;
     }
 
+    @Override
     public boolean isSelected(AnActionEvent e) {
-      return myViewer.isIncluded(myChange);
+      Change change = e.getData(VcsDataKeys.CURRENT_CHANGE);
+      if (change == null) return false;
+
+      return myViewer.isIncluded(change);
     }
 
+    @Override
     public void setSelected(AnActionEvent e, boolean state) {
+      Change change = e.getData(VcsDataKeys.CURRENT_CHANGE);
+      if (change == null) return;
+
       if (state) {
-        myViewer.includeChange(myChange);
+        myViewer.includeChange(change);
       }
       else {
-        myViewer.excludeChange(myChange);
+        myViewer.excludeChange(change);
       }
     }
   }
 
   protected void showDiffForChanges(Change[] changesArray, final int indexInSelection) {
-    final ShowDiffUIContext context = new ShowDiffUIContext(isInFrame());
-    context.setActionsFactory(myDiffExtendUIFactory);
-    ShowDiffAction.showDiffForChange(changesArray, indexInSelection, myProject, context);
+    final ShowDiffContext context = new ShowDiffContext(isInFrame() ? DiffDialogHints.FRAME : DiffDialogHints.MODAL);
+
+    if (myAdditionalDiffActions == null) {
+      context.addActions(createDiffActions());
+    } else {
+      context.addActions(myAdditionalDiffActions);
+    }
+
+    if (myDiffBottomComponent != null) {
+      context.putChainContext(DiffUserDataKeysEx.BOTTOM_PANEL, myDiffBottomComponent);
+    }
+
+    updateDiffContext(context);
+
+    ShowDiffAction.showDiffForChange(myProject, Arrays.asList(changesArray), indexInSelection, context);
+  }
+
+  protected void updateDiffContext(@NotNull ShowDiffContext context) {
   }
 
   private void showDiff() {
@@ -234,21 +273,22 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
     List<Change> changes = myViewer.getSelectedChanges();
 
     if (changes.size() < 2) {
-      final Collection<Change> displayedChanges = getCurrentDisplayedChanges();
-      changes = new ArrayList<Change>(displayedChanges);
+      changes = myViewer.getChanges();
     }
 
-    int indexInSelection = changes.indexOf(leadSelection);
-    if (indexInSelection >= 0) {
-      Change[] changesArray = changes.toArray(new Change[changes.size()]);
-      showDiffForChanges(changesArray, indexInSelection);
+    Change[] changesArray = changes.toArray(new Change[changes.size()]);
+
+    if (leadSelection != null) {
+      int indexInSelection = changes.indexOf(leadSelection);
+      if (indexInSelection == -1) {
+        showDiffForChanges(new Change[]{leadSelection}, 0);
+      }
+      else {
+        showDiffForChanges(changesArray, indexInSelection);
+      }
     }
-    else if ((leadSelection == null && changes.size() > 0)) {
-      Change[] changesArray = changes.toArray(new Change[changes.size()]);
+    else {
       showDiffForChanges(changesArray, 0);
-    }
-    else if (leadSelection != null) {
-      showDiffForChanges(new Change[]{leadSelection}, 0);
     }
 
     afterDiffRefresh();
@@ -261,21 +301,10 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
     return ModalityState.current().equals(ModalityState.NON_MODAL);
   }
 
-  private class DiffToolbarActionsFactory implements DiffExtendUIFactory {
-    public List<? extends AnAction> createActions(Change change) {
-      return createDiffActions(change);
-    }
-
-    @Nullable
-    public JComponent createBottomComponent() {
-      return null;
-    }
-  }
-
-  protected List<AnAction> createDiffActions(final Change change) {
+  protected List<AnAction> createDiffActions() {
     List<AnAction> actions = new ArrayList<AnAction>();
     if (myCapableOfExcludingChanges) {
-      actions.add(new ToggleChangeAction(change));
+      actions.add(new ToggleChangeAction());
     }
     return actions;
   }
@@ -306,12 +335,16 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
 
   protected void buildToolBar(final DefaultActionGroup toolBarGroup) {
     myDiffAction = new ShowDiffAction() {
-      public void update(AnActionEvent e) {
+      @RequiredDispatchThread
+      @Override
+      public void update(@NotNull AnActionEvent e) {
         Change[] changes = e.getData(VcsDataKeys.CHANGES);
-        e.getPresentation().setEnabled(canShowDiff(changes));
+        e.getPresentation().setEnabled(canShowDiff(myProject, changes));
       }
 
-      public void actionPerformed(AnActionEvent e) {
+      @RequiredDispatchThread
+      @Override
+      public void actionPerformed(@NotNull AnActionEvent e) {
         showDiff();                     // todo here
       }
     };
@@ -334,8 +367,15 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
   }
 
   protected List<Change> sortChanges(final List<Change> list) {
-    Collections.sort(list, ChangesComparator.getInstance(myViewer.isShowFlatten()));
-    return list;
+    List<Change> sortedList;
+    try {
+      sortedList = ContainerUtil.sorted(list, ChangesComparator.getInstance(myViewer.isShowFlatten()));
+    }
+    catch (IllegalArgumentException e) {
+      sortedList = ContainerUtil.newArrayList(list);
+      LOG.error("Couldn't sort these changes: " + list, e);
+    }
+    return sortedList;
   }
 
   public ChangeList getSelectedChangeList() {
@@ -380,7 +420,7 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
     return myDiffAction;
   }
 
-  public static enum MyUseCase {
+  public enum MyUseCase {
     LOCAL_CHANGES,
     COMMITTED_CHANGES
   }

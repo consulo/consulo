@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Represents a specific caret instance in the editor when it support multiple carets (see {@link CaretModel#supportsMultipleCarets()}.
+ * Represents a specific caret instance in the editor.
  * Provides methods to query and modify caret position and caret's associated selection.
  */
 public interface Caret extends UserDataHolderEx, Disposable {
@@ -41,8 +41,8 @@ public interface Caret extends UserDataHolderEx, Disposable {
    * Tells whether this caret is valid, i.e. recognized by the caret model currently. Caret is valid since its creation till its
    * removal from caret model.
    *
-   * @see com.intellij.openapi.editor.CaretModel#addCaret(VisualPosition)
-   * @see com.intellij.openapi.editor.CaretModel#removeCaret(Caret)
+   * @see CaretModel#addCaret(VisualPosition)
+   * @see CaretModel#removeCaret(Caret)
    */
   boolean isValid();
 
@@ -296,4 +296,19 @@ public interface Caret extends UserDataHolderEx, Disposable {
    */
   @Nullable
   Caret clone(boolean above);
+
+  /**
+   * Returns <code>true</code> if caret is located in RTL text fragment. In that case visual column number is inversely related
+   * to offset and logical column number in the vicinity of caret.
+   */
+  boolean isAtRtlLocation();
+
+  /**
+   * Returns <code>true</code> if caret is located at a boundary between different runs of bidirectional text. 
+   * This means that text fragments at different sides of the boundary are non-adjacent in logical order.
+   * Caret can located at any side of the boundary, 
+   * exact location can be determined from directionality flags of caret's logical and visual position 
+   * ({@link LogicalPosition#leansForward} and {@link VisualPosition#leansRight}).
+   */
+  boolean isAtBidiRunBoundary();
 }

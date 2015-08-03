@@ -30,6 +30,7 @@ import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.vcsUtil.VcsUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +57,11 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
   }
 
-  private static boolean isEnabled(final AnActionEvent e) {
+  protected boolean isEnabled(final AnActionEvent e) {
+    return checkEnabled(e);
+  }
+
+  private static boolean checkEnabled(final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return false;
     if (! ProjectLevelVcsManager.getInstance(project).hasActiveVcss()) return false;
@@ -70,7 +75,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     if (changes != null && changes.length > 0) {
       return true;
     }
-    final VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     return files != null && files.length > 0;
   }
 
@@ -82,7 +87,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
 
     final ChangeListManager changeListManager = ChangeListManager.getInstance(project);
-    VirtualFile[] virtualFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (virtualFiles != null) {
       List<Change> changesInFiles = new ArrayList<Change>();
       for(VirtualFile vFile: virtualFiles) {
@@ -93,7 +98,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
             unversionedFiles.add(vFile);
             if (changedFiles != null) changedFiles.add(vFile);
           } else if (FileStatus.NOT_CHANGED.equals(status) && vFile.isDirectory()) {
-            addAllChangesUnderPath(changedFiles, changeListManager, changesInFiles, new FilePathImpl(vFile));
+            addAllChangesUnderPath(changedFiles, changeListManager, changesInFiles, VcsUtil.getFilePath(vFile));
           }
           continue;
         }
@@ -201,8 +206,8 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
   }
 
   private static List<LocalChangeList> getPreferredLists(final List<LocalChangeList> lists,
-                                                    final Collection<Change> changes,
-                                                    final boolean includeDefaultIfEmpty) {
+                                                         final Collection<Change> changes,
+                                                         final boolean includeDefaultIfEmpty) {
     List<LocalChangeList> preferredLists = new ArrayList<LocalChangeList>(lists);
     Set<Change> changesAsSet = new THashSet<Change>(changes);
     for (LocalChangeList list : lists) {

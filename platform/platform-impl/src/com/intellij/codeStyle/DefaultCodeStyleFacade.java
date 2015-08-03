@@ -19,6 +19,7 @@
  */
 package com.intellij.codeStyle;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.Configurable;
@@ -26,20 +27,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DefaultCodeStyleFacade extends CodeStyleFacade {
+  @Override
   public int getIndentSize(final FileType fileType) {
     return 4;
   }
 
+  @Override
   @Nullable
   public String getLineIndent(@NotNull final Document document, int offset) {
     return null;
   }
 
+  @Override
   public String getLineSeparator() {
     return "\n";
   }
 
-  public int getRightMargin() {
+  public int getRightMargin(Language language) {
     return 80;
   }
 
@@ -48,22 +52,27 @@ public class DefaultCodeStyleFacade extends CodeStyleFacade {
     return false;
   }
 
+  @Override
   public int getTabSize(final FileType fileType) {
     return 4;
   }
 
+  @Override
   public boolean isSmartTabs(final FileType fileType) {
     return false;
   }
 
+  @Override
   public boolean projectUsesOwnSettings() {
     return false;
   }
 
+  @Override
   public boolean isUnsuitableCodeStyleConfigurable(final Configurable c) {
     return false;
   }
 
+  @Override
   public boolean useTabCharacter(final FileType fileType) {
     return false;
   }

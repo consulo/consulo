@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,9 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.openapi.wm.impl.FloatingDecorator;
 import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.containers.WeakValueHashMap;
 import gnu.trove.THashMap;
@@ -68,7 +70,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
   @Nullable
   private Object getData(@NotNull String dataId, final Component focusedComponent) {
     for (Component c = focusedComponent; c != null; c = c.getParent()) {
-      final DataProvider dataProvider = getDataProvider(c);
+      final DataProvider dataProvider = getDataProviderEx(c);
       if (dataProvider == null) continue;
       Object data = getDataFromProvider(dataProvider, dataId, null);
       if (data != null) return data;
@@ -107,7 +109,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
   }
 
   @Nullable
-  private static DataProvider getDataProvider(Object component) {
+  public static DataProvider getDataProviderEx(Object component) {
     DataProvider dataProvider = null;
     if (component instanceof DataProvider) {
       dataProvider = (DataProvider)component;
@@ -257,6 +259,21 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
       }
     }
 
+    // In case we have an active floating toolwindow and some component in another window focused,
+    // we want this other component to receive key events.
+    // Walking up the window ownership hierarchy from the floating toolwindow would have led us to the main IdeFrame
+    // whereas we want to be able to type in other frames as well.
+    if (activeWindow instanceof FloatingDecorator) {
+      IdeFocusManager ideFocusManager = IdeFocusManager.findInstanceByComponent(activeWindow);
+      IdeFrame lastFocusedFrame = ideFocusManager.getLastFocusedFrame();
+      JComponent frameComponent = lastFocusedFrame != null ? lastFocusedFrame.getComponent() : null;
+      Window lastFocusedWindow = frameComponent != null ? SwingUtilities.getWindowAncestor(frameComponent) : null;
+      boolean toolWindowIsNotFocused = myWindowManager.getFocusedComponent(activeWindow) == null;
+      if (toolWindowIsNotFocused && lastFocusedWindow != null) {
+        activeWindow = lastFocusedWindow;
+      }
+    }
+
     // try to find first parent window that has focus
     Window window = activeWindow;
     Component focusedComponent = null;
@@ -280,8 +297,8 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
     myDataConstantToRuleMap.put(PlatformDataKeys.PASTE_PROVIDER.getName(), new PasteProviderRule());
     myDataConstantToRuleMap.put(PlatformDataKeys.FILE_TEXT.getName(), new FileTextRule());
     myDataConstantToRuleMap.put(PlatformDataKeys.FILE_EDITOR.getName(), new FileEditorRule());
-    myDataConstantToRuleMap.put(PlatformDataKeys.NAVIGATABLE_ARRAY.getName(), new NavigatableArrayRule());
-    myDataConstantToRuleMap.put(PlatformDataKeys.EDITOR_EVEN_IF_INACTIVE.getName(), new InactiveEditorRule());
+    myDataConstantToRuleMap.put(CommonDataKeys.NAVIGATABLE_ARRAY.getName(), new NavigatableArrayRule());
+    myDataConstantToRuleMap.put(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE.getName(), new InactiveEditorRule());
   }
 
   @Override
@@ -303,16 +320,27 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
     return dataContext instanceof UserDataHolder ? ((UserDataHolder)dataContext).getUserData(dataKey) : null;
   }
 
+  @Nullable
+  public static Editor validateEditor(Editor editor) {
+    Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+    if (focusOwner instanceof JComponent) {
+      final JComponent jComponent = (JComponent)focusOwner;
+      if (jComponent.getClientProperty("AuxEditorComponent") != null) return null; // Hack for EditorSearchComponent
+    }
+
+    return editor;
+  }
+
   private static class NullResult {
     public static final NullResult INSTANCE = new NullResult();
   }
 
   private static final Set<String> ourSafeKeys = new HashSet<String>(Arrays.asList(
-    CommonDataKeys.PROJECT.getName(),
-    PlatformDataKeys.EDITOR.getName(),
-    PlatformDataKeys.IS_MODAL_CONTEXT.getName(),
-    PlatformDataKeys.CONTEXT_COMPONENT.getName(),
-    PlatformDataKeys.MODALITY_STATE.getName()
+          CommonDataKeys.PROJECT.getName(),
+          CommonDataKeys.EDITOR.getName(),
+          PlatformDataKeys.IS_MODAL_CONTEXT.getName(),
+          PlatformDataKeys.CONTEXT_COMPONENT.getName(),
+          PlatformDataKeys.MODALITY_STATE.getName()
   ));
 
   public static class MyDataContext implements DataContext, UserDataHolder {
@@ -366,7 +394,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
         if (component == null) {
           return null;
         }
-        return IdeKeyEventDispatcher.isModalContext(component) ? Boolean.TRUE : Boolean.FALSE;
+        return IdeKeyEventDispatcher.isModalContext(component);
       }
       if (PlatformDataKeys.CONTEXT_COMPONENT.is(dataId)) {
         return component;
@@ -374,22 +402,11 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
       if (PlatformDataKeys.MODALITY_STATE.is(dataId)) {
         return component != null ? ModalityState.stateForComponent(component) : ModalityState.NON_MODAL;
       }
-      if (PlatformDataKeys.EDITOR.is(dataId)) {
+      if (CommonDataKeys.EDITOR.is(dataId)) {
         Editor editor = (Editor)((DataManagerImpl)DataManager.getInstance()).getData(dataId, component);
         return validateEditor(editor);
       }
       return ((DataManagerImpl)DataManager.getInstance()).getData(dataId, component);
-    }
-
-    @Nullable
-    private static Editor validateEditor(Editor editor) {
-      Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-      if (focusOwner instanceof JComponent) {
-        final JComponent jComponent = (JComponent)focusOwner;
-        if (jComponent.getClientProperty("AuxEditorComponent") != null) return null; // Hack for EditorSearchComponent
-      }
-
-      return editor;
     }
 
     @NonNls

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
@@ -72,6 +73,11 @@ public abstract class DiffElement<T> /*implements Disposable */{
 
   public abstract DiffElement[] getChildren() throws IOException;
 
+  @Nullable
+  public OpenFileDescriptor getOpenFileDescriptor(@Nullable Project project) {
+    return null;
+  }
+
   /**
    * Returns content data as byte array. Can be null, if element for example is a container
    * @return content byte array
@@ -80,6 +86,7 @@ public abstract class DiffElement<T> /*implements Disposable */{
   @Nullable
   public abstract byte[] getContent() throws IOException;
 
+  @NotNull
   public Charset getCharset() {
     return EncodingManager.getInstance().getDefaultCharset();
   }

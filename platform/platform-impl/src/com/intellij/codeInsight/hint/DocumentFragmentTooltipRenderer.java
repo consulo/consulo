@@ -57,9 +57,9 @@ public class DocumentFragmentTooltipRenderer implements TooltipRenderer {
     VisualPosition visual = editor.offsetToVisualPosition(startOffset);
     p = editor.visualPositionToXY(visual);
     p = SwingUtilities.convertPoint(
-      ((EditorEx)editor).getGutterComponentEx(),
-      p,
-      layeredPane
+            ((EditorEx)editor).getGutterComponentEx(),
+            p,
+            layeredPane
     );
 
     p.x -= 3;
@@ -72,11 +72,12 @@ public class DocumentFragmentTooltipRenderer implements TooltipRenderer {
     if (endLine - startLine > maxLineCount) {
       endOffset = doc.getLineEndOffset(Math.max(0, Math.min(startLine + maxLineCount, doc.getLineCount() - 1)));
     }
+    if (endOffset < startOffset) return null;
 
     FoldingModelEx foldingModel = (FoldingModelEx)editor.getFoldingModel();
     foldingModel.setFoldingEnabled(false);
     TextRange textRange = new TextRange(startOffset, endOffset);
-    hint = EditorFragmentComponent.showEditorFragmentHintAt(editor, textRange, p.x, p.y, false, false, true);
+    hint = EditorFragmentComponent.showEditorFragmentHintAt(editor, textRange, p.y, false, false, true, true, true);
     foldingModel.setFoldingEnabled(true);
     return hint;
   }

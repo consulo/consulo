@@ -573,6 +573,7 @@
           <orderEntry type="library" name="gson" level="project" />
           <orderEntry type="module" module-name="editor-ui-api" />
           <orderEntry type="library" name="httpmime" level="project" />
+          <orderEntry type="module" module-name="diff-api" />
         </module-layer>
       </module>
       <module name="platform/platform-main" dirurl="file://$PROJECT_DIR$/platform/platform-main" current-layer="Default">
@@ -861,6 +862,7 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-api" exported="" />
           <orderEntry type="library" name="microba" level="project" />
+          <orderEntry type="module" module-name="vcs-api-core" exported="" />
         </module-layer>
       </module>
       <module name="platform/vcs-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-impl" current-layer="Default">
@@ -879,6 +881,7 @@
           <orderEntry type="library" name="Guava" level="project" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="library" name="OroMatcher" level="project" />
+          <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
       <module name="platform/vcs-log-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log-api" current-layer="Default">
@@ -1054,6 +1057,41 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="util" />
           <orderEntry type="library" name="slf4j-api" level="project" />
+        </module-layer>
+      </module>
+      <module name="platform/diff-impl" dirurl="file://$PROJECT_DIR$/platform/diff-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="diff-api" exported="" />
+          <orderEntry type="module" module-name="platform-impl" />
+        </module-layer>
+      </module>
+      <module name="platform/diff-api" dirurl="file://$PROJECT_DIR$/platform/diff-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-api" exported="" />
+          <orderEntry type="module" module-name="vcs-api-core" exported="" />
+        </module-layer>
+      </module>
+      <module name="platform/vcs-api-core" dirurl="file://$PROJECT_DIR$/platform/vcs-api-core" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" exported="" />
         </module-layer>
       </module>
     </modules>

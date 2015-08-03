@@ -20,6 +20,7 @@
 package com.intellij.psi.impl.source.codeStyle;
 
 import com.intellij.codeStyle.CodeStyleFacade;
+import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.Configurable;
@@ -68,13 +69,19 @@ public class CodeStyleFacadeImpl extends CodeStyleFacade {
   }
 
   @Override
-  public int getRightMargin() {
-    return CodeStyleSettingsManager.getSettings(myProject).RIGHT_MARGIN;
+  public int getRightMargin(Language language) {
+    return CodeStyleSettingsManager.getSettings(myProject).getRightMargin(language);
   }
 
   @Override
+  @Deprecated
   public boolean isWrapWhenTypingReachesRightMargin() {
     return CodeStyleSettingsManager.getSettings(myProject).WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN;
+  }
+
+  @Override
+  public boolean isWrapOnTyping(@Nullable Language language) {
+    return CodeStyleSettingsManager.getSettings(myProject).isWrapOnTyping(language);
   }
 
   @Override

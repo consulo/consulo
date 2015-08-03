@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,8 +85,10 @@ public class CharsetToolkit {
   private static final byte EF = (byte)0xef;
   private static final byte BB = (byte)0xbb;
   private static final byte BF = (byte)0xbf;
+  private static final int BINARY_THRESHOLD = 9; // characters with codes below this considered to be binary
 
   private final byte[] buffer;
+  @NotNull
   private final Charset defaultCharset;
   private boolean enforce8Bit = false;
 
@@ -121,9 +123,9 @@ public class CharsetToolkit {
    * @param buffer the byte buffer of which we want to know the encoding.
    * @param defaultCharset the default Charset to use in case an 8-bit charset is recognized.
    */
-  public CharsetToolkit(@NotNull byte[] buffer, Charset defaultCharset) {
+  public CharsetToolkit(@NotNull byte[] buffer, @NotNull Charset defaultCharset) {
     this.buffer = buffer;
-    this.defaultCharset = defaultCharset == null ? getDefaultSystemCharset() : defaultCharset;
+    this.defaultCharset = defaultCharset;
   }
 
   @NotNull
@@ -239,6 +241,7 @@ public class CharsetToolkit {
   /**
    * Retrieves the default Charset
    */
+  @NotNull
   public Charset getDefaultCharset() {
     return defaultCharset;
   }
@@ -267,7 +270,7 @@ public class CharsetToolkit {
    *
    * @return the Charset recognized.
    */
-  public Charset guessEncoding(int guess_length, Charset defaultCharset) {
+  public Charset guessEncoding(int guess_length, @NotNull Charset defaultCharset) {
     // if the file has a Byte Order Marker, we can assume the file is in UTF-xx
     // otherwise, the file would not be human readable
     Charset charset = guessFromBOM();
@@ -283,6 +286,10 @@ public class CharsetToolkit {
         return defaultCharset;
       case VALID_UTF8:
         return UTF8_CHARSET;
+      case BINARY:
+        break;
+      default:
+        break;
     }
     return null;
   }
@@ -290,15 +297,22 @@ public class CharsetToolkit {
   @NotNull
   public static String bytesToString(@NotNull byte[] bytes, @NotNull final Charset defaultCharset) {
     Charset charset = new CharsetToolkit(bytes, defaultCharset).guessEncoding(bytes.length);
+    if (charset == null) charset = defaultCharset; // binary content. This is silly but method contract says to return something anyway
+    return decodeString(bytes, charset);
+  }
+
+  @NotNull
+  public static String decodeString(@NotNull byte[] bytes, @NotNull final Charset charset) {
     int bomLength = getBOMLength(bytes, charset);
     final CharBuffer charBuffer = charset.decode(ByteBuffer.wrap(bytes, bomLength, bytes.length - bomLength));
     return charBuffer.toString();
   }
 
   public enum GuessedEncoding {
-    SEVEN_BIT,
-    VALID_UTF8,
-    INVALID_UTF8,
+    SEVEN_BIT,     // ASCII
+    VALID_UTF8,    // UTF-8
+    INVALID_UTF8,  // invalid UTF
+    BINARY         // binary
   }
 
   @NotNull
@@ -310,6 +324,9 @@ public class CharsetToolkit {
     // if the file is in UTF-8, high order bytes must have a certain value, in order to be valid
     // if it's not the case, we can assume the encoding is the default encoding of the system
     boolean validU8Char = true;
+
+    // true if char bytes < BINARY_THRESHOLD occurred
+    boolean hasBinary = false;
 
     int length = Math.min(buffer.length, guess_length);
     int i = 0;
@@ -387,17 +404,23 @@ public class CharsetToolkit {
           validU8Char = false;
         }
       }
+      else if (b0 < BINARY_THRESHOLD) {
+        hasBinary = true;
+      }
       if (!validU8Char) break;
       i++;
     }
-    if (!highOrderBit) {
+
+    if (!highOrderBit && !hasBinary) {
       return GuessedEncoding.SEVEN_BIT;
     }
+    // finally, if it's not UTF-8 nor US-ASCII
+    if (!validU8Char) return GuessedEncoding.INVALID_UTF8;
+    if (hasBinary) return GuessedEncoding.BINARY;
+
     // if no invalid UTF-8 were encountered, we can assume the encoding is UTF-8,
     // otherwise the file would not be human readable
-    if (validU8Char) return GuessedEncoding.VALID_UTF8;
-    // finally, if it's not UTF-8 nor US-ASCII
-    return GuessedEncoding.INVALID_UTF8;
+    return GuessedEncoding.VALID_UTF8;
   }
 
   @Nullable
@@ -420,7 +443,7 @@ public class CharsetToolkit {
     return guessEncoding(guess_length, defaultCharset);
   }
 
-  public static Charset guessEncoding(@NotNull File f, int bufferLength, Charset defaultCharset) throws IOException {
+  public static Charset guessEncoding(@NotNull File f, int bufferLength, @NotNull Charset defaultCharset) throws IOException {
     byte[] buffer = new byte[bufferLength];
     int read;
     FileInputStream fis = new FileInputStream(f);
@@ -499,16 +522,9 @@ public class CharsetToolkit {
    *
    * @return the default <code>Charset</code>.
    */
-  @Nullable
+  @NotNull
   public static Charset getDefaultSystemCharset() {
-    Charset charset = null;
-    try {
-      charset = Charset.forName(System.getProperty(FILE_ENCODING_PROPERTY));
-    } catch (Exception e) {
-      // Null is OK here.
-    }
-
-    return charset;
+    return Charset.defaultCharset();
   }
 
   /**
@@ -564,15 +580,15 @@ public class CharsetToolkit {
   @NotNull
   public static byte[] getUtf8Bytes(@NotNull String s) {
     try {
-      return s.getBytes(CharsetToolkit.UTF8);
+      return s.getBytes(UTF8);
     }
     catch (UnsupportedEncodingException e) {
       throw new RuntimeException("UTF-8 must be supported", e);
     }
   }
 
-  public static int getBOMLength(@NotNull byte[] content, Charset charset) {
-    if (charset != null && charset.name().contains(UTF8) && hasUTF8Bom(content)) {
+  public static int getBOMLength(@NotNull byte[] content, @NotNull Charset charset) {
+    if (charset.name().contains(UTF8) && hasUTF8Bom(content)) {
       return UTF8_BOM.length;
     }
     if (hasUTF32BEBom(content)) {
@@ -588,14 +604,6 @@ public class CharsetToolkit {
       return UTF16BE_BOM.length;
     }
     return 0;
-  }
-
-  /**
-   * @deprecated use {@link CharsetToolkit#getMandatoryBom(java.nio.charset.Charset)}
-   */
-  @Nullable
-  public static byte[] getBom(@NotNull Charset charset) {
-    return getMandatoryBom(charset);
   }
 
   /**
@@ -621,10 +629,10 @@ public class CharsetToolkit {
       try {
         charset = Charset.forName(name);
       }
-      catch (IllegalCharsetNameException e) {
+      catch (IllegalCharsetNameException ignored) {
         //ignore
       }
-      catch(UnsupportedCharsetException e){
+      catch(UnsupportedCharsetException ignored){
         //ignore
       }
     }

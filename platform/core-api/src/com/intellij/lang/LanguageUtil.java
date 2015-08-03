@@ -18,15 +18,18 @@ package com.intellij.lang;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.util.Condition;
+import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.templateLanguages.TemplateLanguage;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 public final class LanguageUtil {
   private LanguageUtil() {
@@ -43,11 +46,11 @@ public final class LanguageUtil {
     String textStr = left.getText() + right.getText();
 
     lexer.start(textStr, 0, textStr.length());
-    if(lexer.getTokenType() != left.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
-    if(lexer.getTokenEnd() != left.getTextLength()) return ParserDefinition.SpaceRequirements.MUST;
+    if (lexer.getTokenType() != left.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
+    if (lexer.getTokenEnd() != left.getTextLength()) return ParserDefinition.SpaceRequirements.MUST;
     lexer.advance();
-    if(lexer.getTokenEnd() != textStr.length()) return ParserDefinition.SpaceRequirements.MUST;
-    if(lexer.getTokenType() != right.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
+    if (lexer.getTokenEnd() != textStr.length()) return ParserDefinition.SpaceRequirements.MUST;
+    if (lexer.getTokenType() != right.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
     return ParserDefinition.SpaceRequirements.MAY;
   }
 
@@ -66,7 +69,7 @@ public final class LanguageUtil {
     if (element == null) return false;
 
     final PsiFile psiFile = element.getContainingFile();
-    if(psiFile == null) return false;
+    if (psiFile == null) return false;
 
     final Language language = psiFile.getViewProvider().getBaseLanguage();
     return language instanceof TemplateLanguage;
@@ -89,5 +92,21 @@ public final class LanguageUtil {
       return false;
     }
     return true;
+  }
+
+  @NotNull
+  @RequiredReadAction
+  public static Language getRootLanguage(@NotNull PsiElement element) {
+    final FileViewProvider provider = element.getContainingFile().getViewProvider();
+    final Set<Language> languages = provider.getLanguages();
+    if (languages.size() > 1) {
+      PsiElement current = element;
+      while (current != null) {
+        final Language language = current.getLanguage();
+        if (languages.contains(language)) return language;
+        current = current.getParent();
+      }
+    }
+    return provider.getBaseLanguage();
   }
 }

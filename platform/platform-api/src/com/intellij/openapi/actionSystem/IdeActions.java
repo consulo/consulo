@@ -154,6 +154,7 @@ public interface IdeActions {
 
   @NonNls String ACTION_PREVIOUS_DIFF = "PreviousDiff";
   @NonNls String ACTION_NEXT_DIFF = "NextDiff";
+  @NonNls String GROUP_DIFF_EDITOR_POPUP = "Diff.EditorPopupMenu";
 
   @NonNls String ACTION_EXPAND_ALL = "ExpandAll";
   @NonNls String ACTION_COLLAPSE_ALL = "CollapseAll";

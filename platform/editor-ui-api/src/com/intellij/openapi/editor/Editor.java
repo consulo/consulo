@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
+import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.event.EditorMouseListener;
@@ -22,6 +23,7 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,9 +38,8 @@ import java.awt.event.MouseEvent;
  * @see EditorFactory#createEditor(Document)
  * @see EditorFactory#createViewer(Document)
  */
+@ArrayFactoryFields
 public interface Editor extends UserDataHolder {
-  Editor[] EMPTY_ARRAY = new Editor[0];
-
   /**
    * Returns the document edited or viewed in the editor.
    *
@@ -68,7 +69,7 @@ public interface Editor extends UserDataHolder {
   /**
    * Returns the component for the content area of the editor (the area displaying the document text).
    * The component can be used, for example, for converting logical to screen coordinates.
-   * The instance is implementing {@link com.intellij.openapi.actionSystem.DataProvider}
+   * The instance is implementing {@link DataProvider}
    *
    * @return the component instance.
    */
@@ -82,6 +83,10 @@ public interface Editor extends UserDataHolder {
   /**
    * Returns the selection model for the editor, which can be used to select ranges of text in
    * the document and retrieve information about the selection.
+   * <p>
+   * To query or change selections for specific carets, {@link CaretModel} interface should be used.
+   *
+   * @see #getCaretModel()
    *
    * @return the selection model instance.
    */
@@ -92,9 +97,10 @@ public interface Editor extends UserDataHolder {
    * Returns the markup model for the editor. This model contains editor-specific highlighters
    * (for example, highlighters added by "Highlight usages in file"), which are painted in addition
    * to the highlighters contained in the markup model for the document.
+   * <p>
+   * See also com.intellij.openapi.editor.impl.DocumentMarkupModel.forDocument(Document, Project, boolean).
    *
    * @return the markup model instance.
-   * @see com.intellij.openapi.editor.impl.DocumentMarkupModel#forDocument(com.intellij.openapi.editor.Document, com.intellij.openapi.project.Project, boolean)
    */
   @NotNull
   MarkupModel getMarkupModel();
@@ -118,8 +124,8 @@ public interface Editor extends UserDataHolder {
   ScrollingModel getScrollingModel();
 
   /**
-   * Returns the caret model for the document, which can be used to move the caret and
-   * retrieve information about the caret position.
+   * Returns the caret model for the document, which can be used to add and remove carets to the editor, as well as to query and update 
+   * carets' and corresponding selections' positions.
    *
    * @return the caret model instance.
    */
@@ -208,6 +214,9 @@ public interface Editor extends UserDataHolder {
 
   /**
    * Maps an offset in the document to a logical position.
+   * <p>
+   * It's assumed that original position is associated with character immediately preceding given offset, so target logical position will 
+   * have {@link LogicalPosition#leansForward leansForward} value set to <code>false</code>.
    *
    * @param offset the offset in the document.
    * @return the corresponding logical position.
@@ -217,12 +226,31 @@ public interface Editor extends UserDataHolder {
 
   /**
    * Maps an offset in the document to a visual position.
+   * <p>
+   * It's assumed that original position is associated with character immediately preceding given offset, 
+   * {@link VisualPosition#leansRight leansRight} value for visual position will be determined correspondingly.
+   * <p>
+   * If there's a soft wrap at given offset, visual position on a line following the wrap will be returned.
    *
    * @param offset the offset in the document.
    * @return the corresponding visual position.
    */
   @NotNull
   VisualPosition offsetToVisualPosition(int offset);
+
+  /**
+   * Maps an offset in the document to a visual position.
+   *
+   * @param offset the offset in the document.
+   * @param leanForward if <code>true</code>, original position is associated with character after given offset, if <code>false</code> - 
+   *                    with character before given offset. This can make a difference in bidirectional text (see {@link LogicalPosition},
+   *                    {@link VisualPosition})
+   * @param beforeSoftWrap if <code>true</code>, visual position at line preceeding the wrap will be returned, otherwise - visual position
+   *                       at line following the wrap.
+   * @return the corresponding visual position.
+   */
+  @NotNull
+  VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap);
 
   /**
    * Maps the pixel coordinates in the editor to a logical position.
@@ -336,12 +364,12 @@ public interface Editor extends UserDataHolder {
   void setHeaderComponent(@Nullable JComponent header);
 
   /**
-   * @return <code>true</code> if this editor has active header component set up by {@link #setHeaderComponent(javax.swing.JComponent)}
+   * @return <code>true</code> if this editor has active header component set up by {@link #setHeaderComponent(JComponent)}
    */
   boolean hasHeaderComponent();
 
   /**
-   * @return a component set by {@link #setHeaderComponent(javax.swing.JComponent)} or <code>null</code> if no header currently installed.
+   * @return a component set by {@link #setHeaderComponent(JComponent)} or <code>null</code> if no header currently installed.
    */
   @Nullable
   JComponent getHeaderComponent();

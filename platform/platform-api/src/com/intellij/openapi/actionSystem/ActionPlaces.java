@@ -119,6 +119,7 @@ public abstract class ActionPlaces {
   public static final String DOCK_MENU = "DockMenu";
   public static final String PHING_MESSAGES_TOOLBAR = "PhingMessagesToolbar";
 
+  public static final String DIFF_TOOLBAR = "DiffPopup";
   public static final String CHANGES_LOCAL_DIFF_SETTINGS = "CHANGES_LOCAL_DIFF_SETTINGS";
 
   private static final String[] ourToolbarPlaces = {EDITOR_TOOLBAR, PROJECT_VIEW_TOOLBAR, TESTTREE_VIEW_TOOLBAR, MAIN_TOOLBAR,

@@ -49,7 +49,7 @@ public abstract class FileDifferenceModel {
   }
 
   public String getRightTitle(RevisionProcessingProgress p) {
-    if (!hasRightEntry()) return LocalHistoryBundle.message("file.does.not.exist"); 
+    if (!hasRightEntry()) return LocalHistoryBundle.message("file.does.not.exist");
     if (!isRightContentAvailable(p)) {
       return formatTitle(getRightEntry(), false);
     }

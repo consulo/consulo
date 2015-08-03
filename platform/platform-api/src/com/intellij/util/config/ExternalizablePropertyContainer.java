@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.util.config;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Factory;
+import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.util.SmartList;
+import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
-public class ExternalizablePropertyContainer
-    extends AbstractProperty.AbstractPropertyContainer
-    implements JDOMExternalizable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.config.ExternalizablePropertyContainer");
-  private final Map<AbstractProperty, Object> myValues = new HashMap<AbstractProperty, Object>();
-  private final Map<AbstractProperty, Externalizer> myExternalizers = new HashMap<AbstractProperty, Externalizer>();
+public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPropertyContainer {
+  private static final Logger LOG = Logger.getInstance(ExternalizablePropertyContainer.class);
+  private final Map<AbstractProperty, Object> myValues = new THashMap<AbstractProperty, Object>();
+  private final Map<AbstractProperty, Externalizer> myExternalizers = new THashMap<AbstractProperty, Externalizer>();
 
   public <T> void registerProperty(AbstractProperty<T> property, Externalizer<T> externalizer) {
     String name = property.getName();
@@ -68,65 +74,74 @@ public class ExternalizablePropertyContainer
     registerProperty(property, itemTagName, Externalizer.FactoryBased.create(factory));
   }
 
-  private <T> Externalizer<List<T>> createListExternalizer(final Externalizer<T> itemExternalizer, final String itemTagName) {
-    return new ListExternalizer<T>(itemExternalizer, itemTagName);
+  private static <T> Externalizer<List<T>> createListExternalizer(final Externalizer<T> itemExternalizer, final String itemTagName) {
+    return new ListExternalizer(itemExternalizer, itemTagName);
   }
 
-  public void readExternal(Element element) throws InvalidDataException {
-    HashMap<String, AbstractProperty> propertyByName = new HashMap<String, AbstractProperty>();
+  public void readExternal(@NotNull Element element) {
+    Map<String, AbstractProperty> propertyByName = new THashMap<String, AbstractProperty>();
     for (AbstractProperty abstractProperty : myExternalizers.keySet()) {
       propertyByName.put(abstractProperty.getName(), abstractProperty);
     }
-    final List<Element> children = element.getChildren();
-    for (Element child : children) {
+    for (Element child : element.getChildren()) {
       AbstractProperty property = propertyByName.get(child.getName());
       if (property == null) {
         continue;
       }
-      final Externalizer externalizer = myExternalizers.get(property);
+      Externalizer externalizer = myExternalizers.get(property);
       if (externalizer == null) {
         continue;
       }
       try {
         myValues.put(property, externalizer.readValue(child));
       }
-      catch (InvalidDataException e) {
+      catch (Exception e) {
         LOG.info(e);
       }
     }
   }
 
-  public void writeExternal(Element element) throws WriteExternalException {
+  public void writeExternal(@NotNull Element element) {
+    if (myExternalizers.isEmpty()) {
+      return;
+    }
+
     List<AbstractProperty> properties = new ArrayList<AbstractProperty>(myExternalizers.keySet());
     Collections.sort(properties, AbstractProperty.NAME_COMPARATOR);
     for (AbstractProperty property : properties) {
-      final Externalizer externalizer = myExternalizers.get(property);
+      Externalizer externalizer = myExternalizers.get(property);
       if (externalizer == null) {
         continue;
       }
-      final Object propValue = property.get(this);
+
+      Object propValue = property.get(this);
       if (!Comparing.equal(propValue, property.getDefault(this))) {
-        final Element child = new Element(property.getName());
+        Element child = new Element(property.getName());
         externalizer.writeValue(child, propValue);
-        element.addContent(child);
+        if (!JDOMUtil.isEmpty(child)) {
+          element.addContent(child);
+        }
       }
     }
   }
 
+  @Override
   protected Object getValueOf(AbstractProperty property) {
     Object value = myValues.get(property);
     return value != null ? value : property.getDefault(this);
   }
 
+  @Override
   protected void setValueOf(AbstractProperty externalizableProperty, Object value) {
     myValues.put(externalizableProperty, value);
   }
 
+  @Override
   public boolean hasProperty(AbstractProperty property) {
     return myExternalizers.containsKey(property);
   }
 
-  private class ListExternalizer<T> implements Externalizer<List<T>> {
+  private static class ListExternalizer<T> implements Externalizer<List<T>> {
     @NonNls private static final String NULL_ELEMENT = "NULL_VALUE_ELEMENT";
     private final Externalizer<T> myItemExternalizer;
     private final String myItemTagName;
@@ -136,12 +151,13 @@ public class ExternalizablePropertyContainer
       myItemTagName = itemTagName;
     }
 
-    public List<T> readValue(Element dataElement) throws InvalidDataException {
-      ArrayList<T> list = new ArrayList<T>();
-      List<Element> children = dataElement.getChildren();
-      for (Iterator<Element> iterator = children.iterator(); iterator.hasNext();) {
-        Element element = iterator.next();
-        if (NULL_ELEMENT.equals(element.getName())) list.add(null);
+    @Override
+    public List<T> readValue(Element dataElement) {
+      List<T> list = new SmartList<T>();
+      for (Element element : dataElement.getChildren()) {
+        if (NULL_ELEMENT.equals(element.getName())) {
+          list.add(null);
+        }
         else if (myItemTagName.equals(element.getName())) {
           T item = myItemExternalizer.readValue(element);
           if (item == null) {
@@ -154,17 +170,18 @@ public class ExternalizablePropertyContainer
       return list;
     }
 
-    public void writeValue(Element dataElement, List<T> value) throws WriteExternalException {
-      for (Iterator<T> iterator = value.iterator(); iterator.hasNext();) {
-        T item = iterator.next();
-        if (item != null) {
+    @Override
+    public void writeValue(Element dataElement, List<T> value) {
+      for (T item : value) {
+        if (item == null) {
+          dataElement.addContent(new Element(NULL_ELEMENT));
+        }
+        else {
           Element element = new Element(myItemTagName);
           myItemExternalizer.writeValue(element, item);
           dataElement.addContent(element);
         }
-        else dataElement.addContent(new Element(NULL_ELEMENT));
       }
     }
   }
-
 }

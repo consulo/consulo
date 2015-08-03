@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.pom.core.impl.PomModelImpl;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -57,14 +58,14 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
 
   public PsiDocumentManagerImpl(@NotNull final Project project,
                                 @NotNull PsiManager psiManager,
-                                @NotNull SmartPointerManager smartPointerManager,
                                 @NotNull EditorFactory editorFactory,
                                 @NotNull MessageBus bus,
                                 @NonNls @NotNull final DocumentCommitThread documentCommitThread) {
-    super(project, psiManager, smartPointerManager, bus, documentCommitThread);
+    super(project, psiManager, bus, documentCommitThread);
     myDocumentCommitThread = documentCommitThread;
     editorFactory.getEventMulticaster().addDocumentListener(this, project);
-    bus.connect().subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
+    MessageBusConnection busConnection = bus.connect();
+    busConnection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
       public void fileContentLoaded(@NotNull final VirtualFile virtualFile, @NotNull Document document) {
         PsiFile psiFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
@@ -76,7 +77,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
         fireDocumentCreated(document, psiFile);
       }
     });
-    bus.connect().subscribe(DocumentBulkUpdateListener.TOPIC, new DocumentBulkUpdateListener.Adapter() {
+    busConnection.subscribe(DocumentBulkUpdateListener.TOPIC, new DocumentBulkUpdateListener.Adapter() {
       @Override
       public void updateFinished(@NotNull Document doc) {
         documentCommitThread.queueCommit(project, doc, "Bulk update finished");
@@ -84,9 +85,9 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
     });
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
-  @RequiredReadAction
   public PsiFile getPsiFile(@NotNull Document document) {
     final PsiFile psiFile = super.getPsiFile(document);
     if (myUnitTestMode) {
@@ -106,9 +107,10 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   @Override
   public void documentChanged(DocumentEvent event) {
     super.documentChanged(event);
-    // avoid documents piling up during batch processing
+    // optimisation: avoid documents piling up during batch processing
     if (FileDocumentManagerImpl.areTooManyDocumentsInTheQueue(myUncommittedDocuments)) {
       if (myUnitTestMode) {
+        myStopTrackingDocuments = true;
         try {
           LOG.error("Too many uncommitted documents for " + myProject + ":\n" + myUncommittedDocuments);
         }
@@ -116,7 +118,10 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
           clearUncommittedDocuments();
         }
       }
-      commitAllDocuments();
+      // must not commit during document save
+      if (PomModelImpl.isAllowPsiModification()) {
+        commitAllDocuments();
+      }
     }
   }
 

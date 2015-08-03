@@ -106,23 +106,23 @@ public class UpToDateLineNumberProviderImpl implements UpToDateLineNumberProvide
 
   private static int calcLineNumber(LineStatusTracker tracker, int currentNumber){
     if (tracker == null) return -1;
-    List ranges = tracker.getRanges();
+    List<Range> ranges = tracker.getRanges();
     int result = currentNumber;
 
-    for (final Object range1 : ranges) {
-      Range range = (Range)range1;
-      int startOffset = range.getLine1();
-      int endOffset = range.getLine2();
+    for (final Range range : ranges) {
+      int startLine = range.getLine1();
+      int endLine = range.getLine2();
 
-      if ((startOffset <= currentNumber) && (endOffset > currentNumber)) {
+      if ((startLine <= currentNumber) && (endLine > currentNumber)) {
         return ABSENT_LINE_NUMBER;
       }
 
-      if (endOffset > currentNumber) return result;
+      if (endLine > currentNumber) return result;
 
-      int currentRangeLength = endOffset - startOffset;
+      int currentRangeLength = endLine - startLine;
+      int vcsRangeLength = range.getVcsLine2() - range.getVcsLine1();
 
-      result += range.getUpToDateRangeLength() - currentRangeLength;
+      result += vcsRangeLength - currentRangeLength;
     }
     return result;
 

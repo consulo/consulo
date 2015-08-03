@@ -34,7 +34,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
@@ -171,7 +170,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
 
     DocumentCommitThread.getInstance().clearQueue();
-    DocumentImpl.CHECK_DOCUMENT_CONSISTENCY = !isPerformanceTest();
+    UIUtil.dispatchAllInvocationEvents();
   }
 
   public Project getProject() {

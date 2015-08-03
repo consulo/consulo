@@ -16,6 +16,7 @@
 package com.intellij.util.diff;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Enumerator;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 
 /**
  * @author dyoma
@@ -49,15 +51,50 @@ public class Diff {
     final int startShift = getStartShift(objects1, objects2);
     final int endCut = getEndCut(objects1, objects2, startShift);
 
-    Enumerator<T> enumerator = new Enumerator<T>(objects1.length + objects2.length, ContainerUtil.<T>canonicalStrategy());
+    ChangeBuilder builder = new ChangeBuilder(startShift);
+    int trimmedLength1 = objects1.length - startShift - endCut;
+    int trimmedLength2 = objects2.length - startShift - endCut;
+    if (trimmedLength1 == 0 || trimmedLength2 == 0) {
+      if (trimmedLength1 != 0 || trimmedLength2 != 0) {
+        builder.addChange(trimmedLength1, trimmedLength2);
+      }
+      return builder.getFirstChange();
+    }
+
+    Enumerator<T> enumerator = new Enumerator<T>(trimmedLength1 + trimmedLength2, ContainerUtil.<T>canonicalStrategy());
     int[] ints1 = enumerator.enumerate(objects1, startShift, endCut);
     int[] ints2 = enumerator.enumerate(objects2, startShift, endCut);
-    Reindexer reindexer = new Reindexer();
+    Reindexer reindexer = new Reindexer(); // discard unique elements, that have no chance to be matched
     int[][] discarded = reindexer.discardUnique(ints1, ints2);
-    IntLCS intLCS = new IntLCS(discarded[0], discarded[1]);
-    intLCS.execute();
-    ChangeBuilder builder = new ChangeBuilder(startShift);
-    reindexer.reindex(intLCS.getPaths(), builder);
+
+    if (discarded[0].length == 0 && discarded[1].length == 0) {
+      // assert trimmedLength > 0
+      builder.addChange(ints1.length, ints2.length);
+      return builder.getFirstChange();
+    }
+
+    BitSet[] changes;
+    if (Registry.is("diff.patience.alg")) {
+      PatienceIntLCS patienceIntLCS = new PatienceIntLCS(discarded[0], discarded[1]);
+      patienceIntLCS.execute();
+      changes = patienceIntLCS.getChanges();
+    }
+    else {
+      try {
+        IntLCS intLCS = new IntLCS(discarded[0], discarded[1]);
+        intLCS.execute();
+        changes = intLCS.getChanges();
+      }
+      catch (FilesTooBigForDiffException e) {
+        PatienceIntLCS patienceIntLCS = new PatienceIntLCS(discarded[0], discarded[1]);
+        patienceIntLCS.failOnSmallSizeReduction();
+        patienceIntLCS.execute();
+        changes = patienceIntLCS.getChanges();
+        LOG.info("Successful fallback to patience diff");
+      }
+    }
+
+    reindexer.reindex(changes, builder);
     return builder.getFirstChange();
   }
 
@@ -91,31 +128,36 @@ public class Diff {
    * @return          translated line if the processing is ok; negative value otherwise
    */
   public static int translateLine(@NotNull CharSequence before, @NotNull CharSequence after, int line) throws FilesTooBigForDiffException {
+    return translateLine(before, after, line, false);
+  }
+
+  public static int translateLine(@NotNull CharSequence before, @NotNull CharSequence after, int line, boolean approximate)
+          throws FilesTooBigForDiffException {
     Change change = buildChanges(before, after);
-    if (change == null) {
-      return -1;
-    }
-    return translateLine(change, line);
+    return translateLine(change, line, approximate);
   }
 
   /**
    * Tries to translate given line that pointed to the text before change to the line that points to the same text after the change.
-   * 
+   *
    * @param change    target change
    * @param line      target line before change
    * @return          translated line if the processing is ok; negative value otherwise
    */
-  public static int translateLine(@NotNull Change change, int line) {
+  public static int translateLine(@Nullable Change change, int line) {
+    return translateLine(change, line, false);
+  }
+
+  public static int translateLine(@Nullable Change change, int line, boolean approximate) {
     int result = line;
 
     Change currentChange = change;
-    
     while (currentChange != null) {
       if (line < currentChange.line0) break;
       if (line >= currentChange.line0 + currentChange.deleted) {
         result += currentChange.inserted - currentChange.deleted;
       } else {
-        return -1;
+        return approximate ? currentChange.line1 : -1;
       }
 
       currentChange = currentChange.link;
@@ -123,7 +165,7 @@ public class Diff {
 
     return result;
   }
-  
+
   public static class Change {
     // todo remove. Return lists instead.
     /**
@@ -146,7 +188,7 @@ public class Diff {
 
      If DELETED is 0 then LINE0 is the number of the line before
      which the insertion was done; vice versa for INSERTED and LINE1.  */
-    protected Change(int line0, int line1, int deleted, int inserted, Change old) {
+    public Change(int line0, int line1, int deleted, int inserted, @Nullable Change old) {
       this.line0 = line0;
       this.line1 = line1;
       this.inserted = inserted;

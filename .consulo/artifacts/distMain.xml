@@ -92,6 +92,9 @@
           <element id="module-output" name="vcs-log-graph-api" />
           <element id="module-output" name="dvcs-api" />
           <element id="module-output" name="slf4j-bind" />
+          <element id="module-output" name="diff-impl" />
+          <element id="module-output" name="diff-api" />
+          <element id="module-output" name="vcs-api-core" />
         </element>
         <element id="zip-archive" name="forms_rt.jar">
           <element id="module-output" name="forms_rt" />

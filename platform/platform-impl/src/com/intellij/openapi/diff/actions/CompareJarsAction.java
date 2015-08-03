@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
 public class CompareJarsAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {

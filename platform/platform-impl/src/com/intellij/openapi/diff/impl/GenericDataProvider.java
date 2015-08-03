@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.diff.impl;
 
+import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataProvider;
 
 import java.util.HashMap;
@@ -27,10 +28,19 @@ public class GenericDataProvider implements DataProvider {
     myGenericData = new HashMap<String, Object>();
   }
 
+  public void putData(DataKey key, Object value) {
+    myGenericData.put(key.getName(), value);
+  }
+
+  public void putData(String key, Object value) {
+    myGenericData.put(key, value);
+  }
+
   public void putData(final Map<String, Object> map) {
     myGenericData.putAll(map);
   }
 
+  @Override
   public Object getData(String dataId) {
     return myGenericData.get(dataId);
   }

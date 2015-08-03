@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * Is intended to hold utility methods to use during {@link Document} processing.
@@ -61,10 +62,40 @@ public final class DocumentUtil {
   public static void writeInRunUndoTransparentAction(@NotNull final Runnable runnable) {
     CommandProcessor.getInstance().runUndoTransparentAction(new Runnable() {
       @Override
+      @RequiredWriteAction
       public void run() {
         ApplicationManager.getApplication().runWriteAction(runnable);
       }
     });
+  }
+
+  public static int getFirstNonSpaceCharOffset(@NotNull Document document, int line) {
+    int startOffset = document.getLineStartOffset(line);
+    int endOffset = document.getLineEndOffset(line);
+    return getFirstNonSpaceCharOffset(document, startOffset, endOffset);
+  }
+
+  public static int getFirstNonSpaceCharOffset(@NotNull Document document, int startOffset, int endOffset) {
+    CharSequence text = document.getImmutableCharSequence();
+    for (int i = startOffset; i < endOffset; i++) {
+      char c = text.charAt(i);
+      if (c != ' ' && c != '\t') {
+        return i;
+      }
+    }
+    return startOffset;
+  }
+
+  public static boolean isValidOffset(int offset, @NotNull Document document) {
+    return offset >= 0 && offset <= document.getTextLength();
+  }
+
+  public static int getLineStartOffset(int offset, @NotNull Document document) {
+    if (offset < 0 || offset > document.getTextLength()) {
+      return offset;
+    }
+    int lineNumber = document.getLineNumber(offset);
+    return document.getLineStartOffset(lineNumber);
   }
 
   @NotNull

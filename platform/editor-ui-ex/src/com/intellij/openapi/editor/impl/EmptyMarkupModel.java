@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DisposableIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import com.intellij.openapi.editor.ex.SweepProcessor;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
@@ -59,6 +58,7 @@ public class EmptyMarkupModel implements MarkupModelEx {
     throw new ProcessCanceledException();
   }
 
+  @NotNull
   @Override
   public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
                                                                    int endOffset,
@@ -140,12 +140,7 @@ public class EmptyMarkupModel implements MarkupModelEx {
   @NotNull
   @Override
   public DisposableIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
-    return DisposableIterator.EMPTY;
-  }
-
-  @Override
-  public boolean sweep(int start, int end, @NotNull SweepProcessor<RangeHighlighterEx> sweepProcessor) {
-    return false;
+    return IntervalTreeImpl.PeekableIterator.EMPTY;
   }
 
   @Override
@@ -164,7 +159,7 @@ public class EmptyMarkupModel implements MarkupModelEx {
   }
 
   @Override
-  public void addRangeHighlighter(RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+  public void addRangeHighlighter(@NotNull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
 
   }
 }

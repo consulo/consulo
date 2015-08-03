@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.codeInsight.documentation.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
@@ -26,17 +25,18 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorGutter;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;
 
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
-  @NonNls public static final String CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE = "codeassists.quickjavadoc.lookup";
-  @NonNls public static final String CODEASSISTS_QUICKJAVADOC_FEATURE = "codeassists.quickjavadoc";
+  @SuppressWarnings("SpellCheckingInspection") public static final String CODEASSISTS_QUICKJAVADOC_FEATURE = "codeassists.quickjavadoc";
+  @SuppressWarnings("SpellCheckingInspection") public static final String CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE = "codeassists.quickjavadoc.lookup";
+  @SuppressWarnings("SpellCheckingInspection") public static final String CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE = "codeassists.quickjavadoc.ctrln";
 
   public ShowQuickDocInfoAction() {
     setEnabledInModalContext(true);
@@ -60,14 +60,13 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     };
   }
 
-
   @Override
   protected boolean isValidForLookup() {
     return true;
   }
 
-  @Override
   @RequiredDispatchThread
+  @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
@@ -78,8 +77,8 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
       return;
     }
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
-    PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
     if (editor == null && element == null) {
       presentation.setEnabled(false);
       return;
@@ -95,6 +94,10 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     }
     else {
       if (editor != null) {
+        if (EditorGutter.KEY.getData(event.getDataContext()) != null) {
+          presentation.setEnabled(false);
+          return;
+        }
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         if (file == null) {
           presentation.setEnabled(false);
@@ -124,8 +127,8 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
-    final PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    final PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
 
     if (project != null && editor != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_FEATURE);
@@ -136,8 +139,8 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
       }
       actionPerformedImpl(project, editor);
     }
-    else if (project != null) {
-      FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickjavadoc.ctrln");
+    else if (project != null && element != null) {
+      FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE);
       CommandProcessor.getInstance().executeCommand(project, new Runnable() {
         @Override
         public void run() {
@@ -146,5 +149,4 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
       }, getCommandName(), null);
     }
   }
-
 }

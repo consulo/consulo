@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.SimpleDiffRequest;
 import com.intellij.openapi.help.HelpManager;
@@ -42,12 +43,14 @@ import com.intellij.openapi.ui.*;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.patch.CreatePatchConfigurationPanel;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBLayeredPane;
@@ -195,7 +198,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     myToolBar = createRevisionsToolbar(actions);
     myRevisionsList = new RevisionsList(new RevisionsList.SelectionListener() {
       public void revisionsSelected(final int first, final int last) {
-        scheduleDiffUpdate(Pair.create(first, last));
+        scheduleDiffUpdate(Couple.of(first, last));
       }
     });
     addPopupMenuToComponent(myRevisionsList.getComponent(), actions);
@@ -243,7 +246,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     return m.createActionPopupMenu(ActionPlaces.UNKNOWN, ag);
   }
 
-  private void scheduleDiffUpdate(@Nullable final Pair<Integer, Integer> toSelect) {
+  private void scheduleDiffUpdate(@Nullable final Couple<Integer> toSelect) {
     doScheduleUpdate(UPDATE_DIFFS, new Computable<Runnable>() {
       public Runnable compute() {
         synchronized (myModel) {
@@ -338,16 +341,21 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     final SimpleDiffRequest r = new SimpleDiffRequest(myProject, m.getTitle());
 
     new Task.Modal(myProject, message("message.processing.revisions"), false) {
-      public void run(@NotNull ProgressIndicator i) {
-        RevisionProcessingProgressAdapter p = new RevisionProcessingProgressAdapter(i);
-        p.processingLeftRevision();
-        DiffContent left = m.getLeftDiffContent(p);
+      public void run(@NotNull final ProgressIndicator i) {
+        ApplicationManager.getApplication().runReadAction(new Runnable() {
+          @Override
+          public void run() {
+            RevisionProcessingProgressAdapter p = new RevisionProcessingProgressAdapter(i);
+            p.processingLeftRevision();
+            DiffContent left = m.getLeftDiffContent(p);
 
-        p.processingRightRevision();
-        DiffContent right = m.getRightDiffContent(p);
+            p.processingRightRevision();
+            DiffContent right = m.getRightDiffContent(p);
 
-        r.setContents(left, right);
-        r.setContentTitles(m.getLeftTitle(p), m.getRightTitle(p));
+            r.setContents(left, right);
+            r.setContentTitles(m.getLeftTitle(p), m.getRightTitle(p));
+          }
+        });
       }
     }.queue();
 
@@ -432,10 +440,10 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         final Balloon b =
-          JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(title, null, MessageType.INFO.getPopupBackground(), null)
-            .setFadeoutTime(3000)
-            .setShowCallout(false)
-            .createBalloon();
+                JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(title, null, MessageType.INFO.getPopupBackground(), null)
+                        .setFadeoutTime(3000)
+                        .setShowCallout(false)
+                        .createBalloon();
 
         Dimension size = myDiffView.getSize();
         RelativePoint point = new RelativePoint(myDiffView, new Point(size.width / 2, size.height / 2));
@@ -487,8 +495,10 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
   private boolean showAsDialog(CreatePatchConfigurationPanel p) {
     final DialogBuilder b = new DialogBuilder(myProject);
+    JComponent createPatchPanel = p.getPanel();
+    b.setPreferredFocusComponent(IdeFocusTraversalPolicy.getPreferredFocusedComponent(createPatchPanel));
     b.setTitle(message("create.patch.dialog.title"));
-    b.setCenterPanel(p.getPanel());
+    b.setCenterPanel(createPatchPanel);
     p.installOkEnabledListener(new Consumer<Boolean>() {
       public void consume(final Boolean aBoolean) {
         b.setOkActionEnabled(aBoolean);

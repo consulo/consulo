@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.util.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
  * User: cdr
  */
 public class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
-  private final MarkupModelImpl myMarkupModel;
+  private final MarkupModelEx myMarkupModel;
 
-  public RangeHighlighterTree(@NotNull Document document, @NotNull MarkupModelImpl markupModel) {
+  public RangeHighlighterTree(@NotNull Document document, @NotNull MarkupModelEx markupModel) {
     super(document);
     myMarkupModel = markupModel;
   }
@@ -65,13 +66,13 @@ public class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
     //range highlighters are strongly referenced
     @Override
     protected Getter<RangeHighlighterEx> createGetter(@NotNull RangeHighlighterEx interval) {
-      return (RangeHighlighterImpl)interval;
+      //noinspection unchecked
+      return (Getter<RangeHighlighterEx>)interval;
     }
   }
 
   @Override
-  void reportInvalidation(RangeHighlighterEx markerEx, Object reason) {
-    super.reportInvalidation(markerEx, reason);
+  void fireBeforeRemoved(@NotNull RangeHighlighterEx markerEx, @NotNull Object reason) {
     myMarkupModel.fireBeforeRemoved(markerEx);
   }
 }

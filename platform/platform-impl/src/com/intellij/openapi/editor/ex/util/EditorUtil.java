@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,26 @@ package com.intellij.openapi.editor.ex.util;
 
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.impl.IterationState;
+import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.DocumentUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +62,11 @@ public final class EditorUtil {
   }
 
   public static int getLastVisualLineColumnNumber(@NotNull Editor editor, final int line) {
+    if (editor instanceof EditorImpl && ((EditorImpl)editor).myUseNewRendering) {
+      LogicalPosition lineEndPosition = editor.visualToLogicalPosition(new VisualPosition(line, Integer.MAX_VALUE));
+      int lineEndOffset = editor.logicalPositionToOffset(lineEndPosition);
+      return editor.offsetToVisualPosition(lineEndOffset, true, true).column;
+    }
     Document document = editor.getDocument();
     int lastLine = document.getLineCount() - 1;
     if (lastLine < 0) {
@@ -222,6 +231,10 @@ public final class EditorUtil {
    * @param tabSize       number of desired visual columns to use for tabulation representation
    * @param debugBuffer   buffer to hold debug info during the processing (if any)
    * @return              given text offset that identifies the same position that is pointed by the given visual column
+   *
+   * @deprecated This function can give incorrect results when soft wraps are enabled in editor. It is also slow in case of
+   * long document lines - {@link Editor#logicalPositionToOffset(LogicalPosition)}
+   * should be faster when soft wraps are enabled. To be removed in IDEA 16.
    */
   public static int calcOffset(@NotNull EditorEx editor,
                                @NotNull CharSequence text,
@@ -291,15 +304,15 @@ public final class EditorUtil {
    * @return                target offset that belongs to the <code>[start; end)</code> range and points to the target logical
    *                        column if any; <code>-1</code> otherwise
    */
-  private static int calcSoftWrapUnawareOffset(@NotNull Editor editor,
-                                               @NotNull CharSequence text,
-                                               int start,
-                                               int end,
-                                               int columnNumber,
-                                               int tabSize,
-                                               int x,
-                                               @NotNull int[] currentColumn,
-                                               @Nullable StringBuilder debugBuffer) {
+  public static int calcSoftWrapUnawareOffset(@NotNull Editor editor,
+                                              @NotNull CharSequence text,
+                                              int start,
+                                              int end,
+                                              int columnNumber,
+                                              int tabSize,
+                                              int x,
+                                              @NotNull int[] currentColumn,
+                                              @Nullable StringBuilder debugBuffer) {
     if (debugBuffer != null) {
       debugBuffer.append(String.format(
               "Starting calcSoftWrapUnawareOffset(). Target range: [%d; %d), target column number to map: %d, tab size: %d, "
@@ -461,6 +474,9 @@ public final class EditorUtil {
   }
 
   public static int calcColumnNumber(@Nullable Editor editor, @NotNull CharSequence text, final int start, final int offset, final int tabSize) {
+    if (editor instanceof TextComponentEditor) {
+      return offset - start;
+    }
     boolean useOptimization = true;
     if (editor != null) {
       SoftWrap softWrap = editor.getSoftWrapModel().getSoftWrap(start);
@@ -526,6 +542,7 @@ public final class EditorUtil {
     }
   }
 
+  @NotNull
   public static FontInfo fontForChar(final char c, @JdkConstants.FontStyle int style, @NotNull Editor editor) {
     EditorColorsScheme colorsScheme = editor.getColorsScheme();
     return ComplementaryFontsRegistry.getFontAbleToDisplay(c, style, colorsScheme.getFontPreferences());
@@ -713,8 +730,8 @@ public final class EditorUtil {
    * @param end       target end coordinate
    * @return          pair of the closest surrounding non-soft-wrapped logical positions for the visual line start and end
    *
-   * @see #getNotFoldedLineStartOffset(com.intellij.openapi.editor.Editor, int)
-   * @see #getNotFoldedLineEndOffset(com.intellij.openapi.editor.Editor, int)
+   * @see #getNotFoldedLineStartOffset(Editor, int)
+   * @see #getNotFoldedLineEndOffset(Editor, int)
    */
   @SuppressWarnings("AssignmentToForLoopParameter")
   public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@NotNull Editor editor,
@@ -771,7 +788,7 @@ public final class EditorUtil {
    */
   public static int getNotFoldedLineStartOffset(@NotNull Editor editor, int offset) {
     while(true) {
-      offset = getLineStartOffset(offset, editor.getDocument());
+      offset = DocumentUtil.getLineStartOffset(offset, editor.getDocument());
       FoldRegion foldRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(offset - 1);
       if (foldRegion == null || foldRegion.getStartOffset() >= offset) {
         break;
@@ -794,14 +811,6 @@ public final class EditorUtil {
       offset = foldRegion.getEndOffset();
     }
     return offset;
-  }
-
-  private static int getLineStartOffset(int offset, Document document) {
-    if (offset > document.getTextLength()) {
-      return offset;
-    }
-    int lineNumber = document.getLineNumber(offset);
-    return document.getLineStartOffset(lineNumber);
   }
 
   private static int getLineEndOffset(int offset, Document document) {
@@ -867,6 +876,58 @@ public final class EditorUtil {
     }
     int line = document.getLineNumber(offset);
     return offset == document.getLineEndOffset(line);
+  }
+
+  /**
+   * Setting selection using {@link SelectionModel#setSelection(int, int)} or {@link Caret#setSelection(int, int)} methods can result
+   * in resulting selection range to be larger than requested (in case requested range intersects with collapsed fold regions).
+   * This method will make sure interfering collapsed regions are expanded first, so that resulting selection range is exactly as 
+   * requested.
+   */
+  public static void setSelectionExpandingFoldedRegionsIfNeeded(@NotNull Editor editor, int startOffset, int endOffset) {
+    FoldingModel foldingModel = editor.getFoldingModel();
+    FoldRegion startFoldRegion = foldingModel.getCollapsedRegionAtOffset(startOffset);
+    if (startFoldRegion != null && (startFoldRegion.getStartOffset() == startOffset || startFoldRegion.isExpanded())) {
+      startFoldRegion = null;
+    }
+    FoldRegion endFoldRegion = foldingModel.getCollapsedRegionAtOffset(endOffset);
+    if (endFoldRegion != null && (endFoldRegion.getStartOffset() == endOffset || endFoldRegion.isExpanded())) {
+      endFoldRegion = null;
+    }
+    if (startFoldRegion != null || endFoldRegion != null) {
+      final FoldRegion finalStartFoldRegion = startFoldRegion;
+      final FoldRegion finalEndFoldRegion = endFoldRegion;
+      foldingModel.runBatchFoldingOperation(new Runnable() {
+        @Override
+        public void run() {
+          if (finalStartFoldRegion != null) finalStartFoldRegion.setExpanded(true);
+          if (finalEndFoldRegion != null) finalEndFoldRegion.setExpanded(true);
+        }
+      });
+    }
+    editor.getSelectionModel().setSelection(startOffset, endOffset);
+  }
+
+  public static Font getEditorFont() {
+    EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+    int size = UISettings.getInstance().PRESENTATION_MODE
+               ? UISettings.getInstance().PRESENTATION_MODE_FONT_SIZE - 4 : scheme.getEditorFontSize();
+    return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
+  }
+
+  /**
+   * Number of virtual soft wrap introduced lines on a current logical line before the visual position that corresponds
+   * to the current logical position.
+   *
+   * @see LogicalPosition#softWrapLinesOnCurrentLogicalLine
+   */
+  public static int getSoftWrapCountAfterLineStart(@NotNull Editor editor, @NotNull LogicalPosition position) {
+    if (position.visualPositionAware) {
+      return position.softWrapLinesOnCurrentLogicalLine;
+    }
+    int startOffset = editor.getDocument().getLineStartOffset(position.line);
+    int endOffset = editor.logicalPositionToOffset(position);
+    return editor.getSoftWrapModel().getSoftWrapsForRange(startOffset, endOffset).size();
   }
 }
 

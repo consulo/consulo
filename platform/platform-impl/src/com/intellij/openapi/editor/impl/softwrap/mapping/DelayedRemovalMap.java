@@ -25,13 +25,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Stands for key-value storage with <code>int</code> keys that allows to mark particular range for deletion and
  * remove it later.
- * 
+ *
  * @author Denis Zhdanov
  * @since 11/15/10 10:56 AM
  * @param <T>   value type
  */
 class DelayedRemovalMap<T> {
-  
+
   //TODO den add simple array that tracks stored key in assumption that they are adjacent
   private final TIntObjectHashMap<T> myMap = new TIntObjectHashMap<T>();
   private final TIntHashSet myKeysToRemove = new TIntHashSet();
@@ -45,7 +45,7 @@ class DelayedRemovalMap<T> {
 
   /**
    * Asks for the value stored for the given key if any.
-   *  
+   *
    * @param key   target key
    * @return      value mapped for the given key if any; <code>null</code> otherwise
    */
@@ -56,7 +56,7 @@ class DelayedRemovalMap<T> {
 
   /**
    * Stores mapping between the given key and value.
-   * 
+   *
    * @param key       target key
    * @param value     target value
    */
@@ -68,7 +68,7 @@ class DelayedRemovalMap<T> {
   /**
    * Marks all entries of the given map that belongs to the <code>[start; end]</code> interval for further removal (triggered by
    * call to {@link #deleteMarked()}).
-   * 
+   *
    * @param start   target key's interval start (inclusive)
    * @param end     target key's interval end (inclusive)
    */
@@ -109,7 +109,7 @@ class DelayedRemovalMap<T> {
 
   /**
    * Asks current map to drop all entries which keys are greater or equal to the given one.
-   * 
+   *
    * @param key   target start key
    */
   public void deleteFrom(final int key) {
@@ -132,7 +132,7 @@ class DelayedRemovalMap<T> {
     myMap.clear();
     myKeysToRemove.clear();
   }
-  
+
   public int size() {
     return myMap.size();
   }
