@@ -246,6 +246,7 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
           myPanels.setOpaque(false);
           myPanels.setBorder(new MyBorder());
           mySplitters = new EditorsSplitters(this, myDockManager, true);
+          Disposer.register(myProject, mySplitters);
           myPanels.add(mySplitters, BorderLayout.CENTER);
         }
       }
