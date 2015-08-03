@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.diff.impl.external;
+package com.intellij.diff.settings;
 
 import com.intellij.openapi.diff.DiffBundle;
+import com.intellij.openapi.diff.impl.external.DiffManagerImpl;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -33,7 +34,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DiffOptionsForm implements SearchableConfigurable, Configurable.NoScroll {
+public class ExternalDiffSettingsConfigurable implements SearchableConfigurable, Configurable.NoScroll {
   private JComponent myPanel;
   // Garbage
   private JCheckBox myEnableFolders;
@@ -46,7 +47,7 @@ public class DiffOptionsForm implements SearchableConfigurable, Configurable.NoS
 
   private final ToolPath[] myTools = new ToolPath[3];
 
-  public DiffOptionsForm() {
+  public ExternalDiffSettingsConfigurable() {
     myEnableMerge.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -61,10 +62,12 @@ public class DiffOptionsForm implements SearchableConfigurable, Configurable.NoS
     myMergeParameters.setEnabled(myEnableMerge.isEnabled());
   }
 
+  @Override
   public JComponent createComponent() {
     return myPanel;
   }
 
+  @Override
   public boolean isModified() {
     for (ToolPath tool : myTools) {
       if (tool.isModifier()) return true;
@@ -72,35 +75,42 @@ public class DiffOptionsForm implements SearchableConfigurable, Configurable.NoS
     return false;
   }
 
+  @Override
   public void apply() {
     for (ToolPath tool : myTools) {
       tool.apply();
     }
   }
 
+  @Override
   public void reset() {
     for (ToolPath tool : myTools) {
       tool.reset();
     }
   }
 
+  @Override
   public void disposeUIResources() {
   }
 
+  @Override
   @Nls
   public String getDisplayName() {
     return "External Diff Tools";
   }
 
+  @Override
   public String getHelpTopic() {
     return "diff";
   }
 
+  @Override
   @NotNull
   public String getId() {
     return getHelpTopic();
   }
 
+  @Override
   public Runnable enableSearch(final String option) {
     return null;
   }
@@ -123,6 +133,7 @@ public class DiffOptionsForm implements SearchableConfigurable, Configurable.NoS
       myParametersProperty = parametersProperty;
       final ButtonModel model = myCheckBox.getModel();
       model.addActionListener(new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           updateEnabledEffect();
         }

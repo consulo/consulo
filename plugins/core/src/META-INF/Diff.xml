@@ -45,8 +45,14 @@
                     interface="com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider"/>
     <extensionPoint qualifiedName="com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider"
                     interface="com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider"/>
+
   </extensionPoints>
   <extensions defaultExtensionNs="com.intellij">
+    <applicationConfigurable id="diff.base" displayName="Diff"
+                             instance="com.intellij.diff.settings.DiffSettingsConfigurable">
+      <configurable id="diff.external" displayName="External Diff Tools"
+                    instance="com.intellij.diff.settings.ExternalDiffSettingsConfigurable"/>
+    </applicationConfigurable>
 
     <applicationService serviceInterface="com.intellij.diff.impl.DiffSettingsHolder"
                         serviceImplementation="com.intellij.diff.impl.DiffSettingsHolder"/>
