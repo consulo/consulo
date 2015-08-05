@@ -23,15 +23,14 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBList;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -60,6 +59,12 @@ public class ModuleDependencyTabContext extends AddModuleDependencyTabContext {
         elements.add(module);
       }
     }
+    ContainerUtil.sort(elements, new Comparator<Module>() {
+      @Override
+      public int compare(Module o1, Module o2) {
+        return StringUtil.compare(o1.getName(), o2.getName(), false);
+      }
+    });
     return elements;
   }
 
