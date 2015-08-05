@@ -36,6 +36,7 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -140,6 +141,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
     return null;
   }
 
+  @RequiredDispatchThread
   @NotNull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {

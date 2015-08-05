@@ -24,6 +24,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Couple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -42,6 +43,7 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
     return (RunConfigurable)super.getConfigurable();
   }
 
+  @RequiredDispatchThread
   @NotNull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {

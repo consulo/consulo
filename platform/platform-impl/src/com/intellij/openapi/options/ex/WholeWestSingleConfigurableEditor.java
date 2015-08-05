@@ -32,6 +32,7 @@ import com.intellij.util.Alarm;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -263,6 +264,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     }
   }
 
+  @RequiredDispatchThread
   @Override
   protected void initRootPanel(@NotNull JPanel rootPanel) {
     myRootPanel = rootPanel;

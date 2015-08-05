@@ -19,29 +19,24 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.impl.StaticAnchoredButton;
-import com.intellij.openapi.wm.impl.StripeButtonUI;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.Consumer;
 import com.intellij.util.EmptyConsumer;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.ui.StripeTabPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.ButtonUI;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,11 +45,11 @@ import java.util.List;
  * @since 28.07.2015
  */
 public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
+  private static final Key<Configurable> CONFIGURABLE_KEY = Key.create("configurable.key");
 
   private final List<Configurable> myName2Config = new ArrayList<Configurable>();
-  private final List<StaticAnchoredButton> myButtons = new ArrayList<StaticAnchoredButton>();
-  private JPanel myListBoxPanel;
   private JPanel myRightPanel;
+  private StripeTabPanel myStripeTabPanel;
   private ProjectStructureConfigurable myStructureConfigurable;
 
   public static boolean show(@NotNull Project project) {
@@ -154,86 +149,74 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
 
   @NotNull
   @Override
+  @RequiredDispatchThread
   public Couple<JComponent> createSplitterComponents(final JPanel rootPanel) {
-    final JPanel tabPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
-    tabPanel.setBorder(new CustomLineBorder(0, 0, 0, 1));
-    myListBoxPanel = new JPanel(new CardLayout());
     myRightPanel = new JPanel(new CardLayout());
 
-    final JPanel leftPanel = new JPanel(new BorderLayout());
-    ButtonGroup buttonGroup = new ButtonGroup();
-    ItemListener itemListener = new ItemListener() {
+    myStripeTabPanel = new StripeTabPanel();
+    myStripeTabPanel.addSelectListener(new StripeTabPanel.SelectListener() {
+      @RequiredDispatchThread
       @Override
-      public void itemStateChanged(ItemEvent e) {
-        if (e.getStateChange() == ItemEvent.SELECTED) {
-          StaticAnchoredButton source = (StaticAnchoredButton)e.getSource();
+      public void selected(@NotNull StripeTabPanel.TabInfo tabInfo) {
+        Configurable configurable = tabInfo.getUserData(CONFIGURABLE_KEY);
+        CardLayout right = (CardLayout)myRightPanel.getLayout();
 
-          CardLayout listBox = (CardLayout)myListBoxPanel.getLayout();
-          CardLayout right = (CardLayout)myRightPanel.getLayout();
-
-          Object clientProperty = source.getClientProperty(Configurable.class);
-          if (clientProperty instanceof WholeWestConfigurable) {
-            listBox.show(myListBoxPanel, ((WholeWestConfigurable)clientProperty).getDisplayName());
-            right.show(myRightPanel, ((WholeWestConfigurable)clientProperty).getDisplayName());
-            myStructureConfigurable.setSelectedConfigurable((Configurable)clientProperty);
-          }
+        if (configurable instanceof WholeWestConfigurable) {
+          right.show(myRightPanel, configurable.getDisplayName());
+          myStructureConfigurable.setSelectedConfigurable(configurable);
         }
       }
-    };
+    });
 
-    StaticAnchoredButton firstButton = null;
+    StripeTabPanel.TabInfo firstButton = null;
     for (Configurable sub : myName2Config) {
-      StaticAnchoredButton button = new StaticAnchoredButton(sub.getDisplayName(), ToolWindowAnchor.LEFT);
-      if (firstButton == null) {
-        firstButton = button;
-      }
-
-      button.addItemListener(itemListener);
-      button.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
-      button.setBackground(new Color(247, 243, 239));
-      button.setUI((ButtonUI)StripeButtonUI.createUI(button));
-
-      tabPanel.add(button);
-
-      button.putClientProperty(Configurable.class, sub);
-
+      final JComponent component;
       if (sub instanceof WholeWestConfigurable) {
         Couple<JComponent> splitterComponents = ((WholeWestConfigurable)sub).createSplitterComponents();
 
-        myListBoxPanel.add(splitterComponents.getFirst(), sub.getDisplayName());
         myRightPanel.add(splitterComponents.getSecond(), sub.getDisplayName());
+        component = splitterComponents.getFirst();
+      }
+      else {
+        component = new JPanel();
       }
 
-      buttonGroup.add(button);
-      myButtons.add(button);
+      StripeTabPanel.TabInfo tabInfo = myStripeTabPanel.addTab(sub.getDisplayName(), component);
+      if (firstButton == null) {
+        firstButton = tabInfo;
+      }
+      tabInfo.putUserData(CONFIGURABLE_KEY, sub);
     }
 
-    if (buttonGroup.getSelection() == null) {
-      assert firstButton != null;
-      firstButton.setSelected(true);
-    }
+    assert firstButton != null;
+    firstButton.select();
 
-    leftPanel.add(tabPanel, BorderLayout.WEST);
-    leftPanel.add(myListBoxPanel, BorderLayout.CENTER);
-    return Couple.<JComponent>of(leftPanel, myRightPanel);
+    return Couple.<JComponent>of(myStripeTabPanel, myRightPanel);
   }
 
+  @RequiredDispatchThread
   public void select(@NotNull Configurable configurable) {
-    for (StaticAnchoredButton button : myButtons) {
-      Object clientProperty = button.getClientProperty(Configurable.class);
-      if (clientProperty == configurable) {
-        button.setSelected(true);
+    List<StripeTabPanel.TabInfo> tabs = myStripeTabPanel.getTabs();
+    for (StripeTabPanel.TabInfo tab : tabs) {
+      Configurable other = tab.getUserData(CONFIGURABLE_KEY);
+      if(other == configurable) {
+        tab.select();
+        break;
       }
     }
   }
 
   @NotNull
   public Configurable getSelectedConfigurable() {
-    for (StaticAnchoredButton button : myButtons) {
-      if (button.isSelected()) {
-        return (Configurable)button.getClientProperty(Configurable.class);
+    List<StripeTabPanel.TabInfo> tabs = myStripeTabPanel.getTabs();
+    for (StripeTabPanel.TabInfo tab : tabs) {
+      if(tab.isSelected()) {
+        Configurable data = tab.getUserData(CONFIGURABLE_KEY);
+        assert data != null;
+        return data;
       }
     }
+
     throw new UnsupportedOperationException();
   }
 }
