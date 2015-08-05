@@ -510,7 +510,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
 
   @Override
   public void paint(@NotNull Graphics g) {
-    UISettings.setupAntialiasing(g);
+    UIUtil.applyRenderingHints(g);
     //noinspection Since15
     super.paint(g);
   }

@@ -17,7 +17,6 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
@@ -231,7 +230,7 @@ public class AboutDialog extends JDialog {
     protected void paintChildren(Graphics g) {
       super.paintChildren(g);
       Graphics2D g2 = (Graphics2D)g;
-      UISettings.setupAntialiasing(g);
+      UIUtil.applyRenderingHints(g);
 
       Font labelFont = UIUtil.getLabelFont();
       for (int labelSize = 10; labelSize != 6; labelSize -= 1) {

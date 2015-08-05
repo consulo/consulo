@@ -16,7 +16,6 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -447,7 +446,7 @@ public class FrameWrapper implements Disposable, DataProvider {
 
     @Override
     public void paint(Graphics g) {
-      UISettings.setupAntialiasing(g);
+      UIUtil.applyRenderingHints(g);
       super.paint(g);
     }
   }
@@ -551,7 +550,7 @@ public class FrameWrapper implements Disposable, DataProvider {
 
     @Override
     public void paint(Graphics g) {
-      UISettings.setupAntialiasing(g);
+      UIUtil.applyRenderingHints(g);
       super.paint(g);
     }
   }

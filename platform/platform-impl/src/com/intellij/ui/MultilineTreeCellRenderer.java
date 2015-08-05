@@ -15,7 +15,6 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ArrayUtil;
@@ -155,7 +154,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
     currBaseLine += myTextInsets.top;
     g.setFont(getFont());
     g.setColor(fgColor);
-    UISettings.setupAntialiasing(g);
+    UIUtil.applyRenderingHints(g);
 
     if (!StringUtil.isEmpty(myPrefix)) {
       g.drawString(myPrefix, myTextInsets.left - myPrefixWidth + 1, currBaseLine);

@@ -16,7 +16,6 @@
 
 package com.intellij.ui;
 
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.ui.UIUtil;
@@ -345,7 +344,7 @@ public class HighlightableComponent extends JComponent {
   }
 
   protected void applyRenderingHints(Graphics g) {
-    UISettings.setupAntialiasing(g);
+    UIUtil.applyRenderingHints(g);
   }
 
   private int getTextOffset() {

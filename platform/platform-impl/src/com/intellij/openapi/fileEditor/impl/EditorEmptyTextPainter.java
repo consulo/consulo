@@ -17,7 +17,6 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.ide.actions.ShowFilePathAction;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.keymap.KeymapManager;
@@ -48,7 +47,7 @@ public class EditorEmptyTextPainter {
 
   public void paintEmptyText(final EditorsSplitters splitters, Graphics g) {
     boolean isDarkBackground = UIUtil.isUnderDarcula();
-    UISettings.setupAntialiasing(g);
+    UIUtil.applyRenderingHints(g);
     GraphicsUtil.setupAntialiasing(g, true, false);
     g.setColor(new JBColor(isDarkBackground ? Gray._230 : Gray._80, Gray._160));
     g.setFont(JBUI.Fonts.label(isDarkBackground ? 24f : 20f));

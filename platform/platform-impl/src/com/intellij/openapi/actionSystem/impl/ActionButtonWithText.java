@@ -37,6 +37,7 @@ public class ActionButtonWithText extends ActionButton {
     setForeground(UIUtil.getLabelForeground());
   }
 
+  @Override
   public Dimension getPreferredSize() {
     final Dimension preferredSize = new Dimension(super.getPreferredSize());
     final String text = getText();
@@ -46,6 +47,7 @@ public class ActionButtonWithText extends ActionButton {
     return preferredSize;
   }
 
+  @Override
   public void paintComponent(Graphics g) {
     Icon icon = getIcon();
     FontMetrics fm = SwingUtilities2.getFontMetrics(this, g, getFont());

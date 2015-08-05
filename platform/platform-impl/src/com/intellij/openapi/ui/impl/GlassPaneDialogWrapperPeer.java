@@ -533,7 +533,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
 
     @Override
     public void paint(final Graphics g) {
-      UISettings.setupAntialiasing(g);
+      UIUtil.applyRenderingHints(g);
       super.paint(g);
     }
 

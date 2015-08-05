@@ -407,7 +407,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
   protected void paintChildren(Graphics g) {
     Graphics2D graphics = (Graphics2D) g.create();
 
-    UISettings.setupAntialiasing(g);
+    UIUtil.applyRenderingHints(graphics);
     super.paintChildren(graphics);
 
     Rectangle r = getBounds();

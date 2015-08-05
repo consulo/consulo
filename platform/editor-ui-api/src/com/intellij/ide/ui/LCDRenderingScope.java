@@ -46,6 +46,7 @@ public enum LCDRenderingScope {
     return aaDisabled;
   }
 
+
   public static Object getKeyForCurrentScope(boolean inEditor) {
     Object renderingHint = RenderingHints.VALUE_TEXT_ANTIALIAS_OFF;
 
