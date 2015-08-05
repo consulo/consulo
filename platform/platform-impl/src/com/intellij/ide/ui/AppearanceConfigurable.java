@@ -72,6 +72,19 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     myComponent.myLafComboBox.setModel(new DefaultComboBoxModel(LafManager.getInstance().getInstalledLookAndFeels()));
     myComponent.myLafComboBox.setRenderer(new LafComboBoxRenderer());
 
+    myComponent.myAntialiasingCheckBox.setSelected(UISettings.getInstance().ANTIALIASING_IN_IDE);
+    myComponent.myLCDRenderingScopeCombo.setEnabled(UISettings.getInstance().ANTIALIASING_IN_IDE);
+
+    myComponent.myAntialiasingCheckBox.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        myComponent.myLCDRenderingScopeCombo.setEnabled(myComponent.myAntialiasingCheckBox.isSelected());
+      }
+    });
+
+    myComponent.myLCDRenderingScopeCombo.setModel(new DefaultComboBoxModel(LCDRenderingScope.values()));
+    myComponent.myLCDRenderingScopeCombo.setSelectedItem(UISettings.getInstance().LCD_RENDERING_SCOPE);
+
     Dictionary<Integer, JLabel> delayDictionary = new Hashtable<Integer, JLabel>();
     delayDictionary.put(new Integer(0), new JLabel("0"));
     delayDictionary.put(new Integer(1200), new JLabel("1200"));
@@ -137,6 +150,16 @@ public class AppearanceConfigurable implements SearchableConfigurable {
 
     if (_presentationFontSize != settings.PRESENTATION_MODE_FONT_SIZE) {
       settings.PRESENTATION_MODE_FONT_SIZE = _presentationFontSize;
+      shouldUpdateUI = true;
+    }
+
+    if (myComponent.myAntialiasingCheckBox.isSelected() != settings.ANTIALIASING_IN_IDE) {
+      settings.ANTIALIASING_IN_IDE = myComponent.myAntialiasingCheckBox.isSelected();
+      shouldUpdateUI = true;
+    }
+
+    if (!myComponent.myLCDRenderingScopeCombo.getSelectedItem().equals(settings.LCD_RENDERING_SCOPE)) {
+      settings.LCD_RENDERING_SCOPE = (LCDRenderingScope)myComponent.myLCDRenderingScopeCombo.getSelectedItem();
       shouldUpdateUI = true;
     }
 
@@ -261,6 +284,8 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     UISettings settings = UISettings.getInstance();
 
     myComponent.myFontCombo.setSelectedItem(settings.FONT_FACE);
+    myComponent.myAntialiasingCheckBox.setSelected(settings.ANTIALIASING_IN_IDE);
+    myComponent.myLCDRenderingScopeCombo.setSelectedItem(settings.LCD_RENDERING_SCOPE);
     myComponent.myFontSizeCombo.setSelectedItem(Integer.toString(settings.FONT_SIZE));
     myComponent.myPresentationModeFontSize.setSelectedItem(Integer.toString(settings.PRESENTATION_MODE_FONT_SIZE));
     myComponent.myAnimateWindowsCheckBox.setSelected(settings.ANIMATE_WINDOWS);
@@ -311,6 +336,8 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     boolean isModified = false;
     isModified |= !Comparing.equal(myComponent.myFontCombo.getSelectedItem(), settings.FONT_FACE);
     isModified |= !Comparing.equal(myComponent.myFontSizeCombo.getEditor().getItem(), Integer.toString(settings.FONT_SIZE));
+    isModified |= myComponent.myAntialiasingCheckBox.isSelected() != settings.ANTIALIASING_IN_IDE;
+    isModified |= !myComponent.myLCDRenderingScopeCombo.getSelectedItem().equals(settings.LCD_RENDERING_SCOPE);
     isModified |= myComponent.myAnimateWindowsCheckBox.isSelected() != settings.ANIMATE_WINDOWS;
     isModified |= myComponent.myWindowShortcutsCheckBox.isSelected() != settings.SHOW_TOOL_WINDOW_NUMBERS;
     isModified |= myComponent.myShowToolStripesCheckBox.isSelected() == settings.HIDE_TOOL_STRIPES;
@@ -403,6 +430,8 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     private JSlider myInitialTooltipDelaySlider;
     private ComboBox myPresentationModeFontSize;
     private JCheckBox myEditorTooltipCheckBox;
+    private JBCheckBox myAntialiasingCheckBox;
+    private ComboBox myLCDRenderingScopeCombo;
 
     public MyComponent() {
       myOverrideLAFFonts.addActionListener( new ActionListener() {

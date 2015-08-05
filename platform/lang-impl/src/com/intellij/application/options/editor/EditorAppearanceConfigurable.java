@@ -17,8 +17,6 @@
 package com.intellij.application.options.editor;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
-import com.intellij.ide.ui.LafManager;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -57,7 +55,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
   private JTextField myBlinkIntervalField;
   private JPanel myAddonPanel;
   private JCheckBox myCbShowMethodSeparators;
-  private JCheckBox myAntialiasingInEditorCheckBox;
   private JCheckBox myCbShowIconsInGutter;
   private JCheckBox myShowVerticalIndentGuidesCheckBox;
 
@@ -85,7 +82,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     myCbBlockCursor.setSelected(editorSettings.isBlockCursor());
     myCbShowWhitespaces.setSelected(editorSettings.isWhitespacesShown());
     myShowVerticalIndentGuidesCheckBox.setSelected(editorSettings.isIndentGuidesShown());
-    myAntialiasingInEditorCheckBox.setSelected(UISettings.getInstance().ANTIALIASING_IN_EDITOR);
     myCbShowIconsInGutter.setSelected(DaemonCodeAnalyzerSettings.getInstance().SHOW_SMALL_ICONS_IN_GUTTER);
 
     super.reset();
@@ -112,13 +108,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     DaemonCodeAnalyzerSettings.getInstance().SHOW_METHOD_SEPARATORS = myCbShowMethodSeparators.isSelected();
     DaemonCodeAnalyzerSettings.getInstance().SHOW_SMALL_ICONS_IN_GUTTER = myCbShowIconsInGutter.isSelected();
 
-    UISettings uiSettings = UISettings.getInstance();
-    if (uiSettings.ANTIALIASING_IN_EDITOR != myAntialiasingInEditorCheckBox.isSelected()) {
-      uiSettings.ANTIALIASING_IN_EDITOR = myAntialiasingInEditorCheckBox.isSelected();
-      LafManager.getInstance().repaintUI();
-      uiSettings.fireUISettingsChanged();
-    }
-
     EditorOptionsPanel.restartDaemons();
 
     super.apply();
@@ -140,7 +129,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     isModified |= isModified(myShowVerticalIndentGuidesCheckBox, editorSettings.isIndentGuidesShown());
     isModified |= isModified(myCbShowMethodSeparators, DaemonCodeAnalyzerSettings.getInstance().SHOW_METHOD_SEPARATORS);
     isModified |= isModified(myCbShowIconsInGutter, DaemonCodeAnalyzerSettings.getInstance().SHOW_SMALL_ICONS_IN_GUTTER);
-    isModified |= myAntialiasingInEditorCheckBox.isSelected() != UISettings.getInstance().ANTIALIASING_IN_EDITOR;
 
     return isModified;
   }

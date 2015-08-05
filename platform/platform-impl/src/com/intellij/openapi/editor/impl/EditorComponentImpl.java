@@ -16,19 +16,20 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.TypingTarget;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
+import com.intellij.ui.EditorTextField;
 import com.intellij.ui.components.Magnificator;
-import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -148,9 +149,11 @@ public class EditorComponentImpl extends JComponent implements Scrollable, DataP
     myApplication.editorPaintStart();
 
     try {
-      UIUtil.setupComposite((Graphics2D)g);
-      UISettings.setupAntialiasing(g);
-      myEditor.paint((Graphics2D)g);
+      Graphics2D gg = !Boolean.TRUE.equals(EditorTextField.SUPPLEMENTARY_KEY.get(myEditor)) ?
+                      IdeBackgroundUtil.withEditorBackground(g, this) : (Graphics2D)g;
+      UIUtil.setupComposite(gg);
+      EditorUIUtil.setupAntialiasing(gg);
+      myEditor.paint(gg);
     }
     finally {
       myApplication.editorPaintFinish();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,12 +37,18 @@ import java.util.List;
 public class ComplementaryFontsRegistry {
   private static final Object lock = new String("common lock");
   private static final List<String> ourFontNames;
-  private static final Set<String> ourStyledFontNames;
+  private static final Map<String, Pair<String, Integer>[]> ourStyledFontMap = new HashMap<String, Pair<String, Integer>[]>();
   private static final LinkedHashMap<FontKey, FontInfo> ourUsedFonts;
   private static FontKey ourSharedKeyInstance = new FontKey("", 0, 0);
   private static FontInfo ourSharedDefaultFont;
   private static final TIntHashSet ourUndisplayableChars = new TIntHashSet();
   private static boolean ourOldUseAntialiasing;
+
+  // This matches style detection in JDK (class sun.font.Font2D)
+  private static final String[] BOLD_NAMES = {"bold", "demibold", "demi-bold", "demi bold", "negreta", "demi" };
+  private static final String[] ITALIC_NAMES = {"italic", "cursiva", "oblique", "inclined"};
+  private static final String[] BOLD_ITALIC_NAMES = {"bolditalic", "bold-italic", "bold italic", "boldoblique", "bold-oblique",
+          "bold oblique", "demibold italic", "negreta cursiva","demi oblique"};
 
   static {
     final UISettings settings = UISettings.getInstance();
@@ -100,24 +106,14 @@ public class ComplementaryFontsRegistry {
   @NonNls private static final String ITALIC_SUFFIX = ".italic";
 
   static {
-    ourStyledFontNames = new HashSet<String>();
     ourFontNames = new ArrayList<String>();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       ourFontNames.add("Monospaced");
-    }
-    else {
-      GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    } else {
       if (SystemInfo.isMac) {
-        Font[] allFonts = graphicsEnvironment.getAllFonts();
-        for (Font font : allFonts) {
-          String name = font.getName();
-          if (name.endsWith("-Italic") || name.endsWith("-Bold") || name.endsWith("-BoldItalic")) {
-            ourStyledFontNames.add(font.getName());
-          }
-        }
+        fillStyledFontMap();
       }
-
-      String[] fontNames = graphicsEnvironment.getAvailableFontFamilyNames();
+      String[] fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       for (final String fontName : fontNames) {
         if (!fontName.endsWith(BOLD_SUFFIX) && !fontName.endsWith(ITALIC_SUFFIX)) {
           ourFontNames.add(fontName);
@@ -127,21 +123,40 @@ public class ComplementaryFontsRegistry {
     ourUsedFonts = new LinkedHashMap<FontKey, FontInfo>();
   }
 
-  private static Pair<String, Integer> fontFamily(String familyName, int style) {
-    if (!SystemInfo.isMac || style == 0) return Pair.create(familyName, style);
-
-    StringBuilder st = new StringBuilder(familyName).append('-');
-    if ((style & Font.BOLD) != 0) {
-      st.append("Bold");
+  private static void fillStyledFontMap() {
+    Font[] allFonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+    for (Font font : allFonts) {
+      String name = font.getName();
+      int style = getFontStyle(name);
+      if (style != Font.PLAIN) {
+        String familyName = font.getFamily();
+        Pair<String, Integer>[] entry = ourStyledFontMap.get(familyName);
+        if (entry == null) {
+          //noinspection unchecked
+          entry = new Pair[4];
+          for (int i = 1; i < 4; i++) {
+            entry[i] = Pair.create(familyName, i);
+          }
+          ourStyledFontMap.put(familyName, entry);
+        }
+        entry[style] = Pair.create(name, Font.PLAIN);
+      }
     }
+  }
 
-    if ((style & Font.ITALIC) != 0) {
-      st.append("Italic");
+  @JdkConstants.FontStyle
+  private static int getFontStyle(String fontName) {
+    fontName = fontName.toLowerCase(Locale.getDefault());
+    for (String name : BOLD_ITALIC_NAMES) {
+      if (fontName.contains(name)) return Font.BOLD | Font.ITALIC;
     }
-
-    String styledFamilyName = st.toString();
-    boolean found = ourStyledFontNames.contains(styledFamilyName);
-    return Pair.create(found ? styledFamilyName : familyName, found ? Font.PLAIN : style);
+    for (String name : ITALIC_NAMES) {
+      if (fontName.contains(name)) return Font.ITALIC;
+    }
+    for (String name : BOLD_NAMES) {
+      if (fontName.contains(name)) return Font.BOLD;
+    }
+    return Font.PLAIN;
   }
 
   @NotNull
@@ -149,7 +164,8 @@ public class ComplementaryFontsRegistry {
     boolean tryDefaultFont = true;
     List<String> fontFamilies = preferences.getEffectiveFontFamilies();
     FontInfo result;
-    for (int i = 0, len = fontFamilies.size(); i < len; ++i) {
+    //noinspection ForLoopReplaceableByForEach
+    for (int i = 0, len = fontFamilies.size(); i < len; ++i) { // avoid foreach, it instantiates ArrayList$Itr, this traversal happens very often
       final String fontFamily = fontFamilies.get(i);
       result = doGetFontAbleToDisplay(c, preferences.getSize(fontFamily), style, fontFamily);
       if (result != null) {
@@ -182,23 +198,32 @@ public class ComplementaryFontsRegistry {
   @Nullable
   private static FontInfo doGetFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @NotNull String defaultFontFamily) {
     synchronized (lock) {
-      Pair<String, Integer> p = fontFamily(defaultFontFamily, style);
+      if (SystemInfo.isMac && style > 0 && style < 4) {
+        Pair<String, Integer>[] replacement = ourStyledFontMap.get(defaultFontFamily);
+        if (replacement != null) {
+          defaultFontFamily = replacement[style].first;
+          style = replacement[style].second;
+        }
+      }
       if (ourSharedKeyInstance.mySize == size &&
-          ourSharedKeyInstance.myStyle == p.getSecond() &&
+          ourSharedKeyInstance.myStyle == style &&
           ourSharedKeyInstance.myFamilyName != null &&
-          ourSharedKeyInstance.myFamilyName.equals(p.getFirst()) &&
+          ourSharedKeyInstance.myFamilyName.equals(defaultFontFamily) &&
           ourSharedDefaultFont != null &&
-          (c < 128 || ourSharedDefaultFont.canDisplay(c))) {
+          ( c < 128 ||
+            ourSharedDefaultFont.canDisplay(c)
+          )
+              ) {
         return ourSharedDefaultFont;
       }
 
-      ourSharedKeyInstance.myFamilyName = p.getFirst();
+      ourSharedKeyInstance.myFamilyName = defaultFontFamily;
       ourSharedKeyInstance.mySize = size;
-      ourSharedKeyInstance.myStyle = p.getSecond();
+      ourSharedKeyInstance.myStyle = style;
 
       FontInfo defaultFont = ourUsedFonts.get(ourSharedKeyInstance);
       if (defaultFont == null) {
-        defaultFont = new FontInfo(p.getFirst(), size, p.getSecond());
+        defaultFont = new FontInfo(defaultFontFamily, size, style);
         ourUsedFonts.put(ourSharedKeyInstance, defaultFont);
         ourSharedKeyInstance = new FontKey("", 0, 0);
       }

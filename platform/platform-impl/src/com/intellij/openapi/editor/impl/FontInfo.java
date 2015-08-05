@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.ide.ui.UISettings;
+import com.intellij.openapi.editor.ex.util.EditorUIUtil;
+import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntHashSet;
 import org.intellij.lang.annotations.JdkConstants;
@@ -30,6 +32,8 @@ import java.awt.image.BufferedImage;
  * @author max
  */
 public class FontInfo {
+  private static final boolean USE_ALTERNATIVE_CAN_DISPLAY_PROCEDURE = SystemInfo.isAppleJvm && Registry.is("ide.mac.fix.font.fallback");
+  private static final FontRenderContext DUMMY_CONTEXT = new FontRenderContext(null, false, false);
 
   private final TIntHashSet mySymbolsToBreakDrawingIteration = new TIntHashSet();
 
@@ -47,7 +51,7 @@ public class FontInfo {
     myStyle = style;
     myFont = new Font(familyName, style, size);
   }
-  
+
   private void parseProblemGlyphs() {
     myCheckedForProblemGlyphs = true;
     BufferedImage buffer = UIUtil.createImage(20, 20, BufferedImage.TYPE_INT_RGB);
@@ -81,7 +85,7 @@ public class FontInfo {
    * <p/>
    * Hopefully, such glyphs are exceptions from the normal processing, so, this method allows to answer whether a font
    * {@link #getFont() referenced} by the current object has such a glyph.
-   * 
+   *
    * @return    true if the {@link #getFont() target font} has problem glyphs; <code>false</code> otherwise
    */
   public boolean hasGlyphsToBreakDrawingIteration() {
@@ -107,7 +111,7 @@ public class FontInfo {
     try {
       if (c < 128) return true;
       if (mySafeCharacters.contains(c)) return true;
-      if (myFont.canDisplay(c)) {
+      if (canDisplayImpl(c)) {
         mySafeCharacters.add(c);
         return true;
       }
@@ -116,6 +120,15 @@ public class FontInfo {
     catch (Exception e) {
       // JRE has problems working with the font. Just skip.
       return false;
+    }
+  }
+
+  private boolean canDisplayImpl(char c) {
+    if (USE_ALTERNATIVE_CAN_DISPLAY_PROCEDURE) {
+      return myFont.createGlyphVector(DUMMY_CONTEXT, new char[]{c}).getGlyphCode(0) > 0;
+    }
+    else {
+      return myFont.canDisplay(c);
     }
   }
 
@@ -134,7 +147,7 @@ public class FontInfo {
       // We need to use antialising-aware font metrics because we've alrady encountered a situation when non-antialiased symbol
       // width is not equal to the antialiased one (IDEA-81539).
       final Graphics graphics = UIUtil.createImage(1, 1, BufferedImage.TYPE_INT_RGB).getGraphics();
-      UISettings.setupAntialiasing(graphics);
+      EditorUIUtil.setupAntialiasing(graphics);
       graphics.setFont(myFont);
       myFontMetrics = graphics.getFontMetrics();
       for (int i = 0; i < 128; i++) {
@@ -147,7 +160,7 @@ public class FontInfo {
   void reset() {
     myFontMetrics = null;
   }
-  
+
   public int getSize() {
     return mySize;
   }
