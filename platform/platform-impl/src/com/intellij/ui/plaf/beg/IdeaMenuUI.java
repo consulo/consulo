@@ -15,6 +15,7 @@
  */
 package com.intellij.ui.plaf.beg;
 
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.UIUtil;
 
@@ -72,7 +73,7 @@ public class IdeaMenuUI extends BasicMenuUI{
 
   @Override
   public void paint(Graphics g, JComponent comp) {
-    UIUtil.applyRenderingHints(g);
+    UISettings.setupAntialiasing(g);
     JMenu jMenu = (JMenu)comp;
     ButtonModel buttonmodel = jMenu.getModel();
     int mnemonicIndex = jMenu.getDisplayedMnemonicIndex();
