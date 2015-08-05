@@ -24,6 +24,7 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
@@ -45,6 +46,8 @@ public class ModuleDependencyTabContext extends AddModuleDependencyTabContext {
     myNotAddedModules = getNotAddedModules();
     myModuleList = new JBList(myNotAddedModules);
     myModuleList.setCellRenderer(new ModuleListCellRenderer());
+
+    new ListSpeedSearch(myModuleList);
   }
 
   private List<Module> getNotAddedModules() {

@@ -49,11 +49,18 @@ public class StripeTabPanel extends JPanel {
 
   public static class TabInfo extends UserDataHolderBase {
     private JComponent myComponent;
+    private JComponent myPreferredFocusableComponent;
     private StaticAnchoredButton myButton;
 
-    public TabInfo(StaticAnchoredButton button, JComponent component) {
+    public TabInfo(StaticAnchoredButton button, JComponent component, JComponent preferredFocusableComponent) {
       myButton = button;
       myComponent = component;
+      myPreferredFocusableComponent = preferredFocusableComponent;
+    }
+
+    @Nullable
+    public JComponent getPreferredFocusableComponent() {
+      return myPreferredFocusableComponent;
     }
 
     @NotNull
@@ -95,6 +102,11 @@ public class StripeTabPanel extends JPanel {
         contentPanel.show(myContentPanel, tabInfo.getTabName());
 
         mySelectListenerDispatcher.getMulticaster().selected(tabInfo);
+
+        JComponent preferredFocusableComponent = tabInfo.getPreferredFocusableComponent();
+        if(preferredFocusableComponent != null) {
+          preferredFocusableComponent.requestFocus();
+        }
       }
     }
   };
@@ -123,6 +135,12 @@ public class StripeTabPanel extends JPanel {
   @NotNull
   @RequiredDispatchThread
   public TabInfo addTab(@NotNull String tabName, @NotNull JComponent component) {
+    return addTab(tabName, component, component);
+  }
+
+  @NotNull
+  @RequiredDispatchThread
+  public TabInfo addTab(@NotNull String tabName, @NotNull JComponent component, @Nullable JComponent preferredFocusableComponent) {
     StaticAnchoredButton button = new StaticAnchoredButton(tabName, ToolWindowAnchor.LEFT);
 
     button.addItemListener(myItemListener);
@@ -132,7 +150,7 @@ public class StripeTabPanel extends JPanel {
 
     myTabPanel.add(button);
 
-    TabInfo tabInfo = new TabInfo(button, component);
+    TabInfo tabInfo = new TabInfo(button, component, preferredFocusableComponent);
     button.putClientProperty(TabInfo.class, tabInfo);
 
     myButtonGroup.add(button);

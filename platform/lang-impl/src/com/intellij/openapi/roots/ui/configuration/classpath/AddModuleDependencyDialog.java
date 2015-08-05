@@ -59,7 +59,7 @@ public class AddModuleDependencyDialog extends DialogWrapper {
       JComponent component = tabContext.getComponent();
       JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(component, true);
 
-      StripeTabPanel.TabInfo tabInfo = myTabs.addTab(tabContext.getTabName(), scrollPane);
+      StripeTabPanel.TabInfo tabInfo = myTabs.addTab(tabContext.getTabName(), scrollPane, component);
       tabInfo.setEnabled(!tabContext.isEmpty());
       tabInfo.putUserData(CONTEXT_KEY, tabContext);
     }
