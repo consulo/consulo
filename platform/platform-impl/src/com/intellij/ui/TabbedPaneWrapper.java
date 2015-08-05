@@ -348,6 +348,7 @@ public class TabbedPaneWrapper  {
     /*
      * Make possible to search down for DataProviders
      */
+    @Override
     public Object getData(final String dataId) {
       if(myComponent instanceof DataProvider){
         return ((DataProvider)myComponent).getData(dataId);
@@ -370,6 +371,7 @@ public class TabbedPaneWrapper  {
       }
     }
 
+    @Override
     public boolean requestDefaultFocus() {
       if (!myCustomFocus) return super.requestDefaultFocus();
       if (myComponent == null) return false; // Just in case someone requests the focus when we're already removed from the Swing tree.
@@ -384,6 +386,7 @@ public class TabbedPaneWrapper  {
       }
     }
 
+    @Override
     public void requestFocus() {
       if (!myCustomFocus) {
         super.requestFocus();
@@ -392,6 +395,7 @@ public class TabbedPaneWrapper  {
       }
     }
 
+    @Override
     public boolean requestFocusInWindow() {
       if (!myCustomFocus) return super.requestFocusInWindow();
       return requestDefaultFocus();
@@ -399,6 +403,7 @@ public class TabbedPaneWrapper  {
   }
 
   private final class _MyFocusTraversalPolicy extends IdeFocusTraversalPolicy{
+    @Override
     public final Component getDefaultComponentImpl(final Container focusCycleRoot) {
       final JComponent component=getSelectedComponent();
       if(component!=null){
@@ -418,6 +423,7 @@ public class TabbedPaneWrapper  {
       myWrapper = wrapper;
     }
 
+    @Override
     public boolean requestDefaultFocus() {
       final JComponent preferredFocusedComponent = IdeFocusTraversalPolicy.getPreferredFocusedComponent(myWrapper.myTabbedPane.getComponent());
       if (preferredFocusedComponent != null) {
@@ -430,14 +436,17 @@ public class TabbedPaneWrapper  {
       }
     }
 
+    @Override
     public final void requestFocus() {
       requestDefaultFocus();
     }
 
+    @Override
     public final boolean requestFocusInWindow() {
       return requestDefaultFocus();
     }
 
+    @Override
     public void updateUI() {
       super.updateUI();
       if (myWrapper != null) {
@@ -463,14 +472,17 @@ public class TabbedPaneWrapper  {
       myWrapper = wrapper;
     }
 
+    @Override
     public TabbedPane createTabbedPane(int tabPlacement) {
       return new TabbedPaneImpl(tabPlacement);
     }
 
+    @Override
     public TabbedPaneHolder createTabbedPaneHolder() {
       return new TabbedPaneHolder(myWrapper);
     }
 
+    @Override
     public TabWrapper createTabWrapper(JComponent component) {
       return new TabWrapper(component);
     }
@@ -488,10 +500,12 @@ public class TabbedPaneWrapper  {
       myParent = parent;
     }
 
+    @Override
     public TabbedPane createTabbedPane(int tabPlacement) {
       return new JBTabsPaneImpl(myProject, tabPlacement, myParent);
     }
 
+    @Override
     public TabbedPaneHolder createTabbedPaneHolder() {
       return new TabbedPaneHolder(myWrapper) {
         @Override
@@ -503,6 +517,7 @@ public class TabbedPaneWrapper  {
       };
     }
 
+    @Override
     public TabWrapper createTabWrapper(JComponent component) {
       final TabWrapper tabWrapper = new TabWrapper(component);
       tabWrapper.myCustomFocus = false;
