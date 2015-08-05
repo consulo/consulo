@@ -24,6 +24,7 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -31,7 +32,9 @@ import javax.swing.plaf.ButtonUI;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.EventListener;
 import java.util.List;
 
 /**
@@ -70,6 +73,10 @@ public class StripeTabPanel extends JPanel {
     @RequiredDispatchThread
     public void select() {
       myButton.setSelected(true);
+    }
+
+    public void setEnabled(boolean enabled) {
+      myButton.setEnabled(enabled);
     }
   }
 
@@ -114,6 +121,7 @@ public class StripeTabPanel extends JPanel {
   }
 
   @NotNull
+  @RequiredDispatchThread
   public TabInfo addTab(@NotNull String tabName, @NotNull JComponent component) {
     StaticAnchoredButton button = new StaticAnchoredButton(tabName, ToolWindowAnchor.LEFT);
 
@@ -126,9 +134,26 @@ public class StripeTabPanel extends JPanel {
 
     TabInfo tabInfo = new TabInfo(button, component);
     button.putClientProperty(TabInfo.class, tabInfo);
+
     myButtonGroup.add(button);
     myContentPanel.add(component, tabName);
+    if(myButtonGroup.getSelection() == null) {
+      tabInfo.select();
+    }
     return tabInfo;
+  }
+
+  @Nullable
+  public TabInfo getSelectedTab() {
+    Enumeration<AbstractButton> elements = myButtonGroup.getElements();
+    while (elements.hasMoreElements()) {
+      AbstractButton button = elements.nextElement();
+
+      if (button.isSelected()) {
+        return (TabInfo)button.getClientProperty(TabInfo.class);
+      }
+    }
+    return null;
   }
 
   @NotNull

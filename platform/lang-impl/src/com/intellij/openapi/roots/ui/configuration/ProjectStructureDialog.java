@@ -168,7 +168,6 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
       }
     });
 
-    StripeTabPanel.TabInfo firstButton = null;
     for (Configurable sub : myName2Config) {
       final JComponent component;
       if (sub instanceof WholeWestConfigurable) {
@@ -182,14 +181,8 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
       }
 
       StripeTabPanel.TabInfo tabInfo = myStripeTabPanel.addTab(sub.getDisplayName(), component);
-      if (firstButton == null) {
-        firstButton = tabInfo;
-      }
       tabInfo.putUserData(CONFIGURABLE_KEY, sub);
     }
-
-    assert firstButton != null;
-    firstButton.select();
 
     return Couple.<JComponent>of(myStripeTabPanel, myRightPanel);
   }

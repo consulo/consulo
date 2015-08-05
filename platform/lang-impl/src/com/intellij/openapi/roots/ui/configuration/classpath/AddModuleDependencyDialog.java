@@ -15,38 +15,41 @@
  */
 package com.intellij.openapi.roots.ui.configuration.classpath;
 
-import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.*;
+import com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabContext;
+import com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.IdeBorderFactory;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.tabs.JBTabsPosition;
-import com.intellij.ui.tabs.TabInfo;
-import com.intellij.ui.tabs.impl.JBEditorTabs;
+import com.intellij.ui.border.CustomLineBorder;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.ui.StripeTabPanel;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 /**
  * @author VISTALL
  * @since 27.09.14
  */
 public class AddModuleDependencyDialog extends DialogWrapper {
-  private JBEditorTabs myTabs;
+  public static final Key<AddModuleDependencyTabContext> CONTEXT_KEY = Key.create("context.key");
 
+  private StripeTabPanel myTabs;
+
+  @RequiredDispatchThread
   public AddModuleDependencyDialog(@NotNull ClasspathPanel panel, StructureConfigurableContext context) {
     super(panel.getComponent(), true);
 
     ModifiableRootModel rootModel = panel.getRootModel();
 
-    myTabs = new JBEditorTabs(rootModel.getProject(), ActionManager.getInstance(), IdeFocusManager.getInstance(rootModel.getProject()), myDisposable);
-    myTabs.setTabsPosition(JBTabsPosition.left);
+    myTabs = new StripeTabPanel();
 
-    int i = 0;
     for (AddModuleDependencyTabFactory factory : AddModuleDependencyTabFactory.EP_NAME.getExtensions()) {
       if(!factory.isAvailable(rootModel)) {
         continue;
@@ -55,23 +58,41 @@ public class AddModuleDependencyDialog extends DialogWrapper {
 
       JComponent component = tabContext.getComponent();
       JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(component, true);
-      TabInfo tabInfo = new TabInfo(scrollPane);
-      tabInfo.setObject(tabContext);
-      tabInfo.setText(tabContext.getTabName());
-      tabInfo.setEnabled(!tabContext.isEmpty());
 
-      myTabs.addTab(tabInfo, i ++);
+      StripeTabPanel.TabInfo tabInfo = myTabs.addTab(tabContext.getTabName(), scrollPane);
+      tabInfo.setEnabled(!tabContext.isEmpty());
+      tabInfo.putUserData(CONTEXT_KEY, tabContext);
     }
+
     setTitle("Add Dependencies");
     init();
   }
 
+  @Nullable
+  @Override
+  protected Border createContentPaneBorder() {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  protected JComponent createSouthPanel() {
+    JComponent southPanel = super.createSouthPanel();
+    if(southPanel != null) {
+      southPanel.setBorder(ourDefaultBorder);
+      BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
+      borderLayoutPanel.setBorder(new CustomLineBorder(1, 0, 0, 0));
+      return borderLayoutPanel;
+    }
+    return null;
+  }
+
   @Override
   protected void doOKAction() {
-    TabInfo selectedInfo = myTabs.getSelectedInfo();
+    StripeTabPanel.TabInfo selectedInfo = myTabs.getSelectedTab();
     if(selectedInfo != null) {
-      AddModuleDependencyTabContext tabContext = (AddModuleDependencyTabContext)selectedInfo.getObject();
-
+      AddModuleDependencyTabContext tabContext = selectedInfo.getUserData(CONTEXT_KEY);
+      assert tabContext != null;
       tabContext.processAddOrderEntries(this);
     }
     super.doOKAction();
@@ -80,15 +101,13 @@ public class AddModuleDependencyDialog extends DialogWrapper {
   @Nullable
   @Override
   protected String getDimensionServiceKey() {
-    setSize(450, 600);
+    setSize(350, 600);
     return getClass().getSimpleName() + "#dialog";
   }
 
   @Nullable
   @Override
   protected JComponent createCenterPanel() {
-    JComponent component = myTabs.getComponent();
-    component.setBorder(IdeBorderFactory.createEmptyBorder(0, 1, 1, 1));
-    return component;
+    return myTabs;
   }
 }
