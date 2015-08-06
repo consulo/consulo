@@ -31,6 +31,7 @@ import com.intellij.util.net.IOExceptionDialog;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -39,7 +40,7 @@ import java.util.*;
 /**
  * @author lloix
  */
-public class ActionInstallPlugin extends AnAction implements DumbAware {
+public class InstallPluginAction extends AnAction implements DumbAware {
   final private static String updateMessage = IdeBundle.message("action.update.plugin");
 
   private static final Set<IdeaPluginDescriptor> ourInstallingNodes = new HashSet<IdeaPluginDescriptor>();
@@ -47,13 +48,14 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
   private final PluginManagerMain installed;
   private final PluginManagerMain host;
 
-  public ActionInstallPlugin(PluginManagerMain mgr, PluginManagerMain installed) {
+  public InstallPluginAction(PluginManagerMain mgr, PluginManagerMain installed) {
     super(IdeBundle.message("action.download.and.install.plugin"), IdeBundle.message("action.download.and.install.plugin"),
           AllIcons.Actions.Install);
     host = mgr;
     this.installed = installed;
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
@@ -85,6 +87,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
     presentation.setEnabled(enabled);
   }
 
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(AnActionEvent e) {
     install(null);

@@ -148,7 +148,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
         }
       }
       if (enabled) {
-        new ActionInstallPlugin(this, installed).install(null);
+        new InstallPluginAction(this, installed).install(null);
       }
       return true;
     }
@@ -188,7 +188,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     else {
       actionGroup.add(createSortersGroup());
       actionGroup.add(AnSeparator.getInstance());
-      actionGroup.add(new ActionInstallPlugin(getAvailable(), getInstalled()));
+      actionGroup.add(new InstallPluginAction(getAvailable(), getInstalled()));
     }
     return actionGroup;
   }
