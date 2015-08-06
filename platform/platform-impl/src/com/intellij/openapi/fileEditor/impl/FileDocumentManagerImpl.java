@@ -71,6 +71,8 @@ import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -166,6 +168,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
 
   @Override
   @Nullable
+  @RequiredReadAction
   public Document getDocument(@NotNull final VirtualFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     DocumentEx document = (DocumentEx)getCachedDocument(file);
@@ -320,6 +323,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   @Override
+  @RequiredDispatchThread
   public void saveAllDocuments() {
     saveAllDocuments(true);
   }
@@ -363,10 +367,12 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   @Override
+  @RequiredDispatchThread
   public void saveDocument(@NotNull final Document document) {
     saveDocument(document, true);
   }
 
+  @RequiredDispatchThread
   public void saveDocument(@NotNull final Document document, final boolean explicit) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (!myUnsavedDocuments.contains(document)) return;
@@ -382,6 +388,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   @Override
+  @RequiredDispatchThread
   public void saveDocumentAsIs(@NotNull Document document) {
     VirtualFile file = getFile(document);
     boolean spaceStrippingEnabled = true;

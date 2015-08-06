@@ -22,6 +22,8 @@ import com.intellij.openapi.vfs.SavingRequestor;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 public abstract class FileDocumentManager implements SavingRequestor {
   public static FileDocumentManager getInstance() {
@@ -29,6 +31,7 @@ public abstract class FileDocumentManager implements SavingRequestor {
   }
 
   @Nullable
+  @RequiredReadAction
   public abstract Document getDocument(@NotNull VirtualFile file);
 
   @Nullable
@@ -37,13 +40,16 @@ public abstract class FileDocumentManager implements SavingRequestor {
   @Nullable
   public abstract VirtualFile getFile(@NotNull Document document);
 
+  @RequiredDispatchThread
   public abstract void saveAllDocuments();
+  @RequiredDispatchThread
   public abstract void saveDocument(@NotNull Document document);
 
   /**
    * Saves the document without stripping the trailing spaces or adding a blank line in the end of the file.
    * @param document the document to save.
    */
+  @RequiredDispatchThread
   public abstract void saveDocumentAsIs(@NotNull Document document);
   
   @NotNull

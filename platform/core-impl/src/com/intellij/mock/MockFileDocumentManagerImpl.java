@@ -12,6 +12,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.WeakFactoryMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.lang.ref.Reference;
 
@@ -42,6 +44,7 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
     }
   };
 
+  @RequiredReadAction
   @Override
   public Document getDocument(@NotNull VirtualFile file) {
     return myDocuments.get(file);
@@ -61,14 +64,17 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
     return document.getUserData(MOCK_VIRTUAL_FILE_KEY);
   }
 
+  @RequiredDispatchThread
   @Override
   public void saveAllDocuments() {
   }
 
+  @RequiredDispatchThread
   @Override
   public void saveDocument(@NotNull Document document) {
   }
 
+  @RequiredDispatchThread
   @Override
   public void saveDocumentAsIs(@NotNull Document document) {
   }
