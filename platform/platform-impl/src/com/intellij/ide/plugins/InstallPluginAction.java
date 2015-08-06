@@ -171,6 +171,10 @@ public class InstallPluginAction extends AnAction implements DumbAware {
                 PluginManagerMain.notifyPluginsWereInstalled(pluginNodes, null);
               }
             }
+
+            if(onSuccess != null) {
+              onSuccess.run();
+            }
           }
         };
         PluginManagerMain.downloadPlugins(list, host.getPluginsModel().getAllPlugins(), onInstallRunnable, new Consumer<Set<PluginNode>>(){
