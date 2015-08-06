@@ -133,7 +133,12 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
               }
             });
             if (psiFile != null) {
-              final Document document = fileManager.getDocument(file);
+              final Document document = ApplicationManager.getApplication().runReadAction(new Computable<Document>() {
+                @Override
+                public Document compute() {
+                  return fileManager.getDocument(file);
+                }
+              });
               if (document != null) {
                 final List<CodeSmellInfo> codeSmells = findCodeSmells(psiFile, progress, document);
                 result.addAll(codeSmells);
