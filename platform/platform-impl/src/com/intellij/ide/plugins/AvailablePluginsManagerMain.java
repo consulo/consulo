@@ -30,6 +30,7 @@ import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableUtil;
 import com.intellij.util.net.HttpConfigurable;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -148,7 +149,17 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
         }
       }
       if (enabled) {
-        new InstallPluginAction(this, installed).install(null);
+        new InstallPluginAction(this, installed).install(new Runnable() {
+          @Override
+          public void run() {
+            UIUtil.invokeLaterIfNeeded(new Runnable() {
+              @Override
+              public void run() {
+                refresh();
+              }
+            });
+          }
+        });
       }
       return true;
     }

@@ -55,6 +55,7 @@ import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -249,6 +250,7 @@ public abstract class PluginManagerMain implements Disposable {
     new MySpeedSearchBar(pluginTable);
   }
 
+  @RequiredDispatchThread
   public void refresh() {
     final IdeaPluginDescriptor[] descriptors = pluginTable.getSelectedObjects();
     pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea, myPluginHeaderPanel,
