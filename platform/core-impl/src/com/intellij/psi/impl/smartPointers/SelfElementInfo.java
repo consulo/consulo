@@ -65,7 +65,7 @@ public class SelfElementInfo implements SmartPointerElementInfo {
     }
   }
 
-  void setRange(@NotNull TextRange range, @NotNull Document document) {
+  public void setRange(@NotNull TextRange range, @NotNull Document document) {
     myPsiRange = null;
     myRangeMarker = ((SmartPointerManagerImpl)SmartPointerManager.getInstance(myProject)).obtainMarker(document, ProperTextRange.create(range));
   }
