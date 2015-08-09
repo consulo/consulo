@@ -55,7 +55,7 @@ public abstract class FileTypeRegistry {
    * Returns the file type for the specified file name.
    *
    * @param fileName The file name for which the type is requested.
-   * @return The file type instance, or {@link FileTypes#UNKNOWN} if not found.
+   * @return The file type instance, or {@link UnknownFileType#INSTANCE} if not found.
    */
   @NotNull
   public abstract FileType getFileTypeByFileName(@NotNull @NonNls String fileName);
