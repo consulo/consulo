@@ -38,6 +38,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,17 +61,19 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
 
   @NotNull
   @Override
+  @RequiredDispatchThread
   public Collection<? extends AbstractTreeNode> getChildren() {
     final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(getProject()).getFileIndex();
     Module[] modules = ModuleManager.getInstance(getProject()).getModules();
     Set<Library> processedLibraries = new THashSet<Library>();
     Set<Sdk> processedSdk = new THashSet<Sdk>();
+    Set<OrderEntry> processedCustomOrderEntries = new THashSet<OrderEntry>();
 
     for (Module module : modules) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
       final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
-      for (final OrderEntry orderEntry : orderEntries) {
+      loop:for (final OrderEntry orderEntry : orderEntries) {
         if (orderEntry instanceof LibraryOrderEntry) {
           final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)orderEntry;
           final Library library = libraryOrderEntry.getLibrary();
@@ -89,10 +93,10 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
         }
         else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
           final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
-          final Sdk jdk = sdkOrderEntry.getSdk();
-          if (jdk != null) {
-            if (processedSdk.contains(jdk)) continue;
-            processedSdk.add(jdk);
+          final Sdk sdk = sdkOrderEntry.getSdk();
+          if (sdk != null) {
+            if (processedSdk.contains(sdk)) continue;
+            processedSdk.add(sdk);
             children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(null, sdkOrderEntry), getSettings()));
           }
         }
@@ -100,6 +104,12 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
           if(!orderEntry.isValid()) {
             continue;
           }
+          for (OrderEntry processedCustomOrderEntry : processedCustomOrderEntries) {
+            if(processedCustomOrderEntry.isEquivalentTo(orderEntry)) {
+              continue loop;
+            }
+          }
+          processedCustomOrderEntries.add(orderEntry);
           children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(null, orderEntry), getSettings()));
         }
       }
@@ -107,6 +117,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
     return children;
   }
 
+  @RequiredReadAction
   public static void addLibraryChildren(final LibraryOrderEntry entry, final List<AbstractTreeNode> children, Project project, ProjectViewNode node) {
     final PsiManager psiManager = PsiManager.getInstance(project);
     final VirtualFile[] files = entry.getFiles(BinariesOrderRootType.getInstance());
