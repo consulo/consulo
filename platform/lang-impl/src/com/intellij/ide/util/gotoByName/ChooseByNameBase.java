@@ -879,6 +879,7 @@ public abstract class ChooseByNameBase {
             (10, (paneHeight - (y + preferredTextFieldPanelSize.height)) / (preferredTextFieldPanelSize.height / 2) - 1);
 
     ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(myTextFieldPanel, myTextField);
+    builder.setLocateWithinScreenBounds(false);
     builder.setCancelCallback(new Computable<Boolean>() {
       @Override
       public Boolean compute() {
@@ -895,7 +896,7 @@ public abstract class ChooseByNameBase {
     myTextPopup.setSize(bounds.getSize());
     myTextPopup.setLocation(bounds.getLocation());
 
-    new MnemonicHelper().register(myTextFieldPanel);
+    MnemonicHelper.init(myTextFieldPanel);
     if (myProject != null && !myProject.isDefault()) {
       DaemonCodeAnalyzer.getInstance(myProject).disableUpdateByTimer(myTextPopup);
     }
