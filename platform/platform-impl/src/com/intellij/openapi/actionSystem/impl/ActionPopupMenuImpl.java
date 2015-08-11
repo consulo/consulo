@@ -26,7 +26,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
@@ -42,7 +41,7 @@ import java.awt.*;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-final class ActionPopupMenuImpl implements ActionPopupMenu, ApplicationActivationListener {
+public final class ActionPopupMenuImpl extends ApplicationActivationListener.Adapter implements ActionPopupMenu {
 
   private final MyMenu myMenu;
   private final ActionManagerImpl myManager;
@@ -58,6 +57,7 @@ final class ActionPopupMenuImpl implements ActionPopupMenu, ApplicationActivatio
     myApp = ApplicationManager.getApplication();
   }
 
+  @Override
   public JPopupMenu getComponent() {
     return myMenu;
   }
@@ -79,6 +79,7 @@ final class ActionPopupMenuImpl implements ActionPopupMenu, ApplicationActivatio
       addPopupMenuListener(new MyPopupMenuListener());
     }
 
+    @Override
     public void show(final Component component, int x, int y) {
       if (!component.isShowing()) {
         //noinspection HardCodedStringLiteral
@@ -97,58 +98,6 @@ final class ActionPopupMenuImpl implements ActionPopupMenu, ApplicationActivatio
       if (getComponentCount() == 0) {
         return;
       }
-      Dimension preferredSize = getPreferredSize();
-
-      // Translate (x,y) into screen coordinate syetem
-
-      int _x, _y; // these are screen coordinates of clicked point
-      Point p = component.getLocationOnScreen();
-      _x = p.x + x;
-      _y = p.y + y;
-
-      // Determine graphics device which contains our point
-
-      GraphicsConfiguration targetGraphicsConfiguration = null;
-      GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      GraphicsDevice[] devices = env.getScreenDevices();
-      for (GraphicsDevice device : devices) {
-        GraphicsConfiguration graphicsConfiguration = device.getDefaultConfiguration();
-        Rectangle r = graphicsConfiguration.getBounds();
-        if (r.x <= _x && _x <= r.x + r.width && r.y <= _y && _y <= r.y + r.height) {
-          targetGraphicsConfiguration = graphicsConfiguration;
-          break;
-        }
-      }
-      if (targetGraphicsConfiguration == null && devices.length > 0) {
-        targetGraphicsConfiguration = env.getDefaultScreenDevice().getDefaultConfiguration();
-      }
-      if (targetGraphicsConfiguration == null) {
-        //noinspection HardCodedStringLiteral
-        throw new IllegalStateException("It's impossible to determine target graphics environment for point (" + _x + "," + _y + ")");
-      }
-
-      // Determine real client area of target graphics configuration
-      Insets insets = ScreenUtil.getScreenInsets(targetGraphicsConfiguration);
-      Rectangle targetRectangle = targetGraphicsConfiguration.getBounds();
-      targetRectangle.x += insets.left;
-      targetRectangle.y += insets.top;
-      targetRectangle.width -= insets.left + insets.right;
-      targetRectangle.height -= insets.top + insets.bottom;
-
-      // Fit popup into targetRectangle.
-      // The algorithm is the following:
-      // First of all try to move menu up on its height. If menu's left-top corner
-      // is inside screen bounds after that, then OK. Otherwise, if menu is too high
-      // (left-top corner is outside of screen bounds) then try to move menu up on
-      // not visible visible area height.
-      if (_x + preferredSize.width > targetRectangle.x + targetRectangle.width) {
-        x -= preferredSize.width;
-      }
-      if (_y + preferredSize.height > targetRectangle.y + targetRectangle.height) {
-        int invisibleHeight = _y + preferredSize.height - targetRectangle.y - targetRectangle.height;
-        y -= invisibleHeight;
-      }
-
       if (myApp != null) {
         if (myApp.isActive()) {
           Component frame = UIUtil.findUltimateParent(component);
@@ -157,7 +106,7 @@ final class ActionPopupMenuImpl implements ActionPopupMenu, ApplicationActivatio
           }
           myConnection = myApp.getMessageBus().connect();
           myConnection.subscribe(ApplicationActivationListener.TOPIC, ActionPopupMenuImpl.this);
-       }
+        }
       }
 
       super.show(component, x, y);
@@ -170,10 +119,12 @@ final class ActionPopupMenuImpl implements ActionPopupMenu, ApplicationActivatio
     }
 
     private class MyPopupMenuListener implements PopupMenuListener {
+      @Override
       public void popupMenuCanceled(PopupMenuEvent e) {
         disposeMenu();
       }
 
+      @Override
       public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
         disposeMenu();
       }
@@ -186,6 +137,7 @@ final class ActionPopupMenuImpl implements ActionPopupMenu, ApplicationActivatio
         }
       }
 
+      @Override
       public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
         MyMenu.this.removeAll();
         Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().DISABLE_MNEMONICS, myPresentationFactory, myContext, myPlace, false,
