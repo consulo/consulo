@@ -117,9 +117,9 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     mySdksModel = sdksModel;
     myFilter = filter;
     myCreationFilter = creationFilter;
-    setRenderer(new ColoredListCellRendererWrapper() {
+    setRenderer(new ColoredListCellRendererWrapper<SdkComboBoxItem>() {
       @Override
-      public void doCustomize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+      public void doCustomize(JList list, SdkComboBoxItem value, int index, boolean selected, boolean hasFocus) {
         if (SdkComboBox.this.isEnabled()) {
           setIcon(EMPTY_ICON);    // to fix vertical size
           if (value instanceof InvalidSdkComboBoxItem) {
@@ -145,9 +145,9 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             String name = ObjectUtil.notNull(nullItemName, ProjectBundle.message("sdk.combo.box.none.item"));
             append(name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
           }
-          else if(value instanceof SdkComboBoxItem) {
-            Sdk sdk = ((SdkComboBoxItem)value).getSdk();
-            String sdkName = ((SdkComboBoxItem)value).getSdkName();
+          else {
+            Sdk sdk = value.getSdk();
+            String sdkName = value.getSdkName();
             assert sdkName != null;
             setIcon(sdk == null ? AllIcons.Toolbar.Unknown : SdkUtil.getIcon(sdk));
             append(sdkName, sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes
@@ -158,9 +158,6 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
               append(version, SimpleTextAttributes.GRAY_ATTRIBUTES);
               append(")", SimpleTextAttributes.GRAY_ATTRIBUTES);
             }
-          }
-          else {
-            throw new UnsupportedOperationException("Item is not supported: " + value.getClass());
           }
         }
       }
