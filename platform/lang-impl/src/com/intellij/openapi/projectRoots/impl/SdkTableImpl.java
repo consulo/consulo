@@ -108,7 +108,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     return null;
   }
 
-  @Override
+  @NotNull@Override
   public Sdk[] getAllSdks() {
     return mySdks.toArray(new Sdk[mySdks.size()]);
   }

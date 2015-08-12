@@ -37,7 +37,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,12 +95,6 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   @Override
   public boolean isPredefined() {
     return myPredefined;
-  }
-
-  @Override
-  @Deprecated
-  public boolean isBundled() {
-    return isPredefined();
   }
 
   @Override
@@ -239,12 +232,6 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   @NotNull
   public RootProvider getRootProvider() {
     return myRootProvider;
-  }
-
-  @Deprecated
-  @DeprecationInfo(value = "Use #setPredefined(boolean)", until = "1.0")
-  public void setBundled(boolean val) {
-    setPredefined(val);
   }
 
   public void setPredefined(boolean predefined) {

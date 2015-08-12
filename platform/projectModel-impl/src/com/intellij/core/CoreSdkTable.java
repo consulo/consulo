@@ -22,6 +22,7 @@ import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.util.Comparing;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class CoreSdkTable extends SdkTable {
     return null;
   }
 
+  @NotNull
   @Override
   public Sdk[] getAllSdks() {
     synchronized (mySdks) {
@@ -64,6 +66,7 @@ public class CoreSdkTable extends SdkTable {
     return result;
   }
 
+  @RequiredWriteAction
   @Override
   public void addSdk(@NotNull Sdk jdk) {
     synchronized (mySdks) {
@@ -71,6 +74,7 @@ public class CoreSdkTable extends SdkTable {
     }
   }
 
+  @RequiredWriteAction
   @Override
   public void removeSdk(@NotNull Sdk jdk) {
     synchronized (mySdks) {
@@ -78,6 +82,7 @@ public class CoreSdkTable extends SdkTable {
     }
   }
 
+  @RequiredWriteAction
   @Override
   public void updateSdk(@NotNull Sdk originalJdk, @NotNull Sdk modifiedJdk) {
     throw new UnsupportedOperationException();

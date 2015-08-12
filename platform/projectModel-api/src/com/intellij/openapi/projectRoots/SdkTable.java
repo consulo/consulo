@@ -33,6 +33,7 @@ public abstract class SdkTable {
   @Nullable
   public abstract Sdk findSdk(String name);
 
+  @NotNull
   public abstract Sdk[] getAllSdks();
 
   public abstract List<Sdk> getSdksOfType(SdkTypeId type);
@@ -48,7 +49,7 @@ public abstract class SdkTable {
   }
 
   @Nullable
-  public Sdk findMostRecentSdk(Condition<Sdk> condition) {
+  public Sdk findMostRecentSdk(@NotNull Condition<Sdk> condition) {
     Sdk found = null;
     for (Sdk each : getAllSdks()) {
       if (!condition.value(each)) continue;
