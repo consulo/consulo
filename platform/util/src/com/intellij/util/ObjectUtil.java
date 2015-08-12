@@ -18,14 +18,11 @@ package com.intellij.util;
 import com.intellij.openapi.util.Condition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author peter
  */
-@Deprecated
-@DeprecationInfo(value = "Use com.intellij.util.ObjectUtil", until = "1.0")
-public class ObjectUtils extends ObjectUtil {
+public class ObjectUtil {
   public static final Object NULL = new Object();
 
   @NotNull
