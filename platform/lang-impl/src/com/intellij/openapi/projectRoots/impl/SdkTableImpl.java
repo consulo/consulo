@@ -108,7 +108,8 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     return null;
   }
 
-  @NotNull@Override
+  @NotNull
+  @Override
   public Sdk[] getAllSdks() {
     return mySdks.toArray(new Sdk[mySdks.size()]);
   }
@@ -123,23 +124,6 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
       }
     }
     return result;
-  }
-
-  @Nullable
-  @Override
-  @Deprecated
-  public Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass) {
-    SdkType sdkType = SdkType.EP_NAME.findExtension(sdkTypeClass);
-    if(sdkType == null) {
-      return null;
-    }
-
-    for (Sdk sdk : mySdks) {
-      if(sdk.isPredefined() && sdk.getSdkType() == sdkType) {
-        return sdk;
-      }
-    }
-    return null;
   }
 
   @Override

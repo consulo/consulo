@@ -100,11 +100,6 @@ public class CoreSdkTable extends SdkTable {
 
   @Nullable
   @Override
-  public Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public Sdk findPredefinedSdkByType(@NotNull SdkTypeId sdkType) {
     for (Sdk sdk : mySdks) {
       if(sdk.isPredefined() && sdk.getSdkType() == sdkType) {

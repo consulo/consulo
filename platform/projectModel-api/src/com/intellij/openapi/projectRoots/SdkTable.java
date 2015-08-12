@@ -21,7 +21,6 @@ import com.intellij.util.messages.Topic;
 import org.consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.List;
@@ -74,11 +73,6 @@ public abstract class SdkTable {
   public abstract SdkTypeId getDefaultSdkType();
 
   public abstract SdkTypeId getSdkTypeByName(String name);
-
-  @Nullable
-  @Deprecated
-  @DeprecationInfo(value = "Use #findPredefinedSdkByType(SdkTypeId)")
-  public abstract Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass);
 
   @Nullable
   public abstract Sdk findPredefinedSdkByType(@NotNull SdkTypeId sdkType);
