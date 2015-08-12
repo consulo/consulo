@@ -16,6 +16,7 @@
 package org.consulo.module.extension.ui;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
@@ -72,6 +73,10 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   private final T myMutableModuleExtension;
 
   private String myLabelText = "SDK";
+
+  private Icon myNullItemIcon = null;
+
+  private String myNullItemName = ProjectBundle.message("sdk.combo.box.none.item");
 
   private Runnable myLaterUpdater;
 
@@ -133,11 +138,18 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   }
 
   @NotNull
+  public ModuleExtensionSdkBoxBuilder<T> nullItem(@Nullable String name, @Nullable Icon icon) {
+    myNullItemName = name;
+    myNullItemIcon = icon;
+    return this;
+  }
+
+  @NotNull
   @RequiredReadAction
   public JComponent build() {
     final ProjectSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(myMutableModuleExtension.getProject()).getProjectSdksModel();
 
-    final SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, true);
+    final SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, null, myNullItemName, myNullItemIcon);
 
     comboBox.insertModuleItems(myMutableModuleExtension, mySdkPointerFunction);
 
