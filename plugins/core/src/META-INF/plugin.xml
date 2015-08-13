@@ -154,7 +154,7 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighterFactory"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.elementIcon" beanClass="org.consulo.lang.LanguageElementIcon"/>
+    <extensionPoint name="lang.elementIcon" beanClass="org.mustbe.consulo.lang.LanguageElementIcon"/>
 
     <extensionPoint name="projectOpenProcessor"
                     interface="com.intellij.projectImport.ProjectOpenProcessor"/>

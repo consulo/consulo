@@ -27,7 +27,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import lombok.val;
-import org.consulo.lang.LanguageElementIcons;
+import org.mustbe.consulo.lang.LanguageElementIcons;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
