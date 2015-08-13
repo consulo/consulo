@@ -1368,7 +1368,7 @@
                         serviceImplementation="com.intellij.ui.popup.StackingPopupDispatcherImpl"/>
 
     <projectService serviceInterface="org.consulo.psi.PsiPackageManager"
-                    serviceImplementation="org.consulo.psi.impl.PsiPackageManagerImpl"/>
+                    serviceImplementation="org.mustbe.consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
     <componentConfigurationMerger implementation="com.intellij.openapi.vcs.changes.shelf.ShelfManagerConfigurationMerger"/>
     <editorActionHandler action="EditorEscape" implementationClass="com.intellij.codeInsight.hint.EscapeHandler" id="hide-hints"/>
@@ -2470,8 +2470,8 @@
 
 
     <iconDescriptorUpdater implementation="com.intellij.psi.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
-    <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver"/>
-    <psi.packageResolver implementation="org.consulo.psi.impl.LibraryPsiPackageResolver"/>
+    <psi.packageResolver implementation="org.mustbe.consulo.psi.impl.DefaultPsiPackageResolver"/>
+    <psi.packageResolver implementation="org.mustbe.consulo.psi.impl.LibraryPsiPackageResolver"/>
 
     <lang.ast.lazyFactory implementation="com.intellij.lang.impl.DefaultASTLazyFactory" order="last"/>
     <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last"/>

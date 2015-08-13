@@ -1,4 +1,4 @@
-package org.consulo.psi.impl;
+package org.mustbe.consulo.psi.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
