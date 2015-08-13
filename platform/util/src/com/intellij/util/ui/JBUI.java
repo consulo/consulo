@@ -19,6 +19,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import com.intellij.util.ui.components.VerticalLayoutPanel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -210,14 +212,27 @@ public class JBUI {
   }
 
   public static class Panels {
+    @NotNull
+    public static VerticalLayoutPanel verticalPanel() {
+      return new VerticalLayoutPanel();
+    }
+
+    @NotNull
+    public static VerticalLayoutPanel verticalPanel(int hgap, int vgap) {
+      return new VerticalLayoutPanel(hgap, vgap);
+    }
+
+    @NotNull
     public static BorderLayoutPanel simplePanel() {
       return new BorderLayoutPanel();
     }
 
+    @NotNull
     public static BorderLayoutPanel simplePanel(Component comp) {
       return simplePanel().addToCenter(comp);
     }
 
+    @NotNull
     public static BorderLayoutPanel simplePanel(int hgap, int vgap) {
       return new BorderLayoutPanel(hgap, vgap);
     }

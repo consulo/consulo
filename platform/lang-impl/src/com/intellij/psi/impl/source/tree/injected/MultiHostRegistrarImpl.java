@@ -36,9 +36,8 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.DocumentCommitThread;
+import com.intellij.psi.impl.DocumentCommitProcessor;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
@@ -443,7 +442,6 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
       final ASTNode injectedNode = injectedPsi.getNode();
       final ASTNode oldFileNode = oldFile.getNode();
       assert injectedNode != null : "New node is null";
-      assert oldFileNode != null : "Old node is null";
       if (oldDocument.areRangesEqual(documentWindow)) {
         if (oldFile.getFileType() != injectedPsi.getFileType() || oldFile.getLanguage() != injectedPsi.getLanguage()) {
           injected.remove(i);
@@ -456,16 +454,9 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
         oldViewProvider.performNonPhysically(new Runnable() {
           @Override
           public void run() {
-            //todo
-            final DiffLog diffLog = BlockSupportImpl.mergeTrees(oldFile, oldFileNode, injectedNode, new DaemonProgressIndicator());
-            CodeStyleManager.getInstance(hostPsiFile.getProject()).performActionWithFormatterDisabled(new Runnable() {
-              @Override
-              public void run() {
-                synchronized (PsiLock.LOCK) {
-                  DocumentCommitThread.doActualPsiChange(oldFile, diffLog);
-                }
-              }
-            });
+            final DiffLog diffLog = BlockSupportImpl.mergeTrees(oldFile, oldFileNode, injectedNode, new DaemonProgressIndicator(),
+                                                                oldFileNode.getText());
+            DocumentCommitProcessor.doActualPsiChange(oldFile, diffLog);
           }
         });
         assert shreds.isValid();
