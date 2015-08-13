@@ -19,9 +19,9 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <treeStructureProvider implementation="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsProjectViewProvider" order="last" />
-    <generatedSourcesFilter implementation="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsGeneratedSourcesFilter" />
+    <treeStructureProvider implementation="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsProjectViewProvider" order="last" />
+    <generatedSourcesFilter implementation="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsGeneratedSourcesFilter" />
     <projectService serviceInterface="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager"
-                    serviceImplementation="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManagerImpl"/>
+                    serviceImplementation="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManagerImpl"/>
   </extensions>
 </idea-plugin>

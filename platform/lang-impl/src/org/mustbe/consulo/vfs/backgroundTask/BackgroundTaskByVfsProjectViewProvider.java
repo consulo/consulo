@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.vfs.backgroundTask;
+package org.mustbe.consulo.vfs.backgroundTask;
 
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
@@ -24,7 +24,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import lombok.val;
-import org.consulo.vfs.backgroundTask.tree.BackgroundTaskPsiFileTreeNode;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
+import org.mustbe.consulo.vfs.backgroundTask.tree.BackgroundTaskPsiFileTreeNode;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;

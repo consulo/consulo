@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.vfs.backgroundTask;
+package org.mustbe.consulo.vfs.backgroundTask;
 
 import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.execution.ExecutionException;
@@ -38,6 +38,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
 import org.consulo.lombok.annotations.Logger;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsParameters;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -161,7 +164,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
       }
       catch (ExecutionException e) {
         actionCallback.setRejected();
-        LOGGER.error(e);
+        BackgroundTaskByVfsChangeTaskImpl.LOGGER.error(e);
       }
   }
 

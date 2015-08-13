@@ -23,7 +23,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsParameters;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsParametersImpl;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsParametersImpl;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

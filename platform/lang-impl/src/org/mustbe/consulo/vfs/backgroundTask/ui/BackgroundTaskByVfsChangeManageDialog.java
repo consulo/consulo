@@ -31,6 +31,9 @@ import com.intellij.util.ui.UIUtil;
 import org.consulo.vfs.backgroundTask.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManagerImpl;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTaskImpl;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsParametersImpl;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.vfs.backgroundTask;
+package org.mustbe.consulo.vfs.backgroundTask;
 
 import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.openapi.Disposable;
@@ -30,6 +30,8 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.xmlb.XmlSerializer;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

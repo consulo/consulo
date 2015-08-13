@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.vfs.backgroundTask;
+package org.mustbe.consulo.vfs.backgroundTask;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsParameters;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
