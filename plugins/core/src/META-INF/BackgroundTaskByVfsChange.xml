@@ -15,7 +15,7 @@
   -->
 <idea-plugin>
   <extensionPoints>
-    <extensionPoint name="taskByVfsChange" interface="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider" />
+    <extensionPoint name="taskByVfsChange" interface="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
