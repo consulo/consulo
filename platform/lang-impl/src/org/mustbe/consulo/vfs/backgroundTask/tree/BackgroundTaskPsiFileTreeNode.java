@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 
 import java.util.ArrayList;
 import java.util.Collection;

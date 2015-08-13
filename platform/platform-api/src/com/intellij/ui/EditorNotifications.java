@@ -29,8 +29,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

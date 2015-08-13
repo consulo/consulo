@@ -18,7 +18,7 @@ package org.mustbe.consulo.sandLanguage.ide.vfs.backgroundTask;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsParameters;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsParameters;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.sandLanguage.lang.SandFileType;
 

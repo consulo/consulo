@@ -34,10 +34,10 @@ import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
 import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProviders;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProviders;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

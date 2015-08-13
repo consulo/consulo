@@ -30,8 +30,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.xmlb.XmlSerializer;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

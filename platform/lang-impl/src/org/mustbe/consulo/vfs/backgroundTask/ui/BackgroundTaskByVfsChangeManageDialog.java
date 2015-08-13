@@ -31,9 +31,7 @@ import com.intellij.util.ui.UIUtil;
 import org.consulo.vfs.backgroundTask.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManagerImpl;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTaskImpl;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsParametersImpl;
+import org.mustbe.consulo.vfs.backgroundTask.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -98,7 +96,8 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
       }
     });
 
-    final List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders.getProviders(project, virtualFile);
+    final List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders
+            .getProviders(project, virtualFile);
 
     ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myBoxlist);
     decorator = decorator.setAddActionUpdater(new AnActionButtonUpdater() {
