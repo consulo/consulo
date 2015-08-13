@@ -19,7 +19,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
+import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
 
 import javax.swing.*;
 

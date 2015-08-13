@@ -38,7 +38,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
 import org.consulo.lombok.annotations.Logger;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -63,7 +63,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
-import org.consulo.module.extension.condition.ModuleExtensionCondition;
+import org.mustbe.consulo.module.extension.condition.ModuleExtensionCondition;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

@@ -17,7 +17,6 @@ package org.mustbe.consulo.vfs.backgroundTask;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

@@ -28,7 +28,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.Function;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.vfs.backgroundTask.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.vfs.backgroundTask.*;

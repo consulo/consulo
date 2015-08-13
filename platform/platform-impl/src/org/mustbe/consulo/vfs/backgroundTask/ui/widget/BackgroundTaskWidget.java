@@ -34,12 +34,13 @@ import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProviders;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProviders;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,20 +157,22 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
         }
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(new AnAction("Force Run", null, AllIcons.Actions.Resume) {
+          @RequiredDispatchThread
           @Override
-          public void actionPerformed(AnActionEvent e) {
+          public void actionPerformed(@NotNull AnActionEvent e) {
             BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(myVirtualFile);
           }
 
+          @RequiredDispatchThread
           @Override
-          public void update(AnActionEvent e) {
-
+          public void update(@NotNull AnActionEvent e) {
             e.getPresentation().setEnabled(!BackgroundTaskByVfsChangeManager.getInstance(myProject).findEnabledTasks(myVirtualFile).isEmpty());
           }
         });
         group.add(new AnAction("Manage", null, AllIcons.General.Settings) {
+          @RequiredDispatchThread
           @Override
-          public void actionPerformed(AnActionEvent e) {
+          public void actionPerformed(@NotNull AnActionEvent e) {
             BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(myVirtualFile);
           }
         });

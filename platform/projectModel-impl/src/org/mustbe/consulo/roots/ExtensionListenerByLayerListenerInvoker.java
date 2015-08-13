@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.util.messages.MessageBus;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
+import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 

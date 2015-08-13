@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.module.extension;
+package org.mustbe.consulo.module.extension;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
@@ -27,6 +27,8 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.consulo.lombok.annotations.Logger;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
