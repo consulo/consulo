@@ -13,8 +13,8 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.CatchingConsumer;
 import com.intellij.util.Consumer;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.*;
+import com.intellij.util.ObjectUtil;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,8 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.*;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class InstalledPackagesPanel extends JPanel {
@@ -272,7 +270,7 @@ public class InstalledPackagesPanel extends JPanel {
 
   @Nullable
   private PackageManagementServiceEx getServiceEx() {
-    return ObjectUtils.tryCast(myPackageManagementService, PackageManagementServiceEx.class);
+    return ObjectUtil.tryCast(myPackageManagementService, PackageManagementServiceEx.class);
   }
 
   private void updateUninstallUpgrade() {

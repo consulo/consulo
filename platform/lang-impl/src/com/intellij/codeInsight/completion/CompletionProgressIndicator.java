@@ -61,7 +61,7 @@ import com.intellij.psi.ReferenceRange;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Alarm;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.ThreeState;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
@@ -603,7 +603,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
   @NotNull
   public Project getProject() {
-    return ObjectUtils.assertNotNull(myEditor.getProject());
+    return ObjectUtil.assertNotNull(myEditor.getProject());
   }
 
   public void addWatchedPrefix(int startOffset, ElementPattern<String> restartCondition) {

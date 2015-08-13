@@ -37,7 +37,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.ui.UIUtil;
@@ -301,7 +301,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
       field.setFontInheritedFromLAF(inheritFontFromLaF);
       field.addNotify(); // creates editor
 
-      EditorEx editor = (EditorEx)ObjectUtils.assertNotNull(field.getEditor());
+      EditorEx editor = (EditorEx)ObjectUtil.assertNotNull(field.getEditor());
       editor.setRendererMode(true);
 
       editor.setColorsScheme(editor.createBoundColorSchemeDelegate(null));

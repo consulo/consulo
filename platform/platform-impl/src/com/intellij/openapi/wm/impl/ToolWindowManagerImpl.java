@@ -1918,7 +1918,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
       IdeFrame lastFocusedFrame = ideFocusManager.getLastFocusedFrame();
       JComponent frameComponent = lastFocusedFrame != null ? lastFocusedFrame.getComponent() : null;
       Window lastFocusedWindow = frameComponent != null ? SwingUtilities.getWindowAncestor(frameComponent) : null;
-      activeWindow = ObjectUtils.notNull(lastFocusedWindow, activeWindow);
+      activeWindow = ObjectUtil.notNull(lastFocusedWindow, activeWindow);
     }
 
     FileEditorManagerEx fem = FileEditorManagerEx.getInstanceEx(myProject);

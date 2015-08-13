@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -83,7 +83,7 @@ public class CompletionInitializationContext {
 
   @NotNull
   public Language getPositionLanguage() {
-    return ObjectUtils.assertNotNull(PsiUtilBase.getLanguageInEditor(getEditor(), getProject()));
+    return ObjectUtil.assertNotNull(PsiUtilBase.getLanguageInEditor(getEditor(), getProject()));
   }
 
   public String getDummyIdentifier() {

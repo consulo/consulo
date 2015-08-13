@@ -25,8 +25,8 @@ import org.mustbe.consulo.DeprecationInfo;
  */
 @Deprecated
 @DeprecationInfo(value = "Use com.intellij.util.ObjectUtil", until = "1.0")
-public class ObjectUtils extends ObjectUtil {
-  public static final Object NULL = new Object();
+public class ObjectUtils {
+  public static final Object NULL = ObjectUtil.NULL;
 
   @NotNull
   public static <T> T assertNotNull(@Nullable final T t) {

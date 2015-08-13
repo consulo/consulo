@@ -25,6 +25,9 @@ import org.jetbrains.annotations.Nullable;
 public class ObjectUtil {
   public static final Object NULL = new Object();
 
+  private ObjectUtil() {
+  }
+
   @NotNull
   public static <T> T assertNotNull(@Nullable final T t) {
     return _assertNotNull(t);

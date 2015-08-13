@@ -31,7 +31,7 @@ import com.intellij.ui.EditorNotifications;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.MessageView;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
@@ -107,7 +107,7 @@ public class ExternalSystemNotificationManager {
     NotificationData notificationData =
             new NotificationData(
                     title, message, notificationCategory, NotificationSource.PROJECT_SYNC,
-                    filePath, ObjectUtils.notNull(line, -1), ObjectUtils.notNull(column, -1), false);
+                    filePath, ObjectUtil.notNull(line, -1), ObjectUtil.notNull(column, -1), false);
 
     for (ExternalSystemNotificationExtension extension : ExternalSystemNotificationExtension.EP_NAME.getExtensions()) {
       if (!externalSystemId.equals(extension.getTargetExternalSystemId())) {

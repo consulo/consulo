@@ -18,7 +18,7 @@ package com.intellij.util.containers;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ConcurrentMap;
 
-import static com.intellij.util.ObjectUtils.NULL;
+import static com.intellij.util.ObjectUtil.NULL;
 
 /**
  * @author peter

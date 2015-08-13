@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.HashSet;
 
-import static com.intellij.util.ObjectUtils.NULL;
+import static com.intellij.util.ObjectUtil.NULL;
 
 /**
  * @author peter

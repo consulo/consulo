@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.mac.MacMessages;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,8 +96,8 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
 
     @Messages.YesNoResult
     public int show() {
-      String yesText = ObjectUtils.chooseNotNull(myYesText, Messages.YES_BUTTON);
-      String noText = ObjectUtils.chooseNotNull(myNoText, Messages.NO_BUTTON);
+      String yesText = ObjectUtil.chooseNotNull(myYesText, Messages.YES_BUTTON);
+      String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
       try {
         if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
           return MacMessages.getInstance().showYesNoDialog(myTitle, myMessage, yesText, noText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
@@ -132,9 +132,9 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
 
     @Messages.YesNoCancelResult
     public int show() {
-      String yesText = ObjectUtils.chooseNotNull(myYesText, Messages.YES_BUTTON);
-      String noText = ObjectUtils.chooseNotNull(myNoText, Messages.NO_BUTTON);
-      String cancelText = ObjectUtils.chooseNotNull(myCancelText, Messages.CANCEL_BUTTON);
+      String yesText = ObjectUtil.chooseNotNull(myYesText, Messages.YES_BUTTON);
+      String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
+      String cancelText = ObjectUtil.chooseNotNull(myCancelText, Messages.CANCEL_BUTTON);
       try {
         if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
           return MacMessages.getInstance().showYesNoCancelDialog(myTitle, myMessage, yesText, noText, cancelText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);

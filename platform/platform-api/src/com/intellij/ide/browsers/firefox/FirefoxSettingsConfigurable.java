@@ -26,7 +26,7 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
@@ -110,7 +110,7 @@ public class FirefoxSettingsConfigurable implements Configurable {
     String path = mySettings.getProfilesIniPath();
     myProfilesIniPathField.setText(path != null ? FileUtilRt.toSystemDependentName(path) : myDefaultProfilesIniPath);
     updateProfilesList();
-    myProfileCombobox.setSelectedItem(ObjectUtils.notNull(mySettings.getProfile(), myDefaultProfile));
+    myProfileCombobox.setSelectedItem(ObjectUtil.notNull(mySettings.getProfile(), myDefaultProfile));
   }
 
   private void updateProfilesList() {

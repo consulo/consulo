@@ -26,7 +26,7 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -159,7 +159,7 @@ public final class IntentionActionMetaData {
       Exception cause = null;
       try {
         URI uri = descriptionDirectory.toURI();
-        children = uri.isOpaque()? null : ObjectUtils.notNull(new File(uri).list(), ArrayUtil.EMPTY_STRING_ARRAY);
+        children = uri.isOpaque()? null : ObjectUtil.notNull(new File(uri).list(), ArrayUtil.EMPTY_STRING_ARRAY);
       }
       catch (URISyntaxException e) {
         cause = e;

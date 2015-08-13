@@ -36,7 +36,7 @@ import com.intellij.openapi.wm.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.content.Content;
 import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
@@ -358,7 +358,7 @@ public class EventLog {
       createNewContent(DEFAULT_CATEGORY);
 
       for (Notification notification : myInitial) {
-        doPrintNotification(notification, ObjectUtils.assertNotNull(getConsole(notification)));
+        doPrintNotification(notification, ObjectUtil.assertNotNull(getConsole(notification)));
       }
       myInitial.clear();
     }
@@ -451,7 +451,7 @@ public class EventLog {
     public void navigate(Project project) {
       NotificationListener listener = myNotification.getListener();
       if (listener != null) {
-        EventLogConsole console = ObjectUtils.assertNotNull(getProjectComponent(project).getConsole(myNotification));
+        EventLogConsole console = ObjectUtil.assertNotNull(getProjectComponent(project).getConsole(myNotification));
         JComponent component = console.getConsoleEditor().getContentComponent();
         listener.hyperlinkUpdate(myNotification, IJSwingUtilities.createHyperlinkEvent(myHref, component));
       }
@@ -478,7 +478,7 @@ public class EventLog {
         hideBalloon(notification);
       }
 
-      EventLogConsole console = ObjectUtils.assertNotNull(getProjectComponent(project).getConsole(myNotification));
+      EventLogConsole console = ObjectUtil.assertNotNull(getProjectComponent(project).getConsole(myNotification));
       if (myRangeHighlighter == null || !myRangeHighlighter.isValid()) {
         return;
       }

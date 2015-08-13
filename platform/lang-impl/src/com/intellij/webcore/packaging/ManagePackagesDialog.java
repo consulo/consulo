@@ -15,7 +15,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.CatchingConsumer;
 import com.intellij.util.Function;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
@@ -319,7 +319,7 @@ public class ManagePackagesDialog extends DialogWrapper {
   }
 
   private void doSelectPackage(@Nullable String packageName) {
-    PackagesModel packagesModel = ObjectUtils.tryCast(myPackages.getModel(), PackagesModel.class);
+    PackagesModel packagesModel = ObjectUtil.tryCast(myPackages.getModel(), PackagesModel.class);
     if (packageName == null || packagesModel == null) {
       return;
     }

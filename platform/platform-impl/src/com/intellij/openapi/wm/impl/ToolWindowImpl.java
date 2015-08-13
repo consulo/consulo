@@ -36,7 +36,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.impl.ContentImpl;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
@@ -384,7 +384,7 @@ public final class ToolWindowImpl implements ToolWindowEx {
   @NotNull
   public final String getStripeTitle() {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    return ObjectUtils.notNull(myStripeTitle, myId);
+    return ObjectUtil.notNull(myStripeTitle, myId);
   }
 
   @Override

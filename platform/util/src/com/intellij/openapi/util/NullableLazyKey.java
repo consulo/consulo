@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.util.NullableFunction;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,9 +36,9 @@ public class NullableLazyKey<T,H extends UserDataHolder> extends Key<T>{
     T data = h.getUserData(this);
     if (data == null) {
       data = myFunction.fun(h);
-      h.putUserData(this, data == null ? (T)ObjectUtils.NULL : data);
+      h.putUserData(this, data == null ? (T)ObjectUtil.NULL : data);
     }
-    return data == ObjectUtils.NULL ? null : data;
+    return data == ObjectUtil.NULL ? null : data;
   }
 
   public static <T,H extends UserDataHolder> NullableLazyKey<T,H> create(@NonNls String name, final NullableFunction<H, T> function) {

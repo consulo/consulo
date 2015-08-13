@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +48,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
     @Nullable
     @Override
     protected String create(SettingsType key) {
-      return ObjectUtils.notNull(getCodeSample(key), "");
+      return ObjectUtil.notNull(getCodeSample(key), "");
     }
   };
 

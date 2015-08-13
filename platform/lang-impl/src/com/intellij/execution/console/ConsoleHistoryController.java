@@ -47,7 +47,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.io.SafeFileOutputStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.XppReader;
@@ -259,7 +259,8 @@ public class ConsoleHistoryController {
       }
       else {
         if (!myMultiline && getModel().getHistoryCursor() < 0) return;
-        command = ObjectUtils.chooseNotNull(getModel().getHistoryPrev(), myMultiline ? "" : StringUtil.notNullize(myHelper.getContent()));
+        command = ObjectUtil.chooseNotNull(getModel().getHistoryPrev(),
+                                           myMultiline ? "" : StringUtil.notNullize(myHelper.getContent()));
       }
       setConsoleText(command, myNext && getModel().getHistoryCursor() == 0, true);
     }

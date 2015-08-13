@@ -24,7 +24,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.testIntegration.TestLocationProvider;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -271,7 +271,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   public void onTestFailure(@NotNull final TestFailedEvent testFailedEvent) {
     addToInvokeLater(new Runnable() {
       public void run() {
-        final String testName = ObjectUtils.assertNotNull(testFailedEvent.getName());
+        final String testName = ObjectUtil.assertNotNull(testFailedEvent.getName());
         final String localizedMessage = testFailedEvent.getLocalizedFailureMessage();
         final String stackTrace = testFailedEvent.getStacktrace();
         final boolean isTestError = testFailedEvent.isTestError();
@@ -337,7 +337,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   public void onTestIgnored(@NotNull final TestIgnoredEvent testIgnoredEvent) {
     addToInvokeLater(new Runnable() {
       public void run() {
-        final String testName = ObjectUtils.assertNotNull(testIgnoredEvent.getName());
+        final String testName = ObjectUtil.assertNotNull(testIgnoredEvent.getName());
         final String ignoreComment = testIgnoredEvent.getIgnoreComment();
         final String stackTrace = testIgnoredEvent.getStacktrace();
         final String fullTestName = getFullTestName(testName);

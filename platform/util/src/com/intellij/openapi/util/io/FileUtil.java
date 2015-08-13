@@ -545,7 +545,7 @@ public class FileUtil extends FileUtilRt {
    * @throws IOException in case of any IO troubles
    */
   public static void copyDirContent(@NotNull File fromDir, @NotNull File toDir) throws IOException {
-    File[] children = ObjectUtils.notNull(fromDir.listFiles(), ArrayUtil.EMPTY_FILE_ARRAY);
+    File[] children = ObjectUtil.notNull(fromDir.listFiles(), ArrayUtil.EMPTY_FILE_ARRAY);
     for (File child : children) {
       File target = new File(toDir, child.getName());
       if (child.isFile()) {

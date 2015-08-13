@@ -58,7 +58,7 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.hash.LinkedHashMap;
@@ -130,7 +130,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     myOrigCreationStamp = myOrigDocument.getModificationStamp(); // store creation stamp for UNDO tracking
     myOrigDocument.addDocumentListener(this, this);
     myNewDocument.addDocumentListener(this, this);
-    EditorFactory editorFactory = ObjectUtils.assertNotNull(EditorFactory.getInstance());
+    EditorFactory editorFactory = ObjectUtil.assertNotNull(EditorFactory.getInstance());
     // not FileEditorManager listener because of RegExp checker and alike
     editorFactory.addEditorFactoryListener(new EditorFactoryAdapter() {
 

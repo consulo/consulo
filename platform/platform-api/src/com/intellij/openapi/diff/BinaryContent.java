@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,7 +89,8 @@ public class BinaryContent extends DiffContent {
 
       String text = null;
       try {
-        Charset charset = ObjectUtils.notNull(myCharset, EncodingProjectManager.getInstance(myProject).getDefaultCharset());
+        Charset charset = ObjectUtil
+                .notNull(myCharset, EncodingProjectManager.getInstance(myProject).getDefaultCharset());
         text = CharsetToolkit.bytesToString(myBytes, charset);
       }
       catch (IllegalCharsetNameException e) {

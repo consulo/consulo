@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SortedList;
@@ -251,9 +251,9 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   @Nullable
   public List<? extends XValueContainerNode<?>> getLoadedChildren() {
     List<? extends XValueContainerNode<?>> empty = Collections.<XValueGroupNodeImpl>emptyList();
-    return ContainerUtil.concat(ObjectUtils.notNull(myTopGroups, empty),
-                                ObjectUtils.notNull(myValueChildren, empty),
-                                ObjectUtils.notNull(myBottomGroups, empty));
+    return ContainerUtil.concat(ObjectUtil.notNull(myTopGroups, empty),
+                                ObjectUtil.notNull(myValueChildren, empty),
+                                ObjectUtil.notNull(myBottomGroups, empty));
   }
 
   public void setObsolete() {

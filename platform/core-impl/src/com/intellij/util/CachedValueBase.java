@@ -50,7 +50,7 @@ public abstract class CachedValueBase<T> {
   }
 
   protected void setValue(final T value, final CachedValueProvider.Result<T> result) {
-    myData = new SoftReference<Data<T>>(computeData(value == null ? (T)ObjectUtils.NULL : value, getDependencies(result)));
+    myData = new SoftReference<Data<T>>(computeData(value == null ? (T)ObjectUtil.NULL : value, getDependencies(result)));
   }
 
   @Nullable
@@ -122,7 +122,7 @@ public abstract class CachedValueBase<T> {
 
   private void collectDependencies(TLongArrayList timeStamps, List<Object> resultingDeps, Object[] dependencies) {
     for (Object dependency : dependencies) {
-      if (dependency == null || dependency == ObjectUtils.NULL) continue;
+      if (dependency == null || dependency == ObjectUtil.NULL) continue;
       if (dependency instanceof Object[]) {
         collectDependencies(timeStamps, resultingDeps, (Object[])dependency);
       }
@@ -191,7 +191,7 @@ public abstract class CachedValueBase<T> {
   protected <P> T getValueWithLock(P param) {
     T value = getUpToDateOrNull(true);
     if (value != null) {
-      return value == ObjectUtils.NULL ? null : value;
+      return value == ObjectUtil.NULL ? null : value;
     }
 
     RecursionGuard.StackStamp stamp = RecursionManager.createGuard("cachedValue").markStack();

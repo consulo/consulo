@@ -20,7 +20,7 @@ import com.intellij.ide.IconDescriptor;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import org.consulo.sdk.SdkPointerManager;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +51,7 @@ public class SdkUtil {
       return AllIcons.Toolbar.Unknown;
     }
     SdkType sdkType = (SdkType)sdk.getSdkType();
-    Icon icon = ObjectUtils.notNull(sdkType.getIcon(), AllIcons.Toolbar.Unknown);
+    Icon icon = ObjectUtil.notNull(sdkType.getIcon(), AllIcons.Toolbar.Unknown);
     if(sdk.isPredefined()) {
       return new IconDescriptor(icon).addLayerIcon(AllIcons.Nodes.Locked).toIcon();
     }

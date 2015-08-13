@@ -17,7 +17,7 @@ package com.intellij.ide.util;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,7 +69,7 @@ public abstract class PropertiesComponent {
     if (!isValueSet(name)) {
       return defaultValue;
     }
-    return ObjectUtils.notNull(getValue(name), defaultValue);
+    return ObjectUtil.notNull(getValue(name), defaultValue);
   }
 
   public final int getOrInitInt(@NonNls String name, int defaultValue) {

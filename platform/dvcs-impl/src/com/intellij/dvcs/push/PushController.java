@@ -33,7 +33,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.util.Function;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcs.log.VcsFullCommitDetails;
@@ -552,7 +552,7 @@ public class PushController implements Disposable {
 
   public boolean ensureForcePushIsNeeded() {
     Collection<MyRepoModel<?, ?, ?>> selectedNodes = getSelectedRepoNode();
-    MyRepoModel<?, ?, ?> selectedModel = ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(selectedNodes));
+    MyRepoModel<?, ?, ?> selectedModel = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(selectedNodes));
     final PushSupport activePushSupport = selectedModel.getSupport();
     final PushTarget commonTarget = getCommonTarget(selectedNodes);
     if (commonTarget != null && activePushSupport.isSilentForcePushAllowed(commonTarget)) return true;
@@ -569,7 +569,7 @@ public class PushController implements Disposable {
 
   @Nullable
   private static PushTarget getCommonTarget(@NotNull Collection<MyRepoModel<?, ?, ?>> selectedNodes) {
-    final PushTarget commonTarget = ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(selectedNodes)).getTarget();
+    final PushTarget commonTarget = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(selectedNodes)).getTarget();
     return commonTarget != null && !ContainerUtil.exists(selectedNodes, new Condition<MyRepoModel<?, ?, ?>>() {
       @Override
       public boolean value(MyRepoModel model) {

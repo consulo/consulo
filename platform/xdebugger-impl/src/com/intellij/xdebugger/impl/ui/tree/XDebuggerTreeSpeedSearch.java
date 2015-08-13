@@ -1,7 +1,7 @@
 package com.intellij.xdebugger.impl.ui.tree;
 
 import com.intellij.ui.TreeSpeedSearch;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
@@ -26,9 +26,9 @@ class XDebuggerTreeSpeedSearch extends TreeSpeedSearch implements XDebuggerTreeL
   protected Object findElement(String s) {
     String string = s.trim();
 
-    XDebuggerTreeNode node = ObjectUtils.tryCast(myComponent.getLastSelectedPathComponent(), XDebuggerTreeNode.class);
+    XDebuggerTreeNode node = ObjectUtil.tryCast(myComponent.getLastSelectedPathComponent(), XDebuggerTreeNode.class);
     if (node == null) {
-      node = ObjectUtils.tryCast(myComponent.getModel().getRoot(), XDebuggerTreeNode.class);
+      node = ObjectUtil.tryCast(myComponent.getModel().getRoot(), XDebuggerTreeNode.class);
       if (node == null) {
         return null;
       }
@@ -42,7 +42,7 @@ class XDebuggerTreeSpeedSearch extends TreeSpeedSearch implements XDebuggerTreeL
       return path;
     }
 
-    XDebuggerTreeNode parent = ObjectUtils.tryCast(node.getParent(), XDebuggerTreeNode.class);
+    XDebuggerTreeNode parent = ObjectUtil.tryCast(node.getParent(), XDebuggerTreeNode.class);
     int nodeIndex;
     List<? extends TreeNode> parentChildren;
     if (parent != null) {

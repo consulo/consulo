@@ -36,7 +36,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.NullableFunction;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -653,7 +653,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         public void drop(DnDEvent event) {
           //noinspection unchecked
           moveTemplates((Map<TemplateImpl, DefaultMutableTreeNode>)event.getAttachedObject(),
-                        ObjectUtils.assertNotNull(getDropGroup(event)).getName());
+                        ObjectUtil.assertNotNull(getDropGroup(event)).getName());
         }
       })
       .setImageProvider(new NullableFunction<DnDActionInfo, DnDImage>() {

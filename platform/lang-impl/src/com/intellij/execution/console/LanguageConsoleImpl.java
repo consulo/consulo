@@ -671,7 +671,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
   }
 
   public Editor getCurrentEditor() {
-    return ObjectUtils.chooseNotNull(myCurrentEditor, myConsoleEditor);
+    return ObjectUtil.chooseNotNull(myCurrentEditor, myConsoleEditor);
   }
 
   public Language getLanguage() {
@@ -696,7 +696,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
 
   @NotNull
   protected PsiFile createFile(@NotNull LightVirtualFile virtualFile, @NotNull Document document, @NotNull Project project) {
-    return ObjectUtils.assertNotNull(PsiManager.getInstance(project).findFile(virtualFile));
+    return ObjectUtil.assertNotNull(PsiManager.getInstance(project).findFile(virtualFile));
   }
 
   boolean isHistoryViewerForceAdditionalColumnsUsage() {

@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class ShowDiffWithLocalAction extends DumbAwareAction {
@@ -38,8 +38,9 @@ public class ShowDiffWithLocalAction extends DumbAwareAction {
     FilePath filePath = e.getRequiredData(VcsDataKeys.FILE_PATH);
 
     if (currentRevisionNumber != null && selectedRevision != null) {
-      DiffFromHistoryHandler diffHandler = ObjectUtils.notNull(e.getRequiredData(VcsDataKeys.HISTORY_PROVIDER).getHistoryDiffHandler(),
-                                                               new StandardDiffFromHistoryHandler());
+      DiffFromHistoryHandler diffHandler = ObjectUtil
+              .notNull(e.getRequiredData(VcsDataKeys.HISTORY_PROVIDER).getHistoryDiffHandler(),
+                       new StandardDiffFromHistoryHandler());
       diffHandler.showDiffForTwo(project, filePath,
                                  selectedRevision, new CurrentRevision(filePath.getVirtualFile(), currentRevisionNumber));
     }

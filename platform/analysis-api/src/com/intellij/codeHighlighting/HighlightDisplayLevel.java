@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.JBColor;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.ColorIcon;
 import com.intellij.util.ui.JBUI;
@@ -161,7 +161,7 @@ public class HighlightDisplayLevel {
     @Override
     @NotNull
     public Color getColor() {
-      return ObjectUtils.notNull(getColorInner(), JBColor.GRAY);
+      return ObjectUtil.notNull(getColorInner(), JBColor.GRAY);
     }
 
     @Nullable

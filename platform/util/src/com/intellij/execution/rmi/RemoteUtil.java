@@ -17,8 +17,7 @@ package com.intellij.execution.rmi;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
@@ -212,7 +211,7 @@ public class RemoteUtil {
         }
         catch (InvocationTargetException e) {
           Throwable cause = e.getCause(); // root cause may go deeper than we need, so leave it like this
-          if (cause instanceof ServerError) cause = ObjectUtils.chooseNotNull(cause.getCause(), cause);
+          if (cause instanceof ServerError) cause = ObjectUtil.chooseNotNull(cause.getCause(), cause);
           if (cause instanceof RuntimeException) throw cause;
           if (cause instanceof Error) throw cause;
           if (canThrow(cause, method)) throw cause;

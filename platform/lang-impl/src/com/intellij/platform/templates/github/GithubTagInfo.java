@@ -1,7 +1,7 @@
 package com.intellij.platform.templates.github;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -159,7 +159,7 @@ public class GithubTagInfo {
 
   @Nullable
   public static GithubTagInfo tryCast(@Nullable Object o) {
-    return ObjectUtils.tryCast(o, GithubTagInfo.class);
+    return ObjectUtil.tryCast(o, GithubTagInfo.class);
   }
 
 }

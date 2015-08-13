@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.GuiUtils;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +60,7 @@ public class IOExceptionDialog extends DialogWrapper {
       new AbstractAction(CommonBundle.message("dialog.ioexception.proxy")) {
         @Override
         public void actionPerformed(@NotNull ActionEvent e) {
-          HttpConfigurable.editConfigurable(ObjectUtils.tryCast(e.getSource(), JComponent.class));
+          HttpConfigurable.editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class));
         }
       }
     };

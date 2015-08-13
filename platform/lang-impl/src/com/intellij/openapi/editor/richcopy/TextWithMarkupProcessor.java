@@ -48,7 +48,7 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -144,7 +144,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       logSyntaxInfo(syntaxInfo);
 
       createResult(syntaxInfo, editor);
-      return ObjectUtils.notNull(myResult, Collections.<RawTextWithMarkup>emptyList());
+      return ObjectUtil.notNull(myResult, Collections.<RawTextWithMarkup>emptyList());
     }
     catch (Exception e) {
       // catching the exception so that the rest of copy/paste functionality can still work fine

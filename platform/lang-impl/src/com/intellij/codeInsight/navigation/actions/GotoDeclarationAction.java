@@ -49,7 +49,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -239,7 +239,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
 
     Pair<PsiElement[], GotoDeclarationHandler> pair = findTargetElementsNoVSWithHandler(project, editor, offset, true);
-    return Pair.create(ObjectUtils.notNull(pair.getFirst(), PsiElement.EMPTY_ARRAY), pair.getSecond());
+    return Pair.create(ObjectUtil.notNull(pair.getFirst(), PsiElement.EMPTY_ARRAY), pair.getSecond());
   }
 
   @Nullable

@@ -34,7 +34,7 @@ import com.intellij.ui.speedSearch.FilteringListModel;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import com.intellij.util.Alarm;
 import com.intellij.util.Function;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,8 +104,8 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     if (myUseIdeaEditor) {
       EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
       myList.setFont(scheme.getFont(EditorFontType.PLAIN));
-      Color fg = ObjectUtils.chooseNotNull(scheme.getDefaultForeground(), UIUtil.getListForeground());
-      Color bg = ObjectUtils.chooseNotNull(scheme.getDefaultBackground(), UIUtil.getListBackground());
+      Color fg = ObjectUtil.chooseNotNull(scheme.getDefaultForeground(), UIUtil.getListForeground());
+      Color bg = ObjectUtil.chooseNotNull(scheme.getDefaultBackground(), UIUtil.getListBackground());
       myList.setForeground(fg);
       myList.setBackground(bg);
     }

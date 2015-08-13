@@ -47,7 +47,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Alarm;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.xmlb.annotations.Attribute;
 import gnu.trove.Equality;
@@ -96,7 +96,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     public void setDefaultCharsetName(@NotNull String name) {
       myDefaultEncoding = name.isEmpty()
                           ? ChooseFileEncodingAction.NO_ENCODING
-                          : ObjectUtils.notNull(CharsetToolkit.forName(name), CharsetToolkit.getDefaultSystemCharset());
+                          : ObjectUtil.notNull(CharsetToolkit.forName(name), CharsetToolkit.getDefaultSystemCharset());
     }
   }
 

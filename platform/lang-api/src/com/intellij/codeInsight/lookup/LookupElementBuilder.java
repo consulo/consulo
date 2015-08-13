@@ -20,7 +20,7 @@ import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.psi.PsiNamedElement;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,7 +65,7 @@ public final class LookupElementBuilder extends LookupElement {
   }
 
   public static LookupElementBuilder create(@NotNull PsiNamedElement element) {
-    return new LookupElementBuilder(ObjectUtils.assertNotNull(element.getName()), element);
+    return new LookupElementBuilder(ObjectUtil.assertNotNull(element.getName()), element);
   }
 
   public static LookupElementBuilder createWithIcon(@NotNull PsiNamedElement element) {

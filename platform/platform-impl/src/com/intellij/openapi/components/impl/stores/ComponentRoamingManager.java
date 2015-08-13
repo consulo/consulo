@@ -16,7 +16,7 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.RoamingType;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +33,7 @@ public class ComponentRoamingManager {
   }
 
   public RoamingType getRoamingType(@Nullable String name) {
-    return name == null ? RoamingType.PER_USER : ObjectUtils.notNull(myRoamingTypeMap.get(name), RoamingType.PER_USER);
+    return name == null ? RoamingType.PER_USER : ObjectUtil.notNull(myRoamingTypeMap.get(name), RoamingType.PER_USER);
   }
 
   public void setRoamingType(@NotNull String name, @NotNull RoamingType roamingType) {

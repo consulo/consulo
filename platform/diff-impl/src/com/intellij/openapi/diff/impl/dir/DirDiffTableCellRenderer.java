@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.dir;
 
 import com.intellij.ide.diff.DirDiffOperation;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -41,7 +41,7 @@ public class DirDiffTableCellRenderer extends DefaultTableCellRenderer {
     if (element.isSeparator()) {
       return new SimpleColoredComponent() {
         {
-          setIcon(ObjectUtils.chooseNotNull(element.getSourceIcon(), element.getTargetIcon()));
+          setIcon(ObjectUtil.chooseNotNull(element.getSourceIcon(), element.getTargetIcon()));
           append(element.getName());
         }
         @Override
