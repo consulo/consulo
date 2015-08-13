@@ -1077,12 +1077,13 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
   @NotNull
   private DiffLog merge(@NotNull final ASTNode oldRoot, @NotNull StartMarker newRoot) {
     DiffLog diffLog = new DiffLog();
-    final ConvertFromTokensToASTBuilder builder = new ConvertFromTokensToASTBuilder(newRoot, diffLog);
-    final MyTreeStructure treeStructure = new MyTreeStructure(newRoot, null);
-    final MyComparator comparator = new MyComparator(getUserDataUnprotected(CUSTOM_COMPARATOR), treeStructure);
+    DiffTreeChangeBuilder<ASTNode, LighterASTNode> builder = new ConvertFromTokensToASTBuilder(newRoot, diffLog);
+    MyTreeStructure treeStructure = new MyTreeStructure(newRoot, null);
+    ShallowNodeComparator<ASTNode, LighterASTNode> comparator = new MyComparator(getUserDataUnprotected(CUSTOM_COMPARATOR), treeStructure);
 
-    final ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
-    BlockSupportImpl.diffTrees(oldRoot, builder, comparator, treeStructure, indicator == null ? new EmptyProgressIndicator() : indicator);
+    ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
+    BlockSupportImpl.diffTrees(oldRoot, builder, comparator, treeStructure, indicator == null ? new EmptyProgressIndicator() : indicator,
+                               oldRoot.getText());
     return diffLog;
   }
 
@@ -1600,6 +1601,22 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
       lexeme.myTokenEnd = end;
       ensureCapacity();
       nodes[count++] = lexeme;
+    }
+
+    @NotNull
+    @Override
+    public CharSequence toString(@NotNull LighterASTNode node) {
+      return myRoot.myBuilder.myText.subSequence(node.getStartOffset(), node.getEndOffset());
+    }
+
+    @Override
+    public int getStartOffset(@NotNull LighterASTNode node) {
+      return node.getStartOffset();
+    }
+
+    @Override
+    public int getEndOffset(@NotNull LighterASTNode node) {
+      return node.getEndOffset();
     }
   }
 

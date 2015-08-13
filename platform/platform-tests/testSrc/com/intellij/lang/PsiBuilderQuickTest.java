@@ -623,7 +623,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
                       fail("inserted(" + oldParent + "," + newNode.getTokenType() + ")");
                     }
                   }
-    );
+    , root.getText());
   }
 
   private static void doFailTest(@NonNls final String text, final Parser parser, @NonNls final String expected) {

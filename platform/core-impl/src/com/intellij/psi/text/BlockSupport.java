@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import com.intellij.psi.impl.source.text.DiffLog;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 public abstract class BlockSupport {
   public static BlockSupport getInstance(Project project) {
@@ -38,10 +39,12 @@ public abstract class BlockSupport {
   public abstract void reparseRange(PsiFile file, int startOffset, int endOffset, @NonNls CharSequence newText) throws IncorrectOperationException;
 
   @NotNull
+  @RequiredReadAction
   public abstract DiffLog reparseRange(@NotNull PsiFile file,
-                                       TextRange changedPsiRange,
+                                       @NotNull TextRange changedPsiRange,
                                        @NotNull CharSequence newText,
-                                       @NotNull ProgressIndicator progressIndicator) throws IncorrectOperationException;
+                                       @NotNull ProgressIndicator progressIndicator,
+                                       @NotNull CharSequence lastCommittedText) throws IncorrectOperationException;
 
   public static final Key<Boolean> DO_NOT_REPARSE_INCREMENTALLY = Key.create("DO_NOT_REPARSE_INCREMENTALLY");
   public static final Key<ASTNode> TREE_TO_BE_REPARSED = Key.create("TREE_TO_BE_REPARSED");
@@ -66,7 +69,7 @@ public abstract class BlockSupport {
 
   // maximal tree depth for which incremental reparse is allowed
   // if tree is deeper then it will be replaced completely - to avoid SOEs
-  public static final int INCREMENTAL_REPARSE_DEPTH_LIMIT = Registry.intValue("psi.incremental.reparse.depth.limit", 1000);
+  public static final int INCREMENTAL_REPARSE_DEPTH_LIMIT = Registry.intValue("psi.incremental.reparse.depth.limit");
 
   public static final Key<Boolean> TREE_DEPTH_LIMIT_EXCEEDED = Key.create("TREE_IS_TOO_DEEP");
 
