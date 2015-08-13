@@ -43,7 +43,6 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.MutableModuleExtension;
-import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -261,30 +260,6 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   @Override
   public SdkComboBoxItem getSelectedItem() {
     return (SdkComboBoxItem)super.getSelectedItem();
-  }
-
-  @Deprecated
-  @DeprecationInfo(
-          value = "Use #insertModuleItems(MutableModuleExtension<?>, NullableFunction<MutableModuleExtension<?>, MutableModuleInheritableNamedPointer<Sdk>>)",
-          until = "1.0")
-  @RequiredReadAction
-  public void insertModuleItems(@NotNull ModuleExtension<?> moduleExtension) {
-    for (Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
-      // dont add self module
-      if (module == moduleExtension.getModule()) {
-        continue;
-      }
-
-      final ModuleExtension extension = ModuleUtilCore.getExtension(module, moduleExtension.getId());
-      if (extension instanceof MutableModuleExtensionWithSdk) {
-        final MutableModuleExtensionWithSdk sdkExtension = (MutableModuleExtensionWithSdk)extension;
-        // recursive depend
-        if (sdkExtension.getInheritableSdk().getModule() == moduleExtension.getModule()) {
-          continue;
-        }
-        addItem(new ModuleExtensionSdkComboBoxItemOld(sdkExtension));
-      }
-    }
   }
 
   @RequiredReadAction
@@ -526,13 +501,6 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     @Override
     public String toString() {
       return mySdk.getName();
-    }
-  }
-
-  @Deprecated
-  public static class ModuleExtensionSdkComboBoxItemOld extends ModuleExtensionSdkComboBoxItem {
-    public ModuleExtensionSdkComboBoxItemOld(MutableModuleExtensionWithSdk<?> moduleExtensionWithSdk) {
-      super(moduleExtensionWithSdk, moduleExtensionWithSdk.getInheritableSdk());
     }
   }
 
