@@ -6,13 +6,14 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPlainTextFile;
+import com.intellij.psi.PsiPlainTextFile;import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author sergey.evdokimov
  */
 public class CompletionContributorForTextField extends CompletionContributor implements DumbAware {
 
+  @RequiredReadAction
   @Override
   public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
     PsiFile file = parameters.getOriginalFile();

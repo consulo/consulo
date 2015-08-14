@@ -22,6 +22,7 @@ import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * User: anna
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CompletionContributorForInplaceRename extends CompletionContributor {
 
+  @RequiredReadAction
   @Override
   public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
     final Editor editor = parameters.getEditor();

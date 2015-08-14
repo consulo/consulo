@@ -26,6 +26,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.ReferenceRange;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.util.PairConsumer;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -37,6 +38,7 @@ import java.util.Set;
 public class LegacyCompletionContributor extends CompletionContributor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.LegacyCompletionContributor");
 
+  @RequiredReadAction
   @Override
   public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet _result) {
     if (parameters.getCompletionType() != CompletionType.BASIC) {

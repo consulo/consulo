@@ -28,6 +28,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;
@@ -53,6 +54,7 @@ public class TextFieldWithAutoCompletionContributor<T> extends CompletionContrib
     }
   }
 
+  @RequiredReadAction
   @Override
   public void fillCompletionVariants(final CompletionParameters parameters, CompletionResultSet result) {
     PsiFile file = parameters.getOriginalFile();

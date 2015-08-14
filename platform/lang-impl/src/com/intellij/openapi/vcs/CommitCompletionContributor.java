@@ -29,13 +29,14 @@ import com.intellij.openapi.vcs.ui.CommitMessage;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.ui.TextFieldWithAutoCompletionListProvider;
+import com.intellij.ui.TextFieldWithAutoCompletionListProvider;import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author Dmitry Avdeev
  */
 public class CommitCompletionContributor extends CompletionContributor {
 
+  @RequiredReadAction
   @Override
   public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
     PsiFile file = parameters.getOriginalFile();

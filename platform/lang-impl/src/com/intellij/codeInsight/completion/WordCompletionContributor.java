@@ -31,6 +31,7 @@ import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ import static com.intellij.patterns.PlatformPatterns.psiElement;
  */
 public class WordCompletionContributor extends CompletionContributor implements DumbAware {
 
+  @RequiredReadAction
   @Override
   public void fillCompletionVariants(final CompletionParameters parameters, final CompletionResultSet result) {
     if (parameters.getCompletionType() == CompletionType.BASIC && shouldPerformWordCompletion(parameters)) {

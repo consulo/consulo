@@ -49,6 +49,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.util.*;
@@ -63,6 +64,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
 
   public FilePathCompletionContributor() {
     extend(CompletionType.BASIC, psiElement(), new CompletionProvider<CompletionParameters>() {
+      @RequiredReadAction
       @Override
       protected void addCompletions(@NotNull CompletionParameters parameters,
                                     ProcessingContext context,
@@ -78,6 +80,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
     });
 
     CompletionProvider<CompletionParameters> provider = new CompletionProvider<CompletionParameters>() {
+      @RequiredReadAction
       @Override
       protected void addCompletions(@NotNull final CompletionParameters parameters,
                                     ProcessingContext context,

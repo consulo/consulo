@@ -17,13 +17,16 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author peter
  */
 public abstract class CompletionProvider<V extends CompletionParameters> {
+  @RequiredReadAction
   protected abstract void addCompletions(@NotNull V parameters, final ProcessingContext context, @NotNull CompletionResultSet result);
 
+  @RequiredReadAction
   public final void addCompletionVariants(@NotNull final V parameters, final ProcessingContext context, @NotNull final CompletionResultSet result) {
     addCompletions(parameters, context, result);
   }

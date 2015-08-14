@@ -21,6 +21,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.StringComboboxEditor;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 
@@ -29,6 +30,7 @@ import javax.swing.*;
  */
 public class ComboEditorCompletionContributor extends CompletionContributor {
 
+  @RequiredReadAction
   @Override
   public void fillCompletionVariants(final CompletionParameters parameters, final CompletionResultSet result) {
     if (parameters.getInvocationCount() == 0) {

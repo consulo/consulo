@@ -36,6 +36,7 @@ import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.List;
 
@@ -147,6 +148,7 @@ public abstract class CompletionContributor {
    * @param parameters
    * @param result
    */
+  @RequiredReadAction
   public void fillCompletionVariants(final CompletionParameters parameters, CompletionResultSet result) {
     for (final Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>> pair : myMap.get(parameters.getCompletionType())) {
       final ProcessingContext context = new ProcessingContext();

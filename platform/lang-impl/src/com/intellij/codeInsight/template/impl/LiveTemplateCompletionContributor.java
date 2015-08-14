@@ -33,6 +33,7 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.List;
@@ -56,6 +57,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor {
 
   public LiveTemplateCompletionContributor() {
     extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new CompletionProvider<CompletionParameters>() {
+      @RequiredReadAction
       @Override
       protected void addCompletions(@NotNull final CompletionParameters parameters,
                                     ProcessingContext context,
