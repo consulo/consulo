@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.PathUtil;
 import org.consulo.compiler.server.fileSystem.archive.ArchiveNewVirtualFile;
+import org.consulo.vfs.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredWriteAction;
@@ -275,7 +276,7 @@ public class CompilerServerManagingFSImpl extends PersistentFS {
 
     if (fileByPath != null) {
       if (fs instanceof ArchiveFileSystem) {
-        return new ArchiveNewVirtualFile(fileByPath, (ArchiveFileSystem) fs);
+        return new ArchiveNewVirtualFile(fileByPath, (ArchiveFileSystemBase) fs);
       }
       return new CompilerServerNewVirtualFileImpl(fileByPath, fs);
     }

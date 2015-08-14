@@ -375,7 +375,6 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
     return findFileByPath(path);
   }
 
-  @Override
   public ArchiveFile getArchiveWrapperFile(@NotNull VirtualFile entryVFile) throws IOException {
     ArchiveHandler handler = getHandler(entryVFile);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.DistinctRootsCollection;
 import com.intellij.util.io.URLUtil;
+import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -45,12 +46,16 @@ import static com.intellij.openapi.vfs.VirtualFileVisitor.VisitorException;
 public class VfsUtilCore {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.VfsUtilCore");
 
+  @NonNls private static final String MAILTO = "mailto";
+
   public static final String LOCALHOST_URI_PATH_PREFIX = "localhost/";
+  public static final char VFS_SEPARATOR_CHAR = '/';
+
   private static final String PROTOCOL_DELIMITER = ":";
 
   /**
-   * Checks whether the <code>ancestor {@link com.intellij.openapi.vfs.VirtualFile}</code> is parent of <code>file
-   * {@link com.intellij.openapi.vfs.VirtualFile}</code>.
+   * Checks whether the <code>ancestor {@link VirtualFile}</code> is parent of <code>file
+   * {@link VirtualFile}</code>.
    *
    * @param ancestor the file
    * @param file     the file
@@ -84,6 +89,20 @@ public class VfsUtilCore {
     return false;
   }
 
+  /**
+   * @return {@code true} if {@code url} is located under one of {@code rootUrls} or equal to one of them
+   */
+  public static boolean isUnder(@NotNull String url, @Nullable Collection<String> rootUrls) {
+    if (rootUrls == null || rootUrls.isEmpty()) return false;
+
+    for (String excludesUrl : rootUrls) {
+      if (isEqualOrAncestor(excludesUrl, url)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public static boolean isEqualOrAncestor(@NotNull String ancestorUrl, @NotNull String fileUrl) {
     if (ancestorUrl.equals(fileUrl)) return true;
     if (StringUtil.endsWithChar(ancestorUrl, '/')) {
@@ -104,6 +123,11 @@ public class VfsUtilCore {
     return false;
   }
 
+  @Nullable
+  public static String getRelativePath(@NotNull VirtualFile file, @NotNull VirtualFile ancestor) {
+    return getRelativePath(file, ancestor, VFS_SEPARATOR_CHAR);
+  }
+
   /**
    * Gets the relative path of <code>file</code> to its <code>ancestor</code>. Uses <code>separator</code> for
    * separating files.
@@ -115,12 +139,10 @@ public class VfsUtilCore {
    */
   @Nullable
   public static String getRelativePath(@NotNull VirtualFile file, @NotNull VirtualFile ancestor, char separator) {
-    if (!file.getFileSystem().equals(ancestor.getFileSystem())) return null;
+    if (!file.getFileSystem().equals(ancestor.getFileSystem())) {
+      return null;
+    }
 
-    return doGetRelative(file, ancestor, separator);
-  }
-
-  public static String doGetRelative(VirtualFile file, VirtualFile ancestor, char separator) {
     int length = 0;
     VirtualFile parent = file;
     while (true) {
@@ -166,11 +188,11 @@ public class VfsUtilCore {
    *
    * @param requestor any object to control who called this method. Note that
    *                  it is considered to be an external change if <code>requestor</code> is <code>null</code>.
-   *                  See {@link com.intellij.openapi.vfs.VirtualFileEvent#getRequestor}
+   *                  See {@link VirtualFileEvent#getRequestor}
    * @param file      file to make a copy of
    * @param toDir     directory to make a copy in
    * @return a copy of the file
-   * @throws java.io.IOException if file failed to be copied
+   * @throws IOException if file failed to be copied
    */
   @NotNull
   public static VirtualFile copyFile(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile toDir) throws IOException {
@@ -182,12 +204,12 @@ public class VfsUtilCore {
    *
    * @param requestor any object to control who called this method. Note that
    *                  it is considered to be an external change if <code>requestor</code> is <code>null</code>.
-   *                  See {@link com.intellij.openapi.vfs.VirtualFileEvent#getRequestor}
+   *                  See {@link VirtualFileEvent#getRequestor}
    * @param file      file to make a copy of
    * @param toDir     directory to make a copy in
    * @param newName   new name of the file
    * @return a copy of the file
-   * @throws java.io.IOException if file failed to be copied
+   * @throws IOException if file failed to be copied
    */
   @NotNull
   public static VirtualFile copyFile(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile toDir, @NotNull @NonNls String newName)
@@ -234,7 +256,7 @@ public class VfsUtilCore {
     return !Comparing.equal(result.skipToParent, root);
   }
 
-  @SuppressWarnings("UnsafeVfsRecursion")
+  @SuppressWarnings({"UnsafeVfsRecursion", "Duplicates"})
   @NotNull
   public static VirtualFileVisitor.Result visitChildrenRecursively(@NotNull VirtualFile file,
                                                                    @NotNull VirtualFileVisitor<?> visitor) throws VisitorException {
@@ -396,7 +418,7 @@ public class VfsUtilCore {
         return prefix + ":///" + suffix;
       }
     }
-    else if (url.charAt(index + 3) == '/' && SystemInfoRt.isWindows && url.regionMatches(0, StandardFileSystems.FILE_PROTOCOL_PREFIX, 0, StandardFileSystems.FILE_PROTOCOL_PREFIX.length())) {
+    else if (SystemInfoRt.isWindows && (index + 3) < url.length() && url.charAt(index + 3) == '/' && url.regionMatches(0, StandardFileSystems.FILE_PROTOCOL_PREFIX, 0, StandardFileSystems.FILE_PROTOCOL_PREFIX.length())) {
       // file:///C:/test/file.js -> file://C:/test/file.js
       for (int i = index + 4; i < url.length(); i++) {
         char c = url.charAt(i);
@@ -444,6 +466,57 @@ public class VfsUtilCore {
 
     path = URLUtil.unescapePercentSequences(path);
     return protocol + "://" + path;
+  }
+
+  /**
+   * Converts VsfUrl info {@link URL}.
+   *
+   * @param vfsUrl VFS url (as constructed by {@link VirtualFile#getUrl()}
+   * @return converted URL or null if error has occurred.
+   */
+  @Nullable
+  public static URL convertToURL(@NotNull String vfsUrl) {
+    if (vfsUrl.startsWith(StandardFileSystems.JAR_PROTOCOL_PREFIX)) {
+      try {
+        return new URL("jar:file:///" + vfsUrl.substring(StandardFileSystems.JAR_PROTOCOL_PREFIX.length()));
+      }
+      catch (MalformedURLException e) {
+        return null;
+      }
+    }
+
+    // [stathik] for supporting mail URLs in Plugin Manager
+    if (vfsUrl.startsWith(MAILTO)) {
+      try {
+        return new URL (vfsUrl);
+      }
+      catch (MalformedURLException e) {
+        return null;
+      }
+    }
+
+    String[] split = vfsUrl.split("://");
+
+    if (split.length != 2) {
+      LOG.debug("Malformed VFS URL: " + vfsUrl);
+      return null;
+    }
+
+    String protocol = split[0];
+    String path = split[1];
+
+    try {
+      if (protocol.equals(StandardFileSystems.FILE_PROTOCOL)) {
+        return new URL(StandardFileSystems.FILE_PROTOCOL, "", path);
+      }
+      else {
+        return UrlClassLoader.internProtocol(new URL(vfsUrl));
+      }
+    }
+    catch (MalformedURLException e) {
+      LOG.debug("MalformedURLException occurred:" + e.getMessage());
+      return null;
+    }
   }
 
   @NotNull

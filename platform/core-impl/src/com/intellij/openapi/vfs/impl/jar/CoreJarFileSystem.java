@@ -84,12 +84,6 @@ public class CoreJarFileSystem extends DeprecatedVirtualFileSystem implements Ar
     return null;
   }
 
-  @Nullable
-  @Override
-  public ArchiveFile getArchiveWrapperFile(@NotNull VirtualFile entryVFile) throws IOException {
-    return null;
-  }
-
   @Override
   public boolean isMakeCopyOfJar(File originalFile) {
     return false;

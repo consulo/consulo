@@ -18,10 +18,7 @@ package com.intellij.openapi.vfs;
 import com.intellij.openapi.vfs.newvfs.CachingVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.FileSystemInterface;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
 
 /**
  * @author VISTALL
@@ -42,7 +39,4 @@ public interface ArchiveFileSystem
   @Nullable
   @Deprecated
   VirtualFile findByPathWithSeparator(@Nullable VirtualFile entryVFile);
-
-  @Nullable
-  ArchiveFile getArchiveWrapperFile(@NotNull VirtualFile entryVFile) throws IOException;
 }

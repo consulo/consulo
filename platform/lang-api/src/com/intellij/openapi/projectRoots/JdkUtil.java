@@ -30,6 +30,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import gnu.trove.THashMap;
@@ -79,26 +80,17 @@ public class JdkUtil {
       }
       return versionString;
     }
-    VirtualFile rtJarFileContent = StandardFileSystems.jar().findFileByPath(rtJar.getPath() + ArchiveFileSystem.ARCHIVE_SEPARATOR);
-    if (rtJarFileContent == null) {
-      return null;
-    }
-    ArchiveFile manifestArchiveFile;
-    try {
-      manifestArchiveFile = ((JarFileSystem) StandardFileSystems.jar()).getArchiveWrapperFile(rtJarFileContent);
-    }
-    catch (IOException e) {
-      return null;
-    }
-    if (manifestArchiveFile == null) {
+
+    VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(rtJar);
+    if(archiveRootForLocalFile == null) {
       return null;
     }
     try {
-      ArchiveEntry entry = manifestArchiveFile.getEntry(JarFile.MANIFEST_NAME);
-      if (entry == null) {
+      VirtualFile manifestArchiveFile = archiveRootForLocalFile.findFileByRelativePath(JarFile.MANIFEST_NAME);
+      if (manifestArchiveFile == null) {
         return null;
       }
-      InputStream is = manifestArchiveFile.getInputStream(entry);
+      InputStream is = manifestArchiveFile.getInputStream();
       Manifest manifest = new Manifest(is);
       is.close();
       Attributes attributes = manifest.getMainAttributes();

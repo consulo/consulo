@@ -66,7 +66,7 @@ public class PlatformDocumentationUtil {
     return x;
   }
 
-  public static String fixupText(String docText) {
+  public static String fixupText(CharSequence docText) {
     Matcher fixupMatcher = ourLtFixupPattern.matcher(docText);
     LinkedList<String> secondSymbols = new LinkedList<String>();
 
@@ -90,6 +90,6 @@ public class PlatformDocumentationUtil {
       }
     }
 
-    return docText;
+    return docText.toString();
   }
 }

@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import org.consulo.lombok.annotations.Logger;
+import org.consulo.vfs.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +47,7 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
 
   protected List<NewVirtualFile> myChilds = new ArrayList<NewVirtualFile>();
 
-  public ArchiveNewVirtualFile(VirtualFile parent, ArchiveFileSystem fileSystem) {
+  public ArchiveNewVirtualFile(VirtualFile parent, ArchiveFileSystemBase fileSystem) {
     myParent = parent;
 
     myFileSystem = fileSystem;
