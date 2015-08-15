@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.intellij.codeInsight.intention;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
@@ -24,6 +25,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -101,7 +103,7 @@ public abstract class IntentionManager  {
 
   /**
    * @deprecated custom directory name causes problem with internationalization of intention descriptions.
-   * Register intention class via extension point {@link IntentionManager.EP_INTENTION_ACTIONS} instead.
+   * Register intention class via extension point {@link IntentionManager#EP_INTENTION_ACTIONS} instead.
    */
   @Deprecated
   public abstract void registerIntentionAndMetaData(@NotNull IntentionAction action,
@@ -120,10 +122,16 @@ public abstract class IntentionManager  {
   /**
    * @return actions used as additional options for the given problem.
    * E.g. actions for suppress the problem via comment, javadoc or annotation,
-   * and edit corresponding inspection settings.   
+   * and edit corresponding inspection settings.
    */
   @NotNull
   public abstract List<IntentionAction> getStandardIntentionOptions(@NotNull HighlightDisplayKey displayKey, @NotNull PsiElement context);
+
+  /**
+   * @return "Fix all '' inspections problems for a file" intention if toolWrapper is local inspection or simple global one
+   */
+  @Nullable
+  public abstract IntentionAction createFixAllIntention(InspectionToolWrapper toolWrapper, IntentionAction action);
 
   /**
    * Wraps given action in a LocalQuickFix object.

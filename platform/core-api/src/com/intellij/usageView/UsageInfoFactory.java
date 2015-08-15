@@ -1,6 +1,5 @@
-
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.usageView;
 
-package com.intellij.codeHighlighting;
+import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public interface Pass {
-  int UPDATE_FOLDING = 1;
-  int POPUP_HINTS = 3;
-  int UPDATE_ALL = 4;
-  int UPDATE_OVERRIDEN_MARKERS = 6;
-  int LOCAL_INSPECTIONS = 7;
-  int EXTERNAL_TOOLS = 8;
-  int WOLF = 9;
-  int VISIBLE_LINE_MARKERS = 10;
-  int LINE_MARKERS = 11;
-  int WHOLE_FILE_LOCAL_INSPECTIONS = 12;
-
-  int LAST_PASS = WHOLE_FILE_LOCAL_INSPECTIONS;
+public interface UsageInfoFactory {
+  @Nullable
+  UsageInfo createUsageInfo(@NotNull PsiElement usage, int startOffset, int endOffset);
 }

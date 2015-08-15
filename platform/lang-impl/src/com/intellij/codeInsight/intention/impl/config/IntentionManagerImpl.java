@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,13 @@ import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionBean;
 import com.intellij.codeInsight.intention.IntentionManager;
+import com.intellij.codeInspection.GlobalInspectionTool;
+import com.intellij.codeInspection.GlobalSimpleInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.actions.CleanupInspectionIntention;
 import com.intellij.codeInspection.actions.RunInspectionIntention;
-import com.intellij.codeInspection.ex.DisableInspectionToolAction;
-import com.intellij.codeInspection.ex.EditInspectionToolsSettingsAction;
-import com.intellij.codeInspection.ex.EditInspectionToolsSettingsInSuppressedPlaceIntention;
+import com.intellij.codeInspection.ex.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
@@ -36,6 +37,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.Alarm;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
@@ -181,6 +183,32 @@ public class IntentionManagerImpl extends IntentionManager {
     return options;
   }
 
+  @Nullable
+  @Override
+  public IntentionAction createFixAllIntention(InspectionToolWrapper toolWrapper, IntentionAction action) {
+    if (toolWrapper instanceof LocalInspectionToolWrapper) {
+      Class aClass = action.getClass();
+      if (action instanceof QuickFixWrapper) {
+        aClass = ((QuickFixWrapper)action).getFix().getClass();
+      }
+      return new CleanupInspectionIntention(toolWrapper, aClass, action.getText());
+    }
+    else if (toolWrapper instanceof GlobalInspectionToolWrapper) {
+      GlobalInspectionTool wrappedTool = ((GlobalInspectionToolWrapper)toolWrapper).getTool();
+      if (wrappedTool instanceof GlobalSimpleInspectionTool && (action instanceof LocalQuickFix || action instanceof QuickFixWrapper)) {
+        Class aClass = action.getClass();
+        if (action instanceof QuickFixWrapper) {
+          aClass = ((QuickFixWrapper)action).getFix().getClass();
+        }
+        return new CleanupInspectionIntention(toolWrapper, aClass, action.getText());
+      }
+    }
+    else {
+      throw new AssertionError("unknown tool: " + toolWrapper);
+    }
+    return null;
+  }
+
   @Override
   @NotNull
   public LocalQuickFix convertToFix(@NotNull final IntentionAction action) {
@@ -221,7 +249,7 @@ public class IntentionManagerImpl extends IntentionManager {
   @Override
   @NotNull
   public IntentionAction[] getIntentionActions() {
-    return myActions.toArray(new IntentionAction[myActions.size()]);
+    return ArrayUtil.stripTrailingNulls(myActions.toArray(new IntentionAction[myActions.size()]));
   }
 
   @NotNull
@@ -237,6 +265,6 @@ public class IntentionManagerImpl extends IntentionManager {
   }
 
   public boolean hasActiveRequests() {
-    return myInitActionsAlarm.getActiveRequestCount() > 0;
+    return !myInitActionsAlarm.isEmpty();
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.codeHighlighting;
 
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
+import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -26,10 +27,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
 public abstract class TextEditorHighlightingPass implements HighlightingPass {
@@ -57,6 +60,9 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
   @Override
   public final void collectInformation(@NotNull ProgressIndicator progress) {
     if (!isValid()) return; //Document has changed.
+    if (!(progress instanceof DaemonProgressIndicator)) {
+      throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: "+progress);
+    }
     myDumb = DumbService.getInstance(myProject).isDumb();
     doCollectInformation(progress);
   }
@@ -74,7 +80,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     return myDumb;
   }
 
-  private boolean isValid() {
+  protected boolean isValid() {
     if (isDumbMode() && !DumbService.isDumbAware(this)) {
       return false;
     }
@@ -113,9 +119,9 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     myId = id;
   }
 
-  @Nullable
+  @NotNull
   public List<HighlightInfo> getInfos() {
-    return null;
+    return Collections.emptyList();
   }
 
   @NotNull
@@ -140,9 +146,10 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     myStartingPredecessorIds = startingPredecessorIds;
   }
 
+  @Override
   @NonNls
   public String toString() {
-    return getClass() + "; id=" + getId();
+    return (getClass().isAnonymousClass() ? getClass().getSuperclass() : getClass()).getSimpleName() + "; id=" + getId();
   }
 
   public boolean isRunIntentionPassAfter() {

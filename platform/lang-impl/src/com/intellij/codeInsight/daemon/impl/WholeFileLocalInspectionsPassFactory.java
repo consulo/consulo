@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
 import com.intellij.codeInsight.daemon.DaemonBundle;
-import com.intellij.codeInspection.ex.InspectionManagerEx;
+import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.openapi.Disposable;
@@ -36,7 +36,7 @@ import com.intellij.profile.ProfileChangeAdapter;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.containers.ConcurrentWeakHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,14 +49,14 @@ import java.util.Map;
  * @author cdr
  */
 public class WholeFileLocalInspectionsPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
-  private final Map<PsiFile, Boolean> myFileTools = new ConcurrentWeakHashMap<PsiFile, Boolean>();
+  private final Map<PsiFile, Boolean> myFileTools = ContainerUtil.createConcurrentWeakMap();
   public InspectionProjectProfileManager myProfileManager;
 
   public WholeFileLocalInspectionsPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar,
                                               final InspectionProjectProfileManager profileManager) {
     super(project);
     // can run in the same time with LIP, but should start after it, since I believe whole-file inspections would run longer
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.LOCAL_INSPECTIONS}, true, -1);
+    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.LOCAL_INSPECTIONS}, true, Pass.WHOLE_FILE_LOCAL_INSPECTIONS);
     myProfileManager = profileManager;
   }
 
@@ -76,7 +76,7 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
       }
 
       @Override
-      public void profileActivated(@NotNull Profile oldProfile, Profile profile) {
+      public void profileActivated(Profile oldProfile, Profile profile) {
         myFileTools.clear();
       }
     };
@@ -122,9 +122,8 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
       void inspectInjectedPsi(@NotNull List<PsiElement> elements,
                               boolean onTheFly,
                               @NotNull ProgressIndicator indicator,
-                              @NotNull InspectionManagerEx iManager,
+                              @NotNull InspectionManager iManager,
                               boolean inVisibleRange,
-                              boolean checkDumbAwareness,
                               @NotNull List<LocalInspectionToolWrapper> wrappers) {
         // already inspected in LIP
       }

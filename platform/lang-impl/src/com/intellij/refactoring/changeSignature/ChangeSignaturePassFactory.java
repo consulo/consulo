@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,13 +45,13 @@ import java.util.Collections;
 public class ChangeSignaturePassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
   public ChangeSignaturePassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
     super(project);
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, new int[]{Pass.POST_UPDATE_ALL}, null, false, -1);
+    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, null, false, -1);
   }
 
   @Override
   public TextEditorHighlightingPass createHighlightingPass(@NotNull final PsiFile file, @NotNull final Editor editor) {
     LanguageChangeSignatureDetector detector =
-      LanguageChangeSignatureDetectors.INSTANCE.forLanguage(file.getLanguage());
+            LanguageChangeSignatureDetectors.INSTANCE.forLanguage(file.getLanguage());
     if (detector == null) return null;
 
     return new ChangeSignaturePass(file.getProject(), file, editor);
@@ -96,7 +96,7 @@ public class ChangeSignaturePassFactory extends AbstractProjectComponent impleme
       if (myRange != null)  {
         TextAttributes attributes = new TextAttributes(null, null,
                                                        myEditor.getColorsScheme().getAttributes(CodeInsightColors.WEAK_WARNING_ATTRIBUTES)
-                                                         .getEffectColor(),
+                                                               .getEffectColor(),
                                                        null, Font.PLAIN);
         HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(myRange);
         builder.textAttributes(attributes);

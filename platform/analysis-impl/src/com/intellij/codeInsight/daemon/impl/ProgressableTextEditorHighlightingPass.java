@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public abstract class ProgressableTextEditorHighlightingPass extends TextEditorHighlightingPass {
   private volatile boolean myFinished;
-  private volatile long myProgressLimit = 0;
+  private volatile long myProgressLimit;
   private final AtomicLong myProgressCount = new AtomicLong();
   private volatile long myNextChunkThreshold; // the value myProgressCount should exceed to generate next fireProgressAdvanced event
   private final String myPresentableName;
@@ -60,16 +60,9 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     myHighlightInfoProcessor = highlightInfoProcessor;
   }
 
-  @NotNull
-  private HighlightingSession sessionCreated(@NotNull TextRange restrictRange,
-                                             @NotNull PsiFile file,
-                                             @Nullable Editor editor,
-                                             @NotNull ProgressIndicator progress,
-                                             EditorColorsScheme scheme,
-                                             int passId) {
-    HighlightingSessionImpl impl = new HighlightingSessionImpl(file, editor, progress, scheme, passId, restrictRange);
-    myHighlightingSession = impl;
-    return impl;
+  @Override
+  protected boolean isValid() {
+    return super.isValid() && (myFile == null || myFile.isValid());
   }
 
   private void sessionFinished() {
@@ -78,9 +71,12 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
 
   @Override
   public final void doCollectInformation(@NotNull final ProgressIndicator progress) {
+    if (!(progress instanceof DaemonProgressIndicator)) {
+      throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: "+progress);
+    }
     myFinished = false;
     if (myFile != null) {
-      myHighlightingSession = sessionCreated(myRestrictRange, myFile, myEditor, progress, getColorsScheme(), getId());
+      myHighlightingSession = HighlightingSessionImpl.getOrCreateHighlightingSession(myFile, myEditor, (DaemonProgressIndicator)progress, getColorsScheme());
     }
     try {
       collectInformationWithProgress(progress);
@@ -100,6 +96,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     applyInformationWithProgress();
     DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
     daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
+    myHighlightInfoProcessor.progressIsAdvanced(myHighlightingSession, 1);  //causes traffic light repaint
   }
 
   protected abstract void applyInformationWithProgress();
@@ -115,11 +112,11 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     return progressCount > progressLimit ? 1 : (double)progressCount / progressLimit;
   }
 
-  public long getProgressLimit() {
+  private long getProgressLimit() {
     return myProgressLimit;
   }
 
-  public long getProgressCount() {
+  private long getProgressCount() {
     return myProgressCount.get();
   }
 
@@ -129,6 +126,10 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
 
   protected String getPresentableName() {
     return myPresentableName;
+  }
+
+  protected Editor getEditor() {
+    return myEditor;
   }
 
   public void setProgressLimit(long limit) {
@@ -148,7 +149,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
   }
 
-  public static class EmptyPass extends TextEditorHighlightingPass {
+  static class EmptyPass extends TextEditorHighlightingPass {
     public EmptyPass(final Project project, @Nullable final Document document) {
       super(project, document, false);
     }

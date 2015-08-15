@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +58,12 @@ public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
     if (caretWasBeforeStatement) {
       editor.getCaretModel().moveToOffset(container.getTextRange().getStartOffset());
     }
+  }
+
+  public ThreeState isShouldBeAppliedToInjectionHost() {
+    return myFix instanceof InjectionAwareSuppressQuickFix
+           ? ((InjectionAwareSuppressQuickFix)myFix).isShouldBeAppliedToInjectionHost()
+           : ThreeState.UNSURE;
   }
 
   public PsiElement getContainer(PsiElement element) {

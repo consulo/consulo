@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,21 @@ import org.jetbrains.annotations.Nullable;
  * complete graph of references between classes, methods and other elements in the scope
  * selected for the analysis.
  *
+ * Global inspections can use a shared local inspection tool for highlighting the cases
+ * that do not need global analysis in the editor by implementing {@link #getSharedLocalInspectionTool()}
+ * The shared local inspection tools shares settings and documentation with the global inspection tool.
+ *
  * @author anna
  * @see LocalInspectionTool
  * @since 6.0
  */
 public abstract class GlobalInspectionTool extends InspectionProfileEntry {
+  @NotNull
+  @Override
+  protected final String getSuppressId() {
+    return super.getSuppressId();
+  }
+
   /**
    * Returns the annotator which will receive callbacks while the reference graph
    * is being built. The annotator can be used to add additional markers to reference
@@ -185,17 +195,32 @@ public abstract class GlobalInspectionTool extends InspectionProfileEntry {
 
   /**
    * @return JobDescriptors array to show inspection progress correctly. TotalAmount should be set (e.g. in
-   * {@link #runInspection(com.intellij.analysis.AnalysisScope, InspectionManager, GlobalInspectionContext, ProblemDescriptionsProcessor)})
-   * ProgressIndicator should progress with {@link com.intellij.codeInspection.GlobalInspectionContext#incrementJobDoneAmount(com.intellij.codeInspection.ex.JobDescriptor, String)}
+   * {@link #runInspection(AnalysisScope, InspectionManager, GlobalInspectionContext, ProblemDescriptionsProcessor)})
+   * ProgressIndicator should progress with {@link GlobalInspectionContext#incrementJobDoneAmount(JobDescriptor, String)}
    */
   @Nullable
   public JobDescriptor[] getAdditionalJobs() {
     return null;
   }
 
-  // In some cases we can do highlighting in annotator or high. visitor based on global inspection
+  /**
+   * In some cases we can do highlighting in annotator or high. visitor based on global inspection or use a shared local inspection tool
+   */
   public boolean worksInBatchModeOnly() {
-    return true;
+    return getSharedLocalInspectionTool() == null;
+  }
+
+  /**
+   * Returns the local inspection tool used for highlighting in the editor. Meant for global inspections which have a local component.
+   * The local inspection tool is not required to report on the exact same problems, and naturally can't use global analysis. The local
+   * inspection tool is not used in batch mode.
+   *
+   * For example a global inspection that reports a package could have a local inspection tool which highlights
+   * the package statement in a file.
+   */
+  @Nullable
+  public LocalInspectionTool getSharedLocalInspectionTool() {
+    return null;
   }
 
   public void initialize(@NotNull GlobalInspectionContext context) {

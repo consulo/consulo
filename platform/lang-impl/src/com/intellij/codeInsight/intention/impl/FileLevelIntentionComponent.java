@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.intention.impl;
 
+import com.intellij.codeInsight.daemon.GutterMark;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
@@ -26,12 +27,16 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.LightColors;
+import com.intellij.ui.awt.RelativePoint;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -46,6 +51,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
 
   public FileLevelIntentionComponent(final String description,
                                      final HighlightSeverity severity,
+                                     final GutterMark gutterMark,
                                      final List<Pair<HighlightInfo.IntentionActionDescriptor, TextRange>> intentions,
                                      final Project project, final PsiFile psiFile, final Editor editor) {
     myProject = project;
@@ -65,6 +71,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
         createActionLabel(text, new Runnable() {
           @Override
           public void run() {
+            PsiDocumentManager.getInstance(myProject).commitAllDocuments();
             ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, text);
           }
         });
@@ -72,23 +79,30 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
     }
 
     myLabel.setText(description);
-    myLabel.setIcon(SeverityRegistrar.getSeverityRegistrar(project).compare(severity, HighlightSeverity.ERROR) >= 0 ? AllIcons.Actions.QuickfixBulb : AllIcons.Actions.IntentionBulb);
+    if (gutterMark != null) {
+      myLabel.setIcon(gutterMark.getIcon());
+    }
 
-    new ClickListener() {
-      @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
-        IntentionListStep step = new IntentionListStep(null, info, editor, psiFile, project);
-        if (intentions != null && !intentions.isEmpty()) {
+    if (intentions != null && !intentions.isEmpty()) {
+      myGearLabel.setIcon(AllIcons.General.Gear);
+
+      new ClickListener() {
+        @Override
+        public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+          IntentionListStep step = new IntentionListStep(null, editor, psiFile, project);
           HighlightInfo.IntentionActionDescriptor descriptor = intentions.get(0).getFirst();
           IntentionActionWithTextCaching actionWithTextCaching = step.wrapAction(descriptor, psiFile, psiFile, editor);
           if (step.hasSubstep(actionWithTextCaching)) {
             step = step.getSubStep(actionWithTextCaching, null);
           }
+          ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
+          Dimension dimension = popup.getContent().getPreferredSize();
+          Point at = new Point(-dimension.width + myGearLabel.getWidth(), FileLevelIntentionComponent.this.getHeight());
+          popup.show(new RelativePoint(e.getComponent(), at));
+          return true;
         }
-        JBPopupFactory.getInstance().createListPopup(step).showUnderneathOf(myLabel);
-        return true;
-      }
-    }.installOn(myLabel);
+      }.installOn(myGearLabel);
+    }
   }
 
   @Override

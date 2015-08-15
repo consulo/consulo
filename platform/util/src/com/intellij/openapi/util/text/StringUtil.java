@@ -102,6 +102,40 @@ public class StringUtil extends StringUtilRt {
     }
   };
 
+  @Contract(pure = true)
+  public static boolean isEscapedBackslash(@NotNull char[] chars, int startOffset, int backslashOffset) {
+    if (chars[backslashOffset] != '\\') {
+      return true;
+    }
+    boolean escaped = false;
+    for (int i = startOffset; i < backslashOffset; i++) {
+      if (chars[i] == '\\') {
+        escaped = !escaped;
+      }
+      else {
+        escaped = false;
+      }
+    }
+    return escaped;
+  }
+
+  @Contract(pure = true)
+  public static boolean isEscapedBackslash(@NotNull CharSequence text, int startOffset, int backslashOffset) {
+    if (text.charAt(backslashOffset) != '\\') {
+      return true;
+    }
+    boolean escaped = false;
+    for (int i = startOffset; i < backslashOffset; i++) {
+      if (text.charAt(i) == '\\') {
+        escaped = !escaped;
+      }
+      else {
+        escaped = false;
+      }
+    }
+    return escaped;
+  }
+
   @NotNull
   @Contract(pure = true)
   public static String replace(@NonNls @NotNull String text, @NonNls @NotNull String oldS, @NonNls @NotNull String newS) {

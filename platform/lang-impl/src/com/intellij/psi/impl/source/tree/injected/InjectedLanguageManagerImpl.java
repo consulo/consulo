@@ -53,26 +53,27 @@ import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author cdr
  */
-public class InjectedLanguageManagerImpl extends InjectedLanguageManager implements Disposable{
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl");
+public class InjectedLanguageManagerImpl extends InjectedLanguageManager implements Disposable {
+  private static final Logger LOG =
+          Logger.getInstance("#com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl");
   private final Project myProject;
   private final DumbService myDumbService;
-  private final AtomicReference<MultiHostInjector> myPsiManagerRegisteredInjectorsAdapter = new AtomicReference<MultiHostInjector>();
+  private final AtomicReference<MultiHostInjector> myPsiManagerRegisteredInjectorsAdapter =
+          new AtomicReference<MultiHostInjector>();
   private volatile DaemonProgressIndicator myProgress;
 
   public static InjectedLanguageManagerImpl getInstanceImpl(Project project) {
@@ -83,18 +84,21 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     myProject = project;
     myDumbService = dumbService;
 
-    final ExtensionPoint<MultiHostInjectorExtensionPoint> multiPoint = Extensions.getArea(project).getExtensionPoint(MultiHostInjector.EP_NAME);
+    final ExtensionPoint<MultiHostInjectorExtensionPoint> multiPoint =
+            Extensions.getArea(project).getExtensionPoint(MultiHostInjector.EP_NAME);
     multiPoint.addExtensionPointListener(new ExtensionPointListener<MultiHostInjectorExtensionPoint>() {
       @Override
-      public void extensionAdded(@NotNull MultiHostInjectorExtensionPoint ep, @Nullable PluginDescriptor pluginDescriptor) {
+      public void extensionAdded(@NotNull MultiHostInjectorExtensionPoint ep,
+                                 @Nullable PluginDescriptor pluginDescriptor) {
         registerMultiHostInjector(ep.getInstance(project), ep.getKey());
       }
 
       @Override
-      public void extensionRemoved(@NotNull MultiHostInjectorExtensionPoint ep, @Nullable PluginDescriptor pluginDescriptor) {
+      public void extensionRemoved(@NotNull MultiHostInjectorExtensionPoint ep,
+                                   @Nullable PluginDescriptor pluginDescriptor) {
         unregisterMultiHostInjector(ep.getInstance(project));
       }
-    },this);
+    }, this);
     final ExtensionPointListener<LanguageInjector> myListener = new ExtensionPointListener<LanguageInjector>() {
       @Override
       public void extensionAdded(@NotNull LanguageInjector extension, @Nullable PluginDescriptor pluginDescriptor) {
@@ -106,19 +110,21 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
         psiManagerInjectorsChanged();
       }
     };
-    final ExtensionPoint<LanguageInjector> psiManagerPoint = Extensions.getRootArea().getExtensionPoint(LanguageInjector.EXTENSION_POINT_NAME);
-    psiManagerPoint.addExtensionPointListener(myListener,this);
+    final ExtensionPoint<LanguageInjector> psiManagerPoint =
+            Extensions.getRootArea().getExtensionPoint(LanguageInjector.EXTENSION_POINT_NAME);
+    psiManagerPoint.addExtensionPointListener(myListener, this);
     myProgress = new DaemonProgressIndicator();
-    project.getMessageBus().connect(this).subscribe(DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC, new DaemonCodeAnalyzer.DaemonListener() {
-      @Override
-      public void daemonFinished() {
-      }
+    project.getMessageBus().connect(this)
+            .subscribe(DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC, new DaemonCodeAnalyzer.DaemonListener() {
+              @Override
+              public void daemonFinished() {
+              }
 
-      @Override
-      public void daemonCancelEventOccurred() {
-        myProgress.cancel();
-      }
-    });
+              @Override
+              public void daemonCancelEventOccurred() {
+                myProgress.cancel();
+              }
+            });
   }
 
   @Override
@@ -167,7 +173,9 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
         if (myProject.isDisposed()) return false;
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         if (indicator != null && indicator.isCanceled()) return false;
-        if (documentManager.isUncommited(hostDocument) || !hostPsiFile.isValid()) return false; // will be committed later
+        if (documentManager.isUncommited(hostDocument) || !hostPsiFile.isValid()) {
+          return false; // will be committed later
+        }
 
         Segment[] ranges = documentWindow.getHostRanges();
         Segment rangeMarker = ranges.length > 0 ? ranges[0] : null;
@@ -204,8 +212,9 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
       @Override
       public void run() {
         if (myProgress.isCanceled()) return;
-        JobLauncher.getInstance().invokeConcurrentlyUnderProgress(new ArrayList<DocumentWindow>(injected), myProgress, !synchronously,
-                                                                  commitProcessor);
+        JobLauncher.getInstance()
+                .invokeConcurrentlyUnderProgress(new ArrayList<DocumentWindow>(injected), myProgress, !synchronously,
+                                                 commitProcessor);
       }
     };
 
@@ -250,7 +259,8 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     final PsiFile file = element.getContainingFile();
     final VirtualFile virtualFile = file == null ? null : file.getVirtualFile();
     if (virtualFile instanceof VirtualFileWindow) {
-      PsiElement host = FileContextUtil.getFileContext(file); // use utility method in case the file's overridden getContext()
+      PsiElement host =
+              FileContextUtil.getFileContext(file); // use utility method in case the file's overridden getContext()
       if (host instanceof PsiLanguageInjectionHost) {
         return (PsiLanguageInjectionHost)host;
       }
@@ -269,6 +279,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     DocumentWindowImpl documentWindow = (DocumentWindowImpl)document;
     return documentWindow.injectedToHost(injectedTextRange);
   }
+
   @Override
   public int injectedToHost(@NotNull PsiElement element, int offset) {
     PsiFile file = element.getContainingFile();
@@ -279,48 +290,75 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     return documentWindow.injectedToHost(offset);
   }
 
-  private final ConcurrentMap<Class, MultiHostInjector[]> injectors = new ConcurrentHashMap<Class, MultiHostInjector[]>();
-  private final ClassMapCachingNulls<MultiHostInjector> cachedInjectors = new ClassMapCachingNulls<MultiHostInjector>(injectors, new MultiHostInjector[0]);
+  // used only from tests => no need for complex synchronization
+  private final MultiMap<Class<? extends PsiElement>, MultiHostInjector> myManualInjectors = MultiMap.createLinkedSet();
+  private volatile ClassMapCachingNulls<MultiHostInjector> cachedInjectors;
 
-  @Override
-  public void registerMultiHostInjector(@NotNull MultiHostInjector injector,  @NotNull Class<? extends PsiElement>... elements) {
-    for (Class<? extends PsiElement> place : elements) {
-      LOG.assertTrue(place != null, injector);
-      while (true) {
-        MultiHostInjector[] injectors = this.injectors.get(place);
-        if (injectors == null) {
-          if (this.injectors.putIfAbsent(place, new MultiHostInjector[]{injector}) == null) break;
-        }
-        else {
-          MultiHostInjector[] newInfos = ArrayUtil.append(injectors, injector);
-          if (this.injectors.replace(place, injectors, newInfos)) break;
-        }
+  public void processInjectableElements(Collection<PsiElement> in, Processor<PsiElement> processor) {
+    ClassMapCachingNulls<MultiHostInjector> map = getInjectorMap();
+    for (PsiElement element : in) {
+      if (map.get(element.getClass()) != null) processor.process(element);
+    }
+  }
+
+  private ClassMapCachingNulls<MultiHostInjector> getInjectorMap() {
+    ClassMapCachingNulls<MultiHostInjector> cached = cachedInjectors;
+    if (cached != null) {
+      return cached;
+    }
+
+    Map<Class, MultiHostInjector[]> injectors = ContainerUtil.newHashMap();
+
+    MultiMap<Class<? extends PsiElement>, MultiHostInjector> allInjectors = MultiMap.createLinkedSet();
+    allInjectors.putAllValues(myManualInjectors);
+    for (MultiHostInjectorExtensionPoint multiHostInjectorExtensionPoint : MultiHostInjector.EP_NAME
+            .getExtensions(myProject)) {
+      Class<PsiElement> key = multiHostInjectorExtensionPoint.getKey();
+      MultiHostInjector multiHostInjector = multiHostInjectorExtensionPoint.getInstance(myProject);
+      allInjectors.putValue(key, multiHostInjector);
+    }
+    if (LanguageInjector.EXTENSION_POINT_NAME.getExtensions().length > 0) {
+      allInjectors.putValue(PsiLanguageInjectionHost.class, PsiManagerRegisteredInjectorsAdapter.INSTANCE);
+    }
+
+    for (Map.Entry<Class<? extends PsiElement>, Collection<MultiHostInjector>> entry : allInjectors.entrySet()) {
+      Class<? extends PsiElement> place = entry.getKey();
+      Collection<MultiHostInjector> value = entry.getValue();
+
+      for (MultiHostInjector injector : value) {
+        MultiHostInjector[] existing = injectors.get(place);
+        injectors.put(place,
+                      existing == null ? new MultiHostInjector[]{injector} : ArrayUtil.append(existing, injector));
       }
     }
-    cachedInjectors.clearCache();
+
+    ClassMapCachingNulls<MultiHostInjector> result =
+            new ClassMapCachingNulls<MultiHostInjector>(injectors, new MultiHostInjector[0]);
+    cachedInjectors = result;
+    return result;
+  }
+
+  private void clearInjectorCache() {
+    cachedInjectors = null;
+  }
+
+  @Override
+  public void registerMultiHostInjector(@NotNull MultiHostInjector injector,
+                                        @NotNull Class<? extends PsiElement>... elements) {
+    for (Class<? extends PsiElement> element : elements) {
+      myManualInjectors.putValue(element, injector);
+    }
+    clearInjectorCache();
   }
 
   @Override
   public boolean unregisterMultiHostInjector(@NotNull MultiHostInjector injector) {
-    boolean removed = false;
-    Iterator<Map.Entry<Class,MultiHostInjector[]>> iterator = injectors.entrySet().iterator();
-    while (iterator.hasNext()) {
-      Map.Entry<Class,MultiHostInjector[]> entry = iterator.next();
-      MultiHostInjector[] infos = entry.getValue();
-      int i = ArrayUtil.find(infos, injector);
-      if (i != -1) {
-        MultiHostInjector[] newInfos = ArrayUtil.remove(infos, i);
-        if (newInfos.length == 0) {
-          iterator.remove();
-        }
-        else {
-          injectors.put(entry.getKey(), newInfos);
-        }
-        removed = true;
-      }
+    try {
+      return myManualInjectors.values().remove(injector);
     }
-    cachedInjectors.clearCache();
-    return removed;
+    finally {
+      clearInjectorCache();
+    }
   }
 
 
@@ -343,21 +381,24 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   }
 
   /**
-   *  intersection may spread over several injected fragments
-   *  @param rangeToEdit range in encoded(raw) PSI
-   *  @return list of ranges in encoded (raw) PSI
+   * intersection may spread over several injected fragments
+   *
+   * @param rangeToEdit range in encoded(raw) PSI
+   * @return list of ranges in encoded (raw) PSI
    */
   @Override
   @SuppressWarnings({"ConstantConditions", "unchecked"})
   @NotNull
-  public List<TextRange> intersectWithAllEditableFragments(@NotNull PsiFile injectedPsi, @NotNull TextRange rangeToEdit) {
+  public List<TextRange> intersectWithAllEditableFragments(@NotNull PsiFile injectedPsi,
+                                                           @NotNull TextRange rangeToEdit) {
     Place shreds = InjectedLanguageUtil.getShreds(injectedPsi);
     if (shreds == null) return Collections.emptyList();
     Object result = null; // optimization: TextRange or ArrayList
     int count = 0;
     int offset = 0;
     for (PsiLanguageInjectionHost.Shred shred : shreds) {
-      TextRange encodedRange = TextRange.from(offset + shred.getPrefix().length(), shred.getRangeInsideHost().getLength());
+      TextRange encodedRange =
+              TextRange.from(offset + shred.getPrefix().length(), shred.getRangeInsideHost().getLength());
       TextRange intersection = encodedRange.intersection(rangeToEdit);
       if (intersection != null) {
         count++;
@@ -389,7 +430,9 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
       }
       offset += shred.getPrefix().length() + shred.getRangeInsideHost().getLength() + shred.getSuffix().length();
     }
-    return count == 0 ? Collections.<TextRange>emptyList() : count == 1 ? Collections.singletonList((TextRange)result) : (List<TextRange>)result;
+    return count == 0
+           ? Collections.<TextRange>emptyList()
+           : count == 1 ? Collections.singletonList((TextRange)result) : (List<TextRange>)result;
   }
 
   @Override
@@ -412,7 +455,8 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     return InjectedLanguageUtil.getTopLevelFile(element);
   }
 
-  private final Map<Class,MultiHostInjector[]> myInjectorsClone = new HashMap<Class, MultiHostInjector[]>();
+  private final Map<Class, MultiHostInjector[]> myInjectorsClone = new HashMap<Class, MultiHostInjector[]>();
+
   @TestOnly
   public static void pushInjectors(@NotNull Project project) {
     InjectedLanguageManagerImpl cachedManager = (InjectedLanguageManagerImpl)project.getUserData(INSTANCE_CACHE);
@@ -423,14 +467,19 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     finally {
       cachedManager.myInjectorsClone.clear();
     }
-    cachedManager.myInjectorsClone.putAll(cachedManager.injectors);
+    cachedManager.myInjectorsClone.putAll(cachedManager.getInjectorMap().getBackingMap());
   }
+
   @TestOnly
   public static void checkInjectorsAreDisposed(@NotNull Project project) {
     InjectedLanguageManagerImpl cachedManager = (InjectedLanguageManagerImpl)project.getUserData(INSTANCE_CACHE);
-    if (cachedManager == null) return;
+    if (cachedManager == null) {
+      return;
+    }
     try {
-      for (Map.Entry<Class, MultiHostInjector[]> entry : cachedManager.injectors.entrySet()) {
+      ClassMapCachingNulls<MultiHostInjector> cached = cachedManager.cachedInjectors;
+      if (cached == null) return;
+      for (Map.Entry<Class, MultiHostInjector[]> entry : cached.getBackingMap().entrySet()) {
         Class key = entry.getKey();
         if (cachedManager.myInjectorsClone.isEmpty()) return;
         MultiHostInjector[] oldInjectors = cachedManager.myInjectorsClone.get(key);
@@ -449,8 +498,9 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   public interface InjProcessor {
     boolean process(PsiElement element, MultiHostInjector injector);
   }
+
   public void processInPlaceInjectorsFor(@NotNull PsiElement element, @NotNull InjProcessor processor) {
-    MultiHostInjector[] infos = cachedInjectors.get(element.getClass());
+    MultiHostInjector[] infos = getInjectorMap().get(element.getClass());
     if (infos != null) {
       final boolean dumb = myDumbService.isDumb();
       for (MultiHostInjector injector : infos) {
@@ -466,7 +516,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   @Override
   @Nullable
   public List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(@NotNull final PsiElement host) {
-    if (!(host instanceof PsiLanguageInjectionHost) || !((PsiLanguageInjectionHost) host).isValidHost()) {
+    if (!(host instanceof PsiLanguageInjectionHost) || !((PsiLanguageInjectionHost)host).isValidHost()) {
       return null;
     }
     final PsiElement inTree = InjectedLanguageUtil.loadTree(host, host.getContainingFile());
@@ -485,17 +535,21 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   }
 
   private static class PsiManagerRegisteredInjectorsAdapter implements MultiHostInjector {
+    public static final PsiManagerRegisteredInjectorsAdapter INSTANCE = new PsiManagerRegisteredInjectorsAdapter();
+
     @Override
-    public void injectLanguages(@NotNull final MultiHostRegistrar injectionPlacesRegistrar, @NotNull PsiElement context) {
+    public void injectLanguages(@NotNull final MultiHostRegistrar injectionPlacesRegistrar,
+                                @NotNull PsiElement context) {
       final PsiLanguageInjectionHost host = (PsiLanguageInjectionHost)context;
       InjectedLanguagePlaces placesRegistrar = new InjectedLanguagePlaces() {
         @Override
-        public void addPlace(@NotNull Language language, @NotNull TextRange rangeInsideHost, @NonNls @Nullable String prefix, @NonNls @Nullable String suffix) {
+        public void addPlace(@NotNull Language language,
+                             @NotNull TextRange rangeInsideHost,
+                             @NonNls @Nullable String prefix,
+                             @NonNls @Nullable String suffix) {
           ProperTextRange.assertProperRange(rangeInsideHost);
-          injectionPlacesRegistrar
-            .startInjecting(language)
-            .addPlace(prefix, suffix, host, rangeInsideHost)
-            .doneInjecting();
+          injectionPlacesRegistrar.startInjecting(language).addPlace(prefix, suffix, host, rangeInsideHost)
+                  .doneInjecting();
         }
       };
       for (LanguageInjector injector : Extensions.getExtensions(LanguageInjector.EXTENSION_POINT_NAME)) {

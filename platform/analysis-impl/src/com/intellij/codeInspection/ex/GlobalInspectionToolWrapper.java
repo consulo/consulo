@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.GlobalInspectionContext;
 import com.intellij.codeInspection.GlobalInspectionTool;
 import com.intellij.codeInspection.InspectionEP;
+import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.reference.RefGraphAnnotator;
 import com.intellij.codeInspection.reference.RefManagerImpl;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * User: anna
@@ -30,6 +32,10 @@ import org.jetbrains.annotations.NotNull;
 public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalInspectionTool, InspectionEP> {
   public GlobalInspectionToolWrapper(@NotNull GlobalInspectionTool globalInspectionTool) {
     super(globalInspectionTool);
+  }
+
+  public GlobalInspectionToolWrapper(@NotNull GlobalInspectionTool tool, @NotNull InspectionEP ep) {
+    super(tool, ep);
   }
 
   public GlobalInspectionToolWrapper(@NotNull InspectionEP ep) {
@@ -71,5 +77,14 @@ public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalIns
 
   public boolean worksInBatchModeOnly() {
     return getTool().worksInBatchModeOnly();
+  }
+
+  @Nullable
+  public LocalInspectionToolWrapper getSharedLocalInspectionToolWrapper() {
+    final LocalInspectionTool sharedTool = getTool().getSharedLocalInspectionTool();
+    if (sharedTool == null) {
+      return null;
+    }
+    return new LocalInspectionToolWrapper(sharedTool);
   }
 }
