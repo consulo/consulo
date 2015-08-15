@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 public class FindUsagesHelper {
-  protected static boolean processUsagesInText(@NotNull final PsiElement element,
+  public static boolean processUsagesInText(@NotNull final PsiElement element,
                                                @NotNull Collection<String> stringToSearch,
                                                @NotNull GlobalSearchScope searchScope,
                                                @NotNull Processor<UsageInfo> processor) {
