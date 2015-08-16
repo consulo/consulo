@@ -18,6 +18,7 @@ package com.intellij.codeInsight.daemon;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,11 +30,13 @@ import java.util.List;
  * @author nik
  */
 public abstract class RelatedItemLineMarkerProvider implements LineMarkerProvider {
+  @RequiredReadAction
   @Override
   public RelatedItemLineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public final void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
     collectNavigationMarkers(elements, result, false);

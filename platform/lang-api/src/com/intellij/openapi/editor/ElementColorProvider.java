@@ -19,6 +19,8 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.awt.*;
 
@@ -27,9 +29,11 @@ import java.awt.*;
  */
 public interface ElementColorProvider {
   ExtensionPointName<ElementColorProvider> EP_NAME = new ExtensionPointName<ElementColorProvider>("com.intellij.colorProvider");
-  
+
   @Nullable
+  @RequiredReadAction
   Color getColorFrom(@NotNull PsiElement element);
 
+  @RequiredWriteAction
   void setColorTo(@NotNull PsiElement element, @NotNull Color color);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,22 @@
 package com.intellij.ui;
 
 import com.intellij.codeHighlighting.Pass;
-import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
-import com.intellij.codeInsight.daemon.LineMarkerInfo;
-import com.intellij.codeInsight.daemon.LineMarkerProvider;
-import com.intellij.codeInsight.daemon.MergeableLineMarkerInfo;
+import com.intellij.codeInsight.daemon.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ElementColorProvider;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.ui.ColorIcon;
 import com.intellij.util.ui.TwoColorsIcon;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,39 +45,45 @@ import java.util.List;
 public final class ColorLineMarkerProvider implements LineMarkerProvider {
   private final ElementColorProvider[] myExtensions = ElementColorProvider.EP_NAME.getExtensions();
 
+  @RequiredReadAction
   @Override
   public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
     for (ElementColorProvider colorProvider : myExtensions) {
       final Color color = colorProvider.getColorFrom(element);
       if (color != null) {
-        return new MyInfo(element, color, colorProvider);
+        MyInfo info = new MyInfo(element, color, colorProvider);
+        NavigateAction.setNavigateAction(info, "Choose color", null);
+        return info;
       }
     }
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
   }
-  
+
   private static class MyInfo extends MergeableLineMarkerInfo<PsiElement> {
 
     private final Color myColor;
 
+    @RequiredReadAction
     public MyInfo(@NotNull final PsiElement element, final Color color, final ElementColorProvider colorProvider) {
-      super(element, 
+      super(element,
             element.getTextRange(),
             new ColorIcon(12, color),
-            Pass.UPDATE_ALL, 
-            FunctionUtil.<Object, String>nullConstant(), 
+            Pass.UPDATE_ALL,
+            FunctionUtil.<Object, String>nullConstant(),
             new GutterIconNavigationHandler<PsiElement>() {
               @Override
+              @RequiredDispatchThread
               public void navigate(MouseEvent e, PsiElement elt) {
                 if (!elt.isWritable()) return;
 
-                final Editor editor = FileEditorManager.getInstance(element.getProject()).getSelectedTextEditor();
+                final Editor editor = PsiUtilBase.findEditor(element);
                 assert editor != null;
-                final Color c = ColorChooser.chooseColor(editor.getComponent(), "Choose color", color, true);
+                final Color c = ColorChooser.chooseColor(editor.getComponent(), "Choose Color", color, true);
                 if (c != null) {
                   AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(ColorLineMarkerProvider.class);
                   try {
@@ -89,7 +94,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
                   }
                 }
               }
-            }, 
+            },
             GutterIconRenderer.Alignment.LEFT);
       myColor = color;
     }
@@ -102,11 +107,12 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     @Override
     public Icon getCommonIcon(@NotNull List<MergeableLineMarkerInfo> infos) {
       if (infos.size() == 2 && infos.get(0) instanceof MyInfo && infos.get(1) instanceof MyInfo) {
-         return new TwoColorsIcon(12, ((MyInfo)infos.get(1)).myColor, ((MyInfo)infos.get(0)).myColor);
+        return new TwoColorsIcon(12, ((MyInfo)infos.get(1)).myColor, ((MyInfo)infos.get(0)).myColor);
       }
       return AllIcons.Gutter.Colors;
     }
 
+    @NotNull
     @Override
     public Function<? super PsiElement, String> getCommonTooltip(@NotNull List<MergeableLineMarkerInfo> infos) {
       return FunctionUtil.nullConstant();

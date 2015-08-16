@@ -2315,6 +2315,8 @@ public class UIUtil {
     }
   }
 
+  public static final int LIST_FIXED_CELL_HEIGHT = 20;
+
   public static int fixComboBoxHeight(final int height) {
     return SystemInfo.isMac && isUnderAquaLookAndFeel() ? 28 : height;
   }

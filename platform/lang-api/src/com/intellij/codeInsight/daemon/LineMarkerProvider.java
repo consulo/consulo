@@ -19,6 +19,7 @@ package com.intellij.codeInsight.daemon;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +29,9 @@ import java.util.List;
  */
 public interface LineMarkerProvider {
   @Nullable
+  @RequiredReadAction
   LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element);
 
+  @RequiredReadAction
   void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result);
 }
