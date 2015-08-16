@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.event.EditorMouseMotionAdapter;
-import com.intellij.openapi.editor.ex.DocumentBulkUpdateListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
@@ -49,6 +48,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import static com.intellij.codeInsight.folding.impl.UpdateFoldRegionsOperation.ApplyDefaultStateMode.*;
+
 public class CodeFoldingManagerImpl extends CodeFoldingManager implements ProjectComponent {
   private final Project myProject;
 
@@ -59,12 +60,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
   CodeFoldingManagerImpl(Project project) {
     myProject = project;
-    project.getMessageBus().connect().subscribe(DocumentBulkUpdateListener.TOPIC, new DocumentBulkUpdateListener.Adapter() {
-      @Override
-      public void updateStarted(@NotNull final Document doc) {
-        resetFoldingInfo(doc);
-      }
-    });
   }
 
   @Override
@@ -234,7 +229,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     }
 
 
-    final FoldingUpdate.FoldingMap foldingMap = FoldingUpdate.getFoldingsFor(myProject, file, document, true);
+    final FoldingUpdate.FoldingMap foldingMap = FoldingUpdate.getFoldingsFor(file, document, true);
 
     return new CodeFoldingState() {
       @Override
@@ -246,7 +241,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
         if (isFoldingsInitializedInEditor(editor)) return;
         if (DumbService.isDumb(myProject) && !FoldingUpdate.supportsDumbModeFolding(editor)) return;
 
-        foldingModel.runBatchFoldingOperationDoNotCollapseCaret(new UpdateFoldRegionsOperation(myProject, editor, file, foldingMap, true, false));
+        foldingModel.runBatchFoldingOperationDoNotCollapseCaret(new UpdateFoldRegionsOperation(myProject, editor, file, foldingMap, YES, false));
         initFolding(editor);
       }
     };
@@ -267,7 +262,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
         documentFoldingInfo.setToEditor(editor);
         documentFoldingInfo.clear();
 
-        document.putUserData(FOLDING_STATE_KEY, Boolean.TRUE);
         editor.putUserData(FOLDING_STATE_KEY, Boolean.TRUE);
       }
     });
@@ -294,6 +288,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   public void updateFoldRegions(Editor editor, boolean quick) {
+    if (!editor.getSettings().isAutoCodeFoldingEnabled()) return;
     PsiDocumentManager.getInstance(myProject).commitDocument(editor.getDocument());
     Runnable runnable = updateFoldRegions(editor, false, quick);
     if (runnable != null) {
@@ -327,6 +322,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   @Override
   @Nullable
   public Runnable updateFoldRegionsAsync(@NotNull final Editor editor, final boolean firstTime) {
+    if (!editor.getSettings().isAutoCodeFoldingEnabled()) return null;
     final Runnable runnable = updateFoldRegions(editor, firstTime, false);
     return new Runnable() {
       @Override
@@ -401,20 +397,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
       }
     }
     return info;
-  }
-
-  private static void resetFoldingInfo(@NotNull final Document document) {
-    if (isFoldingsInitializedInDocument(document)) {
-      final Editor[] editors = EditorFactory.getInstance().getEditors(document);
-      for(Editor editor:editors) {
-        EditorFoldingInfo.resetInfo(editor);
-      }
-      document.putUserData(FOLDING_STATE_KEY, null);
-    }
-  }
-
-  static boolean isFoldingsInitializedInDocument(@NotNull Document document) {
-    return Boolean.TRUE.equals(document.getUserData(FOLDING_STATE_KEY));
   }
 
   static boolean isFoldingsInitializedInEditor(@NotNull Editor editor) {

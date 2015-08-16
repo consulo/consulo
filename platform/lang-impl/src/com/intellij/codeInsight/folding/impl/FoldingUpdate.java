@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,7 @@ import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.fileTypes.ContentBasedFileSubstitutor;
+import com.intellij.openapi.editor.FoldingModel;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Couple;
@@ -50,17 +49,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static com.intellij.codeInsight.folding.impl.UpdateFoldRegionsOperation.ApplyDefaultStateMode.EXCEPT_CARET_REGION;
+import static com.intellij.codeInsight.folding.impl.UpdateFoldRegionsOperation.ApplyDefaultStateMode.NO;
+
 public class FoldingUpdate {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.folding.impl.FoldingUpdate");
 
   private static final Key<ParameterizedCachedValue<Runnable, Couple<Boolean>>> CODE_FOLDING_KEY = Key.create("code folding");
   private static final Key<String> CODE_FOLDING_FILE_EXTENSION_KEY = Key.create("code folding file extension");
 
-  private static final Comparator<PsiElement> COMPARE_BY_OFFSET = new Comparator<PsiElement>() {
+  private static final Comparator<PsiElement> COMPARE_BY_OFFSET_REVERSED = new Comparator<PsiElement>() {
     @Override
     public int compare(PsiElement element, PsiElement element1) {
-      int startOffsetDiff = element.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
-      return startOffsetDiff == 0 ? element.getTextRange().getEndOffset() - element1.getTextRange().getEndOffset() : startOffsetDiff;
+      int startOffsetDiff = element1.getTextRange().getStartOffset() - element.getTextRange().getStartOffset();
+      return startOffsetDiff == 0 ? element1.getTextRange().getEndOffset() - element.getTextRange().getEndOffset() : startOffsetDiff;
     }
   };
 
@@ -114,8 +116,9 @@ public class FoldingUpdate {
                                                                       final Editor editor,
                                                                       final boolean applyDefaultState) {
 
-    final FoldingMap elementsToFoldMap = getFoldingsFor(project, file, document, quick);
-    final UpdateFoldRegionsOperation operation = new UpdateFoldRegionsOperation(project, editor, file, elementsToFoldMap, applyDefaultState, false);
+    final FoldingMap elementsToFoldMap = getFoldingsFor(file, document, quick);
+    final UpdateFoldRegionsOperation operation = new UpdateFoldRegionsOperation(project, editor, file, elementsToFoldMap,
+                                                                                applyDefaultState ? EXCEPT_CARET_REGION : NO, false);
     Runnable runnable = new Runnable() {
       @Override
       public void run() {
@@ -130,16 +133,6 @@ public class FoldingUpdate {
     return CachedValueProvider.Result.create(runnable, ArrayUtil.toObjectArray(dependencies));
   }
 
-  private static boolean isContentSubstituted(PsiFile file, Project project) {
-    final ContentBasedFileSubstitutor[] processors = Extensions.getExtensions(ContentBasedFileSubstitutor.EP_NAME);
-    for (ContentBasedFileSubstitutor processor : processors) {
-      if (processor.isApplicable(project, file.getVirtualFile())) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   private static final Key<Object> LAST_UPDATE_INJECTED_STAMP_KEY = Key.create("LAST_UPDATE_INJECTED_STAMP_KEY");
   @Nullable
   public static Runnable updateInjectedFoldRegions(@NotNull final Editor editor, @NotNull final PsiFile file, final boolean applyDefaultState) {
@@ -149,6 +142,7 @@ public class FoldingUpdate {
     final Project project = file.getProject();
     Document document = editor.getDocument();
     LOG.assertTrue(!PsiDocumentManager.getInstance(project).isUncommited(document));
+    final FoldingModel foldingModel = editor.getFoldingModel();
 
     final long timeStamp = document.getModificationStamp();
     Object lastTimeStamp = editor.getUserData(LAST_UPDATE_INJECTED_STAMP_KEY);
@@ -174,7 +168,7 @@ public class FoldingUpdate {
           injectedFiles.add(injectedFile);
           final FoldingMap map = new FoldingMap();
           maps.add(map);
-          getFoldingsFor(injectedFile, injectedDocument, map, false);
+          getFoldingsFor(injectedFile, injectedEditor.getDocument(), map, false);
         }
       });
     }
@@ -182,14 +176,23 @@ public class FoldingUpdate {
     return new Runnable() {
       @Override
       public void run() {
+        final ArrayList<Runnable> updateOperations = new ArrayList<Runnable>(injectedEditors.size());
         for (int i = 0; i < injectedEditors.size(); i++) {
           EditorWindow injectedEditor = injectedEditors.get(i);
           PsiFile injectedFile = injectedFiles.get(i);
           if (!injectedEditor.getDocument().isValid()) continue;
           FoldingMap map = maps.get(i);
-          UpdateFoldRegionsOperation op = new UpdateFoldRegionsOperation(project, injectedEditor, injectedFile, map, applyDefaultState, true);
-          injectedEditor.getFoldingModel().runBatchFoldingOperationDoNotCollapseCaret(op);
+          updateOperations.add(new UpdateFoldRegionsOperation(project, injectedEditor, injectedFile, map,
+                                                              applyDefaultState ? EXCEPT_CARET_REGION : NO, true));
         }
+        foldingModel.runBatchFoldingOperation(new Runnable() {
+          @Override
+          public void run() {
+            for (Runnable operation : updateOperations) {
+              operation.run();
+            }
+          }
+        });
 
         editor.putUserData(LAST_UPDATE_INJECTED_STAMP_KEY, timeStamp);
       }
@@ -230,11 +233,12 @@ public class FoldingUpdate {
     return true;
   }
 
-  static FoldingMap getFoldingsFor(@NotNull Project project, @NotNull PsiFile file, @NotNull Document document, boolean quick) {
+  static FoldingMap getFoldingsFor(@NotNull PsiFile file, @NotNull Document document, boolean quick) {
     FoldingMap foldingMap = new FoldingMap();
-    if (!isContentSubstituted(file, project)) {
-      getFoldingsFor(file instanceof PsiCompiledFile ? ((PsiCompiledFile)file).getDecompiledPsiFile() : file, document, foldingMap, quick);
+    if (file instanceof PsiCompiledFile) {
+      file = ((PsiCompiledFile)file).getDecompiledPsiFile();
     }
+    getFoldingsFor(file, document, foldingMap, quick);
     return foldingMap;
   }
 
@@ -267,10 +271,17 @@ public class FoldingUpdate {
   }
 
   public static class FoldingMap extends MultiMap<PsiElement, FoldingDescriptor>{
+    public FoldingMap() {
+    }
+
+    public FoldingMap(FoldingMap map) {
+      super(map);
+    }
+
     @NotNull
     @Override
     protected Map<PsiElement, Collection<FoldingDescriptor>> createMap() {
-      return new TreeMap<PsiElement, Collection<FoldingDescriptor>>(COMPARE_BY_OFFSET);
+      return new TreeMap<PsiElement, Collection<FoldingDescriptor>>(COMPARE_BY_OFFSET_REVERSED);
     }
 
     @NotNull

@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.folding;
 
+import com.intellij.codeInsight.folding.CodeFoldingSettings;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 
@@ -38,10 +39,10 @@ public abstract class CustomFoldingProvider {
    * @return A description string shown in "Surround With" action.
    */
   public abstract String getDescription();
-  
+
   public abstract String getStartString();
   public abstract String getEndString();
-  
+
   public boolean isCollapsedByDefault(String text) {
     return false;
   }
