@@ -112,4 +112,9 @@ public class PathUtil {
   public static String toSystemDependentName(@Nullable String path) {
     return path == null ? null : FileUtilRt.toSystemDependentName(path);
   }
+
+  @NotNull
+  public static String makeFileName(@NotNull String name, @Nullable String extension) {
+    return name + (StringUtil.isEmpty(extension) ? "" : "." + extension);
+  }
 }
