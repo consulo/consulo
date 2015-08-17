@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,19 +19,18 @@
  */
 package com.intellij.ui;
 
-import com.intellij.concurrency.Job;
-import com.intellij.concurrency.JobLauncher;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.tabs.impl.TabLabel;
 import com.intellij.util.Alarm;
+import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.TransferToEDTQueue;
-import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +40,7 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import java.awt.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class DeferredIconImpl<T> implements DeferredIcon {
   private static final int MIN_AUTO_UPDATE_MILLIS = 950;
@@ -50,12 +50,14 @@ public class DeferredIconImpl<T> implements DeferredIcon {
   private Function<T, Icon> myEvaluator;
   private volatile boolean myIsScheduled = false;
   private T myParam;
-  private static final Icon EMPTY_ICON = EmptyIcon.ICON_16;
+  private static final Icon EMPTY_ICON = JBUI.emptyIcon(16);
   private final boolean myNeedReadAction;
   private boolean myDone;
   private final boolean myAutoUpdatable;
   private long myLastCalcTime = 0L;
   private long myLastTimeSpent = 0L;
+
+  private static final ThreadPoolExecutor ourIconsCalculatingExecutor = ConcurrencyUtil.newSingleThreadExecutor("Icons");
 
   private final IconListener<T> myEvalListener;
   private static final TransferToEDTQueue<Runnable> ourLaterInvocator = TransferToEDTQueue.createRunnableMerger("Deferred icon later invocator", 200);
@@ -96,45 +98,46 @@ public class DeferredIconImpl<T> implements DeferredIcon {
     final Component target = getTarget(c);
     final Component paintingParent = SwingUtilities.getAncestorOfClass(PaintingParent.class, c);
     final Rectangle paintingParentRec = paintingParent == null ? null : ((PaintingParent)paintingParent).getChildRec(c);
-
-    JobLauncher.getInstance().submitToJobThread(Job.DEFAULT_PRIORITY, new Runnable() {
+    ourIconsCalculatingExecutor.submit(new Runnable() {
       @Override
       public void run() {
         int oldWidth = myDelegateIcon.getIconWidth();
         final Icon[] evaluated = new Icon[1];
-        final Runnable evalRunnable = new Runnable() {
-          @Override
-          public void run() {
-            try {
-              evaluated[0] = nonNull(myEvaluator.fun(myParam));
-            }
-            catch (ProcessCanceledException e) {
-              evaluated[0] = EMPTY_ICON;
-            }
-            catch (IndexNotReadyException e) {
-              evaluated[0] = EMPTY_ICON;
-            }
-          }
-        };
 
         final long startTime = System.currentTimeMillis();
         if (myNeedReadAction) {
-          if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(new Runnable() {
+          boolean result = ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(new Runnable() {
             @Override
             public void run() {
-              IconDeferrerImpl.evaluateDeferred(evalRunnable);
+              IconDeferrerImpl.evaluateDeferred(new Runnable() {
+                @Override
+                public void run() {
+                  try {
+                    evaluated[0] = nonNull(myEvaluator.fun(myParam));
+                  }
+                  catch (IndexNotReadyException e) {
+                    evaluated[0] = EMPTY_ICON;
+                  }
+                }
+              });
               if (myAutoUpdatable) {
                 myLastCalcTime = System.currentTimeMillis();
                 myLastTimeSpent = myLastCalcTime - startTime;
               }
             }
-          })) {
+          });
+          if (!result) {
             myIsScheduled = false;
             return;
           }
         }
         else {
-          IconDeferrerImpl.evaluateDeferred(evalRunnable);
+          IconDeferrerImpl.evaluateDeferred(new Runnable() {
+            @Override
+            public void run() {
+              evaluated[0] = nonNull(myEvaluator.fun(myParam));
+            }
+          });
           if (myAutoUpdatable) {
             myLastCalcTime = System.currentTimeMillis();
             myLastTimeSpent = myLastCalcTime - startTime;
@@ -218,7 +221,7 @@ public class DeferredIconImpl<T> implements DeferredIcon {
 
   private void setDone(@NotNull Icon result) {
     if (myEvalListener != null) {
-      myEvalListener.evalDone(myParam, result);
+      myEvalListener.evalDone(this, myParam, result);
     }
 
     myDone = true;
@@ -334,6 +337,6 @@ public class DeferredIconImpl<T> implements DeferredIcon {
   }
 
   public interface IconListener<T> {
-    void evalDone(T key, @NotNull Icon result);
+    void evalDone(DeferredIconImpl<T> source, T key, @NotNull Icon result);
   }
 }

@@ -16,8 +16,9 @@
 package com.intellij.formatting;
 
 import com.intellij.diagnostic.LogMessageEx;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,14 +26,14 @@ import java.util.Set;
 
 /**
  * Gof Template Method for {@link BlockAlignmentProcessor}.
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/29/11 11:52 AM
  */
 public abstract class AbstractBlockAlignmentProcessor implements BlockAlignmentProcessor {
 
   private static final Logger LOG = Logger.getInstance("#" + AbstractBlockAlignmentProcessor.class.getName());
-  
+
   @Override
   public Result applyAlignment(@NotNull Context context) {
     IndentData indent = calculateAlignmentAnchorIndent(context);
@@ -50,10 +51,16 @@ public abstract class AbstractBlockAlignmentProcessor implements BlockAlignmentP
     }
 
     if (diff > 0) {
-      whiteSpace.setSpaces(whiteSpace.getSpaces() + diff, whiteSpace.getIndentSpaces());
+      int alignmentSpaces = whiteSpace.getSpaces() + diff;
+      if (alignmentSpaces > context.maxAlignmentSpaces) {
+        whiteSpace.setSpaces(1, whiteSpace.getIndentSpaces());
+        reportAlignmentProcessingError(context);
+        return Result.RECURSION_DETECTED;
+      }
+      whiteSpace.setSpaces(alignmentSpaces, whiteSpace.getIndentSpaces());
 
-      // Avoid tabulations usage for aligning blocks that are not the first blocks on a line.
       if (!whiteSpace.containsLineFeeds()) {
+        // Avoid tabulations usage for aligning blocks that are not the first blocks on a line.
         whiteSpace.setForceSkipTabulationsUsage(true);
       }
       return Result.TARGET_BLOCK_ALIGNED;
@@ -111,7 +118,7 @@ public abstract class AbstractBlockAlignmentProcessor implements BlockAlignmentP
 
   /**
    * Encapsulates logic of applying alignment anchor indent to the target block that starts new line.
-   * 
+   *
    * @param alignmentAnchorIndent   alignment anchor indent
    * @param context                 current processing context
    * @return                        <code>true</code> if desired alignment indent is applied to the current block;
@@ -121,10 +128,18 @@ public abstract class AbstractBlockAlignmentProcessor implements BlockAlignmentP
 
   /**
    * Calculates the difference between alignment anchor indent and current target block indent.
-   * 
+   *
    * @param alignmentAnchorIndent   alignment anchor indent
    * @param context                 current processing context
    * @return                        alignment anchor indent minus current target block indent
    */
   protected abstract int getAlignmentIndentDiff(@NotNull IndentData alignmentAnchorIndent, @NotNull Context context);
+
+  private static void reportAlignmentProcessingError(Context context) {
+    ASTNode node = context.targetBlock.getNode();
+    Language language = node != null ? node.getPsi().getLanguage() : null;
+    LogMessageEx.error(LOG,
+                       (language != null ? language.getDisplayName() + ": " : "") +
+                       "Can't align block " + context.targetBlock, context.document.getText());
+  }
 }

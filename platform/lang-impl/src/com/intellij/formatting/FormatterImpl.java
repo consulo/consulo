@@ -42,9 +42,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static com.intellij.formatting.FormatProcessor.FormatOptions;
 
 public class FormatterImpl extends FormatterEx
         implements IndentFactory,
@@ -112,26 +115,27 @@ public class FormatterImpl extends FormatterEx
   @Override
   public int getSpacingForBlockAtOffset(FormattingModel model, int offset) {
     Couple<Block> blockWithParent = getBlockAtOffset(null, model.getRootBlock(), offset);
-    if (blockWithParent == null) {
-      return 0;
+    if (blockWithParent != null) {
+      Block parentBlock = blockWithParent.first;
+      Block targetBlock = blockWithParent.second;
+      if (parentBlock != null && targetBlock != null) {
+        Block prevBlock = findPreviousSibling(parentBlock, targetBlock);
+        if (prevBlock != null) {
+          SpacingImpl spacing = (SpacingImpl)parentBlock.getSpacing(prevBlock, targetBlock);
+          if (spacing != null) {
+            int minSpaces = spacing.getMinSpaces();
+            if (minSpaces > 0) {
+              return minSpaces;
+            }
+          }
+        }
+      }
     }
-    Block parentBlock = blockWithParent.first;
-    Block targetBlock = blockWithParent.second;
-    if (parentBlock == null || targetBlock == null) {
-      return 0;
-    }
-    Block prevBlock = findPreviousSibling(parentBlock, targetBlock);
-    if (prevBlock == null) {
-      return 0;
-    }
-    SpacingImpl spacing = (SpacingImpl)parentBlock.getSpacing(prevBlock, targetBlock);
-    if (spacing == null) {
-      return 0;
-    }
-    return Math.max(spacing.getMinSpaces(), 0);
+    return 0;
   }
 
-  private static Couple<Block> getBlockAtOffset(Block parent, Block block, int offset) {
+  @Nullable
+  private static Couple<Block> getBlockAtOffset(@Nullable Block parent, @NotNull Block block, int offset) {
     TextRange textRange = block.getTextRange();
     int startOffset = textRange.getStartOffset();
     int endOffset = textRange.getEndOffset();
@@ -150,7 +154,8 @@ public class FormatterImpl extends FormatterEx
     return null;
   }
 
-  private static Block findPreviousSibling(Block parent, Block block) {
+  @Nullable
+  private static Block findPreviousSibling(@NotNull Block parent, Block block) {
     Block result = null;
     for (Block subBlock : parent.getSubBlocks()) {
       if (subBlock == block) {
@@ -230,6 +235,18 @@ public class FormatterImpl extends FormatterEx
   }
 
   @NotNull
+  @Override
+  public Spacing createDependentLFSpacing(int minSpaces,
+                                          int maxSpaces,
+                                          @NotNull List<TextRange> dependentRegion,
+                                          boolean keepLineBreaks,
+                                          int keepBlankLines,
+                                          @NotNull DependentSpacingRule rule)
+  {
+    return new DependantSpacingImpl(minSpaces, maxSpaces, dependentRegion, keepLineBreaks, keepBlankLines, rule);
+  }
+
+  @NotNull
   private FormattingProgressCallback getProgressCallback() {
     FormattingProgressCallback result = myProgressTask.get();
     return result == null ? FormattingProgressCallback.EMPTY : result;
@@ -240,14 +257,23 @@ public class FormatterImpl extends FormatterEx
                      final CodeStyleSettings settings,
                      final CommonCodeStyleSettings.IndentOptions indentOptions,
                      final FormatTextRanges affectedRanges) throws IncorrectOperationException {
+    format(model, settings, indentOptions, affectedRanges, false);
+  }
+
+  public void format(final FormattingModel model,
+                     final CodeStyleSettings settings,
+                     final CommonCodeStyleSettings.IndentOptions indentOptions,
+                     final FormatTextRanges affectedRanges,
+                     final boolean formatContextAroundRanges) throws IncorrectOperationException {
     try {
       validateModel(model);
       SequentialTask task = new MyFormattingTask() {
         @NotNull
         @Override
         protected FormatProcessor buildProcessor() {
+          FormatOptions options = new FormatOptions(settings, indentOptions, affectedRanges, formatContextAroundRanges);
           FormatProcessor processor = new FormatProcessor(
-                  model.getDocumentModel(), model.getRootBlock(), settings, indentOptions, affectedRanges, getProgressCallback()
+                  model.getDocumentModel(), model.getRootBlock(), options, getProgressCallback()
           );
           processor.format(model, true);
           return processor;
@@ -337,7 +363,7 @@ public class FormatterImpl extends FormatterEx
       final FormatProcessor processor = buildProcessorAndWrapBlocks(
               model, block, settings, indentOptions, new FormatTextRanges(affectedRange, true)
       );
-      final LeafBlockWrapper blockBefore = processor.getBlockAfter(affectedRange.getStartOffset());
+      final LeafBlockWrapper blockBefore = processor.getBlockAtOrAfter(affectedRange.getStartOffset());
       LOG.assertTrue(blockBefore != null);
       WhiteSpace whiteSpace = blockBefore.getWhiteSpace();
       LOG.assertTrue(whiteSpace != null);
@@ -447,7 +473,7 @@ public class FormatterImpl extends FormatterEx
               documentModel, block, settings, indentOptions, new FormatTextRanges(affectedRange, true), offset
       );
 
-      final LeafBlockWrapper blockAfterOffset = processor.getBlockAfter(offset);
+      final LeafBlockWrapper blockAfterOffset = processor.getBlockAtOrAfter(offset);
 
       if (blockAfterOffset != null && blockAfterOffset.contains(offset)) {
         return offset;
@@ -507,8 +533,9 @@ public class FormatterImpl extends FormatterEx
                                                              @Nullable FormatTextRanges affectedRanges,
                                                              int interestingOffset)
   {
+    FormatOptions options = new FormatOptions(settings, indentOptions, affectedRanges, false, interestingOffset);
     FormatProcessor processor = new FormatProcessor(
-            docModel, rootBlock, settings, indentOptions, affectedRanges, interestingOffset, FormattingProgressCallback.EMPTY
+            docModel, rootBlock, options, FormattingProgressCallback.EMPTY
     );
     while (!processor.iteration()) ;
     return processor;
@@ -568,12 +595,13 @@ public class FormatterImpl extends FormatterEx
                               final TextRange affectedRange) {
     final FormattingDocumentModel documentModel = model.getDocumentModel();
     final Block block = model.getRootBlock();
+    if (block.getTextRange().isEmpty()) return null; // handing empty document case
     final FormatProcessor processor = buildProcessorAndWrapBlocks(
             documentModel, block, settings, indentOptions, new FormatTextRanges(affectedRange, true), offset
     );
-    final LeafBlockWrapper blockAfterOffset = processor.getBlockAfter(offset);
+    final LeafBlockWrapper blockAfterOffset = processor.getBlockAtOrAfter(offset);
 
-    if (blockAfterOffset != null) {
+    if (blockAfterOffset != null && !blockAfterOffset.contains(offset)) {
       final WhiteSpace whiteSpace = blockAfterOffset.getWhiteSpace();
       final IndentInfo indent = calcIndent(offset, documentModel, processor, whiteSpace);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ import java.util.List;
 public class UpdateHighlightersUtil {
   private static final Comparator<HighlightInfo> BY_START_OFFSET_NODUPS = new Comparator<HighlightInfo>() {
     @Override
-    public int compare(HighlightInfo o1, HighlightInfo o2) {
+    public int compare(@NotNull HighlightInfo o1, @NotNull HighlightInfo o2) {
       int d = o1.getActualStartOffset() - o2.getActualStartOffset();
       if (d != 0) return d;
       d = o1.getActualEndOffset() - o2.getActualEndOffset();
@@ -167,7 +167,9 @@ public class UpdateHighlightersUtil {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     final DaemonCodeAnalyzerEx codeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(project);
-    codeAnalyzer.cleanFileLevelHighlights(project, group, psiFile);
+    if (startOffset == 0 && endOffset == document.getTextLength()) {
+      codeAnalyzer.cleanFileLevelHighlights(project, group, psiFile);
+    }
 
     final MarkupModel markup = DocumentMarkupModel.forDocument(document, project, true);
     assertMarkupConsistent(markup, project);
@@ -212,7 +214,7 @@ public class UpdateHighlightersUtil {
                               if (!atStart) return true;
                               if (!info.isFromInjection() && info.getEndOffset() < document.getTextLength() && (info.getEndOffset() <= startOffset || info.getStartOffset()>=endOffset)) return true; // injections are oblivious to restricting range
 
-                              if (info.isFileLevelAnnotation() && psiFile.getViewProvider().isPhysical()) {
+                              if (info.isFileLevelAnnotation()) {
                                 codeAnalyzer.addFileLevelHighlight(project, group, info, psiFile);
                                 changed[0] = true;
                                 return true;
@@ -366,7 +368,9 @@ public class UpdateHighlightersUtil {
     Consumer<RangeHighlighterEx> changeAttributes = new Consumer<RangeHighlighterEx>() {
       @Override
       public void consume(RangeHighlighterEx finalHighlighter) {
-        finalHighlighter.setTextAttributes(infoAttributes);
+        if (infoAttributes != null) {
+          finalHighlighter.setTextAttributes(infoAttributes);
+        }
 
         info.highlighter = finalHighlighter;
         finalHighlighter.setAfterEndOfLine(info.isAfterEndOfLine());

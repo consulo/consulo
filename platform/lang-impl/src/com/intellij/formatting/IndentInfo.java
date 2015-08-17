@@ -18,6 +18,7 @@ package com.intellij.formatting;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import org.jetbrains.annotations.NotNull;
 
 public class IndentInfo {
 
@@ -26,7 +27,8 @@ public class IndentInfo {
   private final int myLineFeeds;
 
   /** @see WhiteSpace#setForceSkipTabulationsUsage(boolean)  */
-  private boolean   myForceSkipTabulationsUsage;
+  private final boolean   myForceSkipTabulationsUsage;
+  private boolean myIndentEmptyLines; // Additional indent on empty lines (before the end of code block)
 
   public IndentInfo(final int lineFeeds, final int indentSpaces, final int spaces) {
     this(lineFeeds, indentSpaces, spaces, false);
@@ -54,21 +56,36 @@ public class IndentInfo {
    */
   public String generateNewWhiteSpace(CommonCodeStyleSettings.IndentOptions options) {
     StringBuffer buffer = new StringBuffer();
-    StringUtil.repeatSymbol(buffer, '\n', myLineFeeds);
+    for (int i = 0; i < myLineFeeds; i ++) {
+      if (options.KEEP_INDENTS_ON_EMPTY_LINES && i > 0) {
+        int spaces = myIndentEmptyLines ? myIndentSpaces + options.INDENT_SIZE : myIndentSpaces;
+        generateLineWhitespace(buffer, options, spaces, 0, true);
+      }
+      buffer.append('\n');
+    }
+    generateLineWhitespace(buffer, options, myIndentSpaces, mySpaces, !myForceSkipTabulationsUsage || myLineFeeds > 0);
+    return buffer.toString();
 
-    if (options.USE_TAB_CHARACTER && (!myForceSkipTabulationsUsage || myLineFeeds > 0)) {
+  }
+
+  private static void generateLineWhitespace(@NotNull StringBuffer buffer,
+                                      @NotNull CommonCodeStyleSettings.IndentOptions options,
+                                      int indentSpaces,
+                                      int alignmentSpaces,
+                                      boolean tabsAllowed) {
+     if (options.USE_TAB_CHARACTER && tabsAllowed) {
       if (options.SMART_TABS) {
-        int tabCount = myIndentSpaces / options.TAB_SIZE;
-        int leftSpaces = myIndentSpaces - tabCount * options.TAB_SIZE;
+        int tabCount = indentSpaces / options.TAB_SIZE;
+        int leftSpaces = indentSpaces - tabCount * options.TAB_SIZE;
         if (tabCount > 0) {
           StringUtil.repeatSymbol(buffer, '\t', tabCount);
         }
-        if (leftSpaces + mySpaces > 0) {
-          StringUtil.repeatSymbol(buffer, ' ', leftSpaces + mySpaces);
+        if (leftSpaces + alignmentSpaces > 0) {
+          StringUtil.repeatSymbol(buffer, ' ', leftSpaces + alignmentSpaces);
         }
       }
       else {
-        int size = getTotalSpaces();
+        int size = indentSpaces + alignmentSpaces;
         while (size > 0) {
           if (size >= options.TAB_SIZE) {
             buffer.append('\t');
@@ -82,17 +99,15 @@ public class IndentInfo {
       }
     }
     else {
-      int spaces = getTotalSpaces();
+      int spaces = indentSpaces + alignmentSpaces;
       if (spaces > 0) {
         StringUtil.repeatSymbol(buffer, ' ', spaces);
       }
     }
-
-    return buffer.toString();
-
   }
 
-  public int getTotalSpaces() {
-    return myIndentSpaces + mySpaces;
+  public IndentInfo setIndentEmptyLines(boolean indentEmptyLines) {
+    myIndentEmptyLines = indentEmptyLines;
+    return this;
   }
 }

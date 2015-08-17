@@ -25,12 +25,12 @@ import java.util.Set;
 /**
  * Stands for block alignment strategy (e.g. we may want to use different strategies for the different
  * {@link Alignment.Anchor alignment acnhors}).
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/28/11 3:55 PM
  */
 public interface BlockAlignmentProcessor {
-  
+
   enum Result {
 
     /**
@@ -38,7 +38,7 @@ public interface BlockAlignmentProcessor {
      * a counterparty (e.g. we want to align two blocks and this value is returned after processing the first of them).
      */
     TARGET_BLOCK_PROCESSED_NOT_ALIGNED,
-    
+
     /** Alignment is performed for the target block. */
     TARGET_BLOCK_ALIGNED,
 
@@ -47,7 +47,7 @@ public interface BlockAlignmentProcessor {
 
     /** Detected that backward alignment dependency graph is cycled. */
     RECURSION_DETECTED,
-    
+
     /**
      * It was necessary to align already processed block because of {@link AlignmentImpl#isAllowBackwardShift() backward alignment}
      * but that can't be done (e.g. that backward block {@link AbstractBlockWrapper#getWhiteSpace() white space} is read-only).
@@ -57,12 +57,12 @@ public interface BlockAlignmentProcessor {
 
   /**
    * Asks current processor to perform alignment processing for the parameters encapsulated at the given context.
-   * 
+   *
    * @param context     target parameters holder
    * @return            processing result
    */
   Result applyAlignment(@NotNull Context context);
-  
+
   class Context {
 
     @NotNull public final Document                                             document;
@@ -71,13 +71,15 @@ public interface BlockAlignmentProcessor {
     @NotNull public final Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings;
     @NotNull public final Map<LeafBlockWrapper, Set<LeafBlockWrapper>>         backwardShiftedAlignedBlocks;
     @NotNull public final CommonCodeStyleSettings.IndentOptions                indentOptions;
+    public final int                                                           maxAlignmentSpaces;
 
     public Context(@NotNull Document document,
                    @NotNull AlignmentImpl alignment,
                    @NotNull LeafBlockWrapper targetBlock,
                    @NotNull Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings,
                    @NotNull Map<LeafBlockWrapper, Set<LeafBlockWrapper>> backwardShiftedAlignedBlocks,
-                   @NotNull CommonCodeStyleSettings.IndentOptions indentOptions)
+                   @NotNull CommonCodeStyleSettings.IndentOptions indentOptions,
+                   int maxAlignmentSpaces)
     {
       this.document = document;
       this.alignment = alignment;
@@ -85,6 +87,7 @@ public interface BlockAlignmentProcessor {
       this.alignmentMappings = alignmentMappings;
       this.backwardShiftedAlignedBlocks = backwardShiftedAlignedBlocks;
       this.indentOptions = indentOptions;
+      this.maxAlignmentSpaces = maxAlignmentSpaces;
     }
   }
 }

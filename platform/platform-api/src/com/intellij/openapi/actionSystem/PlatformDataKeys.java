@@ -82,6 +82,7 @@ public class PlatformDataKeys extends CommonDataKeys {
 
   public static final DataKey<String> PREDEFINED_TEXT = DataKey.create("predefined.text.value");
 
+  public static final DataKey<String> SEARCH_INPUT_TEXT = DataKey.create("search.input.text.value");
   /**
    * Returns java.awt.Point to guess where to show context menu invoked by key.
    * This point should be relative to the currently focused component

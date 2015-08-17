@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package com.intellij.codeInsight.problems;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.Problem;
 import com.intellij.problems.WolfTheProblemSolver;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -34,6 +34,10 @@ import java.util.List;
 public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   private WolfTheProblemSolver myDelegate;
 
+  public MockWolfTheProblemSolver(Project project) {
+    super(project);
+  }
+
   @Override
   public boolean isProblemFile(VirtualFile virtualFile) {
     return myDelegate != null && myDelegate.isProblemFile(virtualFile);
@@ -42,6 +46,11 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   @Override
   public void weHaveGotProblems(@NotNull final VirtualFile virtualFile, @NotNull final List<Problem> problems) {
     if (myDelegate != null) myDelegate.weHaveGotProblems(virtualFile, problems);
+  }
+
+  @Override
+  public void weHaveGotNonIgnorableProblems(@NotNull VirtualFile virtualFile, @NotNull List<Problem> problems) {
+    if (myDelegate != null) myDelegate.weHaveGotNonIgnorableProblems(virtualFile, problems);
   }
 
   @Override
@@ -81,33 +90,6 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   @Override
   public void queue(VirtualFile suspiciousFile) {
     if (myDelegate != null) myDelegate.queue(suspiciousFile);
-  }
-
-  @Override
-  public void projectOpened() {
-    if (myDelegate != null) myDelegate.projectOpened();
-  }
-
-  @Override
-  public void projectClosed() {
-    if (myDelegate != null) myDelegate.projectClosed();
-  }
-
-  @Override
-  @NonNls
-  @NotNull
-  public String getComponentName() {
-    return "mockwolf";
-  }
-
-  @Override
-  public void initComponent() {
-
-  }
-
-  @Override
-  public void disposeComponent() {
-
   }
 
   @Override

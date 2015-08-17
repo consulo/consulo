@@ -17,7 +17,6 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.TextChange;
-import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +27,7 @@ import java.util.List;
  * Encapsulates logic of merging set of changes into particular text.
  * <p/>
  * Thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 12/22/10 12:02 PM
  */
@@ -44,20 +43,20 @@ public class BulkChangesMerger {
    * @param text          text to apply given changes for
    * @param textLength    interested number of symbols from the given text to use
    * @param changes       changes to apply to the given text. It's assumed that there are no intersections between them and that they
-   *                      are sorted by offsets in ascending order 
+   *                      are sorted by offsets in ascending order
    * @return              merge result
    */
   public CharSequence mergeToCharSequence(@NotNull char[] text, int textLength, @NotNull List<? extends TextChange> changes) {
     return StringFactory.createShared(mergeToCharArray(text, textLength, changes));
   }
-  
+
   /**
    * Merges given changes within the given text and returns result as a new char array.
-   * 
+   *
    * @param text          text to apply given changes for
    * @param textLength    interested number of symbols from the given text to use
    * @param changes       changes to apply to the given text. It's assumed that there are no intersections between them and that they
-   *                      are sorted by offsets in ascending order 
+   *                      are sorted by offsets in ascending order
    * @return              merge result
    */
   public char[] mergeToCharArray(@NotNull char[] text, int textLength, @NotNull List<? extends TextChange> changes) {
@@ -70,23 +69,23 @@ public class BulkChangesMerger {
     int newEndOffset = data.length;
     for (int i = changes.size() - 1; i >= 0; i--) {
       TextChange change = changes.get(i);
-      
+
       // Copy all unprocessed symbols from initial text that lay after the changed offset.
       int symbolsToMoveNumber = oldEndOffset - change.getEnd();
       System.arraycopy(text, change.getEnd(), data, newEndOffset - symbolsToMoveNumber, symbolsToMoveNumber);
       newEndOffset -= symbolsToMoveNumber;
-      
+
       // Copy all change symbols.
       char[] changeSymbols = change.getChars();
       newEndOffset -= changeSymbols.length;
       System.arraycopy(changeSymbols, 0, data, newEndOffset, changeSymbols.length);
       oldEndOffset = change.getStart();
     }
-    
+
     if (oldEndOffset > 0) {
       System.arraycopy(text, 0, data, 0, oldEndOffset);
     }
-    
+
     return data;
   }
 
@@ -99,14 +98,14 @@ public class BulkChangesMerger {
    * Example: consider that initial text is <code>'12345'</code> and given changes are <code>'remove text at [1; 3) interval'</code>
    * and <code>'replace text at [4; 5) interval with 'abcde''</code>. Resulting text is <code>'14abcde'</code> then and given array
    * length should be not less than 7.
-   * 
+   *
    * @param data      data array
    * @param length    initial text length (without changes)
    * @param changes   change to apply to the target text
    * @throws IllegalArgumentException     if given array is not big enough to contain the resulting text
    */
   public void mergeInPlace(@NotNull char[] data, int length, @NotNull List<? extends TextChangeImpl> changes)
-    throws IllegalArgumentException
+          throws IllegalArgumentException
   {
     // Consider two corner cases:
     //     1. Every given change increases text length, i.e. change text length is more than changed region length. We can calculate
@@ -131,15 +130,15 @@ public class BulkChangesMerger {
     if (changes.isEmpty()) {
       return;
     }
-    
+
     int diff = 0;
     for (TextChangeImpl change : changes) {
       diff += change.getDiff();
     }
     if (length + diff > data.length) {
       throw new IllegalArgumentException(String.format(
-        "Can't perform in-place changes merge. Reason: data array is not big enough to hold resulting text. Current size: %d, "
-        + "minimum size: %d", data.length, length + diff
+              "Can't perform in-place changes merge. Reason: data array is not big enough to hold resulting text. Current size: %d, "
+              + "minimum size: %d", data.length, length + diff
       ));
     }
 
@@ -155,26 +154,40 @@ public class BulkChangesMerger {
       StringBuilder changesDescription = new StringBuilder();
       for (TextChangeImpl change : changes) {
         changesDescription.append(change.getText().length()).append(":").append(change.getStart()).append("-").append(change.getEnd())
-          .append(",");
+                .append(",");
       }
       if (changesDescription.length() > 0) {
         changesDescription.setLength(changesDescription.length() - 1);
-      } 
+      }
       LOG.error(String.format(
-        "Invalid attempt to perform in-place document changes merge detected. Initial text length: %d, data array length: %d, "
-        + "changes: [%s], changes diff: %d", length, data.length, changesDescription, diff
+              "Invalid attempt to perform in-place document changes merge detected. Initial text length: %d, data array length: %d, "
+              + "changes: [%s], changes diff: %d", length, data.length, changesDescription, diff
       ), e);
       char[] merged = mergeToCharArray(data, length, changes);
       System.arraycopy(merged, 0, data, 0, length + diff);
     }
   }
-  
+
   private static void copy(@NotNull char[] data, int offset, @NotNull CharSequence text) {
     for (int i = 0; i < text.length(); i++) {
       data[i + offset] = text.charAt(i);
     }
   }
-  
+
+  /**
+   * Given an offset of some location in the document, returns offset of this location after application of given changes. List of changes
+   * is supposed to satisfy the same constraints as required by {@link #mergeToCharSequence(char[], int, List)} method.
+   */
+  public int updateOffset(int originalOffset, @NotNull List<? extends TextChange> changes) {
+    int offset = originalOffset;
+    for (TextChange change : changes) {
+      if (originalOffset > change.getStart()) {
+        offset += change.getText().length() - (change.getEnd() - change.getStart());
+      }
+    }
+    return offset;
+  }
+
   private static class Context {
 
     private final List<? extends TextChangeImpl> myChanges;
@@ -198,7 +211,7 @@ public class BulkChangesMerger {
 
     /**
      * Asks current context to update its state in order to point to the first change in a group.
-     * 
+     *
      * @return      <code>true</code> if the first change in a group is found; <code>false</code> otherwise
      */
     @SuppressWarnings({"ForLoopThatDoesntUseLoopVariable"})
@@ -223,14 +236,14 @@ public class BulkChangesMerger {
       }
       return myDiff != 0;
     }
-    
+
     public void endGroup() {
       boolean includeEndChange = false;
       myLastChangeShift = 0;
       for (myChangeGroupEndIndex = myChangeGroupStartIndex + 1; myChangeGroupEndIndex < myChanges.size(); myChangeGroupEndIndex++) {
         assert myDiff != 0 : String.format(
-          "Text: '%s', length: %d, changes: %s, change group indices: %d-%d",
-          Arrays.toString(myData), myInputLength, myChanges, myChangeGroupStartIndex, myChangeGroupEndIndex);
+                "Text: '%s', length: %d, changes: %s, change group indices: %d-%d",
+                Arrays.toString(myData), myInputLength, myChanges, myChangeGroupStartIndex, myChangeGroupEndIndex);
         TextChangeImpl change = myChanges.get(myChangeGroupEndIndex);
         int newDiff = myDiff + change.getDiff();
 
@@ -252,7 +265,7 @@ public class BulkChangesMerger {
         myLastChangeShift = myDiff;
         break;
       }
-      
+
       if (myChangeGroupEndIndex >= myChanges.size()) {
         if (myDiff > 0) {
           processLastPositiveGroup();
@@ -275,11 +288,11 @@ public class BulkChangesMerger {
       }
       myFirstChangeShift = myLastChangeShift;
     }
-    
+
     /**
      * Asks to process changes group identified by [{@link #myChangeGroupStartIndex}; {@link #myChangeGroupEndIndex}) where
      * overall group direction is 'positive' (i.e. it starts from the change that increases text length).
-     * 
+     *
      * @param includeEndChange    flag that defines if change defined by {@link #myChangeGroupEndIndex} should be processed
      */
     private void processPositiveGroup(boolean includeEndChange) {
@@ -312,7 +325,7 @@ public class BulkChangesMerger {
       myChangeGroupEndIndex = myChanges.size() - 1;
       processPositiveGroup(true);
     }
-    
+
     private void processNegativeGroup(boolean includeEndChange) {
       int prevChangeEnd = -1;
       for (int i = myChangeGroupStartIndex; i <= myChangeGroupEndIndex; i++) {
@@ -340,7 +353,7 @@ public class BulkChangesMerger {
       int end = myChanges.get(myChangeGroupEndIndex).getEnd();
       System.arraycopy(myData, end, myData, myDataStartOffset, myInputLength - end);
     }
-    
+
     public boolean isComplete() {
       return myChangeGroupStartIndex >= myChanges.size();
     }

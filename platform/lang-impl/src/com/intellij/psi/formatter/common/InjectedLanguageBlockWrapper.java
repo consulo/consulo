@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package com.intellij.psi.formatter.common;
 import com.intellij.formatting.*;
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,11 +47,11 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
    * @param range range of code inside injected document which is really placed in the main document
    * @param indent
    */
-  public InjectedLanguageBlockWrapper(final @NotNull Block original, final int offset, @Nullable TextRange range, @Nullable Indent indent) {
+  public InjectedLanguageBlockWrapper(@NotNull final Block original, final int offset, @Nullable TextRange range, @Nullable Indent indent) {
     this(original, offset, range, indent, null);
   }
 
-  public InjectedLanguageBlockWrapper(final @NotNull Block original,
+  public InjectedLanguageBlockWrapper(@NotNull final Block original,
                                       final int offset,
                                       @Nullable TextRange range,
                                       @Nullable Indent indent,
@@ -102,7 +104,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
 
   private List<Block> buildBlocks() {
     final List<Block> list = myOriginal.getSubBlocks();
-    if (list.size() == 0) return AbstractBlock.EMPTY;
+    if (list.isEmpty()) return AbstractBlock.EMPTY;
     if (myOffset == 0 && myRange == null) return list;
 
     final ArrayList<Block> result = new ArrayList<Block>(list.size());
@@ -117,7 +119,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
     return result;
   }
 
-  private void collectBlocksIntersectingRange(final List<Block> list, final List<Block> result, final @NotNull TextRange range) {
+  private void collectBlocksIntersectingRange(final List<Block> list, final List<Block> result, @NotNull final TextRange range) {
     for (Block block : list) {
       final TextRange textRange = block.getTextRange();
       if (range.contains(textRange)) {
@@ -148,11 +150,18 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
     Spacing spacing = myOriginal.getSpacing(child1ToUse, child2ToUse);
     if (spacing instanceof DependantSpacingImpl && shift != 0) {
       DependantSpacingImpl hostSpacing = (DependantSpacingImpl)spacing;
+      final int finalShift = shift;
+      List<TextRange> shiftedRanges = ContainerUtil.map(hostSpacing.getDependentRegionRanges(), new Function<TextRange, TextRange>() {
+        @Override
+        public TextRange fun(TextRange range) {
+          return range.shiftRight(finalShift);
+        }
+      });
       return new DependantSpacingImpl(
-        hostSpacing.getMinSpaces(), hostSpacing.getMaxSpaces(), hostSpacing.getDependency().shiftRight(shift),
-        hostSpacing.shouldKeepLineFeeds(), hostSpacing.getKeepBlankLines(), DependentSpacingRule.DEFAULT
+              hostSpacing.getMinSpaces(), hostSpacing.getMaxSpaces(), shiftedRanges,
+              hostSpacing.shouldKeepLineFeeds(), hostSpacing.getKeepBlankLines(), DependentSpacingRule.DEFAULT
       );
-    } 
+    }
     return spacing;
   }
 

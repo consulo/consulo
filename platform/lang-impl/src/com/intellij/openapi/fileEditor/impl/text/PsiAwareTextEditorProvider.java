@@ -22,16 +22,18 @@ package com.intellij.openapi.fileEditor.impl.text;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
+import com.intellij.openapi.application.Result;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.Producer;
-import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -54,14 +56,19 @@ public class PsiAwareTextEditorProvider extends TextEditorProvider implements As
       LOG.error("Cannot open text editor for " + file);
     }
     CodeFoldingState state = null;
-    try {
-      Document document = FileDocumentManager.getInstance().getDocument(file);
-      if (document != null) {
-        state = CodeFoldingManager.getInstance(project).buildInitialFoldings(document);
+    if (!project.isDefault()) { // There's no CodeFoldingManager for default project (which is used in diff command-line application)
+      try {
+        Document document = FileDocumentManager.getInstance().getDocument(file);
+        if (document != null) {
+          state = CodeFoldingManager.getInstance(project).buildInitialFoldings(document);
+        }
       }
-    }
-    catch (Exception e) {
-      LOG.error("Error building initial foldings", e);
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
+      catch (Exception e) {
+        LOG.error("Error building initial foldings", e);
+      }
     }
     final CodeFoldingState finalState = state;
     return new Builder() {
@@ -147,10 +154,10 @@ public class PsiAwareTextEditorProvider extends TextEditorProvider implements As
     super.setStateImpl(project, editor, state);
     // Folding
     final CodeFoldingState foldState = state.getFoldingState();
-    if (project != null && foldState != null){
-      UIUtil.invokeAndWaitIfNeeded(new Runnable() {
+    if (project != null && foldState != null) {
+      new WriteAction() {
         @Override
-        public void run() {
+        protected void run(@NotNull Result result) throws Throwable {
           PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
           editor.getFoldingModel().runBatchFoldingOperation(
                   new Runnable() {
@@ -161,7 +168,7 @@ public class PsiAwareTextEditorProvider extends TextEditorProvider implements As
                   }
           );
         }
-      });
+      }.execute();
     }
   }
 

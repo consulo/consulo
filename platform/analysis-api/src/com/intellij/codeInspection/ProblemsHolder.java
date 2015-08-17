@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package com.intellij.codeInspection;
 import com.intellij.BundleBase;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
-import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -36,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 /**
@@ -47,7 +45,7 @@ public class ProblemsHolder {
   private final InspectionManager myManager;
   private final PsiFile myFile;
   private final boolean myOnTheFly;
-  private MyList<ProblemDescriptor> myProblems = new MyList<ProblemDescriptor>();
+  private final List<ProblemDescriptor> myProblems = new ArrayList<ProblemDescriptor>();
 
   public ProblemsHolder(@NotNull InspectionManager manager, @NotNull PsiFile file, boolean onTheFly) {
     myManager = manager;
@@ -55,14 +53,16 @@ public class ProblemsHolder {
     myOnTheFly = onTheFly;
   }
 
-  public void registerProblem(@NotNull PsiElement psiElement, @NotNull @Nls String descriptionTemplate, LocalQuickFix... fixes) {
+  public void registerProblem(@NotNull PsiElement psiElement,
+                              @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
+                              @Nullable LocalQuickFix... fixes) {
     registerProblem(psiElement, descriptionTemplate, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, fixes);
   }
 
   public void registerProblem(@NotNull PsiElement psiElement,
-                              @NotNull String descriptionTemplate,
-                              ProblemHighlightType highlightType,
-                              LocalQuickFix... fixes) {
+                              @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
+                              @NotNull ProblemHighlightType highlightType,
+                              @Nullable LocalQuickFix... fixes) {
     registerProblem(myManager.createProblemDescriptor(psiElement, descriptionTemplate, myOnTheFly, fixes, highlightType));
   }
 
@@ -77,14 +77,6 @@ public class ProblemsHolder {
           return;
         }
       }
-
-      PsiFile containingFile = element.getContainingFile();
-      PsiElement context = InjectedLanguageManager.getInstance(containingFile.getProject()).getInjectionHost(containingFile);
-      PsiElement myContext = InjectedLanguageManager.getInstance(myFile.getProject()).getInjectionHost(myFile);
-      LOG.error("Reported element " + element + " is not from the file '" + myFile + "' the inspection was invoked for. Message: '" + problemDescriptor.getDescriptionTemplate()+"'.\n" +
-                "Element' containing file: "+ containingFile +"; context: "+(context == null ? null : context.getContainingFile())+"\n"
-                +"Inspection invoked for file: "+ myFile +"; context: "+(myContext == null ? null : myContext.getContainingFile())+"\n"
-                );
     }
 
     myProblems.add(problemDescriptor);
@@ -104,13 +96,13 @@ public class ProblemsHolder {
     String description = XmlStringUtil.stripHtml(problem.getDescriptionTemplate());
 
     final String template =
-      InspectionsBundle.message("inspection.redirect.template",
-                                description, path, original.getTextRange().getStartOffset(), vFile.getName());
+            InspectionsBundle.message("inspection.redirect.template",
+                                      description, path, original.getTextRange().getStartOffset(), vFile.getName());
 
 
     final InspectionManager manager = InspectionManager.getInstance(original.getProject());
     final ProblemDescriptor newProblem =
-      manager.createProblemDescriptor(target, template, (LocalQuickFix)null, problem.getHighlightType(), isOnTheFly());
+            manager.createProblemDescriptor(target, template, (LocalQuickFix)null, problem.getHighlightType(), isOnTheFly());
     registerProblem(newProblem);
   }
 
@@ -123,18 +115,20 @@ public class ProblemsHolder {
   }
 
   public void registerProblemForReference(@NotNull PsiReference reference,
-                              ProblemHighlightType highlightType,
-                              String descriptionTemplate,
-                              LocalQuickFix... fixes) {
-    registerProblem(myManager.createProblemDescriptor(reference.getElement(), reference.getRangeInElement(), descriptionTemplate, highlightType,
-                                                      myOnTheFly, fixes));
+                                          @NotNull ProblemHighlightType highlightType,
+                                          @NotNull String descriptionTemplate,
+                                          @Nullable LocalQuickFix... fixes) {
+    ProblemDescriptor descriptor = myManager.createProblemDescriptor(reference.getElement(), reference.getRangeInElement(),
+                                                                     descriptionTemplate, highlightType, myOnTheFly, fixes);
+    registerProblem(descriptor);
   }
 
   public void registerProblem(@NotNull PsiReference reference) {
     registerProblem(reference, unresolvedReferenceMessage(reference), ProblemHighlightType.LIKE_UNKNOWN_SYMBOL);
   }
 
-  public static String unresolvedReferenceMessage(PsiReference reference) {
+  @NotNull
+  public static String unresolvedReferenceMessage(@NotNull PsiReference reference) {
     String message;
     if (reference instanceof EmptyResolveMessageProvider) {
       String pattern = ((EmptyResolveMessageProvider)reference).getUnresolvedMessagePattern();
@@ -164,29 +158,25 @@ public class ProblemsHolder {
    */
   public void registerProblem(@NotNull final PsiElement psiElement,
                               @NotNull final String message,
-                              final ProblemHighlightType highlightType,
+                              @NotNull ProblemHighlightType highlightType,
                               @Nullable TextRange rangeInElement,
-                              final LocalQuickFix... fixes) {
+                              @Nullable LocalQuickFix... fixes) {
 
-    final ProblemDescriptor descriptor = myManager.createProblemDescriptor(psiElement, rangeInElement, message, highlightType, myOnTheFly,
-                                                                           fixes);
+    final ProblemDescriptor descriptor = myManager.createProblemDescriptor(psiElement, rangeInElement, message, highlightType, myOnTheFly, fixes);
     registerProblem(descriptor);
   }
 
   public void registerProblem(@NotNull final PsiElement psiElement,
-                              final TextRange rangeInElement,
+                              @Nullable TextRange rangeInElement,
                               @NotNull final String message,
-                              final LocalQuickFix... fixes) {
+                              @Nullable LocalQuickFix... fixes) {
     final ProblemDescriptor descriptor = myManager.createProblemDescriptor(psiElement, rangeInElement, message, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, myOnTheFly, fixes);
     registerProblem(descriptor);
   }
 
   @NotNull
   public List<ProblemDescriptor> getResults() {
-    MyList<ProblemDescriptor> problems = myProblems;
-    problems.allowModifications(false);
-    myProblems = new MyList<ProblemDescriptor>();
-    return problems;
+    return myProblems;
   }
 
   @NotNull
@@ -220,18 +210,5 @@ public class ProblemsHolder {
   @NotNull
   public final Project getProject() {
     return myManager.getProject();
-  }
-
-  private static class MyList<T> extends ArrayList<T> {
-    private volatile boolean readOnly;
-    @Override
-    public boolean add(T o) {
-      if (readOnly) throw new ConcurrentModificationException();
-      return super.add(o);
-    }
-
-    private void allowModifications(boolean v) {
-      readOnly = !v;
-    }
   }
 }

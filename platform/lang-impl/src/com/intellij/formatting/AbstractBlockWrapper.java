@@ -36,7 +36,7 @@ import static java.util.Arrays.asList;
 public abstract class AbstractBlockWrapper {
 
   private static final Set<IndentImpl.Type> RELATIVE_INDENT_TYPES = new HashSet<IndentImpl.Type>(asList(
-          Indent.Type.NORMAL, Indent.Type.CONTINUATION, Indent.Type.CONTINUATION_WITHOUT_FIRST
+    Indent.Type.NORMAL, Indent.Type.CONTINUATION, Indent.Type.CONTINUATION_WITHOUT_FIRST
   ));
 
   protected WhiteSpace myWhiteSpaceBefore;
@@ -227,7 +227,7 @@ public abstract class AbstractBlockWrapper {
       AlignmentImpl alignment = child.getAlignment();
       if (alignment != null) {
         // Generally, we want to handle situation like the one below:
-        //   test("text", new Runnable() { 
+        //   test("text", new Runnable() {
         //            @Override
         //            public void run() {
         //            }
@@ -246,7 +246,7 @@ public abstract class AbstractBlockWrapper {
           if (anchorBlock instanceof CompositeBlockWrapper) {
             List<AbstractBlockWrapper> children = ((CompositeBlockWrapper)anchorBlock).getChildren();
             for (AbstractBlockWrapper c : children) {
-              if (c.getStartOffset() != getStartOffset()) {
+              if (c.getStartOffset() != getStartOffset() && c.getStartOffset() < targetBlockStartOffset) {
                 anchorBlock = c;
                 break;
               }

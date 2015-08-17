@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     if (virtualFile == null || !virtualFile.isDirectory()) return;
 
     final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap =
-      new HashMap<String, Map<String, Set<OfflineProblemDescriptor>>>();
+            new HashMap<String, Map<String, Set<OfflineProblemDescriptor>>>();
     final String [] profileName = new String[1];
     final Runnable process = new Runnable() {
       @Override
@@ -115,23 +115,23 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
             final String extension = inspectionFile.getExtension();
             if (shortName.equals(InspectionApplication.DESCRIPTIONS)) {
               profileName[0] = ApplicationManager.getApplication().runReadAction(
-                  new Computable<String>() {
-                    @Override
-                    @Nullable
-                    public String compute() {
-                      return OfflineViewParseUtil.parseProfileName(LoadTextUtil.loadText(inspectionFile).toString());
-                    }
-                  }
+                      new Computable<String>() {
+                        @Override
+                        @Nullable
+                        public String compute() {
+                          return OfflineViewParseUtil.parseProfileName(LoadTextUtil.loadText(inspectionFile).toString());
+                        }
+                      }
               );
             }
             else if (XML_EXTENSION.equals(extension)) {
               resMap.put(shortName, ApplicationManager.getApplication().runReadAction(
-                  new Computable<Map<String, Set<OfflineProblemDescriptor>>>() {
-                    @Override
-                    public Map<String, Set<OfflineProblemDescriptor>> compute() {
-                      return OfflineViewParseUtil.parse(LoadTextUtil.loadText(inspectionFile).toString());
-                    }
-                  }
+                      new Computable<Map<String, Set<OfflineProblemDescriptor>>>() {
+                        @Override
+                        public Map<String, Set<OfflineProblemDescriptor>> compute() {
+                          return OfflineViewParseUtil.parse(LoadTextUtil.loadText(inspectionFile).toString());
+                        }
+                      }
               ));
             }
           }
@@ -163,12 +163,12 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     }, null, new PerformAnalysisInBackgroundOption(project));
   }
 
-  @SuppressWarnings({"UnusedDeclaration", "WeakerAccess", "UnusedReturnValue"}) //used in TeamCity
-  public static InspectionResultsView showOfflineView(final Project project,
+  @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"}) //used in TeamCity
+  public static InspectionResultsView showOfflineView(@NotNull Project project,
                                                       @Nullable
                                                       final String profileName,
-                                                      final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
-                                                      final String title) {
+                                                      @NotNull final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
+                                                      @NotNull String title) {
     Profile profile;
     if (profileName != null) {
       profile = InspectionProjectProfileManager.getInstance(project).getProfile(profileName, false);
@@ -210,24 +210,23 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     return showOfflineView(project, resMap, inspectionProfile, title);
   }
 
-  public static InspectionResultsView showOfflineView(final Project project,
-                                                      final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
-                                                      final InspectionProfile inspectionProfile,
-                                                      final String title) {
+  @NotNull
+  public static InspectionResultsView showOfflineView(@NotNull Project project,
+                                                      @NotNull Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
+                                                      @NotNull InspectionProfile inspectionProfile,
+                                                      @NotNull String title) {
     final AnalysisScope scope = new AnalysisScope(project);
     final InspectionManagerEx managerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
-    final GlobalInspectionContextImpl inspectionContext = managerEx.createNewGlobalContext(false);
-    inspectionContext.setExternalProfile(inspectionProfile);
-    inspectionContext.setCurrentScope(scope);
-    inspectionContext.initializeTools(new ArrayList<Tools>(), new ArrayList<Tools>(), new ArrayList<Tools>());
-    final InspectionResultsView view = new InspectionResultsView(project, inspectionProfile, scope, inspectionContext,
+    final GlobalInspectionContextImpl context = managerEx.createNewGlobalContext(false);
+    context.setExternalProfile(inspectionProfile);
+    context.setCurrentScope(scope);
+    context.initializeTools(new ArrayList<Tools>(), new ArrayList<Tools>(), new ArrayList<Tools>());
+    final InspectionResultsView view = new InspectionResultsView(project, inspectionProfile, scope, context,
                                                                  new OfflineInspectionRVContentProvider(resMap, project));
-    ((RefManagerImpl)inspectionContext.getRefManager()).inspectionReadActionStarted();
+    ((RefManagerImpl)context.getRefManager()).inspectionReadActionStarted();
     view.update();
     TreeUtil.selectFirstNode(view.getTree());
-    if (inspectionContext.getContentManager() != null) { //test
-      inspectionContext.addView(view, title);
-    }
+    context.addView(view, title);
     return view;
   }
 }

@@ -16,9 +16,13 @@
 
 package com.intellij.codeInsight.editorActions;
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RawText;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -36,8 +40,8 @@ public class TextBlockTransferable implements Transferable {
   private final String myText;
   private final DataFlavor[] myTransferDataFlavors;
 
-  public TextBlockTransferable(String text, Collection<TextBlockTransferableData> extraData, RawText rawText) {
-    myText = text;
+  public TextBlockTransferable(@NotNull String text, @NotNull Collection<TextBlockTransferableData> extraData, @Nullable RawText rawText) {
+    myText = cleanFromNullsIfNeeded(text);
     myExtraData = extraData;
     myRawText = rawText;
 
@@ -54,6 +58,12 @@ public class TextBlockTransferable implements Transferable {
       }
     }
     myTransferDataFlavors = dataFlavors.toArray(new DataFlavor[dataFlavors.size()]);
+  }
+
+  @NotNull
+  private static String cleanFromNullsIfNeeded(@NotNull String text) {
+    // Clipboard on Windows and Linux works with null-terminated strings, on Mac nulls are not treated in a special way.
+    return SystemInfo.isMac ? text : text.replace('\000', ' ');
   }
 
   @Override
@@ -96,25 +106,37 @@ public class TextBlockTransferable implements Transferable {
     throw new UnsupportedFlavorException(flavor);
   }
 
+  @NotNull
+  public static String convertLineSeparators(@NotNull Editor editor, @NotNull String input) {
+    return convertLineSeparators(editor, input, Collections.<TextBlockTransferableData>emptyList());
+  }
+
+  @NotNull
+  public static String convertLineSeparators(@NotNull Editor editor, @NotNull String input,
+                                             @NotNull Collection<TextBlockTransferableData> itemsToUpdate) {
+    // converting line separators to spaces matches the behavior of Swing text components on paste
+    return convertLineSeparators(input, editor.isOneLineMode() ? " " : "\n", itemsToUpdate);
+  }
+
   public static String convertLineSeparators(String text,
                                              String newSeparator,
-                                             Collection<TextBlockTransferableData> transferableDatas) {
-    if (transferableDatas.size() > 0){
+                                             Collection<TextBlockTransferableData> itemsToUpdate) {
+    if (itemsToUpdate.size() > 0){
       int size = 0;
-      for(TextBlockTransferableData data: transferableDatas) {
+      for(TextBlockTransferableData data: itemsToUpdate) {
         size += data.getOffsetCount();
       }
 
       int[] offsets = new int[size];
       int index = 0;
-      for(TextBlockTransferableData data: transferableDatas) {
+      for(TextBlockTransferableData data: itemsToUpdate) {
         index = data.getOffsets(offsets, index);
       }
 
       text = StringUtil.convertLineSeparators(text, newSeparator, offsets);
 
       index = 0;
-      for(TextBlockTransferableData data: transferableDatas) {
+      for(TextBlockTransferableData data: itemsToUpdate) {
         index = data.setOffsets(offsets, index);
       }
 

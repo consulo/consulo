@@ -27,6 +27,8 @@
  */
 package com.intellij.util.text;
 
+import com.intellij.openapi.util.text.CharSequenceWithStringHash;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,18 +36,18 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A pruned and optimized version of javolution.text.Text
  *
- * <p> This class represents an immutable character sequence with 
- *     fast {@link #concat concatenation}, {@link #insert insertion} and 
- *     {@link #delete deletion} capabilities (O[Log(n)]) instead of 
+ * <p> This class represents an immutable character sequence with
+ *     fast {@link #concat concatenation}, {@link #insert insertion} and
+ *     {@link #delete deletion} capabilities (O[Log(n)]) instead of
  *     O[n] for StringBuffer/StringBuilder).</p>
  *
- * <p><i> Implementation Note: To avoid expensive copy operations , 
- *        {@link ImmutableText} instances are broken down into smaller immutable 
+ * <p><i> Implementation Note: To avoid expensive copy operations ,
+ *        {@link ImmutableText} instances are broken down into smaller immutable
  *        sequences, they form a minimal-depth binary tree.
- *        The tree is maintained balanced automatically through <a 
- *        href="http://en.wikipedia.org/wiki/Tree_rotation">tree rotations</a>. 
+ *        The tree is maintained balanced automatically through <a
+ *        href="http://en.wikipedia.org/wiki/Tree_rotation">tree rotations</a>.
  *        Insertion/deletions are performed in <code>O[Log(n)]</code>
- *        instead of <code>O[n]</code> for 
+ *        instead of <code>O[n]</code> for
  *        <code>StringBuffer/StringBuilder</code>.</i></p>
  *
  * @author  <a href="mailto:jean-marie@dautelle.com">Jean-Marie Dautelle</a>
@@ -53,7 +55,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 5.3, January 10, 2007
  */
 @SuppressWarnings({"AssignmentToForLoopParameter","UnnecessaryThis"})
-public final class ImmutableText extends ImmutableCharSequence implements CharArrayExternalizable {
+public final class ImmutableText extends ImmutableCharSequence implements CharArrayExternalizable, CharSequenceWithStringHash {
   /**
    * Holds the default size for primitive blocks of characters.
    */
@@ -136,8 +138,8 @@ public final class ImmutableText extends ImmutableCharSequence implements CharAr
    * Returns the text representation of the <code>boolean</code> argument.
    *
    * @param b a <code>boolean</code>.
-   * @return if the argument is <code>true</code>, the text 
-   *          <code>"true"</code> is returned; otherwise, the text 
+   * @return if the argument is <code>true</code>, the text
+   *          <code>"true"</code> is returned; otherwise, the text
    *          <code>"false"</code> is returned.
    */
   public static ImmutableText valueOf(boolean b) {
@@ -162,8 +164,8 @@ public final class ImmutableText extends ImmutableCharSequence implements CharAr
   }
 
   /**
-   * Concatenates the specified text to the end of this text. 
-   * This method is very fast (faster even than 
+   * Concatenates the specified text to the end of this text.
+   * This method is very fast (faster even than
    * <code>StringBuffer.append(String)</code>) and still returns
    * a text instance with an internal binary tree of minimal depth!
    *
@@ -179,7 +181,7 @@ public final class ImmutableText extends ImmutableCharSequence implements CharAr
    *
    * @param  start the index of the first character inclusive.
    * @return the sub-text starting at the specified position.
-   * @throws IndexOutOfBoundsException if <code>(start < 0) || 
+   * @throws IndexOutOfBoundsException if <code>(start < 0) ||
    *          (start > this.length())</code>
    */
   private ImmutableText subtext(int start) {
@@ -187,7 +189,7 @@ public final class ImmutableText extends ImmutableCharSequence implements CharAr
   }
 
   /**
-   * Returns the text having the specified text inserted at 
+   * Returns the text having the specified text inserted at
    * the specified location.
    *
    * @param index the insertion position.
@@ -248,6 +250,7 @@ public final class ImmutableText extends ImmutableCharSequence implements CharAr
     return true;
   }
 
+  private int hash;
   /**
    * Returns the hash code for this text.
    *
@@ -255,10 +258,9 @@ public final class ImmutableText extends ImmutableCharSequence implements CharAr
    */
   @Override
   public int hashCode() {
-    int h = 0;
-    final int length = this.length();
-    for (int i = 0; i < length;) {
-      h = 31 * h + charAt(i++);
+    int h = hash;
+    if (h == 0) {
+      hash = h = StringUtil.stringHashCode(this, 0, length());
     }
     return h;
   }

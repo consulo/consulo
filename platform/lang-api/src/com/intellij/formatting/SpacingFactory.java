@@ -18,6 +18,8 @@ package com.intellij.formatting;
 import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * Internal interface for creating spacing instances.
  */
@@ -26,14 +28,14 @@ interface SpacingFactory {
 
   @NotNull
   Spacing createSpacing(int minSpaces,
-                               int maxSpaces,
-                               int minLineFeeds,
-                               boolean keepLineBreaks,
-                               int keepBlankLines);
+                        int maxSpaces,
+                        int minLineFeeds,
+                        boolean keepLineBreaks,
+                        int keepBlankLines);
 
   @NotNull
   Spacing getReadOnlySpacing();
-  
+
   @NotNull
   Spacing createDependentLFSpacing(int minSpaces,
                                    int maxSpaces,
@@ -41,6 +43,16 @@ interface SpacingFactory {
                                    boolean keepLineBreaks,
                                    int keepBlankLines,
                                    @NotNull DependentSpacingRule rule);
+
+
+  @NotNull
+  Spacing createDependentLFSpacing(int minSpaces,
+                                   int maxSpaces,
+                                   @NotNull List<TextRange> dependencyRange,
+                                   boolean keepLineBreaks,
+                                   int keepBlankLines,
+                                   @NotNull DependentSpacingRule rule);
+
 
   @NotNull
   Spacing createSafeSpacing(boolean keepLineBreaks,
@@ -54,5 +66,5 @@ interface SpacingFactory {
 
   @NotNull
   Spacing createSpacing(final int minSpaces, final int maxSpaces, final int minLineFeeds, final boolean keepLineBreaks,
-                     final int keepBlankLines, final int prefLineFeeds);
+                        final int keepBlankLines, final int prefLineFeeds);
 }
