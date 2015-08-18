@@ -15,12 +15,13 @@
  */
 package org.mustbe.consulo.roots.impl;
 
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
+import com.intellij.openapi.roots.ui.configuration.ProjectStructureDialog;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 
@@ -38,10 +39,11 @@ public abstract class OrderEntryTypeProviderEx<T extends OrderEntry> implements 
   public void navigate(@NotNull final T orderEntry) {
     Project project = orderEntry.getOwnerModule().getProject();
     final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
-    ShowSettingsUtil.getInstance().editConfigurable(project, config, new Runnable() {
+    ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override
-      public void run() {
+      public void consume(ProjectStructureConfigurable configurable) {
         config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry);
+
       }
     });
   }
