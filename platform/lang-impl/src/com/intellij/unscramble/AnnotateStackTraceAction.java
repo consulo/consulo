@@ -55,6 +55,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.awt.*;
 import java.util.*;
@@ -91,6 +92,7 @@ class AnnotateStackTraceAction extends AnAction {
         return true;
       }
 
+      @RequiredDispatchThread
       @Override
       public void onSuccess() {
       }

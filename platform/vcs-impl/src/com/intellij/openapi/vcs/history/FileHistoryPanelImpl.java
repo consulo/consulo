@@ -69,6 +69,7 @@ import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -1166,11 +1167,13 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton {
           }
         }
 
+        @RequiredDispatchThread
         @Override
         public void onCancel() {
           onSuccess();
         }
 
+        @RequiredDispatchThread
         @Override
         public void onSuccess() {
           handler.completed(key(revisionVirtualFile));
@@ -1793,6 +1796,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton {
       }
     }
 
+    @RequiredDispatchThread
     @Override
     public void onSuccess() {
       final AbstractVcsHelper helper = AbstractVcsHelper.getInstance(myProject);

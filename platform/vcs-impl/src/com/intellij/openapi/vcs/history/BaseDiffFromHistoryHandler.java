@@ -31,6 +31,7 @@ import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.List;
 
@@ -187,6 +188,7 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
     @NotNull
     public abstract String getDialogTitle();
 
+    @RequiredDispatchThread
     @Override
     public void onSuccess() {
       showChangesDialog(getDialogTitle(), ContainerUtil.notNullize(myChanges));

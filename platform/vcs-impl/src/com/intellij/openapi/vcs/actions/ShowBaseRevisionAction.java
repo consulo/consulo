@@ -33,6 +33,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,6 +75,7 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
       myDescription = ObjectUtil.assertNotNull((DiffMixin)vcs.getDiffProvider()).getCurrentRevisionDescription(selectedFile);
     }
 
+    @RequiredDispatchThread
     @Override
     public void onSuccess() {
       if (myProject.isDisposed() || ! myProject.isOpen()) return;

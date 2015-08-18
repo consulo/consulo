@@ -43,6 +43,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -473,6 +474,7 @@ public class ProgressManagerImpl extends ProgressManager implements Disposable {
       }
 
 
+      @RequiredDispatchThread
       @Override
       public void onCancel() {
         if (canceledRunnable != null) {
@@ -480,6 +482,7 @@ public class ProgressManagerImpl extends ProgressManager implements Disposable {
         }
       }
 
+      @RequiredDispatchThread
       @Override
       public void onSuccess() {
         if (successRunnable != null) {

@@ -28,6 +28,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ public abstract class DependenciesHandlerBase {
           perform(builders);
         }
 
+        @RequiredDispatchThread
         @Override
         public void onSuccess() {
           DependenciesHandlerBase.this.onSuccess(builders);
@@ -71,6 +73,7 @@ public abstract class DependenciesHandlerBase {
           perform(builders);
         }
 
+        @RequiredDispatchThread
         @Override
         public void onSuccess() {
           DependenciesHandlerBase.this.onSuccess(builders);

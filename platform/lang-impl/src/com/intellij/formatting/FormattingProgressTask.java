@@ -32,6 +32,7 @@ import com.intellij.util.containers.ConcurrentHashSet;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -120,6 +121,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
     return getCallbacks(eventType).add(callback);
   }
 
+  @RequiredDispatchThread
   @Override
   public void onSuccess() {
     super.onSuccess();
@@ -128,6 +130,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void onCancel() {
     super.onCancel();

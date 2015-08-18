@@ -85,6 +85,7 @@ import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -1753,11 +1754,13 @@ public abstract class ChooseByNameBase {
             });
           }
 
+          @RequiredDispatchThread
           @Override
           public void onSuccess() {
             showUsageView(targets, usages, presentation);
           }
 
+          @RequiredDispatchThread
           @Override
           public void onCancel() {
             myCalcUsagesThread.cancel();

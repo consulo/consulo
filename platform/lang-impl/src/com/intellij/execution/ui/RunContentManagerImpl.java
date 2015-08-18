@@ -58,6 +58,7 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.*;
@@ -807,6 +808,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         semaphore.waitFor();
       }
 
+      @RequiredDispatchThread
       @Override
       public void onCancel() {
         if (killable && !processHandler.isProcessTerminated()) {

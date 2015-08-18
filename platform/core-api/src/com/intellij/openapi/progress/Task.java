@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * Intended to run tasks, both modal and non-modal (backgroundable)
@@ -58,11 +59,13 @@ public abstract class Task implements TaskInfo, Progressive {
   /**
    * This callback will be invoked on AWT dispatch thread.
    */
+  @RequiredDispatchThread
   public void onCancel() {}
 
   /**
    * This callback will be invoked on AWT dispatch thread.
    */
+  @RequiredDispatchThread
   public void onSuccess() {}
 
   public final Project getProject() {

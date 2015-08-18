@@ -26,6 +26,7 @@ import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
   private final String myErrorTitle;
@@ -120,11 +121,13 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void onCancel() {
     commonFinish();
   }
 
+  @RequiredDispatchThread
   @Override
   public void onSuccess() {
     commonFinish();

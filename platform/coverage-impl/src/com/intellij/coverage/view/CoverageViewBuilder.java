@@ -15,6 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class CoverageViewBuilder extends AbstractListBuilder {
         buildRoot();
       }
 
+      @RequiredDispatchThread
       @Override
       public void onSuccess() {
         ensureSelectionExist();

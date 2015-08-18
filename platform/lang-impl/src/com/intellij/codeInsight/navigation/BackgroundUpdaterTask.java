@@ -33,6 +33,7 @@ import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.util.Alarm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -143,6 +144,7 @@ public abstract class BackgroundUpdaterTask<T> extends Task.Backgroundable {
     paintBusy(true);
   }
 
+  @RequiredDispatchThread
   @Override
   public void onSuccess() {
     myPopup.setCaption(getCaption(getCurrentSize()));

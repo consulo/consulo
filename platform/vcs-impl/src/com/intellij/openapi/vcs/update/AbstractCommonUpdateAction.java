@@ -51,6 +51,7 @@ import com.intellij.util.ui.OptionsDialog;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.File;
 import java.util.*;
@@ -478,6 +479,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
       }
     }
 
+    @RequiredDispatchThread
     public void onSuccess() {
       try {
         onSuccessImpl(false);
@@ -611,6 +613,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
       });
     }
 
+    @RequiredDispatchThread
     public void onCancel() {
       try {
         onSuccessImpl(true);

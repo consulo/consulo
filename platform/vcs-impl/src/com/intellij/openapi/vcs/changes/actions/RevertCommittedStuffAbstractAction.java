@@ -38,7 +38,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangeListChooser;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.WaitForProgressToShow;
 import com.intellij.util.containers.Convertor;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNull;import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,7 +96,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
         }
       }
 
-      @Override
+      @RequiredDispatchThread@Override
       public void onSuccess() {
         new PatchApplier<BinaryFilePatch>(project, baseDir, patches, chooser.getSelectedList(), null, null).execute();
       }

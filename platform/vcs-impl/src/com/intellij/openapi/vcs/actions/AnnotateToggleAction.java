@@ -50,6 +50,7 @@ import com.intellij.util.containers.SortedList;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.awt.*;
 import java.util.*;
@@ -189,11 +190,13 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
                 }
               }
 
+              @RequiredDispatchThread
               @Override
               public void onCancel() {
                 onSuccess();
               }
 
+              @RequiredDispatchThread
               @Override
               public void onSuccess() {
                 handler.completed(file.getPath());

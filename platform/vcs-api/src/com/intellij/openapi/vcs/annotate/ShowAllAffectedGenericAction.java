@@ -31,6 +31,7 @@ import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.List;
 
@@ -127,6 +128,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
         }
       }
 
+      @RequiredDispatchThread
       @Override
       public void onSuccess() {
         final AbstractVcsHelper instance = AbstractVcsHelper.getInstance(project);

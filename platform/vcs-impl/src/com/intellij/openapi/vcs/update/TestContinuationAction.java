@@ -27,6 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.continuation.*;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author irengrig
@@ -97,11 +98,13 @@ public class TestContinuationAction extends AnAction {
           finalBlock});
       }
 
+      @RequiredDispatchThread
       @Override
       public void onCancel() {
         Messages.showInfoMessage("cancel!", myTitle);
       }
 
+      @RequiredDispatchThread
       @Override
       public void onSuccess() {
         Messages.showInfoMessage("success!", myTitle);

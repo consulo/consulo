@@ -48,6 +48,7 @@ import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.*;
 
@@ -241,6 +242,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         performInspectionsWithProgress(scope, false, false);
       }
 
+      @RequiredDispatchThread
       @Override
       public void onSuccess() {
         notifyInspectionsFinished();

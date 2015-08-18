@@ -8,6 +8,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author Roman.Chernyatchik
@@ -36,6 +37,7 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
           request.run();
         }
 
+        @RequiredDispatchThread
         @Override
         public void onSuccess() {
           final CoverageView coverageView = CoverageViewManager.getInstance(myProject).getToolwindow(suite);

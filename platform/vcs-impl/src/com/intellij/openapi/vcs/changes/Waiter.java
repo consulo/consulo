@@ -22,6 +22,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class Waiter extends Task.Modal {
   private final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.Waiter");
@@ -62,11 +63,13 @@ public class Waiter extends Task.Modal {
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void onCancel() {
     onSuccess();
   }
 
+  @RequiredDispatchThread
   @Override
   public void onSuccess() {
     // allow do not wait for done

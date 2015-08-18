@@ -31,6 +31,7 @@ import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.*;
 
@@ -113,6 +114,7 @@ public class PluginAdvertiserEditorNotificationProvider extends EditorNotificati
               }
             }
 
+            @RequiredDispatchThread
             @Override
             public void onSuccess() {
               final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, myPlugins, myAllPlugins);
