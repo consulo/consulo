@@ -113,14 +113,15 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
   private final List<Pair<VirtualFile, EditorWindow>> mySelectionHistory = new ArrayList<Pair<VirtualFile, EditorWindow>>();
   private Reference<EditorComposite> myLastSelectedComposite = new WeakReference<EditorComposite>(null);
 
-  private final MergingUpdateQueue myQueue = new MergingUpdateQueue("FileEditorManagerUpdateQueue", 50, true, null);
+  private final MergingUpdateQueue myQueue = new MergingUpdateQueue("FileEditorManagerUpdateQueue", 50, true,
+                                                                    MergingUpdateQueue.ANY_COMPONENT);
 
   private final BusyObject.Impl.Simple myBusyObject = new BusyObject.Impl.Simple();
 
   /**
    * Removes invalid myEditor and updates "modified" status.
    */
-  private final MyEditorPropertyChangeListener myEditorPropertyChangeListener = new MyEditorPropertyChangeListener();
+  private final PropertyChangeListener myEditorPropertyChangeListener = new MyEditorPropertyChangeListener();
   private final DockManager myDockManager;
   private DockableEditorContainerFactory myContentFactory;
   private final EditorHistoryManager myEditorHistoryManager;
@@ -144,6 +145,47 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
     }
 
     myQueue.setTrackUiActivity(true);
+
+    project.getMessageBus().connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+      @Override
+      public void enteredDumbMode() {
+      }
+
+      @Override
+      public void exitDumbMode() {
+        // can happen under write action, so postpone to avoid deadlock on FileEditorProviderManager.getProviders()
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            if (!project.isDisposed())
+              dumbModeFinished(project);
+          }
+        });
+      }
+    });
+  }
+
+  private void dumbModeFinished(Project project) {
+    VirtualFile[] files = getOpenFiles();
+    for (VirtualFile file : files) {
+      Set<FileEditorProvider> providers = new HashSet<FileEditorProvider>();
+      List<EditorWithProviderComposite> composites = getEditorComposites(file);
+      for (EditorWithProviderComposite composite : composites) {
+        providers.addAll(Arrays.asList(composite.getProviders()));
+      }
+      FileEditorProvider[] newProviders = FileEditorProviderManager.getInstance().getProviders(project, file);
+      if (newProviders.length > providers.size()) {
+        List<FileEditorProvider> toOpen = new ArrayList<FileEditorProvider>(Arrays.asList(newProviders));
+        toOpen.removeAll(providers);
+        // need to open additional non dumb-aware editors
+        for (EditorWithProviderComposite composite : composites) {
+          for (FileEditorProvider provider : toOpen) {
+            FileEditor editor = provider.createEditor(myProject, file);
+            composite.addEditor(editor, provider);
+          }
+        }
+      }
+    }
   }
 
   public void initDockableContentFactory() {
@@ -242,12 +284,13 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
     if (myPanels == null) {
       synchronized (myInitLock) {
         if (myPanels == null) {
-          myPanels = new JPanel(new BorderLayout());
-          myPanels.setOpaque(false);
-          myPanels.setBorder(new MyBorder());
+          final JPanel panel = new JPanel(new BorderLayout());
+          panel.setOpaque(false);
+          panel.setBorder(new MyBorder());
           mySplitters = new EditorsSplitters(this, myDockManager, true);
           Disposer.register(myProject, mySplitters);
-          myPanels.add(mySplitters, BorderLayout.CENTER);
+          panel.add(mySplitters, BorderLayout.CENTER);
+          myPanels = panel;
         }
       }
     }
@@ -753,7 +796,7 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
     if (compositeRef.isNull()) {
       // File is not opened yet. In this case we have to create editors
       // and select the created EditorComposite.
-      newProviders = getAvailableProviders(file);
+      newProviders = FileEditorProviderManager.getInstance().getProviders(myProject, file);
       if (newProviders.length == 0) {
         return Pair.create(EMPTY_EDITOR_ARRAY, EMPTY_PROVIDER_ARRAY);
       }
@@ -823,7 +866,8 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
 
           // Now we have to create EditorComposite and insert it into the TabbedEditorComponent.
           // After that we have to select opened editor.
-          EditorWithProviderComposite composite = new EditorWithProviderComposite(file, newEditors, newProviders, FileEditorManagerImpl.this);
+          EditorWithProviderComposite composite = createComposite(file, newEditors, newProviders);
+          if (composite == null) return;
 
           if (index >= 0) {
             composite.getFile().putUserData(EditorWindow.INITIAL_INDEX_KEY, index);
@@ -909,7 +953,30 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
         }
       }
     });
-    return Pair.create(compositeRef.get().getEditors(), compositeRef.get().getProviders());
+    EditorWithProviderComposite composite = compositeRef.get();
+    return Pair.create(composite == null ? EMPTY_EDITOR_ARRAY : composite.getEditors(),
+                       composite == null ? EMPTY_PROVIDER_ARRAY : composite.getProviders());
+  }
+
+  @Nullable
+  private EditorWithProviderComposite createComposite(@NotNull VirtualFile file,
+                                                      @NotNull FileEditor[] editors, @NotNull FileEditorProvider[] providers) {
+    if (NullUtils.hasNull(editors) || NullUtils.hasNull(providers)) {
+      List<FileEditor> editorList = new ArrayList<FileEditor>(editors.length);
+      List<FileEditorProvider> providerList = new ArrayList<FileEditorProvider>(providers.length);
+      for (int i = 0; i < editors.length; i++) {
+        FileEditor editor = editors[i];
+        FileEditorProvider provider = providers[i];
+        if (editor != null && provider != null) {
+          editorList.add(editor);
+          providerList.add(provider);
+        }
+      }
+      if (editorList.isEmpty()) return null;
+      editors = editorList.toArray(new FileEditor[editorList.size()]);
+      providers = providerList.toArray(new FileEditorProvider[providerList.size()]);
+    }
+    return new EditorWithProviderComposite(file, editors, providers, this);
   }
 
   private static void clearWindowIfNeeded(@NotNull EditorWindow window) {
@@ -949,22 +1016,6 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
         editor.setState(state);
       }
     }
-  }
-
-  @NotNull
-  private FileEditorProvider[] getAvailableProviders(@NotNull VirtualFile file) {
-    final FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
-    FileEditorProvider[] providers = editorProviderManager.getProviders(myProject, file);
-    if (DumbService.getInstance(myProject).isDumb()) {
-      final List<FileEditorProvider> dumbAware = ContainerUtil.findAll(providers, new Condition<FileEditorProvider>() {
-        @Override
-        public boolean value(FileEditorProvider fileEditorProvider) {
-          return DumbService.isDumbAware(fileEditorProvider);
-        }
-      });
-      providers = dumbAware.toArray(new FileEditorProvider[dumbAware.size()]);
-    }
-    return providers;
   }
 
   @NotNull
@@ -1452,11 +1503,8 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
 
   @Override
   public void projectClosed() {
-    //myFocusWatcher.deinstall(myWindows.getComponent ());
-    getMainSplitters().dispose();
-
-// Dispose created editors. We do not use use closeEditor method because
-// it fires event and changes history.
+    // Dispose created editors. We do not use use closeEditor method because
+    // it fires event and changes history.
     closeAllFiles();
   }
 
@@ -1576,17 +1624,9 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
   @Override
   public boolean isChanged(@NotNull final EditorComposite editor) {
     final FileStatusManager fileStatusManager = FileStatusManager.getInstance(myProject);
-    if (fileStatusManager != null) {
-      VirtualFile file = editor.getFile();
-      FileStatus status = fileStatusManager.getStatus(file);
-      if (status == FileStatus.UNKNOWN && !file.isWritable()) {
-        return false;
-      }
-      if (!status.equals(FileStatus.NOT_CHANGED)) {
-        return true;
-      }
-    }
-    return false;
+    if (fileStatusManager == null) return false;
+    FileStatus status = fileStatusManager.getStatus(editor.getFile());
+    return status != FileStatus.UNKNOWN && status != FileStatus.NOT_CHANGED;
   }
 
   public void disposeComposite(@NotNull EditorWithProviderComposite editor) {
@@ -1815,8 +1855,22 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
   }
 
   private class MyRootsListener extends ModuleRootAdapter {
+    private boolean myScheduled;
+
     @Override
     public void rootsChanged(ModuleRootEvent event) {
+      if (myScheduled) return;
+      myScheduled = true;
+      DumbService.getInstance(myProject).runWhenSmart(new Runnable() {
+        @Override
+        public void run() {
+          myScheduled = false;
+          handleRootChange();
+        }
+      });
+    }
+
+    private void handleRootChange() {
       EditorFileSwapper[] swappers = Extensions.getExtensions(EditorFileSwapper.EP_NAME);
 
       for (EditorWindow eachWindow : getWindows()) {

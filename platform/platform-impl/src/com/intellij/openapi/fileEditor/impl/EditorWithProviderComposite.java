@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EditorWithProviderComposite extends EditorComposite {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite");
-  private final FileEditorProvider[] myProviders;
+  private FileEditorProvider[] myProviders;
 
   EditorWithProviderComposite(@NotNull VirtualFile file,
                               @NotNull FileEditor[] editors,
@@ -89,5 +89,10 @@ public class EditorWithProviderComposite extends EditorComposite {
     LOG.assertTrue(selectedProviderIndex != -1);
     final FileEditorProvider[] providers = getProviders();
     return new HistoryEntry(getFile(), providers, states, providers[selectedProviderIndex]);
+  }
+
+  public void addEditor(@NotNull FileEditor editor, FileEditorProvider provider) {
+    addEditor(editor);
+    myProviders = ArrayUtil.append(myProviders, provider);
   }
 }

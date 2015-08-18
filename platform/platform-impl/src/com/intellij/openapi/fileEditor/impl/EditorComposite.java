@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,10 +41,12 @@ import com.intellij.ui.PrevNextActionsDescriptor;
 import com.intellij.ui.SideBorder;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.tabs.UiDecorator;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -75,13 +77,13 @@ public abstract class EditorComposite implements Disposable {
   /**
    * Editors which are opened in the composite
    */
-  protected final FileEditor[] myEditors;
+  protected FileEditor[] myEditors;
   /**
    * This is initial timestamp of the file. It uses to implement
    * "close non modified editors first" feature.
    */
   private final long myInitialFileTimeStamp;
-  protected final TabbedPaneWrapper myTabbedPaneWrapper;
+  protected TabbedPaneWrapper myTabbedPaneWrapper;
   private final MyComponent myComponent;
   private final FocusWatcher myFocusWatcher;
   /**
@@ -112,69 +114,14 @@ public abstract class EditorComposite implements Disposable {
     Disposer.register(fileEditorManager.getProject(), this);
 
     if(editors.length > 1){
-      PrevNextActionsDescriptor descriptor = new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
-      final TabbedPaneWrapper.AsJBTabs wrapper = new TabbedPaneWrapper.AsJBTabs(fileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
-      wrapper.getTabs().getPresentation().setPaintBorder(0, 0, 0, 0).setTabSidePaintBorder(1).setGhostsAlwaysVisible(true).setUiDecorator(new UiDecorator() {
-        @Override
-        @NotNull
-        public UiDecoration getDecoration() {
-          return new UiDecoration(null, new Insets(0, 8, 0, 8));
-        }
-      });
-      wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
-
-      myTabbedPaneWrapper=wrapper;
-      myComponent=new MyComponent(wrapper.getComponent()){
-        @Override
-        public boolean requestFocusInWindow() {
-          return wrapper.getComponent().requestFocusInWindow();
-        }
-
-        @Override
-        public void requestFocus() {
-          wrapper.getComponent().requestFocus();
-        }
-
-        @Override
-        public boolean requestDefaultFocus() {
-          return wrapper.getComponent().requestDefaultFocus();
-        }
-      };
-      for (FileEditor editor : editors) {
-        wrapper.addTab(editor.getName(), createEditorComponent(editor));
-      }
-      myTabbedPaneWrapper.addChangeListener(new MyChangeListener());
+      myTabbedPaneWrapper = createTabbedPaneWrapper(editors);
+      JComponent component = myTabbedPaneWrapper.getComponent();
+      myComponent = new MyComponent(component, component);
     }
     else if(editors.length==1){
       myTabbedPaneWrapper=null;
-      myComponent = new MyComponent(createEditorComponent(editors[0])){
-        @Override
-        public void requestFocus() {
-          JComponent component = editors[0].getPreferredFocusedComponent();
-          if (component != null) {
-            component.requestFocus();
-          }
-        }
-
-        @Override
-        public boolean requestFocusInWindow() {
-          JComponent component = editors[0].getPreferredFocusedComponent();
-          if (component != null) {
-            return component.requestFocusInWindow();
-          }
-
-          return false;
-        }
-
-        @Override
-        public boolean requestDefaultFocus() {
-          JComponent component = editors[0].getPreferredFocusedComponent();
-          if (component != null) {
-            return component.requestDefaultFocus();
-          }
-          return false;
-        }
-      };
+      FileEditor editor = editors[0];
+      myComponent = new MyComponent(createEditorComponent(editor), editor.getPreferredFocusedComponent());
     }
     else{
       throw new IllegalArgumentException("editors array cannot be empty");
@@ -210,6 +157,30 @@ public abstract class EditorComposite implements Disposable {
         }
       }
     }, this);
+  }
+
+  @NotNull
+  private TabbedPaneWrapper.AsJBTabs createTabbedPaneWrapper(FileEditor[] editors) {
+    PrevNextActionsDescriptor descriptor = new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
+    final TabbedPaneWrapper.AsJBTabs wrapper = new TabbedPaneWrapper.AsJBTabs(myFileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
+    wrapper.getTabs().getPresentation().setPaintBorder(0, 0, 0, 0).setTabSidePaintBorder(1).setGhostsAlwaysVisible(true).setUiDecorator(new UiDecorator() {
+      @Override
+      @NotNull
+      public UiDecoration getDecoration() {
+        return new UiDecoration(null, new Insets(0, 8, 0, 8));
+      }
+    });
+    wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
+
+    boolean firstEditor = true;
+    for (FileEditor editor : editors) {
+      JComponent component = firstEditor && myComponent != null ? (JComponent)myComponent.getComponent(0) : createEditorComponent(editor);
+      wrapper.addTab(editor.getName(), component);
+      firstEditor = false;
+    }
+    wrapper.addChangeListener(new MyChangeListener());
+
+    return wrapper;
   }
 
   private JComponent createEditorComponent(final FileEditor editor) {
@@ -423,10 +394,36 @@ public abstract class EditorComposite implements Disposable {
     }
   }
 
-  private abstract class MyComponent extends JPanel implements DataProvider{
-    public MyComponent(JComponent realComponent){
+  private class MyComponent extends JPanel implements DataProvider{
+    @Nullable
+    private JComponent myFocusComponent;
+
+    public MyComponent(@NotNull JComponent realComponent, @Nullable JComponent focusComponent){
       super(new BorderLayout());
+      myFocusComponent = focusComponent;
       add(realComponent, BorderLayout.CENTER);
+    }
+
+    void setComponent(JComponent newComponent) {
+      add(newComponent, BorderLayout.CENTER);
+      myFocusComponent = newComponent;
+    }
+
+    @Override
+    public boolean requestFocusInWindow() {
+      return myFocusComponent == null ? false : myFocusComponent.requestFocusInWindow();
+    }
+
+    @Override
+    public void requestFocus() {
+      if (myFocusComponent != null) {
+        myFocusComponent.requestFocus();
+      }
+    }
+
+    @Override
+    public boolean requestDefaultFocus() {
+      return myFocusComponent == null ? false : myFocusComponent.requestDefaultFocus();
     }
 
     @Override
@@ -460,6 +457,22 @@ public abstract class EditorComposite implements Disposable {
       }
     }
     myFocusWatcher.deinstall(myFocusWatcher.getTopComponent());
+  }
+
+  @RequiredDispatchThread
+  void addEditor(@NotNull FileEditor editor) {
+    ApplicationManager.getApplication().assertIsDispatchThread();
+    myEditors = ArrayUtil.append(myEditors, editor);
+    if (myTabbedPaneWrapper == null) {
+      myTabbedPaneWrapper = createTabbedPaneWrapper(myEditors);
+      myComponent.setComponent(myTabbedPaneWrapper.getComponent());
+    }
+    else {
+      JComponent component = createEditorComponent(editor);
+      myTabbedPaneWrapper.addTab(editor.getName(), component);
+    }
+    myFocusWatcher.deinstall(myFocusWatcher.getTopComponent());
+    myFocusWatcher.install(myComponent);
   }
 
   private static class TopBottomPanel extends JPanel {
