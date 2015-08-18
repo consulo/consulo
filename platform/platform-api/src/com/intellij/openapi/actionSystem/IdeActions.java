@@ -300,4 +300,5 @@ public interface IdeActions {
 
   String ACTION_RECENT_FILES = "RecentFiles";
   String ACTION_SEARCH_EVERYWHERE = "SearchEverywhere";
+  String ACTION_SWITCHER = "Switcher";
 }

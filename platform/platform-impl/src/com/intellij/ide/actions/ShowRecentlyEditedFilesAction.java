@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +19,26 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
-public class ShowRecentlyEditedFilesAction extends BaseShowRecentFilesAction {
-  protected VirtualFile[] filesToShow(Project project) {
-    return IdeDocumentHistory.getInstance(project).getChangedFiles();
-  }
-
+public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
+  @RequiredDispatchThread
   @Override
-  protected String getPeerActionId() {
-    return IdeActions.ACTION_RECENT_FILES;
+  public void actionPerformed(@NotNull AnActionEvent e) {
+    final Project project = e.getProject();
+    if (project != null) {
+      Switcher.createAndShowSwitcher(e, "Recently Edited Files", true, IdeDocumentHistory.getInstance(project).getChangedFiles());
+    }
   }
 
-  protected String getTitle() {
-    return "Recently Edited Files";
+  @RequiredDispatchThread
+  @Override
+  public void update(@NotNull AnActionEvent e) {
+    e.getPresentation().setEnabled(e.getProject() != null);
   }
 }

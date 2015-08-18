@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,20 +22,24 @@ package com.intellij.ide.actions;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class ShowRecentFilesAction extends DumbAwareAction {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    if (project != null) {
-      FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.recent.files");
-      Switcher.createAndShowSwitcher(project, IdeBundle.message("title.popup.recent.files"), true);
-    }
+  public void actionPerformed(@NotNull AnActionEvent e) {
+    FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.recent.files");
+    Switcher.createAndShowSwitcher(e, IdeBundle.message("title.popup.recent.files"), true, null);
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void update(@NotNull AnActionEvent e) {
+    e.getPresentation().setEnabled(e.getProject() != null);
   }
 }

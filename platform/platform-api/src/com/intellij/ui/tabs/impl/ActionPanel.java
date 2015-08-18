@@ -61,7 +61,7 @@ public class ActionPanel extends NonOpaquePanel {
           }
         }
       };
-      
+
       myButtons.add(eachButton);
       InplaceButton component = eachButton.getComponent();
       inner.add(component);
@@ -80,7 +80,7 @@ public class ActionPanel extends NonOpaquePanel {
     }
 
     myActionsIsVisible = anyVisible;
-    
+
     return changed;
   }
 
