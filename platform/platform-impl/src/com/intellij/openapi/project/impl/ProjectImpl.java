@@ -49,6 +49,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
+import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.Function;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
@@ -67,7 +68,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.project.impl.ProjectImpl");
-  private static final String PLUGIN_SETTINGS_ERROR = "Plugin Settings Error";
   public static final String NAME_FILE = ".name";
 
   private ProjectManager myManager;
@@ -83,10 +83,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   private String myOldName;
 
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
+  public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
   protected ProjectImpl(@NotNull ProjectManager manager, @NotNull String filePath, boolean isOptimiseTestLoadSpeed, String projectName) {
     super(ApplicationManager.getApplication(), "Project "+(projectName == null ? filePath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
+
+    if (ApplicationManager.getApplication().isUnitTestMode()) {
+      putUserData(CREATION_TRACE, DebugUtil.currentStackTrace());
+    }
 
     getPicoContainer().registerComponentInstance(Project.class, this);
 

@@ -157,7 +157,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
         public void syncDocument(@NotNull Document document, @NotNull PsiTreeChangeEventImpl event) {
           insertString(document, event.getOffset(), event.getChild().getText());
         }
-      });
+    });
     }
   }
 
@@ -377,7 +377,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
                newStartInReplace > 0 &&
                chars.charAt(start - 1) == chars.charAt(end - 1) &&
                chars.charAt(end - 1) != '\n'
-                ) {
+          ) {
           start--;
           end--;
           newStartInReplace--;

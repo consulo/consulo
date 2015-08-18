@@ -90,7 +90,6 @@ public class DefaultStubBuilder implements StubBuilder {
   }
 
   @NotNull
-  @RequiredReadAction
   protected StubElement buildStubTreeFor(@NotNull ASTNode root, @NotNull StubElement parentStub) {
     Stack<StubElement> parentStubs = new Stack<StubElement>();
     Stack<ASTNode> parentNodes = new Stack<ASTNode>();

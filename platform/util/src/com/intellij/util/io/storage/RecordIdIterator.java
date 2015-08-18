@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.indexing;
+package com.intellij.util.io.storage;
 
-import com.intellij.util.concurrency.Semaphore;
+import org.jetbrains.annotations.TestOnly;
 
-/**
- * @author Eugene Zhuravlev
- *         Date: 6/26/13
- */
-final class UpdateSemaphore extends Semaphore {
-  private volatile boolean myIsCanceled = false;
+public interface RecordIdIterator {
+  boolean hasNextId();
 
-  UpdateSemaphore() {
-  }
+  int nextId();
 
-  boolean isUpdateCanceled() {
-    return myIsCanceled;
-  }
-
-  void reportUpdateCanceled() {
-    myIsCanceled = true;
-  }
+  @TestOnly
+  boolean validId();
 }

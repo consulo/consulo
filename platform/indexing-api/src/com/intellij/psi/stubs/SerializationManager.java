@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,9 @@ package com.intellij.psi.stubs;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IStubFileElementType;
+import com.intellij.psi.tree.StubFileElementType;
 import com.intellij.util.Processor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +51,12 @@ public abstract class SerializationManager {
       }
       final IElementType[] stubElementTypes = IElementType.enumerate(new Processor<IElementType>() {
         @Override
-        public boolean process(final IElementType type) {
+        public boolean process(@NotNull final IElementType type) {
           return type instanceof StubSerializer;
         }
       });
       for (IElementType type : stubElementTypes) {
-        if (type instanceof IStubFileElementType &&
-            ((IStubFileElementType)type).getExternalId().equals(PsiFileStubImpl.TYPE.getExternalId())) {
+        if (type instanceof StubFileElementType && ((StubFileElementType)type).isDefault()) {
           continue;
         }
         StubSerializer stubSerializer = (StubSerializer)type;
@@ -69,4 +69,5 @@ public abstract class SerializationManager {
     }
   }
 
+  public abstract String internString(String string);
 }

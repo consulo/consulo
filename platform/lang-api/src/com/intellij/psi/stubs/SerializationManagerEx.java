@@ -40,5 +40,5 @@ public abstract class SerializationManagerEx extends SerializationManager {
 
   public abstract void flushNameStorage();
 
-  public abstract String internString(String string);
+  public abstract void reinitializeNameStorage();
 }

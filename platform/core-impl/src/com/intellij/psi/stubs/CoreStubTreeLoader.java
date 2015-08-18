@@ -69,11 +69,6 @@ public class CoreStubTreeLoader extends StubTreeLoader {
   }
 
   @Override
-  public long getStubTreeTimestamp(VirtualFile vFile) {
-    return 0;
-  }
-
-  @Override
   public boolean canHaveStub(VirtualFile file) {
     final FileType fileType = file.getFileType();
     if (fileType instanceof LanguageFileType) {
@@ -88,10 +83,5 @@ public class CoreStubTreeLoader extends StubTreeLoader {
       return builder != null && builder.acceptsFile(file);
     }
     return false;
-  }
-
-  @Override
-  public String getIndexingStampDebugInfo(VirtualFile file) {
-    return "";
   }
 }

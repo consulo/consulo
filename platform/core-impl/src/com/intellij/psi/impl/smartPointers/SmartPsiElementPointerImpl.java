@@ -20,7 +20,6 @@ import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -174,17 +173,12 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     }
     ProperTextRange proper = ProperTextRange.create(elementRange);
 
-    return new SelfElementInfo(project, proper, element.getClass(), containingFile, LanguageUtil.getRootLanguage(element));
+    return new SelfElementInfo(project, proper, element.getClass(), containingFile, LanguageUtil.getRootLanguage(element), false);
   }
 
   @Override
-  public void unfastenBelt(int offset) {
-    myElementInfo.unfastenBelt(offset);
-  }
-
-  @Override
-  public void fastenBelt(int offset, @Nullable RangeMarker[] cachedRangeMarkers) {
-    myElementInfo.fastenBelt(offset, cachedRangeMarkers);
+  public void fastenBelt() {
+    myElementInfo.fastenBelt();
   }
 
   @NotNull

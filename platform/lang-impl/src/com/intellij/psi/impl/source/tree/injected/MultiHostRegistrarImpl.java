@@ -39,6 +39,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.DocumentCommitProcessor;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;
+import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.impl.source.text.BlockSupportImpl;
@@ -194,7 +195,10 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     RangeMarker relevantMarker = myHostDocument.createRangeMarker(relevantRangeInHost);
     relevantMarker.setGreedyToLeft(true);
     relevantMarker.setGreedyToRight(true);
-    shreds.add(new ShredImpl(host, myHostPsiFile, relevantMarker, prefix, suffix, new ProperTextRange(startOffset, endOffset)));
+    SmartPointerManagerImpl manager = (SmartPointerManagerImpl)SmartPointerManager.getInstance(myProject);
+    shreds.add(new ShredImpl(manager.createSmartPsiFileRangePointer(myHostPsiFile, relevantRangeInHost, true),
+                             manager.createSmartPsiElementPointer(host, myHostPsiFile),
+                             prefix, suffix, new ProperTextRange(startOffset, endOffset)));
     return this;
   }
 

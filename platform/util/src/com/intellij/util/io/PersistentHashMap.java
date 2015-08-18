@@ -20,8 +20,10 @@ import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.ThreadLocalCachedValue;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.LimitedPool;
 import com.intellij.util.containers.SLRUCache;
 import org.jetbrains.annotations.NonNls;
@@ -52,6 +54,7 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
   // Also for certain Value types it is possible to avoid random reads at all: e.g. in case Value is nonnegative integer the value can be stored
   // directly in storage used for offset and in case of btreeenumerator directly in btree leaf.
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.io.PersistentHashMap");
+  private static final boolean myDoTrace = SystemProperties.getBooleanProperty("idea.trace.persistent.map", false);
   private static final int DEAD_KEY_NUMBER_MASK = 0xFFFFFFFF;
 
   private final File myStorageFile;
@@ -160,15 +163,16 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
     });
 
     myEnumerator.setMarkCleanCallback(
-            new Flushable() {
-              @Override
-              public void flush() throws IOException {
-                myEnumerator.putMetaData(myLiveAndGarbageKeysCounter);
-                myEnumerator.putMetaData2(myLargeIndexWatermarkId | ((long)myReadCompactionGarbageSize << 32));
-              }
-            }
+      new Flushable() {
+        @Override
+        public void flush() throws IOException {
+          myEnumerator.putMetaData(myLiveAndGarbageKeysCounter);
+          myEnumerator.putMetaData2(myLargeIndexWatermarkId | ((long)myReadCompactionGarbageSize << 32));
+        }
+      }
     );
 
+    if(myDoTrace) LOG.info("Opened " + file);
     try {
       myValueExternalizer = valueExternalizer;
       myValueStorage = PersistentHashMapValueStorage.create(getDataFile(file).getPath());
@@ -263,6 +267,7 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
   }
 
   public void dropMemoryCaches() {
+    if(myDoTrace) LOG.info("Drop memory caches " + myStorageFile);
     synchronized (myEnumerator) {
       myEnumerator.lockStorage();
       try {
@@ -284,7 +289,7 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
 
   @TestOnly // public for tests
   public boolean makesSenseToCompact() {
-    final long fileSize = getDataFile(myEnumerator.myFile).length();
+    final long fileSize = myValueStorage.getSize();
     final int megabyte = 1024 * 1024;
 
     if (fileSize > 5 * megabyte) { // file is longer than 5MB and (more than 50% of keys is garbage or approximate benefit larger than 100M)
@@ -388,6 +393,14 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
     void append(DataOutput out) throws IOException;
   }
 
+  /**
+   * Appends value chunk from specified appender to key's value.
+   * Important use note: value externalizer used by this map should process all bytes from DataInput during deserialization and make sure
+   * that deserialized value is consistent with value chunks appended.
+   * E.g. Value can be Set of String and individual Strings can be appended with this method for particular key, when {@link #get()} will
+   * be eventually called for the key, deserializer will read all bytes retrieving Strings and collecting them into Set
+   * @throws IOException
+   */
   public final void appendData(Key key, @NotNull ValueDataAppender appender) throws IOException {
     synchronized (myEnumerator) {
       doAppendData(key, appender);
@@ -594,6 +607,7 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
 
   @Override
   public final void force() {
+    if(myDoTrace) LOG.info("Forcing " + myStorageFile);
     synchronized (myEnumerator) {
       doForce();
     }
@@ -621,6 +635,7 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
 
   @Override
   public final void close() throws IOException {
+    if(myDoTrace) LOG.info("Closed " + myStorageFile);
     synchronized (myEnumerator) {
       doClose();
     }
@@ -663,15 +678,22 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
   // made public for tests
   public void compact() throws IOException {
     synchronized (myEnumerator) {
+      force();
       LOG.info("Compacting "+myEnumerator.myFile.getPath());
       LOG.info("Live keys:" + ((int)(myLiveAndGarbageKeysCounter  / LIVE_KEY_MASK)) +
                ", dead keys:" + ((int)(myLiveAndGarbageKeysCounter & DEAD_KEY_NUMBER_MASK)) +
                ", read compaction size:" + myReadCompactionGarbageSize);
 
       final long now = System.currentTimeMillis();
+
+      final File oldDataFile = getDataFile(myEnumerator.myFile);
+      final String oldDataFileBaseName = oldDataFile.getName();
+      final File[] oldFiles = getFilesInDirectoryWithNameStartingWith(oldDataFile, oldDataFileBaseName);
+
       final String newPath = getDataFile(myEnumerator.myFile).getPath() + ".new";
       final PersistentHashMapValueStorage newStorage = PersistentHashMapValueStorage.create(newPath);
       myValueStorage.switchToCompactionMode();
+      myEnumerator.markDirty(true);
       long sizeBefore = myValueStorage.getSize();
 
       myLiveAndGarbageKeysCounter = 0;
@@ -701,15 +723,45 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
       }
 
       myValueStorage.dispose();
+
+      if (oldFiles != null) {
+        for(File f:oldFiles) {
+          assert FileUtil.deleteWithRenaming(f);
+        }
+      }
+
       final long newSize = newStorage.getSize();
 
-      FileUtil.rename(new File(newPath), getDataFile(myEnumerator.myFile));
+      File newDataFile = new File(newPath);
+      final String newBaseName = newDataFile.getName();
+      final File[] newFiles = getFilesInDirectoryWithNameStartingWith(newDataFile, newBaseName);
 
-      myValueStorage = PersistentHashMapValueStorage.create(getDataFile(myEnumerator.myFile).getPath());
+      if (newFiles != null) {
+        File parentFile = newDataFile.getParentFile();
+
+        // newFiles should get the same names as oldDataFiles
+        for (File f : newFiles) {
+          String nameAfterRename = StringUtil.replace(f.getName(), newBaseName, oldDataFileBaseName);
+          FileUtil.rename(f, new File(parentFile, nameAfterRename));
+        }
+      }
+
+      myValueStorage = PersistentHashMapValueStorage.create(oldDataFile.getPath());
       LOG.info("Compacted " + myEnumerator.myFile.getPath() + ":" + sizeBefore + " bytes into " + newSize + " bytes in " + (System.currentTimeMillis() - now) + "ms.");
       myEnumerator.putMetaData(myLiveAndGarbageKeysCounter);
       myEnumerator.putMetaData2( myLargeIndexWatermarkId );
+      if (myDoTrace) LOG.assertTrue(myEnumerator.isDirty());
     }
+  }
+
+  private static File[] getFilesInDirectoryWithNameStartingWith(File fileFromDirectory, final String baseFileName) {
+    File parentFile = fileFromDirectory.getParentFile();
+    return parentFile != null ?parentFile.listFiles(new FileFilter() {
+      @Override
+      public boolean accept(final File pathname) {
+        return pathname.getName().startsWith(baseFileName);
+      }
+    }) : null;
   }
 
   private void newCompact(PersistentHashMapValueStorage newStorage) throws IOException {

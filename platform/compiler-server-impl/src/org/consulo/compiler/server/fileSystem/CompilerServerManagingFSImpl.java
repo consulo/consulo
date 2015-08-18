@@ -114,11 +114,6 @@ public class CompilerServerManagingFSImpl extends PersistentFS {
   }
 
   @Override
-  public boolean isSpecialFile(@NotNull VirtualFile file) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public VirtualFile createChildDirectory(@Nullable Object requestor, @NotNull VirtualFile parent, @NotNull String dir) throws IOException {
     throw new UnsupportedOperationException();
   }
@@ -245,6 +240,16 @@ public class CompilerServerManagingFSImpl extends PersistentFS {
 
   @Override
   public int getCheapFileSystemModificationCount() {
+    return 0;
+  }
+
+  @Override
+  public int getModificationCount() {
+    return 0;
+  }
+
+  @Override
+  public int getStructureModificationCount() {
     return 0;
   }
 

@@ -19,8 +19,8 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.AbstractStringEnumerator;
+import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,18 +76,12 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
   public void repairNameStorage() {
     if (myNameStorageCrashed.getAndSet(false)) {
       try {
+        LOG.info("Name storage is repaired");
         if (myNameStorage != null) {
           myNameStorage.close();
         }
 
-        final File[] files = myFile.getParentFile().listFiles();
-        if (files != null) {
-          for (File file : files) {
-            if (file.getName().startsWith(myFile.getName())) {
-              FileUtil.delete(file);
-            }
-          }
-        }
+        IOUtil.deleteAllFilesStartingWith(myFile);
         myNameStorage = new PersistentStringEnumerator(myFile, true);
         myStubSerializationHelper = new StubSerializationHelper(myNameStorage);
         for (ObjectStubSerializer serializer : myAllSerializers) {
@@ -103,12 +97,20 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
 
   @Override
   public void flushNameStorage() {
-    myNameStorage.force();
+    if (myNameStorage.isDirty()) {
+      myNameStorage.force();
+    }
   }
 
   @Override
   public String internString(String string) {
     return myStubSerializationHelper.intern(string);
+  }
+
+  @Override
+  public void reinitializeNameStorage() {
+    nameStorageCrashed();
+    repairNameStorage();
   }
 
   protected void nameStorageCrashed() {

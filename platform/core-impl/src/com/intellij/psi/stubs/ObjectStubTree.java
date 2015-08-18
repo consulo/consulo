@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,15 +71,14 @@ public class ObjectStubTree<T extends Stub> {
     return sink.getResult();
   }
 
-  protected void enumerateStubs(@NotNull Stub root, @NotNull List<Stub> result) {
-    enumerateStubs(root, result, 0);
-  }
-
-  protected static void enumerateStubs(@NotNull Stub root, @NotNull List<Stub> result, int idOffset) {
-    ((ObjectStubBase)root).id = idOffset + result.size();
+  private static void enumerateStubs(@NotNull Stub root, @NotNull List<Stub> result) {
+    ((ObjectStubBase)root).id = result.size();
     result.add(root);
-    for (Stub child : root.getChildrenStubs()) {
-      enumerateStubs(child, result, idOffset);
+    List<? extends Stub> childrenStubs = root.getChildrenStubs();
+    //noinspection ForLoopReplaceableByForEach
+    for (int i = 0; i < childrenStubs.size(); i++) {
+      Stub child = childrenStubs.get(i);
+      enumerateStubs(child, result);
     }
   }
 

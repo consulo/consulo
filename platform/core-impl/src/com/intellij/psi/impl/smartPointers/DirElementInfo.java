@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 /**
 * User: cdr
 */
-class DirElementInfo extends FileElementInfo {
+public class DirElementInfo extends FileElementInfo {
   public DirElementInfo(@NotNull PsiDirectory directory) {
     super(directory.getProject(), directory.getVirtualFile());
   }

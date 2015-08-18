@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
  */
 package com.intellij.openapi.vfs.newvfs.persistent;
 
+import com.intellij.concurrency.JobSchedulerImpl;
 import com.intellij.ide.highlighter.ArchiveFileType;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.*;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.openapi.vfs.newvfs.*;
@@ -43,13 +45,10 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import org.mustbe.consulo.RequiredWriteAction;
 
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author max
@@ -59,21 +58,22 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
   private final MessageBus myEventBus;
 
-  private final ReadWriteLock myRootsLock = new ReentrantReadWriteLock();
-  private final Map<String, VirtualFileSystemEntry> myRoots = ContainerUtil.newTroveMap(FileUtil.PATH_HASHING_STRATEGY);
-  private final TIntObjectHashMap<VirtualFileSystemEntry> myRootsById = new TIntObjectHashMap<VirtualFileSystemEntry>();
+  private final Map<String, VirtualFileSystemEntry> myRoots = ContainerUtil.newConcurrentMap(10, 0.4f, JobSchedulerImpl.CORES_COUNT, FileUtil.PATH_HASHING_STRATEGY);
+  private final ConcurrentIntObjectMap<VirtualFileSystemEntry> myRootsById = ContainerUtil.createConcurrentIntObjectMap(10, 0.4f, JobSchedulerImpl.CORES_COUNT);
 
+  // FS roots must be in this map too. findFileById() relies on this.
   private final ConcurrentIntObjectMap<VirtualFileSystemEntry> myIdToDirCache = ContainerUtil.createConcurrentIntObjectMap();
   private final Object myInputLock = new Object();
 
   private final AtomicBoolean myShutDown = new AtomicBoolean(false);
-  @SuppressWarnings("FieldCanBeLocal")
+  @SuppressWarnings({"FieldCanBeLocal", "unused"})
   private final LowMemoryWatcher myWatcher = LowMemoryWatcher.register(new Runnable() {
     @Override
     public void run() {
       clearIdCache();
     }
   });
+  private volatile int myStructureModificationCount;
 
   public PersistentFSImpl(@NotNull MessageBus bus) {
     myEventBus = bus;
@@ -198,7 +198,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     return nameIds.toArray(new FSRecords.NameId[nameIds.size()]);
   }
 
-  public static void setChildrenCached(int id) {
+  private static void setChildrenCached(int id) {
     int flags = FSRecords.getFlags(id);
     FSRecords.setFlags(id, flags | CHILDREN_CACHED_FLAG, true);
   }
@@ -262,8 +262,17 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   }
 
   @Override
-  public int getCheapFileSystemModificationCount() {
+  public int getModificationCount() {
     return FSRecords.getLocalModCount();
+  }
+
+  @Override
+  public int getStructureModificationCount() {
+    return myStructureModificationCount;
+  }
+
+  public void incStructuralModificationCount() {
+    myStructureModificationCount++;
   }
 
   @Override
@@ -278,7 +287,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
                                                  @NotNull FileAttributes attributes) {
     String name = file.getName();
     if (!name.isEmpty()) {
-      if (namesEqual(fs, name, FSRecords.getName(id))) return false; // TODO: Handle root attributes change.
+      if (namesEqual(fs, name, FSRecords.getNameSequence(id))) return false; // TODO: Handle root attributes change.
     }
     else {
       if (areChildrenLoaded(id)) return false; // TODO: hack
@@ -301,13 +310,8 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     return isDirectory(getFileAttributes(getFileId(file)));
   }
 
-  private static int getParent(final int id) {
-    assert id > 0;
-    return FSRecords.getParent(id);
-  }
-
-  private static boolean namesEqual(@NotNull VirtualFileSystem fs, @NotNull String n1, String n2) {
-    return fs.isCaseSensitive() ? n1.equals(n2) : n1.equalsIgnoreCase(n2);
+  private static boolean namesEqual(@NotNull VirtualFileSystem fs, @NotNull CharSequence n1, CharSequence n2) {
+    return Comparing.equal(n1, n2, fs.isCaseSensitive());
   }
 
   @Override
@@ -346,11 +350,6 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   }
 
   @Override
-  public boolean isSpecialFile(@NotNull VirtualFile file) {
-    return isSpecialFile(getFileAttributes(getFileId(file)));
-  }
-
-  @Override
   public boolean isWritable(@NotNull VirtualFile file) {
     return (getFileAttributes(getFileId(file)) & IS_READ_ONLY) == 0;
   }
@@ -386,7 +385,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     }
 
     for (final int childId : children) {
-      if (namesEqual(fs, childName, FSRecords.getName(childId))) return childId;
+      if (namesEqual(fs, childName, FSRecords.getNameSequence(childId))) return childId;
     }
 
     final VirtualFile fake = new FakeVirtualFile(parent, childName);
@@ -507,7 +506,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
         FSRecords.setLength(fileId, content.length);
       }
 
-      ApplicationEx application = (ApplicationEx)ApplicationManager.getApplication();
+      Application application = ApplicationManager.getApplication();
       // we should cache every local files content
       // because the local history feature is currently depends on this cache,
       // perforce offline mode as well
@@ -624,6 +623,8 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
         if (closed) return;
         super.close();
 
+        ApplicationManager.getApplication().assertWriteAccessAllowed();
+
         VFileContentChangeEvent event = new VFileContentChangeEvent(requestor, file, file.getModificationStamp(), modStamp, false);
         List<VFileContentChangeEvent> events = Collections.singletonList(event);
         BulkFileListener publisher = myEventBus.syncPublisher(VirtualFileManager.VFS_CHANGES);
@@ -675,7 +676,6 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     processEvent(new VFileMoveEvent(requestor, file, newParent));
   }
 
-  @RequiredWriteAction
   private void processEvent(@NotNull VFileEvent event) {
     processEvents(Collections.singletonList(event));
   }
@@ -744,7 +744,6 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     return filtered;
   }
 
-  @RequiredWriteAction
   @Override
   public void processEvents(@NotNull List<VFileEvent> events) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
@@ -792,7 +791,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     publisher.after(validated);
   }
 
-  private void applyChildrenChangeEvents(VirtualFile parent, List<VFileEvent> events) {
+  private void applyChildrenChangeEvents(@NotNull VirtualFile parent, @NotNull List<VFileEvent> events) {
     final NewVirtualFileSystem delegate = getDelegate(parent);
     TIntArrayList childrenIdsUpdated = new TIntArrayList();
     List<VirtualFile> childrenToBeUpdated = new SmartList<VirtualFile>();
@@ -864,14 +863,8 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
     String rootUrl = normalizeRootUrl(basePath, fs);
 
-    myRootsLock.readLock().lock();
-    try {
-      VirtualFileSystemEntry root = myRoots.get(rootUrl);
-      if (root != null) return root;
-    }
-    finally {
-      myRootsLock.readLock().unlock();
-    }
+    VirtualFileSystemEntry root = myRoots.get(rootUrl);
+    if (root != null) return root;
 
     final VirtualFileSystemEntry newRoot;
     int rootId = FSRecords.findRootRecord(rootUrl);
@@ -884,10 +877,10 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
       if (parentFile == null) return null;
       FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(parentFile.getName());
       if (!(type instanceof ArchiveFileType)) return null;
-      newRoot = new ArchiveRoot(fs, rootId, segment, directoryData, parentFile);
+      newRoot = new FsRoot(rootId, segment, directoryData, fs, parentFile.getName(), parentFile.getPath() + "!");
     }
     else {
-      newRoot = new FsRoot(fs, rootId, segment, directoryData, basePath);
+      newRoot = new FsRoot(rootId, segment, directoryData, fs, basePath, StringUtil.trimEnd(basePath, "/"));
     }
 
     FileAttributes attributes = fs.getAttributes(new StubVirtualFile() {
@@ -907,21 +900,29 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
       return null;
     }
 
-    boolean mark = false;
-
-    myRootsLock.writeLock().lock();
-    try {
-      VirtualFileSystemEntry root = myRoots.get(rootUrl);
+    boolean mark;
+    synchronized (myRoots) {
+      root = myRoots.get(rootUrl);
       if (root != null) return root;
 
-      VfsData.initFile(rootId, segment, -1, directoryData);
+      try {
+        VfsData.initFile(rootId, segment, -1, directoryData);
+      }
+      catch (AssertionError e) {
+        for (Map.Entry<String, VirtualFileSystemEntry> entry : myRoots.entrySet()) {
+          final VirtualFileSystemEntry existingRoot = entry.getValue();
+          if (Math.abs(existingRoot.getId()) == rootId) {
+            throw new RuntimeException("Duplicate FS roots: " + rootUrl + " and " + entry.getKey() + ", id=" + rootId + ", valid=" + existingRoot.isValid(), e);
+          }
+        }
+        throw new RuntimeException("No root duplication", e);
+      }
+      incStructuralModificationCount();
       mark = writeAttributesToRecord(rootId, 0, newRoot, fs, attributes);
 
       myRoots.put(rootUrl, newRoot);
       myRootsById.put(rootId, newRoot);
-    }
-    finally {
-      myRootsLock.writeLock().unlock();
+      myIdToDirCache.put(rootId, newRoot);
     }
 
     if (!mark && attributes.lastModified != FSRecords.getTimestamp(rootId)) {
@@ -936,88 +937,66 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   @NotNull
   private static String normalizeRootUrl(@NotNull String basePath, @NotNull NewVirtualFileSystem fs) {
     // need to protect against relative path of the form "/x/../y"
-    return UriUtil.trimTrailingSlashes(
-            fs.getProtocol() + URLUtil.SCHEME_SEPARATOR + VfsImplUtil.normalize(fs, FileUtil.toCanonicalPath(basePath)));
+    String normalized = VfsImplUtil.normalize(fs, FileUtil.toCanonicalPath(basePath));
+    String protocol = fs.getProtocol();
+    StringBuilder result = new StringBuilder(protocol.length() + URLUtil.SCHEME_SEPARATOR.length() + normalized.length());
+    result.append(protocol).append(URLUtil.SCHEME_SEPARATOR).append(normalized);
+    return StringUtil.endsWithChar(result, '/') ? UriUtil.trimTrailingSlashes(result.toString()) : result.toString();
   }
 
   @Override
   public void clearIdCache() {
-    myIdToDirCache.clear();
+    // remove all except myRootsById contents
+    for (Iterator<ConcurrentIntObjectMap.IntEntry<VirtualFileSystemEntry>> iterator = myIdToDirCache.entries().iterator(); iterator.hasNext(); ) {
+      ConcurrentIntObjectMap.IntEntry<VirtualFileSystemEntry> entry = iterator.next();
+      int id = entry.getKey();
+      if (!myRootsById.containsKey(id)) {
+        iterator.remove();
+      }
+    }
   }
-
-  private static final int DEPTH_LIMIT = 75;
 
   @Override
   @Nullable
   public NewVirtualFile findFileById(final int id) {
-    return findFileById(id, false, null, 0);
+    return findFileById(id, false);
   }
 
   @Override
   public NewVirtualFile findFileByIdIfCached(final int id) {
-    return findFileById(id, true, null, 0);
+    return findFileById(id, true);
   }
 
   @Nullable
-  private VirtualFileSystemEntry findFileById(int id, boolean cachedOnly, TIntArrayList visited, int mask) {
+  private VirtualFileSystemEntry findFileById(int id, boolean cachedOnly) {
     VirtualFileSystemEntry cached = myIdToDirCache.get(id);
     if (cached != null) return cached;
 
-    if (visited != null && (visited.size() >= DEPTH_LIMIT || (mask & id) == id && visited.contains(id))) {
-      @NonNls String sb = "Dead loop detected in persistent FS (id=" + id + " cached-only=" + cachedOnly + "):";
-      for (int i = 0; i < visited.size(); i++) {
-        int _id = visited.get(i);
-        sb += "\n  " + _id + " '" + getName(_id) + "' " +
-              String.format("%02x", getFileAttributes(_id)) + ' ' + myIdToDirCache.containsKey(_id);
-      }
-      LOG.error(sb);
-      return null;
-    }
+    TIntArrayList parents = FSRecords.getParents(id, myIdToDirCache);
+    // the last element of the parents is either a root or already cached element
+    int parentId = parents.get(parents.size() - 1);
+    VirtualFileSystemEntry result = myIdToDirCache.get(parentId);
 
-    int parentId = getParent(id);
-    if (parentId >= id) {
-      if (visited == null) visited = new TIntArrayList(DEPTH_LIMIT);
-    }
-    if (visited != null)  visited.add(id);
-
-    VirtualFileSystemEntry result;
-    if (parentId == 0) {
-      myRootsLock.readLock().lock();
-      try {
-        result = myRootsById.get(id);
+    for (int i=parents.size() - 2; i>=0; i--) {
+      if (!(result instanceof VirtualDirectoryImpl)) {
+        return null;
       }
-      finally {
-        myRootsLock.readLock().unlock();
-      }
-    }
-    else {
-      VirtualFileSystemEntry parentFile = findFileById(parentId, cachedOnly, visited, mask | id);
-      if (parentFile instanceof VirtualDirectoryImpl) {
-        result = ((VirtualDirectoryImpl)parentFile).findChildById(id, cachedOnly);
-      }
-      else {
-        result = null;
+      parentId = parents.get(i);
+      result = ((VirtualDirectoryImpl)result).findChildById(parentId, cachedOnly);
+      if (result instanceof VirtualDirectoryImpl) {
+        VirtualFileSystemEntry old = myIdToDirCache.putIfAbsent(parentId, result);
+        if (old != null) result = old;
       }
     }
 
-    if (result != null && result.isDirectory()) {
-      VirtualFileSystemEntry old = myIdToDirCache.put(id, result);
-      if (old != null) result = old;
-    }
     return result;
   }
 
   @Override
   @NotNull
   public VirtualFile[] getRoots() {
-    myRootsLock.readLock().lock();
-    try {
-      Collection<VirtualFileSystemEntry> roots = myRoots.values();
-      return VfsUtilCore.toVirtualFileArray(roots);
-    }
-    finally {
-      myRootsLock.readLock().unlock();
-    }
+    Collection<VirtualFileSystemEntry> roots = myRoots.values();
+    return ArrayUtil.stripTrailingNulls(VfsUtilCore.toVirtualFileArray(roots));
   }
 
   @Override
@@ -1025,16 +1004,10 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   public VirtualFile[] getRoots(@NotNull final NewVirtualFileSystem fs) {
     final List<VirtualFile> roots = new ArrayList<VirtualFile>();
 
-    myRootsLock.readLock().lock();
-    try {
-      for (NewVirtualFile root : myRoots.values()) {
-        if (root.getFileSystem() == fs) {
-          roots.add(root);
-        }
+    for (NewVirtualFile root : myRoots.values()) {
+      if (root.getFileSystem() == fs) {
+        roots.add(root);
       }
-    }
-    finally {
-      myRootsLock.readLock().unlock();
     }
 
     return VfsUtilCore.toVirtualFileArray(roots);
@@ -1045,18 +1018,11 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   public VirtualFile[] getLocalRoots() {
     List<VirtualFile> roots = ContainerUtil.newSmartList();
 
-    myRootsLock.readLock().lock();
-    try {
-      for (NewVirtualFile root : myRoots.values()) {
-        if (root.isInLocalFileSystem() && !(root.getFileSystem() instanceof TempFileSystem)) {
-          roots.add(root);
-        }
+    for (NewVirtualFile root : myRoots.values()) {
+      if (root.isInLocalFileSystem() && !(root.getFileSystem() instanceof TempFileSystem)) {
+        roots.add(root);
       }
     }
-    finally {
-      myRootsLock.readLock().unlock();
-    }
-
     return VfsUtilCore.toVirtualFileArray(roots);
   }
 
@@ -1157,14 +1123,11 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
     if (parentId == 0) {
       String rootUrl = normalizeRootUrl(file.getPath(), (NewVirtualFileSystem)file.getFileSystem());
-      myRootsLock.writeLock().lock();
-      try {
+      synchronized (myRoots) {
         myRoots.remove(rootUrl);
         myRootsById.remove(id);
+        myIdToDirCache.remove(id);
         FSRecords.deleteRootRecord(id);
-      }
-      finally {
-        myRootsLock.writeLock().unlock();
       }
     }
     else {
@@ -1177,6 +1140,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     FSRecords.deleteRecordRecursively(id);
 
     invalidateSubtree(file);
+    incStructuralModificationCount();
   }
 
   private static void invalidateSubtree(@NotNull VirtualFile file) {
@@ -1290,60 +1254,14 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   }
 
 
-  private abstract static class AbstractRoot extends VirtualDirectoryImpl {
-    public AbstractRoot(int id, VfsData.Segment segment, VfsData.DirectoryData data, NewVirtualFileSystem fs) {
-      super(id, segment, data, null, fs);
-    }
-
-    @NotNull
-    @Override
-    public abstract CharSequence getNameSequence();
-
-    @Override
-    protected abstract char[] appendPathOnFileSystem(int accumulatedPathLength, int[] positionRef);
-
-    @Override
-    public void setNewName(@NotNull String newName) {
-      throw new IncorrectOperationException();
-    }
-
-    @Override
-    public final void setParent(@NotNull VirtualFile newParent) {
-      throw new IncorrectOperationException();
-    }
-  }
-
-  private static class ArchiveRoot extends AbstractRoot {
-    private final VirtualFile myParentLocalFile;
-    private final String myParentPath;
-
-    private ArchiveRoot(@NotNull NewVirtualFileSystem fs, int id, VfsData.Segment segment, VfsData.DirectoryData data, VirtualFile parentLocalFile) {
-      super(id, segment, data, fs);
-      myParentLocalFile = parentLocalFile;
-      myParentPath = myParentLocalFile.getPath();
-    }
-
-    @NotNull
-    @Override
-    public CharSequence getNameSequence() {
-      return myParentLocalFile.getName();
-    }
-
-    @Override
-    protected char[] appendPathOnFileSystem(int accumulatedPathLength, int[] positionRef) {
-      char[] chars = new char[myParentPath.length() + ArchiveFileSystem.ARCHIVE_SEPARATOR.length() + accumulatedPathLength];
-      positionRef[0] = copyString(chars, positionRef[0], myParentPath);
-      positionRef[0] = copyString(chars, positionRef[0], ArchiveFileSystem.ARCHIVE_SEPARATOR);
-      return chars;
-    }
-  }
-
-  private static class FsRoot extends AbstractRoot {
+  private static class FsRoot extends VirtualDirectoryImpl {
     private final String myName;
+    private final String myPathBeforeSlash;
 
-    private FsRoot(@NotNull NewVirtualFileSystem fs, int id, VfsData.Segment segment, VfsData.DirectoryData data, @NotNull String basePath) {
-      super(id, segment, data, fs);
-      myName = FileUtil.toSystemIndependentName(basePath);
+    private FsRoot(int id, VfsData.Segment segment, VfsData.DirectoryData data, NewVirtualFileSystem fs, String name, String pathBeforeSlash) {
+      super(id, segment, data, null, fs);
+      myName = name;
+      myPathBeforeSlash = pathBeforeSlash;
     }
 
     @NotNull
@@ -1354,23 +1272,32 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
     @Override
     protected char[] appendPathOnFileSystem(int pathLength, int[] position) {
-      String name = getName();
-      int nameLength = name.length();
-      int rootPathLength = pathLength + nameLength;
-
-      // otherwise we called this as a part of longer file path calculation and slash will be added anyway
-      boolean appendSlash = SystemInfo.isWindows && nameLength == 2 && name.charAt(1) == ':' && pathLength == 0;
-
-      if (appendSlash) ++rootPathLength;
-      char[] chars = new char[rootPathLength];
-
-      position[0] = copyString(chars, position[0], name);
-
-      if (appendSlash) {
-        chars[position[0]++] = '/';
-      }
-
+      char[] chars = new char[pathLength + myPathBeforeSlash.length()];
+      position[0] = copyString(chars, position[0], myPathBeforeSlash);
       return chars;
     }
+
+    @Override
+    public void setNewName(@NotNull String newName) {
+      throw new IncorrectOperationException();
+    }
+
+    @Override
+    public final void setParent(@NotNull VirtualFile newParent) {
+      throw new IncorrectOperationException();
+    }
+
+    @NotNull
+    @Override
+    public String getPath() {
+      return myPathBeforeSlash + "/";
+    }
+
+    @NotNull
+    @Override
+    public String getUrl() {
+      return getFileSystem().getProtocol() + "://" + getPath();
+    }
   }
+
 }

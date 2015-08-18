@@ -24,6 +24,7 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiElementPointer<T> {
   private final T myElement;
   private final PsiFile myFile;
@@ -51,10 +52,7 @@ public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiEleme
   @Override
   public T getElement() {
     T element = myElement;
-    if (element != null && !element.isValid()) {
-      element = null;
-    }
-    return element;
+    return element.isValid() ? element : null;
   }
 
   public int hashCode() {
@@ -74,7 +72,6 @@ public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiEleme
 
   @Override
   public Segment getRange() {
-    T element = myElement;
-    return element == null ? null : element.getTextRange();
+    return myElement.getTextRange();
   }
 }

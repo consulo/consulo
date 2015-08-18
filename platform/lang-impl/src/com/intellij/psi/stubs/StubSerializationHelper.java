@@ -16,7 +16,9 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.openapi.diagnostic.LogUtil;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.RecentStringInterner;
 import com.intellij.util.io.AbstractStringEnumerator;
 import com.intellij.util.io.DataInputOutputUtil;
@@ -77,15 +79,22 @@ public class StubSerializationHelper {
     BufferExposingByteArrayOutputStream out = new BufferExposingByteArrayOutputStream();
     FileLocalStringEnumerator storage = new FileLocalStringEnumerator(true);
     StubOutputStream stubOutputStream = new StubOutputStream(out, storage);
+    boolean doDefaultSerialization = true;
 
     if (rootStub instanceof PsiFileStub) {
       final PsiFileStub[] roots = ((PsiFileStub)rootStub).getStubRoots();
-      DataInputOutputUtil.writeINT(stubOutputStream, roots.length);
-      for (PsiFileStub root : roots) {
-        doSerialize(root, stubOutputStream);
+      if (roots.length == 0) {
+        Logger.getInstance(getClass()).error("Incorrect stub files count during serialization:" + rootStub + "," + rootStub.getStubType());
+      } else {
+        doDefaultSerialization = false;
+        DataInputOutputUtil.writeINT(stubOutputStream, roots.length);
+        for (PsiFileStub root : roots) {
+          doSerialize(root, stubOutputStream);
+        }
       }
     }
-    else {
+
+    if (doDefaultSerialization) {
       DataInputOutputUtil.writeINT(stubOutputStream, 1);
       doSerialize(rootStub, stubOutputStream);
     }
@@ -121,24 +130,30 @@ public class StubSerializationHelper {
       ++i;
     }
 
-    int stubFilesCount = DataInputOutputUtil.readINT(inputStream);
-    if (stubFilesCount > 1) {
-      final List<PsiFileStub> stubs = new ArrayList<PsiFileStub>(stubFilesCount);
-      while (stubFilesCount-- > 0) {
-        final PsiFileStub fileStub = (PsiFileStub)deserialize(inputStream, null);
+    final int stubFilesCount = DataInputOutputUtil.readINT(inputStream);
+    if (stubFilesCount <= 0) {
+      Logger.getInstance(getClass()).error("Incorrect stub files count during deserialization:"+stubFilesCount);
+    }
+    final Stub baseStub = deserialize(inputStream, null);
+    final List<PsiFileStub> stubs = ContainerUtil.newArrayListWithCapacity(stubFilesCount);
+    if (baseStub instanceof PsiFileStub) stubs.add((PsiFileStub)baseStub);
+    for (int j = 1; j < stubFilesCount; j++) {
+      final Stub deserialize = deserialize(inputStream, null);
+      if (deserialize instanceof PsiFileStub) {
+        final PsiFileStub fileStub = (PsiFileStub)deserialize;
         stubs.add(fileStub);
       }
-      final PsiFileStub[] stubsArray = stubs.toArray(new PsiFileStub[stubs.size()]);
-      for (PsiFileStub stub : stubsArray) {
-        if (stub instanceof PsiFileStubImpl) {
-          ((PsiFileStubImpl)stub).setStubRoots(stubsArray);
-        }
+      else {
+        Logger.getInstance(getClass()).error("Stub root must be PsiFileStub for files with several stub roots");
       }
-      return stubsArray[0];
     }
-    else {
-      return deserialize(inputStream, null);
+    final PsiFileStub[] stubsArray = stubs.toArray(new PsiFileStub[stubs.size()]);
+    for (PsiFileStub stub : stubsArray) {
+      if (stub instanceof PsiFileStubImpl) {
+        ((PsiFileStubImpl)stub).setStubRoots(stubsArray);
+      }
     }
+    return baseStub;
   }
 
   String intern(String str) {
@@ -150,7 +165,11 @@ public class StubSerializationHelper {
     final int id = DataInputOutputUtil.readINT(stream);
     final ObjectStubSerializer serializer = getClassById(id);
     if (serializer == null) {
-      throw new SerializerNotFoundException("No serializer registered for stub: ID=" + id + "; parent stub class=" + (parentStub != null? parentStub.getClass().getName() : "null"));
+      String externalId = null;
+      try {
+        externalId = myNameStorage.valueOf(id);
+      } catch (Throwable ignore) {}
+      throw new SerializerNotFoundException("No serializer registered for stub: ID=" + id + ", externalId:" + externalId + "; parent stub class=" + (parentStub != null? parentStub.getClass().getName() : "null"));
     }
 
     Stub stub = serializer.deserialize(stream, parentStub);

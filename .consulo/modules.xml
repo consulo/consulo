@@ -839,6 +839,7 @@
           <orderEntry type="module" module-name="icons" />
           <orderEntry type="library" name="jsr166" level="project" />
           <orderEntry type="library" name="Lombok" level="project" />
+          <orderEntry type="library" name="Snappy-Java" level="project" />
         </module-layer>
       </module>
       <module name="platform/util-rt" dirurl="file://$PROJECT_DIR$/platform/util-rt" current-layer="Default">

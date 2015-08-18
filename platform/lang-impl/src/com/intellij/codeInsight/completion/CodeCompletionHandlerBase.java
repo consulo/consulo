@@ -182,6 +182,7 @@ public class CodeCompletionHandlerBase {
     };
     if (autopopup) {
       CommandProcessor.getInstance().runUndoTransparentAction(initCmd);
+      CompletionAssertions.checkEditorValid(editor);
       if (!restarted && shouldSkipAutoPopup(editor, initializationContext[0].getFile())) {
         CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion);
         return;
@@ -457,6 +458,8 @@ public class CodeCompletionHandlerBase {
   private void insertDummyIdentifier(final CompletionInitializationContext initContext,
                                      final boolean hasModifiers,
                                      final int invocationCount) {
+    CompletionAssertions.checkEditorValid(initContext.getEditor());
+
     final PsiFile originalFile = initContext.getFile();
     InjectedLanguageManager manager = InjectedLanguageManager.getInstance(originalFile.getProject());
     final PsiFile hostFile = manager.getTopLevelFile(originalFile);
@@ -600,46 +603,13 @@ public class CodeCompletionHandlerBase {
     }
     final int idEndOffsetDelta = idEndOffset - caretOffset;
 
-    CompletionAssertions.WatchingInsertionContext context = null;
-    if (editor.getSelectionModel().hasBlockSelection() && editor.getSelectionModel().getBlockSelectionEnds().length > 0) {
-      List<RangeMarker> insertionPoints = new ArrayList<RangeMarker>();
-      int idDelta = 0;
-      Document document = editor.getDocument();
-      int caretLine = document.getLineNumber(editor.getCaretModel().getOffset());
-
-      for (int point : editor.getSelectionModel().getBlockSelectionEnds()) {
-        insertionPoints.add(document.createRangeMarker(point, point));
-        if (document.getLineNumber(point) == document.getLineNumber(idEndOffset)) {
-          idDelta = idEndOffset - point;
-        }
-      }
-
-      List<RangeMarker> caretsAfter = new ArrayList<RangeMarker>();
-      for (RangeMarker marker : insertionPoints) {
-        if (marker.isValid()) {
-          int insertionPoint = marker.getStartOffset();
-          context = insertItem(indicator, item, completionChar, items, update, editor, indicator.getParameters().getOriginalFile(),
-                               insertionPoint, idDelta + insertionPoint, indicator.getOffsetMap());
-          int offset = editor.getCaretModel().getOffset();
-          caretsAfter.add(document.createRangeMarker(offset, offset));
-        }
-      }
-      assert context != null;
-
-      restoreBlockSelection(editor, caretsAfter, caretLine);
-
-      for (RangeMarker insertionPoint : insertionPoints) {
-        insertionPoint.dispose();
-      }
-      for (RangeMarker marker : caretsAfter) {
-        marker.dispose();
-      }
-
-    } else if (editor.getCaretModel().supportsMultipleCarets()) {
+    CompletionAssertions.WatchingInsertionContext context;
+    if (editor.getCaretModel().supportsMultipleCarets()) {
       final List<CompletionAssertions.WatchingInsertionContext> contexts = new ArrayList<CompletionAssertions.WatchingInsertionContext>();
       final Editor hostEditor = InjectedLanguageUtil.getTopLevelEditor(editor);
       final PsiFile originalFile = indicator.getParameters().getOriginalFile();
       final PsiFile hostFile = InjectedLanguageUtil.getTopLevelFile(originalFile);
+      assert hostFile != null;
       final OffsetMap hostMap = translateOffsetMapToHost(originalFile, hostFile, hostEditor, indicator.getOffsetMap());
       hostEditor.getCaretModel().runForEachCaret(new CaretAction() {
         @Override
@@ -649,13 +619,17 @@ public class CodeCompletionHandlerBase {
           Editor targetEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(hostEditor, targetFile);
           int targetCaretOffset = targetEditor.getCaretModel().getOffset();
           OffsetMap injectedMap = translateOffsetMapToInjected(hostMap, targetEditor.getDocument());
+          int idEnd = targetCaretOffset + idEndOffsetDelta;
+          if (idEnd > targetEditor.getDocument().getTextLength()) {
+            idEnd = targetCaretOffset; // no replacement by Tab when offsets gone wrong for some reason
+          }
           CompletionAssertions.WatchingInsertionContext currentContext = insertItem(indicator, item, completionChar, items, update,
                                                                                     targetEditor, targetFile == null ? hostFile : targetFile,
-                                                                                    targetCaretOffset, targetCaretOffset + idEndOffsetDelta,
+                                                                                    targetCaretOffset, idEnd,
                                                                                     injectedMap);
           contexts.add(currentContext);
         }
-      }, true);
+      });
       context = contexts.get(contexts.size() - 1);
       if (context.shouldAddCompletionChar() && context.getCompletionChar() != Lookup.COMPLETE_STATEMENT_SELECT_CHAR) {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -699,29 +673,6 @@ public class CodeCompletionHandlerBase {
     }
   }
 
-  private static void restoreBlockSelection(Editor editor, List<RangeMarker> caretsAfter, int caretLine) {
-    int column = -1;
-    int minLine = Integer.MAX_VALUE;
-    int maxLine = -1;
-    for (RangeMarker marker : caretsAfter) {
-      if (marker.isValid()) {
-        LogicalPosition lp = editor.offsetToLogicalPosition(marker.getStartOffset());
-        if (column == -1) {
-          column = lp.column;
-        } else if (column != lp.column) {
-          return;
-        }
-        minLine = Math.min(minLine, lp.line);
-        maxLine = Math.max(maxLine, lp.line);
-
-        if (lp.line == caretLine) {
-          editor.getCaretModel().moveToLogicalPosition(lp);
-        }
-      }
-    }
-    editor.getSelectionModel().setBlockSelection(new LogicalPosition(minLine, column), new LogicalPosition(maxLine, column));
-  }
-
   private static CompletionAssertions.WatchingInsertionContext insertItem(final CompletionProgressIndicator indicator,
                                                                           final LookupElement item,
                                                                           final char completionChar,
@@ -745,7 +696,7 @@ public class CodeCompletionHandlerBase {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        if (caretOffset != idEndOffset && completionChar == Lookup.REPLACE_SELECT_CHAR) {
+        if (caretOffset < idEndOffset && completionChar == Lookup.REPLACE_SELECT_CHAR) {
           editor.getDocument().deleteString(caretOffset, idEndOffset);
         }
 
@@ -820,7 +771,7 @@ public class CodeCompletionHandlerBase {
             cached.third.longValue() != combinedOffsets) {
           // the copy PSI might have some caches that are not cleared on its modification because there are no events in the copy
           //   so, clear all the caches
-          // hopefully it's a rare situation that the user invokes completion in different parts of the file 
+          // hopefully it's a rare situation that the user invokes completion in different parts of the file
           //   without modifying anything physical in between
           ((PsiModificationTrackerImpl) file.getManager().getModificationTracker()).incCounter();
         }
@@ -831,7 +782,7 @@ public class CodeCompletionHandlerBase {
         Document originalDocument = file.getViewProvider().getDocument();
         assert originalDocument != null;
         assert originalDocument.getTextLength() == file.getTextLength() : originalDocument;
-        document.setText(originalDocument.getImmutableCharSequence());
+        document.replaceString(0, document.getTextLength(), originalDocument.getImmutableCharSequence());
         return copy;
       }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.RandomAccessDataFile;
 import gnu.trove.TIntArrayList;
+import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,7 +88,7 @@ public abstract class AbstractRecordsTable implements Disposable, Forceable {
     if (myFreeRecordsList.isEmpty()) {
       int result = getRecordsCount() + 1;
       doCleanRecord(result);
-      LOG.assertTrue(getRecordsCount() == result, "Failed to correctly allocate new record in: " + myStorage.getFile());
+      if (getRecordsCount() != result)  LOG.error("Failed to correctly allocate new record in: " + myStorage.getFile());
       return result;
     }
     else {
@@ -105,6 +106,36 @@ public abstract class AbstractRecordsTable implements Disposable, Forceable {
                                                  myStorage.length(), recordsLength, getRecordSize()));
     }
     return recordsLength / getRecordSize();
+  }
+
+  public RecordIdIterator createRecordIdIterator() throws IOException {
+    return new RecordIdIterator() {
+      private final int count = getRecordsCount();
+      private int recordId = 1;
+
+      @Override
+      public boolean hasNextId() {
+        return recordId <= count;
+      }
+
+      @Override
+      public int nextId() {
+        assert hasNextId();
+        return recordId++;
+      }
+
+      @Override
+      public boolean validId() {
+        assert hasNextId();
+        return getSize(recordId) != -1;
+      }
+    };
+  }
+
+  @TestOnly
+  public int getLiveRecordsCount() throws IOException {
+    ensureFreeRecordsScanned();
+    return getRecordsCount() - myFreeRecordsList.size();
   }
 
   private void ensureFreeRecordsScanned() throws IOException {
@@ -176,6 +207,7 @@ public abstract class AbstractRecordsTable implements Disposable, Forceable {
     myStorage.putInt(HEADER_VERSION_OFFSET, expectedVersion);
   }
 
+  @Override
   public void dispose() {
     if (!myStorage.isDisposed()) {
       markClean();
@@ -183,6 +215,7 @@ public abstract class AbstractRecordsTable implements Disposable, Forceable {
     }
   }
 
+  @Override
   public void force() {
     markClean();
     myStorage.force();
@@ -197,6 +230,7 @@ public abstract class AbstractRecordsTable implements Disposable, Forceable {
     return false;
   }
 
+  @Override
   public boolean isDirty() {
     return myIsDirty || myStorage.isDirty();
   }

@@ -21,6 +21,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.util.Processor;
+import com.intellij.util.indexing.IdIterator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -56,5 +57,34 @@ public class CompilerServerStubIndexImpl extends StubIndex {
   @Override
   public <K> boolean processAllKeys(@NotNull StubIndexKey<K, ?> indexKey, @NotNull Project project, Processor<K> processor) {
     return true;
+  }
+
+  @NotNull
+  @Override
+  public <Key> IdIterator getContainingIds(@NotNull StubIndexKey<Key, ?> indexKey,
+                                           @NotNull Key dataKey,
+                                           @NotNull Project project,
+                                           @NotNull GlobalSearchScope scope) {
+    return new IdIterator() {
+      @Override
+      public boolean hasNext() {
+        return false;
+      }
+
+      @Override
+      public int next() {
+        return 0;
+      }
+
+      @Override
+      public int size() {
+        return 0;
+      }
+    };
+  }
+
+  @Override
+  public void forceRebuild(@NotNull Throwable e) {
+
   }
 }
