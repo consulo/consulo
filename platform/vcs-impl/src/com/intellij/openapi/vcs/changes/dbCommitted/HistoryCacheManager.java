@@ -31,7 +31,8 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;import org.mustbe.consulo.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.List;
 
@@ -128,7 +129,8 @@ public class HistoryCacheManager {
       }
     }
 
-    @RequiredDispatchThread@Override
+    @RequiredDispatchThread
+    @Override
     public void onSuccess() {
       if (myException != null) {
         if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -167,7 +169,8 @@ public class HistoryCacheManager {
       }
     }
 
-    @RequiredDispatchThread@Override
+    @RequiredDispatchThread
+    @Override
     public void onSuccess() {
       // todo track whether the db was initialized, if not - delete all other requests
       if (myException != null) {

@@ -44,7 +44,8 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.CacheOneStepIterator;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;import org.mustbe.consulo.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -124,7 +125,8 @@ class ShowDiffFromAnnotation extends AnAction implements LineNumberListener {
           }
         }
 
-        @RequiredDispatchThread@Override
+        @RequiredDispatchThread
+        @Override
         public void onSuccess() {
           if (exc[0] != null) {
             VcsBalloonProblemNotifier

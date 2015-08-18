@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,9 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.util.Alarm;
 import com.intellij.util.ProcessingContext;
@@ -61,7 +63,7 @@ public class CompletionLookupArranger extends LookupArranger {
       return invariant.compareToIgnoreCase(PRESENTATION_INVARIANT.get(o2));
     }
   };
-  private static final int MAX_PREFERRED_COUNT = 5;
+  static final int MAX_PREFERRED_COUNT = 5;
   public static final Key<WeighingContext> WEIGHING_CONTEXT = Key.create("WEIGHING_CONTEXT");
   public static final Key<Boolean> PURE_RELEVANCE = Key.create("PURE_RELEVANCE");
   public static final Key<Integer> PREFIX_CHANGES = Key.create("PREFIX_CHANGES");
@@ -75,6 +77,8 @@ public class CompletionLookupArranger extends LookupArranger {
       }
     });
   }
+  private final int myLimit = Registry.intValue("ide.completion.variant.limit");
+  private boolean myOverflow;
 
   private final CompletionLocation myLocation;
   private final CompletionParameters myParameters;
@@ -143,9 +147,48 @@ public class CompletionLookupArranger extends LookupArranger {
     if (classifier == null) {
       myClassifiers.put(sorter, classifier = sorter.buildClassifier(new AlphaClassifier((LookupImpl)lookup)));
     }
-    classifier.addElement(element, createContext(true));
+    ProcessingContext context = createContext(true);
+    classifier.addElement(element, context);
 
     super.addElement(lookup, element, presentation);
+
+    trimToLimit(lookup, context);
+  }
+
+  private void trimToLimit(Lookup lookup, ProcessingContext context) {
+    if (myItems.size() <= myLimit * 2) return;
+
+    List<LookupElement> items = getMatchingItems();
+    Iterator<LookupElement> iterator = sortByRelevance(groupItemsBySorter(items)).iterator();
+
+    final Set<LookupElement> retainedSet = ContainerUtil.newIdentityTroveSet();
+    retainedSet.addAll(getPrefixItems(true));
+    retainedSet.addAll(getPrefixItems(false));
+    retainedSet.addAll(myFrozenItems);
+    while (retainedSet.size() < myLimit && iterator.hasNext()) {
+      retainedSet.add(iterator.next());
+    }
+
+    if (!iterator.hasNext()) return;
+
+    List<LookupElement> removed = retainItems(retainedSet, lookup);
+    for (LookupElement element : removed) {
+      removeItem(element, context);
+    }
+
+    if (!myOverflow) {
+      myOverflow = true;
+      myProcess.addAdvertisement("Not all variants are shown, please type more letters to see the rest", null);
+
+      // restart completion on any prefix change
+      myProcess.addWatchedPrefix(0, StandardPatterns.string());
+    }
+  }
+
+  private void removeItem(LookupElement element, ProcessingContext context) {
+    CompletionSorterImpl sorter = obtainSorter(element);
+    Classifier<LookupElement> classifier = myClassifiers.get(sorter);
+    classifier.removeElement(element, context);
   }
 
   @NotNull
@@ -179,7 +222,7 @@ public class CompletionLookupArranger extends LookupArranger {
     LookupImpl lookupImpl = (LookupImpl)lookup;
     List<LookupElement> listModel = isAlphaSorted() ?
                                     sortByPresentation(items, lookupImpl) :
-                                    fillModelByRelevance(lookupImpl, items, itemsBySorter, relevantSelection);
+                                    fillModelByRelevance(lookupImpl, ContainerUtil.newIdentityTroveSet(items), itemsBySorter, relevantSelection);
 
     int toSelect = getItemToSelect(lookupImpl, listModel, onExplicitAction, relevantSelection);
     LOG.assertTrue(toSelect >= 0);
@@ -197,7 +240,7 @@ public class CompletionLookupArranger extends LookupArranger {
   }
 
   private List<LookupElement> fillModelByRelevance(LookupImpl lookup,
-                                                   List<LookupElement> items,
+                                                   Set<LookupElement> items,
                                                    MultiMap<CompletionSorterImpl, LookupElement> inputBySorter,
                                                    @Nullable LookupElement relevantSelection) {
     Iterator<LookupElement> byRelevance = sortByRelevance(inputBySorter).iterator();
@@ -235,10 +278,10 @@ public class CompletionLookupArranger extends LookupArranger {
     });
   }
 
-  private static void ensureItemAdded(List<LookupElement> items,
+  private static void ensureItemAdded(Set<LookupElement> items,
                                       LinkedHashSet<LookupElement> model,
                                       Iterator<LookupElement> byRelevance, @Nullable final LookupElement item) {
-    if (item != null && ContainerUtil.indexOfIdentity(items, item) >= 0 && !model.contains(item)) {
+    if (item != null && items.contains(item) && !model.contains(item)) {
       addSomeItems(model, byRelevance, new Condition<LookupElement>() {
         @Override
         public boolean value(LookupElement lastAdded) {
@@ -255,8 +298,13 @@ public class CompletionLookupArranger extends LookupArranger {
     }
   }
 
-  private void addFrozenItems(List<LookupElement> items, LinkedHashSet<LookupElement> model) {
-    myFrozenItems.retainAll(items);
+  private void addFrozenItems(Set<LookupElement> items, LinkedHashSet<LookupElement> model) {
+    for (Iterator<LookupElement> iterator = myFrozenItems.iterator(); iterator.hasNext(); ) {
+      LookupElement element = iterator.next();
+      if (!element.isValid() || !items.contains(element)) {
+        iterator.remove();
+      }
+    }
     model.addAll(myFrozenItems);
   }
 
@@ -265,10 +313,10 @@ public class CompletionLookupArranger extends LookupArranger {
     ContainerUtil.addAll(model, sortByRelevance(groupItemsBySorter(getPrefixItems(false))));
   }
 
-  private static void addCurrentlySelectedItemToTop(Lookup lookup, List<LookupElement> items, LinkedHashSet<LookupElement> model) {
+  private static void addCurrentlySelectedItemToTop(Lookup lookup, Set<LookupElement> items, LinkedHashSet<LookupElement> model) {
     if (!lookup.isSelectionTouched()) {
       LookupElement lastSelection = lookup.getCurrentItem();
-      if (ContainerUtil.indexOfIdentity(items, lastSelection) >= 0) {
+      if (items.contains(lastSelection)) {
         model.add(lastSelection);
       }
     }
@@ -339,16 +387,24 @@ public class CompletionLookupArranger extends LookupArranger {
     }
 
     String selectedText = lookup.getEditor().getSelectionModel().getSelectedText();
+    int exactMatchIndex = -1;
     for (int i = 0; i < items.size(); i++) {
       LookupElement item = items.get(i);
-      boolean isTemplate = isLiveTemplate(item);
-      if (isPrefixItem(lookup, item, true) && !isTemplate ||
+      boolean isSuddenLiveTemplate = isSuddenLiveTemplate(item);
+      if (isPrefixItem(lookup, item, true) && !isSuddenLiveTemplate ||
           item.getLookupString().equals(selectedText)) {
-        return i;
+
+        if (exactMatchIndex == -1 || item instanceof LiveTemplateLookupElement) {
+          // prefer most recent item or LiveTemplate item
+          exactMatchIndex = i;
+        }
       }
-      if (i == 0 && isTemplate && items.size() > 1 && !CompletionServiceImpl.isStartMatch(items.get(1), lookup)) {
+      else if (i == 0 && isSuddenLiveTemplate && items.size() > 1 && !CompletionServiceImpl.isStartMatch(items.get(1), lookup)) {
         return 0;
       }
+    }
+    if (exactMatchIndex >= 0) {
+      return exactMatchIndex;
     }
 
     return Math.max(0, ContainerUtil.indexOfIdentity(items, mostRelevant));
@@ -370,7 +426,7 @@ public class CompletionLookupArranger extends LookupArranger {
   }
 
 
-  private static boolean isLiveTemplate(LookupElement element) {
+  private static boolean isSuddenLiveTemplate(LookupElement element) {
     return element instanceof LiveTemplateLookupElement && ((LiveTemplateLookupElement)element).sudden;
   }
 
@@ -511,11 +567,8 @@ public class CompletionLookupArranger extends LookupArranger {
     private final LookupImpl myLookup;
 
     private AlphaClassifier(LookupImpl lookup) {
+      super(null);
       myLookup = lookup;
-    }
-
-    @Override
-    public void addElement(LookupElement element, ProcessingContext context) {
     }
 
     @Override
@@ -523,8 +576,5 @@ public class CompletionLookupArranger extends LookupArranger {
       return sortByPresentation(source, myLookup);
     }
 
-    @Override
-    public void describeItems(LinkedHashMap<LookupElement, StringBuilder> map, ProcessingContext context) {
-    }
   }
 }

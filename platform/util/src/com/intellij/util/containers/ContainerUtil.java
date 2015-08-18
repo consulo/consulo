@@ -2404,6 +2404,13 @@ public class ContainerUtil extends ContainerUtilRt {
     return new ConcurrentWeakHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
+  @NotNull
+  @Contract(pure=true)
+  public static <K,V> ConcurrentMap<K,V> createConcurrentWeakMap(@NotNull TObjectHashingStrategy<K> hashingStrategy) {
+    //noinspection deprecation
+    return new ConcurrentWeakHashMap<K, V>(hashingStrategy);
+  }
+
   /**
    * @see {@link #createLockFreeCopyOnWriteList()}
    */

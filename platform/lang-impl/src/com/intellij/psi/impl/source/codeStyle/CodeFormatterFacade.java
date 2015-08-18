@@ -74,16 +74,21 @@ public class CodeFormatterFacade {
    * @see CodeStyleSettings#WRAP_LONG_LINES
    */
   public static final Key<Boolean> WRAP_LONG_LINE_DURING_FORMATTING_IN_PROGRESS_KEY
-          = new Key<Boolean>("WRAP_LONG_LINE_DURING_FORMATTING_IN_PROGRESS_KEY");
+    = new Key<Boolean>("WRAP_LONG_LINE_DURING_FORMATTING_IN_PROGRESS_KEY");
 
   private final CodeStyleSettings mySettings;
   private final FormatterTagHandler myTagHandler;
   private final int myRightMargin;
+  private boolean myReformatContext;
 
   public CodeFormatterFacade(CodeStyleSettings settings, @Nullable Language language) {
     mySettings = settings;
     myTagHandler = new FormatterTagHandler(settings);
     myRightMargin = mySettings.getRightMargin(language);
+  }
+
+  public void setReformatContext(boolean value) {
+    myReformatContext = value;
   }
 
   public ASTNode processElement(ASTNode element) {
@@ -109,7 +114,7 @@ public class CodeFormatterFacade {
     final Document document = file.getViewProvider().getDocument();
 
     PsiElement elementToFormat = document instanceof DocumentWindow ? InjectedLanguageManager
-            .getInstance(file.getProject()).getTopLevelFile(file) : psiElement;
+          .getInstance(file.getProject()).getTopLevelFile(file) : psiElement;
     final PsiFile fileToFormat = elementToFormat.getContainingFile();
 
     final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(fileToFormat);
@@ -129,7 +134,7 @@ public class CodeFormatterFacade {
       if (file.getTextLength() > 0) {
         try {
           FormatterEx.getInstanceEx().format(
-                  model, mySettings,mySettings.getIndentOptionsByFile(fileToFormat, range), new FormatTextRanges(range, true)
+            model, mySettings,mySettings.getIndentOptionsByFile(fileToFormat, range), new FormatTextRanges(range, true)
           );
 
           wrapLongLinesIfNecessary(file, document, startOffset, endOffset);
@@ -183,7 +188,7 @@ public class CodeFormatterFacade {
           final FileViewProvider viewProvider = file.getViewProvider();
           final PsiElement startElement = viewProvider.findElementAt(textRanges.get(0).getTextRange().getStartOffset(), contextLanguage);
           final PsiElement endElement =
-                  viewProvider.findElementAt(textRanges.get(textRanges.size() - 1).getTextRange().getEndOffset() - 1, contextLanguage);
+            viewProvider.findElementAt(textRanges.get(textRanges.size() - 1).getTextRange().getEndOffset() - 1, contextLanguage);
           final PsiElement commonParent = startElement != null && endElement != null ? PsiTreeUtil.findCommonParent(startElement, endElement) : null;
           ASTNode node = null;
           if (commonParent != null) {
@@ -228,7 +233,7 @@ public class CodeFormatterFacade {
           }
 
           final FormattingModel originalModel = CoreFormatterUtil.buildModel(builder, file, mySettings, FormattingMode.REFORMAT);
-          final FormattingModel model = new DocumentBasedFormattingModel(originalModel.getRootBlock(),
+          final FormattingModel model = new DocumentBasedFormattingModel(originalModel,
                                                                          document,
                                                                          project, mySettings, file.getFileType(), file);
 
@@ -237,15 +242,10 @@ public class CodeFormatterFacade {
             formatter.setProgressTask(new FormattingProgressTask(project, file, document));
           }
 
-          CommonCodeStyleSettings.IndentOptions indentOptions = null;
-          if (builder instanceof FormattingModelBuilderEx) {
-            indentOptions = ((FormattingModelBuilderEx)builder).getIndentOptionsToUse(file, ranges, mySettings);
-          }
-          if (indentOptions == null) {
-            indentOptions  = mySettings.getIndentOptionsByFile(file, textRanges.size() == 1 ? textRanges.get(0).getTextRange() : null);
-          }
+          CommonCodeStyleSettings.IndentOptions indentOptions =
+            mySettings.getIndentOptionsByFile(file, textRanges.size() == 1 ? textRanges.get(0).getTextRange() : null);
 
-          formatter.format(model, mySettings, indentOptions, ranges);
+          formatter.format(model, mySettings, indentOptions, ranges, myReformatContext);
           for (FormatTextRanges.FormatTextRange range : textRanges) {
             TextRange textRange = range.getTextRange();
             wrapLongLinesIfNecessary(file, document, textRange.getStartOffset(), textRange.getEndOffset());
@@ -321,8 +321,8 @@ public class CodeFormatterFacade {
                     && initialInjectedRange.getEndOffset() < injected.getTextLength()))
             {
               range = TextRange.create(
-                      range.getStartOffset() + injectedRange.getStartOffset() - initialInjectedRange.getStartOffset(),
-                      range.getEndOffset() + initialInjectedRange.getEndOffset() - injectedRange.getEndOffset());
+                range.getStartOffset() + injectedRange.getStartOffset() - initialInjectedRange.getStartOffset(),
+                range.getEndOffset() + initialInjectedRange.getEndOffset() - injectedRange.getEndOffset());
             }
           }
         }
@@ -489,7 +489,7 @@ public class CodeFormatterFacade {
       int startLineOffset = document.getLineStartOffset(line);
       int endLineOffset = document.getLineEndOffset(line);
       final int preferredWrapPosition
-              = calculatePreferredWrapPosition(editor, text, tabSize, spaceSize, startLineOffset, endLineOffset, endOffsetToUse);
+        = calculatePreferredWrapPosition(editor, text, tabSize, spaceSize, startLineOffset, endLineOffset, endOffsetToUse);
 
       if (preferredWrapPosition < 0 || preferredWrapPosition >= endLineOffset) {
         continue;
@@ -500,8 +500,8 @@ public class CodeFormatterFacade {
 
       // We know that current line exceeds right margin if control flow reaches this place, so, wrap it.
       int wrapOffset = strategy.calculateWrapPosition(
-              document, editor.getProject(), Math.max(startLineOffset, startOffsetToUse), Math.min(endLineOffset, endOffsetToUse),
-              preferredWrapPosition, false, false
+        document, editor.getProject(), Math.max(startLineOffset, startOffsetToUse), Math.min(endLineOffset, endOffsetToUse),
+        preferredWrapPosition, false, false
       );
       if (wrapOffset < 0 // No appropriate wrap position is found.
           // No point in splitting line when its left part contains only white spaces, example:

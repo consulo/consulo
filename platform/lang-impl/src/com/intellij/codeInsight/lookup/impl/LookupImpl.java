@@ -52,8 +52,6 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.CollectConsumer;
-import com.intellij.util.containers.ConcurrentHashMap;
-import com.intellij.util.containers.ConcurrentWeakHashMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
@@ -95,11 +93,10 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
       super.processKeyEvent(e);
     }
 
-    ExpandableItemsHandler<Integer> myExtender = new CompletionExtender(this);
     @NotNull
     @Override
-    public ExpandableItemsHandler<Integer> getExpandableItemsHandler() {
-      return myExtender;
+    protected ExpandableItemsHandler<Integer> createExpandableItemsHandler() {
+      return new CompletionExtender(this);
     }
   };
   final LookupCellRenderer myCellRenderer;
@@ -118,10 +115,10 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
   private boolean myChangeGuard;
   private volatile LookupArranger myArranger;
   private LookupArranger myPresentableArranger;
-  private final Map<LookupElement, PrefixMatcher> myMatchers = new ConcurrentHashMap<LookupElement, PrefixMatcher>(
-          ContainerUtil.<LookupElement>identityStrategy());
-  private final Map<LookupElement, Font> myCustomFonts = new ConcurrentWeakHashMap<LookupElement, Font>(
-          ContainerUtil.<LookupElement>identityStrategy());
+  private final Map<LookupElement, PrefixMatcher> myMatchers =
+          ContainerUtil.createConcurrentWeakMap(ContainerUtil.<LookupElement>identityStrategy());
+  private final Map<LookupElement, Font> myCustomFonts = ContainerUtil.createConcurrentWeakMap(10, 0.75f, Runtime.getRuntime().availableProcessors(),
+                                                                                               ContainerUtil.<LookupElement>identityStrategy());
   private boolean myStartCompletionWhenNothingMatches;
   boolean myResizePending;
   private boolean myFinishing;
@@ -139,6 +136,8 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
     myEditor = editor;
     myArranger = arranger;
     myPresentableArranger = arranger;
+
+    DaemonCodeAnalyzer.getInstance(myProject).disableUpdateByTimer(this);
 
     myCellRenderer = new LookupCellRenderer(this);
     myList.setCellRenderer(myCellRenderer);
@@ -531,59 +530,28 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
   }
 
   private void insertLookupString(LookupElement item, final int prefix) {
-    final Document document = myEditor.getDocument();
-
     final String lookupString = getCaseCorrectedLookupString(item);
 
-    if (myEditor.getSelectionModel().hasBlockSelection()) {
-      LogicalPosition blockStart = myEditor.getSelectionModel().getBlockStart();
-      LogicalPosition blockEnd = myEditor.getSelectionModel().getBlockEnd();
-      assert blockStart != null && blockEnd != null;
+    final Editor hostEditor = InjectedLanguageUtil.getTopLevelEditor(myEditor);
+    hostEditor.getCaretModel().runForEachCaret(new CaretAction() {
+      @Override
+      public void perform(Caret caret) {
+        EditorModificationUtil.deleteSelectedText(hostEditor);
+        final int caretOffset = hostEditor.getCaretModel().getOffset();
+        int lookupStart = Math.min(caretOffset, Math.max(caretOffset - prefix, 0));
 
-      int minLine = Math.min(blockStart.line, blockEnd.line);
-      int maxLine = Math.max(blockStart.line, blockEnd.line);
-      int minColumn = Math.min(blockStart.column, blockEnd.column);
-      int maxColumn = Math.max(blockStart.column, blockEnd.column);
+        int len = hostEditor.getDocument().getTextLength();
+        LOG.assertTrue(lookupStart >= 0 && lookupStart <= len,
+                       "ls: " + lookupStart + " caret: " + caretOffset + " prefix:" + prefix + " doc: " + len);
+        LOG.assertTrue(caretOffset >= 0 && caretOffset <= len, "co: " + caretOffset + " doc: " + len);
 
-      int caretLine = document.getLineNumber(myEditor.getCaretModel().getOffset());
+        hostEditor.getDocument().replaceString(lookupStart, caretOffset, lookupString);
 
-      for (int line = minLine; line <= maxLine; line++) {
-        int bs = myEditor.logicalPositionToOffset(new LogicalPosition(line, minColumn));
-        int start = bs - prefix;
-        int end = myEditor.logicalPositionToOffset(new LogicalPosition(line, maxColumn));
-        if (start > end) {
-          LOG.error("bs=" + bs + "; start=" + start + "; end=" + end +
-                    "; blockStart=" + blockStart + "; blockEnd=" + blockEnd + "; line=" + line + "; len=" +
-                    (document.getLineEndOffset(line) - document.getLineStartOffset(line)));
-        }
-        document.replaceString(start, end, lookupString);
+        int offset = lookupStart + lookupString.length();
+        hostEditor.getCaretModel().moveToOffset(offset);
+        hostEditor.getSelectionModel().removeSelection();
       }
-      LogicalPosition start = new LogicalPosition(minLine, minColumn - prefix);
-      LogicalPosition end = new LogicalPosition(maxLine, start.column + lookupString.length());
-      myEditor.getSelectionModel().setBlockSelection(start, end);
-      myEditor.getCaretModel().moveToLogicalPosition(new LogicalPosition(caretLine, end.column));
-    } else {
-      final Editor hostEditor = InjectedLanguageUtil.getTopLevelEditor(myEditor);
-      hostEditor.getCaretModel().runForEachCaret(new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          EditorModificationUtil.deleteSelectedText(hostEditor);
-          final int caretOffset = hostEditor.getCaretModel().getOffset();
-          int lookupStart = Math.max(caretOffset - prefix, 0);
-
-          int len = hostEditor.getDocument().getTextLength();
-          LOG.assertTrue(lookupStart >= 0 && lookupStart <= len,
-                         "ls: " + lookupStart + " caret: " + caretOffset + " prefix:" + prefix + " doc: " + len);
-          LOG.assertTrue(caretOffset >= 0 && caretOffset <= len, "co: " + caretOffset + " doc: " + len);
-
-          hostEditor.getDocument().replaceString(lookupStart, caretOffset, lookupString);
-
-          int offset = lookupStart + lookupString.length();
-          hostEditor.getCaretModel().moveToOffset(offset);
-          hostEditor.getSelectionModel().removeSelection();
-        }
-      });
-    }
+    });
 
     myEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
   }
@@ -688,17 +656,18 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
     myUi = new LookupUi(this, myAdComponent, myList, myProject);
     myUi.setCalculating(myCalculating);
     Point p = myUi.calculatePosition().getLocation();
-    HintManagerImpl.getInstanceImpl().showEditorHint(this, myEditor, p, HintManager.HIDE_BY_ESCAPE | HintManager.UPDATE_BY_SCROLLING, 0, false,
-                                                     HintManagerImpl.createHintHint(myEditor, p, this, HintManager.UNDER).setAwtTooltip(false));
+    try {
+      HintManagerImpl.getInstanceImpl().showEditorHint(this, myEditor, p, HintManager.HIDE_BY_ESCAPE | HintManager.UPDATE_BY_SCROLLING, 0, false,
+                                                       HintManagerImpl.createHintHint(myEditor, p, this, HintManager.UNDER).setAwtTooltip(false));
+    }
+    catch (Exception e) {
+      LOG.error(e);
+    }
 
-    if (!isVisible()) {
+    if (!isVisible() || !myList.isShowing()) {
       hide();
       return false;
     }
-
-    DaemonCodeAnalyzer.getInstance(myProject).disableUpdateByTimer(this);
-
-    LOG.assertTrue(myList.isShowing(), "!showing, disposed=" + myDisposed);
 
     return true;
   }
@@ -776,15 +745,13 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
 
       @Override
       public void valueChanged(@NotNull ListSelectionEvent e){
-        final LookupElement item = getCurrentItem();
-        if (oldItem != item && !myList.isEmpty()) { // do not update on temporary model wipe
-          fireCurrentItemChanged(item);
-          if (myDisposed) { //a listener may have decided to close us, what can we do?
-            return;
-          }
+        if (!myUpdating) {
+          final LookupElement item = getCurrentItem();
+          fireCurrentItemChanged(oldItem, item);
           oldItem = item;
         }
       }
+
     });
 
     new ClickListener() {
@@ -876,9 +843,9 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
     }
   }
 
-  void fireCurrentItemChanged(LookupElement item){
-    if (!myListeners.isEmpty()){
-      LookupEvent event = new LookupEvent(this, item, (char)0);
+  private void fireCurrentItemChanged(@Nullable LookupElement oldItem, @Nullable LookupElement currentItem) {
+    if (oldItem != currentItem && !myListeners.isEmpty()) {
+      LookupEvent event = new LookupEvent(this, currentItem, (char)0);
       for (LookupListener listener : myListeners) {
         listener.currentItemChanged(event);
       }
@@ -1003,6 +970,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
   }
 
   @Override
+  @NotNull
   public Editor getEditor() {
     return myEditor;
   }
@@ -1060,7 +1028,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
   }
 
   public void restorePrefix() {
-    myOffsets.restorePrefix(getLookupStart());
+    myOffsets.restorePrefix();
   }
 
   private static String staticDisposeTrace = null;
@@ -1088,6 +1056,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
 
   public void refreshUi(boolean mayCheckReused, boolean onExplicitAction) {
     assert !myUpdating;
+    LookupElement prevItem = getCurrentItem();
     myUpdating = true;
     try {
       final boolean reused = mayCheckReused && checkReused();
@@ -1100,6 +1069,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
     }
     finally {
       myUpdating = false;
+      fireCurrentItemChanged(prevItem, getCurrentItem());
     }
   }
 

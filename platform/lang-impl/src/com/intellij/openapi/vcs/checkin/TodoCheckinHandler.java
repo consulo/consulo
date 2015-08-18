@@ -50,7 +50,8 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;import org.mustbe.consulo.RequiredDispatchThread;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -161,7 +162,8 @@ public class TodoCheckinHandler extends CheckinHandler {
         worker.execute();
       }
 
-      @RequiredDispatchThread@Override
+      @RequiredDispatchThread
+      @Override
       public void onSuccess() {
         completed.set(Boolean.TRUE);
       }
