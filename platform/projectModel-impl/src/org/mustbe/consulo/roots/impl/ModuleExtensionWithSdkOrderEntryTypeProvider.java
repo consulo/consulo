@@ -15,7 +15,6 @@
  */
 package org.mustbe.consulo.roots.impl;
 
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootLayer;
@@ -23,9 +22,11 @@ import com.intellij.openapi.roots.impl.ModuleExtensionWithSdkOrderEntryImpl;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
+import com.intellij.openapi.roots.ui.configuration.ProjectStructureDialog;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.util.Consumer;
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -76,9 +77,9 @@ public class ModuleExtensionWithSdkOrderEntryTypeProvider implements OrderEntryT
     }
     Project project = orderEntry.getModuleRootLayer().getProject();
     final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
-    ShowSettingsUtil.getInstance().editConfigurable(project, config, new Runnable() {
+    ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override
-      public void run() {
+      public void consume(ProjectStructureConfigurable configurable) {
         config.select(sdk, true);
       }
     });

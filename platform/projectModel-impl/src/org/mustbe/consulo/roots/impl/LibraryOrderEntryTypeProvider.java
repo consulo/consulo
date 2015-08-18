@@ -15,7 +15,6 @@
  */
 package org.mustbe.consulo.roots.impl;
 
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModuleRootLayer;
@@ -29,10 +28,12 @@ import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
+import com.intellij.openapi.roots.ui.configuration.ProjectStructureDialog;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.util.Consumer;
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -90,10 +91,9 @@ public class LibraryOrderEntryTypeProvider extends OrderEntryTypeProviderEx<Libr
   @Override
   public void navigate(@NotNull final LibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
-    final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
-    ShowSettingsUtil.getInstance().editConfigurable(project, config, new Runnable() {
+    ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override
-      public void run() {
+      public void consume(ProjectStructureConfigurable config) {
         config.select(orderEntry, true);
       }
     });
