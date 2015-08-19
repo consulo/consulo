@@ -18,10 +18,10 @@ package com.intellij.ide.ui.laf.darcula.ui;
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -34,11 +34,13 @@ public class DarculaTextBorder implements Border, UIResource {
   public Insets getBorderInsets(Component c) {
     int vOffset = c instanceof JPasswordField ? 3 : 4;
     if (DarculaTextFieldUI.isSearchFieldWithHistoryPopup(c)) {
-      return new InsetsUIResource(vOffset, 7 + 16 + 3, vOffset, 7 + 16);
-    } else if (DarculaTextFieldUI.isSearchField(c)) {
-      return new InsetsUIResource(vOffset, 4 + 16 + 3, vOffset, 7 + 16);
-    } else {
-      return new InsetsUIResource(vOffset, 7, vOffset, 7);
+      return JBUI.insets(vOffset, 7 + 16 + 3, vOffset, 7 + 16).asUIResource();
+    }
+    else if (DarculaTextFieldUI.isSearchField(c)) {
+      return JBUI.insets(vOffset, 4 + 16 + 3, vOffset, 7 + 16).asUIResource();
+    }
+    else {
+      return JBUI.insets(vOffset, 7, vOffset, 7).asUIResource();
     }
   }
 
@@ -55,11 +57,12 @@ public class DarculaTextBorder implements Border, UIResource {
     g.translate(x, y);
 
     if (c.hasFocus()) {
-      DarculaUIUtil.paintFocusRing(g, 2, 2, width-4, height-4);
-    } else {
+      DarculaUIUtil.paintFocusRing(g, JBUI.scale(2), JBUI.scale(2), width - JBUI.scale(4), height - JBUI.scale(4));
+    }
+    else {
       boolean editable = !(c instanceof JTextComponent) || (((JTextComponent)c).isEditable());
       g.setColor(c.isEnabled() && editable ? Gray._100 : new Color(0x535353));
-      g.drawRect(1, 1, width - 2, height - 2);
+      g.drawRect(JBUI.scale(1), JBUI.scale(1), width - JBUI.scale(2), height - JBUI.scale(2));
     }
     g.translate(-x, -y);
     config.restore();
