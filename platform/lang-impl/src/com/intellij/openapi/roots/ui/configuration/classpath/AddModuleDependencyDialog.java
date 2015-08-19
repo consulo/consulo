@@ -79,9 +79,9 @@ public class AddModuleDependencyDialog extends DialogWrapper {
   protected JComponent createSouthPanel() {
     JComponent southPanel = super.createSouthPanel();
     if(southPanel != null) {
-      southPanel.setBorder(ourDefaultBorder);
+      southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
       BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
-      borderLayoutPanel.setBorder(new CustomLineBorder(1, 0, 0, 0));
+      borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
       return borderLayoutPanel;
     }
     return null;

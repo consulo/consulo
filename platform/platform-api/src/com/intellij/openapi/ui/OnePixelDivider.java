@@ -23,6 +23,7 @@ import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,7 +83,7 @@ public class OnePixelDivider extends Divider {
       final MouseEvent event = getTargetEvent(e);
       final Point p = event.getPoint();
       final int r = Math.abs(isVertical() ? p.y : p.x);
-      return r < 6;
+      return r < JBUI.scale(6);
     }
 
     @Override

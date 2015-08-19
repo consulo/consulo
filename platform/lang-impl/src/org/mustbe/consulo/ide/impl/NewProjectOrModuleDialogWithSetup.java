@@ -30,7 +30,7 @@ import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
-import lombok.val;
+import com.intellij.util.ui.JBUI;
 import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -82,7 +82,7 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
 
     setTitle(myModuleCreation ? IdeBundle.message("title.add.module") : IdeBundle.message("title.new.project"));
 
-    val context = new NewModuleContext();
+    NewModuleContext context = new NewModuleContext();
 
     for (NewModuleBuilder newModuleBuilder : NewModuleBuilder.EP_NAME.getExtensions()) {
       newModuleBuilder.setupContext(context);
@@ -203,7 +203,7 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
 
   @Override
   protected String getDimensionServiceKey() {
-    setSize(600, 400);
+    setSize(JBUI.scale(600), JBUI.scale(400));
     return "#NewProjectOrModuleDialogWithSetup";
   }
 

@@ -22,6 +22,7 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.OnePixelSplitter;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -129,7 +130,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
       final Project projectGuess = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(rightComponent));
       Dimension size = DimensionService.getInstance().getSize(dimensionKey, projectGuess);
       if (size == null) {
-        DimensionService.getInstance().setSize(dimensionKey, getDefaultSize());
+        DimensionService.getInstance().setSize(dimensionKey, JBUI.size(getDefaultSize()));
       }
     }
   }

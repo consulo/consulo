@@ -26,6 +26,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -217,7 +218,7 @@ public class ProcessPopup  {
 
     public ActiveContent() {
       super(new BorderLayout());
-      setBorder(DialogWrapper.ourDefaultBorder);
+      setBorder(JBUI.Borders.empty(DialogWrapper.ourDefaultBorderInsets));
       setFocusable(true);
     }
 
