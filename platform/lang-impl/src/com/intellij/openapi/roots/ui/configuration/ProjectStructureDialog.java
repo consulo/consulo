@@ -125,7 +125,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
 
   @Override
   public Dimension getDefaultSize() {
-    return new Dimension(1024, 768);
+    return JBUI.size(1024, 768);
   }
 
   @Nullable
@@ -141,7 +141,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     if(southPanel != null) {
       southPanel.setBorder(ourDefaultBorder);
       BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
-      borderLayoutPanel.setBorder(new CustomLineBorder(1, 0, 0, 0));
+      borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
       return borderLayoutPanel;
     }
     return null;

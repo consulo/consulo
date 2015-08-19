@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TObjectIntHashMap;
 import org.jdom.Element;
@@ -42,10 +43,9 @@ import java.util.Map;
 @State(
         name = "DimensionService",
         storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml"),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/dimensions.xml", roamingType = RoamingType.DISABLED)
-        },
-        storageChooser = LastStorageChooserForWrite.ElementStateLastStorageChooserForWrite.class
+                @Storage(file = StoragePathMacros.APP_CONFIG + "/dimensions.xml", roamingType = RoamingType.DISABLED),
+                @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true)
+        }
 )
 public class DimensionService implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DimensionService.class);
@@ -230,10 +230,18 @@ public class DimensionService implements PersistentStateComponent<Element> {
     }
   }
 
+  @Deprecated
+  /**
+   * @deprecated Use {@link com.intellij.ide.util.PropertiesComponent}
+   */
   public void setExtendedState(String key, int extendedState) {
     myKey2ExtendedState.put(key, extendedState);
   }
 
+  @Deprecated
+  /**
+   * @deprecated Use {@link com.intellij.ide.util.PropertiesComponent}
+   */
   public int getExtendedState(String key) {
     if (!myKey2ExtendedState.containsKey(key)) return -1;
     return myKey2ExtendedState.get(key);
@@ -279,6 +287,10 @@ public class DimensionService implements PersistentStateComponent<Element> {
       GraphicsConfiguration gc = env.getScreenDevices()[0].getDefaultConfiguration();
       screen = gc.getBounds();
     }
-    return key + '.' + screen.x + '.' + screen.y + '.' + screen.width + '.' + screen.height;
+    String realKey = key + '.' + screen.x + '.' + screen.y + '.' + screen.width + '.' + screen.height;
+    if (JBUI.isHiDPI()) {
+      realKey+= "@" + (((int)(96 * JBUI.scale(1f)))) + "dpi";
+    }
+    return realKey;
   }
 }

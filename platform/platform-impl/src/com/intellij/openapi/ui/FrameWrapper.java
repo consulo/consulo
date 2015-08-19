@@ -26,10 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.DimensionService;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -277,47 +274,13 @@ public class FrameWrapper implements Disposable, DataProvider {
 
   protected void loadFrameState() {
     final Window frame = getFrame();
-    final Point location;
-    final Dimension size;
-    final int extendedState;
-    DimensionService dimensionService = DimensionService.getInstance();
-    if (myDimensionKey == null || dimensionService == null) {
-      location = null;
-      size = null;
-      extendedState = -1;
-    }
-    else {
-      location = dimensionService.getLocation(myDimensionKey);
-      size = dimensionService.getSize(myDimensionKey);
-      extendedState = dimensionService.getExtendedState(myDimensionKey);
-    }
-
-    if (size != null && location != null) {
-      frame.setLocation(location);
-      frame.setSize(size);
-      ((RootPaneContainer)frame).getRootPane().revalidate();
-    }
-    else {
+    if (myDimensionKey != null && !WindowStateService.getInstance().loadStateFor(myProject, myDimensionKey, frame)) {
       final IdeFrame ideFrame = WindowManagerEx.getInstanceEx().getIdeFrame(myProject);
       if (ideFrame != null) {
-        frame.pack();
         frame.setBounds(ideFrame.suggestChildFrameBounds());
       }
     }
-
-    if (extendedState == Frame.MAXIMIZED_BOTH && frame instanceof JFrame) {
-      ((JFrame)frame).setExtendedState(extendedState);
-    }
-  }
-
-  private static void saveFrameState(String dimensionKey, Component frame) {
-    DimensionService dimensionService = DimensionService.getInstance();
-    if (dimensionKey == null || dimensionService == null) return;
-    dimensionService.setLocation(dimensionKey, frame.getLocation());
-    dimensionService.setSize(dimensionKey, frame.getSize());
-    if (frame instanceof JFrame) {
-      dimensionService.setExtendedState(dimensionKey, ((JFrame)frame).getExtendedState());
-    }
+    ((RootPaneContainer)frame).getRootPane().revalidate();
   }
 
   public void setTitle(String title) {
@@ -415,7 +378,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       MouseGestureManager.getInstance().remove(this);
 
       if (myShown) {
-        saveFrameState(myDimensionKey, this);
+        WindowStateService.getInstance().saveStateFor(myProject, myDimensionKey, this);
       }
 
       Disposer.dispose(FrameWrapper.this);
@@ -518,8 +481,8 @@ public class FrameWrapper implements Disposable, DataProvider {
 
       MouseGestureManager.getInstance().remove(this);
 
-      if (myShown) {
-        saveFrameState(myDimensionKey, this);
+      if (myShown && myDimensionKey != null) {
+        WindowStateService.getInstance().saveStateFor(myProject, myDimensionKey, this);
       }
 
       Disposer.dispose(FrameWrapper.this);
