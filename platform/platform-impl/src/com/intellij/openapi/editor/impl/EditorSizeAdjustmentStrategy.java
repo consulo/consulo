@@ -37,7 +37,7 @@ import java.awt.*;
  * is permanently increasing (the user is typing at the end of the longest line) etc. See method javadocs for more details.
  * <p/>
  * Not thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 6/17/11 2:45 PM
  */
@@ -45,10 +45,10 @@ public class EditorSizeAdjustmentStrategy {
 
   /** Amount of time (in milliseconds) to keep information about preferred size change. */
   private static final long TIMING_TTL_MILLIS = 10000L;
-  
+
   /** Constant that indicates minimum number of preferred size changes per target amount of time that is considered to be frequent. */
   private static final int FREQUENT_SIZE_CHANGES_NUMBER = 10;
-  
+
   /** Default number of columns to reserve during frequent typing at the end of the longest document line. */
   private static final int DEFAULT_RESERVE_COLUMNS_NUMBER = 4;
 
@@ -57,10 +57,10 @@ public class EditorSizeAdjustmentStrategy {
 
   private int myReserveColumns = DEFAULT_RESERVE_COLUMNS_NUMBER;
   private boolean mySkip;
-  
+
   /**
    * Asks to adjust new preferred size appliance if necessary.
-   * 
+   *
    * @param newPreferredSize  newly calculated preferred size that differs from the old preferred size
    * @param oldPreferredSize  old preferred size (if any)
    * @param editor            target editor
@@ -113,16 +113,16 @@ public class EditorSizeAdjustmentStrategy {
     }
     if (endIndex > 0) {
       myTimings.remove(0, endIndex);
-    } 
+    }
   }
 
   private void scheduleSizeUpdate(@NotNull EditorImpl editor) {
     myAlarm.cancelAllRequests();
     myAlarm.addRequest(new UpdateSizeTask(editor), 1000);
   }
-  
+
   private class UpdateSizeTask implements Runnable {
-    
+
     private final EditorImpl myEditor;
 
     UpdateSizeTask(@NotNull EditorImpl editor) {
