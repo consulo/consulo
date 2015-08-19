@@ -47,7 +47,7 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
    */
   int AUTO_LAYOUT_POLICY = 2;
 
-  /** This is default minimum size of the toolbar button */
+  /** This is default minimum size of the toolbar button, without scaling */
   Dimension DEFAULT_MINIMUM_BUTTON_SIZE = new Dimension(25, 25);
 
   Dimension NAVBAR_MINIMUM_BUTTON_SIZE = new Dimension(20, 20);
