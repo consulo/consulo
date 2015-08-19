@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityStateListener;
 import com.intellij.openapi.application.impl.LaterInvocator;
+import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -27,6 +28,7 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.EditorEventMulticaster;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
+import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
@@ -36,6 +38,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
@@ -45,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class EditorFactoryImpl extends EditorFactory {
+public class EditorFactoryImpl extends EditorFactory implements ApplicationComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.EditorFactoryImpl");
   private final EditorEventMulticasterImpl myEditorEventMulticaster = new EditorEventMulticasterImpl();
   private final EventDispatcher<EditorFactoryListener> myEditorFactoryEventDispatcher = EventDispatcher.create(EditorFactoryListener.class);
@@ -125,21 +128,21 @@ public class EditorFactoryImpl extends EditorFactory {
   @Override
   @NotNull
   public Document createDocument(@NotNull CharSequence text) {
-    DocumentImpl document = new DocumentImpl(text);
+    DocumentEx document = new DocumentImpl(text);
     myEditorEventMulticaster.registerDocument(document);
     return document;
   }
 
   @NotNull
   public Document createDocument(boolean allowUpdatesWithoutWriteAction) {
-    DocumentImpl document = new DocumentImpl("", allowUpdatesWithoutWriteAction);
+    DocumentEx document = new DocumentImpl("", allowUpdatesWithoutWriteAction);
     myEditorEventMulticaster.registerDocument(document);
     return document;
   }
 
   @NotNull
   public Document createDocument(@NotNull CharSequence text, boolean acceptsSlashR, boolean allowUpdatesWithoutWriteAction) {
-    DocumentImpl document = new DocumentImpl(text, acceptsSlashR, allowUpdatesWithoutWriteAction);
+    DocumentEx document = new DocumentImpl(text, acceptsSlashR, allowUpdatesWithoutWriteAction);
     myEditorEventMulticaster.registerDocument(document);
     return document;
   }
@@ -202,14 +205,17 @@ public class EditorFactoryImpl extends EditorFactory {
   @Override
   public void releaseEditor(@NotNull Editor editor) {
     try {
-      ((EditorImpl)editor).release();
+      myEditorFactoryEventDispatcher.getMulticaster().editorReleased(new EditorFactoryEvent(this, editor));
     }
     finally {
-      myEditors.remove(editor);
-      myEditorFactoryEventDispatcher.getMulticaster().editorReleased(new EditorFactoryEvent(this, editor));
-
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("number of Editor's:" + myEditors.size());
+      try {
+        ((EditorImpl)editor).release();
+      }
+      finally {
+        myEditors.remove(editor);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("number of Editor's:" + myEditors.size());
+        }
       }
     }
   }
@@ -237,10 +243,11 @@ public class EditorFactoryImpl extends EditorFactory {
   @Override
   @NotNull
   public Editor[] getAllEditors() {
-    return myEditors.toArray(new Editor[myEditors.size()]);
+    return ArrayUtil.stripTrailingNulls(myEditors.toArray(new Editor[myEditors.size()]));
   }
 
   @Override
+  @Deprecated
   public void addEditorFactoryListener(@NotNull EditorFactoryListener listener) {
     myEditorFactoryEventDispatcher.addListener(listener);
   }
@@ -251,6 +258,7 @@ public class EditorFactoryImpl extends EditorFactory {
   }
 
   @Override
+  @Deprecated
   public void removeEditorFactoryListener(@NotNull EditorFactoryListener listener) {
     myEditorFactoryEventDispatcher.removeListener(listener);
   }

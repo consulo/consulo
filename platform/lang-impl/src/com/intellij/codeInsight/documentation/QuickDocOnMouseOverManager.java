@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.wm.IdeFrame;
@@ -77,7 +78,7 @@ public class QuickDocOnMouseOverManager {
 
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(
             ApplicationActivationListener.TOPIC,
-            new ApplicationActivationListener() {
+            new ApplicationActivationListener.Adapter() {
               @Override
               public void applicationActivated(IdeFrame ideFrame) {
                 myApplicationActive = true;
@@ -159,6 +160,10 @@ public class QuickDocOnMouseOverManager {
     }
 
     Editor editor = e.getEditor();
+    if (editor.getComponent().getClientProperty(EditorImpl.IGNORE_MOUSE_TRACKING) != null) {
+      return;
+    }
+
     if (editor.isOneLineMode()) {
       // Don't want auto quick doc to mess at, say, editor used for debugger condition.
       return;
@@ -336,7 +341,7 @@ public class QuickDocOnMouseOverManager {
     @Override
     public void editorReleased(@NotNull EditorFactoryEvent event) {
       if (myEnabled) {
-        // We do this in the 'if' block because editor logs an error on attempt to remove already released listener. 
+        // We do this in the 'if' block because editor logs an error on attempt to remove already released listener.
         unRegisterListeners(event.getEditor());
       }
     }
