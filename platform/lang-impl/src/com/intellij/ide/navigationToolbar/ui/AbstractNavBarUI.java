@@ -50,7 +50,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public Insets getElementIpad(boolean isPopupElement) {
-    return isPopupElement ? new Insets(1, 2, 1, 2) : JBUI.emptyInsets();
+    return isPopupElement ? new JBInsets(1, 2, 1, 2) : JBUI.emptyInsets();
   }
 
   @Override
@@ -175,10 +175,10 @@ public abstract class AbstractNavBarUI implements NavBarUI {
         focusShape.moveTo(0, 0);
         focusShape.lineTo(offset, 0);
       }
-      focusShape.lineTo(w - 1, h2);
-      focusShape.lineTo(offset, h - 1);
+      focusShape.lineTo(w - JBUI.scale(1), h2);
+      focusShape.lineTo(offset, h - JBUI.scale(1));
       if (!toolbarVisible && !floating) {
-        focusShape.lineTo(0, h - 1);
+        focusShape.lineTo(0, h - JBUI.scale(1));
 
       }
 
@@ -218,7 +218,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
 
     g2.translate(offset, 0);
-    int off = getDecorationOffset() - 1;
+    int off = getDecorationOffset() - JBUI.scale(1);
 
     if (!floating || !item.isLastElement()) {
       if (toolbarVisible || floating) {
@@ -239,7 +239,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
   }
 
   private static void drawArrow(Graphics2D g2d, Color c, Color light, int decorationOffset, int h, boolean highlight, boolean gradient) {
-    int off = decorationOffset - 1;
+    int off = decorationOffset - JBUI.scale(1);
 
     g2d.setColor(c);
     if (gradient) {
@@ -270,11 +270,11 @@ public abstract class AbstractNavBarUI implements NavBarUI {
   }
 
   private int getDecorationOffset() {
-    return 8;
+    return JBUI.scale(8);
   }
 
   private int getFirstElementLeftOffset() {
-    return 6;
+    return JBUI.scale(6);
   }
 
   @Override

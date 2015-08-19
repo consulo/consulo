@@ -21,7 +21,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -99,7 +99,7 @@ public class NavBarItem extends SimpleColoredComponent implements Disposable {
     if (myObject != null) {
       final NavBarPresentation presentation = myPanel.getPresentation();
       Icon icon = presentation.getIcon(myObject);
-      setIcon = icon != null ? icon : EmptyIcon.ICON_16;
+      setIcon = icon != null ? icon : JBUI.emptyIcon(16);
     }
     else {
       setIcon = AllIcons.Nodes.TreeClosed;

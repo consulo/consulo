@@ -42,6 +42,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.IconUtil;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.sdk.SdkUtil;
@@ -75,8 +76,8 @@ public class NavBarPresentation {
           }
         });
 
-        if (icon != null && (icon.getIconHeight() > 16 || icon.getIconWidth() > 16)) {
-          icon = IconUtil.cropIcon(icon, 16, 16);
+        if (icon != null && (icon.getIconHeight() > JBUI.scale(16) || icon.getIconWidth() > JBUI.scale(16))) {
+          icon = IconUtil.cropIcon(icon, JBUI.scale(16), JBUI.scale(16));
         }
         return icon;
       }

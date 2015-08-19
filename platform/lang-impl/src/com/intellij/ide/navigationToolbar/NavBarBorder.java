@@ -17,6 +17,7 @@ package com.intellij.ide.navigationToolbar;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ui.Gray;
+import com.intellij.util.ui.JBInsets;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -51,16 +52,16 @@ public class NavBarBorder implements Border {
     if (myDocked) {
       if (!UISettings.getInstance().SHOW_MAIN_TOOLBAR) {
         if (NavBarRootPaneExtension.runToolbarExists()) {
-          return new Insets(1, 0, 1, 4);
+          return new JBInsets(1, 0, 1, 4);
         }
 
-        return new Insets(0, 0, 0, 4);
+        return new JBInsets(0, 0, 0, 4);
       }
 
-      return new Insets(1, 0, 0, 4);
+      return new JBInsets(1, 0, 0, 4);
     }
 
-    return new Insets(1, 0, 1, 4);
+    return new JBInsets(1, 0, 1, 4);
   }
 
   @Override
