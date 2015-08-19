@@ -56,6 +56,7 @@ import com.intellij.ui.mac.MacPopupMenuUI;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.BuildInLookAndFeel;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -612,13 +613,16 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   private void patchLafFonts(UIDefaults uiDefaults) {
-    if (UISettings.getInstance().OVERRIDE_NONIDEA_LAF_FONTS) {
+    UISettings uiSettings = UISettings.getInstance();
+    if (uiSettings.OVERRIDE_NONIDEA_LAF_FONTS) {
       storeOriginalFontDefaults(uiDefaults);
-      initFontDefaults(uiDefaults, myUiSettings.FONT_FACE, myUiSettings.FONT_SIZE);
+      JBUI.setScaleFactor(uiSettings.FONT_SIZE / 12f);
+      initFontDefaults(uiDefaults, uiSettings.FONT_FACE, uiSettings.FONT_SIZE);
     }
     else {
       restoreOriginalFontDefaults(uiDefaults);
     }
+    JBUI.setScaleFactor(JBUI.Fonts.label().getSize()/12f);
   }
 
   private void restoreOriginalFontDefaults(UIDefaults defaults) {

@@ -24,11 +24,11 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.RetinaImage;
 import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.WeakHashMap;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,6 @@ import java.awt.image.ImageProducer;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -48,6 +47,7 @@ public final class IconLoader {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.IconLoader");
   public static boolean STRICT = false;
   private static boolean USE_DARK_ICONS = UIUtil.isUnderDarkBuildInLaf();
+  private static float SCALE = JBUI.scale(1f);
 
   @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
   private static final ConcurrentMap<URL, CachedImageIcon> ourIconsCache = new ConcurrentHashMap<URL, CachedImageIcon>(100, 0.9f,2);
@@ -75,10 +75,20 @@ public final class IconLoader {
 
   public static void setUseDarkIcons(boolean useDarkIcons) {
     USE_DARK_ICONS = useDarkIcons;
+    clearCache();
+  }
+
+  public static void setScale(float scale) {
+    if (scale != SCALE) {
+      SCALE = scale;
+      clearCache();
+    }
+  }
+
+  private static void clearCache() {
     ourIconsCache.clear();
     ourIcon2DisabledIcon.clear();
   }
-
 
   //TODO[kb] support iconsets
   //public static Icon getIcon(@NotNull final String path, @NotNull final String darkVariantPath) {
@@ -289,19 +299,22 @@ public final class IconLoader {
     @NotNull
     private final URL myUrl;
     private boolean dark;
+    private float scale;
 
     public CachedImageIcon(@NotNull URL url) {
       myUrl = url;
       dark = USE_DARK_ICONS;
+      scale = SCALE;
     }
 
     @NotNull
     private synchronized Icon getRealIcon() {
-      if (isLoaderDisabled()) return EMPTY_ICON;
+      if (isLoaderDisabled() && (myRealIcon == null || dark != USE_DARK_ICONS || scale != SCALE)) return EMPTY_ICON;
 
-      if (dark != USE_DARK_ICONS) {
+      if (dark != USE_DARK_ICONS || scale != SCALE) {
         myRealIcon = null;
         dark = USE_DARK_ICONS;
+        scale = SCALE;
       }
       Object realIcon = myRealIcon;
       if (realIcon instanceof Icon) return (Icon)realIcon;
@@ -366,6 +379,7 @@ public final class IconLoader {
     private boolean myWasComputed;
     private Icon myIcon;
     private boolean isDarkVariant = USE_DARK_ICONS;
+    private float scale = SCALE;
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -388,8 +402,9 @@ public final class IconLoader {
     }
 
     protected final synchronized Icon getOrComputeIcon() {
-      if (!myWasComputed || isDarkVariant != USE_DARK_ICONS) {
+      if (!myWasComputed || isDarkVariant != USE_DARK_ICONS || scale != SCALE) {
         isDarkVariant = USE_DARK_ICONS;
+        scale = SCALE;
         myWasComputed = true;
         myIcon = compute();
       }

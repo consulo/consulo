@@ -15,43 +15,25 @@
  */
 package com.intellij.util.ui;
 
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.components.VerticalLayoutPanel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class JBUI {
-  private static boolean IS_HIDPI = calculateHiDPI();
   private static float SCALE_FACTOR = calculateScaleFactor();
-
-  private static boolean calculateHiDPI() {
-    if (SystemInfo.isMac) {
-      return false;
-    }
-
-    if (SystemProperties.is("hidpi")) {
-      return true;
-    }
-
-    if (SystemProperties.has("hidpi") && !SystemProperties.is("hidpi")) {
-      return false;
-    }
-
-    if (SystemInfo.isWindows && getSystemDPI() > 144) {
-      return true;
-    }
-
-    return false;
-  }
 
   private static float calculateScaleFactor() {
     if (SystemInfo.isMac) {
@@ -62,11 +44,29 @@ public class JBUI {
       return 1.0f;
     }
 
-    final int dpi = getSystemDPI();
-    if (dpi <= 96)  return 1.0f;
-    if (dpi <= 120) return 1.25f;
-    if (dpi <= 144) return 1.5f;
-    if (dpi <= 168) return 1.75f;
+    if (SystemInfo.isLinux) {
+      final int dpi = getSystemDPI();
+      if (dpi < 120) return 1f;
+      if (dpi < 144) return 1.25f;
+      if (dpi < 168) return 1.5f;
+      if (dpi < 192) return 1.75f;
+      return 2f;
+    }
+
+    int size = -1;
+    try {
+      if (SystemInfo.isWindows) {
+        size = (Integer)Toolkit.getDefaultToolkit().getDesktopProperty("win.system.font.height");
+      }
+    } catch (Exception e) {//
+    }
+    if (size == -1) {
+      size = Fonts.label().getSize();
+    }
+    if (size <= 13) return 1.0f;
+    if (size <= 16) return 1.25f;
+    if (size <= 18) return 1.5f;
+    if (size < 24)  return 1.75f;
 
     return 2.0f;
   }
@@ -79,8 +79,29 @@ public class JBUI {
     }
   }
 
+  public static void setScaleFactor(float scale) {
+    if (scale < 1.25f) scale = 1.0f;
+    else if (scale < 1.5f) scale = 1.25f;
+    else if (scale < 1.75f) scale = 1.5f;
+    else if (scale < 2f) scale = 1.75f;
+    else scale = 2.0f;
+
+    if (SystemInfo.isLinux && scale == 1.25f) {
+      //Default UI font size for Unity and Gnome is 15. Scaling factor 1.25f works badly on Linux
+      scale = 1f;
+    }
+    SCALE_FACTOR = scale;
+    IconLoader.setScale(scale);
+  }
+
   public static int scale(int i) {
     return (int)(SCALE_FACTOR * i);
+  }
+
+  public static int scaleFontSize(int fontSize) {
+    if (SCALE_FACTOR == 1.25f) return (int)(fontSize * 1.34f);
+    if (SCALE_FACTOR == 1.75f) return (int)(fontSize * 1.67f);
+    return scale(fontSize);
   }
 
   public static JBDimension size(int width, int height) {
@@ -208,6 +229,11 @@ public class JBUI {
 
     public static Border customLine(Color color, int thickness) {
       return customLine(color, thickness, thickness, thickness, thickness);
+    }
+
+    public static Border merge(@Nullable Border source, @NotNull Border extra, boolean extraIsOutside) {
+      if (source == null) return extra;
+      return new CompoundBorder(extraIsOutside ? extra : source, extraIsOutside? source : extra);
     }
   }
 

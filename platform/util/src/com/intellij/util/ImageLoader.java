@@ -22,6 +22,7 @@ import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.io.URLUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -108,7 +109,7 @@ public class ImageLoader implements Serializable {
   }
 
   public static List<Pair<String, Integer>> getFileNames(@NotNull String file) {
-    return getFileNames(file, UIUtil.isUnderDarkBuildInLaf(), UIUtil.isRetina());
+    return getFileNames(file, UIUtil.isUnderDarkBuildInLaf(), UIUtil.isRetina() || JBUI.scale(1.0f) >= 1.5f);
   }
 
   public static List<Pair<String, Integer>> getFileNames(@NotNull String file, boolean dark, boolean retina) {
