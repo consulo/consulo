@@ -16,6 +16,7 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ui.Gray;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -60,12 +61,12 @@ public class StatusBarUI extends ComponentUI {
 
   @Override
   public Dimension getMinimumSize(JComponent c) {
-    return MIN_SIZE; // TODO
+    return JBUI.size(MIN_SIZE);
   }
 
   @Override
   public Dimension getMaximumSize(JComponent c) {
-    return MAX_SIZE;
+    return JBUI.size(MAX_SIZE);
   }
 
   private static final class BackgroundPainter implements Border {
@@ -75,8 +76,7 @@ public class StatusBarUI extends ComponentUI {
 
     private static final Color BG_COLOR = Gray._238;
 
-    private static final Insets INSETS = new Insets(0, 0, 0, 0);
-
+    @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width, final int height) {
       final Graphics2D g2d = (Graphics2D) g.create();
 
@@ -90,7 +90,7 @@ public class StatusBarUI extends ComponentUI {
 
       if (!UIUtil.isUnderDarcula()) {
         g2d.setColor(BORDER2_TOP_COLOR);
-        g2d.drawLine(0, 1, width, 1);
+        g2d.drawLine(0, JBUI.scale(1), width, JBUI.scale(1));
       }
 
       g2d.setColor(UIUtil.isUnderDarcula() ? BORDER_BOTTOM_COLOR.darker().darker() : BORDER_BOTTOM_COLOR);
@@ -99,10 +99,12 @@ public class StatusBarUI extends ComponentUI {
       g2d.dispose();
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
-      return INSETS;
+      return JBUI.emptyInsets();
     }
 
+    @Override
     public boolean isBorderOpaque() {
       return true;
     }
