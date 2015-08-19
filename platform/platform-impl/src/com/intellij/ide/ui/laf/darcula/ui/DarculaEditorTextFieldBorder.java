@@ -19,10 +19,10 @@ import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 
 /**
@@ -34,10 +34,10 @@ public class DarculaEditorTextFieldBorder implements Border {
     final EditorTextField textField = UIUtil.getParentOfType(EditorTextField.class, c);
     if (textField == null) return;
 
-    final int x1 = x + 3;
-    final int y1 = y + 3;
-    final int width1 = width - 8;
-    final int height1 = height - 6;
+    final int x1 = x + JBUI.scale(3);
+    final int y1 = y + JBUI.scale(3);
+    final int width1 = width - JBUI.scale(8);
+    final int height1 = height - JBUI.scale(6);
 
     if (c.isOpaque()) {
       g.setColor(UIUtil.getPanelBackground());
@@ -62,7 +62,7 @@ public class DarculaEditorTextFieldBorder implements Border {
 
   @Override
   public Insets getBorderInsets(Component c) {
-    return new InsetsUIResource(6, 7, 6, 7);
+    return JBUI.insets(6, 7, 6, 7).asUIResource();
   }
 
   @Override
