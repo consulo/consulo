@@ -72,7 +72,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     }
   }
 
-  void setRange(@NotNull TextRange range, @NotNull Document document) {
+  public void setRange(@NotNull TextRange range, @NotNull Document document) {
     myPsiRange = null;
     FrozenDocument frozenDocument = myPsiDocManager.getLastCommittedDocument(document);
     myRangeMarker = myMarkerCache
