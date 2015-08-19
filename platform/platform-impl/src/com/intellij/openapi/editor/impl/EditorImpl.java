@@ -1622,7 +1622,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     if (logLine < 0) {
       lineStartOffset = 0;
     }
-    else if (lineStartOffset < 0) {
+    if (lineStartOffset < 0) {
       lineStartOffset = logLine >= myDocument.getLineCount() ? myDocument.getTextLength() : myDocument.getLineStartOffset(logLine);
     }
 
