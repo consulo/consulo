@@ -22,8 +22,10 @@ import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.io.URLUtil;
+import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,11 +61,26 @@ public class ImageLoader implements Serializable {
     return !mediatracker.isErrorID(1);
   }
 
+
   @Nullable
-  public static Image loadFromUrl(URL url) {
+  public static Image loadFromUrl(@NotNull URL url) {
+    return loadFromUrl(url, true);
+  }
+
+  @Nullable
+  public static Image loadFromUrl(@NotNull URL url, boolean allowFloatScaling) {
     for (Pair<String, Integer> each : getFileNames(url.toString())) {
       try {
-        return loadFromStream(URLUtil.openStream(new URL(each.first)), each.second);
+        Image image = loadFromStream(URLUtil.openStream(new URL(each.first)), each.second);
+        float scale = allowFloatScaling ? JBUI.scale(1f) : JBUI.scale(1f) > 1.5f ? 2f : 1f;
+        //we can't check all 3rd party plugins and convince the authors to add @2x icons.
+        // isHiDPI() != isRetina() => we should scale images manually
+        if (image != null && JBUI.isHiDPI() && !each.first.contains("@2x")) {
+          image = upscale(image, scale);
+        } else if (image != null && JBUI.scale(1f) >= 1.5f && JBUI.scale(1f) < 2.0f && each.first.contains("@2x")) {
+          image = downscale(image, scale);
+        }
+        return image;
       }
       catch (IOException ignore) {
       }
@@ -71,16 +88,18 @@ public class ImageLoader implements Serializable {
     return null;
   }
 
-  @Nullable
-  public static Image loadFromUrl(URL url, boolean dark, boolean retina) {
-    for (Pair<String, Integer> each : getFileNames(url.toString(), dark, retina)) {
-      try {
-        return loadFromStream(URLUtil.openStream(new URL(each.first)), each.second);
-      }
-      catch (IOException ignore) {
-      }
-    }
-    return null;
+  @NotNull
+  private static Image upscale(Image image, float scale) {
+    int width = (int)(scale * image.getWidth(null));
+    int height = (int)(scale * image.getHeight(null));
+    return Scalr.resize(ImageUtil.toBufferedImage(image), Scalr.Method.ULTRA_QUALITY, width, height);
+  }
+
+  @NotNull
+  private static Image downscale(Image image, float scale) {
+    int width = (int)(image.getWidth(null)  / 2f * scale);
+    int height = (int)(image.getHeight(null)/ 2f * scale);
+    return Scalr.resize(ImageUtil.toBufferedImage(image), Scalr.Method.ULTRA_QUALITY, width, height);
   }
 
   @Nullable

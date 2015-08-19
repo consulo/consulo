@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="imgscalr">
+    <binaries>
+      <root url="jar://$PROJECT_DIR$/lib/imgscalr-lib-4.2.jar!/" />
+    </binaries>
+    <sources>
+      <root url="jar://$PROJECT_DIR$/libSrc/imgscalr-lib-4.2-sources.jar!/" />
+    </sources>
+  </library>
+</component>
