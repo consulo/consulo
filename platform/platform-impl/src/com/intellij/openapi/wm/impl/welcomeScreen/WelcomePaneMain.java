@@ -3,6 +3,7 @@ package com.intellij.openapi.wm.impl.welcomeScreen;
 import com.intellij.ide.RecentProjectsManagerBase;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.ui.ClickListener;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -58,7 +59,7 @@ public class WelcomePaneMain extends JPanel {
 
     @Override
     public Dimension getMaximumSize() {
-      return new Dimension(super.getPreferredSize().width / 2, 28);
+      return new Dimension(super.getPreferredSize().width / 2, JBUI.scale(28));
     }
 
     @Override
@@ -86,7 +87,7 @@ public class WelcomePaneMain extends JPanel {
     myCardPanel = new JPanel(new CardLayout()) {
       @Override
       public Dimension getPreferredSize() {
-        return new Dimension(getWidth(), 500);
+        return new Dimension(getWidth(), JBUI.scale(500));
       }
 
     };

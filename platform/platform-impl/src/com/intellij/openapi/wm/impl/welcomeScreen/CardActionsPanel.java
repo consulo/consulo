@@ -29,9 +29,9 @@ import com.intellij.ui.JBCardLayout;
 import com.intellij.ui.LightColors;
 import com.intellij.util.ui.CenteredIcon;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,11 +77,11 @@ public class CardActionsPanel extends JPanel {
       buttons.add(0, new Button(back, p));
     }
 
-    JPanel buttonsPanel = new JPanel(new GridLayout(buttons.size(), 1, 5, 5));
+    JPanel buttonsPanel = new JPanel(new GridLayout(buttons.size(), 1, JBUI.scale(5), JBUI.scale(5)));
     if (!USE_ICONS) {
       buttonsPanel.setOpaque(false);
     }
-    buttonsPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+    buttonsPanel.setBorder(JBUI.Borders.empty(15, 15, 15, 15));
     for (Button button : buttons) {
       buttonsPanel.add(button);
     }
@@ -126,19 +126,21 @@ public class CardActionsPanel extends JPanel {
       @Override
       public void paintIcon(Component c, Graphics g, int x, int y) {
         g.setColor(LightColors.SLIGHTLY_GREEN);
-        g.fillRoundRect(x + 4, y + 4, 32 - 8, 32 - 8, 8, 8);
+        int scale4 = JBUI.scale(4);
+        int scale8 = JBUI.scale(8);
+        g.fillRoundRect(x + scale4, y + scale4, getIconWidth() - scale8, getIconHeight() - scale8, scale8, scale8);
         g.setColor(Color.GRAY);
-        g.drawRoundRect(x + 4, y + 4, 32 - 8, 32 - 8, 8, 8);
+        g.drawRoundRect(x + scale4, y + scale4, getIconWidth() - scale8, getIconHeight() - scale8, scale8, scale8);
       }
 
       @Override
       public int getIconWidth() {
-        return 32;
+        return JBUI.scale(32);
       }
 
       @Override
       public int getIconHeight() {
-        return 32;
+        return JBUI.scale(32);
       }
     };
 
@@ -152,15 +154,17 @@ public class CardActionsPanel extends JPanel {
 
         Icon icon = AllIcons.Actions.Forward; //AllIcons.Icons.Ide.NextStepGrayed;
         int y = (bounds.height - icon.getIconHeight()) / 2;
-        int x = bounds.width - icon.getIconWidth() - 15;
+        int x = bounds.width - icon.getIconWidth() - JBUI.scale(15);
 
         if (getPopState() == POPPED) {
           final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
           g.setColor(WelcomeScreenColors.CAPTION_BACKGROUND);
-          g.fillOval(x - 3, y - 3, icon.getIconWidth() + 6, icon.getIconHeight() + 6);
+          int scale3 = JBUI.scale(3);
+          int scale6 = JBUI.scale(6);
+          g.fillOval(x - scale3, y - scale3, icon.getIconWidth() + scale6, icon.getIconHeight() + scale6);
 
           g.setColor(WelcomeScreenColors.GROUP_ICON_BORDER_COLOR);
-          g.drawOval(x - 3, y - 3, icon.getIconWidth() + 6, icon.getIconHeight() + 6);
+          g.drawOval(x - scale3, y - scale3, icon.getIconWidth() + scale6, icon.getIconHeight() + scale6);
           config.restore();
         }
         else {
@@ -175,8 +179,8 @@ public class CardActionsPanel extends JPanel {
       super(action,
             wrapIcon(presentation),
             ActionPlaces.WELCOME_SCREEN,
-            new Dimension(32, 32));
-      setBorder(new EmptyBorder(3, 3, 3, 3));
+            JBUI.size(32, 32));
+      setBorder(JBUI.Borders.empty(3, 3, 3, 3));
     }
 
     @Override
@@ -191,12 +195,12 @@ public class CardActionsPanel extends JPanel {
 
     @Override
     protected int iconTextSpace() {
-      return 8;
+      return JBUI.scale(8);
     }
 
     private static Presentation wrapIcon(Presentation presentation) {
       Icon original = presentation.getIcon();
-      CenteredIcon centered = new CenteredIcon(original != null ? original : DEFAULT_ICON, 40, 40, false);
+      CenteredIcon centered = new CenteredIcon(original != null ? original : DEFAULT_ICON, JBUI.scale(40), JBUI.scale(40), false);
       presentation.setIcon(centered);
       return presentation;
     }

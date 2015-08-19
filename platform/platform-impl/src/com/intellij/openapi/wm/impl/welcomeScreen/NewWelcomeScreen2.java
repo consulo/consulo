@@ -31,6 +31,7 @@ import com.intellij.openapi.wm.WelcomeScreen;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -84,7 +85,7 @@ public class NewWelcomeScreen2 extends JPanel implements WelcomeScreen {
 
     JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     footerPanel.setBackground(WelcomeScreenColors.FOOTER_BACKGROUND);
-    footerPanel.setBorder(new EmptyBorder(2, 5, 2, 5) {
+    footerPanel.setBorder(new EmptyBorder(JBUI.scale(2), JBUI.scale(5), JBUI.scale(2), JBUI.scale(5)) {
       @Override
       public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         g.setColor(WelcomeScreenColors.BORDER_COLOR);
@@ -104,7 +105,7 @@ public class NewWelcomeScreen2 extends JPanel implements WelcomeScreen {
   }
 
   private static JLabel makeSmallFont(JLabel label) {
-    label.setFont(label.getFont().deriveFont((float)10));
+    label.setFont(JBUI.Fonts.label(10));
     return label;
   }
 
@@ -113,9 +114,9 @@ public class NewWelcomeScreen2 extends JPanel implements WelcomeScreen {
     JLabel welcome = new JLabel(ApplicationNamesInfo.getInstance().getFullProductName(),
                                 ApplicationInfoEx.getWelcomeScreenLogo(),
                                 SwingConstants.LEFT);
-    welcome.setBorder(new EmptyBorder(10, 15, 10, 15));
-    welcome.setFont(welcome.getFont().deriveFont((float) 32));
-    welcome.setIconTextGap(20);
+    welcome.setBorder(JBUI.Borders.empty(10, 15, 10, 15));
+    welcome.setFont(JBUI.Fonts.label(32));
+    welcome.setIconTextGap(JBUI.scale(20));
     welcome.setForeground(WelcomeScreenColors.WELCOME_HEADER_FOREGROUND);
     header.add(welcome);
     header.setBackground(WelcomeScreenColors.WELCOME_HEADER_BACKGROUND);
@@ -133,7 +134,7 @@ public class NewWelcomeScreen2 extends JPanel implements WelcomeScreen {
   public void setupFrame(JFrame frame) {
     frame.setResizable(false);
    // frame.pack();
-    frame.setSize(new Dimension(350, 700));
+    frame.setSize(JBUI.size(350, 700));
     Point location = DimensionService.getInstance().getLocation(WelcomeFrame.DIMENSION_KEY, null);
     Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
     frame.setLocation(new Point(
