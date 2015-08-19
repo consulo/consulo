@@ -22,6 +22,7 @@ import com.intellij.openapi.wm.impl.StaticAnchoredButton;
 import com.intellij.openapi.wm.impl.StripeButtonUI;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.EventDispatcher;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -116,7 +117,7 @@ public class StripeTabPanel extends JPanel {
   public StripeTabPanel() {
     super(new BorderLayout());
     myTabPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
-    myTabPanel.setBorder(new CustomLineBorder(0, 0, 0, 1));
+    myTabPanel.setBorder(new CustomLineBorder(0, 0, 0, JBUI.scale(1)));
 
     add(myTabPanel, BorderLayout.WEST);
 

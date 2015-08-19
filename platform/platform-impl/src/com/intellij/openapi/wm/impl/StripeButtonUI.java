@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.wm.impl;
 
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.ui.Gray;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -50,8 +52,8 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
     final AnchoredButton button = (AnchoredButton)c;
     final Dimension dim = super.getPreferredSize(button);
 
-    dim.width = (int)(4 + dim.width * 1.1f);
-    dim.height += 2;
+    dim.width = (int)(JBUI.scale(4) + dim.width * 1.1f);
+    dim.height += JBUI.scale(2);
 
     final ToolWindowAnchor anchor = button.getAnchor();
     if (ToolWindowAnchor.LEFT == anchor || ToolWindowAnchor.RIGHT == anchor) {
@@ -69,7 +71,7 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
     final String text = button.getText();
     final Icon icon = (button.isEnabled()) ? button.getIcon() : button.getDisabledIcon();
 
-    if (icon == null && text == null) {
+    if ((icon == null) && (text == null)) {
       return;
     }
 
@@ -95,9 +97,9 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
     myTextRect.x = myTextRect.y = myTextRect.width = myTextRect.height = 0;
 
     final String clippedText = SwingUtilities
-            .layoutCompoundLabel(c, fm, text, icon, button.getVerticalAlignment(), button.getHorizontalAlignment(), button.getVerticalTextPosition(),
-                                 button.getHorizontalTextPosition(), myViewRect, myIconRect, myTextRect,
-                                 button.getText() == null ? 0 : button.getIconTextGap());
+            .layoutCompoundLabel(c, fm, text, icon, button.getVerticalAlignment(), button.getHorizontalAlignment(),
+                                 button.getVerticalTextPosition(), button.getHorizontalTextPosition(), myViewRect,
+                                 myIconRect, myTextRect, button.getText() == null ? 0 : button.getIconTextGap());
 
     // Paint button's background
 
@@ -108,16 +110,19 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
 
     final ButtonModel model = button.getModel();
     final Color background = button.getBackground();
-    myIconRect.x -= 2;
-    myTextRect.x -= 2;
+    myIconRect.x -= JBUI.scale(2);
+    myTextRect.x -= JBUI.scale(2);
+    final int off = JBUI.scale(1);
     if (model.isArmed() && model.isPressed() || model.isSelected() || model.isRollover()) {
-      //if (anchor == ToolWindowAnchor.LEFT) g2.translate(-1, 0);
-      if (anchor.isHorizontal()) g2.translate(0, -1);
-      final boolean dark = UIUtil.isUnderDarcula();
-      g2.setColor(dark ? Gray._15.withAlpha(model.isSelected() ? 85 : 40) : Gray._85.withAlpha(model.isSelected() ? 85 : 40));
+      if (anchor == ToolWindowAnchor.LEFT) g2.translate(-off, 0);
+      if (anchor.isHorizontal()) g2.translate(0, -off);
+      final boolean dark = UIUtil.isUnderDarkBuildInLaf();
+      g2.setColor(dark
+                  ? Gray._15.withAlpha(model.isSelected() ? 85 : 40)
+                  : Gray._85.withAlpha(model.isSelected() ? 85 : 40));
       g2.fillRect(0, 0, button.getWidth(), button.getHeight());
-      //if (anchor == ToolWindowAnchor.LEFT) g2.translate(1, 0);
-      if (anchor.isHorizontal()) g2.translate(0, 1);
+      if (anchor == ToolWindowAnchor.LEFT) g2.translate(off, 0);
+      if (anchor.isHorizontal()) g2.translate(0, off);
     }
 
 
@@ -147,6 +152,7 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
 
     // paint text
 
+    UISettings.setupAntialiasing(g2);
     if (text != null) {
       if (model.isEnabled()) {
         if (model.isArmed() && model.isPressed() || model.isSelected()) {
@@ -162,8 +168,11 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
       /* Draw the Text */
       if (model.isEnabled()) {
         /*** paint the text normally */
-        g2.setColor(UIUtil.isUnderDarcula() && model.isSelected() ? button.getForeground().brighter() : button.getForeground());
-        BasicGraphicsUtils.drawString(g2, clippedText, button.getMnemonic2(), myTextRect.x, myTextRect.y + fm.getAscent());
+        g2.setColor(UIUtil.isUnderDarkBuildInLaf() && model.isSelected()
+                    ? button.getForeground().brighter()
+                    : button.getForeground());
+        BasicGraphicsUtils
+                .drawString(g2, clippedText, button.getMnemonic2(), myTextRect.x, myTextRect.y + fm.getAscent());
       }
       else {
         /*** paint the text disabled ***/
@@ -173,7 +182,8 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
         else {
           g2.setColor(getDisabledTextColor());
         }
-        BasicGraphicsUtils.drawString(g2, clippedText, button.getMnemonic2(), myTextRect.x, myTextRect.y + fm.getAscent());
+        BasicGraphicsUtils
+                .drawString(g2, clippedText, button.getMnemonic2(), myTextRect.x, myTextRect.y + fm.getAscent());
       }
     }
     if (ToolWindowAnchor.RIGHT == anchor || ToolWindowAnchor.LEFT == anchor) {
