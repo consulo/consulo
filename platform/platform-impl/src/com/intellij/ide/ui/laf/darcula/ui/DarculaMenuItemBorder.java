@@ -1,5 +1,7 @@
 package com.intellij.ide.ui.laf.darcula.ui;
 
+import com.intellij.util.ui.JBUI;
+
 import javax.swing.plaf.BorderUIResource;
 
 /**
@@ -7,6 +9,6 @@ import javax.swing.plaf.BorderUIResource;
  */
 public class DarculaMenuItemBorder extends BorderUIResource.EmptyBorderUIResource {
   public DarculaMenuItemBorder() {
-    super(2, 2, 2, 2);
+    super(JBUI.insets(2));
   }
 }

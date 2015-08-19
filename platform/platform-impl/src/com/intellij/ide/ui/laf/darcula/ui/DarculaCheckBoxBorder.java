@@ -16,11 +16,11 @@
 package com.intellij.ide.ui.laf.darcula.ui;
 
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
@@ -35,7 +35,7 @@ public class DarculaCheckBoxBorder implements Border, UIResource {
   @Override
   public Insets getBorderInsets(Component c) {
     final int a = SystemInfo.isMac || UIUtil.getParentOfType(CellRendererPane.class, c) != null ? 0 : 2;
-    return  new InsetsUIResource(a, a, a, a);
+    return JBUI.insets(a, a, a, a);
   }
 
   @Override

@@ -17,10 +17,10 @@ package com.intellij.ide.ui.laf.darcula.ui;
 
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicProgressBarUI;
@@ -34,7 +34,7 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
 
   @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(JComponent c) {
-    c.setBorder(new BorderUIResource(new EmptyBorder(0,0,0,0)));
+    c.setBorder(new BorderUIResource(JBUI.Borders.empty()));
     return new DarculaProgressBarUI();
   }
 
@@ -182,6 +182,6 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
   }
 
   protected int getPeriodLength() {
-    return 16;
+    return JBUI.scale(16);
   }
 }
