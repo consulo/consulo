@@ -25,6 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.ui.BuildInLookAndFeel;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
 
@@ -106,7 +107,7 @@ public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
       patchStyledEditorKit();
       patchComboBox(metalDefaults, defaults);
       defaults.remove("Spinner.arrowButtonBorder");
-      defaults.put("Spinner.arrowButtonSize", new Dimension(16, 5));
+      defaults.put("Spinner.arrowButtonSize", JBUI.size(16, 5).asUIResource());
       MetalLookAndFeel.setCurrentTheme(createMetalTheme());
       if (SystemInfo.isWindows) {
         //JFrame.setDefaultLookAndFeelDecorated(true);
