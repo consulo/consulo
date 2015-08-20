@@ -18,10 +18,10 @@ package com.intellij.ide.ui.laf.darcula.ui;
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
@@ -29,7 +29,6 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class DarculaButtonPainter implements Border, UIResource {
-  private static final int myOffset = 4;
 
   @Override
   public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
@@ -37,18 +36,22 @@ public class DarculaButtonPainter implements Border, UIResource {
     final Insets ins = getBorderInsets(c);
     final int yOff = (ins.top + ins.bottom) / 4;
     final boolean square = DarculaButtonUI.isSquare(c);
-    int offset = square ? 1 : getOffset();
+    int offset = JBUI.scale(square ? 1 : getOffset());
     if (c.hasFocus()) {
       DarculaUIUtil.paintFocusRing(g2d, offset, yOff, width - 2 * offset, height - 2 * yOff);
-    } else {
+    }
+    else {
       final GraphicsConfig config = new GraphicsConfig(g);
       g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
       g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_DEFAULT);
-      g2d.setPaint(UIUtil.getGradientPaint(width / 2, y + yOff + 1, Gray._80.withAlpha(90), width / 2, height - 2 * yOff, Gray._90.withAlpha(90)));
+      g2d.setPaint(
+              UIUtil.getGradientPaint(width / 2, y + yOff + 1, Gray._80.withAlpha(90), width / 2, height - 2 * yOff,
+                                      Gray._90.withAlpha(90)));
       //g.drawRoundRect(x + offset + 1, y + yOff + 1, width - 2 * offset, height - 2*yOff, 5, 5);
 
       ((Graphics2D)g).setPaint(Gray._100.withAlpha(180));
-      g.drawRoundRect(x + offset, y + yOff, width - 2 * offset, height - 2*yOff, square ? 3 : 5, square ? 3 : 5);
+      g.drawRoundRect(x + offset, y + yOff, width - 2 * offset, height - 2 * yOff, JBUI.scale(square ? 3 : 5),
+                      JBUI.scale(square ? 3 : 5));
 
       config.restore();
     }
@@ -57,13 +60,13 @@ public class DarculaButtonPainter implements Border, UIResource {
   @Override
   public Insets getBorderInsets(Component c) {
     if (DarculaButtonUI.isSquare(c)) {
-      return new InsetsUIResource(2, 0, 2, 0);
+      return JBUI.insets(2, 0, 2, 0).asUIResource();
     }
-    return new InsetsUIResource(8, 16, 8, 14);
+    return JBUI.insets(8, 16, 8, 14).asUIResource();
   }
 
   protected int getOffset() {
-    return myOffset;
+    return 4;
   }
 
   @Override

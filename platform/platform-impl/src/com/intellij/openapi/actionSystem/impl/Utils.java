@@ -27,6 +27,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -254,7 +255,8 @@ public class Utils{
               final boolean fix = UIUtil.isUnderGTKLookAndFeel() &&
                                   getBorder() != null &&
                                   insets.top + insets.bottom == 0;
-              return fix ? new Insets(2, insets.left, 3, insets.right) : insets;  // workaround for Sun bug #6636964
+              return fix ? new Insets(JBUI.scale(2), insets.left, JBUI.scale(3),
+                                      insets.right) : insets;  // workaround for Sun bug #6636964
             }
 
             @Override

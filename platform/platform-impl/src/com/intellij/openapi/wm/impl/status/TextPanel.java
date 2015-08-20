@@ -17,6 +17,7 @@ package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.Gray;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -163,7 +164,7 @@ public class TextPanel extends JComponent {
   }
 
   private Dimension getPanelDimensionFromFontMetrics (String text) {
-    int width = (text == null) ? 0 : myRightPadding + getFontMetrics(getFont()).stringWidth(text);
+    int width = (text == null) ? 0 : JBUI.scale(myRightPadding) + getFontMetrics(getFont()).stringWidth(text);
     int height = (myPrefHeight == null) ? getMinimumSize().height : myPrefHeight;
 
     return new Dimension(width, height);

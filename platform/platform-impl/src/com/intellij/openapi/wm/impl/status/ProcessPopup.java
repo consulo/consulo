@@ -26,6 +26,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -55,6 +56,7 @@ public class ProcessPopup  {
 
     buildActiveContent();
     myInactiveContentComponent = new JLabel(IdeBundle.message("progress.window.empty.text"), null, JLabel.CENTER) {
+      @Override
       public Dimension getPreferredSize() {
         return getEmptyPreferredSize();
       }
@@ -68,7 +70,7 @@ public class ProcessPopup  {
     myIndicators.add(indicator);
 
     myProcessBox.add(indicator.getComponent());
-    myProcessBox.add(Box.createVerticalStrut(4));
+    myProcessBox.add(Box.createVerticalStrut(JBUI.scale(4)));
 
     swithToActive();
 
@@ -121,6 +123,7 @@ public class ProcessPopup  {
 
     final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(myRootContent, toFocus);
     builder.addListener(new JBPopupAdapter() {
+      @Override
       public void onClosed(LightweightWindowEvent event) {
         myProgressPanel.hideProcessPopup();
       }
@@ -171,6 +174,7 @@ public class ProcessPopup  {
     myActiveFocusedContent.add(wrapper, BorderLayout.CENTER);
 
     final JScrollPane scrolls = new JBScrollPane(myActiveFocusedContent) {
+      @Override
       public Dimension getPreferredSize() {
         if (myProcessBox.getComponentCount() > 0) {
           return super.getPreferredSize();
@@ -217,27 +221,32 @@ public class ProcessPopup  {
 
     public ActiveContent() {
       super(new BorderLayout());
-      setBorder(DialogWrapper.ourDefaultBorder);
+      setBorder(JBUI.Borders.empty(DialogWrapper.ourDefaultBorderInsets));
       setFocusable(true);
     }
 
 
+    @Override
     public Dimension getPreferredScrollableViewportSize() {
       return getPreferredSize();
     }
 
+    @Override
     public int getScrollableUnitIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
       return myLabel.getPreferredSize().height;
     }
 
+    @Override
     public int getScrollableBlockIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
       return myLabel.getPreferredSize().height;
     }
 
+    @Override
     public boolean getScrollableTracksViewportWidth() {
       return true;
     }
 
+    @Override
     public boolean getScrollableTracksViewportHeight() {
       return false;
     }

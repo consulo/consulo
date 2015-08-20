@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.OnePixelDivider;
+import com.intellij.util.ui.JBUI;
 
 /**
  * @author Konstantin Bulenkov
@@ -49,7 +50,7 @@ public class OnePixelSplitter extends JBSplitter {
   }
 
   protected void init() {
-    setDividerWidth(1);
+    setDividerWidth(JBUI.scale(1));
   }
 
   @Override

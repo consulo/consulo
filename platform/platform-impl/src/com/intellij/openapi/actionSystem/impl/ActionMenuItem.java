@@ -31,6 +31,7 @@ import com.intellij.ui.SizedIcon;
 import com.intellij.ui.plaf.beg.BegMenuItemUI;
 import com.intellij.ui.plaf.gtk.GtkMenuItemUI;
 import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,7 @@ import java.util.Set;
 public class ActionMenuItem extends JCheckBoxMenuItem {
   private static final Icon ourCheckedIcon = new SizedIcon(AllIcons.Actions.Checked, 18, 18);
   private static final Icon ourUncheckedIcon = EmptyIcon.ICON_18;
+  private static final int outIconSize = 18;
 
   private final ActionRef<AnAction> myAction;
   private final Presentation myPresentation;
@@ -280,12 +282,14 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
       }
       else if (!(getUI() instanceof GtkMenuItemUI)) {
         if (myToggled) {
-          setIcon(ourCheckedIcon);
-          setDisabledIcon(IconLoader.getDisabledIcon(ourCheckedIcon));
+          SizedIcon icon = new SizedIcon(AllIcons.Actions.Checked, JBUI.scale(outIconSize), JBUI.scale(outIconSize));
+          setIcon(icon);
+          setDisabledIcon(IconLoader.getDisabledIcon(icon));
         }
         else {
-          setIcon(ourUncheckedIcon);
-          setDisabledIcon(IconLoader.getDisabledIcon(ourUncheckedIcon));
+          EmptyIcon emptyIcon = JBUI.emptyIcon(outIconSize);
+          setIcon(emptyIcon);
+          setDisabledIcon(emptyIcon);
         }
       }
     }
@@ -293,7 +297,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
       if (UISettings.getInstance().SHOW_ICONS_IN_MENUS) {
         Icon icon = myPresentation.getIcon();
         if (action instanceof ToggleAction && ((ToggleAction)action).isSelected(myEvent)) {
-          icon = new PoppedIcon(icon, 16, 16);
+          icon = new PoppedIcon(icon, JBUI.scale(16), JBUI.scale(16));
         }
         setIcon(icon);
         if (myPresentation.getDisabledIcon() != null) {

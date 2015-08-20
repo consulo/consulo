@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.border.Border;
@@ -69,12 +70,12 @@ public interface PopupBorder extends Border {
 
       Color color = myActive ? myActiveColor : myPassiveColor;
       g.setColor(color);
-      g.drawRect(x, y, width - 1, height - 1);
+      g.drawRect(x, y, width - JBUI.scale(1), height - JBUI.scale(1));
     }
 
     @Override
     public Insets getBorderInsets(final Component c) {
-      return myVisible ? new Insets(1, 1, 1, 1) : new Insets(0, 0, 0, 0);
+      return myVisible ? JBUI.insets(1, 1, 1, 1) : JBUI.insets(0, 0, 0, 0);
     }
 
     @Override

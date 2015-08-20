@@ -18,7 +18,7 @@ package com.intellij.ide.ui.laf.darcula.ui;
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
-import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import sun.swing.SwingUtilities2;
 
@@ -79,16 +79,16 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
     } else if (!b.isSelected() && b.getIcon() != null) {
       b.getIcon().paintIcon(b, g, iconRect.x + 4, iconRect.y + 2);
     } else {
-      final int x = iconRect.x + 3;
-      final int y = iconRect.y + 3;
-      final int w = iconRect.width - 6;
-      final int h = iconRect.height - 6;
+      final int x = iconRect.x + JBUI.scale(3);
+      final int y = iconRect.y + JBUI.scale(3);
+      final int w = iconRect.width - JBUI.scale(6);
+      final int h = iconRect.height - JBUI.scale(6);
 
       g.translate(x, y);
       final Paint paint = UIUtil.getGradientPaint(w / 2, 0, b.getBackground().brighter(),
                                                   w / 2, h, b.getBackground());
       g.setPaint(paint);
-      g.fillRect(1, 1, w - 2, h - 2);
+      g.fillRect(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2));
 
       //setup AA for lines
       final GraphicsConfig config = new GraphicsConfig(g);
@@ -115,13 +115,13 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
 
       if (b.getModel().isSelected()) {
         g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-        g.setStroke(new BasicStroke(1 *2.0f, BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+        g.setStroke(new BasicStroke(JBUI.scale(1) *2.0f, BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
         g.setPaint(getShadowColor(b.isEnabled()));
-        g.drawLine(4, 7, 7, 11);
-        g.drawLine(7, 11, w, 2);
+        g.drawLine(JBUI.scale(4), JBUI.scale(7), JBUI.scale(7), JBUI.scale(11));
+        g.drawLine(JBUI.scale(7), JBUI.scale(11), w, JBUI.scale(2));
         g.setPaint(getCheckSignColor(b.isEnabled()));
-        g.drawLine(4, 5, 7, 9);
-        g.drawLine(7, 9, w, 0);
+        g.drawLine(JBUI.scale(4), JBUI.scale(5), JBUI.scale(7), JBUI.scale(9));
+        g.drawLine(JBUI.scale(7), JBUI.scale(9), w, 0);
       }
       g.translate(-x, -y);
       config.restore();
@@ -191,6 +191,6 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
 
   @Override
   public Icon getDefaultIcon() {
-    return new IconUIResource(EmptyIcon.create(20));
+    return new IconUIResource(JBUI.emptyIcon(20));
   }
 }

@@ -18,6 +18,7 @@ package com.intellij.ui.plaf.beg;
 import com.intellij.openapi.actionSystem.impl.ActionMenuItem;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -67,7 +68,7 @@ public class BegMenuItemUI extends BasicMenuItemUI {
   }
 
   public BegMenuItemUI() {
-    myMaxGutterIconWidth = 18;
+    myMaxGutterIconWidth = JBUI.scale(18);
 
     if (UIUtil.isUnderAquaBasedLookAndFeel() && myAquaSelectedBackgroundPainter == null) {
       myAquaSelectedBackgroundPainter = (Border)UIManager.get("MenuItem.selectedBackgroundPainter");
@@ -80,7 +81,7 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     final String propertyPrefix = getPropertyPrefix();
     Integer integer = UIUtil.getPropertyMaxGutterIconWidth(propertyPrefix);
     if (integer != null) {
-      myMaxGutterIconWidth = integer.intValue();
+      myMaxGutterIconWidth = JBUI.scale(integer.intValue());
     }
   }
 
@@ -375,7 +376,7 @@ public class BegMenuItemUI extends BasicMenuItemUI {
         checkIconRect.x += (viewRect.x + myMaxGutterIconWidth / 2) - checkIcon.getIconWidth() / 2;
         a = viewRect.x;
         e = (viewRect.y + labelRect.height / 2) - myMaxGutterIconWidth / 2;
-        k = viewRect.x + myMaxGutterIconWidth + 2;
+        k = viewRect.x + myMaxGutterIconWidth + JBUI.scale(2);
       }
       else {
         checkIconRect.x = checkIconRect.y = 0;

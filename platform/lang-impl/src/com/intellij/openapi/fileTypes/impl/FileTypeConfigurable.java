@@ -36,6 +36,7 @@ import com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.PairConvertor;
+import com.intellij.util.ui.JBUI;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -176,7 +177,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
 
     @Override
     public Dimension getPreferredSize() {
-      return new Dimension(0, 20);
+      return JBUI.size(0, 20);
     }
   }
 

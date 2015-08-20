@@ -164,7 +164,7 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
       final int totalBarLength = size.width - insets.left - insets.right;
       final int usedBarLength = (int)(totalBarLength * usedMem / maxMem);
       final int unusedBarLength = (int)(totalBarLength * unusedMem / maxMem);
-      final int barHeight = Math.max(JBUI.scale(HEIGHT), getFont().getSize() + 2);
+      final int barHeight = Math.max(JBUI.scale(HEIGHT), getFont().getSize() + JBUI.scale(2));
       final int yOffset = (size.height - barHeight) / 2;
       final int xOffset = insets.left;
 
@@ -199,7 +199,8 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
       final int infoHeight = fontMetrics.getAscent();
       UISettings.setupAntialiasing(g2);
       g2.setColor(UIUtil.getLabelForeground());
-      g2.drawString(info, xOffset + (totalBarLength - infoWidth) / 2, yOffset + infoHeight + (barHeight - infoHeight) / 2 - 1);
+      g2.drawString(info, xOffset + (totalBarLength - infoWidth) / 2, yOffset + infoHeight + (barHeight - infoHeight)
+                                                                                             / 2 - JBUI.scale(1));
 
       g2.dispose();
     }

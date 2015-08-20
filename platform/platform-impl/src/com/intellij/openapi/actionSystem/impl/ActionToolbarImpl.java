@@ -54,7 +54,6 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -319,7 +318,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
     }
 
     if (mySecondaryActions.getChildrenCount() > 0) {
-      mySecondaryActionsButton = new ActionButton(mySecondaryActions, myPresentationFactory.getPresentation(mySecondaryActions), myPlace, getMinimumButtonSize());
+      mySecondaryActionsButton = new ActionButton(mySecondaryActions, myPresentationFactory.getPresentation(mySecondaryActions), myPlace, getDefaultMinimumButtonSize());
       mySecondaryActionsButton.setNoIconsInPopup(true);
       add(mySecondaryActionsButton);
     }
@@ -351,8 +350,8 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
     return customComponent;
   }
 
-  private Dimension getMinimumButtonSize() {
-    return isInsideNavBar() ? NAVBAR_MINIMUM_BUTTON_SIZE : DEFAULT_MINIMUM_BUTTON_SIZE;
+  private Dimension getDefaultMinimumButtonSize() {
+    return JBUI.size(isInsideNavBar() ? NAVBAR_MINIMUM_BUTTON_SIZE : DEFAULT_MINIMUM_BUTTON_SIZE);
   }
 
   public ActionButton createToolbarButton(final AnAction action, final ActionButtonLook look, final String place, final Presentation presentation, final Dimension minimumSize) {
@@ -805,10 +804,10 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
 
     public MySeparator() {
       if (myOrientation == SwingConstants.HORIZONTAL) {
-        mySize = new Dimension(6, 24);
+        mySize = JBUI.size(6, 24);
       }
       else {
-        mySize = new Dimension(24, 6);
+        mySize = JBUI.size(24, 6);
       }
     }
 
@@ -1334,17 +1333,17 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
     if (myMinimalMode) {
       setMinimumButtonSize(new Dimension(0, 0));
       setLayoutPolicy(NOWRAP_LAYOUT_POLICY);
-      setBorder(new EmptyBorder(0, 0, 0, 0));
+      setBorder(JBUI.Borders.empty(0, 0, 0, 0));
       setOpaque(false);
     } else {
       if (isInsideNavBar()) {
-        setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
+        setBorder(JBUI.Borders.empty(0, 2));
       }
       else {
-        setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        setBorder(JBUI.Borders.empty(2));
       }
 
-      setMinimumButtonSize(myDecorateButtons ? new Dimension(30, 20) : DEFAULT_MINIMUM_BUTTON_SIZE);
+      setMinimumButtonSize(JBUI.size(myDecorateButtons ? new Dimension(30, 20) : DEFAULT_MINIMUM_BUTTON_SIZE));
       setOpaque(true);
       setLayoutPolicy(AUTO_LAYOUT_POLICY);
     }

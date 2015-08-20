@@ -22,6 +22,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
 import com.intellij.util.ui.Animator;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.OwnScrollBarUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -251,7 +252,7 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
   }
 
   protected int getThickness() {
-    return 13;
+    return JBUI.scale(13);
   }
 
   @Override
@@ -283,18 +284,18 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
 
   private void paintMaxiThumb(Graphics2D g, Rectangle thumbBounds) {
     final boolean vertical = isVertical();
-    int hGap = vertical ? 2 : 1;
-    int vGap = vertical ? 1 : 2;
+    int hGap = JBUI.scale(vertical ? 2 : 1);
+    int vGap = JBUI.scale(vertical ? 1 : 2);
 
     int w = adjustThumbWidth(thumbBounds.width - hGap * 2);
     int h = thumbBounds.height - vGap * 2;
 
     // leave one pixel between thumb and right or bottom edge
     if (vertical) {
-      h -= 1;
+      h -= JBUI.scale(1);
     }
     else {
-      w -= 1;
+      w -= JBUI.scale(1);
     }
 
     final Paint paint;
@@ -302,19 +303,19 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
     final Color end = adjustColor(getGradientDarkColor());
 
     if (vertical) {
-      paint = UIUtil.getGradientPaint(1, 0, start, w + 1, 0, end);
+      paint = UIUtil.getGradientPaint(JBUI.scale(1), 0, start, w + JBUI.scale(1), 0, end);
     }
     else {
-      paint = UIUtil.getGradientPaint(0, 1, start, 0, h + 1, end);
+      paint = UIUtil.getGradientPaint(0, JBUI.scale(1), start, 0, h + JBUI.scale(1), end);
     }
 
     g.setPaint(paint);
-    g.fillRect(hGap + 1, vGap + 1, w - 1, h - 1);
+    g.fillRect(hGap + JBUI.scale(1), vGap + JBUI.scale(1), w - JBUI.scale(1), h - JBUI.scale(1));
 
     final Stroke stroke = g.getStroke();
     g.setStroke(BORDER_STROKE);
     g.setColor(getGradientThumbBorderColor());
-    g.drawRoundRect(hGap, vGap, w, h, 3, 3);
+    g.drawRoundRect(hGap, vGap, w, h, JBUI.scale(3), JBUI.scale(3));
     g.setStroke(stroke);
   }
 

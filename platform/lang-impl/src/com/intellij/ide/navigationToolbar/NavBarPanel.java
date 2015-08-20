@@ -65,6 +65,7 @@ import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupOwner;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -118,7 +119,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     CustomizationUtil.installPopupHandler(this, IdeActions.GROUP_NAVBAR_POPUP, ActionPlaces.NAVIGATION_BAR_POPUP);
     setOpaque(false);
     if (!docked && UIUtil.isUnderDarcula()) {
-      setBorder(new LineBorder(Gray._120, 1));
+      setBorder(new LineBorder(Gray._120, JBUI.scale(1)));
     }
     myCopyPasteDelegator = new CopyPasteDelegator(myProject, NavBarPanel.this) {
       @Override

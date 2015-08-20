@@ -831,7 +831,7 @@ public class AbstractPopup implements JBPopup {
       final IdeGlassPaneImpl glass = new IdeGlassPaneImpl(root);
       root.setGlassPane(glass);
 
-      int i = Registry.intValue("ide.popup.resizable.border.sensitivity", 4);
+      int i = JBUI.scale(Registry.intValue("ide.popup.resizable.border.sensitivity", 4));
       WindowResizeListener resizeListener = new WindowResizeListener(
               myContent,
               myMovable ? new Insets(i, i, i, i) : new Insets(0, 0, i, i),

@@ -152,8 +152,8 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
   }
 
   IdeStatusBarImpl(@Nullable IdeStatusBarImpl master) {
-    setLayout(new BorderLayout(2, 0));
-    setBorder(BorderFactory.createEmptyBorder(1, 4, 0, SystemInfo.isMac ? 2 : 0));
+    setLayout(new BorderLayout(JBUI.scale(2), 0));
+    setBorder(JBUI.Borders.empty(1, 4, 0, SystemInfo.isMac ? 2 : 0));
 
     myInfoAndProgressPanel = new InfoAndProgressPanel();
     addWidget(myInfoAndProgressPanel, Position.CENTER);
@@ -184,7 +184,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     if (size == null) return null;
 
     Insets insets = getInsets();
-    int minHeight = insets.top + insets.bottom + MIN_ICON_HEIGHT;
+    int minHeight = insets.top + insets.bottom + JBUI.scale(MIN_ICON_HEIGHT);
     return new Dimension(size.width, Math.max(size.height, minHeight));
   }
 
@@ -851,7 +851,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
     @Override
     public Dimension getMinimumSize() {
-      return myIcon == null ? new Dimension() : new Dimension(24, MIN_ICON_HEIGHT);
+      return myIcon == null ? new Dimension() : JBUI.size(24, MIN_ICON_HEIGHT);
     }
 
     @Override

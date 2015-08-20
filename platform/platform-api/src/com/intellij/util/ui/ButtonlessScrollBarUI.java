@@ -229,7 +229,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
   }
 
   protected int getThickness() {
-    return 13;
+    return JBUI.scale(13);
   }
 
   @Override

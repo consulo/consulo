@@ -36,6 +36,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import com.intellij.util.Function;
 import com.intellij.util.SystemProperties;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -200,7 +201,7 @@ public class RecentProjectPanel extends JPanel {
     private RecentProjectItemRenderer() {
       super(new VerticalFlowLayout());
       setFocusable(true);
-      myPath.setFont(myPath.getFont().deriveFont((float)10));
+      myPath.setFont(JBUI.Fonts.miniFont());
       add(myName);
       add(myPath);
     }
@@ -227,7 +228,7 @@ public class RecentProjectPanel extends JPanel {
     @Override
     public Dimension getPreferredSize() {
       Dimension size = super.getPreferredSize();
-      return new Dimension(Math.min(size.width, 245), size.height);
+      return new Dimension(Math.min(size.width, JBUI.scale(245)), size.height);
     }
   }
 }

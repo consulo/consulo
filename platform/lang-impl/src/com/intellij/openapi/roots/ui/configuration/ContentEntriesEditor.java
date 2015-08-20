@@ -43,6 +43,8 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.roots.ToolbarPanel;
 import com.intellij.util.Consumer;
+import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -158,7 +160,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     myRootTreeEditor = new ContentEntryTreeEditor(project, myState);
     JComponent component = myRootTreeEditor.createComponent();
-    component.setBorder(new CustomLineBorder(1,0,0,0));
+    component.setBorder(new CustomLineBorder(JBUI.scale(1),0,0,0));
 
     splitter.setFirstComponent(component);
     splitter.setSecondComponent(entriesPanel);
@@ -166,13 +168,14 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, myRootTreeEditor.getEditingActionsGroup(), true);
     contentPanel.add(new JLabel("Mark as:"),
-                     new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, 0, new Insets(0, 5, 0, 5), 0, 0));
+                     new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, 0, new JBInsets(0, 5, 0, 5), 0,
+                                            0));
     contentPanel.add(actionToolbar.getComponent(),
                      new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                                            new Insets(0, 0, 0, 0), 0, 0));
+                                            new JBInsets(0, 0, 0, 0), 0, 0));
     contentPanel.add(splitter,
                      new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                                            new Insets(0, 0, 0, 0), 0, 0));
+                                            new JBInsets(0, 0, 0, 0), 0, 0));
 
     mainPanel.add(contentPanel, BorderLayout.CENTER);
 
@@ -207,7 +210,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     myEntryToEditorMap.put(contentEntry, contentEntryEditor);
     final JComponent component = contentEntryEditor.getComponent();
 
-    component.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    component.setBorder(JBUI.Borders.empty());
     myEditorsPanel.add(component);
   }
 

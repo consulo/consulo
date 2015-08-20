@@ -21,6 +21,7 @@ import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +40,7 @@ class DiffSplitter extends Splitter implements DiffSplitterI {
   public DiffSplitter(JComponent component1, JComponent component2, DiffDividerPaint dividerPaint, DiffPanelState data) {
     myPaint = dividerPaint;
     myData = data;
-    setDividerWidth(30);
+    setDividerWidth(JBUI.scale(30));
     setFirstComponent(component1);
     setSecondComponent(component2);
     setHonorComponentsMinimumSize(false);

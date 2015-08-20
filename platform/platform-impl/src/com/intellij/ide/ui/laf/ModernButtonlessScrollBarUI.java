@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.OwnScrollBarUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -217,7 +218,7 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
   }
 
   protected int getThickness() {
-    return 13;
+    return JBUI.scale(13);
   }
 
   @Override

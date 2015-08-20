@@ -31,6 +31,7 @@ import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -127,7 +128,7 @@ public class NavBarPopup extends LightweightHint implements Disposable{
       });
     } else {
       int offset = NavBarUIManager.getUI().getPopupOffset(item);
-      show(myPanel, p.x - offset, p.y, myPanel, new HintHint(myPanel, p));
+      show(myPanel, p.x - JBUI.scale(offset), p.y, myPanel, new HintHint(myPanel, p));
       final JBList list = getList();
       if (0 <= myIndex && myIndex < list.getItemsCount()) {
         ListScrollingUtil.selectItem(list, myIndex);

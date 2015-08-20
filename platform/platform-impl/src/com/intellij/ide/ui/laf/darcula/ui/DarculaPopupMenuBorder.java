@@ -15,9 +15,10 @@
  */
 package com.intellij.ide.ui.laf.darcula.ui;
 
+import com.intellij.util.ui.JBUI;
+
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
@@ -28,11 +29,11 @@ public class DarculaPopupMenuBorder extends AbstractBorder implements UIResource
   @Override
   public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
     g.setColor(UIManager.getDefaults().getColor("Separator.foreground"));
-    g.drawRect(0,0,width-1,height-1);
+    g.drawRect(0, 0, width - JBUI.scale(1), height - JBUI.scale(1));
   }
 
   @Override
   public Insets getBorderInsets(Component c) {
-    return new InsetsUIResource(1,1,1,1);
+    return JBUI.insets(1, 1, 1, 1).asUIResource();
   }
 }

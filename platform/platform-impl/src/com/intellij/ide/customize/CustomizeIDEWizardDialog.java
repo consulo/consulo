@@ -65,7 +65,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     myFooterLabel.setEnabled(false);
     init();
     initCurrentStep(true);
-    setSize(400, 300);
+    setScalableSize(400, 300);
     System.setProperty(StartupActionScriptManager.STARTUP_WIZARD_MODE, "true");
   }
 

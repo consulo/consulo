@@ -136,7 +136,7 @@ public class Splash extends JDialog implements StartupProgress {
     final int progressWidth = (int)(myImage.getIconWidth() * myProgress);
     final int width = progressWidth - myProgressLastPosition;
     g.setColor(color);
-    g.fillRect(0, getProgressY(), width, 4);
+    g.fillRect(0, getProgressY(), width, JBUI.scale(4));
     myProgressLastPosition = progressWidth;
   }
 

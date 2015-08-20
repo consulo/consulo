@@ -219,6 +219,11 @@ public class JBUI {
       return empty(0, 0, 0, 0);
     }
 
+    @NotNull
+    public static JBEmptyBorder empty(@NotNull Insets insets) {
+      return empty(insets.top, insets.left, insets.bottom, insets.right);
+    }
+
     public static Border empty(int offsets) {
       return empty(offsets, offsets, offsets, offsets);
     }

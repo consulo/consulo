@@ -46,6 +46,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.AwtVisitor;
 import com.intellij.util.ui.DialogUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.intellij.lang.annotations.MagicConstant;
@@ -129,6 +130,8 @@ public abstract class DialogWrapper {
   /**
    * The shared instance of default border for dialog's content pane.
    */
+  public static final Insets ourDefaultBorderInsets = UIUtil.PANEL_SMALL_INSETS;
+  @Deprecated
   public static final Border ourDefaultBorder = new EmptyBorder(UIUtil.PANEL_SMALL_INSETS);
 
   private float myHorizontalStretch = 1.0f;
@@ -424,7 +427,7 @@ public abstract class DialogWrapper {
    */
   @Nullable
   protected Border createContentPaneBorder() {
-    return ourDefaultBorder;
+    return JBUI.Borders.empty(ourDefaultBorderInsets);
   }
 
   /**
@@ -1449,6 +1452,10 @@ public abstract class DialogWrapper {
    */
   public boolean isShowing() {
     return myPeer.isShowing();
+  }
+
+  public void setScalableSize(int width, int height) {
+    setSize(JBUI.scale(width), JBUI.scale(height));
   }
 
   /**

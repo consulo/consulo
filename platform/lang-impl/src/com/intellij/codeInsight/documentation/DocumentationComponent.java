@@ -57,6 +57,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -178,7 +179,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
         Insets ins = myEditorPane.getInsets();
         View rootView = myEditorPane.getUI().getRootView(myEditorPane);
-        rootView.setSize(prefWidth, prefHeightMax);  // Necessary! Without this line, the size won't increase when the content does
+        rootView.setSize(prefWidth,
+                         prefHeightMax);  // Necessary! Without this line, the size won't increase when the content does
 
         int prefHeight = (int)rootView.getPreferredSpan(View.Y_AXIS) + ins.bottom + ins.top +
                          myScrollPane.getHorizontalScrollBar().getMaximumSize().height;
@@ -279,7 +281,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     final FocusAdapter focusAdapter = new FocusAdapter() {
       @Override
       public void focusLost(FocusEvent e) {
-        Component previouslyFocused = WindowManagerEx.getInstanceEx().getFocusedComponent(manager.getProject(getElement()));
+        Component previouslyFocused =
+                WindowManagerEx.getInstanceEx().getFocusedComponent(manager.getProject(getElement()));
 
         if (!(previouslyFocused == myEditorPane)) {
           if (myHint != null && !myHint.isDisposed()) myHint.cancel();
@@ -316,7 +319,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       public Dimension getPreferredSize() {
         Dimension editorPaneSize = myEditorPane.getPreferredScrollableViewportSize();
         Dimension controlPanelSize = myControlPanel.getPreferredSize();
-        return new Dimension(Math.max(editorPaneSize.width, controlPanelSize.width), editorPaneSize.height + controlPanelSize.height);
+        return new Dimension(Math.max(editorPaneSize.width, controlPanelSize.width),
+                             editorPaneSize.height + controlPanelSize.height);
       }
     };
     layeredPane.add(myScrollPane);
@@ -397,7 +401,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       // Javadocs often contain &nbsp; symbols (non-breakable white space). We don't want to copy them as is and replace
       // with raw white spaces. See IDEA-86633 for more details.
       String selectedText = myEditorPane.getSelectedText();
-      return selectedText == null? null : selectedText.replace((char)160, ' ');
+      return selectedText == null ? null : selectedText.replace((char)160, ' ');
     }
 
     return null;
@@ -526,9 +530,9 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       myForwardStack.clear();
     }
 
-    final SmartPsiElementPointer element = _element != null && _element.isValid()
-                                           ? SmartPointerManager.getInstance(_element.getProject()).createSmartPsiElementPointer(_element)
-                                           : null;
+    final SmartPsiElementPointer element =
+            _element != null && _element.isValid() ? SmartPointerManager.getInstance(_element.getProject())
+                    .createSmartPsiElementPointer(_element) : null;
 
     if (element != null) {
       myElement = element;
@@ -570,7 +574,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       // set base URL for this javadoc to resolve relative images correctly
       VirtualFile virtualFile = element.getVirtualFile();
       VirtualFile directory = virtualFile == null ? null : virtualFile.getParent();
-      String path = directory == null ? "" : directory.getPath()+"/";
+      String path = directory == null ? "" : directory.getPath() + "/";
 
       try {
         URL url = new URL(URLUtil.FILE_PROTOCOL, null, path);
@@ -710,7 +714,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       SmartPsiElementPointer element = myElement;
       if (element != null) {
         PsiElement psiElement = element.getElement();
-        return psiElement instanceof Navigatable ? new Navigatable[] {(Navigatable)psiElement} : null;
+        return psiElement instanceof Navigatable ? new Navigatable[]{(Navigatable)psiElement} : null;
       }
       return null;
     }
@@ -720,7 +724,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   private class ExternalDocAction extends AnAction implements HintManagerImpl.ActionToIgnore {
     public ExternalDocAction() {
       super(CodeInsightBundle.message("javadoc.action.view.external"), null, AllIcons.Actions.Browser_externalJavaDoc);
-      registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
+      registerCustomShortcutSet(
+              ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
     }
 
     @Override
@@ -732,7 +737,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         boolean processed = false;
         if (provider instanceof CompositeDocumentationProvider) {
           for (DocumentationProvider p : ((CompositeDocumentationProvider)provider).getAllProviders()) {
-            if (p instanceof ExternalDocumentationHandler && ((ExternalDocumentationHandler)p).handleExternal(element, originalElement)) {
+            if (p instanceof ExternalDocumentationHandler &&
+                ((ExternalDocumentationHandler)p).handleExternal(element, originalElement)) {
               processed = true;
               break;
             }
@@ -744,7 +750,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
           final List<String> urls;
           if (!StringUtil.isEmptyOrSpaces(myEffectiveExternalUrl)) {
             urls = Collections.singletonList(myEffectiveExternalUrl);
-          } else {
+          }
+          else {
             urls = provider.getUrlFor(element, originalElement);
             assert urls != null : provider;
             assert !urls.isEmpty() : provider;
@@ -763,7 +770,9 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         final DocumentationProvider provider = DocumentationManager.getProviderFromElement(element);
         final PsiElement originalElement = DocumentationManager.getOriginalElement(element);
         if (provider instanceof ExternalDocumentationProvider) {
-          presentation.setEnabled(element != null && ((ExternalDocumentationProvider)provider).hasDocumentationFor(element, originalElement));
+          presentation.setEnabled(element != null &&
+                                  ((ExternalDocumentationProvider)provider)
+                                          .hasDocumentationFor(element, originalElement));
         }
         else {
           final List<String> urls = provider.getUrlFor(element, originalElement);
@@ -774,8 +783,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   private void registerActions() {
-    myExternalDocAction
-            .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), myEditorPane);
+    myExternalDocAction.registerCustomShortcutSet(
+            ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), myEditorPane);
 
     myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), new ActionListener() {
       @Override
@@ -888,7 +897,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   private class MyShowSettingsButton extends ActionButton {
 
     MyShowSettingsButton() {
-      this(new MyShowSettingsAction(), new Presentation(), ActionPlaces.JAVADOC_INPLACE_SETTINGS, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+      this(new MyShowSettingsAction(), new Presentation(), ActionPlaces.JAVADOC_INPLACE_SETTINGS,
+           JBUI.size(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
     }
 
     MyShowSettingsButton(AnAction action, Presentation presentation, String place, @NotNull Dimension minimumSize) {
@@ -900,9 +910,9 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       if (!mySettingsPanel.isVisible()) {
         return;
       }
-      AnActionEvent event = new AnActionEvent(
-              null, EMPTY_DATA_CONTEXT, ActionPlaces.JAVADOC_INPLACE_SETTINGS, myPresentation, ActionManager.getInstance(), 0
-      );
+      AnActionEvent event =
+              new AnActionEvent(null, EMPTY_DATA_CONTEXT, ActionPlaces.JAVADOC_INPLACE_SETTINGS, myPresentation,
+                                ActionManager.getInstance(), 0);
       myAction.actionPerformed(event);
     }
   }

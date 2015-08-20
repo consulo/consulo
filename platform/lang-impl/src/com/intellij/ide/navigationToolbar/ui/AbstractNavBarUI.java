@@ -50,7 +50,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public Insets getElementIpad(boolean isPopupElement) {
-    return isPopupElement ? JBUI.insets(1, 2) : JBUI.emptyInsets();
+    return isPopupElement ? new JBInsets(1, 2, 1, 2) : JBUI.emptyInsets();
   }
 
   @Override
@@ -175,10 +175,10 @@ public abstract class AbstractNavBarUI implements NavBarUI {
         focusShape.moveTo(0, 0);
         focusShape.lineTo(offset, 0);
       }
-      focusShape.lineTo(w - 1, h2);
-      focusShape.lineTo(offset, h - 1);
+      focusShape.lineTo(w - JBUI.scale(1), h2);
+      focusShape.lineTo(offset, h - JBUI.scale(1));
       if (!toolbarVisible && !floating) {
-        focusShape.lineTo(0, h - 1);
+        focusShape.lineTo(0, h - JBUI.scale(1));
 
       }
 
@@ -218,7 +218,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
 
     g2.translate(offset, 0);
-    int off = getDecorationOffset() - 1;
+    int off = getDecorationOffset() - JBUI.scale(1);
 
     if (!floating || !item.isLastElement()) {
       if (toolbarVisible || floating) {
@@ -239,7 +239,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
   }
 
   private static void drawArrow(Graphics2D g2d, Color c, Color light, int decorationOffset, int h, boolean highlight, boolean gradient) {
-    int off = decorationOffset - 1;
+    int off = decorationOffset - JBUI.scale(1);
 
     g2d.setColor(c);
     if (gradient) {
@@ -289,11 +289,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public Insets getWrapperPanelInsets(Insets insets) {
-    final JBInsets result = JBUI.insets(insets);
-    if (shouldPaintWrapperPanel()) {
-      result.top += JBUI.scale(1);
-    }
-    return result;
+    return new Insets(insets.top + (shouldPaintWrapperPanel() ? 1 : 0), insets.left, insets.bottom, insets.right);
   }
 
   private static boolean shouldPaintWrapperPanel() {
@@ -319,6 +315,6 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public int getPopupOffset(@NotNull NavBarItem item) {
-    return item.isFirstElement() ? 0 : JBUI.scale(5);
+    return item.isFirstElement() ? 0 : 5;
   }
 }

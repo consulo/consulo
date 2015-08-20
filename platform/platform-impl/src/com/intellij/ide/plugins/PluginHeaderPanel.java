@@ -23,6 +23,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -148,8 +149,8 @@ public class PluginHeaderPanel {
       public Dimension getPreferredSize() {
         final FontMetrics metrics = getFontMetrics(getFont());
         final int textWidth = metrics.stringWidth(getText());
-        final int width = 8 + 16 + 4 + textWidth + 8;
-        final int height = 2 + Math.max(16, metrics.getHeight()) + 2;
+        final int width = JBUI.scale(8 + 16 + 4 + 8) + textWidth;
+        final int height = JBUI.scale(2) + Math.max(JBUI.scale(16), metrics.getHeight()) + JBUI.scale(2);
         return new Dimension(width, height);
       }
 
@@ -161,13 +162,13 @@ public class PluginHeaderPanel {
         final int h = g.getClipBounds().height;
 
         g.setPaint(getBackgroundBorderPaint());
-        g.fillRoundRect(0, 0, w, h, 7, 7);
+        g.fillRoundRect(0, 0, w, h, JBUI.scale(7), JBUI.scale(7));
 
         g.setPaint(getBackgroundPaint());
-        g.fillRoundRect(1, 1, w - 2, h - 2, 6, 6);
+        g.fillRoundRect(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2), JBUI.scale(6), JBUI.scale(6));
         g.setColor(getButtonForeground());
-        g.drawString(getText(), 8 + 16 + 4, getBaseline(w, h));
-        getIcon().paintIcon(this, g, 8, (getHeight() - getIcon().getIconHeight()) / 2);
+        g.drawString(getText(), JBUI.scale(8 + 16 + 4), getBaseline(w, h));
+        getIcon().paintIcon(this, g, JBUI.scale(8), (getHeight() - getIcon().getIconHeight()) / 2);
         config.restore();
       }
 

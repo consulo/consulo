@@ -66,22 +66,23 @@ public class MacUIUtil {
                          USE_QUARTZ ? RenderingHints.VALUE_STROKE_PURE : RenderingHints.VALUE_STROKE_NORMALIZE);
 
 
-    final Rectangle r = new Rectangle(bounds.x - 3, bounds.y - 3, bounds.width + 6, bounds.height + 6);
+    final Rectangle r = new Rectangle(bounds.x - JBUI.scale(3), bounds.y - JBUI.scale(3),
+                                      bounds.width + JBUI.scale(6), bounds.height + JBUI.scale(6));
 
     g.setColor(colors[0]);
-    drawRectOrOval(g, oval, 5, r.x + 2, r.y + 2, r.width - 5, r.height - 5);
+    drawRectOrOval(g, oval, JBUI.scale(5), r.x + JBUI.scale(2), r.y + JBUI.scale(2), r.width - JBUI.scale(5), r.height - JBUI.scale(5));
 
     g.setColor(colors[1]);
-    drawRectOrOval(g, oval, 7, r.x + 1, r.y + 1, r.width - 3, r.height - 3);
+    drawRectOrOval(g, oval, JBUI.scale(7), r.x + JBUI.scale(1), r.y + JBUI.scale(1), r.width - JBUI.scale(3), r.height - JBUI.scale(3));
 
     g.setColor(colors[2]);
-    drawRectOrOval(g, oval, 9, r.x, r.y, r.width - 1, r.height - 1);
+    drawRectOrOval(g, oval, JBUI.scale(9), r.x, r.y, r.width - JBUI.scale(1), r.height - JBUI.scale(1));
 
     g.setColor(colors[3]);
-    drawRectOrOval(g, oval, 0, r.x + 3, r.y + 3, r.width - 7, r.height - 7);
+    drawRectOrOval(g, oval, 0, r.x + JBUI.scale(3), r.y + JBUI.scale(3), r.width - JBUI.scale(7), r.height - JBUI.scale(7));
 
     g.setColor(colors[4]);
-    drawRectOrOval(g, oval, 0, r.x + 4, r.y + 4, r.width - 9, r.height - 9);
+    drawRectOrOval(g, oval, 0, r.x + JBUI.scale(4), r.y + JBUI.scale(4), r.width - JBUI.scale(9), r.height - JBUI.scale(9));
 
     // restore rendering hints
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAntialiasingValue);

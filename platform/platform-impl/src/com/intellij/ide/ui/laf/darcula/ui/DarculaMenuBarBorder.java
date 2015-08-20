@@ -15,6 +15,8 @@
  */
 package com.intellij.ide.ui.laf.darcula.ui;
 
+import com.intellij.util.ui.JBUI;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
@@ -39,7 +41,7 @@ public class DarculaMenuBarBorder implements Border, UIResource {
 
   @Override
   public Insets getBorderInsets(Component c) {
-    return new InsetsUIResource(0, 0, 2, 0);
+    return new InsetsUIResource(0, 0, JBUI.scale(2), 0);
   }
 
   @Override

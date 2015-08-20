@@ -26,6 +26,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.moduleLayerAction
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.MutableCollectionComboBoxModel;
 import com.intellij.util.IconUtil;
+import com.intellij.util.ui.JBUI;
 import lombok.val;
 import org.jdesktop.swingx.HorizontalLayout;
 import org.jetbrains.annotations.NotNull;
@@ -73,14 +74,15 @@ public class ModuleLayerPanel extends JPanel {
     });
 
     JPanel panel = new JPanel(new HorizontalLayout());
+    Dimension size = JBUI.size(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
     panel.add(new ActionButton(new AddLayerAction(moduleEditor, false), presentation("Add", IconUtil.getAddIcon()), ACTION_PLACE,
-                               ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+                               size));
 
     panel.add(new ActionButton(new RemoveLayerAction(moduleEditor), presentation("Remove", IconUtil.getRemoveIcon()), ACTION_PLACE,
-                               ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+                               size));
 
     panel.add(new ActionButton(new AddLayerAction(moduleEditor, true), presentation("Copy", AllIcons.Actions.Copy), ACTION_PLACE,
-                               ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+                               size));
 
     JPanel newPanel = new JPanel(new BorderLayout());
     newPanel.add(comboBox, BorderLayout.CENTER);

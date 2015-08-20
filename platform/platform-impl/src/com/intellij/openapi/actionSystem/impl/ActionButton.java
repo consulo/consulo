@@ -25,6 +25,7 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -37,9 +38,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class ActionButton extends JComponent implements ActionButtonComponent, AnActionHolder {
-  private static final Insets ICON_INSETS = new Insets(2, 2, 2, 2);
-
+  @Deprecated
   private static final Icon ourEmptyIcon = EmptyIcon.ICON_18;
+  private static final int ourEmptyIconSize = 18;
 
   private Dimension myMinimumButtonSize;
   private PropertyChangeListener myActionButtonSynchronizer;
@@ -226,7 +227,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   protected Icon getIcon() {
     Icon icon = isButtonEnabled() ? myIcon : myDisabledIcon;
     if (icon == null) {
-      icon = ourEmptyIcon;
+      icon = JBUI.emptyIcon(ourEmptyIconSize);
     }
     return icon;
   }
@@ -257,12 +258,12 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
     if (myAction instanceof ActionGroup && ((ActionGroup)myAction).isPopup()) {
 
-      int x = 5;
-      int y = 4;
+      int x = JBUI.scale(5);
+      int y = JBUI.scale(4);
 
       if (getPopState() == PUSHED) {
-        x++;
-        y++;
+        x += JBUI.scale(1);
+        y += JBUI.scale(1);
       }
 
       AllIcons.General.Dropdown.paintIcon(this, g, x, y);

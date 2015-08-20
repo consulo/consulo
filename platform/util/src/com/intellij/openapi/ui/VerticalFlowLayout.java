@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
+import com.intellij.util.ui.JBUI;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.awt.*;
@@ -33,19 +34,19 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
   public @interface VerticalFlowAlignment {}
 
   public VerticalFlowLayout() {
-    this(TOP, 5, 5, true, false);
+    this(TOP, JBUI.scale(5), JBUI.scale(5), true, false);
   }
 
   public VerticalFlowLayout(@VerticalFlowAlignment int alignment) {
-    this(alignment, 5, 5, true, false);
+    this(alignment, JBUI.scale(5), JBUI.scale(5), true, false);
   }
 
   public VerticalFlowLayout(boolean fillHorizontally, boolean fillVertically) {
-    this(TOP, 5, 5, fillHorizontally, fillVertically);
+    this(TOP, JBUI.scale(5), JBUI.scale(5), fillHorizontally, fillVertically);
   }
 
   public VerticalFlowLayout(@VerticalFlowAlignment int alignment, boolean fillHorizontally, boolean fillVertically) {
-    this(alignment, 5, 5, fillHorizontally, fillVertically);
+    this(alignment, JBUI.scale(5), JBUI.scale(5), fillHorizontally, fillVertically);
   }
 
   public VerticalFlowLayout(int hGap, int vGap) {

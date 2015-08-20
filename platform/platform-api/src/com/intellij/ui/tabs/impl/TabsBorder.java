@@ -18,6 +18,8 @@ package com.intellij.ui.tabs.impl;
 import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.JBTabsPresentation;
 import com.intellij.ui.tabs.TabsUtil;
+import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 
 import java.awt.*;
 
@@ -34,12 +36,12 @@ public class TabsBorder {
 
   public TabsBorder(JBTabsImpl tabs) {
     myTabs = tabs;
-    myBorderSize = new Insets(JBTabsImpl.getBorder(-1), JBTabsImpl.getBorder(-1), JBTabsImpl.getBorder(-1), JBTabsImpl.getBorder(-1));
+    myBorderSize = new JBInsets(JBTabsImpl.getBorder(-1), JBTabsImpl.getBorder(-1), JBTabsImpl.getBorder(-1), JBTabsImpl.getBorder(-1));
     myTabBorderSize = JBTabsImpl.getBorder(-1);
   }
 
   public JBTabsPresentation setPaintBorder(int top, int left, int right, int bottom) {
-    final Insets newBorder = new Insets(
+    final Insets newBorder = new JBInsets(
       JBTabsImpl.getBorder(top), JBTabsImpl.getBorder(left), JBTabsImpl.getBorder(bottom), JBTabsImpl.getBorder(right));
     if (newBorder.equals(myBorderSize)) return myTabs;
 
@@ -75,10 +77,10 @@ public class TabsBorder {
 
     if (myTabs.isEditorTabs()) {
       // it seems like all of the borders should be defined in splitters. this is wrong, but I just can not fix it right now :(
-      myEffectiveBorder = new Insets(myPosition == JBTabsPosition.top ? TabsUtil.TABS_BORDER : 0, 0, 0, 0);
+      myEffectiveBorder = JBUI.insets(myPosition == JBTabsPosition.top ? TabsUtil.TABS_BORDER : 0, 0, 0, 0);
     }
     else {
-      myEffectiveBorder = new Insets(
+      myEffectiveBorder = JBUI.insets(
         myPosition == JBTabsPosition.top ? myTabBorderSize : myBorderSize.top,
         myPosition == JBTabsPosition.left ? myTabBorderSize : myBorderSize.left,
         myPosition == JBTabsPosition.bottom ? myTabBorderSize : myBorderSize.bottom,

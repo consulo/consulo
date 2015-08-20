@@ -16,13 +16,15 @@
  */
 package com.intellij.ui.plaf.beg;
 
+import com.intellij.util.ui.JBInsets;
+
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
 public class BegMenuBorder extends AbstractBorder implements UIResource {
-  protected static Insets borderInsets = new Insets(2, 2, 2, 2);
+  protected static Insets borderInsets = new JBInsets(2, 2, 2, 2);
 
   public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
     JMenuItem b = (JMenuItem)c;

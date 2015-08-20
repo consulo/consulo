@@ -215,7 +215,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
   @Nullable
   @Override
   protected String getDimensionServiceKey() {
-    setSize(600, 200);
+    setScalableSize(600, 200);
     return "#BackgroundTaskByVfsChangeManageDialog";
   }
 

@@ -34,7 +34,8 @@ import java.awt.event.*;
  */
 public class DarculaTextFieldUI extends BasicTextFieldUI {
   private static final Icon SEARCH_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/search.png");
-  private static final Icon SEARCH_WITH_HISTORY_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png");
+  private static final Icon SEARCH_WITH_HISTORY_ICON =
+          IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png");
   private static final Icon CLEAR_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/clear.png");
 
   private enum SearchAction {POPUP, CLEAR}
@@ -67,7 +68,8 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
         if (ui.getComponent() != null && isSearchField(c)) {
           if (ui.getActionUnder(e) != null) {
             c.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-          } else {
+          }
+          else {
             c.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
           }
         }
@@ -106,10 +108,10 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
   private SearchAction getActionUnder(MouseEvent e) {
     final Point cPoint = getClearIconCoord();
     final Point sPoint = getSearchIconCoord();
-    cPoint.x+=8;
-    cPoint.y+=8;
-    sPoint.x+=8;
-    sPoint.y+=8;
+    cPoint.x += 8;
+    cPoint.y += 8;
+    sPoint.x += 8;
+    sPoint.y += 8;
     final Point ePoint = e.getPoint();
     return cPoint.distance(ePoint) <= 8 ? SearchAction.CLEAR : sPoint.distance(ePoint) <= 8 ? SearchAction.POPUP : null;
   }
@@ -119,9 +121,9 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
     final JBInsets i = JBInsets.create(c.getInsets());
     final int x = i.right - 4 - 16;
     final int y = i.top - 3;
-    final int w = c.getWidth() - i.width() + 16*2 +7*2  - 5;
-    int h = c.getBounds().height - i.height() + 4*2 - 3;
-    if (h%2==1) h++;
+    final int w = c.getWidth() - i.width() + 16 * 2 + 7 * 2 - 5;
+    int h = c.getBounds().height - i.height() + 4 * 2 - 3;
+    if (h % 2 == 1) h++;
     return new Rectangle(x, y, w, h);
   }
 
@@ -153,22 +155,26 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
     if (isSearchField(c)) {
       g.setColor(c.getBackground());
 
-      int radius = r.height-1;
-      g.fillRoundRect(r.x, r.y, r.width, r.height-1, radius, radius);
+      int radius = r.height - 1;
+      g.fillRoundRect(r.x, r.y, r.width, r.height - 1, radius, radius);
       g.setColor(c.isEnabled() ? Gray._100 : new Color(0x535353));
       if (c.hasFocus() && c.getClientProperty("JTextField.Search.noFocusRing") != Boolean.TRUE) {
         DarculaUIUtil.paintSearchFocusRing(g, r);
-      } else {
-        g.drawRoundRect(r.x, r.y, r.width, r.height-1, radius, radius);
+      }
+      else {
+        g.drawRoundRect(r.x, r.y, r.width, r.height - 1, radius, radius);
       }
       Point p = getSearchIconCoord();
-      Icon searchIcon = getComponent().getClientProperty("JTextField.Search.FindPopup") instanceof JPopupMenu ? SEARCH_WITH_HISTORY_ICON : SEARCH_ICON;
+      Icon searchIcon = getComponent().getClientProperty("JTextField.Search.FindPopup") instanceof JPopupMenu
+                        ? SEARCH_WITH_HISTORY_ICON
+                        : SEARCH_ICON;
       searchIcon.paintIcon(null, g, p.x, p.y);
       if (getComponent().hasFocus() && getComponent().getText().length() > 0) {
         p = getClearIconCoord();
         CLEAR_ICON.paintIcon(null, g, p.x, p.y);
       }
-    } else if (border instanceof DarculaTextBorder) {
+    }
+    else if (border instanceof DarculaTextBorder) {
       if (c.isEnabled() && c.isEditable()) {
         g.setColor(c.getBackground());
       }
@@ -177,10 +183,12 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
       final Insets i = border.getBorderInsets(c);
       if (c.hasFocus()) {
         g.fillRoundRect(i.left - 5, i.top - 2, width - i.right - i.left + 10, height - i.top - i.bottom + 6, 5, 5);
-      } else {
+      }
+      else {
         g.fillRect(i.left - 5, i.top - 2, width - i.right - i.left + 12, height - i.top - i.bottom + 6);
       }
-    } else {
+    }
+    else {
       super.paintBackground(g);
     }
     config.restore();

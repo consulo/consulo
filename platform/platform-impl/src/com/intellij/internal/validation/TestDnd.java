@@ -39,7 +39,7 @@ public class TestDnd extends AnAction {
     new DialogWrapper(getEventProject(e)) {
       {
         setTitle("DnD Test");
-        setSize(600, 500);
+        setScalableSize(600, 500);
         init();
       }
       @Nullable

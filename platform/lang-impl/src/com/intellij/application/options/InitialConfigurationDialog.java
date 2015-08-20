@@ -308,7 +308,7 @@ public class InitialConfigurationDialog extends DialogWrapper {
   }
 
   private void resizeTo(final int newWidth, final int newHeight) {
-    setSize(newWidth, newHeight);
+    setScalableSize(newWidth, newHeight);
     getRootPane().revalidate();
     getRootPane().repaint();
   }

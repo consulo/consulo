@@ -18,6 +18,7 @@ package com.intellij.openapi.actionSystem.impl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionButtonLook;
 import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import sun.swing.SwingUtilities2;
 
@@ -82,7 +83,7 @@ public class ActionButtonWithText extends ActionButton {
   }
 
   protected int iconTextSpace() {
-    return (getIcon() instanceof EmptyIcon || getIcon() == null ) ? 0 : ICON_TEXT_SPACE;
+    return (getIcon() instanceof EmptyIcon || getIcon() == null ) ? 0 : JBUI.scale(ICON_TEXT_SPACE);
   }
 
   private int getMnemonicCharIndex(String text) {
