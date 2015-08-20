@@ -92,7 +92,9 @@ public class LaterInvocator {
   private static final List<RunnableInfo> ourForcedFlushQueue = new ArrayList<RunnableInfo>();
 
   public static void addModalityStateListener(@NotNull ModalityStateListener listener, @NotNull Disposable parentDisposable) {
-    ourModalityStateMulticaster.addListener(listener, parentDisposable);
+    if (!ourModalityStateMulticaster.getListeners().contains(listener)) {
+      ourModalityStateMulticaster.addListener(listener, parentDisposable);
+    }
   }
 
   @NotNull
@@ -248,7 +250,7 @@ public class LaterInvocator {
   }
 
   /**
-   * There might be some requests in the queue, but ourFlushQueueRunnable might not be scheduled yet. In these circumstances 
+   * There might be some requests in the queue, but ourFlushQueueRunnable might not be scheduled yet. In these circumstances
    * {@link EventQueue#peekEvent()} default implementation would return null, and {@link UIUtil#dispatchAllInvocationEvents()} would
    * stop processing events too early and lead to spurious test failures.
    *

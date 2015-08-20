@@ -44,7 +44,7 @@ public class ModifiableModelCommitter {
     final List<ModifiableRootModel> modelsToDispose = new ArrayList<ModifiableRootModel>(Arrays.asList(rootModels));
     modelsToDispose.removeAll(modelsToCommit);
 
-    Runnable runnable = new Runnable() {
+    ModuleManagerImpl.commitModelWithRunnable(moduleModel, new Runnable() {
       @Override
       public void run() {
         for (RootModelImpl rootModel : modelsToCommit) {
@@ -55,8 +55,7 @@ public class ModifiableModelCommitter {
           model.dispose();
         }
       }
-    };
-    ModuleManagerImpl.commitModelWithRunnable(moduleModel, runnable);
+    });
   }
 
   private static List<RootModelImpl> getSortedChangedModels(ModifiableRootModel[] _rootModels,

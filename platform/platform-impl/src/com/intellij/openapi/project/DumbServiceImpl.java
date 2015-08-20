@@ -156,7 +156,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   private void scheduleCacheUpdate(@NotNull final DumbModeTask task, boolean forceDumbMode) {
-    final Throwable trace = new Throwable(); // please report exceptions here to peter
+    final Throwable trace = new Throwable();
     if (LOG.isDebugEnabled()) LOG.debug("Scheduling task " + task, trace);
     final Application application = ApplicationManager.getApplication();
 

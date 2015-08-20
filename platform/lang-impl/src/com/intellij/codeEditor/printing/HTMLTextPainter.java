@@ -196,14 +196,14 @@ class HTMLTextPainter {
       writeFooter(writer);
     }
     catch(IOException e) {
-      LOG.error(e.getMessage(), e);
+      LOG.error(e);
     }
     finally {
       try {
         writer.close();
       }
       catch(IOException e) {
-        LOG.error(e.getMessage(), e);
+        LOG.error(e);
       }
     }
   }

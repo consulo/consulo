@@ -31,6 +31,8 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.project.DumbModePermission;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -40,7 +42,6 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.ui.Messages;
@@ -58,6 +59,7 @@ import com.intellij.util.graph.GraphGenerator;
 import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 
@@ -276,44 +278,33 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     for (ModuleEditor moduleEditor : myModuleEditors) {
       moduleEditor.canApply();
     }
-    
-    final Map<Sdk, Sdk> modifiedToOriginalMap = new HashMap<Sdk, Sdk>();
-    final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(myProject).getProjectSdksModel();
-    for (Map.Entry<Sdk, Sdk> entry : projectJdksModel.getProjectSdks().entrySet()) {
-      modifiedToOriginalMap.put(entry.getValue(), entry.getKey());
-    }
-    
+
     for (final ModuleEditor moduleEditor : myModuleEditors) {
       final ModifiableRootModel model = moduleEditor.apply();
       if (model != null) {
-        /*if (!model.isSdkInherited()) {
-          // make sure the sdk is set to original SDK stored in the JDK Table
-          final Sdk modelSdk = model.getSdk();
-          if (modelSdk != null) {
-            final Sdk original = modifiedToOriginalMap.get(modelSdk);
-            if (original != null) {
-              model.setSdk(original);
-            }
-          }
-        } */
         models.add(model);
       }
     }
 
-
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+    DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
       @Override
+      @RequiredDispatchThread
       public void run() {
-        try {
-          final ModifiableRootModel[] rootModels = models.toArray(new ModifiableRootModel[models.size()]);
-          ModifiableModelCommitter.multiCommit(rootModels, myModuleModel);
-          myModuleModelCommitted = true;
-        }
-        finally {
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              final ModifiableRootModel[] rootModels = models.toArray(new ModifiableRootModel[models.size()]);
+              ModifiableModelCommitter.multiCommit(rootModels, myModuleModel);
+              myModuleModelCommitted = true;
+            }
+            finally {
 
-          myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
-          myModuleModelCommitted = false;
-        }
+              myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
+              myModuleModelCommitted = false;
+            }
+          }
+        });
       }
     });
 
