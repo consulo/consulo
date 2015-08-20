@@ -375,16 +375,25 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       };
       fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
 
-      VirtualFile moduleDir =
-        FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
+      final VirtualFile moduleDir = FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
 
       if(moduleDir == null) {
         return null;
       }
 
-      NewProjectOrModuleDialogWithSetup dialogWithSetup = new NewProjectOrModuleDialogWithSetup(myProject, moduleDir);
-      final Module newModule = dialogWithSetup.showAndGet() ? dialogWithSetup.doCreate(myModuleModel, moduleDir, false) : null;
+      final NewProjectOrModuleDialogWithSetup dialogWithSetup = new NewProjectOrModuleDialogWithSetup(myProject, moduleDir);
+      final com.intellij.openapi.util.Ref<Module> moduleRef = com.intellij.openapi.util.Ref.create();
 
+      if(dialogWithSetup.showAndGet()) {
+        DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
+          @Override
+          public void run() {
+            moduleRef.set(dialogWithSetup.doCreate(myModuleModel, moduleDir, false));
+          }
+        });
+      }
+
+      final Module newModule = moduleRef.get();
       if(newModule == null) {
         return null;
       }
