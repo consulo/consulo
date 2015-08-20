@@ -21,7 +21,6 @@ import com.intellij.util.ui.JBUI;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
-import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.*;
@@ -34,11 +33,12 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
 
   @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(JComponent c) {
-    c.setBorder(new BorderUIResource(JBUI.Borders.empty()));
+    c.setBorder(JBUI.Borders.empty().asUIResource());
     return new DarculaProgressBarUI();
   }
 
   protected volatile int offset = 0;
+
   @Override
   protected void paintIndeterminate(Graphics g, JComponent c) {
     if (!(g instanceof Graphics2D)) {
@@ -72,17 +72,19 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
       g.translate(x, 0);
       ((Graphics2D)g).fill(path);
       g.translate(-x, 0);
-      x+= getPeriodLength();
+      x += getPeriodLength();
     }
-    offset = (offset + 1) % getPeriodLength();
-    Area area = new Area(new Rectangle2D.Double(0, 0, w, h));
-    area.subtract(new Area(new RoundRectangle2D.Double(1,1,w-2, h-2, 8,8)));
+    offset = (offset + JBUI.scale(1)) % getPeriodLength();
+    Area area = new Area(new Rectangle2D.Float(0, 0, w, h));
+    area.subtract(new Area(
+            new RoundRectangle2D.Float(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2),
+                                        JBUI.scale(8), JBUI.scale(8))));
     ((Graphics2D)g).setPaint(Gray._128);
     ((Graphics2D)g).fill(area);
-    area.subtract(new Area(new RoundRectangle2D.Double(0,0,w, h, 9,9)));
+    area.subtract(new Area(new RoundRectangle2D.Float(0, 0, w, h, JBUI.scale(9), JBUI.scale(9))));
     ((Graphics2D)g).setPaint(c.getParent().getBackground());
     ((Graphics2D)g).fill(area);
-    g.drawRoundRect(1,1, w-3, h-3, 8,8);
+    g.drawRoundRect(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(3), h - JBUI.scale(3), JBUI.scale(8), JBUI.scale(8));
 
     // Deal with possible text painting
     if (progressBar.isStringPainted()) {
@@ -123,18 +125,18 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
     g.fillRect(0, 0, w, h);
 
     g2.setColor(progressBar.getForeground());
-    g2.fill(new RoundRectangle2D.Double(0, 0, w - 1, h - 1, 9, 9));
+    g2.fill(new RoundRectangle2D.Float(0, 0, w - JBUI.scale(1), h - JBUI.scale(1), JBUI.scale(9), JBUI.scale(9)));
     g2.setColor(c.getParent().getBackground());
-    g2.fill(new RoundRectangle2D.Double(1,1,w-3,h-3,8,8));
+    g2.fill(new RoundRectangle2D.Float(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(3), h - JBUI.scale(3),
+                                       JBUI.scale(8), JBUI.scale(8)));
     g2.setColor(UIManager.getColor("ProgressBar.stepColor1"));
-    g2.fill(new RoundRectangle2D.Double(2,2,amountFull-5,h-5,7,7));
+    g2.fill(new RoundRectangle2D.Float(JBUI.scale(2), JBUI.scale(2), amountFull - JBUI.scale(5), h - JBUI.scale(5),
+                                       JBUI.scale(7), JBUI.scale(7)));
 
 
     // Deal with possible text painting
     if (progressBar.isStringPainted()) {
-      paintString(g, b.left, b.top,
-                  barRectWidth, barRectHeight,
-                  amountFull, b);
+      paintString(g, b.left, b.top, barRectWidth, barRectHeight, amountFull, b);
     }
 
   }
@@ -147,31 +149,25 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
     Graphics2D g2 = (Graphics2D)g;
     String progressString = progressBar.getString();
     g2.setFont(progressBar.getFont());
-    Point renderLocation = getStringPlacement(g2, progressString,
-                                              x, y, w, h);
+    Point renderLocation = getStringPlacement(g2, progressString, x, y, w, h);
     Rectangle oldClip = g2.getClipBounds();
 
     if (progressBar.getOrientation() == JProgressBar.HORIZONTAL) {
       g2.setColor(getSelectionBackground());
-      SwingUtilities2.drawString(progressBar, g2, progressString,
-                                 renderLocation.x, renderLocation.y);
+      SwingUtilities2.drawString(progressBar, g2, progressString, renderLocation.x, renderLocation.y);
       g2.setColor(getSelectionForeground());
       g2.clipRect(fillStart, y, amountFull, h);
-      SwingUtilities2.drawString(progressBar, g2, progressString,
-                                 renderLocation.x, renderLocation.y);
-    } else { // VERTICAL
+      SwingUtilities2.drawString(progressBar, g2, progressString, renderLocation.x, renderLocation.y);
+    }
+    else { // VERTICAL
       g2.setColor(getSelectionBackground());
-      AffineTransform rotate =
-        AffineTransform.getRotateInstance(Math.PI/2);
+      AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
       g2.setFont(progressBar.getFont().deriveFont(rotate));
-      renderLocation = getStringPlacement(g2, progressString,
-                                          x, y, w, h);
-      SwingUtilities2.drawString(progressBar, g2, progressString,
-                                 renderLocation.x, renderLocation.y);
+      renderLocation = getStringPlacement(g2, progressString, x, y, w, h);
+      SwingUtilities2.drawString(progressBar, g2, progressString, renderLocation.x, renderLocation.y);
       g2.setColor(getSelectionForeground());
       g2.clipRect(x, fillStart, w, amountFull);
-      SwingUtilities2.drawString(progressBar, g2, progressString,
-                                 renderLocation.x, renderLocation.y);
+      SwingUtilities2.drawString(progressBar, g2, progressString, renderLocation.x, renderLocation.y);
     }
     g2.setClip(oldClip);
   }
