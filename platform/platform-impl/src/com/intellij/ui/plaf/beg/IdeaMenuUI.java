@@ -67,7 +67,7 @@ public class IdeaMenuUI extends BasicMenuUI{
     super.installDefaults();
     Integer integer = UIUtil.getPropertyMaxGutterIconWidth(getPropertyPrefix());
     if (integer != null){
-      myMaxGutterIconWidth = integer.intValue();
+      myMaxGutterIconWidth = JBUI.scale(integer.intValue());
     }
   }
 
@@ -300,7 +300,7 @@ public class IdeaMenuUI extends BasicMenuUI{
         checkIconRect.x += (viewRect.x + myMaxGutterIconWidth / 2) - checkIcon.getIconWidth() / 2;
         a = viewRect.x;
         e = (viewRect.y + labelRect.height / 2) - myMaxGutterIconWidth / 2;
-        k = viewRect.x + myMaxGutterIconWidth + 2;
+        k = viewRect.x + myMaxGutterIconWidth + JBUI.scale(2);
       }
       else{
         checkIconRect.x = checkIconRect.y = 0;
@@ -374,10 +374,10 @@ public class IdeaMenuUI extends BasicMenuUI{
   }
 
   private void drawIconBorder(Graphics g) {
-    int i1 = a - 1;
-    int j1 = e - 2;
-    int k1 = i1 + myMaxGutterIconWidth + 1;
-    int l1 = j1 + myMaxGutterIconWidth + 4;
+    int i1 = a - JBUI.scale(1);
+    int j1 = e - JBUI.scale(2);
+    int k1 = i1 + myMaxGutterIconWidth + JBUI.scale(1);
+    int l1 = j1 + myMaxGutterIconWidth + JBUI.scale(4);
     g.setColor(BegResources.m);
     UIUtil.drawLine(g, i1, j1, i1, l1);
     UIUtil.drawLine(g, i1, j1, k1, j1);
