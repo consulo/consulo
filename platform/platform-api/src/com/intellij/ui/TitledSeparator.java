@@ -17,11 +17,12 @@
 package com.intellij.ui;
 
 import com.intellij.ui.components.JBLabel;
+import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 /**
@@ -32,8 +33,6 @@ public class TitledSeparator extends JPanel {
   public static final int BOTTOM_INSET = 5;
   public static final int SEPARATOR_LEFT_INSET = 6;
   public static final int SEPARATOR_RIGHT_INSET = 3;
-
-  public static final Border EMPTY_BORDER = IdeBorderFactory.createEmptyBorder(TOP_INSET, 0, BOTTOM_INSET, 0);
 
   protected final JBLabel myLabel = new JBLabel() {
     @Override
@@ -58,8 +57,8 @@ public class TitledSeparator extends JPanel {
     add(myLabel, new GridBagConstraints(0, 0, 1, 1, 0, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     add(mySeparator,
         new GridBagConstraints(1, 0, GridBagConstraints.REMAINDER, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                               new Insets(2, SEPARATOR_LEFT_INSET, 0, SEPARATOR_RIGHT_INSET), 0, 0));
-    setBorder(EMPTY_BORDER);
+                               new JBInsets(2, SEPARATOR_LEFT_INSET, 0, SEPARATOR_RIGHT_INSET), 0, 0));
+    setBorder(JBUI.Borders.empty(TOP_INSET, 0, BOTTOM_INSET, 0));
 
     setText(text);
     setLabelFor(labelFor);
@@ -88,7 +87,6 @@ public class TitledSeparator extends JPanel {
   public JSeparator getSeparator() {
     return mySeparator;
   }
-
 
   public Component getLabelFor() {
     return myLabel.getLabelFor();
