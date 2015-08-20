@@ -136,7 +136,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
 
   @Override
   public List<OrderEntry> createOrderEntries(@NotNull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
-    List<VirtualFile> chosenFiles = FileChooserUtil.getChosenFiles(myFileChooserDescriptor, myFileSystemTree.getSelectedFiles());
+    List<VirtualFile> chosenFiles = FileChooserUtil.getChosenFiles(myFileChooserDescriptor, Arrays.asList(myFileSystemTree.getSelectedFiles()));
     if (chosenFiles.isEmpty()) {
       return Collections.emptyList();
     }

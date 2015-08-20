@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.execution.ExecutionException;
+import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -23,6 +24,7 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.ApplicationBundle;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -42,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static com.intellij.util.containers.ContainerUtil.newHashMap;
 import static java.util.Arrays.asList;
@@ -67,8 +70,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
 
     final Project project = event.getProject();
     final CreateDesktopEntryDialog dialog = new CreateDesktopEntryDialog(project);
-    dialog.show();
-    if (!dialog.isOK()) {
+    if (!dialog.showAndGet()) {
       return;
     }
 
@@ -102,17 +104,21 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
 
       final String message = ApplicationBundle.message("desktop.entry.success",
                                                        ApplicationNamesInfo.getInstance().getProductName());
-      Notifications.Bus.notify(
-        new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Desktop entry created", message, NotificationType.INFORMATION)
-      );
+      if (ApplicationManager.getApplication() != null) {
+        Notifications.Bus
+                .notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Desktop entry created", message, NotificationType.INFORMATION));
+      }
     }
     catch (Exception e) {
+      if (ApplicationManager.getApplication() == null) {
+        throw new RuntimeException(e);
+      }
       final String message = e.getMessage();
       if (!StringUtil.isEmptyOrSpaces(message)) {
         LOG.warn(e);
         Notifications.Bus.notify(
-          new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Failed to create desktop entry", message, NotificationType.ERROR),
-          project
+                new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Failed to create desktop entry", message, NotificationType.ERROR),
+                project
         );
       }
       else {
@@ -122,15 +128,15 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   }
 
   private static void check() throws ExecutionException, InterruptedException {
-    final int result = ExecUtil.execAndGetResult("which", "xdg-desktop-menu");
+    int result = new GeneralCommandLine("which", "xdg-desktop-menu").createProcess().waitFor();
     if (result != 0) throw new RuntimeException(ApplicationBundle.message("desktop.entry.xdg.missing"));
   }
 
   private static File prepare() throws IOException {
     final String homePath = PathManager.getHomePath();
-    assert homePath != null && new File(homePath).isDirectory() : "Invalid home path: '" + homePath + "'";
+    assert new File(homePath).isDirectory() : "Invalid home path: '" + homePath + "'";
     final String binPath = homePath + "/bin";
-    assert new File(binPath).isDirectory() : "Invalid bin/ path: '" + binPath + "'";
+    assert new File(binPath).isDirectory() : "Invalid bin path: '" + binPath + "'";
 
     String name = ApplicationNamesInfo.getInstance().getFullProductName();
 
@@ -158,13 +164,17 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   }
 
   @Nullable
-  private static String findScript(final String binPath) {
-    final String productName = ApplicationNamesInfo.getInstance().getProductName();
+  private static String findScript(String binPath) {
+    String productName = ApplicationNamesInfo.getInstance().getProductName();
 
     String execPath = binPath + '/' + productName + ".sh";
     if (new File(execPath).canExecute()) return execPath;
 
-    execPath = binPath + '/' + productName.toLowerCase() + ".sh";
+    execPath = binPath + '/' + productName.toLowerCase(Locale.US) + ".sh";
+    if (new File(execPath).canExecute()) return execPath;
+
+    String scriptName = ApplicationNamesInfo.getInstance().getScriptName();
+    execPath = binPath + '/' + scriptName + ".sh";
     if (new File(execPath).canExecute()) return execPath;
 
     return null;
@@ -173,20 +183,20 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   private static void install(File entryFile, boolean globalEntry) throws IOException, ExecutionException, InterruptedException {
     if (globalEntry) {
       File script = ExecUtil.createTempExecutableScript(
-        "sudo", ".sh", "#!/bin/sh\n" +
-                       "xdg-desktop-menu install --mode system \"" + entryFile.getAbsolutePath() + "\"\n" +
-                       "RV=$?\n" +
-                       "xdg-desktop-menu forceupdate --mode system\n" +
-                       "exit $RV\n");
+              "sudo", ".sh", "#!/bin/sh\n" +
+                             "xdg-desktop-menu install --mode system \"" + entryFile.getAbsolutePath() + "\"\n" +
+                             "RV=$?\n" +
+                             "xdg-desktop-menu forceupdate --mode system\n" +
+                             "exit $RV\n");
       script.deleteOnExit();
       String prompt = ApplicationBundle.message("desktop.entry.sudo.prompt");
-      int result = ExecUtil.sudoAndGetOutput(asList(script.getPath()), prompt, null).getExitCode();
+      int result = ExecUtil.sudoAndGetOutput(new GeneralCommandLine(script.getPath()), prompt).getExitCode();
       if (result != 0) throw new RuntimeException("'" + script.getAbsolutePath() + "' : " + result);
     }
     else {
-      int result = ExecUtil.execAndGetResult("xdg-desktop-menu", "install", "--mode", "user", entryFile.getAbsolutePath());
+      int result = new GeneralCommandLine("xdg-desktop-menu", "install", "--mode", "user", entryFile.getAbsolutePath()).createProcess().waitFor();
       if (result != 0) throw new RuntimeException("'" + entryFile.getAbsolutePath() + "' : " + result);
-      ExecUtil.execAndGetResult("xdg-desktop-menu", "forceupdate", "--mode", "user");
+      new GeneralCommandLine("xdg-desktop-menu", "forceupdate", "--mode", "user").createProcess().waitFor();
     }
   }
 

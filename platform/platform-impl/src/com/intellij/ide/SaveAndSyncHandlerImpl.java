@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,10 @@
  */
 package com.intellij.ide;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -32,7 +31,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.util.Alarm;
+import com.intellij.openapi.vfs.newvfs.RefreshSession;
+import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,44 +45,47 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class SaveAndSyncHandlerImpl implements ApplicationComponent, SaveAndSyncHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.SaveAndSyncHandler");
+public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Disposable {
+  private static final Logger LOG = Logger.getInstance(SaveAndSyncHandler.class);
 
   private final Runnable myIdleListener;
   private final PropertyChangeListener myGeneralSettingsListener;
+  private final GeneralSettings mySettings;
   private final ProgressManager myProgressManager;
+  private final SingleAlarm myRefreshDelayAlarm = new SingleAlarm(new Runnable() {
+    @Override
+    public void run() {
+      if (canSyncOrSave()) {
+        refreshOpenFiles();
+      }
+      maybeRefresh(ModalityState.NON_MODAL);
+    }
+  }, 300, this);
 
   private final AtomicInteger myBlockSaveOnFrameDeactivationCount = new AtomicInteger();
   private final AtomicInteger myBlockSyncOnFrameActivationCount = new AtomicInteger();
-  private final Alarm myRefreshDelayAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
+  private volatile long myRefreshSessionId = 0;
 
-  public static SaveAndSyncHandlerImpl getInstance(){
-    return (SaveAndSyncHandlerImpl) ApplicationManager.getApplication().getComponent(SaveAndSyncHandler.class);
-  }
-
-  public SaveAndSyncHandlerImpl(final FrameStateManager frameStateManager,
-                                final FileDocumentManager fileDocumentManager,
-                                final GeneralSettings generalSettings,
-                                final ProgressManager progressManager) {
+  public SaveAndSyncHandlerImpl(@NotNull GeneralSettings generalSettings,
+                                @NotNull ProgressManager progressManager,
+                                @NotNull FrameStateManager frameStateManager,
+                                @NotNull final FileDocumentManager fileDocumentManager) {
+    mySettings = generalSettings;
     myProgressManager = progressManager;
 
     myIdleListener = new Runnable() {
       @Override
       public void run() {
-        if (generalSettings.isAutoSaveIfInactive() && canSyncOrSave()) {
+        if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
           ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false);
         }
       }
     };
-
-    IdeEventQueue.getInstance().addIdleListener(
-      myIdleListener,
-      generalSettings.getInactiveTimeout() * 1000
-    );
+    IdeEventQueue.getInstance().addIdleListener(myIdleListener, mySettings.getInactiveTimeout() * 1000);
 
     myGeneralSettingsListener = new PropertyChangeListener() {
       @Override
-      public void propertyChange(PropertyChangeEvent e) {
+      public void propertyChange(@NotNull PropertyChangeEvent e) {
         if (GeneralSettings.PROP_INACTIVE_TIMEOUT.equals(e.getPropertyName())) {
           IdeEventQueue eventQueue = IdeEventQueue.getInstance();
           eventQueue.removeIdleListener(myIdleListener);
@@ -91,36 +94,31 @@ public class SaveAndSyncHandlerImpl implements ApplicationComponent, SaveAndSync
         }
       }
     };
-    generalSettings.addPropertyChangeListener(myGeneralSettingsListener);
+    mySettings.addPropertyChangeListener(myGeneralSettingsListener);
 
     frameStateManager.addListener(new FrameStateListener() {
       @Override
       public void onFrameDeactivated() {
+        LOG.debug("save(): enter");
         if (canSyncOrSave()) {
           saveProjectsAndDocuments();
         }
+        LOG.debug("save(): exit");
       }
 
       @Override
       public void onFrameActivated() {
-        refreshFiles();
+        if (!ApplicationManager.getApplication().isDisposed() && mySettings.isSyncOnFrameActivation()) {
+          scheduleRefresh();
+        }
       }
     });
   }
 
   @Override
-  @NotNull
-  public String getComponentName() {
-    return "SaveAndSyncHandler";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-    GeneralSettings.getInstance().removePropertyChangeListener(myGeneralSettingsListener);
+  public void dispose() {
+    RefreshQueue.getInstance().cancelSession(myRefreshSessionId);
+    mySettings.removePropertyChangeListener(myGeneralSettingsListener);
     IdeEventQueue.getInstance().removeIdleListener(myIdleListener);
   }
 
@@ -128,66 +126,53 @@ public class SaveAndSyncHandlerImpl implements ApplicationComponent, SaveAndSync
     return !LaterInvocator.isInModalContext() && !myProgressManager.hasModalProgressIndicator();
   }
 
-  // made public for tests
+  @Override
   public void saveProjectsAndDocuments() {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("enter: save()");
-    }
-    if (ApplicationManager.getApplication().isDisposed()) return;
-
-    if (myBlockSaveOnFrameDeactivationCount.get() == 0 && GeneralSettings.getInstance().isSaveOnFrameDeactivation()) {
-      FileDocumentManager.getInstance().saveAllDocuments();
-
-      Project[] openProjects = ProjectManagerEx.getInstanceEx().getOpenProjects();
-      for (Project project : openProjects) {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("save project: " + project);
-        }
-        project.save();
-      }
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("save application settings");
-      }
-      ApplicationManagerEx.getApplicationEx().saveSettings();
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("exit: save()");
-      }
+    if (!ApplicationManager.getApplication().isDisposed() &&
+        mySettings.isSaveOnFrameDeactivation() &&
+        myBlockSaveOnFrameDeactivationCount.get() == 0) {
+      doSaveDocumentsAndProjectsAndApp();
     }
   }
 
-  private void refreshFiles() {
-    if (ApplicationManager.getApplication().isDisposed() || !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
-      return;
+  public static void doSaveDocumentsAndProjectsAndApp() {
+    LOG.debug("saving documents");
+    FileDocumentManager.getInstance().saveAllDocuments();
+
+    for (Project project : ProjectManagerEx.getInstanceEx().getOpenProjects()) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("saving project: " + project);
+      }
+      project.save();
     }
 
-    LOG.debug("enter: refreshFiles()");
-    myRefreshDelayAlarm.cancelAllRequests();
-    myRefreshDelayAlarm.addRequest(new Runnable() {
-      @Override
-      public void run() {
-        if (canSyncOrSave()) {
-          refreshOpenFiles();
-        }
+    LOG.debug("saving application settings");
+    ApplicationManager.getApplication().saveSettings();
+  }
 
-        maybeRefresh(ModalityState.NON_MODAL);
-      }
-    }, 300, ModalityState.NON_MODAL);
-    LOG.debug("exit: refreshFiles()");
+  @Override
+  public void scheduleRefresh() {
+    myRefreshDelayAlarm.cancelAndRequest();
   }
 
   public void maybeRefresh(@NotNull ModalityState modalityState) {
-    if (myBlockSyncOnFrameActivationCount.get() == 0) {
-      LOG.debug("VFS refresh started");
-      RefreshQueue.getInstance().refresh(true, true, null, modalityState, ManagingFS.getInstance().getLocalRoots());
-      LOG.debug("VFS refresh finished");
+    if (myBlockSyncOnFrameActivationCount.get() == 0 && mySettings.isSyncOnFrameActivation()) {
+      RefreshQueue queue = RefreshQueue.getInstance();
+      queue.cancelSession(myRefreshSessionId);
+
+      RefreshSession session = queue.createSession(true, true, null, modalityState);
+      session.addAllFiles(ManagingFS.getInstance().getLocalRoots());
+      myRefreshSessionId = session.getId();
+      session.launch();
     }
   }
 
-  public static void refreshOpenFiles() {
+  @Override
+  public void refreshOpenFiles() {
     List<VirtualFile> files = ContainerUtil.newArrayList();
+
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-      VirtualFile[] projectFiles = FileEditorManager.getInstance(project).getSelectedFiles();
-      for (VirtualFile file : projectFiles) {
+      for (VirtualFile file : FileEditorManager.getInstance(project).getSelectedFiles()) {
         if (file instanceof NewVirtualFile) {
           files.add(file);
         }
@@ -202,21 +187,25 @@ public class SaveAndSyncHandlerImpl implements ApplicationComponent, SaveAndSync
 
   @Override
   public void blockSaveOnFrameDeactivation() {
+    LOG.debug("save blocked");
     myBlockSaveOnFrameDeactivationCount.incrementAndGet();
   }
 
   @Override
   public void unblockSaveOnFrameDeactivation() {
     myBlockSaveOnFrameDeactivationCount.decrementAndGet();
+    LOG.debug("save unblocked");
   }
 
   @Override
   public void blockSyncOnFrameActivation() {
+    LOG.debug("sync blocked");
     myBlockSyncOnFrameActivationCount.incrementAndGet();
   }
 
   @Override
   public void unblockSyncOnFrameActivation() {
     myBlockSyncOnFrameActivationCount.decrementAndGet();
+    LOG.debug("sync unblocked");
   }
 }

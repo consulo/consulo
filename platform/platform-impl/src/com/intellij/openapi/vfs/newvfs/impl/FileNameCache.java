@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,14 @@
  */
 package com.intellij.openapi.vfs.newvfs.impl;
 
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.IntSLRUCache;
 import com.intellij.util.containers.IntObjectLinkedMap;
-import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
 import com.intellij.util.text.ByteArrayCharSequence;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author peter
@@ -52,7 +51,7 @@ public class FileNameCache {
       throw new RuntimeException("VFS name enumerator corrupted");
     }
 
-    CharSequence rawName = convertToBytesIfAsciiString(name);
+    CharSequence rawName = ByteArrayCharSequence.convertToBytesIfAsciiString(name);
     IntObjectLinkedMap.MapEntry<CharSequence> entry = new IntObjectLinkedMap.MapEntry<CharSequence>(id, rawName);
     IntSLRUCache<IntObjectLinkedMap.MapEntry<CharSequence>> cache = ourNameCache[stripe];
     //noinspection SynchronizationOnLocalVariableOrMethodParameter
@@ -63,80 +62,58 @@ public class FileNameCache {
 
   private static int calcStripeIdFromNameId(int id) {
     int h = id;
-    h -= (h<<6);
-    h ^= (h>>17);
-    h -= (h<<9);
-    h ^= (h<<4);
-    h -= (h<<3);
-    h ^= (h<<10);
-    h ^= (h>>15);
+    h -= h<<6;
+    h ^= h>>17;
+    h -= h<<9;
+    h ^= h<<4;
+    h -= h<<3;
+    h ^= h<<10;
+    h ^= h>>15;
     return h % ourNameCache.length;
   }
 
-  @NotNull
-  private static CharSequence convertToBytesIfAsciiString(@NotNull String name) {
-    int length = name.length();
-    if (length == 0) return "";
+  private static final boolean ourTrackStats = false;
+  private static final int ourLOneSize = 1024;
+  private static final IntObjectLinkedMap.MapEntry<CharSequence>[] ourArrayCache = new IntObjectLinkedMap.MapEntry[ourLOneSize];
 
-    if (!IOUtil.isAscii(name)) {
-      return new String(name); // So we don't hold whole char[] buffer of a lengthy path on JDK 6
-    }
-
-    byte[] bytes = new byte[length];
-    for (int i = 0; i < length; i++) {
-      bytes[i] = (byte)name.charAt(i);
-    }
-    return new ByteArrayCharSequence(bytes);
-  }
-
-  @NotNull
-  private static IntObjectLinkedMap.MapEntry<CharSequence> getEntry(int id) {
-    assert id > 0;
-    final int stripe = calcStripeIdFromNameId(id);
-    IntSLRUCache<IntObjectLinkedMap.MapEntry<CharSequence>> cache = ourNameCache[stripe];
-    //noinspection SynchronizationOnLocalVariableOrMethodParameter
-    synchronized (cache) {
-      IntObjectLinkedMap.MapEntry<CharSequence> entry = cache.getCachedEntry(id);
-      if (entry != null) {
-        return entry;
-      }
-    }
-
-    return cacheData(FSRecords.getNameByNameId(id), id, stripe);
-  }
+  private static final AtomicInteger ourQueries = new AtomicInteger();
+  private static final AtomicInteger ourMisses = new AtomicInteger();
 
   @NotNull
   public static CharSequence getVFileName(int nameId) {
-    return getEntry(nameId).value;
-  }
+    assert nameId > 0;
 
-  @NotNull
-  static char[] appendPathOnFileSystem(int nameId, @Nullable VirtualFileSystemEntry parent, int accumulatedPathLength, @NotNull int[] positionRef) {
-    IntObjectLinkedMap.MapEntry<CharSequence> entry = getEntry(nameId);
-    CharSequence o = entry.value;
-    int nameLength = o.length();
-    boolean appendSlash = SystemInfo.isWindows && parent == null && nameLength == 2 && o.charAt(1) == ':';
-
-    char[] chars;
-    if (parent != null) {
-      chars = parent.appendPathOnFileSystem(accumulatedPathLength + 1 + nameLength, positionRef);
-      if (positionRef[0] > 0 && chars[positionRef[0] - 1] != '/') {
-        chars[positionRef[0]++] = '/';
+    if (ourTrackStats) {
+      int frequency = 10000000;
+      int queryCount = ourQueries.incrementAndGet();
+      if (queryCount >= frequency && ourQueries.compareAndSet(queryCount, 0)) {
+        double misses = ourMisses.getAndSet(0);
+        //noinspection UseOfSystemOutOrSystemErr
+        System.out.println("Misses: " + (misses / frequency));
+        ourQueries.set(0);
       }
     }
-    else {
-      int rootPathLength = accumulatedPathLength + nameLength;
-      if (appendSlash) ++rootPathLength;
-      chars = new char[rootPathLength];
+
+    int l1 = nameId % ourLOneSize;
+    IntObjectLinkedMap.MapEntry<CharSequence> entry = ourArrayCache[l1];
+    if (entry != null && entry.key == nameId) {
+      return entry.value;
     }
 
-    positionRef[0] = VirtualFileSystemEntry.copyString(chars, positionRef[0], o);
-
-    if (appendSlash) {
-      chars[positionRef[0]++] = '/';
+    if (ourTrackStats) {
+      ourMisses.incrementAndGet();
     }
 
-    return chars;
+    final int stripe = calcStripeIdFromNameId(nameId);
+    IntSLRUCache<IntObjectLinkedMap.MapEntry<CharSequence>> cache = ourNameCache[stripe];
+    //noinspection SynchronizationOnLocalVariableOrMethodParameter
+    synchronized (cache) {
+      entry = cache.getCachedEntry(nameId);
+    }
+    if (entry == null) {
+      entry = cacheData(FSRecords.getNameByNameId(nameId), nameId, stripe);
+    }
+    ourArrayCache[l1] = entry;
+    return entry.value;
   }
-
 }

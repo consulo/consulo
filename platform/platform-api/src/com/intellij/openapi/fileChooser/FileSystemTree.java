@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.Collection;
 import java.util.List;
 
 public interface FileSystemTree extends Disposable {
@@ -36,7 +35,7 @@ public interface FileSystemTree extends Disposable {
   VirtualFile getSelectedFile();
 
   @NotNull
-  Collection<VirtualFile> getSelectedFiles();
+  VirtualFile[] getSelectedFiles();
 
   @Nullable
   VirtualFile getNewFileParent();

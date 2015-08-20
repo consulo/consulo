@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,8 @@ import com.intellij.openapi.fileChooser.impl.FileComparator;
 import com.intellij.openapi.fileChooser.impl.FileTreeBuilder;
 import com.intellij.openapi.fileChooser.impl.FileTreeStructure;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.DumbModePermission;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
@@ -50,6 +52,7 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
+import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,7 +80,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
   private final List<Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private final MyExpansionListener myExpansionListener = new MyExpansionListener();
 
-  private Map<VirtualFile, VirtualFile> myEverExpanded = new WeakHashMap<VirtualFile, VirtualFile>();
+  private final Set<VirtualFile> myEverExpanded = new THashSet<VirtualFile>();
 
   public FileSystemTreeImpl(@Nullable final Project project, final FileChooserDescriptor descriptor) {
     this(project, descriptor, new Tree(), null, null, null);
@@ -137,7 +140,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     TreeUtil.installActions(myTree);
 
     myTree.getSelectionModel().setSelectionMode(
-      descriptor.isChooseMultiple() ? TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION : TreeSelectionModel.SINGLE_TREE_SELECTION
+            descriptor.isChooseMultiple() ? TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION : TreeSelectionModel.SINGLE_TREE_SELECTION
     );
     registerTreeActions();
 
@@ -174,12 +177,12 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
   private void registerTreeActions() {
     myTree.registerKeyboardAction(
-      new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          performEnterAction(true);
-        }
-      }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED
+            new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                performEnterAction(true);
+              }
+            }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED
     );
 
     new DoubleClickListener() {
@@ -291,30 +294,35 @@ public class FileSystemTreeImpl implements FileSystemTree {
   public Exception createNewFolder(final VirtualFile parentDirectory, final String newFolderName) {
     final Exception[] failReason = new Exception[] { null };
     CommandProcessor.getInstance().executeCommand(
-      myProject, new Runnable() {
+            myProject, new Runnable() {
       @Override
       public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_MODAL, new Runnable() {
           @Override
           public void run() {
-            try {
-              VirtualFile parent = parentDirectory;
-              for (String name : StringUtil.tokenize(newFolderName, "\\/")) {
-                VirtualFile folder = parent.createChildDirectory(this, name);
-                updateTree();
-                select(folder, null);
-                parent = folder;
+            ApplicationManager.getApplication().runWriteAction(new Runnable() {
+              @Override
+              public void run() {
+                try {
+                  VirtualFile parent = parentDirectory;
+                  for (String name : StringUtil.tokenize(newFolderName, "\\/")) {
+                    VirtualFile folder = parent.createChildDirectory(this, name);
+                    updateTree();
+                    select(folder, null);
+                    parent = folder;
+                  }
+                }
+                catch (IOException e) {
+                  failReason[0] = e;
+                }
               }
-            }
-            catch (IOException e) {
-              failReason[0] = e;
-            }
+            });
           }
         });
       }
     },
-      UIBundle.message("file.chooser.create.new.folder.command.name"),
-      null
+            UIBundle.message("file.chooser.create.new.folder.command.name"),
+            null
     );
     return failReason[0];
   }
@@ -322,7 +330,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
   public Exception createNewFile(final VirtualFile parentDirectory, final String newFileName, final FileType fileType, final String initialContent) {
     final Exception[] failReason = new Exception[] { null };
     CommandProcessor.getInstance().executeCommand(
-      myProject, new Runnable() {
+            myProject, new Runnable() {
       @Override
       public void run() {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -342,8 +350,8 @@ public class FileSystemTreeImpl implements FileSystemTree {
         });
       }
     },
-      UIBundle.message("file.chooser.create.new.file.command.name"),
-      null
+            UIBundle.message("file.chooser.create.new.file.command.name"),
+            null
     );
     return failReason[0];
   }
@@ -379,14 +387,15 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
   @Override
   @NotNull
-  public Collection<VirtualFile> getSelectedFiles() {
-    return collectSelectedElements(new NullableFunction<FileElement, VirtualFile>() {
+  public VirtualFile[] getSelectedFiles() {
+    final List<VirtualFile> files = collectSelectedElements(new NullableFunction<FileElement, VirtualFile>() {
       @Override
       public VirtualFile fun(final FileElement element) {
         final VirtualFile file = element.getFile();
         return file != null && file.isValid() ? file : null;
       }
     });
+    return VfsUtilCore.toVirtualFileArray(files);
   }
 
   private <T> List<T> collectSelectedElements(final Function<FileElement, T> converter) {
@@ -480,22 +489,27 @@ public class FileSystemTreeImpl implements FileSystemTree {
         final FileElement fileDescriptor = nodeDescriptor.getElement();
         final VirtualFile virtualFile = fileDescriptor.getFile();
         if (virtualFile != null) {
-          if (!myEverExpanded.containsKey(virtualFile)) {
+          if (!myEverExpanded.contains(virtualFile)) {
             if (virtualFile instanceof NewVirtualFile) {
               ((NewVirtualFile)virtualFile).markDirty();
             }
-            myEverExpanded.put(virtualFile, virtualFile);
+            myEverExpanded.add(virtualFile);
           }
 
 
           AbstractTreeStructure treeStructure = myTreeBuilder.getTreeStructure();
-          boolean async = treeStructure != null && treeStructure.isToBuildChildrenInBackground(virtualFile);
-          if (virtualFile instanceof NewVirtualFile) {
-            RefreshQueue.getInstance().refresh(async, false, null, ModalityState.stateForComponent(myTree), virtualFile);
-          }
-          else {
-            virtualFile.refresh(async, false);
-          }
+          final boolean async = treeStructure != null && treeStructure.isToBuildChildrenInBackground(virtualFile);
+          DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_MODAL, new Runnable() {
+            @Override
+            public void run() {
+              if (virtualFile instanceof NewVirtualFile) {
+                RefreshQueue.getInstance().refresh(async, false, null, ModalityState.stateForComponent(myTree), virtualFile);
+              }
+              else {
+                virtualFile.refresh(async, false);
+              }
+            }
+          });
         }
       }
     }

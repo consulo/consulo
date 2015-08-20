@@ -27,7 +27,7 @@ import javax.swing.*;
 import java.util.Map;
 
 import static com.intellij.openapi.util.Pair.pair;
-import static com.intellij.util.ObjectUtil.notNull;
+import static com.intellij.util.ObjectUtils.notNull;
 
 public class StatusBarProgress extends ProgressIndicatorBase {
   // statusBar -> [textToRestore, MyPreviousText]

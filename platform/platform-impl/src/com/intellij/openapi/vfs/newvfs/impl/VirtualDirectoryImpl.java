@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.openapi.vfs.newvfs.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtilRt;
@@ -31,6 +32,8 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
+import com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl;
+import com.intellij.psi.impl.PsiCachedValue;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.UriUtil;
@@ -94,12 +97,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     else if (result != null && doRefresh && delegate.isDirectory(result) != result.isDirectory()) {
       RefreshQueue.getInstance().refresh(false, false, null, result);
       result = findChild(name, false, ensureCanonicalName, delegate);
-    }
-
-    if (result == null) {
-      synchronized (myData) {
-        addToAdoptedChildren(ignoreCase, name);
-      }
     }
 
     return result;
@@ -169,10 +166,14 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
       if (indexInReal >= 0) {
         return VfsData.getFileById(array[indexInReal], this);
       }
+      if (allChildrenLoaded()) {
+        return null;
+      }
 
       // do not extract getId outside the synchronized block since it will cause a concurrency problem.
       int id = ourPersistence.getId(this, name, delegate);
       if (id <= 0) {
+        myData.addAdoptedName(name, !ignoreCase);
         return null;
       }
       child = createChild(FileNameCache.storeName(name), id, delegate);
@@ -200,7 +201,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
 
   private VirtualFileSystemEntry[] getArraySafely() {
     synchronized (myData) {
-      return myData.getFileChildren(Math.abs(getId()), this);
+      return myData.getFileChildren(myId, this);
     }
   }
 
@@ -393,10 +394,8 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   public VirtualFileSystemEntry findChildById(int id, boolean cachedOnly) {
-    synchronized (myData) {
-      if (ArrayUtil.indexOf(myData.myChildrenIds, id) >= 0) {
-        return VfsData.getFileById(id, this);
-      }
+    if (ArrayUtil.indexOf(myData.myChildrenIds, id) >= 0) {
+      return VfsData.getFileById(id, this);
     }
     if (cachedOnly) return null;
 
@@ -419,6 +418,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
       myData.removeAdoptedName(childName);
       if (indexInReal < 0) {
         insertChildAt(child, indexInReal);
+        ((PersistentFSImpl)PersistentFS.getInstance()).incStructuralModificationCount();
       }
       // else already stored
       assertConsistency(ignoreCase, child);
@@ -447,6 +447,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
 
   private void removeFromArray(int index) {
     myData.myChildrenIds = ArrayUtil.remove(myData.myChildrenIds, index);
+    ((PersistentFSImpl)PersistentFS.getInstance()).incStructuralModificationCount();
   }
 
   public boolean allChildrenLoaded() {
@@ -454,6 +455,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
   private void setChildrenLoaded() {
     setFlagInt(CHILDREN_CACHED, true);
+    myData.clearAdoptedNames();
   }
 
   @NotNull
@@ -545,6 +547,15 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
 
   @Override
   protected boolean changeUserMap(KeyFMap oldMap, KeyFMap newMap) {
+    checkLeaks(newMap);
     return myData.changeUserMap(oldMap, UserDataInterner.internUserData(newMap));
+  }
+
+  static void checkLeaks(KeyFMap newMap) {
+    for (Key key : newMap.getKeys()) {
+      if (key != null && newMap.get(key) instanceof PsiCachedValue) {
+        throw new AssertionError("Don't store CachedValue in VFS user data, since it leads to memory leaks");
+      }
+    }
   }
 }

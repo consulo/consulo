@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,39 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.compiler.server.fileSystem;
+package com.intellij.openapi.util.io;
 
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
+import java.io.IOException;
 
-/**
- * @author VISTALL
- * @since 11:34/14.08.13
- */
-public class CompilerServerRefreshSessionImpl extends RefreshSession {
+class NullAppendable implements Appendable {
+  static Appendable INSTANCE = new NullAppendable();
+  @NotNull
   @Override
-  public long getId() {
-    return 0;
+  public Appendable append(CharSequence csq) throws IOException {
+    return this;
   }
 
+  @NotNull
   @Override
-  public boolean isAsynchronous() {
-    return false;
+  public Appendable append(CharSequence csq, int start, int end) throws IOException {
+    return this;
   }
 
+  @NotNull
   @Override
-  public void addFile(@NotNull VirtualFile file) {
-  }
-
-  @Override
-  public void addAllFiles(@NotNull Collection<? extends VirtualFile> files) {
-
-  }
-
-  @Override
-  public void launch() {
+  public Appendable append(char c) throws IOException {
+    return this;
   }
 }

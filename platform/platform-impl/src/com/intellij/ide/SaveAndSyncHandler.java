@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,23 @@
  */
 package com.intellij.ide;
 
+import com.intellij.openapi.application.ApplicationManager;
+
 /**
  * @author Kirill Likhodedov
  */
-public interface SaveAndSyncHandler {
+public abstract class SaveAndSyncHandler {
+  public static SaveAndSyncHandler getInstance() {
+    return ApplicationManager.getApplication().getComponent(SaveAndSyncHandler.class);
+  }
 
-  void blockSaveOnFrameDeactivation();
+  public abstract void saveProjectsAndDocuments();
+  public abstract void scheduleRefresh();
+  public abstract void refreshOpenFiles();
 
-  void unblockSaveOnFrameDeactivation();
+  public abstract void blockSaveOnFrameDeactivation();
+  public abstract void unblockSaveOnFrameDeactivation();
 
-  void blockSyncOnFrameActivation();
-
-  void unblockSyncOnFrameActivation();
+  public abstract void blockSyncOnFrameActivation();
+  public abstract void unblockSyncOnFrameActivation();
 }

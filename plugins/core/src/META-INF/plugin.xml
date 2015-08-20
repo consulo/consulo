@@ -1304,6 +1304,9 @@
     <projectService serviceInterface="com.intellij.openapi.project.DumbService"
                     serviceImplementation="com.intellij.openapi.project.DumbServiceImpl"/>
 
+    <applicationService serviceInterface="com.intellij.openapi.project.DumbPermissionService"
+                        serviceImplementation="com.intellij.openapi.project.DumbPermissionServiceImpl"/>
+
     <projectService serviceInterface="com.intellij.psi.util.CachedValuesManager"
                     serviceImplementation="com.intellij.util.CachedValuesManagerImpl"/>
 
@@ -1321,6 +1324,9 @@
 
     <projectService serviceInterface="com.intellij.openapi.vcs.VcsFileListenerContextHelper"
                     serviceImplementation="com.intellij.openapi.vcs.VcsFileListenerContextHelper"/>
+
+    <projectService serviceInterface="com.intellij.openapi.editor.LazyRangeMarkerFactory"
+                    serviceImplementation="com.intellij.openapi.editor.impl.LazyRangeMarkerFactoryImpl"/>
 
     <!-- General -->
     <applicationConfigurable instance="com.intellij.ide.GeneralSettingsConfigurable"/>

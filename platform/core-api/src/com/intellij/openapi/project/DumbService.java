@@ -21,6 +21,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.util.NotNullLazyKey;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.messages.Topic;
@@ -29,15 +30,13 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * A service managing IDEA's 'dumb' mode: when indices are updated in background and the functionality is very much limited.
  * Only the explicitly allowed functionality is available. Usually it's allowed by implementing {@link DumbAware} interface.
- *
- * If you want to register a toolwindow, which will be enabled during the dumb mode, please use {@link com.intellij.openapi.wm.ToolWindowManager}'s
- * registration methods which have 'canWorkInDumMode' parameter. 
  *
  * @author peter
  */
@@ -48,6 +47,11 @@ public abstract class DumbService {
    * @see Project#getMessageBus()
    */
   public static final Topic<DumbModeListener> DUMB_MODE = new Topic<DumbModeListener>("dumb mode", DumbModeListener.class);
+
+  /**
+   * The tracker is advanced each time we enter/exit from dumb mode.
+   */
+  public abstract ModificationTracker getModificationTracker();
 
   /**
    * @return whether IntelliJ IDEA is in dumb mode, which means that right now indices are updated in background.
@@ -159,6 +163,19 @@ public abstract class DumbService {
     return INSTANCE_KEY.getValue(project);
   }
 
+  /**
+   * @return all the elements of the given array if there's no dumb mode currently, or the dumb-aware ones if {@link #isDumb()} is true.
+   * @see #isDumbAware(Object)
+   */
+  @NotNull
+  public <T> List<T> filterByDumbAwareness(@NotNull T[] array) {
+    return filterByDumbAwareness(Arrays.asList(array));
+  }
+
+  /**
+   * @return all the elements of the given collection if there's no dumb mode currently, or the dumb-aware ones if {@link #isDumb()} is true.
+   * @see #isDumbAware(Object)
+   */
   @NotNull
   public <T> List<T> filterByDumbAwareness(@NotNull Collection<T> collection) {
     if (isDumb()) {
@@ -211,7 +228,7 @@ public abstract class DumbService {
   }
 
   /**
-   * Enables or disables alternative resolve strategies for the current thread.<p/> 
+   * Enables or disables alternative resolve strategies for the current thread.<p/>
    *
    * Normally reference resolution uses index, and hence is not available in dumb mode. In some cases, alternative ways
    * of performing resolve are available, although much slower. It's impractical to always use these ways because it'll
@@ -228,11 +245,41 @@ public abstract class DumbService {
   public abstract void setAlternativeResolveEnabled(boolean enabled);
 
   /**
+   * Invokes the given runnable with alternative resolve set to true.
+   * @see #setAlternativeResolveEnabled(boolean)
+   */
+  public void withAlternativeResolveEnabled(@NotNull Runnable runnable) {
+    setAlternativeResolveEnabled(true);
+    try {
+      runnable.run();
+    }
+    finally {
+      setAlternativeResolveEnabled(false);
+    }
+  }
+
+  /**
    * @return whether alternative resolution is enabled for the current thread.
    *
    * @see #setAlternativeResolveEnabled(boolean)
    */
   public abstract boolean isAlternativeResolveEnabled();
+
+  /**
+   * By default, dumb mode tasks (including indexing) are allowed in non-modal state only. The reason is that
+   * when some code shows a dialog, it probably does't expect that after the dialog is closed the dumb mode will be on.
+   * Therefore any dumb mode started within a dialog is considered a mistake, performed under modal progress and reported as an exception.<p/>
+   *
+   * If the dialog (e.g. Project Structure) starting background dumb mode is an expected situation, the dumb mode should be started inside the runnable
+   * passed to this method. This will suppress the exception and allow either modal or background indexing. Note that this will only affect the invocation time
+   * modality state, so showing other dialogs from within the runnable and starting dumb mode from them would still result in an assertion failure.<p/>
+   *
+   * If this exception occurs inside invokeLater call which happens to run when a modal dialog is shown, the correct fix is supplying an explicit modality state
+   * in {@link com.intellij.openapi.application.Application#invokeLater(Runnable, ModalityState)}.
+   */
+  public static void allowStartingDumbModeInside(@NotNull DumbModePermission permission, @NotNull Runnable runnable) {
+    ServiceManager.getService(DumbPermissionService.class).allowStartingDumbModeInside(permission, runnable);
+  }
 
   /**
    * @see #DUMB_MODE
@@ -250,4 +297,5 @@ public abstract class DumbService {
     void exitDumbMode();
 
   }
+
 }

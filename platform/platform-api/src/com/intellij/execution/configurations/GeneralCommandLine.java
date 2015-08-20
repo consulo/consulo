@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,20 +81,37 @@ public class GeneralCommandLine implements UserDataHolder {
     return myExePath;
   }
 
-  public void setExePath(@NotNull @NonNls final String exePath) {
+  @NotNull
+  public GeneralCommandLine withExePath(@NotNull String exePath) {
     myExePath = exePath.trim();
+    return this;
+  }
+
+  public void setExePath(@NotNull String exePath) {
+    withExePath(exePath);
   }
 
   public File getWorkDirectory() {
     return myWorkDirectory;
   }
 
-  public void setWorkDirectory(@Nullable @NonNls final String path) {
-    setWorkDirectory(path != null ? new File(path) : null);
+  @NotNull
+  public GeneralCommandLine withWorkDirectory(@Nullable String path) {
+    return withWorkDirectory(path != null ? new File(path) : null);
   }
 
-  public void setWorkDirectory(@Nullable final File workDirectory) {
+  @NotNull
+  public GeneralCommandLine withWorkDirectory(@Nullable File workDirectory) {
     myWorkDirectory = workDirectory;
+    return this;
+  }
+
+  public void setWorkDirectory(@Nullable String path) {
+    withWorkDirectory(path);
+  }
+
+  public void setWorkDirectory(@Nullable File workDirectory) {
+    withWorkDirectory(workDirectory);
   }
 
   /**
@@ -106,27 +122,49 @@ public class GeneralCommandLine implements UserDataHolder {
     return myEnvParams;
   }
 
-  public void setPassParentEnvironment(boolean passParentEnvironment) {
-    myPassParentEnvironment = passParentEnvironment;
+  @NotNull
+  public GeneralCommandLine withEnvironment(@Nullable Map<String, String> environment) {
+    if (environment != null) {
+      getEnvironment().putAll(environment);
+    }
+    return this;
   }
 
   public boolean isPassParentEnvironment() {
     return myPassParentEnvironment;
   }
 
-  public void addParameters(final String... parameters) {
+  @NotNull
+  public GeneralCommandLine withPassParentEnvironment(boolean passParentEnvironment) {
+    myPassParentEnvironment = passParentEnvironment;
+    return this;
+  }
+
+  public void setPassParentEnvironment(boolean passParentEnvironment) {
+    withPassParentEnvironment(passParentEnvironment);
+  }
+
+  /**
+   * @return unmodifiable map of the parent environment, that will be passed to the process if isPassParentEnvironment() == true
+   */
+  @NotNull
+  public Map<String, String> getParentEnvironment() {
+    return EnvironmentUtil.getEnvironmentMap();
+  }
+
+  public void addParameters(String... parameters) {
     for (String parameter : parameters) {
       addParameter(parameter);
     }
   }
 
-  public void addParameters(@NotNull final List<String> parameters) {
-    for (final String parameter : parameters) {
+  public void addParameters(@NotNull List<String> parameters) {
+    for (String parameter : parameters) {
       addParameter(parameter);
     }
   }
 
-  public void addParameter(@NotNull @NonNls final String parameter) {
+  public void addParameter(@NotNull String parameter) {
     myProgramParams.add(parameter);
   }
 
@@ -139,16 +177,28 @@ public class GeneralCommandLine implements UserDataHolder {
     return myCharset;
   }
 
-  public void setCharset(@NotNull final Charset charset) {
+  @NotNull
+  public GeneralCommandLine withCharset(@NotNull Charset charset) {
     myCharset = charset;
+    return this;
+  }
+
+  public void setCharset(@NotNull Charset charset) {
+    withCharset(charset);
   }
 
   public boolean isRedirectErrorStream() {
     return myRedirectErrorStream;
   }
 
-  public void setRedirectErrorStream(final boolean redirectErrorStream) {
+  @NotNull
+  public GeneralCommandLine withRedirectErrorStream(boolean redirectErrorStream) {
     myRedirectErrorStream = redirectErrorStream;
+    return this;
+  }
+
+  public void setRedirectErrorStream(boolean redirectErrorStream) {
+    withRedirectErrorStream(redirectErrorStream);
   }
 
   /**
@@ -168,8 +218,12 @@ public class GeneralCommandLine implements UserDataHolder {
    * @param exeName use this executable name instead of given by {@link #setExePath(String)}
    * @return single-string representation of this command line.
    */
-  public String getCommandLineString(@Nullable final String exeName) {
-    final List<String> commands = new ArrayList<String>();
+  public String getCommandLineString(@Nullable String exeName) {
+    return ParametersList.join(getCommandLineList(exeName));
+  }
+
+  public List<String> getCommandLineList(@Nullable String exeName) {
+    List<String> commands = new ArrayList<String>();
     if (exeName != null) {
       commands.add(exeName);
     }
@@ -180,7 +234,7 @@ public class GeneralCommandLine implements UserDataHolder {
       commands.add("<null>");
     }
     commands.addAll(myProgramParams.getList());
-    return ParametersList.join(commands);
+    return commands;
   }
 
   /**
@@ -196,6 +250,7 @@ public class GeneralCommandLine implements UserDataHolder {
     return StringUtil.join(CommandLineUtil.toCommandLine(exePath, myProgramParams.getList(), platform), "\n");
   }
 
+  @NotNull
   public Process createProcess() throws ExecutionException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Executing [" + getCommandLineString() + "]");
@@ -212,7 +267,7 @@ public class GeneralCommandLine implements UserDataHolder {
       commands = CommandLineUtil.toCommandLine(myExePath, myProgramParams.getList());
     }
     catch (ExecutionException e) {
-      LOG.warn(e);
+      LOG.info(e);
       throw e;
     }
 
@@ -220,11 +275,12 @@ public class GeneralCommandLine implements UserDataHolder {
       return startProcess(commands);
     }
     catch (IOException e) {
-      LOG.warn(e);
+      LOG.info(e);
       throw new ProcessNotCreatedException(e.getMessage(), e, this);
     }
   }
 
+  @NotNull
   protected Process startProcess(@NotNull List<String> commands) throws IOException {
     ProcessBuilder builder = new ProcessBuilder(commands);
     setupEnvironment(builder.environment());
@@ -250,7 +306,7 @@ public class GeneralCommandLine implements UserDataHolder {
     environment.clear();
 
     if (myPassParentEnvironment) {
-      environment.putAll(EnvironmentUtil.getEnvironmentMap());
+      environment.putAll(getParentEnvironment());
     }
 
     if (!myEnvParams.isEmpty()) {
@@ -285,16 +341,16 @@ public class GeneralCommandLine implements UserDataHolder {
   }
 
   @Override
-  public <T> T getUserData(@NotNull final Key<T> key) {
+  public <T> T getUserData(@NotNull Key<T> key) {
     if (myUserData != null) {
-      @SuppressWarnings({"UnnecessaryLocalVariable", "unchecked"}) final T t = (T)myUserData.get(key);
+      @SuppressWarnings({"UnnecessaryLocalVariable", "unchecked"}) T t = (T)myUserData.get(key);
       return t;
     }
     return null;
   }
 
   @Override
-  public <T> void putUserData(@NotNull final Key<T> key, @Nullable final T value) {
+  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
     if (myUserData == null) {
       myUserData = ContainerUtil.newHashMap();
     }
@@ -302,6 +358,24 @@ public class GeneralCommandLine implements UserDataHolder {
   }
 
   private static class MyTHashMap extends THashMap<String, String> {
+    public MyTHashMap() {
+      super(SystemInfo.isWindows ? CaseInsensitiveStringHashingStrategy.INSTANCE : ContainerUtil.<String>canonicalStrategy());
+    }
+
+    @Override
+    public String put(String key, String value) {
+      if (key == null || value == null) {
+        LOG.error(new Exception("Nulls are not allowed"));
+        return null;
+      }
+      if (key.isEmpty()) {
+        // Windows: passing an environment variable with empty name causes "CreateProcess error=87, The parameter is incorrect"
+        LOG.warn("Skipping environment variable with empty name, value: " + value);
+        return null;
+      }
+      return super.put(key, value);
+    }
+
     @Override
     public void putAll(Map<? extends String, ? extends String> map) {
       if (map != null) {

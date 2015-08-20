@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.PathUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.containers.ContainerUtil;
@@ -52,7 +51,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   protected static final Logger LOG = Logger.getInstance(LocalFileSystemBase.class);
 
   private static final FileAttributes FAKE_ROOT_ATTRIBUTES =
-    new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false);
+          new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false);
 
   private final List<LocalFileOperationsHandler> myHandlers = new ArrayList<LocalFileOperationsHandler>();
 
@@ -178,6 +177,11 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   }
 
   @Override
+  public boolean isReadOnly() {
+    return false;
+  }
+
+  @Override
   @Nullable
   protected String normalize(@NotNull String path) {
     if (path.isEmpty()) {
@@ -211,7 +215,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     return FileUtil.normalize(path);
   }
 
-  private static boolean isAbsoluteFileOrDriveLetter(File file) {
+  private static boolean isAbsoluteFileOrDriveLetter(@NotNull File file) {
     String path = file.getPath();
     if (SystemInfo.isWindows && path.length() == 2 && path.charAt(1) == ':') {
       // just drive letter.
@@ -313,19 +317,12 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     return false;
   }
 
-  private void auxNotifyCompleted(@NotNull ThrowableConsumer<LocalFileOperationsHandler, IOException> consumer) {
-    for (LocalFileOperationsHandler handler : myHandlers) {
-      handler.afterDone(consumer);
-    }
-  }
-
-  @Nullable
-  private File auxCopy(@NotNull VirtualFile file, @NotNull VirtualFile toDir, @NotNull String copyName) throws IOException {
+  private boolean auxCopy(@NotNull VirtualFile file, @NotNull VirtualFile toDir, @NotNull String copyName) throws IOException {
     for (LocalFileOperationsHandler handler : myHandlers) {
       final File copy = handler.copy(file, toDir, copyName);
-      if (copy != null) return copy;
+      if (copy != null) return true;
     }
-    return null;
+    return false;
   }
 
   private boolean auxRename(@NotNull VirtualFile file, @NotNull String newName) throws IOException {
@@ -349,52 +346,97 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     return false;
   }
 
-  private static void delete(@NotNull File physicalFile) throws IOException {
-    if (!FileUtil.delete(physicalFile)) {
-      throw new IOException(VfsBundle.message("file.delete.error", physicalFile.getPath()));
+  private void auxNotifyCompleted(@NotNull ThrowableConsumer<LocalFileOperationsHandler, IOException> consumer) {
+    for (LocalFileOperationsHandler handler : myHandlers) {
+      handler.afterDone(consumer);
     }
   }
 
   @Override
   @NotNull
-  public VirtualFile createChildDirectory(final Object requestor, @NotNull final VirtualFile parent, @NotNull final String dir) throws IOException {
-    final File ioDir = new File(convertToIOFile(parent), dir);
-    final boolean succeed = auxCreateDirectory(parent, dir) || ioDir.mkdirs();
+  public VirtualFile createChildDirectory(Object requestor, @NotNull final VirtualFile parent, @NotNull final String dir) throws IOException {
+    if (!VirtualFile.isValidName(dir)) {
+      throw new IOException(VfsBundle.message("directory.invalid.name.error", dir));
+    }
+
+    if (!parent.exists() || !parent.isDirectory()) {
+      throw new IOException(VfsBundle.message("vfs.target.not.directory.error", parent.getPath()));
+    }
+    if (parent.findChild(dir) != null) {
+      throw new IOException(VfsBundle.message("vfs.target.already.exists.error", parent.getPath() + "/" + dir));
+    }
+
+    File ioParent = convertToIOFile(parent);
+    if (!ioParent.isDirectory()) {
+      throw new IOException(VfsBundle.message("target.not.directory.error", ioParent.getPath()));
+    }
+
+    if (!auxCreateDirectory(parent, dir)) {
+      File ioDir = new File(ioParent, dir);
+      if (!(ioDir.mkdirs() || ioDir.isDirectory())) {
+        throw new IOException(VfsBundle.message("new.directory.failed.error", ioDir.getPath()));
+      }
+    }
+
     auxNotifyCompleted(new ThrowableConsumer<LocalFileOperationsHandler, IOException>() {
       @Override
       public void consume(LocalFileOperationsHandler handler) throws IOException {
         handler.createDirectory(parent, dir);
       }
     });
-    if (!succeed) {
-      throw new IOException("Failed to create directory: " + ioDir.getPath());
-    }
 
     return new FakeVirtualFile(parent, dir);
   }
 
+  @NotNull
   @Override
-  public VirtualFile createChildFile(final Object requestor, @NotNull final VirtualFile parent, @NotNull final String file) throws IOException {
-    final File ioFile = new File(convertToIOFile(parent), file);
-    final boolean succeed = auxCreateFile(parent, file) || FileUtil.createIfDoesntExist(ioFile);
+  public VirtualFile createChildFile(Object requestor, @NotNull final VirtualFile parent, @NotNull final String file) throws IOException {
+    if (!VirtualFile.isValidName(file)) {
+      throw new IOException(VfsBundle.message("file.invalid.name.error", file));
+    }
+
+    if (!parent.exists() || !parent.isDirectory()) {
+      throw new IOException(VfsBundle.message("vfs.target.not.directory.error", parent.getPath()));
+    }
+    if (parent.findChild(file) != null) {
+      throw new IOException(VfsBundle.message("vfs.target.already.exists.error", parent.getPath() + "/" + file));
+    }
+
+    File ioParent = convertToIOFile(parent);
+    if (!ioParent.isDirectory()) {
+      throw new IOException(VfsBundle.message("target.not.directory.error", ioParent.getPath()));
+    }
+
+    if (!auxCreateFile(parent, file)) {
+      File ioFile = new File(ioParent, file);
+      if (!FileUtil.createIfDoesntExist(ioFile)) {
+        throw new IOException(VfsBundle.message("new.file.failed.error", ioFile.getPath()));
+      }
+    }
+
     auxNotifyCompleted(new ThrowableConsumer<LocalFileOperationsHandler, IOException>() {
       @Override
       public void consume(LocalFileOperationsHandler handler) throws IOException {
         handler.createFile(parent, file);
       }
     });
-    if (!succeed) {
-      throw new IOException("Failed to create child file at " + ioFile.getPath());
-    }
 
     return new FakeVirtualFile(parent, file);
   }
 
   @Override
-  public void deleteFile(final Object requestor, @NotNull final VirtualFile file) throws IOException {
-    if (!auxDelete(file)) {
-      delete(convertToIOFile(file));
+  public void deleteFile(Object requestor, @NotNull final VirtualFile file) throws IOException {
+    if (file.getParent() == null) {
+      throw new IOException(VfsBundle.message("cannot.delete.root.directory", file.getPath()));
     }
+
+    if (!auxDelete(file)) {
+      File ioFile = convertToIOFile(file);
+      if (!FileUtil.delete(ioFile)) {
+        throw new IOException(VfsBundle.message("delete.failed.error", ioFile.getPath()));
+      }
+    }
+
     auxNotifyCompleted(new ThrowableConsumer<LocalFileOperationsHandler, IOException>() {
       @Override
       public void consume(LocalFileOperationsHandler handler) throws IOException {
@@ -417,13 +459,15 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   @Override
   @NotNull
   public byte[] contentsToByteArray(@NotNull final VirtualFile file) throws IOException {
-    final FileInputStream stream = new FileInputStream(convertToIOFileAndCheck(file));
+    final InputStream stream = new FileInputStream(convertToIOFileAndCheck(file));
     try {
       long l = file.getLength();
       if (l > Integer.MAX_VALUE) throw new IOException("File is too large: " + l + ", " + file);
       final int length = (int)l;
       if (length < 0) throw new IOException("Invalid file length: " + length + ", " + file);
-      return FileUtil.loadBytes(stream, length);
+      // io_util.c#readBytes allocates custom native stack buffer for io operation with malloc if io request > 8K
+      // so let's do buffered requests with buffer size 8192 that will use stack allocated buffer
+      return FileUtil.loadBytes(length <= 8192 ? stream : new BufferedInputStream(stream), length);
     }
     finally {
       stream.close();
@@ -455,17 +499,41 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   }
 
   @Override
-  public void moveFile(final Object requestor, @NotNull final VirtualFile file, @NotNull final VirtualFile newParent) throws IOException {
+  public void moveFile(Object requestor, @NotNull final VirtualFile file, @NotNull final VirtualFile newParent) throws IOException {
+    String name = file.getName();
+
+    if (!file.exists()) {
+      throw new IOException(VfsBundle.message("vfs.file.not.exist.error", file.getPath()));
+    }
+    if (file.getParent() == null) {
+      throw new IOException(VfsBundle.message("cannot.rename.root.directory", file.getPath()));
+    }
+    if (!newParent.exists() || !newParent.isDirectory()) {
+      throw new IOException(VfsBundle.message("vfs.target.not.directory.error", newParent.getPath()));
+    }
+    if (newParent.findChild(name) != null) {
+      throw new IOException(VfsBundle.message("vfs.target.already.exists.error", newParent.getPath() + "/" + name));
+    }
+
+    File ioFile = convertToIOFile(file);
+    if (FileSystemUtil.getAttributes(ioFile) == null) {
+      throw new FileNotFoundException(VfsBundle.message("file.not.exist.error", ioFile.getPath()));
+    }
+    File ioParent = convertToIOFile(newParent);
+    if (!ioParent.isDirectory()) {
+      throw new IOException(VfsBundle.message("target.not.directory.error", ioParent.getPath()));
+    }
+    File ioTarget = new File(ioParent, name);
+    if (ioTarget.exists()) {
+      throw new IOException(VfsBundle.message("target.already.exists.error", ioTarget.getPath()));
+    }
+
     if (!auxMove(file, newParent)) {
-      final File ioFrom = convertToIOFile(file);
-      final File ioParent = convertToIOFile(newParent);
-      if (!ioParent.isDirectory()) {
-        throw new IOException("Target '" + ioParent + "' is not a directory");
-      }
-      if (!ioFrom.renameTo(new File(ioParent, file.getName()))) {
-        throw new IOException("Move failed: '" + file.getPath() + "' to '" + newParent.getPath() +"'");
+      if (!ioFile.renameTo(ioTarget)) {
+        throw new IOException(VfsBundle.message("move.failed.error", ioFile.getPath(), ioParent.getPath()));
       }
     }
+
     auxNotifyCompleted(new ThrowableConsumer<LocalFileOperationsHandler, IOException>() {
       @Override
       public void consume(LocalFileOperationsHandler handler) throws IOException {
@@ -475,24 +543,39 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   }
 
   @Override
-  public void renameFile(final Object requestor, @NotNull final VirtualFile file, @NotNull final String newName) throws IOException {
-    if (!file.exists()) {
-      throw new IOException("File to move does not exist: " + file.getPath());
+  public void renameFile(Object requestor, @NotNull final VirtualFile file, @NotNull final String newName) throws IOException {
+    if (!VirtualFile.isValidName(newName)) {
+      throw new IOException(VfsBundle.message("file.invalid.name.error", newName));
     }
 
-    final VirtualFile parent = file.getParent();
-    assert parent != null;
+    boolean sameName = !isCaseSensitive() && newName.equalsIgnoreCase(file.getName());
+
+    if (!file.exists()) {
+      throw new IOException(VfsBundle.message("vfs.file.not.exist.error", file.getPath()));
+    }
+    VirtualFile parent = file.getParent();
+    if (parent == null) {
+      throw new IOException(VfsBundle.message("cannot.rename.root.directory", file.getPath()));
+    }
+    if (!sameName && parent.findChild(newName) != null) {
+      throw new IOException(VfsBundle.message("vfs.target.already.exists.error", parent.getPath() + "/" + newName));
+    }
+
+    File ioFile = convertToIOFile(file);
+    if (!ioFile.exists()) {
+      throw new FileNotFoundException(VfsBundle.message("file.not.exist.error", ioFile.getPath()));
+    }
+    File ioTarget = new File(convertToIOFile(parent), newName);
+    if (!sameName && ioTarget.exists()) {
+      throw new IOException(VfsBundle.message("target.already.exists.error", ioTarget.getPath()));
+    }
 
     if (!auxRename(file, newName)) {
-      final File target = new File(convertToIOFile(parent), newName);
-      if (!convertToIOFile(file).renameTo(target)) {
-        if (target.exists()) {
-          throw new IOException("Destination already exists: " + parent.getPath() + "/" + newName);
-        } else {
-          throw new IOException("Unable to rename " + file.getPath());
-        }
+      if (!FileUtil.rename(ioFile, newName)) {
+        throw new IOException(VfsBundle.message("rename.failed.error", ioFile.getPath(), newName));
       }
     }
+
     auxNotifyCompleted(new ThrowableConsumer<LocalFileOperationsHandler, IOException>() {
       @Override
       public void consume(LocalFileOperationsHandler handler) throws IOException {
@@ -501,50 +584,59 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     });
   }
 
+  @NotNull
   @Override
-  public VirtualFile copyFile(final Object requestor,
-                              @NotNull final VirtualFile vFile,
+  public VirtualFile copyFile(Object requestor,
+                              @NotNull final VirtualFile file,
                               @NotNull final VirtualFile newParent,
                               @NotNull final String copyName) throws IOException {
-    if (!PathUtil.isValidFileName(copyName)) {
-      throw new IOException("Invalid file name: " + copyName);
+    if (!VirtualFile.isValidName(copyName)) {
+      throw new IOException(VfsBundle.message("file.invalid.name.error", copyName));
     }
 
-    FileAttributes attributes = getAttributes(vFile);
-    if (attributes == null || attributes.isSpecial()) {
-      throw new FileNotFoundException("Not a file: " + vFile);
+    if (!file.exists()) {
+      throw new IOException(VfsBundle.message("vfs.file.not.exist.error", file.getPath()));
+    }
+    if (!newParent.exists() || !newParent.isDirectory()) {
+      throw new IOException(VfsBundle.message("vfs.target.not.directory.error", newParent.getPath()));
+    }
+    if (newParent.findChild(copyName) != null) {
+      throw new IOException(VfsBundle.message("vfs.target.already.exists.error", newParent.getPath() + "/" + copyName));
     }
 
-    File physicalFile = convertToIOFile(vFile);
-    File physicalCopy = auxCopy(vFile, newParent, copyName);
+    FileAttributes attributes = getAttributes(file);
+    if (attributes == null) {
+      throw new FileNotFoundException(VfsBundle.message("file.not.exist.error", file.getPath()));
+    }
+    if (attributes.isSpecial()) {
+      throw new FileNotFoundException("Not a file: " + file);
+    }
+    File ioParent = convertToIOFile(newParent);
+    if (!ioParent.isDirectory()) {
+      throw new IOException(VfsBundle.message("target.not.directory.error", ioParent.getPath()));
+    }
+    File ioTarget = new File(ioParent, copyName);
+    if (ioTarget.exists()) {
+      throw new IOException(VfsBundle.message("target.already.exists.error", ioTarget.getPath()));
+    }
 
-    try {
-      if (physicalCopy == null) {
-        File newPhysicalParent = convertToIOFile(newParent);
-        physicalCopy = new File(newPhysicalParent, copyName);
-
-        try {
-          if (attributes.isDirectory()) {
-            FileUtil.copyDir(physicalFile, physicalCopy);
-          }
-          else {
-            FileUtil.copy(physicalFile, physicalCopy);
-          }
-        }
-        catch (IOException e) {
-          FileUtil.delete(physicalCopy);
-          throw e;
-        }
+    if (!auxCopy(file, newParent, copyName)) {
+      try {
+        File ioFile = convertToIOFile(file);
+        FileUtil.copyFileOrDir(ioFile, ioTarget, attributes.isDirectory());
+      }
+      catch (IOException e) {
+        FileUtil.delete(ioTarget);
+        throw e;
       }
     }
-    finally {
-      auxNotifyCompleted(new ThrowableConsumer<LocalFileOperationsHandler, IOException>() {
-        @Override
-        public void consume(LocalFileOperationsHandler handler) throws IOException {
-          handler.copy(vFile, newParent, copyName);
-        }
-      });
-    }
+
+    auxNotifyCompleted(new ThrowableConsumer<LocalFileOperationsHandler, IOException>() {
+      @Override
+      public void consume(LocalFileOperationsHandler handler) throws IOException {
+        handler.copy(file, newParent, copyName);
+      }
+    });
 
     return new FakeVirtualFile(newParent, copyName);
   }
@@ -617,6 +709,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     return true;
   }
 
+  @NotNull
   @Override
   public String getCanonicallyCasedName(@NotNull final VirtualFile file) {
     if (isCaseSensitive()) {

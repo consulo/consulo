@@ -13,31 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.newvfs;
+package com.intellij.openapi.project;
 
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 /**
- * @author max
+ * A helper class for {@link DumbService}
  */
-public abstract class RefreshSession {
-  public long getId() {
-    return 0;
-  }
-
-  public abstract boolean isAsynchronous();
-
-  public abstract void addFile(@NotNull VirtualFile file);
-
-  public abstract void addAllFiles(@NotNull Collection<? extends VirtualFile> files);
-
-  public void addAllFiles(@NotNull VirtualFile... files) {
-    addAllFiles(Arrays.asList(files));
-  }
-
-  public abstract void launch();
+interface DumbPermissionService {
+  void allowStartingDumbModeInside(@NotNull final DumbModePermission permission, @NotNull Runnable runnable);
 }

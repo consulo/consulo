@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry.ALL_FLAGS_MASK;
-import static com.intellij.util.ObjectUtil.assertNotNull;
+import static com.intellij.util.ObjectUtils.assertNotNull;
 
 /**
  * The place where all the data is stored for VFS parts loaded into a memory: name-ids, flags, user data, children.
@@ -120,7 +120,8 @@ public class VfsData {
     if (o == ourDeadMarker) {
       throw reportDeadFileAccess(new VirtualFileImpl(id, segment, parent));
     }
-    assert segment.getNameId(id) > 0;
+    final int nameId = segment.getNameId(id);
+    assert nameId > 0 : "nameId=" + nameId + "; data=" + o + "; parent=" + parent;
 
     return o instanceof DirectoryData ? new VirtualDirectoryImpl(id, segment, (DirectoryData)o, parent, parent.getFileSystem())
                                       : new VirtualFileImpl(id, segment, parent);
@@ -181,7 +182,7 @@ public class VfsData {
 
   public static class Segment {
     // user data for files, DirectoryData for folders
-    final AtomicReferenceArray<Object> myObjectArray = new AtomicReferenceArray<Object>(SEGMENT_SIZE);
+    private final AtomicReferenceArray<Object> myObjectArray = new AtomicReferenceArray<Object>(SEGMENT_SIZE);
 
     // <nameId, flags> pairs, "flags" part containing flags per se and modification stamp
     private final AtomicIntegerArray myIntArray = new AtomicIntegerArray(SEGMENT_SIZE * 2);
@@ -198,8 +199,8 @@ public class VfsData {
       myObjectArray.set(getOffset(fileId), map);
     }
 
-    KeyFMap getUserMap(VirtualFileSystemEntry file) {
-      Object o = myObjectArray.get(getOffset(Math.abs(file.getId())));
+    KeyFMap getUserMap(VirtualFileSystemEntry file, int id) {
+      Object o = myObjectArray.get(getOffset(id));
       if (!(o instanceof KeyFMap)) {
         throw reportDeadFileAccess(file);
       }
@@ -286,6 +287,10 @@ public class VfsData {
 
     List<String> getAdoptedNames() {
       return myAdoptedNames == null ? Collections.<String>emptyList() : ContainerUtil.newArrayList(myAdoptedNames);
+    }
+
+    void clearAdoptedNames() {
+      myAdoptedNames = null;
     }
 
     @Override
