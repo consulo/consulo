@@ -34,7 +34,7 @@ public class TestMacMessagesAction extends AnAction {
   public void actionPerformed(final AnActionEvent e) {
     new DialogWrapper(e.getProject()) {
       {
-        setSize(500, 500);
+        setScalableSize(500, 500);
         setTitle("Dialog 1");
         init();
       }
@@ -48,7 +48,7 @@ public class TestMacMessagesAction extends AnAction {
           public void actionPerformed(ActionEvent event) {
             new DialogWrapper(e.getProject()) {
               {
-                setSize(400, 400);
+                setScalableSize(400, 400);
                 setTitle("Dialog 2");
                 init();
               }

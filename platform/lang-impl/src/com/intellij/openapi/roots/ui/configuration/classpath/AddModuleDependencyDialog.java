@@ -101,7 +101,7 @@ public class AddModuleDependencyDialog extends DialogWrapper {
   @Nullable
   @Override
   protected String getDimensionServiceKey() {
-    setSize(350, 600);
+    setScalableSize(350, 600);
     return getClass().getSimpleName() + "#dialog";
   }
 

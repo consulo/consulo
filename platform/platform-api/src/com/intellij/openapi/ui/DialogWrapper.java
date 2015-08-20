@@ -1454,6 +1454,10 @@ public abstract class DialogWrapper {
     return myPeer.isShowing();
   }
 
+  public void setScalableSize(int width, int height) {
+    setSize(JBUI.scale(width), JBUI.scale(height));
+  }
+
   /**
    * @param width width
    * @param height height

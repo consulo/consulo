@@ -51,7 +51,7 @@ public class ExportTestResultsDialog extends DialogWrapper {
       }
     });
 
-    setSize(600, 400);
+    setScalableSize(600, 400);
     setTitle(ExecutionBundle.message("export.test.results.dialog.title"));
     init();
 

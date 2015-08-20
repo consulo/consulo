@@ -30,7 +30,6 @@ import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
-import com.intellij.util.ui.JBUI;
 import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -203,7 +202,7 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
 
   @Override
   protected String getDimensionServiceKey() {
-    setSize(JBUI.scale(600), JBUI.scale(400));
+    setScalableSize(600, 400);
     return "#NewProjectOrModuleDialogWithSetup";
   }
 
