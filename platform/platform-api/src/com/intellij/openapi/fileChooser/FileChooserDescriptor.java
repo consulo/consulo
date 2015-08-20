@@ -27,6 +27,7 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.IconUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.*;
@@ -219,6 +220,7 @@ public class FileChooserDescriptor implements Cloneable {
   /**
    * Defines whether file can be chosen or not
    */
+  @RequiredDispatchThread
   public boolean isFileSelectable(VirtualFile file) {
     if (file == null) return false;
     if (file.isDirectory() && myChooseFolders) return true;

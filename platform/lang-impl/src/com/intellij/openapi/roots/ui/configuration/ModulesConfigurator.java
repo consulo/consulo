@@ -22,8 +22,6 @@ import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -38,7 +36,6 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
@@ -56,7 +53,6 @@ import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -386,25 +382,8 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         return null;
       }
 
-      final Module newModule;
-      if(EarlyAccessProgramManager.is(NewProjectOrModuleDialogWithSetup.EapDescriptor.class)) {
-        NewProjectOrModuleDialogWithSetup dialogWithSetup = new NewProjectOrModuleDialogWithSetup(myProject, moduleDir);
-        newModule = dialogWithSetup.showAndGet() ? dialogWithSetup.doCreate(myModuleModel, moduleDir, false) : null;
-      }
-      else {
-        newModule = myModuleModel.newModule(moduleDir.getNameWithoutExtension(), moduleDir.getPath());
-
-        final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(newModule).getModifiableModel();
-
-        modifiableModel.addContentEntry(moduleDir);
-
-        new WriteAction<Object>() {
-          @Override
-          protected void run(Result<Object> result) throws Throwable {
-            modifiableModel.commit();
-          }
-        }.execute();
-      }
+      NewProjectOrModuleDialogWithSetup dialogWithSetup = new NewProjectOrModuleDialogWithSetup(myProject, moduleDir);
+      final Module newModule = dialogWithSetup.showAndGet() ? dialogWithSetup.doCreate(myModuleModel, moduleDir, false) : null;
 
       if(newModule == null) {
         return null;

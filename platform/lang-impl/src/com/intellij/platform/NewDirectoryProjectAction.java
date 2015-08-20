@@ -26,9 +26,9 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialog;
 import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
 
@@ -38,17 +38,11 @@ import java.io.File;
  * @author yole
  */
 public class NewDirectoryProjectAction extends AnAction implements DumbAware {
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    NewProjectOrModuleDialog dialog;
     Project project = e.getProject();
-
-    if (EarlyAccessProgramManager.is(NewProjectOrModuleDialogWithSetup.EapDescriptor.class)) {
-      dialog = new NewProjectOrModuleDialogWithSetup(project, null);
-    }
-    else {
-      dialog = new NewDirectoryProjectDialog(project);
-    }
+    NewProjectOrModuleDialog dialog = new NewProjectOrModuleDialogWithSetup(project, null);
 
     if (dialog.showAndGet()) {
       generateProject(project, dialog);
@@ -56,6 +50,7 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
   }
 
   @Nullable
+  @RequiredDispatchThread
   protected Project generateProject(Project project, @NotNull final NewProjectOrModuleDialog dialog) {
     final File location = new File(dialog.getLocationText());
     final int childCount = location.exists() ? location.list().length : 0;
@@ -83,6 +78,7 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
     GeneralSettings.getInstance().setLastProjectCreationLocation(location.getParent());
     return PlatformProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, new Consumer<Project>() {
       @Override
+      @RequiredDispatchThread
       public void consume(final Project project) {
         dialog.doCreate(project, baseDir);
       }

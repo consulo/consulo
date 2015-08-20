@@ -30,7 +30,6 @@ import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
-import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.ide.impl.ui.DListItem;
@@ -47,25 +46,6 @@ import java.util.Map;
  */
 public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog {
   private final boolean myModuleCreation;
-
-  public static class EapDescriptor extends EarlyAccessProgramDescriptor {
-    @NotNull
-    @Override
-    public String getName() {
-      return "Support module templates";
-    }
-
-    @Override
-    public boolean getDefaultState() {
-      return true;
-    }
-
-    @NotNull
-    @Override
-    public String getDescription() {
-      return "Support module templates in project & module creation dialog";
-    }
-  }
 
   private JBSplitter mySplitter;
   private JTextField myNameField;

@@ -36,7 +36,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
@@ -54,7 +54,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredDispatchThread
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final Project project = getEventProject(e);
     if (project == null) {
       return;
@@ -64,19 +64,13 @@ public class NewModuleAction extends AnAction implements DumbAware {
     final VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
     Module newModule = null;
-    boolean eapState = EarlyAccessProgramManager.is(NewProjectOrModuleDialogWithSetup.EapDescriptor.class);
-    if (eapState) {
-      VirtualFile moduleDir = selectModuleDirectory(project, virtualFile);
-      if(moduleDir == null) {
-        return;
-      }
+    VirtualFile moduleDir = selectModuleDirectory(project, virtualFile);
+    if(moduleDir == null) {
+      return;
+    }
 
-      NewProjectOrModuleDialogWithSetup dialog = new NewProjectOrModuleDialogWithSetup(project, moduleDir);
-      newModule = dialog.showAndGet() ? dialog.doCreate(project, moduleDir) : null;
-    }
-    else {
-      newModule = createModuleBySimpleWay(project, virtualFile);
-    }
+    NewProjectOrModuleDialogWithSetup dialog = new NewProjectOrModuleDialogWithSetup(project, moduleDir);
+    newModule = dialog.showAndGet() ? dialog.doCreate(project, moduleDir) : null;
 
     if (newModule != null) {
       processCreatedModule(newModule, dataFromContext);
@@ -87,6 +81,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     final ModuleManager moduleManager = ModuleManager.getInstance(project);
     FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override
+      @RequiredDispatchThread
       public boolean isFileSelectable(VirtualFile file) {
         if (!super.isFileSelectable(file)) {
           return false;
