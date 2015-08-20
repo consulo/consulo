@@ -71,7 +71,7 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
     final String text = button.getText();
     final Icon icon = (button.isEnabled()) ? button.getIcon() : button.getDisabledIcon();
 
-    if ((icon == null) && (text == null)) {
+    if (icon == null && text == null) {
       return;
     }
 
@@ -114,14 +114,12 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
     myTextRect.x -= JBUI.scale(2);
     final int off = JBUI.scale(1);
     if (model.isArmed() && model.isPressed() || model.isSelected() || model.isRollover()) {
-      if (anchor == ToolWindowAnchor.LEFT) g2.translate(-off, 0);
       if (anchor.isHorizontal()) g2.translate(0, -off);
       final boolean dark = UIUtil.isUnderDarkBuildInLaf();
       g2.setColor(dark
                   ? Gray._15.withAlpha(model.isSelected() ? 85 : 40)
                   : Gray._85.withAlpha(model.isSelected() ? 85 : 40));
       g2.fillRect(0, 0, button.getWidth(), button.getHeight());
-      if (anchor == ToolWindowAnchor.LEFT) g2.translate(off, 0);
       if (anchor.isHorizontal()) g2.translate(0, off);
     }
 
