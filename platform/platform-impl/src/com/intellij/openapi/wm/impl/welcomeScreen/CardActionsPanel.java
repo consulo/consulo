@@ -30,6 +30,7 @@ import com.intellij.ui.LightColors;
 import com.intellij.util.ui.CenteredIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CardActionsPanel extends JPanel {
-  private final boolean USE_ICONS = true;
   private final JBCardLayout myLayout = new JBCardLayout();
   private final JPanel myContent = new JPanel(myLayout);
   private int nCards = 0;
@@ -50,15 +50,8 @@ public class CardActionsPanel extends JPanel {
 
   private void createCardForGroup(ActionGroup group, String cardId, final String parentId) {
     JPanel card = new JPanel(new BorderLayout());
-    if (!USE_ICONS) {
-      card.setOpaque(false);
-    }
 
     JPanel withBottomFiller = new JPanel(new BorderLayout());
-    if (!USE_ICONS) {
-      withBottomFiller.setOpaque(true);
-      withBottomFiller.setBackground(Color.white);
-    }
     withBottomFiller.add(card, BorderLayout.NORTH);
     myContent.add(withBottomFiller, cardId);
 
@@ -66,6 +59,7 @@ public class CardActionsPanel extends JPanel {
     if(parentId != null)
     {
       AnAction back = new AnAction(null, null, null) {
+        @RequiredDispatchThread
         @Override
         public void actionPerformed(AnActionEvent e) {
           myLayout.swipe(myContent, parentId, JBCardLayout.SwipeDirection.BACKWARD);
@@ -78,9 +72,6 @@ public class CardActionsPanel extends JPanel {
     }
 
     JPanel buttonsPanel = new JPanel(new GridLayout(buttons.size(), 1, JBUI.scale(5), JBUI.scale(5)));
-    if (!USE_ICONS) {
-      buttonsPanel.setOpaque(false);
-    }
     buttonsPanel.setBorder(JBUI.Borders.empty(15, 15, 15, 15));
     for (Button button : buttons) {
       buttonsPanel.add(button);
@@ -95,9 +86,6 @@ public class CardActionsPanel extends JPanel {
 
     for (AnAction action : actions) {
       Presentation presentation = action.getTemplatePresentation();
-      if (!USE_ICONS) {
-        presentation.setIcon(null);
-      }
       if (action instanceof ActionGroup) {
         ActionGroup childGroup = (ActionGroup)action;
         if (childGroup.isPopup()) {
@@ -213,6 +201,7 @@ public class CardActionsPanel extends JPanel {
       myId = id;
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       myLayout.swipe(myContent, myId, JBCardLayout.SwipeDirection.FORWARD);

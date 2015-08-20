@@ -804,10 +804,10 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
 
     public MySeparator() {
       if (myOrientation == SwingConstants.HORIZONTAL) {
-        mySize = new Dimension(6, 24);
+        mySize = JBUI.size(6, 24);
       }
       else {
-        mySize = new Dimension(24, 6);
+        mySize = JBUI.size(24, 6);
       }
     }
 

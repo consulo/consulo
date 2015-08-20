@@ -46,7 +46,6 @@ import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.ComparatorUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import lombok.val;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -109,7 +108,7 @@ public class ContentEntryTreeEditor {
         return ComparatorUtil.compareInt(o1.getWeight(), o2.getWeight());
       }
     });
-    for (val contentFolderTypeProvider : supportedFolders) {
+    for (ContentFolderTypeProvider contentFolderTypeProvider : supportedFolders) {
       ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, contentFolderTypeProvider);
      /* CustomShortcutSet shortcutSet = editor.getMarkRootShortcutSet();
       if (shortcutSet != null) {
