@@ -20,8 +20,8 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import sun.swing.SwingUtilities2;
 
@@ -136,6 +136,6 @@ public class DarculaRadioButtonUI extends MetalRadioButtonUI {
 
   @Override
   public Icon getDefaultIcon() {
-    return new IconUIResource(EmptyIcon.create(20));
+    return new IconUIResource(JBUI.emptyIcon(20));
   }
 }
