@@ -18,6 +18,7 @@ package com.intellij.ui.tabs.impl;
 import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.JBTabsPresentation;
 import com.intellij.ui.tabs.TabsUtil;
+import com.intellij.util.ui.JBUI;
 
 import java.awt.*;
 
@@ -75,10 +76,10 @@ public class TabsBorder {
 
     if (myTabs.isEditorTabs()) {
       // it seems like all of the borders should be defined in splitters. this is wrong, but I just can not fix it right now :(
-      myEffectiveBorder = new Insets(myPosition == JBTabsPosition.top ? TabsUtil.TABS_BORDER : 0, 0, 0, 0);
+      myEffectiveBorder = JBUI.insets(myPosition == JBTabsPosition.top ? TabsUtil.TABS_BORDER : 0, 0, 0, 0);
     }
     else {
-      myEffectiveBorder = new Insets(
+      myEffectiveBorder = JBUI.insets(
         myPosition == JBTabsPosition.top ? myTabBorderSize : myBorderSize.top,
         myPosition == JBTabsPosition.left ? myTabBorderSize : myBorderSize.left,
         myPosition == JBTabsPosition.bottom ? myTabBorderSize : myBorderSize.bottom,

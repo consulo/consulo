@@ -1417,10 +1417,10 @@ public class UIUtil {
 
     g.setColor(new Color(0, 0, 0, toolWindow ? 90 : 50));
     if (drawTopLine) g.drawLine(x, 0, width, 0);
-    if (drawBottomLine) g.drawLine(x, height - 1, width, height - 1);
+    if (drawBottomLine) g.drawLine(x, height - JBUI.scale(1), width, height - JBUI.scale(1));
 
     g.setColor(isUnderDarkBuildInLaf() ? Gray._255.withAlpha(30) : new Color(255, 255, 255, 100));
-    g.drawLine(x, drawTopLine ? 1 : 0, width, drawTopLine ? 1 : 0);
+    g.drawLine(x, drawTopLine ? JBUI.scale(1) : 0, width, drawTopLine ? JBUI.scale(1) : 0);
 
     if (active) {
       g.setColor(ColorUtil.toAlpha(UIManager.getColor("Hyperlink.linkColor"), toolWindow ? 100 : 30));//new Color(100, 150, 230, toolWindow ? 50 : 30));

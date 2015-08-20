@@ -21,6 +21,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.UIBundle;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -107,7 +108,7 @@ public class Splitter extends JPanel {
     myHonorMinimumSize = true;
     myDivider = createDivider();
     setProportion(proportion);
-    myDividerWidth = 7;
+    myDividerWidth = JBUI.scale(7);
     super.add(myDivider);
     myFocusWatcher = new FocusWatcher();
     myFocusWatcher.install(this);

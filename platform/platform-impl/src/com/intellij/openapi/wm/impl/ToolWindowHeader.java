@@ -38,6 +38,7 @@ import com.intellij.util.Producer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBSwingUtilities;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -106,7 +107,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
     JPanel eastPanel = new JPanel();
     eastPanel.setOpaque(false);
     eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.X_AXIS));
-    eastPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
+    eastPanel.setBorder(JBUI.Borders.empty(0, 3));
     add(eastPanel, BorderLayout.EAST);
 
     myGearButton = new ActionButton(new AnAction() {
@@ -201,7 +202,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
     });
 
     setOpaque(true);
-    setBorder(BorderFactory.createEmptyBorder(TabsUtil.TABS_BORDER, 1, TabsUtil.TABS_BORDER, 1));
+    setBorder(JBUI.Borders.empty(TabsUtil.TABS_BORDER, 1, TabsUtil.TABS_BORDER, 1));
 
     UISettings.getInstance().addUISettingsListener(this, toolWindow.getContentUI());
     myUpdater = new ToolbarUpdater(this) {
@@ -247,9 +248,9 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
 
   private void addDefaultActions(JPanel eastPanel) {
     eastPanel.add(myGearButton);
-    eastPanel.add(Box.createHorizontalStrut(6));
+    eastPanel.add(Box.createHorizontalStrut(JBUI.scale(6)));
     eastPanel.add(myHideButton);
-    eastPanel.add(Box.createHorizontalStrut(1));
+    eastPanel.add(Box.createHorizontalStrut(JBUI.scale(1)));
   }
 
   @Override
@@ -287,12 +288,12 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
             return icon != null ? icon : super.getActiveHoveredIcon();
           }
         });
-        myButtonPanel.add(Box.createHorizontalStrut(9));
+        myButtonPanel.add(Box.createHorizontalStrut(JBUI.scale(9)));
         actionAdded = true;
       }
       if (actionAdded) {
         myButtonPanel.add(new JLabel(AllIcons.General.Divider));
-        myButtonPanel.add(Box.createHorizontalStrut(6));
+        myButtonPanel.add(Box.createHorizontalStrut(JBUI.scale(6)));
       }
       addDefaultActions(myButtonPanel);
 
