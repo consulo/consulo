@@ -21,6 +21,7 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -66,7 +67,7 @@ public class IdeaActionButtonLook extends ActionButtonLook {
       final Color bg = UIUtil.getPanelBackground();
       final boolean dark = UIUtil.isUnderDarcula();
       g.setColor(state == ActionButtonComponent.PUSHED ? ColorUtil.shift(bg, dark ? 1d / 0.7d : 0.7d) : dark ? Gray._255.withAlpha(40) : ALPHA_40);
-      g.fillRect(1, 1, size.width - 2, size.height - 2);
+      g.fillRect(JBUI.scale(1), JBUI.scale(1), size.width - JBUI.scale(2), size.height - JBUI.scale(2));
     }
   }
 
@@ -88,7 +89,7 @@ public class IdeaActionButtonLook extends ActionButtonLook {
       g.setColor(ColorUtil.shift(UIUtil.getPanelBackground(), shift));
       ((Graphics2D)g).setStroke(BASIC_STROKE);
       final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
-      g.drawRoundRect(0, 0, size.width - 2, size.height - 2, 4, 4);
+      g.drawRoundRect(0, 0, size.width - JBUI.scale(2), size.height - JBUI.scale(2), JBUI.scale(4), JBUI.scale(4));
       config.restore();
     }
   }

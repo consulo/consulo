@@ -16,6 +16,7 @@
 package com.intellij.ui.plaf.beg;
 
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -52,7 +53,7 @@ public class IdeaMenuUI extends BasicMenuUI{
   }
 
   public IdeaMenuUI() {
-    myMaxGutterIconWidth = 18;
+    myMaxGutterIconWidth = JBUI.scale(18);
 
     if (UIUtil.isUnderAquaLookAndFeel()) {
       if (myAquaSelectedBackgroundPainter == null) myAquaSelectedBackgroundPainter = (Border) UIManager.get("MenuItem.selectedBackgroundPainter");
