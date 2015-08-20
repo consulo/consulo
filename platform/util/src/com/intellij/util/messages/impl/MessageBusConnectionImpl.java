@@ -126,10 +126,10 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
       if (e.getCause() instanceof ProcessCanceledException) {
         throw (ProcessCanceledException)e.getCause();
       }
-      LOG.error(e);
+      LOG.error(e.getCause() == null ? e : e.getCause());
     }
     catch (Throwable e) {
-      LOG.error(e);
+      LOG.error(e.getCause() == null ? e : e.getCause());
     }
   }
 
