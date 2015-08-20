@@ -20,9 +20,11 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 /**
@@ -33,6 +35,11 @@ public class TitledSeparator extends JPanel {
   public static final int BOTTOM_INSET = 5;
   public static final int SEPARATOR_LEFT_INSET = 6;
   public static final int SEPARATOR_RIGHT_INSET = 3;
+
+  @NotNull
+  public static Border createEmptyBorder() {
+    return JBUI.Borders.empty(TOP_INSET, 0, BOTTOM_INSET, 0);
+  }
 
   protected final JBLabel myLabel = new JBLabel() {
     @Override
@@ -58,7 +65,7 @@ public class TitledSeparator extends JPanel {
     add(mySeparator,
         new GridBagConstraints(1, 0, GridBagConstraints.REMAINDER, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                                new JBInsets(2, SEPARATOR_LEFT_INSET, 0, SEPARATOR_RIGHT_INSET), 0, 0));
-    setBorder(JBUI.Borders.empty(TOP_INSET, 0, BOTTOM_INSET, 0));
+    setBorder(createEmptyBorder());
 
     setText(text);
     setLabelFor(labelFor);
