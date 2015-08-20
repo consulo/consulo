@@ -45,7 +45,7 @@ public class DarculaRadioButtonUI extends MetalRadioButtonUI {
   @Override
   public synchronized void paint(Graphics g2d, JComponent c) {
     Graphics2D g = (Graphics2D)g2d;
-    AbstractButton b = (AbstractButton) c;
+    AbstractButton b = (AbstractButton)c;
     ButtonModel model = b.getModel();
 
     Dimension size = c.getSize();
@@ -64,23 +64,22 @@ public class DarculaRadioButtonUI extends MetalRadioButtonUI {
     viewRect.height -= (i.bottom + viewRect.y);
 
 
-    String text = SwingUtilities.layoutCompoundLabel(
-      c, fm, b.getText(), getDefaultIcon(),
-      b.getVerticalAlignment(), b.getHorizontalAlignment(),
-      b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
-      viewRect, iconRect, textRect, b.getIconTextGap());
+    String text = SwingUtilities.layoutCompoundLabel(c, fm, b.getText(), getDefaultIcon(), b.getVerticalAlignment(),
+                                                     b.getHorizontalAlignment(), b.getVerticalTextPosition(),
+                                                     b.getHorizontalTextPosition(), viewRect, iconRect, textRect,
+                                                     b.getIconTextGap());
 
     // fill background
-    if(c.isOpaque()) {
+    if (c.isOpaque()) {
       g.setColor(b.getBackground());
-      g.fillRect(0,0, size.width, size.height);
+      g.fillRect(0, 0, size.width, size.height);
     }
 
     int rad = 5;
 
     // Paint the radio button
-    final int x = iconRect.x + (rad-1)/2;
-    final int y = iconRect.y + (rad-1)/2;
+    final int x = iconRect.x + (rad - 1) / 2;
+    final int y = iconRect.y + (rad - 1) / 2;
     final int w = iconRect.width - (rad + 5) / 2;
     final int h = iconRect.height - (rad + 5) / 2;
 
@@ -88,15 +87,16 @@ public class DarculaRadioButtonUI extends MetalRadioButtonUI {
 
     //setup AA for lines
     final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
-    g.setPaint(
-      UIUtil.getGradientPaint(0, 0, ColorUtil.shift(c.getBackground(), 1.5), 0, c.getHeight(), ColorUtil.shift(c.getBackground(), 1.2)));
+    g.setPaint(UIUtil.getGradientPaint(0, 0, ColorUtil.shift(c.getBackground(), 1.5), 0, c.getHeight(),
+                                       ColorUtil.shift(c.getBackground(), 1.2)));
     g.fillOval(0, 1, w - 1, h - 1);
 
     if (b.hasFocus()) {
       int sysOffX = SystemInfo.isMac ? 0 : 1;
       int sysOffY = SystemInfo.isMac ? 0 : -1;
-      DarculaUIUtil.paintFocusOval(g, x-rad - 1  + sysOffX, y- (rad + 1)/2 + sysOffY, w-2, h-2);
-    } else {
+      DarculaUIUtil.paintFocusOval(g, x - rad - 1 + sysOffX, y - (rad + 1) / 2 + sysOffY, w - 2, h - 2);
+    }
+    else {
       g.setPaint(UIUtil.getGradientPaint(w / 2, 1, Gray._160.withAlpha(90), w / 2, h, Gray._100.withAlpha(90)));
       g.drawOval(0, 2, w - 1, h - 1);
 
@@ -106,30 +106,35 @@ public class DarculaRadioButtonUI extends MetalRadioButtonUI {
 
     if (b.isSelected()) {
       final boolean enabled = b.isEnabled();
-      g.setColor(UIManager.getColor(enabled ? "RadioButton.darcula.selectionEnabledShadowColor" : "RadioButton.darcula.selectionDisabledShadowColor"));// ? Gray._30 : Gray._60);
-      g.fillOval(w/2 - rad/2, h/2 , rad, rad);
-      g.setColor(UIManager.getColor(enabled ? "RadioButton.darcula.selectionEnabledColor" : "RadioButton.darcula.selectionDisabledColor")); //Gray._170 : Gray._120);
-      g.fillOval(w/2 - rad/2, h/2 - 1, rad, rad);
+      g.setColor(UIManager.getColor(enabled
+                                    ? "RadioButton.darcula.selectionEnabledShadowColor"
+                                    : "RadioButton.darcula.selectionDisabledShadowColor"));// ? Gray._30 : Gray._60);
+      g.fillOval(w / 2 - rad / 2, h / 2, rad, rad);
+      g.setColor(UIManager.getColor(enabled
+                                    ? "RadioButton.darcula.selectionEnabledColor"
+                                    : "RadioButton.darcula.selectionDisabledColor")); //Gray._170 : Gray._120);
+      g.fillOval(w / 2 - rad / 2, h / 2 - 1, rad, rad);
     }
     config.restore();
     g.translate(-x, -y);
 
     // Draw the Text
-    if(text != null) {
-      View v = (View) c.getClientProperty(BasicHTML.propertyKey);
+    if (text != null) {
+      View v = (View)c.getClientProperty(BasicHTML.propertyKey);
       if (v != null) {
         v.paint(g, textRect);
-      } else {
+      }
+      else {
         int mnemIndex = b.getDisplayedMnemonicIndex();
-        if(model.isEnabled()) {
+        if (model.isEnabled()) {
           // *** paint the text normally
           g.setColor(b.getForeground());
-        } else {
+        }
+        else {
           // *** paint the text disabled
           g.setColor(getDisabledTextColor());
         }
-        SwingUtilities2.drawStringUnderlineCharAt(c, g, text,
-                                                  mnemIndex, textRect.x, textRect.y + fm.getAscent());
+        SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemIndex, textRect.x, textRect.y + fm.getAscent());
       }
     }
   }
