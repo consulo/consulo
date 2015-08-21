@@ -37,6 +37,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
+import com.intellij.util.ui.JBUI;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -908,11 +909,15 @@ public final class EditorUtil {
     editor.getSelectionModel().setSelection(startOffset, endOffset);
   }
 
+  /**
+   * Return editor font with scaling
+   * @return font
+   */
   public static Font getEditorFont() {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     int size = UISettings.getInstance().PRESENTATION_MODE
                ? UISettings.getInstance().PRESENTATION_MODE_FONT_SIZE - 4 : scheme.getEditorFontSize();
-    return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
+    return new Font(scheme.getEditorFontName(), Font.PLAIN, JBUI.scale(size));
   }
 
   /**
