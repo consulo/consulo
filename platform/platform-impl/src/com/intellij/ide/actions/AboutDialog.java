@@ -29,6 +29,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.UI;
 import com.intellij.util.text.DateFormatUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -241,10 +242,10 @@ public class AboutDialog extends JDialog {
         g2.setColor(col);
         TextRenderer renderer = new TextRenderer(0, 145, 398, 120, g2);
         UIUtil.setupComposite(g2);
-        myFont = labelFont.deriveFont(Font.PLAIN, labelSize);
-        myBoldFont = labelFont.deriveFont(Font.BOLD, labelSize + 1);
+        myFont = labelFont.deriveFont(Font.PLAIN, JBUI.scaleFontSize(labelSize));
+        myBoldFont = labelFont.deriveFont(Font.BOLD, JBUI.scaleFontSize(labelSize + 1));
         try {
-          renderer.render(30, 0, myLines);
+          renderer.render(JBUI.scale(30), 0, myLines);
           break;
         }
         catch (TextRenderer.OverflowException ignore) {
@@ -280,10 +281,10 @@ public class AboutDialog extends JDialog {
       }
 
       public TextRenderer(final int xBase, final int yBase, final int w, final int h, final Graphics2D g2) {
-        this.xBase = xBase;
-        this.yBase = yBase;
-        this.w = w;
-        this.h = h;
+        this.xBase = JBUI.scale(xBase);
+        this.yBase = JBUI.scale(yBase);
+        this.w = JBUI.scale(w);
+        this.h = JBUI.scale(h);
         this.g2 = g2;
 
         if (SystemInfo.isWindows) {
