@@ -31,7 +31,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.ui.JBUI;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -390,7 +389,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
       myLineSpacing = Float.parseFloat(value);
     }
     else if (EDITOR_FONT_SIZE.equals(name)) {
-      setEditorFontSize(JBUI.scale(Integer.parseInt(value)));
+      setEditorFontSize(Integer.parseInt(value));
     }
     else if (EDITOR_FONT_NAME.equals(name)) {
       setEditorFontName(value);
@@ -399,7 +398,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
       setConsoleLineSpacing(Float.parseFloat(value));
     }
     else if (CONSOLE_FONT_SIZE.equals(name)) {
-      setConsoleFontSize(JBUI.scale(Integer.parseInt(value)));
+      setConsoleFontSize(Integer.parseInt(value));
     }
     else if (CONSOLE_FONT_NAME.equals(name)) {
       setConsoleFontName(value);
@@ -420,7 +419,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
       }
       else if (EDITOR_FONT_SIZE.equals(e.getAttributeValue(NAME_ATTR))) {
         try {
-          size = JBUI.scale(Integer.parseInt(getValue(e)));
+          size = Integer.parseInt(getValue(e));
         }
         catch (NumberFormatException ex) {
           // ignore
@@ -460,7 +459,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     if (useOldFontFormat) {
       element = new Element(OPTION_ELEMENT);
       element.setAttribute(NAME_ATTR, EDITOR_FONT_SIZE);
-      element.setAttribute(VALUE_ELEMENT, String.valueOf(getEditorFontSize() / JBUI.scale(1)));
+      element.setAttribute(VALUE_ELEMENT, String.valueOf(getEditorFontSize()));
       parentNode.addContent(element);
     }
     else {
@@ -477,7 +476,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         if (getConsoleFontSize() != getEditorFontSize()) {
           element = new Element(OPTION_ELEMENT);
           element.setAttribute(NAME_ATTR, CONSOLE_FONT_SIZE);
-          element.setAttribute(VALUE_ELEMENT, Integer.toString(getConsoleFontSize() / JBUI.scale(1)));
+          element.setAttribute(VALUE_ELEMENT, Integer.toString(getConsoleFontSize()));
           parentNode.addContent(element);
         }
       }
