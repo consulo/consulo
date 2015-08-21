@@ -104,7 +104,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
   @NotNull private ErrorStripTooltipRendererProvider myTooltipRendererProvider = new BasicTooltipRendererProvider();
 
-  private int myMinMarkHeight = 3;
+  private int myMinMarkHeight = JBUI.scale(3);
   private static final int myPreviewLines = 5;// Actually preview has myPreviewLines * 2 + 1 lines (above + below + current one)
   private static final int myCachePreviewLines = 100;// Actually cache image has myCachePreviewLines * 2 + 1 lines (above + below + current one)
   private LightweightHint myEditorPreviewHint = null;
@@ -438,7 +438,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
       final Rectangle bounds = getBounds();
       final Rectangle errorIconBounds = new Rectangle(0, 0, getErrorIconWidth(), getErrorIconHeight());
-      errorIconBounds.x = bounds.width / 2 - errorIconBounds.width / 2 + 1;
+      errorIconBounds.x = bounds.width / 2 - errorIconBounds.width / 2 + JBUI.scale(1);
       errorIconBounds.y = bounds.height / 2 - errorIconBounds.height / 2;
 
       try {
@@ -455,7 +455,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
           g.fillRect(0, 0, bounds.width, bounds.height);
 
           g.setColor(ButtonlessScrollBarUI.getTrackBorderColor());
-          int borderX = !isMirrored() ? 0 : bounds.width - 1;
+          int borderX = !isMirrored() ? 0 : bounds.width - JBUI.scale(1);
           g.drawLine(borderX, 0, borderX, bounds.height);
 
           if (myErrorStripeRenderer != null) {
@@ -519,7 +519,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
         super.paintThumb(g, c, thumbBounds);
         return;
       }
-      int shift = isMirrored() ? -9 : 9;
+      int shift = JBUI.scale(isMirrored() ? -9 : 9);
       g.translate(shift, 0);
       super.paintThumb(g, c, thumbBounds);
       g.translate(-shift, 0);
@@ -528,13 +528,13 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     @Override
     protected int adjustThumbWidth(int width) {
       if (UISettings.getInstance().PRESENTATION_MODE) return super.adjustThumbWidth(width);
-      return width - 2;
+      return width - JBUI.scale(2);
     }
 
     @Override
     protected int getThickness() {
       if (UISettings.getInstance().PRESENTATION_MODE) return super.getThickness();
-      return super.getThickness() + 7;
+      return super.getThickness() + JBUI.scale(7);
     }
 
     @Override
@@ -582,11 +582,11 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       }
 
       g.setColor(ButtonlessScrollBarUI.getTrackBackground());
-      g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height + 1);
+      g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height + JBUI.scale(1));
 
       g.setColor(ButtonlessScrollBarUI.getTrackBorderColor());
-      int border = isMirrored() ? bounds.x + bounds.width - 1 : bounds.x;
-      g.drawLine(border, bounds.y, border, bounds.y + bounds.height + 1);
+      int border = isMirrored() ? bounds.x + bounds.width - JBUI.scale(1) : bounds.x;
+      g.drawLine(border, bounds.y, border, bounds.y + bounds.height + JBUI.scale(1));
     }
 
     @Override
@@ -719,16 +719,16 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
                           Color color,
                           boolean drawTopDecoration,
                           boolean drawBottomDecoration) {
-      int x = isMirrored() ? 3 : 5;
+      int x = JBUI.scale(isMirrored() ? 3 : 5);
       int paintWidth = width;
       if (thinErrorStripeMark) {
         paintWidth /= 2;
-        paintWidth += 1;
-        x = isMirrored() ? width + 2 : 0;
+        paintWidth += JBUI.scale(1);
+        x = isMirrored() ? width + JBUI.scale(2) : 0;
       }
       if (color == null) return;
       g.setColor(color);
-      g.fillRect(x + 1, yStart, paintWidth - 2, yEnd - yStart + 1);
+      g.fillRect(x + JBUI.scale(1), yStart, paintWidth - JBUI.scale(2), yEnd - yStart + JBUI.scale(1));
 
       Color brighter = color.brighter();
       g.setColor(brighter);
@@ -736,17 +736,18 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       UIUtil.drawLine(g, x, yStart, x, yEnd/* - 1*/);
       if (drawTopDecoration) {
         //top decoration
-        UIUtil.drawLine(g, x + 1, yStart, x + paintWidth - 2, yStart);
+        UIUtil.drawLine(g, x + JBUI.scale(1), yStart, x + paintWidth - JBUI.scale(2), yStart);
       }
       Color darker = ColorUtil.shift(color, 0.75);
 
       g.setColor(darker);
       if (drawBottomDecoration) {
         // bottom decoration
-        UIUtil.drawLine(g, x + 1, yEnd/* - 1*/, x + paintWidth - 2, yEnd/* - 1*/);   // large bottom to let overwrite by hl below
+        UIUtil.drawLine(g, x + JBUI.scale(1), yEnd/* - 1*/, x + paintWidth - JBUI.scale(2),
+                        yEnd/* - 1*/);   // large bottom to let overwrite by hl below
       }
       //right decoration
-      UIUtil.drawLine(g, x + paintWidth - 2, yStart, x + paintWidth - 2, yEnd/* - 1*/);
+      UIUtil.drawLine(g, x + paintWidth - JBUI.scale(2), yStart, x + paintWidth - JBUI.scale(2), yEnd/* - 1*/);
     }
 
     // mouse events
@@ -923,7 +924,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
   @Override
   public void setMinMarkHeight(final int minMarkHeight) {
-    myMinMarkHeight = minMarkHeight;
+    myMinMarkHeight = JBUI.scale(minMarkHeight);
   }
 
   @Override
@@ -1138,22 +1139,22 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
             int gutterWidth = gutterComponentEx.getWidth();
             if (myCacheLevel2 == null || myCacheStartLine > myStartVisualLine || myCacheEndLine < myEndVisualLine) {
               myCacheStartLine = fitLineToEditor(myVisualLine - myCachePreviewLines);
-              myCacheEndLine = fitLineToEditor(myCacheStartLine + 2 * myCachePreviewLines + 1);
+              myCacheEndLine = fitLineToEditor(myCacheStartLine + 2 * myCachePreviewLines + JBUI.scale(1));
               if (myCacheLevel2 == null) {
-                myCacheLevel2 = UIUtil.createImage(size.width, myEditor.getLineHeight() * (2 * myCachePreviewLines + 1), BufferedImage.TYPE_INT_RGB);
+                myCacheLevel2 = UIUtil.createImage(size.width, myEditor.getLineHeight() * (2 * myCachePreviewLines + JBUI.scale(1)), BufferedImage.TYPE_INT_RGB);
               }
               Graphics2D cg = myCacheLevel2.createGraphics();
               final AffineTransform t = cg.getTransform();
               EditorUIUtil.setupAntialiasing(cg);
               int lineShift = -myEditor.getLineHeight() * myCacheStartLine;
 
-              AffineTransform translateInstance = AffineTransform.getTranslateInstance(-3, lineShift);
+              AffineTransform translateInstance = AffineTransform.getTranslateInstance(-JBUI.scale(3), lineShift);
               translateInstance.preConcatenate(t);
               cg.setTransform(translateInstance);
 
               cg.setClip(0, -lineShift, gutterWidth, myCacheLevel2.getHeight());
               gutterComponentEx.paint(cg);
-              translateInstance = AffineTransform.getTranslateInstance(gutterWidth  - 3, lineShift);
+              translateInstance = AffineTransform.getTranslateInstance(gutterWidth - JBUI.scale(3), lineShift);
               translateInstance.preConcatenate(t);
               cg.setTransform(translateInstance);
               EditorComponentImpl contentComponent = myEditor.getContentComponent();
@@ -1161,7 +1162,8 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
               contentComponent.paint(cg);
             }
             if (myCacheLevel1 == null) {
-              myCacheLevel1 = UIUtil.createImage(size.width, myEditor.getLineHeight() * (2 * myPreviewLines + 1), BufferedImage.TYPE_INT_RGB);
+              myCacheLevel1 = UIUtil.createImage(size.width, myEditor.getLineHeight() * (2 * myPreviewLines + JBUI
+                      .scale(1)), BufferedImage.TYPE_INT_RGB);
               isDirty = true;
             }
             if (isDirty) {
@@ -1205,9 +1207,9 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
                 rightEdges.put(logicalPosition.line, rightEdge);
 
                 g2d.setColor(MessageType.WARNING.getPopupBackground());
-                g2d.fillRoundRect(placeToShow.x, placeToShow.y, w + 2 * R, h, R, R);
+                g2d.fillRoundRect(placeToShow.x, placeToShow.y, w + JBUI.scale(2) * R, h, R, R);
                 g2d.setColor(new JBColor(JBColor.GRAY, Gray._200));
-                g2d.drawRoundRect(placeToShow.x, placeToShow.y, w + 2 * R, h, R, R);
+                g2d.drawRoundRect(placeToShow.x, placeToShow.y, w + JBUI.scale(2) * R, h, R, R);
                 g2d.setColor(JBColor.foreground());
                 g2d.drawString(s, placeToShow.x + R, placeToShow.y + h - g2d.getFontMetrics(g2d.getFont()).getDescent()/2 - 2);
               }
