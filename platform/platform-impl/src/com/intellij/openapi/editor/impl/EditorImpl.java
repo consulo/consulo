@@ -6587,6 +6587,10 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
     @Override
     public int getEditorFontSize() {
+      return JBUI.scale(getEditorFontSizeImpl());
+    }
+
+    private int getEditorFontSizeImpl() {
       if (myFontSize == -1) {
         return getDelegate().getEditorFontSize();
       }
@@ -6689,7 +6693,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
     @Override
     public int getConsoleFontSize() {
-      return myConsoleFontSize == -1 ? super.getConsoleFontSize() : myConsoleFontSize;
+      return JBUI.scale(myConsoleFontSize == -1 ? super.getConsoleFontSize() : myConsoleFontSize);
     }
   }
 
