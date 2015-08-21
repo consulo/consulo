@@ -84,7 +84,7 @@ public class JBUI {
     else if (scale < 1.5f) scale = 1.25f;
     else if (scale < 1.75f) scale = 1.5f;
     else if (scale < 2f) scale = 1.75f;
-    else scale = 2.0f;
+    else if(scale > 3) scale = 2f; // for example scale 2.5 is acceptable
 
     if (SystemInfo.isLinux && scale == 1.25f) {
       //Default UI font size for Unity and Gnome is 15. Scaling factor 1.25f works badly on Linux
@@ -96,6 +96,14 @@ public class JBUI {
 
   public static int scale(int i) {
     return (int)(SCALE_FACTOR * i);
+  }
+
+  public static int scaleIconSize(int iconSize) {
+    // if we get scale 2.5 we need scale icon only to 2
+    if(SCALE_FACTOR >= 2.5) {
+      return iconSize * 2;
+    }
+    return scale(iconSize);
   }
 
   public static int scaleFontSize(int fontSize) {
