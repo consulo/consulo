@@ -44,6 +44,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,7 +73,7 @@ public class HectorComponent extends JPanel {
 
   public HectorComponent(@NotNull PsiFile file) {
     super(new GridBagLayout());
-    setBorder(BorderFactory.createEmptyBorder(0, 0, 7, 0));
+    setBorder(JBUI.Borders.empty(0, 0, 7, 0));
     myFile = file;
     mySliders = new HashMap<Language, JSlider>();
 
@@ -123,7 +124,7 @@ public class HectorComponent extends JPanel {
     }
 
     GridBagConstraints gc = new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
-                                                   GridBagConstraints.NONE, new Insets(0, 5, 0, 0), 0, 0);
+                                                   GridBagConstraints.NONE, JBUI.insets(0, 5, 0, 0), 0, 0);
 
     JPanel panel = new JPanel(new GridBagLayout());
     panel.setBorder(IdeBorderFactory.createTitledBorder(EditorBundle.message("hector.highlighting.level.title"), false));
@@ -144,8 +145,8 @@ public class HectorComponent extends JPanel {
     gc.weighty = 0;
 
     final HyperlinkLabel configurator = new HyperlinkLabel("Configure inspections");
-    gc.insets.right = 5;
-    gc.insets.bottom = 10;
+    gc.insets.right = JBUI.scale(5);
+    gc.insets.bottom = JBUI.scale(10);
     gc.weightx = 0;
     gc.fill = GridBagConstraints.NONE;
     gc.anchor = GridBagConstraints.EAST;
@@ -184,7 +185,7 @@ public class HectorComponent extends JPanel {
   @Override
   public Dimension getPreferredSize() {
     final Dimension preferredSize = super.getPreferredSize();
-    final int width = 300;
+    final int width = JBUI.scale(300);
     if (preferredSize.width < width){
       preferredSize.width = width;
     }
@@ -194,9 +195,9 @@ public class HectorComponent extends JPanel {
   private void layoutHorizontal(final JPanel panel) {
     for (JSlider slider : mySliders.values()) {
       slider.setOrientation(SwingConstants.HORIZONTAL);
-      slider.setPreferredSize(new Dimension(200, 40));
+      slider.setPreferredSize(JBUI.size(200, 40));
       panel.add(slider, new GridBagConstraints(0, 1, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                                               new Insets(5, 0, 5, 0), 0, 0));
+                                               JBUI.insets(5, 0, 5, 0), 0, 0));
     }
   }
 
@@ -206,11 +207,11 @@ public class HectorComponent extends JPanel {
       JSlider slider = entry.getValue();
 
       JPanel borderPanel = new JPanel(new BorderLayout());
-      slider.setPreferredSize(new Dimension(100, 100));
+      slider.setPreferredSize(JBUI.size(100, 100));
       borderPanel.add(new JLabel(language.getDisplayName()), BorderLayout.NORTH);
       borderPanel.add(slider, BorderLayout.CENTER);
       panel.add(borderPanel, new GridBagConstraints(GridBagConstraints.RELATIVE, 1, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-                                                    new Insets(0, 5, 0, 5), 0, 0));
+                                                    JBUI.insets(0, 5, 0, 5), 0, 0));
     }
   }
 
