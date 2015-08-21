@@ -41,6 +41,7 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
 import com.intellij.ui.FocusTrackback;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -581,7 +582,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     }
 
     private void createShadow() {
-      if (!UISettings.isRemoteDesktopConnected()) {
+      if (!UISettings.isRemoteDesktopConnected() && !JBUI.isHiDPI()) {
         shadow = ShadowBorderPainter.createShadow(this, getWidth(), getHeight());
       }
     }
