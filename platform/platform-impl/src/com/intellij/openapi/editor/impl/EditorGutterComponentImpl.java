@@ -81,7 +81,7 @@ import java.util.List;
 
 class EditorGutterComponentImpl extends EditorGutterComponentEx implements MouseListener, MouseMotionListener, DataProvider {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.EditorGutterComponentImpl");
-  private static final int START_ICON_AREA_WIDTH = 15;
+  private static final int START_ICON_AREA_WIDTH = JBUI.scale(15);
   private static final int FREE_PAINTERS_AREA_WIDTH = 5;
   private static final int GAP_BETWEEN_ICONS_AND_FREE_PAINTERS_AREA = 5;
   private static final int GAP_BETWEEN_ICONS = 3;
