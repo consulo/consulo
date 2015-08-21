@@ -48,6 +48,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.ButtonlessScrollBarUI;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,7 +95,8 @@ class LookupUi {
     myIconPanel.add(myProcessIcon);
 
     JComponent adComponent = advertiser.getAdComponent();
-    adComponent.setBorder(new EmptyBorder(0, 1, 1, 2 + AllIcons.Ide.LookupRelevance.getIconWidth()));
+    adComponent.setBorder(new EmptyBorder(0, JBUI.scale(1), JBUI.scale(1),
+                                          JBUI.scale(2) + AllIcons.Ide.LookupRelevance.getIconWidth()));
     myLayeredPane.mainPanel.add(adComponent, BorderLayout.SOUTH);
 
     myScrollBarIncreaseButton = new JButton();
@@ -102,7 +104,7 @@ class LookupUi {
     myScrollBarIncreaseButton.setRequestFocusEnabled(false);
 
     myScrollPane = new JBScrollPane(lookup.getList());
-    myScrollPane.setViewportBorder(new EmptyBorder(0, 0, 0, 0));
+    myScrollPane.setViewportBorder(JBUI.Borders.empty());
     myScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(myScrollPane.getVerticalScrollBar(), new Factory<JButton>() {
       @Override
@@ -163,7 +165,9 @@ class LookupUi {
   private void updateScrollbarVisibility() {
     boolean showSorting = myLookup.isCompletion() && myList.getModel().getSize() >= 3;
     mySortingLabel.setVisible(showSorting);
-    myScrollPane.setVerticalScrollBarPolicy(showSorting ? ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS : ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+    myScrollPane.setVerticalScrollBarPolicy(showSorting
+                                            ? ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
+                                            : ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
   }
 
   private void updateHint(@NotNull final LookupElement item) {
@@ -204,7 +208,8 @@ class LookupUi {
     myLookup.getComponent().addFocusListener(new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) {
-        final ActionCallback done = IdeFocusManager.getInstance(myProject).requestFocus(myLookup.getEditor().getContentComponent(), true);
+        final ActionCallback done =
+                IdeFocusManager.getInstance(myProject).requestFocus(myLookup.getEditor().getContentComponent(), true);
         IdeFocusManager.getInstance(myProject).typeAheadUntil(done);
         new Alarm(myLookup).addRequest(new Runnable() {
           @Override
@@ -227,13 +232,15 @@ class LookupUi {
     };
     if (myLookup.isCalculating()) {
       new Alarm(myLookup).addRequest(setVisible, 100, myModalityState);
-    } else {
+    }
+    else {
       setVisible.run();
     }
 
     if (calculating) {
       myProcessIcon.resume();
-    } else {
+    }
+    else {
       myProcessIcon.suspend();
     }
   }
@@ -241,7 +248,8 @@ class LookupUi {
   private void updateSorting() {
     final boolean lexi = UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY;
     mySortingLabel.setIcon(lexi ? AllIcons.Ide.LookupAlphanumeric : AllIcons.Ide.LookupRelevance);
-    mySortingLabel.setToolTipText(lexi ? "Click to sort variants by relevance" : "Click to sort variants alphabetically");
+    mySortingLabel
+            .setToolTipText(lexi ? "Click to sort variants by relevance" : "Click to sort variants alphabetically");
 
     myLookup.resort(false);
   }
@@ -310,7 +318,12 @@ class LookupUi {
 
     final JRootPane rootPane = editor.getComponent().getRootPane();
     if (rootPane == null) {
-      LOG.error("editor.disposed=" + editor.isDisposed() + "; lookup.disposed=" + myLookup.isLookupDisposed() + "; editorShowing=" + editor.getContentComponent().isShowing());
+      LOG.error("editor.disposed=" +
+                editor.isDisposed() +
+                "; lookup.disposed=" +
+                myLookup.isLookupDisposed() +
+                "; editorShowing=" +
+                editor.getContentComponent().isShowing());
     }
     Rectangle candidate = new Rectangle(location, dim);
     ScreenUtil.cropRectangleToFitTheScreen(candidate);
@@ -332,7 +345,8 @@ class LookupUi {
         @Override
         public Dimension preferredLayoutSize(@Nullable Container parent) {
           int maxCellWidth = myLookup.myLookupTextWidth + myLookup.myCellRenderer.getIconIndent();
-          int scrollBarWidth = myScrollPane.getPreferredSize().width - myScrollPane.getViewport().getPreferredSize().width;
+          int scrollBarWidth =
+                  myScrollPane.getPreferredSize().width - myScrollPane.getViewport().getPreferredSize().width;
           int listWidth = Math.min(scrollBarWidth + maxCellWidth, UISettings.getInstance().MAX_LOOKUP_WIDTH2);
 
           Dimension adSize = myAdvertiser.getAdComponent().getPreferredSize();
@@ -357,7 +371,9 @@ class LookupUi {
             }
 
             int listHeight = myList.getLastVisibleIndex() - myList.getFirstVisibleIndex() + 1;
-            if (listHeight != myList.getModel().getSize() && listHeight != myList.getVisibleRowCount() && preferredSize.height != size.height) {
+            if (listHeight != myList.getModel().getSize() &&
+                listHeight != myList.getVisibleRowCount() &&
+                preferredSize.height != size.height) {
               UISettings.getInstance().MAX_LOOKUP_LIST_HEIGHT = Math.max(5, listHeight);
             }
           }
@@ -371,8 +387,10 @@ class LookupUi {
 
     private void layoutStatusIcons() {
       int adHeight = myAdvertiser.getAdComponent().getPreferredSize().height;
-      Dimension buttonSize = adHeight > 0 || !mySortingLabel.isVisible() ? new Dimension(0, 0) : new Dimension(
-              AllIcons.Ide.LookupRelevance.getIconWidth(), AllIcons.Ide.LookupRelevance.getIconHeight());
+      Dimension buttonSize = adHeight > 0 || !mySortingLabel.isVisible()
+                             ? new Dimension(0, 0)
+                             : new Dimension(AllIcons.Ide.LookupRelevance.getIconWidth(),
+                                             AllIcons.Ide.LookupRelevance.getIconHeight());
       myScrollBarIncreaseButton.setPreferredSize(buttonSize);
       myScrollBarIncreaseButton.setMinimumSize(buttonSize);
       myScrollBarIncreaseButton.setMaximumSize(buttonSize);
@@ -381,7 +399,8 @@ class LookupUi {
       scrollBar.repaint();
 
       final Dimension iconSize = myProcessIcon.getPreferredSize();
-      myIconPanel.setBounds(getWidth() - iconSize.width - (scrollBar.isVisible() ? scrollBar.getWidth() : 0), 0, iconSize.width, iconSize.height);
+      myIconPanel.setBounds(getWidth() - iconSize.width - (scrollBar.isVisible() ? scrollBar.getWidth() : 0), 0,
+                            iconSize.width, iconSize.height);
 
       final Dimension sortSize = mySortingLabel.getPreferredSize();
       final Point sbLocation = SwingUtilities.convertPoint(scrollBar, 0, 0, myLayeredPane);
@@ -404,8 +423,10 @@ class LookupUi {
   }
 
   private class LookupHint extends JLabel {
-    private final Border INACTIVE_BORDER = BorderFactory.createEmptyBorder(2, 2, 2, 2);
-    private final Border ACTIVE_BORDER = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(1, 1, 1, 1));
+    private final Border INACTIVE_BORDER = JBUI.Borders.empty(2);
+    private final Border ACTIVE_BORDER = BorderFactory
+            .createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, JBUI.scale(1)), JBUI.Borders.empty(1));
+
     private LookupHint() {
       setOpaque(false);
       setBorder(INACTIVE_BORDER);
@@ -426,6 +447,7 @@ class LookupUi {
         public void mouseExited(MouseEvent e) {
           setBorder(INACTIVE_BORDER);
         }
+
         @Override
         public void mousePressed(MouseEvent e) {
           if (!e.isPopupTrigger() && e.getButton() == MouseEvent.BUTTON1) {
@@ -444,18 +466,21 @@ class LookupUi {
       DefaultActionGroup group = new DefaultActionGroup();
       group.add(createSortingAction(true));
       group.add(createSortingAction(false));
-      JBPopupFactory.getInstance().createActionGroupPopup("Change sorting", group, context, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false).showInBestPositionFor(
-              context);
+      JBPopupFactory.getInstance()
+              .createActionGroupPopup("Change sorting", group, context, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                                      false).showInBestPositionFor(context);
       return true;
     }
 
     private AnAction createSortingAction(boolean checked) {
       boolean currentSetting = UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY;
       final boolean newSetting = checked ? currentSetting : !currentSetting;
-      return new DumbAwareAction(newSetting ? "Sort lexicographically" : "Sort by relevance", null, checked ? AllIcons.Actions.Checked : null) {
+      return new DumbAwareAction(newSetting ? "Sort lexicographically" : "Sort by relevance", null,
+                                 checked ? AllIcons.Actions.Checked : null) {
         @Override
         public void actionPerformed(AnActionEvent e) {
-          FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CHANGE_SORTING);
+          FeatureUsageTracker.getInstance()
+                  .triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CHANGE_SORTING);
           UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY = newSetting;
           updateSorting();
         }

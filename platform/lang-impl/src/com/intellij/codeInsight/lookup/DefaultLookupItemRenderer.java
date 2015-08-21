@@ -47,8 +47,8 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
   @Nullable
   public static Icon getRawIcon(final LookupElement item, boolean real) {
     final Icon icon = _getRawIcon(item, real);
-    if (icon != null && icon.getIconHeight() > IconUtil.NODE_ICON_SIZE) {
-      return new SizedIcon(icon, icon.getIconWidth(), IconUtil.NODE_ICON_SIZE);
+    if (icon != null && icon.getIconHeight() > IconUtil.getDefaultNodeIconSize()) {
+      return new SizedIcon(icon, icon.getIconWidth(), IconUtil.getDefaultNodeIconSize());
     }
     return icon;
   }
@@ -67,7 +67,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
         return EmptyIcon.ICON_0;
       }
 
-      return new EmptyIcon(IconUtil.NODE_ICON_SIZE * 2, IconUtil.NODE_ICON_SIZE);
+      return new EmptyIcon(IconUtil.getDefaultNodeIconSize() * 2, IconUtil.getDefaultNodeIconSize());
     }
 
     if (o instanceof Iconable && !(o instanceof PsiElement)) {

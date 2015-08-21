@@ -36,6 +36,7 @@ import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +50,8 @@ import java.awt.image.BufferedImage;
  */
 public class IconUtil {
   private static final Key<Boolean> PROJECT_WAS_EVER_INITIALIZED = Key.create("iconDeferrer:projectWasEverInitialized");
+  @Deprecated
+  @DeprecationInfo("Use #getDefaultNodeIconSize()")
   public static final int NODE_ICON_SIZE = UIUtil.isRetina() ? 32 : 16;
   private static NullableFunction<AnyIconKey<VirtualFile>, Icon> ourVirtualFileIconFunc = new NullableFunction<AnyIconKey<VirtualFile>, Icon>() {
     @Override
@@ -149,11 +152,15 @@ public class IconUtil {
   @NotNull
   public static Icon getEmptyIcon(boolean showVisibility) {
     RowIcon baseIcon = new RowIcon(2);
-    baseIcon.setIcon(EmptyIcon.create(NODE_ICON_SIZE), 0);
+    baseIcon.setIcon(EmptyIcon.create(getDefaultNodeIconSize()), 0);
     if (showVisibility) {
-      baseIcon.setIcon(EmptyIcon.create(NODE_ICON_SIZE), 1);
+      baseIcon.setIcon(EmptyIcon.create(getDefaultNodeIconSize()), 1);
     }
     return baseIcon;
+  }
+
+  public static int getDefaultNodeIconSize() {
+    return UIUtil.isRetina() ? 32 : JBUI.scale(16);
   }
 
   public static Image toImage(@NotNull Icon icon) {

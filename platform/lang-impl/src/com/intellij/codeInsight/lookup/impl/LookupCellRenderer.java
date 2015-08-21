@@ -37,11 +37,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +56,7 @@ public class LookupCellRenderer implements ListCellRenderer {
   //TODO[kb]: move all these awesome constants to Editor's Fonts & Colors settings
   private static final int AFTER_TAIL = 10;
   private static final int AFTER_TYPE = 6;
-  private Icon myEmptyIcon = EmptyIcon.create(5);
+  private Icon myEmptyIcon = JBUI.emptyIcon(5);
   private final Font myNormalFont;
   private final Font myBoldFont;
   private final FontMetrics myNormalMetrics;
@@ -102,10 +102,10 @@ public class LookupCellRenderer implements ListCellRenderer {
     myPanel = new LookupPanel();
     myPanel.add(myNameComponent, BorderLayout.WEST);
     myPanel.add(myTailComponent, BorderLayout.CENTER);
-    myTailComponent.setBorder(new EmptyBorder(0, 0, 0, AFTER_TAIL));
+    myTailComponent.setBorder(JBUI.Borders.empty(0, 0, 0, AFTER_TAIL));
 
     myPanel.add(myTypeLabel, BorderLayout.EAST);
-    myTypeLabel.setBorder(new EmptyBorder(0, 0, 0, AFTER_TYPE));
+    myTypeLabel.setBorder(JBUI.Borders.empty(0, 0, 0, AFTER_TYPE));
 
     myNormalMetrics = myLookup.getEditor().getComponent().getFontMetrics(myNormalFont);
     myBoldMetrics = myLookup.getEditor().getComponent().getFontMetrics(myBoldFont);
@@ -218,7 +218,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     if (myMaxWidth < 0) {
       final Point p = myLookup.getComponent().getLocationOnScreen();
       final Rectangle rectangle = ScreenUtil.getScreenRectangle(p);
-      myMaxWidth = rectangle.x + rectangle.width - p.x - 111;
+      myMaxWidth = rectangle.x + rectangle.width - p.x - JBUI.scale(111);
     }
     return myMaxWidth;
   }
