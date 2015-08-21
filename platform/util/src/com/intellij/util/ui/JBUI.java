@@ -54,12 +54,12 @@ public class JBUI {
     }
 
     int size = -1;
-    try {
+    /*try {
       if (SystemInfo.isWindows) {
         size = (Integer)Toolkit.getDefaultToolkit().getDesktopProperty("win.system.font.height");
       }
     } catch (Exception e) {//
-    }
+    }  */
     if (size == -1) {
       size = Fonts.label().getSize();
     }

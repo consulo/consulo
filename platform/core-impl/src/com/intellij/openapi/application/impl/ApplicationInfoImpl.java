@@ -56,7 +56,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private Color myAboutForeground = Color.black;
   private Color myAboutLinkColor = null;
 
-  private int myProgressY = 350;
   private String mySplashImageUrl = null;
   private String myAboutImageUrl = null;
   private String myEditorBackgroundImageUrl = null;
@@ -101,7 +100,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ATTRIBUTE_PROGRESS_COLOR = "progressColor";
   @NonNls private static final String ATTRIBUTE_ABOUT_FOREGROUND_COLOR = "foreground";
   @NonNls private static final String ATTRIBUTE_ABOUT_LINK_COLOR = "linkColor";
-  @NonNls private static final String ATTRIBUTE_PROGRESS_Y = "progressY";
   @NonNls private static final String ELEMENT_ABOUT = "about";
   @NonNls private static final String ELEMENT_EDITOR = "editor";
   @NonNls private static final String BACKGROUND_URL_ATTR = "background-url";
@@ -194,10 +192,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
 
   public Color getProgressColor() {
     return myProgressColor;
-  }
-
-  public int getProgressY() {
-    return myProgressY;
   }
 
   @Override
@@ -408,11 +402,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
       String v = logoElement.getAttributeValue(ATTRIBUTE_PROGRESS_COLOR);
       if (v != null) {
         myProgressColor = parseColor(v);
-      }
-
-      v = logoElement.getAttributeValue(ATTRIBUTE_PROGRESS_Y);
-      if (v != null) {
-        myProgressY = Integer.parseInt(v);
       }
     }
 
