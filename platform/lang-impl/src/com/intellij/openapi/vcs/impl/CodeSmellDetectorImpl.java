@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,9 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.CodeSmellDetector;
@@ -54,14 +55,13 @@ import java.util.*;
 public class CodeSmellDetectorImpl extends CodeSmellDetector {
   private final Project myProject;
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.CodeSmellDetectorImpl");
-  private Exception myException;
 
   public CodeSmellDetectorImpl(final Project project) {
     myProject = project;
   }
 
   @Override
-  public void showCodeSmellErrors(final List<CodeSmellInfo> smellList) {
+  public void showCodeSmellErrors(@NotNull final List<CodeSmellInfo> smellList) {
     Collections.sort(smellList, new Comparator<CodeSmellInfo>() {
       @Override
       public int compare(final CodeSmellInfo o1, final CodeSmellInfo o2) {
@@ -105,15 +105,15 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
 
   }
 
-
+  @NotNull
   @Override
-  public List<CodeSmellInfo> findCodeSmells(final List<VirtualFile> filesToCheck) throws ProcessCanceledException {
+  public List<CodeSmellInfo> findCodeSmells(@NotNull final List<VirtualFile> filesToCheck) throws ProcessCanceledException {
+    ApplicationManager.getApplication().assertIsDispatchThread();
     final List<CodeSmellInfo> result = new ArrayList<CodeSmellInfo>();
-    final PsiManager manager = PsiManager.getInstance(myProject);
-    final FileDocumentManager fileManager = FileDocumentManager.getInstance();
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
     if (ApplicationManager.getApplication().isWriteAccessAllowed()) throw new RuntimeException("Must not run under write action");
 
+    final Ref<Exception> exception = Ref.create();
     ProgressManager.getInstance().run(new Task.Modal(myProject, VcsBundle.message("checking.code.smells.progress.title"), true) {
       @Override
       public void run(@NotNull ProgressIndicator progress) {
@@ -126,49 +126,33 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
             progress.setText(VcsBundle.message("searching.for.code.smells.processing.file.progress.text", file.getPresentableUrl()));
             progress.setFraction((double)i / (double)filesToCheck.size());
 
-            final PsiFile psiFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
-              @Override
-              public PsiFile compute() {
-                return manager.findFile(file);
-              }
-            });
-            if (psiFile != null) {
-              final Document document = ApplicationManager.getApplication().runReadAction(new Computable<Document>() {
-                @Override
-                public Document compute() {
-                  return fileManager.getDocument(file);
-                }
-              });
-              if (document != null) {
-                final List<CodeSmellInfo> codeSmells = findCodeSmells(psiFile, progress, document);
-                result.addAll(codeSmells);
-              }
-            }
+            result.addAll(findCodeSmells(file, progress));
           }
         }
         catch (ProcessCanceledException e) {
-          throw e;
+          exception.set(e);
         }
         catch (Exception e) {
           LOG.error(e);
-          myException = e;
+          exception.set(e);
         }
       }
     });
-    if (myException != null) {
-      Rethrow.reThrowRuntime(myException);
+    if (!exception.isNull()) {
+      Exception t = exception.get();
+      Rethrow.reThrowRuntime(t);
     }
 
     return result;
   }
 
   @NotNull
-  private List<CodeSmellInfo> findCodeSmells(@NotNull final PsiFile psiFile, @NotNull final ProgressIndicator progress, @NotNull final Document document) {
-    final List<CodeSmellInfo> result = new ArrayList<CodeSmellInfo>();
+  private List<CodeSmellInfo> findCodeSmells(@NotNull final VirtualFile file, @NotNull final ProgressIndicator progress) {
+    final List<CodeSmellInfo> result = Collections.synchronizedList(new ArrayList<CodeSmellInfo>());
 
     final DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(myProject);
-    final DaemonProgressIndicator daemonIndicator = new DaemonProgressIndicator();
-    ((ProgressIndicatorEx)progress).addStateDelegate(new AbstractProgressIndicatorExBase(){
+    final ProgressIndicator daemonIndicator = new DaemonProgressIndicator();
+    ((ProgressIndicatorEx)progress).addStateDelegate(new AbstractProgressIndicatorExBase() {
       @Override
       public void cancel() {
         super.cancel();
@@ -178,23 +162,27 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     ProgressManager.getInstance().runProcess(new Runnable() {
       @Override
       public void run() {
-        List<HighlightInfo> infos = ApplicationManager.getApplication().runReadAction(new Computable<List<HighlightInfo>>() {
+        DumbService.getInstance(myProject).runReadActionInSmartMode(new Runnable() {
           @Override
-          public List<HighlightInfo> compute() {
-            return codeAnalyzer.runMainPasses(psiFile, document, daemonIndicator);
+          public void run() {
+            final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
+            final Document document = FileDocumentManager.getInstance().getDocument(file);
+            if (psiFile == null || document == null) {
+              return;
+            }
+            List<HighlightInfo> infos = codeAnalyzer.runMainPasses(psiFile, document, daemonIndicator);
+            convertErrorsAndWarnings(infos, result, document);
           }
         });
-        collectErrorsAndWarnings(infos, result, document);
       }
     }, daemonIndicator);
 
     return result;
   }
 
-  private void collectErrorsAndWarnings(final Collection<HighlightInfo> highlights,
-                                        final List<CodeSmellInfo> result,
-                                        final Document document) {
-    if (highlights == null) return;
+  private void convertErrorsAndWarnings(@NotNull Collection<HighlightInfo> highlights,
+                                        @NotNull List<CodeSmellInfo> result,
+                                        @NotNull Document document) {
     for (HighlightInfo highlightInfo : highlights) {
       final HighlightSeverity severity = highlightInfo.getSeverity();
       if (SeverityRegistrar.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
@@ -204,7 +192,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     }
   }
 
-  private static String getDescription(final HighlightInfo highlightInfo) {
+  private static String getDescription(@NotNull HighlightInfo highlightInfo) {
     final String description = highlightInfo.getDescription();
     final HighlightInfoType type = highlightInfo.type;
     if (type instanceof HighlightInfoType.HighlightInfoTypeSeverityByKey) {

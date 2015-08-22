@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,6 +108,10 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
     myResizable = b;
   }
 
+  protected boolean canAutoHideOn(TooltipEvent event) {
+    return true;
+  }
+
   /**
    * Shows the hint in the layered pane. Coordinates <code>x</code> and <code>y</code>
    * are in <code>parentComponent</code> coordinate system. Note that the component
@@ -126,8 +130,10 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
 
     LOG.assertTrue(myParentComponent.isShowing());
     myEscListener = new MyEscListener();
-    myComponent.registerKeyboardAction(myEscListener, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
-    myComponent.registerKeyboardAction(myEscListener, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_FOCUSED);
+    myComponent.registerKeyboardAction(myEscListener, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                                       JComponent.WHEN_IN_FOCUSED_WINDOW);
+    myComponent.registerKeyboardAction(myEscListener, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                                       JComponent.WHEN_FOCUSED);
     final JLayeredPane layeredPane = parentComponent.getRootPane().getLayeredPane();
 
     myComponent.validate();
@@ -141,43 +147,45 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
 
       if (hintHint.isAwtTooltip()) {
         IdeTooltip tooltip =
-          new IdeTooltip(hintHint.getOriginalComponent(), hintHint.getOriginalPoint(), myComponent, hintHint, myComponent) {
-            @Override
-            protected boolean canAutohideOn(TooltipEvent event) {
-              if (event.getInputEvent() instanceof MouseEvent) {
-                return !(hintHint.isContentActive() && event.isIsEventInsideBalloon());
-              }
-              else if (event.getAction() != null) {
-                return false;
-              }
-              else {
-                return true;
-              }
-            }
+                new IdeTooltip(hintHint.getOriginalComponent(), hintHint.getOriginalPoint(), myComponent, hintHint,
+                               myComponent) {
+                  @Override
+                  protected boolean canAutohideOn(TooltipEvent event) {
+                    if (!LightweightHint.this.canAutoHideOn(event)) {
+                      return false;
+                    }
+                    else if (event.getInputEvent() instanceof MouseEvent) {
+                      return !(hintHint.isContentActive() && event.isIsEventInsideBalloon());
+                    }
+                    else if (event.getAction() != null) {
+                      return false;
+                    }
+                    else {
+                      return true;
+                    }
+                  }
 
-            @Override
-            protected void onHidden() {
-              fireHintHidden();
-              TooltipController.getInstance().resetCurrent();
-            }
+                  @Override
+                  protected void onHidden() {
+                    fireHintHidden();
+                    TooltipController.getInstance().resetCurrent();
+                  }
 
-          @Override
-          public boolean canBeDismissedOnTimeout() {
-            return false;
-          }
-        }.setToCenterIfSmall(hintHint.isMayCenterTooltip())
-          .setPreferredPosition(hintHint.getPreferredPosition())
-          .setHighlighterType(hintHint.isHighlighterType())
-          .setTextForeground(hintHint.getTextForeground())
-          .setTextBackground(hintHint.getTextBackground())
-          .setBorderColor(hintHint.getBorderColor())
-          .setFont(hintHint.getTextFont())
-          .setCalloutShift(hintHint.getCalloutShift())
-          .setPositionChangeShift(hintHint.getPositionChangeX(), hintHint.getPositionChangeY())
-          .setExplicitClose(hintHint.isExplicitClose())
-          .setHint(true);
+                  @Override
+                  public boolean canBeDismissedOnTimeout() {
+                    return false;
+                  }
+                }.setToCenterIfSmall(hintHint.isMayCenterTooltip())
+                        .setPreferredPosition(hintHint.getPreferredPosition())
+                        .setHighlighterType(hintHint.isHighlighterType())
+                        .setTextForeground(hintHint.getTextForeground()).setTextBackground(hintHint.getTextBackground())
+                        .setBorderColor(hintHint.getBorderColor()).setBorderInsets(hintHint.getBorderInsets())
+                        .setFont(hintHint.getTextFont()).setCalloutShift(hintHint.getCalloutShift())
+                        .setPositionChangeShift(hintHint.getPositionChangeX(), hintHint.getPositionChangeY())
+                        .setExplicitClose(hintHint.isExplicitClose()).setHint(true);
         myComponent.validate();
-        myCurrentIdeTooltip = IdeTooltipManager.getInstance().show(tooltip, hintHint.isShowImmediately());
+        myCurrentIdeTooltip = IdeTooltipManager.getInstance()
+                .show(tooltip, hintHint.isShowImmediately(), hintHint.isAnimationEnabled());
       }
       else {
         final Point layeredPanePoint = SwingUtilities.convertPoint(parentComponent, x, y, layeredPane);
@@ -194,9 +202,6 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
       JComponent actualComponent = new OpaquePanel(new BorderLayout());
       actualComponent.add(myComponent, BorderLayout.CENTER);
       if (isAwtTooltip()) {
-        fixActualPoint(actualPoint);
-
-
         int inset = BalloonImpl.getNormalInset();
         actualComponent.setBorder(new LineBorder(hintHint.getTextBackground(), inset));
         actualComponent.setBackground(hintHint.getTextBackground());
@@ -204,24 +209,16 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
       }
 
       myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(actualComponent, myFocusRequestor)
-        .setRequestFocus(myFocusRequestor != null)
-        .setFocusable(myFocusRequestor != null)
-        .setResizable(myResizable)
-        .setMovable(myTitle != null)
-        .setTitle(myTitle)
-        .setModalContext(false)
-        .setShowShadow(isRealPopup() && !isForceHideShadow())
-        .setCancelKeyEnabled(false)
-        .setCancelOnClickOutside(myCancelOnClickOutside)
-        .setCancelCallback(new Computable<Boolean>() {
-          @Override
-          public Boolean compute() {
-            onPopupCancel();
-            return true;
-          }
-        })
-        .setCancelOnOtherWindowOpen(myCancelOnOtherWindowOpen)
-        .createPopup();
+              .setRequestFocus(myFocusRequestor != null).setFocusable(myFocusRequestor != null)
+              .setResizable(myResizable).setMovable(myTitle != null).setTitle(myTitle).setModalContext(false)
+              .setShowShadow(isRealPopup() && !isForceHideShadow()).setCancelKeyEnabled(false)
+              .setCancelOnClickOutside(myCancelOnClickOutside).setCancelCallback(new Computable<Boolean>() {
+                @Override
+                public Boolean compute() {
+                  onPopupCancel();
+                  return true;
+                }
+              }).setCancelOnOtherWindowOpen(myCancelOnOtherWindowOpen).createPopup();
 
       beforeShow();
       myPopup.show(new RelativePoint(myParentComponent, new Point(actualPoint.x, actualPoint.y)));
@@ -270,7 +267,10 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
     myForceHideShadow = forceHideShadow;
   }
 
-  private static boolean fitsLayeredPane(JLayeredPane pane, JComponent component, RelativePoint desiredLocation, HintHint hintHint) {
+  private static boolean fitsLayeredPane(JLayeredPane pane,
+                                         JComponent component,
+                                         RelativePoint desiredLocation,
+                                         HintHint hintHint) {
     if (hintHint.isAwtTooltip()) {
       Dimension size = component.getPreferredSize();
       Dimension paneSize = pane.getSize();
@@ -288,11 +288,11 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
       }
     }
     else {
-      final Rectangle lpRect = new Rectangle(pane.getLocationOnScreen().x, pane.getLocationOnScreen().y, pane.getWidth(), pane.getHeight());
-      Rectangle componentRect = new Rectangle(desiredLocation.getScreenPoint().x,
-                                              desiredLocation.getScreenPoint().y,
-                                              component.getPreferredSize().width,
-                                              component.getPreferredSize().height);
+      final Rectangle lpRect =
+              new Rectangle(pane.getLocationOnScreen().x, pane.getLocationOnScreen().y, pane.getWidth(),
+                            pane.getHeight());
+      Rectangle componentRect = new Rectangle(desiredLocation.getScreenPoint().x, desiredLocation.getScreenPoint().y,
+                                              component.getPreferredSize().width, component.getPreferredSize().height);
       return lpRect.contains(componentRect);
     }
   }
@@ -305,10 +305,12 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
   }
 
   /**
-   * @return bounds of hint component in the layered pane.
+   * @return bounds of hint component in the parent component's layered pane coordinate system.
    */
   public final Rectangle getBounds() {
-    return myComponent.getBounds();
+    Rectangle bounds = new Rectangle(myComponent.getBounds());
+    final JLayeredPane layeredPane = myParentComponent.getRootPane().getLayeredPane();
+    return SwingUtilities.convertRectangle(myComponent, bounds, layeredPane);
   }
 
   @Override
@@ -383,16 +385,19 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
     setSize(myComponent.getPreferredSize());
   }
 
-  @Override
-  public void updateBounds(int x, int y) {
-    setSize(myComponent.getPreferredSize());
-    updateLocation(x, y);
-  }
-
   public void updateLocation(int x, int y) {
     Point point = new Point(x, y);
     fixActualPoint(point);
     setLocation(new RelativePoint(myParentComponent, point));
+  }
+
+  public void updatePosition(Balloon.Position position) {
+    if (myHintHint != null) {
+      myHintHint.setPreferredPosition(position);
+    }
+    if (myCurrentIdeTooltip != null) {
+      myCurrentIdeTooltip.setPreferredPosition(position);
+    }
   }
 
   public final JComponent getComponent() {
@@ -422,11 +427,7 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
         return SwingUtilities.convertPoint(tipComponent, tipPoint, c);
       }
       else {
-        location = SwingUtilities.convertPoint(
-          myComponent.getParent(),
-          myComponent.getLocation(),
-          c
-        );
+        location = SwingUtilities.convertPoint(myComponent.getParent(), myComponent.getLocation(), c);
       }
     }
 
@@ -441,7 +442,8 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
     else {
       if (myCurrentIdeTooltip != null) {
         Point screenPoint = point.getScreenPoint();
-        if (!screenPoint.equals(new RelativePoint(myCurrentIdeTooltip.getComponent(), myCurrentIdeTooltip.getPoint()).getScreenPoint())) {
+        if (!screenPoint.equals(new RelativePoint(myCurrentIdeTooltip.getComponent(), myCurrentIdeTooltip.getPoint())
+                                        .getScreenPoint())) {
           myCurrentIdeTooltip.setPoint(point.getPoint());
           myCurrentIdeTooltip.setComponent(point.getComponent());
           IdeTooltipManager.getInstance().show(myCurrentIdeTooltip, true, false);

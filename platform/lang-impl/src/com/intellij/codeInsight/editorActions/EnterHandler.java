@@ -32,6 +32,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
@@ -177,7 +178,7 @@ public class EnterHandler extends BaseEnterHandler {
     documentManager.commitDocument(document);
   }
 
-  private static boolean isCommentComplete(PsiComment comment, CodeDocumentationAwareCommenter commenter, Editor editor) {
+  public static boolean isCommentComplete(PsiComment comment, CodeDocumentationAwareCommenter commenter, Editor editor) {
     for (CommentCompleteHandler handler : Extensions.getExtensions(CommentCompleteHandler.EP_NAME)) {
       if (handler.isApplicable(comment, commenter)) {
         return handler.isCommentComplete(comment, commenter, editor);
@@ -195,8 +196,7 @@ public class EnterHandler extends BaseEnterHandler {
     if (parserDefinition == null) {
       return true;
     }
-    final LanguageVersion languageVersion = comment.getLanguageVersion();
-    Lexer lexer = parserDefinition.createLexer(null, languageVersion);
+    Lexer lexer = parserDefinition.createLexer(containingFile.getProject(), containingFile.getLanguageVersion());
     final String commentPrefix = docComment? commenter.getDocumentationCommentPrefix() : commenter.getBlockCommentPrefix();
     lexer.start(commentText, commentPrefix == null? 0 : commentPrefix.length(), commentText.length());
     QuoteHandler fileTypeHandler = TypedHandler.getQuoteHandler(containingFile, editor);
@@ -356,7 +356,7 @@ public class EnterHandler extends BaseEnterHandler {
                   commentContext.docStart = false;
                 }
                 else {
-                  commentContext.docAsterisk = true;
+                  commentContext.docAsterisk = CodeStyleSettingsManager.getSettings(getProject()).JD_LEADING_ASTERISKS_ARE_ENABLED;
                   commentContext.docStart = false;
                 }
               }
@@ -424,7 +424,7 @@ public class EnterHandler extends BaseEnterHandler {
           myOffset = codeStyleManager.adjustLineIndent(myFile, myOffset);
           psiDocumentManager.commitAllDocuments();
 
-          if (!StringUtil.isEmpty(indentInsideJavadoc) && myOffset < myDocument.getTextLength()) {
+          if (commentContext.docAsterisk && !StringUtil.isEmpty(indentInsideJavadoc) && myOffset < myDocument.getTextLength()) {
             myDocument.insertString(myOffset + 1, indentInsideJavadoc);
             myOffset += indentInsideJavadoc.length();
             docIndentApplied = true;
@@ -556,7 +556,11 @@ public class EnterHandler extends BaseEnterHandler {
       codeStyleSettings.ENABLE_JAVADOC_FORMATTING = false;
 
       try {
-        comment = (PsiComment)codeStyleManager.reformat(comment);
+        RangeMarker commentMarker = myDocument.createRangeMarker(comment.getTextRange().getStartOffset(),
+                                                                 comment.getTextRange().getEndOffset());
+        codeStyleManager.reformatNewlyAddedElement(comment.getNode().getTreeParent(), comment.getNode());
+        comment = PsiTreeUtil.getNonStrictParentOfType(myFile.findElementAt(commentMarker.getStartOffset()), PsiComment.class);
+        commentMarker.dispose();
       }
       finally {
         codeStyleSettings.ENABLE_JAVADOC_FORMATTING = old;
@@ -596,7 +600,15 @@ public class EnterHandler extends BaseEnterHandler {
 
         if (docProvider != null) {
           if (docProvider.findExistingDocComment(comment) != comment) return comment;
-          String docStub = docProvider.generateDocumentationContentStub(comment);
+          String docStub;
+
+          DumbService.getInstance(project).setAlternativeResolveEnabled(true);
+          try {
+            docStub = docProvider.generateDocumentationContentStub(comment);
+          }
+          finally {
+            DumbService.getInstance(project).setAlternativeResolveEnabled(false);
+          }
 
           if (docStub != null && docStub.length() != 0) {
             myOffset = CharArrayUtil.shiftForwardUntil(myDocument.getCharsSequence(), myOffset, LINE_SEPARATOR);
