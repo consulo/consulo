@@ -560,7 +560,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     indentBrace(project, editor, '}');
   }
 
-  static void indentOpenedBrace(@NotNull Project project, @NotNull Editor editor) {
+  public static void indentOpenedBrace(@NotNull Project project, @NotNull Editor editor) {
     indentBrace(project, editor, '{');
   }
 
