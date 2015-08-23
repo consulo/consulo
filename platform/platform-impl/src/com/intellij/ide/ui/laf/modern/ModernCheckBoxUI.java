@@ -82,20 +82,20 @@ public class ModernCheckBoxUI extends BasicCheckBoxUI {
     }
 
     if (b.isSelected() && b.getSelectedIcon() != null) {
-      b.getSelectedIcon().paintIcon(b, g, iconRect.x + 4, iconRect.y + 2);
+      b.getSelectedIcon().paintIcon(b, g, iconRect.x + JBUI.scale(4), iconRect.y + JBUI.scale(2));
     }
     else if (!b.isSelected() && b.getIcon() != null) {
-      b.getIcon().paintIcon(b, g, iconRect.x + 4, iconRect.y + 2);
+      b.getIcon().paintIcon(b, g, iconRect.x + JBUI.scale(4), iconRect.y + JBUI.scale(2));
     }
     else {
-      final int x = iconRect.x + 3;
-      final int y = iconRect.y + 3;
-      final int w = iconRect.width - 6;
-      final int h = iconRect.height - 6;
+      final int x = iconRect.x + JBUI.scale(3);
+      final int y = iconRect.y + JBUI.scale(3);
+      final int w = iconRect.width - JBUI.scale(6);
+      final int h = iconRect.height - JBUI.scale(6);
 
       g.translate(x, y);
       g.setColor(b.getBackground());
-      g.fillRect(1, 1, w - 2, h - 2);
+      g.fillRect(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2));
 
       //setup AA for lines
       final GraphicsConfig config = new GraphicsConfig(g);
@@ -109,14 +109,14 @@ public class ModernCheckBoxUI extends BasicCheckBoxUI {
         g.fillRect(0, 0, w, h);
 
         g.setColor(ModernUIUtil.getSelectionBackground());
-        g.drawRect(0, 0, w, h - 1);
+        g.drawRect(0, 0, w, h - JBUI.scale(1));
       }
       else {
         g.setPaint(ModernUIUtil.getBorderColor(c));
-        g.drawRect(0, 0, w, h - 1);
+        g.drawRect(0, 0, w, h - JBUI.scale(1));
 
         g.setPaint(getInactiveFillColor());
-        g.drawRect(0, 0, w, h - 1);
+        g.drawRect(0, 0, w, h - JBUI.scale(1));
       }
 
       if (b.getModel().isSelected()) {
@@ -124,8 +124,8 @@ public class ModernCheckBoxUI extends BasicCheckBoxUI {
         g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
         g.setPaint(getCheckSignColor(b.isEnabled()));
-        g.drawLine(4, 7, 7, 10);
-        g.drawLine(7, 10, 11, 3);
+        g.drawLine(JBUI.scale(4), JBUI.scale(7), JBUI.scale(7), JBUI.scale(10));
+        g.drawLine(JBUI.scale(7), JBUI.scale(10), JBUI.scale(11), JBUI.scale(3));
       }
       g.translate(-x, -y);
       config.restore();
@@ -147,7 +147,7 @@ public class ModernCheckBoxUI extends BasicCheckBoxUI {
   @Override
   protected void paintFocus(Graphics g, Rectangle t, Dimension d) {
     g.setColor(UIManager.getColor("CheckBox.focus"));
-    g.drawRect(t.x - 1, t.y - 1, t.width + 1, t.height + 1);
+    g.drawRect(t.x - JBUI.scale(1), t.y - JBUI.scale(1), t.width + JBUI.scale(1), t.height + JBUI.scale(1));
   }
 
   protected Color getInactiveFillColor() {
