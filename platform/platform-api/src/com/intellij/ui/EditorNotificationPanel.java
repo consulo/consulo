@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -41,9 +42,9 @@ public class EditorNotificationPanel extends JPanel {
 
   public EditorNotificationPanel() {
     super(new BorderLayout());
-    setBorder(BorderFactory.createEmptyBorder(1, 10, 1, 10));
+    setBorder(JBUI.Borders.empty(1, 10, 1, 10));
 
-    setPreferredSize(new Dimension(-1, 24));
+    setPreferredSize(JBUI.size(-1, 24));
 
     add(myLabel, BorderLayout.CENTER);
 
@@ -52,7 +53,7 @@ public class EditorNotificationPanel extends JPanel {
 
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBackground(getBackground());
-    myGearLabel.setBorder(IdeBorderFactory.createEmptyBorder(0, 3, 0, 0));
+    myGearLabel.setBorder(JBUI.Borders.empty(0, 3, 0, 0));
     panel.add(myLinksPanel, BorderLayout.WEST);
     panel.add(myGearLabel, BorderLayout.EAST);
     add(panel, BorderLayout.EAST);
