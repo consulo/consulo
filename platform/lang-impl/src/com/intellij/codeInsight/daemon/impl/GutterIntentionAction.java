@@ -32,6 +32,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IconUtil;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,7 +124,7 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
     if (!gutterAction.isAvailable(project, editor, psiFile)) return;
     Icon icon = action.getTemplatePresentation().getIcon();
     if (icon == null) icon = renderer.getIcon();
-    if (icon.getIconWidth() < 16) icon = IconUtil.toSize(icon, 16, 16);
+    if (icon.getIconWidth() < JBUI.scaleIconSize(16)) icon = IconUtil.toSize(icon, 16, 16);
     HighlightInfo.IntentionActionDescriptor descriptor =
             new HighlightInfo.IntentionActionDescriptor(gutterAction, Collections.<IntentionAction>emptyList(), null, icon) {
               @Nullable

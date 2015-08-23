@@ -105,6 +105,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -1175,7 +1176,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
           if (!StringUtil.isEmpty(groupName)) {
             setLocationString(groupName);
           }
-          if (icon != null && icon.getIconWidth() <= 16 && icon.getIconHeight() <= 16) {
+          if (icon != null && icon.getIconWidth() <= JBUI.scaleIconSize(16) && icon.getIconHeight() <= JBUI.scaleIconSize(16)) {
             setIcon(IconUtil.toSize(icon, 16, 16));
           }
         }
