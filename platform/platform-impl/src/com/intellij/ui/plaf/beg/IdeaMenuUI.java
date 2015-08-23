@@ -15,6 +15,7 @@
  */
 package com.intellij.ui.plaf.beg;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -69,6 +70,9 @@ public class IdeaMenuUI extends BasicMenuUI{
     if (integer != null){
       myMaxGutterIconWidth = JBUI.scale(integer.intValue());
     }
+
+    // define selft icon due with hidpi, jdk icon is too small
+    arrowIcon = AllIcons.Nodes.TreeExpandNode;
   }
 
   @Override
