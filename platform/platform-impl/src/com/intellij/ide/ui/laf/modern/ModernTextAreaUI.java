@@ -31,7 +31,7 @@ import java.awt.event.FocusEvent;
 public class ModernTextAreaUI extends BasicTextAreaUI implements ModernTextBorder.ModernTextUI{
   @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(final JComponent c) {
-    val ui = new ModernTextAreaUI(c);
+    final ModernTextAreaUI ui = new ModernTextAreaUI(c);
     c.addFocusListener(new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) {

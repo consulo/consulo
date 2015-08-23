@@ -18,7 +18,7 @@ package com.intellij.ide.ui.laf.modern;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.Gray;
-import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -32,12 +32,13 @@ import java.awt.event.*;
 /**
  * @author VISTALL
  * @since 05.08.14
- *
+ * <p/>
  * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaTextFieldUI}
  */
 public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBorder.ModernTextUI {
   private static final Icon SEARCH_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/search.png");
-  private static final Icon SEARCH_WITH_HISTORY_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png");
+  private static final Icon SEARCH_WITH_HISTORY_ICON =
+          IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png");
   private static final Icon CLEAR_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/clear.png");
 
   private enum SearchAction {POPUP, CLEAR}
@@ -73,7 +74,8 @@ public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBor
         if (ui.getComponent() != null && isSearchField(c)) {
           if (ui.getActionUnder(e) != null) {
             c.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-          } else {
+          }
+          else {
             c.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
           }
         }
@@ -112,33 +114,33 @@ public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBor
   private SearchAction getActionUnder(MouseEvent e) {
     final Point cPoint = getClearIconCoord();
     final Point sPoint = getSearchIconCoord();
-    cPoint.x+=8;
-    cPoint.y+=8;
-    sPoint.x+=8;
-    sPoint.y+=8;
+    cPoint.x += 8;
+    cPoint.y += 8;
+    sPoint.x += 8;
+    sPoint.y += 8;
     final Point ePoint = e.getPoint();
     return cPoint.distance(ePoint) <= 8 ? SearchAction.CLEAR : sPoint.distance(ePoint) <= 8 ? SearchAction.POPUP : null;
   }
 
   protected Rectangle getDrawingRect() {
     final JTextComponent c = getComponent();
-    final JBInsets i = JBInsets.create(c.getInsets());
-    final int x = i.right - 4 - 16;
-    final int y = i.top - 3;
-    final int w = c.getWidth() - i.width() + 16*2 +7*2  - 5;
-    int h = c.getBounds().height - i.height() + 4*2 - 3;
-    if (h%2==1) h++;
+    final Insets i = c.getInsets();
+    final int x = i.right - JBUI.scale(4) - JBUI.scale(16);
+    final int y = i.top - JBUI.scale(3);
+    final int w = c.getWidth() - (i.right + i.left) + JBUI.scale(16 * 2) + JBUI.scale(7 * 2) - JBUI.scale(5);
+    int h = c.getBounds().height - (i.top + i.bottom) + JBUI.scale(4 * 2) - JBUI.scale(3);
+    if (h % 2 == 1) h += JBUI.scale(1);
     return new Rectangle(x, y, w, h);
   }
 
   protected Point getSearchIconCoord() {
     final Rectangle r = getDrawingRect();
-    return new Point(r.x + 3, r.y + (r.height - 16) / 2 + 1);
+    return new Point(r.x + JBUI.scale(3), r.y + (r.height - JBUI.scale(16)) / 2 + JBUI.scale(1));
   }
 
   protected Point getClearIconCoord() {
     final Rectangle r = getDrawingRect();
-    return new Point(r.x + r.width - 16 - 1, r.y + (r.height - 16) / 2);
+    return new Point(r.x + r.width - JBUI.scale(16 - 1), r.y + (r.height - JBUI.scale(16)) / 2);
   }
 
   @Override
@@ -159,20 +161,23 @@ public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBor
     if (isSearchField(c)) {
       g.setColor(c.getBackground());
 
-      g.fillRect(r.x, r.y, r.width, r.height-1);
+      g.fillRect(r.x, r.y, r.width, r.height - JBUI.scale(1));
       g.setColor(c.isEnabled() ? Gray._100 : new Color(0x535353));
       if (c.hasFocus() && c.getClientProperty("JTextField.Search.noFocusRing") != Boolean.TRUE) {
         g.setColor(ModernUIUtil.getSelectionBackground());
       }
-      g.drawRect(r.x, r.y, r.width, r.height-1);
+      g.drawRect(r.x, r.y, r.width, r.height - JBUI.scale(1));
       Point p = getSearchIconCoord();
-      Icon searchIcon = getComponent().getClientProperty("JTextField.Search.FindPopup") instanceof JPopupMenu ? SEARCH_WITH_HISTORY_ICON : SEARCH_ICON;
+      Icon searchIcon = getComponent().getClientProperty("JTextField.Search.FindPopup") instanceof JPopupMenu
+                        ? SEARCH_WITH_HISTORY_ICON
+                        : SEARCH_ICON;
       searchIcon.paintIcon(null, g, p.x, p.y);
       if (getComponent().hasFocus() && getComponent().getText().length() > 0) {
         p = getClearIconCoord();
         CLEAR_ICON.paintIcon(null, g, p.x, p.y);
       }
-    } else if (border instanceof ModernTextBorder) {
+    }
+    else if (border instanceof ModernTextBorder) {
       if (c.isEnabled() && c.isEditable()) {
         g.setColor(c.getBackground());
       }
@@ -180,11 +185,13 @@ public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBor
       final int height = c.getHeight();
       final Insets i = border.getBorderInsets(c);
       if (myMouseEnterHandler.isMouseEntered()) {
-        g.fillRoundRect(i.left - 5, i.top - 2, width - i.right - i.left + 10, height - i.top - i.bottom + 6, 5, 5);
-      } else {
-        g.fillRect(i.left - 5, i.top - 2, width - i.right - i.left + 12, height - i.top - i.bottom + 6);
+        g.fillRoundRect(i.left - JBUI.scale(5), i.top - 2, width - i.right - i.left + 10, height - i.top - i.bottom + 6, 5, 5);
       }
-    } else {
+      else {
+        g.fillRect(i.left - JBUI.scale(5), i.top - 2, width - i.right - i.left + 12, height - i.top - i.bottom + 6);
+      }
+    }
+    else {
       super.paintBackground(g);
     }
     config.restore();

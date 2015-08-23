@@ -18,6 +18,7 @@ package com.intellij.ide.ui.laf.modern;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -84,7 +85,7 @@ public class ModernButtonUI extends BasicButtonUI {
         }
       }
 
-      g.fillRect(square ? 2 : 4, yOff, c.getWidth() - 2 * 4, c.getHeight() - 2 * yOff);
+      g.fillRect(JBUI.scale(square ? 2 : 4), yOff, c.getWidth() - JBUI.scale(2 * 4), c.getHeight() - 2 * yOff);
       config.restore();
     }
     super.paint(g, c);

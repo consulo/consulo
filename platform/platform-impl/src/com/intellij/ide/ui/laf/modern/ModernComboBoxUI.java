@@ -17,6 +17,7 @@ package com.intellij.ide.ui.laf.modern;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import sun.swing.DefaultLookup;
 
@@ -136,7 +137,7 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
 
   @Override
   protected Insets getInsets() {
-    return new InsetsUIResource(4, 7, 4, 5);
+    return JBUI.insets(4, 7, 4, 5).asUIResource();
   }
 
   @Override

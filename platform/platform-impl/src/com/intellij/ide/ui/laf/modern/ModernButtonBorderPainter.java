@@ -16,10 +16,10 @@
 package com.intellij.ide.ui.laf.modern;
 
 import com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
@@ -39,7 +39,7 @@ public class ModernButtonBorderPainter implements Border, UIResource {
     final Insets ins = getBorderInsets(c);
     final int yOff = (ins.top + ins.bottom) / 4;
     final boolean square = DarculaButtonUI.isSquare(c);
-    int offset = square ? 1 : 4;
+    int offset = JBUI.scale(square ? 1 : 4);
 
     ModernButtonUI ui = ModernUIUtil.getUI(c);
     MouseEnterHandler mouseEnterHandler = ui.getMouseEnterHandler();
@@ -70,9 +70,9 @@ public class ModernButtonBorderPainter implements Border, UIResource {
   @Override
   public Insets getBorderInsets(Component c) {
     if (DarculaButtonUI.isSquare(c)) {
-      return new InsetsUIResource(2, 0, 2, 0);
+      return JBUI.insets(2, 0, 2, 0).asUIResource();
     }
-    return new InsetsUIResource(8, 16, 8, 14);
+    return JBUI.insets(8, 16, 8, 14).asUIResource();
   }
 
 
