@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.ui.AwtVisitor;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,7 @@ public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider
   }
 
   public SimpleToolWindowPanel(boolean vertical, boolean borderless) {
-    setLayout(new BorderLayout(vertical ? 0 : 1, vertical ? 1 : 0));
+    super(new BorderLayout(JBUI.scale(vertical ? 0 : 1), JBUI.scale(vertical ? 0 : 1)));
     myBorderless = borderless;
     myVertical = vertical;
     setProvideQuickActions(true);
