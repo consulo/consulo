@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@ package com.intellij.ui;
 
 import com.intellij.ui.border.IdeaTitledBorder;
 import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,27 +51,27 @@ public class IdeBorderFactory {
 
   @NotNull
   public static RoundedLineBorder createRoundedBorder(int arcSize) {
-    return new RoundedLineBorder(getBorderColor(), JBUI.scale(arcSize));
+    return new RoundedLineBorder(getBorderColor(), arcSize);
   }
 
   @NotNull
   public static RoundedLineBorder createRoundedBorder(int arcSize, final int thickness) {
-    return new RoundedLineBorder(getBorderColor(), JBUI.scale(arcSize), JBUI.scale(thickness));
+    return new RoundedLineBorder(getBorderColor(), arcSize, thickness);
   }
 
   public static Border createEmptyBorder(Insets insets) {
-    return new EmptyBorder(insets);
+    return new EmptyBorder(JBInsets.create(insets));
   }
 
   public static Border createEmptyBorder() {
     return createEmptyBorder(0);
   }
   public static Border createEmptyBorder(int thickness) {
-    return new EmptyBorder(thickness, thickness, thickness, thickness);
+    return new EmptyBorder(new JBInsets(thickness, thickness, thickness, thickness));
   }
 
   public static Border createEmptyBorder(int top, int left, int bottom, int right) {
-    return new EmptyBorder(top, left, bottom, right);
+    return new EmptyBorder(new JBInsets(top, left, bottom, right));
   }
 
   public static TitledBorder createTitledBorder(String s) {
@@ -91,7 +89,7 @@ public class IdeBorderFactory {
   }
 
   public static IdeaTitledBorder createTitledBorder(String title, boolean hasIndent) {
-    Insets insets = new JBInsets(TITLED_BORDER_TOP_INSET, TITLED_BORDER_LEFT_INSET, TITLED_BORDER_BOTTOM_INSET, TITLED_BORDER_RIGHT_INSET);
+    Insets insets = new Insets(TITLED_BORDER_TOP_INSET, TITLED_BORDER_LEFT_INSET, TITLED_BORDER_BOTTOM_INSET, TITLED_BORDER_RIGHT_INSET);
     return createTitledBorder(title, hasIndent, insets);
   }
 
@@ -103,11 +101,11 @@ public class IdeBorderFactory {
   @Deprecated
   // Don't remove, used in TeamCity plugin.
   public static TitledBorder createTitledHeaderBorder(String title) {
-    return new IdeaTitledBorder(title, JBUI.scale(10), new JBInsets(5, 0, 10, 0));
+    return new IdeaTitledBorder(title, 10, new Insets(5, 0, 10, 0));
   }
 
   private static Color getBorderColor() {
-    return UIUtil.getBorderColor();
+    return JBColor.border();
   }
 
 
@@ -149,7 +147,7 @@ public class IdeBorderFactory {
                                                   int titlePosition,
                                                   Font titleFont,
                                                   Color titleColor) {
-      return IdeBorderFactory.createTitledBorder(title, false, new JBInsets(TITLED_BORDER_TOP_INSET,0,0,0));
+      return IdeBorderFactory.createTitledBorder(title, false, new Insets(TITLED_BORDER_TOP_INSET,0,0,0));
     }
   }
 
@@ -163,7 +161,7 @@ public class IdeBorderFactory {
                                                   int titlePosition,
                                                   Font titleFont,
                                                   Color titleColor) {
-      return IdeBorderFactory.createTitledBorder(title, true, new JBInsets(TITLED_BORDER_TOP_INSET, 0, 0, 0));
+      return IdeBorderFactory.createTitledBorder(title, true, new Insets(TITLED_BORDER_TOP_INSET,0,0,0));
     }
   }
 }
