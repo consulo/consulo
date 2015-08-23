@@ -43,6 +43,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TextTransferable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,10 +82,10 @@ public class InspectionsConfigTreeTable extends TreeTable {
     super(model);
 
     final TableColumn severitiesColumn = getColumnModel().getColumn(SEVERITIES_COLUMN);
-    severitiesColumn.setMaxWidth(20);
+    severitiesColumn.setMaxWidth(JBUI.scale(20));
 
     final TableColumn isEnabledColumn = getColumnModel().getColumn(IS_ENABLED_COLUMN);
-    isEnabledColumn.setMaxWidth(20 + getAdditionalPadding());
+    isEnabledColumn.setMaxWidth(JBUI.scale(20 + getAdditionalPadding()));
     isEnabledColumn.setCellRenderer(new ThreeStateCheckBoxRenderer());
     isEnabledColumn.setCellEditor(new ThreeStateCheckBoxRenderer());
 
