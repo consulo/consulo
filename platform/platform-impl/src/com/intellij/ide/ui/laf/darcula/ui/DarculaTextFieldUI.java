@@ -19,7 +19,7 @@ import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.Gray;
-import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -118,23 +118,23 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
 
   protected Rectangle getDrawingRect() {
     final JTextComponent c = getComponent();
-    final JBInsets i = JBInsets.create(c.getInsets());
-    final int x = i.right - 4 - 16;
-    final int y = i.top - 3;
-    final int w = c.getWidth() - i.width() + 16 * 2 + 7 * 2 - 5;
-    int h = c.getBounds().height - i.height() + 4 * 2 - 3;
-    if (h % 2 == 1) h++;
+    final Insets i = c.getInsets();
+    final int x = i.right - JBUI.scale(4) - JBUI.scale(16);
+    final int y = i.top - JBUI.scale(3);
+    final int w = c.getWidth() - (i.right + i.left) + JBUI.scale(16 * 2) + JBUI.scale(7 * 2) - JBUI.scale(5);
+    int h = c.getBounds().height - (i.top + i.bottom) + JBUI.scale(4 * 2) - JBUI.scale(3);
+    if (h % 2 == 1) h += JBUI.scale(1);
     return new Rectangle(x, y, w, h);
   }
 
   protected Point getSearchIconCoord() {
     final Rectangle r = getDrawingRect();
-    return new Point(r.x + 3, r.y + (r.height - 16) / 2 + 1);
+    return new Point(r.x + JBUI.scale(3), r.y + (r.height - JBUI.scale(16)) / 2 + JBUI.scale(1));
   }
 
   protected Point getClearIconCoord() {
     final Rectangle r = getDrawingRect();
-    return new Point(r.x + r.width - 16 - 1, r.y + (r.height - 16) / 2);
+    return new Point(r.x + r.width - JBUI.scale(16 - 1), r.y + (r.height - JBUI.scale(16)) / 2);
   }
 
   @Override
@@ -155,8 +155,8 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
     if (isSearchField(c)) {
       g.setColor(c.getBackground());
 
-      int radius = r.height - 1;
-      g.fillRoundRect(r.x, r.y, r.width, r.height - 1, radius, radius);
+      int radius = r.height - JBUI.scale(1);
+      g.fillRoundRect(r.x, r.y, r.width, r.height - JBUI.scale(1), radius, radius);
       g.setColor(c.isEnabled() ? Gray._100 : new Color(0x535353));
       if (c.hasFocus() && c.getClientProperty("JTextField.Search.noFocusRing") != Boolean.TRUE) {
         DarculaUIUtil.paintSearchFocusRing(g, r);
@@ -182,10 +182,12 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
       final int height = c.getHeight();
       final Insets i = border.getBorderInsets(c);
       if (c.hasFocus()) {
-        g.fillRoundRect(i.left - 5, i.top - 2, width - i.right - i.left + 10, height - i.top - i.bottom + 6, 5, 5);
+        g.fillRoundRect(i.left - JBUI.scale(5), i.top - JBUI.scale(2), width - i.right - i.left + JBUI.scale(10),
+                        height - i.top - i.bottom + JBUI.scale(6), JBUI.scale(5), JBUI.scale(5));
       }
       else {
-        g.fillRect(i.left - 5, i.top - 2, width - i.right - i.left + 12, height - i.top - i.bottom + 6);
+        g.fillRect(i.left - JBUI.scale(5), i.top - JBUI.scale(2), width - i.right - i.left + JBUI.scale(12),
+                   height - i.top - i.bottom + 6);
       }
     }
     else {
