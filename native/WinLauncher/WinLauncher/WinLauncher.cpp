@@ -615,8 +615,8 @@ bool CheckSingleInstance()
   {
     if (*p == ':' || *p == '\\') *p = '_';
   }
-  std::string mappingName = std::string("IntelliJLauncherMapping.") + moduleFileName;
-  std::string eventName = std::string("IntelliJLauncherEvent.") + moduleFileName;
+  std::string mappingName = std::string("ConsuloLauncherMapping.") + moduleFileName;
+  std::string eventName = std::string("ConsuloLauncherEvent.") + moduleFileName;
 
   hEvent = CreateEventA(NULL, FALSE, FALSE, eventName.c_str());
 
@@ -662,7 +662,7 @@ LRESULT CALLBACK SplashScreenWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
   return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-const TCHAR splashClassName[] = _T("IntelliJLauncherSplash");
+const TCHAR splashClassName[] = _T("ConsuloLauncherSplash");
 
 void RegisterSplashScreenWndClass()
 {
@@ -790,28 +790,66 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
   if (__argc == 2 && _wcsicmp(__wargv[0], _T("SPLASH")) == 0)
   {
-    HBITMAP hSplashBitmap = static_cast<HBITMAP>(LoadImage(hInst, MAKEINTRESOURCE(IDB_SPLASH), IMAGE_BITMAP, 0, 0, 0));
-    if (hSplashBitmap)
-    {
-      parentProcId = _wtoi(__wargv[1]);
-      parentProcHandle = OpenProcess(SYNCHRONIZE, FALSE, parentProcId);
-      if (IsParentProcessRunning(parentProcHandle)) SplashScreen(hSplashBitmap);
-    }
-    CloseHandle(parentProcHandle);
-    return 0;
+	  HDC monitor = GetDC(NULL);
+	  int logPixelX = GetDeviceCaps(monitor, LOGPIXELSX);
+	  int logPixelY = GetDeviceCaps(monitor, LOGPIXELSY);
+
+	  HBITMAP hSplashBitmap;
+
+	  if(logPixelX >= 144 || logPixelY >= 144)
+	  {
+		  hSplashBitmap = static_cast<HBITMAP>(LoadImage(hInst, MAKEINTRESOURCE(IDB_SPLASH_2X), IMAGE_BITMAP, 0, 0, 0));
+	  }
+	  else
+	  {
+		  hSplashBitmap = static_cast<HBITMAP>(LoadImage(hInst, MAKEINTRESOURCE(IDB_SPLASH), IMAGE_BITMAP, 0, 0, 0));
+	  }
+
+	  if (hSplashBitmap)
+	  {
+		  parentProcId = _wtoi(__wargv[1]);
+		  parentProcHandle = OpenProcess(SYNCHRONIZE, FALSE, parentProcId);
+		  if (IsParentProcessRunning(parentProcHandle))
+		  {
+			  SplashScreen(hSplashBitmap);
+		  }
+	  }
+	  CloseHandle(parentProcHandle);
+	  return 0;
   }
 
-  if (!CheckSingleInstance()) return 1;
+  if (!CheckSingleInstance()) 
+  {
+	  return 1;
+  }
 
   if (wcsstr(lpCmdLine, _T("nosplash")) == NULL) StartSplashProcess();
 
-  if (!LocateJVM()) return 1;
-  if (!LoadVMOptions()) return 1;
-  if (!LoadJVMLibrary()) return 1;
-  if (!CreateJVM()) return 1;
+  if (!LocateJVM()) 
+  {
+	  MessageBox(NULL, L"Cant locate JVM libraries", L"Consulo", 0);
+	  return 1;
+  }
+
+  if (!LoadVMOptions())
+  {
+	  MessageBox(NULL, L"Cant load vm options", L"Consulo", 0);
+	  return 1;
+  }
+
+  if (!LoadJVMLibrary())
+  {
+	  MessageBox(NULL, L"Cant load JVM library", L"Consulo", 0);
+	  return 1;
+  }
+
+  if (!CreateJVM())
+  {
+	  MessageBox(NULL, L"Cant create JVM instance", L"Consulo", 0);
+	  return 1;
+  }
 
   hSingleInstanceWatcherThread = CreateThread(NULL, 0, SingleInstanceThread, NULL, 0, NULL);
-
   if (!RunMainClass()) return 1;
 
   jvm->DestroyJavaVM();
