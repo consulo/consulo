@@ -30,6 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.ColorIcon;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -38,7 +39,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -109,7 +109,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     private InspectorWindow(@NotNull final JComponent component, UiInspector uiInspector) throws HeadlessException {
       myComponent = component;
       myUiInspector = uiInspector;
-      getRootPane().setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+      getRootPane().setBorder(JBUI.Borders.empty(5, 5, 5, 5));
 
       setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -246,8 +246,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   private static class ComponentTreeCellRenderer extends JLabel implements TreeCellRenderer {
     private ComponentTreeCellRenderer() {
       setOpaque(true);
-      setFont(UIUtil.getLabelFont().deriveFont(11f));
-      setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
+      setFont(JBUI.Fonts.label(11f));
+      setBorder(JBUI.Borders.empty(0, 3, 0, 3));
     }
 
     @Override
@@ -468,9 +468,9 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       myComponent = component;
       setOpaque(true);
       setBackground(Color.WHITE);
-      setBorder(new EmptyBorder(5, 0, 5, 0));
+      setBorder(JBUI.Borders.empty(5, 0, 5, 0));
 
-      setFont(new JLabel().getFont().deriveFont(Font.PLAIN, 9));
+      setFont(JBUI.Fonts.label(9));
 
       update();
     }
@@ -548,12 +548,12 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     @Override
     public Dimension getMinimumSize() {
-      return new Dimension(120, 120);
+      return JBUI.size(120, 120);
     }
 
     @Override
     public Dimension getPreferredSize() {
-      return new Dimension(150, 150);
+      return JBUI.size(150, 150);
     }
   }
 
