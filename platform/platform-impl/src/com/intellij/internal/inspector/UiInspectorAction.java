@@ -120,6 +120,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       JToolBar bar = new JToolBar(SwingConstants.HORIZONTAL);
       bar.setFloatable(false);
       bar.add(new AbstractAction("Highlight", AllIcons.Toolbar.Unknown) {
+        @Override
         public void actionPerformed(ActionEvent e) {
           myHighlighted = !myHighlighted;
           highlight(myComponent, !myHighlighted);
@@ -134,6 +135,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       bar.addSeparator();
 
       bar.add(new AbstractAction("Refresh", AllIcons.Actions.Refresh) {
+        @Override
         public void actionPerformed(ActionEvent e) {
           getCurrentTable().refresh();
         }
@@ -181,6 +183,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       });
 
       getRootPane().getActionMap().put("CLOSE", new AbstractAction() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           myUiInspector.closed(InspectorWindow.this);
           close();
@@ -575,6 +578,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static final JLabel NULL_RENDERER = new JLabel("-");
 
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       if (value == null) {
         NULL_RENDERER.setOpaque(false);
@@ -619,6 +623,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class PointRenderer extends JLabel implements Renderer<Point> {
+    @Override
     public JComponent setValue(@NotNull final Point value) {
       setText(String.valueOf(value.x) + ':' + value.y);
       return this;
@@ -626,6 +631,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class DimensionRenderer extends JLabel implements Renderer<Dimension> {
+    @Override
     public JComponent setValue(@NotNull final Dimension value) {
       setText(String.valueOf(value.width) + " x " + value.height);
       return this;
@@ -633,6 +639,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class InsetsRenderer extends JLabel implements Renderer<Insets> {
+    @Override
     public JComponent setValue(@NotNull final Insets value) {
       setText("top: " + value.top + " left:" + value.left + " bottom:" + value.bottom + " right:" + value.right);
       return this;
@@ -640,6 +647,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class RectangleRenderer extends JLabel implements Renderer<Rectangle> {
+    @Override
     public JComponent setValue(@NotNull final Rectangle value) {
       setText(String.valueOf(value.x) + ":" + value.y + ", " + value.width + " x " + value.height);
       return this;
@@ -647,6 +655,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class ColorRenderer extends JLabel implements Renderer<Color> {
+    @Override
     public JComponent setValue(@NotNull final Color value) {
       setText("r:" + value.getRed() + ", g:" + value.getGreen() + ", b:" + value.getBlue());
       setIcon(new ColorIcon(13, 11, value, true));
@@ -655,6 +664,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class FontRenderer extends JLabel implements Renderer<Font> {
+    @Override
     public JComponent setValue(@NotNull final Font value) {
       setText(value.getFontName() + " (" + value.getFamily() + "), " + value.getSize() + "px");
       return this;
@@ -662,6 +672,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class BooleanRenderer extends JLabel implements Renderer<Boolean> {
+    @Override
     public JComponent setValue(@NotNull final Boolean value) {
       setText(value ? "Yes" : "No");
       return this;
@@ -669,6 +680,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class IconRenderer extends JLabel implements Renderer<Icon> {
+    @Override
     public JComponent setValue(@NotNull final Icon value) {
       setIcon(value);
       return this;
@@ -676,6 +688,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class ObjectRenderer extends JLabel implements Renderer<Object> {
+    @Override
     public JComponent setValue(@NotNull final Object value) {
       setText(value.toString());
       return this;
@@ -733,6 +746,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         }
       }
     }
+    @Override
     @Nullable
     public Object getValueAt(int row, int column) {
       final PropertyBean bean = myProperties.get(row);
@@ -748,18 +762,22 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       return null;
     }
 
+    @Override
     public int getColumnCount() {
       return 2;
     }
 
+    @Override
     public int getRowCount() {
       return myProperties.size();
     }
 
+    @Override
     public String getColumnName(int columnIndex) {
       return columnIndex == 0 ? "Property" : "Value";
     }
 
+    @Override
     public Class<?> getColumnClass(int columnIndex) {
       return columnIndex == 0 ? String.class : Object.class;
     }
@@ -774,6 +792,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   private static class UiInspector implements AWTEventListener, Disposable {
     private Map<JComponent, InspectorWindow> myComponentToInspector = new HashMap<JComponent, InspectorWindow>();
 
+    @Override
     public void dispose() {
       for (final JComponent c : myComponentToInspector.keySet()) {
         final InspectorWindow window = myComponentToInspector.get(c);
@@ -796,6 +815,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       }
     }
 
+    @Override
     public void eventDispatched(final AWTEvent event) {
       if (event instanceof MouseEvent) {
         final MouseEvent me = (MouseEvent)event;
