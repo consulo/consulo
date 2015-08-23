@@ -45,6 +45,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBDimension;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -556,7 +558,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         });
       }
       else {
-        editor.setBorder(BorderFactory.createCompoundBorder(UIUtil.getTextFieldBorder(), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+        editor.setBorder(BorderFactory.createCompoundBorder(UIUtil.getTextFieldBorder(), JBUI.Borders.empty(2, 2, 2, 2)));
       }
     }
   }
@@ -564,7 +566,8 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
   private void setupEditorFont(final EditorEx editor) {
     if (myInheritSwingFont) {
       editor.getColorsScheme().setEditorFontName(getFont().getFontName());
-      editor.getColorsScheme().setEditorFontSize(getFont().getSize());
+      // we need div it by scaling, because getFont() return scaled size, but setEditorFontSize required not scaled
+      editor.getColorsScheme().setEditorFontSize(getFont().getSize() / JBUI.scale(1));
     }
   }
 
@@ -624,7 +627,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
 
 
-    Dimension size = new Dimension(100, 20);
+    Dimension size = new JBDimension(100, 20);
     if (myEditor != null) {
       final Dimension preferredSize = new Dimension(myEditor.getComponent().getPreferredSize());
 
@@ -658,7 +661,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
       return super.getMinimumSize();
     }
 
-    Dimension size = new Dimension(1, 20);
+    Dimension size = new JBDimension(1, 20);
     if (myEditor != null) {
       size.height = myEditor.getLineHeight();
 
