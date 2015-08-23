@@ -44,8 +44,6 @@ public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBor
   private enum SearchAction {POPUP, CLEAR}
 
   private final MouseEnterHandler myMouseEnterHandler;
-  protected JLabel myClearIcon;
-  protected JLabel myRecentIcon;
   private boolean myFocus;
 
   public ModernTextFieldUI(JTextField textField) {
