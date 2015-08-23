@@ -29,10 +29,11 @@ import com.intellij.ui.InplaceButton;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,6 +68,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
                                                       AllIcons.Process.Stop,
                                                       AllIcons.Process.StopHovered) {
     }, new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         cancelRequest();
       }
@@ -82,17 +84,17 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     myComponent = new MyComponent(compact, myProcessName);
     if (myCompact) {
       myComponent.setOpaque(false);
-      myComponent.setLayout(new BorderLayout(2, 0));
+      myComponent.setLayout(new BorderLayout(JBUI.scale(2), 0));
       final JPanel textAndProgress = new JPanel(new BorderLayout());
       textAndProgress.setOpaque(false);
       textAndProgress.add(myText, BorderLayout.CENTER);
 
       final NonOpaquePanel progressWrapper = new NonOpaquePanel(new GridBagLayout());
-      progressWrapper.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
+      progressWrapper.setBorder(JBUI.Borders.empty(0, 4, 0, 0));
       final GridBagConstraints c = new GridBagConstraints();
       c.weightx = 1;
       c.weighty = 1;
-      c.insets = new Insets(SystemInfo.isMacOSLion ? 1 : 0, 0, 1, myInfo.isCancellable() ? 0 : 4);
+      c.insets = new JBInsets(SystemInfo.isMacOSLion ? 1 : 0, 0, 1, myInfo.isCancellable() ? 0 : 4);
       c.fill = GridBagConstraints.HORIZONTAL;
       progressWrapper.add(myProgress, c);
 
@@ -108,16 +110,16 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
       final Font font = myProcessName.getFont();
 
       myProcessName.setForeground(UIUtil.getPanelBackground().brighter().brighter());
-      myProcessName.setBorder(new EmptyBorder(2, 2, 2, 2));
+      myProcessName.setBorder(JBUI.Borders.empty(2));
       myProcessName.setDecorate(false);
 
       final NonOpaquePanel content = new NonOpaquePanel(new BorderLayout());
-      content.setBorder(new EmptyBorder(2, 2, 2, myInfo.isCancellable() ? 2 : 4));
+      content.setBorder(JBUI.Borders.empty(2, 2, 2, myInfo.isCancellable() ? 2 : 4));
       myComponent.add(content, BorderLayout.CENTER);
 
       final Wrapper cancelWrapper = new Wrapper(myCancelButton);
       cancelWrapper.setOpaque(false);
-      cancelWrapper.setBorder(new EmptyBorder(0, 3, 0, 2));
+      cancelWrapper.setBorder(JBUI.Borders.empty(0, 3, 0, 2));
 
       content.add(cancelWrapper, BorderLayout.EAST);
       content.add(myText, BorderLayout.NORTH);
@@ -127,7 +129,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
       myText.setDecorate(false);
       myText2.setDecorate(false);
 
-      myComponent.setBorder(new EmptyBorder(2, 2, 2, 2));
+      myComponent.setBorder(JBUI.Borders.empty(2));
       myProgress.setActive(false);
     }
 
@@ -149,6 +151,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
 
   protected void updateProgress() {
     queueProgressUpdate(new Runnable() {
+      @Override
       public void run() {
         if (isDisposed()) return;
 
@@ -259,10 +262,12 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     }
   }
 
+  @Override
   protected void onProgressChange() {
     updateProgress();
   }
 
+  @Override
   protected void onRunningChange() {
     updateRunning();
   }
@@ -291,6 +296,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     }
 
 
+    @Override
     public void paint(final Graphics g) {
       if (!myActive) return;
       super.paint(g);
@@ -302,6 +308,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     }
 
 
+    @Override
     public Dimension getPreferredSize() {
       if (!myActive && myCompact) return new Dimension(0, 0);
       return super.getPreferredSize();
@@ -320,6 +327,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
       myCompact = compact;
       myProcessName = processName;
       addMouseListener(new MouseAdapter() {
+        @Override
         public void mousePressed(final MouseEvent e) {
           if (UIUtil.isCloseClick(e) && getBounds().contains(e.getX(), e.getY())) {
             cancelRequest();
@@ -328,6 +336,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
       });
     }
 
+    @Override
     protected void paintComponent(final Graphics g) {
       if (myCompact) {
         super.paintComponent(g);
@@ -367,6 +376,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     }
   }
 
+  @Override
   public void dispose() {
     if (myDisposed) return;
 

@@ -177,6 +177,16 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
     return availableLength;
   }
 
+  @Override
+  protected Dimension getPreferredInnerHorizontal() {
+    return JBUI.size(146, 12).asUIResource();
+  }
+
+  @Override
+  protected Dimension getPreferredInnerVertical() {
+    return JBUI.size(12, 146).asUIResource();
+  }
+
   protected int getPeriodLength() {
     return JBUI.scale(16);
   }

@@ -16,11 +16,10 @@
 package com.intellij.ide.ui.laf.modern;
 
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.*;
@@ -39,7 +38,7 @@ public class ModernProgressBarUI extends BasicProgressBarUI {
 
   @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(JComponent c) {
-    c.setBorder(new BorderUIResource(new EmptyBorder(0, 0, 0, 0)));
+    c.setBorder(JBUI.Borders.empty().asUIResource());
     return new ModernProgressBarUI();
   }
 
@@ -168,11 +167,21 @@ public class ModernProgressBarUI extends BasicProgressBarUI {
   }
 
   @Override
+  protected Dimension getPreferredInnerHorizontal() {
+    return JBUI.size(146, 12).asUIResource();
+  }
+
+  @Override
+  protected Dimension getPreferredInnerVertical() {
+    return JBUI.size(12, 146).asUIResource();
+  }
+
+  @Override
   protected int getBoxLength(int availableLength, int otherDimension) {
     return availableLength;
   }
 
   protected int getPeriodLength() {
-    return 16;
+    return JBUI.scale(16);
   }
 }
