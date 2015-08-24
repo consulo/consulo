@@ -849,7 +849,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
       int col = (x - left - JBUI.scale(2)) / 31;
       col = col > JBUI.scale(9) ? JBUI.scale(9) : col;
       int row = (y - top - JBUI.scale(2)) / 31;
-      row = row > 1 ? 1 : row;
+      row = row > JBUI.scale(1) ? JBUI.scale(1) : row;
 
       return row >= 0 && col >= 0 ? Pair.create(row, col) : null;
     }
@@ -884,8 +884,8 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
 
 
       for (int k = 1; k < 10; k++) {
-        g.drawLine(left + JBUI.scale(1) + k * 31, top + JBUI.scale(1), left + JBUI.scale(1) + k * 31,
-                   top + getComponentHeight() - JBUI.scale(3));
+        g.drawLine(left + JBUI.scale(1) + JBUI.scale(k * 31), top + JBUI.scale(1),
+                   left + JBUI.scale(1) + JBUI.scale(k * 31), top + getComponentHeight() - JBUI.scale(3));
       }
 
       for (int r = 0; r < myRecentColors.size(); r++) {
@@ -893,8 +893,9 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
         int col = r % 10;
         Color color = myRecentColors.get(r);
         g.setColor(color);
-        g.fillRect(left + JBUI.scale(2) + col * 30 + col + JBUI.scale(1),
-                   top + JBUI.scale(2) + row * 30 + row + JBUI.scale(1), JBUI.scale(28), JBUI.scale(28));
+        g.fillRect(left + JBUI.scale(2) + JBUI.scale(col * 30) + JBUI.scale(col) + JBUI.scale(1),
+                   top + JBUI.scale(2) + JBUI.scale(row * 30) + JBUI.scale(row) + JBUI.scale(1), JBUI.scale(28),
+                   JBUI.scale(28));
       }
     }
   }
