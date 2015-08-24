@@ -19,11 +19,11 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.ContentManager;
+import com.intellij.util.ui.JBEmptyBorder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.InputEvent;
 
@@ -178,7 +178,7 @@ public interface ToolWindow extends BusyObject {
 
   ActionCallback getActivation();
 
-  class Border extends EmptyBorder {
+  class Border extends JBEmptyBorder {
     public Border() {
       this(true, true, true, true);
     }
