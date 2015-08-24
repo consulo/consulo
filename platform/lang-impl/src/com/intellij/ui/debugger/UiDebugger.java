@@ -28,6 +28,7 @@ import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -46,11 +47,12 @@ public class UiDebugger extends JPanel implements Disposable {
     Disposer.register(Disposer.get("ui"), this);
 
     myTabs = new JBTabsImpl(null, ActionManager.getInstance(), null, this);
-    myTabs.getPresentation().setInnerInsets(new Insets(4, 0, 0, 0)).setPaintBorder(1, 0, 0, 0).setActiveTabFillIn(JBColor.GRAY).setUiDecorator(new UiDecorator() {
+    myTabs.getPresentation().setInnerInsets(JBUI.insets(4, 0, 0, 0)).setPaintBorder(JBUI.scale(1), 0, 0, 0)
+            .setActiveTabFillIn(JBColor.GRAY).setUiDecorator(new UiDecorator() {
       @Override
       @NotNull
       public UiDecoration getDecoration() {
-        return new UiDecoration(null, new Insets(4, 4, 4, 4));
+        return new UiDecoration(null, JBUI.insets(4, 4, 4, 4));
       }
     });
 
@@ -95,7 +97,8 @@ public class UiDebugger extends JPanel implements Disposable {
               final WindowManagerEx mgr = WindowManagerEx.getInstanceEx();
               if (value == 100) {
                 mgr.setAlphaModeEnabled(wnd, false);
-              } else {
+              }
+              else {
                 mgr.setAlphaModeEnabled(wnd, true);
                 mgr.setAlphaModeRatio(wnd, 1f - alpha);
               }
@@ -109,7 +112,7 @@ public class UiDebugger extends JPanel implements Disposable {
       @NotNull
       @Override
       protected Action[] createActions() {
-        return new Action[] {new AbstractAction("Close") {
+        return new Action[]{new AbstractAction("Close") {
           @Override
           public void actionPerformed(ActionEvent e) {
             doOKAction();

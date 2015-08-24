@@ -31,6 +31,7 @@ import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.ui.tabs.impl.table.TableLayout;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.ui.Centerizer;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -129,7 +130,9 @@ public class TabLabel extends JPanel {
 
       @Override
       protected void doPaint(Graphics2D g) {
-        if (UISettings.getInstance().HIDE_TABS_IF_NEED || tabs.getTabsPosition() == JBTabsPosition.left || tabs.getTabsPosition() == JBTabsPosition.right) {
+        if (UISettings.getInstance().HIDE_TABS_IF_NEED ||
+            tabs.getTabsPosition() == JBTabsPosition.left ||
+            tabs.getTabsPosition() == JBTabsPosition.right) {
           super.doPaint(g);
           return;
         }
@@ -146,12 +149,14 @@ public class TabLabel extends JPanel {
           g.setClip(clip.x, clip.y, Math.max(0, clip.width - dimSize), clip.height);
           super.doPaint(g);
 
-          for (int x = clip.x + clip.width - dimSize; x < clip.x + clip.width; x+=dimStep) {
+          for (int x = clip.x + clip.width - dimSize; x < clip.x + clip.width; x += dimStep) {
             g.setClip(x, clip.y, dimStep, clip.height);
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1 - ((float)x - (clip.x + clip.width - dimSize)) / dimSize));
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                                                      1 - ((float)x - (clip.x + clip.width - dimSize)) / dimSize));
             super.doPaint(g);
           }
-        } finally {
+        }
+        finally {
           g.setComposite(oldComposite);
           g.setClip(oldClip);
         }
@@ -159,16 +164,20 @@ public class TabLabel extends JPanel {
 
       @Override
       protected void applyAdditionalHints(@NotNull Graphics2D g) {
-        if (!SystemInfo.isJavaVersionAtLeast("1.7") && g.getComposite() instanceof AlphaComposite && (((AlphaComposite)g.getComposite()).getAlpha() < 1)) {
+        if (!SystemInfo.isJavaVersionAtLeast("1.7") &&
+            g.getComposite() instanceof AlphaComposite &&
+            (((AlphaComposite)g.getComposite()).getAlpha() < 1)) {
           g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         }
       }
     };
     label.setOpaque(false);
     label.setBorder(null);
-    label.setIconTextGap(tabs.isEditorTabs() ? (!UISettings.getInstance().HIDE_TABS_IF_NEED ? 4 : 2) : new JLabel().getIconTextGap());
+    label.setIconTextGap(tabs.isEditorTabs()
+                         ? (!UISettings.getInstance().HIDE_TABS_IF_NEED ? JBUI.scale(4) : JBUI.scale(2))
+                         : new JLabel().getIconTextGap());
     label.setIconOpaque(false);
-    label.setIpad(new Insets(0, 0, 0, 0));
+    label.setIpad(JBUI.emptyInsets());
 
     return label;
   }
@@ -177,7 +186,7 @@ public class TabLabel extends JPanel {
   public Insets getInsets() {
     Insets insets = super.getInsets();
     if (myTabs.isEditorTabs() && UISettings.getInstance().SHOW_CLOSE_BUTTON) {
-      insets.right = 3;
+      insets.right = JBUI.scale(3);
     }
     return insets;
   }
@@ -201,7 +210,6 @@ public class TabLabel extends JPanel {
 
     myCentered = toCenter;
   }
-
 
 
   public void paintOffscreen(Graphics g) {
@@ -295,7 +303,8 @@ public class TabLabel extends JPanel {
   }
 
   protected int getNonSelectedOffset() {
-    if (myTabs.isEditorTabs() && (myTabs.isSingleRow() || ((TableLayout)myTabs.getEffectiveLayout()).isLastRow(getInfo()))) {
+    if (myTabs.isEditorTabs() &&
+        (myTabs.isSingleRow() || ((TableLayout)myTabs.getEffectiveLayout()).isLastRow(getInfo()))) {
       return -myTabs.getActiveTabUnderlineHeight() / 2 + 1;
     }
     return 1;
@@ -332,7 +341,12 @@ public class TabLabel extends JPanel {
   private void handlePopup(final MouseEvent e) {
     if (e.getClickCount() != 1 || !e.isPopupTrigger()) return;
 
-    if (e.getX() < 0 || e.getX() >= e.getComponent().getWidth() || e.getY() < 0 || e.getY() >= e.getComponent().getHeight()) return;
+    if (e.getX() < 0 ||
+        e.getX() >= e.getComponent().getWidth() ||
+        e.getY() < 0 ||
+        e.getY() >= e.getComponent().getHeight()) {
+      return;
+    }
 
     String place = myTabs.getPopupPlace();
     place = place != null ? place : ActionPlaces.UNKNOWN;
@@ -344,8 +358,8 @@ public class TabLabel extends JPanel {
       toShow.addSeparator();
     }
 
-    JBTabsImpl tabs =
-            JBTabsImpl.NAVIGATION_ACTIONS_KEY.getData(DataManager.getInstance().getDataContext(e.getComponent(), e.getX(), e.getY()));
+    JBTabsImpl tabs = JBTabsImpl.NAVIGATION_ACTIONS_KEY
+            .getData(DataManager.getInstance().getDataContext(e.getComponent(), e.getX(), e.getY()));
     if (tabs == myTabs && myTabs.myAddNavigationGroup) {
       toShow.addAll(myTabs.myNavigationActions);
     }
@@ -368,7 +382,8 @@ public class TabLabel extends JPanel {
         myLabel.setIcon(hasIcons() ? myIcon : null);
 
         if (text != null) {
-          SimpleColoredText derive = myTabs.useBoldLabels() ? text.derive(SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES, true) : text;
+          SimpleColoredText derive =
+                  myTabs.useBoldLabels() ? text.derive(SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES, true) : text;
           derive.appendToComponent(myLabel);
         }
       }
@@ -447,9 +462,8 @@ public class TabLabel extends JPanel {
     if (insets != null) {
       Insets current = JBTabsImpl.ourDefaultDecorator.getDecoration().getLabelInsets();
       if (current != null) {
-        setBorder(
-                new EmptyBorder(getValue(current.top, insets.top), getValue(current.left, insets.left), getValue(current.bottom, insets.bottom),
-                                getValue(current.right, insets.right)));
+        setBorder(new EmptyBorder(getValue(current.top, insets.top), getValue(current.left, insets.left),
+                                  getValue(current.bottom, insets.bottom), getValue(current.right, insets.right)));
       }
     }
   }
@@ -563,7 +577,8 @@ public class TabLabel extends JPanel {
 
     if (myOverlayedIcon == null || getLabelComponent().getParent() == null) return;
 
-    final Rectangle textBounds = SwingUtilities.convertRectangle(getLabelComponent().getParent(), getLabelComponent().getBounds(), this);
+    final Rectangle textBounds =
+            SwingUtilities.convertRectangle(getLabelComponent().getParent(), getLabelComponent().getBounds(), this);
     if (getLayeredIcon().isLayerEnabled(1)) {
 
       final int top = (getSize().height - myOverlayedIcon.getIconHeight()) / 2;
@@ -605,7 +620,8 @@ public class TabLabel extends JPanel {
   @Nullable
   public BufferedImage getInactiveStateImage(Rectangle effectiveBounds) {
     BufferedImage img = null;
-    if (myLastPaintedInactiveImageBounds != null && myLastPaintedInactiveImageBounds.getSize().equals(effectiveBounds.getSize())) {
+    if (myLastPaintedInactiveImageBounds != null &&
+        myLastPaintedInactiveImageBounds.getSize().equals(effectiveBounds.getSize())) {
       img = myInactiveStateImage;
     }
     else {

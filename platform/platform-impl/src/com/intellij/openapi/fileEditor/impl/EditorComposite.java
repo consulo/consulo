@@ -43,13 +43,13 @@ import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -167,10 +167,10 @@ public abstract class EditorComposite implements Disposable {
       @Override
       @NotNull
       public UiDecoration getDecoration() {
-        return new UiDecoration(null, new Insets(0, 8, 0, 8));
+        return new UiDecoration(null, JBUI.insets(0, 8, 0, 8));
       }
     });
-    wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
+    wrapper.getTabs().getComponent().setBorder(JBUI.Borders.empty(0, 0, 1, 0));
 
     boolean firstEditor = true;
     for (FileEditor editor : editors) {
