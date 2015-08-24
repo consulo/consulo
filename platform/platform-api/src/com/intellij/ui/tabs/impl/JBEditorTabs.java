@@ -108,6 +108,12 @@ public class JBEditorTabs extends JBTabsImpl {
     return true;
   }
 
+  @Nullable
+  public Rectangle getSelectedBounds() {
+    TabLabel label = getSelectedLabel();
+    return label != null ? label.getBounds() : null;
+  }
+
   @Override
   public boolean isEditorTabs() {
     return true;
