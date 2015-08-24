@@ -20,6 +20,7 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -32,7 +33,6 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 class SlideComponent extends JComponent {
-  private static final int OFFSET = 11;
   private int myPointerValue = 0;
   private int myValue = 0;
   private final boolean myVertical;
@@ -106,9 +106,9 @@ class SlideComponent extends JComponent {
         final int amount = e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL ? e.getUnitsToScroll() * e.getScrollAmount() :
                            e.getWheelRotation() < 0 ? -e.getScrollAmount() : e.getScrollAmount();
         int pointerValue = myPointerValue + amount;
-        pointerValue = pointerValue < OFFSET ? OFFSET : pointerValue;
+        pointerValue = pointerValue < getPointerOffset() ? getPointerOffset() : pointerValue;
         int size = myVertical ? getHeight() : getWidth();
-        pointerValue = pointerValue > (size - 12) ? size - 12 : pointerValue;
+        pointerValue = pointerValue > (size - JBUI.scale(12)) ? size - JBUI.scale(12) : pointerValue;
 
         myPointerValue = pointerValue;
         myValue = pointerValueToValue(myPointerValue);
@@ -160,9 +160,9 @@ class SlideComponent extends JComponent {
 
   private void processMouse(MouseEvent e) {
     int pointerValue = myVertical ? e.getY() : e.getX();
-    pointerValue = pointerValue < OFFSET ? OFFSET : pointerValue;
+    pointerValue = pointerValue < getPointerOffset() ? getPointerOffset() : pointerValue;
     int size = myVertical ? getHeight() : getWidth();
-    pointerValue = pointerValue > (size - 12) ? size - 12 : pointerValue;
+    pointerValue = pointerValue > (size - JBUI.scale(12)) ? size - JBUI.scale(12) : pointerValue;
 
     myPointerValue = pointerValue;
 
@@ -193,26 +193,30 @@ class SlideComponent extends JComponent {
   }
 
   private int pointerValueToValue(int pointerValue) {
-    pointerValue -= OFFSET;
+    pointerValue -= getPointerOffset();
     final int size = myVertical ? getHeight() : getWidth();
-    float proportion = (size - 23) / 255f;
+    float proportion = (size - JBUI.scale(23)) / 255f;
     return (int)(pointerValue / proportion);
   }
 
   private int valueToPointerValue(int value) {
     final int size = myVertical ? getHeight() : getWidth();
-    float proportion = (size - 23) / 255f;
-    return OFFSET + (int)(value * proportion);
+    float proportion = (size - JBUI.scale(23)) / 255f;
+    return getPointerOffset() + (int)(value * proportion);
+  }
+
+  private static int getPointerOffset() {
+    return JBUI.scale(11);
   }
 
   @Override
   public Dimension getPreferredSize() {
-    return myVertical ? new Dimension(22, 100) : new Dimension(100, 22);
+    return myVertical ? JBUI.size(22, 100) : JBUI.size(100, 22);
   }
 
   @Override
   public Dimension getMinimumSize() {
-    return myVertical ? new Dimension(22, 50) : new Dimension(50, 22);
+    return myVertical ? JBUI.size(22, 50) : JBUI.size(50, 22);
   }
 
   @Override
@@ -226,65 +230,65 @@ class SlideComponent extends JComponent {
 
     if (myVertical) {
       g2d.setPaint(UIUtil.getGradientPaint(0f, 0f, Color.WHITE, 0f, getHeight(), Color.BLACK));
-      g.fillRect(7, 10, 12, getHeight() - 20);
+      g.fillRect(JBUI.scale(7), JBUI.scale(10), JBUI.scale(12), getHeight() - JBUI.scale(20));
 
       g.setColor(Gray._150);
-      g.drawRect(7, 10, 12, getHeight() - 20);
+      g.drawRect(JBUI.scale(7), JBUI.scale(10), JBUI.scale(12), getHeight() - JBUI.scale(20));
 
       g.setColor(Gray._250);
-      g.drawRect(8, 11, 10, getHeight() - 22);
+      g.drawRect(JBUI.scale(8), JBUI.scale(11), JBUI.scale(10), getHeight() - JBUI.scale(22));
     }
     else {
       g2d.setPaint(UIUtil.getGradientPaint(0f, 0f, Color.WHITE, getWidth(), 0f, Color.BLACK));
-      g.fillRect(10, 7, getWidth() - 20, 12);
+      g.fillRect(JBUI.scale(10), JBUI.scale(7), getWidth() - JBUI.scale(20), JBUI.scale(12));
 
       g.setColor(Gray._150);
-      g.drawRect(10, 7, getWidth() - 20, 12);
+      g.drawRect(JBUI.scale(10), JBUI.scale(7), getWidth() - JBUI.scale(20), JBUI.scale(12));
 
       g.setColor(Gray._250);
-      g.drawRect(11, 8, getWidth() - 22, 10);
+      g.drawRect(JBUI.scale(11), JBUI.scale(8), getWidth() - JBUI.scale(22), JBUI.scale(10));
     }
 
-    drawKnob(g2d, myVertical ? 7 : myPointerValue, myVertical ? myPointerValue : 7, myVertical);
+    drawKnob(g2d, myVertical ? JBUI.scale(7) : myPointerValue, myVertical ? myPointerValue : JBUI.scale(7), myVertical);
   }
 
   private static void drawKnob(Graphics2D g2d, int x, int y, boolean vertical) {
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     if (vertical) {
-      y -= 6;
+      y -= JBUI.scale(6);
 
       Polygon arrowShadow = new Polygon();
-      arrowShadow.addPoint(x - 5, y + 1);
-      arrowShadow.addPoint(x + 7, y + 7);
-      arrowShadow.addPoint(x - 5, y + 13);
+      arrowShadow.addPoint(x - JBUI.scale(5), y + JBUI.scale(1));
+      arrowShadow.addPoint(x + JBUI.scale(7), y + JBUI.scale(7));
+      arrowShadow.addPoint(x - JBUI.scale(5), y + JBUI.scale(13));
 
       g2d.setColor(new Color(0, 0, 0, 70));
       g2d.fill(arrowShadow);
 
       Polygon arrowHead = new Polygon();
-      arrowHead.addPoint(x - 6, y);
-      arrowHead.addPoint(x + 6, y + 6);
-      arrowHead.addPoint(x - 6, y + 12);
+      arrowHead.addPoint(x - JBUI.scale(6), y);
+      arrowHead.addPoint(x + JBUI.scale(6), y + JBUI.scale(6));
+      arrowHead.addPoint(x - JBUI.scale(6), y + JBUI.scale(12));
 
       g2d.setColor(new Color(153, 51, 0));
       g2d.fill(arrowHead);
     }
     else {
-      x -= 6;
+      x -= JBUI.scale(6);
 
       Polygon arrowShadow = new Polygon();
-      arrowShadow.addPoint(x + 1, y - 5);
-      arrowShadow.addPoint(x + 13, y - 5);
-      arrowShadow.addPoint(x + 7, y + 7);
+      arrowShadow.addPoint(x + JBUI.scale(1), y - JBUI.scale(5));
+      arrowShadow.addPoint(x + JBUI.scale(13), y - JBUI.scale(5));
+      arrowShadow.addPoint(x + JBUI.scale(7), y + JBUI.scale(7));
 
       g2d.setColor(new Color(0, 0, 0, 70));
       g2d.fill(arrowShadow);
 
       Polygon arrowHead = new Polygon();
-      arrowHead.addPoint(x, y - 6);
-      arrowHead.addPoint(x + 12, y - 6);
-      arrowHead.addPoint(x + 6, y + 6);
+      arrowHead.addPoint(x, y - JBUI.scale(6));
+      arrowHead.addPoint(x + JBUI.scale(12), y - JBUI.scale(6));
+      arrowHead.addPoint(x + JBUI.scale(6), y + JBUI.scale(6));
 
       g2d.setColor(new Color(153, 51, 0));
       g2d.fill(arrowHead);

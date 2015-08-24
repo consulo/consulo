@@ -846,9 +846,9 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
       final int left = i.left + (d.width - i.left - i.right - getComponentWidth()) / 2;
       final int top = i.top + (d.height - i.top - i.bottom - getComponentHeight()) / 2;
 
-      int col = (x - left - 2) / 31;
-      col = col > 9 ? 9 : col;
-      int row = (y - top - 2) / 31;
+      int col = (x - left - JBUI.scale(2)) / 31;
+      col = col > JBUI.scale(9) ? JBUI.scale(9) : col;
+      int row = (y - top - JBUI.scale(2)) / 31;
       row = row > 1 ? 1 : row;
 
       return row >= 0 && col >= 0 ? Pair.create(row, col) : null;
