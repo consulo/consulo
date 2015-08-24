@@ -2315,7 +2315,13 @@ public class UIUtil {
     }
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #getListFixedCellHeight()")
   public static final int LIST_FIXED_CELL_HEIGHT = 20;
+
+  public static int getListFixedCellHeight() {
+    return JBUI.scale(LIST_FIXED_CELL_HEIGHT);
+  }
 
   public static int fixComboBoxHeight(final int height) {
     return SystemInfo.isMac && isUnderAquaLookAndFeel() ? 28 : height;

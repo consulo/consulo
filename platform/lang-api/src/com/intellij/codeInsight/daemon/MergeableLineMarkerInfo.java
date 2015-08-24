@@ -134,7 +134,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
             }
           });
           final JBList list = new JBList(infos);
-          list.setFixedCellHeight(UIUtil.LIST_FIXED_CELL_HEIGHT);
+          list.setFixedCellHeight(UIUtil.getListFixedCellHeight());
           PopupChooserBuilder builder  = JBPopupFactory.getInstance().createListPopupBuilder(list);
           if (!markers.get(0).configurePopupAndRenderer(builder, list, infos)) {
             list.installCellRenderer(new NotNullFunction<Object, JComponent>() {
