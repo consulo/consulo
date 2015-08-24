@@ -27,6 +27,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -418,7 +419,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
 
     private ColorWheelPanel(ColorListener listener, boolean enableOpacity, boolean opacityInPercent) {
       setLayout(new BorderLayout());
-      setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+      setBorder(JBUI.Borders.empty(5, 0));
 
       myColorWheel = new ColorWheel();
       add(myColorWheel, BorderLayout.CENTER);
@@ -583,7 +584,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
 
     @Override
     public Dimension getMinimumSize() {
-      return new Dimension(300, 300);
+      return JBUI.size(300, 300);
     }
 
     @Override
@@ -637,12 +638,12 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     private Color myColor;
 
     private ColorPreviewComponent() {
-      setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
+      setBorder(JBUI.Borders.empty(0, 2, 0, 2));
     }
 
     @Override
     public Dimension getPreferredSize() {
-      return new Dimension(100, 32);
+      return JBUI.size(100, 32);
     }
 
     public void setColor(Color c) {
@@ -1122,32 +1123,34 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
           }
         });
 
-        myPickerFrame.setSize(50, 50);
+        myPickerFrame.setSize(JBUI.size(50, 50));
         myPickerFrame.setUndecorated(true);
         myPickerFrame.setAlwaysOnTop(true);
 
         JRootPane rootPane = ((JDialog)myPickerFrame).getRootPane();
         rootPane.putClientProperty("Window.shadow", Boolean.FALSE);
 
-        myGlassRect = new Rectangle(0, 0, 32, 32);
+        int scale32 = JBUI.scale(32);
+
+        myGlassRect = new Rectangle(0, 0, scale32, scale32);
         myPickOffset = new Point(0, 0);
         myCaptureRect = new Rectangle(-4, -4, 8, 8);
         myCaptureOffset = new Point(myCaptureRect.x, myCaptureRect.y);
         myHotspot = new Point(14, 16);
 
-        myZoomRect = new Rectangle(0, 0, 32, 32);
+        myZoomRect = new Rectangle(0, 0, scale32, scale32);
 
-        myMaskImage = UIUtil.createImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+        myMaskImage = UIUtil.createImage(scale32, scale32, BufferedImage.TYPE_INT_ARGB);
         Graphics2D maskG = myMaskImage.createGraphics();
         maskG.setColor(Color.BLUE);
-        maskG.fillRect(0, 0, 32, 32);
+        maskG.fillRect(0, 0, scale32, scale32);
 
         maskG.setColor(Color.RED);
         maskG.setComposite(AlphaComposite.SrcOut);
-        maskG.fillRect(0, 0, 32, 32);
+        maskG.fillRect(0, 0, scale32, scale32);
         maskG.dispose();
 
-        myMagnifierImage = UIUtil.createImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+        myMagnifierImage = UIUtil.createImage(scale32, scale32, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = myMagnifierImage.createGraphics();
 
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
