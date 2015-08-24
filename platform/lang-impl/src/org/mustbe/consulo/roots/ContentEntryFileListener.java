@@ -20,6 +20,8 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.project.DumbModePermission;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -72,12 +74,7 @@ public class ContentEntryFileListener extends AbstractProjectComponent {
 
         modifiableModuleRootLayer.addContentEntry(event.getFile());
       }
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          modifiableModel.commit();
-        }
-      });
+      commitViaDumbService(modifiableModel);
     }
 
     @Override
@@ -112,16 +109,26 @@ public class ContentEntryFileListener extends AbstractProjectComponent {
       }
 
       if (processed) {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            modifiableModel.commit();
-          }
-        });
+        commitViaDumbService(modifiableModel);
       }
       else {
         modifiableModel.dispose();
       }
+    }
+
+    private void commitViaDumbService(final ModifiableRootModel model) {
+      DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
+        @Override
+        public void run() {
+          //noinspection RequiredXAction
+          ApplicationManager.getApplication().runWriteAction(new Runnable() {
+            @Override
+            public void run() {
+              model.commit();
+            }
+          });
+        }
+      });
     }
   }
 
