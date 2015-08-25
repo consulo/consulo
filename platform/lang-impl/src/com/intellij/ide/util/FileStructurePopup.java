@@ -67,6 +67,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashSet;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
@@ -294,7 +295,7 @@ public class FileStructurePopup implements Disposable {
 
     ((AbstractPopup)myPopup).setShowHints(true);
     if (shouldSetWidth) {
-      myPopup.setSize(new Dimension(myPreferredWidth + 10, myPopup.getSize().height));
+      myPopup.setSize(new Dimension(myPreferredWidth + JBUI.scale(10), myPopup.getSize().height));
     }
 
     IdeFocusManager.getInstance(myProject).requestFocus(myTree, true);
@@ -582,7 +583,7 @@ public class FileStructurePopup implements Disposable {
     for (FileStructureNodeProvider provider : fileStructureNodeProviders) {
       addCheckbox(comboPanel, provider);
     }
-    myPreferredWidth = Math.max(comboPanel.getPreferredSize().width, 350);
+    myPreferredWidth = Math.max(comboPanel.getPreferredSize().width, JBUI.scale(350));
     panel.add(comboPanel, BorderLayout.NORTH);
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myAbstractTreeBuilder.getTree());
     scrollPane.setBorder(IdeBorderFactory.createBorder(SideBorder.TOP | SideBorder.BOTTOM));

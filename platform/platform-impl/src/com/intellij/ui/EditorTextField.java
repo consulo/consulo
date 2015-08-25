@@ -567,7 +567,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     if (myInheritSwingFont) {
       editor.getColorsScheme().setEditorFontName(getFont().getFontName());
       // we need div it by scaling, because getFont() return scaled size, but setEditorFontSize required not scaled
-      editor.getColorsScheme().setEditorFontSize(getFont().getSize() / JBUI.scale(1));
+      editor.getColorsScheme().setEditorFontSize((int)(getFont().getSize() / JBUI.scale(1f)));
     }
   }
 

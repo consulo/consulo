@@ -30,6 +30,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ReflectionUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
@@ -482,7 +483,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
             boolean cellHasFocus) {
       Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
       if (value instanceof String) {
-        c.setFont(new Font((String) value, Font.PLAIN, 14));
+        c.setFont(new Font((String) value, Font.PLAIN, JBUI.scaleFontSize(14)));
       }
       return c;
     }

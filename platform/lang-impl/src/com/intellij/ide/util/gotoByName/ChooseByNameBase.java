@@ -395,7 +395,8 @@ public abstract class ChooseByNameBase {
 
     caption2Tools.add(hBox, BorderLayout.EAST);
 
-    myCardContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 4));  // space between checkbox and filter/show all in view buttons
+    // space between checkbox and filter/show all in view buttons
+    myCardContainer.setBorder(JBUI.Borders.empty(0, 0, 0, 4));
 
     final String checkBoxName = myModel.getCheckBoxName();
     myCheckBox = new JCheckBox(checkBoxName != null ? checkBoxName +
@@ -419,7 +420,7 @@ public abstract class ChooseByNameBase {
 
     addCard(new HintLabel(myModel.getNotInMessage()), NOT_FOUND_IN_PROJECT_CARD);
     addCard(new HintLabel(IdeBundle.message("label.choosebyname.no.matches.found")), NOT_FOUND_CARD);
-    JPanel searching = new JPanel(new BorderLayout(5, 0));
+    JPanel searching = new JPanel(new BorderLayout(JBUI.scale(5), 0));
     searching.add(new AsyncProcessIcon("searching"), BorderLayout.WEST);
     searching.add(new HintLabel(IdeBundle.message("label.choosebyname.searching")), BorderLayout.CENTER);
     addCard(searching, SEARCHING_CARD);
@@ -462,7 +463,7 @@ public abstract class ChooseByNameBase {
     toolbarComponent.setBorder(null);
 
     if (myToolArea == null) {
-      myToolArea = new JLabel(EmptyIcon.create(1, 24));
+      myToolArea = new JLabel(EmptyIcon.create(JBUI.scale(1), JBUI.scale(24)));
     }
     hBox.add(myToolArea);
     hBox.add(toolbarComponent);
@@ -493,6 +494,7 @@ public abstract class ChooseByNameBase {
     if (checkBoxName != null) {
       if (myCheckBox != null && myCheckBoxShortcut != null) {
         new AnAction("change goto check box", null, null) {
+          @RequiredDispatchThread
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {
             myCheckBox.setSelected(!myCheckBox.isSelected());
@@ -691,7 +693,7 @@ public abstract class ChooseByNameBase {
     myListScrollPane = ScrollPaneFactory.createScrollPane(myList);
     myListScrollPane.setViewportBorder(JBUI.Borders.empty());
 
-    myTextFieldPanel.setBorder(new EmptyBorder(2, 2, 2, 2));
+    myTextFieldPanel.setBorder(JBUI.Borders.empty(2, 2, 2, 2));
 
     showTextFieldPanel();
 
@@ -1683,6 +1685,7 @@ public abstract class ChooseByNameBase {
       super(ACTION_NAME, ACTION_NAME, AllIcons.General.AutohideOff);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(@NotNull final AnActionEvent e) {
       cancelListUpdater();
@@ -1795,6 +1798,7 @@ public abstract class ChooseByNameBase {
       UsageViewManager.getInstance(myProject).showUsages(usageTargets, usages.toArray(new Usage[usages.size()]), presentation);
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(@NotNull AnActionEvent e) {
       if (myFindUsagesTitle == null || myProject == null) {

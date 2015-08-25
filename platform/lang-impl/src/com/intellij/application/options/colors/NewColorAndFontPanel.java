@@ -19,6 +19,7 @@ package com.intellij.application.options.colors;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class NewColorAndFontPanel extends JPanel {
                               final OptionsPanel optionsPanel,
                               final PreviewPanel previewPanel,
                               final String category, final Collection<String> optionList, final ColorSettingsPage page) {
-    super(new BorderLayout(0, 10));
+    super(new BorderLayout(0, JBUI.scale(10)));
     mySchemesPanel = schemesPanel;
     myOptionsPanel = optionsPanel;
     myPreviewPanel = previewPanel;
