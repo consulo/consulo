@@ -25,6 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.ui.ColorPanel;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -74,7 +75,7 @@ public class ColorAndFontDescriptionPanel extends JPanel {
     JPanel settingsPanel = createSettingsPanel();
 
     add(settingsPanel, BorderLayout.CENTER);
-    setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 4));
+    setBorder(JBUI.Borders.empty(4, 0, 4, 4));
 
     myEffectsCombo.setRenderer(new ListCellRendererWrapper<String>() {
       @Override
@@ -91,7 +92,7 @@ public class ColorAndFontDescriptionPanel extends JPanel {
     gbConstraints.weightx = 1;
     gbConstraints.weighty = 0;
     gbConstraints.gridwidth = GridBagConstraints.REMAINDER;
-    gbConstraints.insets = new Insets(4, 4, 4, 4);
+    gbConstraints.insets = JBUI.insets(4, 4, 4, 4);
 
     settingsPanel.add(createFontSettingsPanel(), gbConstraints);
     settingsPanel.add(createColorSettingsPanel(), gbConstraints);
@@ -111,7 +112,7 @@ public class ColorAndFontDescriptionPanel extends JPanel {
     gbConstraints.gridwidth = 2;
     inheritancePanel.add(myInheritAttributesBox, gbConstraints);
     gbConstraints.gridy = 1;
-    gbConstraints.insets = new Insets(0, 20, 0,0);
+    gbConstraints.insets = JBUI.insets(0, 20, 0,0);
     inheritancePanel.add(myInheritanceLabel, gbConstraints);
     myInheritAttributesBox.addActionListener(new ActionListener(){
       @Override
@@ -187,7 +188,7 @@ public class ColorAndFontDescriptionPanel extends JPanel {
     panel.add(myCbEffects, gc);
 
     gc.gridy++;
-    gc.insets = new Insets(0, 10, 0, 0);
+    gc.insets = JBUI.insets(0, 10, 0, 0);
     gc.weighty = 0;
     panel.add(myEffectsCombo, gc);
 

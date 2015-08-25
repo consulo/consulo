@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -32,11 +33,11 @@ public class ColorPanel extends JPanel {
   private boolean isEditable = true;
 
   public ColorPanel() {
-    this(10);
+    this(JBUI.scale(10));
   }
 
   public ColorPanel(int boxSize) {
-    myFgSelectedColorBox = new ColorBox(null, (boxSize + 2) * 2, true);
+    myFgSelectedColorBox = new ColorBox(null, (boxSize + JBUI.scale(2)) * 2, true);
     myFgSelectedColorBox.setSelectColorAction(
       new Runnable() {
         @Override
@@ -47,7 +48,7 @@ public class ColorPanel extends JPanel {
     );
 
     JPanel selectedColorPanel = new JPanel(new GridBagLayout());
-    selectedColorPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+    selectedColorPanel.setBorder(JBUI.Borders.empty(4, 4, 4, 4));
     myFgSelectedColorBox.setBorder(BorderFactory.createEtchedBorder());
     selectedColorPanel.add(myFgSelectedColorBox, new GridBagConstraints());
 
@@ -202,7 +203,7 @@ public class ColorPanel extends JPanel {
       buffer.append(myColor.getBlue());
 
       if (isSelectable) {
-        buffer.append(" (" + UIBundle.message("color.panel.right.click.to.customize.tooltip.suffix") + ")");
+        buffer.append(" (").append(UIBundle.message("color.panel.right.click.to.customize.tooltip.suffix")).append(")");
       }
       setToolTipText(buffer.toString());
     }
