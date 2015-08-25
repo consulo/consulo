@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,20 +24,27 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbModePermission;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class CreateFileAction extends CreateElementActionBase implements DumbAware {
 
@@ -84,16 +91,32 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     public final String newName;
     public final PsiDirectory directory;
 
-    public MkDirs(String newName, PsiDirectory directory) {
+    public MkDirs(@NotNull String newName, @NotNull PsiDirectory directory) {
       if (SystemInfo.isWindows) {
         newName = newName.replace('\\', '/');
       }
       if (newName.contains("/")) {
         final List<String> subDirs = StringUtil.split(newName, "/");
         newName = subDirs.remove(subDirs.size() - 1);
+        boolean firstToken = true;
         for (String dir : subDirs) {
-          final PsiDirectory sub = directory.findSubdirectory(dir);
-          directory = sub == null ? directory.createSubdirectory(dir) : sub;
+          if (firstToken && "~".equals(dir)) {
+            final VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+            if (userHomeDir == null) throw new IncorrectOperationException("User home directory not found");
+            final PsiDirectory directory1 = directory.getManager().findDirectory(userHomeDir);
+            if (directory1 == null) throw new IncorrectOperationException("User home directory not found");
+            directory = directory1;
+          }
+          else if ("..".equals(dir)) {
+            final PsiDirectory parentDirectory = directory.getParentDirectory();
+            if (parentDirectory == null) throw new IncorrectOperationException("Not a valid directory");
+            directory = parentDirectory;
+          }
+          else if (!".".equals(dir)){
+            final PsiDirectory sub = directory.findSubdirectory(dir);
+            directory = sub == null ? directory.createSubdirectory(dir) : sub;
+          }
+          firstToken = false;
         }
       }
 
@@ -138,13 +161,51 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
 
     @Override
     public boolean checkInput(String inputString) {
-      if (FileTypeManager.getInstance().isFileIgnored(getFileName(inputString))) {
-        myErrorText = "This filename is ignored (Settings | File Types | Ignore files and folders)";
-        return false;
-      }
-      if (inputString.equals(".") || StringUtil.isEmpty(inputString.replace('.', ' ').trim())) {
-        myErrorText = "Can't create file with name '" + inputString + "'";
-        return false;
+      final StringTokenizer tokenizer = new StringTokenizer(inputString, "\\/");
+      VirtualFile vFile = getDirectory().getVirtualFile();
+      boolean firstToken = true;
+      while (tokenizer.hasMoreTokens()) {
+        final String token = tokenizer.nextToken();
+        if ((token.equals(".") || token.equals("..")) && !tokenizer.hasMoreTokens()) {
+          myErrorText = "Can't create file with name '" + token + "'";
+          return false;
+        }
+        if (vFile != null) {
+          if (firstToken && "~".equals(token)) {
+            final VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+            if (userHomeDir == null) {
+              myErrorText = "User home directory not found";
+              return false;
+            }
+            vFile = userHomeDir;
+          }
+          else if ("..".equals(token)) {
+            vFile = vFile.getParent();
+            if (vFile == null) {
+              myErrorText = "Not a valid directory";
+              return false;
+            }
+          }
+          else if (!".".equals(token)){
+            final VirtualFile child = vFile.findChild(token);
+            if (child != null) {
+              if (!child.isDirectory()) {
+                myErrorText = "A file with name '" + token + "' already exists";
+                return false;
+              }
+              else if (!tokenizer.hasMoreTokens()) {
+                myErrorText = "A directory with name '" + token + "' already exists";
+                return false;
+              }
+            }
+            vFile = child;
+          }
+        }
+        if (FileTypeManager.getInstance().isFileIgnored(getFileName(token))) {
+          myErrorText = "'" + token + "' is an ignored name (Settings | File Types | Ignore files and folders)";
+          return true;
+        }
+        firstToken = false;
       }
       myErrorText = null;
       return true;
@@ -162,13 +223,24 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     }
 
     @Override
-    public boolean canClose(String inputString) {
+    public boolean canClose(final String inputString) {
       if (inputString.length() == 0) {
         return super.canClose(inputString);
       }
 
-      FileType type = FileTypeChooser.getKnownFileTypeOrAssociate(getFileName(inputString));
-      return type != null && super.canClose(getFileName(inputString));
+      final PsiDirectory psiDirectory = getDirectory();
+
+      final Project project = psiDirectory.getProject();
+      final boolean[] result = {false};
+      DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
+        @Override
+        public void run() {
+          final FileType type = FileTypeChooser.getKnownFileTypeOrAssociate(new FakeVirtualFile(psiDirectory.getVirtualFile(), getFileName(inputString)),
+                                                                            project);
+          result[0] = type != null && MyValidator.super.canClose(getFileName(inputString));
+        }
+      });
+      return result[0];
     }
   }
 }

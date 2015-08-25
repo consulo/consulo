@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 package com.intellij.openapi.fileTypes.impl;
 
-import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.LayeredIcon;
+import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.EmptyIcon;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -34,11 +36,11 @@ public class FileTypeRenderer extends ListCellRendererWrapper<FileType> {
 
   private final FileTypeListProvider myFileTypeListProvider;
 
-  public FileTypeRenderer(final ListCellRenderer renderer) {
-    this(renderer, new DefaultFileTypeListProvider());
+  public FileTypeRenderer() {
+    this(new DefaultFileTypeListProvider());
   }
 
-  public FileTypeRenderer(final ListCellRenderer renderer, final FileTypeListProvider fileTypeListProvider) {
+  public FileTypeRenderer(@NotNull FileTypeListProvider fileTypeListProvider) {
     super();
     myFileTypeListProvider = fileTypeListProvider;
   }
@@ -54,12 +56,14 @@ public class FileTypeRenderer extends ListCellRendererWrapper<FileType> {
 
     setIcon(layeredIcon);
 
-    if (isDuplicated(type.getDescription())) {
-      setText(type.getDescription() + " (" + type.getName() + ")");
+    String description = type.getDescription();
+    String trimmedDescription = StringUtil.capitalizeWords(description.replaceAll("(?i)\\s*file(?:s)?$", ""), true);
+    if (isDuplicated(description)) {
+      setText(trimmedDescription + " (" + type.getName() + ")");
 
     }
     else {
-      setText(type.getDescription());
+      setText(trimmedDescription);
     }
   }
 
@@ -79,10 +83,6 @@ public class FileTypeRenderer extends ListCellRendererWrapper<FileType> {
     return false;
   }
 
-  //public Dimension getPreferredSize() {
-  //  return new Dimension(0, 20);
-  //}
-
   private static class DefaultFileTypeListProvider implements FileTypeListProvider {
     private final List<FileType> myFileTypes;
 
@@ -90,6 +90,7 @@ public class FileTypeRenderer extends ListCellRendererWrapper<FileType> {
       myFileTypes = Arrays.asList(FileTypeManager.getInstance().getRegisteredFileTypes());
     }
 
+    @Override
     public Iterable<FileType> getCurrentFileTypeList() {
       return myFileTypes;
     }

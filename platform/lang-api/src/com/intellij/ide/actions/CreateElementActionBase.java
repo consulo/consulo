@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -60,16 +61,15 @@ public abstract class CreateElementActionBase extends AnAction {
 
   protected abstract String getActionName(PsiDirectory directory, String newName);
 
+  @RequiredDispatchThread
   @Override
-  public final void actionPerformed(final AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-
-    final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
+  public final void actionPerformed(@NotNull final AnActionEvent e) {
+    final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
     if (view == null) {
       return;
     }
 
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = e.getProject();
 
     final PsiDirectory dir = view.getOrChooseDirectory();
     if (dir == null) return;
@@ -80,8 +80,9 @@ public abstract class CreateElementActionBase extends AnAction {
     }
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@NotNull final AnActionEvent e) {
     if(!e.getPresentation().isVisible()) {
       return;
     }
@@ -133,6 +134,10 @@ public abstract class CreateElementActionBase extends AnAction {
     public MyInputValidator(final Project project, final PsiDirectory directory) {
       super(project, getErrorTitle());
       myDirectory = directory;
+    }
+
+    public PsiDirectory getDirectory() {
+      return myDirectory;
     }
 
     @Override
