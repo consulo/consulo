@@ -5498,7 +5498,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
   @Override
   public void setColorsScheme(@NotNull EditorColorsScheme scheme) {
     assertIsDispatchThread();
-    myScheme = scheme;
+    myScheme = new MyColorSchemeDelegate(scheme);
     reinitSettings();
   }
 
