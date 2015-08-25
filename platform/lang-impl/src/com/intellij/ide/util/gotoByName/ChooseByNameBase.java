@@ -494,6 +494,7 @@ public abstract class ChooseByNameBase {
     if (checkBoxName != null) {
       if (myCheckBox != null && myCheckBoxShortcut != null) {
         new AnAction("change goto check box", null, null) {
+          @RequiredDispatchThread
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {
             myCheckBox.setSelected(!myCheckBox.isSelected());
@@ -1684,6 +1685,7 @@ public abstract class ChooseByNameBase {
       super(ACTION_NAME, ACTION_NAME, AllIcons.General.AutohideOff);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(@NotNull final AnActionEvent e) {
       cancelListUpdater();
@@ -1796,6 +1798,7 @@ public abstract class ChooseByNameBase {
       UsageViewManager.getInstance(myProject).showUsages(usageTargets, usages.toArray(new Usage[usages.size()]), presentation);
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(@NotNull AnActionEvent e) {
       if (myFindUsagesTitle == null || myProject == null) {
