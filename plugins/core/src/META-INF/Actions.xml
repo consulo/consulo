@@ -653,19 +653,6 @@
     <group id="EditorContextBarMenu">
     </group>
 
-    <group id="DirDiffMenu">
-      <action id="DirDiffMenu.SetCopyToRight" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetCopyToRight"
-              text="Set Copy to Right" icon="AllIcons.Vcs.Arrow_right"/>
-      <action id="DirDiffMenu.SetCopyToLeft" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetCopyToLeft" text="Set Copy to Left"
-              icon="AllIcons.Vcs.Arrow_left"/>
-      <action id="DirDiffMenu.SetDelete" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetDelete" text="Set Delete"
-              icon="AllIcons.Vcs.Remove"/>
-      <action id="DirDiffMenu.SetNoOperation" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetNoOperation"
-              text="Set Do Nothing"/>
-      <separator/>
-      <action id="DirDiffMenu.SetDefault" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetDefault" text="Set Default"/>
-    </group>
-
     <action id="Rerun" class="com.intellij.execution.runners.FakeRerunAction" text="Rerun"/>
 
     <action id="IncrementWindowWidth" class="com.intellij.ide.actions.WindowAction$IncrementWidth" use-shortcut-of="ResizeToolWindowRight"/>
