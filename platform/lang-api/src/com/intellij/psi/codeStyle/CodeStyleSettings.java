@@ -246,7 +246,13 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   /**
    * @deprecated Use get/setRightMargin() methods instead.
    */
+//----------------- WRAPPING ---------------------------
+  /**
+   * @deprecated Use get/setRightMargin() methods instead.
+   */
   @Deprecated
+  public int RIGHT_MARGIN = 120;
+
   /**
    * <b>Do not use this field directly since it doesn't reflect a setting for a specific language which may
    * overwrite this one. Call {@link #isWrapOnTyping(Language)} method instead.</b>
