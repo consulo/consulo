@@ -16,6 +16,8 @@
 package com.intellij.diagnostic;
 
 
+import com.intellij.openapi.util.text.StringUtil;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -66,7 +68,7 @@ public class CookieManager {
   public CookieManager() {
 
     store = new HashMap();
-    dateFormat = new SimpleDateFormat(DATE_FORMAT);
+    dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
   }
 
 
@@ -122,8 +124,10 @@ public class CookieManager {
 
         while (st.hasMoreTokens()) {
           String token = st.nextToken();
-          cookie.put(token.substring(0, token.indexOf(NAME_VALUE_SEPARATOR)).toLowerCase(),
-                     token.substring(token.indexOf(NAME_VALUE_SEPARATOR) + 1, token.length()));
+          if(StringUtil.containsChar(token, NAME_VALUE_SEPARATOR)) {
+            cookie.put(token.substring(0, token.indexOf(NAME_VALUE_SEPARATOR)).toLowerCase(),
+                       token.substring(token.indexOf(NAME_VALUE_SEPARATOR) + 1, token.length()));
+          }
         }
       }
     }
