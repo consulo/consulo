@@ -45,7 +45,6 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
-import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.Alarm;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
@@ -55,6 +54,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,7 +86,6 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   private boolean mySomethingChanged = false;
   private long myEndHighlightPreviewChangesTimeMillis = -1;
   private boolean myShowsPreviewHighlighters;
-  private boolean mySkipPreviewHighlighting;
   private final CodeStyleSettings myCurrentSettings;
   private final Language myDefaultLanguage;
 
@@ -211,9 +210,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
       public void run() {
         try {
           Document beforeReformat = null;
-          if (!mySkipPreviewHighlighting) {
-            beforeReformat = collectChangesBeforeCurrentSettingsAppliance(project);
-          }
+          beforeReformat = collectChangesBeforeCurrentSettingsAppliance(project);
 
           //important not mark as generated not to get the classes before setting language level
           PsiFile psiFile = createFileFromText(project, myTextToReformat);
@@ -225,7 +222,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
           catch (ConfigurationException ignore) {
           }
           CodeStyleSettings clone = mySettings.clone();
-          clone.RIGHT_MARGIN = getAdjustedRightMargin();
+          clone.setRightMargin(getDefaultLanguage(), getAdjustedRightMargin());
           CodeStyleSettingsManager.getInstance(project).setTemporarySettings(clone);
           PsiFile formatted;
           try {
@@ -266,7 +263,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
       Document document = documentManager.getDocument(psiFile);
       if (document != null) {
         CodeStyleSettings clone = mySettings.clone();
-        clone.RIGHT_MARGIN = getAdjustedRightMargin();
+        clone.setRightMargin(getDefaultLanguage(), getAdjustedRightMargin());
         CodeStyleSettingsManager.getInstance(project).setTemporarySettings(clone);
         try {
           CodeStyleManager.getInstance(project).reformat(psiFile);
@@ -278,10 +275,6 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
       }
     }
     return null;
-  }
-
-  public void setSkipPreviewHighlighting(boolean skipPreviewHighlighting) {
-    mySkipPreviewHighlighting = skipPreviewHighlighting;
   }
 
   protected void prepareForReformat(PsiFile psiFile) {
@@ -303,9 +296,6 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   }
 
   private void highlightChanges(Document beforeReformat) {
-    if (mySkipPreviewHighlighting) {
-      return;
-    }
 
     myPreviewRangesToHighlight.clear();
     MarkupModel markupModel = myEditor.getMarkupModel();
@@ -382,7 +372,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
 
   private void updatePreviewHighlighter(final EditorEx editor) {
     EditorColorsScheme scheme = editor.getColorsScheme();
-    scheme.setColor(EditorColors.CARET_ROW_COLOR, null);
+    editor.getSettings().setCaretRowShown(false);
     editor.setHighlighter(createHighlighter(scheme));
   }
 
@@ -450,10 +440,29 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     }
   }
 
-  protected void installPreviewPanel(JPanel previewPanel) {
+  protected void installPreviewPanel(final JPanel previewPanel) {
     previewPanel.setLayout(new BorderLayout());
     previewPanel.add(getEditor().getComponent(), BorderLayout.CENTER);
-    previewPanel.setBorder(new CustomLineBorder(OnePixelDivider.BACKGROUND, 0, 1, 0, 0));
+    previewPanel.setBorder(new AbstractBorder() {
+      private static final int LEFT_WHITE_SPACE = 2;
+
+      @Override
+      public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        Editor editor = getEditor();
+        if (editor instanceof EditorEx) {
+          g.setColor(((EditorEx)editor).getBackgroundColor());
+          g.fillRect(x + 1, y, LEFT_WHITE_SPACE, height);
+        }
+        g.setColor(OnePixelDivider.BACKGROUND);
+        g.fillRect(x, y, 1, height);
+      }
+
+      @Override
+      public Insets getBorderInsets(Component c, Insets insets) {
+        insets.set(0, 1 + LEFT_WHITE_SPACE, 0, 0);
+        return insets;
+      }
+    });
   }
 
   @NonNls
@@ -591,7 +600,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   }
 
   /**
-   * Override this method if the panel is linked to a specific language. 
+   * Override this method if the panel is linked to a specific language.
    * @return The language this panel is associated with.
    */
   @Nullable
@@ -614,4 +623,5 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   public boolean isCopyFromMenuAvailable() {
     return false;
   }
+
 }

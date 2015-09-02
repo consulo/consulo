@@ -46,7 +46,6 @@ import org.consulo.module.extension.MutableModuleExtension;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.sdk.SdkUtil;
@@ -77,8 +76,6 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     this(sdksModel, null, false);
   }
 
-  @Deprecated
-  @DeprecationInfo("Use another constructor with 'String nullItemName' parameter")
   public SdkComboBox(@NotNull ProjectSdksModel sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      boolean withNoneItem) {
@@ -91,8 +88,6 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     this(sdksModel, filter, filter, nullItemName, null);
   }
 
-  @Deprecated
-  @DeprecationInfo("Use another constructor with 'String nullItemName' parameter")
   public SdkComboBox(@NotNull ProjectSdksModel sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter,
