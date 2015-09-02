@@ -169,9 +169,9 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       @Override
       public Dimension getPreferredScrollableViewportSize() {
         int em = myEditorPane.getFont().getSize();
-        int prefWidth = PREFERRED_WIDTH_EM * em;
-        int prefHeightMin = PREFERRED_HEIGHT_MIN_EM * em;
-        int prefHeightMax = PREFERRED_HEIGHT_MAX_EM * em;
+        int prefWidth = JBUI.scale(PREFERRED_WIDTH_EM) * em;
+        int prefHeightMin = JBUI.scale(PREFERRED_HEIGHT_MIN_EM) * em;
+        int prefHeightMax = JBUI.scale(PREFERRED_HEIGHT_MAX_EM) * em;
 
         if (getWidth() == 0 || getHeight() == 0) {
           setSize(prefWidth, prefHeightMax);
@@ -308,7 +308,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             component.setBounds(0, 0, r.width, r.height);
           }
           else {
-            int insets = 2;
+            int insets = JBUI.scale(2);
             Dimension d = component.getPreferredSize();
             component.setBounds(r.width - d.width - insets, insets, d.width, d.height);
           }
@@ -358,11 +358,11 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     myToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.JAVADOC_TOOLBAR, actions, true);
 
-    myControlPanel = new JPanel(new BorderLayout(5, 5));
+    myControlPanel = new JPanel(new BorderLayout(JBUI.scale(5), JBUI.scale(5)));
     myControlPanel.setBorder(IdeBorderFactory.createBorder(SideBorder.BOTTOM));
 
     myElementLabel = new JLabel();
-    myElementLabel.setMinimumSize(new Dimension(100, 0)); // do not recalculate size according to the text
+    myElementLabel.setMinimumSize(JBUI.size(100, 0)); // do not recalculate size according to the text
 
     myControlPanel.add(myToolBar.getComponent(), BorderLayout.WEST);
     myControlPanel.add(myElementLabel, BorderLayout.CENTER);
@@ -408,7 +408,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   private JComponent createSettingsPanel() {
-    JPanel result = new JPanel(new FlowLayout(FlowLayout.RIGHT, 3, 0));
+    JPanel result = new JPanel(new FlowLayout(FlowLayout.RIGHT, JBUI.scale(3), 0));
     result.add(new JLabel(ApplicationBundle.message("label.font.size")));
     myFontSizeSlider = new JSlider(SwingConstants.HORIZONTAL, 0, FontSize.values().length - 1, 3);
     myFontSizeSlider.setMinorTickSpacing(1);
@@ -417,7 +417,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     myFontSizeSlider.setSnapToTicks(true);
     UIUtil.setSliderIsFilled(myFontSizeSlider, true);
     result.add(myFontSizeSlider);
-    result.setBorder(BorderFactory.createLineBorder(JBColor.border(), 1));
+    result.setBorder(JBUI.Borders.customLine(JBColor.border(), 1));
 
     myFontSizeSlider.addChangeListener(new ChangeListener() {
       @Override
@@ -606,7 +606,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     EditorColorsManager colorsManager = EditorColorsManager.getInstance();
     EditorColorsScheme scheme = colorsManager.getGlobalScheme();
-    StyleConstants.setFontSize(myFontSizeStyle, scheme.getQuickDocFontSize().getSize());
+    StyleConstants.setFontSize(myFontSizeStyle, scheme.getQuickDocFontSize().getScaledSize());
     if (Registry.is("documentation.component.editor.font")) {
       StyleConstants.setFontFamily(myFontSizeStyle, scheme.getEditorFontName());
     }

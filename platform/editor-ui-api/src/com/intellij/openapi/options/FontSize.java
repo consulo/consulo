@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.options;
 
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -41,6 +42,10 @@ public enum FontSize {
 
   public int getSize() {
     return mySize;
+  }
+
+  public int getScaledSize() {
+    return JBUI.scaleFontSize(getSize());
   }
 
   /**

@@ -20,6 +20,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.ButtonlessScrollBarUI;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,11 +107,11 @@ public class JBScrollPane extends JScrollPane {
   }
 
   private void updateViewportBorder() {
-    setViewportBorder(new ViewportBorder(myViewportBorderWidth >= 0 ? myViewportBorderWidth : 1));
+    setViewportBorder(new ViewportBorder(JBUI.scale(myViewportBorderWidth >= 0 ? myViewportBorderWidth : 1)));
   }
 
   public static ViewportBorder createIndentBorder() {
-    return new ViewportBorder(2);
+    return new ViewportBorder(JBUI.scale(2));
   }
 
   @Override
