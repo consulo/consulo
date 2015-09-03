@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.util.*;
 
@@ -116,7 +115,7 @@ public class NativeFileIconUtil {
 
   @Nullable
   public static Icon getNativeIcon(@Nullable File file) {
-    return file == null || file.isDirectory() ? null : FileSystemView.getFileSystemView().getSystemIcon(file);
+    return file == null || file.isDirectory() ? null : FileSystemViewDelegate.getIcon(file);
   }
 
   private static Ext getExtension(final VirtualFile file) {
