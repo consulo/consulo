@@ -3904,10 +3904,11 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
         final int charWidth = isOracleRetina ? GraphicsUtil.charWidth(c, g.getFont()) : metrics.charWidth(c);
 
         if (c == ' ') {
-          g.fillRect(x + (charWidth >> 1), y, 1, 1);
+          int scale1 = JBUI.scale(1);
+          g.fillRect(x + (charWidth >> 1), y, scale1, scale1);
         } else if (c == IDEOGRAPHIC_SPACE) {
           final int charHeight = getCharHeight();
-          g.drawRect(x + 2, y - charHeight, charWidth - 4, charHeight);
+          g.drawRect(x + JBUI.scale(2), y - charHeight, charWidth - JBUI.scale(4), charHeight);
         }
 
         x += charWidth;
