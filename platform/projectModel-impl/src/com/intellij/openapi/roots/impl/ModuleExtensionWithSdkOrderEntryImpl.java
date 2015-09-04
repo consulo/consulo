@@ -50,12 +50,8 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
   @Override
   protected RootProvider getRootProvider() {
-    final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
-    if (moduleExtension == null) {
-      return null;
-    }
-    final Sdk sdk = moduleExtension.getSdk();
-    if (sdk == null) {
+    Sdk sdk = getSdk();
+    if(sdk == null) {
       return null;
     }
     return sdk.getRootProvider();
@@ -68,7 +64,8 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     if (moduleExtension == null) {
       return null;
     }
-    return moduleExtension.getSdk();
+    return myModuleRootLayer.getRootModel().getConfigurationAccessor().getSdk(moduleExtension.getSdk(),
+                                                                              moduleExtension.getSdkName());
   }
 
   @Override
