@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.border.Border;
@@ -33,9 +34,10 @@ public class ColoredSideBorder implements Border {
     myLeftColor = leftColor;
     myRightColor = rightColor;
     myBottomColor = bottomColor;
-    myThickness = thickness;
+    myThickness = JBUI.scale(thickness);
   }
 
+  @Override
   public Insets getBorderInsets(Component component) {
     return new Insets(
       myTopColor != null ? getThickness() : 0,
@@ -45,10 +47,12 @@ public class ColoredSideBorder implements Border {
     );
   }
 
+  @Override
   public boolean isBorderOpaque() {
     return true;
   }
 
+  @Override
   public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
     Color oldColor = g.getColor();
     int i;

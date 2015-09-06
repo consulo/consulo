@@ -54,6 +54,7 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Function;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -91,7 +92,7 @@ public class LineStatusTrackerDrawing {
     Color gutterColor = getDiffGutterColor(range);
     Color borderColor = getDiffGutterBorderColor();
 
-    final int x = r.x + r.width - 3;
+    final int x = r.x + r.width - JBUI.scale(3);
     final int endX = gutter.getWhitespaceSeparatorOffset();
 
     final int y = lineToY(editor, range.getLine1());
@@ -129,15 +130,15 @@ public class LineStatusTrackerDrawing {
 
           if (i == 0) {
             start = lineToY(editor, innerRange.getLine1());
-            end = lineToY(editor, innerRange.getLine2()) + 5;
+            end = lineToY(editor, innerRange.getLine2()) + JBUI.scale(5);
           }
           else if (i == innerRanges.size() - 1) {
-            start = lineToY(editor, innerRange.getLine1()) - 5;
+            start = lineToY(editor, innerRange.getLine1()) - JBUI.scale(5);
             end = lineToY(editor, innerRange.getLine2());
           }
           else {
-            start = lineToY(editor, innerRange.getLine1()) - 3;
-            end = lineToY(editor, innerRange.getLine2()) + 3;
+            start = lineToY(editor, innerRange.getLine1()) - JBUI.scale(3);
+            end = lineToY(editor, innerRange.getLine2()) + JBUI.scale(3);
           }
 
           paintRect(g, getDiffColor(innerRange), null, x, start, endX, end);
@@ -164,14 +165,14 @@ public class LineStatusTrackerDrawing {
     }
     if (borderColor != null) {
       g.setColor(borderColor);
-      UIUtil.drawLine(g, x1, y1, x2 - 1, y1);
-      UIUtil.drawLine(g, x1, y1, x1, y2 - 1);
-      UIUtil.drawLine(g, x1, y2 - 1, x2 - 1, y2 - 1);
+      UIUtil.drawLine(g, x1, y1, x2 - JBUI.scale(1), y1);
+      UIUtil.drawLine(g, x1, y1, x1, y2 - JBUI.scale(1));
+      UIUtil.drawLine(g, x1, y2 - JBUI.scale(1), x2 - JBUI.scale(1), y2 - JBUI.scale(1));
     }
   }
 
   private static void paintTriangle(@NotNull Graphics g, @Nullable Color color, @Nullable Color borderColor, int x1, int x2, int y) {
-    int size = 4;
+    int size = JBUI.scale(4);
 
     final int[] xPoints = new int[]{x1, x1, x2};
     final int[] yPoints = new int[]{y - size, y + size, y};
