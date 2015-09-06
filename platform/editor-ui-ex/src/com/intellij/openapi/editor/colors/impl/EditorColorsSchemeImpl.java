@@ -84,7 +84,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
   }
 
   @Override
-  public Object clone() {
+  public EditorColorsScheme clone() {
     EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(myParentScheme);
     copyTo(newScheme);
     newScheme.setName(getName());

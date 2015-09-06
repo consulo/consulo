@@ -51,6 +51,7 @@ public class ConsoleViewUtil {
 
   public static void setupConsoleEditor(final EditorEx editor, final boolean foldingOutlineShown, final boolean lineMarkerAreaShown) {
     ApplicationManager.getApplication().runReadAction(new Runnable() {
+      @Override
       public void run() {
         editor.setSoftWrapAppliancePlace(SoftWrapAppliancePlaces.CONSOLE);
 
@@ -89,8 +90,8 @@ public class ConsoleViewUtil {
       }
 
       @Override
-      public int getEditorFontSize() {
-        return getConsoleFontSize();
+      public int getEditorFontSize(boolean scale) {
+        return getConsoleFontSize(scale);
       }
 
       @Override

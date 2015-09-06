@@ -31,6 +31,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.HashMap;
+import com.intellij.util.ui.JBUI;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -126,7 +127,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   }
 
   @Override
-  public abstract Object clone();
+  public abstract EditorColorsScheme clone();
 
   public void copyTo(AbstractColorsScheme newScheme) {
     myFontPreferences.copyTo(newScheme.myFontPreferences);
@@ -148,7 +149,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
 
   @Override
   public void setEditorFontName(String fontName) {
-    int editorFontSize = getEditorFontSize();
+    int editorFontSize = getEditorFontSizeInternal();
     myFontPreferences.clear();
     myFontPreferences.register(fontName, editorFontSize);
     initFonts();
@@ -206,6 +207,16 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
 
   @Override
   public int getEditorFontSize() {
+    return getEditorFontSize(true);
+  }
+
+  @Override
+  public int getEditorFontSize(boolean scale) {
+    int editorFontSizeInternal = getEditorFontSizeInternal();
+    return scale ? JBUI.scale(editorFontSizeInternal) : editorFontSizeInternal;
+  }
+
+  public int getEditorFontSizeInternal() {
     return myFontPreferences.getSize(getEditorFontName());
   }
 
@@ -223,7 +234,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
 
   protected void initFonts() {
     String editorFontName = getEditorFontName();
-    int editorFontSize = getEditorFontSize();
+    int editorFontSize = getEditorFontSizeInternal();
 
     myFallbackFontName = FontPreferences.getFallbackName(editorFontName, editorFontSize, myParentScheme);
     if (myFallbackFontName != null) {
@@ -240,7 +251,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     myFonts.put(EditorFontType.BOLD_ITALIC, boldItalicFont);
 
     String consoleFontName = getConsoleFontName();
-    int consoleFontSize = getConsoleFontSize();
+    int consoleFontSize = getConsoleFontSizeInternal();
 
     Font consolePlainFont = new Font(consoleFontName, Font.PLAIN, consoleFontSize);
     Font consoleBoldFont = new Font(consoleFontName, Font.BOLD, consoleFontSize);
@@ -459,7 +470,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     if (useOldFontFormat) {
       element = new Element(OPTION_ELEMENT);
       element.setAttribute(NAME_ATTR, EDITOR_FONT_SIZE);
-      element.setAttribute(VALUE_ELEMENT, String.valueOf(getEditorFontSize()));
+      element.setAttribute(VALUE_ELEMENT, String.valueOf(getEditorFontSizeInternal()));
       parentNode.addContent(element);
     }
     else {
@@ -473,10 +484,10 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         element.setAttribute(VALUE_ELEMENT, getConsoleFontName());
         parentNode.addContent(element);
 
-        if (getConsoleFontSize() != getEditorFontSize()) {
+        if (getConsoleFontSizeInternal() != getEditorFontSizeInternal()) {
           element = new Element(OPTION_ELEMENT);
           element.setAttribute(NAME_ATTR, CONSOLE_FONT_SIZE);
-          element.setAttribute(VALUE_ELEMENT, Integer.toString(getConsoleFontSize()));
+          element.setAttribute(VALUE_ELEMENT, Integer.toString(getConsoleFontSizeInternal()));
           parentNode.addContent(element);
         }
       }
@@ -614,19 +625,29 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
 
   @Override
   public void setConsoleFontName(String fontName) {
-    int consoleFontSize = getConsoleFontSize();
+    int consoleFontSize = getConsoleFontSizeInternal();
     myConsoleFontPreferences.clear();
     myConsoleFontPreferences.register(fontName, consoleFontSize);
   }
 
   @Override
   public int getConsoleFontSize() {
+    return getConsoleFontSize(true);
+  }
+
+  @Override
+  public int getConsoleFontSize(boolean scale) {
+    int consoleFontSizeInternal = getConsoleFontSizeInternal();
+    return scale ? JBUI.scale(consoleFontSizeInternal) : consoleFontSizeInternal;
+  }
+
+  public int getConsoleFontSizeInternal() {
     String font = getConsoleFontName();
     UISettings uiSettings = UISettings.getInstance();
     if ((uiSettings == null || !uiSettings.PRESENTATION_MODE) && myConsoleFontPreferences.hasSize(font)) {
       return myConsoleFontPreferences.getSize(font);
     }
-    return getEditorFontSize();
+    return getEditorFontSizeInternal();
   }
 
   @Override

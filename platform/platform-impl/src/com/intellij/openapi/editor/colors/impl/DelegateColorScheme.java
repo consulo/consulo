@@ -98,6 +98,11 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
   }
 
   @Override
+  public int getEditorFontSize(boolean scale) {
+    return myDelegate.getEditorFontSize(scale);
+  }
+
+  @Override
   public void setEditorFontSize(int fontSize) {
     myDelegate.setEditorFontSize(fontSize);
   }
@@ -153,7 +158,7 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
   }
 
   @Override
-  public Object clone() {
+  public EditorColorsScheme clone() {
     return myDelegate.clone();
   }
 
@@ -181,6 +186,11 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
   @Override
   public int getConsoleFontSize() {
     return myDelegate.getConsoleFontSize();
+  }
+
+  @Override
+  public int getConsoleFontSize(boolean scale) {
+    return myDelegate.getConsoleFontSize(scale);
   }
 
   @Override

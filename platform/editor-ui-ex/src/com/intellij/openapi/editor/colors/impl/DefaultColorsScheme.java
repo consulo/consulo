@@ -20,6 +20,7 @@
 package com.intellij.openapi.editor.colors.impl;
 
 import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -84,7 +85,7 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
   }
 
   @Override
-  public Object clone() {
+  public EditorColorsScheme clone() {
     EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(this);
     copyTo(newScheme);
     newScheme.setName(DEFAULT_SCHEME_NAME);

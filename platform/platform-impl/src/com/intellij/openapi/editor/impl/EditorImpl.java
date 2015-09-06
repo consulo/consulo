@@ -6587,15 +6587,9 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     }
 
     @Override
-    public int getEditorFontSize() {
-      return JBUI.scale(getEditorFontSizeImpl());
-    }
-
-    private int getEditorFontSizeImpl() {
-      if (myFontSize == -1) {
-        return getDelegate().getEditorFontSize();
-      }
-      return myFontSize;
+    public int getEditorFontSize(boolean scale) {
+      int fontSize = myFontSize == -1 ? getDelegate().getEditorFontSize(false) : myFontSize;
+      return scale ? JBUI.scale(fontSize) : fontSize;
     }
 
     @Override
@@ -6669,7 +6663,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
     @Override
     @Nullable
-    public Object clone() {
+    public EditorColorsScheme clone() {
       return null;
     }
 
@@ -6693,8 +6687,9 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     }
 
     @Override
-    public int getConsoleFontSize() {
-      return JBUI.scale(myConsoleFontSize == -1 ? super.getConsoleFontSize() : myConsoleFontSize);
+    public int getConsoleFontSize(boolean scale) {
+      int fontSize = myConsoleFontSize == -1 ? super.getConsoleFontSize(false) : myConsoleFontSize;
+      return scale ? JBUI.scale(fontSize) : fontSize;
     }
   }
 

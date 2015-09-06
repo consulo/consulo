@@ -1073,7 +1073,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public Object clone() {
+    public EditorColorsScheme clone() {
       return null;
     }
 

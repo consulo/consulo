@@ -61,6 +61,10 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
   void setEditorFontName(String fontName);
 
   int getEditorFontSize();
+  /**
+   * @return editor font size with scaling
+   */
+  int getEditorFontSize(boolean scale);
   void setEditorFontSize(int fontSize);
 
   FontSize getQuickDocFontSize();
@@ -72,7 +76,7 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
   float getLineSpacing();
   void setLineSpacing(float lineSpacing);
 
-  Object clone();
+  EditorColorsScheme clone();
 
   /**
    * @return    console font preferences to use
@@ -85,7 +89,11 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
   String getConsoleFontName();
   void setConsoleFontName(String fontName);
 
+  /**
+   * @return console font size with scaling
+   */
   int getConsoleFontSize();
+  int getConsoleFontSize(boolean scale);
   void setConsoleFontSize(int fontSize);
 
   float getConsoleLineSpacing();
