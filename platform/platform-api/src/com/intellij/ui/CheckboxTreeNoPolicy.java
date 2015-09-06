@@ -378,21 +378,4 @@ public class CheckboxTreeNoPolicy extends Tree {
   public enum NodeState {
     FULL, CLEAR, PARTIAL
   }
-
-  public static class CheckPolicy {
-    public final boolean checkChildrenWithCheckedParent;
-    public final boolean uncheckChildrenWithUncheckedParent;
-    public final boolean checkParentWithCheckedChild;
-    public final boolean uncheckParentWithUncheckedChild;
-
-    public CheckPolicy(final boolean checkChildrenWithCheckedParent,
-                       final boolean uncheckChildrenWithUncheckedParent,
-                       final boolean checkParentWithCheckedChild,
-                       final boolean uncheckParentWithUncheckedChild) {
-      this.checkChildrenWithCheckedParent = checkChildrenWithCheckedParent;
-      this.uncheckChildrenWithUncheckedParent = uncheckChildrenWithUncheckedParent;
-      this.checkParentWithCheckedChild = checkParentWithCheckedChild;
-      this.uncheckParentWithUncheckedChild = uncheckParentWithUncheckedChild;
-    }
-  }
 }
