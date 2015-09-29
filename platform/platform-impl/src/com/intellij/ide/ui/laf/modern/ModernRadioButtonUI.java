@@ -80,36 +80,34 @@ public class ModernRadioButtonUI extends BasicRadioButtonUI {
       g.fillRect(0,0, size.width, size.height);
     }
 
-    int rad = 5;
+    int rad = JBUI.scale(5);
 
     // Paint the radio button
-    final int x = iconRect.x + (rad-1)/2;
-    final int y = iconRect.y + (rad-1)/2;
-    final int w = iconRect.width - (rad + 5) / 2;
-    final int h = iconRect.height - (rad + 5) / 2;
+    final int x = iconRect.x + (rad - JBUI.scale(1)) / 2;
+    final int y = iconRect.y + (rad - JBUI.scale(1)) / 2;
+    final int w = iconRect.width - rad;
+    final int h = iconRect.height - rad;
 
     g.translate(x, y);
 
     //setup AA for lines
     final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
     g.setColor(c.getBackground());
-    g.fillOval(0, 1, w - 1, h - 1);
+    g.fillOval(0, JBUI.scale(1), w - JBUI.scale(1), h - JBUI.scale(1));
 
     if (myMouseEnterHandler.isMouseEntered()) {
       g.setColor(ModernUIUtil.getSelectionBackground());
-      g.drawOval(0, 1, w - 1, h - 1);
+      g.drawOval(0, JBUI.scale(1), w - JBUI.scale(1), h - JBUI.scale(1));
     }
     else {
       g.setPaint(ModernUIUtil.getBorderColor(c));
-      g.drawOval(0, 1, w - 1, h - 1);
+      g.drawOval(0, JBUI.scale(1), w - JBUI.scale(1), h - JBUI.scale(1));
     }
 
     if (b.isSelected()) {
       final boolean enabled = b.isEnabled();
-      g.setColor(UIManager.getColor(enabled ? "RadioButton.darcula.selectionEnabledShadowColor" : "RadioButton.darcula.selectionDisabledShadowColor"));// ? Gray._30 : Gray._60);
-      g.fillOval(w/2 - rad/2, h/2 , rad, rad);
       g.setColor(UIManager.getColor(enabled ? "RadioButton.darcula.selectionEnabledColor" : "RadioButton.darcula.selectionDisabledColor")); //Gray._170 : Gray._120);
-      g.fillOval(w/2 - rad/2, h/2 - 1, rad, rad);
+      g.fillOval(w/2 - rad/2, h / 2 - Math.round(JBUI.scale(1f)), rad, rad);
     }
     config.restore();
     g.translate(-x, -y);
