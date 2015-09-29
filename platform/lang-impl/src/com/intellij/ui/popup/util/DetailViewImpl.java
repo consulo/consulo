@@ -34,6 +34,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.SideBorder;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,7 +74,7 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
   public DetailViewImpl(Project project) {
     super(new BorderLayout());
     myProject = project;
-    setPreferredSize(new Dimension(700, 400));
+    setPreferredSize(JBUI.size(700, 400));
     myLabel.setVerticalAlignment(SwingConstants.CENTER);
   }
 
@@ -194,7 +195,7 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
 
     if (panel != null) {
       if (myDetailPanelWrapper == null) {
-        myDetailPanelWrapper = new JPanel(new GridLayout(1, 1));
+        myDetailPanelWrapper = new JPanel(new GridLayout(JBUI.scale(1), JBUI.scale(1)));
         myDetailPanelWrapper.setBorder(IdeBorderFactory.createEmptyBorder(5, 30, 5, 5));
         myDetailPanelWrapper.add(panel);
 

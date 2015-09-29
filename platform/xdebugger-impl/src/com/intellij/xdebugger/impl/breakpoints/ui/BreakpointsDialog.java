@@ -20,10 +20,11 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.WholeWestDialogWrapper;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.*;
 import com.intellij.ui.popup.util.DetailController;
@@ -33,6 +34,7 @@ import com.intellij.ui.popup.util.MasterController;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
+import com.intellij.util.ui.JBUI;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
@@ -46,6 +48,7 @@ import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeContro
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,8 +56,9 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
 
-public class BreakpointsDialog extends DialogWrapper {
-  @NotNull private Project myProject;
+public class BreakpointsDialog extends WholeWestDialogWrapper {
+  @NotNull
+  private Project myProject;
 
   private Object myInitialBreakpoint;
   private List<BreakpointPanelProvider> myBreakpointsPanelProviders;
@@ -106,24 +110,17 @@ public class BreakpointsDialog extends DialogWrapper {
     setOKButtonText("Done");
   }
 
-  private String getSplitterProportionKey() {
+  @NotNull
+  @Override
+  public String getSplitterKey() {
     return getDimensionServiceKey() + ".splitter";
   }
 
-  @Nullable
+  @RequiredDispatchThread
+  @NotNull
   @Override
-  protected JComponent createCenterPanel() {
-    JPanel mainPanel = new JPanel(new BorderLayout());
-
-    JBSplitter splitPane = new JBSplitter(0.3f);
-    splitPane.setSplitterProportionKey(getSplitterProportionKey());
-
-    splitPane.setFirstComponent(createMasterView());
-    splitPane.setSecondComponent(createDetailView());
-
-    mainPanel.add(splitPane, BorderLayout.CENTER);
-
-    return mainPanel;
+  public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
+    return Couple.of(createMasterView(), createDetailView());
   }
 
   private JComponent createDetailView() {
@@ -154,6 +151,11 @@ public class BreakpointsDialog extends DialogWrapper {
   @Override
   protected String getDimensionServiceKey() {
     return getClass().getName();
+  }
+
+  @Override
+  public Dimension getDefaultSize() {
+    return new Dimension(910, 400);
   }
 
   @NotNull
@@ -299,7 +301,7 @@ public class BreakpointsDialog extends DialogWrapper {
             setToolbarPosition(ActionToolbarPosition.TOP).
             setToolbarBorder(IdeBorderFactory.createEmptyBorder());
 
-    tree.setBorder(IdeBorderFactory.createBorder());
+    tree.setBorder(JBUI.Borders.empty());
 
     for (ToggleActionButton action : myToggleRuleActions) {
       decorator.addExtraAction(action);
