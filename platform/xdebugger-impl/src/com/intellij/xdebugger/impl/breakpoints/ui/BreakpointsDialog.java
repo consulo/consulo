@@ -247,16 +247,18 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     }, ActionPlaces.UNKNOWN, ActionManager.getInstance());
 
     new AnAction("BreakpointDialog.GoToSource") {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         navigate(true);
         close(OK_EXIT_CODE);
       }
     }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), tree);
 
     new AnAction("BreakpointDialog.ShowSource") {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         navigate(true);
         close(OK_EXIT_CODE);
       }
@@ -423,8 +425,9 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
       getTemplatePresentation().setText(type.getTitle());
     }
 
+    @RequiredDispatchThread
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
       saveCurrentItem();
       XBreakpoint<?> breakpoint = myType.addBreakpoint(myProject, null);
       if (breakpoint != null) {
@@ -459,8 +462,9 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
       myGroup = null;
     }
 
+    @RequiredDispatchThread
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
       String groupName = myGroup;
       if (myNewGroup) {
         groupName = Messages.showInputDialog("New group name", "New Group", AllIcons.Nodes.NewFolder);
