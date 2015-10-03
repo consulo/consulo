@@ -16,6 +16,7 @@
 package com.intellij.ide.ui.laf.modern;
 
 import com.intellij.openapi.ui.GraphicsConfig;
+import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import sun.swing.DefaultLookup;
@@ -28,7 +29,6 @@ import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
-import java.awt.geom.Path2D;
 
 /**
  * @author VISTALL
@@ -62,7 +62,8 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
   @Override
   protected void installDefaults() {
     super.installDefaults();
-    myPadding = UIManager.getInsets("ComboBox.padding");
+    Insets insets = UIManager.getInsets("ComboBox.padding");
+    myPadding = insets == null ? null : JBUI.insets(insets);
   }
 
   @Override
@@ -93,39 +94,25 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
     JButton button = new BasicArrowButton(SwingConstants.SOUTH, bg, fg, fg, fg) {
 
       @Override
-      public void paint(Graphics g2) {
-        final Graphics2D g = (Graphics2D)g2;
-        final GraphicsConfig config = new GraphicsConfig(g);
+      public void paint(Graphics g) {
         Color borderColor = ModernUIUtil.getBorderColor(myComboBox);
+        GraphicsConfig config = new GraphicsConfig(g);
 
         final int w = getWidth();
         final int h = getHeight();
         g.setColor(UIUtil.getControlColor());
         g.fillRect(0, 0, w, h);
         g.setColor(myComboBox.isEnabled() ? getForeground() : borderColor);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
-        g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
-        final int xU = w / 4;
-        final int yU = h / 4;
-        final Path2D.Double path = new Path2D.Double();
-        g.translate(2, 0);
-        path.moveTo(xU + 1, yU + 2);
-        path.lineTo(3 * xU + 1, yU + 2);
-        path.lineTo(2 * xU + 1, 3 * yU);
-        path.lineTo(xU + 1, yU + 2);
-        path.closePath();
-        g.fill(path);
-        g.translate(-2, 0);
-        g.setColor(borderColor);
-        g.drawLine(0, -1, 0, h);
+        GraphicsUtil.setupAAPainting(g);
+        g.drawLine(JBUI.scale(3), JBUI.scale(7), JBUI.scale(7), JBUI.scale(11));
+        g.drawLine(JBUI.scale(7), JBUI.scale(11), JBUI.scale(11), JBUI.scale(7));
         config.restore();
       }
 
       @Override
       public Dimension getPreferredSize() {
-        int size = getFont().getSize() + 4;
-        if (size % 2 == 1) size++;
+        int size = getFont().getSize() + JBUI.scale(4);
+        if (size % 2 == 1) size += JBUI.scale(1);
         return new DimensionUIResource(size, size);
       }
     };
@@ -213,7 +200,6 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
     return d;
   }
 
-
   @Override
   public void paint(Graphics g, JComponent c) {
     final Container parent = c.getParent();
@@ -288,40 +274,36 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
 
     final Graphics2D g = (Graphics2D)g2;
     final Rectangle arrowButtonBounds = arrowButton.getBounds();
-    final int xxx = arrowButtonBounds.x - 5;
+    final int xxx = arrowButtonBounds.x - JBUI.scale(5);
     final GraphicsConfig config = new GraphicsConfig(g);
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
     if (editor != null && comboBox.isEditable()) {
       ((JComponent)editor).setBorder(null);
       g.setColor(editor.getBackground());
-      g.fillRect(x + 1, y + 1, width - 2, height - 4);
+      g.fillRect(x + JBUI.scale(1), y + JBUI.scale(1), width - JBUI.scale(2), height - JBUI.scale(4));
       g.setColor(arrowButton.getBackground());
-      g.fillRect(xxx, y + 1, width - xxx, height - 4);
+      g.fillRect(xxx, y + JBUI.scale(1), width - xxx, height - JBUI.scale(4));
       g.setColor(editor.getBackground());
-      g.fillRect(xxx, y + 1, 5, height - 4);
+      g.fillRect(xxx, y + JBUI.scale(1), JBUI.scale(5), height - JBUI.scale(4));
     }
     else {
       g.setColor(UIUtil.getPanelBackground());
-      g.fillRect(x + 1, y + 1, width - 2, height - 4);
+      g.fillRect(x + JBUI.scale(1), y + JBUI.scale(1), width - JBUI.scale(2), height - JBUI.scale(4));
     }
 
     final Color borderColor = ModernUIUtil.getBorderColor(myComboBox);
-    g.setColor(borderColor);
-    int off = hasFocus ? 1 : 0;
-    g.drawLine(xxx + 5, y + 1 + off, xxx + 5, height - 3);
-
     Rectangle r = rectangleForCurrentValue();
     paintCurrentValueBackground(g, r, hasFocus);
     paintCurrentValue(g, r, hasFocus);
 
     if (hasFocus) {
       g.setColor(ModernUIUtil.getSelectionBackground());
-      g.drawRect(1, 1, width - 2, height - 4);
+      g.drawRect(JBUI.scale(1), JBUI.scale(1), width - JBUI.scale(2), height - JBUI.scale(4));
     }
     else {
       g.setColor(borderColor);
-      g.drawRect(1, 1, width - 2, height - 4);
+      g.drawRect(JBUI.scale(1), JBUI.scale(1), width - JBUI.scale(2), height - JBUI.scale(4));
     }
     config.restore();
   }
