@@ -317,6 +317,7 @@
           <orderEntry type="module" module-name="platform-api" exported="" />
           <orderEntry type="module" module-name="lang-api" exported="" />
           <orderEntry type="module" module-name="compiler-api" exported="" />
+          <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
         </module-layer>
       </module>
       <module name="platform/external-system-impl" dirurl="file://$PROJECT_DIR$/platform/external-system-impl" current-layer="Default">
