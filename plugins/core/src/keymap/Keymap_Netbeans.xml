@@ -265,6 +265,7 @@
     <action id="Print">
       <keyboard-shortcut first-keystroke="shift control alt P" />
     </action>
+    <action id="ExpressionTypeInfo"/>
     <action id="QuickImplementations" />
     <action id="RecentChangedFiles" />
     <action id="RecentChanges" />

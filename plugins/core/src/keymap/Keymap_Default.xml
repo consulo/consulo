@@ -369,6 +369,9 @@
   <action id="ParameterInfo">
     <keyboard-shortcut first-keystroke="control P"/>
   </action>
+  <action id="ExpressionTypeInfo">
+    <keyboard-shortcut first-keystroke="control shift P"/>
+  </action>
   <action id="ChangeSignature">
     <keyboard-shortcut first-keystroke="control F6"/>
   </action>

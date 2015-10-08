@@ -648,7 +648,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   public class ChangeScopeAction extends ComboBoxAction {
     @RequiredDispatchThread
     @Override
-    public final void update(final AnActionEvent e) {
+    public final void update(@NotNull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
       final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
       if (project == null) return;

@@ -51,7 +51,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
 
   @RequiredDispatchThread
   @Override
-  public abstract void update(final AnActionEvent e);
+  public abstract void update(@NotNull final AnActionEvent e);
 
   private void fillCharsetActions(@NotNull DefaultActionGroup group,
                                   @Nullable VirtualFile virtualFile,

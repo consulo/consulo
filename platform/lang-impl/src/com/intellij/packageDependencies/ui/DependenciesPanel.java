@@ -1047,7 +1047,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
     @RequiredDispatchThread
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(@NotNull final AnActionEvent e) {
       super.update(e);
       final PatternDialectProvider provider = PatternDialectProvider.getInstance(mySettings.SCOPE_TYPE);
       e.getPresentation().setText(provider.getDisplayName());

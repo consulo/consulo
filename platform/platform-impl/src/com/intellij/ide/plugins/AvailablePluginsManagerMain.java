@@ -219,7 +219,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   private class MyFilterCategoryAction extends ComboBoxAction implements DumbAware{
     @RequiredDispatchThread
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@NotNull AnActionEvent e) {
       super.update(e);
       String category = ((AvailablePluginsTableModel)pluginsModel).getCategory();
       if (category == null) {
@@ -261,7 +261,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
     @RequiredDispatchThread
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@NotNull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setVisible(!UpdateSettings.getInstance().getStoredPluginHosts().isEmpty());
       String repository = ((AvailablePluginsTableModel)pluginsModel).getRepository();

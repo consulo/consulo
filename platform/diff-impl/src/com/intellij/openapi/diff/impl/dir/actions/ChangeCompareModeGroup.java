@@ -59,7 +59,7 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
 
   @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     super.update(e);
     getTemplatePresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
     e.getPresentation().setText(mySettings.compareMode.getPresentableName(mySettings));

@@ -527,8 +527,9 @@ public abstract class DiffRequestProcessor implements Disposable {
       setEnabledInModalContext(true);
     }
 
+    @RequiredDispatchThread
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@NotNull AnActionEvent e) {
       Presentation presentation = e.getPresentation();
 
       DiffTool activeTool = myState.getActiveTool();

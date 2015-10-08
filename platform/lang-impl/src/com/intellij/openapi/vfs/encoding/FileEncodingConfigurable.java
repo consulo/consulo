@@ -94,7 +94,7 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
     ChooseFileEncodingAction myAction = new ChooseFileEncodingAction(null) {
       @RequiredDispatchThread
       @Override
-      public void update(final AnActionEvent e) {
+      public void update(@NotNull final AnActionEvent e) {
         getTemplatePresentation().setEnabled(true);
         Charset charset = selected.get();
         getTemplatePresentation().setText(charset == null ? IdeBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName()) : charset.displayName());

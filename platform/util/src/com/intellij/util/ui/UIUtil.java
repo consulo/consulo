@@ -26,6 +26,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.JBIterable;
+import com.intellij.util.containers.JBTreeTraverser;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -78,6 +80,36 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
 public class UIUtil {
+
+  public static final Key<Iterable<? extends Component>> NOT_IN_HIERARCHY_COMPONENTS = Key.create("NOT_IN_HIERARCHY_COMPONENTS");
+  private static final Function<Component, Iterable<Component>> COMPONENT_CHILDREN = new Function<Component, Iterable<Component>>() {
+    @NotNull
+    @Override
+    public JBIterable<Component> fun(@NotNull Component c) {
+      JBIterable<Component> result;
+      if (c instanceof JMenu) {
+        result = JBIterable.of(((JMenu)c).getMenuComponents());
+      }
+      else if (c instanceof Container) {
+        result = JBIterable.of(((Container)c).getComponents());
+      }
+      else {
+        result = JBIterable.empty();
+      }
+      if (c instanceof JComponent) {
+        JComponent jc = (JComponent)c;
+        Iterable<? extends Component> orphans = getClientProperty(jc, NOT_IN_HIERARCHY_COMPONENTS);
+        if (orphans != null) {
+          result = result.append(orphans);
+        }
+        JPopupMenu jpm = jc.getComponentPopupMenu();
+        if (jpm != null && jpm.isVisible() && jpm.getInvoker() == jc) {
+          result = result.append(Collections.singletonList(jpm));
+        }
+      }
+      return result;
+    }
+  };
 
   public static int getMultiClickInterval() {
     Object property = Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
@@ -184,6 +216,16 @@ public class UIUtil {
 
   public static boolean isAppleRetina() {
     return isRetina() && SystemInfo.isAppleJvm;
+  }
+
+  @NotNull
+  public static JBTreeTraverser<Component> uiTraverser() {
+    return new JBTreeTraverser<Component>(COMPONENT_CHILDREN);
+  }
+
+  @NotNull
+  public static JBTreeTraverser<Component> uiTraverser(@Nullable Component component) {
+    return new JBTreeTraverser<Component>(COMPONENT_CHILDREN).withRoot(component);
   }
 
   public enum FontSize {NORMAL, SMALL, MINI}

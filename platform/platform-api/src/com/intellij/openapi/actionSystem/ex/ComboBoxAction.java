@@ -34,7 +34,6 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.UserActivityProviderComponent;
-import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
@@ -60,14 +59,14 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CUSTOM_COMPONENT_PROPERTY);
     if (button == null) {
       Component contextComponent = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
       JRootPane rootPane = UIUtil.getParentOfType(JRootPane.class, contextComponent);
       if (rootPane != null) {
         button = (ComboBoxButton)
-                JBSwingUtilities.uiTraverser().bfsTraversal(rootPane).filter(new Condition<Component>() {
+                UIUtil.uiTraverser().withRoot(rootPane).bfsTraversal().filter(new Condition<Component>() {
                   @Override
                   public boolean value(Component component) {
                     return component instanceof ComboBoxButton && ((ComboBoxButton)component).getMyAction() == ComboBoxAction.this;
@@ -107,7 +106,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
   @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
   }
 
   protected boolean shouldShowDisabledActions() {

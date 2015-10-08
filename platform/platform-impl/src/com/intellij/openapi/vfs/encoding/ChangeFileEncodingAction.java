@@ -116,7 +116,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     return new ChooseFileEncodingAction(myFile) {
      @RequiredDispatchThread
      @Override
-     public void update(final AnActionEvent e) {
+     public void update(@NotNull final AnActionEvent e) {
      }
 
      @NotNull

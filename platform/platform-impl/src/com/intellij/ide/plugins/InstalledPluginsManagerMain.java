@@ -338,7 +338,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
     @RequiredDispatchThread
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@NotNull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setText(((InstalledPluginsTableModel)pluginsModel).getEnabledFilter());
     }

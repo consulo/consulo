@@ -40,6 +40,7 @@ import com.intellij.ui.ToggleActionButton;
 import com.intellij.util.EditorPopupHandler;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -139,8 +140,9 @@ public class TextDiffViewerUtil {
       setEnabledInModalContext(true);
     }
 
+    @RequiredDispatchThread
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@NotNull AnActionEvent e) {
       Presentation presentation = e.getPresentation();
       presentation.setText(getText(getCurrentSetting()));
     }

@@ -160,7 +160,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
           final ChooseSomethingAction changeAction = new ChooseSomethingAction(myVirtualFile) {
             @RequiredDispatchThread
             @Override
-            public void update(final AnActionEvent e) {
+            public void update(@NotNull final AnActionEvent e) {
               boolean enabled = isValueEditableForFile(myVirtualFile);
               if (myVirtualFile != null) {
                 final T mapping = myMappings.getMapping(myVirtualFile);
