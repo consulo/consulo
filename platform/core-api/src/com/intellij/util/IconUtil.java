@@ -329,6 +329,52 @@ public class IconUtil {
   }
 
   @NotNull
+  public static Icon colorize(@NotNull final Icon source, @NotNull Color color) {
+    return colorize(source, color, false);
+  }
+
+  @NotNull
+  public static Icon colorize(@NotNull final Icon source, @NotNull Color color, boolean keepGray) {
+    float[] base = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+
+    final BufferedImage image = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
+    final Graphics2D g = image.createGraphics();
+    source.paintIcon(null, g, 0, 0);
+    g.dispose();
+
+    final BufferedImage img = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
+    int[] rgba = new int[4];
+    float[] hsb = new float[3];
+    for (int y = 0; y < image.getRaster().getHeight(); y++) {
+      for (int x = 0; x < image.getRaster().getWidth(); x++) {
+        image.getRaster().getPixel(x, y, rgba);
+        if (rgba[3] != 0) {
+          Color.RGBtoHSB(rgba[0], rgba[1], rgba[2], hsb);
+          int rgb = Color.HSBtoRGB(base[0], base[1] * (keepGray ? hsb[1] : 1f), base[2] * hsb[2]);
+          img.getRaster().setPixel(x, y, new int[]{rgb >> 16 & 0xff, rgb >> 8 & 0xff, rgb & 0xff, rgba[3]});
+        }
+      }
+    }
+
+    return createImageIcon(img);
+  }
+
+  @NotNull
+  public static JBImageIcon createImageIcon(@NotNull final BufferedImage img) {
+    return new JBImageIcon(img) {
+      @Override
+      public int getIconWidth() {
+        return getImage() instanceof JBHiDPIScaledImage ? super.getIconWidth() / 2 : super.getIconWidth();
+      }
+
+      @Override
+      public int getIconHeight() {
+        return getImage() instanceof JBHiDPIScaledImage ? super.getIconHeight() / 2: super.getIconHeight();
+      }
+    };
+  }
+
+  @NotNull
   public static Icon textToIcon(final String text, final Component component, final float fontSize) {
     final Font font = JBFont.create(JBUI.Fonts.label().deriveFont(fontSize));
     FontMetrics metrics = component.getFontMetrics(font);

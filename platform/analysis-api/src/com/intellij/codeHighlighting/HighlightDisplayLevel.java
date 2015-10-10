@@ -15,6 +15,7 @@
  */
 package com.intellij.codeHighlighting;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -22,6 +23,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.JBColor;
+import com.intellij.util.IconUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.ColorIcon;
@@ -36,11 +38,16 @@ import java.util.Map;
 public class HighlightDisplayLevel {
   private static final Map<HighlightSeverity, HighlightDisplayLevel> ourMap = new HashMap<HighlightSeverity, HighlightDisplayLevel>();
 
-  public static final HighlightDisplayLevel GENERIC_SERVER_ERROR_OR_WARNING = new HighlightDisplayLevel(HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING,
-                                                                                                        createIconByKey(CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING));
-  public static final HighlightDisplayLevel ERROR = new HighlightDisplayLevel(HighlightSeverity.ERROR, createIconByKey(CodeInsightColors.ERRORS_ATTRIBUTES));
-  public static final HighlightDisplayLevel WARNING = new HighlightDisplayLevel(HighlightSeverity.WARNING, createIconByKey(CodeInsightColors.WARNINGS_ATTRIBUTES));
-  private static final Icon DO_NOT_SHOW_KEY = createIconByKey(TextAttributesKey.createTextAttributesKey("DO_NOT_SHOW"));
+  public static final HighlightDisplayLevel GENERIC_SERVER_ERROR_OR_WARNING =
+          new HighlightDisplayLevel(HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING, createBoxIcon(CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING));
+
+  public static final HighlightDisplayLevel ERROR =
+          new HighlightDisplayLevel(HighlightSeverity.ERROR, createErrorIcon(CodeInsightColors.ERRORS_ATTRIBUTES));
+
+  public static final HighlightDisplayLevel WARNING =
+          new HighlightDisplayLevel(HighlightSeverity.WARNING, createBoxIcon(CodeInsightColors.WARNINGS_ATTRIBUTES));
+
+  private static final Icon DO_NOT_SHOW_KEY = createBoxIcon(TextAttributesKey.createTextAttributesKey("DO_NOT_SHOW"));
   public static final HighlightDisplayLevel DO_NOT_SHOW = new HighlightDisplayLevel(HighlightSeverity.INFORMATION, DO_NOT_SHOW_KEY);
   /**
    * use #WEAK_WARNING instead
@@ -96,12 +103,12 @@ public class HighlightDisplayLevel {
   }
 
   @NotNull
-  public HighlightSeverity getSeverity(){
+  public HighlightSeverity getSeverity() {
     return mySeverity;
   }
 
-  public static void registerSeverity(@NotNull HighlightSeverity severity, final TextAttributesKey key) {
-    Icon severityIcon = createIconByKey(key);
+  public static void registerSeverity(@NotNull HighlightSeverity severity, final TextAttributesKey key, @Nullable Icon icon) {
+    Icon severityIcon = icon != null ? icon : createBoxIcon(key);
     final HighlightDisplayLevel level = ourMap.get(severity);
     if (level == null) {
       new HighlightDisplayLevel(severity, severityIcon);
@@ -115,8 +122,18 @@ public class HighlightDisplayLevel {
     return JBUI.scaleIconSize(12);
   }
 
-  public static Icon createIconByKey(@NotNull TextAttributesKey key) {
+  public static Icon createBoxIcon(@NotNull TextAttributesKey key) {
     return new SingleColorIcon(key);
+  }
+
+  @NotNull
+  private static Icon createErrorIcon(@NotNull TextAttributesKey textAttributesKey) {
+    return new SingleColorIcon(textAttributesKey) {
+      @Override
+      public void paintIcon(Component c, Graphics g, int x, int y) {
+        IconUtil.colorize(AllIcons.General.InspectionsError, getColor()).paintIcon(c, g, x, y);
+      }
+    };
   }
 
   @NotNull

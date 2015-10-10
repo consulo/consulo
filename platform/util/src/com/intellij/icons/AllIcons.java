@@ -403,9 +403,13 @@ public class AllIcons {
     public static final Icon Information = IconLoader.getIcon("/general/information.png"); // 16x16
     public static final Icon InformationDialog = IconLoader.getIcon("/general/informationDialog.png"); // 32x32
     public static final Icon InheritedMethod = IconLoader.getIcon("/general/inheritedMethod.png"); // 11x14
-    public static final Icon InspectionsEye = IconLoader.getIcon("/general/inspectionsEye.png"); // 16x16
+    public static final Icon InspectionsError = IconLoader.getIcon("/general/inspectionsError.png"); // 14x14
+    public static final Icon InspectionsEye = IconLoader.getIcon("/general/inspectionsEye.png"); // 14x14
     public static final Icon InspectionsOff = IconLoader.getIcon("/general/inspectionsOff.png"); // 16x16
-    public static final Icon InspectionsPause = IconLoader.getIcon("/general/inspectionsPause.png"); // 12x12
+    public static final Icon InspectionsOK = IconLoader.getIcon("/general/inspectionsOK.png"); // 14x14
+    public static final Icon InspectionsPause = IconLoader.getIcon("/general/inspectionsPause.png"); // 14x14
+    public static final Icon InspectionsTrafficOff = IconLoader.getIcon("/general/inspectionsTrafficOff.png"); // 14x14
+    public static final Icon InspectionsTypos = IconLoader.getIcon("/general/inspectionsTypos.png"); // 14x14
     public static final Icon Jdk = IconLoader.getIcon("/general/jdk.png"); // 16x16
     public static final Icon Youtube = IconLoader.getIcon("/general/youtube.png"); // 32x32
     public static final Icon KeyboardShortcut = IconLoader.getIcon("/general/keyboardShortcut.png"); // 13x13

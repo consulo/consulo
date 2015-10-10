@@ -36,6 +36,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+
 public interface HighlightInfoType {
   @NonNls String UNUSED_SYMBOL_SHORT_NAME = "UNUSED_SYMBOL";
   @NonNls String UNUSED_SYMBOL_DISPLAY_NAME = InspectionsBundle.message("unused.symbol");
@@ -233,5 +235,10 @@ public interface HighlightInfoType {
     public HighlightDisplayKey getSeverityKey() {
       return myToolKey;
     }
+  }
+
+  interface Iconable {
+    @NotNull
+    Icon getIcon();
   }
 }
