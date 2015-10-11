@@ -30,10 +30,11 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
-import lombok.val;
+import com.intellij.psi.PsiFileSystemItem;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
@@ -72,8 +73,9 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     super(IdeBundle.message("action.create.new.directory.or.package"), IdeBundle.message("action.create.new.directory.or.package"), null);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     IdeView view = e.getData(LangDataKeys.IDE_VIEW);
     Project project = e.getData(CommonDataKeys.PROJECT);
 
@@ -81,27 +83,28 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
       return;
     }
 
-    val directory = DirectoryChooserUtil.getOrChooseDirectory(view);
+    PsiDirectory directory = DirectoryChooserUtil.getOrChooseDirectory(view);
 
     if (directory == null) {
       return;
     }
 
-    val info = getInfo(directory);
+    Trinity<ContentFolderTypeProvider, PsiDirectory, ChildType> info = getInfo(directory);
 
-    val validator =
+    CreateDirectoryOrPackageHandler validator =
       new CreateDirectoryOrPackageHandler(project, directory, info.getThird() == ChildType.Directory, info.getThird().getSeparator());
     Messages.showInputDialog(project, IdeBundle.message("prompt.enter.new.name"), info.getThird().getName(), Messages.getQuestionIcon(), "",
                              validator);
 
-    val result = validator.getCreatedElement();
+    PsiFileSystemItem result = validator.getCreatedElement();
     if (result != null) {
       view.selectElement(result);
     }
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@NotNull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
 
     Project project = event.getData(CommonDataKeys.PROJECT);
@@ -134,11 +137,11 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
       presentation.setIcon(AllIcons.Nodes.TreeClosed);
     }
     else {
-      val info = getInfo(directories[0]);
+      Trinity<ContentFolderTypeProvider, PsiDirectory, ChildType> info = getInfo(directories[0]);
 
       presentation.setText(info.getThird().getName());
 
-      val first = info.getFirst();
+      ContentFolderTypeProvider first = info.getFirst();
       Icon childIcon;
       if (first == null) {
         childIcon = AllIcons.Nodes.TreeClosed;
@@ -151,9 +154,10 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
   }
 
   @NotNull
+  @RequiredDispatchThread
   private static Trinity<ContentFolderTypeProvider, PsiDirectory, ChildType> getInfo(PsiDirectory d) {
-    val project = d.getProject();
-    val projectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
+    Project project = d.getProject();
+    ProjectFileIndex projectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
 
     Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(d);
     if(moduleForPsiElement != null) {
@@ -170,9 +174,9 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
       }
 
       if(isPackageSupported) {
-        val contentFolderTypeForFile = projectFileIndex.getContentFolderTypeForFile(d.getVirtualFile());
+        ContentFolderTypeProvider contentFolderTypeForFile = projectFileIndex.getContentFolderTypeForFile(d.getVirtualFile());
         if (contentFolderTypeForFile != null) {
-          val childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
+          Icon childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
           return Trinity.create(contentFolderTypeForFile, d, childPackageIcon != null ? ChildType.Package : ChildType.Directory);
         }
       }
