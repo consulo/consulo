@@ -36,8 +36,8 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -76,6 +76,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   }
 
   @Override
+  @RequiredDispatchThread
   public boolean checkInput(String inputString) {
     final StringTokenizer tokenizer = new StringTokenizer(inputString, myDelimiters);
     VirtualFile vFile = myDirectory.getVirtualFile();
@@ -122,7 +123,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
                       " with an ignored name, the result will not be visible";
         return true;
       }
-      if (!myIsDirectory && token.length() > 0 && !PsiPackageHelper.getInstance(myProject).isValidPackageName(token)) {
+      if (!myIsDirectory && token.length() > 0 && !PsiPackageManager.getInstance(myDirectory.getProject()).isValidPackageName(myDirectory, token)) {
         myErrorText = "Not a valid package name, it will not be possible to create a class inside";
         return true;
       }
@@ -137,6 +138,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     return myErrorText;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean canClose(final String subDirName) {
 

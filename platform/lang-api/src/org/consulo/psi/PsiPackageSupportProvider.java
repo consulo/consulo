@@ -29,6 +29,8 @@ public interface PsiPackageSupportProvider {
 
   boolean isSupported(@NotNull ModuleExtension moduleExtension);
 
+  boolean isValidPackageName(@NotNull String packageName);
+
   @NotNull
   PsiPackage createPackage(@NotNull PsiManager psiManager,
                            @NotNull PsiPackageManager packageManager,

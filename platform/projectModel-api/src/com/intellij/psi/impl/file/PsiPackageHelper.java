@@ -38,6 +38,4 @@ public abstract class PsiPackageHelper {
   public abstract PsiDirectoryContainer getDirectoryContainer(@NotNull PsiDirectory directory);
 
   public abstract boolean isPackage(PsiDirectory directory);
-
-  public abstract boolean isValidPackageName(String name);
 }

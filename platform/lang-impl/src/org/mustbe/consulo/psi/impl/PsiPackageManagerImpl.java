@@ -16,9 +16,11 @@
 package org.mustbe.consulo.psi.impl;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
@@ -34,10 +36,12 @@ import com.intellij.util.messages.MessageBus;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
-import org.consulo.psi.PsiPackageResolver;
+import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
@@ -46,7 +50,6 @@ import java.util.concurrent.ConcurrentMap;
  * @since 8:05/20.05.13
  */
 public class PsiPackageManagerImpl extends PsiPackageManager {
-
   private final Project myProject;
   private final DirectoryIndex myDirectoryIndex;
 
@@ -59,7 +62,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
   });
 
   private Map<Class<? extends ModuleExtension>, ConcurrentMap<String, PsiPackage>> myPackageCache =
-    new ConcurrentHashMap<Class<? extends ModuleExtension>, ConcurrentMap<String, PsiPackage>>();
+          new ConcurrentHashMap<Class<? extends ModuleExtension>, ConcurrentMap<String, PsiPackage>>();
 
   public PsiPackageManagerImpl(Project project, PsiManager psiManager, DirectoryIndex directoryIndex, MessageBus bus) {
     myProject = project;
@@ -88,6 +91,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     myPackageCache.remove(extensionClass);
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiPackage findPackage(@NotNull String qualifiedName, @NotNull Class<? extends ModuleExtension> extensionClass) {
@@ -118,16 +122,68 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     }
 
     for (VirtualFile next : dirs) {
-      for (PsiPackageResolver psiPackageResolver : PsiPackageResolver.EP_NAME.getExtensions()) {
-        final PsiPackage psiPackage = psiPackageResolver.resolvePackage(this, next, extensionClass, qualifiedName);
-        if (psiPackage != null) {
-          return psiPackage;
+      PsiPackage packageFromProviders = createPackageFromProviders(next, extensionClass, qualifiedName);
+      if (packageFromProviders != null) {
+        return packageFromProviders;
+      }
+
+      PsiPackage packageFromLibrary = createPackageFromLibrary(next, extensionClass, qualifiedName);
+      if (packageFromLibrary != null) {
+        return packageFromLibrary;
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  private PsiPackage createPackageFromProviders(@NotNull VirtualFile virtualFile,
+                                                @NotNull Class<? extends ModuleExtension> extensionClass,
+                                                @NotNull String qualifiedName) {
+    final Module moduleForFile = ModuleUtil.findModuleForFile(virtualFile, myProject);
+    if (moduleForFile == null) {
+      return null;
+    }
+
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForFile);
+
+    final ModuleExtension extension = moduleRootManager.getExtension(extensionClass);
+    if (extension == null) {
+      return null;
+    }
+
+    PsiManager psiManager = PsiManager.getInstance(myProject);
+    for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+      if (p.isSupported(extension)) {
+        return p.createPackage(psiManager, this, extensionClass, qualifiedName);
+      }
+    }
+    return null;
+  }
+
+  private PsiPackage createPackageFromLibrary(@NotNull VirtualFile virtualFile,
+                                              @NotNull Class<? extends ModuleExtension> extensionClass,
+                                              @NotNull String qualifiedName) {
+    ProjectFileIndex fileIndexFacade = ProjectFileIndex.SERVICE.getInstance(myProject);
+    PsiManager psiManager = PsiManager.getInstance(myProject);
+    if (fileIndexFacade.isInLibraryClasses(virtualFile)) {
+
+      List<OrderEntry> orderEntriesForFile = fileIndexFacade.getOrderEntriesForFile(virtualFile);
+      for (OrderEntry orderEntry : orderEntriesForFile) {
+        Module ownerModule = orderEntry.getOwnerModule();
+        ModuleExtension extension = ModuleUtilCore.getExtension(ownerModule, extensionClass);
+        if (extension != null) {
+          for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+            if (p.isSupported(extension)) {
+              return p.createPackage(psiManager, this, extensionClass, qualifiedName);
+            }
+          }
         }
       }
     }
     return null;
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiPackage findPackage(@NotNull PsiDirectory directory, @NotNull Class<? extends ModuleExtension> extensionClass) {
@@ -139,6 +195,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     return findPackage(packageName, extensionClass);
   }
 
+  @RequiredReadAction
   @Override
   public PsiPackage findAnyPackage(@NotNull PsiDirectory directory) {
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(directory.getProject()).getFileIndex();
@@ -153,7 +210,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     }
 
     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-    for (ModuleExtension moduleExtension : rootManager.getExtensions()) {
+    for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {
       final PsiPackage aPackage = findPackage(packageName, moduleExtension.getClass());
       if (aPackage != null) {
         return aPackage;
@@ -162,20 +219,31 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public PsiPackage findAnyPackage(@NotNull String packageName) {
     for (ConcurrentMap<String, PsiPackage> map : myPackageCache.values()) {
       PsiPackage psiPackage = map.get(packageName);
-      if(psiPackage != null) {
+      if (psiPackage != null) {
         return psiPackage;
       }
     }
     return null;
   }
 
-  @NotNull
+  @RequiredReadAction
   @Override
-  public Project getProject() {
-    return myProject;
+  public boolean isValidPackageName(@NotNull Module module, @NotNull String packageName) {
+    PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();
+
+    ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+    for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {
+      for (PsiPackageSupportProvider provider : extensions) {
+        if (provider.isSupported(moduleExtension)) {
+          return provider.isValidPackageName(packageName);
+        }
+      }
+    }
+    return true;
   }
 }

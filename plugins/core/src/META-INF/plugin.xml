@@ -1102,7 +1102,6 @@
     <extensionPoint name="testFramework" interface="com.intellij.testIntegration.TestFramework"/>
     <extensionPoint name="unusedDeclarationFixProvider"
                     interface="com.intellij.codeInspection.reference.UnusedDeclarationFixProvider"/>
-    <extensionPoint name="psi.packageResolver" interface="org.consulo.psi.PsiPackageResolver"/>
     <extensionPoint name="library.dependencyScopeSuggester" interface="com.intellij.openapi.roots.LibraryDependencyScopeSuggester"/>
 
     <extensionPoint name="eventLogCategory" interface="com.intellij.notification.EventLogCategory"/>
@@ -2488,8 +2487,6 @@
 
 
     <iconDescriptorUpdater implementation="com.intellij.psi.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
-    <psi.packageResolver implementation="org.mustbe.consulo.psi.impl.DefaultPsiPackageResolver"/>
-    <psi.packageResolver implementation="org.mustbe.consulo.psi.impl.LibraryPsiPackageResolver"/>
 
     <lang.ast.lazyFactory implementation="com.intellij.lang.impl.DefaultASTLazyFactory" order="last"/>
     <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last"/>

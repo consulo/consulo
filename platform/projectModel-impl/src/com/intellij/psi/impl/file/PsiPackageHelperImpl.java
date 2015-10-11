@@ -51,9 +51,4 @@ public class PsiPackageHelperImpl extends PsiPackageHelper {
   public boolean isPackage(PsiDirectory directory) {
     return PsiPackageManager.getInstance(myManager.getProject()).findAnyPackage(directory) != null;
   }
-
-  @Override
-  public boolean isValidPackageName(String name) {
-    return true;
-  }
 }

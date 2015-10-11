@@ -37,6 +37,11 @@ public class Sand2PackageProvider implements PsiPackageSupportProvider {
     return moduleExtension instanceof Sand2ModuleExtension;
   }
 
+  @Override
+  public boolean isValidPackageName(@NotNull String packageName) {
+    return true;
+  }
+
   @NotNull
   @Override
   public PsiPackage createPackage(@NotNull PsiManager psiManager,

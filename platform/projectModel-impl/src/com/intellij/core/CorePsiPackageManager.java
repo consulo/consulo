@@ -11,6 +11,7 @@ import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +40,14 @@ public abstract class CorePsiPackageManager extends PsiPackageManager {
 
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiPackage findPackage(@NotNull String qualifiedName, @NotNull Class<? extends ModuleExtension> extensionClass) {
     return createPackage(myPsiManager, this, extensionClass, qualifiedName);
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiPackage findPackage(@NotNull PsiDirectory directory, @NotNull Class<? extends ModuleExtension> extensionClass) {
@@ -61,22 +64,18 @@ public abstract class CorePsiPackageManager extends PsiPackageManager {
     return null;
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiPackage findAnyPackage(@NotNull PsiDirectory directory) {
     return findPackage(directory, CoreModuleExtension.class);
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiPackage findAnyPackage(@NotNull String packageName) {
     return null;
-  }
-
-  @NotNull
-  @Override
-  public Project getProject() {
-    return myProject;
   }
 
   private List<VirtualFile> roots() {

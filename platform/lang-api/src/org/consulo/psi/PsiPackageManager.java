@@ -16,11 +16,14 @@
 package org.consulo.psi;
 
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -35,17 +38,27 @@ public abstract class PsiPackageManager {
   public abstract void dropCache(@NotNull Class<? extends ModuleExtension> extensionClass);
 
   @Nullable
+  @RequiredReadAction
   public abstract PsiPackage findPackage(@NotNull String qualifiedName, @NotNull Class<? extends ModuleExtension> extensionClass);
 
   @Nullable
+  @RequiredReadAction
   public abstract PsiPackage findPackage(@NotNull PsiDirectory directory, @NotNull Class<? extends ModuleExtension> extensionClass);
 
   @Nullable
+  @RequiredReadAction
   public abstract PsiPackage findAnyPackage(@NotNull PsiDirectory directory);
 
   @Nullable
+  @RequiredReadAction
   public abstract PsiPackage findAnyPackage(@NotNull String packageName);
 
-  @NotNull
-  public abstract Project getProject();
+  @RequiredReadAction
+  public boolean isValidPackageName(@NotNull PsiDirectory directory, @NotNull String packageName) {
+    Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(directory);
+    return moduleForPsiElement == null || isValidPackageName(moduleForPsiElement, packageName);
+  }
+
+  @RequiredReadAction
+  public abstract boolean isValidPackageName(@NotNull Module module, @NotNull String packageName);
 }
