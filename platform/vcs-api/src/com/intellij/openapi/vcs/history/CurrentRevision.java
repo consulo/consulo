@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.vcs.history;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
@@ -33,27 +35,36 @@ public class CurrentRevision implements VcsFileRevision {
   private final VirtualFile myFile;
   public static final String CURRENT = VcsBundle.message("vcs.revision.name.current");
   private final VcsRevisionNumber myRevisionNumber;
-  
+
   public CurrentRevision(VirtualFile file, VcsRevisionNumber revision) {
     myFile = file;
     myRevisionNumber = revision;
   }
 
+  @Override
   public String getCommitMessage() {
     return "[" + CURRENT + "]";
   }
 
+  @Override
   public byte[] loadContent() throws IOException, VcsException {
     return getContent();
   }
 
+  @Override
   public Date getRevisionDate() {
     return new Date(myFile.getTimeStamp());
   }
 
+  @Override
   public byte[] getContent() throws IOException, VcsException {
     try {
-      Document document = FileDocumentManager.getInstance().getDocument(myFile);
+      Document document = ApplicationManager.getApplication().runReadAction(new Computable<Document>() {
+        @Override
+        public Document compute() {
+          return FileDocumentManager.getInstance().getDocument(myFile);
+        }
+      });
       if (document != null) {
         return document.getText().getBytes(myFile.getCharset().name());
       }
@@ -73,14 +84,17 @@ public class CurrentRevision implements VcsFileRevision {
 
   }
 
+  @Override
   public String getAuthor() {
     return "";
   }
 
+  @Override
   public VcsRevisionNumber getRevisionNumber() {
     return myRevisionNumber;
   }
 
+  @Override
   public String getBranchName() {
     return null;
   }
