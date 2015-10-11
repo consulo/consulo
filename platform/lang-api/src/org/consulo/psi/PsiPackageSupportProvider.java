@@ -16,6 +16,7 @@
 package org.consulo.psi;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiManager;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,7 @@ public interface PsiPackageSupportProvider {
 
   boolean isSupported(@NotNull ModuleExtension moduleExtension);
 
-  boolean isValidPackageName(@NotNull String packageName);
+  boolean isValidPackageName(@NotNull Module module, @NotNull String packageName);
 
   @NotNull
   PsiPackage createPackage(@NotNull PsiManager psiManager,

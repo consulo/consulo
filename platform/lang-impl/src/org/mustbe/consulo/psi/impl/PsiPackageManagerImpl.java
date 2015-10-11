@@ -240,7 +240,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {
       for (PsiPackageSupportProvider provider : extensions) {
         if (provider.isSupported(moduleExtension)) {
-          return provider.isValidPackageName(packageName);
+          return provider.isValidPackageName(module, packageName);
         }
       }
     }

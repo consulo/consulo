@@ -16,6 +16,7 @@
 package org.mustbe.consulo.sandLanguage.ide.module;
 
 import com.intellij.lang.Language;
+import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageBase;
 import com.intellij.util.ArrayFactory;
@@ -24,6 +25,7 @@ import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.sandLanguage.ide.module.extension.Sand2ModuleExtension;
 import org.mustbe.consulo.sandLanguage.lang.SandLanguage;
 
@@ -38,7 +40,7 @@ public class Sand2PackageProvider implements PsiPackageSupportProvider {
   }
 
   @Override
-  public boolean isValidPackageName(@NotNull String packageName) {
+  public boolean isValidPackageName(@NotNull Module module, @NotNull String packageName) {
     return true;
   }
 
@@ -54,6 +56,7 @@ public class Sand2PackageProvider implements PsiPackageSupportProvider {
         return PsiPackage.ARRAY_FACTORY;
       }
 
+      @RequiredReadAction
       @NotNull
       @Override
       public Language getLanguage() {
