@@ -44,6 +44,45 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 public class FileEncodingConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+
+  private static class MyChooseFileEncodingAction extends ChooseFileEncodingAction {
+    private final Ref<Charset> mySelected;
+
+    public MyChooseFileEncodingAction(Ref<Charset> selected) {
+      super(null);
+      mySelected = selected;
+    }
+
+    @RequiredDispatchThread
+    @Override
+    public void update(@NotNull final AnActionEvent e) {
+      update();
+    }
+
+    public void update() {
+      getTemplatePresentation().setEnabled(true);
+      Charset charset = mySelected.get();
+      getTemplatePresentation().setText(charset == null ? IdeBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName()) : charset.displayName());
+    }
+
+    @Override
+    protected void chosen(final VirtualFile virtualFile, @NotNull final Charset charset) {
+      mySelected.set(charset == NO_ENCODING ? null : charset);
+      update();
+    }
+
+    @NotNull
+    @Override
+    protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+      return createCharsetsActionGroup("<System Default>", mySelected.get(), new Function<Charset, String>() {
+        @Override
+        public String fun(Charset charset) {
+          return "Choose encoding '" + charset + "'";
+        }
+      });
+    }
+  }
+
   private final Project myProject;
   private EncodingFileTreeTable myTreeView;
   private JScrollPane myTreePanel;
@@ -56,9 +95,9 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
   private JLabel myTitleLabel;
   private JPanel myIdeEncodingsListCombo;
   private JPanel myProjectEncodingListCombo;
-  private ChooseFileEncodingAction myPropertiesEncodingAction;
-  private ChooseFileEncodingAction myIdeEncodingAction;
-  private ChooseFileEncodingAction myProjectEncodingAction;
+  private MyChooseFileEncodingAction myPropertiesEncodingAction;
+  private MyChooseFileEncodingAction myIdeEncodingAction;
+  private MyChooseFileEncodingAction myProjectEncodingAction;
 
   public FileEncodingConfigurable(@NotNull Project project) {
     myProject = project;
@@ -90,38 +129,13 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
   }
 
   @NotNull
-  private static ChooseFileEncodingAction installChooseEncodingCombo(@NotNull JPanel parentPanel, @NotNull final Ref<Charset> selected) {
-    ChooseFileEncodingAction myAction = new ChooseFileEncodingAction(null) {
-      @RequiredDispatchThread
-      @Override
-      public void update(@NotNull final AnActionEvent e) {
-        getTemplatePresentation().setEnabled(true);
-        Charset charset = selected.get();
-        getTemplatePresentation().setText(charset == null ? IdeBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName()) : charset.displayName());
-      }
-
-      @Override
-      protected void chosen(final VirtualFile virtualFile, @NotNull final Charset charset) {
-        selected.set(charset == NO_ENCODING ? null : charset);
-        update(null);
-      }
-
-      @NotNull
-      @Override
-      protected DefaultActionGroup createPopupActionGroup(JComponent button) {
-        return createCharsetsActionGroup("<System Default>", selected.get(), new Function<Charset, String>() {
-          @Override
-          public String fun(Charset charset) {
-            return "Choose encoding '" + charset + "'";
-          }
-        });
-      }
-    };
+  private static MyChooseFileEncodingAction installChooseEncodingCombo(@NotNull JPanel parentPanel, @NotNull final Ref<Charset> selected) {
+    MyChooseFileEncodingAction action = new MyChooseFileEncodingAction(selected);
     parentPanel.removeAll();
-    Presentation templatePresentation = myAction.getTemplatePresentation();
-    parentPanel.add(myAction.createCustomComponent(templatePresentation), BorderLayout.CENTER);
-    myAction.update(null);
-    return myAction;
+    Presentation templatePresentation = action.getTemplatePresentation();
+    parentPanel.add(action.createCustomComponent(templatePresentation), BorderLayout.CENTER);
+    action.update();
+    return action;
   }
 
   @Override
@@ -189,9 +203,9 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
 
     mySelectedIdeCharset.set(EncodingManager.getInstance().getDefaultCharsetName().isEmpty() ? null : EncodingManager.getInstance().getDefaultCharset());
     mySelectedProjectCharset.set(EncodingProjectManager.getInstance(myProject).getDefaultCharsetName().isEmpty() ? null : EncodingProjectManager.getInstance(myProject).getDefaultCharset());
-    myPropertiesEncodingAction.update(null);
-    myIdeEncodingAction.update(null);
-    myProjectEncodingAction.update(null);
+    myPropertiesEncodingAction.update();
+    myIdeEncodingAction.update();
+    myProjectEncodingAction.update();
   }
 
   @Override
