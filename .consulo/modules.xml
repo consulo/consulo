@@ -493,6 +493,7 @@
           <orderEntry type="library" name="jcip" level="project" />
           <orderEntry type="module" module-name="lang-api" />
           <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
       <module name="platform/platform-api" dirurl="file://$PROJECT_DIR$/platform/platform-api" current-layer="Default">
@@ -628,6 +629,7 @@
           <orderEntry type="module" module-name="vcs-impl" />
           <orderEntry type="module" module-name="platform-resources" />
           <orderEntry type="module" module-name="xdebugger-impl" />
+          <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
       <module name="platform/projectImportModel" dirurl="file://$PROJECT_DIR$/platform/projectImportModel" current-layer="Default">
@@ -950,6 +952,7 @@
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="testFramework" />
           <orderEntry type="module" module-name="platform-resources" />
+          <orderEntry type="module" module-name="diff-api" />
         </module-layer>
       </module>
       <module name="updater" dirurl="file://$PROJECT_DIR$/tools/updater" current-layer="Default">

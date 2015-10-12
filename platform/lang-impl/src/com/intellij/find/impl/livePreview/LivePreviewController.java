@@ -42,7 +42,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
 
   public static final int USER_ACTIVITY_TRIGGERING_DELAY = 30;
   public static final int MATCHES_LIMIT = 10000;
-  protected EditorSearchComponent myComponent;
+  protected EditorSearchSession myComponent;
 
   private int myUserActivityDelay = USER_ACTIVITY_TRIGGERING_DELAY;
 
@@ -111,7 +111,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
     return myReplaceDenied;
   }
 
-  public LivePreviewController(SearchResults searchResults, @Nullable EditorSearchComponent component) {
+  public LivePreviewController(SearchResults searchResults, @Nullable EditorSearchSession component) {
     mySearchResults = searchResults;
     myComponent = component;
     getEditor().getDocument().addDocumentListener(myDocumentListener);
@@ -155,7 +155,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
       return null;
     }
     String foundString = editor.getDocument().getText(findResult);
-    String documentText = editor.getDocument().getText();
+    CharSequence documentText = editor.getDocument().getImmutableCharSequence();
     FindModel currentModel = mySearchResults.getFindModel();
     String stringToReplace = null;
 
@@ -199,7 +199,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
       final SelectionModel selectionModel = mySearchResults.getEditor().getSelectionModel();
 
       final int offset;
-      if ((!selectionModel.hasSelection() && !selectionModel.hasBlockSelection()) || copy.isGlobal()) {
+      if (!selectionModel.hasSelection() || copy.isGlobal()) {
         copy.setGlobal(true);
         offset = 0;
       } else {
@@ -220,10 +220,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
   }
 
   public boolean canReplace() {
-    if (mySearchResults != null && mySearchResults.getCursor() != null &&
-        !isReplaceDenied() && (mySearchResults.getFindModel().isGlobal() ||
-                               !mySearchResults.getEditor().getSelectionModel()
-                                       .hasBlockSelection()) ) {
+    if (mySearchResults != null && mySearchResults.getCursor() != null && !isReplaceDenied()) {
 
       final String replacement = getStringToReplace(getEditor(), mySearchResults.getCursor());
       return replacement != null;
@@ -246,7 +243,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
       mySuppressUpdate = false;
     }
     if (myComponent != null) {
-      myComponent.addTextToRecent(myComponent.getReplaceField());
+      myComponent.addTextToRecent(myComponent.getComponent().getReplaceTextComponent());
       myComponent.clearUndoInTextFields();
     }
   }
@@ -277,7 +274,6 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
   public void dispose() {
     if (myDisposed) return;
 
-    myLivePreview.cleanUp();
     off();
 
     mySearchResults.dispose();

@@ -15,32 +15,33 @@
  */
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.find.EditorSearchComponent;
+import com.intellij.find.EditorSearchSession;
 import com.intellij.find.FindModel;
+import com.intellij.find.SearchSession;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class TogglePreserveCaseAction extends EditorHeaderToggleAction  implements SecondaryHeaderAction {
-  private static final String TEXT = "&Preserve Case";
-
-  public TogglePreserveCaseAction(EditorSearchComponent editorSearchComponent) {
-    super(editorSearchComponent, TEXT);
-  }
-
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return getEditorSearchComponent().getFindModel().isPreserveCase();
+public class TogglePreserveCaseAction extends EditorHeaderToggleAction {
+  public TogglePreserveCaseAction() {
+    super("Pr&eserve Case");
   }
 
   @Override
   public void update(AnActionEvent e) {
     super.update(e);
-    FindModel findModel = getEditorSearchComponent().getFindModel();
-    e.getPresentation().setVisible(findModel.isReplaceState() && !findModel.isMultiline());
-    e.getPresentation().setEnabled(!findModel.isRegularExpressions());
+
+    EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
+    FindModel findModel = search != null ? search.getFindModel() : null;
+    e.getPresentation().setEnabled(findModel != null && !findModel.isRegularExpressions());
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    getEditorSearchComponent().getFindModel().setPreserveCase(state);
+  protected boolean isSelected(@NotNull SearchSession session) {
+    return session.getFindModel().isPreserveCase();
+  }
+
+  @Override
+  protected void setSelected(@NotNull SearchSession session, boolean selected) {
+    session.getFindModel().setPreserveCase(selected);
   }
 }

@@ -15,24 +15,10 @@
  */
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.find.EditorSearchComponent;
 import com.intellij.find.FindModel;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 
-public class ToggleExceptCommentsAction extends EditorHeaderToggleAction implements SecondaryHeaderAction {
-  private static final String TEXT = "Except C&omments";
-
-  public ToggleExceptCommentsAction(EditorSearchComponent editorSearchComponent) {
-    super(editorSearchComponent, TEXT);
-  }
-
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return getEditorSearchComponent().getFindModel().isExceptComments();
-  }
-
-  @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    getEditorSearchComponent().getFindModel().setSearchContext(state ? FindModel.SearchContext.EXCEPT_COMMENTS : FindModel.SearchContext.ANY);
+public class ToggleExceptCommentsAction extends EditorHeaderSetSearchContextAction {
+  public ToggleExceptCommentsAction() {
+    super("Except C&omments", FindModel.SearchContext.EXCEPT_COMMENTS);
   }
 }

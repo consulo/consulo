@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Consider to use factory methods {@link #createLinked()}, {@link #createSet()}, {@link #createSmart()}, {@link #create(gnu.trove.TObjectHashingStrategy)} instead of override.
- * @see com.intellij.util.containers.BidirectionalMultiMap
- * @see com.intellij.util.containers.ConcurrentMultiMap
+ * Consider to use factory methods {@link #createLinked()}, {@link #createSet()}, {@link #createSmart()}, {@link #create(TObjectHashingStrategy)} instead of override.
+ * @see BidirectionalMultiMap
+ * @see ConcurrentMultiMap
  * @author Dmitry Avdeev
  */
 public class MultiMap<K, V> implements Serializable {
@@ -47,8 +47,13 @@ public class MultiMap<K, V> implements Serializable {
     putAllValues(toCopy);
   }
 
-  public MultiMap(int i, float v) {
-    myMap = createMap(i, v);
+  @NotNull
+  public MultiMap<K, V> copy() {
+    return new MultiMap<K, V>(this);
+  }
+
+  public MultiMap(int initialCapacity, float loadFactor) {
+    myMap = createMap(initialCapacity, loadFactor);
   }
 
   @NotNull
@@ -57,7 +62,7 @@ public class MultiMap<K, V> implements Serializable {
   }
 
   @NotNull
-  protected Map<K, Collection<V>>  createMap(int initialCapacity, float loadFactor) {
+  protected Map<K, Collection<V>> createMap(int initialCapacity, float loadFactor) {
     return new HashMap<K, Collection<V>>(initialCapacity, loadFactor);
   }
 
@@ -238,13 +243,14 @@ public class MultiMap<K, V> implements Serializable {
     myMap.clear();
   }
 
+  @Nullable
   public Collection<V> remove(K key) {
     return myMap.remove(key);
   }
 
   @NotNull
   public static <K, V> MultiMap<K, V> emptyInstance() {
-    @SuppressWarnings({"unchecked"}) final MultiMap<K, V> empty = EMPTY;
+    @SuppressWarnings("unchecked") final MultiMap<K, V> empty = EMPTY;
     return empty;
   }
 
@@ -351,8 +357,18 @@ public class MultiMap<K, V> implements Serializable {
   }
 
   @NotNull
-  public static <K, V> MultiMap<K, V> create(int i, float v) {
-    return new MultiMap<K, V>(i, v);
+  public static <K, V> MultiMap<K, V> createWeakKey() {
+    return new MultiMap<K, V>() {
+      @NotNull
+      @Override
+      protected Map<K, Collection<V>> createMap() {
+        return new WeakHashMap<K, Collection<V>>();
+      }
+    };
+  }
+
+  public static <K, V> MultiMap<K, V> create(int initialCapacity, float loadFactor) {
+    return new MultiMap<K, V>(initialCapacity, loadFactor);
   }
 
   @Override
@@ -370,6 +386,11 @@ public class MultiMap<K, V> implements Serializable {
   @Override
   public String toString() {
     return myMap.toString();
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <K, V> MultiMap<K, V> empty() {
+    return EMPTY;
   }
 
   private static class EmptyMap extends MultiMap {

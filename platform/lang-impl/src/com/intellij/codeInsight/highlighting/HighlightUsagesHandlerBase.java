@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,27 +87,34 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
   protected void buildStatusText(@Nullable String elementName, int refCount) {
     if (refCount > 0) {
       myStatusText = CodeInsightBundle.message(elementName != null ?
-                                        "status.bar.highlighted.usages.message" :
-                                        "status.bar.highlighted.usages.no.target.message", refCount, elementName,
+                                               "status.bar.highlighted.usages.message" :
+                                               "status.bar.highlighted.usages.no.target.message", refCount, elementName,
                                                HighlightUsagesHandler.getShortcutText());
     }
     else {
-      myStatusText = CodeInsightBundle.message(elementName != null ?
-                                          "status.bar.highlighted.usages.not.found.message" :
-                                          "status.bar.highlighted.usages.not.found.no.target.message", elementName);
+      myHintText = CodeInsightBundle.message(elementName != null ?
+                                             "status.bar.highlighted.usages.not.found.message" :
+                                             "status.bar.highlighted.usages.not.found.no.target.message", elementName);
     }
   }
 
   public abstract List<T> getTargets();
 
+  @Nullable
+  public String getFeatureId() {
+    return null;
+  }
+
   protected abstract void selectTargets(List<T> targets, Consumer<List<T>> selectionConsumer);
 
   public abstract void computeUsages(List<T> targets);
 
-  public void addOccurrence(@NotNull PsiElement element) {
+  protected void addOccurrence(@NotNull PsiElement element) {
     TextRange range = element.getTextRange();
-    range = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range);
-    myReadUsages.add(range);
+    if (range != null) {
+      range = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range);
+      myReadUsages.add(range);
+    }
   }
 
   public List<TextRange> getReadUsages() {
@@ -116,5 +123,13 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
 
   public List<TextRange> getWriteUsages() {
     return myWriteUsages;
+  }
+
+  /**
+   * In case of egoistic handler (highlightReferences = true) IdentifierHighlighterPass applies information only from this particular handler.
+   * Otherwise additional information would be collected from reference search as well.
+   */
+  public boolean highlightReferences() {
+    return false;
   }
 }

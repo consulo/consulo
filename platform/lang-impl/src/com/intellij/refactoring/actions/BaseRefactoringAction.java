@@ -22,6 +22,7 @@ import com.intellij.codeInsight.lookup.LookupEx;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.ide.IdeEventQueue;
+import com.intellij.lang.ContextAwareActionHandler;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
@@ -34,7 +35,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.*;
-import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
@@ -42,6 +43,7 @@ import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,31 +66,43 @@ public abstract class BaseRefactoringAction extends AnAction {
   }
 
   protected boolean hasAvailableHandler(@NotNull DataContext dataContext) {
-    return getHandler(dataContext) != null;
+    final RefactoringActionHandler handler = getHandler(dataContext);
+    if (handler != null) {
+      if (handler instanceof ContextAwareActionHandler) {
+        final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+        final PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
+        if (editor != null && file != null && !((ContextAwareActionHandler)handler).isAvailableForQuickList(editor, file, dataContext)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
   }
 
   @Nullable
   protected abstract RefactoringActionHandler getHandler(@NotNull DataContext dataContext);
 
+  @RequiredDispatchThread
   @Override
-  public final void actionPerformed(AnActionEvent e) {
+  public final void actionPerformed(@NotNull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
-    final Editor editor = e.getData(PlatformDataKeys.EDITOR);
+    final Editor editor = e.getData(CommonDataKeys.EDITOR);
     final PsiElement[] elements = getPsiElementArray(dataContext);
     int eventCount = IdeEventQueue.getInstance().getEventCount();
     RefactoringActionHandler handler;
     try {
       handler = getHandler(dataContext);
     }
-    catch (ProcessCanceledException e1) {
+    catch (ProcessCanceledException ignored) {
       return;
     }
     if (handler == null) {
       CommonRefactoringUtil.showErrorHint(project, editor, RefactoringBundle.getCannotRefactorMessage(RefactoringBundle.message(
-        "error.wrong.caret.position.symbol.to.refactor")), RefactoringBundle.getCannotRefactorMessage(null), null);
+              "error.wrong.caret.position.symbol.to.refactor")), RefactoringBundle.getCannotRefactorMessage(null), null);
       return;
     }
 
@@ -130,8 +144,9 @@ public abstract class BaseRefactoringAction extends AnAction {
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setVisible(true);
     presentation.setEnabled(true);
@@ -142,8 +157,8 @@ public abstract class BaseRefactoringAction extends AnAction {
       return;
     }
 
-    Editor editor = e.getData(PlatformDataKeys.EDITOR);
-    PsiFile file = e.getData(LangDataKeys.PSI_FILE);
+    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    PsiFile file = e.getData(CommonDataKeys.PSI_FILE);
     if (file != null) {
       if (file instanceof PsiCompiledElement || !isAvailableForFile(file)) {
         hideAction(e);
@@ -163,7 +178,7 @@ public abstract class BaseRefactoringAction extends AnAction {
       }
     }
     else {
-      PsiElement element = e.getData(LangDataKeys.PSI_ELEMENT);
+      PsiElement element = e.getData(CommonDataKeys.PSI_ELEMENT);
       Language[] languages = e.getData(LangDataKeys.CONTEXT_LANGUAGES);
       if (element == null || !isAvailableForLanguage(element.getLanguage())) {
         if (file == null) {
@@ -178,7 +193,7 @@ public abstract class BaseRefactoringAction extends AnAction {
         return;
       }
 
-      boolean isVisible = ContainerUtil.find(languages, myLanguageCondition) != null;      
+      boolean isVisible = ContainerUtil.find(languages, myLanguageCondition) != null;
       if (isVisible) {
         boolean isEnabled = isAvailableOnElementInEditorAndFile(element, editor, file, dataContext);
         if (!isEnabled) {
@@ -215,7 +230,7 @@ public abstract class BaseRefactoringAction extends AnAction {
 
   private static int fixCaretOffset(final Editor editor) {
     final int caret = editor.getCaretModel().getOffset();
-    if (editor.getSelectionModel().hasSelection() && !editor.getSelectionModel().hasBlockSelection()) {
+    if (editor.getSelectionModel().hasSelection()) {
       if (caret == editor.getSelectionModel().getSelectionEnd()) {
         return Math.max(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd() - 1);
       }
@@ -240,7 +255,7 @@ public abstract class BaseRefactoringAction extends AnAction {
   public static PsiElement[] getPsiElementArray(DataContext dataContext) {
     PsiElement[] psiElements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
     if (psiElements == null || psiElements.length == 0) {
-      PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+      PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
       if (element != null) {
         psiElements = new PsiElement[]{element};
       }
@@ -255,7 +270,7 @@ public abstract class BaseRefactoringAction extends AnAction {
         filtered.remove(element);
       }
     }
-    return filtered == null ? psiElements : PsiUtilBase.toPsiElementArray(filtered);
+    return filtered == null ? psiElements : PsiUtilCore.toPsiElementArray(filtered);
   }
 
 }

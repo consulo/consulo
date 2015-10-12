@@ -18,6 +18,7 @@ package com.intellij.openapi.actionSystem;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -78,12 +79,14 @@ public abstract class ActionGroup extends AnAction {
   /**
    * This method can be called in popup menus if {@link #canBePerformed(DataContext)} is true
    */
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e){
+  public void actionPerformed(@NotNull AnActionEvent e){
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     super.update(e);
   }
 

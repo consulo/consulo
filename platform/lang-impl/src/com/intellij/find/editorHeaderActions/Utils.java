@@ -1,13 +1,21 @@
 package com.intellij.find.editorHeaderActions;
 
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.util.List;
 
 public class Utils {
   private Utils() {
@@ -34,7 +42,7 @@ public class Utils {
       builder.setTitle(title);
     }
     final JBPopup popup = builder.setMovable(false).setResizable(false)
-      .setRequestFocus(true).setItemChoosenCallback(callback).createPopup();
+            .setRequestFocus(true).setItemChoosenCallback(callback).createPopup();
 
     if (ad != null) {
       popup.setAdText(ad, SwingConstants.LEFT);
@@ -50,14 +58,8 @@ public class Utils {
 
   public static void setSmallerFont(final JComponent component) {
     if (SystemInfo.isMac) {
-      Font f = new JLabel(" ").getFont();
-      Font font = smaller(f);
-      component.setFont(font);
+      component.setFont(JBUI.Fonts.smallFont());
     }
-  }
-
-  static Font smaller(Font f) {
-    return f.deriveFont(f.getStyle(), f.getSize() - 2);
   }
 
   public static void setSmallerFontForChildren(JComponent component) {
@@ -66,5 +68,16 @@ public class Utils {
         setSmallerFont((JComponent)c);
       }
     }
+  }
+
+  @NotNull
+  public static CustomShortcutSet shortcutSetOf(@NotNull List<Shortcut> shortcuts) {
+    return new CustomShortcutSet(shortcuts.toArray(new Shortcut[shortcuts.size()]));
+  }
+
+  @NotNull
+  public static List<Shortcut> shortcutsOf(@NotNull String actionId) {
+    AnAction action = ActionManager.getInstance().getAction(actionId);
+    return action == null ? ContainerUtil.<Shortcut>emptyList() : ContainerUtil.immutableList(action.getShortcutSet().getShortcuts());
   }
 }

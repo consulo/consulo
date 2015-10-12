@@ -15,35 +15,18 @@
  */
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.find.EditorSearchComponent;
+import com.intellij.find.EditorSearchSession;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.project.DumbAware;
 
-import java.util.Arrays;
-
-public class RemoveOccurrenceAction extends EditorHeaderAction implements DumbAware {
-  public RemoveOccurrenceAction(EditorSearchComponent editorSearchComponent) {
-    super(editorSearchComponent);
-
-    copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_UNSELECT_PREVIOUS_OCCURENCE));
-    getTemplatePresentation().setIcon(AllIcons.Actions.RemoveMulticaret);
-
-    registerShortcutsForComponent(Arrays.asList(getShortcutSet().getShortcuts()), editorSearchComponent.getSearchField());
+public class RemoveOccurrenceAction extends OccurrenceAction {
+  public RemoveOccurrenceAction() {
+    super(IdeActions.ACTION_UNSELECT_PREVIOUS_OCCURENCE, AllIcons.Actions.RemoveMulticaret);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    getEditorSearchComponent().removeOccurrence();
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    boolean isFind = !getEditorSearchComponent().getFindModel().isReplaceState();
-    boolean hasMatches = getEditorSearchComponent().hasMatches();
-    e.getPresentation().setVisible(isFind);
-    e.getPresentation().setEnabled(isFind && hasMatches);
+    e.getRequiredData(EditorSearchSession.SESSION_KEY).removeOccurrence();
   }
 }

@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.xdebugger.impl.frame.XWatchesView;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -30,7 +31,8 @@ import java.util.List;
  * @author nik
  */
 public abstract class XWatchesTreeActionBase extends AnAction {
-  protected static <T extends TreeNode> List<? extends T> getSelectedNodes(final @NotNull XDebuggerTree tree, Class<T> nodeClass) {
+  @NotNull
+  public static <T extends TreeNode> List<? extends T> getSelectedNodes(final @NotNull XDebuggerTree tree, Class<T> nodeClass) {
     List<T> list = new ArrayList<T>();
     TreePath[] selectionPaths = tree.getSelectionPaths();
     if (selectionPaths != null) {
@@ -44,15 +46,18 @@ public abstract class XWatchesTreeActionBase extends AnAction {
     return list;
   }
 
-  public void update(final AnActionEvent e) {
+  @RequiredDispatchThread
+  @Override
+  public void update(@NotNull final AnActionEvent e) {
     final XDebuggerTree tree = XDebuggerTree.getTree(e);
     XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
     boolean enabled = tree != null && watchesView != null && isEnabled(e, tree);
     e.getPresentation().setEnabled(enabled);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final XDebuggerTree tree = XDebuggerTree.getTree(e);
     XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
     if (tree != null && watchesView != null) {

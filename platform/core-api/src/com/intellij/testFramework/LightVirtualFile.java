@@ -46,6 +46,7 @@ public class LightVirtualFile extends VirtualFile {
   private boolean myValid = true;
   private Language myLanguage;
   private VirtualFile myOriginalFile;
+  private boolean myReadOnly;
 
   public LightVirtualFile() {
     this("");
@@ -103,7 +104,8 @@ public class LightVirtualFile extends VirtualFile {
     myFileType = fileType;
   }
 
-  private void setContent(CharSequence content) {
+  private void setContent(@NotNull CharSequence content) {
+    assert !myReadOnly;
     //StringUtil.assertValidSeparators(content);
     myContent = content;
   }
@@ -154,7 +156,8 @@ public class LightVirtualFile extends VirtualFile {
     }
 
     @Override
-    public VirtualFile copyFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent, @NotNull final String copyName) throws IOException {
+    public VirtualFile copyFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent, @NotNull final String copyName)
+            throws IOException {
       throw new IOException("Cannot copy files");
     }
 
@@ -241,7 +244,7 @@ public class LightVirtualFile extends VirtualFile {
         myModStamp = newModificationStamp;
         setContent(toString());
       }
-    },this);
+    }, this);
   }
 
   @Override
@@ -294,6 +297,11 @@ public class LightVirtualFile extends VirtualFile {
 
   public CharSequence getContent() {
     return myContent;
+  }
+
+  public void markReadOnly() {
+    setWritable(false);
+    myReadOnly = true;
   }
 
   @Override

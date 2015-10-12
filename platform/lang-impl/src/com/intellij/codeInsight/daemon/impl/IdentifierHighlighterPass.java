@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   private final Collection<TextRange> myWriteAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
   private final int myCaretOffset;
 
-  protected IdentifierHighlighterPass(final Project project, final PsiFile file, final Editor editor) {
+  protected IdentifierHighlighterPass(@NotNull Project project, @NotNull PsiFile file, @NotNull Editor editor) {
     super(project, editor.getDocument(), false);
     myFile = file;
     myEditor = editor;
@@ -68,7 +68,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
 
   @Override
   public void doCollectInformation(@NotNull final ProgressIndicator progress) {
-    final HighlightUsagesHandlerBase<PsiElement> handler = HighlightUsagesHandler.createCustomHandler(myEditor, myFile);
+    @SuppressWarnings("unchecked") HighlightUsagesHandlerBase<PsiElement> handler = HighlightUsagesHandler.createCustomHandler(myEditor, myFile);
     if (handler != null) {
       List<PsiElement> targets = handler.getTargets();
       handler.computeUsages(targets);
@@ -118,23 +118,27 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   }
 
   /**
-   * Returns read and write usages of psi element inside single file
+   * Returns read and write usages of psi element inside a single element
    *
    * @param target target psi element
-   * @param psiFile psi file for element
+   * @param psiElement psi element to search in
    * @return a pair where first element is read usages and second is write usages
    */
-  public static Couple<Collection<TextRange>> getHighlightUsages(@NotNull PsiElement target, PsiFile psiFile) {
+  public static Couple<Collection<TextRange>> getHighlightUsages(@NotNull PsiElement target, PsiElement psiElement, boolean withDeclarations) {
     Collection<TextRange> readRanges = new ArrayList<TextRange>();
     Collection<TextRange> writeRanges = new ArrayList<TextRange>();
     final ReadWriteAccessDetector detector = ReadWriteAccessDetector.findDetector(target);
     final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(target.getProject())).getFindUsagesManager();
     final FindUsagesHandler findUsagesHandler = findUsagesManager.getFindUsagesHandler(target, true);
-    final LocalSearchScope scope = new LocalSearchScope(psiFile);
+    final LocalSearchScope scope = new LocalSearchScope(psiElement);
     Collection<PsiReference> refs = findUsagesHandler != null
                                     ? findUsagesHandler.findReferencesToHighlight(target, scope)
                                     : ReferencesSearch.search(target, scope).findAll();
     for (PsiReference psiReference : refs) {
+      if (psiReference == null) {
+        LOG.error("Null reference returned, findUsagesHandler=" + findUsagesHandler + "; target=" + target + " of " + target.getClass());
+        continue;
+      }
       final List<TextRange> textRanges = HighlightUsagesHandler.getRangesToHighlight(psiReference);
       if (detector == null || detector.getReferenceAccess(target, psiReference) == ReadWriteAccessDetector.Access.Read) {
         readRanges.addAll(textRanges);
@@ -144,13 +148,15 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
       }
     }
 
-    final TextRange declRange = HighlightUsagesHandler.getNameIdentifierRange(psiFile, target);
-    if (declRange != null) {
-      if (detector != null && detector.isDeclarationWriteAccess(target)) {
-        writeRanges.add(declRange);
-      }
-      else {
-        readRanges.add(declRange);
+    if (withDeclarations) {
+      final TextRange declRange = HighlightUsagesHandler.getNameIdentifierRange(psiElement.getContainingFile(), target);
+      if (declRange != null) {
+        if (detector != null && detector.isDeclarationWriteAccess(target)) {
+          writeRanges.add(declRange);
+        }
+        else {
+          readRanges.add(declRange);
+        }
       }
     }
 
@@ -158,7 +164,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   }
 
   private void highlightTargetUsages(@NotNull PsiElement target) {
-    final Couple<Collection<TextRange>> usages = getHighlightUsages(target, myFile);
+    final Couple<Collection<TextRange>> usages = getHighlightUsages(target, myFile, true);
     myReadAccessRanges.addAll(usages.first);
     myWriteAccessRanges.addAll(usages.second);
   }

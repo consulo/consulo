@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,13 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.AppIcon;
 import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentManager;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -89,21 +93,58 @@ public abstract class DebuggerSessionTabBase extends RunTab {
     return myEnvironment != null ? myEnvironment.getRunProfile() : null;
   }
 
-  public void toFront(boolean focus) {
-    if (!ApplicationManager.getApplication().isUnitTestMode()) {
-      ExecutionManager.getInstance(myProject).getContentManager().toFrontRunContent(DefaultDebugExecutor.getDebugExecutorInstance(), myRunContentDescriptor);
-      if (focus) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            boolean focusWnd = Registry.is("debugger.mayBringFrameToFrontOnBreakpoint");
-            ProjectUtil.focusProjectWindow(myProject, focusWnd);
-            if (!focusWnd) {
-              AppIcon.getInstance().requestAttention(myProject, true);
-            }
+
+  public void select() {
+    if (ApplicationManager.getApplication().isUnitTestMode()) return;
+
+    UIUtil.invokeLaterIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        if (myRunContentDescriptor != null) {
+          ToolWindow toolWindow = ExecutionManager.getInstance(myProject).getContentManager()
+                  .getToolWindowByDescriptor(myRunContentDescriptor);
+          Content content = myRunContentDescriptor.getAttachedContent();
+          if (toolWindow == null || content == null) return;
+          ContentManager manager = toolWindow.getContentManager();
+          if (ArrayUtil.contains(content, manager.getContents()) && !manager.isSelected(content)) {
+            manager.setSelectedContent(content);
           }
-        });
+        }
       }
+    });
+  }
+
+  public void toFront(boolean focus, @Nullable final Runnable onShowCallback) {
+    if (ApplicationManager.getApplication().isUnitTestMode()) return;
+
+    ApplicationManager.getApplication().invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        if (myRunContentDescriptor != null) {
+          ToolWindow toolWindow = ExecutionManager.getInstance(myProject).getContentManager()
+                  .getToolWindowByDescriptor(myRunContentDescriptor);
+          if (toolWindow != null) {
+            if (!toolWindow.isVisible()) {
+              toolWindow.show(onShowCallback);
+            }
+            //noinspection ConstantConditions
+            toolWindow.getContentManager().setSelectedContent(myRunContentDescriptor.getAttachedContent());
+          }
+        }
+      }
+    });
+
+    if (focus) {
+      ApplicationManager.getApplication().invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          boolean focusWnd = Registry.is("debugger.mayBringFrameToFrontOnBreakpoint");
+          ProjectUtil.focusProjectWindow(myProject, focusWnd);
+          if (!focusWnd) {
+            AppIcon.getInstance().requestAttention(myProject, true);
+          }
+        }
+      });
     }
   }
 }

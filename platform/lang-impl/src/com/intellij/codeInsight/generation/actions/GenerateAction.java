@@ -21,28 +21,35 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAwareAction;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class GenerateAction extends DumbAwareAction implements PreloadableAction {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@NotNull final AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
 
+    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     final ListPopup popup =
-      JBPopupFactory.getInstance().createActionGroupPopup(
-          CodeInsightBundle.message("generate.list.popup.title"),
-                                                          getGroup(),
-                                                          dataContext,
-                                                          JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                                                          false);
+            JBPopupFactory.getInstance().createActionGroupPopup(
+                    CodeInsightBundle.message("generate.list.popup.title"),
+                    wrapGroup(getGroup(), dataContext, project),
+                    dataContext,
+                    JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                    false);
 
     popup.showInBestPositionFor(dataContext);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent event){
+  public void update(@NotNull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     Project project = CommonDataKeys.PROJECT.getData(dataContext);
@@ -51,7 +58,7 @@ public class GenerateAction extends DumbAwareAction implements PreloadableAction
       return;
     }
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
     if (editor == null) {
       presentation.setEnabled(false);
       return;
@@ -65,8 +72,71 @@ public class GenerateAction extends DumbAwareAction implements PreloadableAction
     return (DefaultActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_GENERATE);
   }
 
+  private static DefaultActionGroup wrapGroup(DefaultActionGroup actionGroup, DataContext dataContext, @NotNull Project project) {
+    final DefaultActionGroup copy = new DefaultActionGroup();
+    for (final AnAction action : actionGroup.getChildren(null)) {
+      if (DumbService.isDumb(project) && !action.isDumbAware()) {
+        continue;
+      }
+
+      if (action instanceof GenerateActionPopupTemplateInjector) {
+        final AnAction editTemplateAction = ((GenerateActionPopupTemplateInjector)action).createEditTemplateAction(dataContext);
+        if (editTemplateAction != null) {
+          copy.add(new GenerateWrappingGroup(action, editTemplateAction));
+          continue;
+        }
+      }
+      if (action instanceof DefaultActionGroup) {
+        copy.add(wrapGroup((DefaultActionGroup)action, dataContext, project));
+      }
+      else {
+        copy.add(action);
+      }
+    }
+    return copy;
+  }
+
   @Override
   public void preload() {
     ((ActionManagerImpl) ActionManager.getInstance()).preloadActionGroup(IdeActions.GROUP_GENERATE);
+  }
+
+  private static class GenerateWrappingGroup extends ActionGroup {
+
+    private final AnAction myAction;
+    private final AnAction myEditTemplateAction;
+
+    public GenerateWrappingGroup(AnAction action, AnAction editTemplateAction) {
+      myAction = action;
+      myEditTemplateAction = editTemplateAction;
+      copyFrom(action);
+      setPopup(true);
+    }
+
+    @Override
+    public boolean canBePerformed(DataContext context) {
+      return true;
+    }
+
+    @NotNull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+      return new AnAction[] {myEditTemplateAction};
+    }
+
+    @Override
+    @RequiredDispatchThread
+    public void actionPerformed(@NotNull AnActionEvent e) {
+      final Project project = getEventProject(e);
+      assert project != null;
+      final DumbService dumbService = DumbService.getInstance(project);
+      try {
+        dumbService.setAlternativeResolveEnabled(true);
+        myAction.actionPerformed(e);
+      }
+      finally {
+        dumbService.setAlternativeResolveEnabled(false);
+      }
+    }
   }
 }

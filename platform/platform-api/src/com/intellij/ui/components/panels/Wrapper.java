@@ -25,6 +25,9 @@ import java.awt.event.FocusListener;
 
 public class Wrapper extends JPanel implements NullableComponent {
 
+  private JComponent myVerticalSizeReferent;
+  private JComponent myHorizontalSizeReferent;
+
   public Wrapper() {
     setLayout(new BorderLayout());
     setOpaque(false);
@@ -61,7 +64,7 @@ public class Wrapper extends JPanel implements NullableComponent {
     if (wrapped == getTargetComponent()) {
       return;
     }
-    
+
     removeAll();
     setLayout(new BorderLayout());
     if (wrapped != null) {
@@ -70,10 +73,12 @@ public class Wrapper extends JPanel implements NullableComponent {
     validate();
   }
 
+  @Override
   public boolean isNull() {
     return getComponentCount() == 0;
   }
 
+  @Override
   public void requestFocus() {
     if (getTargetComponent() == this) {
       super.requestFocus();
@@ -82,6 +87,7 @@ public class Wrapper extends JPanel implements NullableComponent {
     getTargetComponent().requestFocus();
   }
 
+  @Override
   public boolean requestFocusInWindow() {
     if (getTargetComponent() == this) {
       return super.requestFocusInWindow();
@@ -93,6 +99,7 @@ public class Wrapper extends JPanel implements NullableComponent {
     super.requestFocus();
   }
 
+  @Override
   public final boolean requestFocus(boolean temporary) {
     if (getTargetComponent() == this) {
       return super.requestFocus(temporary);
@@ -108,6 +115,27 @@ public class Wrapper extends JPanel implements NullableComponent {
     }
   }
 
+  public final Wrapper setVerticalSizeReferent(JComponent verticalSizeReferent) {
+    myVerticalSizeReferent = verticalSizeReferent;
+    return this;
+  }
+
+  public final Wrapper setHorizontalSizeReferent(JComponent horizontalSizeReferent) {
+    myHorizontalSizeReferent = horizontalSizeReferent;
+    return this;
+  }
+
+  @Override
+  public Dimension getPreferredSize() {
+    Dimension size = super.getPreferredSize();
+    if (myHorizontalSizeReferent != null && myHorizontalSizeReferent.isShowing()) {
+      size.width = Math.max(size.width, myHorizontalSizeReferent.getPreferredSize().width);
+    }
+    if (myVerticalSizeReferent != null && myVerticalSizeReferent.isShowing()) {
+      size.height = Math.max(size.height, myVerticalSizeReferent.getPreferredSize().height);
+    }
+    return size;
+  }
 
   public static class FocusHolder extends Wrapper implements FocusListener {
 
@@ -151,12 +179,13 @@ public class Wrapper extends JPanel implements NullableComponent {
     public void requestFocus(Runnable callback) {
       myFocusGainedCallback = callback;
       if (isFocusOwner()) {
-        processCallback();    
+        processCallback();
       } else {
         requestFocusInternal();
       }
     }
 
+    @Override
     public void focusGained(final FocusEvent e) {
       processCallback();
     }
@@ -169,8 +198,10 @@ public class Wrapper extends JPanel implements NullableComponent {
       }
     }
 
+    @Override
     public void focusLost(final FocusEvent e) {
     }
+
   }
 
   public static class North extends Wrapper {

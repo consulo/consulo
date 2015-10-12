@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,10 @@ import org.mustbe.consulo.RequiredDispatchThread;
 public abstract class CodeInsightAction extends AnAction {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+  public void actionPerformed(@NotNull AnActionEvent e) {
+    Project project = e.getProject();
     if (project != null) {
-      Editor editor = getEditor(dataContext, project);
+      Editor editor = getEditor(e.getDataContext(), project);
       actionPerformedImpl(project, editor);
     }
   }
@@ -47,7 +46,7 @@ public abstract class CodeInsightAction extends AnAction {
   @Nullable
   @RequiredDispatchThread
   protected Editor getEditor(@NotNull DataContext dataContext, @NotNull Project project) {
-    return PlatformDataKeys.EDITOR.getData(dataContext);
+    return CommonDataKeys.EDITOR.getData(dataContext);
   }
 
   @RequiredDispatchThread
@@ -77,18 +76,18 @@ public abstract class CodeInsightAction extends AnAction {
     }, getCommandName(), DocCommandGroupId.noneGroupId(editor.getDocument()));
   }
 
-  @Override
   @RequiredDispatchThread
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
+  @Override
+  public void update(@NotNull AnActionEvent e) {
+    Presentation presentation = e.getPresentation();
 
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = e.getProject();
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
 
+    final DataContext dataContext = e.getDataContext();
     Editor editor = getEditor(dataContext, project);
     if (editor == null) {
       presentation.setEnabled(false);
@@ -96,7 +95,21 @@ public abstract class CodeInsightAction extends AnAction {
     }
 
     final PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, project);
-    presentation.setEnabled(file != null && isValidForFile(project, editor, file));
+    if (file == null) {
+      presentation.setEnabled(false);
+      return;
+    }
+
+    update(presentation, project, editor, file, dataContext, e.getPlace());
+  }
+
+  protected void update(@NotNull Presentation presentation, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+    presentation.setEnabled(isValidForFile(project, editor, file));
+  }
+
+  protected void update(@NotNull Presentation presentation, @NotNull Project project,
+                        @NotNull Editor editor, @NotNull PsiFile file, @NotNull DataContext dataContext, @Nullable String actionPlace) {
+    update(presentation, project, editor, file);
   }
 
   protected boolean isValidForFile(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {

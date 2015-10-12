@@ -26,6 +26,7 @@ import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.lang.LanguageExtractInclude;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author ven
@@ -46,8 +47,9 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
     return true;
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@NotNull final AnActionEvent e) {
     super.update(e);
     final RefactoringActionHandler handler = getHandler(e.getDataContext());
     if (handler instanceof TitledHandler) {

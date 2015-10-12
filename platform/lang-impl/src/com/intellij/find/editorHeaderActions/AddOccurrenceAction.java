@@ -15,32 +15,21 @@
  */
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.find.EditorSearchComponent;
+import com.intellij.find.EditorSearchSession;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.IdeActions;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
-import java.util.Arrays;
-
-public class AddOccurrenceAction extends EditorHeaderAction implements DumbAware {
-  public AddOccurrenceAction(EditorSearchComponent editorSearchComponent) {
-    super(editorSearchComponent);
-
-    copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_SELECT_NEXT_OCCURENCE));
-    getTemplatePresentation().setIcon(AllIcons.Actions.AddMulticaret);
-
-    registerShortcutsForComponent(Arrays.asList(getShortcutSet().getShortcuts()), editorSearchComponent.getSearchField());
+public class AddOccurrenceAction extends OccurrenceAction {
+  public AddOccurrenceAction() {
+    super(IdeActions.ACTION_SELECT_NEXT_OCCURENCE, AllIcons.Actions.AddMulticaret);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    getEditorSearchComponent().addNextOccurrence();
+  public void actionPerformed(@NotNull AnActionEvent e) {
+    e.getRequiredData(EditorSearchSession.SESSION_KEY).addNextOccurrence();
   }
-
-  @Override
-  public void update(AnActionEvent e) {
-    boolean isFind = !getEditorSearchComponent().getFindModel().isReplaceState();
-    boolean hasMatches = getEditorSearchComponent().hasMatches();
-    e.getPresentation().setVisible(isFind);
-    e.getPresentation().setEnabled(isFind && hasMatches);
-  }}
+}

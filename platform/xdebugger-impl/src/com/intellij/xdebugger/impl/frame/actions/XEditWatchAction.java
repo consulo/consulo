@@ -22,6 +22,7 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.WatchNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.WatchesRootNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.List;
 
@@ -29,8 +30,9 @@ import java.util.List;
  * @author nik
  */
 public class XEditWatchAction extends XWatchesTreeActionBase {
+  @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@NotNull final AnActionEvent e) {
     XDebuggerTree tree = XDebuggerTree.getTree(e);
     e.getPresentation().setVisible(tree != null && getSelectedNodes(tree, WatchNode.class).size() == 1);
     super.update(e);

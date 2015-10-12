@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.util.SystemInfo;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -74,6 +76,10 @@ public class CommonShortcuts {
     return shortcutsById(IdeActions.ACTION_COPY);
   }
 
+  public static ShortcutSet getPaste() {
+    return shortcutsById(IdeActions.ACTION_PASTE);
+  }
+
   public static ShortcutSet getRerun() {
     return shortcutsById(IdeActions.ACTION_RERUN);
   }
@@ -90,18 +96,20 @@ public class CommonShortcuts {
     return shortcutsById(IdeActions.ACTION_NEW_ELEMENT);
   }
 
+  public static ShortcutSet getDuplicate() {
+    return shortcutsById(IdeActions.ACTION_EDITOR_DUPLICATE);
+  }
+
   public static ShortcutSet getMove() {
     return shortcutsById(IdeActions.ACTION_MOVE);
   }
-
 
   public static ShortcutSet getRename() {
     return shortcutsById(IdeActions.ACTION_RENAME);
   }
 
   public static ShortcutSet getDiff() {
-    return new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, SystemInfo.isMac ? InputEvent.META_DOWN_MASK
-                                                                                        : InputEvent.CTRL_DOWN_MASK));
+    return shortcutsById(IdeActions.ACTION_SHOW_DIFF_COMMON);
   }
 
   public static ShortcutSet getFind() {
@@ -148,9 +156,13 @@ public class CommonShortcuts {
     return shortcutsById(IdeActions.ACTION_DELETE);
   }
 
+  @NotNull
   private static CustomShortcutSet shortcutsById(String actionId) {
-    if (ApplicationManager.getApplication() == null) return new CustomShortcutSet(Shortcut.EMPTY_ARRAY);
-
-    return new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId));
+    Application application = ApplicationManager.getApplication();
+    KeymapManager keymapManager = application == null ? null : application.getComponent(KeymapManager.class);
+    if (keymapManager == null) {
+      return new CustomShortcutSet(Shortcut.EMPTY_ARRAY);
+    }
+    return new CustomShortcutSet(keymapManager.getActiveKeymap().getShortcuts(actionId));
   }
 }

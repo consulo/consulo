@@ -58,13 +58,13 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.*;
 import com.intellij.ui.LightweightHint;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.usages.impl.UsageViewImpl;
+import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -87,7 +87,9 @@ public class FindUtil {
   public static void initStringToFindWithSelection(FindModel findModel, Editor editor) {
     if (editor != null) {
       String s = editor.getSelectionModel().getSelectedText();
-      FindModel.initStringToFindNoMultiline(findModel, s);
+      if (s != null && s.length() < 10000) {
+        FindModel.initStringToFindNoMultiline(findModel, s);
+      }
     }
   }
 
@@ -95,10 +97,8 @@ public class FindUtil {
     SelectionModel selectionModel = editor != null ? editor.getSelectionModel() : null;
     if (selectionModel != null) {
       String selectedText = selectionModel.getSelectedText();
-      if (selectedText != null) {
-        if (selectedText.indexOf("\n") != -1) {
-          return true;
-        }
+      if (selectedText != null && selectedText.contains("\n")) {
+        return true;
       }
     }
     return false;
@@ -148,6 +148,17 @@ public class FindUtil {
     model.setPromptOnReplace(false);
   }
 
+  public static void updateFindInFileModel(@Nullable Project project, @NotNull FindModel with) {
+    FindModel model = FindManager.getInstance(project).getFindInFileModel();
+    model.setCaseSensitive(with.isCaseSensitive());
+    model.setWholeWordsOnly(with.isWholeWordsOnly());
+    model.setRegularExpressions(with.isRegularExpressions());
+    model.setSearchContext(with.getSearchContext());
+    if (with.isReplaceState()) {
+      model.setPreserveCase(with.isPreserveCase());
+    }
+  }
+
   private enum Direction {
     UP, DOWN
   }
@@ -192,10 +203,9 @@ public class FindUtil {
     model.setCaseSensitive(true);
     model.setWholeWordsOnly(!editor.getSelectionModel().hasSelection());
 
-    final JComponent header = editor.getHeaderComponent();
-    if (header instanceof EditorSearchComponent) {
-      final EditorSearchComponent searchComponent = (EditorSearchComponent)header;
-      searchComponent.setTextInField(model.getStringToFind());
+    EditorSearchSession searchSession = EditorSearchSession.get(editor);
+    if (searchSession != null) {
+      searchSession.setTextInField(model.getStringToFind());
     }
 
     findManager.setFindNextModel(model);
@@ -207,7 +217,7 @@ public class FindUtil {
     final FindManager findManager = FindManager.getInstance(project);
     String s = editor.getSelectionModel().getSelectedText();
 
-    final FindModel model = (FindModel)findManager.getFindInFileModel().clone();
+    final FindModel model = findManager.getFindInFileModel().clone();
     if (StringUtil.isEmpty(s)) {
       model.setGlobal(true);
     }
@@ -328,7 +338,7 @@ public class FindUtil {
     if (model == null) {
       model = findManager.getFindInFileModel();
     }
-    model = (FindModel)model.clone();
+    model = model.clone();
     model.setForward(!model.isForward());
     if (!model.isGlobal() && !editor.getSelectionModel().hasSelection()) {
       model.setGlobal(true);
@@ -370,7 +380,7 @@ public class FindUtil {
     if (model == null) {
       model = findManager.getFindInFileModel();
     }
-    model = (FindModel)model.clone();
+    model = model.clone();
 
     int offset;
     if (Direction.DOWN.equals(editor.getUserData(KEY)) && model.isForward()) {
@@ -408,7 +418,7 @@ public class FindUtil {
 
   public static void replace(final Project project, final Editor editor) {
     final FindManager findManager = FindManager.getInstance(project);
-    final FindModel model = (FindModel)findManager.getFindInFileModel().clone();
+    final FindModel model = findManager.getFindInFileModel().clone();
     final String s = editor.getSelectionModel().getSelectedText();
     if (!StringUtil.isEmpty(s)) {
       if (s.indexOf('\n') >= 0) {
@@ -531,8 +541,7 @@ public class FindUtil {
       String foundString = document.getCharsSequence().subSequence(startOffset, endOffset).toString();
       String toReplace;
       try {
-        CharSequence textToMatch = document.getCharsSequence().subSequence(offset, document.getTextLength());
-        toReplace = findManager.getStringToReplace(foundString, model, startOffset - offset, textToMatch);
+        toReplace = findManager.getStringToReplace(foundString, model, startOffset, document.getCharsSequence());
       }
       catch (FindManager.MalformedReplacementStringException e) {
         if (!ApplicationManager.getApplication().isUnitTestMode()) {
@@ -776,7 +785,7 @@ public class FindUtil {
 
     short position = HintManager.UNDER;
     if (model.isGlobal()) {
-      final FindModel newModel = (FindModel)model.clone();
+      final FindModel newModel = model.clone();
       FindManager findManager = FindManager.getInstance(project);
       Document document = editor.getDocument();
       FindResult result = findManager.findString(document.getCharsSequence(),
@@ -916,7 +925,7 @@ public class FindUtil {
   }
 
   @Nullable
-  public static UsageView showInUsageView(PsiElement sourceElement, @NotNull final PsiElement[] targets, @NotNull String title, @NotNull Project project) {
+  public static UsageView showInUsageView(PsiElement sourceElement, @NotNull PsiElement[] targets, @NotNull String title, @NotNull final Project project) {
     if (targets.length == 0) return null;
     final UsageViewPresentation presentation = new UsageViewPresentation();
     presentation.setCodeUsagesString(title);
@@ -929,17 +938,30 @@ public class FindUtil {
     final Usage[] usages = {UsageInfoToUsageConverter.convert(primary, new UsageInfo(targets[0]))};
     final UsageView view =
             UsageViewManager.getInstance(project).showUsages(usageTargets, usages, presentation);
+
+    final List<SmartPsiElementPointer> pointers = ContainerUtil.map(targets, new Function<PsiElement, SmartPsiElementPointer>() {
+      @Override
+      public SmartPsiElementPointer fun(PsiElement psiElement) {
+        return SmartPointerManager.getInstance(project).createSmartPsiElementPointer(psiElement);
+      }
+    });
+
+    // usage view will load document/AST so still referencing all these PSI elements might lead to out of memory
+    //noinspection UnusedAssignment
+    targets = PsiElement.EMPTY_ARRAY;
+
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Updating Usage View ...") {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
-        for (int i = 1; i < targets.length; i++) {
+        for (final SmartPsiElementPointer pointer : pointers) {
           if (((UsageViewImpl)view).isDisposed()) break;
-          final PsiElement target = targets[i];
           ApplicationManager.getApplication().runReadAction(new Runnable() {
             @Override
             public void run() {
-              final Usage usage = UsageInfoToUsageConverter.convert(primary, new UsageInfo(target));
-              view.appendUsage(usage);
+              final PsiElement target = pointer.getElement();
+              if (target != null) {
+                view.appendUsage(UsageInfoToUsageConverter.convert(primary, new UsageInfo(target)));
+              }
             }
           });
         }

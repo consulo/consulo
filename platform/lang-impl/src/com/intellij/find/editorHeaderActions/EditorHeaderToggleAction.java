@@ -1,22 +1,22 @@
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.find.EditorSearchComponent;
+import com.intellij.find.SearchSession;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import com.intellij.openapi.project.DumbAware;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 public abstract class EditorHeaderToggleAction extends CheckboxAction implements DumbAware {
+  protected EditorHeaderToggleAction(@NotNull String text) {
+    super(text);
+  }
 
   @Override
   public boolean displayTextInToolbar() {
     return true;
-  }
-
-  public EditorSearchComponent getEditorSearchComponent() {
-    return myEditorSearchComponent;
   }
 
   @Override
@@ -32,10 +32,21 @@ public abstract class EditorHeaderToggleAction extends CheckboxAction implements
     return customComponent;
   }
 
-  private EditorSearchComponent myEditorSearchComponent;
-
-  protected EditorHeaderToggleAction(EditorSearchComponent editorSearchComponent, String text) {
-    super(text);
-    myEditorSearchComponent = editorSearchComponent;
+  @Override
+  public boolean isSelected(AnActionEvent e) {
+    SearchSession search = e.getData(SearchSession.KEY);
+    return search != null && isSelected(search);
   }
+
+  @Override
+  public void setSelected(AnActionEvent e, boolean selected) {
+    SearchSession search = e.getData(SearchSession.KEY);
+    if (search != null) {
+      setSelected(search, selected);
+    }
+  }
+
+  protected abstract boolean isSelected(@NotNull SearchSession session);
+
+  protected abstract void setSelected(@NotNull SearchSession session, boolean selected);
 }
