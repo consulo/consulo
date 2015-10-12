@@ -49,12 +49,8 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
   public static final Object TYPE_TEXT_ATTR = Key.create("typeText");
   public static final Object TAIL_TEXT_ATTR = Key.create("tailText");
   public static final Object TAIL_TEXT_SMALL_ATTR = Key.create("tailTextSmall");
-  public static final Key<Object> FORCE_SHOW_SIGNATURE_ATTR = Key.create("forceShowSignature");
 
   public static final Object FORCE_QUALIFY = Key.create("FORCE_QUALIFY");
-  public static final Object SUBSTITUTOR = Key.create("SUBSTITUTOR");
-  public static final Object TYPE = Key.create("TYPE");
-  public static final Key<Object> DEPRECATED_ATTR = Key.create("DEPRECATED");
 
   public static final Object CASE_INSENSITIVE = Key.create("CASE_INSENSITIVE");
 
@@ -279,11 +275,6 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
 
   public LookupItem<T> forceQualify() {
     setAttribute(FORCE_QUALIFY, "");
-    return this;
-  }
-
-  public LookupItem<T> setDeprecated(boolean deprecated) {
-    setAttribute(DEPRECATED_ATTR, deprecated ? "" : null);
     return this;
   }
 
