@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.codeInsight.hint.HintUtil;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -24,9 +25,7 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.DimensionService;
-import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.AppUIUtil;
@@ -35,11 +34,13 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointAdapter;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.frame.XFullValueEvaluator;
+import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;
 import com.intellij.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPanel;
@@ -47,12 +48,11 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.concurrency.Promise;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DebuggerUIUtil {
@@ -93,7 +93,8 @@ public class DebuggerUIUtil {
     ApplicationManager.getApplication().invokeLater(runnable);
   }
 
-  public static RelativePoint calcPopupLocation(Editor editor, final int line) {
+  @Deprecated
+  public static RelativePoint calcPopupLocation(@NotNull Editor editor, final int line) {
     Point p = editor.logicalPositionToXY(new LogicalPosition(line + 1, 0));
 
     final Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
@@ -101,6 +102,28 @@ public class DebuggerUIUtil {
       p = new Point((visibleArea.x + visibleArea.width) / 2, (visibleArea.y + visibleArea.height) / 2);
     }
     return new RelativePoint(editor.getContentComponent(), p);
+  }
+
+  @Nullable
+  public static RelativePoint getPositionForPopup(@NotNull Editor editor, int line) {
+    Point p = editor.logicalPositionToXY(new LogicalPosition(line + 1, 0));
+    return editor.getScrollingModel().getVisibleArea().contains(p) ? new RelativePoint(editor.getContentComponent(), p) : null;
+  }
+
+  public static void showPopupForEditorLine(@NotNull JBPopup popup, @NotNull Editor editor, int line) {
+    RelativePoint point = getPositionForPopup(editor, line);
+    if (point != null) {
+      popup.show(point);
+    }
+    else {
+      Project project = editor.getProject();
+      if (project != null) {
+        popup.showCenteredInCurrentWindow(project);
+      }
+      else {
+        popup.showInFocusCenter();
+      }
+    }
   }
 
   public static void showValuePopup(@NotNull XFullValueEvaluator evaluator, @NotNull MouseEvent event, @NotNull Project project, @Nullable Editor editor) {
@@ -133,14 +156,9 @@ public class DebuggerUIUtil {
     }
   }
 
-  public static JBPopup createValuePopup(Project project,
-                                         JComponent component,
-                                         @Nullable final FullValueEvaluationCallbackImpl callback) {
+  public static JBPopup createValuePopup(Project project, JComponent component, @Nullable final FullValueEvaluationCallbackImpl callback) {
     ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(component, null);
-    builder.setResizable(true)
-            .setMovable(true)
-            .setDimensionServiceKey(project, FULL_VALUE_POPUP_DIMENSION_KEY, false)
-            .setRequestFocus(false);
+    builder.setResizable(true).setMovable(true).setDimensionServiceKey(project, FULL_VALUE_POPUP_DIMENSION_KEY, false).setRequestFocus(false);
     if (callback != null) {
       builder.setCancelCallback(new Computable<Boolean>() {
         @Override
@@ -160,8 +178,7 @@ public class DebuggerUIUtil {
                                                   final XBreakpoint breakpoint) {
     final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
     final XLightBreakpointPropertiesPanel<XBreakpointBase<?, ?, ?>> propertiesPanel =
-            new XLightBreakpointPropertiesPanel<XBreakpointBase<?, ?, ?>>(project, breakpointManager, (XBreakpointBase)breakpoint,
-                                                                          showAllOptions);
+            new XLightBreakpointPropertiesPanel<XBreakpointBase<?, ?, ?>>(project, breakpointManager, (XBreakpointBase)breakpoint, showAllOptions);
 
     final Ref<Balloon> balloonRef = Ref.create(null);
     final Ref<Boolean> isLoading = Ref.create(Boolean.FALSE);
@@ -229,22 +246,20 @@ public class DebuggerUIUtil {
     });
   }
 
-  public static Balloon showBreakpointEditor(Project project, final JComponent mainPanel,
+  public static Balloon showBreakpointEditor(Project project,
+                                             final JComponent mainPanel,
                                              final Point whereToShow,
                                              final JComponent component,
-                                             @Nullable final Runnable showMoreOptions, Object breakpoint) {
+                                             @Nullable final Runnable showMoreOptions,
+                                             Object breakpoint) {
     final BreakpointEditor editor = new BreakpointEditor();
     editor.setPropertiesPanel(mainPanel);
     editor.setShowMoreOptionsLink(true);
 
     final JPanel panel = editor.getMainPanel();
-    final Balloon balloon = JBPopupFactory.getInstance()
-            .createDialogBalloonBuilder(panel, null)
-            .setHideOnClickOutside(true)
-            .setCloseButtonEnabled(false)
-            .setAnimationCycle(0)
-            .setBlockClicksThroughBalloon(true)
-            .createBalloon();
+    final Balloon balloon =
+            JBPopupFactory.getInstance().createDialogBalloonBuilder(panel, null).setHideOnClickOutside(true).setCloseButtonEnabled(false).setAnimationCycle(0)
+                    .setBlockClicksThroughBalloon(true).createBalloon();
 
 
     editor.setDelegate(new BreakpointEditor.Delegate() {
@@ -258,6 +273,20 @@ public class DebuggerUIUtil {
         assert showMoreOptions != null;
         balloon.hide();
         showMoreOptions.run();
+      }
+    });
+
+    final ComponentAdapter moveListener = new ComponentAdapter() {
+      @Override
+      public void componentMoved(ComponentEvent e) {
+        balloon.hide();
+      }
+    };
+    component.addComponentListener(moveListener);
+    Disposer.register(balloon, new Disposable() {
+      @Override
+      public void dispose() {
+        component.removeComponentListener(moveListener);
       }
     });
 
@@ -337,6 +366,18 @@ public class DebuggerUIUtil {
     else {
       return valueNode.getRawValue();
     }
+  }
+
+  /**
+   * Checks if value has evaluation expression ready, or calculation is pending
+   */
+  public static boolean hasEvaluationExpression(@NotNull XValue value) {
+    Promise<XExpression> promise = value.calculateEvaluationExpression();
+    if (promise.getState() == Promise.State.PENDING) return true;
+    if (promise instanceof Getter) {
+      return ((Getter)promise).get() != null;
+    }
+    return true;
   }
 
   public static void registerExtraHandleShortcuts(final ListPopupImpl popup, String actionName) {
