@@ -20,6 +20,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine;
+import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
+import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NotNull;
@@ -37,18 +39,18 @@ import java.util.Set;
  * determine position where a new element should be inserted.
  * <p/>
  * This service provides utility methods for that.
- * 
+ *
  * @author Denis Zhdanov
  * @since 9/4/12 11:12 AM
  */
 public class MemberOrderService {
-  
+
   /**
    * Tries to find an element at the given context which should be the previous sibling for the given 'member'element according to the
    * {@link CommonCodeStyleSettings#getArrangementSettings() user-defined arrangement rules}.
    * <p/>
    * E.g. the IDE might generate given 'member' element and wants to know element after which it should be inserted
-   * 
+   *
    * @param member    target member which anchor should be calculated
    * @param settings  code style settings to use
    * @param context   given member's context
@@ -69,13 +71,13 @@ public class MemberOrderService {
     if (arrangementSettings == null && rearranger instanceof ArrangementStandardSettingsAware) {
       arrangementSettings = ((ArrangementStandardSettingsAware)rearranger).getDefaultSettings();
     }
-    
+
     if (arrangementSettings == null) {
       return null;
     }
 
     Pair<? extends ArrangementEntry,? extends List<? extends ArrangementEntry>> pair =
-      rearranger.parseWithNew(context, null, Collections.singleton(context.getTextRange()), member, arrangementSettings);
+            rearranger.parseWithNew(context, null, Collections.singleton(context.getTextRange()), member, arrangementSettings);
     if (pair == null || pair.second.isEmpty()) {
       return null;
     }
@@ -86,9 +88,12 @@ public class MemberOrderService {
     List<? extends ArrangementEntry> nonArranged = parentEntry.getChildren();
     List<ArrangementEntry> entriesWithNew = new ArrayList<ArrangementEntry>(nonArranged);
     entriesWithNew.add(memberEntry);
-    List<ArrangementEntry> arranged = ArrangementEngine.arrange(entriesWithNew, arrangementSettings.getRules());
+    //TODO: check insert new element
+    final List<? extends ArrangementMatchRule> rulesByPriority = arrangementSettings.getRulesSortedByPriority();
+    final List<ArrangementSectionRule> extendedSectionRules = ArrangementUtil.getExtendedSectionRules(arrangementSettings);
+    List<ArrangementEntry> arranged = ArrangementEngine.arrange(entriesWithNew, extendedSectionRules, rulesByPriority, null);
     int i = arranged.indexOf(memberEntry);
-    
+
     if (i <= 0) {
       return context;
     }

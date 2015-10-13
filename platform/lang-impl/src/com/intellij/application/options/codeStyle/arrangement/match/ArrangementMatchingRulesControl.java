@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,32 +15,24 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.match;
 
-import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementEditorAware;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementRepresentationAware;
 import com.intellij.application.options.codeStyle.arrangement.util.ArrangementListRowDecorator;
 import com.intellij.application.options.codeStyle.arrangement.util.IntObjectMap;
-import com.intellij.lang.Language;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementEntryMatcher;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AbstractTableCellEditor;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -52,53 +44,43 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import static com.intellij.application.options.codeStyle.arrangement.match.ArrangementSectionRuleManager.ArrangementSectionRuleData;
 
 /**
  * @author Denis Zhdanov
  * @since 10/31/12 1:23 PM
  */
 public class ArrangementMatchingRulesControl extends JBTable {
-
-  @NotNull public static final DataKey<ArrangementMatchingRulesControl> KEY = DataKey.create("Arrangement.Rule.Match.Control");
-
-  @NotNull private static final Logger LOG            = Logger.getInstance("#" + ArrangementMatchingRulesControl.class.getName());
   @NotNull private static final JLabel EMPTY_RENDERER = new JLabel(ApplicationBundle.message("arrangement.text.empty.rule"));
 
-  @NotNull private final IntObjectMap<ArrangementListRowDecorator> myComponents   = new IntObjectMap<ArrangementListRowDecorator>();
-  @NotNull private final TIntArrayList                             mySelectedRows = new TIntArrayList();
-
-  @Nullable private final ArrangementSectionRuleManager        mySectionRuleManager;
+  @NotNull protected final IntObjectMap<ArrangementListRowDecorator> myComponents   = new IntObjectMap<ArrangementListRowDecorator>();
+  @NotNull private final TIntArrayList mySelectedRows = new TIntArrayList();
 
   @NotNull private final ArrangementMatchNodeComponentFactory myFactory;
-  @NotNull private final ArrangementMatchingRuleEditor        myEditor;
-  @NotNull private final RepresentationCallback               myRepresentationCallback;
-  @NotNull private final MyRenderer                           myRenderer;
-  @NotNull private final MyValidator                          myValidator;
+  @NotNull protected ArrangementMatchingRuleEditor        myEditor;
+  @NotNull private final RepresentationCallback           myRepresentationCallback;
+  @NotNull private final MatchingRulesRendererBase        myRenderer;
+
+  private ArrangementMatchingRulesValidator myValidator;
 
   private final int myMinRowHeight;
   private int myRowUnderMouse = -1;
   private int myEditorRow     = -1;
   private boolean mySkipSelectionChange;
 
-  public ArrangementMatchingRulesControl(@NotNull Language language, @NotNull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementMatchingRulesControl(@NotNull ArrangementStandardSettingsManager settingsManager,
                                          @NotNull ArrangementColorsProvider colorsProvider,
                                          @NotNull RepresentationCallback callback)
   {
     super(new ArrangementMatchingRulesModel());
     myRepresentationCallback = callback;
     myFactory = new ArrangementMatchNodeComponentFactory(settingsManager, colorsProvider, this);
-    myRenderer = new MyRenderer();
-    myValidator = new MyValidator();
+    myRenderer = createRender();
     setDefaultRenderer(Object.class, myRenderer);
     getColumnModel().getColumn(0).setCellEditor(new MyEditor());
     setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     setShowColumns(false);
     setShowGrid(false);
+    setBorder(IdeBorderFactory.createBorder());
     setSurrendersFocusOnKeystroke(true);
     putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 
@@ -107,7 +89,6 @@ public class ArrangementMatchingRulesControl extends JBTable {
     ArrangementUiComponent component = myFactory.getComponent(condition, rule, true);
     myMinRowHeight = new ArrangementListRowDecorator(component, this).getPreferredSize().height;
 
-    mySectionRuleManager = ArrangementSectionRuleManager.getInstance(language, settingsManager, colorsProvider, this);
     myEditor = new ArrangementMatchingRuleEditor(settingsManager, colorsProvider, this);
     addMouseMotionListener(new MouseAdapter() {
       @Override
@@ -127,78 +108,26 @@ public class ArrangementMatchingRulesControl extends JBTable {
     });
   }
 
+  protected MatchingRulesRendererBase createRender() {
+    return new MatchingRulesRendererBase();
+  }
+
+  @NotNull
+  protected ArrangementMatchingRulesValidator createValidator() {
+    return new ArrangementMatchingRulesValidator(getModel());
+  }
+
+  private ArrangementMatchingRulesValidator getValidator() {
+    if (myValidator == null) {
+      myValidator = createValidator();
+    }
+    return myValidator;
+  }
+
   @NotNull
   @Override
   public ArrangementMatchingRulesModel getModel() {
     return (ArrangementMatchingRulesModel)super.getModel();
-  }
-
-  @Nullable
-  public ArrangementSectionRuleManager getSectionRuleManager() {
-    return mySectionRuleManager;
-  }
-
-  public void setSections(@Nullable List<ArrangementSectionRule> sections) {
-    final List<StdArrangementMatchRule> rules = sections == null ? null : ArrangementUtil.collectMatchRules(sections);
-    myComponents.clear();
-    getModel().clear();
-
-    if (rules == null) {
-      return;
-    }
-
-    for (StdArrangementMatchRule rule : rules) {
-      getModel().add(rule);
-    }
-
-    if (ArrangementConstants.LOG_RULE_MODIFICATION) {
-      LOG.info("Arrangement matching rules list is refreshed. Given rules:");
-      for (StdArrangementMatchRule rule : rules) {
-        LOG.info("  " + rule.toString());
-      }
-    }
-  }
-
-  public List<ArrangementSectionRule> getSections() {
-    if (getModel().getSize() <= 0) {
-      return Collections.emptyList();
-    }
-
-    final List<ArrangementSectionRule> result = ContainerUtil.newArrayList();
-    final List<StdArrangementMatchRule> currentRules = ContainerUtil.newArrayList();
-    String currentSectionStart = null;
-    for (int i = 0; i < getModel().getSize(); i++) {
-      Object element = getModel().getElementAt(i);
-      if (element instanceof StdArrangementMatchRule) {
-        final ArrangementSectionRuleData sectionRule =
-                mySectionRuleManager == null ? null : mySectionRuleManager.getSectionRuleData((StdArrangementMatchRule)element);
-        if (sectionRule != null) {
-          if (sectionRule.isSectionStart()) {
-            if (currentSectionStart != null) {
-              result.add(ArrangementSectionRule.create(currentSectionStart, null, currentRules));
-              currentRules.clear();
-            }
-            currentSectionStart = sectionRule.getText();
-          }
-          else {
-            result.add(ArrangementSectionRule.create(StringUtil.notNullize(currentSectionStart), sectionRule.getText(), currentRules));
-            currentRules.clear();
-            currentSectionStart = null;
-          }
-        }
-        else if (currentSectionStart == null) {
-          result.add(ArrangementSectionRule.create((StdArrangementMatchRule)element));
-        }
-        else {
-          currentRules.add((StdArrangementMatchRule)element);
-        }
-      }
-    }
-
-    if (currentSectionStart != null) {
-      result.add(ArrangementSectionRule.create(currentSectionStart, null, currentRules));
-    }
-    return result;
   }
 
   @Override
@@ -208,10 +137,27 @@ public class ArrangementMatchingRulesControl extends JBTable {
       case MouseEvent.MOUSE_ENTERED: onMouseEntered(e); break;
       case MouseEvent.MOUSE_EXITED: onMouseExited(); break;
       case MouseEvent.MOUSE_RELEASED: onMouseReleased(e); break;
+      case MouseEvent.MOUSE_CLICKED: onMouseClicked(e); break;
     }
     if (!e.isConsumed()) {
       super.processMouseEvent(e);
     }
+  }
+
+  private void onMouseClicked(@NotNull MouseEvent e) {
+    final int count = e.getClickCount();
+    if (count != 2) {
+      return;
+    }
+
+    final TIntArrayList rows = getSelectedModelRows();
+    if (rows.size() != 1) {
+      return;
+    }
+
+    final int row = rows.get(0);
+    showEditor(row);
+    scrollRowToVisible(row);
   }
 
   private void onMouseMoved(@NotNull MouseEvent e) {
@@ -399,11 +345,21 @@ public class ArrangementMatchingRulesControl extends JBTable {
   }
 
   public void showEditor(int rowToEdit) {
-    if (mySectionRuleManager != null && mySectionRuleManager.isSectionRule(getModel().getElementAt(rowToEdit))) {
-      mySectionRuleManager.showEditor(rowToEdit);
+    showEditor(myEditor, rowToEdit);
+  }
+
+  public void scrollRowToVisible(int row) {
+    final Rectangle rect = getCellRect(row, 0, false);
+    if (row != getEditingRow() - 1) {
+      scrollRectToVisible(rect);
     }
     else {
-      showEditor(myEditor, rowToEdit);
+      final Rectangle editorRect = getCellRect(row + 1, 0, false);
+      if(!rect.isEmpty() && !editorRect.isEmpty()) {
+        final int height = (int)(rect.getHeight() + editorRect.getHeight());
+        final Rectangle visibleRect = new Rectangle((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), height);
+        scrollRectToVisible(visibleRect);
+      }
     }
   }
 
@@ -510,58 +466,14 @@ public class ArrangementMatchingRulesControl extends JBTable {
     return component;
   }
 
-  private class MyValidator {
-    @Nullable
-    private String validate(int index) {
-      if (mySectionRuleManager == null || getModel().getSize() < index) {
-        return null;
-      }
-
-      int startSectionIndex = -1;
-      final Set<String> rules = ContainerUtil.newHashSet();
-      for (int i = 0; i < index; i++) {
-        final ArrangementSectionRuleData section = extractSectionText(i);
-        if (section != null) {
-          startSectionIndex = section.isSectionStart() ? i : -1;
-          if (StringUtil.isNotEmpty(section.getText())) {
-            rules.add(section.getText());
-          }
-        }
-      }
-
-      final ArrangementSectionRuleData data = extractSectionText(index);
-      if (data != null) {
-        if (StringUtil.isNotEmpty(data.getText()) && rules.contains(data.getText())) {
-          return ApplicationBundle.message("arrangement.settings.validation.duplicate.section.text");
-        }
-
-        if (!data.isSectionStart()) {
-          if (startSectionIndex == -1) {
-            return ApplicationBundle.message("arrangement.settings.validation.end.section.rule.without.start");
-          }
-          else if (startSectionIndex == index - 1) {
-            return ApplicationBundle.message("arrangement.settings.validation.empty.section.rule");
-          }
-        }
-      }
-      return null;
-    }
-
-    @Nullable
-    private ArrangementSectionRuleData extractSectionText(int i) {
-      Object element = getModel().getElementAt(i);
-      if (element instanceof StdArrangementMatchRule) {
-        assert mySectionRuleManager != null;
-        return mySectionRuleManager.getSectionRuleData((StdArrangementMatchRule)element);
-      }
-      return null;
-    }
-  }
-
-  private class MyRenderer implements TableCellRenderer {
+  protected class MatchingRulesRendererBase implements TableCellRenderer {
 
     public Component getRendererComponent(int row) {
       return getTableCellRendererComponent(ArrangementMatchingRulesControl.this, getModel().getElementAt(row), false, false, row, 0);
+    }
+
+    public boolean allowModifications(StdArrangementMatchRule rule) {
+      return true;
     }
 
     @Override
@@ -579,10 +491,10 @@ public class ArrangementMatchingRulesControl extends JBTable {
           return EMPTY_RENDERER;
         }
         StdArrangementMatchRule rule = (StdArrangementMatchRule)value;
-        final boolean isSectionRule = mySectionRuleManager != null && mySectionRuleManager.isSectionRule(rule);
-        ArrangementUiComponent ruleComponent = myFactory.getComponent(rule.getMatcher().getCondition(), rule, !isSectionRule);
+        final boolean allowModifications = allowModifications(rule);
+        ArrangementUiComponent ruleComponent = myFactory.getComponent(rule.getMatcher().getCondition(), rule, allowModifications);
         component = new ArrangementListRowDecorator(ruleComponent, ArrangementMatchingRulesControl.this);
-        component.setError(myValidator.validate(row));
+        component.setError(getValidator().validate(row));
         myComponents.set(row, component);
       }
 

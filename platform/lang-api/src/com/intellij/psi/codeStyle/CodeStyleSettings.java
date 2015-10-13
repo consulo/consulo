@@ -17,13 +17,18 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.extensions.ExtensionException;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.*;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.Processor;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ClassMap;
 import org.jdom.Element;
@@ -38,6 +43,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class CodeStyleSettings extends CommonCodeStyleSettings implements Cloneable, JDOMExternalizable {
+
+  public static final int MAX_RIGHT_MARGIN = 1000;
 
   private static final Logger LOG = Logger.getInstance("#" + CodeStyleSettings.class.getName());
 
@@ -246,13 +253,8 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   /**
    * @deprecated Use get/setRightMargin() methods instead.
    */
-//----------------- WRAPPING ---------------------------
-  /**
-   * @deprecated Use get/setRightMargin() methods instead.
-   */
   @Deprecated
   public int RIGHT_MARGIN = 120;
-
   /**
    * <b>Do not use this field directly since it doesn't reflect a setting for a specific language which may
    * overwrite this one. Call {@link #isWrapOnTyping(Language)} method instead.</b>
@@ -318,7 +320,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   @NonNls public String HTML_DO_NOT_INDENT_CHILDREN_OF = "html,body,thead,tbody,tfoot";
   public int HTML_DO_NOT_ALIGN_CHILDREN_OF_MIN_LINES = 200;
 
-  @NonNls public String HTML_KEEP_WHITESPACES_INSIDE = "span,pre";
+  @NonNls public String HTML_KEEP_WHITESPACES_INSIDE = "span,pre,textarea";
   @NonNls public String HTML_INLINE_ELEMENTS =
           "a,abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,img,input,kbd,label,q,s,samp,select,span,strike,strong,sub,sup,textarea,tt,u,var";
   @NonNls public String HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT = "title,h1,h2,h3,h4,h5,h6,p";
@@ -420,24 +422,29 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     }
 
     final List<Element> list = element.getChildren(ADDITIONAL_INDENT_OPTIONS);
-    for (Element o : list) {
-      final String fileTypeId = o.getAttributeValue(FILETYPE);
+    if (list != null) {
+      for (Element additionalIndentElement : list) {
 
-      if (fileTypeId != null && !fileTypeId.isEmpty()) {
-        FileType target = FileTypeManager.getInstance().getFileTypeByExtension(fileTypeId);
-        if (target == UnknownFileType.INSTANCE || target == PlainTextFileType.INSTANCE || target.getDefaultExtension().isEmpty()) {
-          target = new TempFileType(fileTypeId);
+        final String fileTypeId = additionalIndentElement.getAttributeValue(FILETYPE);
+
+        if (fileTypeId != null && !fileTypeId.isEmpty()) {
+          FileType target = FileTypeManager.getInstance().getFileTypeByExtension(fileTypeId);
+          if (target == UnknownFileType.INSTANCE || target == PlainTextFileType.INSTANCE || target.getDefaultExtension().isEmpty()) {
+            target = new TempFileType(fileTypeId);
+          }
+
+          final IndentOptions options = getDefaultIndentOptions(target);
+          options.readExternal(additionalIndentElement);
+          registerAdditionalIndentOptions(target, options);
         }
-
-        final IndentOptions options = getDefaultIndentOptions(target);
-        options.readExternal(o);
-        registerAdditionalIndentOptions(target, options);
       }
     }
+
     myCommonSettingsManager.readExternal(element);
 
     if (USE_SAME_INDENTS) IGNORE_SAME_INDENTS_FOR_LANGUAGES = true;
   }
+
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
@@ -522,6 +529,27 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     return OTHER_INDENT_OPTIONS;
   }
 
+  /**
+   * If the document has an associated PsiFile, returns options for this file. Otherwise attempts to find associated VirtualFile and
+   * return options for corresponding FileType. If none are found, other indent options are returned.
+   *
+   * @param project  The project in which PsiFile should be searched.
+   * @param document The document to search indent options for.
+   * @return Indent options from the indent options providers or file type indent options or <code>OTHER_INDENT_OPTIONS</code>.
+   * @see FileIndentOptionsProvider
+   * @see FileTypeIndentOptionsProvider
+   * @see LanguageCodeStyleSettingsProvider
+   */
+  @NotNull
+  public IndentOptions getIndentOptionsByDocument(@Nullable Project project, @NotNull Document document) {
+    PsiFile file = project != null ? PsiDocumentManager.getInstance(project).getPsiFile(document) : null;
+    if (file != null) return getIndentOptionsByFile(file);
+
+    VirtualFile vFile = FileDocumentManager.getInstance().getFile(document);
+    FileType fileType = vFile != null ? vFile.getFileType() : null;
+    return getIndentOptions(fileType);
+  }
+
   @NotNull
   public IndentOptions getIndentOptionsByFile(@Nullable PsiFile file) {
     return getIndentOptionsByFile(file, null);
@@ -529,45 +557,78 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
   @NotNull
   public IndentOptions getIndentOptionsByFile(@Nullable PsiFile file, @Nullable TextRange formatRange) {
-    return getIndentOptionsByFile(file, formatRange, false);
+    return getIndentOptionsByFile(file, formatRange, false, null);
   }
 
   /**
    * Retrieves indent options for PSI file from an associated document or (if not defined in the document) from file indent options
    * providers.
    *
-   * @param file             The PSI file to retrieve options for.
-   * @param formatRange      The text range within the file for formatting purposes or null if there is either no specific range or multiple
-   *                         ranges. If the range covers the entire file (full reformat), options stored in the document are ignored and
-   *                         indent options are taken from file indent options providers.
-   * @param ignoreDocOptions Ignore options stored in the document and use file indent options providers even if there is no text range
-   *                         or the text range doesn't cover the entire file.
+   * @param file              The PSI file to retrieve options for.
+   * @param formatRange       The text range within the file for formatting purposes or null if there is either no specific range or multiple
+   *                          ranges. If the range covers the entire file (full reformat), options stored in the document are ignored and
+   *                          indent options are taken from file indent options providers.
+   * @param ignoreDocOptions  Ignore options stored in the document and use file indent options providers even if there is no text range
+   *                          or the text range doesn't cover the entire file.
+   * @param providerProcessor A callback object containing a reference to indent option provider which has returned indent options.
    * @return Indent options from the associated document or file indent options providers.
    * @see com.intellij.psi.codeStyle.FileIndentOptionsProvider
    */
   @NotNull
-  public IndentOptions getIndentOptionsByFile(@Nullable PsiFile file, @Nullable TextRange formatRange, boolean ignoreDocOptions) {
+  public IndentOptions getIndentOptionsByFile(@Nullable PsiFile file,
+                                              @Nullable TextRange formatRange,
+                                              boolean ignoreDocOptions,
+                                              @Nullable Processor<FileIndentOptionsProvider> providerProcessor) {
     if (file != null && file.isValid()) {
       boolean isFullReformat = isFileFullyCoveredByRange(file, formatRange);
       if (!ignoreDocOptions && !isFullReformat) {
-        IndentOptions docOptions = IndentOptions.retrieveFromAssociatedDocument(file);
-        if (docOptions != null) return docOptions;
+        IndentOptions options = IndentOptions.retrieveFromAssociatedDocument(file);
+        if (options != null) {
+          FileIndentOptionsProvider provider = options.getFileIndentOptionsProvider();
+          if (providerProcessor != null && provider != null) {
+            providerProcessor.process(provider);
+          }
+          return options;
+        }
       }
-      FileIndentOptionsProvider[] providers = FileIndentOptionsProvider.EP_NAME.getExtensions();
-      for (FileIndentOptionsProvider provider : providers) {
+
+      boolean committedDocumentNeeded = false;
+      for (FileIndentOptionsProvider provider : Extensions.getExtensions(FileIndentOptionsProvider.EP_NAME)) {
         if (!isFullReformat || provider.useOnFullReformat()) {
+          committedDocumentNeeded |= provider instanceof ProviderForCommittedDocument;
           IndentOptions indentOptions = provider.getIndentOptions(this, file);
           if (indentOptions != null) {
+            if (providerProcessor != null) {
+              providerProcessor.process(provider);
+            }
+            indentOptions.setFileIndentOptionsProvider(provider);
             logIndentOptions(file, provider, indentOptions);
             return indentOptions;
           }
         }
       }
-      return getIndentOptions(file.getFileType());
+
+      IndentOptions options = getIndentOptions(file.getFileType());
+      if (committedDocumentNeeded) {
+        markOptionsInaccurateIfDocumentUncommitted(options, file);
+      }
+      return options;
     }
     else {
       return OTHER_INDENT_OPTIONS;
     }
+  }
+
+  private static void markOptionsInaccurateIfDocumentUncommitted(@NotNull IndentOptions options, @NotNull PsiFile file) {
+    PsiDocumentManager manager = PsiDocumentManager.getInstance(file.getProject());
+    Document document = manager.getDocument(file);
+    if (document != null && !manager.isCommitted(document)) {
+      options.setRecalculateForCommittedDocument(true);
+    }
+  }
+
+  public static boolean isRecalculateForCommittedDocument(@NotNull IndentOptions options) {
+    return options.isRecalculateForCommittedDocument();
   }
 
   private static boolean isFileFullyCoveredByRange(@NotNull PsiFile file, @Nullable TextRange formatRange) {
@@ -718,10 +779,6 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     }
   }
 
-  public void unregisterAdditionalIndentOptions(FileType fileType) {
-    myAdditionalIndentOptions.remove(fileType);
-  }
-
   public IndentOptions getAdditionalIndentOptions(FileType fileType) {
     if (!myLoadedAdditionalIndentOptions) {
       loadAdditionalIndentOptions();
@@ -865,7 +922,8 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
   /**
    * Defines whether or not wrapping should occur when typing reaches right margin.
-   * @param language  The language to check the option for or null for a global option.
+   *
+   * @param language The language to check the option for or null for a global option.
    * @return True if wrapping on right margin is enabled.
    */
   public boolean isWrapOnTyping(@Nullable Language language) {

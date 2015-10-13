@@ -15,17 +15,22 @@
  */
 package com.intellij.psi.codeStyle.autodetect;
 
+import com.intellij.formatting.Block;
+import com.intellij.formatting.FormattingModel;
+import com.intellij.formatting.FormattingModelBuilder;
+import com.intellij.lang.LanguageFormatting;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.*;
+import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
 
 public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
   private static Logger LOG = Logger.getInstance("#com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptionsDetector");
@@ -48,13 +53,24 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
   public IndentOptions getIndentOptions() {
     IndentOptions indentOptions = (IndentOptions)CodeStyleSettingsManager.getSettings(myProject).getIndentOptions(myFile.getFileType()).clone();
 
-    if (myDocument != null) {
-      List<LineIndentInfo> linesInfo = new LineIndentInfoBuilder(myDocument.getCharsSequence()).build();
+    List<LineIndentInfo> linesInfo = calcLineIndentInfo();
+    if (linesInfo != null) {
       IndentUsageStatistics stats = new IndentUsageStatisticsImpl(linesInfo);
       adjustIndentOptions(indentOptions, stats);
     }
 
     return indentOptions;
+  }
+
+  private List<LineIndentInfo> calcLineIndentInfo() {
+    if (myDocument == null) return null;
+    CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(myProject);
+    FormattingModelBuilder modelBuilder = LanguageFormatting.INSTANCE.forContext(myFile);
+    if (modelBuilder == null) return null;
+
+    FormattingModel model = modelBuilder.createModel(myFile, settings);
+    Block rootBlock = model.getRootBlock();
+    return new FormatterBasedLineIndentInfoBuilder(myDocument, rootBlock).build();
   }
 
   private void adjustIndentOptions(@NotNull IndentOptions indentOptions, @NotNull IndentUsageStatistics stats) {
@@ -63,6 +79,8 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
 
     if (linesWithTabs > linesWithWhiteSpaceIndent) {
       setUseTabs(indentOptions, true);
+      indentOptions.INDENT_SIZE = indentOptions.TAB_SIZE;
+      indentOptions.CONTINUATION_INDENT_SIZE = indentOptions.TAB_SIZE * 2;
     }
     else if (linesWithWhiteSpaceIndent > linesWithTabs) {
       setUseTabs(indentOptions, false);

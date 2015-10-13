@@ -17,38 +17,37 @@ package com.intellij.application.options.codeStyle.arrangement.action;
 
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesModel;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.util.SystemInfoRt;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.util.IconUtil;
 import gnu.trove.TIntArrayList;
 
 /**
  * @author Denis Zhdanov
  * @since 8/26/12 7:41 PM
  */
-public class RemoveArrangementRuleAction extends AnAction {
+public class RemoveArrangementRuleAction extends AbstractArrangementRuleAction implements DumbAware {
 
   public RemoveArrangementRuleAction() {
     getTemplatePresentation().setText(ApplicationBundle.message("arrangement.action.rule.remove.text"));
     getTemplatePresentation().setDescription(ApplicationBundle.message("arrangement.action.rule.remove.description"));
+    getTemplatePresentation().setIcon(IconUtil.getRemoveIcon());
   }
 
   @Override
   public void update(AnActionEvent e) {
-   ArrangementMatchingRulesControl control = ArrangementMatchingRulesControl.KEY.getData(e.getDataContext());
-    e.getPresentation().setEnabled(control != null && !control.isEditing() && !control.getSelectedModelRows().isEmpty());
-    e.getPresentation().setIcon(SystemInfoRt.isMac ? AllIcons.ToolbarDecorator.Mac.Remove : AllIcons.ToolbarDecorator.Remove);
+    ArrangementMatchingRulesControl control = getRulesControl(e);
+    e.getPresentation().setEnabled(control != null && !control.getSelectedModelRows().isEmpty() && control.getEditingRow() == -1);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    ArrangementMatchingRulesControl control = ArrangementMatchingRulesControl.KEY.getData(e.getDataContext());
+    ArrangementMatchingRulesControl control = getRulesControl(e);
     if (control == null) {
       return;
     }
-    
+
     control.hideEditor();
 
     final TIntArrayList rowsToRemove = control.getSelectedModelRows();
@@ -63,7 +62,7 @@ public class RemoveArrangementRuleAction extends AnAction {
         for (int i = 0; i < rowsToRemove.size(); i++) {
           int row = rowsToRemove.get(i);
           model.removeRow(row);
-        } 
+        }
       }
     });
   }

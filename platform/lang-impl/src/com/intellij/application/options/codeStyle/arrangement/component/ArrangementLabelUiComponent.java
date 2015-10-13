@@ -32,6 +32,7 @@ public class ArrangementLabelUiComponent extends AbstractArrangementUiComponent 
   @NotNull private final JLabel                        myLabel;
 
   public ArrangementLabelUiComponent(@NotNull ArrangementSettingsToken token) {
+    super(token);
     myCondition = new ArrangementAtomMatchCondition(token);
     myLabel = new JLabel(token.getRepresentationValue());
   }
@@ -79,9 +80,14 @@ public class ArrangementLabelUiComponent extends AbstractArrangementUiComponent 
   @Override
   protected void doReset() {
   }
-  
+
   @Override
   public int getBaselineToUse(int width, int height) {
     return myLabel.getBaseline(width, height);
+  }
+
+  @Override
+  public void handleMouseClickOnSelected() {
+    setSelected(false);
   }
 }

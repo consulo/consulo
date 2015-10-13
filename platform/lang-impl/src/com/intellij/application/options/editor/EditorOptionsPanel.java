@@ -54,11 +54,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class EditorOptionsPanel {
-  private JPanel    myBehaviourPanel;
+  private JPanel myBehaviourPanel;
   private JCheckBox myCbHighlightBraces;
   private static final String STRIP_CHANGED = ApplicationBundle.message("combobox.strip.modified.lines");
 
-  private static final String STRIP_ALL  = ApplicationBundle.message("combobox.strip.all");
+  private static final String STRIP_ALL = ApplicationBundle.message("combobox.strip.all");
   private static final String STRIP_NONE = ApplicationBundle.message("combobox.strip.none");
   private JComboBox myStripTrailingSpacesCombo;
 
@@ -71,31 +71,31 @@ public class EditorOptionsPanel {
   private JCheckBox myCbHighlightScope;
 
   private JTextField myClipboardContentLimitTextField;
-  private JCheckBox  myCbSmoothScrolling;
-  private JCheckBox  myCbVirtualPageAtBottom;
-  private JCheckBox  myCbEnableDnD;
-  private JCheckBox  myCbEnableWheelFontChange;
-  private JCheckBox  myCbHonorCamelHumpsWhenSelectingByClicking;
+  private JCheckBox myCbSmoothScrolling;
+  private JCheckBox myCbVirtualPageAtBottom;
+  private JCheckBox myCbEnableDnD;
+  private JCheckBox myCbEnableWheelFontChange;
+  private JCheckBox myCbHonorCamelHumpsWhenSelectingByClicking;
 
-  private JPanel       myHighlightSettingsPanel;
+  private JPanel myHighlightSettingsPanel;
   private JRadioButton myRbPreferScrolling;
   private JRadioButton myRbPreferMovingCaret;
-  private JCheckBox    myCbRenameLocalVariablesInplace;
-  private JCheckBox    myCbHighlightIdentifierUnderCaret;
-  private JCheckBox    myCbEnsureBlankLineBeforeCheckBox;
-  private JCheckBox    myShowReformatCodeDialogCheckBox;
-  private JCheckBox    myShowOptimizeImportsDialogCheckBox;
-  private JCheckBox    myCbUseSoftWrapsAtEditor;
-  private JCheckBox    myCbUseSoftWrapsAtConsole;
-  private JCheckBox    myCbUseCustomSoftWrapIndent;
-  private JTextField   myCustomSoftWrapIndent;
-  private JCheckBox    myCbShowAllSoftWraps;
-  private JCheckBox    myPreselectCheckBox;
-  private JBCheckBox   myCbShowQuickDocOnMouseMove;
-  private JBLabel      myQuickDocDelayLabel;
-  private JTextField   myQuickDocDelayTextField;
-  private JComboBox    myRichCopyColorSchemeComboBox;
-  private JCheckBox    myRichCopyStripWhitespaceCheckBox;
+  private JCheckBox myCbRenameLocalVariablesInplace;
+  private JCheckBox myCbHighlightIdentifierUnderCaret;
+  private JCheckBox myCbEnsureBlankLineBeforeCheckBox;
+  private JCheckBox myShowNotificationAfterReformatCodeCheckBox;
+  private JCheckBox myShowNotificationAfterOptimizeImportsCheckBox;
+  private JCheckBox myCbUseSoftWrapsAtEditor;
+  private JCheckBox myCbUseSoftWrapsAtConsole;
+  private JCheckBox myCbUseCustomSoftWrapIndent;
+  private JTextField myCustomSoftWrapIndent;
+  private JCheckBox myCbShowAllSoftWraps;
+  private JCheckBox myPreselectCheckBox;
+  private JBCheckBox myCbShowQuickDocOnMouseMove;
+  private JBLabel myQuickDocDelayLabel;
+  private JTextField myQuickDocDelayTextField;
+  private JComboBox myRichCopyColorSchemeComboBox;
+  private JCheckBox myRichCopyStripWhitespaceCheckBox;
 
   private static final String ACTIVE_COLOR_SCHEME = ApplicationBundle.message("combobox.richcopy.color.scheme.active");
 
@@ -173,7 +173,7 @@ public class EditorOptionsPanel {
     // Strip trailing spaces on save
 
     String stripTrailingSpaces = editorSettings.getStripTrailingSpaces();
-    if(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE.equals(stripTrailingSpaces)) {
+    if (EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE.equals(stripTrailingSpaces)) {
       myStripTrailingSpacesCombo.setSelectedItem(STRIP_NONE);
     }
     else if (EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED.equals(stripTrailingSpaces)) {
@@ -204,8 +204,8 @@ public class EditorOptionsPanel {
     myCbRenameLocalVariablesInplace.setSelected(editorSettings.isVariableInplaceRenameEnabled());
     myPreselectCheckBox.setSelected(editorSettings.isPreselectRename());
 
-    myShowReformatCodeDialogCheckBox.setSelected(editorSettings.getOptions().SHOW_REFORMAT_DIALOG);
-    myShowOptimizeImportsDialogCheckBox.setSelected(editorSettings.getOptions().SHOW_OPIMIZE_IMPORTS_DIALOG);
+    myShowNotificationAfterReformatCodeCheckBox.setSelected(editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION);
+    myShowNotificationAfterOptimizeImportsCheckBox.setSelected(editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION);
 
     myErrorHighlightingPanel.reset();
 
@@ -227,7 +227,7 @@ public class EditorOptionsPanel {
   public void apply() throws ConfigurationException {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
-    UISettings uiSettings=UISettings.getInstance();
+    UISettings uiSettings = UISettings.getInstance();
 
     // Display
 
@@ -255,7 +255,6 @@ public class EditorOptionsPanel {
     // Limits
 
 
-
     boolean uiSettingsChanged = false;
     int maxClipboardContents = getMaxClipboardContents();
     if (uiSettings.MAX_CLIPBOARD_CONTENTS != maxClipboardContents) {
@@ -263,16 +262,16 @@ public class EditorOptionsPanel {
       uiSettingsChanged = true;
     }
 
-    if(uiSettingsChanged){
+    if (uiSettingsChanged) {
       uiSettings.fireUISettingsChanged();
     }
 
     // Strip trailing spaces on save
 
-    if(STRIP_NONE.equals(myStripTrailingSpacesCombo.getSelectedItem())) {
+    if (STRIP_NONE.equals(myStripTrailingSpacesCombo.getSelectedItem())) {
       editorSettings.setStripTrailingSpaces(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE);
     }
-    else if(STRIP_CHANGED.equals(myStripTrailingSpacesCombo.getSelectedItem())){
+    else if (STRIP_CHANGED.equals(myStripTrailingSpacesCombo.getSelectedItem())) {
       editorSettings.setStripTrailingSpaces(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED);
     }
     else {
@@ -301,22 +300,24 @@ public class EditorOptionsPanel {
     editorSettings.setVariableInplaceRenameEnabled(myCbRenameLocalVariablesInplace.isSelected());
     editorSettings.setPreselectRename(myPreselectCheckBox.isSelected());
 
-    editorSettings.getOptions().SHOW_REFORMAT_DIALOG = myShowReformatCodeDialogCheckBox.isSelected();
-    editorSettings.getOptions().SHOW_OPIMIZE_IMPORTS_DIALOG = myShowOptimizeImportsDialogCheckBox.isSelected();
+    editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION = myShowNotificationAfterReformatCodeCheckBox.isSelected();
+    editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION = myShowNotificationAfterOptimizeImportsCheckBox.isSelected();
 
     reinitAllEditors();
 
-    String temp=myRecentFilesLimitField.getText();
-    if(temp.trim().length() > 0){
+    String temp = myRecentFilesLimitField.getText();
+    if (temp.trim().length() > 0) {
       try {
-        int newRecentFilesLimit= Integer.parseInt(temp);
-        if(newRecentFilesLimit>0&&uiSettings.RECENT_FILES_LIMIT!=newRecentFilesLimit){
-          uiSettings.RECENT_FILES_LIMIT=newRecentFilesLimit;
+        int newRecentFilesLimit = Integer.parseInt(temp);
+        if (newRecentFilesLimit > 0 && uiSettings.RECENT_FILES_LIMIT != newRecentFilesLimit) {
+          uiSettings.RECENT_FILES_LIMIT = newRecentFilesLimit;
           uiSettingsChanged = true;
         }
-      }catch (NumberFormatException ignored){}
+      }
+      catch (NumberFormatException ignored) {
+      }
     }
-    if(uiSettingsChanged){
+    if (uiSettingsChanged) {
       uiSettings.fireUISettingsChanged();
     }
     uiSettings.CONSOLE_COMMAND_HISTORY_LIMIT = StringUtil.parseInt(myCommandsHistoryLimitField.getText(), uiSettings.CONSOLE_COMMAND_HISTORY_LIMIT);
@@ -379,11 +380,13 @@ public class EditorOptionsPanel {
     myErrorHighlightingPanel.disposeUIResources();
   }
 
-  private int getMaxClipboardContents(){
+  private int getMaxClipboardContents() {
     int maxClipboardContents = -1;
     try {
       maxClipboardContents = Integer.parseInt(myClipboardContentLimitTextField.getText());
-    } catch (NumberFormatException ignored) {}
+    }
+    catch (NumberFormatException ignored) {
+    }
     if (maxClipboardContents <= 0) {
       maxClipboardContents = 1;
     }
@@ -393,7 +396,7 @@ public class EditorOptionsPanel {
   public boolean isModified() {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
-    UISettings uiSettings=UISettings.getInstance();
+    UISettings uiSettings = UISettings.getInstance();
 
     // Display
     boolean isModified = isModified(myCbSmoothScrolling, editorSettings.isSmoothScrolling());
@@ -443,8 +446,8 @@ public class EditorOptionsPanel {
     isModified |= isModified(myCbRenameLocalVariablesInplace, editorSettings.isVariableInplaceRenameEnabled());
     isModified |= isModified(myPreselectCheckBox, editorSettings.isPreselectRename());
 
-    isModified |= isModified(myShowReformatCodeDialogCheckBox, editorSettings.getOptions().SHOW_REFORMAT_DIALOG);
-    isModified |= isModified(myShowOptimizeImportsDialogCheckBox, editorSettings.getOptions().SHOW_OPIMIZE_IMPORTS_DIALOG);
+    isModified |= isModified(myShowNotificationAfterReformatCodeCheckBox, editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION);
+    isModified |= isModified(myShowNotificationAfterOptimizeImportsCheckBox, editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION);
 
     isModified |= myErrorHighlightingPanel.isModified();
 
@@ -464,17 +467,17 @@ public class EditorOptionsPanel {
       int fieldValue = Integer.parseInt(textField.getText().trim());
       return fieldValue != value;
     }
-    catch(NumberFormatException e) {
+    catch (NumberFormatException e) {
       return false;
     }
   }
 
   private String getStripTrailingSpacesValue() {
     Object selectedItem = myStripTrailingSpacesCombo.getSelectedItem();
-    if(STRIP_NONE.equals(selectedItem)) {
+    if (STRIP_NONE.equals(selectedItem)) {
       return EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE;
     }
-    else if(STRIP_CHANGED.equals(selectedItem)){
+    else if (STRIP_CHANGED.equals(selectedItem)) {
       return EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED;
     }
     else {
@@ -491,7 +494,8 @@ public class EditorOptionsPanel {
     try {
       int indent = Integer.parseInt(indentAsString.trim());
       return indent >= 0 ? indent : defaultIndent;
-    } catch (IllegalArgumentException e) {
+    }
+    catch (IllegalArgumentException e) {
       // Ignore
     }
     return defaultIndent;

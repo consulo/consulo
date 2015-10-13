@@ -31,8 +31,8 @@ import org.jetbrains.annotations.NotNull;
  * <p/>
  * <pre>
  *     return a == 0
-                  && (b == 0
-                          || c == 0);
+ && (b == 0
+ || c == 0);
  * </pre>
  * <p/>
  * Here is the following blocks hierarchy (going from child to parent):
@@ -63,13 +63,13 @@ import org.jetbrains.annotations.NotNull;
  * It's possible to configure indent to enforce parent block indent to its children that start new line. Consider the following situation:
  * <pre>
  *   foo("test", new Runnable() {
- *           public void run() { 
- *           }                   
+ *           public void run() {
+ *           }
  *       },                      
- *       new Runnable() {        
- *           public void run() { 
- *           }                   
- *       }                       
+ *       new Runnable() {
+ *           public void run() {
+ *           }
+ *       }
  *   );                          
  * </pre>
  * We want the first {@code 'new Runnable() {...}'} block here to be indented to the method expression list element. However, formatter
@@ -77,11 +77,13 @@ import org.jetbrains.annotations.NotNull;
  * we need to define <code>'enforce indent to children'</code> flag in order to instruct formatter to apply parent indent to the sub-blocks.
  *
  * @see com.intellij.formatting.Block#getIndent()
- * @see com.intellij.formatting.ChildAttributes#getChildIndent() 
+ * @see com.intellij.formatting.ChildAttributes#getChildIndent()
  */
 
 public abstract class Indent {
   private static IndentFactory myFactory;
+
+  public abstract Type getType();
 
   static void setFactory(IndentFactory factory) {
     myFactory = factory;
@@ -240,7 +242,7 @@ public abstract class Indent {
 
   /**
    * Base factory method for {@link Indent} objects construction, i.e. all other methods may be expressed in terms of this method.
-   * 
+   *
    * @param type                      indent type
    * @param relativeToDirectParent    flag the indicates if current indent object anchors direct block parent (feel free
    *                                  to get more information about that at class-level javadoc)
@@ -265,6 +267,10 @@ public abstract class Indent {
    */
   public static Indent getIndent(@NotNull Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
     return myFactory.getIndent(type, spaces, relativeToDirectParent, enforceIndentToChildren);
+  }
+
+  public static Indent getSmartIndent(Type type) {
+    return myFactory.getSmartIndent(type);
   }
 
   public static class Type {

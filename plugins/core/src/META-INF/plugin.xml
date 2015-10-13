@@ -1281,6 +1281,9 @@
 
     <applicationService serviceImplementation="com.intellij.internal.statistic.UsageTrigger"/>
 
+    <applicationService serviceInterface="com.intellij.codeInsight.actions.FormatChangedTextUtil"
+                        serviceImplementation="com.intellij.codeInsight.actions.VcsAwareFormatChangedTextUtil" />
+
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.startup.StartupManager"
@@ -2568,6 +2571,8 @@
     <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.ProjectLibraryTabFactory"/>
 
     <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectableIndentOptionsProvider" order="last"/>
+
+    <editorNotificationProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectedIndentOptionsNotificationProvider"/>
 
     <predefinedBundlesProvider implementation="org.mustbe.consulo.bundle.DefaultPredefinedBundlesProvider" order="first" />
 

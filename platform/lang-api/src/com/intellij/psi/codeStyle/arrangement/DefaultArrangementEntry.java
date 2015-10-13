@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Not thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 7/20/12 4:53 PM
  */

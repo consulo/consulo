@@ -51,7 +51,7 @@ public interface ArrangementUiComponent {
 
   /**
    * We use 'enabled by user' property name here in order to avoid clash
-   * with {@link Component#isEnabled() standard awt 'enabled' property}. 
+   * with {@link Component#isEnabled() standard awt 'enabled' property}.
    *
    * @return    <code>true</code> if current ui token is enabled; <code>false</code> otherwise
    */
@@ -107,6 +107,19 @@ public interface ArrangementUiComponent {
   int getBaselineToUse(int width, int height);
 
   void setListener(@NotNull Listener listener);
+
+  /**
+   * Method to process second click on the component,
+   * e.g. we can deselect the component or invert it condition
+   */
+  void handleMouseClickOnSelected();
+
+  /**
+   * For condition that can't be disabled,
+   * e.g. 'not public' can be used with any other rule like 'private' or 'not private'
+   * @return
+   */
+  boolean alwaysCanBeActive();
 
   interface Factory {
     ExtensionPointName<Factory> EP_NAME = ExtensionPointName.create("com.intellij.rearranger.ui");

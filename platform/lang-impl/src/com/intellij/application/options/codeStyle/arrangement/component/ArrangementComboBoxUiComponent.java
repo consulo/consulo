@@ -35,11 +35,12 @@ import java.util.List;
  * @since 3/11/13 11:56 AM
  */
 public class ArrangementComboBoxUiComponent extends AbstractArrangementUiComponent {
-  
+
   @NotNull private final JComboBox myComboBox;
 
   @SuppressWarnings("unchecked")
   public ArrangementComboBoxUiComponent(@NotNull List<ArrangementSettingsToken> tokens) {
+    super(tokens);
     ArrangementSettingsToken[] tokensArray = tokens.toArray(new ArrangementSettingsToken[tokens.size()]);
     Arrays.sort(tokensArray, new Comparator<ArrangementSettingsToken>() {
       @Override
@@ -80,7 +81,7 @@ public class ArrangementComboBoxUiComponent extends AbstractArrangementUiCompone
 
   @Override
   public void chooseToken(@NotNull ArrangementSettingsToken data) throws IllegalArgumentException {
-    myComboBox.setSelectedItem(data); 
+    myComboBox.setSelectedItem(data);
   }
 
   @NotNull
@@ -111,7 +112,7 @@ public class ArrangementComboBoxUiComponent extends AbstractArrangementUiCompone
 
   @Override
   public void setEnabled(boolean enabled) {
-    myComboBox.setEnabled(enabled); 
+    myComboBox.setEnabled(enabled);
   }
 
   @Override
@@ -121,5 +122,10 @@ public class ArrangementComboBoxUiComponent extends AbstractArrangementUiCompone
   @Override
   public int getBaselineToUse(int width, int height) {
     return -1;
+  }
+
+  @Override
+  public void handleMouseClickOnSelected() {
+    setSelected(false);
   }
 }

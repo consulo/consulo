@@ -21,21 +21,23 @@ import org.jetbrains.annotations.PropertyKey;
 
 /**
  * Represents ArrangementSettingsToken designed for use with standard GUI, i.e. a token that knows its UI role.
- *
  * @author Roman.Shein
- *         Date: 19.07.13
+ * Date: 19.07.13
  */
 public class StdArrangementSettingsToken extends ArrangementSettingsToken {
 
   @NotNull private final StdArrangementTokenType myTokenType;
 
   @NotNull
-  public static StdArrangementSettingsToken tokenById(@NotNull String id, @NotNull StdArrangementTokenType tokenType) {
+  public static StdArrangementSettingsToken tokenById(@NotNull String id,
+                                                      @NotNull StdArrangementTokenType tokenType) {
     return new StdArrangementSettingsToken(id, id.toLowerCase().replace("_", " "), tokenType);
   }
 
   @NotNull
-  public static StdArrangementSettingsToken token(@NotNull String id, @NotNull String name, @NotNull StdArrangementTokenType tokenType) {
+  public static StdArrangementSettingsToken token(@NotNull String id,
+                                                  @NotNull String name,
+                                                  @NotNull StdArrangementTokenType tokenType) {
     return new StdArrangementSettingsToken(id, name, tokenType);
   }
 
@@ -46,12 +48,13 @@ public class StdArrangementSettingsToken extends ArrangementSettingsToken {
     return new StdArrangementSettingsToken(id, ApplicationBundle.message(key), tokenType);
   }
 
-  @NotNull
-  public StdArrangementTokenType getTokenType() {
+  @NotNull public StdArrangementTokenType getTokenType() {
     return myTokenType;
   }
 
-  private StdArrangementSettingsToken(@NotNull String id, @NotNull String uiName, @NotNull StdArrangementTokenType tokenType) {
+  protected StdArrangementSettingsToken(@NotNull String id,
+                                        @NotNull String uiName,
+                                        @NotNull StdArrangementTokenType tokenType) {
     super(id, uiName);
     myTokenType = tokenType;
   }

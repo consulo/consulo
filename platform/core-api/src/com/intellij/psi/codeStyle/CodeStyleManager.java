@@ -138,12 +138,21 @@ public abstract class CodeStyleManager  {
    * Re-formats a ranges of text in the specified file. This method works faster than
    * {@link #reformatRange(com.intellij.psi.PsiElement, int, int)} but invalidates the
    * PSI structure for the file.
-   * 
+   *
    * @param file  the file to reformat
    * @param ranges   ranges to process
    * @throws IncorrectOperationException  if the file to reformat is read-only.
    */
   public abstract void reformatText(@NotNull PsiFile file, @NotNull Collection<TextRange> ranges) throws IncorrectOperationException;
+
+
+  /**
+   * Works as #reformatText, but reformats not only specified ranges, but also some context around to make code look consistent
+   * @param file
+   * @param ranges
+   * @throws IncorrectOperationException
+   */
+  public abstract void reformatTextWithContext(@NotNull PsiFile file, @NotNull Collection<TextRange> ranges) throws IncorrectOperationException;
 
   /**
    * Re-formats the specified range of a file, modifying only line indents and leaving
@@ -196,7 +205,7 @@ public abstract class CodeStyleManager  {
    * Calculates the indent that should be used for the current line in the specified
    * editor.
    *
-   * @param editor the editor for which the indent should be calculated.
+   * @param document for which the indent should be calculated.
    * @return the indent string (containing of tabs and/or whitespaces), or null if it
    *         was not possible to calculate the indent.
    */
@@ -238,7 +247,7 @@ public abstract class CodeStyleManager  {
    * <p/>
    * It's possible to configure that (implementation details are insignificant here) and current method serves as a read-only
    * facade for obtaining information if 'sequential' processing is allowed at the moment.
-   * 
+   *
    * @return      <code>true</code> if 'sequential' formatting is allowed now; <code>false</code> otherwise
    */
   public abstract boolean isSequentialProcessingAllowed();

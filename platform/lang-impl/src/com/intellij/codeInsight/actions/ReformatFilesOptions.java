@@ -15,12 +15,15 @@
  */
 package com.intellij.codeInsight.actions;
 
-public interface ReformatFilesOptions {
+import com.intellij.psi.search.SearchScope;
+import org.jetbrains.annotations.Nullable;
 
-  boolean isOptimizeImports();
+public interface ReformatFilesOptions extends LayoutCodeOptions {
 
-  boolean isProcessOnlyChangedText();
+  @Nullable
+  String getFileTypeMask();
 
-  boolean isRearrangeEntries();
+  @Nullable
+  SearchScope getSearchScope();
 
 }

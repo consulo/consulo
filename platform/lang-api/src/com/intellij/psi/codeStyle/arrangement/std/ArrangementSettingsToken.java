@@ -22,14 +22,14 @@ import org.jetbrains.annotations.Nullable;
  * Stands for an atomic settings element. The general idea is to allow third-party plugin developers to use platform
  * codebase for managing arrangement settings, that's why we need a general purpose class that represent a setting.
  * I.e. third-party developers can create their own instances of this class and implement {@link ArrangementStandardSettingsAware}.
- * 
+ *
  * @author Denis Zhdanov
  * @since 3/6/13 12:38 PM
  */
 public class ArrangementSettingsToken implements Comparable<ArrangementSettingsToken> {
 
-  @NotNull private final String myId;
-  @NotNull private final String myRepresentationName;
+  @NotNull protected String myId;
+  @NotNull protected String myRepresentationName;
 
   public ArrangementSettingsToken(@NotNull String id, @NotNull String name) {
     myId = id;
@@ -40,14 +40,14 @@ public class ArrangementSettingsToken implements Comparable<ArrangementSettingsT
   public String getId() {
     return myId;
   }
-  
+
   @NotNull
   public String getRepresentationValue() {
     return myRepresentationName;
   }
 
   @Override
-  public int compareTo(ArrangementSettingsToken that) {
+  public int compareTo(@NotNull ArrangementSettingsToken that) {
     return myId.compareTo(that.myId);
   }
 

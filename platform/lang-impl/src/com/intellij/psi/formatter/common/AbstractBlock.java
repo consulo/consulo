@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,10 @@ public abstract class AbstractBlock implements ASTBlock {
   @NotNull protected final  ASTNode     myNode;
   @Nullable protected final Wrap        myWrap;
   @Nullable protected final Alignment   myAlignment;
-  private                   List<Block> mySubBlocks;
-  private                   Boolean     myIncomplete;
+
+  private List<Block> mySubBlocks;
+  private Boolean myIncomplete;
+  private boolean myBuildIndentsOnly = false;
 
   protected AbstractBlock(@NotNull ASTNode node, @Nullable Wrap wrap, @Nullable Alignment alignment) {
     myNode = node;
@@ -61,13 +63,28 @@ public abstract class AbstractBlock implements ASTBlock {
       if (list.isEmpty()) {
         list = buildInjectedBlocks();
       }
-      mySubBlocks = list.size() > 0 ? list : EMPTY;
+      mySubBlocks = !list.isEmpty() ? list : EMPTY;
     }
     return mySubBlocks;
   }
 
+  /**
+   * Prevents from building injected blocks, which allows to build blocks faster
+   * Initially was made for formatting-based indent detector
+   */
+  public void setBuildIndentsOnly(boolean value) {
+    myBuildIndentsOnly = value;
+  }
+
+  protected boolean isBuildIndentsOnly() {
+    return myBuildIndentsOnly;
+  }
+
   @NotNull
   private List<Block> buildInjectedBlocks() {
+    if (myBuildIndentsOnly) {
+      return EMPTY;
+    }
     if (!(this instanceof SettingsAwareBlock)) {
       return EMPTY;
     }
@@ -79,11 +96,11 @@ public abstract class AbstractBlock implements ASTBlock {
     if (file == null) {
       return EMPTY;
     }
-    
+
     if (InjectedLanguageUtil.getCachedInjectedDocuments(file).isEmpty()) {
       return EMPTY;
     }
-    
+
     TextRange blockRange = myNode.getTextRange();
     List<DocumentWindow> documentWindows = InjectedLanguageUtil.getCachedInjectedDocuments(file);
     for (DocumentWindow documentWindow : documentWindows) {

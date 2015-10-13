@@ -2229,5 +2229,7 @@
     </reference>
 
     <action id="SendEOF" class="com.intellij.execution.actions.EOFAction" text="Send EOF"/>
+
+    <action id="ShowReformatFileDialog" class="com.intellij.codeInsight.actions.ShowReformatFileDialog"/>
   </actions>
 </idea-plugin>

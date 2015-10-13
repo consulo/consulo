@@ -38,7 +38,8 @@ class IndentImpl extends Indent {
     myEnforceIndentToChildren = enforceIndentToChildren;
   }
 
-  Type getType() {
+  @Override
+  public Type getType() {
     return myType;
   }
 
@@ -70,7 +71,7 @@ class IndentImpl extends Indent {
    * new line.
    * <p/>
    * Feel free to check {@link Indent} javadoc for the more detailed explanation of this property usage.
-   * 
+   *
    * @return      <code>true</code> if current indent object is configured to enforce indent for sub-blocks of composite block
    *              that doesn't start new line; <code>false</code> otherwise
    */
@@ -84,7 +85,7 @@ class IndentImpl extends Indent {
     if (myType == Type.SPACES) {
       return "<Indent: SPACES(" + mySpaces + ")>";
     }
-    return "<Indent: " + myType + (myIsAbsolute ? ":ABSOLUTE " : "") 
+    return "<Indent: " + myType + (myIsAbsolute ? ":ABSOLUTE " : "")
            + (myRelativeToDirectParent ? " relative to direct parent " : "")
            + (myEnforceIndentToChildren ? " enforce indent to children" : "") + ">";
   }

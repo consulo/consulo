@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,44 +16,39 @@
 
 package com.intellij.codeInsight.actions;
 
-import com.intellij.application.options.editor.EditorOptions;
 import com.intellij.codeInsight.CodeInsightBundle;
+import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.LanguageFormatting;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.psi.*;
-import com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine;
-import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
-import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class ReformatCodeAction extends AnAction implements DumbAware {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.actions.ReformatCodeAction");
+
   private static final @NonNls String HELP_ID = "editing.codeReformatting";
   protected static ReformatFilesOptions myTestOptions;
 
@@ -68,12 +63,9 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
     final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
     final VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
-    if (files == null) {
-      return;
-    }
 
     PsiFile file = null;
-    final PsiDirectory dir;
+    PsiDirectory dir = null;
     boolean hasSelection = false;
 
     if (editor != null){
@@ -82,40 +74,37 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
       dir = file.getContainingDirectory();
       hasSelection = editor.getSelectionModel().hasSelection();
     }
-    else if (areFiles(files)) {
+    else if (containsAtLeastOneFile(files)) {
       final ReadonlyStatusHandler.OperationStatus operationStatus = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(files);
       if (!operationStatus.hasReadonlyFiles()) {
         ReformatFilesOptions selectedFlags = getReformatFilesOptions(project, files);
         if (selectedFlags == null)
           return;
 
-        final boolean processOnlyChangedText = selectedFlags.isProcessOnlyChangedText();
+        final boolean processOnlyChangedText = selectedFlags.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT;
         final boolean shouldOptimizeImports = selectedFlags.isOptimizeImports() && !DumbService.getInstance(project).isDumb();
 
         AbstractLayoutCodeProcessor processor = new ReformatCodeProcessor(project, convertToPsiFiles(files, project), null, processOnlyChangedText);
         if (shouldOptimizeImports) {
           processor = new OptimizeImportsProcessor(processor);
         }
-        if (selectedFlags.isRearrangeEntries()) {
-          processor = new RearrangeCodeProcessor(processor, null);
+        if (selectedFlags.isRearrangeCode()) {
+          processor = new RearrangeCodeProcessor(processor);
         }
 
         processor.run();
       }
       return;
     }
-    else {
-      Project projectContext = PlatformDataKeys.PROJECT_CONTEXT.getData(dataContext);
+    else if (PlatformDataKeys.PROJECT_CONTEXT.getData(dataContext) != null || LangDataKeys.MODULE_CONTEXT.getData(dataContext) != null) {
       Module moduleContext = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
-
-      if (projectContext != null || moduleContext != null) {
-        ReformatFilesOptions selectedFlags = getLayoutProjectOptions(project, moduleContext); // module menu - only 2 options available
-        if (selectedFlags != null) {
-          reformatModule(project, moduleContext, selectedFlags);
-        }
-        return;
+      ReformatFilesOptions selectedFlags = getLayoutProjectOptions(project, moduleContext);
+      if (selectedFlags != null) {
+        reformatModule(project, moduleContext, selectedFlags);
       }
-
+      return;
+    }
+    else {
       PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
       if (element == null) return;
       if (element instanceof PsiDirectoryContainer) {
@@ -131,76 +120,75 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
       }
     }
 
-    boolean optimizeImports = ReformatFilesDialog.isOptmizeImportsOptionOn();
-    boolean processWholeFile = false;
-    boolean processChangedTextOnly = PropertiesComponent.getInstance().getBoolean(LayoutCodeConstants.PROCESS_CHANGED_TEXT_KEY, false);
-    boolean rearrangeEntries = getLastSavedRearrangeCbState(project, file);
-
-    final boolean showDialog = EditorSettingsExternalizable.getInstance().getOptions().SHOW_REFORMAT_DIALOG;
-
-    if (showDialog || (file == null && dir != null)) {
-      LayoutCodeOptions selectedFlags = getLayoutCodeOptions(project, file, dir, hasSelection);
-      if (selectedFlags == null)
-        return;
-
-      optimizeImports = selectedFlags.isOptimizeImports();
-      rearrangeEntries = selectedFlags.isRearrangeEntries();
-      processWholeFile = selectedFlags.isProcessWholeFile();
-      processChangedTextOnly = selectedFlags.isProcessOnlyChangedText();
-
-      if (selectedFlags.isProcessDirectory()) {
-        AbstractLayoutCodeProcessor processor = new ReformatCodeProcessor(project, dir, selectedFlags.isIncludeSubdirectories(), processChangedTextOnly);
-        if (optimizeImports) {
-          processor = new OptimizeImportsProcessor(processor);
-        }
-        if (selectedFlags.isRearrangeEntries()) {
-          processor = new RearrangeCodeProcessor(processor, null);
-        }
-
-        processor.run();
-        return;
+    if (file == null && dir != null) {
+      DirectoryFormattingOptions options = getDirectoryFormattingOptions(project, dir);
+      if (options != null) {
+        reformatDirectory(project, dir, options);
       }
+      return;
     }
 
-    final TextRange range;
-    if (!processWholeFile && editor != null && editor.getSelectionModel().hasSelection()){
-      range = TextRange.create(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
-    }
-    else{
-      range = null;
-    }
+    if (file == null || editor == null) return;
 
-    if (optimizeImports && range == null) {
-      if (file != null || dir == null) {
-        new OptimizeImportsProcessor(new ReformatCodeProcessor(project, file, null, processChangedTextOnly)).run();
-      }
-      else {
-        new OptimizeImportsProcessor(new ReformatCodeProcessor(project, dir, true, processChangedTextOnly)).run();
+    LastRunReformatCodeOptionsProvider provider = new LastRunReformatCodeOptionsProvider(PropertiesComponent.getInstance());
+    ReformatCodeRunOptions currentRunOptions = provider.getLastRunOptions(file);
+
+    TextRangeType processingScope = currentRunOptions.getTextRangeType();
+    if (hasSelection) {
+      processingScope = TextRangeType.SELECTED_TEXT;
+    }
+    else if (processingScope == TextRangeType.VCS_CHANGED_TEXT) {
+      if (FormatChangedTextUtil.getInstance().isChangeNotTrackedForFile(project, file)) {
+        processingScope = TextRangeType.WHOLE_FILE;
       }
     }
     else {
-      new ReformatCodeProcessor(project, file, range, processChangedTextOnly).run();
+      processingScope = TextRangeType.WHOLE_FILE;
     }
 
-    if (rearrangeEntries && file != null && editor != null) {
-      final ArrangementEngine engine = ServiceManager.getService(project, ArrangementEngine.class);
-      try {
-        final PsiFile finalFile = file;
-        SelectionModel selectionModel = editor.getSelectionModel();
-        final TextRange rangeToUse = selectionModel.hasSelection()
-                                     ? TextRange.create(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd())
-                                     : TextRange.create(0, editor.getDocument().getTextLength());
-        CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-          @Override
-          public void run() {
-            engine.arrange(finalFile, Collections.singleton(rangeToUse));
-          }
-        }, getTemplatePresentation().getText(), null);
-      }
-      finally {
-        PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
-      }
+    currentRunOptions.setProcessingScope(processingScope);
+    new FileInEditorProcessor(file, editor, currentRunOptions).processCode();
+  }
+
+
+  @Nullable
+  private static DirectoryFormattingOptions getDirectoryFormattingOptions(@NotNull Project project, @NotNull PsiDirectory dir) {
+    LayoutDirectoryDialog dialog = new LayoutDirectoryDialog(
+            project,
+            CodeInsightBundle.message("process.reformat.code"),
+            CodeInsightBundle.message("process.scope.directory", dir.getVirtualFile().getPath()),
+            FormatChangedTextUtil.hasChanges(dir)
+    );
+
+    boolean enableIncludeDirectoriesCb = dir.getSubdirectories().length > 0;
+    dialog.setEnabledIncludeSubdirsCb(enableIncludeDirectoriesCb);
+    dialog.setSelectedIncludeSubdirsCb(enableIncludeDirectoriesCb);
+
+    if (dialog.showAndGet()) {
+      return dialog;
     }
+    return null;
+  }
+
+  private static void reformatDirectory(@NotNull Project project,
+                                        @NotNull PsiDirectory dir,
+                                        @NotNull DirectoryFormattingOptions options)
+  {
+    AbstractLayoutCodeProcessor processor = new ReformatCodeProcessor(
+            project, dir, options.isIncludeSubdirectories(), options.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT
+    );
+
+    registerScopeFilter(processor, options.getSearchScope());
+    registerFileMaskFilter(processor, options.getFileTypeMask());
+
+    if (options.isOptimizeImports()) {
+      processor = new OptimizeImportsProcessor(processor);
+    }
+    if (options.isRearrangeCode()) {
+      processor = new RearrangeCodeProcessor(processor);
+    }
+
+    processor.run();
   }
 
   private static void reformatModule(@NotNull Project project,
@@ -208,7 +196,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
                                      @NotNull ReformatFilesOptions selectedFlags)
   {
     boolean shouldOptimizeImports = selectedFlags.isOptimizeImports() && !DumbService.getInstance(project).isDumb();
-    boolean processOnlyChangedText = selectedFlags.isProcessOnlyChangedText();
+    boolean processOnlyChangedText = selectedFlags.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT;
 
     AbstractLayoutCodeProcessor processor;
     if (moduleContext != null)
@@ -216,39 +204,73 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     else
       processor = new ReformatCodeProcessor(project, processOnlyChangedText);
 
+    registerScopeFilter(processor, selectedFlags.getSearchScope());
+    registerFileMaskFilter(processor, selectedFlags.getFileTypeMask());
 
     if (shouldOptimizeImports) {
       processor = new OptimizeImportsProcessor(processor);
     }
 
-    if (selectedFlags.isRearrangeEntries()) {
-      processor = new RearrangeCodeProcessor(processor, null);
+    if (selectedFlags.isRearrangeCode()) {
+      processor = new RearrangeCodeProcessor(processor);
     }
 
     processor.run();
   }
 
-  public static void updateShowDialogSetting(LayoutCodeDialog dialog, String title) {
-    if (dialog.isDoNotAskMe()) {
-      Notifications.Bus.notify(new Notification("Reformat Code", title,
-                                                "<html>You can re-enable the dialog on the <a href=''>IDE Settings -> Editor</a> pane</html>",
-                                                NotificationType.INFORMATION, new NotificationListener() {
-        @Override
-        public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent e) {
-          if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
-            IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-            util.editConfigurable((JFrame)ideFrame, new EditorOptions());
-          }
+  public static void registerScopeFilter(@NotNull AbstractLayoutCodeProcessor processor, @Nullable final SearchScope scope) {
+    if (scope == null) {
+      return;
+    }
+
+    processor.addFileFilter(new VirtualFileFilter() {
+      @Override
+      public boolean accept(@NotNull VirtualFile file) {
+        if (scope instanceof LocalSearchScope) {
+          return ((LocalSearchScope)scope).isInScope(file);
         }
-      }));
+        if (scope instanceof GlobalSearchScope) {
+          return ((GlobalSearchScope)scope).contains(file);
+        }
+
+        return false;
+      }
+    });
+  }
+
+  public static void registerFileMaskFilter(@NotNull AbstractLayoutCodeProcessor processor, @Nullable String fileTypeMask) {
+    if (fileTypeMask == null)
+      return;
+
+    final Pattern pattern = getFileTypeMaskPattern(fileTypeMask);
+    if (pattern != null) {
+      processor.addFileFilter(new VirtualFileFilter() {
+        @Override
+        public boolean accept(@NotNull VirtualFile file) {
+          return pattern.matcher(file.getName()).matches();
+        }
+      });
     }
   }
 
-  @NotNull
-  @Deprecated
+  @Nullable
+  private static Pattern getFileTypeMaskPattern(@Nullable String mask) {
+    try {
+      return FindInProjectUtil.createFileMaskRegExp(mask);
+    } catch (PatternSyntaxException e) {
+      LOG.info("Error while processing file mask: ", e);
+      return null;
+    }
+  }
+
   public static PsiFile[] convertToPsiFiles(final VirtualFile[] files,Project project) {
-    return PsiUtilBase.virtualToPsiFiles(files, project);
+    final PsiManager manager = PsiManager.getInstance(project);
+    final ArrayList<PsiFile> result = new ArrayList<PsiFile>();
+    for (VirtualFile virtualFile : files) {
+      final PsiFile psiFile = manager.findFile(virtualFile);
+      if (psiFile != null) result.add(psiFile);
+    }
+    return PsiUtilCore.toPsiFileArray(result);
   }
 
   @Override
@@ -277,7 +299,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         return;
       }
     }
-    else if (files!= null && areFiles(files)) {
+    else if (files!= null && containsAtLeastOneFile(files)) {
       boolean anyFormatters = false;
       for (VirtualFile virtualFile : files) {
         if (virtualFile.isDirectory()) {
@@ -326,8 +348,9 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
       return myTestOptions;
     }
     ReformatFilesDialog dialog = new ReformatFilesDialog(project, files);
-    dialog.show();
-    if (!dialog.isOK()) return null;
+    if (!dialog.showAndGet()) {
+      return null;
+    }
     return dialog;
   }
 
@@ -337,47 +360,28 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
       return myTestOptions;
     }
 
-    final String text = module != null ? CodeInsightBundle.message("process.scope.module", module.getModuleDirUrl())
+    final String text = module != null ? CodeInsightBundle.message("process.scope.module", module.getModuleDir())
                                        : CodeInsightBundle.message("process.scope.project", project.getPresentableUrl());
 
-    LayoutProjectCodeDialog dialog = new LayoutProjectCodeDialog(project, module, CodeInsightBundle.message("process.reformat.code"), text, true);
-    dialog.show();
-    if (!dialog.isOK()) return null;
+    final boolean enableOnlyVCSChangedRegions = module != null ? FormatChangedTextUtil.hasChanges(module)
+                                                               : FormatChangedTextUtil.hasChanges(project);
+
+    LayoutProjectCodeDialog dialog =
+            new LayoutProjectCodeDialog(project, CodeInsightBundle.message("process.reformat.code"), text, enableOnlyVCSChangedRegions);
+    if (!dialog.showAndGet()) {
+      return null;
+    }
     return dialog;
   }
 
-  @Nullable
-  private static LayoutCodeOptions getLayoutCodeOptions(@NotNull Project project,
-                                                        @Nullable PsiFile file,
-                                                        @Nullable PsiDirectory dir,
-                                                        boolean hasSelection)
-  {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      return (LayoutCodeOptions)myTestOptions;
-    }
-    LayoutCodeDialog dialog = new LayoutCodeDialog(project, CodeInsightBundle.message("process.reformat.code"),
-                                                   file, dir, hasSelection ? Boolean.TRUE : Boolean.FALSE, HELP_ID);
-    dialog.show();
-    if (!dialog.isOK()) return null;
-    EditorSettingsExternalizable.getInstance().getOptions().SHOW_REFORMAT_DIALOG = !dialog.isDoNotAskMe();
-    updateShowDialogSetting(dialog, "\"Reformat Code\" dialog disabled");
-    return dialog;
-  }
-
-  public static boolean getLastSavedRearrangeCbState(@NotNull Project project, @Nullable PsiFile file) {
-    if (file != null) {
-      return LayoutCodeSettingsStorage.getLastSavedRearrangeEntriesCbStateFor(project, file.getLanguage());
-    }
-    return LayoutCodeSettingsStorage.getLastSavedRearrangeEntriesCbStateFor(project);
-  }
-
+  @TestOnly
   protected static void setTestOptions(ReformatFilesOptions options) {
     myTestOptions = options;
   }
 
-  public static boolean areFiles(final VirtualFile[] files) {
+  public static boolean containsAtLeastOneFile(final VirtualFile[] files) {
     if (files == null) return false;
-    if (files.length < 2) return false;
+    if (files.length < 1) return false;
     for (VirtualFile virtualFile : files) {
       if (virtualFile.isDirectory()) return false;
     }

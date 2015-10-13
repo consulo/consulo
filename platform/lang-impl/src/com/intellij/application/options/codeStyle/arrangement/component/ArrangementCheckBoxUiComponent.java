@@ -43,6 +43,7 @@ public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiCompone
   @NotNull private final JLabel                        myTextLabel;
 
   public ArrangementCheckBoxUiComponent(@NotNull ArrangementSettingsToken token) {
+    super(token);
     myComponent.setOpaque(false);
     myCondition = new ArrangementAtomMatchCondition(token);
     myCheckBox = new JBCheckBox();
@@ -77,7 +78,7 @@ public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiCompone
   public void chooseToken(@NotNull ArrangementSettingsToken data) throws UnsupportedOperationException {
     if (!getToken().equals(data)) {
       throw new UnsupportedOperationException(String.format(
-        "Can't choose '%s' data at the check box token with data '%s'", data, getToken()
+              "Can't choose '%s' data at the check box token with data '%s'", data, getToken()
       ));
     }
   }
@@ -104,7 +105,7 @@ public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiCompone
 
   @Override
   public void setEnabled(boolean enabled) {
-    myCheckBox.setEnabled(enabled); 
+    myCheckBox.setEnabled(enabled);
   }
 
   @Override
@@ -114,11 +115,16 @@ public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiCompone
 
   @Override
   public void setSelected(boolean selected) {
-    myCheckBox.setSelected(selected); 
+    myCheckBox.setSelected(selected);
   }
 
   @Override
   public int getBaselineToUse(int width, int height) {
     return myTextLabel.getBaseline(width, height);
+  }
+
+  @Override
+  public void handleMouseClickOnSelected() {
+    setSelected(false);
   }
 }

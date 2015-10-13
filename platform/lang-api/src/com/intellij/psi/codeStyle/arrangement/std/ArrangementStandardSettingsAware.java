@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * Defines a contract for {@link Rearranger} implementation which wants to use standard platform UI for configuring
  * and managing arrangement settings.
- * 
+ *
  * @author Denis Zhdanov
  * @since 8/6/12 2:26 PM
  */
@@ -61,7 +61,7 @@ public interface ArrangementStandardSettingsAware {
    * Example: say, current rearranger is for java and given condition is like 'public class'. This method is expected to
    * return <code>false</code> for token 'volatile' (because it can be applied only to fields) but <code>true</code>
    * for token 'abstract' (a java class can be abstract).
-   * 
+   *
    * @param token    target token to check
    * @param current  an object which represents currently chosen tokens; <code>null</code> if no other token is selected
    * @return         <code>true</code> if given token is enabled with the given condition; <code>false</code> otherwise
@@ -71,14 +71,14 @@ public interface ArrangementStandardSettingsAware {
   /**
    * This method is assumed to be used only by third-party developers. All built-in IJ conditions are supposed
    * to be implemented in terms of {@link StdArrangementTokens}.
-   * 
+   *
    * @param condition  target condition
    * @return           a matcher for the given condition
    * @throws IllegalArgumentException   if current rearranger doesn't know how to build a matcher from the given condition
    */
   @NotNull
   ArrangementEntryMatcher buildMatcher(@NotNull ArrangementMatchCondition condition) throws IllegalArgumentException;
-  
+
   /**
    * @return    collections of mutual exclusion settings. It's is used by standard arrangement settings UI to automatically
    *            deselect elements on selection change. Example: 'private' modifier was selected. When any other modifier is selected

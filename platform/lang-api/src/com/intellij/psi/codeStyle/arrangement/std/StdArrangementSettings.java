@@ -24,18 +24,20 @@ import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Denis Zhdanov
  * @since 9/17/12 11:53 AM
  */
 public class StdArrangementSettings implements ArrangementSettings {
-  @NotNull private final   List<ArrangementSectionRule> mySectionRules     = new ArrayList<ArrangementSectionRule>();
-  @NotNull private final   List<ArrangementGroupingRule> myGroupings       = new ArrayList<ArrangementGroupingRule>();
+  @NotNull private final List<ArrangementSectionRule> mySectionRules = new ArrayList<ArrangementSectionRule>();
+  @NotNull private final List<ArrangementGroupingRule> myGroupings = new ArrayList<ArrangementGroupingRule>();
 
   // cached values
-  @NotNull protected final List<StdArrangementMatchRule> myRulesByPriority = new ArrayList<StdArrangementMatchRule>();
+  @NotNull protected final List<StdArrangementMatchRule> myRulesByPriority = Collections.synchronizedList(new ArrayList<StdArrangementMatchRule>());
 
   public StdArrangementSettings() {
   }
@@ -45,8 +47,7 @@ public class StdArrangementSettings implements ArrangementSettings {
     this(Collections.EMPTY_LIST, rules);
   }
 
-  public StdArrangementSettings(@NotNull List<ArrangementGroupingRule> groupingRules,
-                                @NotNull List<ArrangementSectionRule> sectionRules) {
+  public StdArrangementSettings(@NotNull List<ArrangementGroupingRule> groupingRules, @NotNull List<ArrangementSectionRule> sectionRules) {
     myGroupings.addAll(groupingRules);
     mySectionRules.addAll(sectionRules);
   }
@@ -105,22 +106,24 @@ public class StdArrangementSettings implements ArrangementSettings {
   @NotNull
   @Override
   public List<? extends ArrangementMatchRule> getRulesSortedByPriority() {
-    if (myRulesByPriority.isEmpty()) {
-      for (ArrangementSectionRule rule : mySectionRules) {
-        myRulesByPriority.addAll(rule.getMatchRules());
+    synchronized (myRulesByPriority) {
+      if (myRulesByPriority.isEmpty()) {
+        for (ArrangementSectionRule rule : mySectionRules) {
+          myRulesByPriority.addAll(rule.getMatchRules());
+        }
+        ContainerUtil.sort(myRulesByPriority);
       }
-      ContainerUtil.sort(myRulesByPriority);
     }
     return myRulesByPriority;
   }
 
   public void addRule(@NotNull StdArrangementMatchRule rule) {
-    addRule(ArrangementSectionRule.create(rule));
+    addSectionRule(rule);
+    myRulesByPriority.clear();
   }
 
-  public void addRule(@NotNull ArrangementSectionRule rule) {
-    mySectionRules.add(rule);
-    myRulesByPriority.clear();
+  public void addSectionRule(@NotNull StdArrangementMatchRule rule) {
+    mySectionRules.add(ArrangementSectionRule.create(rule));
   }
 
   public void addGrouping(@NotNull ArrangementGroupingRule rule) {

@@ -61,8 +61,9 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
   public CommonCodeStyleSettings getCommonSettings(@Nullable Language lang) {
     Map<Language, CommonCodeStyleSettings> commonSettingsMap = getCommonSettingsMap();
     CommonCodeStyleSettings settings = commonSettingsMap.get(lang);
-    if (settings == null && lang != null) {
-      settings = commonSettingsMap.get(lang.getBaseLanguage());
+    while (settings == null && lang != null) {
+      lang = lang.getBaseLanguage();
+      settings = commonSettingsMap.get(lang);
     }
     if (settings != null) {
       return settings;
@@ -89,7 +90,7 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
    * Get common code style settings by language name. <code>getCommonSettings(Language)</code> is a preferred method but
    * sometimes (for example, in plug-ins which do not depend on a specific language support) language settings can be
    * obtained by name.
-   * 
+   *
    * @param langName The display name of the language whose settings must be returned.
    * @return Common code style settings for the given language or parent (shared) settings if not found.
    */
@@ -102,7 +103,7 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
       }
     }
     return myParentSettings;
-  }  
+  }
 
 
   private void initNonReadSettings() {
@@ -112,7 +113,6 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
       if (!myCommonSettingsMap.containsKey(target)) {
         CommonCodeStyleSettings initialSettings = provider.getDefaultCommonSettings();
         if (initialSettings != null) {
-          initialSettings.copyNonDefaultValuesFrom(myParentSettings);
           init(initialSettings, target);
         }
       }
@@ -121,7 +121,6 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
 
   private void init(@NotNull CommonCodeStyleSettings initialSettings, @NotNull Language target) {
     initialSettings.setRootSettings(myParentSettings);
-    initialSettings.importOldIndentOptions(myParentSettings);
     registerCommonSettings(target, initialSettings);
   }
 
