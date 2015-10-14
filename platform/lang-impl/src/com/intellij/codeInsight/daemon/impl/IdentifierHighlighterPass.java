@@ -82,7 +82,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
         LOG.assertTrue(writeUsage != null, "null text range from " + handler);
       }
       myWriteAccessRanges.addAll(writeUsages);
-      return;
+      if (!handler.highlightReferences()) return;
     }
 
     Set<String> flags = ContainerUtil.newHashSet(TargetElementUtilEx.ELEMENT_NAME_ACCEPTED, TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED);
