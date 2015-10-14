@@ -30,6 +30,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
     }
   }
 
-  protected void buildStatusText(@Nullable String elementName, int refCount) {
+  public void buildStatusText(@Nullable String elementName, int refCount) {
     if (refCount > 0) {
       myStatusText = CodeInsightBundle.message(elementName != null ?
                                                "status.bar.highlighted.usages.message" :
@@ -109,7 +110,8 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
 
   public abstract void computeUsages(List<T> targets);
 
-  protected void addOccurrence(@NotNull PsiElement element) {
+  @RequiredReadAction
+  public void addOccurrence(@NotNull PsiElement element) {
     TextRange range = element.getTextRange();
     if (range != null) {
       range = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range);
