@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.BalloonHandler;
 import com.intellij.openapi.ui.popup.ListPopup;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
@@ -152,8 +153,8 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
   }
 
   IdeStatusBarImpl(@Nullable IdeStatusBarImpl master) {
-    setLayout(new BorderLayout(JBUI.scale(2), 0));
-    setBorder(JBUI.Borders.empty(1, 4, 0, SystemInfo.isMac ? 2 : 0));
+    setLayout(new BorderLayout());
+    setBorder(JBUI.Borders.empty());
 
     myInfoAndProgressPanel = new InfoAndProgressPanel();
     addWidget(myInfoAndProgressPanel, Position.CENTER);
@@ -184,22 +185,37 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     if (size == null) return null;
 
     Insets insets = getInsets();
-    int minHeight = insets.top + insets.bottom + JBUI.scale(MIN_ICON_HEIGHT);
+    int minHeight = insets.top + insets.bottom + MIN_ICON_HEIGHT;
     return new Dimension(size.width, Math.max(size.height, minHeight));
   }
 
   @Override
   public void addWidget(@NotNull final StatusBarWidget widget) {
-    addWidget(widget, Position.RIGHT, "__AUTODETECT__");
+    UIUtil.invokeLaterIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        addWidget(widget, Position.RIGHT, "__AUTODETECT__");
+      }
+    });
   }
 
   @Override
-  public void addWidget(@NotNull final StatusBarWidget widget, @NotNull String anchor) {
-    addWidget(widget, Position.RIGHT, anchor);
+  public void addWidget(@NotNull final StatusBarWidget widget, @NotNull final String anchor) {
+    UIUtil.invokeLaterIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        addWidget(widget, Position.RIGHT, anchor);
+      }
+    });
   }
 
   private void addWidget(@NotNull final StatusBarWidget widget, @NotNull final Position pos) {
-    addWidget(widget, pos, "__IGNORED__");
+    UIUtil.invokeLaterIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        addWidget(widget, pos, "__IGNORED__");
+      }
+    });
   }
 
   @Override
@@ -319,7 +335,22 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     if (pos == Position.RIGHT) {
       if (myRightPanel == null) {
         myRightPanel = new JPanel();
-        myRightPanel.setLayout(new BoxLayout(myRightPanel, BoxLayout.X_AXIS));
+        myRightPanel.setBorder(JBUI.Borders.empty(1, 1, 0, SystemInfo.isMac ? 2 : 0));
+        myRightPanel.setLayout(new BoxLayout(myRightPanel, BoxLayout.X_AXIS) {
+          @Override
+          public void layoutContainer(Container target) {
+            super.layoutContainer(target);
+            for (Component component : target.getComponents()) {
+              if (component instanceof MemoryUsagePanel) {
+                Rectangle r = component.getBounds();
+                r.y = 0;
+                r.width += SystemInfo.isMac ? 4 : 0;
+                r.height = target.getHeight();
+                component.setBounds(r);
+              }
+            }
+          }
+        });
         myRightPanel.setOpaque(false);
         add(myRightPanel, BorderLayout.EAST);
       }
@@ -329,6 +360,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     else if (pos == Position.LEFT) {
       if (myLeftPanel == null) {
         myLeftPanel = new JPanel();
+        myLeftPanel.setBorder(JBUI.Borders.empty(1, 4, 0, 1));
         myLeftPanel.setLayout(new BoxLayout(myLeftPanel, BoxLayout.X_AXIS));
         myLeftPanel.setOpaque(false);
         add(myLeftPanel, BorderLayout.WEST);
@@ -338,8 +370,8 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     }
     else {
       if (myCenterPanel == null) {
-        myCenterPanel = new JPanel(new BorderLayout());
-        myCenterPanel.setOpaque(false);
+        myCenterPanel = JBUI.Panels.simplePanel().andTransparent();
+        myCenterPanel.setBorder(JBUI.Borders.empty(1, 1, 0, 1));
         add(myCenterPanel, BorderLayout.CENTER);
       }
 
@@ -393,7 +425,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     }
 
     if (Position.LEFT == pos && panel.getComponentCount() == 0) {
-      c.setBorder(SystemInfo.isMac ? BorderFactory.createEmptyBorder(2, 0, 2, 4) : BorderFactory.createEmptyBorder());
+      c.setBorder(SystemInfo.isMac ? JBUI.Borders.empty(2, 0, 2, 4) : JBUI.Borders.empty());
     }
 
     panel.add(c);
@@ -403,9 +435,14 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
       final StatusBarWidget.Multiframe mfw = (StatusBarWidget.Multiframe)widget;
       updateChildren(new ChildAction() {
         @Override
-        public void update(IdeStatusBarImpl child) {
-          StatusBarWidget widgetCopy = mfw.copy();
-          child.addWidget(widgetCopy, pos, anchor);
+        public void update(final IdeStatusBarImpl child) {
+          UIUtil.invokeLaterIfNeeded(new Runnable() {
+            @Override
+            public void run() {
+              StatusBarWidget widgetCopy = mfw.copy();
+              child.addWidget(widgetCopy, pos, anchor);
+            }
+          });
         }
       });
     }
@@ -443,7 +480,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
       @Override
       public void run() {
         if (myInfoAndProgressPanel != null) {
-          Pair<String, String> pair = myInfoAndProgressPanel.setText(s, requestor);
+          Couple<String> pair = myInfoAndProgressPanel.setText(s, requestor);
           myInfo = pair.first;
           myRequestor = pair.second;
         }
@@ -574,7 +611,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
       setUI((StatusBarUI)UIManager.getUI(this));
     }
     else {
-      setUI(SystemInfo.isMac && !UIUtil.isUnderDarcula() ? new MacStatusBarUI() : new StatusBarUI());
+      setUI(new StatusBarUI());
     }
   }
 
@@ -607,6 +644,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
   @Override
   public void removeWidget(@NotNull final String id) {
+    assert EventQueue.isDispatchThread() : "Must be EDT";
     final WidgetBean bean = myWidgetMap.get(id);
     if (bean != null) {
       if (Position.LEFT == bean.position) {
@@ -734,22 +772,15 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
         final Insets insets = getInsets();
         Icon icon = AllIcons.Ide.Statusbar_arrows;
         icon.paintIcon(this, g,
-                       r.width - insets.right - icon.getIconWidth() - 2,
+                       r.width - insets.right - icon.getIconWidth() + 1,
                        r.height / 2 - icon.getIconHeight() / 2);
       }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-      final Dimension preferredSize = super.getPreferredSize();
-      return new Dimension(preferredSize.width + AllIcons.Ide.Statusbar_arrows.getIconWidth() + 4, preferredSize.height);
     }
   }
 
   private static final class TextPresentationWrapper extends TextPanel implements StatusBarWrapper {
     private final StatusBarWidget.TextPresentation myPresentation;
     private final Consumer<MouseEvent> myClickConsumer;
-    private boolean myMouseOver;
 
     private TextPresentationWrapper(@NotNull final StatusBarWidget.TextPresentation presentation) {
       super();
@@ -771,12 +802,10 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
         @Override
         public void mouseEntered(MouseEvent e) {
-          myMouseOver = true;
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-          myMouseOver = false;
         }
       });
 
@@ -825,10 +854,6 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
       myIcon = myPresentation.getIcon();
     }
 
-    private StatusBarWidget.IconPresentation getPresentation() {
-      return myPresentation;
-    }
-
     @Override
     @Nullable
     public String getToolTipText() {
@@ -838,7 +863,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     @Override
     protected void paintComponent(final Graphics g) {
       final Rectangle bounds = getBounds();
-      final Insets insets = getInsets();
+      final Insets insets = JBUI.insets(getInsets());
 
       if (myIcon != null) {
         final int iconWidth = myIcon.getIconWidth();
@@ -851,7 +876,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
     @Override
     public Dimension getMinimumSize() {
-      return myIcon == null ? new Dimension() : JBUI.size(24, MIN_ICON_HEIGHT);
+      return JBUI.size(24, MIN_ICON_HEIGHT);
     }
 
     @Override

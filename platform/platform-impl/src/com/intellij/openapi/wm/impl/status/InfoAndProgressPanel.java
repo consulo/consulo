@@ -366,14 +366,15 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     myRefreshAndInfoPanel.repaint();
   }
 
-  public Pair<String, String> setText(@Nullable final String text, @Nullable final String requestor) {
+  @NotNull
+  public Couple<String> setText(@Nullable final String text, @Nullable final String requestor) {
     if (StringUtil.isEmpty(text) && !Comparing.equal(requestor, myCurrentRequestor) && !EventLog.LOG_REQUESTOR.equals(requestor)) {
-      return Pair.create(myInfoPanel.getText(), myCurrentRequestor);
+      return Couple.of(myInfoPanel.getText(), myCurrentRequestor);
     }
 
     boolean logMode = myInfoPanel.updateText(EventLog.LOG_REQUESTOR.equals(requestor) ? "" : text);
     myCurrentRequestor = logMode ? EventLog.LOG_REQUESTOR : requestor;
-    return Pair.create(text, requestor);
+    return Couple.of(text, requestor);
   }
 
   public void setRefreshVisible(final boolean visible) {
