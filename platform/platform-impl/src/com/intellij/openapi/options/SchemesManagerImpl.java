@@ -342,8 +342,9 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     if (myUpdateExtension && StringUtilRt.endsWithIgnoreCase(file.getName(), mySchemeExtension)) {
       return true;
     }
-
-    return StringUtilRt.endsWithIgnoreCase(file.getName(), DirectoryStorageData.DEFAULT_EXT);
+    else {
+      return StringUtilRt.endsWithIgnoreCase(file.getName(), DirectoryStorageData.DEFAULT_EXT);
+    }
   }
 
   @Nullable
