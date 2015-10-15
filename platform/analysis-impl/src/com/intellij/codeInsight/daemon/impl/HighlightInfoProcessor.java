@@ -25,25 +25,33 @@ public abstract class HighlightInfoProcessor {
   public void highlightsInsideVisiblePartAreProduced(@NotNull HighlightingSession session,
                                                      @NotNull List<HighlightInfo> infos,
                                                      @NotNull TextRange priorityRange,
-                                                     @NotNull TextRange restrictRange, int groupId) {}
+                                                     @NotNull TextRange restrictRange,
+                                                     int groupId) {
+  }
+
   public void highlightsOutsideVisiblePartAreProduced(@NotNull HighlightingSession session,
                                                       @NotNull List<HighlightInfo> infos,
                                                       @NotNull TextRange priorityRange,
-                                                      @NotNull TextRange restrictedRange, int groupId) {}
+                                                      @NotNull TextRange restrictedRange,
+                                                      int groupId) {
+  }
 
   public void infoIsAvailable(@NotNull HighlightingSession session,
                               @NotNull HighlightInfo info,
                               @NotNull TextRange priorityRange,
                               @NotNull TextRange restrictedRange,
-                              int groupId) {}
-  public void allHighlightsForRangeAreProduced(@NotNull HighlightingSession session,
-                                               @NotNull TextRange elementRange,
-                                               @Nullable List<HighlightInfo> infos){}
+                              int groupId) {
+  }
 
-  public void progressIsAdvanced(@NotNull HighlightingSession highlightingSession, double progress){}
+  public void allHighlightsForRangeAreProduced(@NotNull HighlightingSession session, @NotNull TextRange elementRange, @Nullable List<HighlightInfo> infos) {
+  }
+
+  public void progressIsAdvanced(@NotNull HighlightingSession highlightingSession, double progress) {
+  }
 
 
-  private static final HighlightInfoProcessor EMPTY = new HighlightInfoProcessor() { };
+  private static final HighlightInfoProcessor EMPTY = new HighlightInfoProcessor() {
+  };
 
   @NotNull
   public static HighlightInfoProcessor getEmpty() {
