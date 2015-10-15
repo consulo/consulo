@@ -168,8 +168,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   @TestOnly
   public static List<HighlightInfo> getHighlights(@NotNull Document document, HighlightSeverity minSeverity, @NotNull Project project) {
     List<HighlightInfo> infos = new ArrayList<HighlightInfo>();
-    processHighlights(document, project, minSeverity, 0, document.getTextLength(),
-                      new CommonProcessors.CollectProcessor<HighlightInfo>(infos));
+    processHighlights(document, project, minSeverity, 0, document.getTextLength(), new CommonProcessors.CollectProcessor<HighlightInfo>(infos));
     return infos;
   }
 
@@ -211,17 +210,14 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   }
 
   @Override
-  public void addFileLevelHighlight(@NotNull final Project project,
-                                    final int group,
-                                    @NotNull final HighlightInfo info,
-                                    @NotNull final PsiFile psiFile) {
+  public void addFileLevelHighlight(@NotNull final Project project, final int group, @NotNull final HighlightInfo info, @NotNull final PsiFile psiFile) {
     VirtualFile vFile = psiFile.getViewProvider().getVirtualFile();
     final FileEditorManager manager = FileEditorManager.getInstance(project);
     for (FileEditor fileEditor : manager.getEditors(vFile)) {
       if (fileEditor instanceof TextEditor) {
-        FileLevelIntentionComponent component = new FileLevelIntentionComponent(info.getDescription(), info.getSeverity(),
-                                                                                info.getGutterIconRenderer(), info.quickFixActionRanges,
-                                                                                project, psiFile, ((TextEditor)fileEditor).getEditor());
+        FileLevelIntentionComponent component =
+                new FileLevelIntentionComponent(info.getDescription(), info.getSeverity(), info.getGutterIconRenderer(), info.quickFixActionRanges, project,
+                                                psiFile, ((TextEditor)fileEditor).getEditor());
         manager.addTopComponent(fileEditor, component);
         List<HighlightInfo> fileLevelInfos = fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS);
         if (fileLevelInfos == null) {
@@ -237,9 +233,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
   @Override
   @NotNull
-  public List<HighlightInfo> runMainPasses(@NotNull PsiFile psiFile,
-                                           @NotNull Document document,
-                                           @NotNull final ProgressIndicator progress) {
+  public List<HighlightInfo> runMainPasses(@NotNull PsiFile psiFile, @NotNull Document document, @NotNull final ProgressIndicator progress) {
     // clear status maps to run passes from scratch so that refCountHolder won't conflict and try to restart itself on partially filled maps
     myFileStatusMap.markAllFilesDirty("prepare to run main passes");
     stopProcess(false, "disable background daemon");
@@ -251,8 +245,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       final VirtualFile virtualFile = psiFile.getVirtualFile();
       if (virtualFile != null && !virtualFile.getFileType().isBinary()) {
         List<TextEditorHighlightingPass> passes =
-                TextEditorHighlightingPassRegistrarEx.getInstanceEx(myProject).instantiateMainPasses(psiFile, document,
-                                                                                                     HighlightInfoProcessor.getEmpty());
+                TextEditorHighlightingPassRegistrarEx.getInstanceEx(myProject).instantiateMainPasses(psiFile, document, HighlightInfoProcessor.getEmpty());
 
         Collections.sort(passes, new Comparator<TextEditorHighlightingPass>() {
           @Override
@@ -263,7 +256,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
           }
         });
 
-        LOG.debug("All passes for " + psiFile.getName()+ " started (" + passes+"). progress canceled: "+progress.isCanceled());
+        LOG.debug("All passes for " + psiFile.getName() + " started (" + passes + "). progress canceled: " + progress.isCanceled());
         try {
           for (TextEditorHighlightingPass pass : passes) {
             pass.doCollectInformation(progress);
@@ -274,7 +267,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
           LOG.debug("Canceled: " + progress);
           throw e;
         }
-        LOG.debug("All passes for " + psiFile.getName()+ " run. progress canceled: "+progress.isCanceled()+"; infos: "+result);
+        LOG.debug("All passes for " + psiFile.getName() + " run. progress canceled: " + progress.isCanceled() + "; infos: " + result);
       }
     }
     finally {
@@ -607,32 +600,28 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   }
 
   @Nullable
-  HighlightInfo findHighlightByOffset(@NotNull Document document,
-                                      final int offset,
-                                      final boolean includeFixRange,
-                                      @NotNull HighlightSeverity minSeverity) {
+  HighlightInfo findHighlightByOffset(@NotNull Document document, final int offset, final boolean includeFixRange, @NotNull HighlightSeverity minSeverity) {
     final List<HighlightInfo> foundInfoList = new SmartList<HighlightInfo>();
-    processHighlightsNearOffset(document, myProject, minSeverity, offset, includeFixRange,
-                                new Processor<HighlightInfo>() {
-                                  @Override
-                                  public boolean process(@NotNull HighlightInfo info) {
-                                    if (info.getSeverity() == HighlightInfoType.ELEMENT_UNDER_CARET_SEVERITY) {
-                                      return true;
-                                    }
-                                    if (!foundInfoList.isEmpty()) {
-                                      HighlightInfo foundInfo = foundInfoList.get(0);
-                                      int compare = foundInfo.getSeverity().compareTo(info.getSeverity());
-                                      if (compare < 0) {
-                                        foundInfoList.clear();
-                                      }
-                                      else if (compare > 0) {
-                                        return true;
-                                      }
-                                    }
-                                    foundInfoList.add(info);
-                                    return true;
-                                  }
-                                });
+    processHighlightsNearOffset(document, myProject, minSeverity, offset, includeFixRange, new Processor<HighlightInfo>() {
+      @Override
+      public boolean process(@NotNull HighlightInfo info) {
+        if (info.getSeverity() == HighlightInfoType.ELEMENT_UNDER_CARET_SEVERITY) {
+          return true;
+        }
+        if (!foundInfoList.isEmpty()) {
+          HighlightInfo foundInfo = foundInfoList.get(0);
+          int compare = foundInfo.getSeverity().compareTo(info.getSeverity());
+          if (compare < 0) {
+            foundInfoList.clear();
+          }
+          else if (compare > 0) {
+            return true;
+          }
+        }
+        foundInfoList.add(info);
+        return true;
+      }
+    });
 
     if (foundInfoList.isEmpty()) return null;
     if (foundInfoList.size() == 1) return foundInfoList.get(0);
@@ -753,8 +742,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   private final Runnable submitPassesRunnable = new Runnable() {
     @Override
     public void run() {
-      PassExecutorService.log(getUpdateProgress(), null, "Update Runnable. myUpdateByTimerEnabled:",
-                              myUpdateByTimerEnabled, " something disposed:",
+      PassExecutorService.log(getUpdateProgress(), null, "Update Runnable. myUpdateByTimerEnabled:", myUpdateByTimerEnabled, " something disposed:",
                               PowerSaveMode.isEnabled() || myDisposed || !myProject.isInitialized(), " activeEditors:",
                               myProject.isDisposed() ? null : getSelectedEditors());
       if (!myUpdateByTimerEnabled) return;
@@ -808,8 +796,24 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
           return;
         }
         if (HeavyProcessLatch.INSTANCE.isRunning()) {
-          if (myAlarm.isEmpty()) {
-            myAlarm.addRequest(myUpdateRunnable, mySettings.AUTOREPARSE_DELAY);
+          final Disposable removeListenerDisposable = Disposer.newDisposable();
+          Disposer.register(DaemonCodeAnalyzerImpl.this, removeListenerDisposable);
+          // wait for heavy processing to stop, re-schedule daemon but not too soon
+          HeavyProcessLatch.HeavyProcessListener heavyProcessListener = new HeavyProcessLatch.HeavyProcessListener() {
+            @Override
+            public void processStarted() {
+            }
+
+            @Override
+            public void processFinished() {
+              Disposer.dispose(removeListenerDisposable);
+              myAlarm.addRequest(myUpdateRunnable, Math.max(mySettings.AUTOREPARSE_DELAY, 100), ModalityState.NON_MODAL);
+            }
+          };
+          HeavyProcessLatch.INSTANCE.addListener(removeListenerDisposable, heavyProcessListener);
+          if (!HeavyProcessLatch.INSTANCE.isRunning()) {
+            // in case heavy operation finished right before listener added
+            heavyProcessListener.processFinished();
           }
           return;
         }
@@ -819,9 +823,13 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
           submitPassesRunnable.run();
         }
         else {
-          ((PsiDocumentManagerBase)myPsiDocumentManager).cancelAndRunWhenAllCommitted("start daemon when all committed",
-                                                                                      submitPassesRunnable);
+          ((PsiDocumentManagerBase)myPsiDocumentManager).cancelAndRunWhenAllCommitted("start daemon when all committed", submitPassesRunnable);
         }
+      }
+
+      @Override
+      public String toString() {
+        return "Daemon update runnable";
       }
     };
   }
@@ -868,6 +876,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
     Collection<FileEditor> activeTextEditors = new THashSet<FileEditor>(editors.size());
     for (Editor editor : editors) {
+      if (editor.isDisposed()) continue;
       TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
       activeTextEditors.add(textEditor);
     }
