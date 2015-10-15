@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.store.ReadOnlyModificationException;
 import com.intellij.openapi.components.store.StateStorageBase;
-import com.intellij.openapi.editor.DocumentRunnable;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
@@ -166,7 +165,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
       return file;
     }
 
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DocumentRunnable.IgnoreDocumentRunnable.class);
+    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
     try {
       return parentVirtualFile.createChildData(requestor, fileName);
     }
@@ -316,7 +315,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     }
 
     private void deleteFiles(@NotNull VirtualFile dir) {
-      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DocumentRunnable.IgnoreDocumentRunnable.class);
+      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
       try {
         for (VirtualFile file : dir.getChildren()) {
           if (removedFileNames.contains(file.getName())) {

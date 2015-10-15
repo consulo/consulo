@@ -28,7 +28,6 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.store.ReadOnlyModificationException;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.DocumentRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -135,8 +134,7 @@ public class StorageUtil {
 
   @NotNull
   public static VirtualFile writeFile(@Nullable File file, @NotNull Object requestor, @Nullable VirtualFile virtualFile, @NotNull BufferExposingByteArrayOutputStream content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
-    // mark this action as modifying the file which daemon analyzer should ignore
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DocumentRunnable.IgnoreDocumentRunnable.class);
+    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
     try {
       if (file != null && (virtualFile == null || !virtualFile.isValid())) {
         virtualFile = getOrCreateVirtualFile(requestor, file);
@@ -184,7 +182,7 @@ public class StorageUtil {
   }
 
   public static void deleteFile(@NotNull Object requestor, @NotNull VirtualFile virtualFile) throws IOException {
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DocumentRunnable.IgnoreDocumentRunnable.class);
+    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
     try {
       virtualFile.delete(requestor);
     }

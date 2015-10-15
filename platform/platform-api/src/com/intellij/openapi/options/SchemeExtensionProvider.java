@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
  * A scheme processor can implement this interface to provide a file extension different from default .xml.
  * @see SchemeProcessor
  */
+@Deprecated
 public interface SchemeExtensionProvider {
 
   /**
