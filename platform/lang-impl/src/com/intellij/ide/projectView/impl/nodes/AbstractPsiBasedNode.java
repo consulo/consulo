@@ -156,12 +156,12 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         }
         catch (IndexNotReadyException ignored) {
         }
+
         updateImpl(data);
+
         for (ProjectViewNodeDecorator decorator : Extensions.getExtensions(ProjectViewNodeDecorator.EP_NAME, myProject)) {
           decorator.decorate(AbstractPsiBasedNode.this, data);
         }
-
-        Iconable.LastComputedIcon.put(value, data.getIcon(false), flags);
       }
     });
   }

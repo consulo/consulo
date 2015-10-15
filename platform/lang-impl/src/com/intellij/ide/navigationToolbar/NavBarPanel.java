@@ -365,6 +365,12 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
           return true;
         }
 
+        Icon oldIcon = eachLabel.getNodeIcon();
+        Icon newIcon = getPresentation().getIcon(eachElement);
+        if (!IconDeferrer.getInstance().equalIcons(oldIcon, newIcon)) {
+          return true;
+        }
+
         SimpleTextAttributes modelAttributes1 = myPresentation.getTextAttributes(eachElement, true);
         SimpleTextAttributes modelAttributes2 = myPresentation.getTextAttributes(eachElement, false);
         SimpleTextAttributes labelAttributes = eachLabel.getAttributes();

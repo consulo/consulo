@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,6 @@ public class LayeredIcon implements Icon {
     }
   }
 
-  @NotNull
   public static LayeredIcon createHorizontalIcon(@NotNull Icon... icons) {
     LayeredIcon result = new LayeredIcon(icons.length);
     int maxHeight = 0;
@@ -231,5 +230,10 @@ public class LayeredIcon implements Icon {
     layeredIcon.setIcon(backgroundIcon, 0);
     layeredIcon.setIcon(foregroundIcon, 1);
     return layeredIcon;
+  }
+
+  @Override
+  public String toString() {
+    return "Layered icon. myIcons=" + Arrays.asList(myIcons);
   }
 }

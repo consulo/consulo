@@ -53,6 +53,7 @@ public class IconUtil {
   @Deprecated
   @DeprecationInfo("Use #getDefaultNodeIconSize()")
   public static final int NODE_ICON_SIZE = UIUtil.isRetina() ? 32 : 16;
+
   private static NullableFunction<AnyIconKey<VirtualFile>, Icon> ourVirtualFileIconFunc = new NullableFunction<AnyIconKey<VirtualFile>, Icon>() {
     @Override
     public Icon fun(final AnyIconKey<VirtualFile> key) {
@@ -76,7 +77,9 @@ public class IconUtil {
         iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
       }
 
-      return iconDescriptor.toIcon();
+      Icon icon = iconDescriptor.toIcon();
+      Iconable.LastComputedIcon.put(file, icon, flags);
+      return icon;
     }
   };
 
@@ -145,8 +148,12 @@ public class IconUtil {
 
   @Nullable
   public static Icon getIcon(@NotNull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
-    return IconDeferrer.getInstance()
-            .deferAutoUpdatable(VirtualFilePresentation.getIcon(file), new AnyIconKey<VirtualFile>(file, project, flags), ourVirtualFileIconFunc);
+    Icon icon = Iconable.LastComputedIcon.get(file, flags);
+    if(icon == null) {
+      icon = VirtualFilePresentation.getIcon(file);
+    }
+
+    return IconDeferrer.getInstance().defer(icon, new AnyIconKey<VirtualFile>(file, project, flags), ourVirtualFileIconFunc);
   }
 
   @NotNull

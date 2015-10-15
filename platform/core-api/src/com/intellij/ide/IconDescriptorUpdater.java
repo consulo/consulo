@@ -17,6 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.extensions.CompositeExtensionPointName;
 
 /**
@@ -27,5 +28,6 @@ public interface IconDescriptorUpdater {
   CompositeExtensionPointName<IconDescriptorUpdater> EP_NAME =
           CompositeExtensionPointName.applicationPoint("com.intellij.iconDescriptorUpdater", IconDescriptorUpdater.class);
 
+  @RequiredReadAction
   void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags);
 }

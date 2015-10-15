@@ -360,6 +360,23 @@ public final class IconLoader {
     public String toString() {
       return myUrl.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      CachedImageIcon that = (CachedImageIcon)o;
+
+      if (!myUrl.equals(that.myUrl)) return false;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return myUrl.hashCode();
+    }
   }
 
   private static final class MyImageIcon extends ImageIcon {
