@@ -50,8 +50,7 @@ import java.util.zip.GZIPInputStream;
  * }</pre>
  */
 public final class HttpRequests {
-  private HttpRequests() {
-  }
+  private HttpRequests() { }
 
   public interface Request {
     @NotNull
@@ -184,7 +183,7 @@ public final class HttpRequests {
       @Override
       public boolean isSuccessful() throws IOException {
         URLConnection connection = getConnection();
-        return !(connection instanceof HttpURLConnection) || ((HttpURLConnection)connection).getResponseCode() == HttpURLConnection.HTTP_OK;
+        return !(connection instanceof HttpURLConnection) || ((HttpURLConnection)connection).getResponseCode() == 200;
       }
 
       private void cleanup() {
@@ -285,18 +284,12 @@ public final class HttpRequests {
 
       if (connection instanceof HttpURLConnection) {
         int responseCode = ((HttpURLConnection)connection).getResponseCode();
-
-        if (responseCode != HttpURLConnection.HTTP_OK && responseCode != HttpURLConnection.HTTP_NOT_MODIFIED) {
+        if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
           ((HttpURLConnection)connection).disconnect();
-
-          if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
-            url = connection.getHeaderField("Location");
-            if (url != null) {
-              continue;
-            }
+          url = connection.getHeaderField("Location");
+          if (url != null) {
+            continue;
           }
-
-          throw new IOException(IdeBundle.message("error.connection.failed.with.http.code.N", responseCode));
         }
       }
 
