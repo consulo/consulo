@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.ListPopupStep;
@@ -27,6 +28,7 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.Function;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +37,6 @@ import org.mustbe.consulo.vfs.backgroundTask.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
   private final CheckBoxList<BackgroundTaskByVfsChangeTask> myBoxlist;
   private final Project myProject;
   private final VirtualFile myVirtualFile;
-  private JPanel myPanel = new JPanel(new BorderLayout());
+  private JPanel myPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, true));
   private BackgroundTaskByVfsChangePanel myVfsChangePanel;
 
   private BackgroundTaskByVfsChangeTask myPrevTask;
@@ -94,6 +95,8 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
         myPrevTask = task;
       }
     });
+    myBoxlist.setBorder(null);
+    myBoxlist.setPreferredSize(JBUI.size(550, 200));
 
     final List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders
             .getProviders(project, virtualFile);
@@ -141,11 +144,10 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
 
     set(cloneTasks);
 
-    myPanel.add(decorator.createPanel(), BorderLayout.NORTH);
-    myPanel.add(myVfsChangePanel, BorderLayout.SOUTH);
+    myPanel.add(decorator.createPanel());
+    myPanel.add(myVfsChangePanel);
     setTitle("Manage Background Tasks");
     init();
-    pack();
   }
 
   private void set(List<BackgroundTaskByVfsChangeTask> cloneTasks) {
@@ -215,7 +217,6 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
   @Nullable
   @Override
   protected String getDimensionServiceKey() {
-    setScalableSize(600, 200);
     return "#BackgroundTaskByVfsChangeManageDialog";
   }
 
