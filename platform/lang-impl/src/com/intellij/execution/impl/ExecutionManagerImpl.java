@@ -207,7 +207,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
         try {
           project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStarting(executor.getId(), environment);
 
-          final RunContentDescriptor descriptor = starter.execute(project, executor, state, reuseContent, environment);
+          final RunContentDescriptor descriptor = starter.execute(state, environment);
           if (descriptor != null) {
             environment.setContentToReuse(descriptor);
             final Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity =

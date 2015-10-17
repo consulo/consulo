@@ -18,7 +18,6 @@ package com.intellij.execution;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,17 +27,6 @@ import org.jetbrains.annotations.Nullable;
  * @author nik
  */
 public abstract class RunProfileStarter {
-  @SuppressWarnings("UnusedParameters")
-  @Deprecated
-  @Nullable
-  /**
-   * @deprecated to remove in IDEA 15
-   */
-  public RunContentDescriptor execute(@NotNull Project project, @NotNull Executor executor, @NotNull RunProfileState state,
-                                      @Nullable RunContentDescriptor contentToReuse, @NotNull ExecutionEnvironment environment) throws ExecutionException {
-    return execute(state, environment);
-  }
-
   @Nullable
   public RunContentDescriptor execute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
     throw new AbstractMethodError();

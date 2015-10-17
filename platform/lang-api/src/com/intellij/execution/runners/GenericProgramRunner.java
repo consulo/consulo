@@ -23,7 +23,6 @@ import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.actionSystem.DataKey;
-import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,18 +46,6 @@ public abstract class GenericProgramRunner<Settings extends RunnerSettings> exte
 
   @Nullable
   protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
-    return doExecute(environment.getProject(), state, environment.getContentToReuse(), environment);
-  }
-
-  @Deprecated
-  @Nullable
-  /**
-   * @deprecated to remove in IDEA 16
-   */
-  protected RunContentDescriptor doExecute(@NotNull Project project,
-                                           @NotNull RunProfileState state,
-                                           @Nullable RunContentDescriptor contentToReuse,
-                                           @NotNull ExecutionEnvironment environment) throws ExecutionException {
-    throw new AbstractMethodError();
+    return null;
   }
 }
