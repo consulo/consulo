@@ -149,70 +149,25 @@ public final class ExecutionEnvironmentBuilder {
     return this;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  @Deprecated
-  /**
-   * to remove in IDEA 15
-   */
-  public ExecutionEnvironmentBuilder setRunnerSettings(@Nullable RunnerSettings runnerSettings) {
-    myRunnerSettings = runnerSettings;
-    return this;
-  }
-
+  @NotNull
   public ExecutionEnvironmentBuilder runnerSettings(@Nullable RunnerSettings runnerSettings) {
     myRunnerSettings = runnerSettings;
     return this;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  @Deprecated
-  /**
-   * to remove in IDEA 15
-   */
-  public ExecutionEnvironmentBuilder setConfigurationSettings(@Nullable ConfigurationPerRunnerSettings configurationSettings) {
-    myConfigurationSettings = configurationSettings;
-    return this;
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  @Deprecated
-  /**
-   * to remove in IDEA 15
-   */
-  public ExecutionEnvironmentBuilder setContentToReuse(@Nullable RunContentDescriptor contentToReuse) {
-    contentToReuse(contentToReuse);
-    return this;
-  }
-
+  @NotNull
   public ExecutionEnvironmentBuilder contentToReuse(@Nullable RunContentDescriptor contentToReuse) {
     myContentToReuse = contentToReuse;
     return this;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  @Deprecated
-  /**
-   * to remove in IDEA 15
-   */
-  public ExecutionEnvironmentBuilder setRunProfile(@NotNull RunProfile runProfile) {
-    return runProfile(runProfile);
-  }
-
+  @NotNull
   public ExecutionEnvironmentBuilder runProfile(@NotNull RunProfile runProfile) {
     myRunProfile = runProfile;
     return this;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  @Deprecated
-  /**
-   * to remove in IDEA 15
-   */
-  public ExecutionEnvironmentBuilder setRunnerId(@Nullable String runnerId) {
-    myRunnerId = runnerId;
-    return this;
-  }
-
+  @NotNull
   public ExecutionEnvironmentBuilder runner(@NotNull ProgramRunner<?> runner) {
     myRunner = runner;
     return this;
@@ -223,29 +178,13 @@ public final class ExecutionEnvironmentBuilder {
     return this;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  @Deprecated
-  /**
-   * to remove in IDEA 15
-   */
-  public ExecutionEnvironmentBuilder setDataContext(@Nullable DataContext dataContext) {
-    return dataContext(dataContext);
-  }
-
+  @NotNull
   public ExecutionEnvironmentBuilder dataContext(@Nullable DataContext dataContext) {
     myDataContext = dataContext;
     return this;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  @Deprecated
-  /**
-   * to remove in IDEA 15
-   */
-  public ExecutionEnvironmentBuilder setExecutor(@NotNull Executor executor) {
-    return executor(executor);
-  }
-
+  @NotNull
   public ExecutionEnvironmentBuilder executor(@NotNull Executor executor) {
     myExecutor = executor;
     return this;

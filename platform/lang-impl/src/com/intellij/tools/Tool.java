@@ -280,7 +280,7 @@ public class Tool implements SchemeElement {
         assert runner != null;
 
         ExecutionEnvironment executionEnvironment = new ExecutionEnvironmentBuilder(project, DefaultRunExecutor.getRunExecutorInstance())
-          .setRunProfile(profile)
+          .runProfile(profile)
           .build();
         executionEnvironment.setExecutionId(executionId);
         runner.execute(executionEnvironment, new ProgramRunner.Callback() {
