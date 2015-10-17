@@ -28,7 +28,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.IdeFocusManager;
 
 public class IncrementalFindAction extends EditorAction {
   public static class Handler extends EditorActionHandler {
@@ -46,7 +45,7 @@ public class IncrementalFindAction extends EditorAction {
       if (!editor.isOneLineMode()) {
         EditorSearchSession search = EditorSearchSession.get(editor);
         if (search != null) {
-          IdeFocusManager.getInstance(project).requestFocus(search.getComponent(), true);
+          search.getComponent().requestFocus();
           FindUtil.configureFindModel(myReplace, editor, search.getFindModel(), false);
         } else {
           FindManager findManager = FindManager.getInstance(project);

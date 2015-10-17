@@ -74,11 +74,7 @@ public class PlaybackRunner {
     myUseDirectActionCall = useDirectActionCall;
     myUseTypingTargets = useTypingTargets;
     myStopOnAppDeactivation = stopOnAppDeactivation;
-    myAppListener = new ApplicationActivationListener() {
-      @Override
-      public void applicationActivated(IdeFrame ideFrame) {
-      }
-
+    myAppListener = new ApplicationActivationListener.Adapter() {
       @Override
       public void applicationDeactivated(IdeFrame ideFrame) {
         if (myStopOnAppDeactivation) {

@@ -143,16 +143,12 @@ public abstract class AppIcon {
       Application app = ApplicationManager.getApplication();
 
       if (app != null && myAppListener == null) {
-        myAppListener = new ApplicationActivationListener() {
+        myAppListener = new ApplicationActivationListener.Adapter() {
           @Override
           public void applicationActivated(IdeFrame ideFrame) {
             hideProgress(ideFrame.getProject(), myCurrentProcessId);
             _setOkBadge(ideFrame, false);
             _setTextBadge(ideFrame, null);
-          }
-
-          @Override
-          public void applicationDeactivated(IdeFrame ideFrame) {
           }
         };
         app.getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC, myAppListener);

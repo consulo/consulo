@@ -141,9 +141,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     registerPluginActions();
   }
 
+  @Override
   public void initComponent() {
   }
 
+  @Override
   public void disposeComponent() {
     if (myTimer != null) {
       myTimer.stop();
@@ -151,10 +153,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   public void addTimerListener(int delay, final TimerListener listener) {
     _addTimerListener(listener, false);
   }
 
+  @Override
   public void removeTimerListener(TimerListener listener) {
     _removeTimerListener(listener, false);
   }
@@ -192,14 +196,17 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     return new ActionPopupMenuImpl(place, group, this, presentationFactory);
   }
 
+  @Override
   public ActionPopupMenu createActionPopupMenu(String place, @NotNull ActionGroup group) {
     return new ActionPopupMenuImpl(place, group, this, null);
   }
 
+  @Override
   public ActionToolbar createActionToolbar(final String place, final ActionGroup group, final boolean horizontal) {
     return createActionToolbar(place, group, horizontal, false);
   }
 
+  @Override
   public ActionToolbar createActionToolbar(final String place,
                                            final ActionGroup group,
                                            final boolean horizontal,
@@ -221,6 +228,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   public AnAction getAction(@NotNull String id) {
     return getActionImpl(id, false);
   }
@@ -304,6 +312,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     return anAction;
   }
 
+  @Override
   public String getId(@NotNull AnAction action) {
     LOG.assertTrue(!(action instanceof ActionStub));
     synchronized (myLock) {
@@ -311,6 +320,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   public String[] getActionIds(@NotNull String idPrefix) {
     synchronized (myLock) {
       ArrayList<String> idList = new ArrayList<String>();
@@ -323,14 +333,17 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   public boolean isGroup(@NotNull String actionId) {
     return getActionImpl(actionId, true) instanceof ActionGroup;
   }
 
+  @Override
   public JComponent createButtonToolbar(final String actionPlace, final ActionGroup messageActionGroup) {
     return new ButtonToolbarImpl(actionPlace, messageActionGroup, myDataManager, this);
   }
 
+  @Override
   public AnAction getActionOrStub(String id) {
     return getActionImpl(id, true);
   }
@@ -925,6 +938,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   public void registerAction(@NotNull String actionId, @NotNull AnAction action, @Nullable PluginId pluginId) {
     synchronized (myLock) {
       if (myId2Action.containsKey(actionId)) {
@@ -981,10 +995,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     return "";
   }
 
+  @Override
   public void registerAction(@NotNull String actionId, @NotNull AnAction action) {
     registerAction(actionId, action, null);
   }
 
+  @Override
   public void unregisterAction(@NotNull String actionId) {
     synchronized (myLock) {
       if (!myId2Action.containsKey(actionId)) {
@@ -1005,19 +1021,23 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   @NotNull
   public String getComponentName() {
     return "ActionManager";
   }
 
+  @Override
   public Comparator<String> getRegistrationOrderComparator() {
     return new Comparator<String>() {
+      @Override
       public int compare(String id1, String id2) {
         return myId2Index.get(id1) - myId2Index.get(id2);
       }
     };
   }
 
+  @Override
   public String[] getPluginActions(PluginId pluginName) {
     if (myPlugin2Id.containsKey(pluginName)) {
       final THashSet<String> pluginActions = myPlugin2Id.get(pluginName);
@@ -1037,6 +1057,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   public void queueActionPerformedEvent(final AnAction action, DataContext context, AnActionEvent event) {
     if (!myPopups.isEmpty()) {
       myQueuedNotifications.put(action, context);
@@ -1047,6 +1068,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
 
+  @Override
   public boolean isActionPopupStackEmpty() {
     return myPopups.isEmpty();
   }
@@ -1066,23 +1088,28 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     myQueuedNotificationsEvents.clear();
   }
 
+  @Override
   public void addAnActionListener(AnActionListener listener) {
     myActionListeners.add(listener);
   }
 
+  @Override
   public void addAnActionListener(final AnActionListener listener, final Disposable parentDisposable) {
     addAnActionListener(listener);
     Disposer.register(parentDisposable, new Disposable() {
+      @Override
       public void dispose() {
         removeAnActionListener(listener);
       }
     });
   }
 
+  @Override
   public void removeAnActionListener(AnActionListener listener) {
     myActionListeners.remove(listener);
   }
 
+  @Override
   public void fireBeforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
     if (action != null) {
       myPrevPerformedActionId = myLastPreformedActionId;
@@ -1095,6 +1122,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   public void fireAfterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
     if (action != null) {
       myPrevPerformedActionId = myLastPreformedActionId;
@@ -1130,6 +1158,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     return null;
   }
 
+  @Override
   public void fireBeforeEditorTyping(char c, DataContext dataContext) {
     myLastTimeEditorWasTypedIn = System.currentTimeMillis();
     for (AnActionListener listener : myActionListeners) {
@@ -1137,10 +1166,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   public String getLastPreformedActionId() {
     return myLastPreformedActionId;
   }
 
+  @Override
   public String getPrevPreformedActionId() {
     return myPrevPerformedActionId;
   }
@@ -1156,6 +1187,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   public void preloadActions() {
     if (myPreloadActionsRunnable == null) {
       myPreloadActionsRunnable = new Runnable() {
+        @Override
         public void run() {
           try {
             doPreloadActions();
@@ -1193,6 +1225,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   private void preloadActionGroup(final ActionGroup group) {
     final Application application = ApplicationManager.getApplication();
     final AnAction[] children = application.runReadAction(new Computable<AnAction[]>() {
+      @Override
       public AnAction[] compute() {
         if (application.isDisposed()) {
           return AnAction.EMPTY_ARRAY;
@@ -1232,7 +1265,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       addActionListener(this);
       setRepeats(true);
       final MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
-      connection.subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener() {
+      connection.subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener.Adapter() {
         @Override
         public void applicationActivated(IdeFrame ideFrame) {
           setDelay(TIMER_DELAY);
@@ -1269,6 +1302,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       }
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
       if (myLastTimeEditorWasTypedIn + UPDATE_DELAY_AFTER_TYPING > System.currentTimeMillis()) {
         return;
@@ -1326,6 +1360,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
+  @Override
   public ActionCallback tryToExecute(@NotNull final AnAction action,
                                      @NotNull final InputEvent inputEvent,
                                      @Nullable final Component contextComponent,
@@ -1337,6 +1372,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
 
     final ActionCallback result = new ActionCallback();
     final Runnable doRunnable = new Runnable() {
+      @Override
       public void run() {
         tryToExecuteNow(action, inputEvent, contextComponent, place, result);
       }
@@ -1362,6 +1398,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     final Presentation presentation = action.getTemplatePresentation().clone();
 
     IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown(new Runnable() {
+      @Override
       public void run() {
         final DataContext context = getContextBy(contextComponent);
 
@@ -1390,6 +1427,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
         fireBeforeActionPerformed(action, context, event);
 
         UIUtil.addAwtListener(new AWTEventListener() {
+          @Override
           public void eventDispatched(AWTEvent event) {
             if (event.getID() == WindowEvent.WINDOW_OPENED || event.getID() == WindowEvent.WINDOW_ACTIVATED) {
               if (!result.isProcessed()) {

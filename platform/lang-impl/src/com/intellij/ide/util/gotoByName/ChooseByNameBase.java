@@ -22,7 +22,6 @@ import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.CopyReferenceAction;
 import com.intellij.ide.actions.GotoFileAction;
 import com.intellij.ide.actions.WindowAction;
@@ -539,15 +538,7 @@ public abstract class ChooseByNameBase {
                   return; // Allow toolwindows to gain focus (used by QuickDoc shown in a toolwindow)
                 }
 
-                EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
-                if (queue instanceof IdeEventQueue) {
-                  if (((IdeEventQueue)queue).wasRootRecentlyClicked(oppositeComponent)) {
-                    Component root = SwingUtilities.getRoot(myTextField);
-                    if (root == null || root.isShowing()) {
-                      hideHint();
-                    }
-                  }
-                }
+                hideHint();
               }
             }
           }, 5);
@@ -600,16 +591,16 @@ public abstract class ChooseByNameBase {
         }
         switch (keyCode) {
           case KeyEvent.VK_DOWN:
-            ListScrollingUtil.moveDown(myList, e.getModifiersEx());
+            ScrollingUtil.moveDown(myList, e.getModifiersEx());
             break;
           case KeyEvent.VK_UP:
-            ListScrollingUtil.moveUp(myList, e.getModifiersEx());
+            ScrollingUtil.moveUp(myList, e.getModifiersEx());
             break;
           case KeyEvent.VK_PAGE_UP:
-            ListScrollingUtil.movePageUp(myList);
+            ScrollingUtil.movePageUp(myList);
             break;
           case KeyEvent.VK_PAGE_DOWN:
-            ListScrollingUtil.movePageDown(myList);
+            ScrollingUtil.movePageDown(myList);
             break;
           case KeyEvent.VK_TAB:
             close(true);
@@ -625,10 +616,10 @@ public abstract class ChooseByNameBase {
 
         if (myList.getSelectedValue() == NON_PREFIX_SEPARATOR) {
           if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_PAGE_UP) {
-            ListScrollingUtil.moveUp(myList, e.getModifiersEx());
+            ScrollingUtil.moveUp(myList, e.getModifiersEx());
           }
           else {
-            ListScrollingUtil.moveDown(myList, e.getModifiersEx());
+            ScrollingUtil.moveDown(myList, e.getModifiersEx());
           }
         }
       }
@@ -1073,7 +1064,7 @@ public abstract class ChooseByNameBase {
         pos = detectBestStatisticalPosition();
       }
 
-      ListScrollingUtil.selectItem(myList, Math.min(pos, myListModel.size() - 1));
+      ScrollingUtil.selectItem(myList, Math.min(pos, myListModel.size() - 1));
       myList.setVisibleRowCount(Math.min(VISIBLE_LIST_SIZE_LIMIT, myList.getModel().getSize()));
       showList();
       myTextFieldPanel.repositionHint();
@@ -1189,7 +1180,7 @@ public abstract class ChooseByNameBase {
 
             if (!myListModel.isEmpty()) {
               int pos = selectionPos <= 0 ? detectBestStatisticalPosition() : selectionPos;
-              ListScrollingUtil.selectItem(myList, Math.min(pos, myListModel.size() - 1));
+              ScrollingUtil.selectItem(myList, Math.min(pos, myListModel.size() - 1));
             }
           }
         }
