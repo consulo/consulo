@@ -26,14 +26,21 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.ex.StatusBarEx;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
@@ -111,47 +118,50 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   }
 
   public void run(@NotNull final ActionCallback actionCallback) {
-      try {
-        final ExpandMacroToPathMap expandMacroToPathMap = createExpandMacroToPathMap();
+    try {
+      final ExpandMacroToPathMap expandMacroToPathMap = createExpandMacroToPathMap();
 
-        GeneralCommandLine commandLine = new GeneralCommandLine();
-        commandLine.setExePath(myParameters.getExePath());
-        String programParameters = myParameters.getProgramParameters();
-        if (programParameters != null) {
-          commandLine.addParameters(StringUtil.split(expandMacroToPathMap.substitute(programParameters, false), " "));
-        }
+      GeneralCommandLine commandLine = new GeneralCommandLine();
+      commandLine.setExePath(myParameters.getExePath());
+      String programParameters = myParameters.getProgramParameters();
+      if (programParameters != null) {
+        commandLine.addParameters(StringUtil.split(expandMacroToPathMap.substitute(programParameters, false), " "));
+      }
 
-        commandLine.setWorkDirectory(expandMacroToPathMap.substitute(myParameters.getWorkingDirectory(), false));
-        commandLine.setPassParentEnvironment(myParameters.isPassParentEnvs());
-        commandLine.getEnvironment().putAll(myParameters.getEnvs());
+      commandLine.setWorkDirectory(expandMacroToPathMap.substitute(myParameters.getWorkingDirectory(), false));
+      commandLine.setPassParentEnvironment(myParameters.isPassParentEnvs());
+      commandLine.getEnvironment().putAll(myParameters.getEnvs());
 
-        CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine.createProcess());
-        processHandler.addProcessListener(new ProcessAdapter() {
-          @Override
-          public void processTerminated(ProcessEvent event) {
-            actionCallback.setDone();
+      CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine.createProcess());
+      processHandler.addProcessListener(new ProcessAdapter() {
+        @Override
+        public void processTerminated(ProcessEvent event) {
+          actionCallback.setDone();
 
-            String outPath = myParameters.getOutPath();
-            if (outPath == null) {
-              return;
-            }
-            String substitute = expandMacroToPathMap.substitute(outPath, false);
-
-            final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(substitute);
-            if (fileByPath != null) {
-              new WriteAction<Object>() {
-                @Override
-                protected void run(Result<Object> result) throws Throwable {
-                  fileByPath.refresh(false, true);
-                }
-              }.execute();
-            }
+          String outPath = myParameters.getOutPath();
+          if (outPath == null) {
+            return;
           }
-        });
+          String substitute = expandMacroToPathMap.substitute(outPath, false);
 
-        final RunContentExecutor contentExecutor =
-                new RunContentExecutor(BackgroundTaskByVfsChangeTaskImpl.this.myProject, processHandler).withTitle(myProviderName)
-                        .withActivateToolWindow(false);
+          final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(substitute);
+          if (fileByPath != null) {
+            new WriteAction<Object>() {
+              @Override
+              protected void run(Result<Object> result) throws Throwable {
+                fileByPath.refresh(false, true);
+              }
+            }.execute();
+          }
+
+          if (!myParameters.isShowConsole()) {
+            showBalloon(event);
+          }
+        }
+      });
+
+      if (myParameters.isShowConsole()) {
+        final RunContentExecutor contentExecutor = new RunContentExecutor(myProject, processHandler).withTitle(myProviderName).withActivateToolWindow(false);
         UIUtil.invokeLaterIfNeeded(new Runnable() {
           @Override
           public void run() {
@@ -159,10 +169,26 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
           }
         });
       }
-      catch (ExecutionException e) {
-        actionCallback.setRejected();
-        BackgroundTaskByVfsChangeTaskImpl.LOGGER.error(e);
+      else {
+        processHandler.startNotify();
       }
+    }
+    catch (ExecutionException e) {
+      actionCallback.setRejected();
+      LOGGER.error(e);
+    }
+  }
+
+  private void showBalloon(@NotNull ProcessEvent processEvent) {
+    IdeFrame frame = ((WindowManagerEx)WindowManager.getInstance()).findFrameFor(myProject);
+    StatusBarEx statusBar = frame == null ? null : (StatusBarEx)frame.getStatusBar();
+    if (statusBar == null) {
+      return;
+    }
+
+    int exitCode = processEvent.getExitCode();
+    statusBar.notifyProgressByBalloon(exitCode == 0 ? MessageType.INFO : MessageType.ERROR, "Task <b>" + myName + "</b> finished with code: <b>" +
+                                                                                            exitCode + "</b>", null, null);
   }
 
   public ExpandMacroToPathMap createExpandMacroToPathMap() {

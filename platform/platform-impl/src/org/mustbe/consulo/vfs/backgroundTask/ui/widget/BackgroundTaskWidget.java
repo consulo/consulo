@@ -17,11 +17,11 @@ package org.mustbe.consulo.vfs.backgroundTask.ui.widget;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -52,6 +52,7 @@ import java.util.List;
  * @since 01.05.14
  */
 public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
+  public static final String ID = "BackgroundTaskWidget";
   private Icon myIcon;
   private VirtualFile myVirtualFile;
 
@@ -62,7 +63,7 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
   @NotNull
   @Override
   public String ID() {
-    return "BackgroundTaskWidget";
+    return ID;
   }
 
   @Nullable
@@ -117,6 +118,20 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
   @Override
   public void install(@NotNull StatusBar statusBar) {
     super.install(statusBar);
+    myProject.getMessageBus().connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+      @Override
+      public void enteredDumbMode() {
+        exitDumbMode();
+      }
+
+      @Override
+      public void exitDumbMode() {
+        if(myVirtualFile != null) {
+          update(myVirtualFile);
+        }
+      }
+    });
+
     myProject.getMessageBus().connect().subscribe(BackgroundTaskByVfsChangeManager.TOPIC, new BackgroundTaskByVfsChangeManager.ListenerAdapter() {
       @Override
       public void taskChanged(@NotNull BackgroundTaskByVfsChangeTask task) {
@@ -156,7 +171,7 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
           return;
         }
         DefaultActionGroup group = new DefaultActionGroup();
-        group.add(new AnAction("Force Run", null, AllIcons.Actions.Resume) {
+        group.add(new DumbAwareAction("Force Run", null, AllIcons.Actions.Resume) {
           @RequiredDispatchThread
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {
@@ -169,7 +184,7 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
             e.getPresentation().setEnabled(!BackgroundTaskByVfsChangeManager.getInstance(myProject).findEnabledTasks(myVirtualFile).isEmpty());
           }
         });
-        group.add(new AnAction("Manage", null, AllIcons.General.Settings) {
+        group.add(new DumbAwareAction("Manage", null, AllIcons.General.Settings) {
           @RequiredDispatchThread
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {

@@ -39,6 +39,7 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
   private String myWorkDirectory;
   private String myExePath = "";
   private String myOutPath = "";
+  private boolean myShowConsole = true;
   private Map<String, String> myEnvs = Collections.emptyMap();
   private boolean myPassParentEnvs;
 
@@ -116,19 +117,6 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
     return myOutPath;
   }
 
-  @NotNull
-  @Override
-  public BackgroundTaskByVfsParameters copy() {
-    BackgroundTaskByVfsParametersImpl parameters = new BackgroundTaskByVfsParametersImpl(myProject);
-    parameters.setEnvs(getEnvs());
-    parameters.setExePath(getExePath());
-    parameters.setOutPath(getOutPath());
-    parameters.setPassParentEnvs(isPassParentEnvs());
-    parameters.setProgramParameters(getProgramParameters());
-    parameters.setWorkingDirectory(getWorkingDirectory());
-    return parameters;
-  }
-
   @Override
   public void set(@NotNull BackgroundTaskByVfsParameters parameters) {
     setEnvs(parameters.getEnvs());
@@ -137,5 +125,16 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
     setPassParentEnvs(parameters.isPassParentEnvs());
     setProgramParameters(parameters.getProgramParameters());
     setWorkingDirectory(parameters.getWorkingDirectory());
+    setShowConsole(parameters.isShowConsole());
+  }
+
+  @Override
+  public boolean isShowConsole() {
+    return myShowConsole;
+  }
+
+  @Override
+  public void setShowConsole(boolean console) {
+    myShowConsole = console;
   }
 }

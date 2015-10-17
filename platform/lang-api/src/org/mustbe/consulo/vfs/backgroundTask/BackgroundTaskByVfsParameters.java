@@ -34,8 +34,9 @@ public interface BackgroundTaskByVfsParameters extends CommonProgramRunConfigura
   @Nullable
   String getOutPath();
 
-  @NotNull
-  BackgroundTaskByVfsParameters copy();
-
   void set(@NotNull BackgroundTaskByVfsParameters parameters);
+
+  boolean isShowConsole();
+
+  void setShowConsole(boolean console);
 }

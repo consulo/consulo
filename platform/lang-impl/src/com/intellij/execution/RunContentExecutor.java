@@ -22,6 +22,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,6 +95,7 @@ public class RunContentExecutor implements Disposable {
     return console;
   }
 
+  @RequiredDispatchThread
   public void run() {
     FileDocumentManager.getInstance().saveAllDocuments();
 

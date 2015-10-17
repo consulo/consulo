@@ -33,6 +33,7 @@ public class BackgroundTaskByVfsChangePanel extends JPanel {
   private TextFieldWithBrowseButton myExePath;
   private CommonProgramParametersPanel myProgramParametersPanel;
   private TextFieldWithBrowseButton myOutPath;
+  private JCheckBox myShowConsoleCheckBox;
 
   public BackgroundTaskByVfsChangePanel(Project project) {
     myOutPath.addBrowseFolderListener("Select Output Path", null, project, new FileChooserDescriptor(false, true, false, false, false, false));
@@ -43,6 +44,7 @@ public class BackgroundTaskByVfsChangePanel extends JPanel {
     myProgramParametersPanel.reset(parameters);
     myExePath.setText(FileUtil.toSystemDependentName(StringUtil.notNullize(parameters.getExePath())));
     myOutPath.setText(FileUtil.toSystemDependentName(StringUtil.notNullize(parameters.getOutPath())));
+    myShowConsoleCheckBox.setSelected(parameters.isShowConsole());
     UIUtil.setEnabled(this, parameters != BackgroundTaskByVfsParametersImpl.EMPTY, true);
   }
 
@@ -50,6 +52,7 @@ public class BackgroundTaskByVfsChangePanel extends JPanel {
     parameters.setExePath(FileUtil.toSystemIndependentName(myExePath.getText()));
     parameters.setOutPath(FileUtil.toSystemIndependentName(myOutPath.getText()));
     myProgramParametersPanel.applyTo(parameters);
+    parameters.setShowConsole(myShowConsoleCheckBox.isSelected());
   }
 
   private void createUIComponents() {
