@@ -26,7 +26,6 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
@@ -37,10 +36,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.tools.ToolProcessAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
@@ -153,10 +149,6 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
               }
             }.execute();
           }
-
-          if (!myParameters.isShowConsole()) {
-            showBalloon(event);
-          }
         }
       });
 
@@ -170,6 +162,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         });
       }
       else {
+        processHandler.addProcessListener(new ToolProcessAdapter(myProject, true, myName));
         processHandler.startNotify();
       }
     }
@@ -177,18 +170,6 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
       actionCallback.setRejected();
       LOGGER.error(e);
     }
-  }
-
-  private void showBalloon(@NotNull ProcessEvent processEvent) {
-    IdeFrame frame = ((WindowManagerEx)WindowManager.getInstance()).findFrameFor(myProject);
-    StatusBarEx statusBar = frame == null ? null : (StatusBarEx)frame.getStatusBar();
-    if (statusBar == null) {
-      return;
-    }
-
-    int exitCode = processEvent.getExitCode();
-    statusBar.notifyProgressByBalloon(exitCode == 0 ? MessageType.INFO : MessageType.ERROR, "Task <b>" + myName + "</b> finished with code: <b>" +
-                                                                                            exitCode + "</b>", null, null);
   }
 
   public ExpandMacroToPathMap createExpandMacroToPathMap() {
