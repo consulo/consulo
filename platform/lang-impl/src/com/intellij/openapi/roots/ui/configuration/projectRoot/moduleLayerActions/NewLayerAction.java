@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.moduleLayerActions;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -22,8 +23,10 @@ import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.IconUtil;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.Set;
 
@@ -31,27 +34,31 @@ import java.util.Set;
  * @author VISTALL
  * @since 30.07.14
  */
-public class AddLayerAction extends AnAction {
+public class NewLayerAction extends AnAction {
   private ModuleEditor myModuleEditor;
   private boolean myCopy;
 
-  public AddLayerAction(ModuleEditor moduleEditor, boolean copy) {
+  public NewLayerAction(ModuleEditor moduleEditor, boolean copy) {
+    super(copy ? "Copy layer" : "New layer", null, copy ? AllIcons.Actions.Copy : IconUtil.getAddIcon());
     myModuleEditor = moduleEditor;
     myCopy = copy;
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     val modifiableRootModel = myModuleEditor.getModifiableRootModelProxy();
     String copyName = myCopy ? modifiableRootModel.getCurrentLayerName() : null;
     String newName = Messages.showInputDialog(modifiableRootModel.getProject(), "Name", "Enter Name", Messages.getQuestionIcon(),
                                               createUniqueSdkName(copyName, modifiableRootModel), new InputValidator() {
+      @RequiredDispatchThread
       @Override
       public boolean checkInput(String inputString) {
         String trimString = inputString.trim();
         return !StringUtil.isEmpty(trimString) && modifiableRootModel.findLayerByName(trimString) == null;
       }
 
+      @RequiredDispatchThread
       @Override
       public boolean canClose(String inputString) {
         return true;
@@ -60,7 +67,10 @@ public class AddLayerAction extends AnAction {
 
     if (newName != null) {
       modifiableRootModel.addLayer(newName.trim(), copyName, true);
-      modifiableRootModel.addContentEntry(modifiableRootModel.getModule().getModuleDirUrl());
+      String moduleDirUrl = modifiableRootModel.getModule().getModuleDirUrl();
+      if(moduleDirUrl != null) {
+        modifiableRootModel.addContentEntry(moduleDirUrl);
+      }
     }
   }
 

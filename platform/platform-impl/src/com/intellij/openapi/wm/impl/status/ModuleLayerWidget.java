@@ -156,7 +156,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
     }
 
     ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup("Select profile", actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+            .createActionGroupPopup("Module layer", actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     Dimension dimension = popup.getContent().getPreferredSize();
     Point at = new Point(0, -dimension.height);
     popup.show(new RelativePoint(e.getComponent(), at));

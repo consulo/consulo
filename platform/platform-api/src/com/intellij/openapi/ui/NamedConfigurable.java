@@ -19,10 +19,10 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.ui.DocumentAdapter;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 
@@ -57,7 +57,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
         }
       });
     }
-    myNamePanel.setBorder(new EmptyBorder(10, 10, 6, 10));
+    myNamePanel.setBorder(JBUI.Borders.empty(10, 10, 6, 10));
   }
 
   public boolean isNameEditable() {

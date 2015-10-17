@@ -19,24 +19,35 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
+import com.intellij.util.IconUtil;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author VISTALL
  * @since 30.07.14
  */
-public class RemoveLayerAction extends AnAction {
+public class DeleteLayerAction extends AnAction {
   private ModuleEditor myModuleEditor;
 
-  public RemoveLayerAction(ModuleEditor moduleEditor) {
+  public DeleteLayerAction(ModuleEditor moduleEditor) {
+    super("Delete layer", null, IconUtil.getRemoveIcon());
     myModuleEditor = moduleEditor;
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
 
     String currentLayerName = modifiableRootModelProxy.getCurrentLayerName();
 
     modifiableRootModelProxy.removeLayer(currentLayerName, true);
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void update(@NotNull AnActionEvent e) {
+    e.getPresentation().setEnabled(myModuleEditor.getModifiableRootModelProxy().getLayers().size() > 1);
   }
 }
