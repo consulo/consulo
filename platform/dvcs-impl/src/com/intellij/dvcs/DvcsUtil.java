@@ -15,6 +15,7 @@
  */
 package com.intellij.dvcs;
 
+import com.intellij.dvcs.push.PushSupport;
 import com.intellij.dvcs.repo.RepoStateException;
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.RepositoryManager;
@@ -24,6 +25,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -35,7 +37,6 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -43,12 +44,11 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.status.StatusBarUtil;
-import com.intellij.util.CommonProcessors;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.text.DateFormatUtil;
@@ -71,20 +71,7 @@ public class DvcsUtil {
   private static final Logger LOGGER = Logger.getInstance(DvcsUtil.class);
   private static final int IO_RETRIES = 3; // number of retries before fail if an IOException happens during file read.
   private static final int SHORT_HASH_LENGTH = 8;
-
-  public static void installStatusBarWidget(@NotNull Project project, @NotNull StatusBarWidget widget) {
-    StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-    if (statusBar != null) {
-      statusBar.addWidget(widget, "after " + (SystemInfo.isMac ? "Encoding" : "InsertOverwrite"), project);
-    }
-  }
-
-  public static void removeStatusBarWidget(@NotNull Project project, @NotNull StatusBarWidget widget) {
-    StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-    if (statusBar != null) {
-      statusBar.removeWidget(widget.ID());
-    }
-  }
+  private static final int LONG_HASH_LENGTH = 40;
 
   @NotNull
   public static String getShortRepositoryName(@NotNull Project project, @NotNull VirtualFile root) {
@@ -116,16 +103,6 @@ public class DvcsUtil {
     }, ", ");
   }
 
-  @NotNull
-  public static String joinRootsPaths(@NotNull Collection<VirtualFile> roots) {
-    return StringUtil.join(roots, new Function<VirtualFile, String>() {
-      @Override
-      public String fun(VirtualFile virtualFile) {
-        return virtualFile.getPresentableUrl();
-      }
-    }, ", ");
-  }
-
   public static boolean anyRepositoryIsFresh(Collection<? extends Repository> repositories) {
     for (Repository repository : repositories) {
       if (repository.isFresh()) {
@@ -133,23 +110,6 @@ public class DvcsUtil {
       }
     }
     return false;
-  }
-
-  /**
-   * Report a warning that the given root has no associated Repositories.
-   */
-  public static void noVcsRepositoryForRoot(@NotNull Logger log,
-                                            @NotNull VirtualFile root,
-                                            @NotNull Project project,
-                                            @NotNull RepositoryManager repositoryManager,
-                                            @Nullable AbstractVcs vcs) {
-    if (vcs == null) {
-      return;
-    }
-    ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
-    List<VirtualFile> roots = Arrays.asList(vcsManager.getRootsUnderVcs(vcs));
-    log.warn(String.format("Repository not found for root: %s. All roots: %s, all repositories: %s", root, roots,
-                           repositoryManager.getRepositories()));
   }
 
   @Nullable
@@ -190,13 +150,13 @@ public class DvcsUtil {
 
   @NotNull
   public static String getShortHash(@NotNull String hash) {
-    if (hash.length() == 0) return "";
-    if (hash.length() == 40) return hash.substring(0, SHORT_HASH_LENGTH);
-    if (hash.length() > 40)  // revision string encoded with date too
-    {
-      return hash.substring(hash.indexOf("[") + 1, SHORT_HASH_LENGTH);
+    if (hash.length() < SHORT_HASH_LENGTH) {
+      LOG.debug("Unexpectedly short hash: [" + hash + "]");
     }
-    return hash;
+    if (hash.length() > LONG_HASH_LENGTH) {
+      LOG.debug("Unexpectedly long hash: [" + hash + "]");
+    }
+    return hash.substring(0, Math.min(SHORT_HASH_LENGTH, hash.length()));
   }
 
   @NotNull
@@ -264,7 +224,7 @@ public class DvcsUtil {
    * If an other exception happens, rethrows it as a {@link RepoStateException}.
    * In the case of success returns the result of the task execution.
    */
-  public static <T> T tryOrThrow(Callable<T> actionToTry, File fileToLoad) throws RepoStateException {
+  private static <T> T tryOrThrow(Callable<T> actionToTry, File fileToLoad) throws RepoStateException {
     IOException cause = null;
     for (int i = 0; i < IO_RETRIES; i++) {
       try {
@@ -292,7 +252,8 @@ public class DvcsUtil {
 
   public static void ensureAllChildrenInVfs(@Nullable VirtualFile dir) {
     if (dir != null) {
-      VfsUtilCore.processFilesRecursively(dir, CommonProcessors.<VirtualFile>alwaysTrue());
+      //noinspection unchecked
+      VfsUtilCore.processFilesRecursively(dir, Processor.TRUE);
     }
   }
 
@@ -301,6 +262,66 @@ public class DvcsUtil {
       ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
       manager.setDirectoryMappings(VcsUtil.addMapping(manager.getDirectoryMappings(), newRepositoryPath, vcsName));
     }
+  }
+
+  @Nullable
+  public static <T extends Repository> T guessRepositoryForFile(@NotNull Project project,
+                                                                @NotNull RepositoryManager<T> manager,
+                                                                @Nullable AbstractVcs vcs,
+                                                                @Nullable VirtualFile file,
+                                                                @Nullable String defaultRootPathValue) {
+    T repository = manager.getRepositoryForRoot(getVcsRoot(project, file));
+    return repository != null ? repository : manager.getRepositoryForRoot(guessRootForVcs(project, vcs, defaultRootPathValue));
+  }
+
+  @Nullable
+  private static VirtualFile guessRootForVcs(@NotNull Project project, @Nullable AbstractVcs vcs, @Nullable String defaultRootPathValue) {
+    if (project.isDisposed()) return null;
+    LOG.debug("Guessing vcs root...");
+    ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+    if (vcs == null) {
+      LOG.debug("Vcs not found.");
+      return null;
+    }
+    String vcsName = vcs.getDisplayName();
+    VirtualFile[] vcsRoots = vcsManager.getRootsUnderVcs(vcs);
+    if (vcsRoots.length == 0) {
+      LOG.debug("No " + vcsName + " roots in the project.");
+      return null;
+    }
+
+    if (vcsRoots.length == 1) {
+      VirtualFile onlyRoot = vcsRoots[0];
+      LOG.debug("Only one " + vcsName + " root in the project, returning: " + onlyRoot);
+      return onlyRoot;
+    }
+
+    // get remembered last visited repository root
+    if (defaultRootPathValue != null) {
+      VirtualFile recentRoot = VcsUtil.getVirtualFile(defaultRootPathValue);
+      if (recentRoot != null) {
+        LOG.debug("Returning the recent root: " + recentRoot);
+        return recentRoot;
+      }
+    }
+
+    // otherwise return the root of the project dir or the root containing the project dir, if there is such
+    VirtualFile projectBaseDir = project.getBaseDir();
+    if (projectBaseDir == null) {
+      VirtualFile firstRoot = vcsRoots[0];
+      LOG.debug("Project base dir is null, returning the first root: " + firstRoot);
+      return firstRoot;
+    }
+    VirtualFile rootCandidate;
+    for (VirtualFile root : vcsRoots) {
+      if (root.equals(projectBaseDir) || VfsUtilCore.isAncestor(root, projectBaseDir, true)) {
+        LOG.debug("The best candidate: " + root);
+        return root;
+      }
+    }
+    rootCandidate = vcsRoots[0];
+    LOG.debug("Returning the best candidate: " + rootCandidate);
+    return rootCandidate;
   }
 
   public static class Updater implements Consumer<Object> {
@@ -319,14 +340,14 @@ public class DvcsUtil {
   }
 
   public static <T extends Repository> List<T> sortRepositories(@NotNull Collection<T> repositories) {
-    List<T> repos = ContainerUtil.filter(repositories, new Condition<T>() {
+    List<T> validRepositories = ContainerUtil.filter(repositories, new Condition<T>() {
       @Override
       public boolean value(T t) {
         return t.getRoot().isValid();
       }
     });
-    Collections.sort(repos, REPOSITORY_COMPARATOR);
-    return repos;
+    Collections.sort(validRepositories, REPOSITORY_COMPARATOR);
+    return validRepositories;
   }
 
   @Nullable
@@ -401,5 +422,15 @@ public class DvcsUtil {
       commitsInRoot.add(commit);
     }
     return groupedCommits;
+  }
+
+  @Nullable
+  public static PushSupport getPushSupport(@NotNull final AbstractVcs vcs) {
+    return ContainerUtil.find(Extensions.getExtensions(PushSupport.PUSH_SUPPORT_EP, vcs.getProject()), new Condition<PushSupport>() {
+      @Override
+      public boolean value(final PushSupport support) {
+        return support.getVcs().equals(vcs);
+      }
+    });
   }
 }
