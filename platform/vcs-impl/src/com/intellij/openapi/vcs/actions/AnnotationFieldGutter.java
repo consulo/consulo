@@ -20,6 +20,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorGutterAction;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
@@ -30,7 +31,6 @@ import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -40,17 +40,25 @@ import java.util.Map;
  */
 public class AnnotationFieldGutter implements ActiveAnnotationGutter {
   protected final FileAnnotation myAnnotation;
-  private final Editor myEditor;
   protected final LineAnnotationAspect myAspect;
   private final TextAnnotationPresentation myPresentation;
   private final boolean myIsGutterAction;
-  private Map<String, Color> myColorScheme;
-  private boolean myShowBg = ShowAnnotationColorsAction.isColorsEnabled();
-  private boolean myShowAdditionalInfo = false;
+  private Couple<Map<VcsRevisionNumber, Color>> myColorScheme;
 
-  AnnotationFieldGutter(FileAnnotation annotation, Editor editor, LineAnnotationAspect aspect, final TextAnnotationPresentation presentation, Map<String, Color> colorScheme) {
+  @Deprecated
+  AnnotationFieldGutter(FileAnnotation annotation,
+                        Editor editor,
+                        LineAnnotationAspect aspect,
+                        final TextAnnotationPresentation presentation,
+                        Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
+    this(annotation, aspect, presentation, colorScheme);
+  }
+
+  AnnotationFieldGutter(FileAnnotation annotation,
+                        LineAnnotationAspect aspect,
+                        final TextAnnotationPresentation presentation,
+                        Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
     myAnnotation = annotation;
-    myEditor = editor;
     myAspect = aspect;
     myPresentation = presentation;
     myIsGutterAction = myAspect instanceof EditorGutterAction;
@@ -61,6 +69,7 @@ public class AnnotationFieldGutter implements ActiveAnnotationGutter {
     return myIsGutterAction;
   }
 
+  @Override
   public String getLineText(int line, Editor editor) {
     final String value = isAvailable() ? myAspect.getValue(line) : "";
     if (myAspect.getId() == LineAnnotationAspect.AUTHOR && ShowShortenNames.isSet()) {
@@ -97,18 +106,21 @@ public class AnnotationFieldGutter implements ActiveAnnotationGutter {
     return name;
   }
 
+  @Override
   @Nullable
   public String getToolTip(final int line, final Editor editor) {
     return isAvailable() ?
-    XmlStringUtil.escapeString(myAnnotation.getToolTip(line)) : null;
+           XmlStringUtil.escapeString(myAnnotation.getToolTip(line)) : null;
   }
 
+  @Override
   public void doAction(int line) {
     if (myIsGutterAction) {
       ((EditorGutterAction)myAspect).doAction(line);
     }
   }
 
+  @Override
   public Cursor getCursor(final int line) {
     if (myIsGutterAction) {
       return ((EditorGutterAction)myAspect).getCursor(line);
@@ -118,64 +130,41 @@ public class AnnotationFieldGutter implements ActiveAnnotationGutter {
 
   }
 
+  @Override
   public EditorFontType getStyle(final int line, final Editor editor) {
     return myPresentation.getFontType(line);
   }
 
+  @Override
   @Nullable
   public ColorKey getColor(final int line, final Editor editor) {
     return myPresentation.getColor(line);
   }
 
+  @Override
   public List<AnAction> getPopupActions(int line, final Editor editor) {
     return myPresentation.getActions(line);
   }
 
+  @Override
   public void gutterClosed() {
     myAnnotation.unregister();
     myAnnotation.dispose();
-    final Collection<ActiveAnnotationGutter> gutters = myEditor.getUserData(AnnotateToggleAction.KEY_IN_EDITOR);
-    if (gutters != null) {
-      gutters.remove(this);
-    }
   }
 
+  @Override
   @Nullable
   public Color getBgColor(int line, Editor editor) {
-    if (myColorScheme == null || !myShowBg) return null;
-    final String s = getLineText(line, editor);
+    ColorMode type = ShowAnnotationColorsAction.getType();
+    Map<VcsRevisionNumber, Color> colorMap = type == ColorMode.AUTHOR ? myColorScheme.second : myColorScheme.first;
+    if (colorMap == null || type == ColorMode.NONE) return null;
     final VcsRevisionNumber number = myAnnotation.getLineRevisionNumber(line);
-    if (number == null || s == null) return null;
-    final Color bg = myColorScheme.get(number.asString());
-    return bg == null ? findBgColor(s) : bg;
-  }
-
-  @Nullable
-  private Color findBgColor(String s) {
-    if (myColorScheme != null) {
-      for (String key : myColorScheme.keySet()) {
-            if (key.startsWith(s)) {
-              return myColorScheme.get(key);
-            }
-          }
-    }
-    return null;
-  }
-
-  public void setAspectValueToBgColorMap(Map<String, Color> colorScheme) {
-    myColorScheme = colorScheme;
-  }
-
-  public void setShowBg(boolean show) {
-    myShowBg = show;
-  }
-
-  public void setShowAdditionalInfo(boolean show) {
-    myShowAdditionalInfo = show;
+    if (number == null) return null;
+    return colorMap.get(number);
   }
 
   public boolean isAvailable() {
-    return myShowAdditionalInfo || VcsUtil.isAspectAvailableByDefault(getID());
+    return VcsUtil.isAspectAvailableByDefault(getID());
   }
 
   @Nullable

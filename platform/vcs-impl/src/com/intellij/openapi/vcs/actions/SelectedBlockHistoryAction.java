@@ -34,6 +34,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.vcsUtil.VcsSelection;
 import com.intellij.vcsUtil.VcsSelectionUtil;
+import com.intellij.vcsUtil.VcsUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -48,13 +50,13 @@ public class SelectedBlockHistoryAction extends AbstractVcsAction {
     if (project == null) return false;
     final ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
     final BackgroundableActionEnabledHandler handler =
-      vcsManager.getBackgroundableActionHandler(VcsBackgroundableActions.HISTORY_FOR_SELECTION);
+            vcsManager.getBackgroundableActionHandler(VcsBackgroundableActions.HISTORY_FOR_SELECTION);
     if (handler.isInProgress(VcsBackgroundableActions.keyFrom(file))) return false;
     AbstractVcs vcs = vcsManager.getVcsFor(file);
     if (vcs == null) return false;
     VcsHistoryProvider vcsHistoryProvider = vcs.getVcsBlockHistoryProvider();
     if (vcsHistoryProvider == null) return false;
-    if (! AbstractVcs.fileInVcsByFileStatus(project, new FilePathImpl(file))) return false;
+    if (! AbstractVcs.fileInVcsByFileStatus(project, VcsUtil.getFilePath(file))) return false;
 
     VcsSelection selection = VcsSelectionUtil.getSelection(context);
     if (selection == null) {
@@ -63,7 +65,7 @@ public class SelectedBlockHistoryAction extends AbstractVcsAction {
     return true;
   }
 
-  public void actionPerformed(final VcsContext context) {
+  public void actionPerformed(@NotNull final VcsContext context) {
     try {
       final VcsSelection selection = VcsSelectionUtil.getSelection(context);
       VirtualFile file = FileDocumentManager.getInstance().getFile(selection.getDocument());
@@ -80,42 +82,43 @@ public class SelectedBlockHistoryAction extends AbstractVcsAction {
       final VcsException[] preloadException = new VcsException[1];
       final CachedRevisionsContents cachedRevisionsContents = new CachedRevisionsContents(project, file);
       new VcsHistoryProviderBackgroundableProxy(activeVcs, provider, activeVcs.getDiffProvider()).
-        createSessionFor(activeVcs.getKeyInstanceMethod(), new FilePathImpl(file),
-        new Consumer<VcsHistorySession>() {
-          public void consume(VcsHistorySession session) {
-            if (preloadException[0] != null) {
-              reportError(preloadException[0]);
-            }
-            if (session == null) return;
-            final VcsHistoryDialog vcsHistoryDialog =
-              new VcsHistoryDialog(project,
-                                        context.getSelectedFiles()[0],
-                                        provider,
-                                        session,
-                                        activeVcs,
-                                        Math.min(selectionStart, selectionEnd),
-                                        Math.max(selectionStart, selectionEnd),
-                                        selection.getDialogTitle(), cachedRevisionsContents);
+              createSessionFor(activeVcs.getKeyInstanceMethod(), VcsUtil.getFilePath(file),
+                               new Consumer<VcsHistorySession>() {
+                                 public void consume(VcsHistorySession session) {
+                                   if (preloadException[0] != null) {
+                                     reportError(preloadException[0]);
+                                   }
+                                   if (session == null) return;
+                                   final VcsHistoryDialog vcsHistoryDialog =
+                                           new VcsHistoryDialog(project,
+                                                                context.getSelectedFiles()[0],
+                                                                context.getEditor(),
+                                                                provider,
+                                                                session,
+                                                                activeVcs,
+                                                                Math.min(selectionStart, selectionEnd),
+                                                                Math.max(selectionStart, selectionEnd),
+                                                                selection.getDialogTitle(), cachedRevisionsContents);
 
-            vcsHistoryDialog.show();
-          }
-        }, VcsBackgroundableActions.HISTORY_FOR_SELECTION, false, new Consumer<VcsHistorySession>() {
-          @Override
-          public void consume(VcsHistorySession vcsHistorySession) {
-            if (vcsHistorySession == null) return;
-            final List<VcsFileRevision> revisionList = vcsHistorySession.getRevisionList();
-            cachedRevisionsContents.setRevisions(revisionList);
-            if (VcsConfiguration.getInstance(project).SHOW_ONLY_CHANGED_IN_SELECTION_DIFF) {
-              // preload while in bckgrnd
-              try {
-                cachedRevisionsContents.loadContentsFor(revisionList.toArray(new VcsFileRevision[revisionList.size()]));
-              }
-              catch (VcsException e) {
-                preloadException[0] = e;
-              }
-            }
-          }
-        });
+                                   vcsHistoryDialog.show();
+                                 }
+                               }, VcsBackgroundableActions.HISTORY_FOR_SELECTION, false, new Consumer<VcsHistorySession>() {
+                        @Override
+                        public void consume(VcsHistorySession vcsHistorySession) {
+                          if (vcsHistorySession == null) return;
+                          final List<VcsFileRevision> revisionList = vcsHistorySession.getRevisionList();
+                          cachedRevisionsContents.setRevisions(revisionList);
+                          if (VcsConfiguration.getInstance(project).SHOW_ONLY_CHANGED_IN_SELECTION_DIFF) {
+                            // preload while in bckgrnd
+                            try {
+                              cachedRevisionsContents.loadContentsFor(revisionList.toArray(new VcsFileRevision[revisionList.size()]));
+                            }
+                            catch (VcsException e) {
+                              preloadException[0] = e;
+                            }
+                          }
+                        }
+                      });
     }
     catch (Exception exception) {
       reportError(exception);

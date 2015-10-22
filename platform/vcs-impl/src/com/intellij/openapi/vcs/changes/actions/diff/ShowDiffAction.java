@@ -37,9 +37,9 @@ import com.intellij.openapi.vcs.changes.actions.ShowDiffUIContext;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -54,8 +54,6 @@ public class ShowDiffAction extends AnAction implements DumbAware {
           AllIcons.Actions.Diff);
   }
 
-  @RequiredDispatchThread
-  @Override
   public void update(@NotNull AnActionEvent e) {
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
     Project project = e.getData(CommonDataKeys.PROJECT);
@@ -68,15 +66,17 @@ public class ShowDiffAction extends AnAction implements DumbAware {
   }
 
   protected static boolean canShowDiff(@Nullable Project project, @Nullable Change[] changes) {
-    if (changes == null || changes.length == 0) return false;
+    return changes != null && canShowDiff(project, Arrays.asList(changes));
+  }
+
+  protected static boolean canShowDiff(@Nullable Project project, @Nullable List<Change> changes) {
+    if (changes == null || changes.size() == 0) return false;
     for (Change change : changes) {
       if (ChangeDiffRequestProducer.canCreate(project, change)) return true;
     }
     return false;
   }
 
-  @RequiredDispatchThread
-  @Override
   public void actionPerformed(@NotNull final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     final Change[] changes = e.getData(VcsDataKeys.CHANGES);
@@ -89,7 +89,6 @@ public class ShowDiffAction extends AnAction implements DumbAware {
     // this trick is essential since we are under some conditions to refresh changes;
     // but we can only rely on callback after refresh
     final Runnable performer = new Runnable() {
-      @Override
       public void run() {
         Change[] convertedChanges;
         if (needsConversion) {

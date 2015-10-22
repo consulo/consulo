@@ -45,9 +45,9 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.WeakList;
-import com.intellij.util.ui.ButtonlessScrollBarUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,6 +133,11 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
     return !isDisposed() && !myInjectedFile.getProject().isDisposed() && myInjectedFile.isValid() && myDocumentWindow.isValid();
   }
 
+  private void checkValid() {
+    PsiUtilCore.ensureValid(myInjectedFile);
+    if (!isValid()) throw new AssertionError();
+  }
+
   @Override
   @NotNull
   public PsiFile getInjectedFile() {
@@ -142,7 +147,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @Override
   @NotNull
   public LogicalPosition hostToInjected(@NotNull LogicalPosition hPos) {
-    assert isValid();
+    checkValid();
     DocumentEx hostDocument = myDelegate.getDocument();
     int hLineEndOffset = hPos.line >= hostDocument.getLineCount() ? hostDocument.getTextLength() : hostDocument.getLineEndOffset(hPos.line);
     LogicalPosition hLineEndPos = myDelegate.offsetToLogicalPosition(hLineEndOffset);
@@ -162,7 +167,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @Override
   @NotNull
   public LogicalPosition injectedToHost(@NotNull LogicalPosition pos) {
-    assert isValid();
+    checkValid();
 
     int offset = logicalPositionToOffset(pos);
     LogicalPosition samePos = offsetToLogicalPosition(offset);
@@ -388,7 +393,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @Override
   @NotNull
   public LogicalPosition offsetToLogicalPosition(final int offset, boolean softWrapAware) {
-    assert isValid();
+    checkValid();
     int lineNumber = myDocumentWindow.getLineNumber(offset);
     int lineStartOffset = myDocumentWindow.getLineStartOffset(lineNumber);
     int column = calcLogicalColumnNumber(offset-lineStartOffset, lineNumber, lineStartOffset);
@@ -404,7 +409,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @Override
   @NotNull
   public LogicalPosition xyToLogicalPosition(@NotNull final Point p) {
-    assert isValid();
+    checkValid();
     LogicalPosition hostPos = myDelegate.xyToLogicalPosition(p);
     return hostToInjected(hostPos);
   }
@@ -412,7 +417,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @Override
   @NotNull
   public Point logicalPositionToXY(@NotNull final LogicalPosition pos) {
-    assert isValid();
+    checkValid();
     LogicalPosition hostPos = injectedToHost(pos);
     return myDelegate.logicalPositionToXY(hostPos);
   }
@@ -420,13 +425,13 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @Override
   @NotNull
   public Point visualPositionToXY(@NotNull final VisualPosition pos) {
-    assert isValid();
+    checkValid();
     return logicalPositionToXY(visualToLogicalPosition(pos));
   }
 
   @Override
   public void repaint(final int startOffset, final int endOffset) {
-    assert isValid();
+    checkValid();
     myDelegate.repaint(myDocumentWindow.injectedToHost(startOffset), myDocumentWindow.injectedToHost(endOffset));
   }
 
@@ -445,7 +450,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   private final ListenerWrapperMap<EditorMouseListener> myEditorMouseListeners = new ListenerWrapperMap<EditorMouseListener>();
   @Override
   public void addEditorMouseListener(@NotNull final EditorMouseListener listener) {
-    assert isValid();
+    checkValid();
     EditorMouseListener wrapper = new EditorMouseListener() {
       @Override
       public void mousePressed(EditorMouseEvent e) {
@@ -489,7 +494,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   private final ListenerWrapperMap<EditorMouseMotionListener> myEditorMouseMotionListeners = new ListenerWrapperMap<EditorMouseMotionListener>();
   @Override
   public void addEditorMouseMotionListener(@NotNull final EditorMouseMotionListener listener) {
-    assert isValid();
+    checkValid();
     EditorMouseMotionListener wrapper = new EditorMouseMotionListener() {
       @Override
       public void mouseMoved(EditorMouseEvent e) {
@@ -614,7 +619,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @NotNull
   @Override
   public VisualPosition logicalToVisualPosition(@NotNull LogicalPosition logicalPos, boolean softWrapAware) {
-    assert isValid();
+    checkValid();
     return new VisualPosition(logicalPos.line, logicalPos.column);
   }
 
@@ -634,7 +639,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @Override
   @NotNull
   public LogicalPosition visualToLogicalPosition(@NotNull final VisualPosition pos, boolean softWrapAware) {
-    assert isValid();
+    checkValid();
     return new LogicalPosition(pos.line, pos.column);
   }
 
@@ -862,5 +867,16 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @Override
   public int getExpectedCaretOffset() {
     return myDocumentWindow.hostToInjected(myDelegate.getExpectedCaretOffset());
+  }
+
+  @Override
+  public void setContextMenuGroupId(@Nullable String groupId) {
+    myDelegate.setContextMenuGroupId(groupId);
+  }
+
+  @Nullable
+  @Override
+  public String getContextMenuGroupId() {
+    return myDelegate.getContextMenuGroupId();
   }
 }

@@ -101,6 +101,7 @@ public interface IdeActions {
   @NonNls String GROUP_MAIN_MENU = "MainMenu";
   @NonNls String GROUP_MAIN_TOOLBAR = "MainToolBar";
   @NonNls String GROUP_EDITOR_POPUP = "EditorPopupMenu";
+  @NonNls String GROUP_BASIC_EDITOR_POPUP = "BasicEditorPopupMenu";
   @NonNls String GROUP_CONSOLE_EDITOR_POPUP = "ConsoleEditorPopupMenu";
   @NonNls String GROUP_CUT_COPY_PASTE = "CutCopyPasteGroup";
   @NonNls String GROUP_EDITOR_TAB_POPUP = "EditorTabPopupMenu";
@@ -156,6 +157,9 @@ public interface IdeActions {
   @NonNls String ACTION_PREVIOUS_DIFF = "PreviousDiff";
   @NonNls String ACTION_NEXT_DIFF = "NextDiff";
   @NonNls String GROUP_DIFF_EDITOR_POPUP = "Diff.EditorPopupMenu";
+  @NonNls String DIFF_VIEWER_POPUP = "Diff.ViewerPopupMenu";
+  @NonNls String DIFF_VIEWER_TOOLBAR = "Diff.ViewerToolbar";
+  @NonNls String GROUP_DIFF_EDITOR_GUTTER_POPUP = "Diff.EditorGutterPopupMenu";
 
   @NonNls String ACTION_EXPAND_ALL = "ExpandAll";
   @NonNls String ACTION_COLLAPSE_ALL = "CollapseAll";

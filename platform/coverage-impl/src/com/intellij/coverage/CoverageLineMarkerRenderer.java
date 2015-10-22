@@ -1,5 +1,17 @@
 /*
- * Copyright (c) 2000-2006 JetBrains s.r.o. All Rights Reserved.
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.intellij.coverage;
@@ -25,6 +37,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.ActiveGutterRenderer;
+import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -57,7 +70,7 @@ import java.util.TreeMap;
 /**
  * @author ven
  */
-public class CoverageLineMarkerRenderer implements ActiveGutterRenderer {
+public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveGutterRenderer {
   private static final int THICKNESS = 8;
   private final TextAttributesKey myKey;
   private final String myClassName;
@@ -69,10 +82,10 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer {
   private final boolean mySubCoverageActive;
 
   protected CoverageLineMarkerRenderer(final TextAttributesKey textAttributesKey, @Nullable final String className, final TreeMap<Integer, LineData> lines,
-                             final boolean coverageByTestApplicable,
-                             final Function<Integer, Integer> newToOldConverter,
-                             final Function<Integer, Integer> oldToNewConverter,
-                             final CoverageSuitesBundle coverageSuite, boolean subCoverageActive) {
+                                       final boolean coverageByTestApplicable,
+                                       final Function<Integer, Integer> newToOldConverter,
+                                       final Function<Integer, Integer> oldToNewConverter,
+                                       final CoverageSuitesBundle coverageSuite, boolean subCoverageActive) {
     myKey = textAttributesKey;
     myClassName = className;
     myLines = lines;
@@ -97,10 +110,10 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer {
     if (bgColor != null) {
       g.setColor(bgColor);
     }
-    g.fillRect(0, r.y, THICKNESS, r.height);
+    g.fillRect(r.x, r.y, r.width, r.height);
     final LineData lineData = getLineData(editor.xyToLogicalPosition(new Point(0, r.y)).line);
     if (lineData != null && lineData.isCoveredByOneTest()) {
-      g.drawImage( ImageLoader.loadFromResource("/gutter/unique.png"), 0, r.y, 8, 8, editor.getComponent());
+      g.drawImage( ImageLoader.loadFromResource("/gutter/unique.png"), r.x, r.y, 8, 8, editor.getComponent());
     }
   }
 
@@ -135,7 +148,12 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer {
   }
 
   public boolean canDoAction(final MouseEvent e) {
-    return e.getX() < THICKNESS;
+    Component component = e.getComponent();
+    if (component instanceof EditorGutterComponentEx) {
+      EditorGutterComponentEx gutter = (EditorGutterComponentEx)component;
+      return e.getX() > gutter.getLineMarkerAreaOffset() && e.getX() < gutter.getIconAreaOffset();
+    }
+    return false;
   }
 
   public void doAction(final Editor editor, final MouseEvent e) {
@@ -173,7 +191,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer {
       }
     };
     HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, point,
-        HintManagerImpl.HIDE_BY_ANY_KEY | HintManagerImpl.HIDE_BY_TEXT_CHANGE | HintManagerImpl.HIDE_BY_OTHER_HINT | HintManagerImpl.HIDE_BY_SCROLLING, -1, false, new HintHint(editor, point));
+                                                     HintManagerImpl.HIDE_BY_ANY_KEY | HintManagerImpl.HIDE_BY_TEXT_CHANGE | HintManagerImpl.HIDE_BY_OTHER_HINT | HintManagerImpl.HIDE_BY_SCROLLING, -1, false, new HintHint(editor, point));
   }
 
   private String getReport(final Editor editor, final int lineNumber) {
@@ -185,7 +203,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer {
 
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     assert psiFile != null;
-    
+
     final int lineStartOffset = document.getLineStartOffset(lineNumber);
     final int lineEndOffset = document.getLineEndOffset(lineNumber);
 
@@ -217,13 +235,15 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer {
     group.add(new EditCoverageColorsAction(editor, lineNumber));
     group.add(new HideCoverageInfoAction());
 
-    final JComponent toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group, true).getComponent();
+    final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group, true);
+    final JComponent toolbarComponent = toolbar.getComponent();
 
     final Color background = ((EditorEx)editor).getBackgroundColor();
     final Color foreground = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
-    toolbar.setBackground(background);
-    toolbar.setBorder(new ColoredSideBorder(foreground, foreground, lineData == null || lineData.getStatus() == LineCoverage.NONE || mySubCoverageActive ? foreground : null, foreground, 1));
-    return toolbar;
+    toolbarComponent.setBackground(background);
+    toolbarComponent.setBorder(new ColoredSideBorder(foreground, foreground, lineData == null || lineData.getStatus() == LineCoverage.NONE || mySubCoverageActive ? foreground : null, foreground, 1));
+    toolbar.updateActionsImmediately();
+    return toolbarComponent;
   }
 
   public void moveToLine(final int lineNumber, final Editor editor) {
@@ -249,6 +269,11 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer {
 
   public Color getErrorStripeColor(final Editor editor) {
     return editor.getColorsScheme().getAttributes(myKey).getErrorStripeColor();
+  }
+
+  @Override
+  public Position getPosition() {
+    return Position.LEFT;
   }
 
   private class GotoPreviousCoveredLineAction extends BaseGotoCoveredLineAction {
@@ -353,7 +378,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer {
         final LineData lineData = getLineData(entry);
         if (lineData != null) {
           switch (lineData.getStatus()) {
-            case LineCoverage.NONE: 
+            case LineCoverage.NONE:
               return "Uncovered";
             case LineCoverage.PARTIAL:
               return "Partial Covered";

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 
-public abstract class MessageDiffRequest extends DiffRequest {
+public class MessageDiffRequest extends DiffRequest {
   @Nullable private String myTitle;
   @NotNull private String myMessage;
 

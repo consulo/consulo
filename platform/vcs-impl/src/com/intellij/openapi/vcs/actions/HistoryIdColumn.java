@@ -16,6 +16,7 @@
 package com.intellij.openapi.vcs.actions;
 
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.TextAnnotationPresentation;
@@ -28,14 +29,13 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 class HistoryIdColumn extends AnnotationFieldGutter {
-  private final Map<String, Integer> myHistoryIds;
+  private final Map<VcsRevisionNumber, Integer> myHistoryIds;
 
   HistoryIdColumn(FileAnnotation annotation,
-                  final Editor editor,
                   final TextAnnotationPresentation presentation,
-                  Map<String, Color> colorScheme,
-                  Map<String, Integer> ids) {
-    super(annotation, editor, null, presentation, colorScheme);
+                  Couple<Map<VcsRevisionNumber, Color>> colorScheme,
+                  Map<VcsRevisionNumber, Integer> ids) {
+    super(annotation, null, presentation, colorScheme);
     myHistoryIds = ids;
   }
 
@@ -44,7 +44,7 @@ class HistoryIdColumn extends AnnotationFieldGutter {
     if (!isAvailable()) return "";
     final VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(line);
     if (revisionNumber != null) {
-      final Integer num = myHistoryIds.get(revisionNumber.asString());
+      final Integer num = myHistoryIds.get(revisionNumber);
       if (num != null) {
         final String size = String.valueOf(myHistoryIds.size());
         String value = num.toString();

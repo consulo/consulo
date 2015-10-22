@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.diff.DiffDialogHints;
+import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.diff.DiffDialogHints;
-import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;
@@ -33,7 +33,6 @@ import com.intellij.util.containers.ContainerUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -90,18 +89,15 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
                                           RemoteRevisionsCache.getInstance(myProject).getChangesNodeDecorator() : null;
 
     myViewer = new ChangesTreeList<Change>(myProject, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, decorator) {
-      @Override
       protected DefaultTreeModel buildTreeModel(final List<Change> changes, ChangeNodeDecorator changeNodeDecorator) {
         TreeModelBuilder builder = new TreeModelBuilder(myProject, false);
         return builder.buildModel(changes, changeNodeDecorator);
       }
 
-      @Override
       protected List<Change> getSelectedObjects(final ChangesBrowserNode<Change> node) {
         return node.getAllChangesUnder();
       }
 
-      @Override
       @Nullable
       protected Change getLeadSelectedObject(final ChangesBrowserNode node) {
         final Object o = node.getUserObject();
@@ -132,9 +128,8 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
   @NotNull
   protected Runnable getDoubleClickHandler() {
     return new Runnable() {
-      @Override
       public void run() {
-        showDiff();
+        showDiff(getChangesSelection());
       }
     };
   }
@@ -183,12 +178,14 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
     return myViewer;
   }
 
-  @Override
   public void calcData(DataKey key, DataSink sink) {
     if (key == VcsDataKeys.CHANGES) {
       List<Change> list = myViewer.getSelectedChanges();
       if (list.isEmpty()) list = myViewer.getChanges();
-      sink.put(VcsDataKeys.CHANGES, list.toArray(new Change [list.size()]));
+      sink.put(VcsDataKeys.CHANGES, list.toArray(new Change[list.size()]));
+    }
+    else if (key == VcsDataKeys.CHANGES_SELECTION) {
+      sink.put(VcsDataKeys.CHANGES_SELECTION, getChangesSelection());
     }
     else if (key == VcsDataKeys.CHANGE_LISTS) {
       sink.put(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists());
@@ -225,7 +222,6 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
       super(myToggleActionTitle);
     }
 
-    @Override
     public boolean isSelected(AnActionEvent e) {
       Change change = e.getData(VcsDataKeys.CURRENT_CHANGE);
       if (change == null) return false;
@@ -233,7 +229,6 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
       return myViewer.isIncluded(change);
     }
 
-    @Override
     public void setSelected(AnActionEvent e, boolean state) {
       Change change = e.getData(VcsDataKeys.CURRENT_CHANGE);
       if (change == null) return;
@@ -268,30 +263,39 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
   protected void updateDiffContext(@NotNull ShowDiffContext context) {
   }
 
-  private void showDiff() {
+  private void showDiff(@NotNull ChangesSelection selection) {
+    List<Change> changes = selection.getChanges();
+
+    Change[] changesArray = changes.toArray(new Change[changes.size()]);
+    showDiffForChanges(changesArray, selection.getIndex());
+
+    afterDiffRefresh();
+  }
+
+  @NotNull
+  protected ChangesSelection getChangesSelection() {
     final Change leadSelection = myViewer.getLeadSelection();
     List<Change> changes = myViewer.getSelectedChanges();
 
     if (changes.size() < 2) {
-      changes = myViewer.getChanges();
+      List<Change> allChanges = myViewer.getChanges();
+      if (allChanges.size() > 1) {
+        changes = allChanges;
+      }
     }
-
-    Change[] changesArray = changes.toArray(new Change[changes.size()]);
 
     if (leadSelection != null) {
       int indexInSelection = changes.indexOf(leadSelection);
       if (indexInSelection == -1) {
-        showDiffForChanges(new Change[]{leadSelection}, 0);
+        return new ChangesSelection(Collections.singletonList(leadSelection), 0);
       }
       else {
-        showDiffForChanges(changesArray, indexInSelection);
+        return new ChangesSelection(changes, indexInSelection);
       }
     }
     else {
-      showDiffForChanges(changesArray, 0);
+      return new ChangesSelection(changes, 0);
     }
-
-    afterDiffRefresh();
   }
 
   protected void afterDiffRefresh() {
@@ -335,17 +339,13 @@ public class ChangesBrowser extends JPanel implements TypeSafeDataProvider {
 
   protected void buildToolBar(final DefaultActionGroup toolBarGroup) {
     myDiffAction = new ShowDiffAction() {
-      @RequiredDispatchThread
-      @Override
-      public void update(@NotNull AnActionEvent e) {
-        Change[] changes = e.getData(VcsDataKeys.CHANGES);
-        e.getPresentation().setEnabled(canShowDiff(myProject, changes));
+      public void update(AnActionEvent e) {
+        ChangesSelection selection = e.getData(VcsDataKeys.CHANGES_SELECTION);
+        e.getPresentation().setEnabled(selection != null && canShowDiff(myProject, selection.getChanges()));
       }
 
-      @RequiredDispatchThread
-      @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
-        showDiff();                     // todo here
+      public void actionPerformed(AnActionEvent e) {
+        showDiff(e.getRequiredData(VcsDataKeys.CHANGES_SELECTION));
       }
     };
     myDiffAction.registerCustomShortcutSet(CommonShortcuts.getDiff(), myViewer);

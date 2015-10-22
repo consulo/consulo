@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import com.intellij.util.config.Storage;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -178,8 +179,8 @@ public class DualView extends JPanel {
 
   public void switchToTheFlatMode() {
     if (myFlatView == myCurrentView) return;
-    changeViewTo(myFlatView);
     copySelection(myTreeView, myFlatView);
+    changeViewTo(myFlatView);
     myCardLayout.show(this, FLAT);
   }
 
@@ -195,7 +196,7 @@ public class DualView extends JPanel {
     }
   }
 
-  private void copySelection(SelectionProvider from, SelectionProvider to) {
+  private static void copySelection(SelectionProvider from, SelectionProvider to) {
     to.clearSelection();
 
     Collection selection = from.getSelection();
@@ -207,8 +208,8 @@ public class DualView extends JPanel {
 
   public void switchToTheTreeMode() {
     if (myTreeView == myCurrentView) return;
-    changeViewTo(myTreeView);
     copySelection(myFlatView, myTreeView);
+    changeViewTo(myTreeView);
     myCardLayout.show(this, TREE);
   }
 
@@ -239,8 +240,9 @@ public class DualView extends JPanel {
         return createWrappedRenderer(super.getCellRenderer(row, column));
       }
 
+      @NotNull
       @Override
-      public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+      public Component prepareRenderer(@NotNull TableCellRenderer renderer, int row, int column) {
         final Component c = super.prepareRenderer(renderer, row, column);
         if (c instanceof JComponent && !myFlatView.getCellSelectionEnabled()) {
           ((JComponent)c).setBorder(null);
@@ -494,7 +496,7 @@ public class DualView extends JPanel {
     final Dimension was = super.getPreferredSize();
     if (! myZipByHeight) return was;
     final int tableHeight = myFlatView.getTableHeader().getHeight() + myFlatView.getTableViewModel().getRowCount() *
-                                                                 myFlatView.getRowHeight();
+                                                                      myFlatView.getRowHeight();
     return new Dimension(was.width, tableHeight);
   }
 
@@ -505,5 +507,10 @@ public class DualView extends JPanel {
 
   public void setZipByHeight(boolean zipByHeight) {
     myZipByHeight = zipByHeight;
+  }
+
+  public void setEmptyText(@NotNull String text) {
+    myTreeView.getEmptyText().setText(text);
+    myFlatView.getEmptyText().setText(text);
   }
 }

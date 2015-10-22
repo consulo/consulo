@@ -39,7 +39,6 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collections;
 import java.util.List;
@@ -63,8 +62,20 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
   // Update
   //
 
+  @Override
+  protected void reloadRequest() {
+    updateRequest(true, false, null);
+  }
+
   @RequiredDispatchThread
   public void updateRequest(final boolean force, @Nullable final ScrollToPolicy scrollToChangePolicy) {
+    updateRequest(force, true, scrollToChangePolicy);
+  }
+
+  @RequiredDispatchThread
+  public void updateRequest(final boolean force, boolean useCache, @Nullable final ScrollToPolicy scrollToChangePolicy) {
+    if (isDisposed()) return;
+
     List<? extends DiffRequestProducer> requests = myRequestChain.getRequests();
     int index = myRequestChain.getIndex();
     if (index < 0 || index >= requests.size()) {
@@ -74,7 +85,7 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
 
     final DiffRequestProducer producer = requests.get(index);
 
-    DiffRequest request = loadRequestFast(producer);
+    DiffRequest request = loadRequestFast(producer, useCache);
     if (request != null) {
       applyRequest(request, force, scrollToChangePolicy);
       return;
@@ -106,7 +117,8 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
   }
 
   @Nullable
-  protected DiffRequest loadRequestFast(@NotNull DiffRequestProducer producer) {
+  protected DiffRequest loadRequestFast(@NotNull DiffRequestProducer producer, boolean useCache) {
+    if (!useCache) return null;
     return myRequestCache.get(producer);
   }
 
@@ -124,6 +136,7 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
       return new ErrorDiffRequest(producer, e);
     }
     catch (Exception e) {
+      LOG.warn(e);
       return new ErrorDiffRequest(producer, e);
     }
   }
@@ -132,9 +145,8 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
   // Misc
   //
 
-  @RequiredDispatchThread
   @Override
-  @RequiredReadAction
+  @RequiredDispatchThread
   protected void onDispose() {
     super.onDispose();
     myQueue.abort();
@@ -166,33 +178,28 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
   // Navigation
   //
 
-  @RequiredDispatchThread
   @Override
   protected boolean hasNextChange() {
     return myRequestChain.getIndex() < myRequestChain.getRequests().size() - 1;
   }
 
-  @RequiredDispatchThread
   @Override
   protected boolean hasPrevChange() {
     return myRequestChain.getIndex() > 0;
   }
 
-  @RequiredDispatchThread
   @Override
   protected void goToNextChange(boolean fromDifferences) {
     myRequestChain.setIndex(myRequestChain.getIndex() + 1);
     updateRequest(false, fromDifferences ? ScrollToPolicy.FIRST_CHANGE : null);
   }
 
-  @RequiredDispatchThread
   @Override
   protected void goToPrevChange(boolean fromDifferences) {
     myRequestChain.setIndex(myRequestChain.getIndex() - 1);
     updateRequest(false, fromDifferences ? ScrollToPolicy.LAST_CHANGE : null);
   }
 
-  @RequiredDispatchThread
   @Override
   protected boolean isNavigationEnabled() {
     return myRequestChain.getRequests().size() > 1;

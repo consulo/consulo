@@ -16,6 +16,7 @@
 package com.intellij.diff.tools.util.side;
 
 import com.intellij.diff.DiffContext;
+import com.intellij.diff.actions.ProxyUndoRedoAction;
 import com.intellij.diff.actions.impl.FocusOppositePaneAction;
 import com.intellij.diff.actions.impl.OpenInEditorWithMouseAction;
 import com.intellij.diff.actions.impl.SetEditorSettingsAction;
@@ -80,6 +81,12 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     myEditableEditors = TextDiffViewerUtil.getEditableEditors(getEditors());
 
     TextDiffViewerUtil.checkDifferentDocuments(myRequest);
+
+    boolean editable1 = DiffUtil.canMakeWritable(getContent1().getDocument());
+    boolean editable2 = DiffUtil.canMakeWritable(getContent2().getDocument());
+    if (editable1 ^ editable2) {
+      ProxyUndoRedoAction.register(getProject(), editable1 ? getEditor1() : getEditor2(), myPanel);
+    }
   }
 
   @Override
@@ -173,7 +180,12 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
   protected void disableSyncScrollSupport(boolean disable) {
     if (mySyncScrollSupport != null) {
-      mySyncScrollSupport.setDisabled(disable);
+      if (disable) {
+        mySyncScrollSupport.enterDisableScrollSection();
+      }
+      else {
+        mySyncScrollSupport.exitDisableScrollSection();
+      }
     }
   }
 
@@ -280,8 +292,14 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   @Nullable
   @Override
   protected OpenFileDescriptor getOpenFileDescriptor() {
-    int offset = getCurrentEditor().getCaretModel().getOffset();
-    return getCurrentContent().getOpenFileDescriptor(offset);
+    Side side = getCurrentSide();
+    int offset = getEditor(side).getCaretModel().getOffset();
+    OpenFileDescriptor descriptor = getContent(side).getOpenFileDescriptor(offset);
+    if (descriptor != null) return descriptor;
+
+    LogicalPosition otherPosition = transferPosition(side, getEditor(side).getCaretModel().getLogicalPosition());
+    int otherOffset = getEditor(side.other()).logicalPositionToOffset(otherPosition);
+    return getContent(side.other()).getOpenFileDescriptor(otherOffset);
   }
 
   public static boolean canShowRequest(@NotNull DiffContext context, @NotNull DiffRequest request) {
@@ -311,8 +329,9 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
       }
 
       setCurrentSide(targetSide);
-      myContext.requestFocus();
       currentEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
+
+      DiffUtil.requestFocus(getProject(), getPreferredFocusedComponent());
     }
   }
 

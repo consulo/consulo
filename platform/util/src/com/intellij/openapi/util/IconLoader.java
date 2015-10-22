@@ -24,21 +24,21 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.RetinaImage;
 import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.WeakHashMap;
+import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
+import java.awt.image.*;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -294,12 +294,13 @@ public final class IconLoader {
     };
   }
 
-  private static final class CachedImageIcon implements Icon {
+  private static final class CachedImageIcon implements ScalableIcon {
     private Object myRealIcon;
     @NotNull
     private final URL myUrl;
     private boolean dark;
     private float scale;
+    private HashMap<Float, Icon> scaledIcons;
 
     public CachedImageIcon(@NotNull URL url) {
       myUrl = url;
@@ -362,20 +363,30 @@ public final class IconLoader {
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+    public Icon scale(float scaleFactor) {
+      if (scaleFactor == 1f) {
+        return this;
+      }
+      if (scaledIcons == null) {
+        scaledIcons = new HashMap<Float, Icon>(1);
+      }
 
-      CachedImageIcon that = (CachedImageIcon)o;
+      Icon result = scaledIcons.get(scaleFactor);
+      if (result != null) {
+        return result;
+      }
 
-      if (!myUrl.equals(that.myUrl)) return false;
+      final Image image = ImageLoader.loadFromUrl(myUrl, scaleFactor >= 1.5f);
+      if (image != null) {
+        int width = (int)(getIconWidth() * scaleFactor);
+        int height = (int)(getIconHeight() * scaleFactor);
+        final BufferedImage resizedImage = Scalr.resize(ImageUtil.toBufferedImage(image), Scalr.Method.ULTRA_QUALITY, width, height);
+        result = getIcon(resizedImage);
+        scaledIcons.put(scaleFactor, result);
+        return result;
+      }
 
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return myUrl.hashCode();
+      return this;
     }
   }
 

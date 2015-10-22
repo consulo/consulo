@@ -26,6 +26,7 @@ import com.intellij.diagnostic.LogMessageEx;
 import com.intellij.ide.*;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.ui.UISettings;
+import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -317,6 +318,8 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
   private boolean myDocumentChangeInProgress;
   private boolean myErrorStripeNeedsRepaint;
+
+  private String myContextMenuGroupId = IdeActions.GROUP_BASIC_EDITOR_POPUP;
 
   // Characters that excluded from zero-latency painting after key typing
   private static final Set<Character> KEY_CHARS_TO_SKIP = new HashSet<Character>(Arrays.asList('\n', '\t', '(', ')', '[', ']', '{', '}', '"', '\''));
@@ -698,6 +701,17 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
   @Override
   public int getExpectedCaretOffset() {
     return myExpectedCaretOffset == -1 ? getCaretModel().getOffset() : myExpectedCaretOffset;
+  }
+
+  @Override
+  public void setContextMenuGroupId(@Nullable String groupId) {
+    myContextMenuGroupId = groupId;
+  }
+
+  @Nullable
+  @Override
+  public String getContextMenuGroupId() {
+    return myContextMenuGroupId;
   }
 
   @Override
@@ -6057,6 +6071,8 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       else {
         processMousePressed(e);
       }
+
+      invokePopupIfNeeded(event);
     }
 
     private void runMouseClickedCommand(@NotNull final MouseEvent e) {
@@ -6083,6 +6099,10 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
       myScrollingTimer.stop();
       EditorMouseEvent event = new EditorMouseEvent(EditorImpl.this, e, getMouseEventArea(e));
+      invokePopupIfNeeded(event);
+      if (event.isConsumed()) {
+        return;
+      }
       for (EditorMouseListener listener : myMouseListeners) {
         listener.mouseReleased(event);
         if (event.isConsumed()) {
@@ -7251,6 +7271,24 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
   public void putInfo(@NotNull Map<String, String> info) {
     final VisualPosition visual = getCaretModel().getVisualPosition();
     info.put("caret", visual.getLine() + ":" + visual.getColumn());
+  }
+
+  private void invokePopupIfNeeded(EditorMouseEvent event) {
+    if (myContextMenuGroupId != null &&
+        event.getArea() == EditorMouseEventArea.EDITING_AREA &&
+        event.getMouseEvent().isPopupTrigger() &&
+        !event.isConsumed()) {
+      AnAction action = CustomActionsSchema.getInstance().getCorrectedAction(myContextMenuGroupId);
+      if (action instanceof ActionGroup) {
+        ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.EDITOR_POPUP, (ActionGroup)action);
+        MouseEvent e = event.getMouseEvent();
+        final Component c = e.getComponent();
+        if (c != null && c.isShowing()) {
+          popupMenu.getComponent().show(c, e.getX(), e.getY());
+        }
+        e.consume();
+      }
+    }
   }
 
   private class MyScrollPane extends JBScrollPane {

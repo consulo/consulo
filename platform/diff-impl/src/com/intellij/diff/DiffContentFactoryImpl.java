@@ -58,7 +58,7 @@ public class DiffContentFactoryImpl extends DiffContentFactory {
   @Override
   @NotNull
   public DocumentContent create(@NotNull String text) {
-    return create(text, null);
+    return create(text, (FileType)null);
   }
 
   @Override
@@ -71,6 +71,11 @@ public class DiffContentFactoryImpl extends DiffContentFactory {
   @NotNull
   public DocumentContent create(@NotNull String text, @Nullable FileType type, boolean respectLineSeparators) {
     return createImpl(text, type, null, null, respectLineSeparators, true);
+  }
+
+  @NotNull
+  public DocumentContent create(@NotNull String text, @Nullable VirtualFile highlightFile) {
+    return createImpl(text, highlightFile != null ? highlightFile.getFileType() : null, highlightFile, null, true, true);
   }
 
   @Override
@@ -116,6 +121,13 @@ public class DiffContentFactoryImpl extends DiffContentFactory {
     });
     if (document == null) return null;
     return new FileDocumentContentImpl(project, document, file);
+  }
+
+  @Override
+  @Nullable
+  public FileContent createFile(@Nullable Project project, @NotNull VirtualFile file) {
+    if (file.isDirectory()) return null;
+    return (FileContent)create(project, file);
   }
 
   @Override

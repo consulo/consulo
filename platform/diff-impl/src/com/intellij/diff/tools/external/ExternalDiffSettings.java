@@ -35,12 +35,10 @@ import org.jetbrains.annotations.Nullable;
 public class ExternalDiffSettings implements PersistentStateComponent<ExternalDiffSettings.State> {
   private State myState = new State();
 
-  @Override
   public State getState() {
     return myState;
   }
 
-  @Override
   public void loadState(State state) {
     myState = state;
   }
@@ -93,6 +91,7 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
     @Nullable public Boolean MERGE_ENABLED = null;
     @Nullable public String MERGE_EXE_PATH = null;
     @Nullable public String MERGE_PARAMETERS = null;
+    public boolean MERGE_TRUST_EXIT_CODE = false;
   }
 
   public boolean isDiffEnabled() {
@@ -159,5 +158,13 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
   public void setMergeParameters(@NotNull String path) {
     myState.MERGE_PARAMETERS = path;
     setProperty(DiffManagerImpl.MERGE_TOOL_PARAMETERS, path);
+  }
+
+  public boolean isMergeTrustExitCode() {
+    return myState.MERGE_TRUST_EXIT_CODE;
+  }
+
+  public void setMergeTrustExitCode(boolean value) {
+    myState.MERGE_TRUST_EXIT_CODE = value;
   }
 }

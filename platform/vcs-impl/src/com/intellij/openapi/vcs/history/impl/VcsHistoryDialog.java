@@ -15,14 +15,16 @@
  */
 package com.intellij.openapi.vcs.history.impl;
 
-import com.intellij.diff.Block;
-import com.intellij.diff.FindBlock;
+import com.intellij.diff.*;
+import com.intellij.diff.comparison.DiffTooBigException;
+import com.intellij.diff.contents.DiffContent;
+import com.intellij.diff.requests.DiffRequest;
+import com.intellij.diff.requests.MessageDiffRequest;
+import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.diff.DiffManager;
-import com.intellij.openapi.diff.DiffPanel;
-import com.intellij.openapi.diff.SimpleContent;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
@@ -35,6 +37,7 @@ import com.intellij.openapi.vcs.history.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.TableView;
+import com.intellij.util.containers.HashMap;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
@@ -56,16 +59,17 @@ import java.util.*;
 import java.util.List;
 
 public class VcsHistoryDialog extends DialogWrapper implements DataProvider {
+  private final Editor myEditor;
   private final int mySelectionStart;
   private final int mySelectionEnd;
 
   // todo equals???
-  private final Map<VcsFileRevision, Block> myRevisionToContentMap = new com.intellij.util.containers.HashMap<VcsFileRevision, Block>();
+  private final Map<VcsFileRevision, Block> myRevisionToContentMap = new HashMap<VcsFileRevision, Block>();
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.history.impl.VcsHistoryDialog");
   private final AbstractVcs myActiveVcs;
 
-  private final DiffPanel myDiffPanel;
+  private final DiffRequestPanel myDiffPanel;
   private final Project myProject;
 
   private static final ColumnInfo REVISION = new ColumnInfo(VcsBundle.message("column.name.revision.version")) {
@@ -115,7 +119,7 @@ public class VcsHistoryDialog extends DialogWrapper implements DataProvider {
 
   public VcsHistoryDialog(Project project,
                           final VirtualFile file,
-                          final VcsHistoryProvider vcsHistoryProvider,
+                          Editor editor, final VcsHistoryProvider vcsHistoryProvider,
                           VcsHistorySession session,
                           AbstractVcs vcs,
                           int selectionStart,
@@ -123,6 +127,7 @@ public class VcsHistoryDialog extends DialogWrapper implements DataProvider {
                           final String title, final CachedRevisionsContents cachedContents){
     super(project, true);
     myProject = project;
+    myEditor = editor;
     mySelectionStart = selectionStart;
     mySelectionEnd = selectionEnd;
     myCachedContents = cachedContents;
@@ -138,8 +143,7 @@ public class VcsHistoryDialog extends DialogWrapper implements DataProvider {
 
     myList.getEmptyText().setText(VcsBundle.message("history.empty"));
 
-    myDiffPanel = DiffManager.getInstance().createDiffPanel(getWindow(), myProject,getDisposable(), null);
-    myDiffPanel.setRequestFocus(false);
+    myDiffPanel = DiffManager.getInstance().createRequestPanel(myProject, getDisposable(), getWindow());
 
     myRevisions.addAll(session.getRevisionList());
     final VcsRevisionNumber currentRevisionNumber = session.getCurrentRevisionNumber();
@@ -166,7 +170,7 @@ public class VcsHistoryDialog extends DialogWrapper implements DataProvider {
       public void propertyChange(PropertyChangeEvent evt) {
         if (Splitter.PROP_PROPORTION.equals(evt.getPropertyName())) {
           getVcsConfiguration().FILE_HISTORY_DIALOG_SPLITTER_PROPORTION
-          = ((Float)evt.getNewValue()).floatValue();
+                  = ((Float)evt.getNewValue()).floatValue();
         }
       }
     });
@@ -334,22 +338,29 @@ public class VcsHistoryDialog extends DialogWrapper implements DataProvider {
     }
 
     if (myIsDisposed) return;
+
+    DiffRequest diffRequest = createDiffRequest(firstRev, secondRev);
+    myDiffPanel.setRequest(diffRequest);
+  }
+
+  @NotNull
+  private DiffRequest createDiffRequest(@NotNull VcsFileRevision firstRev, @NotNull VcsFileRevision secondRev) {
     try {
-      myDiffPanel.setContents(new SimpleContent(getContentToShow(firstRev), myContentFileType),
-                              new SimpleContent(getContentToShow(secondRev), myContentFileType));
-    }
-    catch (FilesTooBigForDiffException e) {
-      myDiffPanel.setTooBigFileErrorContents();
+      DiffContent content1 = DiffContentFactory.getInstance().create(getContentToShow(firstRev), myContentFileType);
+      DiffContent content2 = DiffContentFactory.getInstance().create(getContentToShow(secondRev), myContentFileType);
+
+      String title1 = VcsBundle.message("diff.content.title.revision.number", firstRev.getRevisionNumber());
+      String title2 = VcsBundle.message("diff.content.title.revision.number", secondRev.getRevisionNumber());
+
+      return new SimpleDiffRequest(null, content1, content2, title1, title2);
     }
     catch (VcsException e) {
-      final String text = canNoLoadMessage(e);
-      myDiffPanel.setContents(new SimpleContent(text, myContentFileType),
-                              new SimpleContent(text, myContentFileType));
       canNotLoadRevisionMessage(e);
+      return new MessageDiffRequest(canNoLoadMessage(e));
     }
-    myDiffPanel.setTitle1(VcsBundle.message("diff.content.title.revision.number", firstRev.getRevisionNumber()));
-    myDiffPanel.setTitle2(VcsBundle.message("diff.content.title.revision.number", secondRev.getRevisionNumber()));
-
+    catch (FilesTooBigForDiffException e) {
+      return new MessageDiffRequest(DiffTooBigException.MESSAGE);
+    }
   }
 
   public synchronized void dispose() {
@@ -359,14 +370,14 @@ public class VcsHistoryDialog extends DialogWrapper implements DataProvider {
 
   private JComponent createBottomPanel(final JComponent addComp) {
     Splitter splitter = new Splitter(true, getVcsConfiguration()
-                                           .FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION);
+            .FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION);
     splitter.setDividerWidth(4);
 
     splitter.addPropertyChangeListener(new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent evt) {
         if (Splitter.PROP_PROPORTION.equals(evt.getPropertyName())) {
           getVcsConfiguration().FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION
-          = ((Float)evt.getNewValue()).floatValue();
+                  = ((Float)evt.getNewValue()).floatValue();
         }
       }
     });
@@ -456,20 +467,23 @@ public class VcsHistoryDialog extends DialogWrapper implements DataProvider {
 
   @Nullable
   private Block getBlock(VcsFileRevision revision) throws FilesTooBigForDiffException, VcsException {
-    if (myRevisionToContentMap.containsKey(revision))
+    if (myRevisionToContentMap.containsKey(revision)) {
       return myRevisionToContentMap.get(revision);
-
-    int index = myRevisions.indexOf(revision);
+    }
 
     final String revisionContent = getContentOf(revision);
     if (revisionContent == null) return null;
-    if (index == 0)
-      myRevisionToContentMap.put(revision, new Block(revisionContent,  mySelectionStart, mySelectionEnd));
-    else {
-      Block prevBlock = getBlock(myRevisions.get(index - 1));
-      if (prevBlock == null) return null;
-      myRevisionToContentMap.put(revision, new FindBlock(revisionContent, prevBlock).getBlockInThePrevVersion());
-    }
+
+    int index = myRevisions.indexOf(revision);
+    Block blockByIndex = getBlock(index);
+    if (blockByIndex == null) return null;
+
+    myRevisionToContentMap.put(revision, new FindBlock(revisionContent, blockByIndex).getBlockInThePrevVersion());
     return myRevisionToContentMap.get(revision);
   }
+
+  private Block getBlock(int index) throws FilesTooBigForDiffException, VcsException {
+    return index > 0 ? getBlock(myRevisions.get(index - 1)) : new Block(myEditor.getDocument().getText(), mySelectionStart, mySelectionEnd);
+  }
+
 }

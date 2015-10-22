@@ -16,81 +16,62 @@
 package com.intellij.openapi.vcs.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
 import com.intellij.openapi.vcs.annotate.*;
-import com.intellij.util.Consumer;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.openapi.vcs.history.VcsRevisionNumber;
+import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Konstantin Bulenkov
- */
 class AnnotationPresentation implements TextAnnotationPresentation {
-  private final HighlightAnnotationsActions myHighlighting;
-  @Nullable
-  private final AnnotationSourceSwitcher mySwitcher;
-  private final ArrayList<AnAction> myActions;
-  private SwitchAnnotationSourceAction mySwitchAction;
-  private final List<LineNumberListener> myPopupLineNumberListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  @NotNull private final FileAnnotation myFileAnnotation;
+  @NotNull private final UpToDateLineNumberProvider myUpToDateLineNumberProvider;
+  @Nullable private final AnnotationSourceSwitcher mySwitcher;
+  private final ArrayList<AnAction> myActions = new ArrayList<AnAction>();
 
-  AnnotationPresentation(@NotNull final HighlightAnnotationsActions highlighting, @Nullable final AnnotationSourceSwitcher switcher,
-                                final EditorGutterComponentEx gutter,
-                                final List<AnnotationFieldGutter> gutters,
-                                final AnAction... actions) {
-    myHighlighting = highlighting;
+  AnnotationPresentation(@NotNull FileAnnotation fileAnnotation,
+                         @NotNull UpToDateLineNumberProvider upToDateLineNumberProvider,
+                         @Nullable final AnnotationSourceSwitcher switcher) {
+    myUpToDateLineNumberProvider = upToDateLineNumberProvider;
+    myFileAnnotation = fileAnnotation;
     mySwitcher = switcher;
-
-    myActions = new ArrayList<AnAction>();
-    myActions.add(AnSeparator.getInstance());
-    if (actions != null) {
-      final List<AnAction> actionsList = Arrays.asList(actions);
-      if (!actionsList.isEmpty()) {
-        myActions.addAll(actionsList);
-        myActions.add(new AnSeparator());
-      }
-    }
-    myActions.addAll(myHighlighting.getList());
-    if (mySwitcher != null) {
-      mySwitchAction = new SwitchAnnotationSourceAction(mySwitcher, gutter);
-      myActions.add(mySwitchAction);
-    }
   }
 
-  public void addLineNumberListener(final LineNumberListener listener) {
-    myPopupLineNumberListeners.add(listener);
-  }
-
+  @Override
   public EditorFontType getFontType(final int line) {
-    return myHighlighting.isLineBold(line) ? EditorFontType.BOLD : EditorFontType.PLAIN;
+    VcsRevisionNumber revision = myFileAnnotation.originalRevision(line);
+    VcsRevisionNumber currentRevision = myFileAnnotation.getCurrentRevision();
+    return currentRevision != null && currentRevision.equals(revision) ? EditorFontType.BOLD : EditorFontType.PLAIN;
   }
 
+  @Override
   public ColorKey getColor(final int line) {
     if (mySwitcher == null) return AnnotationSource.LOCAL.getColor();
     return mySwitcher.getAnnotationSource(line).getColor();
   }
 
+  @Override
   public List<AnAction> getActions(int line) {
-    for (LineNumberListener listener : myPopupLineNumberListeners) {
-      listener.consume(line);
+    int correctedNumber = myUpToDateLineNumberProvider.getLineNumber(line);
+    for (AnAction action : myActions) {
+      UpToDateLineNumberListener upToDateListener = ObjectUtil.tryCast(action, UpToDateLineNumberListener.class);
+      if (upToDateListener != null) upToDateListener.consume(correctedNumber);
+
+      LineNumberListener listener = ObjectUtil.tryCast(action, LineNumberListener.class);
+      if (listener != null) listener.consume(line);
     }
+
     return myActions;
   }
 
   @NotNull
   public List<AnAction> getActions() {
     return myActions;
-  }
-
-  public void addSourceSwitchListener(final Consumer<AnnotationSource> listener) {
-    mySwitchAction.addSourceSwitchListener(listener);
   }
 
   public void addAction(AnAction action) {

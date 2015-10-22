@@ -16,13 +16,14 @@
 package com.intellij.diff;
 
 import com.intellij.diff.chains.DiffRequestChain;
+import com.intellij.diff.merge.MergeRequest;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.awt.*;
 
@@ -36,15 +37,18 @@ public abstract class DiffManager {
   // Usage
   //
 
-  @RequiredReadAction
+  @RequiredDispatchThread
   public abstract void showDiff(@Nullable Project project, @NotNull DiffRequest request);
 
-  @RequiredReadAction
+  @RequiredDispatchThread
   public abstract void showDiff(@Nullable Project project, @NotNull DiffRequest request, @NotNull DiffDialogHints hints);
 
-  @RequiredReadAction
+  @RequiredDispatchThread
   public abstract void showDiff(@Nullable Project project, @NotNull DiffRequestChain requests, @NotNull DiffDialogHints hints);
 
   @NotNull
   public abstract DiffRequestPanel createRequestPanel(@Nullable Project project, @NotNull Disposable parent, @Nullable Window window);
+
+  @RequiredDispatchThread
+  public abstract void showMerge(@Nullable Project project, @NotNull MergeRequest request);
 }

@@ -665,7 +665,6 @@
             icon="AllIcons.Actions.Export"/>
 
     <action id="SaveDocument" class="com.intellij.ide.actions.SaveDocumentAction"/>
-    =
 
     <action id="Vcs.ShowTabbedFileHistory" class="com.intellij.openapi.vcs.actions.TabbedShowHistoryAction"
             icon="AllIcons.Vcs.History"/>

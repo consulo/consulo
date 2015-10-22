@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @see DiffRequestFactory#createMergeRequest
  */
+@Deprecated
 public abstract class MergeRequest extends DiffRequest {
   protected MergeRequest(Project project) {
     super(project);

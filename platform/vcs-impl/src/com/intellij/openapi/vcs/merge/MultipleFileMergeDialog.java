@@ -17,14 +17,18 @@
 package com.intellij.openapi.vcs.merge;
 
 import com.intellij.CommonBundle;
+import com.intellij.diff.DiffManager;
+import com.intellij.diff.DiffRequestFactory;
+import com.intellij.diff.InvalidDiffRequestException;
+import com.intellij.diff.merge.MergeRequest;
+import com.intellij.diff.merge.MergeResult;
+import com.intellij.diff.util.DiffUtil;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diff.ActionButtonPresentation;
-import com.intellij.openapi.diff.DiffManager;
-import com.intellij.openapi.diff.DiffRequestFactory;
-import com.intellij.openapi.diff.MergeRequest;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.mergeTool.MergeVersion;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
@@ -36,13 +40,14 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
-import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.table.TableView;
+import com.intellij.util.Consumer;
+import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.UIUtil;
@@ -56,12 +61,15 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.*;
 
 /**
  * @author yole
  */
 public class MultipleFileMergeDialog extends DialogWrapper {
+  private static final Logger LOG = Logger.getInstance(MultipleFileMergeDialog.class);
+
   private JPanel myRootPanel;
   private JButton myAcceptYoursButton;
   private JButton myAcceptTheirsButton;
@@ -72,16 +80,34 @@ public class MultipleFileMergeDialog extends DialogWrapper {
   private final MergeSession myMergeSession;
   private final List<VirtualFile> myFiles;
   private final ListTableModel<VirtualFile> myModel;
+  @Nullable
   private final Project myProject;
   private final ProjectManagerEx myProjectManager;
-  private final List<VirtualFile> myProcessedFiles = new ArrayList<VirtualFile>();
+  private final List<VirtualFile> myProcessedFiles = new SmartList<VirtualFile>();
   private final Set<VirtualFile> myBinaryFiles = new HashSet<VirtualFile>();
   private final MergeDialogCustomizer myMergeDialogCustomizer;
 
   private final VirtualFileRenderer myVirtualFileRenderer = new VirtualFileRenderer();
 
-  private final ColumnInfo<VirtualFile, VirtualFile> NAME_COLUMN =
-    new ColumnInfo<VirtualFile, VirtualFile>(VcsBundle.message("multiple.file.merge.column.name")) {
+  public MultipleFileMergeDialog(@Nullable Project project, @NotNull final List<VirtualFile> files, @NotNull final MergeProvider provider,
+                                 @NotNull MergeDialogCustomizer mergeDialogCustomizer) {
+    super(project);
+
+    myProject = project;
+    myProjectManager = ProjectManagerEx.getInstanceEx();
+    myProjectManager.blockReloadingProjectOnExternalChanges();
+    myFiles = new ArrayList<VirtualFile>(files);
+    myProvider = provider;
+    myMergeDialogCustomizer = mergeDialogCustomizer;
+
+    final String description = myMergeDialogCustomizer.getMultipleFileMergeDescription(files);
+    if (!StringUtil.isEmptyOrSpaces(description)) {
+      myDescriptionLabel.setText(description);
+    }
+
+    List<ColumnInfo> columns = new ArrayList<ColumnInfo>();
+    columns.add(new ColumnInfo<VirtualFile, VirtualFile>(VcsBundle.message("multiple.file.merge.column.name")) {
+      @Override
       public VirtualFile valueOf(final VirtualFile virtualFile) {
         return virtualFile;
       }
@@ -90,10 +116,9 @@ public class MultipleFileMergeDialog extends DialogWrapper {
       public TableCellRenderer getRenderer(final VirtualFile virtualFile) {
         return myVirtualFileRenderer;
       }
-    };
-
-  private final ColumnInfo<VirtualFile, String> TYPE_COLUMN =
-    new ColumnInfo<VirtualFile, String>(VcsBundle.message("multiple.file.merge.column.type")) {
+    });
+    columns.add(new ColumnInfo<VirtualFile, String>(VcsBundle.message("multiple.file.merge.column.type")) {
+      @Override
       public String valueOf(final VirtualFile virtualFile) {
         return myBinaryFiles.contains(virtualFile)
                ? VcsBundle.message("multiple.file.merge.type.binary")
@@ -109,25 +134,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
       public int getAdditionalWidth() {
         return 10;
       }
-    };
-
-  public MultipleFileMergeDialog(@NotNull Project project, @NotNull final List<VirtualFile> files, @NotNull final MergeProvider provider,
-                                 @NotNull MergeDialogCustomizer mergeDialogCustomizer) {
-    super(project, false);
-    myProject = project;
-    myProjectManager = ProjectManagerEx.getInstanceEx();
-    myProjectManager.blockReloadingProjectOnExternalChanges();
-    myFiles = new ArrayList<VirtualFile>(files);
-    myProvider = provider;
-    myMergeDialogCustomizer = mergeDialogCustomizer;
-
-    final String description = myMergeDialogCustomizer.getMultipleFileMergeDescription(files);
-    if (!StringUtil.isEmptyOrSpaces(description)) {
-      myDescriptionLabel.setText(description);
-    }
-
-    List<ColumnInfo> columns = new ArrayList<ColumnInfo>();
-    Collections.addAll(columns, NAME_COLUMN, TYPE_COLUMN);
+    });
     if (myProvider instanceof MergeProvider2) {
       myMergeSession = ((MergeProvider2)myProvider).createMergeSession(files);
       Collections.addAll(columns, myMergeSession.getMergeInfoColumns());
@@ -143,17 +150,20 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     setTitle(myMergeDialogCustomizer.getMultipleFileDialogTitle());
     init();
     myAcceptYoursButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      @Override
+      public void actionPerformed(@NotNull ActionEvent e) {
         acceptRevision(true);
       }
     });
     myAcceptTheirsButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      @Override
+      public void actionPerformed(@NotNull ActionEvent e) {
         acceptRevision(false);
       }
     });
     myTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      public void valueChanged(final ListSelectionEvent e) {
+      @Override
+      public void valueChanged(@NotNull final ListSelectionEvent e) {
         updateButtonState();
       }
     });
@@ -169,10 +179,6 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     boolean haveSelection = myTable.getSelectedRowCount() > 0;
     boolean haveUnmergeableFiles = false;
     for (VirtualFile file : myTable.getSelection()) {
-      if (myBinaryFiles.contains(file)) {
-        haveUnmergeableFiles = true;
-        break;
-      }
       if (myMergeSession != null) {
         boolean canMerge = myMergeSession.canMerge(file);
         if (!canMerge) {
@@ -186,6 +192,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     myMergeButton.setEnabled(haveSelection && !haveUnmergeableFiles);
   }
 
+  @Override
   @Nullable
   protected JComponent createCenterPanel() {
     return myRootPanel;
@@ -211,6 +218,10 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     super.dispose();
   }
 
+  protected boolean beforeResolve(Collection<VirtualFile> files) {
+    return true;
+  }
+
   @Override
   @NonNls
   protected String getDimensionServiceKey() {
@@ -220,15 +231,23 @@ public class MultipleFileMergeDialog extends DialogWrapper {
   private void acceptRevision(final boolean isCurrent) {
     FileDocumentManager.getInstance().saveAllDocuments();
     final Collection<VirtualFile> files = myTable.getSelection();
+    if (!beforeResolve(files)) {
+      return;
+    }
+
     for (final VirtualFile file : files) {
       final Ref<Exception> ex = new Ref<Exception>();
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
             @Override
             public void run() {
               try {
                 if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
+                  if (!DiffUtil.makeWritable(myProject, file)) {
+                    throw new IOException("File is read-only: " + file.getPresentableName());
+                  }
                   MergeData data = myProvider.loadRevisions(file);
                   if (isCurrent) {
                     file.setBinaryContent(data.CURRENT);
@@ -248,6 +267,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         }
       });
       if (!ex.isNull()) {
+        //noinspection ThrowableResultOfMethodCallIgnored
         Messages.showErrorDialog(myRootPanel, "Error saving merged data: " + ex.get().getMessage());
         break;
       }
@@ -255,7 +275,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     updateModelFromFiles();
   }
 
-  private void markFileProcessed(final VirtualFile file, final MergeSession.Resolution resolution) {
+  private void markFileProcessed(@NotNull VirtualFile file, @NotNull MergeSession.Resolution resolution) {
     myFiles.remove(file);
     if (myProvider instanceof MergeProvider2) {
       myMergeSession.conflictResolvedForFile(file, resolution);
@@ -264,11 +284,13 @@ public class MultipleFileMergeDialog extends DialogWrapper {
       myProvider.conflictResolvedForFile(file);
     }
     myProcessedFiles.add(file);
-    VcsDirtyScopeManager.getInstance(myProject).fileDirty(file);
+    if (myProject != null) {
+      VcsDirtyScopeManager.getInstance(myProject).fileDirty(file);
+    }
   }
 
   private void updateModelFromFiles() {
-    if (myFiles.size() == 0) {
+    if (myFiles.isEmpty()) {
       doCancelAction();
     }
     else {
@@ -282,7 +304,12 @@ public class MultipleFileMergeDialog extends DialogWrapper {
   }
 
   private void showMergeDialog() {
-    final Collection<VirtualFile> files = myTable.getSelection();
+    DiffRequestFactory requestFactory = DiffRequestFactory.getInstance();
+    Collection<VirtualFile> files = myTable.getSelection();
+    if (!beforeResolve(files)) {
+      return;
+    }
+
     for (final VirtualFile file : files) {
       final MergeData mergeData;
       try {
@@ -298,42 +325,74 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         break;
       }
 
-      String leftText = decodeContent(file, mergeData.CURRENT);
-      String rightText = decodeContent(file, mergeData.LAST);
-      String originalText = decodeContent(file, mergeData.ORIGINAL);
+      String leftTitle = myMergeDialogCustomizer.getLeftPanelTitle(file);
+      String baseTitle = myMergeDialogCustomizer.getCenterPanelTitle(file);
+      String rightTitle = myMergeDialogCustomizer.getRightPanelTitle(file, mergeData.LAST_REVISION_NUMBER);
+      String title = myMergeDialogCustomizer.getMergeWindowTitle(file);
 
-      DiffRequestFactory diffRequestFactory = DiffRequestFactory.getInstance();
-      MergeRequest request = diffRequestFactory
-        .createMergeRequest(leftText, rightText, originalText, file, myProject, ActionButtonPresentation.APPLY,
-                            ActionButtonPresentation.CANCEL_WITH_PROMPT);
-      final VcsRevisionNumber lastRevisionNumber = mergeData.LAST_REVISION_NUMBER;
-      request.setVersionTitles(new String[] {
-        myMergeDialogCustomizer.getLeftPanelTitle(file),
-        myMergeDialogCustomizer.getCenterPanelTitle(file),
-        myMergeDialogCustomizer.getRightPanelTitle(file, lastRevisionNumber)
-      });
-      request.setWindowTitle(myMergeDialogCustomizer.getMergeWindowTitle(file));
+      final List<byte[]> byteContents = ContainerUtil.list(mergeData.CURRENT, mergeData.ORIGINAL, mergeData.LAST);
+      List<String> contentTitles = ContainerUtil.list(leftTitle, baseTitle, rightTitle);
 
-      DiffManager.getInstance().getDiffTool().show(request);
-      if (request.getResult() == DialogWrapper.OK_EXIT_CODE) {
-        markFileProcessed(file, MergeSession.Resolution.Merged);
-        checkMarkModifiedProject(file);
+      Consumer<MergeResult> callback = new Consumer<MergeResult>() {
+        @Override
+        public void consume(final MergeResult result) {
+          Document document = FileDocumentManager.getInstance().getCachedDocument(file);
+          if (document != null) FileDocumentManager.getInstance().saveDocument(document);
+          checkMarkModifiedProject(file);
+
+          if (result != MergeResult.CANCEL) {
+            ApplicationManager.getApplication().runWriteAction(new Runnable() {
+              @Override
+              public void run() {
+                markFileProcessed(file, getSessionResolution(result));
+              }
+            });
+          }
+        }
+      };
+
+      MergeRequest request;
+      try {
+        if (myProvider.isBinary(file)) { // respect MIME-types in svn
+          request = requestFactory.createBinaryMergeRequest(myProject, file, byteContents, title, contentTitles, callback);
+        }
+        else {
+          request = requestFactory.createMergeRequest(myProject, file, byteContents, title, contentTitles, callback);
+        }
       }
-      else {
-        request.restoreOriginalContent();
+      catch (InvalidDiffRequestException e) {
+        LOG.error(e);
+        Messages.showErrorDialog(myRootPanel, "Can't show merge dialog");
+        break;
       }
+
+      DiffManager.getInstance().showMerge(myProject, request);
     }
     updateModelFromFiles();
   }
 
-  private void checkMarkModifiedProject(final VirtualFile file) {
+  @NotNull
+  private static MergeSession.Resolution getSessionResolution(@NotNull MergeResult result) {
+    switch (result) {
+      case LEFT:
+        return MergeSession.Resolution.AcceptedYours;
+      case RIGHT:
+        return MergeSession.Resolution.AcceptedTheirs;
+      case RESOLVED:
+        return MergeSession.Resolution.Merged;
+      default:
+        throw new IllegalArgumentException(result.name());
+    }
+  }
+
+  private void checkMarkModifiedProject(@NotNull VirtualFile file) {
     MergeVersion.MergeDocumentVersion.reportProjectFileChangeIfNeeded(myProject, file);
   }
 
   private void createUIComponents() {
     Action mergeAction = new AbstractAction() {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(@NotNull ActionEvent e) {
         showMergeDialog();
       }
     };
@@ -346,15 +405,13 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     return myTable;
   }
 
-  private static String decodeContent(final VirtualFile file, final byte[] content) {
-    return StringUtil.convertLineSeparators(CharsetToolkit.bytesToString(content, file.getCharset()));
-  }
-
+  @NotNull
   public List<VirtualFile> getProcessedFiles() {
     return myProcessedFiles;
   }
 
   private static class VirtualFileRenderer extends ColoredTableCellRenderer {
+    @Override
     protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
       VirtualFile vf = (VirtualFile)value;
       setIcon(VirtualFilePresentation.getIcon(vf));

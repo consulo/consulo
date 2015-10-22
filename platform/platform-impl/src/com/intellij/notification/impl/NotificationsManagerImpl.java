@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Disposer;
@@ -35,9 +36,13 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
-import com.intellij.ui.*;
+import com.intellij.ui.BalloonImpl;
+import com.intellij.ui.BalloonLayout;
+import com.intellij.ui.Gray;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -248,6 +253,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
     Window frame = WindowManager.getInstance().getFrame(project);
     if (frame == null && project == null) {
       frame = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+      while (frame instanceof DialogWrapperDialog && ((DialogWrapperDialog)frame).getDialogWrapper().isModalProgress()) {
+        frame = frame.getOwner();
+      }
     }
     if (frame == null && project == null) {
       frame = (Window)WelcomeFrame.getInstance();
@@ -256,6 +264,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
   }
 
   public static Balloon createBalloon(@NotNull final IdeFrame window, final Notification notification, final boolean showCallout, final boolean hideOnClickOutside) {
+    return createBalloon(window.getComponent(), notification, showCallout, hideOnClickOutside);
+  }
+
+  public static Balloon createBalloon(@Nullable final JComponent windowComponent, final Notification notification, final boolean showCallout, final boolean hideOnClickOutside) {
     final JEditorPane text = new JEditorPane();
     text.setEditorKit(UIUtil.getHTMLEditorKit());
 
@@ -265,7 +277,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     final JLabel label = new JLabel(NotificationsUtil.buildHtml(notification, null));
-    text.setText(NotificationsUtil.buildHtml(notification, "width:" + Math.min(350, label.getPreferredSize().width) + "px;"));
+    text.setText(NotificationsUtil.buildHtml(notification, "width:" + Math.min(JBUI.scale(350), label.getPreferredSize().width) + "px;"));
     text.setEditable(false);
     text.setOpaque(false);
 
@@ -280,10 +292,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
     if (text.getCaret() != null) {
       text.setCaretPosition(0);
     }
-    JScrollPane pane = ScrollPaneFactory.createScrollPane(text,
-                                                          ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    pane.setBorder(null);
+    JScrollPane pane = new JScrollPane(text); // do not add 1px border for viewport on UI update
+    pane.setBorder(BorderFactory.createEmptyBorder());
     pane.setOpaque(false);
     pane.getViewport().setOpaque(false);
     content.add(pane, BorderLayout.CENTER);
@@ -298,8 +308,15 @@ public class NotificationsManagerImpl extends NotificationsManager {
     text.setSize(preferredSize);
 
     Dimension paneSize = new Dimension(text.getPreferredSize());
-    int maxHeight = Math.min(400, window.getComponent().getHeight() - 20);
-    int maxWidth = Math.min(600, window.getComponent().getWidth() - 20);
+
+    int maxHeight = JBUI.scale(400);
+    int maxWidth = JBUI.scale(600);
+
+    if (windowComponent != null) {
+      maxHeight = Math.min(maxHeight, windowComponent.getHeight() - 20);
+      maxWidth = Math.min(maxWidth, windowComponent.getWidth() - 20);
+    }
+
     if (paneSize.height > maxHeight) {
       pane.setPreferredSize(new Dimension(Math.min(maxWidth, paneSize.width + UIUtil.getScrollBarWidth()), maxHeight));
     } else if (paneSize.width > maxWidth) {

@@ -38,7 +38,6 @@ import com.intellij.util.BeforeAfter;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.IOException;
 import java.util.*;
@@ -57,8 +56,6 @@ public class ShowDiffAction extends AnAction implements DumbAware {
           AllIcons.Actions.Diff);
   }
 
-  @RequiredDispatchThread
-  @Override
   public void update(AnActionEvent e) {
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
     Project project = e.getData(CommonDataKeys.PROJECT);
@@ -73,8 +70,6 @@ public class ShowDiffAction extends AnAction implements DumbAware {
     return false;
   }
 
-  @RequiredDispatchThread
-  @Override
   public void actionPerformed(final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
@@ -88,7 +83,6 @@ public class ShowDiffAction extends AnAction implements DumbAware {
     // this trick is essential since we are under some conditions to refresh changes;
     // but we can only rely on callback after refresh
     final Runnable performer = new Runnable() {
-      @Override
       public void run() {
         Change[] convertedChanges;
         if (needsConvertion) {
@@ -111,7 +105,6 @@ public class ShowDiffAction extends AnAction implements DumbAware {
             if (changesInListCopy == null) {
               changesInListCopy = new ArrayList<Change>(changeList.getChanges());
               Collections.sort(changesInListCopy, new Comparator<Change>() {
-                @Override
                 public int compare(final Change o1, final Change o2) {
                   return ChangesUtil.getFilePath(o1).getName().compareToIgnoreCase(ChangesUtil.getFilePath(o2).getName());
                 }

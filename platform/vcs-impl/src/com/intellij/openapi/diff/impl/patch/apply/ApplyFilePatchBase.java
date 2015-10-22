@@ -18,11 +18,10 @@ package com.intellij.openapi.diff.impl.patch.apply;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.patch.ApplyPatchContext;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
-import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FilePathImpl;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 
 public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFilePatch {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase");
+  protected final static Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase");
   protected final T myPatch;
 
   public ApplyFilePatchBase(T patch) {
@@ -42,26 +41,19 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
     return myPatch;
   }
 
-  private FilePath getTarget(final VirtualFile file) {
-    if (myPatch.isNewFile()) {
-      return new FilePathImpl(file, myPatch.getBeforeFileName(), false);
-    }
-    return new FilePathImpl(file);
-  }
-
   public Result apply(final VirtualFile fileToPatch,
                       final ApplyPatchContext context,
                       final Project project,
                       FilePath pathBeforeRename,
-                      Getter<CharSequence> baseContents, CommitContext commitContext) throws IOException {
+                      Getter<CharSequence> baseContents,
+                      CommitContext commitContext) throws IOException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("apply patch called for : " + fileToPatch.getPath());
     }
-    context.addAffectedFile(getTarget(fileToPatch));
     if (myPatch.isNewFile()) {
-      applyCreate(fileToPatch, commitContext);
+      applyCreate(project, fileToPatch, commitContext);
     } else if (myPatch.isDeletedFile()) {
-      FileEditorManagerImpl.getInstance(project).closeFile(fileToPatch);
+      FileEditorManager.getInstance(project).closeFile(fileToPatch);
       fileToPatch.delete(this);
     }
     else {
@@ -70,7 +62,8 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
     return SUCCESS;
   }
 
-  protected abstract void applyCreate(VirtualFile newFile, CommitContext commitContext) throws IOException;
+  protected abstract void applyCreate(Project project, VirtualFile newFile, CommitContext commitContext) throws IOException;
+
   protected abstract Result applyChange(Project project, VirtualFile fileToPatch, FilePath pathBeforeRename, Getter<CharSequence> baseContents) throws IOException;
 
   @Nullable
@@ -89,7 +82,6 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
       if (!beforeNameComponents [beforeNameComponents.length-1].equals(afterNameComponents [afterNameComponents.length-1])) {
         context.registerBeforeRename(file);
         file.rename(FilePatch.class, afterNameComponents [afterNameComponents.length-1]);
-        context.addAffectedFile(file);
       }
       boolean needMove = (beforeNameComponents.length != afterNameComponents.length);
       if (!needMove) {
@@ -102,7 +94,6 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
         }
         context.registerBeforeRename(file);
         file.move(FilePatch.class, moveTarget);
-        context.addAffectedFile(file);
       }
     }
     return file;
@@ -124,7 +115,6 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
     VirtualFile oldDir = findFileToPatchByComponents(context, beforeNameComponents, changedIndex+1);
     VirtualFile newDir = findFileToPatchByComponents(context.getPrepareContext(), afterNameComponents, changedIndex+1);
     if (oldDir != null && newDir == null) {
-      context.addPendingRename(oldDir, afterNameComponents [changedIndex]);
       return false;
     }
     return true;
@@ -161,7 +151,6 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
           }
         }
         else {
-          context.registerMissingDirectory(patchedDir, pathNameComponents, i);
           return null;
         }
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import com.intellij.openapi.vcs.changes.CommitResultHandler;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vcs.history.VcsHistoryProvider;
+import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.merge.MergeDialogCustomizer;
 import com.intellij.openapi.vcs.merge.MergeProvider;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
@@ -50,6 +51,7 @@ public abstract class AbstractVcsHelper {
     myProject = project;
   }
 
+  @NotNull
   public static AbstractVcsHelper getInstance(Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetService(project, AbstractVcsHelper.class);
   }
@@ -69,6 +71,8 @@ public abstract class AbstractVcsHelper {
   }
 
   public abstract void showAnnotation(FileAnnotation annotation, VirtualFile file, AbstractVcs vcs);
+
+  public abstract void showAnnotation(FileAnnotation annotation, VirtualFile file, AbstractVcs vcs, int line);
 
   public abstract void showDifferences(final VcsFileRevision cvsVersionOn, final VcsFileRevision cvsVersionOn1, final File file);
 
@@ -143,11 +147,16 @@ public abstract class AbstractVcsHelper {
     return showMergeDialog(files, provider);
   }
 
-  public abstract void showFileHistory(VcsHistoryProvider vcsHistoryProvider, FilePath path, final AbstractVcs vcs,
-                                       final String repositoryPath);
+  public abstract void showFileHistory(@NotNull VcsHistoryProvider historyProvider,
+                                       @NotNull FilePath path,
+                                       @NotNull AbstractVcs vcs,
+                                       @Nullable String repositoryPath);
 
-  public abstract void showFileHistory(VcsHistoryProvider vcsHistoryProvider, AnnotationProvider annotationProvider, FilePath path,
-                                       final String repositoryPath, final AbstractVcs vcs);
+  public abstract void showFileHistory(@NotNull VcsHistoryProvider historyProvider,
+                                       @Nullable AnnotationProvider annotationProvider,
+                                       @NotNull FilePath path,
+                                       @Nullable String repositoryPath,
+                                       @NotNull final AbstractVcs vcs);
 
   /**
    * Shows the "Rollback Changes" dialog with the specified list of changes.
@@ -174,17 +183,17 @@ public abstract class AbstractVcsHelper {
 
   @Nullable
   public Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
-                                                                final String title,
-                                                                @Nullable final String prompt,
-                                                                final String singleFileTitle,
-                                                                final String singleFilePromptTemplate,
-                                                                final VcsShowConfirmationOption confirmationOption,
-                                                                @Nullable String okActionName,
-                                                                @Nullable String cancelActionName) {
+                                                       final String title,
+                                                       @Nullable final String prompt,
+                                                       final String singleFileTitle,
+                                                       final String singleFilePromptTemplate,
+                                                       final VcsShowConfirmationOption confirmationOption,
+                                                       @Nullable String okActionName,
+                                                       @Nullable String cancelActionName) {
     return selectFilePathsToProcess(files, title, prompt, singleFileTitle, singleFilePromptTemplate, confirmationOption);
   };
-  
-  
+
+
   /**
    * <p>Shows commit dialog, fills it with the given changes and given commit message, initially selects the given changelist.</p>
    * <p>Note that the method is asynchronous: it returns right after user presses "Commit" or "Cancel" and after all pre-commit handlers
@@ -192,5 +201,13 @@ public abstract class AbstractVcsHelper {
    * @return true if user decides to commit the changes, false if user presses Cancel.
    */
   public abstract boolean commitChanges(@NotNull Collection<Change> changes, @NotNull LocalChangeList initialChangeList,
-                               @NotNull String commitMessage, @Nullable CommitResultHandler customResultHandler);
+                                        @NotNull String commitMessage, @Nullable CommitResultHandler customResultHandler);
+
+  public abstract void loadAndShowCommittedChangesDetails(@NotNull Project project,
+                                                          @NotNull VcsRevisionNumber revision,
+                                                          @NotNull VirtualFile file,
+                                                          @NotNull VcsKey key,
+                                                          @Nullable RepositoryLocation location,
+                                                          boolean local);
+
 }

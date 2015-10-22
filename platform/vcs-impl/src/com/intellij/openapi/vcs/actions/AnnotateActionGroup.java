@@ -15,7 +15,10 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,11 +26,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Konstantin Bulenkov
- */
 public class AnnotateActionGroup extends ActionGroup {
-  private AnAction[] myActions;
+  private final AnAction[] myActions;
 
   public AnnotateActionGroup(List<AnnotationFieldGutter> gutters, EditorGutterComponentEx gutterComponent) {
     super("View", true);
@@ -38,7 +38,7 @@ public class AnnotateActionGroup extends ActionGroup {
       }
     }
     actions.add(AnSeparator.getInstance());
-    actions.add(new ShowAnnotationColorsAction(gutters, gutterComponent));
+    actions.add(new ShowAnnotationColorsAction(gutterComponent));
     actions.add(new ShowShortenNames(gutterComponent));
     myActions = actions.toArray(new AnAction[actions.size()]);
   }
@@ -47,13 +47,5 @@ public class AnnotateActionGroup extends ActionGroup {
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return myActions;
-  }
-
-  public void setAvailable(boolean available) {
-    for (AnAction action : myActions) {
-      if (action instanceof ShowHideAspectAction) {
-        ((ShowHideAspectAction)action).setAvailable(available);
-      }
-    }
   }
 }

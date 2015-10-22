@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DiffContent;
@@ -29,6 +30,7 @@ import com.intellij.openapi.diff.impl.external.BinaryDiffTool;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.BackgroundTaskQueue;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.FilePath;
@@ -52,6 +54,7 @@ import java.util.List;
  *         Date: 6/15/11
  *         Time: 5:36 PM
  */
+@Deprecated
 public class VcsChangeDetailsManager {
   private final List<VcsChangeDetailsProvider> myProviders = new ArrayList<VcsChangeDetailsProvider>();
   private final List<VcsChangeDetailsProvider> myDedicatedList;
@@ -94,7 +97,7 @@ public class VcsChangeDetailsManager {
       if (! convertor.canComment(change)) continue;
       RefreshablePanel panel = convertor.comment(change, parent, myQueue);
       if (panel != null) {
-        panels.add(new Pair<String, RefreshablePanel>("Diff", panel));
+        panels.add(Pair.create("Diff", panel));
         break;  // only one of dedicated for now
       }
     }
@@ -102,7 +105,7 @@ public class VcsChangeDetailsManager {
       if (provider.canComment(change)) {
         RefreshablePanel panel = provider.comment(change, parent, myQueue);
         if (panel != null) {
-          panels.add(new Pair<String, RefreshablePanel>(provider.getName(), panel));
+          panels.add(Pair.create(provider.getName(), panel));
         }
       }
     }
@@ -322,17 +325,22 @@ public class VcsChangeDetailsManager {
 
     @Override
     protected ValueWithVcsException<PreparedFragmentedContent> loadImpl() throws VcsException {
-      return new ValueWithVcsException<PreparedFragmentedContent>() {
+      return ApplicationManager.getApplication().runReadAction(new Computable<ValueWithVcsException<PreparedFragmentedContent>>() {
         @Override
-        protected PreparedFragmentedContent computeImpl() throws VcsException {
-          final Change change = myChangeListManager.getChange(myFilePath);
-          if (change == null) {
-            return null;
-          }
-          myDiffPanel.setTitle(changeDescription(change));
-          return myRequestFromChange.getRanges(change);
+        public ValueWithVcsException<PreparedFragmentedContent> compute() {
+          return new ValueWithVcsException<PreparedFragmentedContent>() {
+            @Override
+            protected PreparedFragmentedContent computeImpl() throws VcsException {
+              final Change change = myChangeListManager.getChange(myFilePath);
+              if (change == null) {
+                return null;
+              }
+              myDiffPanel.setTitle(changeDescription(change));
+              return myRequestFromChange.getRanges(change);
+            }
+          };
         }
-      };
+      });
     }
 
     @Override

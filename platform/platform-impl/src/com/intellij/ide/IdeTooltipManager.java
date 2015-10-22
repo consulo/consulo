@@ -38,6 +38,7 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.Alarm;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.Html;
+import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -196,7 +197,8 @@ public class IdeTooltipManager implements ApplicationComponent, AWTEventListener
   }
 
   private void queueShow(final JComponent c, final MouseEvent me, final boolean toCenter, int shift, int posChangeX, int posChangeY) {
-    final IdeTooltip tooltip = new IdeTooltip(c, me.getPoint(), null, new Object()) {
+    String aText = String.valueOf(c.getToolTipText(me));
+    final IdeTooltip tooltip = new IdeTooltip(c, me.getPoint(), null, /*new Object()*/c, aText) {
       @Override
       protected boolean beforeShow() {
         myCurrentEvent = me;
@@ -225,7 +227,7 @@ public class IdeTooltipManager implements ApplicationComponent, AWTEventListener
   public IdeTooltip show(final IdeTooltip tooltip, boolean now, final boolean animationEnabled) {
     myAlarm.cancelAllRequests();
 
-    hideCurrent(null, null, null);
+    hideCurrent(null, tooltip, null, null);
 
     myQueuedComponent = tooltip.getComponent();
     myQueuedTooltip = tooltip;
@@ -238,7 +240,7 @@ public class IdeTooltipManager implements ApplicationComponent, AWTEventListener
         }
 
         if (myQueuedComponent != tooltip.getComponent() || !tooltip.getComponent().isShowing()) {
-          hideCurrent(null, null, null, animationEnabled);
+          hideCurrent(null, tooltip, null, null, animationEnabled);
           return;
         }
 
@@ -246,7 +248,7 @@ public class IdeTooltipManager implements ApplicationComponent, AWTEventListener
           show(tooltip, null, animationEnabled);
         }
         else {
-          hideCurrent(null, null, null, animationEnabled);
+          hideCurrent(null, tooltip, null, null, animationEnabled);
         }
       }
     };
@@ -286,7 +288,7 @@ public class IdeTooltipManager implements ApplicationComponent, AWTEventListener
       effectivePoint.y = toCenterY ? bounds.height / 2 : effectivePoint.y;
     }
 
-    if (myCurrentComponent == tooltip.getComponent() && myCurrentTipUi != null) {
+    if (myCurrentComponent == tooltip.getComponent() && myCurrentTipUi != null && !myCurrentTipUi.isDisposed()) {
       myCurrentTipUi.show(new RelativePoint(tooltip.getComponent(), effectivePoint), tooltip.getPreferredPosition());
       return;
     }
@@ -388,11 +390,22 @@ public class IdeTooltipManager implements ApplicationComponent, AWTEventListener
     return myCurrentTooltip != null;
   }
 
-  public boolean hideCurrent(@Nullable MouseEvent me, @Nullable AnAction action, @Nullable AnActionEvent event) {
-    return hideCurrent(me, action, event, myCurrentTipUi != null && myCurrentTipUi.isAnimationEnabled());
+  public boolean hideCurrent(@Nullable MouseEvent me) {
+    return hideCurrent(me, null, null, null);
   }
 
-  public boolean hideCurrent(@Nullable MouseEvent me, @Nullable AnAction action, @Nullable AnActionEvent event, final boolean animationEnabled) {
+  private boolean hideCurrent(@Nullable MouseEvent me, @Nullable AnAction action, @Nullable AnActionEvent event) {
+    return hideCurrent(me, null, action, event, myCurrentTipUi != null && myCurrentTipUi.isAnimationEnabled());
+  }
+
+  private boolean hideCurrent(@Nullable MouseEvent me,
+                              @Nullable IdeTooltip tooltipToShow,
+                              @Nullable AnAction action,
+                              @Nullable AnActionEvent event) {
+    return hideCurrent(me, tooltipToShow, action, event, myCurrentTipUi != null && myCurrentTipUi.isAnimationEnabled());
+  }
+
+  private boolean hideCurrent(@Nullable MouseEvent me, @Nullable IdeTooltip tooltipToShow, @Nullable AnAction action, @Nullable AnActionEvent event, final boolean animationEnabled) {
     if (myCurrentTooltip != null && me != null && myCurrentTooltip.isInside(RelativePoint.fromScreen(me.getLocationOnScreen()))) {
       if (me.getButton() == MouseEvent.NOBUTTON || myCurrentTipUi == null || myCurrentTipUi.isBlockClicks()) {
         return false;
@@ -414,8 +427,9 @@ public class IdeTooltipManager implements ApplicationComponent, AWTEventListener
                                   (me.getID() == MouseEvent.MOUSE_MOVED ||
                                    me.getID() == MouseEvent.MOUSE_EXITED ||
                                    me.getID() == MouseEvent.MOUSE_ENTERED);
-
-      if (!canAutoHide || myCurrentTooltip.isExplicitClose() && implicitMouseMove) {
+      if (!canAutoHide
+          || (myCurrentTooltip.isExplicitClose() && implicitMouseMove)
+          || (tooltipToShow != null && !tooltipToShow.isHint() && Comparing.equal(myCurrentTooltip, tooltipToShow))) {
         if (myHideRunnable != null) {
           myHideRunnable = null;
         }
@@ -543,11 +557,7 @@ public class IdeTooltipManager implements ApplicationComponent, AWTEventListener
         Dimension s = prefSize.get() != null ? new Dimension(prefSize.get()) : super.getPreferredSize();
         Border b = getBorder();
         if (b != null) {
-          Insets insets = b.getBorderInsets(this);
-          if (insets != null) {
-            s.width += insets.left + insets.right;
-            s.height += insets.top + insets.bottom;
-          }
+          JBInsets.addTo(s, b.getBorderInsets(this));
         }
         return s;
       }

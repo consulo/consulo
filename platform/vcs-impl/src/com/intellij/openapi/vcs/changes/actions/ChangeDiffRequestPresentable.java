@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.openapi.vcs.changes.actions;
 
 import com.intellij.CommonBundle;
+import com.intellij.diff.FileAwareSimpleContent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.DiffContent;
@@ -150,8 +151,9 @@ public class ChangeDiffRequestPresentable implements DiffRequestPresentable {
       final VirtualFile vFile = current.getVirtualFile();
       return vFile != null ? new FileContent(myProject, vFile) : new SimpleContent("");
     }
+    FilePath filePath = revision.getFile();
     if (revision instanceof BinaryContentRevision) {
-      final String name = revision.getFile().getName();
+      final String name = filePath.getName();
       try {
         return FileContent.createFromTempFile(myProject, name, name, ((BinaryContentRevision)revision).getBinaryContent());
       }
@@ -188,8 +190,8 @@ public class ChangeDiffRequestPresentable implements DiffRequestPresentable {
     }
     SimpleContent content = revisionContent == null
                             ? new SimpleContent("")
-                            : new SimpleContent(revisionContent, revision.getFile().getFileType());
-    VirtualFile vFile = revision.getFile().getVirtualFile();
+                            : new FileAwareSimpleContent(myProject, filePath, revisionContent, filePath.getFileType());
+    VirtualFile vFile = filePath.getVirtualFile();
     if (vFile != null) {
       content.setCharset(vFile.getCharset());
       content.setBOM(vFile.getBOM());
@@ -221,44 +223,49 @@ public class ChangeDiffRequestPresentable implements DiffRequestPresentable {
     }
     final FileType type = rev.getFile().getFileType();
     if (! type.isBinary()) return true;
-    if (UnknownFileType.INSTANCE.equals(type)) {
-      final boolean associatedToText = checkAssociate(myProject, rev.getFile(), context);
+    if (type == UnknownFileType.INSTANCE) {
+      final boolean associatedToText = checkAssociate(myProject, rev.getFile().getName(), context);
     }
     return true;
   }
 
   private static boolean hasContents(@Nullable final ContentRevision rev, final List<String> errSb) {
     if (rev == null) return false;
-      try {
-        if (rev instanceof BinaryContentRevision) {
+    try {
+      if (rev instanceof BinaryContentRevision) {
         return ((BinaryContentRevision) rev).getBinaryContent() != null;
-        } else {
-          return rev.getContent() != null;
-        }
+      } else {
+        return rev.getContent() != null;
       }
-      catch (VcsException e) {
-        LOG.info(e);
-        errSb.add(e.getMessage());
-        return false;
-      }
+    }
+    catch (VcsException e) {
+      LOG.info(e);
+      errSb.add(e.getMessage());
+      return false;
+    }
   }
 
   private static boolean checkContentsAvailable(@Nullable final ContentRevision bRev, @Nullable final ContentRevision aRev, final List<String> errSb) {
     if (hasContents(bRev, errSb)) return true;
-    return hasContents(aRev, errSb);
+    if (hasContents(aRev, errSb)) return true;
+    errSb.add("Can't load revisions content:");
+    if (bRev != null) errSb.add("Can't load content of " + bRev.getFile().getPresentableUrl() + " at " + bRev.getRevisionNumber().asString());
+    if (aRev != null) errSb.add("Can't load content of " + aRev.getFile().getPresentableUrl() + " at " + aRev.getRevisionNumber().asString());
+    if (aRev == null && bRev == null) errSb.add("Both revisions are empty");
+    return false;
   }
 
-  public static boolean checkAssociate(final Project project, final FilePath file, DiffChainContext context) {
-    final String pattern = FileUtilRt.getExtension(file.getName()).toLowerCase();
+  public static boolean checkAssociate(final Project project, String fileName, DiffChainContext context) {
+    final String pattern = FileUtilRt.getExtension(fileName).toLowerCase();
     if (context.contains(pattern)) return false;
     int rc = Messages.showOkCancelDialog(project,
-                                 VcsBundle.message("diff.unknown.file.type.prompt", file.getName()),
-                                 VcsBundle.message("diff.unknown.file.type.title"),
-                                   VcsBundle.message("diff.unknown.file.type.associate"),
-                                   CommonBundle.getCancelButtonText(),
-                                 Messages.getQuestionIcon());
-    if (rc == 0) {
-      FileType fileType = FileTypeChooser.associateFileType(file.getName());
+                                         VcsBundle.message("diff.unknown.file.type.prompt", fileName),
+                                         VcsBundle.message("diff.unknown.file.type.title"),
+                                         VcsBundle.message("diff.unknown.file.type.associate"),
+                                         CommonBundle.getCancelButtonText(),
+                                         Messages.getQuestionIcon());
+    if (rc == Messages.OK) {
+      FileType fileType = FileTypeChooser.associateFileType(fileName);
       return fileType != null && !fileType.isBinary();
     } else {
       context.add(pattern);
