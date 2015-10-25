@@ -81,6 +81,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     }
   }
 
+  @Override
   public void dispose() {
     deactivate();
     super.dispose();
@@ -163,7 +164,6 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     });
   }
 
-  @RequiredDispatchThread
   private void update() {
     myText = null;
     myTooltip = null;
