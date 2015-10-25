@@ -745,6 +745,10 @@
 
     <extensionPoint name="runConfigurationProducer" interface="com.intellij.execution.actions.RunConfigurationProducer"/>
 
+    <extensionPoint name="runLineMarkerContributor" beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.execution.lineMarker.RunLineMarkerContributor"/>
+    </extensionPoint>
+
     <extensionPoint name="hectorComponentProvider" interface="com.intellij.openapi.editor.HectorComponentPanelsProvider"
                     area="CONSULO_PROJECT"/>
     <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="CONSULO_PROJECT"/>
@@ -2180,6 +2184,8 @@
 
     <codeInsight.linkHandler prefix="#inspection/" handlerClass="com.intellij.codeInsight.hint.InspectionDescriptionLinkHandler"/>
     <codeInsight.linkHandler prefix="#navigation/" handlerClass="com.intellij.codeInsight.hint.NavigationLinkHandler"/>
+
+    <codeInsight.lineMarkerProvider language="" implementationClass="com.intellij.execution.lineMarker.RunLineMarkerProvider"/>
 
     <applicationConfigurable instance="com.intellij.application.options.editor.EditorSmartKeysConfigurable"
                              id="editor.preferences.smartKeys"
