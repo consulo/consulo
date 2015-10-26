@@ -16,6 +16,7 @@
 package com.intellij.ide.fileTemplates.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -25,9 +26,36 @@ public final class CustomFileTemplate extends FileTemplateBase {
   private String myName;
   private String myExtension;
 
+  private String myEditorName;
+  private String myEditorExtension;
+
   public CustomFileTemplate(@NotNull String name, @NotNull String extension) {
     myName = name;
     myExtension = extension;
+  }
+
+  @NotNull
+  public String getEditorExtension() {
+    if(myEditorExtension != null) {
+      return myEditorExtension;
+    }
+    return myExtension;
+  }
+
+  public void setEditorExtension(@Nullable String editorExtension) {
+    myEditorExtension = editorExtension;
+  }
+
+  @NotNull
+  public String getEditorName() {
+    if(myEditorName != null) {
+      return myEditorName;
+    }
+    return myName;
+  }
+
+  public void setEditorName(@Nullable String editorName) {
+    myEditorName = editorName;
   }
 
   @Override

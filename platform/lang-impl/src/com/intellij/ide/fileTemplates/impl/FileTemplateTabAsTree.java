@@ -19,12 +19,10 @@ package com.intellij.ide.fileTemplates.impl;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateDescriptor;
 import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptor;
-import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nullable;
@@ -88,10 +86,6 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
 
     FileTemplateNode(String name, Icon icon, List<FileTemplateNode> children) {
       this(name, icon, children, null);
-    }
-
-    FileTemplateNode(Icon icon, String templateName) {
-      this(templateName, icon, Collections.<FileTemplateNode>emptyList(), templateName);
     }
 
     private FileTemplateNode(String name, Icon icon, List<FileTemplateNode> children, String templateName) {

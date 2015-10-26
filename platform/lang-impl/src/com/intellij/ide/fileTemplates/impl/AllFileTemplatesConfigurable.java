@@ -25,10 +25,10 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
@@ -39,9 +39,9 @@ import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -90,12 +90,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   }
 
   private void onAdd() {
-    String ext = "java";
-    final FileTemplateDefaultExtension[] defaultExtensions = Extensions.getExtensions(FileTemplateDefaultExtension.EP_NAME);
-    if (defaultExtensions.length > 0) {
-      ext = defaultExtensions[0].value;
-    }
-    createTemplate(IdeBundle.message("template.unnamed"), ext, "");
+    createTemplate(IdeBundle.message("template.unnamed"), PlainTextFileType.INSTANCE.getDefaultExtension(), "");
   }
 
   private void createTemplate(final @NotNull String prefName, final @NotNull String extension, final @NotNull String content) {
@@ -160,7 +155,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       case 2:
         return "fileTemplates.code";
       case 3:
-        return "fileTemplates.j2ee";
+        return "fileTemplates.other";
       default:
         throw new IllegalStateException("wrong index: " + index);
     }
@@ -194,11 +189,9 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       allTabs.add(myCodeTemplatesList);
     }
 
-    final Set<FileTemplateGroupDescriptorFactory> factories = new THashSet<FileTemplateGroupDescriptorFactory>();
-    ContainerUtil.addAll(factories, ApplicationManager.getApplication().getComponents(FileTemplateGroupDescriptorFactory.class));
-    ContainerUtil.addAll(factories, Extensions.getExtensions(FileTemplateGroupDescriptorFactory.EXTENSION_POINT_NAME));
+    final FileTemplateGroupDescriptorFactory[] factories = FileTemplateGroupDescriptorFactory.EP_NAME.getExtensions();
 
-    if (!factories.isEmpty()) {
+    if (factories.length != 0) {
       myJ2eeTemplatesList = new FileTemplateTabAsTree(J2EE_TITLE) {
         @Override
         public void onTemplateSelected() {
@@ -248,38 +241,44 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
     DefaultActionGroup group = new DefaultActionGroup();
     AnAction removeAction = new AnAction(IdeBundle.message("action.remove.template"), null, AllIcons.General.Remove) {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         onRemove();
       }
 
+      @RequiredDispatchThread
       @Override
-      public void update(AnActionEvent e) {
+      public void update(@NotNull AnActionEvent e) {
         super.update(e);
         FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
         e.getPresentation().setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle()));
       }
     };
     AnAction addAction = new AnAction(IdeBundle.message("action.create.template"), null, AllIcons.General.Add) {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         onAdd();
       }
 
+      @RequiredDispatchThread
       @Override
-      public void update(AnActionEvent e) {
+      public void update(@NotNull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(!(myCurrentTab == myCodeTemplatesList || myCurrentTab == myJ2eeTemplatesList));
       }
     };
     AnAction cloneAction = new AnAction(IdeBundle.message("action.copy.template"), null, AllIcons.Actions.Copy) {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         onClone();
       }
 
+      @RequiredDispatchThread
       @Override
-      public void update(AnActionEvent e) {
+      public void update(@NotNull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(myCurrentTab != myCodeTemplatesList
                                        && myCurrentTab != myJ2eeTemplatesList
@@ -287,13 +286,15 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       }
     };
     AnAction resetAction = new AnAction(IdeBundle.message("action.reset.to.default"), null, AllIcons.Actions.Reset) {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         onReset();
       }
 
+      @RequiredDispatchThread
       @Override
-      public void update(AnActionEvent e) {
+      public void update(@NotNull AnActionEvent e) {
         super.update(e);
         final FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
         e.getPresentation().setEnabled(selectedItem instanceof BundledFileTemplate && !selectedItem.isDefault());
@@ -304,7 +305,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     group.add(cloneAction);
     group.add(resetAction);
     addAction.registerCustomShortcutSet(CommonShortcuts.INSERT, myCurrentTab.getComponent());
-    removeAction.registerCustomShortcutSet(CommonShortcuts.DELETE,
+    removeAction.registerCustomShortcutSet(CommonShortcuts.getDelete(),
                                            myCurrentTab.getComponent());
 
     myToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
@@ -335,7 +336,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     if (selected instanceof BundledFileTemplate) {
       if (Messages.showOkCancelDialog(IdeBundle.message("prompt.reset.to.original.template"),
                                       IdeBundle.message("title.reset.template"), Messages.getQuestionIcon()) !=
-          DialogWrapper.OK_EXIT_CODE) {
+          Messages.OK) {
         return;
       }
       ((BundledFileTemplate)selected).revertToDefaults();

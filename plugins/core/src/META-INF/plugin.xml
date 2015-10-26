@@ -1028,8 +1028,6 @@
                     interface="com.intellij.refactoring.listeners.RefactoringElementListenerProvider"
                     area="CONSULO_PROJECT"/>
 
-    <extensionPoint name="fileTemplateDefaultExtension" beanClass="com.intellij.ide.fileTemplates.FileTemplateDefaultExtension"/>
-
     <extensionPoint name="problemFileHighlightFilter" interface="com.intellij.openapi.util.Condition" area="CONSULO_PROJECT"/>
 
     <extensionPoint name="problemHighlightFilter" interface="com.intellij.codeInsight.daemon.ProblemHighlightFilter"/>

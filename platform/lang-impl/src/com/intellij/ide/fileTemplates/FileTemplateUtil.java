@@ -17,6 +17,7 @@
 package com.intellij.ide.fileTemplates;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.fileTemplates.impl.CustomFileTemplate;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -404,7 +405,11 @@ public class FileTemplateUtil{
 
   @Nullable
   public static Icon getIcon(@NotNull FileTemplate fileTemplate) {
-    return FileTypeManager.getInstance().getFileTypeByExtension(fileTemplate.getExtension()).getIcon();
+    String extension = fileTemplate.getExtension();
+    if(fileTemplate instanceof CustomFileTemplate) {
+      extension = ((CustomFileTemplate)fileTemplate).getEditorExtension();
+    }
+    return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
   }
 
   public static void putAll(final Map<String, Object> props, final Properties p) {

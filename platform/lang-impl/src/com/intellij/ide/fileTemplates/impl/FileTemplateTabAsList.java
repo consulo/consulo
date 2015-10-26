@@ -73,7 +73,12 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
         }
         else {
           setFont(getFont().deriveFont(Font.PLAIN));
-          setText(template.getName());
+          if(template instanceof CustomFileTemplate) {
+            setText(((CustomFileTemplate)template).getEditorName());
+          }
+          else {
+            setText(template.getName());
+          }
         }
 
         if (!template.isDefault()) {

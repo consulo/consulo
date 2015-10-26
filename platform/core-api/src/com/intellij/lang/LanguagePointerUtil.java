@@ -30,7 +30,7 @@ public class LanguagePointerUtil {
   private static final Map<String, NamedPointer<Language>> ourPointersCache = new HashMap<String, NamedPointer<Language>>();
 
   @NotNull
-  public static NamedPointer<Language> createPointer(String name) {
+  public static NamedPointer<Language> createPointer(@NotNull String name) {
     NamedPointer<Language> languageNamedPointer = ourPointersCache.get(name);
     if(languageNamedPointer != null) {
       return languageNamedPointer;
