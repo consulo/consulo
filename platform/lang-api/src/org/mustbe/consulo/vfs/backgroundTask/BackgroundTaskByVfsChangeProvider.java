@@ -23,6 +23,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -54,6 +55,7 @@ public abstract class BackgroundTaskByVfsChangeProvider {
   public abstract String getTemplateName();
 
   @NotNull
+  @RequiredReadAction
   public String[] getGeneratedFiles(@NotNull Project project, @NotNull VirtualFile virtualFile) {
     PsiManager psiManager = PsiManager.getInstance(project);
     PsiFile file = psiManager.findFile(virtualFile);

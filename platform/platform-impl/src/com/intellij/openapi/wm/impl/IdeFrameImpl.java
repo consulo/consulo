@@ -57,7 +57,6 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.io.PowerSupplyKit;
-import org.mustbe.consulo.vfs.backgroundTask.ui.widget.BackgroundTaskWidget;
 
 import javax.swing.*;
 import java.awt.*;
@@ -427,10 +426,6 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     statusBar.addWidget(insertOverwritePanel, "after Encoding");
     statusBar.addWidget(readOnlyAttributePanel, "after InsertOverwrite");
 
-    final BackgroundTaskWidget backgroundTaskWidget = new BackgroundTaskWidget(project);
-
-    statusBar.addWidget(backgroundTaskWidget, "after ReadOnlyAttribute");
-
     Disposer.register(project, new Disposable() {
       @Override
       public void dispose() {
@@ -439,7 +434,6 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
         statusBar.removeWidget(lineSeparatorPanel.ID());
         statusBar.removeWidget(positionPanel.ID());
         statusBar.removeWidget(notificationArea.ID());
-        statusBar.removeWidget(backgroundTaskWidget.ID());
         statusBar.removeWidget(readOnlyAttributePanel.ID());
         statusBar.removeWidget(insertOverwritePanel.ID());
 

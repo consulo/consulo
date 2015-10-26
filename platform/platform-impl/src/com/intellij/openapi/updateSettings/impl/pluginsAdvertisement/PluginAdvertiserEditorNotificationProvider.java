@@ -50,6 +50,7 @@ public class PluginAdvertiserEditorNotificationProvider extends EditorNotificati
     myNotifications = notifications;
   }
 
+  @NotNull
   @Override
   public Key<EditorNotificationPanel> getKey() {
     return KEY;

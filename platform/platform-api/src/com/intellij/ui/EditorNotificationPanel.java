@@ -27,6 +27,7 @@ import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -82,6 +83,7 @@ public class EditorNotificationPanel extends JPanel {
   public HyperlinkLabel createActionLabel(final String text, @NonNls final String actionId) {
     return createActionLabel(text, new Runnable() {
       @Override
+      @RequiredDispatchThread
       public void run() {
         executeAction(actionId);
       }
@@ -100,6 +102,7 @@ public class EditorNotificationPanel extends JPanel {
     return label;
   }
 
+  @RequiredDispatchThread
   protected void executeAction(final String actionId) {
     final AnAction action = ActionManager.getInstance().getAction(actionId);
     final AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN,

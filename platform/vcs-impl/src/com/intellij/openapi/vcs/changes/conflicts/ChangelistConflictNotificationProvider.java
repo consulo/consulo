@@ -20,6 +20,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotifications;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dmitry Avdeev
@@ -34,6 +35,7 @@ public class ChangelistConflictNotificationProvider extends EditorNotifications.
     myConflictTracker = changeListManager.getConflictTracker();
   }
 
+  @NotNull
   public Key<ChangelistConflictNotificationPanel> getKey() {
     return KEY;
   }

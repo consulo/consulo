@@ -43,6 +43,7 @@ import lombok.val;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -243,6 +244,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     return myParameters;
   }
 
+  @RequiredReadAction
   @NotNull
   @Override
   public String[] getGeneratedFilePaths() {
@@ -252,6 +254,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     return myGeneratedFilePaths;
   }
 
+  @RequiredReadAction
   @NotNull
   @Override
   public VirtualFile[] getGeneratedFiles() {
@@ -270,6 +273,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   }
 
   @NotNull
+  @RequiredReadAction
   private String[] generateFilePaths() {
     if (myProvider == null) {
       return ArrayUtil.EMPTY_STRING_ARRAY;

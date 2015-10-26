@@ -211,6 +211,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
     for (BackgroundTaskByVfsChangeTask task : tasks) {
       vfsChangeManager.registerTask(task);
     }
+    EditorNotifications.updateAll();
     super.doOKAction();
   }
 

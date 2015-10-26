@@ -44,10 +44,11 @@ public class EditorNotifications extends AbstractProjectComponent {
     new ExtensionPointName<Provider>("com.intellij.editorNotificationProvider");
 
   public abstract static class Provider<T extends JComponent> {
+    @NotNull
     public abstract Key<T> getKey();
 
     @Nullable
-    public abstract T createNotificationPanel(VirtualFile file, FileEditor fileEditor);
+    public abstract T createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor);
   }
 
   public static EditorNotifications getInstance(Project project) {
@@ -112,7 +113,7 @@ public class EditorNotifications extends AbstractProjectComponent {
     }
   }
 
-  private void updateNotification(FileEditor editor, Key<? extends JComponent> key, @Nullable JComponent component) {
+  private void updateNotification(@NotNull FileEditor editor, Key<? extends JComponent> key, @Nullable JComponent component) {
     JComponent old = editor.getUserData(key);
     if (old != null) {
       myFileEditorManager.removeTopComponent(editor, old);

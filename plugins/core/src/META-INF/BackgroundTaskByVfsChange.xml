@@ -23,5 +23,6 @@
     <generatedSourcesFilter implementation="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsGeneratedSourcesFilter" />
     <projectService serviceInterface="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager"
                     serviceImplementation="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManagerImpl"/>
+    <editorNotificationProvider implementation="org.mustbe.consulo.vfs.backgroundTask.ui.BackgroundTaskEditorNotificationProvider" />
   </extensions>
 </idea-plugin>

@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -44,9 +45,11 @@ public interface BackgroundTaskByVfsChangeTask extends Named {
   BackgroundTaskByVfsParameters getParameters();
 
   @NotNull
+  @RequiredReadAction
   String[] getGeneratedFilePaths();
 
   @NotNull
+  @RequiredReadAction
   VirtualFile[] getGeneratedFiles();
 
   @NotNull

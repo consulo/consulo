@@ -17,9 +17,9 @@ package org.mustbe.consulo.vfs.backgroundTask;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,7 +30,7 @@ import java.util.List;
 public class BackgroundTaskByVfsChangeProviders {
   @NotNull
   public static List<BackgroundTaskByVfsChangeProvider> getProviders(@NotNull Project project, @NotNull VirtualFile virtualFile) {
-    List<BackgroundTaskByVfsChangeProvider> providers = new ArrayList<BackgroundTaskByVfsChangeProvider>();
+    List<BackgroundTaskByVfsChangeProvider> providers = new SmartList<BackgroundTaskByVfsChangeProvider>();
     for (BackgroundTaskByVfsChangeProvider provider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensions()) {
       if (provider.validate(project, virtualFile)) {
         providers.add(provider);
