@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jetbrains.ide;
+package org.mustbe.buildInWebServer.api;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.QueryStringDecoder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.ide.HttpRequestHandler;
 
-import java.io.IOException;
+/**
+ * @author VISTALL
+ * @since 27.10.2015
+ */
+public abstract class JsonBaseRequestHandler
+        extends HttpRequestHandler {
 
-public abstract class HttpRequestHandler {
-  public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create("com.intellij.httpRequestHandler");
+  private String myApiUrl;
 
-  public boolean isSupported(HttpRequest request) {
-    return request.getMethod() == HttpMethod.GET;
+  protected JsonBaseRequestHandler(@NotNull String apiUrl) {
+    myApiUrl = "/api/" + apiUrl;
   }
 
-  public abstract boolean process(QueryStringDecoder urlDecoder, HttpRequest request, ChannelHandlerContext context) throws IOException;
+  @Override
+  public boolean isSupported(HttpRequest request) {
+    return getMethod() == request.getMethod() && myApiUrl.equals(request.getUri());
+  }
+
+  @NotNull
+  protected abstract HttpMethod getMethod();
 }
