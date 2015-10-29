@@ -20,6 +20,7 @@ import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncUtil;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -186,7 +187,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     return progress;
   }
 
-  private static boolean shouldProcessInjectedPsi(@NotNull SearchScope scope) {
+  public static boolean shouldProcessInjectedPsi(@NotNull SearchScope scope) {
     return !(scope instanceof LocalSearchScope) || !((LocalSearchScope)scope).isIgnoreInjectedPsi();
   }
 
@@ -293,7 +294,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
             return !canceled.get();
           }
         };
-        if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
+        if (ApplicationManager.getApplication().isWriteAccessAllowed() || ((ApplicationEx)ApplicationManager.getApplication()).isWriteActionPending()) {
           // no point in processing in separate threads - they are doomed to fail to obtain read action anyway
           completed &= ContainerUtil.process(files, processor);
         }
@@ -758,7 +759,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
       for (final VirtualFile file : files) {
         progress.checkCanceled();
         for (final IdIndexEntry entry : keys) {
-          ApplicationManager.getApplication().runReadAction(new Runnable() {
+          DumbService.getInstance(myManager.getProject()).runReadActionInSmartMode(new Runnable() {
             @Override
             public void run() {
               FileBasedIndex.getInstance().processValues(IdIndex.NAME, entry, file, new FileBasedIndex.ValueProcessor<Integer>() {

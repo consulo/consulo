@@ -26,7 +26,6 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbModePermission;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.*;
@@ -36,6 +35,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.RefactoringBundle;
+import com.intellij.refactoring.listeners.RefactoringEventData;
+import com.intellij.refactoring.listeners.RefactoringEventListener;
 import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteCustomUsageInfo;
 import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteReferenceSimpleDeleteUsageInfo;
 import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
@@ -204,6 +205,9 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     }
 
     if (!conflicts.isEmpty()) {
+      final RefactoringEventData conflictData = new RefactoringEventData();
+      conflictData.putUserData(RefactoringEventData.CONFLICTS_KEY, conflicts);
+      myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC).conflictsDetected("refactoring.safeDelete", conflictData);
       if (ApplicationManager.getApplication().isUnitTestMode()) {
         if (!ConflictsInTestsException.isTestIgnore()) throw new ConflictsInTestsException(conflicts);
       }
@@ -367,6 +371,20 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
       }
     }
     return list.toArray(new UsageInfo[list.size()]);
+  }
+
+  @Nullable
+  @Override
+  protected RefactoringEventData getBeforeData() {
+    final RefactoringEventData beforeData = new RefactoringEventData();
+    beforeData.addElements(myElements);
+    return beforeData;
+  }
+
+  @Nullable
+  @Override
+  protected String getRefactoringId() {
+    return "refactoring.safeDelete";
   }
 
   @Override

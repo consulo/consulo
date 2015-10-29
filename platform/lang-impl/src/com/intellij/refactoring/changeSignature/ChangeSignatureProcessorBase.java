@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
-import com.intellij.ide.actions.QualifiedNameProviders;
+import com.intellij.ide.actions.CopyReferenceAction;
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
@@ -27,6 +27,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
+import com.intellij.refactoring.listeners.RefactoringEventData;
 import com.intellij.refactoring.listeners.UndoRefactoringElementListener;
 import com.intellij.refactoring.listeners.impl.RefactoringTransaction;
 import com.intellij.refactoring.rename.ResolveSnapshotProvider;
@@ -106,18 +107,40 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
 
 
   @Override
-  protected boolean isPreviewUsages(UsageInfo[] usages) {
+  protected boolean isPreviewUsages(@NotNull UsageInfo[] usages) {
     for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensions()) {
       if (processor.shouldPreviewUsages(myChangeInfo, usages)) return true;
     }
     return super.isPreviewUsages(usages);
   }
 
+  @Nullable
   @Override
-  protected void performRefactoring(UsageInfo[] usages) {
+  protected String getRefactoringId() {
+    return "refactoring.changeSignature";
+  }
+
+  @Nullable
+  @Override
+  protected RefactoringEventData getBeforeData() {
+    RefactoringEventData data = new RefactoringEventData();
+    data.addElement(getChangeInfo().getMethod());
+    return data;
+  }
+
+  @Nullable
+  @Override
+  protected RefactoringEventData getAfterData(@NotNull UsageInfo[] usages) {
+    RefactoringEventData data = new RefactoringEventData();
+    data.addElement(getChangeInfo().getMethod());
+    return data;
+  }
+
+  @Override
+  protected void performRefactoring(@NotNull UsageInfo[] usages) {
     RefactoringTransaction transaction = getTransaction();
     final RefactoringElementListener elementListener = transaction == null ? null : transaction.getElementListener(myChangeInfo.getMethod());
-    final String fqn = QualifiedNameProviders.elementToFqn(myChangeInfo.getMethod());
+    final String fqn = CopyReferenceAction.elementToFqn(myChangeInfo.getMethod());
     if (fqn != null) {
       UndoableAction action = new BasicUndoableAction() {
         @Override
