@@ -45,7 +45,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
   private final Project myProject;
   private final int myOffset;
   private final int myParameterListStart;
-  private PsiElement myHighlightedElement;
+  private Object myHighlightedElement;
   private Object[] myItems;
 
   public ShowParameterInfoContext(final Editor editor, final Project project,
@@ -84,12 +84,12 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
   }
 
   @Override
-  public PsiElement getHighlightedElement() {
+  public Object getHighlightedElement() {
     return myHighlightedElement;
   }
 
   @Override
-  public void setHighlightedElement(PsiElement element) {
+  public void setHighlightedElement(Object element) {
     myHighlightedElement = element;
   }
 
@@ -114,7 +114,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
                                         final Editor editor,
                                         final Object[] descriptors,
                                         final Project project,
-                                        @Nullable PsiElement highlighted,
+                                        @Nullable Object highlighted,
                                         final int elementStart,
                                         final ParameterInfoHandler handler) {
     if (ParameterInfoController.isAlreadyShown(editor, elementStart)) return;
@@ -156,7 +156,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
 
   private static void showMethodInfo(final Project project, final Editor editor,
                                      final PsiElement list,
-                                     PsiElement highlighted,
+                                     Object highlighted,
                                      Object[] candidates,
                                      int offset,
                                      ParameterInfoHandler handler

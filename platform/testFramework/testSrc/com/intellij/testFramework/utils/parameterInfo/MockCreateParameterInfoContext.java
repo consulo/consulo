@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MockCreateParameterInfoContext implements CreateParameterInfoContext {
   private Object[] myItems;
-  private PsiElement myHighlightedElement;
+  private Object myHighlightedElement;
   private final Editor myEditor;
   private final PsiFile myFile;
 
@@ -56,12 +56,12 @@ public class MockCreateParameterInfoContext implements CreateParameterInfoContex
   }
 
   @Override
-  public PsiElement getHighlightedElement() {
+  public Object getHighlightedElement() {
     return myHighlightedElement;
   }
 
   @Override
-  public void setHighlightedElement(PsiElement elements) {
+  public void setHighlightedElement(Object elements) {
     myHighlightedElement = elements;
   }
 

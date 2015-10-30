@@ -156,7 +156,7 @@ public class AutoPopupController implements Disposable {
   }
 
   @RequiredDispatchThread
-  public void autoPopupParameterInfo(@NotNull final Editor editor, @Nullable final PsiElement highlightedMethod){
+  public void autoPopupParameterInfo(@NotNull final Editor editor, @Nullable final Object highlightedMethod){
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
     if (DumbService.isDumb(myProject)) return;
     if (PowerSaveMode.isEnabled()) return;

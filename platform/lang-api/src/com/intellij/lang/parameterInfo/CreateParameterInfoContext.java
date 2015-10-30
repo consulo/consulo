@@ -25,6 +25,6 @@ public interface CreateParameterInfoContext extends ParameterInfoContext {
   void showHint(PsiElement element, int offset, ParameterInfoHandler handler);
   int getParameterListStart();
 
-  PsiElement getHighlightedElement();
-  void setHighlightedElement(PsiElement elements);
+  Object getHighlightedElement();
+  void setHighlightedElement(Object elements);
 }

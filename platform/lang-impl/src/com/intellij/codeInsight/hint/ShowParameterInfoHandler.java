@@ -53,7 +53,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
   }
 
   @RequiredDispatchThread
-  public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement) {
+  public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, Object highlightedElement) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
