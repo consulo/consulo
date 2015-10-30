@@ -17,14 +17,26 @@
 package com.intellij.lang.parameterInfo;
 
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.Exported;
 
 public interface CreateParameterInfoContext extends ParameterInfoContext {
+  @Exported
+  @Nullable
   Object[] getItemsToShow();
+
+  @Exported
   void setItemsToShow(Object[] items);
 
+  @Exported
   void showHint(PsiElement element, int offset, ParameterInfoHandler handler);
+
+  @Exported
   int getParameterListStart();
 
+  @Nullable
   Object getHighlightedElement();
+
+  @Exported
   void setHighlightedElement(Object elements);
 }
