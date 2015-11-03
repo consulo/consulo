@@ -30,6 +30,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.List;
 
@@ -102,6 +103,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
+  @RequiredReadAction
   public PsiElement restoreElement() {
     Segment segment = getPsiRange();
     if (segment == null) return null;
