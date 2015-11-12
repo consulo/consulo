@@ -28,6 +28,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.DataManager;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
@@ -63,6 +64,7 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.concurrency.Semaphore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -757,6 +759,7 @@ public class CodeCompletionHandlerBase {
     return current != null && current.getViewProvider().getPsi(file.getLanguage()) == file;
   }
 
+  @RequiredReadAction
   private static PsiFile createFileCopy(PsiFile file, long caret, long selEnd) {
     final VirtualFile virtualFile = file.getVirtualFile();
     boolean mayCacheCopy = file.isPhysical() &&
@@ -788,6 +791,7 @@ public class CodeCompletionHandlerBase {
     }
 
     final PsiFile copy = (PsiFile)file.copy();
+    copy.putUserData(LanguageVersion.KEY, file.getLanguageVersion()); // force store language version
     if (mayCacheCopy) {
       final Document document = copy.getViewProvider().getDocument();
       assert document != null;
