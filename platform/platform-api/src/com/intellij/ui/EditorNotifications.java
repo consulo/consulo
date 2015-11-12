@@ -17,8 +17,6 @@ package com.intellij.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
@@ -29,37 +27,45 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
+import org.mustbe.consulo.editor.notifications.EditorNotificationProviders;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
 public class EditorNotifications extends AbstractProjectComponent {
-  private static final ExtensionPointName<Provider> EXTENSION_POINT_NAME =
-    new ExtensionPointName<Provider>("com.intellij.editorNotificationProvider");
-
-  public abstract static class Provider<T extends JComponent> {
+  @Deprecated
+  @DeprecationInfo(value = "Use org.mustbe.consulo.editor.notifications.EditorNotificationProvider", until = "2.0")
+  public abstract static class Provider<T extends JComponent> implements EditorNotificationProvider<T> {
+    @Override
     @NotNull
     public abstract Key<T> getKey();
 
+    @Override
     @Nullable
     public abstract T createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor);
   }
 
+  @NotNull
   public static EditorNotifications getInstance(Project project) {
     return project.getComponent(EditorNotifications.class);
   }
 
-  private final NotNullLazyValue<Provider[]> PROVIDERS = new NotNullLazyValue<Provider[]>() {
+  private final NotNullLazyValue<List<EditorNotificationProvider<?>>> myProvidersValue = new NotNullLazyValue<List<EditorNotificationProvider<?>>>() {
     @NotNull
     @Override
-    protected Provider[] compute() {
-      return Extensions.getExtensions(EXTENSION_POINT_NAME, myProject);
+    protected List<EditorNotificationProvider<?>> compute() {
+      return EditorNotificationProviders.createProviders(myProject);
     }
   };
 
@@ -76,6 +82,7 @@ public class EditorNotifications extends AbstractProjectComponent {
     });
     project.getMessageBus().connect(project).subscribe(BackgroundTaskByVfsChangeManager.TOPIC, new BackgroundTaskByVfsChangeManager.ListenerAdapter() {
       @Override
+      @RequiredReadAction
       public void taskChanged(@NotNull BackgroundTaskByVfsChangeTask task) {
         for (VirtualFile virtualFile : task.getGeneratedFiles()) {
           updateNotifications(virtualFile);
@@ -90,11 +97,12 @@ public class EditorNotifications extends AbstractProjectComponent {
       public void run() {
         ApplicationManager.getApplication().runReadAction(new Runnable() {
           @Override
+          @RequiredDispatchThread
           public void run() {
             if (myProject.isDisposed()) return;
             FileEditor[] editors = myFileEditorManager.getAllEditors(file);
             for (FileEditor editor : editors) {
-              for (Provider<?> provider : PROVIDERS.getValue()) {
+              for (EditorNotificationProvider<?> provider : myProvidersValue.getValue()) {
                 JComponent component = provider.createNotificationPanel(file, editor);
                 Key<? extends JComponent> key = provider.getKey();
                 updateNotification(editor, key, component);
