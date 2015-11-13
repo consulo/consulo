@@ -23,7 +23,6 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.ui.ColoredTreeCellRenderer;
-import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
@@ -31,9 +30,9 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,12 +47,6 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
   private final JLabel myRepositoryLabel;
   private final ColoredTreeCellRenderer myTextRenderer;
   @NotNull private final List<RepositoryNodeListener<T>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private final int myCheckBoxLoadingIconGapH;
-  private final int myCheckBoxLoadingIconGapV;
-  private final LoadingIcon myLoadingIcon;
-  private final int myCheckBoxWidth;
-  private final int myCheckBoxHeight;
-
 
   public RepositoryWithBranchPanel(@NotNull final Project project, @NotNull String repoName,
                                    @NotNull String sourceName, @NotNull PushTargetPanel<T> destPushTargetPanelComponent) {
@@ -74,6 +67,8 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     myArrowLabel = new JLabel(" " + UIUtil.rightArrow() + " ");
     myDestPushTargetPanelComponent = destPushTargetPanelComponent;
     myTextRenderer = new ColoredTreeCellRenderer() {
+      @RequiredDispatchThread
+      @Override
       public void customizeCellRenderer(@NotNull JTree tree,
                                         Object value,
                                         boolean selected,
@@ -101,12 +96,6 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
 
     JCheckBox emptyBorderCheckBox = new JCheckBox();
     emptyBorderCheckBox.setBorder(null);
-    Dimension size = emptyBorderCheckBox.getPreferredSize();
-    myCheckBoxWidth = size.width;
-    myCheckBoxHeight = size.height;
-    myLoadingIcon = LoadingIcon.create(myCheckBoxWidth, size.height);
-    myCheckBoxLoadingIconGapH = myCheckBoxWidth - myLoadingIcon.getIconWidth();
-    myCheckBoxLoadingIconGapV = size.height - myLoadingIcon.getIconHeight();
   }
 
   private void layoutComponents() {
@@ -145,12 +134,8 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
       RepositoryNode node = (RepositoryNode)value;
       myRepositoryCheckbox.setSelected(node.isChecked());
       myRepositoryCheckbox.setVisible(true);
-      if (myCheckBoxLoadingIconGapH < 0) {
-        myTextRenderer.append("");
-        myTextRenderer.appendFixedTextFragmentWidth(calculateRendererShiftH(myTextRenderer));
-      }
       myTextRenderer.append(getRepositoryName(), SimpleTextAttributes.GRAY_ATTRIBUTES);
-      myTextRenderer.appendFixedTextFragmentWidth(120);
+      myTextRenderer.appendTextPadding(120);
     }
     else {
       myRepositoryCheckbox.setVisible(false);
@@ -171,12 +156,23 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
 
   public void addRepoNodeListener(@NotNull RepositoryNodeListener<T> listener) {
     myListeners.add(listener);
+    myDestPushTargetPanelComponent.addTargetEditorListener(new PushTargetEditorListener() {
+
+      @Override
+      public void onTargetInEditModeChanged(@NotNull String value) {
+        for (RepositoryNodeListener listener : myListeners) {
+          listener.onTargetInEditMode(value);
+        }
+      }
+    });
   }
 
   public void fireOnChange() {
     myDestPushTargetPanelComponent.fireOnChange();
+    T target = myDestPushTargetPanelComponent.getValue();
+    if (target == null) return;
     for (RepositoryNodeListener<T> listener : myListeners) {
-      listener.onTargetChanged(myDestPushTargetPanelComponent.getValue());
+      listener.onTargetChanged(target);
     }
   }
 
@@ -194,35 +190,8 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     return myDestPushTargetPanelComponent;
   }
 
-  public LoadingIcon getLoadingIcon() {
-    return myLoadingIcon;
-  }
-
-  public int getCheckBoxWidth() {
-    return myCheckBoxWidth;
-  }
-
-
-  public int getLoadingIconAndCheckBoxGapH() {
-    return myCheckBoxLoadingIconGapH;
-  }
-
-  public int calculateRendererShiftH(@NotNull SimpleColoredComponent coloredRenderer) {
-    int borderOffset = getHBorderOffset(coloredRenderer);
-    return -myCheckBoxLoadingIconGapH + coloredRenderer.getIconTextGap() + coloredRenderer.getIpad().left + borderOffset;
-  }
-
-  public int getHBorderOffset(@NotNull SimpleColoredComponent coloredRenderer) {
-    Border border = coloredRenderer.getMyBorder();
-    return border != null ? border.getBorderInsets(coloredRenderer).left : 0;
-  }
-
-  public int getLoadingIconAndCheckBoxGapV() {
-    return myCheckBoxLoadingIconGapV;
-  }
-
-  public int getCheckBoxHeight() {
-    return myCheckBoxHeight;
+  public boolean isEditable() {
+    return myDestPushTargetPanelComponent.getValue() != null;
   }
 }
 

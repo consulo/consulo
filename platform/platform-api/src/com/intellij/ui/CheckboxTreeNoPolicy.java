@@ -16,9 +16,11 @@
 package com.intellij.ui;
 
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.ui.ThreeStateCheckBox;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -255,7 +257,7 @@ public class CheckboxTreeNoPolicy extends Tree {
 
   public static class CheckboxTreeCellRendererBase extends JPanel implements TreeCellRenderer {
     private final ColoredTreeCellRenderer myTextRenderer;
-    public final JCheckBox myCheckbox;
+    public final ThreeStateCheckBox myCheckbox;
     private final boolean myUsePartialStatusForParentNodes;
 
     public CheckboxTreeCellRendererBase(boolean opaque) {
@@ -265,8 +267,11 @@ public class CheckboxTreeNoPolicy extends Tree {
     public CheckboxTreeCellRendererBase(boolean opaque, final boolean usePartialStatusForParentNodes) {
       super(new BorderLayout());
       myUsePartialStatusForParentNodes = usePartialStatusForParentNodes;
-      myCheckbox = new JCheckBox();
+      myCheckbox = new ThreeStateCheckBox();
+      myCheckbox.setSelected(false);
+      myCheckbox.setThirdStateEnabled(false);
       myTextRenderer = new ColoredTreeCellRenderer() {
+        @RequiredDispatchThread
         @Override
         public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) { }
       };
@@ -280,6 +285,7 @@ public class CheckboxTreeNoPolicy extends Tree {
     }
 
     @Override
+    @RequiredDispatchThread
     public final Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       invalidate();
       if (value instanceof CheckedTreeNode) {
@@ -352,8 +358,8 @@ public class CheckboxTreeNoPolicy extends Tree {
     }
 
     /**
-     * @deprecated
      * @see CheckboxTreeCellRendererBase#customizeRenderer(javax.swing.JTree, Object, boolean, boolean, boolean, int, boolean)
+     * @deprecated
      */
     @Deprecated
     public void customizeCellRenderer(JTree tree,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 package com.intellij.util.ui.tree;
 
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +30,6 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -49,10 +50,11 @@ public class WideSelectionTreeUI extends BasicTreeUI {
   private boolean myWideSelection;
   private boolean myOldRepaintAllRowValue;
   private boolean myForceDontPaintLines = false;
+  private boolean mySkinny = false;
 
   @SuppressWarnings("unchecked")
   public WideSelectionTreeUI() {
-    this(true, Condition.TRUE);
+    this(true, Conditions.<Integer>alwaysTrue());
   }
 
   /**
@@ -67,65 +69,58 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     myWideSelectionCondition = wideSelectionCondition;
   }
 
-  private final MouseListener mySelectionListener = new MouseAdapter() {
-    boolean handled = false;
-    public void mousePressed(@NotNull final MouseEvent e) {
-      handled = false;
-      if (!isSelected(e)) {
-        handled = true;
-        handle(e);
-      }
-    }
+  @Override
+  public int getRightChildIndent() {
+    return isSkinny() ? 8 : super.getRightChildIndent();
+  }
 
-    @Override
-    public void mouseReleased(@NotNull final MouseEvent e) {
-      if (!handled) {
-        handle(e);
-      }
-    }
+  public boolean isSkinny() {
+    return mySkinny;
+  }
 
-    private boolean isSelected(MouseEvent e) {
-      final JTree tree = (JTree)e.getSource();
-      final int selected = tree.getClosestRowForLocation(e.getX(), e.getY());
-      final int[] rows = tree.getSelectionRows();
-      if (rows != null) {
-        for (int row : rows) {
-          if (row == selected) {
-            return true;
-          }
+  /**
+   * Setting to <code>true</code> make tree to reduce row offset
+   * @param skinny <code>true</code> to reduce row offset
+   */
+  public void setSkinny(boolean skinny) {
+    mySkinny = skinny;
+  }
+
+  @Override
+  protected MouseListener createMouseListener() {
+    return new MouseEventAdapter<MouseListener>(super.createMouseListener()) {
+      @Override
+      public void mouseDragged(MouseEvent event) {
+        JTree tree = (JTree)event.getSource();
+        Object property = tree.getClientProperty("DnD Source"); // DnDManagerImpl.SOURCE_KEY
+        if (property == null) {
+          super.mouseDragged(event); // use Swing-based DnD only if custom DnD is not set
         }
       }
 
-      return false;
-    }
-
-    private void handle(MouseEvent e) {
-      final JTree tree = (JTree)e.getSource();
-      if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger()) {
-        // if we can't stop any ongoing editing, do nothing
-        if (isEditing(tree) && tree.getInvokesStopCellEditing() && !stopEditing(tree)) {
-          return;
-        }
-
-        final TreePath pressedPath = getClosestPathForLocation(tree, e.getX(), e.getY());
-        if (pressedPath != null) {
-          Rectangle bounds = getPathBounds(tree, pressedPath);
-
-          if (e.getY() >= bounds.y + bounds.height) {
-            return;
-          }
-
-          if (bounds.contains(e.getPoint()) || isLocationInExpandControl(pressedPath, e.getX(), e.getY())) {
-            return;
-          }
-
-          if (tree.getDragEnabled() || !startEditing(pressedPath, e)) {
-            selectPathForEvent(pressedPath, e);
+      @Override
+      protected MouseEvent convert(MouseEvent event) {
+        if (!event.isConsumed() && SwingUtilities.isLeftMouseButton(event)) {
+          int x = event.getX();
+          int y = event.getY();
+          JTree tree = (JTree)event.getSource();
+          if (tree.isEnabled()) {
+            TreePath path = getClosestPathForLocation(tree, x, y);
+            if (path != null && !isLocationInExpandControl(path, x, y)) {
+              Rectangle bounds = getPathBounds(tree, path);
+              if (bounds != null && bounds.y <= y && y <= (bounds.y + bounds.height)) {
+                x = Math.max(bounds.x, Math.min(x, bounds.x + bounds.width - 1));
+                if (x != event.getX()) {
+                  event = convert(event, tree, x, y);
+                }
+              }
+            }
           }
         }
+        return event;
       }
-    }
-  };
+    };
+  }
 
   @Override
   protected void completeUIInstall() {
@@ -135,7 +130,6 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     UIManager.put("Tree.repaintWholeRow", true);
 
     tree.setShowsRootHandles(true);
-    tree.addMouseListener(mySelectionListener);
   }
 
   @Override
@@ -143,7 +137,6 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     super.uninstallUI(c);
 
     UIManager.put("Tree.repaintWholeRow", myOldRepaintAllRowValue);
-    c.removeMouseListener(mySelectionListener);
   }
 
   @Override
@@ -204,6 +197,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     }
 
     actionMap.put("collapse_or_move_up", new TreeUIAction() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         final Object source = e.getSource();
         if (source instanceof JTree) {
@@ -240,6 +234,16 @@ public class WideSelectionTreeUI extends BasicTreeUI {
   }
 
   @Override
+  protected int getRowX(int row, int depth) {
+    if (isSkinny()) {
+      int off = tree.isRootVisible() ? 8 : 0;
+      return 8 * depth + 8 + off;
+    } else {
+      return super.getRowX(row, depth);
+    }
+  }
+
+  @Override
   protected void paintHorizontalPartOfLeg(final Graphics g,
                                           final Rectangle clipBounds,
                                           final Insets insets,
@@ -249,13 +253,15 @@ public class WideSelectionTreeUI extends BasicTreeUI {
                                           final boolean isExpanded,
                                           final boolean hasBeenExpanded,
                                           final boolean isLeaf) {
-    if (!shouldPaintLines()) return;
-    if (!UIUtil.isUnderAquaBasedLookAndFeel() && !UIUtil.isUnderBuildInLaF()) {
+    if (shouldPaintLines()) {
       super.paintHorizontalPartOfLeg(g, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
     }
   }
 
   private boolean shouldPaintLines() {
+    if (UIUtil.isUnderAquaBasedLookAndFeel() || UIUtil.isUnderBuildInLaF()) {
+      return false;
+    }
     return myForceDontPaintLines || !"None".equals(tree.getClientProperty("JTree.lineStyle"));
   }
 
@@ -266,15 +272,27 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
   @Override
   protected void paintVerticalPartOfLeg(final Graphics g, final Rectangle clipBounds, final Insets insets, final TreePath path) {
-    if (!UIUtil.isUnderAquaBasedLookAndFeel() && !UIUtil.isUnderBuildInLaF() && shouldPaintLines()) {
+    if (shouldPaintLines()) {
       super.paintVerticalPartOfLeg(g, clipBounds, insets, path);
     }
   }
 
   @Override
   protected void paintVerticalLine(Graphics g, JComponent c, int x, int top, int bottom) {
-    if (!shouldPaintLines()) return;
-    super.paintVerticalLine(g, c, x, top, bottom);
+    if (shouldPaintLines()) {
+      super.paintVerticalLine(g, c, x, top, bottom);
+    }
+  }
+
+  @Override
+  protected Color getHashColor() {
+    //if (invertLineColor && !ComparatorUtil.equalsNullable(UIUtil.getTreeSelectionForeground(), UIUtil.getTreeForeground())) {
+    //  final Color c = UIUtil.getTreeSelectionForeground();
+    //  if (c != null) {
+    //    return c.darker();
+    //  }
+    //}
+    return super.getHashColor();
   }
 
   public boolean isWideSelection() {
@@ -321,9 +339,8 @@ public class WideSelectionTreeUI extends BasicTreeUI {
         }
       }
       else {
-        if (selected && (UIUtil.isUnderAquaBasedLookAndFeel() || UIUtil.isUnderBuildInLaF() || Boolean.TRUE.equals(tree.getClientProperty
-                (TREE_TABLE_TREE_KEY)))) {
-          Color bg = UIUtil.getTreeSelectionBackground(tree.hasFocus());
+        if (selected && (UIUtil.isUnderAquaBasedLookAndFeel() || UIUtil.isUnderDarkBuildInLaf() || UIUtil.isUnderIntelliJLaF())) {
+          Color bg = UIUtil.getTreeSelectionBackground(tree.hasFocus() || Boolean.TRUE.equals(tree.getClientProperty(TREE_TABLE_TREE_KEY)));
 
           if (myWideSelectionCondition.value(row)) {
             rowGraphics.setColor(bg);
@@ -346,7 +363,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
   @Override
   public void paint(Graphics g, JComponent c) {
-    if (myWideSelection && !UIUtil.isUnderAquaBasedLookAndFeel() && !UIUtil.isUnderBuildInLaF()) {
+    if (myWideSelection && !UIUtil.isUnderAquaBasedLookAndFeel() && !UIUtil.isUnderDarkBuildInLaf() && !UIUtil.isUnderIntelliJLaF()) {
       paintSelectedRows(g, ((JTree)c));
     }
     if (myWideSelection) {

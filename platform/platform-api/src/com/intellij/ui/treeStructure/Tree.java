@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,12 @@ import com.intellij.ide.util.treeView.*;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.ui.AsyncProcessIcon;
-import com.intellij.util.ui.ComponentWithEmptyText;
-import com.intellij.util.ui.StatusText;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -122,16 +120,6 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     return false;
   }
 
-  /**
-   * Will be removed in version 13
-   *
-   * @deprecated use isWideSelection
-   * @see #isWideSelection()
-   */
-  protected boolean isMacWideSelection() {
-    return isWideSelection();
-  }
-
   protected boolean isWideSelection() {
     return true;
   }
@@ -143,7 +131,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
   @SuppressWarnings("unchecked")
   @NotNull
   protected Condition<Integer> getWideSelectionBackgroundCondition() {
-    return Condition.TRUE;
+    return Conditions.alwaysTrue();
   }
 
   @Override
@@ -219,7 +207,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
       for (TreePath each : paths) {
         final Rectangle selection = getPathBounds(each);
         if (selection != null && (g.getClipBounds().intersects(selection) || g.getClipBounds().contains(selection))) {
-          if (myBusy) {
+          if (myBusy && myBusyIcon != null) {
             Rectangle busyIconBounds = myBusyIcon.getBounds();
             if (selection.contains(busyIconBounds) || selection.intersects(busyIconBounds)) {
               canHoldSelection = false;
@@ -283,7 +271,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
     if (myBusyIcon != null) {
       if (myBusy) {
-        if (hasFocus()) {
+        if (shouldShowBusyIconIfNeeded()) {
           myBusyIcon.resume();
           myBusyIcon.setToolTipText("Update is in progress. Click to cancel");
         }
@@ -303,6 +291,11 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
       }
       updateBusyIconLocation();
     }
+  }
+
+  protected boolean shouldShowBusyIconIfNeeded() {
+    // https://youtrack.jetbrains.com/issue/IDEA-101422 "Rotating wait symbol in Project list whenever typing"
+    return hasFocus();
   }
 
   protected boolean paintNodes() {
@@ -408,8 +401,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
               (e.getX() >= bounds.x + bounds.width ||
                e.getX() < bounds.x && !isLocationInExpandControl(path, e.getX(), e.getY()))) {
             int newX = bounds.x + bounds.width - 2;
-            e2 = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), newX, e.getY(), e.getClickCount(),
-                                e.isPopupTrigger(), e.getButton());
+            e2 = MouseEventAdapter.convert(e, e.getComponent(), newX, e.getY());
           }
         }
       }
@@ -429,7 +421,6 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
       }
       final Method method = ReflectionUtil.getDeclaredMethod(aClass, "isLocationInExpandControl", TreePath.class, int.class, int.class);
       if (method != null) {
-        method.setAccessible(true);
         return (Boolean)method.invoke(ui, path, x, y);
       }
     }
@@ -655,7 +646,6 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
     public void holdSelection() {
       myHeldSelection = getSelectionPaths();
-      clearSelection();
     }
 
     public void unholdSelection() {
@@ -669,8 +659,8 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
   private class MyMouseListener extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent mouseevent) {
-      if (!SwingUtilities.isLeftMouseButton(mouseevent) &&
-          (SwingUtilities.isRightMouseButton(mouseevent) || SwingUtilities.isMiddleMouseButton(mouseevent))) {
+      if (!JBSwingUtilities.isLeftMouseButton(mouseevent) &&
+          (JBSwingUtilities.isRightMouseButton(mouseevent) || JBSwingUtilities.isMiddleMouseButton(mouseevent))) {
         TreePath treepath = getPathForLocation(mouseevent.getX(), mouseevent.getY());
         if (treepath != null) {
           if (getSelectionModel().getSelectionMode() != TreeSelectionModel.SINGLE_TREE_SELECTION) {
@@ -705,7 +695,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     if (!(ui instanceof BasicTreeUI)) return false;
     BasicTreeUI treeUI = (BasicTreeUI)ui;
     if (!treeModel.isLeaf(path.getLastPathComponent())) {
-      Insets insets = Tree.this.getInsets();
+      Insets insets = this.getInsets();
       int boxWidth = treeUI.getExpandedIcon() != null ? treeUI.getExpandedIcon().getIconWidth() : 8;
       int boxLeftX = treeUI.getLeftChildIndent() + treeUI.getRightChildIndent() * (path.getPathCount() - 1);
       if (getComponentOrientation().isLeftToRight()) {
@@ -753,6 +743,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     UIUtil.setLineStyleAngled(this);
   }
 
+  @NotNull
   public <T> T[] getSelectedNodes(Class<T> nodeType, @Nullable NodeFilter<T> filter) {
     TreePath[] paths = getSelectionPaths();
     if (paths == null) return (T[])Array.newInstance(nodeType, 0);
@@ -784,7 +775,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     for (TreePath eachPath : selection) {
       final Object eachNode = eachPath.getLastPathComponent();
       final Component c =
-        getCellRenderer().getTreeCellRendererComponent(this, eachNode, false, false, false, getRowForPath(eachPath), false);
+              getCellRenderer().getTreeCellRendererComponent(this, eachNode, false, false, false, getRowForPath(eachPath), false);
 
       if (c != null) {
         if (nodesText.length() > 0) {
@@ -826,5 +817,36 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
   public void setHorizontalAutoScrollingEnabled(boolean enabled) {
     myHorizontalAutoScrolling = enabled;
+  }
+
+  /**
+   * Returns the deepest visible component
+   * that will be rendered at the specified location.
+   *
+   * @param x horizontal location in the tree
+   * @param y vertical location in the tree
+   * @return the deepest visible component of the renderer
+   */
+  @Nullable
+  public Component getDeepestRendererComponentAt(int x, int y) {
+    int row = getRowForLocation(x, y);
+    if (row >= 0) {
+      TreeCellRenderer renderer = getCellRenderer();
+      if (renderer != null) {
+        TreePath path = getPathForRow(row);
+        Object node = path.getLastPathComponent();
+        Component component = renderer.getTreeCellRendererComponent(this, node,
+                                                                    isRowSelected(row),
+                                                                    isExpanded(row),
+                                                                    getModel().isLeaf(node),
+                                                                    row, true);
+        Rectangle bounds = getPathBounds(path);
+        if (bounds != null) {
+          component.setBounds(bounds); // initialize size to layout complex renderer
+          return SwingUtilities.getDeepestComponentAt(component, x - bounds.x, y - bounds.y);
+        }
+      }
+    }
+    return null;
   }
 }

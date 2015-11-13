@@ -28,7 +28,9 @@ import com.intellij.openapi.vcs.VcsListener;
 import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,6 +43,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class VcsRepositoryManager extends AbstractProjectComponent implements Disposable, VcsListener {
 
+  public static final Topic<VcsRepositoryMappingListener> VCS_REPOSITORY_MAPPING_UPDATED =
+          Topic.create("VCS repository mapping updated", VcsRepositoryMappingListener.class);
+
   @NotNull private final ProjectLevelVcsManager myVcsManager;
 
   @NotNull private final ReentrantReadWriteLock REPO_LOCK = new ReentrantReadWriteLock();
@@ -52,17 +57,24 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
 
   private volatile boolean myDisposed;
 
+  @NotNull
+  public static VcsRepositoryManager getInstance(@NotNull Project project) {
+    return ObjectUtils.assertNotNull(project.getComponent(VcsRepositoryManager.class));
+  }
+
   public VcsRepositoryManager(@NotNull Project project, @NotNull ProjectLevelVcsManager vcsManager) {
     super(project);
     myVcsManager = vcsManager;
     myRepositoryCreators = Arrays.asList(Extensions.getExtensions(VcsRepositoryCreator.EXTENSION_POINT_NAME, project));
   }
 
+  @Override
   public void initComponent() {
     Disposer.register(myProject, this);
     myProject.getMessageBus().connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, this);
   }
 
+  @Override
   public void dispose() {
     myDisposed = true;
     try {
@@ -74,6 +86,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     }
   }
 
+  @Override
   public void directoryMappingChanged() {
     checkAndUpdateRepositoriesCollection(null);
   }
@@ -85,7 +98,17 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
   }
 
   @Nullable
+  public Repository getRepositoryForRootQuick(@Nullable VirtualFile root) {
+    return getRepositoryForRoot(root, false);
+  }
+
+  @Nullable
   public Repository getRepositoryForRoot(@Nullable VirtualFile root) {
+    return getRepositoryForRoot(root, true);
+  }
+
+  @Nullable
+  private Repository getRepositoryForRoot(@Nullable VirtualFile root, boolean updateIfNeeded) {
     if (root == null) return null;
     Repository result;
     try {
@@ -99,9 +122,9 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     finally {
       REPO_LOCK.readLock().unlock();
     }
-    // if we didn't find appropriate repository, request update mappings and try again
+    // if we didn't find appropriate repository, request update mappings if needed and try again
     // may be this should not be called  from several places (for example: branch widget updating from edt).
-    if (result == null && ArrayUtil.contains(root, myVcsManager.getAllVersionedRoots())) {
+    if (updateIfNeeded && result == null && ArrayUtil.contains(root, myVcsManager.getAllVersionedRoots())) {
       checkAndUpdateRepositoriesCollection(root);
       try {
         REPO_LOCK.readLock().lock();
@@ -186,6 +209,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
       finally {
         REPO_LOCK.writeLock().unlock();
       }
+      myProject.getMessageBus().syncPublisher(VCS_REPOSITORY_MAPPING_UPDATED).mappingChanged();
     }
     finally {
       MODIFY_LOCK.unlock();

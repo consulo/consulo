@@ -45,14 +45,10 @@ public class SingleRepositoryNode extends RepositoryNode {
 
   @Override
   public void render(@NotNull ColoredTreeCellRenderer renderer) {
-    if (myLoading.get()) {
-      renderer.setIcon(myRepositoryPanel.getLoadingIcon());
-      renderer.setIconOnTheRight(true);
-    }
     renderer.append(" ");
     renderer.append(myRepositoryPanel.getSourceName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     renderer.append(myRepositoryPanel.getArrow(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     PushTargetPanel pushTargetPanel = myRepositoryPanel.getTargetPanel();
-    pushTargetPanel.render(renderer, renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)), true);
+    pushTargetPanel.render(renderer, renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)), true, null);
   }
 }

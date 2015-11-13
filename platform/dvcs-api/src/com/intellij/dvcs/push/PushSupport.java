@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class PushSupport<Repo extends Repository, Source extends PushSource, Target extends PushTarget> {
 
   public static final ExtensionPointName<PushSupport<? extends Repository, ? extends PushSource, ? extends PushTarget>> PUSH_SUPPORT_EP =
-    ExtensionPointName.create("com.intellij.pushSupport");
+          ExtensionPointName.create("com.intellij.pushSupport");
 
   @NotNull
   public abstract AbstractVcs getVcs();
@@ -89,4 +89,7 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
 
   public abstract void saveSilentForcePushTarget(@NotNull Target target);
 
+  public boolean mayChangeTargetsSync() {
+    return false;
+  }
 }
