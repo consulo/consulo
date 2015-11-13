@@ -688,28 +688,31 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       });
     }
 
-    void setContent(JComponent component, ConfigurationException e, @NotNull Configurable configurable) {
-      if (component != null && mySimpleContent == component && myException == e) return;
+    void setContent(final JComponent component, ConfigurationException e, @NotNull Configurable configurable) {
+      if (component != null && mySimpleContent == component && myException == e) {
+        return;
+      }
 
       removeAll();
 
       if (component != null) {
         boolean noMargin = ConfigurableWrapper.isNoMargin(configurable);
+        JComponent wrapComponent = component;
         if(!noMargin) {
-          component = JBUI.Panels.simplePanel().addToCenter(component);
-          component.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
+          wrapComponent = JBUI.Panels.simplePanel().addToCenter(wrapComponent);
+          wrapComponent.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
         }
 
 
         boolean noScroll = ConfigurableWrapper.isNoScroll(configurable);
         if (!noScroll) {
-          JScrollPane scroll = ScrollPaneFactory.createScrollPane(component, true);
+          JScrollPane scroll = ScrollPaneFactory.createScrollPane(wrapComponent, true);
           scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
           scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
           add(scroll, BorderLayout.CENTER);
         }
         else {
-          add(component, BorderLayout.CENTER);
+          add(wrapComponent, BorderLayout.CENTER);
         }
       }
 
