@@ -15,17 +15,48 @@
  */
 package org.mustbe.buildInWebServer.api;
 
+import com.google.gson.Gson;
+import com.intellij.openapi.vfs.CharsetToolkit;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.ide.HttpRequestHandler;
+import org.jetbrains.io.Responses;
+
+import java.io.IOException;
 
 /**
  * @author VISTALL
  * @since 27.10.2015
  */
-public abstract class JsonBaseRequestHandler
-        extends HttpRequestHandler {
+public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
+  protected static final class JsonResponse {
+    public boolean success;
+    public String message;
+    public Object data;
+
+    private JsonResponse() {
+    }
+
+    public static JsonResponse asSuccess(@Nullable Object data) {
+      JsonResponse response = new JsonResponse();
+      response.success = true;
+      response.message = null;
+      response.data = data;
+      return response;
+    }
+
+    public static JsonResponse asError(@NotNull String message) {
+      JsonResponse response = new JsonResponse();
+      response.success = false;
+      response.message = message;
+      return response;
+    }
+  }
 
   private String myApiUrl;
 
@@ -36,6 +67,17 @@ public abstract class JsonBaseRequestHandler
   @Override
   public boolean isSupported(HttpRequest request) {
     return getMethod() == request.getMethod() && myApiUrl.equals(request.getUri());
+  }
+
+  protected boolean writeResponse(@NotNull Object responseObject, HttpRequest request, ChannelHandlerContext context) throws IOException {
+    HttpResponse response = Responses.create("application/json; charset=utf-8");
+
+    String jsonResponse = new Gson().toJson(responseObject);
+
+    response.setContent(ChannelBuffers.copiedBuffer(jsonResponse, CharsetToolkit.UTF8_CHARSET));
+
+    Responses.send(response, request, context);
+    return true;
   }
 
   @NotNull

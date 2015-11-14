@@ -18,6 +18,7 @@ package org.mustbe.buildInWebServer.api;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.BitUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -28,14 +29,7 @@ import java.awt.*;
  * @since 27.10.2015
  */
 public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
-  public RequestFocusHttpRequestHandler() {
-    super("requestFocus");
-  }
-
-  @Nullable
-  @Override
-  public JsonResponse handle() {
-    final IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
+  public static boolean activateFrame(@Nullable final IdeFrame frame) {
     if (frame instanceof Frame) {
       Runnable runnable = new Runnable() {
         @Override
@@ -43,7 +37,7 @@ public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
           Frame awtFrame = (Frame)frame;
 
           int extendedState = awtFrame.getExtendedState();
-          if(BitUtil.isSet(extendedState, Frame.ICONIFIED)) {
+          if (BitUtil.isSet(extendedState, Frame.ICONIFIED)) {
             extendedState = BitUtil.set(extendedState, Frame.ICONIFIED, false);
             awtFrame.setExtendedState(extendedState);
           }
@@ -51,12 +45,24 @@ public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
           // fixme [vistall] dirty hack - show frame on top
           awtFrame.setAlwaysOnTop(true);
           awtFrame.setAlwaysOnTop(false);
+          awtFrame.requestFocus();
         }
       };
       //noinspection SSBasedInspection
       SwingUtilities.invokeLater(runnable);
-      return JsonResponse.asSuccess(null);
+      return true;
     }
-    return JsonResponse.asError("No Frame");
+    return false;
+  }
+
+  public RequestFocusHttpRequestHandler() {
+    super("requestFocus");
+  }
+
+  @NotNull
+  @Override
+  public JsonResponse handle() {
+    final IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
+    return activateFrame(frame) ? JsonResponse.asSuccess(null) : JsonResponse.asError("No Frame");
   }
 }

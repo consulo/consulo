@@ -15,19 +15,12 @@
  */
 package org.mustbe.buildInWebServer.api;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import org.consulo.lombok.annotations.LazyInstance;
-import org.jboss.netty.buffer.ChannelBuffers;
+import com.intellij.util.ExceptionUtil;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.QueryStringDecoder;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.io.Responses;
 
 import java.io.IOException;
 
@@ -36,35 +29,12 @@ import java.io.IOException;
  * @since 27.10.2015
  */
 public abstract class JsonGetRequestHandler extends JsonBaseRequestHandler {
-  protected static final class JsonResponse {
-    public boolean success;
-    public String message;
-    public Object data;
-
-    private JsonResponse() {
-    }
-
-    public static JsonResponse asSuccess(@Nullable Object data) {
-      JsonResponse response = new JsonResponse();
-      response.success = true;
-      response.message = null;
-      response.data = data;
-      return response;
-    }
-
-    public static JsonResponse asError(@NotNull String message) {
-      JsonResponse response = new JsonResponse();
-      response.success = false;
-      response.message = message;
-      return response;
-    }
-  }
 
   protected JsonGetRequestHandler(@NotNull String apiUrl) {
     super(apiUrl);
   }
 
-  @Nullable
+  @NotNull
   public abstract JsonResponse handle();
 
   @NotNull
@@ -75,24 +45,13 @@ public abstract class JsonGetRequestHandler extends JsonBaseRequestHandler {
 
   @Override
   public boolean process(QueryStringDecoder urlDecoder, HttpRequest request, ChannelHandlerContext context) throws IOException {
-    Object handle = handle();
-    if (handle == null) {
-      return false;
+    Object handle = null;
+    try {
+      handle = handle();
     }
-
-    HttpResponse response = Responses.create("application/json; charset=utf-8");
-
-    String jsonResponse = buildGson().toJson(handle);
-
-    response.setContent(ChannelBuffers.copiedBuffer(jsonResponse, CharsetToolkit.UTF8_CHARSET));
-
-    Responses.send(response, request, context);
-    return true;
-  }
-
-  @NotNull
-  @LazyInstance
-  private Gson buildGson() {
-    return new GsonBuilder().setPrettyPrinting().create();
+    catch (Exception e) {
+      handle = JsonResponse.asError(ExceptionUtil.getThrowableText(e));
+    }
+    return writeResponse(handle, request, context);
   }
 }

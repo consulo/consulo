@@ -15,8 +15,16 @@
  */
 package org.mustbe.buildInWebServer.api;
 
+import com.google.gson.Gson;
+import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.util.ExceptionUtil;
+import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.HttpMethod;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.QueryStringDecoder;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 
 /**
  * @author VISTALL
@@ -24,14 +32,10 @@ import org.jetbrains.annotations.NotNull;
  * <p/>
  * draft
  */
-public abstract class JsonPostRequestHandler<Request extends JsonPostRequestHandler.BaseRequest> extends JsonBaseRequestHandler {
-  public static class BaseRequest {
-
-  }
-
+public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHandler {
   private Class<Request> myRequestClass;
 
-  protected JsonPostRequestHandler(String apiUrl, Class<Request> requestClass) {
+  protected JsonPostRequestHandler(@NotNull String apiUrl, @NotNull Class<Request> requestClass) {
     super(apiUrl);
     myRequestClass = requestClass;
   }
@@ -40,5 +44,24 @@ public abstract class JsonPostRequestHandler<Request extends JsonPostRequestHand
   @Override
   protected HttpMethod getMethod() {
     return HttpMethod.POST;
+  }
+
+  @NotNull
+  public abstract JsonResponse handle(@NotNull Request request);
+
+  @Override
+  public boolean process(QueryStringDecoder urlDecoder, HttpRequest request, ChannelHandlerContext context) throws IOException {
+    Object handle = null;
+    try {
+      String json = request.getContent().toString(CharsetToolkit.UTF8_CHARSET);
+
+      final Request body = new Gson().fromJson(json, myRequestClass);
+
+      handle = handle(body);
+    }
+    catch (Exception e) {
+      handle = JsonResponse.asError(ExceptionUtil.getThrowableText(e));
+    }
+    return writeResponse(handle, request, context);
   }
 }
