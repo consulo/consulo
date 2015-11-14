@@ -6607,6 +6607,11 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     }
 
     @Override
+    public int getEditorFontSize() {
+      return getEditorFontSize(true);
+    }
+
+    @Override
     public int getEditorFontSize(boolean scale) {
       int fontSize = myFontSize == -1 ? getDelegate().getEditorFontSize(false) : myFontSize;
       return scale ? JBUI.scale(fontSize) : fontSize;
