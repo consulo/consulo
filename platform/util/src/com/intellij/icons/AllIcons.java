@@ -730,6 +730,7 @@ public class AllIcons {
     public static final Icon KeymapTools = IconLoader.getIcon("/nodes/keymapTools.png"); // 16x16
     public static final Icon Locked = IconLoader.getIcon("/nodes/locked.png"); // 16x16
     public static final Icon Method = IconLoader.getIcon("/nodes/method.png"); // 16x16
+    public static final Icon MethodReference = IconLoader.getIcon("/nodes/methodReference.png"); // 16x16
     public static final Icon Module = IconLoader.getIcon("/nodes/Module.png"); // 16x16
     public static final Icon ModuleGroup = IconLoader.getIcon("/nodes/moduleGroup.png"); // 16x16
     public static final Icon NewFolder = IconLoader.getIcon("/nodes/newFolder.png"); // 16x16
