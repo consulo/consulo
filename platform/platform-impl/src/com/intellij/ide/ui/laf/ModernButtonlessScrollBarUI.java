@@ -42,32 +42,6 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     return new ModernButtonlessScrollBarUI();
   }
 
-  public static JBColor getGradientLightColor() {
-    return new JBColor(Gray._251, Gray._95);
-  }
-
-  public static JBColor getGradientDarkColor() {
-    return new JBColor(Gray._251, Gray._80);
-  }
-
-  private static JBColor getGradientThumbBorderColor() {
-    return new JBColor(Gray._201, Gray._85);
-  }
-
-  public static JBColor getTrackBackground() {
-    return new JBColor(LightColors.SLIGHTLY_GRAY, UIUtil.getListBackground());
-  }
-
-  public static JBColor getTrackBorderColor() {
-    return new JBColor(Gray._230, UIUtil.getListBackground());
-  }
-
-  private static final BasicStroke BORDER_STROKE = new BasicStroke();
-
-  private static int getAnimationColorShift() {
-    return 20;
-  }
-
   private static Factory<JButton> EMPTY_BUTTON_FACTORY = new Factory<JButton>() {
     @Override
     public JButton create() {
@@ -136,16 +110,13 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
   public int getDecrementButtonHeight() {
     return decrButton.getHeight();
   }
+
   public int getIncrementButtonHeight() {
     return incrButton.getHeight();
   }
 
   private void repaint() {
     scrollbar.repaint(((ModernButtonlessScrollBarUI)scrollbar.getUI()).getThumbBounds());
-  }
-
-  public static ModernButtonlessScrollBarUI createNormal() {
-    return new ModernButtonlessScrollBarUI();
   }
 
   @Override
@@ -199,16 +170,8 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
 
   @Override
   protected void paintTrack(Graphics g, JComponent c, Rectangle bounds) {
-    g.setColor(getTrackBackground());
+    g.setColor(new JBColor(LightColors.SLIGHTLY_GRAY, UIUtil.getListBackground()));
     g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
-    g.setColor(getTrackBorderColor());
-    if (isVertical()) {
-      g.drawLine(bounds.x, bounds.y, bounds.x, bounds.y + bounds.height);
-    }
-    else {
-      g.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y);
-    }
   }
 
   @Override
@@ -253,36 +216,21 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     int hGap = 0;
     int vGap = 0;
 
-    int w = adjustThumbWidth(thumbBounds.width - hGap * 2);
+    int w = thumbBounds.width - hGap * 2;
     int h = thumbBounds.height - vGap * 2;
 
     if (vertical) {
-      h -= 1;
+      vGap -= 1;
     }
     else {
-      w -= 1;
-      h -= 1;
+     hGap -= 1;
     }
 
-    final Paint paint;
-    final Color start = adjustColor(getGradientLightColor());
-    final Color end = adjustColor(getGradientDarkColor());
+    g.setColor(adjustColor(new JBColor(Gray._251, Gray._80)));
+    g.fillRect(hGap, vGap, w, h);
 
-    if (vertical) {
-      paint = UIUtil.getGradientPaint(1, 0, start, w + 1, 0, end);
-    }
-    else {
-      paint = UIUtil.getGradientPaint(0, 1, start, 0, h + 1, end);
-    }
-
-    g.setPaint(paint);
-    g.fillRect(hGap + 1, vGap + 1, w - 1, h - 1);
-
-    final Stroke stroke = g.getStroke();
-    g.setStroke(BORDER_STROKE);
-    g.setColor(getGradientThumbBorderColor());
+    g.setColor(new JBColor(Gray._201, Gray._85));
     g.drawRect(hGap, vGap, w, h);
-    g.setStroke(stroke);
   }
 
   @Override
@@ -290,14 +238,10 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     return true;
   }
 
-  protected int adjustThumbWidth(int width) {
-    return width;
-  }
-
   protected Color adjustColor(Color c) {
     if (!myMouseIsOverThumb) return c;
-    final int sign = UIUtil.isUnderDarcula() ? -1 : 1;
-    return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * getAnimationColorShift())));
+    final int sign = UIUtil.isUnderDarkBuildInLaf() ? -1 : 1;
+    return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * 20)));
   }
 
   private boolean isVertical() {

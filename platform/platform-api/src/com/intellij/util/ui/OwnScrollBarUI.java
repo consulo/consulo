@@ -27,9 +27,5 @@ import javax.swing.*;
  * This is marker class
  */
 public interface OwnScrollBarUI {
-  int getIncrementButtonHeight();
-
-  int getDecrementButtonHeight();
-
   void setIncreaseButtonFactory(@NotNull Factory<JButton> buttonFactory);
 }
