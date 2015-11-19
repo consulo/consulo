@@ -23,6 +23,7 @@ import com.intellij.codeInsight.hint.TooltipGroup;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.ui.UISettings;
@@ -937,7 +938,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
     myScrollPane.setViewportView(myEditorComponent);
     //myScrollPane.setBorder(null);
-    myScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    myScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
     myScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     myScrollPane.setRowHeaderView(myGutterComponent);
@@ -5307,16 +5308,10 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
   class MyScrollBar extends JBScrollBar implements IdeGlassPane.TopComponent {
     @NonNls private static final String APPLE_LAF_AQUA_SCROLL_BAR_UI_CLASS = "apple.laf.AquaScrollBarUI";
-    private ScrollBarUI myPersistentUI;
     private Consumer<Graphics> myRepaintCallback;
 
     private MyScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
       super(orientation);
-    }
-
-    void setPersistentUI(ScrollBarUI ui) {
-      myPersistentUI = ui;
-      setUI(ui);
     }
 
     @Override
@@ -5326,8 +5321,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
     @Override
     public void setUI(ScrollBarUI ui) {
-      if (myPersistentUI == null) myPersistentUI = ui;
-      super.setUI(myPersistentUI);
+      super.setUI(ui);
       setOpaque(false);
     }
 
@@ -5351,23 +5345,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
      * value.
      */
     int getDecScrollButtonHeight() {
-      ScrollBarUI barUI = getUI();
-      Insets insets = getInsets();
-      int top = Math.max(0, insets.top);
-      if (barUI instanceof ButtonlessScrollBarUI) {
-        return top + ((ButtonlessScrollBarUI)barUI).getDecrementButtonHeight();
-      }
-      if (barUI instanceof BasicScrollBarUI) {
-        try {
-          JButton decrButtonValue = (JButton)decrButtonField.get(barUI);
-          LOG.assertTrue(decrButtonValue != null);
-          return top + decrButtonValue.getHeight();
-        }
-        catch (Exception exc) {
-          throw new IllegalStateException(exc);
-        }
-      }
-      return top + 15;
+      return AllIcons.General.InspectionsOK.getIconHeight() + 2;
     }
 
     /**
@@ -5377,25 +5355,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
      * value.
      */
     int getIncScrollButtonHeight() {
-      ScrollBarUI barUI = getUI();
-      Insets insets = getInsets();
-      if (barUI instanceof ButtonlessScrollBarUI) {
-        return insets.top + ((ButtonlessScrollBarUI)barUI).getIncrementButtonHeight();
-      }
-      if (barUI instanceof BasicScrollBarUI) {
-        try {
-          JButton incrButtonValue = (JButton)incrButtonField.get(barUI);
-          LOG.assertTrue(incrButtonValue != null);
-          return insets.bottom + incrButtonValue.getHeight();
-        }
-        catch (Exception exc) {
-          throw new IllegalStateException(exc);
-        }
-      }
-      if (APPLE_LAF_AQUA_SCROLL_BAR_UI_CLASS.equals(barUI.getClass().getName())) {
-        return insets.bottom + 30;
-      }
-      return insets.bottom + 15;
+      return AllIcons.General.InspectionsOK.getIconHeight() + 2;
     }
 
     @Override
@@ -5543,6 +5503,12 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       myScrollPane.setLayout(new ScrollPaneLayout());
     }
     myScrollingModel.scrollHorizontally(currentHorOffset);
+    boolean errorStripeVisible = myMarkupModel.isErrorStripeVisible();
+    // move error panel to correct side
+    if(errorStripeVisible) {
+      myMarkupModel.setErrorStripeVisible(false);
+      myMarkupModel.setErrorStripeVisible(true);
+    }
   }
 
   @Override
@@ -5569,6 +5535,10 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
   @NotNull
   MyScrollBar getVerticalScrollBar() {
     return myVerticalScrollBar;
+  }
+
+  JPanel getPanel() {
+    return myPanel;
   }
 
   @NotNull

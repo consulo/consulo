@@ -119,7 +119,7 @@ public class HighlightDisplayLevel {
   }
 
   public static int getEmptyIconDim() {
-    return JBUI.scaleIconSize(12);
+    return JBUI.scaleIconSize(14);
   }
 
   public static Icon createBoxIcon(@NotNull TextAttributesKey key) {
@@ -160,7 +160,7 @@ public class HighlightDisplayLevel {
     private final TextAttributesKey myKey;
 
     public SingleColorIcon(final TextAttributesKey key) {
-      super(getEmptyIconDim(), JBColor.GRAY, true);
+      super(getEmptyIconDim(), JBColor.GRAY, false);
       myKey = key;
     }
 

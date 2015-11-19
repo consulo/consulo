@@ -218,7 +218,7 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
   }
 
   protected int getThickness() {
-    return JBUI.scale(13);
+    return JBUI.scale(10);
   }
 
   @Override
