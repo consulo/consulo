@@ -124,7 +124,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   void recalcEditorDimensions() {
     int scrollBarHeight = myEditor.getPanel().getHeight();
 
-    myEditorScrollbarTop = 0;
+    myEditorScrollbarTop = myErrorStripeRenderer == null ? 0 : myErrorStripeRenderer.getSquareSize();
     int editorScrollbarBottom = 0;
     myEditorTargetHeight = scrollBarHeight - myEditorScrollbarTop - editorScrollbarBottom;
     myEditorSourceHeight = myEditor.getPreferredHeight();
