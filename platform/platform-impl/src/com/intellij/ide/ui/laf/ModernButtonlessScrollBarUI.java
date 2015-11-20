@@ -90,7 +90,8 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
   public void layoutContainer(Container scrollbarContainer) {
     try {
       super.layoutContainer(scrollbarContainer);
-    } catch (NullPointerException ignore) {
+    }
+    catch (NullPointerException ignore) {
       //installUI is not performed yet or uninstallUI has set almost every field to null. Just ignore it //IDEA-89674
     }
   }
@@ -207,23 +208,43 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     }
 
     g.translate(thumbBounds.x, thumbBounds.y);
-    paintMaxiThumb((Graphics2D)g, thumbBounds);
+    paintMaxiThumb((Graphics2D)g, c, thumbBounds);
     g.translate(-thumbBounds.x, -thumbBounds.y);
   }
 
-  private void paintMaxiThumb(Graphics2D g, Rectangle thumbBounds) {
+  @Override
+  protected void setThumbBounds(int x, int y, int width, int height) {
+    if ((thumbRect.x == x) &&
+        (thumbRect.y == y) &&
+        (thumbRect.width == width) &&
+        (thumbRect.height == height)) {
+      return;
+    }
+
+    int minX = Math.min(x, thumbRect.x);
+    int minY = Math.min(y, thumbRect.y);
+    int maxX = Math.max(x + width, thumbRect.x + thumbRect.width);
+    int maxY = Math.max(y + height, thumbRect.y + thumbRect.height);
+
+    thumbRect.setBounds(x, y, width, height);
+    scrollbar.repaint(minX - JBUI.scale(1), minY - JBUI.scale(1), (maxX - minX) + JBUI.scale(2), (maxY - minY) + JBUI.scale(2));
+  }
+
+  private void paintMaxiThumb(Graphics2D g, JComponent c, Rectangle thumbBounds) {
     final boolean vertical = isVertical();
     int hGap = 0;
     int vGap = 0;
 
-    int w = thumbBounds.width - hGap * 2;
-    int h = thumbBounds.height - vGap * 2;
+    int w = thumbBounds.width;
+    int h = thumbBounds.height;
 
     if (vertical) {
-      vGap -= 1;
+      vGap -= JBUI.scale(1);
+      h += JBUI.scale(1);
     }
     else {
-     hGap -= 1;
+      hGap -= JBUI.scale(1);
+      w += JBUI.scale(1);
     }
 
     g.setColor(adjustColor(new JBColor(Gray._251, Gray._80)));
