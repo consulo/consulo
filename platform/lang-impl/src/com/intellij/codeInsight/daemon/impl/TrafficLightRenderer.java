@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
+import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
@@ -55,6 +56,7 @@ import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -126,6 +128,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     errorCount = newErrors;
   }
 
+  @RequiredDispatchThread
   static void setOrRefreshErrorStripeRenderer(@NotNull EditorMarkupModel editorMarkupModel,
                                               @NotNull Project project,
                                               @NotNull Document document,
@@ -273,16 +276,15 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   @Override
-  public String getTooltipMessage() {
-    // see TrafficProgressPanel
-    return null;
+  public void paint(Component c, Graphics g, Point point) {
+    DaemonCodeAnalyzerStatus status = getDaemonCodeAnalyzerStatus(mySeverityRegistrar);
+    Icon icon = getIcon(status);
+    icon.paintIcon(c, g, point.x, point.y);
   }
 
   @Override
-  public void paint(Component c, Graphics g, Rectangle r) {
-    DaemonCodeAnalyzerStatus status = getDaemonCodeAnalyzerStatus(mySeverityRegistrar);
-    Icon icon = getIcon(status);
-    icon.paintIcon(c, g, r.x, r.y);
+  public int getSquareSize() {
+    return HighlightDisplayLevel.getEmptyIconDim();
   }
 
   @NotNull

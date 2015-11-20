@@ -61,6 +61,7 @@ import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,15 +77,6 @@ import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
-  private static int getErrorIconWidth() {
-    return JBUI.scale(12);
-  }
-
-
-  private static int getThinGap() {
-    return JBUI.scale(4);
-  }
-
   private static final TooltipGroup ERROR_STRIPE_TOOLTIP_GROUP = new TooltipGroup("ERROR_STRIPE_TOOLTIP_GROUP", 0);
   private final EditorImpl myEditor;
   // null renderer means we should not show traffic light icon
@@ -130,11 +122,10 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   void recalcEditorDimensions() {
-    EditorImpl.MyScrollBar scrollBar = myEditor.getVerticalScrollBar();
     int scrollBarHeight = myEditor.getPanel().getHeight();
 
-    myEditorScrollbarTop = scrollBar.getDecScrollButtonHeight()/* + 1*/;
-    int editorScrollbarBottom = scrollBar.getIncScrollButtonHeight();
+    myEditorScrollbarTop = 0;
+    int editorScrollbarBottom = 0;
     myEditorTargetHeight = scrollBarHeight - myEditorScrollbarTop - editorScrollbarBottom;
     myEditorSourceHeight = myEditor.getPreferredHeight();
 
@@ -281,6 +272,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     });
   }
 
+  @RequiredDispatchThread
   private void doClick(final MouseEvent e) {
     RangeHighlighter marker = getNearestRangeHighlighter(e);
     int offset;
@@ -346,6 +338,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     return myErrorPanel;
   }
 
+  @RequiredDispatchThread
   @Override
   public void setErrorPanelPopupHandler(@NotNull PopupHandler handler) {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -372,6 +365,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     return myEditor;
   }
 
+  @RequiredDispatchThread
   @Override
   public void setErrorStripeRenderer(ErrorStripeRenderer renderer) {
     assertIsDispatchThread();
@@ -385,6 +379,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     repaintVerticalScrollBar();
   }
 
+  @RequiredDispatchThread
   private static void assertIsDispatchThread() {
     ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
   }
@@ -453,7 +448,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
     @Override
     public Dimension getPreferredSize() {
-      return new Dimension(15, 0);
+      return JBUI.size(15, 0);
     }
 
     @Override
@@ -494,9 +489,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       UIUtil.drawImage(g, myCachedTrack, null, 0, 0);
 
       if (myErrorStripeRenderer != null) {
-        EditorImpl.MyScrollBar scrollBar = myEditor.getVerticalScrollBar();
-        int top = scrollBar.getDecScrollButtonHeight();
-        myErrorStripeRenderer.paint(this, g, new Rectangle(JBUI.scale(1), 0, getWidth(), top));
+        myErrorStripeRenderer.paint(this, g, new Point(JBUI.scale(1), 0));
       }
     }
 
@@ -678,9 +671,11 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
     // mouse events
     @Override
+    @RequiredDispatchThread
     public void mouseClicked(final MouseEvent e) {
       CommandProcessor.getInstance().executeCommand(myEditor.getProject(), new Runnable() {
         @Override
+        @RequiredDispatchThread
         public void run() {
           doMouseClicked(e);
         }
@@ -695,6 +690,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     public void mouseReleased(MouseEvent e) {
     }
 
+    @RequiredDispatchThread
     private void doMouseClicked(MouseEvent e) {
       myEditor.getContentComponent().requestFocus();
       int lineCount = getDocument().getLineCount() + myEditor.getSettings().getAdditionalLinesCount();
@@ -708,14 +704,12 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
     @Override
     public void mouseMoved(MouseEvent e) {
-      EditorImpl.MyScrollBar scrollBar = myEditor.getVerticalScrollBar();
-      int buttonHeight = scrollBar.getDecScrollButtonHeight();
       int lineCount = getDocument().getLineCount() + myEditor.getSettings().getAdditionalLinesCount();
       if (lineCount == 0) {
         return;
       }
 
-      if (e.getY() < buttonHeight && myErrorStripeRenderer != null) {
+      if (myErrorStripeRenderer != null && e.getY() < myErrorStripeRenderer.getSquareSize()) {
         showTrafficLightTooltip(e);
         return;
       }
@@ -813,6 +807,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
                                              hintHint);
   }
 
+  @RequiredDispatchThread
   private void fireErrorMarkerClicked(RangeHighlighter marker, MouseEvent e) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     ErrorStripeEvent event = new ErrorStripeEvent(getEditor(), e, marker);
@@ -1020,6 +1015,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
         myHighlighters.add(rangeHighlighter);
       }
       Collections.sort(myHighlighters, new Comparator<RangeHighlighterEx>() {
+        @Override
         public int compare(RangeHighlighterEx ex1, RangeHighlighterEx ex2) {
           LogicalPosition startPos1 = myEditor.offsetToLogicalPosition(ex1.getAffectedAreaStartOffset());
           LogicalPosition startPos2 = myEditor.offsetToLogicalPosition(ex2.getAffectedAreaStartOffset());
@@ -1138,7 +1134,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
               GraphicsUtil.setupAAPainting(g2);
               g2.setClip(new RoundRectangle2D.Double(0, 0, size.width - .5, size.height - .5, 2, 2));
               UIUtil.drawImage(g2, myCacheLevel1, 0, 0, this);
-              if (UIUtil.isUnderDarcula()) {
+              if (UIUtil.isUnderDarkBuildInLaf()) {
                 //Add glass effect
                 Shape s = new Rectangle(0, 0, size.width, size.height);
                 double cx = size.width / 2;

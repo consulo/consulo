@@ -23,7 +23,6 @@ import com.intellij.codeInsight.hint.TooltipGroup;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.ui.UISettings;
@@ -102,7 +101,6 @@ import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.plaf.ScrollBarUI;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -117,7 +115,6 @@ import java.awt.im.InputMethodRequests;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
@@ -5303,11 +5300,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     }
   }
 
-  private static final Field decrButtonField = ReflectionUtil.getDeclaredField(BasicScrollBarUI.class, "decrButton");
-  private static final Field incrButtonField = ReflectionUtil.getDeclaredField(BasicScrollBarUI.class, "incrButton");
-
   class MyScrollBar extends JBScrollBar implements IdeGlassPane.TopComponent {
-    @NonNls private static final String APPLE_LAF_AQUA_SCROLL_BAR_UI_CLASS = "apple.laf.AquaScrollBarUI";
     private Consumer<Graphics> myRepaintCallback;
 
     private MyScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
@@ -5336,26 +5329,6 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     @Override
     public boolean isOpaque() {
       return true;
-    }
-
-    /**
-     * This is helper method. It returns height of the top (decrease) scroll bar
-     * button. Please note, that it's possible to return real height only if scroll bar
-     * is instance of BasicScrollBarUI. Otherwise it returns fake (but good enough :) )
-     * value.
-     */
-    int getDecScrollButtonHeight() {
-      return AllIcons.General.InspectionsOK.getIconHeight() + 2;
-    }
-
-    /**
-     * This is helper method. It returns height of the bottom (increase) scroll bar
-     * button. Please note, that it's possible to return real height only if scroll bar
-     * is instance of BasicScrollBarUI. Otherwise it returns fake (but good enough :) )
-     * value.
-     */
-    int getIncScrollButtonHeight() {
-      return AllIcons.General.InspectionsOK.getIconHeight() + 2;
     }
 
     @Override
