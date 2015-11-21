@@ -73,6 +73,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -289,6 +290,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   @TestOnly
+  @RequiredWriteAction
   public void dropAllUnsavedDocuments() {
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       throw new RuntimeException("This method is only for test mode!");
@@ -331,6 +333,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   /**
    * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
    */
+  @RequiredDispatchThread
   public void saveAllDocuments(boolean isExplicit) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
@@ -408,6 +411,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
 
   private static class SaveVetoException extends Exception {}
 
+  @RequiredDispatchThread
   private void doSaveDocument(@NotNull final Document document, boolean isExplicit) throws IOException, SaveVetoException {
     VirtualFile file = getFile(document);
 
@@ -546,6 +550,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void reloadFiles(@NotNull final VirtualFile... files) {
     for (VirtualFile file : files) {
@@ -581,6 +586,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   @Override
+  @RequiredDispatchThread
   public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
     final VirtualFile file = event.getFile();
     if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
@@ -622,6 +628,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   @Override
+  @RequiredDispatchThread
   public void contentsChanged(@NotNull VirtualFileEvent event) {
     if (event.isFromSave()) return;
     final VirtualFile file = event.getFile();
@@ -651,6 +658,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void reloadFromDisk(@NotNull final Document document) {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -672,6 +680,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     final Project project = ProjectLocator.getInstance().guessProjectForFile(file);
     CommandProcessor.getInstance().executeCommand(project, new Runnable() {
       @Override
+      @RequiredDispatchThread
       public void run() {
         ApplicationManager.getApplication().runWriteAction(
                 new ExternalChangeAction.ExternalDocumentChange(document, project) {
@@ -753,6 +762,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     });
   }
 
+  @RequiredDispatchThread
   private boolean askReloadFromDisk(final VirtualFile file, final Document document) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (!isDocumentUnsaved(document)) return true;
@@ -816,6 +826,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   @Override
+  @RequiredDispatchThread
   public boolean canCloseProject(Project project) {
     if (!myUnsavedDocuments.isEmpty()) {
       myOnClose = true;
@@ -862,6 +873,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     return FileDocumentManagerListener.EP_NAME.getExtensions();
   }
 
+  @RequiredDispatchThread
   private void handleErrorsOnSave(@NotNull Map<Document, IOException> failures) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       IOException ioException = ContainerUtil.getFirstItem(failures.values());

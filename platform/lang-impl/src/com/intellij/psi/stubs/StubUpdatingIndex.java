@@ -365,13 +365,18 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
       }
     }
 
+    @SuppressWarnings("unchecked")
     private static Map<StubIndexKey, Map<Object, StubIdList>> getStubTree(@NotNull final Map<Integer, SerializedStubTree> data)
             throws SerializerNotFoundException {
       final Map<StubIndexKey, Map<Object, StubIdList>> stubTree;
       if (!data.isEmpty()) {
-        final SerializedStubTree stub = data.values().iterator().next();
+        Map.Entry<Integer, SerializedStubTree> entry = data.entrySet().iterator().next();
+        final SerializedStubTree stub = entry.getValue();
         ObjectStubBase root = (ObjectStubBase)stub.getStub(true);
-
+        if (root instanceof PsiFileStub) {
+          Integer fileId = entry.getKey();
+          root.putUserData(IndexingDataKeys.VIRTUAL_FILE_ID, fileId);
+        }
         ObjectStubTree objectStubTree = root instanceof PsiFileStub ? new StubTree((PsiFileStub)root, false) :
                                         new ObjectStubTree(root, false);
         Map<StubIndexKey, Map<Object, int[]>> map = objectStubTree.indexStubTree();

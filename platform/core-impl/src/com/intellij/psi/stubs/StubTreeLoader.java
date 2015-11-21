@@ -40,12 +40,14 @@ public abstract class StubTreeLoader {
   public abstract ObjectStubTree readOrBuild(Project project, final VirtualFile vFile, @Nullable final PsiFile psiFile);
 
   @Nullable
+  @RequiredReadAction
   public abstract ObjectStubTree readFromVFile(Project project, final VirtualFile vFile);
 
   public abstract void rebuildStubTree(VirtualFile virtualFile);
 
   public abstract boolean canHaveStub(VirtualFile file);
 
+  @RequiredReadAction
   public String getStubAstMismatchDiagnostics(@NotNull VirtualFile file,
                                               @NotNull PsiFile psiFile,
                                               @NotNull ObjectStubTree stubTree,

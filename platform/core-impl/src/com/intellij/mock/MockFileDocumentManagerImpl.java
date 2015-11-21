@@ -95,10 +95,12 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void reloadFromDisk(@NotNull Document document) {
   }
 
+  @RequiredDispatchThread
   @Override
   public void reloadFiles(final VirtualFile... files) {
   }

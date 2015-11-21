@@ -57,6 +57,7 @@ public abstract class FileDocumentManager implements SavingRequestor {
   public abstract boolean isDocumentUnsaved(@NotNull Document document);
   public abstract boolean isFileModified(@NotNull VirtualFile file);
 
+  @RequiredDispatchThread
   public abstract void reloadFromDisk(@NotNull Document document);
 
   @NotNull
@@ -76,5 +77,6 @@ public abstract class FileDocumentManager implements SavingRequestor {
     return getInstance().requestWriting(document, project);
   }
 
+  @RequiredDispatchThread
   public abstract void reloadFiles(VirtualFile... files);
 }

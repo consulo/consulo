@@ -26,13 +26,16 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.CommonProcessors;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.indexing.IdFilter;
 import com.intellij.util.indexing.IdIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.Exported;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.List;
@@ -113,7 +116,7 @@ public abstract class StubIndex {
 
   public <K> boolean processAllKeys(@NotNull StubIndexKey<K, ?> indexKey, @NotNull Processor<K> processor,
                                     @NotNull GlobalSearchScope scope, @Nullable IdFilter idFilter) {
-    return processAllKeys(indexKey, ObjectUtils.assertNotNull(scope.getProject()), processor);
+    return processAllKeys(indexKey, ObjectUtil.assertNotNull(scope.getProject()), processor);
   }
 
   /**
@@ -147,10 +150,13 @@ public abstract class StubIndex {
   }
 
   @NotNull
+  @Exported
   public abstract <Key> IdIterator getContainingIds(@NotNull StubIndexKey<Key, ?> indexKey, @NotNull Key dataKey,
                                                     @NotNull Project project,
                                                     @NotNull final GlobalSearchScope scope);
 
+  @RequiredDispatchThread
+  @RequiredReadAction
   protected <Psi extends PsiElement> void reportStubPsiMismatch(Psi psi, VirtualFile file, Class<Psi> requiredClass) {
     LOG.error("Invalid stub element type in index: " + file + ". found: " + psi + ". expected: " + requiredClass);
   }

@@ -59,6 +59,7 @@ public class CoreStubTreeLoader extends StubTreeLoader {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public ObjectStubTree readFromVFile(Project project, VirtualFile vFile) {
     return null;

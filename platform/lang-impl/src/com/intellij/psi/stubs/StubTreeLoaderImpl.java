@@ -33,6 +33,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,6 +44,7 @@ import java.util.List;
 public class StubTreeLoaderImpl extends StubTreeLoader {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.StubTreeLoaderImpl");
 
+  @RequiredReadAction
   @Override
   @Nullable
   public ObjectStubTree readOrBuild(Project project, final VirtualFile vFile, @Nullable PsiFile psiFile) {
@@ -72,6 +74,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public ObjectStubTree readFromVFile(Project project, final VirtualFile vFile) {
@@ -125,6 +128,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     return null;
   }
 
+  @RequiredReadAction
   private static int getCurrentTextContentLength(Project project, VirtualFile vFile, Document document) {
     if (vFile.getFileType().isBinary()) {
       return -1;
@@ -167,6 +171,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     return StubUpdatingIndex.canHaveStub(file);
   }
 
+  @RequiredReadAction
   private boolean hasPsiInManyProjects(@NotNull final VirtualFile virtualFile) {
     VirtualFile file = virtualFile;
     int count = 0;
@@ -178,6 +183,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     return count > 1;
   }
 
+  @RequiredReadAction
   @Override
   public String getStubAstMismatchDiagnostics(@NotNull VirtualFile file,
                                               @NotNull PsiFile psiFile,
