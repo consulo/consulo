@@ -76,6 +76,7 @@
   </actions>
   <extensionPoints>
     <extensionPoint qualifiedName="com.intellij.diff.DiffTool" interface="com.intellij.diff.DiffTool"/>
+    <extensionPoint qualifiedName="com.intellij.diff.merge.MergeTool" interface="com.intellij.diff.merge.MergeTool"/>
     <extensionPoint qualifiedName="com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider"
                     interface="com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider"/>
     <extensionPoint qualifiedName="com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider"
