@@ -35,7 +35,7 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.content.Content;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.Producer;
+import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -99,10 +99,11 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
     myToggleContentUiTypeAction = new ToggleContentUiTypeAction();
     myToggleToolbarGroup = ToggleToolbarAction.createToggleToolbarGroup(myProject, myToolWindow);
 
-    myHeader = new ToolWindowHeader(toolWindow, info, new Producer<ActionGroup>() {
+    myHeader = new ToolWindowHeader(toolWindow, info, new NotNullProducer<ActionGroup>() {
+      @NotNull
       @Override
       public ActionGroup produce() {
-        return /*createGearPopupGroup()*/createPopupGroup(true);
+        return createPopupGroup(true);
       }
     }) {
       @Override
@@ -371,11 +372,12 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
     }
   }
 
-
+  @NotNull
   public final ActionGroup createPopupGroup() {
     return createPopupGroup(false);
   }
 
+  @NotNull
   public final ActionGroup createPopupGroup(boolean skipHideAction) {
     final DefaultActionGroup group = createGearPopupGroup();
     if (!ToolWindowId.PREVIEW.equals(myInfo.getId())) {

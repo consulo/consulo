@@ -30,11 +30,14 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
-import com.intellij.ui.*;
+import com.intellij.ui.DoubleClickListener;
+import com.intellij.ui.InplaceButton;
+import com.intellij.ui.PopupHandler;
+import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.util.BitUtil;
-import com.intellij.util.Producer;
+import com.intellij.util.NotNullProducer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
@@ -73,8 +76,8 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
   private final DefaultActionGroup myActionGroup = new DefaultActionGroup();
   private List<AnAction> myVisibleActions = ContainerUtil.newArrayListWithCapacity(2);
 
-  public ToolWindowHeader(final ToolWindowImpl toolWindow, @NotNull WindowInfoImpl info, @NotNull final Producer<ActionGroup> gearProducer) {
-    setLayout(new BorderLayout());
+  public ToolWindowHeader(final ToolWindowImpl toolWindow, @NotNull WindowInfoImpl info, @NotNull final NotNullProducer<ActionGroup> gearProducer) {
+    super(new BorderLayout());
 
     myToolWindow = toolWindow;
     myInfo = info;
@@ -110,6 +113,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
     add(eastPanel, BorderLayout.EAST);
 
     myGearButton = new ActionButton(new AnAction() {
+      @RequiredDispatchThread
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
         final InputEvent inputEvent = e.getInputEvent();
@@ -134,11 +138,13 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
     };
 
     myHideButton = new ActionButton(new HideAction() {
+      @RequiredDispatchThread
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
         hideToolWindow();
       }
     }, new HideSideAction() {
+      @RequiredDispatchThread
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
         sideHidden();
@@ -411,7 +417,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
     super.paintChildren(graphics);
 
     Rectangle r = getBounds();
-    if (!isActive() && !UIUtil.isUnderDarcula()) {
+    if (!isActive() && !UIUtil.isUnderDarkBuildInLaf()) {
       graphics.setColor(new Color(255, 255, 255, 30));
       graphics.fill(r);
     }
@@ -607,9 +613,11 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
       getTemplatePresentation().setText(UIBundle.message("tool.window.hideSide.action.name"));
     }
 
+    @RequiredDispatchThread
     @Override
     public abstract void actionPerformed(@NotNull final AnActionEvent e);
 
+    @RequiredDispatchThread
     @Override
     public final void update(@NotNull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
@@ -625,6 +633,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
       getTemplatePresentation().setText(UIBundle.message("tool.window.hide.action.name"));
     }
 
+    @RequiredDispatchThread
     @Override
     public final void update(@NotNull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();

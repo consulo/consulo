@@ -39,14 +39,15 @@ import com.intellij.ui.switcher.SwitchProvider;
 import com.intellij.ui.switcher.SwitchTarget;
 import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -87,7 +88,7 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
 
     myShowContent = new ShowContentAction(myWindow, myContent);
 
-    setBorder(new EmptyBorder(0, 0, 0, 2));
+    setBorder(JBUI.Borders.empty(0, 0, 0, 2));
   }
 
   public void setType(@NotNull ToolWindowContentUiType type) {
@@ -411,8 +412,9 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
 
   private static AnAction createSplitTabsAction(final TabbedContent content) {
     return new DumbAwareAction("Split '" + content.getTitlePrefix() + "' group") {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         content.split();
       }
     };
@@ -420,8 +422,9 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
 
   private static AnAction createMergeTabsAction(final ContentManager manager, final String tabPrefix) {
     return new DumbAwareAction("Merge tabs to '" + tabPrefix + "' group") {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         final Content selectedContent = manager.getSelectedContent();
         final List<Pair<String, JComponent>> tabs = new ArrayList<Pair<String, JComponent>>();
         int selectedTab = -1;
@@ -556,6 +559,7 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
         for (int j = 0; j < tabActions.length; j++) {
           final int index = j;
           tabActions[j] = new DumbAwareAction(tabs.get(index).first) {
+            @RequiredDispatchThread
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
               myManager.setSelectedContent(tabbedContent);
@@ -576,6 +580,7 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
         }
       } else {
         actions[i] = new DumbAwareAction(content.getTabName()) {
+          @RequiredDispatchThread
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {
             myManager.setSelectedContent(content, true, true);

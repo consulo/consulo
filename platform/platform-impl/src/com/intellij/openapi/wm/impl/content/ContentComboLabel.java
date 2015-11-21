@@ -17,11 +17,11 @@ package com.intellij.openapi.wm.impl.content;
 
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -31,7 +31,7 @@ public class ContentComboLabel extends BaseLabel {
   private final ComboIcon myComboIcon = new ComboIcon() {
     @Override
     public Rectangle getIconRec() {
-      return new Rectangle(getWidth() - getIconWidth() - 3, 0, getIconWidth(), getHeight());
+      return new Rectangle(getWidth() - getIconWidth() - JBUI.scale(3), 0, getIconWidth(), getHeight());
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ContentComboLabel extends BaseLabel {
 
   void update() {
     if (isToDrawCombo()) {
-      setBorder(new EmptyBorder(0, 8, 0, 8));
+      setBorder(JBUI.Borders.empty(0, 8, 0, 8));
     } else {
       setBorder(null);
     }

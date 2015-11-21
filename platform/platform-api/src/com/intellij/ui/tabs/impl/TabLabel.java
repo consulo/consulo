@@ -220,6 +220,12 @@ public class TabLabel extends JPanel {
   }
 
   @Override
+  public void updateUI() {
+    super.updateUI();
+    setInactiveStateImage(null);
+  }
+
+  @Override
   public void paint(final Graphics g) {
     if (myTabs.isDropTarget(myInfo)) return;
 
