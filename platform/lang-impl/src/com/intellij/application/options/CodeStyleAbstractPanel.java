@@ -34,7 +34,6 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.ui.OnePixelDivider;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
@@ -45,6 +44,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
+import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.Alarm;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
@@ -52,9 +52,9 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
-import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -187,6 +187,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     final Project finalProject = ProjectUtil.guessCurrentProject(getPanel());
     CommandProcessor.getInstance().executeCommand(finalProject, new Runnable() {
       @Override
+      @RequiredDispatchThread
       public void run() {
         replaceText(finalProject);
       }
@@ -204,6 +205,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
 
   protected abstract int getRightMargin();
 
+  @RequiredDispatchThread
   private void replaceText(final Project project) {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
@@ -235,7 +237,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
           myEditor.getSettings().setTabSize(clone.getTabSize(getFileType()));
           Document document = myEditor.getDocument();
           document.replaceString(0, document.getTextLength(), formatted.getText());
-          if (document != null && beforeReformat != null) {
+          if (beforeReformat != null) {
             highlightChanges(beforeReformat);
           }
         }
@@ -443,31 +445,11 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   protected void installPreviewPanel(final JPanel previewPanel) {
     previewPanel.setLayout(new BorderLayout());
     previewPanel.add(getEditor().getComponent(), BorderLayout.CENTER);
-    previewPanel.setBorder(new AbstractBorder() {
-      private static final int LEFT_WHITE_SPACE = 2;
-
-      @Override
-      public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        Editor editor = getEditor();
-        if (editor instanceof EditorEx) {
-          g.setColor(((EditorEx)editor).getBackgroundColor());
-          g.fillRect(x + 1, y, LEFT_WHITE_SPACE, height);
-        }
-        g.setColor(OnePixelDivider.BACKGROUND);
-        g.fillRect(x, y, 1, height);
-      }
-
-      @Override
-      public Insets getBorderInsets(Component c, Insets insets) {
-        insets.set(0, 1 + LEFT_WHITE_SPACE, 0, 0);
-        return insets;
-      }
-    });
+    previewPanel.setBorder(new CustomLineBorder(0, 1, 0, 0));
   }
 
   @NonNls
-  protected
-  String getFileTypeExtension(FileType fileType) {
+  protected String getFileTypeExtension(FileType fileType) {
     return fileType.getDefaultExtension();
   }
 
