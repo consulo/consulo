@@ -35,13 +35,15 @@ import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
 
 import static com.intellij.psi.codeStyle.EditorNotificationInfo.ActionLabelData;
 
 /**
  * @author Rustam Vishnyakov
  */
-public class DetectedIndentOptionsNotificationProvider extends EditorNotifications.Provider<EditorNotificationPanel> implements DumbAware {
+public class DetectedIndentOptionsNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Key<EditorNotificationPanel> KEY = Key.create("indent.options.notification.provider");
   private static final Key<Boolean> NOTIFIED_FLAG = Key.create("indent.options.notification.provider.status");
   protected static final Key<Boolean> DETECT_INDENT_NOTIFICATION_SHOWN_KEY = Key.create("indent.options.notification.provider.status.test.notification.shown");
@@ -54,6 +56,7 @@ public class DetectedIndentOptionsNotificationProvider extends EditorNotificatio
     return KEY;
   }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   public EditorNotificationPanel createNotificationPanel(@NotNull final VirtualFile file, @NotNull FileEditor fileEditor) {
