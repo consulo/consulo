@@ -18,6 +18,7 @@ package com.intellij.psi;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,21 +35,8 @@ import org.jetbrains.annotations.Nullable;
  * @see com.intellij.psi.PsiReferenceBase
  * @see com.intellij.psi.PsiReferenceContributor
  */
-
+@ArrayFactoryFields
 public interface PsiReference {
-  /**
-   * The empty array of PSI references which can be reused to avoid unnecessary allocations.
-   */
-  PsiReference[] EMPTY_ARRAY = new PsiReference[0];
-
-  ArrayFactory<PsiReference> ARRAY_FACTORY = new ArrayFactory<PsiReference>() {
-    @NotNull
-    @Override
-    public PsiReference[] create(final int count) {
-      return count == 0 ? EMPTY_ARRAY : new PsiReference[count];
-    }
-  };
-
   /**
    * Returns the underlying (referencing) element of the reference.
    *

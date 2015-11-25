@@ -17,8 +17,10 @@ package com.intellij.psi;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Key;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.List;
 
@@ -44,13 +46,15 @@ public abstract class PsiReferenceService {
    * fail-fast checks in case the pattern takes long to match.
    * @return the references
    */
+  @RequiredReadAction
   public abstract List<PsiReference> getReferences(@NotNull final PsiElement element, @NotNull final Hints hints);
 
+  @NotNull
+  @RequiredReadAction
   public PsiReference[] getContributedReferences(@NotNull final PsiElement element) {
     final List<PsiReference> list = getReferences(element, Hints.NO_HINTS);
-    return list.toArray(new PsiReference[list.size()]);
+    return ContainerUtil.toArray(list, PsiReference.ARRAY_FACTORY);
   }
-
 
   public static class Hints {
     public static final Hints NO_HINTS = new Hints();

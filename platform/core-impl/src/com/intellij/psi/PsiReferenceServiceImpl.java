@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.intellij.psi;
 
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,13 +26,16 @@ import java.util.List;
  * @author Gregory.Shrago
  */
 public class PsiReferenceServiceImpl extends PsiReferenceService {
+  @RequiredReadAction
+  @NotNull
   @Override
   public List<PsiReference> getReferences(@NotNull PsiElement element, @NotNull Hints hints) {
     if (element instanceof ContributedReferenceHost) {
       return Arrays.asList(ReferenceProvidersRegistry.getReferencesFromProviders(element, hints));
     }
-    else {
-      return Arrays.asList(element.getReferences());
+    if (element instanceof HintedReferenceHost) {
+      return Arrays.asList(((HintedReferenceHost)element).getReferences(hints));
     }
+    return Arrays.asList(element.getReferences());
   }
 }
