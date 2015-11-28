@@ -36,7 +36,7 @@ import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,12 +50,10 @@ import java.awt.image.BufferedImage;
  */
 public class IconUtil {
   private static final Key<Boolean> PROJECT_WAS_EVER_INITIALIZED = Key.create("iconDeferrer:projectWasEverInitialized");
-  @Deprecated
-  @DeprecationInfo("Use #getDefaultNodeIconSize()")
-  public static final int NODE_ICON_SIZE = UIUtil.isRetina() ? 32 : 16;
 
   private static NullableFunction<AnyIconKey<VirtualFile>, Icon> ourVirtualFileIconFunc = new NullableFunction<AnyIconKey<VirtualFile>, Icon>() {
     @Override
+    @RequiredReadAction
     public Icon fun(final AnyIconKey<VirtualFile> key) {
       final VirtualFile file = key.getObject();
       final int flags = key.getFlags();
@@ -63,6 +61,7 @@ public class IconUtil {
 
       if (!file.isValid() || project != null && (project.isDisposed() || !wasEverInitialized(project))) return null;
 
+      boolean processedDescriptors = false;
       final Icon nativeIcon = NativeFileIconUtil.INSTANCE.getIcon(file);
       IconDescriptor iconDescriptor = new IconDescriptor(nativeIcon == null ? VirtualFilePresentation.getIcon(file) : nativeIcon);
       if (project != null) {
@@ -70,10 +69,12 @@ public class IconUtil {
         final PsiElement element = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
         if (element != null) {
           IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, element, flags);
+          processedDescriptors = true;
         }
       }
 
-      if (file.is(VFileProperty.SYMLINK)) {
+      // if descriptors not processed - we need add layer icon obviously
+      if (!processedDescriptors && file.is(VFileProperty.SYMLINK)) {
         iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
       }
 

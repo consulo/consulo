@@ -19,18 +19,24 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.VFileProperty;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import lombok.val;
-import org.mustbe.consulo.lang.LanguageElementIcons;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.lang.LanguageElementIcons;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 
@@ -39,65 +45,73 @@ import javax.swing.*;
  * @since 0:28/19.07.13
  */
 public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
+  @RequiredReadAction
   @Override
   public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
     if (element instanceof PsiDirectory) {
-      val psiDirectory = (PsiDirectory)element;
-      val vFile = psiDirectory.getVirtualFile();
-      val project = psiDirectory.getProject();
-      val isArhiveSystem = vFile.getParent() == null && vFile.getFileSystem() instanceof ArchiveFileSystem;
-      val isContentRoot = ProjectRootsUtil.isModuleContentRoot(vFile, project);
-      val contentFolder = ProjectRootsUtil.getContentFolderIfIs(vFile, project);
+      PsiDirectory psiDirectory = (PsiDirectory)element;
+      VirtualFile virtualFile = psiDirectory.getVirtualFile();
+      Project project = psiDirectory.getProject();
 
       Icon symbolIcon;
-      if (isArhiveSystem) {
-        symbolIcon = AllIcons.Nodes.PpJar;
-      }
-      else if (isContentRoot) {
-        symbolIcon = AllIcons.Nodes.Module;
-      }
-      else if (contentFolder != null) {
-        symbolIcon = contentFolder.getType().getIcon(contentFolder.getProperties());
-      }
-      else {
-        if (vFile.getFileSystem() instanceof ArchiveFileSystem) {
-          val psiPackage = PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory);
-          symbolIcon = psiPackage != null ? AllIcons.Nodes.Package : AllIcons.Nodes.TreeClosed;
+      if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
+        if (virtualFile.getParent() == null) {
+          symbolIcon = AllIcons.Nodes.PpJar;
         }
         else {
-          val contentFolderTypeForFile = ProjectFileIndex.SERVICE.getInstance(project).getContentFolderTypeForFile(vFile);
-          symbolIcon =
-            contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory) : AllIcons.Nodes.TreeClosed;
+          PsiPackage psiPackage = PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory);
+          symbolIcon = psiPackage != null ? AllIcons.Nodes.Package : AllIcons.Nodes.TreeClosed;
         }
       }
-
-      boolean ignored = ProjectRootManager.getInstance(project).getFileIndex().isExcluded(vFile);
-      if (ignored) {
-        symbolIcon = AllIcons.Modules.ExcludeRoot;
+      else if (ProjectRootsUtil.isModuleContentRoot(virtualFile, project)) {
+        symbolIcon = AllIcons.Nodes.Module;
+      }
+      else {
+        boolean ignored = ProjectRootManager.getInstance(project).getFileIndex().isExcluded(virtualFile);
+        if (ignored) {
+          symbolIcon = AllIcons.Modules.ExcludeRoot;
+        }
+        else {
+          ContentFolder contentFolder = ProjectRootsUtil.getContentFolderIfIs(virtualFile, project);
+          if (contentFolder != null) {
+            symbolIcon = contentFolder.getType().getIcon(contentFolder.getProperties());
+          }
+          else {
+            ContentFolderTypeProvider contentFolderTypeForFile = ProjectFileIndex.SERVICE.getInstance(project).getContentFolderTypeForFile(virtualFile);
+            symbolIcon = contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory) : AllIcons.Nodes.TreeClosed;
+          }
+        }
       }
 
       iconDescriptor.setMainIcon(symbolIcon);
+
+      if(virtualFile.is(VFileProperty.SYMLINK)) {
+        iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
+      }
     }
-    else if(element instanceof PsiPackage) {
+    else if (element instanceof PsiPackage) {
       iconDescriptor.setMainIcon(AllIcons.Nodes.Package);
     }
     else if (element instanceof PsiFile) {
-      if (iconDescriptor.getMainIcon() != null) {
-        return;
-      }
-
-      val virtualFile = ((PsiFile)element).getVirtualFile();
-      if (virtualFile != null) {
-        iconDescriptor.setMainIcon(NativeFileIconUtil.INSTANCE.getIcon(virtualFile));
-      }
-
       if (iconDescriptor.getMainIcon() == null) {
-        val fileType = ((PsiFile)element).getFileType();
-        iconDescriptor.setMainIcon(fileType.getIcon());
+        VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
+        if (virtualFile != null) {
+          iconDescriptor.setMainIcon(NativeFileIconUtil.INSTANCE.getIcon(virtualFile));
+        }
+
+        if (iconDescriptor.getMainIcon() == null) {
+          FileType fileType = ((PsiFile)element).getFileType();
+          iconDescriptor.setMainIcon(fileType.getIcon());
+        }
+      }
+
+      VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
+      if(virtualFile != null && virtualFile.is(VFileProperty.SYMLINK)) {
+        iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
       }
     }
     else {
-      val languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
+      Icon languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
       if (languageElementIcon == null) {
         return;
       }

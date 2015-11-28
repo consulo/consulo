@@ -25,12 +25,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
  * @since 1:20/19.07.13
  */
 public class CompilerIconDescriptorUpdater implements IconDescriptorUpdater {
+  @RequiredReadAction
   @Override
   public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
     Project project = element.getProject();

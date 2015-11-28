@@ -19,12 +19,14 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
  * @since 1:10/19.07.13
  */
 public class LockedIconDescriptorUpdater implements IconDescriptorUpdater {
+  @RequiredReadAction
   @Override
   public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
     final boolean isLocked = (flags & Iconable.ICON_FLAG_READ_STATUS) != 0 && !element.isWritable();

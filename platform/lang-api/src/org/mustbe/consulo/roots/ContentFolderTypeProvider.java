@@ -27,6 +27,7 @@ import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,9 +64,11 @@ public abstract class ContentFolderTypeProvider {
   /**
    * Return child directory icon
    * If psiDirectory is null it require force package support if this provider is supported it
-   * @param psiDirectory
-   * @return
+   * @param psiDirectory child directory
+   * @return icon of child directory
    */
+  @Nullable
+  @RequiredReadAction
   public final Icon getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
     Icon packageIcon = getChildPackageIcon();
     if(packageIcon == null) {

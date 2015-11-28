@@ -21,12 +21,14 @@ import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.psi.PsiElement;
 import com.intellij.testIntegration.TestFramework;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
  * @since 1:22/19.07.13
  */
 public class TestIconDescriptorUpdater implements IconDescriptorUpdater {
+  @RequiredReadAction
   @Override
   public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
     for (TestFramework framework : TestFramework.EXTENSION_NAME.getExtensions()) {
