@@ -22,6 +22,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -44,6 +45,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
     myName = name;
   }
 
+  @RequiredDispatchThread
   public boolean update() {
     boolean changed = false;
 

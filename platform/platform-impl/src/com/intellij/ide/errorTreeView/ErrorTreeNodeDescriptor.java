@@ -17,6 +17,7 @@ package com.intellij.ide.errorTreeView;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author Eugene Zhuravlev
@@ -30,6 +31,7 @@ public class ErrorTreeNodeDescriptor extends NodeDescriptor<ErrorTreeElement>{
     myElement = element;
   }
 
+  @RequiredDispatchThread
   public boolean update() {
     return false;
   }

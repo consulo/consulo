@@ -19,6 +19,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.awt.*;
 
@@ -31,6 +32,7 @@ public abstract class LibraryTableTreeContentElement<E> extends NodeDescriptor<E
     return isValid ? UIUtil.getListForeground() : JBColor.RED;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean update() {
     return false;

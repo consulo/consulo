@@ -21,12 +21,14 @@ import com.intellij.ide.hierarchy.LanguageTypeHierarchy;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public final class BrowseTypeHierarchyAction extends BrowseHierarchyActionBase {
   public BrowseTypeHierarchyAction() {
     super(LanguageTypeHierarchy.INSTANCE);
   }
 
+  @RequiredDispatchThread
   @Override
   public final void update(final AnActionEvent event){
     final Presentation presentation = event.getPresentation();

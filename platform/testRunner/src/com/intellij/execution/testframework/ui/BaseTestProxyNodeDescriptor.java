@@ -20,6 +20,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author Roman.Chernyatchik
@@ -48,6 +49,7 @@ public class BaseTestProxyNodeDescriptor<T extends AbstractTestProxy> extends No
     return !getElement().isLeaf();
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean update() {
     return false;

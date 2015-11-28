@@ -17,6 +17,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,6 +62,7 @@ public abstract class NodeDescriptor<E> {
     myIndex = index;
   }
 
+  @RequiredDispatchThread
   public abstract boolean update();
 
   public abstract E getElement();

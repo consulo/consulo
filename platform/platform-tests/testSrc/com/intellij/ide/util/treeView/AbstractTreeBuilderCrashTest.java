@@ -3,6 +3,7 @@ package com.intellij.ide.util.treeView;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -207,6 +208,7 @@ public abstract class AbstractTreeBuilderCrashTest extends BaseTreeTestCase  {
       return new Node[0];
     }
 
+    @RequiredDispatchThread
     @Override
     public boolean update() {
       return false;

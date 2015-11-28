@@ -22,6 +22,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.awt.*;
 
@@ -34,6 +35,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E>  {
     super(project, parentDescriptor);
   }
 
+  @RequiredDispatchThread
   @Override
   public final boolean update() {
     if (shouldUpdateData()) {

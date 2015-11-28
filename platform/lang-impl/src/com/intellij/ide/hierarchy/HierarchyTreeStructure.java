@@ -37,6 +37,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   protected HierarchyNodeDescriptor myBaseDescriptor;
@@ -200,6 +201,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
       return myName;
     }
 
+    @RequiredDispatchThread
     @Override
     public final boolean update() {
       return true;
