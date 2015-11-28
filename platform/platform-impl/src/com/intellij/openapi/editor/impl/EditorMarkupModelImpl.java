@@ -24,6 +24,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.hint.*;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
@@ -448,7 +449,8 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
     @Override
     public Dimension getPreferredSize() {
-      return JBUI.size(15, 0);
+      // icon scale are different than simple scale
+      return new Dimension(JBUI.scale(1) + HighlightDisplayLevel.getEmptyIconDim(), 0);
     }
 
     @Override
