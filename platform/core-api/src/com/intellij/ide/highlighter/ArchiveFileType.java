@@ -31,14 +31,6 @@ import javax.swing.*;
  * @since 19:19/13.07.13
  */
 public abstract class ArchiveFileType implements FileType {
-  private static final NotNullLazyValue<Icon> ICON = new NotNullLazyValue<Icon>() {
-    @NotNull
-    @Override
-    protected Icon compute() {
-      return AllIcons.FileTypes.Archive;
-    }
-  };
-
   private final NotNullLazyValue<ArchiveFileSystem> myFileSystemLazyValue = new NotNullLazyValue<ArchiveFileSystem>() {
     @NotNull
     @Override
@@ -68,7 +60,7 @@ public abstract class ArchiveFileType implements FileType {
 
   @Override
   public Icon getIcon() {
-    return ICON.getValue();
+    return AllIcons.FileTypes.Archive;
   }
 
   @Override
