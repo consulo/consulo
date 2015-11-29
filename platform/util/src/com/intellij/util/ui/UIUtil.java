@@ -1851,7 +1851,8 @@ public class UIUtil {
   public static boolean isStandardMenuLAF() {
     return isWinLafOnVista() ||
            isUnderNimbusLookAndFeel() ||
-           isUnderGTKLookAndFeel();
+           isUnderGTKLookAndFeel() ||
+           isUnderBuildInLaF();
   }
 
   public static Color getFocusedFillColor() {
