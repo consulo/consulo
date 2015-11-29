@@ -23,6 +23,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.MacKeymapUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.AbstractPainter;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -43,10 +44,19 @@ import java.awt.*;
 /**
  * @author gregsh
  */
-public class EditorEmptyTextPainter {
+public class EditorEmptyTextPainter extends AbstractPainter {
+  @Override
+  public boolean needsRepaint() {
+    return true;
+  }
 
-  public void paintEmptyText(final EditorsSplitters splitters, Graphics g) {
-    boolean isDarkBackground = UIUtil.isUnderDarcula();
+  @Override
+  public void executePaint(Component component, Graphics2D g) {
+    paintEmptyText((JComponent)component, g);
+  }
+
+  private void paintEmptyText(final JComponent splitters, Graphics g) {
+    boolean isDarkBackground = UIUtil.isUnderDarkBuildInLaf();
     UIUtil.applyRenderingHints(g);
     GraphicsUtil.setupAntialiasing(g, true, false);
     g.setColor(new JBColor(isDarkBackground ? Gray._230 : Gray._80, Gray._160));
@@ -68,7 +78,7 @@ public class EditorEmptyTextPainter {
     });
   }
 
-  protected void advertiseActions(EditorsSplitters splitters, UIUtil.TextPainter painter) {
+  protected void advertiseActions(JComponent splitters, UIUtil.TextPainter painter) {
     appendSearchEverywhere(painter);
     appendToolWindow(painter, "Open Project View", ToolWindowId.PROJECT_VIEW, splitters);
     appendAction(painter, "Open a file by name", getActionShortcutText("GotoFile"));
@@ -87,7 +97,7 @@ public class EditorEmptyTextPainter {
     }
   }
 
-  protected void appendToolWindow(UIUtil.TextPainter painter, String action, String toolWindowId, EditorsSplitters splitters) {
+  protected void appendToolWindow(UIUtil.TextPainter painter, String action, String toolWindowId, JComponent splitters) {
     if (!isToolwindowVisible(splitters, toolWindowId)) {
       String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(toolWindowId);
       appendAction(painter, action, getActionShortcutText(activateActionId));
@@ -107,7 +117,7 @@ public class EditorEmptyTextPainter {
     return KeymapUtil.getFirstKeyboardShortcutText(actionId);
   }
 
-  protected static boolean isToolwindowVisible(EditorsSplitters splitters, String toolwindowId) {
+  protected static boolean isToolwindowVisible(JComponent splitters, String toolwindowId) {
     final Window frame = SwingUtilities.getWindowAncestor(splitters);
     if (frame instanceof IdeFrameImpl) {
       final Project project = ((IdeFrameImpl)frame).getProject();
