@@ -31,8 +31,9 @@ import org.jetbrains.annotations.NonNls;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -58,7 +59,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
 
   private String mySplashImageUrl = null;
   private String myAboutImageUrl = null;
-  private String myEditorBackgroundImageUrl = null;
 
   private Calendar myBuildDate = null;
   private Calendar myMajorReleaseBuildDate = null;
@@ -81,7 +81,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private String myHelpFileName = "ideahelp.jar";
   @NonNls private String myHelpRootName = "idea";
   @NonNls private String myWebHelpUrl = "http://must-be.org/wiki/en/Consulo_";
-  private List<PluginChooserPage> myPluginChooserPages = new ArrayList<PluginChooserPage>();
 
   private Rectangle myAboutLogoRect;
 
@@ -101,13 +100,10 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ATTRIBUTE_ABOUT_FOREGROUND_COLOR = "foreground";
   @NonNls private static final String ATTRIBUTE_ABOUT_LINK_COLOR = "linkColor";
   @NonNls private static final String ELEMENT_ABOUT = "about";
-  @NonNls private static final String ELEMENT_EDITOR = "editor";
-  @NonNls private static final String BACKGROUND_URL_ATTR = "background-url";
   @NonNls private static final String ATTRIBUTE_EAP = "eap";
   @NonNls private static final String HELP_ELEMENT_NAME = "help";
   @NonNls private static final String ATTRIBUTE_HELP_FILE = "file";
   @NonNls private static final String ATTRIBUTE_HELP_ROOT = "root";
-  @NonNls private static final String PLUGINS_PAGE_ELEMENT_NAME = "plugins-page";
   @NonNls private static final String ELEMENT_DOCUMENTATION = "documentation";
   @NonNls private static final String ELEMENT_SUPPORT = "support";
   @NonNls private static final String ELEMENT_FEEDBACK = "feedback";
@@ -192,11 +188,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
 
   public Color getProgressColor() {
     return myProgressColor;
-  }
-
-  @Override
-  public String getEditorBackgroundImageUrl() {
-    return myEditorBackgroundImageUrl;
   }
 
   @Override
@@ -433,11 +424,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
       }
     }
 
-    Element editor = parentNode.getChild(ELEMENT_EDITOR);
-    if (editor != null) {
-      myEditorBackgroundImageUrl = editor.getAttributeValue(BACKGROUND_URL_ATTR);
-    }
-
     Element helpElement = parentNode.getChild(HELP_ELEMENT_NAME);
     if (helpElement != null) {
       myHelpFileName = helpElement.getAttributeValue(ATTRIBUTE_HELP_FILE);
@@ -505,12 +491,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
       myWinKeymapUrl = keymapElement.getAttributeValue(ATTRIBUTE_WINDOWS_URL);
       myMacKeymapUrl = keymapElement.getAttributeValue(ATTRIBUTE_MAC_URL);
     }
-
-    myPluginChooserPages = new ArrayList<PluginChooserPage>();
-    final List children = parentNode.getChildren(PLUGINS_PAGE_ELEMENT_NAME);
-    for(Object child: children) {
-      myPluginChooserPages.add(new PluginChooserPageImpl((Element) child));
-    }
   }
 
   private static GregorianCalendar parseDate(final String dateString) {
@@ -533,38 +513,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private static Color parseColor(final String colorString) {
     final long rgb = Long.parseLong(colorString, 16);
     return new Color((int)rgb, rgb > 0xffffff);
-  }
-
-  @Override
-  public List<PluginChooserPage> getPluginChooserPages() {
-    return myPluginChooserPages;
-  }
-
-  private static class PluginChooserPageImpl implements PluginChooserPage {
-    private final String myTitle;
-    private final String myCategory;
-    private final String myDependentPlugin;
-
-    private PluginChooserPageImpl(Element e) {
-      myTitle = e.getAttributeValue("title");
-      myCategory = e.getAttributeValue("category");
-      myDependentPlugin = e.getAttributeValue("depends");
-    }
-
-    @Override
-    public String getTitle() {
-      return myTitle;
-    }
-
-    @Override
-    public String getCategory() {
-      return myCategory;
-    }
-
-    @Override
-    public String getDependentPlugin() {
-      return myDependentPlugin;
-    }
   }
 
   private static volatile boolean myInPerformanceTest;

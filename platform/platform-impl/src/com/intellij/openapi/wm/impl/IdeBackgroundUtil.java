@@ -15,18 +15,14 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.fileEditor.impl.EditorEmptyTextPainter;
 import com.intellij.ui.Graphics2DDelegate;
-import com.intellij.util.ImageLoader;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
 
 /**
  * @author gregsh
@@ -64,21 +60,13 @@ public class IdeBackgroundUtil {
   public static void initFramePainters(@NotNull PaintersHelper painters) {
     PaintersHelper.initWallpaperPainter("idea.wallpaper.ide", painters);
 
-    ApplicationInfoEx appInfo = ApplicationInfoEx.getInstanceEx();
-    String path = UIUtil.isUnderDarcula()? appInfo.getEditorBackgroundImageUrl() : null;
-    URL url = path == null ? null : appInfo.getClass().getResource(path);
-    Image centerImage = url == null ? null : ImageLoader.loadFromUrl(url);
-
-    if (centerImage != null) {
-      painters.addPainter(PaintersHelper.newImagePainter(centerImage, PaintersHelper.FillType.TOP_CENTER, 1.0f, JBUI.insets(5, 0, 0, 0)), null);
-    }
     painters.addPainter(new EditorEmptyTextPainter(), null);
   }
 
   @Nullable
   public static Color getIdeBackgroundColor() {
     Color result = UIUtil.getSlightlyDarkerColor(UIUtil.getPanelBackground());
-    return UIUtil.isUnderDarcula() ? new Color(40, 40, 41) : UIUtil.getSlightlyDarkerColor(UIUtil.getSlightlyDarkerColor(result));
+    return UIUtil.isUnderDarkBuildInLaf() ? new Color(40, 40, 41) : UIUtil.getSlightlyDarkerColor(UIUtil.getSlightlyDarkerColor(result));
   }
 
   private static class MyGraphics extends Graphics2DDelegate {

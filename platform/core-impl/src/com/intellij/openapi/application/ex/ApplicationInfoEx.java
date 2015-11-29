@@ -32,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Calendar;
-import java.util.List;
 
 public abstract class ApplicationInfoEx extends ApplicationInfo {
 
@@ -71,8 +70,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
     return (SandboxUtil.isInsideSandbox() ? prefix + "-sandbox" : prefix) + ".png";
   }
 
-  public abstract String getEditorBackgroundImageUrl();
-
   public abstract String getFullApplicationName();
 
   public abstract boolean isEAP();
@@ -106,13 +103,4 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
   public abstract String getMacKeymapUrl();
 
   public abstract Color getAboutForeground();
-
-  public interface PluginChooserPage {
-    String getTitle();
-    String getCategory();
-    String getDependentPlugin();
-  }
-
-  public abstract List<PluginChooserPage> getPluginChooserPages();
-
 }

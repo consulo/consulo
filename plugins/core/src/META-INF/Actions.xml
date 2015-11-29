@@ -1912,9 +1912,6 @@
     </action>
 
 
-    <action id="StartupWizard" class="com.intellij.ide.startupWizard.StartupWizardAction">
-      <add-to-group group-id="FileSettingsGroup" anchor="last"/>
-    </action>
 
     <group id="Internal1" text="IDEA Internal Actions" internal="true">
       <separator/>
