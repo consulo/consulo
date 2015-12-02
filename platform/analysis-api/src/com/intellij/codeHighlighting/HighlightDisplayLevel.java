@@ -45,7 +45,7 @@ public class HighlightDisplayLevel {
           new HighlightDisplayLevel(HighlightSeverity.ERROR, createErrorIcon(CodeInsightColors.ERRORS_ATTRIBUTES));
 
   public static final HighlightDisplayLevel WARNING =
-          new HighlightDisplayLevel(HighlightSeverity.WARNING, createBoxIcon(CodeInsightColors.WARNINGS_ATTRIBUTES));
+          new HighlightDisplayLevel(HighlightSeverity.WARNING, createErrorIcon(CodeInsightColors.WARNINGS_ATTRIBUTES));
 
   private static final Icon DO_NOT_SHOW_KEY = createBoxIcon(TextAttributesKey.createTextAttributesKey("DO_NOT_SHOW"));
   public static final HighlightDisplayLevel DO_NOT_SHOW = new HighlightDisplayLevel(HighlightSeverity.INFORMATION, DO_NOT_SHOW_KEY);
