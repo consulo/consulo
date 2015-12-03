@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
-import com.intellij.openapi.project.DumbModeAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Key;
@@ -132,12 +131,6 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                     processPresentation, searchScopeToWarnOfFallingOutOf, listener).run();
       }
 
-      @NotNull
-      @Override
-      public DumbModeAction getDumbModeAction() {
-        return DumbModeAction.CANCEL;
-      }
-
       @Override
       @Nullable
       public NotificationInfo getNotificationInfo() {
@@ -188,7 +181,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
   public static String getProgressTitle(@NotNull UsageViewPresentation presentation) {
     final String scopeText = presentation.getScopeText();
     String usagesString = StringUtil.capitalize(presentation.getUsagesString());
-    return UsageViewBundle.message("progress.searching.for.in", usagesString, scopeText);
+    return UsageViewBundle.message("progress.searching.for.in", usagesString, scopeText, presentation.getContextText());
   }
 
   void showToolWindow(boolean activateWindow) {
@@ -240,7 +233,6 @@ public class UsageViewManagerImpl extends UsageViewManager {
       @Override
       public void run() {
         if (!virtualFile.isValid()) return;
-        if (virtualFile.getFileType().isBinary()) return;
         length[0] = virtualFile.getLength();
       }
     });

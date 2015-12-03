@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.usages;
 
 import com.intellij.usageView.UsageViewBundle;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -27,7 +28,8 @@ import java.util.List;
  */
 public class UsageViewPresentation {
   private String myTabText;
-  private String myScopeText;
+  private String myScopeText = ""; // Default value. to be overwritten in most cases.
+  private String myContextText = "";
   private String myUsagesString;
   private String myTargetsNodeText = UsageViewBundle.message("node.targets"); // Default value. to be overwritten in most cases.
   private String myNonCodeUsagesString = UsageViewBundle.message("node.non.code.usages");
@@ -37,6 +39,7 @@ public class UsageViewPresentation {
   private boolean myShowCancelButton = false;
   private boolean myOpenInNewTab = true;
   private boolean myCodeUsages = true;
+  private boolean myUsageTypeFilteringAvailable;
   private String myUsagesWord = UsageViewBundle.message("usage.name");
 
   private String myTabName;
@@ -55,12 +58,21 @@ public class UsageViewPresentation {
     myTabText = tabText;
   }
 
+  @NotNull
   public String getScopeText() {
     return myScopeText;
   }
 
-  public void setScopeText(String scopeText) {
+  public void setScopeText(@NotNull String scopeText) {
     myScopeText = scopeText;
+  }
+
+  public @NotNull String getContextText() {
+    return myContextText;
+  }
+
+  public void setContextText(@NotNull String contextText) {
+    myContextText = contextText;
   }
 
   public boolean isShowReadOnlyStatusAsRed() {
@@ -96,19 +108,21 @@ public class UsageViewPresentation {
     myShowCancelButton = showCancelButton;
   }
 
+  @NotNull
   public String getNonCodeUsagesString() {
     return myNonCodeUsagesString;
   }
 
-  public void setNonCodeUsagesString(String nonCodeUsagesString) {
+  public void setNonCodeUsagesString(@NotNull String nonCodeUsagesString) {
     myNonCodeUsagesString = nonCodeUsagesString;
   }
 
+  @NotNull
   public String getCodeUsagesString() {
     return myCodeUsagesString;
   }
 
-  public void setCodeUsagesString(String codeUsagesString) {
+  public void setCodeUsagesString(@NotNull String codeUsagesString) {
     myCodeUsagesString = codeUsagesString;
   }
 
@@ -137,11 +151,12 @@ public class UsageViewPresentation {
     return myNotFoundActions;
   }
 
+  @NotNull
   public String getUsagesWord() {
     return myUsagesWord;
   }
 
-  public void setUsagesWord(final String usagesWord) {
+  public void setUsagesWord(@NotNull String usagesWord) {
     myUsagesWord = usagesWord;
   }
 
@@ -177,11 +192,12 @@ public class UsageViewPresentation {
     return myDynamicCodeUsagesString;
   }
 
+  @NotNull
   public String getUsagesInGeneratedCodeString() {
     return myUsagesInGeneratedCodeString;
   }
 
-  public void setUsagesInGeneratedCodeString(String usagesInGeneratedCodeString) {
+  public void setUsagesInGeneratedCodeString(@NotNull String usagesInGeneratedCodeString) {
     myUsagesInGeneratedCodeString = usagesInGeneratedCodeString;
   }
 
@@ -191,6 +207,78 @@ public class UsageViewPresentation {
 
   public void setMergeDupLinesAvailable(boolean mergeDupLinesAvailable) {
     myMergeDupLinesAvailable = mergeDupLinesAvailable;
+  }
+
+  public boolean isUsageTypeFilteringAvailable() {
+    return myCodeUsages || myUsageTypeFilteringAvailable;
+  }
+
+  public void setUsageTypeFilteringAvailable(boolean usageTypeFilteringAvailable) {
+    myUsageTypeFilteringAvailable = usageTypeFilteringAvailable;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof UsageViewPresentation)) return false;
+
+    UsageViewPresentation that = (UsageViewPresentation)o;
+
+    if (myCodeUsages != that.myCodeUsages) return false;
+    if (myDetachedMode != that.myDetachedMode) return false;
+    if (myMergeDupLinesAvailable != that.myMergeDupLinesAvailable) return false;
+    if (myOpenInNewTab != that.myOpenInNewTab) return false;
+    if (myShowCancelButton != that.myShowCancelButton) return false;
+    if (myShowReadOnlyStatusAsRed != that.myShowReadOnlyStatusAsRed) return false;
+    if (myUsageTypeFilteringAvailable != that.myUsageTypeFilteringAvailable) return false;
+    if (myCodeUsagesString != null ? !myCodeUsagesString.equals(that.myCodeUsagesString) : that.myCodeUsagesString != null) return false;
+    if (myDynamicCodeUsagesString != null
+        ? !myDynamicCodeUsagesString.equals(that.myDynamicCodeUsagesString)
+        : that.myDynamicCodeUsagesString != null) {
+      return false;
+    }
+    if (myNonCodeUsagesString != null ? !myNonCodeUsagesString.equals(that.myNonCodeUsagesString) : that.myNonCodeUsagesString != null) {
+      return false;
+    }
+    if (myNotFoundActions != null ? !myNotFoundActions.equals(that.myNotFoundActions) : that.myNotFoundActions != null) return false;
+    if (myScopeText != null ? !myScopeText.equals(that.myScopeText) : that.myScopeText != null) return false;
+    if (myTabName != null ? !myTabName.equals(that.myTabName) : that.myTabName != null) return false;
+    if (myTabText != null ? !myTabText.equals(that.myTabText) : that.myTabText != null) return false;
+    if (myTargetsNodeText != null ? !myTargetsNodeText.equals(that.myTargetsNodeText) : that.myTargetsNodeText != null) return false;
+    if (myToolwindowTitle != null ? !myToolwindowTitle.equals(that.myToolwindowTitle) : that.myToolwindowTitle != null) return false;
+    if (myUsagesInGeneratedCodeString != null
+        ? !myUsagesInGeneratedCodeString.equals(that.myUsagesInGeneratedCodeString)
+        : that.myUsagesInGeneratedCodeString != null) {
+      return false;
+    }
+    if (myUsagesString != null ? !myUsagesString.equals(that.myUsagesString) : that.myUsagesString != null) return false;
+    if (myUsagesWord != null ? !myUsagesWord.equals(that.myUsagesWord) : that.myUsagesWord != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = myTabText != null ? myTabText.hashCode() : 0;
+    result = 31 * result + (myScopeText != null ? myScopeText.hashCode() : 0);
+    result = 31 * result + (myUsagesString != null ? myUsagesString.hashCode() : 0);
+    result = 31 * result + (myTargetsNodeText != null ? myTargetsNodeText.hashCode() : 0);
+    result = 31 * result + (myNonCodeUsagesString != null ? myNonCodeUsagesString.hashCode() : 0);
+    result = 31 * result + (myCodeUsagesString != null ? myCodeUsagesString.hashCode() : 0);
+    result = 31 * result + (myUsagesInGeneratedCodeString != null ? myUsagesInGeneratedCodeString.hashCode() : 0);
+    result = 31 * result + (myShowReadOnlyStatusAsRed ? 1 : 0);
+    result = 31 * result + (myShowCancelButton ? 1 : 0);
+    result = 31 * result + (myOpenInNewTab ? 1 : 0);
+    result = 31 * result + (myCodeUsages ? 1 : 0);
+    result = 31 * result + (myUsageTypeFilteringAvailable ? 1 : 0);
+    result = 31 * result + (myUsagesWord != null ? myUsagesWord.hashCode() : 0);
+    result = 31 * result + (myTabName != null ? myTabName.hashCode() : 0);
+    result = 31 * result + (myToolwindowTitle != null ? myToolwindowTitle.hashCode() : 0);
+    result = 31 * result + (myNotFoundActions != null ? myNotFoundActions.hashCode() : 0);
+    result = 31 * result + (myDetachedMode ? 1 : 0);
+    result = 31 * result + (myDynamicCodeUsagesString != null ? myDynamicCodeUsagesString.hashCode() : 0);
+    result = 31 * result + (myMergeDupLinesAvailable ? 1 : 0);
+    return result;
   }
 }
 

@@ -54,6 +54,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
@@ -86,6 +87,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntArrayList;
+import org.consulo.lombok.annotations.Logger;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -102,6 +104,7 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 
+@Logger
 public class CtrlMouseHandler extends AbstractProjectComponent {
   private static final AbstractDocumentationTooltipAction[] ourTooltipActions = {new ShowQuickDocAtPinnedWindowFromTooltipAction()};
   private final EditorColorsManager myEditorColorsManager;
@@ -784,9 +787,10 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
 
       ProgressIndicatorUtils.scheduleWithWriteActionPriority(myProgress, new ReadTask() {
         @RequiredReadAction
+        @Nullable
         @Override
-        public void computeInReadAction(@NotNull ProgressIndicator indicator) {
-          doExecute(file, offset);
+        public Continuation performInReadAction(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
+          return doExecute(file, offset);
         }
 
         @Override
@@ -795,28 +799,32 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       });
     }
 
+    @Nullable
     @RequiredReadAction
-    private void doExecute(@NotNull PsiFile file, int offset) {
+    private ReadTask.Continuation doExecute(@NotNull PsiFile file, int offset) {
       final Info info;
+      final DocInfo docInfo;
       try {
         info = getInfoAt(myEditor, file, offset, myBrowseMode);
-        if (info == null) return;
+        if (info == null) return null;
+        docInfo = info.getInfo();
       }
       catch (IndexNotReadyException e) {
         showDumbModeNotification(myProject);
-        return;
+        return null;
       }
 
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
+      LOGGER.debug("Obtained info about element under cursor");
+      return new ReadTask.Continuation(new Runnable() {
         @Override
         public void run() {
           if (myDisposed || myEditor.isDisposed() || !myEditor.getComponent().isShowing()) return;
-          showHint(info);
+          showHint(info, docInfo);
         }
       });
     }
 
-    private void showHint(@NotNull Info info) {
+    private void showHint(@NotNull Info info, @NotNull DocInfo docInfo) {
       if (myDisposed || myEditor.isDisposed()) return;
       Component internalComponent = myEditor.getContentComponent();
       if (myHighlighter != null) {
@@ -835,8 +843,6 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       }
 
       myHighlighter = installHighlighterSet(info, myEditor);
-
-      DocInfo docInfo = info.getInfo();
 
       if (docInfo.text == null) return;
 

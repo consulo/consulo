@@ -16,16 +16,18 @@
 package com.intellij.openapi.vcs.changes.conflicts;
 
 import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.EditorNotifications;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
 
 /**
  * @author Dmitry Avdeev
  */
-public class ChangelistConflictNotificationProvider extends EditorNotifications.Provider<ChangelistConflictNotificationPanel> {
+public class ChangelistConflictNotificationProvider implements EditorNotificationProvider<ChangelistConflictNotificationPanel>, DumbAware {
 
   private static final Key<ChangelistConflictNotificationPanel> KEY = Key.create("changelistConflicts");
 
@@ -40,6 +42,7 @@ public class ChangelistConflictNotificationProvider extends EditorNotifications.
     return KEY;
   }
 
+  @RequiredReadAction
   public ChangelistConflictNotificationPanel createNotificationPanel(VirtualFile file, FileEditor fileEditor) {
     return myConflictTracker.hasConflict(file) ? ChangelistConflictNotificationPanel.create(myConflictTracker, file) : null;
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.intellij.find.*;
 import com.intellij.find.actions.FindInPathAction;
 import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.find.impl.FindInProjectUtil;
+import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.ide.DataManager;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -38,25 +39,25 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.Segment;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.content.Content;
-import com.intellij.usageView.*;
+import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
-import com.intellij.usages.UsageViewManager;
 import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.util.AdapterProcessor;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.*;
@@ -115,9 +116,23 @@ public class ReplaceInProjectManager {
   }
 
   public void replaceInProject(@NotNull DataContext dataContext) {
+    final boolean isOpenInNewTabEnabled;
+    final boolean toOpenInNewTab;
+    final Content selectedContent = com.intellij.usageView.UsageViewManager.getInstance(myProject).getSelectedContent(true);
+    if (selectedContent != null && selectedContent.isPinned()) {
+      toOpenInNewTab = true;
+      isOpenInNewTabEnabled = false;
+    }
+    else {
+      toOpenInNewTab = FindSettings.getInstance().isShowResultsInSeparateView();
+      isOpenInNewTabEnabled = com.intellij.usageView.UsageViewManager.getInstance(myProject).getReusableContentsCount() > 0;
+    }
     final FindManager findManager = FindManager.getInstance(myProject);
-    final FindModel findModel = (FindModel)findManager.getFindInProjectModel().clone();
+    final FindModel findModel = findManager.getFindInProjectModel().clone();
     findModel.setReplaceState(true);
+    findModel.setOpenInNewTabVisible(true);
+    findModel.setOpenInNewTabEnabled(isOpenInNewTabEnabled);
+    findModel.setOpenInNewTab(toOpenInNewTab);
     FindInProjectUtil.setDirectoryName(findModel, dataContext);
 
     Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
@@ -126,9 +141,8 @@ public class ReplaceInProjectManager {
     findManager.showFindDialog(findModel, new Runnable() {
       @Override
       public void run() {
-        final PsiDirectory psiDirectory = FindInProjectUtil.getPsiDirectory(findModel, myProject);
         if (!findModel.isProjectScope() &&
-            psiDirectory == null &&
+            FindInProjectUtil.getDirectory(findModel) == null &&
             findModel.getModuleName() == null &&
             findModel.getCustomScope() == null) {
           return;
@@ -138,12 +152,12 @@ public class ReplaceInProjectManager {
 
         if (manager == null) return;
         findManager.getFindInProjectModel().copyFrom(findModel);
-        final FindModel findModelCopy = (FindModel)findModel.clone();
+        final FindModel findModelCopy = findModel.clone();
 
-        final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(true, findModelCopy);
+        final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(findModel.isOpenInNewTab(), findModelCopy);
         final FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, true, presentation);
 
-        UsageSearcherFactory factory = new UsageSearcherFactory(findModelCopy, psiDirectory, processPresentation);
+        UsageSearcherFactory factory = new UsageSearcherFactory(findModelCopy, processPresentation);
         searchAndShowUsages(manager, factory, findModelCopy, presentation, processPresentation, findManager);
       }
     });
@@ -168,7 +182,7 @@ public class ReplaceInProjectManager {
     @Override
     public String getLongDescriptiveName() {
       UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(false, myFindModel);
-      return "Replace "+presentation.getToolwindowTitle()+" with '"+ myFindModel.getStringToReplace()+"'";
+      return "Replace "+ StringUtil.decapitalize(presentation.getToolwindowTitle())+" with '"+ myFindModel.getStringToReplace()+"'";
     }
 
     @Override
@@ -193,7 +207,9 @@ public class ReplaceInProjectManager {
                                   final FindManager findManager) {
     presentation.setMergeDupLinesAvailable(false);
     final ReplaceContext[] context = new ReplaceContext[1];
-    manager.searchAndShowUsages(new UsageTarget[]{new ReplaceInProjectTarget(myProject, findModelCopy)},
+    final ReplaceInProjectTarget target = new ReplaceInProjectTarget(myProject, findModelCopy);
+    ((FindManagerImpl)FindManager.getInstance(myProject)).getFindUsagesManager().addToHistory(target);
+    manager.searchAndShowUsages(new UsageTarget[]{target},
                                 usageSearcherFactory, processPresentation, presentation, new UsageViewManager.UsageViewStateListener() {
       @Override
       public void usageViewCreated(@NotNull UsageView usageView) {
@@ -216,6 +232,7 @@ public class ReplaceInProjectManager {
     });
   }
 
+  @RequiredDispatchThread
   private void replaceWithPrompt(final ReplaceContext replaceContext) {
     final List<Usage> _usages = replaceContext.getUsageView().getSortedUsages();
 
@@ -237,15 +254,15 @@ public class ReplaceInProjectManager {
       final PsiFile psiFile = elt.getContainingFile();
       if (!psiFile.isWritable()) continue;
 
+      final VirtualFile virtualFile = psiFile.getVirtualFile();
+
       Runnable selectOnEditorRunnable = new Runnable() {
         @Override
         public void run() {
-          final VirtualFile virtualFile = psiFile.getVirtualFile();
-
           if (virtualFile != null && ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
             @Override
             public Boolean compute() {
-              return virtualFile.isValid() ? Boolean.TRUE : Boolean.FALSE;
+              return virtualFile.isValid();
             }
           }).booleanValue()) {
 
@@ -257,9 +274,15 @@ public class ReplaceInProjectManager {
         }
       };
 
+      String path = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
+        @Override
+        public String compute() {
+          return virtualFile != null ? virtualFile.getPath() : null;
+        }
+      });
       CommandProcessor.getInstance()
               .executeCommand(myProject, selectOnEditorRunnable, FindBundle.message("find.replace.select.on.editor.command"), null);
-      String title = FindBundle.message("find.replace.found.usage.title", i + 1, usages.length);
+      String title = FindBundle.message("find.replace.found.usage.title", i + 1, usages.length, path);
 
       int result;
       try {
@@ -291,6 +314,17 @@ public class ReplaceInProjectManager {
         if (closeUsageViewIfEmpty(replaceContext.getUsageView(), success.get())) {
           return;
         }
+      }
+
+      if (result == FindManager.PromptResult.SKIP_ALL_IN_THIS_FILE) {
+        int j;
+        for(j = i + 1;j < usages.length; ++j) {
+          final PsiElement nextElt = ((UsageInfo2UsageAdapter)usages[j]).getUsageInfo().getElement();
+          if (nextElt == null) continue;
+          if (nextElt.getContainingFile() == psiFile) continue;
+          break;
+        }
+        i = j -1;
       }
 
       if (result == FindManager.PromptResult.ALL_IN_THIS_FILE) {
@@ -371,6 +405,7 @@ public class ReplaceInProjectManager {
     replaceContext.getUsageView().addButtonToLowerPane(replaceSelectedRunnable, FindBundle.message("find.replace.selected.action"));
   }
 
+  @RequiredDispatchThread
   private boolean replaceUsages(@NotNull ReplaceContext replaceContext, @NotNull Collection<Usage> usages) {
     if (!ensureUsagesWritable(replaceContext, usages)) {
       return true;
@@ -406,6 +441,7 @@ public class ReplaceInProjectManager {
     }
   }
 
+  @RequiredDispatchThread
   public boolean replaceUsage(@NotNull final Usage usage,
                               @NotNull final FindModel findModel,
                               @NotNull final Set<Usage> excludedSet,
@@ -422,7 +458,7 @@ public class ReplaceInProjectManager {
         final Document document = ((UsageInfo2UsageAdapter)usage).getDocument();
         if (!document.isWritable()) return false;
 
-        boolean result = ((UsageInfo2UsageAdapter)usage).processRangeMarkers(new Processor<Segment>() {
+        return ((UsageInfo2UsageAdapter)usage).processRangeMarkers(new Processor<Segment>() {
           @Override
           public boolean process(Segment segment) {
             final int textOffset = segment.getStartOffset();
@@ -441,7 +477,6 @@ public class ReplaceInProjectManager {
             return true;
           }
         });
-        return result;
       }
     });
 
@@ -450,7 +485,6 @@ public class ReplaceInProjectManager {
     }
     return result;
   }
-
 
   private boolean getStringToReplace(int textOffset,
                                      int textEndOffset,
@@ -466,7 +500,9 @@ public class ReplaceInProjectManager {
     final CharSequence foundString = document.getCharsSequence().subSequence(textOffset, textEndOffset);
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
     FindResult findResult = findManager.findString(document.getCharsSequence(), textOffset, findModel, file != null ? file.getVirtualFile() : null);
-    if (!findResult.isStringFound()) {
+    if (!findResult.isStringFound() ||
+        // find result should be in needed range
+        !(findResult.getStartOffset() >= textOffset && findResult.getEndOffset() <= textEndOffset) ) {
       return false;
     }
 
@@ -548,14 +584,11 @@ public class ReplaceInProjectManager {
 
   private class UsageSearcherFactory implements Factory<UsageSearcher> {
     private final FindModel myFindModelCopy;
-    private final PsiDirectory myPsiDirectory;
     private final FindUsagesProcessPresentation myProcessPresentation;
 
     private UsageSearcherFactory(@NotNull FindModel findModelCopy,
-                                 PsiDirectory psiDirectory,
                                  @NotNull FindUsagesProcessPresentation processPresentation) {
       myFindModelCopy = findModelCopy;
-      myPsiDirectory = psiDirectory;
       myProcessPresentation = processPresentation;
     }
 
@@ -568,7 +601,7 @@ public class ReplaceInProjectManager {
           try {
             myIsFindInProgress = true;
 
-            FindInProjectUtil.findUsages(myFindModelCopy, myPsiDirectory, myProject,
+            FindInProjectUtil.findUsages(myFindModelCopy, myProject,
                                          new AdapterProcessor<UsageInfo, Usage>(processor, UsageInfo2UsageAdapter.CONVERTER),
                                          myProcessPresentation);
           }

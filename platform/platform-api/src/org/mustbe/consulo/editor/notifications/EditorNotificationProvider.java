@@ -6,7 +6,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 
@@ -21,6 +21,6 @@ public interface EditorNotificationProvider<T extends JComponent> {
   Key<T> getKey();
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredReadAction
   T createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor);
 }

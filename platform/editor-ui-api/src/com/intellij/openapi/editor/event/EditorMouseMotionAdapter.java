@@ -16,9 +16,11 @@
 package com.intellij.openapi.editor.event;
 
 public abstract class EditorMouseMotionAdapter implements EditorMouseMotionListener{
+  @Override
   public void mouseMoved(EditorMouseEvent e) {
   }
 
+  @Override
   public void mouseDragged(EditorMouseEvent e) {
   }
 }

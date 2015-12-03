@@ -23,6 +23,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Key;
@@ -32,6 +33,8 @@ import com.intellij.ui.EditorNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
 
 import java.util.*;
 
@@ -39,7 +42,7 @@ import java.util.*;
  * User: anna
  * Date: 10/11/13
  */
-public class PluginAdvertiserEditorNotificationProvider extends EditorNotifications.Provider<EditorNotificationPanel> {
+public class PluginAdvertiserEditorNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Key<EditorNotificationPanel> KEY = Key.create("file.type.associations.detected");
   private final Project myProject;
   private final EditorNotifications myNotifications;
@@ -56,6 +59,7 @@ public class PluginAdvertiserEditorNotificationProvider extends EditorNotificati
     return KEY;
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public EditorNotificationPanel createNotificationPanel(VirtualFile file, FileEditor fileEditor) {

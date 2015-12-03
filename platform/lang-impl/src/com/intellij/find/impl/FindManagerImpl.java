@@ -52,6 +52,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.patterns.StringPattern;
 import com.intellij.psi.*;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
@@ -134,10 +135,10 @@ public class FindManagerImpl extends FindManager {
       @Override
       @Nullable
       public Point getInitialLocation() {
-        if (model.isMultipleFiles() && myReplaceInProjectPromptPos.x >= 0 && myReplaceInProjectPromptPos.y >= 0){
+        if (model.isMultipleFiles() && myReplaceInProjectPromptPos.x >= 0 && myReplaceInProjectPromptPos.y >= 0) {
           return myReplaceInProjectPromptPos;
         }
-        if (!model.isMultipleFiles() && myReplaceInFilePromptPos.x >= 0 && myReplaceInFilePromptPos.y >= 0){
+        if (!model.isMultipleFiles() && myReplaceInFilePromptPos.x >= 0 && myReplaceInFilePromptPos.y >= 0) {
           return myReplaceInFilePromptPos;
         }
         return null;
@@ -146,10 +147,10 @@ public class FindManagerImpl extends FindManager {
 
     replacePromptDialog.show();
 
-    if (model.isMultipleFiles()){
+    if (model.isMultipleFiles()) {
       myReplaceInProjectPromptPos = replacePromptDialog.getLocation();
     }
-    else{
+    else {
       myReplaceInFilePromptPos = replacePromptDialog.getLocation();
     }
     return replacePromptDialog.getExitCode();
@@ -157,7 +158,7 @@ public class FindManagerImpl extends FindManager {
 
   @Override
   public void showFindDialog(@NotNull final FindModel model, @NotNull final Runnable okHandler) {
-    final Consumer<FindModel> handler = new Consumer<FindModel>(){
+    final Consumer<FindModel> handler = new Consumer<FindModel>() {
       @Override
       public void consume(FindModel findModel) {
         String stringToFind = findModel.getStringToFind();
@@ -177,7 +178,7 @@ public class FindManagerImpl extends FindManager {
         okHandler.run();
       }
     };
-    if(myFindDialog==null || Disposer.isDisposed(myFindDialog.getDisposable())){
+    if (myFindDialog == null || Disposer.isDisposed(myFindDialog.getDisposable())) {
       myFindDialog = new FindDialog(myProject, model, handler) {
         @Override
         protected void dispose() {
@@ -263,7 +264,7 @@ public class FindManagerImpl extends FindManager {
 
   @Override
   @NotNull
-  public FindResult findString(@NotNull CharSequence text, int offset, @NotNull FindModel model){
+  public FindResult findString(@NotNull CharSequence text, int offset, @NotNull FindModel model) {
     return findString(text, offset, model, null);
   }
 
@@ -271,8 +272,8 @@ public class FindManagerImpl extends FindManager {
   @Override
   public FindResult findString(@NotNull CharSequence text, int offset, @NotNull FindModel model, @Nullable VirtualFile file) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("offset="+offset);
-      LOG.debug("textlength="+text.length());
+      LOG.debug("offset=" + offset);
+      LOG.debug("textlength=" + text.length());
       LOG.debug(model.toString());
     }
 
@@ -281,7 +282,7 @@ public class FindManagerImpl extends FindManager {
 
   private FindResult findStringLoop(CharSequence text, int offset, FindModel model, VirtualFile file, @Nullable Predicate<FindResult> filter) {
     final char[] textArray = CharArrayUtil.fromSequenceWithoutCopying(text);
-    while(true) {
+    while (true) {
       FindResult result = doFindString(text, textArray, offset, model, file);
       if (filter == null || filter.apply(result)) {
         if (!model.isWholeWordsOnly()) {
@@ -324,17 +325,13 @@ public class FindManagerImpl extends FindManager {
       mySkipRangesSet = result;
     }
 
-    private void addRanges(VirtualFile file,
-                           FindModel model,
-                           CharSequence text,
-                           TreeMap<Integer, Integer> result,
-                           FindModel.SearchContext searchContext) {
+    private void addRanges(VirtualFile file, FindModel model, CharSequence text, TreeMap<Integer, Integer> result, FindModel.SearchContext searchContext) {
       FindModel clonedModel = model.clone();
       clonedModel.setSearchContext(searchContext);
       clonedModel.setForward(true);
       int offset = 0;
 
-      while(true) {
+      while (true) {
         FindResult customResult = findStringLoop(text, offset, clonedModel, file, null);
         if (!customResult.isStringFound()) break;
         result.put(customResult.getStartOffset(), customResult.getEndOffset());
@@ -346,15 +343,14 @@ public class FindManagerImpl extends FindManager {
     boolean isAcceptableFor(FindModel model, VirtualFile file, CharSequence text) {
       return Comparing.equal(myFile, file) &&
              myFindModel.equals(model) &&
-             myText.length() == text.length()
-              ;
+             myText.length() == text.length();
     }
 
     @Override
     public boolean apply(@Nullable FindResult input) {
       if (input == null || !input.isStringFound()) return true;
       NavigableMap<Integer, Integer> map = mySkipRangesSet.headMap(input.getStartOffset(), true);
-      for(Map.Entry<Integer, Integer> e:map.descendingMap().entrySet()) {
+      for (Map.Entry<Integer, Integer> e : map.descendingMap().entrySet()) {
         // [e.key, e.value] intersect with [input.start, input.end]
         if (e.getKey() <= input.getStartOffset() && (input.getStartOffset() <= e.getValue() || e.getValue() >= input.getEndOffset())) return false;
         if (e.getValue() <= input.getStartOffset()) break;
@@ -362,12 +358,13 @@ public class FindManagerImpl extends FindManager {
       return true;
     }
   }
+
   private static Key<FindExceptCommentsOrLiteralsData> ourExceptCommentsOrLiteralsDataKey = Key.create("except.comments.literals.search.data");
 
   private Predicate<FindResult> getFindContextPredicate(@NotNull FindModel model, VirtualFile file, CharSequence text) {
     if (file == null) return null;
     FindModel.SearchContext context = model.getSearchContext();
-    if( context == FindModel.SearchContext.ANY || context == FindModel.SearchContext.IN_COMMENTS ||
+    if (context == FindModel.SearchContext.ANY || context == FindModel.SearchContext.IN_COMMENTS ||
         context == FindModel.SearchContext.IN_STRING_LITERALS) {
       return null;
     }
@@ -399,14 +396,14 @@ public class FindManagerImpl extends FindManager {
     boolean isWordStart;
 
     if (startOffset != 0) {
-      boolean previousCharacterIsIdentifier = Character.isJavaIdentifierPart(text.charAt(startOffset - 1)) &&
-                                              (startOffset <= 1 || text.charAt(startOffset - 2) != '\\');
+      boolean previousCharacterIsIdentifier =
+              Character.isJavaIdentifierPart(text.charAt(startOffset - 1)) && (startOffset <= 1 || text.charAt(startOffset - 2) != '\\');
       boolean previousCharacterIsSameAsNext = text.charAt(startOffset - 1) == text.charAt(startOffset);
 
       boolean firstCharacterIsIdentifier = Character.isJavaIdentifierPart(text.charAt(startOffset));
-      isWordStart = !firstCharacterIsIdentifier && !previousCharacterIsSameAsNext ||
-                    firstCharacterIsIdentifier && !previousCharacterIsIdentifier;
-    } else {
+      isWordStart = !firstCharacterIsIdentifier && !previousCharacterIsSameAsNext || firstCharacterIsIdentifier && !previousCharacterIsIdentifier;
+    }
+    else {
       isWordStart = true;
     }
 
@@ -415,11 +412,11 @@ public class FindManagerImpl extends FindManager {
     if (endOffset != text.length()) {
       boolean nextCharacterIsIdentifier = Character.isJavaIdentifierPart(text.charAt(endOffset));
       boolean nextCharacterIsSameAsPrevious = endOffset > 0 && text.charAt(endOffset) == text.charAt(endOffset - 1);
-      boolean lastSearchedCharacterIsIdentifier = endOffset  > 0 && Character.isJavaIdentifierPart(text.charAt(endOffset - 1));
+      boolean lastSearchedCharacterIsIdentifier = endOffset > 0 && Character.isJavaIdentifierPart(text.charAt(endOffset - 1));
 
-      isWordEnd = lastSearchedCharacterIsIdentifier && !nextCharacterIsIdentifier ||
-                  !lastSearchedCharacterIsIdentifier && !nextCharacterIsSameAsPrevious;
-    } else {
+      isWordEnd = lastSearchedCharacterIsIdentifier && !nextCharacterIsIdentifier || !lastSearchedCharacterIsIdentifier && !nextCharacterIsSameAsPrevious;
+    }
+    else {
       isWordEnd = true;
     }
 
@@ -436,7 +433,8 @@ public class FindManagerImpl extends FindManager {
 
       if (findmodel.isRegularExpressions()) {
         newStringToFind = StringUtil.replace(s, "\n", "\\n\\s*"); // add \\s* for convenience
-      } else {
+      }
+      else {
         newStringToFind = StringUtil.escapeToRegexp(s);
         model.setRegularExpressions(true);
       }
@@ -455,7 +453,7 @@ public class FindManagerImpl extends FindManager {
                                   @Nullable VirtualFile file) {
     FindModel model = normalizeIfMultilined(findmodel);
     String toFind = model.getStringToFind();
-    if (toFind.isEmpty()){
+    if (toFind.isEmpty()) {
       return NOT_FOUND_RESULT;
     }
 
@@ -464,21 +462,21 @@ public class FindManagerImpl extends FindManager {
       return findInCommentsAndLiterals(text, textArray, offset, model, file);
     }
 
-    if (model.isRegularExpressions()){
+    if (model.isRegularExpressions()) {
       return findStringByRegularExpression(text, offset, model);
     }
 
     final StringSearcher searcher = createStringSearcher(model);
 
     int index;
-    if (model.isForward()){
+    if (model.isForward()) {
       final int res = searcher.scan(text, textArray, offset, text.length());
       index = res < 0 ? -1 : res;
     }
     else {
-      index = offset == 0 ? -1 : searcher.scan(text, textArray, 0, offset-1);
+      index = offset == 0 ? -1 : searcher.scan(text, textArray, 0, offset - 1);
     }
-    if (index < 0){
+    if (index < 0) {
       return NOT_FOUND_RESULT;
     }
     return new FindResultImpl(index, index + toFind.length());
@@ -505,9 +503,13 @@ public class FindManagerImpl extends FindManager {
     final Set<Language> relevantLanguages;
     final FindModel model;
 
-    public CommentsLiteralsSearchData(VirtualFile lastFile, Set<Language> relevantLanguages,
-                                      SyntaxHighlighterOverEditorHighlighter highlighter, TokenSet tokensOfInterest,
-                                      StringSearcher searcher, Matcher matcher, FindModel model) {
+    public CommentsLiteralsSearchData(VirtualFile lastFile,
+                                      Set<Language> relevantLanguages,
+                                      SyntaxHighlighterOverEditorHighlighter highlighter,
+                                      TokenSet tokensOfInterest,
+                                      StringSearcher searcher,
+                                      Matcher matcher,
+                                      FindModel model) {
       this.lastFile = lastFile;
       this.highlighter = highlighter;
       this.tokensOfInterest = tokensOfInterest;
@@ -562,15 +564,15 @@ public class FindManagerImpl extends FindManager {
           }
         });
 
-        for (Language relevantLanguage:relevantLanguages) {
+        for (Language relevantLanguage : relevantLanguages) {
           tokensOfInterest = addTokenTypesForLanguage(model, relevantLanguage, tokensOfInterest);
         }
 
-        if(model.isInStringLiteralsOnly()) {
+        if (model.isInStringLiteralsOnly()) {
           // TODO: xml does not have string literals defined so we add XmlAttributeValue element type as convenience
           final Lexer xmlLexer = getHighlighter(null, Language.findLanguageByID("XML")).getHighlightingLexer();
           final String marker = "xxx";
-          xmlLexer.start("<a href=\"" + marker+ "\" />");
+          xmlLexer.start("<a href=\"" + marker + "\" />");
 
           while (!marker.equals(xmlLexer.getTokenText())) {
             xmlLexer.advance();
@@ -582,20 +584,22 @@ public class FindManagerImpl extends FindManager {
             tokensOfInterest = TokenSet.orSet(tokensOfInterest, TokenSet.create(convenienceXmlAttrType));
           }
         }
-      } else {
+      }
+      else {
         relevantLanguages = ContainerUtil.newHashSet();
         if (ftype instanceof AbstractFileType) {
           if (model.isInCommentsOnly()) {
             tokensOfInterest = TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT);
           }
           if (model.isInStringLiteralsOnly()) {
-            tokensOfInterest = TokenSet.orSet(tokensOfInterest, TokenSet.create(CustomHighlighterTokenType.STRING, CustomHighlighterTokenType.SINGLE_QUOTED_STRING));
+            tokensOfInterest =
+                    TokenSet.orSet(tokensOfInterest, TokenSet.create(CustomHighlighterTokenType.STRING, CustomHighlighterTokenType.SINGLE_QUOTED_STRING));
           }
         }
       }
 
-      Matcher matcher = model.isRegularExpressions() ? compileRegExp(model, ""):null;
-      StringSearcher searcher = matcher != null ? null: new StringSearcher(model.getStringToFind(), model.isCaseSensitive(), true);
+      Matcher matcher = model.isRegularExpressions() ? compileRegExp(model, "") : null;
+      StringSearcher searcher = matcher != null ? null : new StringSearcher(model.getStringToFind(), model.isCaseSensitive(), true);
       SyntaxHighlighterOverEditorHighlighter highlighterAdapter = new SyntaxHighlighterOverEditorHighlighter(highlighter, file, myProject);
       data = new CommentsLiteralsSearchData(file, relevantLanguages, highlighterAdapter, tokensOfInterest, searcher, matcher, model.clone());
       data.highlighter.restart(text);
@@ -613,15 +617,14 @@ public class FindManagerImpl extends FindManager {
     boolean scanningForward = model.isForward();
     FindResultImpl prevFindResult = NOT_FOUND_RESULT;
 
-    while((tokenType = lexer.getTokenType()) != null) {
+    while ((tokenType = lexer.getTokenType()) != null) {
       if (lexer.getState() == 0) lastGoodOffset = lexer.getTokenStart();
 
       final TextAttributesKey[] keys = data.highlighter.getTokenHighlights(tokenType);
 
       if (tokens.contains(tokenType) ||
           (model.isInStringLiteralsOnly() && ChunkExtractor.isHighlightedAsString(keys)) ||
-          (model.isInCommentsOnly() && ChunkExtractor.isHighlightedAsComment(keys))
-              ) {
+          (model.isInCommentsOnly() && ChunkExtractor.isHighlightedAsComment(keys))) {
         int start = lexer.getTokenStart();
         int end = lexer.getTokenEnd();
         if (model.isInStringLiteralsOnly()) { // skip literal quotes itself from matching
@@ -634,7 +637,7 @@ public class FindManagerImpl extends FindManager {
           }
         }
 
-        while(true) {
+        while (true) {
           FindResultImpl findResult = null;
 
           if (data.searcher != null) {
@@ -642,15 +645,17 @@ public class FindManagerImpl extends FindManager {
 
             if (matchStart != -1 && matchStart >= start) {
               final int matchEnd = matchStart + model.getStringToFind().length();
-              if (matchStart >= offset || !scanningForward)
+              if (matchStart >= offset || !scanningForward) {
                 findResult = new FindResultImpl(matchStart, matchEnd);
+              }
               else {
                 start = matchEnd;
                 continue;
               }
             }
-          } else {
-            data.matcher.reset(text.subSequence(start, end));
+          }
+          else {
+            data.matcher.reset(StringPattern.newBombedCharSequence(text.subSequence(start, end)));
             if (data.matcher.find()) {
               final int matchEnd = start + data.matcher.end();
               int matchStart = start + data.matcher.start();
@@ -668,7 +673,8 @@ public class FindManagerImpl extends FindManager {
             if (scanningForward) {
               data.startOffset = lastGoodOffset;
               return findResult;
-            } else {
+            }
+            else {
 
               if (findResult.getEndOffset() >= offset) return prevFindResult;
               prevFindResult = findResult;
@@ -678,7 +684,8 @@ public class FindManagerImpl extends FindManager {
           }
           break;
         }
-      } else {
+      }
+      else {
         Language tokenLang = tokenType.getLanguage();
         if (tokenLang != lang && tokenLang != Language.ANY && !data.relevantLanguages.contains(tokenLang)) {
           tokens = addTokenTypesForLanguage(model, tokenLang, tokens);
@@ -696,15 +703,18 @@ public class FindManagerImpl extends FindManager {
   private static TokenSet addTokenTypesForLanguage(FindModel model, Language lang, TokenSet tokensOfInterest) {
     ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
     if (definition != null) {
-      for(LanguageVersion languageVersion : lang.getVersions()) {
-        tokensOfInterest = TokenSet.orSet(tokensOfInterest, model.isInCommentsOnly() ? definition.getCommentTokens(languageVersion): TokenSet.EMPTY);
-        tokensOfInterest = TokenSet.orSet(tokensOfInterest, model.isInStringLiteralsOnly() ? definition.getStringLiteralElements(languageVersion) : TokenSet.EMPTY);
+      for (LanguageVersion languageVersion : lang.getVersions()) {
+        tokensOfInterest = TokenSet.orSet(tokensOfInterest, model.isInCommentsOnly() ? definition.getCommentTokens(languageVersion) : TokenSet.EMPTY);
+        tokensOfInterest =
+                TokenSet.orSet(tokensOfInterest, model.isInStringLiteralsOnly() ? definition.getStringLiteralElements(languageVersion) : TokenSet.EMPTY);
       }
     }
     return tokensOfInterest;
   }
 
-  private static @Nullable SyntaxHighlighter getHighlighter(VirtualFile file, @Nullable Language lang) {
+  private static
+  @Nullable
+  SyntaxHighlighter getHighlighter(VirtualFile file, @Nullable Language lang) {
     SyntaxHighlighter syntaxHighlighter = lang != null ? SyntaxHighlighterFactory.getSyntaxHighlighter(lang, null, file) : null;
     if (lang == null || syntaxHighlighter instanceof PlainSyntaxHighlighter) {
       syntaxHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(file.getFileType(), null, file);
@@ -718,7 +728,7 @@ public class FindManagerImpl extends FindManager {
     if (matcher == null) {
       return NOT_FOUND_RESULT;
     }
-    if (model.isForward()){
+    if (model.isForward()) {
       if (matcher.find(startOffset)) {
         if (matcher.end() <= text.length()) {
           return new FindResultImpl(matcher.start(), matcher.end());
@@ -729,11 +739,11 @@ public class FindManagerImpl extends FindManager {
     else {
       int start = -1;
       int end = -1;
-      while(matcher.find() && matcher.end() < startOffset){
+      while (matcher.find() && matcher.end() < startOffset) {
         start = matcher.start();
         end = matcher.end();
       }
-      if (start < 0){
+      if (start < 0) {
         return NOT_FOUND_RESULT;
       }
       return new FindResultImpl(start, end);
@@ -742,7 +752,7 @@ public class FindManagerImpl extends FindManager {
 
   private static Matcher compileRegExp(FindModel model, CharSequence text) {
     Pattern pattern = model.compileRegExp();
-    return pattern == null ? null : pattern.matcher(text);
+    return pattern == null ? null : pattern.matcher(StringPattern.newBombedCharSequence(text));
   }
 
   @Override
@@ -752,30 +762,31 @@ public class FindManagerImpl extends FindManager {
       return getStringToReplaceByRegexp0(foundString, model);
     }
     if (model.isPreserveCase()) {
-      return replaceWithCaseRespect (toReplace, foundString);
+      return replaceWithCaseRespect(toReplace, foundString);
     }
     return toReplace;
   }
 
   @Override
-  public String getStringToReplace(@NotNull String foundString, @NotNull FindModel model,
-                                   int startOffset, @NotNull CharSequence documentText) throws MalformedReplacementStringException{
+  public String getStringToReplace(@NotNull String foundString, @NotNull FindModel model, int startOffset, @NotNull CharSequence documentText)
+          throws MalformedReplacementStringException {
     String toReplace = model.getStringToReplace();
     if (model.isRegularExpressions()) {
       return getStringToReplaceByRegexp(model, documentText, startOffset);
     }
     if (model.isPreserveCase()) {
-      return replaceWithCaseRespect (toReplace, foundString);
+      return replaceWithCaseRespect(toReplace, foundString);
     }
     return toReplace;
   }
 
-  private static String getStringToReplaceByRegexp(@NotNull final FindModel model, @NotNull CharSequence text, int startOffset) throws MalformedReplacementStringException {
+  private static String getStringToReplaceByRegexp(@NotNull final FindModel model, @NotNull CharSequence text, int startOffset)
+          throws MalformedReplacementStringException {
     Matcher matcher = compileRegexAndFindFirst(model, text, startOffset);
     return getStringToReplaceByRegexp(model, matcher);
   }
 
-  private static String getStringToReplaceByRegexp(@NotNull final FindModel model, Matcher matcher) throws MalformedReplacementStringException{
+  private static String getStringToReplaceByRegexp(@NotNull final FindModel model, Matcher matcher) throws MalformedReplacementStringException {
     if (matcher == null) return null;
     try {
       String toReplace = model.getStringToReplace();
@@ -789,7 +800,7 @@ public class FindManagerImpl extends FindManager {
   private static Matcher compileRegexAndFindFirst(FindModel model, CharSequence text, int startOffset) {
     Matcher matcher = compileRegExp(model, text);
 
-    if (model.isForward()){
+    if (model.isForward()) {
       if (!matcher.find(startOffset)) {
         return null;
       }
@@ -799,10 +810,10 @@ public class FindManagerImpl extends FindManager {
     }
     else {
       int start = -1;
-      while(matcher.find() && matcher.end() < startOffset){
+      while (matcher.find() && matcher.end() < startOffset) {
         start = matcher.start();
       }
-      if (start < 0){
+      if (start < 0) {
         return null;
       }
     }
@@ -813,18 +824,18 @@ public class FindManagerImpl extends FindManager {
     return new MalformedReplacementStringException(FindBundle.message("find.replace.invalid.replacement.string", model.getStringToReplace()), e);
   }
 
-  private static String getStringToReplaceByRegexp0(String foundString, final FindModel model) throws MalformedReplacementStringException{
+  private static String getStringToReplaceByRegexp0(String foundString, final FindModel model) throws MalformedReplacementStringException {
     String toFind = model.getStringToFind();
     String toReplace = model.getStringToReplace();
     Pattern pattern;
-    try{
+    try {
       int flags = Pattern.MULTILINE;
       if (!model.isCaseSensitive()) {
         flags |= Pattern.CASE_INSENSITIVE;
       }
       pattern = Pattern.compile(toFind, flags);
     }
-    catch(PatternSyntaxException e){
+    catch (PatternSyntaxException e) {
       return toReplace;
     }
 
@@ -954,6 +965,7 @@ public class FindManagerImpl extends FindManager {
     if (fileEditor instanceof TextEditor) {
       TextEditor textEditor = (TextEditor)fileEditor;
       Editor editor = textEditor.getEditor();
+      editor.getCaretModel().removeSecondaryCarets();
       if (tryToFindNextUsageViaEditorSearchComponent(editor, direction)) {
         return true;
       }
@@ -1010,8 +1022,8 @@ public class FindManagerImpl extends FindManager {
       editor.putUserData(HIGHLIGHTER_WAS_NOT_FOUND_KEY, Boolean.TRUE);
       String message = FindBundle.message("find.highlight.no.more.highlights.found");
       if (isForward) {
-        AnAction action=ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_NEXT);
-        String shortcutsText=KeymapUtil.getFirstKeyboardShortcutText(action);
+        AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_NEXT);
+        String shortcutsText = KeymapUtil.getFirstKeyboardShortcutText(action);
         if (shortcutsText.isEmpty()) {
           message = FindBundle.message("find.search.again.from.top.action.message", message);
         }
@@ -1020,8 +1032,8 @@ public class FindManagerImpl extends FindManager {
         }
       }
       else {
-        AnAction action=ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_PREVIOUS);
-        String shortcutsText=KeymapUtil.getFirstKeyboardShortcutText(action);
+        AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_PREVIOUS);
+        String shortcutsText = KeymapUtil.getFirstKeyboardShortcutText(action);
         if (shortcutsText.isEmpty()) {
           message = FindBundle.message("find.search.again.from.bottom.action.message", message);
         }
@@ -1032,7 +1044,8 @@ public class FindManagerImpl extends FindManager {
       JComponent component = HintUtil.createInformationLabel(message);
       final LightweightHint hint = new LightweightHint(component);
       HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, HintManager.UNDER, HintManager.HIDE_BY_ANY_KEY |
-                                                                                        HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING, 0, false);
+                                                                                        HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING, 0,
+                                                       false);
       return true;
     }
     if (!secondPass) {

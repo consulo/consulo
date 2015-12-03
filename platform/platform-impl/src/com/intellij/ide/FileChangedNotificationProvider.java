@@ -17,6 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileAttributes;
@@ -28,8 +29,10 @@ import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
 
-public class FileChangedNotificationProvider extends EditorNotifications.Provider<EditorNotificationPanel> {
+public class FileChangedNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Key<EditorNotificationPanel> KEY = Key.create("file.changed.notification.panel");
 
   private final Project myProject;
@@ -56,6 +59,7 @@ public class FileChangedNotificationProvider extends EditorNotifications.Provide
     return KEY;
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public EditorNotificationPanel createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor) {

@@ -61,7 +61,19 @@ public class IndexCacheManagerImpl extends CacheManager{
     }
     CommonProcessors.CollectProcessor<PsiFile> processor = new CommonProcessors.CollectProcessor<PsiFile>();
     processFilesWithWord(processor, word, occurenceMask, scope, caseSensitively);
-    return processor.getResults().isEmpty() ? PsiFile.EMPTY_ARRAY : processor.toArray(PsiFile.ARRAY_FACTORY);
+    return processor.getResults().isEmpty() ? PsiFile.EMPTY_ARRAY : processor.toArray(PsiFile.EMPTY_ARRAY);
+  }
+
+  @Override
+  @NotNull
+  public VirtualFile[] getVirtualFilesWithWord(@NotNull final String word, final short occurenceMask, @NotNull final GlobalSearchScope scope, final boolean caseSensitively) {
+    if (myProject.isDefault()) {
+      return VirtualFile.EMPTY_ARRAY;
+    }
+
+    final List<VirtualFile> vFiles = new ArrayList<VirtualFile>(5);
+    collectVirtualFilesWithWord(new CommonProcessors.CollectProcessor<VirtualFile>(vFiles), word, occurenceMask, scope, caseSensitively);
+    return vFiles.isEmpty() ? VirtualFile.EMPTY_ARRAY : vFiles.toArray(new VirtualFile[vFiles.size()]);
   }
 
   // IMPORTANT!!!
@@ -69,8 +81,8 @@ public class IndexCacheManagerImpl extends CacheManager{
   // we cannot call it inside FileBasedIndex.processValues() method except in collecting form
   // If we do, deadlocks are possible (IDEADEV-42137). Process the files without not holding indices' read lock.
   private boolean collectVirtualFilesWithWord(@NotNull final Processor<VirtualFile> fileProcessor,
-                                             @NotNull final String word, final short occurrenceMask,
-                                             @NotNull final GlobalSearchScope scope, final boolean caseSensitively) {
+                                              @NotNull final String word, final short occurrenceMask,
+                                              @NotNull final GlobalSearchScope scope, final boolean caseSensitively) {
     if (myProject.isDefault()) {
       return true;
     }

@@ -15,11 +15,11 @@
  */
 package com.intellij.usages.impl;
 
+import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.find.FindManager;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
@@ -43,7 +43,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.ui.HyperlinkAdapter;
@@ -129,7 +128,7 @@ class SearchForUsagesRunnable implements Runnable {
                                           @NotNull final List<String> lines) {
     com.intellij.usageView.UsageViewManager.getInstance(project); // in case tool window not registered
 
-    final Collection<PsiFile> largeFiles = processPresentation.getLargeFiles();
+    final Collection<VirtualFile> largeFiles = processPresentation.getLargeFiles();
     List<String> resultLines = new ArrayList<String>(lines);
     HyperlinkListener resultListener = listener;
     if (!largeFiles.isEmpty()) {
@@ -151,7 +150,7 @@ class SearchForUsagesRunnable implements Runnable {
 
     Runnable searchIncludingProjectFileUsages = processPresentation.searchIncludingProjectFileUsages();
     if (searchIncludingProjectFileUsages != null) {
-      resultLines.add("Occurrences in " + ApplicationNamesInfo.getInstance().getProductName() + " project files are skipped. " +
+      resultLines.add("Occurrences in project configuration files are skipped. " +
                       "<a href='" + SHOW_PROJECT_FILE_OCCURRENCES_HREF_TARGET + "'>Include them</a>");
       resultListener = addHrefHandling(resultListener, SHOW_PROJECT_FILE_OCCURRENCES_HREF_TARGET, searchIncludingProjectFileUsages);
     }
@@ -181,18 +180,17 @@ class SearchForUsagesRunnable implements Runnable {
   }
 
   @NotNull
-  private static String detailedLargeFilesMessage(@NotNull Collection<PsiFile> largeFiles) {
+  private static String detailedLargeFilesMessage(@NotNull Collection<VirtualFile> largeFiles) {
     String message = "";
     if (largeFiles.size() == 1) {
-      final VirtualFile vFile = largeFiles.iterator().next().getVirtualFile();
+      final VirtualFile vFile = largeFiles.iterator().next();
       message += "File " + presentableFileInfo(vFile) + " is ";
     }
     else {
       message += "Files<br> ";
 
       int counter = 0;
-      for (PsiFile file : largeFiles) {
-        final VirtualFile vFile = file.getVirtualFile();
+      for (VirtualFile vFile : largeFiles) {
         message += presentableFileInfo(vFile) + "<br> ";
         if (counter++ > 10) break;
       }
@@ -321,9 +319,13 @@ class SearchForUsagesRunnable implements Runnable {
 
   @Override
   public void run() {
+    PerformanceWatcher.Snapshot snapshot = PerformanceWatcher.takeSnapshot();
+
     AtomicBoolean findUsagesStartedShown = new AtomicBoolean();
     searchUsages(findUsagesStartedShown);
     endSearchForUsages(findUsagesStartedShown);
+
+    snapshot.logResponsivenessSinceCreation("Find Usages");
   }
 
   private void searchUsages(@NotNull final AtomicBoolean findStartedBalloonShown) {
@@ -418,7 +420,9 @@ class SearchForUsagesRunnable implements Runnable {
           final List<Action> notFoundActions = myProcessPresentation.getNotFoundActions();
           final String message = UsageViewBundle.message("dialog.no.usages.found.in",
                                                          StringUtil.decapitalize(myPresentation.getUsagesString()),
-                                                         myPresentation.getScopeText());
+                                                         myPresentation.getScopeText(),
+                                                         myPresentation.getContextText()
+          );
 
           if (notFoundActions.isEmpty()) {
             List<String> lines = new ArrayList<String>();

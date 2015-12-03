@@ -25,11 +25,11 @@ import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Factory;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.content.Content;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewManager;
@@ -39,7 +39,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class FindInProjectManager {
   private final Project myProject;
-  private boolean myToOpenInNewTab = false;
   private volatile boolean myIsFindInProgress = false;
 
   public static FindInProjectManager getInstance(Project project) {
@@ -52,34 +51,40 @@ public class FindInProjectManager {
 
   public void findInProject(@NotNull DataContext dataContext) {
     final boolean isOpenInNewTabEnabled;
-    final boolean[] toOpenInNewTab = new boolean[1];
+    final boolean toOpenInNewTab;
     Content selectedContent = UsageViewManager.getInstance(myProject).getSelectedContent(true);
     if (selectedContent != null && selectedContent.isPinned()) {
-      toOpenInNewTab[0] = true;
+      toOpenInNewTab = true;
       isOpenInNewTabEnabled = false;
     }
     else {
-      toOpenInNewTab[0] = myToOpenInNewTab;
+      toOpenInNewTab = FindSettings.getInstance().isShowResultsInSeparateView();
       isOpenInNewTabEnabled = UsageViewManager.getInstance(myProject).getReusableContentsCount() > 0;
     }
 
     final FindManager findManager = FindManager.getInstance(myProject);
-    final FindModel findModel = (FindModel) findManager.getFindInProjectModel().clone();
+    final FindModel findModel = findManager.getFindInProjectModel().clone();
     findModel.setReplaceState(false);
     findModel.setOpenInNewTabVisible(true);
     findModel.setOpenInNewTabEnabled(isOpenInNewTabEnabled);
-    findModel.setOpenInNewTab(toOpenInNewTab[0]);
+    findModel.setOpenInNewTab(toOpenInNewTab);
     FindInProjectUtil.setDirectoryName(findModel, dataContext);
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-    FindUtil.initStringToFindWithSelection(findModel, editor);
+    String text = PlatformDataKeys.PREDEFINED_TEXT.getData(dataContext);
+    if (text != null) {
+      FindModel.initStringToFindNoMultiline(findModel, text);
+    }
+    else {
+      Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+      FindUtil.initStringToFindWithSelection(findModel, editor);
+    }
 
     findManager.showFindDialog(findModel, new Runnable() {
       @Override
       public void run() {
         findModel.setOpenInNewTabVisible(false);
         if (isOpenInNewTabEnabled) {
-          myToOpenInNewTab = toOpenInNewTab[0] = findModel.isOpenInNewTab();
+          FindSettings.getInstance().setShowResultsInSeparateView(findModel.isOpenInNewTab());
         }
 
         startFindInProject(findModel);
@@ -90,8 +95,7 @@ public class FindInProjectManager {
   }
 
   public void startFindInProject(@NotNull FindModel findModel) {
-    final PsiDirectory psiDirectory = FindInProjectUtil.getPsiDirectory(findModel, myProject);
-    if (findModel.getDirectoryName() != null && psiDirectory == null){
+    if (findModel.getDirectoryName() != null && FindInProjectUtil.getDirectory(findModel) == null) {
       return;
     }
 
@@ -100,8 +104,8 @@ public class FindInProjectManager {
     if (manager == null) return;
     final FindManager findManager = FindManager.getInstance(myProject);
     findManager.getFindInProjectModel().copyFrom(findModel);
-    final FindModel findModelCopy = (FindModel)findModel.clone();
-    final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(myToOpenInNewTab, findModelCopy);
+    final FindModel findModelCopy = findModel.clone();
+    final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(FindSettings.getInstance().isShowResultsInSeparateView(), findModelCopy);
     final boolean showPanelIfOnlyOneUsage = !FindSettings.getInstance().isSkipResultsWithOneUsage();
 
     final FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, showPanelIfOnlyOneUsage, presentation);
@@ -127,7 +131,7 @@ public class FindInProjectManager {
                                               return processor.process(usage);
                                             }
                                           };
-                                          FindInProjectUtil.findUsages(findModelCopy, psiDirectory, myProject, consumer, processPresentation);
+                                          FindInProjectUtil.findUsages(findModelCopy, myProject, consumer, processPresentation);
                                         }
                                         finally {
                                           myIsFindInProgress = false;

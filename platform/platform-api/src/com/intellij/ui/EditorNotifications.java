@@ -15,35 +15,24 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
-import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.DeprecationInfo;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProviders;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 
 import javax.swing.*;
-import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
-public class EditorNotifications extends AbstractProjectComponent {
+public abstract class EditorNotifications  {
   @Deprecated
   @DeprecationInfo(value = "Use org.mustbe.consulo.editor.notifications.EditorNotificationProvider", until = "2.0")
   public abstract static class Provider<T extends JComponent> implements EditorNotificationProvider<T> {
@@ -51,6 +40,7 @@ public class EditorNotifications extends AbstractProjectComponent {
     @NotNull
     public abstract Key<T> getKey();
 
+    @RequiredReadAction
     @Override
     @Nullable
     public abstract T createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor);
@@ -61,81 +51,11 @@ public class EditorNotifications extends AbstractProjectComponent {
     return project.getComponent(EditorNotifications.class);
   }
 
-  private final NotNullLazyValue<List<EditorNotificationProvider<?>>> myProvidersValue = new NotNullLazyValue<List<EditorNotificationProvider<?>>>() {
-    @NotNull
-    @Override
-    protected List<EditorNotificationProvider<?>> compute() {
-      return EditorNotificationProviders.createProviders(myProject);
-    }
-  };
+  public abstract void updateNotifications(final VirtualFile file);
 
-  private final FileEditorManager myFileEditorManager;
+  public abstract void updateAllNotifications();
 
-  public EditorNotifications(final Project project, FileEditorManager fileEditorManager) {
-    super(project);
-    myFileEditorManager = fileEditorManager;
-    project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
-      @Override
-      public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        updateNotifications(file);
-      }
-    });
-    project.getMessageBus().connect(project).subscribe(BackgroundTaskByVfsChangeManager.TOPIC, new BackgroundTaskByVfsChangeManager.ListenerAdapter() {
-      @Override
-      @RequiredReadAction
-      public void taskChanged(@NotNull BackgroundTaskByVfsChangeTask task) {
-        for (VirtualFile virtualFile : task.getGeneratedFiles()) {
-          updateNotifications(virtualFile);
-        }
-      }
-    });
-  }
-
-  public void updateNotifications(final VirtualFile file) {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-          @Override
-          @RequiredDispatchThread
-          public void run() {
-            if (myProject.isDisposed()) return;
-            FileEditor[] editors = myFileEditorManager.getAllEditors(file);
-            for (FileEditor editor : editors) {
-              for (EditorNotificationProvider<?> provider : myProvidersValue.getValue()) {
-                JComponent component = provider.createNotificationPanel(file, editor);
-                Key<? extends JComponent> key = provider.getKey();
-                updateNotification(editor, key, component);
-              }
-            }
-          }
-        });
-      }
-    });
-  }
-
-  public void updateAllNotifications() {
-    VirtualFile[] files = myFileEditorManager.getOpenFiles();
-    for (VirtualFile file : files) {
-      updateNotifications(file);
-    }
-  }
-
-  private void updateNotification(@NotNull FileEditor editor, Key<? extends JComponent> key, @Nullable JComponent component) {
-    JComponent old = editor.getUserData(key);
-    if (old != null) {
-      myFileEditorManager.removeTopComponent(editor, old);
-    }
-    if (component != null) {
-      myFileEditorManager.addTopComponent(editor, component);
-      @SuppressWarnings("unchecked") Key<JComponent> _key = (Key<JComponent>)key;
-      editor.putUserData(_key, component);
-    }
-    else {
-      editor.putUserData(key, null);
-    }
-  }
-
+  @Exported
   public static void updateAll() {
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project project : projects) {

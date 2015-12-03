@@ -36,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
 
 import static com.intellij.psi.codeStyle.EditorNotificationInfo.ActionLabelData;
@@ -56,6 +57,7 @@ public class DetectedIndentOptionsNotificationProvider implements EditorNotifica
     return KEY;
   }
 
+  @RequiredReadAction
   @RequiredDispatchThread
   @Nullable
   @Override

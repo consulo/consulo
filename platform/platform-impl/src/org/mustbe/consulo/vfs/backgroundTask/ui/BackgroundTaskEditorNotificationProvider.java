@@ -16,16 +16,18 @@
 package org.mustbe.consulo.vfs.backgroundTask.ui;
 
 import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotifications;
 import com.intellij.ui.Gray;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
 import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
 import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
 import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProviders;
@@ -38,9 +40,8 @@ import java.util.List;
  * @author VISTALL
  * @since 26.10.2015
  */
-public class BackgroundTaskEditorNotificationProvider extends EditorNotifications.Provider<EditorNotificationPanel> {
+public class BackgroundTaskEditorNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Key<EditorNotificationPanel> KEY = Key.create("BackgroundTaskEditorProvider");
-
   private final Project myProject;
 
   public BackgroundTaskEditorNotificationProvider(Project project) {
@@ -53,6 +54,7 @@ public class BackgroundTaskEditorNotificationProvider extends EditorNotification
     return KEY;
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public EditorNotificationPanel createNotificationPanel(@NotNull final VirtualFile file, @NotNull FileEditor fileEditor) {
@@ -70,7 +72,7 @@ public class BackgroundTaskEditorNotificationProvider extends EditorNotification
     };
 
     List<BackgroundTaskByVfsChangeTask> tasks = BackgroundTaskByVfsChangeManager.getInstance(myProject).findTasks(file);
-    if(!tasks.isEmpty()) {
+    if (!tasks.isEmpty()) {
       panel.text("Task(s): " + StringUtil.join(tasks, new Function<BackgroundTaskByVfsChangeTask, String>() {
         @Override
         public String fun(BackgroundTaskByVfsChangeTask backgroundTaskByVfsChangeTask) {

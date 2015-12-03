@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.editor.event;
 
+import org.mustbe.consulo.RequiredDispatchThread;
+
 import java.util.EventListener;
 
 /**
@@ -30,6 +32,7 @@ public interface EditorMouseMotionListener extends EventListener {
    *
    * @param e the event containing information about the mouse movement.
    */
+  @RequiredDispatchThread
   void mouseMoved(EditorMouseEvent e);
 
   /**
@@ -37,5 +40,6 @@ public interface EditorMouseMotionListener extends EventListener {
    *
    * @param e the event containing information about the mouse movement.
    */
+  @RequiredDispatchThread
   void mouseDragged(EditorMouseEvent e);
 }

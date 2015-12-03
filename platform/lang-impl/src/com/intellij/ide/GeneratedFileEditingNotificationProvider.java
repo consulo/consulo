@@ -16,19 +16,21 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
 
 /**
  * @author nik
  */
-public class GeneratedFileEditingNotificationProvider extends EditorNotifications.Provider<EditorNotificationPanel> {
+public class GeneratedFileEditingNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Key<EditorNotificationPanel> KEY = Key.create("generated.source.file.editing.notification.panel");
 
   private final Project myProject;
@@ -43,9 +45,10 @@ public class GeneratedFileEditingNotificationProvider extends EditorNotification
     return KEY;
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(VirtualFile file, FileEditor fileEditor) {
+  public EditorNotificationPanel createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor) {
     if (!GeneratedSourcesFilter.isGenerated(myProject, file)) return null;
 
     EditorNotificationPanel panel = new EditorNotificationPanel();
