@@ -92,10 +92,11 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
                               text, physical, markAsCopy, noSizeLimit);
   }
 
+  @Nullable
   @Override
   public PsiFile createFileFromText(@NotNull String name,
                                     @NotNull Language language,
-                                    @NotNull LanguageVersion languageVersion,
+                                    @NotNull LanguageVersion<?> languageVersion,
                                     @NotNull CharSequence text,
                                     boolean physical,
                                     boolean markAsCopy,
@@ -106,6 +107,22 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
       SingleRootFileViewProvider.doNotCheckFileSizeLimit(virtualFile);
     }
     return trySetupPsiForFile(virtualFile, language, languageVersion, physical, markAsCopy);
+  }
+
+  @Nullable
+  @Override
+  public PsiFile createFileFromText(@NotNull String name,
+                                    @NotNull LanguageVersion<?> languageVersion,
+                                    @NotNull CharSequence text,
+                                    boolean physical,
+                                    boolean markAsCopy,
+                                    boolean noSizeLimit) {
+    LightVirtualFile virtualFile = new LightVirtualFile(name, languageVersion.getLanguage(), text);
+    virtualFile.putUserData(LanguageVersion.KEY, languageVersion);
+    if (noSizeLimit) {
+      SingleRootFileViewProvider.doNotCheckFileSizeLimit(virtualFile);
+    }
+    return trySetupPsiForFile(virtualFile, languageVersion.getLanguage(), languageVersion, physical, markAsCopy);
   }
 
   @Override
@@ -131,8 +148,8 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
 
   @Nullable
   public PsiFile trySetupPsiForFile(final LightVirtualFile virtualFile,
-                                    Language language,
-                                    LanguageVersion<? extends Language> languageVersion,
+                                    @NotNull Language language,
+                                    @NotNull LanguageVersion<? extends Language> languageVersion,
                                     final boolean physical,
                                     final boolean markAsCopy) {
     final FileViewProviderFactory factory = LanguageFileViewProviders.INSTANCE.forLanguage(language);

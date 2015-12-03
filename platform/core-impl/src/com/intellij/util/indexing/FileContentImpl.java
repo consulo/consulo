@@ -16,6 +16,8 @@
 package com.intellij.util.indexing;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
+import com.intellij.lang.LanguageVersionResolvers;
 import com.intellij.lang.LighterAST;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -34,6 +36,7 @@ import com.intellij.psi.PsiFileFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -79,7 +82,9 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     return psi;
   }
 
-  public @NotNull LighterAST getLighterASTForPsiDependentIndex() {
+  @NotNull
+  @RequiredReadAction
+  public LighterAST getLighterASTForPsiDependentIndex() {
     LighterAST lighterAST = getUserData(IndexingDataKeys.LIGHTER_AST_NODE_KEY);
     if (lighterAST == null) {
       lighterAST = getPsiFileForPsiDependentIndex().getNode().getLighterAST();
@@ -96,7 +101,10 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     }
     final Language language = ((LanguageFileType)getFileTypeWithoutSubstitution()).getLanguage();
     final Language substitutedLanguage = LanguageSubstitutors.INSTANCE.substituteLanguage(language, getFile(), project);
-    return PsiFileFactory.getInstance(project).createFileFromText(getFileName(), substitutedLanguage, text, false, false, true);
+    LanguageVersion<? extends Language> languageVersion =
+            LanguageVersionResolvers.INSTANCE.forLanguage(substitutedLanguage).getLanguageVersion(substitutedLanguage, project, getFile());
+
+    return PsiFileFactory.getInstance(project).createFileFromText(getFileName(), languageVersion, text, false, false, true);
   }
 
   public static class IllegalDataException extends RuntimeException {
@@ -121,12 +129,7 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     this(file, null, null, null, -1);
   }
 
-  private FileContentImpl(@NotNull VirtualFile file,
-                          CharSequence contentAsText,
-                          byte[] content,
-                          Charset charset,
-                          long stamp
-  ) {
+  private FileContentImpl(@NotNull VirtualFile file, CharSequence contentAsText, byte[] content, Charset charset, long stamp) {
     myFile = file;
     myContentAsText = contentAsText;
     myContent = content;
@@ -152,6 +155,7 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     }
   }
 
+  @NotNull
   public FileType getFileTypeWithoutSubstitution() {
     return myFileType;
   }
@@ -221,7 +225,9 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     return myFileName;
   }
 
-  public @Nullable byte[] getHash() {
+  public
+  @Nullable
+  byte[] getHash() {
     return myHash;
   }
 
@@ -229,6 +235,7 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     myHash = hash;
   }
 
+  @RequiredReadAction
   public PsiFile getPsiFileForPsiDependentIndex() {
     Document document = FileDocumentManager.getInstance().getCachedDocument(getFile());
     PsiFile psi = null;
@@ -236,7 +243,7 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
       PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(getProject());
       if (psiDocumentManager.isUncommited(document)) {
         PsiFile existingPsi = psiDocumentManager.getPsiFile(document);
-        if(existingPsi != null) {
+        if (existingPsi != null) {
           psi = existingPsi;
         }
       }

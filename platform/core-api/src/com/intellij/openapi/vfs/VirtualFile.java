@@ -342,9 +342,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   /**
    * @return the {@link FileType} of this file.
    *         When IDEA has no idea what the file type is (i.e. file type is not registered via {@link FileTypeRegistry}),
-   *         it returns {@link com.intellij.openapi.fileTypes.FileTypes#UNKNOWN}
+   *         it returns {@link com.intellij.openapi.fileTypes.UnknownFileType#INSTANCE}
    */
-  @SuppressWarnings("JavadocReference")
   @NotNull
   public FileType getFileType() {
     return FileTypeRegistry.getInstance().getFileTypeByFile(this);

@@ -24,6 +24,7 @@ import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author max
@@ -89,9 +90,20 @@ public abstract class PsiFileFactory {
                                              boolean markAsCopy,
                                              boolean noSizeLimit);
 
+  @Deprecated
+  @DeprecationInfo("Use #createFileFromText() without Language parameter")
+  @Nullable
   public abstract PsiFile createFileFromText(@NotNull String name,
                                              @NotNull Language language,
-                                             @NotNull LanguageVersion languageVersion,
+                                             @NotNull LanguageVersion<?> languageVersion,
+                                             @NotNull CharSequence text,
+                                             boolean physical,
+                                             boolean markAsCopy,
+                                             boolean noSizeLimit);
+
+  @Nullable
+  public abstract PsiFile createFileFromText(@NotNull String name,
+                                             @NotNull LanguageVersion<?> languageVersion,
                                              @NotNull CharSequence text,
                                              boolean physical,
                                              boolean markAsCopy,
