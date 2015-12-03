@@ -595,6 +595,13 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   @Override
+  @Nullable
+  public Document getLastCommittedDocument(@NotNull PsiFile file) {
+    Document document = getDocument(file);
+    return document == null ? null : getLastCommittedDocument(document);
+  }
+
+  @Override
   @NotNull
   public Document[] getUncommittedDocuments() {
     ApplicationManager.getApplication().assertIsDispatchThread();
