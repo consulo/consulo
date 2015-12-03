@@ -536,7 +536,7 @@ public class ModernMenuItemUI extends BasicMenuItemUI {
       msm = MenuSelectionManager.defaultManager();
     }
     msm.clearSelectedPath();
-    ((ActionMenuItem)menuItem).fireActionPerformed(new ActionEvent(menuItem, ActionEvent.ACTION_PERFORMED, null, e.getWhen(), e.getModifiers()));
+    menuItem.doClick(0);
   }
 
   @Override

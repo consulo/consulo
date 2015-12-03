@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerEvent;
+import com.intellij.ui.content.TabbedContent;
 import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nullable;
@@ -326,15 +327,15 @@ class TabContentLayout extends ContentLayout {
         image = drawToBuffer(r, each.isSelected(), last, prevSelected, myUi.myWindow.isActive());
         myCached.put(key.toString(), image);
       }
-      
+
       if (image != null) {
-        g.drawImage(image, isIdVisible() ? r.x : r.x - 2, r.y, null);
+        UIUtil.drawImage(g, image, isIdVisible() ? r.x : r.x - 2, r.y, null);
       }
-      
+
       prevSelected = each.isSelected();
     }
   }
-  
+
   @Nullable
   private static BufferedImage drawToBuffer(Rectangle r, boolean selected, boolean last, boolean prevSelected, boolean active) {
     if (r.width <= 0 || r.height <= 0) return null;
@@ -344,20 +345,20 @@ class TabContentLayout extends ContentLayout {
 
     if (selected) {
       if (!UIUtil.isUnderDarcula()) {
-      g2d.setColor(active ? new Color(0, 0, 0, 70) : new Color(0, 0, 0, 90));
-      g2d.fillRect(0, 0, r.width, r.height);
+        g2d.setColor(active ? new Color(0, 0, 0, 70) : new Color(0, 0, 0, 90));
+        g2d.fillRect(0, 0, r.width, r.height);
 
-      g2d.setColor(new Color(0, 0, 0, 140));
-      g2d.drawLine(0, 0, r.width - 1, 0);
-      g2d.drawLine(0, 1, 0, r.height - 1);
+        g2d.setColor(new Color(0, 0, 0, 140));
+        g2d.drawLine(0, 0, r.width - 1, 0);
+        g2d.drawLine(0, 1, 0, r.height - 1);
 
-      g2d.setColor(new Color(0, 0, 0, 20));
-      g2d.drawLine(1, 1, r.width - 1, 1);
-      g2d.drawLine(1, 2, 1, r.height - 2);
-      g2d.drawLine(1, r.height - 1, r.width - 1, r.height - 1);
+        g2d.setColor(new Color(0, 0, 0, 20));
+        g2d.drawLine(1, 1, r.width - 1, 1);
+        g2d.drawLine(1, 2, 1, r.height - 2);
+        g2d.drawLine(1, r.height - 1, r.width - 1, r.height - 1);
 
-      g2d.setColor(new Color(0, 0, 0, 60));
-      g2d.drawLine(r.width - 1, 1, r.width - 1, r.height - 2);
+        g2d.setColor(new Color(0, 0, 0, 60));
+        g2d.drawLine(r.width - 1, 1, r.width - 1, r.height - 2);
       }
 
       if (active) {
@@ -374,7 +375,8 @@ class TabContentLayout extends ContentLayout {
         if (prevSelected) {
           g2d.setColor(c);
           g2d.drawRect(0, 0, r.width - 2, r.height - 1);
-        } else {
+        }
+        else {
           g2d.setColor(c);
           g2d.drawRect(1, 0, r.width - 3, r.height - 1);
 
@@ -384,7 +386,8 @@ class TabContentLayout extends ContentLayout {
 
         g2d.setColor(new Color(0, 0, 0, 60));
         g2d.drawLine(r.width - 1, 0, r.width - 1, r.height);
-      } else {
+      }
+      else {
         if (prevSelected) {
           g2d.setColor(c);
           g2d.drawRect(0, 0, r.width - 1, r.height - 1);
@@ -432,16 +435,23 @@ class TabContentLayout extends ContentLayout {
       myUi.add(each);
       myUi.initMouseListeners(each, myUi);
     }
-    
+
     myCached.clear();
   }
 
   @Override
   public void contentAdded(ContentManagerEvent event) {
-    final ContentTabLabel tab = new ContentTabLabel(event.getContent(), this);
+    final Content content = event.getContent();
+    final ContentTabLabel tab;
+    if (content instanceof TabbedContent) {
+      tab = new TabbedContentTabLabel((TabbedContent)content, this);
+    }
+    else {
+      tab = new ContentTabLabel(content, this);
+    }
     myTabs.add(event.getIndex(), tab);
-    myContent2Tabs.put(event.getContent(), tab);
-    
+    myContent2Tabs.put(content, tab);
+
     myCached.clear();
   }
 
@@ -452,7 +462,7 @@ class TabContentLayout extends ContentLayout {
       myTabs.remove(tab);
       myContent2Tabs.remove(event.getContent());
     }
-    
+
     myCached.clear();
   }
 
@@ -467,7 +477,8 @@ class TabContentLayout extends ContentLayout {
     if (selected != null) {
       ContentTabLabel tab = myContent2Tabs.get(selected);
       listPopup.showUnderneathOf(tab);
-    } else {
+    }
+    else {
       listPopup.showUnderneathOf(myIdLabel);
     }
   }
@@ -491,6 +502,7 @@ class TabContentLayout extends ContentLayout {
   public String getCloseAllButThisActionName() {
     return UIBundle.message("tabbed.pane.close.all.tabs.but.this.action.name");
   }
+
   @Override
   public String getPreviousContentActionName() {
     return "Select Previous Tab";

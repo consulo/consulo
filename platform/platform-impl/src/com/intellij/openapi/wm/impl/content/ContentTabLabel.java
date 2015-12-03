@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.ui.BaseButtonBehavior;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -54,11 +54,11 @@ class ContentTabLabel extends BaseLabel {
 
   public void update() {
     if (!myLayout.isToDrawTabs()) {
-      setHorizontalAlignment(JLabel.LEFT);
+      setHorizontalAlignment(SwingConstants.LEFT);
       setBorder(null);
     } else {
-      setHorizontalAlignment(JLabel.CENTER);
-      setBorder(new EmptyBorder(0, 8, 0, 8));
+      setHorizontalAlignment(SwingConstants.CENTER);
+      setBorder(JBUI.Borders.empty(0, 8));
     }
 
     updateTextAndIcon(myContent, isSelected());
@@ -72,7 +72,7 @@ class ContentTabLabel extends BaseLabel {
   @Override
   protected Color getActiveFg(boolean selected) {
     if (contentManager().getContentCount() > 1) {
-      return selected ? Color.white : super.getActiveFg(selected);
+      return selected ? Color.white : UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : Color.black;
     }
     return super.getActiveFg(selected);
   }
@@ -80,7 +80,7 @@ class ContentTabLabel extends BaseLabel {
   @Override
   protected Color getPassiveFg(boolean selected) {
     if (contentManager().getContentCount() > 1) {
-      return selected && !UIUtil.isUnderDarcula() ? Gray._255 : super.getPassiveFg(selected);
+      return selected && !UIUtil.isUnderDarcula() ? Gray._255 : UIUtil.isUnderDarcula()? UIUtil.getLabelDisabledForeground() : Gray._75;
     }
     return super.getPassiveFg(selected);
   }
@@ -96,9 +96,9 @@ class ContentTabLabel extends BaseLabel {
   @Override
   protected Graphics _getGraphics(Graphics2D g) {
     if (isSelected() && contentManager().getContentCount() > 1) {
-      return new EngravedTextGraphics(g, 1, 1, myUi.myWindow.isActive() ? new Color(0, 0, 0, 120) : new Color(0, 0, 0, 130));
+      return new EngravedTextGraphics(g, 1, 1, Gray._0.withAlpha(myUi.myWindow.isActive() ? 120 : 130));
     }
-    
+
     return super._getGraphics(g);
   }
 

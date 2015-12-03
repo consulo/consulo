@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BaseLabel extends JLabel {
-
-  private static final Color DEFAULT_ACTIVE_FORE = new JBColor(Color.black, UIUtil.getLabelForeground());
-  private static final Color DEFAULT_PASSIVE_FORE = new JBColor(Gray._75, UIUtil.getLabelDisabledForeground());
-
   protected ToolWindowContentUi myUi;
 
   private Color myActiveFg;
@@ -40,26 +36,25 @@ public class BaseLabel extends JLabel {
   public BaseLabel(ToolWindowContentUi ui, boolean bold) {
     myUi = ui;
     setOpaque(false);
-    setActiveFg(DEFAULT_ACTIVE_FORE);
-    setPassiveFg(DEFAULT_PASSIVE_FORE);
     myBold = bold;
-    updateFont();
   }
 
   @Override
   public void updateUI() {
+    setActiveFg(JBColor.foreground());
+    setPassiveFg(new JBColor(Gray._75, UIUtil.getLabelDisabledForeground()));
     super.updateUI();
-    updateFont();
   }
 
-  private void updateFont() {
-    Font baseFont = getLabelFont();
+  @Override
+  public Font getFont() {
+    Font f = UIUtil.getLabelFont();
+    f = f.deriveFont(f.getStyle(), Math.max(11, f.getSize() - 2));
     if (myBold) {
-      setFont(baseFont.deriveFont(Font.BOLD));
+      f = f.deriveFont(Font.BOLD);
     }
-    else {
-      setFont(baseFont);
-    }
+
+    return f;
   }
 
   public static Font getLabelFont() {
@@ -97,11 +92,11 @@ public class BaseLabel extends JLabel {
   }
 
   protected Color getActiveFg(boolean selected) {
-    return DEFAULT_ACTIVE_FORE;
+    return myActiveFg;
   }
 
   protected Color getPassiveFg(boolean selected) {
-    return DEFAULT_PASSIVE_FORE;
+    return myPassiveFg;
   }
 
   protected void updateTextAndIcon(Content content, boolean isSelected) {
@@ -130,10 +125,8 @@ public class BaseLabel extends JLabel {
       }
 
       myBold = false; //isSelected;
-      updateFont();
     }
   }
-
 
   public Content getContent() {
     return null;

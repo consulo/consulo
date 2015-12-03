@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.wm.impl.content;
 
-import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
@@ -24,12 +23,10 @@ import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ui.JBUI;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 class ComboContentLayout extends ContentLayout {
 
   ContentComboLabel myComboLabel;
-  private BufferedImage myImage;
 
   ComboContentLayout(ToolWindowContentUi ui) {
     super(ui);
@@ -47,13 +44,12 @@ class ComboContentLayout extends ContentLayout {
   public void reset() {
     myIdLabel = null;
     myComboLabel = null;
-    myImage = null;
   }
 
   @Override
   public void layout() {
     Rectangle bounds = myUi.getBounds();
-    Dimension idSize = isIdVisible() ? myIdLabel.getPreferredSize() : new Dimension(0, 0);
+    Dimension idSize = isIdVisible() ? myIdLabel.getPreferredSize() : JBUI.emptySize();
 
     int eachX = 0;
     int eachY = 0;
@@ -83,11 +79,6 @@ class ComboContentLayout extends ContentLayout {
 
   @Override
   public void paintChildren(Graphics g) {
-    if (!isToDrawCombo()) return;
-
-    final GraphicsConfig c = new GraphicsConfig(g);
-    c.setAntialiasing(true);
-    c.restore();
   }
 
   @Override
@@ -101,10 +92,10 @@ class ComboContentLayout extends ContentLayout {
     myUi.removeAll();
 
     myUi.add(myIdLabel);
-    myUi.initMouseListeners(myIdLabel, myUi);
+    ToolWindowContentUi.initMouseListeners(myIdLabel, myUi);
 
     myUi.add(myComboLabel);
-    myUi.initMouseListeners(myComboLabel, myUi);
+    ToolWindowContentUi.initMouseListeners(myComboLabel, myUi);
   }
 
   boolean isToDrawCombo() {
