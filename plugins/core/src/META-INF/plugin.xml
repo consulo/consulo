@@ -564,7 +564,6 @@
 
     <extensionPoint name="referencesSearch" interface="com.intellij.util.QueryExecutor"/>
     <extensionPoint name="definitionsScopedSearch" interface="com.intellij.util.QueryExecutor"/>
-    <extensionPoint name="definitionsSearch" interface="com.intellij.util.QueryExecutor"/>
 
     <extensionPoint name="useScopeEnlarger" interface="com.intellij.psi.search.UseScopeEnlarger"/>
     <extensionPoint name="resolveScopeEnlarger" interface="com.intellij.psi.ResolveScopeEnlarger"/>
@@ -2377,7 +2376,7 @@
 
     <filePasteProvider implementation="com.intellij.ide.FileListPasteProvider"/>
 
-    <definitionsSearch implementation="com.intellij.pom.PomDefinitionSearch"/>
+    <definitionsScopedSearch implementation="com.intellij.pom.PomDefinitionSearch"/>
 
 
     <applicationService serviceInterface="com.intellij.ide.todo.TodoConfiguration"

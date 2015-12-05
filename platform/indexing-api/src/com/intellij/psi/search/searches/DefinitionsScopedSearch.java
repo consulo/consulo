@@ -22,10 +22,8 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.psi.search.SearchScope;
-import com.intellij.util.Processor;
 import com.intellij.util.Query;
 import com.intellij.util.QueryExecutor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * The search is used in two IDE navigation functions namely Go To Implementation (Ctrl+Alt+B) and
@@ -36,19 +34,6 @@ import org.jetbrains.annotations.NotNull;
 public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, DefinitionsScopedSearch.SearchParameters> {
   public static ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.definitionsScopedSearch");
   public static DefinitionsScopedSearch INSTANCE = new DefinitionsScopedSearch();
-
-  static {
-    final QueryExecutor[] OLD_EXECUTORS = DefinitionsSearch.EP_NAME.getExtensions();
-    for (final QueryExecutor executor : OLD_EXECUTORS) {
-      INSTANCE.registerExecutor(new QueryExecutor<PsiElement, SearchParameters>() {
-        @Override
-        public boolean execute(@NotNull SearchParameters queryParameters, @NotNull Processor<PsiElement> consumer) {
-          return executor.execute(queryParameters.getElement(), consumer);
-        }
-      });
-    }
-  }
-
 
   public static Query<PsiElement> search(PsiElement definitionsOf) {
     return INSTANCE.createUniqueResultsQuery(new SearchParameters(definitionsOf));
