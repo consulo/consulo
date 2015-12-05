@@ -382,7 +382,7 @@ public class FrameWrapper implements Disposable, DataProvider {
 
       MouseGestureManager.getInstance().remove(this);
 
-      if (myShown) {
+      if (myShown && myDimensionKey != null) {
         WindowStateService.getInstance().saveStateFor(myProject, myDimensionKey, this);
       }
 
