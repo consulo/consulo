@@ -128,6 +128,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       ((JDialog)frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
     final WindowAdapter focusListener = new WindowAdapter() {
+      @Override
       public void windowOpened(WindowEvent e) {
         IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
         JComponent toFocus = myPreferedFocus;
@@ -163,6 +164,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     }
 
     myFocusWatcher = new FocusWatcher() {
+      @Override
       protected void focusLostImpl(final FocusEvent e) {
         myFocusTrackback.consume();
       }
@@ -176,6 +178,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     Disposer.dispose(this);
   }
 
+  @Override
   public void dispose() {
     if (isDisposed()) return;
 
@@ -208,6 +211,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   private void addCloseOnEsc(final RootPaneContainer frame) {
     frame.getRootPane().registerKeyboardAction(
       new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
           MenuElement[] selectedPath = menuSelectionManager.getSelectedPath();
@@ -371,6 +375,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       return myParent;
     }
 
+    @Override
     public void dispose() {
       if (myDisposing) return;
       myDisposing = true;
@@ -398,6 +403,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       super.dispose();
     }
 
+    @Override
     public Object getData(String dataId) {
       if (IdeFrame.KEY.getName().equals(dataId)) {
         return this;
@@ -475,6 +481,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       return myParent;
     }
 
+    @Override
     public void dispose() {
       if (myDisposing) return;
       myDisposing = true;
@@ -502,6 +509,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       super.dispose();
     }
 
+    @Override
     public Object getData(String dataId) {
       if (IdeFrame.KEY.getName().equals(dataId)) {
         return this;
@@ -528,6 +536,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   private class MyProjectManagerListener extends ProjectManagerAdapter {
+    @Override
     public void projectClosing(Project project) {
       if (project == myProject) {
         close();
