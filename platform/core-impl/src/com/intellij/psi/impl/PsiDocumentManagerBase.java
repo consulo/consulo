@@ -57,6 +57,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.util.*;
@@ -101,6 +103,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     });
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public PsiFile getPsiFile(@NotNull Document document) {
@@ -125,6 +128,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     document.putUserData(HARD_REF_TO_PSI, file);
   }
 
+  @RequiredReadAction
   @Override
   public PsiFile getCachedPsiFile(@NotNull Document document) {
     final PsiFile userData = document.getUserData(HARD_REF_TO_PSI);
@@ -206,6 +210,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return FileDocumentManager.getInstance().getCachedDocument(vFile);
   }
 
+  @RequiredDispatchThread
   @Override
   public void commitAllDocuments() {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -470,6 +475,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
    *
    * @return true if action has been run immediately, or false if action was scheduled for execution later.
    */
+  @RequiredDispatchThread
   @Override
   public boolean performWhenAllCommitted(@NotNull final Runnable action) {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -578,7 +584,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   public FrozenDocument getLastCommittedDocument(@NotNull Document document) {
     if (document instanceof FrozenDocument) return (FrozenDocument)document;
 
-    assert document instanceof DocumentImpl;
+    assert document instanceof DocumentImpl : "Document is not base impl: " + document.getClass().getName();
     UncommittedInfo info = myUncommittedInfos.get(document);
     return info != null ? info.myFrozen : ((DocumentImpl)document).freeze();
   }
@@ -601,6 +607,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return document == null ? null : getLastCommittedDocument(document);
   }
 
+  @RequiredDispatchThread
   @Override
   @NotNull
   public Document[] getUncommittedDocuments() {
