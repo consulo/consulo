@@ -32,6 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -40,6 +41,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,8 +57,9 @@ public class ImportModuleAction extends AnAction {
 
   private static final String LAST_IMPORTED_LOCATION = "last.imported.location";
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     doImport(canCreateNewProject() ? null : e.getProject());
   }
 
@@ -167,7 +170,7 @@ public class ImportModuleAction extends AnAction {
       }
     });
     if (available.isEmpty()) {
-      Messages.showInfoMessage(project, "Cannot import anything from " + file.getPath(), "Cannot Import");
+      Messages.showErrorDialog(project, "Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'", "Cannot Import");
       return null;
     }
 
@@ -185,8 +188,9 @@ public class ImportModuleAction extends AnAction {
   }
 
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
     if(!canCreateNewProject() && e.getProject() == null) {

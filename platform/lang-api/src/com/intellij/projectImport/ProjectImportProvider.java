@@ -30,6 +30,7 @@ import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 
@@ -62,14 +63,11 @@ public abstract class ProjectImportProvider {
   }
 
   public boolean canImport(VirtualFile fileOrDirectory, @Nullable Project project) {
-    if (fileOrDirectory.isDirectory()) {
-      return true;
-    }
-    else {
-      return canImportFromFile(fileOrDirectory);
-    }
+    return !fileOrDirectory.isDirectory() && canImportFromFile(fileOrDirectory);
   }
 
+  @Deprecated
+  @DeprecationInfo(value = "Use #canImport(VirtualFile fileOrDirectory, @Nullable Project project)", until = "2.0")
   protected boolean canImportFromFile(VirtualFile file) {
     return false;
   }

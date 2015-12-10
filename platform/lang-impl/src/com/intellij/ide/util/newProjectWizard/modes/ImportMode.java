@@ -38,8 +38,8 @@ import java.util.Arrays;
 public class ImportMode extends WizardMode {
   private final ProjectImportProvider[] myProviders;
 
-  public ImportMode() {
-    myProviders = ProjectImportProvider.EP_NAME.getExtensions();
+  public ImportMode(@NotNull ProjectImportProvider[] providers) {
+    myProviders = providers;
   }
 
   @Override
