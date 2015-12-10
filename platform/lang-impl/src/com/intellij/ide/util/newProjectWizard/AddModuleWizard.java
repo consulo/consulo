@@ -42,8 +42,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.projectImport.ProjectImportProvider;
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.Function;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -121,10 +121,12 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
       myWizardContext.setProjectName(defaultPath.substring(FileUtil.toSystemIndependentName(defaultPath).lastIndexOf("/") + 1));
     }
     myWizardContext.addContextListener(new WizardContext.Listener() {
+      @Override
       public void buttonsUpdateRequested() {
         updateButtons();
       }
 
+      @Override
       public void nextStepRequested() {
         doNextAction();
       }
@@ -160,11 +162,12 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
   @Override
   protected String addStepComponent(Component component) {
     if (component instanceof JComponent) {
-      ((JComponent)component).setBorder(IdeBorderFactory.createEmptyBorder(0, 0, 0, 0));
+      ((JComponent)component).setBorder(JBUI.Borders.empty());
     }
     return super.addStepComponent(component);
   }
 
+  @Override
   protected void updateStep() {
     if (!mySteps.isEmpty()) {
       getCurrentStepObject().updateStep();
@@ -173,6 +176,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     myIcon.setIcon(null);
   }
 
+  @Override
   protected void dispose() {
     for (ModuleWizardStep step : mySteps) {
       step.disposeUIResources();
@@ -180,6 +184,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     super.dispose();
   }
 
+  @Override
   protected final void doOKAction() {
     int idx = getCurrentStep();
     try {
@@ -232,6 +237,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     return true;
   }
 
+  @Override
   public void doNextAction() {
     final ModuleWizardStep step = getCurrentStepObject();
     if (!commitStepData(step)) {
@@ -241,12 +247,14 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     super.doNextAction();
   }
 
+  @Override
   protected void doPreviousAction() {
     final ModuleWizardStep step = getCurrentStepObject();
     step.onStepLeaving();
     super.doPreviousAction();
   }
 
+  @Override
   public void doCancelAction() {
     final ModuleWizardStep step = getCurrentStepObject();
     step.onStepLeaving();
@@ -258,6 +266,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
   }
 
 
+  @Override
   protected String getHelpID() {
     ModuleWizardStep step = getCurrentStepObject();
     if (step != null) {
@@ -266,6 +275,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     return null;
   }
 
+  @Override
   protected final int getNextStep(final int step) {
     ModuleWizardStep nextStep = null;
     final StepSequence stepSequence = getSequence();
@@ -283,6 +293,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     return getMode().getSteps(myWizardContext, myModulesProvider);
   }
 
+  @Override
   protected final int getPreviousStep(final int step) {
     ModuleWizardStep previousStep = null;
     final StepSequence stepSequence = getSequence();
@@ -309,6 +320,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     if (context.getProject() == null) {
       @Nullable final ProjectBuilder projectBuilder = context.getProjectBuilder();
       return SdkTable.getInstance().findMostRecentSdk(new Condition<Sdk>() {
+        @Override
         public boolean value(Sdk sdk) {
           return projectBuilder == null || projectBuilder.isSuitableSdkType(sdk.getSdkType());
         }
