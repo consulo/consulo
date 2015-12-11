@@ -27,6 +27,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.codeInsight.completion.CompletionProvider;
 
 import java.util.Collections;
 import java.util.Set;
@@ -40,33 +42,31 @@ import static com.intellij.patterns.StandardPatterns.instanceOf;
  */
 public class CustomFileTypeCompletionContributor extends CompletionContributor implements DumbAware {
   public CustomFileTypeCompletionContributor() {
-    extend(CompletionType.BASIC, psiElement().inFile(psiFile().withFileType(instanceOf(CustomSyntaxTableFileType.class))),
-           new CompletionProvider<CompletionParameters>() {
-             @Override
-             protected void addCompletions(@NotNull CompletionParameters parameters,
-                                           ProcessingContext context,
-                                           @NotNull CompletionResultSet result) {
-               if (inCommentOrLiteral(parameters)) {
-                 return;
-               }
+    extend(CompletionType.BASIC, psiElement().inFile(psiFile().withFileType(instanceOf(CustomSyntaxTableFileType.class))), new CompletionProvider() {
+      @RequiredReadAction
+      @Override
+      protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+        if (inCommentOrLiteral(parameters)) {
+          return;
+        }
 
-               FileType fileType = parameters.getOriginalFile().getFileType();
-               if (!(fileType instanceof CustomSyntaxTableFileType)) {
-                 return;
-               }
+        FileType fileType = parameters.getOriginalFile().getFileType();
+        if (!(fileType instanceof CustomSyntaxTableFileType)) {
+          return;
+        }
 
-               SyntaxTable syntaxTable = ((CustomSyntaxTableFileType)fileType).getSyntaxTable();
-               String prefix = findPrefix(parameters.getPosition(), parameters.getOffset());
-               CompletionResultSet resultSetWithPrefix = result.withPrefixMatcher(prefix);
+        SyntaxTable syntaxTable = ((CustomSyntaxTableFileType)fileType).getSyntaxTable();
+        String prefix = findPrefix(parameters.getPosition(), parameters.getOffset());
+        CompletionResultSet resultSetWithPrefix = result.withPrefixMatcher(prefix);
 
-               addVariants(resultSetWithPrefix, syntaxTable.getKeywords1());
-               addVariants(resultSetWithPrefix, syntaxTable.getKeywords2());
-               addVariants(resultSetWithPrefix, syntaxTable.getKeywords3());
-               addVariants(resultSetWithPrefix, syntaxTable.getKeywords4());
+        addVariants(resultSetWithPrefix, syntaxTable.getKeywords1());
+        addVariants(resultSetWithPrefix, syntaxTable.getKeywords2());
+        addVariants(resultSetWithPrefix, syntaxTable.getKeywords3());
+        addVariants(resultSetWithPrefix, syntaxTable.getKeywords4());
 
-               WordCompletionContributor.addWordCompletionVariants(resultSetWithPrefix, parameters, Collections.<String>emptySet());
-             }
-           });
+        WordCompletionContributor.addWordCompletionVariants(resultSetWithPrefix, parameters, Collections.<String>emptySet());
+      }
+    });
   }
 
   private static boolean inCommentOrLiteral(CompletionParameters parameters) {
@@ -88,15 +88,15 @@ public class CustomFileTypeCompletionContributor extends CompletionContributor i
     }
   }
 
+  @RequiredReadAction
   private static String findPrefix(PsiElement insertedElement, int offset) {
     String text = insertedElement.getText();
     int offsetInElement = offset - insertedElement.getTextOffset();
     int start = offsetInElement - 1;
-    while(start >=0 ) {
-      if(!Character.isJavaIdentifierStart(text.charAt(start))) break;
+    while (start >= 0) {
+      if (!Character.isJavaIdentifierStart(text.charAt(start))) break;
       --start;
     }
-    return text.substring(start+1, offsetInElement).trim();
+    return text.substring(start + 1, offsetInElement).trim();
   }
-
 }

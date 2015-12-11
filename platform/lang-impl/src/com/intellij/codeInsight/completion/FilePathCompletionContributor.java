@@ -63,7 +63,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.FilePathCompletionContributor");
 
   public FilePathCompletionContributor() {
-    extend(CompletionType.BASIC, psiElement(), new CompletionProvider<CompletionParameters>() {
+    extend(CompletionType.BASIC, psiElement(), new org.mustbe.consulo.codeInsight.completion.CompletionProvider() {
       @RequiredReadAction
       @Override
       protected void addCompletions(@NotNull CompletionParameters parameters,
@@ -79,7 +79,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
       }
     });
 
-    CompletionProvider<CompletionParameters> provider = new CompletionProvider<CompletionParameters>() {
+    extend(CompletionType.BASIC, psiElement(), new org.mustbe.consulo.codeInsight.completion.CompletionProvider() {
       @RequiredReadAction
       @Override
       protected void addCompletions(@NotNull final CompletionParameters parameters,
@@ -169,8 +169,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
           if (fileReferencePair.getSecond()) result.stopHere();
         }
       }
-    };
-    extend(CompletionType.BASIC, psiElement(), provider);
+    });
   }
 
   private static boolean filenameMatchesPrefixOrType(final String fileName, final String prefix, final FileType[] suitableFileTypes, final int invocationCount) {

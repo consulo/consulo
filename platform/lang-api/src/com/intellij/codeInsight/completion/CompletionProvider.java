@@ -17,17 +17,15 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author peter
  */
+@Deprecated
+@DeprecationInfo(value = "Use org.mustbe.consulo.codeInsight.completion.CompletionProvider (without generic parameter)", until = "2.0")
 public abstract class CompletionProvider<V extends CompletionParameters> {
   @RequiredReadAction
   protected abstract void addCompletions(@NotNull V parameters, final ProcessingContext context, @NotNull CompletionResultSet result);
-
-  @RequiredReadAction
-  public final void addCompletionVariants(@NotNull final V parameters, final ProcessingContext context, @NotNull final CompletionResultSet result) {
-    addCompletions(parameters, context, result);
-  }
 }

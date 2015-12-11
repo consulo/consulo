@@ -15,20 +15,77 @@
  */
 package com.intellij.codeInsight.template.postfix.completion;
 
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.template.CustomLiveTemplate;
+import com.intellij.codeInsight.template.CustomTemplateCallback;
+import com.intellij.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
+import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.patterns.PlatformPatterns;
+import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.codeInsight.completion.CompletionProvider;
 
 public class PostfixTemplateCompletionContributor extends CompletionContributor {
+  private static class MyPrefixMatcher extends PrefixMatcher {
+    protected MyPrefixMatcher(String prefix) {
+      super(prefix);
+    }
+
+    @Override
+    public boolean prefixMatches(@NotNull String name) {
+      return name.equalsIgnoreCase(myPrefix);
+    }
+
+    @NotNull
+    @Override
+    public PrefixMatcher cloneWithPrefix(@NotNull String prefix) {
+      return new MyPrefixMatcher(prefix);
+    }
+  }
+
   public PostfixTemplateCompletionContributor() {
-    extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new PostfixTemplatesCompletionProvider());
+    extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new CompletionProvider() {
+      @RequiredReadAction
+      @Override
+      protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+        Editor editor = parameters.getEditor();
+        if (!isCompletionEnabled(parameters) || LiveTemplateCompletionContributor.shouldShowAllTemplates() ||
+            editor.getCaretModel().getCaretCount() != 1) {
+          /**
+           * disabled or covered with {@link com.intellij.codeInsight.template.impl.LiveTemplateCompletionContributor}
+           */
+          return;
+        }
+
+        PsiFile originalFile = parameters.getOriginalFile();
+        PostfixLiveTemplate postfixLiveTemplate = PostfixTemplateCompletionContributor.getPostfixLiveTemplate(originalFile, editor);
+        if (postfixLiveTemplate != null) {
+          postfixLiveTemplate.addCompletions(parameters, result.withPrefixMatcher(new MyPrefixMatcher(result.getPrefixMatcher().getPrefix())));
+          String possibleKey = postfixLiveTemplate.computeTemplateKeyWithoutContextChecking(new CustomTemplateCallback(editor, originalFile));
+          if (possibleKey != null) {
+            result = result.withPrefixMatcher(possibleKey);
+            result.restartCompletionOnPrefixChange(
+                    StandardPatterns.string().oneOf(postfixLiveTemplate.getAllTemplateKeys(originalFile, parameters.getOffset())));
+          }
+        }
+      }
+    });
+  }
+
+  private static boolean isCompletionEnabled(@NotNull CompletionParameters parameters) {
+    if (!parameters.isAutoPopup()) {
+      return false;
+    }
+
+    PostfixTemplatesSettings settings = PostfixTemplatesSettings.getInstance();
+    return settings.isPostfixTemplatesEnabled() && settings.isTemplatesCompletionEnabled();
   }
 
   @Nullable

@@ -153,7 +153,7 @@ public abstract class CompletionContributor {
     for (final Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>> pair : myMap.get(parameters.getCompletionType())) {
       final ProcessingContext context = new ProcessingContext();
       if (pair.first.accepts(parameters.getPosition(), context)) {
-        pair.second.addCompletionVariants(parameters, context, result);
+        pair.second.addCompletions(parameters, context, result);
         if (result.isStopped()) {
           return;
         }
@@ -162,7 +162,7 @@ public abstract class CompletionContributor {
     for (final Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>> pair : myMap.get(null)) {
       final ProcessingContext context = new ProcessingContext();
       if (pair.first.accepts(parameters.getPosition(), context)) {
-        pair.second.addCompletionVariants(parameters, context, result);
+        pair.second.addCompletions(parameters, context, result);
         if (result.isStopped()) {
           return;
         }
