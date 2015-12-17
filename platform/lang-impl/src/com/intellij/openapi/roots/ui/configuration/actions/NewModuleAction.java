@@ -39,7 +39,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
+import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialog;
 
 import java.util.List;
 
@@ -69,7 +69,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
       return;
     }
 
-    NewProjectOrModuleDialogWithSetup dialog = new NewProjectOrModuleDialogWithSetup(project, moduleDir);
+    NewProjectOrModuleDialog dialog = new NewProjectOrModuleDialog(project, moduleDir);
     newModule = dialog.showAndGet() ? dialog.doCreate(project, moduleDir) : null;
 
     if (newModule != null) {

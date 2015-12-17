@@ -56,7 +56,7 @@ import com.intellij.util.graph.GraphGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
+import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialog;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.awt.*;
@@ -100,6 +100,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     myContext = context;
   }
 
+  @RequiredDispatchThread
   public void disposeUIResources() {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
@@ -171,6 +172,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
 
+  @RequiredDispatchThread
   public void resetModuleEditors() {
     myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
 
@@ -327,6 +329,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
 
   @Nullable
+  @RequiredDispatchThread
   public List<Module> addModule(Component parent, boolean anImport) {
     if (myProject.isDefault()) return null;
 
@@ -359,6 +362,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     }
     else {
       FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
+        @RequiredDispatchThread
         @Override
         public boolean isFileSelectable(VirtualFile file) {
           if(!super.isFileSelectable(file)) {
@@ -381,7 +385,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         return null;
       }
 
-      final NewProjectOrModuleDialogWithSetup dialogWithSetup = new NewProjectOrModuleDialogWithSetup(myProject, moduleDir);
+      final NewProjectOrModuleDialog dialogWithSetup = new NewProjectOrModuleDialog(myProject, moduleDir);
       final com.intellij.openapi.util.Ref<Module> moduleRef = com.intellij.openapi.util.Ref.create();
 
       if(dialogWithSetup.showAndGet()) {
@@ -413,6 +417,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return null;
   }
 
+  @RequiredDispatchThread
   private Module createModule(final ModuleBuilder builder) {
     final Exception[] ex = new Exception[]{null};
     final Module module = ApplicationManager.getApplication().runWriteAction(new Computable<Module>() {
@@ -436,6 +441,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   @Nullable
+  @RequiredDispatchThread
   public Module addModule(final ModuleBuilder moduleBuilder) {
     final Module module = createModule(moduleBuilder);
     if (module != null) {

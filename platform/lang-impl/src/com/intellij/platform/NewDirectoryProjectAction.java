@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialog;
-import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
 
 import java.io.File;
 
@@ -42,7 +41,7 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(final AnActionEvent e) {
     Project project = e.getProject();
-    NewProjectOrModuleDialog dialog = new NewProjectOrModuleDialogWithSetup(project, null);
+    NewProjectOrModuleDialog dialog = new NewProjectOrModuleDialog(project, null);
 
     if (dialog.showAndGet()) {
       generateProject(project, dialog);
@@ -68,8 +67,7 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
     baseDir.refresh(false, true);
 
     if (childCount > 0) {
-      int rc = Messages.showYesNoDialog(project, "The directory '" + location + "' is not empty. Continue?", "Create New Project",
-                                        Messages.getQuestionIcon());
+      int rc = Messages.showYesNoDialog(project, "The directory '" + location + "' is not empty. Continue?", "Create New Project", Messages.getQuestionIcon());
       if (rc == Messages.NO) {
         return null;
       }
