@@ -25,6 +25,8 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurableGroup;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.project.DumbModePermission;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.WholeWestDialogWrapper;
 import com.intellij.openapi.util.ActionCallback;
@@ -202,6 +204,16 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   @Override
   protected String getDimensionServiceKey() {
     return DIMENSION_KEY;
+  }
+
+  @Override
+  public void show() {
+    DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
+      @Override
+      public void run() {
+        OptionsEditorDialog.super.show();
+      }
+    });
   }
 
   @Override

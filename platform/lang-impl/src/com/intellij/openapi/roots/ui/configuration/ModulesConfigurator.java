@@ -215,6 +215,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return ModuleCompilerUtil.createGraphGenerator(models);
   }
 
+  @RequiredDispatchThread
   public void apply() throws ConfigurationException {
     // validate content and source roots 
     final Map<VirtualFile, String> contentRootToModuleNameMap = new HashMap<VirtualFile, String>();
@@ -284,25 +285,19 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       }
     }
 
-    DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
-      @RequiredDispatchThread
       public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            try {
-              final ModifiableRootModel[] rootModels = models.toArray(new ModifiableRootModel[models.size()]);
-              ModifiableModelCommitter.multiCommit(rootModels, myModuleModel);
-              myModuleModelCommitted = true;
-            }
-            finally {
+        try {
+          final ModifiableRootModel[] rootModels = models.toArray(new ModifiableRootModel[models.size()]);
+          ModifiableModelCommitter.multiCommit(rootModels, myModuleModel);
+          myModuleModelCommitted = true;
+        }
+        finally {
 
-              myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
-              myModuleModelCommitted = false;
-            }
-          }
-        });
+          myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
+          myModuleModelCommitted = false;
+        }
       }
     });
 

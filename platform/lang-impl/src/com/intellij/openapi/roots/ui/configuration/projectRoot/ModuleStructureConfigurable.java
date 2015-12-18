@@ -58,6 +58,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -308,6 +309,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
 
   @Override
+  @RequiredDispatchThread
   public void apply() throws ConfigurationException {
     final Set<MyNode> roots = new HashSet<MyNode>();
     roots.add(myRoot);
@@ -324,6 +326,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   @Override
+  @RequiredDispatchThread
   public void disposeUIResources() {
     super.disposeUIResources();
     myContext.myModulesConfigurator.disposeUIResources();

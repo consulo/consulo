@@ -50,6 +50,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -175,6 +176,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
   }
 
   @Override
+  @RequiredDispatchThread
   public void disposeUIResources() {
     if (myUiDisposed) return;
 

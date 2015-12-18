@@ -23,6 +23,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.project.DumbModePermission;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -255,10 +257,10 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
           Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
         }
         else {
-          Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle(),
-                                     Messages.getErrorIcon());
+          Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
         }
-      } finally {
+      }
+      finally {
         myPerformAction = false;
       }
     }
@@ -285,5 +287,15 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     super.dispose();
     myConfigurable.disposeUIResources();
     myConfigurable = null;
+  }
+
+  @Override
+  public void show() {
+    DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
+      @Override
+      public void run() {
+        WholeWestSingleConfigurableEditor.super.show();
+      }
+    });
   }
 }

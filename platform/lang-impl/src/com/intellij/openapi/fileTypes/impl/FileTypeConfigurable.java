@@ -20,13 +20,12 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.DumbModePermission;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -41,6 +40,7 @@ import com.intellij.util.ui.JBUI;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -73,6 +73,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     return FileTypesBundle.message("filetype.settings.title");
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
     myFileTypePanel = new FileTypePanel();
@@ -112,6 +113,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     return result.toArray(new FileType[result.size()]);
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     Set<UserFileType> modifiedUserTypes = myOriginalToEditedMap.keySet();
@@ -121,7 +123,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     }
     myOriginalToEditedMap.clear();
 
-    DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
         if (!myManager.isIgnoredFilesListEqualToCurrent(myFileTypePanel.myIgnoreFilesField.getText())) {
@@ -137,6 +139,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     });
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     myTempPatternsTable = myManager.getExtensionMap().copy();
@@ -151,6 +154,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     myFileTypePanel.myIgnoreFilesField.setText(myManager.getIgnoredFilesList());
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     if (!myManager.isIgnoredFilesListEqualToCurrent(myFileTypePanel.myIgnoreFilesField.getText())) return true;
@@ -160,6 +164,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
            !myTempTemplateDataLanguages.equals(TemplateDataLanguagePatterns.getInstance().getAssocTable());
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     if (myFileTypePanel != null) myFileTypePanel.dispose();

@@ -48,6 +48,7 @@ public class DeleteLayerAction extends AnAction {
   @RequiredDispatchThread
   @Override
   public void update(@NotNull AnActionEvent e) {
-    e.getPresentation().setEnabled(myModuleEditor.getModifiableRootModelProxy().getLayers().size() > 1);
+    ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
+    e.getPresentation().setEnabled(modifiableRootModelProxy != null && modifiableRootModelProxy.getLayers().size() > 1);
   }
 }
