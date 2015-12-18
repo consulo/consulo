@@ -84,14 +84,14 @@ public abstract class FileTypeManager extends FileTypeRegistry {
   }
 
   /**
-   * Checks if the specified file is ignored by IDEA. Ignored files are not visible in
+   * Checks if the specified file is ignored. Ignored files are not visible in
    * different project views and cannot be opened in the editor. They will neither be parsed nor compiled.
    *
    * @param name The name of the file to check.
    * @return true if the file is ignored, false otherwise.
    */
 
-  public abstract boolean isFileIgnored(@NonNls @NotNull String name);
+  public abstract boolean isFileIgnored(@NonNls @NotNull CharSequence name);
 
   /**
    * Returns the list of extensions associated with the specified file type.

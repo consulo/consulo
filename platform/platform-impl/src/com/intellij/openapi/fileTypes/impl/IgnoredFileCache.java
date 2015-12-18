@@ -103,6 +103,6 @@ class IgnoredFileCache {
   }
 
   private boolean isFileIgnoredNoCache(@NotNull VirtualFile file) {
-    return myIgnoredPatterns.isIgnored(file.getName());
+    return myIgnoredPatterns.isIgnored(file.getNameSequence());
   }
 }

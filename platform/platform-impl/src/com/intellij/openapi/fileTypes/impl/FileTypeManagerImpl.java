@@ -799,7 +799,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   }
 
   @Override
-  public boolean isFileIgnored(@NotNull String name) {
+  public boolean isFileIgnored(@NotNull CharSequence name) {
     return myIgnoredPatterns.isIgnored(name);
   }
 

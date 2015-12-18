@@ -101,7 +101,7 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   }
 
   @Override
-  public boolean isFileIgnored(@NotNull String name) {
+  public boolean isFileIgnored(@NotNull CharSequence name) {
     return false;
   }
 
