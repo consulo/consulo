@@ -16,6 +16,7 @@
 package com.intellij.openapi.options;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -31,6 +32,7 @@ public interface UnnamedConfigurable {
    * @return the component instance.
    */
   @Nullable
+  @RequiredDispatchThread
   JComponent createComponent();
 
   /**
@@ -39,20 +41,24 @@ public interface UnnamedConfigurable {
    *
    * @return true if the settings were modified, false otherwise.
    */
+  @RequiredDispatchThread
   boolean isModified();
 
   /**
    * Store the settings from configurable to other components.
    */
+  @RequiredDispatchThread
   void apply() throws ConfigurationException;
 
   /**
    * Load settings from other components to configurable.
    */
+  @RequiredDispatchThread
   void reset();
 
   /**
    * Disposes the Swing components used for displaying the configuration.
    */
+  @RequiredDispatchThread
   void disposeUIResources();
 }
