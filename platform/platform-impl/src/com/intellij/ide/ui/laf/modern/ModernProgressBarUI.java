@@ -58,7 +58,7 @@ public class ModernProgressBarUI extends BasicProgressBarUI {
       return;
     }
     //boxRect = getBox(boxRect);
-    g.setColor(UIManager.getColor("ProgressBar.stepColor1"));
+    g.setColor(c.getForeground());
     int w = c.getWidth();
     int h = c.getHeight();
     g.fillRect(0, 0, w, h);
@@ -125,7 +125,7 @@ public class ModernProgressBarUI extends BasicProgressBarUI {
 
     g.setColor(ModernUIUtil.getDisabledBorderColor());
     g.fillRect(0, 0, w, h);
-    g.setColor(UIManager.getColor("ProgressBar.stepColor1"));
+    g.setColor(c.getForeground());
     g.fillRect(0, 0, amountFull, h);
 
     // Deal with possible text painting

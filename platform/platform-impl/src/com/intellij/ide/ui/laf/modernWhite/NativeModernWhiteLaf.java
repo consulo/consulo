@@ -41,7 +41,7 @@ public class NativeModernWhiteLaf extends ModernWhiteLaf {
       }
       defaults.put("Color.SelectionBackground", value);
       defaults.put("Hyperlink.linkColor", new Color(value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha() + 10));
-      defaults.put("ProgressBar.stepColor1", value);
+      defaults.put("ProgressBar.foreground", value);
       defaults.put("ProgressBar.stepColor2", new Color(value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha() + 10));
     }
     return defaults;

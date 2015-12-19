@@ -53,7 +53,7 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
       return;
     }
     //boxRect = getBox(boxRect);
-    g.setColor(UIManager.getColor("ProgressBar.stepColor1"));
+    g.setColor(c.getForeground());
     int w = c.getWidth();
     int h = c.getHeight();
     g.fillRect(0, 0, w, h);
@@ -76,9 +76,7 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
     }
     offset = (offset + JBUI.scale(1)) % getPeriodLength();
     Area area = new Area(new Rectangle2D.Float(0, 0, w, h));
-    area.subtract(new Area(
-            new RoundRectangle2D.Float(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2),
-                                        JBUI.scale(8), JBUI.scale(8))));
+    area.subtract(new Area(new RoundRectangle2D.Float(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2), JBUI.scale(8), JBUI.scale(8))));
     ((Graphics2D)g).setPaint(Gray._128);
     ((Graphics2D)g).fill(area);
     area.subtract(new Area(new RoundRectangle2D.Float(0, 0, w, h, JBUI.scale(9), JBUI.scale(9))));
@@ -127,11 +125,9 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
     g2.setColor(progressBar.getForeground());
     g2.fill(new RoundRectangle2D.Float(0, 0, w - JBUI.scale(1), h - JBUI.scale(1), JBUI.scale(9), JBUI.scale(9)));
     g2.setColor(c.getParent().getBackground());
-    g2.fill(new RoundRectangle2D.Float(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(3), h - JBUI.scale(3),
-                                       JBUI.scale(8), JBUI.scale(8)));
-    g2.setColor(UIManager.getColor("ProgressBar.stepColor1"));
-    g2.fill(new RoundRectangle2D.Float(JBUI.scale(2), JBUI.scale(2), amountFull - JBUI.scale(5), h - JBUI.scale(5),
-                                       JBUI.scale(7), JBUI.scale(7)));
+    g2.fill(new RoundRectangle2D.Float(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(3), h - JBUI.scale(3), JBUI.scale(8), JBUI.scale(8)));
+    g2.setColor(progressBar.getForeground());
+    g2.fill(new RoundRectangle2D.Float(JBUI.scale(2), JBUI.scale(2), amountFull - JBUI.scale(5), h - JBUI.scale(5), JBUI.scale(7), JBUI.scale(7)));
 
 
     // Deal with possible text painting
