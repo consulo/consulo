@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import com.intellij.openapi.progress.Progressive;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
+import com.intellij.reference.SoftReference;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
@@ -47,7 +47,7 @@ public class AbstractTreeBuilder implements Disposable {
   @NonNls private static final String TREE_BUILDER = "TreeBuilder";
   public static final boolean DEFAULT_UPDATE_INACTIVE = true;
   private final TransferToEDTQueue<Runnable>
-    myLaterInvocator = new TransferToEDTQueue<Runnable>("Tree later invocator", new Processor<Runnable>() {
+          myLaterInvocator = new TransferToEDTQueue<Runnable>("Tree later invocator", new Processor<Runnable>() {
     @Override
     public boolean process(Runnable runnable) {
       runnable.run();
@@ -212,10 +212,9 @@ public class AbstractTreeBuilder implements Disposable {
 
   /**
    * node descriptor getElement contract is as follows:
-   * 1.TreeStructure always returns & recieves "treestructure" element returned by getTreeStructureElement
+   * 1.TreeStructure always returns & receives "treeStructure" element returned by getTreeStructureElement
    * 2.Paths contain "model" element returned by getElement
    */
-
   protected Object getTreeStructureElement(NodeDescriptor nodeDescriptor) {
     return nodeDescriptor.getElement();
   }
@@ -299,23 +298,17 @@ public class AbstractTreeBuilder implements Disposable {
 
   @NotNull
   public ActionCallback queueUpdateFrom(final Object element, final boolean forceResort, final boolean updateStructure) {
-    if (getUi() == null) return new ActionCallback.Rejected();
+    if (getUi() == null) return ActionCallback.REJECTED;
 
     final ActionCallback result = new ActionCallback();
 
-    getUi().invokeLaterIfNeeded(false, new Runnable() {
+    getUi().invokeLaterIfNeeded(false, new TreeRunnable("AbstractTreeBuilder.queueUpdateFrom") {
       @Override
-      public void run() {
-        if (updateStructure) {
-          if (forceResort) {
-            getUi().incComparatorStamp();
-          }
-
-          getUi().queueUpdate(element, true).notify(result);
+      public void perform() {
+        if (updateStructure && forceResort) {
+          getUi().incComparatorStamp();
         }
-        else {
-          getUi().queueUpdate(element, false).notify(result);
-        }
+        getUi().queueUpdate(element, updateStructure).notify(result);
       }
     });
 
@@ -432,6 +425,7 @@ public class AbstractTreeBuilder implements Disposable {
     return true;
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   protected void runOnYeildingDone(Runnable onDone) {
     if (isDisposed()) return;
 
@@ -467,9 +461,9 @@ public class AbstractTreeBuilder implements Disposable {
 
     final Application app = ApplicationManager.getApplication();
     if (app != null) {
-      app.runReadAction(new Runnable() {
+      app.runReadAction(new TreeRunnable("AbstractTreeBuilder.runBackgroundLoading") {
         @Override
-        public void run() {
+        public void perform() {
           runnable.run();
         }
       });
@@ -491,15 +485,16 @@ public class AbstractTreeBuilder implements Disposable {
   }
 
   @NotNull
-  public final ActionCallback getIntialized() {
-    if (isDisposed()) return new ActionCallback.Rejected();
-
+  public final ActionCallback getInitialized() {
+    if (isDisposed()) {
+      return ActionCallback.REJECTED;
+    }
     return myUi.getInitialized();
   }
 
   @NotNull
   public final ActionCallback getReady(Object requestor) {
-    if (isDisposed()) return new ActionCallback.Rejected();
+    if (isDisposed()) return ActionCallback.REJECTED;
 
     return myUi.getReady(requestor);
   }
@@ -522,24 +517,24 @@ public class AbstractTreeBuilder implements Disposable {
 
   @NotNull
   public ActionCallback cancelUpdate() {
-    if (isDisposed()) return new ActionCallback.Rejected();
+    if (isDisposed()) return ActionCallback.REJECTED;
 
     return getUi().cancelUpdate();
   }
 
   @NotNull
   public ActionCallback batch(@NotNull Progressive progressive) {
-    if (isDisposed()) return new ActionCallback.Rejected();
+    if (isDisposed()) return ActionCallback.REJECTED;
 
     return getUi().batch(progressive);
   }
 
   @NotNull
   public AsyncResult<Object> revalidateElement(Object element) {
-    if (isDisposed()) return new AsyncResult.Rejected<Object>();
+    if (isDisposed()) return AsyncResult.rejected();
 
     AbstractTreeStructure structure = getTreeStructure();
-    if (structure == null) return new AsyncResult.Rejected<Object>();
+    if (structure == null) return AsyncResult.rejected();
 
     return structure.revalidateElement(element);
   }
@@ -599,7 +594,7 @@ public class AbstractTreeBuilder implements Disposable {
 
   @NotNull
   public final <T> Set<T> getSelectedElements(@NotNull Class<T> elementClass) {
-    Set<T> result = new HashSet<T>();
+    Set<T> result = new LinkedHashSet<T>();
     for (Object o : getSelectedElements()) {
       Object each = transformElement(o);
       if (elementClass.isInstance(each)) {
@@ -623,20 +618,23 @@ public class AbstractTreeBuilder implements Disposable {
   @Nullable
   public static AbstractTreeBuilder getBuilderFor(@NotNull JTree tree) {
     final WeakReference ref = (WeakReference)tree.getClientProperty(TREE_BUILDER);
-    return ref != null ? (AbstractTreeBuilder)ref.get() : null;
+    return (AbstractTreeBuilder)SoftReference.dereference(ref);
   }
 
   @Nullable
-  public final <T> Object accept(@NotNull Class nodeClass, @NotNull TreeVisitor<T> visitor) {
+  public final <T> Object accept(@NotNull Class<?> nodeClass, @NotNull TreeVisitor<T> visitor) {
     return accept(nodeClass, getRootElement(), visitor);
   }
 
   @Nullable
-  private <T> Object accept(@NotNull Class nodeClass, Object element, @NotNull TreeVisitor<T> visitor) {
-    if (element == null) return null;
+  private <T> Object accept(@NotNull Class<?> nodeClass, Object element, @NotNull TreeVisitor<T> visitor) {
+    if (element == null) {
+      return null;
+    }
 
-    if (nodeClass.isAssignableFrom(element.getClass())) {
-      if (visitor.visit((T)element)) return element;
+    //noinspection unchecked
+    if (nodeClass.isAssignableFrom(element.getClass()) && visitor.visit((T)element)) {
+      return element;
     }
 
     final Object[] children = getTreeStructure().getChildElements(element);

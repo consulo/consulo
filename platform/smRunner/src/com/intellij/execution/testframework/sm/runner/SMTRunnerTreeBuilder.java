@@ -46,6 +46,7 @@ public class SMTRunnerTreeBuilder extends AbstractTestTreeBuilder {
     queueUpdateFrom(parentTestProxy, false, true);
   }
 
+
   @Override
   protected boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
     final AbstractTreeStructure treeStructure = getTreeStructure();

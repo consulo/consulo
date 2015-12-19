@@ -48,15 +48,13 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
 
   @Override
   @RequiredDispatchThread
-  public final Component getTreeCellRendererComponent(
-    JTree tree,
-    Object value,
-    boolean selected,
-    boolean expanded,
-    boolean leaf,
-    int row,
-    boolean hasFocus
-  ){
+  public final Component getTreeCellRendererComponent(JTree tree,
+                                                      Object value,
+                                                      boolean selected,
+                                                      boolean expanded,
+                                                      boolean leaf,
+                                                      int row,
+                                                      boolean hasFocus){
     myTree = tree;
 
     clear();
@@ -75,19 +73,17 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
         setBackground(hasFocus ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeUnfocusedSelectionBackground());
       }
     }
-    else {
-      if (selected) {
-        setPaintFocusBorder(true);
-        if (isFocused()) {
-          setBackground(UIUtil.getTreeSelectionBackground());
-        }
-        else {
-          setBackground(null);
-        }
+    else if (selected) {
+      setPaintFocusBorder(true);
+      if (isFocused()) {
+        setBackground(UIUtil.getTreeSelectionBackground());
       }
       else {
         setBackground(null);
       }
+    }
+    else {
+      setBackground(null);
     }
 
     if (value instanceof LoadingNode) {
@@ -147,6 +143,17 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
     super.setOpaque(isOpaque);
   }
 
+  @Override
+  public Font getFont() {
+    Font font = super.getFont();
+
+    // Cell renderers could have no parent and no explicit set font.
+    // Take tree font in this case.
+    if (font != null) return font;
+    JTree tree = getTree();
+    return tree != null ? tree.getFont() : null;
+  }
+
   /**
    * When the item is selected then we use default tree's selection foreground.
    * It guaranties readability of selected text in any LAF.
@@ -169,13 +176,11 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
    * All component attributes are cleared when this method is being invoked.
    */
   @RequiredDispatchThread
-  public abstract void customizeCellRenderer(
-    JTree tree,
-    Object value,
-    boolean selected,
-    boolean expanded,
-    boolean leaf,
-    int row,
-    boolean hasFocus
-  );
+  public abstract void customizeCellRenderer(@NotNull JTree tree,
+                                             Object value,
+                                             boolean selected,
+                                             boolean expanded,
+                                             boolean leaf,
+                                             int row,
+                                             boolean hasFocus);
 }

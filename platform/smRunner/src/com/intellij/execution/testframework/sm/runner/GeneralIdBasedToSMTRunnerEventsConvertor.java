@@ -54,8 +54,10 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     myLocator = locator;
   }
 
+  @Override
   public void onStartTesting() {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         myTestsRootNode.setState(State.RUNNING, GeneralIdBasedToSMTRunnerEventsConvertor.this);
         myTestsRootProxy.setStarted();
@@ -67,14 +69,17 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
   @Override
   public void onTestsReporterAttached() {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         fireOnTestsReporterAttached(myTestsRootProxy);
       }
     });
   }
 
+  @Override
   public void onFinishTesting() {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         if (myIsTestingFinished) {
           // has been already invoked!
@@ -109,16 +114,20 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     myTestProxyPrinterProvider = printerProvider;
   }
 
+  @Override
   public void onTestStarted(@NotNull final TestStartedEvent testStartedEvent) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         doStartNode(testStartedEvent, false);
       }
     });
   }
 
+  @Override
   public void onSuiteStarted(@NotNull final TestSuiteStartedEvent suiteStartedEvent) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         doStartNode(suiteStartedEvent, true);
       }
@@ -186,8 +195,10 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     return parentNode;
   }
 
+  @Override
   public void onTestFinished(@NotNull final TestFinishedEvent testFinishedEvent) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         Node node = findNodeToTerminate(testFinishedEvent);
         if (node != null) {
@@ -202,8 +213,10 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     });
   }
 
+  @Override
   public void onSuiteFinished(@NotNull final TestSuiteFinishedEvent suiteFinishedEvent) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         Node node = findNodeToTerminate(suiteFinishedEvent);
         if (node != null) {
@@ -226,8 +239,10 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     return node;
   }
 
+  @Override
   public void onUncapturedOutput(@NotNull final String text, final Key outputType) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         Node activeNode = findActiveNode();
         SMTestProxy activeProxy = activeNode.getProxy();
@@ -242,10 +257,12 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     });
   }
 
+  @Override
   public void onError(@NotNull final String localizedMessage,
                       @Nullable final String stackTrace,
                       final boolean isCritical) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         Node activeNode = findActiveNode();
         SMTestProxy activeProxy = activeNode.getProxy();
@@ -254,8 +271,10 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     });
   }
 
+  @Override
   public void onTestFailure(@NotNull final TestFailedEvent testFailedEvent) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         Node node = findNodeToTerminate(testFailedEvent);
         if (node == null) {
@@ -293,8 +312,10 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     });
   }
 
+  @Override
   public void onTestIgnored(@NotNull final TestIgnoredEvent testIgnoredEvent) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         Node node = findNodeToTerminate(testIgnoredEvent);
         if (node != null) {
@@ -308,8 +329,10 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     });
   }
 
+  @Override
   public void onTestOutput(@NotNull final TestOutputEvent testOutputEvent) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         Node node = findNode(testOutputEvent);
         if (node == null) {
@@ -327,8 +350,10 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     });
   }
 
+  @Override
   public void onTestsCountInSuite(final int count) {
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         fireOnTestsCountInSuite(count);
       }
@@ -361,9 +386,11 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
   /*
    * Remove listeners,  etc
    */
+  @Override
   public void dispose() {
     super.dispose();
     addToInvokeLater(new Runnable() {
+      @Override
       public void run() {
         disconnectListeners();
 
