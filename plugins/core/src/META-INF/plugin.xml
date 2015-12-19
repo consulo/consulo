@@ -1102,7 +1102,6 @@
                     interface="com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider"/>
 
 
-    <extensionPoint name="testFramework" interface="com.intellij.testIntegration.TestFramework"/>
     <extensionPoint name="unusedDeclarationFixProvider"
                     interface="com.intellij.codeInspection.reference.UnusedDeclarationFixProvider"/>
     <extensionPoint name="library.dependencyScopeSuggester" interface="com.intellij.openapi.roots.LibraryDependencyScopeSuggester"/>
@@ -2520,8 +2519,6 @@
                          instance="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfigurable"
                          key="resource.compiler.description" bundle="messages.CompilerBundle"/>
 
-
-    <iconDescriptorUpdater implementation="com.intellij.execution.testframework.TestIconDescriptorUpdater" order="before default"/>
 
     <search.topHitProvider implementation="com.intellij.platform.DefaultPlatformTopHitProvider"/>
     <search.topHitProvider implementation="com.intellij.ide.ui.UISimpleSettingsProvider"/>
