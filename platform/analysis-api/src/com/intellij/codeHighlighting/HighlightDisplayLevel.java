@@ -41,8 +41,7 @@ public class HighlightDisplayLevel {
   public static final HighlightDisplayLevel GENERIC_SERVER_ERROR_OR_WARNING =
           new HighlightDisplayLevel(HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING, createBoxIcon(CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING));
 
-  public static final HighlightDisplayLevel ERROR =
-          new HighlightDisplayLevel(HighlightSeverity.ERROR, createErrorIcon(CodeInsightColors.ERRORS_ATTRIBUTES));
+  public static final HighlightDisplayLevel ERROR = new HighlightDisplayLevel(HighlightSeverity.ERROR, createErrorIcon(CodeInsightColors.ERRORS_ATTRIBUTES));
 
   public static final HighlightDisplayLevel WARNING =
           new HighlightDisplayLevel(HighlightSeverity.WARNING, createErrorIcon(CodeInsightColors.WARNINGS_ATTRIBUTES));
@@ -54,7 +53,8 @@ public class HighlightDisplayLevel {
    */
   @Deprecated
   public static final HighlightDisplayLevel INFO = new HighlightDisplayLevel(HighlightSeverity.INFO, DO_NOT_SHOW.getIcon());
-  public static final HighlightDisplayLevel WEAK_WARNING = new HighlightDisplayLevel(HighlightSeverity.WEAK_WARNING, DO_NOT_SHOW.getIcon());
+  public static final HighlightDisplayLevel WEAK_WARNING =
+          new HighlightDisplayLevel(HighlightSeverity.WEAK_WARNING, createErrorIcon(CodeInsightColors.WEAK_WARNING_ATTRIBUTES));
 
   public static final HighlightDisplayLevel NON_SWITCHABLE_ERROR = new HighlightDisplayLevel(HighlightSeverity.ERROR);
 
