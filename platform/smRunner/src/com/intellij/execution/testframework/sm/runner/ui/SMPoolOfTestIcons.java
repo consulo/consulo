@@ -46,7 +46,7 @@ public class SMPoolOfTestIcons implements PoolOfTestIcons {
 
   @NotNull
   public static Icon addErrorMarkTo(@NotNull
-  final Icon baseIcon) {
+                                    final Icon baseIcon) {
     return new LayeredIcon(baseIcon, ERROR_ICON_MARK);
   }
 }

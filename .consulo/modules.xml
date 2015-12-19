@@ -793,6 +793,7 @@
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="xdebugger-api" />
+          <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
       <module name="platform/tests_bootstrap" dirurl="file://$PROJECT_DIR$/platform/testFramework/bootstrap" current-layer="Default">

@@ -15,12 +15,15 @@
  */
 package com.intellij.openapi.progress.util;
 
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
+import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,11 +39,29 @@ import java.awt.geom.Rectangle2D;
 public class ColorProgressBar extends JComponent {
   private static final Dimension PREFERRED_SIZE = new Dimension(146, 17);
 
-  public static final Color GREEN = new JBColor(new Color(0x2fd432), new Color(0x287528));
-  public static final Color RED = new Color(0xd2451e);
+  public static final Color GREEN = new JBColor(new NotNullProducer<Color>() {
+    @NotNull
+    @Override
+    public Color produce() {
+      UISettings settings = UISettings.getInstance();
+      return settings == null || null == settings.COLOR_BLINDNESS
+             ? new JBColor(new Color(0x6cad74), new Color(0x4a8c53))
+             : new JBColor(new Color(0x6ca69c), new Color(0x639990));
+    }
+  });
+  public static final Color RED = new JBColor(new NotNullProducer<Color>() {
+    @NotNull
+    @Override
+    public Color produce() {
+      UISettings settings = UISettings.getInstance();
+      return settings == null || null == settings.COLOR_BLINDNESS
+             ? new JBColor(new Color(0xd67b76), new Color(0xe55757))
+             : new JBColor(new Color(0xcc7447), new Color(0xcc7447));
+    }
+  });
+  public static final Color RED_TEXT = new JBColor(new Color(0xb81708), new Color(0xdb5c5c));
   public static final Color BLUE = new JBColor(new Color(1, 68, 208), JBColor.blue);
-  public static final Color YELLOW = new Color(0xd4b721);
-
+  public static final Color YELLOW = new JBColor(new Color(0xa67a21), new Color(0x91703a));
   private static final Color SHADOW1 = new JBColor(Gray._190, UIUtil.getBorderColor()) ;
   private static final Color SHADOW2 = Gray._105;
 
@@ -111,6 +132,7 @@ public class ColorProgressBar extends JComponent {
     return (int)(bricksTotal * fraction) + 1;
   }
 
+  @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
@@ -162,7 +184,7 @@ public class ColorProgressBar extends JComponent {
           }
         }
         g2.setColor(
-          ColorUtil.toAlpha(myColor, 255 - alpha_step * (y_steps / 2 + 1)));
+                ColorUtil.toAlpha(myColor, 255 - alpha_step * (y_steps / 2 + 1)));
         g2.drawRect(startXOffset, y_center - y_steps, BRICK_WIDTH - 1, size.height - 7);
       }
 
@@ -179,7 +201,7 @@ public class ColorProgressBar extends JComponent {
           }
         }
         g2.setColor(
-          ColorUtil.toAlpha(myColor, 255 - alpha_step * (y_steps / 2 + 1)));
+                ColorUtil.toAlpha(myColor, 255 - alpha_step * (y_steps / 2 + 1)));
         g2.drawRect(x_offset, y_center - y_steps, BRICK_WIDTH - 1, size.height - 7);
         x_offset += BRICK_WIDTH + BRICK_SPACE;
       }
@@ -188,16 +210,19 @@ public class ColorProgressBar extends JComponent {
     config.restore();
   }
 
+  @Override
   public Dimension getPreferredSize() {
     return PREFERRED_SIZE;
   }
 
+  @Override
   public Dimension getMaximumSize() {
     Dimension dimension = getPreferredSize();
     dimension.width = Short.MAX_VALUE;
     return dimension;
   }
 
+  @Override
   public Dimension getMinimumSize() {
     Dimension dimension = getPreferredSize();
     dimension.width = 13;
@@ -212,11 +237,12 @@ public class ColorProgressBar extends JComponent {
   public static void main(String[] args) {
     JFrame frame = new JFrame("ColorProgressBar Test");
     frame.addWindowListener(
-      new WindowAdapter() {
-        public void windowClosing(WindowEvent e) {
-          System.exit(0);
-        }
-      }
+            new WindowAdapter() {
+              @Override
+              public void windowClosing(WindowEvent e) {
+                System.exit(0);
+              }
+            }
     );
     frame.setSize(800, 600);
     frame.setLocation(0, 0);
@@ -229,8 +255,9 @@ public class ColorProgressBar extends JComponent {
     frame.setVisible(true);
     JButton b = new JButton ("X");
     b.addActionListener(new ActionListener () {
+      @Override
       public void actionPerformed(ActionEvent e) {
-         colorProgressBar.setFraction(1);
+        colorProgressBar.setFraction(1);
       }
     });
     contentPane.add(b, BorderLayout.SOUTH);

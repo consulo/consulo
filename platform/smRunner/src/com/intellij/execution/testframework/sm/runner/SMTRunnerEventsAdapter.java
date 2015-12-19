@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik
-*/
+ */
 public class SMTRunnerEventsAdapter implements SMTRunnerEventsListener {
   public void onTestingStarted(@NotNull SMTestProxy.SMRootTestProxy testsRoot){}
   public void onTestingFinished(@NotNull SMTestProxy.SMRootTestProxy testsRoot){}
@@ -39,4 +39,8 @@ public class SMTRunnerEventsAdapter implements SMTRunnerEventsListener {
   public void onCustomProgressTestsCategory(@Nullable String categoryName, final int testCount) {}
   public void onCustomProgressTestStarted() {}
   public void onCustomProgressTestFailed() {}
+  public void onCustomProgressTestFinished() {}
+
+  @Override public void onSuiteTreeNodeAdded(SMTestProxy testProxy) {}
+  @Override public void onSuiteTreeStarted(SMTestProxy suite) {}
 }

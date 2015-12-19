@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,28 +32,26 @@ import java.util.Map;
 import static com.intellij.execution.testframework.sm.runner.GeneralToSMTRunnerEventsConvertor.getTFrameworkPrefix;
 
 /**
+ * This implementation also supports messages split in parts by early flush.
+ * Implementation assumes that buffer is being flushed on line end or by timer,
+ * i.e. incoming text contains no more than one line's end marker ('\r', '\n', or "\r\n")
+ * (e.g. process was run with IDEA program's runner)
+ *
  * @author Roman Chernyatchik
- *         <p/>
- *         This implementation also supports messages splitted in parts by early flush.
- *         Implementation assumes that buffer is being flushed on line end or by timer,
- *         i.e. incomming text contains no more than one line's end marker ('\r', '\n', or "\r\n")
- *         (e.g. process was run with IDEA program's runner)
  */
 public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer {
   private static final Logger LOG = Logger.getInstance(OutputToGeneralTestEventsConverter.class.getName());
 
-  private GeneralTestEventsProcessor myProcessor;
   private final MyServiceMessageVisitor myServiceMessageVisitor;
   private final String myTestFrameworkName;
-
   private final OutputLineSplitter mySplitter;
+
+  private GeneralTestEventsProcessor myProcessor;
   private boolean myPendingLineBreakFlag;
 
-  public OutputToGeneralTestEventsConverter(@NotNull final String testFrameworkName,
-                                            @NotNull final TestConsoleProperties consoleProperties) {
+  public OutputToGeneralTestEventsConverter(@NotNull String testFrameworkName, @NotNull TestConsoleProperties consoleProperties) {
     myTestFrameworkName = testFrameworkName;
     myServiceMessageVisitor = new MyServiceMessageVisitor();
-
     mySplitter = new OutputLineSplitter(consoleProperties.isEditable()) {
       @Override
       protected void onLineAvailable(@NotNull String text, @NotNull Key outputType, boolean tcLikeFakeOutput) {
@@ -62,14 +60,21 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     };
   }
 
+  @Override
   public void setProcessor(@Nullable final GeneralTestEventsProcessor processor) {
     myProcessor = processor;
   }
 
+  protected GeneralTestEventsProcessor getProcessor() {
+    return myProcessor;
+  }
+
+  @Override
   public void dispose() {
     setProcessor(null);
   }
 
+  @Override
   public void process(final String text, final Key outputType) {
     mySplitter.process(text, outputType);
   }
@@ -77,6 +82,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
   /**
    * Flashes the rest of stdout text buffer after output has been stopped
    */
+  @Override
   public void flushBufferBeforeTerminating() {
     mySplitter.flush();
     if (myPendingLineBreakFlag) {
@@ -195,6 +201,13 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     }
   }
 
+  private void fireOnCustomProgressTestFinished() {
+    final GeneralTestEventsProcessor processor = myProcessor;
+    if (processor != null) {
+      processor.onCustomProgressTestFinished();
+    }
+  }
+
   private void fireOnCustomProgressTestFailed() {
     final GeneralTestEventsProcessor processor = myProcessor;
     if (processor != null) {
@@ -206,6 +219,43 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     final GeneralTestEventsProcessor processor = myProcessor;
     if (processor != null) {
       processor.onTestsReporterAttached();
+    }
+  }
+
+  private void fireOnSuiteTreeNodeAdded(String testName, String locationHint) {
+    final GeneralTestEventsProcessor processor = myProcessor;
+    if (processor != null) {
+      processor.onSuiteTreeNodeAdded(testName, locationHint);
+    }
+  }
+
+
+  private void fireRootPresentationAdded(String rootName, @Nullable String comment, String rootLocation) {
+    final GeneralTestEventsProcessor processor = myProcessor;
+    if (processor != null) {
+      processor.onRootPresentationAdded(rootName, comment, rootLocation);
+    }
+  }
+
+  private void fireOnSuiteTreeStarted(String suiteName, String locationHint) {
+
+    final GeneralTestEventsProcessor processor = myProcessor;
+    if (processor != null) {
+      processor.onSuiteTreeStarted(suiteName, locationHint);
+    }
+  }
+
+  private void fireOnSuiteTreeEnded(String suiteName) {
+    final GeneralTestEventsProcessor processor = myProcessor;
+    if (processor != null) {
+      processor.onSuiteTreeEnded(suiteName);
+    }
+  }
+
+  private void fireOnBuildTreeEnded() {
+    final GeneralTestEventsProcessor processor = myProcessor;
+    if (processor != null) {
+      processor.onBuildTreeEnded();
     }
   }
 
@@ -273,30 +323,44 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     }
   }
 
+  public void onStartTesting() {}
+
   private class MyServiceMessageVisitor extends DefaultServiceMessageVisitor {
     @NonNls public static final String KEY_TESTS_COUNT = "testCount";
     @NonNls private static final String ATTR_KEY_TEST_ERROR = "error";
     @NonNls private static final String ATTR_KEY_TEST_COUNT = "count";
     @NonNls private static final String ATTR_KEY_TEST_DURATION = "duration";
+    @NonNls private static final String ATTR_KEY_TEST_OUTPUT_FILE = "outputFile";
     @NonNls private static final String ATTR_KEY_LOCATION_URL = "locationHint";
     @NonNls private static final String ATTR_KEY_LOCATION_URL_OLD = "location";
     @NonNls private static final String ATTR_KEY_STACKTRACE_DETAILS = "details";
     @NonNls private static final String ATTR_KEY_DIAGNOSTIC = "diagnosticInfo";
+    @NonNls private static final String ATTR_KEY_CONFIG = "config";
 
     @NonNls private static final String MESSAGE = "message";
     @NonNls private static final String TEST_REPORTER_ATTACHED = "enteredTheMatrix";
+    @NonNls private static final String SUITE_TREE_STARTED = "suiteTreeStarted";
+    @NonNls private static final String SUITE_TREE_ENDED = "suiteTreeEnded";
+    @NonNls private static final String SUITE_TREE_NODE = "suiteTreeNode";
+    @NonNls private static final String BUILD_TREE_ENDED_NODE = "treeEnded";
+    @NonNls private static final String ROOT_PRESENTATION = "rootName";
+
     @NonNls private static final String ATTR_KEY_STATUS = "status";
     @NonNls private static final String ATTR_VALUE_STATUS_ERROR = "ERROR";
     @NonNls private static final String ATTR_VALUE_STATUS_WARNING = "WARNING";
     @NonNls private static final String ATTR_KEY_TEXT = "text";
     @NonNls private static final String ATTR_KEY_ERROR_DETAILS = "errorDetails";
+    @NonNls private static final String ATTR_KEY_EXPECTED_FILE_PATH = "expectedFile";
+    @NonNls private static final String ATTR_KEY_ACTUAL_FILE_PATH = "actualFile";
 
     @NonNls public static final String CUSTOM_STATUS = "customProgressStatus";
     @NonNls private static final String ATTR_KEY_TEST_TYPE = "type";
     @NonNls private static final String ATTR_KEY_TESTS_CATEGORY = "testsCategory";
     @NonNls private static final String ATTR_VAL_TEST_STARTED = "testStarted";
+    @NonNls private static final String ATTR_VAL_TEST_FINISHED = "testFinished";
     @NonNls private static final String ATTR_VAL_TEST_FAILED = "testFailed";
 
+    @Override
     public void visitTestSuiteStarted(@NotNull final TestSuiteStarted suiteStarted) {
       final String locationUrl = fetchTestLocation(suiteStarted);
       TestSuiteStartedEvent suiteStartedEvent = new TestSuiteStartedEvent(suiteStarted, locationUrl);
@@ -321,20 +385,25 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
       return location;
     }
 
+    @Override
     public void visitTestSuiteFinished(@NotNull final TestSuiteFinished suiteFinished) {
       TestSuiteFinishedEvent finishedEvent = new TestSuiteFinishedEvent(suiteFinished);
       fireOnSuiteFinished(finishedEvent);
     }
 
+    @Override
     public void visitTestStarted(@NotNull final TestStarted testStarted) {
       // TODO
       // final String locationUrl = testStarted.getLocationHint();
 
-      final String locationUrl = testStarted.getAttributes().get(ATTR_KEY_LOCATION_URL);
+      final Map<String, String> attributes = testStarted.getAttributes();
+      final String locationUrl = attributes.get(ATTR_KEY_LOCATION_URL);
       TestStartedEvent testStartedEvent = new TestStartedEvent(testStarted, locationUrl);
+      testStartedEvent.setConfig(attributes.get(ATTR_KEY_CONFIG) != null);
       fireOnTestStarted(testStartedEvent);
     }
 
+    @Override
     public void visitTestFinished(@NotNull final TestFinished testFinished) {
       //TODO
       //final Integer duration = testFinished.getTestDuration();
@@ -349,53 +418,69 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         duration = convertToLong(durationStr, testFinished);
       }
 
-      TestFinishedEvent testFinishedEvent = new TestFinishedEvent(testFinished, duration);
+      TestFinishedEvent testFinishedEvent = new TestFinishedEvent(testFinished, duration,
+                                                                  testFinished.getAttributes().get(ATTR_KEY_TEST_OUTPUT_FILE));
       fireOnTestFinished(testFinishedEvent);
     }
 
+    @Override
     public void visitTestIgnored(@NotNull final TestIgnored testIgnored) {
       final String stacktrace = testIgnored.getAttributes().get(ATTR_KEY_STACKTRACE_DETAILS);
       fireOnTestIgnored(new TestIgnoredEvent(testIgnored, stacktrace));
     }
 
+    @Override
     public void visitTestStdOut(@NotNull final TestStdOut testStdOut) {
       fireOnTestOutput(new TestOutputEvent(testStdOut, testStdOut.getStdOut(), true));
     }
 
+    @Override
     public void visitTestStdErr(@NotNull final TestStdErr testStdErr) {
-      fireOnTestOutput(new TestOutputEvent(testStdErr.getTestName(), testStdErr.getStdErr(), false));
+      fireOnTestOutput(new TestOutputEvent(testStdErr, testStdErr.getStdErr(), false));
     }
 
+    @Override
     public void visitTestFailed(@NotNull final TestFailed testFailed) {
-      final boolean testError = testFailed.getAttributes().get(ATTR_KEY_TEST_ERROR) != null;
-      TestFailedEvent testFailedEvent = new TestFailedEvent(testFailed, testError);
+      final Map<String, String> attributes = testFailed.getAttributes();
+      LOG.assertTrue(testFailed.getFailureMessage() != null, "No failure message for: " + myTestFrameworkName);
+      final boolean testError = attributes.get(ATTR_KEY_TEST_ERROR) != null;
+      TestFailedEvent testFailedEvent = new TestFailedEvent(testFailed, testError,
+                                                            attributes.get(ATTR_KEY_EXPECTED_FILE_PATH),
+                                                            attributes.get(ATTR_KEY_ACTUAL_FILE_PATH));
       fireOnTestFailure(testFailedEvent);
     }
 
+    @Override
     public void visitPublishArtifacts(@NotNull final PublishArtifacts publishArtifacts) {
       //Do nothing
     }
 
+    @Override
     public void visitProgressMessage(@NotNull final ProgressMessage progressMessage) {
       //Do nothing
     }
 
+    @Override
     public void visitProgressStart(@NotNull final ProgressStart progressStart) {
       //Do nothing
     }
 
+    @Override
     public void visitProgressFinish(@NotNull final ProgressFinish progressFinish) {
       //Do nothing
     }
 
+    @Override
     public void visitBuildStatus(@NotNull final BuildStatus buildStatus) {
       //Do nothing
     }
 
+    @Override
     public void visitBuildNumber(@NotNull final BuildNumber buildNumber) {
       //Do nothing
     }
 
+    @Override
     public void visitBuildStatisticValue(@NotNull final BuildStatisticValue buildStatsValue) {
       //Do nothing
     }
@@ -431,6 +516,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
       }
     }
 
+    @Override
     public void visitServiceMessage(@NotNull final ServiceMessage msg) {
       final String name = msg.getMessageName();
 
@@ -455,8 +541,24 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
       else if (TEST_REPORTER_ATTACHED.equals(name)) {
         fireOnTestFrameworkAttached();
       }
+      else if (SUITE_TREE_STARTED.equals(name)) {
+        fireOnSuiteTreeStarted(msg.getAttributes().get("name"), msg.getAttributes().get(ATTR_KEY_LOCATION_URL));
+      }
+      else if (SUITE_TREE_ENDED.equals(name)) {
+        fireOnSuiteTreeEnded(msg.getAttributes().get("name"));
+      }
+      else if (SUITE_TREE_NODE.equals(name)) {
+        fireOnSuiteTreeNodeAdded(msg.getAttributes().get("name"), msg.getAttributes().get(ATTR_KEY_LOCATION_URL));
+      }
+      else if (BUILD_TREE_ENDED_NODE.equals(name)) {
+        fireOnBuildTreeEnded();
+      }
+      else if (ROOT_PRESENTATION.equals(name)) {
+        final Map<String, String> attributes = msg.getAttributes();
+        fireRootPresentationAdded(attributes.get("name"), attributes.get("comment"), attributes.get("location"));
+      }
       else {
-        GeneralToSMTRunnerEventsConvertor.logProblem(LOG, "Unexpected service message:" + name, myTestFrameworkName);
+        GeneralTestEventsProcessor.logProblem(LOG, "Unexpected service message:" + name, myTestFrameworkName);
       }
     }
 
@@ -496,6 +598,9 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
       if (msgType != null) {
         if (msgType.equals(ATTR_VAL_TEST_STARTED)) {
           fireOnCustomProgressTestStarted();
+        }
+        else if (msgType.equals(ATTR_VAL_TEST_FINISHED)) {
+          fireOnCustomProgressTestFinished();
         }
         else if (msgType.equals(ATTR_VAL_TEST_FAILED)) {
           fireOnCustomProgressTestFailed();

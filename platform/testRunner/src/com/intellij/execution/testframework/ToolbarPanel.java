@@ -21,7 +21,8 @@
 package com.intellij.execution.testframework;
 
 import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.testframework.actions.ScrollToTestSourceAction;
 import com.intellij.execution.testframework.actions.ShowStatisticsAction;
 import com.intellij.execution.testframework.actions.TestFrameworkActions;
@@ -38,7 +39,12 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.registry.Registry;
+import com.intellij.util.config.DumbAwareToggleBooleanProperty;
+import com.intellij.util.config.DumbAwareToggleInvertedBooleanProperty;
 import com.intellij.util.config.ToggleBooleanProperty;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,29 +54,30 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
   protected final TestTreeExpander myTreeExpander = new TestTreeExpander();
   protected final FailedTestsNavigator myOccurenceNavigator;
   protected final ScrollToTestSourceAction myScrollToSource;
-  private final ExportTestResultsAction myExportAction;
+  private @Nullable ExportTestResultsAction myExportAction;
 
   private final ArrayList<ToggleModelAction> myActions = new ArrayList<ToggleModelAction>();
 
-  public ToolbarPanel(final TestConsoleProperties properties, ExecutionEnvironment environment, JComponent parent) {
+  public ToolbarPanel(final TestConsoleProperties properties,
+                      final JComponent parent) {
     super(new BorderLayout());
     final DefaultActionGroup actionGroup = new DefaultActionGroup(null, false);
-    actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.run.hide.passed.action.name"),
-                                                    ExecutionBundle.message("junit.run.hide.passed.action.description"), AllIcons.RunConfigurations.HidePassed,
-                                                    properties, TestConsoleProperties.HIDE_PASSED_TESTS));
+    actionGroup.addAction(new DumbAwareToggleInvertedBooleanProperty(ExecutionBundle.message("junit.run.hide.passed.action.name"), ExecutionBundle.message("junit.run.hide.passed.action.description"),
+                                                                     AllIcons.RunConfigurations.TestPassed,
+                                                                     properties, TestConsoleProperties.HIDE_PASSED_TESTS));
+    actionGroup.add(new DumbAwareToggleInvertedBooleanProperty("Show Ignored", "Show Ignored", AllIcons.RunConfigurations.TestIgnored,
+                                                               properties, TestConsoleProperties.HIDE_IGNORED_TEST));
     actionGroup.addSeparator();
 
-    actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.track.test.action.name"),
-                                                    ExecutionBundle.message("junit.runing.info.track.test.action.description"),
-                                                    AllIcons.RunConfigurations.TrackTests, properties, TestConsoleProperties.TRACK_RUNNING_TEST))
-            .setAsSecondary(true);
-    actionGroup.addAction(
-            new ToggleBooleanProperty(ExecutionBundle.message("junit.run.hide.ignored.action.name"), null, AllIcons.RunConfigurations.HideIgnored, properties,
-                                      TestConsoleProperties.HIDE_IGNORED_TEST)).setAsSecondary(true);
 
-    actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.sort.alphabetically.action.name"),
-                                                    ExecutionBundle.message("junit.runing.info.sort.alphabetically.action.description"),
-                                                    AllIcons.ObjectBrowser.Sorted, properties, TestConsoleProperties.SORT_ALPHABETICALLY));
+
+    actionGroup.addAction(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.sort.alphabetically.action.name"),
+                                                             ExecutionBundle.message("junit.runing.info.sort.alphabetically.action.description"),
+                                                             AllIcons.ObjectBrowser.Sorted,
+                                                             properties, TestConsoleProperties.SORT_ALPHABETICALLY));
+    final ToggleModelAction sortByStatistics = new SortByDurationAction(properties);
+    myActions.add(sortByStatistics);
+    actionGroup.addAction(sortByStatistics);
     actionGroup.addSeparator();
 
     AnAction action = CommonActionsManager.getInstance().createExpandAllAction(myTreeExpander, parent);
@@ -87,43 +94,55 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     actionGroup.add(actionsManager.createPrevOccurenceAction(myOccurenceNavigator));
     actionGroup.add(actionsManager.createNextOccurenceAction(myOccurenceNavigator));
 
-    actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.select.first.failed.action.name"), null,
-                                                    AllIcons.RunConfigurations.SelectFirstDefect, properties, TestConsoleProperties.SELECT_FIRST_DEFECT))
-            .setAsSecondary(true);
-    actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.scroll.to.stacktrace.action.name"),
-                                                    ExecutionBundle.message("junit.runing.info.scroll.to.stacktrace.action.description"),
-                                                    AllIcons.RunConfigurations.ScrollToStackTrace, properties, TestConsoleProperties.SCROLL_TO_STACK_TRACE))
-            .setAsSecondary(true);
-    myScrollToSource = new ScrollToTestSourceAction(properties);
-    actionGroup.addAction(myScrollToSource).setAsSecondary(true);
-    actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.open.source.at.exception.action.name"),
-                                                    ExecutionBundle.message("junit.runing.info.open.source.at.exception.action.description"),
-                                                    AllIcons.RunConfigurations.SourceAtException, properties, TestConsoleProperties.OPEN_FAILURE_LINE))
-            .setAsSecondary(true);
-
-    actionGroup.addAction(new ShowStatisticsAction(properties)).setAsSecondary(true);
-    actionGroup.addAction(new AdjustAutotestDelayActionGroup(environment)).setAsSecondary(true);
-
     for (ToggleModelActionProvider actionProvider : Extensions.getExtensions(ToggleModelActionProvider.EP_NAME)) {
       final ToggleModelAction toggleModelAction = actionProvider.createToggleModelAction(properties);
       myActions.add(toggleModelAction);
       actionGroup.add(toggleModelAction);
     }
 
-    myExportAction = ExportTestResultsAction.create(properties.getExecutor().getToolWindowId(), properties.getConfiguration());
-    actionGroup.addAction(myExportAction);
+    final RunProfile configuration = properties.getConfiguration();
+    if (configuration instanceof RunConfiguration) {
+      myExportAction = ExportTestResultsAction.create(properties.getExecutor().getToolWindowId(), (RunConfiguration)configuration);
+      actionGroup.addAction(myExportAction);
+    }
 
-    appendAdditionalActions(actionGroup, properties, environment, parent);
+    final AnAction importAction = properties.createImportAction();
+    if (importAction != null) {
+      actionGroup.addAction(importAction);
+    }
+
+    final DefaultActionGroup secondaryGroup = new DefaultActionGroup();
+    secondaryGroup.setPopup(true);
+    secondaryGroup.getTemplatePresentation().setIcon(AllIcons.General.SecondaryGroup);
+    secondaryGroup.add(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.track.test.action.name"),
+                                                          ExecutionBundle.message("junit.runing.info.track.test.action.description"),
+                                                          null, properties, TestConsoleProperties.TRACK_RUNNING_TEST));
+    if (Registry.is("tests.view.old.statistics.panel")) {
+      secondaryGroup.add(new ShowStatisticsAction(properties));
+    }
+    secondaryGroup.add(new DumbAwareToggleBooleanProperty("Show Inline Statistics", "Toggle the visibility of the test duration in the tree",
+                                                          null, properties, TestConsoleProperties.SHOW_INLINE_STATISTICS));
+
+    secondaryGroup.addSeparator();
+    secondaryGroup.add(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.scroll.to.stacktrace.action.name"),
+                                                          ExecutionBundle.message("junit.runing.info.scroll.to.stacktrace.action.description"),
+                                                          null, properties, TestConsoleProperties.SCROLL_TO_STACK_TRACE));
+    secondaryGroup.add(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.open.source.at.exception.action.name"),
+                                                 ExecutionBundle.message("junit.runing.info.open.source.at.exception.action.description"),
+                                                 null, properties, TestConsoleProperties.OPEN_FAILURE_LINE));
+    myScrollToSource = new ScrollToTestSourceAction(properties);
+    secondaryGroup.add(myScrollToSource);
+
+    secondaryGroup.add(new AdjustAutotestDelayActionGroup(parent));
+    secondaryGroup.addSeparator();
+    secondaryGroup.add(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.select.first.failed.action.name"),
+                                                          null, null, properties, TestConsoleProperties.SELECT_FIRST_DEFECT));
+    properties.appendAdditionalActions(secondaryGroup, parent, properties);
+    actionGroup.add(secondaryGroup);
 
     add(ActionManager.getInstance().
             createActionToolbar(ActionPlaces.TESTTREE_VIEW_TOOLBAR, actionGroup, true).
             getComponent(), BorderLayout.CENTER);
-  }
-
-  protected void appendAdditionalActions(DefaultActionGroup actionGroup,
-                                         TestConsoleProperties properties,
-                                         ExecutionEnvironment environment,
-                                         JComponent parent) {
   }
 
   public void setModel(final TestFrameworkRunningModel model) {
@@ -131,7 +150,9 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     myScrollToSource.setModel(model);
     myTreeExpander.setModel(model);
     myOccurenceNavigator.setModel(model);
-    myExportAction.setModel(model);
+    if (myExportAction != null) {
+      myExportAction.setModel(model);
+    }
     for (ToggleModelAction action : myActions) {
       action.setModel(model);
     }
@@ -141,6 +162,15 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         final AbstractTestTreeBuilder builder = model.getTreeBuilder();
         if (builder != null) {
           builder.setTestsComparator(value);
+        }
+      }
+    }, model, true);
+    TestFrameworkActions.addPropertyListener(TestConsoleProperties.SORT_BY_DURATION, new TestFrameworkPropertyListener<Boolean>() {
+      @Override
+      public void onChanged(Boolean value) {
+        final AbstractTestTreeBuilder builder = model.getTreeBuilder();
+        if (builder != null) {
+          builder.setStatisticsComparator(model.getProperties(), value);
         }
       }
     }, model, true);
@@ -179,6 +209,31 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
   @Override
   public void dispose() {
     myScrollToSource.setModel(null);
-    myExportAction.setModel(null);
+    if (myExportAction != null) {
+      myExportAction.setModel(null);
+    }
+  }
+
+  private static class SortByDurationAction extends ToggleModelAction implements DumbAware {
+
+    private TestFrameworkRunningModel myModel;
+
+    public SortByDurationAction(TestConsoleProperties properties) {
+      super(ExecutionBundle.message("junit.runing.info.sort.by.statistics.action.name"),
+            ExecutionBundle.message("junit.runing.info.sort.by.statistics.action.description"),
+            AllIcons.RunConfigurations.SortbyDuration, properties,
+            TestConsoleProperties.SORT_BY_DURATION);
+    }
+
+    @Override
+    protected boolean isEnabled() {
+      final TestFrameworkRunningModel model = myModel;
+      return model != null && !model.isRunning();
+    }
+
+    @Override
+    public void setModel(TestFrameworkRunningModel model) {
+      myModel = model;
+    }
   }
 }

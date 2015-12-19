@@ -35,34 +35,48 @@ import java.util.List;
  * @author: Roman Chernyatchik
  */
 public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
-  private final ExecutionEnvironment myEnvironment;
   private SMTestRunnerResultsForm myResultsViewer;
   @Nullable private final String mySplitterProperty;
   private final List<AttachToProcessListener> myAttachToProcessListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
+  /**
+   * @deprecated
+   */
   public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties, final ExecutionEnvironment environment) {
     this(consoleProperties, environment, null);
+  }
+
+  /**
+   * @deprecated
+   * @param splitterProperty               Key to store(project level) latest value of testTree/consoleTab splitter. E.g. "RSpec.Splitter.Proportion"
+   */
+  @SuppressWarnings("UnusedParameters")
+  public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties,
+                              final ExecutionEnvironment environment,
+                              @Nullable final String splitterProperty) {
+    super(consoleProperties, null);
+    mySplitterProperty = splitterProperty;
+  }
+
+  public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties) {
+    this(consoleProperties, (String)null);
   }
 
   /**
    * @param splitterProperty               Key to store(project level) latest value of testTree/consoleTab splitter. E.g. "RSpec.Splitter.Proportion"
    */
   public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties,
-                              final ExecutionEnvironment environment,
                               @Nullable final String splitterProperty) {
     super(consoleProperties, null);
-    myEnvironment = environment;
     mySplitterProperty = splitterProperty;
   }
 
   @Override
   protected TestResultsPanel createTestResultsPanel() {
     // Results View
-    myResultsViewer = new SMTestRunnerResultsForm(myProperties.getConfiguration(),
-                                                  getConsole().getComponent(),
+    myResultsViewer = new SMTestRunnerResultsForm(getConsole().getComponent(),
                                                   getConsole().createConsoleActions(),
                                                   myProperties,
-                                                  myEnvironment,
                                                   mySplitterProperty);
     return myResultsViewer;
   }
@@ -103,7 +117,7 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
    * @param contentType  given type
    */
   @Override
-  public void print(final String s, final ConsoleViewContentType contentType) {
+  public void print(@NotNull final String s, @NotNull final ConsoleViewContentType contentType) {
     myResultsViewer.getRoot().addLast(new Printable() {
       @Override
       public void printOn(final Printer printer) {

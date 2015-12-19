@@ -17,7 +17,6 @@ package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.execution.testframework.ui.AbstractTestTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.ide.util.treeView.IndexComparator;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 
@@ -44,13 +43,10 @@ public class SMTRunnerTreeBuilder extends AbstractTestTreeBuilder {
   }
 
   public void updateTestsSubtree(final SMTestProxy parentTestProxy) {
-    final AbstractTreeUpdater updater = getUpdater();
-    if (updater != null) {
-      updater.addSubtreeToUpdateByElement(parentTestProxy);
-    }
+    queueUpdateFrom(parentTestProxy, false, true);
   }
 
-
+  @Override
   protected boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
     final AbstractTreeStructure treeStructure = getTreeStructure();
     final Object rootElement = treeStructure.getRootElement();

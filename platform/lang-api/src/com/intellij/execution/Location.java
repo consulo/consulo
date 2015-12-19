@@ -30,6 +30,7 @@ import java.util.Iterator;
 
 public abstract class Location<E extends PsiElement> {
   public static final DataKey<Location<?>> DATA_KEY = DataKey.create("Location");
+  public static final DataKey<Location<?>[]> DATA_KEYS = DataKey.create("LocationArray");
   @Deprecated @NonNls public static final String LOCATION = DATA_KEY.getName();
 
   @NotNull public abstract E getPsiElement();
@@ -46,7 +47,7 @@ public abstract class Location<E extends PsiElement> {
     if (virtualFile == null || !virtualFile.isValid()) return null;
     return virtualFile;
   }
-  
+
   @Nullable
   public OpenFileDescriptor getOpenFileDescriptor() {
     VirtualFile virtualFile = getVirtualFile();
@@ -55,7 +56,7 @@ public abstract class Location<E extends PsiElement> {
     }
     return new OpenFileDescriptor(getProject(), virtualFile, getPsiElement().getTextOffset());
   }
-  
+
   @Nullable
   public <Ancestor extends PsiElement> Location<Ancestor> getParent(final Class<Ancestor> parentClass) {
     final Iterator<Location<PsiElement>> ancestors = getAncestors(PsiElement.class, true);

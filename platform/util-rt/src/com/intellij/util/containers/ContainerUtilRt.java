@@ -68,10 +68,10 @@ public class ContainerUtilRt {
 
   @NotNull
   @Contract(pure=true)
-  public static <K, V> Map<K,V> newHashMap(@NotNull Pair<K, V> first, @NotNull Pair<K, V>[] entries) {
-    Map<K, V> map = newHashMap();
+  public static <K, V> Map<K, V> newHashMap(@NotNull Pair<K, ? extends V> first, @NotNull Pair<K, ? extends V>... entries) {
+    Map<K, V> map = newHashMap(entries.length + 1);
     map.put(first.getFirst(), first.getSecond());
-    for (Pair<K, V> entry : entries) {
+    for (Pair<K, ? extends V> entry : entries) {
       map.put(entry.getFirst(), entry.getSecond());
     }
     return map;

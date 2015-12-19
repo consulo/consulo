@@ -53,7 +53,7 @@ public class ThriftTestExecutionUtil {
                                                                           @NotNull ExecutionEnvironment environment,
                                                                           @NotNull ThriftTestHandlerFactory factory,
                                                                           @Nullable final TestLocationProvider locator) {
-    return createConsoleWithCustomLocator(testFrameworkName, consoleProperties, environment, new CompositeTestLocationProvider(locator), factory, null);
+    return createConsoleWithCustomLocator(testFrameworkName, consoleProperties, environment, locator, factory, null);
   }
 
   public static SMTRunnerConsoleView createConsoleWithCustomLocator(@NotNull final String testFrameworkName,
@@ -63,7 +63,7 @@ public class ThriftTestExecutionUtil {
                                                                     final ThriftTestHandlerFactory factory,
                                                                     @Nullable final TestProxyFilterProvider filterProvider) {
     String splitterPropertyName = SMTestRunnerConnectionUtil.getSplitterPropertyName(testFrameworkName);
-    SMTRunnerConsoleView consoleView = new SMTRunnerConsoleView(consoleProperties, environment, splitterPropertyName);
+    SMTRunnerConsoleView consoleView = new SMTRunnerConsoleView(consoleProperties, splitterPropertyName);
     initConsoleView(consoleView, testFrameworkName, locator, factory, filterProvider);
     return consoleView;
   }
@@ -103,11 +103,12 @@ public class ThriftTestExecutionUtil {
 
 
     //events processor
-    final GeneralTestEventsProcessor eventsProcessor = new GeneralToSMTRunnerEventsConvertor(resultsViewer.getTestsRootNode(), testFrameworkName);
+    final GeneralTestEventsProcessor eventsProcessor =
+            new GeneralToSMTRunnerEventsConvertor(consoleProperties.getProject(), resultsViewer.getTestsRootNode(), testFrameworkName);
 
-    val open = open(factory.getPort(), factory.createHandler(eventsProcessor));
+    final TServer open = open(factory.getPort(), factory.createHandler(eventsProcessor));
     if (locator != null) {
-      eventsProcessor.setLocator(locator);
+      eventsProcessor.setLocator(new CompositeTestLocationProvider(locator));
     }
     if (printerProvider != null) {
       eventsProcessor.setPrinterProvider(printerProvider);
@@ -115,8 +116,6 @@ public class ThriftTestExecutionUtil {
 
     // ui actions
     final SMTRunnerUIActionsHandler uiActionsHandler = new SMTRunnerUIActionsHandler(consoleProperties);
-    // notifications
-    final SMTRunnerNotificationsHandler notifierHandler = new SMTRunnerNotificationsHandler(consoleProperties);
 
     // subscribe on events
 
@@ -128,8 +127,7 @@ public class ThriftTestExecutionUtil {
     resultsViewer.addEventsListener(uiActionsHandler);
     // subscribes statistics tab viewer on event processor
     eventsProcessor.addEventsListener(statisticsPane.createTestEventsListener());
-    // subscribes test runner's notification balloons on results viewer events
-    eventsProcessor.addEventsListener(notifierHandler);
+
 
     processHandler.addProcessListener(new ProcessAdapter() {
       @Override

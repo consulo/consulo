@@ -104,6 +104,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean ANTIALIASING_IN_EDITOR = true;
   public boolean ANTIALIASING_IN_IDE = ANTIALIASING_IN_EDITOR;
   public LCDRenderingScope LCD_RENDERING_SCOPE = UIUtil.isRetina() ? LCDRenderingScope.OFF : LCDRenderingScope.IDE;
+  public ColorBlindness COLOR_BLINDNESS;
   public boolean MOVE_MOUSE_ON_DEFAULT_BUTTON = false;
   public boolean ENABLE_ALPHA_MODE = false;
   public int ALPHA_MODE_DELAY = 1500;

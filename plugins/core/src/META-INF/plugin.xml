@@ -971,6 +971,8 @@
                     interface="com.intellij.testIntegration.TestFinder"/>
     <extensionPoint name="testSrcLocator"
                     interface="com.intellij.testIntegration.TestLocationProvider"/>
+    <extensionPoint name="testStatusListener"
+                    interface="com.intellij.execution.testframework.TestStatusListener" />
 
     <extensionPoint name="testCreator"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -1336,6 +1338,11 @@
 
     <projectService serviceInterface="com.intellij.openapi.editor.LazyRangeMarkerFactory"
                     serviceImplementation="com.intellij.openapi.editor.impl.LazyRangeMarkerFactoryImpl"/>
+
+    <projectService serviceImplementation="com.intellij.execution.TestStateStorage"/>
+
+    <projectService serviceInterface="com.intellij.execution.testframework.sm.TestHistoryConfiguration"
+                    serviceImplementation="com.intellij.execution.testframework.sm.TestHistoryConfiguration"/>
 
     <!-- General -->
     <applicationConfigurable instance="com.intellij.ide.GeneralSettingsConfigurable"/>
@@ -2304,10 +2311,6 @@
     <templateCompletionProcessor implementation="com.intellij.codeInsight.template.macro.DirectoryTemplateCompletionProcessor"/>
 
     <liveTemplateContext id="OTHER" implementation="com.intellij.codeInsight.template.EverywhereContextType" order="last"/>
-
-
-    <!-- SM Test runner tests locations -->
-    <testSrcLocator implementation="com.intellij.execution.testframework.sm.FileUrlProvider"/>
 
     <dynamicContextProvider implementation="com.intellij.openapi.paths.GenericDynamicContextProvider"/>
 

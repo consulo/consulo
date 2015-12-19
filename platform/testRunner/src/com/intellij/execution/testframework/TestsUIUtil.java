@@ -18,8 +18,10 @@ package com.intellij.execution.testframework;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.Location;
 import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.notification.NotificationGroup;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -35,6 +37,8 @@ import com.intellij.ui.SystemNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.List;
 
@@ -53,12 +57,8 @@ public class TestsUIUtil {
     final Project project = properties.getProject();
     if (testProxy == null) return null;
     if (AbstractTestProxy.DATA_KEY.is(dataId)) return testProxy;
-    if (PlatformDataKeys.NAVIGATABLE.is(dataId)) return getOpenFileDescriptor(testProxy, model);
-    if (PlatformDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
-      final Navigatable openFileDescriptor = getOpenFileDescriptor(testProxy, model);
-      return openFileDescriptor != null ? new Navigatable[]{openFileDescriptor} : null;
-    }
-    if (LangDataKeys.PSI_ELEMENT.is(dataId)) {
+    if (CommonDataKeys.NAVIGATABLE.is(dataId)) return getOpenFileDescriptor(testProxy, model);
+    if (CommonDataKeys.PSI_ELEMENT.is(dataId)) {
       final Location location = testProxy.getLocation(project, properties.getScope());
       if (location != null) {
         final PsiElement element = location.getPsiElement();
@@ -69,8 +69,24 @@ public class TestsUIUtil {
       }
     }
     if (Location.DATA_KEY.is(dataId)) return testProxy.getLocation(project, properties.getScope());
-    if (RunConfiguration.DATA_KEY.is(dataId)) return properties.getConfiguration();
+    if (RunConfiguration.DATA_KEY.is(dataId)) {
+      final RunProfile configuration = properties.getConfiguration();
+      if (configuration instanceof RunConfiguration) {
+        return configuration;
+      }
+    }
     return null;
+  }
+
+  public static boolean isMultipleSelectionImpossible(DataContext dataContext) {
+    final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+    if (component instanceof JTree) {
+      final TreePath[] selectionPaths = ((JTree)component).getSelectionPaths();
+      if (selectionPaths == null || selectionPaths.length <= 1) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static Navigatable getOpenFileDescriptor(final AbstractTestProxy testProxy, final TestFrameworkRunningModel model) {
@@ -102,21 +118,25 @@ public class TestsUIUtil {
                                      final AbstractTestProxy root,
                                      final TestConsoleProperties properties,
                                      @Nullable final String comment) {
+    notifyByBalloon(project, root, properties, new TestResultPresentation(root, started, comment).getPresentation());
+  }
+
+  public static void notifyByBalloon(@NotNull final Project project,
+                                     final AbstractTestProxy root,
+                                     final TestConsoleProperties properties,
+                                     TestResultPresentation testResultPresentation) {
     if (project.isDisposed()) return;
     if (properties == null) return;
+
+    TestStatusListener.notifySuiteFinished(root, properties.getProject());
 
     final String testRunDebugId = properties.isDebug() ? ToolWindowId.DEBUG : ToolWindowId.RUN;
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
 
-    String title;
-    String text;
-    String balloonText;
-    MessageType type;
-    TestResultPresentation testResultPresentation = new TestResultPresentation(root, started, comment).getPresentation();
-    type = testResultPresentation.getType();
-    balloonText = testResultPresentation.getBalloonText();
-    title = testResultPresentation.getTitle();
-    text = testResultPresentation.getText();
+    final String title = testResultPresentation.getTitle();
+    final String text = testResultPresentation.getText();
+    final String balloonText = testResultPresentation.getBalloonText();
+    final MessageType type = testResultPresentation.getType();
 
     if (!Comparing.strEqual(toolWindowManager.getActiveToolWindowId(), testRunDebugId)) {
       toolWindowManager.notifyByBalloon(testRunDebugId, type, balloonText, null, null);
@@ -134,10 +154,10 @@ public class TestsUIUtil {
     return new TestResultPresentation(proxy).getPresentation().getText();
   }
 
-  public static void showIconProgress(Project project, int n, final int maximum, final int problemsCounter) {
+  public static void showIconProgress(Project project, int n, final int maximum, final int problemsCounter, boolean updateWithAttention) {
     AppIcon icon = AppIcon.getInstance();
-    if (n < maximum) {
-      if (icon.setProgress(project, TESTS, AppIconScheme.Progress.TESTS, (double)n / (double)maximum, problemsCounter == 0)) {
+    if (n < maximum || !updateWithAttention) {
+      if (!updateWithAttention || icon.setProgress(project, TESTS, AppIconScheme.Progress.TESTS, (double)n / (double)maximum, problemsCounter == 0)) {
         if (problemsCounter > 0) {
           icon.setErrorBadge(project, String.valueOf(problemsCounter));
         }
@@ -160,10 +180,10 @@ public class TestsUIUtil {
     AppIcon.getInstance().setErrorBadge(project, null);
   }
 
-  private static class TestResultPresentation {
+  public static class TestResultPresentation {
     private AbstractTestProxy myRoot;
     private boolean myStarted;
-    private final String myComment;
+    private String myComment;
     private String myTitle;
     private String myText;
     private String myBalloonText;
@@ -196,30 +216,34 @@ public class TestsUIUtil {
     }
 
     public TestResultPresentation getPresentation() {
+      List allTests = Filter.LEAF.select(myRoot.getAllTests());
+      final List<AbstractTestProxy> failed = Filter.DEFECTIVE_LEAF.select(allTests);
+      final List<AbstractTestProxy> notStarted = Filter.NOT_PASSED.select(allTests);
+      notStarted.removeAll(failed);
+      final List ignored = Filter.IGNORED.select(allTests);
+      notStarted.removeAll(ignored);
+      failed.removeAll(ignored);
+      int failedCount = failed.size();
+      int notStartedCount = notStarted.size() + ignored.size();
+      int passedCount = allTests.size() - failedCount - notStartedCount;
+      return getPresentation(failedCount, passedCount, notStartedCount, ignored.size());
+    }
+
+    public TestResultPresentation getPresentation(int failedCount, int passedCount, int notStartedCount, int ignoredCount) {
       if (myRoot == null) {
         myBalloonText = myTitle = myStarted ? "Tests were interrupted" : ExecutionBundle.message("test.not.started.progress.text");
         myText = "";
         myType = MessageType.WARNING;
       } else{
-        List allTests = Filter.LEAF.select(myRoot.getAllTests());
-        final List<AbstractTestProxy> failed = Filter.DEFECTIVE_LEAF.select(allTests);
-        final List<AbstractTestProxy> notStarted = Filter.NOT_PASSED.select(allTests);
-        notStarted.removeAll(failed);
-        final List ignored = Filter.IGNORED.select(allTests);
-        notStarted.removeAll(ignored);
-        failed.removeAll(ignored);
-        int failedCount = failed.size();
-        int notStartedCount = notStarted.size() + ignored.size();
-        int passedCount = allTests.size() - failedCount - notStartedCount;
         if (failedCount > 0) {
           myTitle = ExecutionBundle.message("junit.runing.info.tests.failed.label");
           myText = passedCount + " passed, " + failedCount + " failed" + (notStartedCount > 0 ? ", " + notStartedCount + " not started" : "");
           myType = MessageType.ERROR;
         }
         else if (notStartedCount > 0) {
-          myTitle = ExecutionBundle.message("junit.runing.info.failed.to.start.error.message");
-          myText = passedCount + " passed, " + notStartedCount + " not started" ;
-          myType = MessageType.ERROR;
+          myTitle = ignoredCount > 0 ? "Tests Ignored" : ExecutionBundle.message("junit.running.info.failed.to.start.error.message");
+          myText = passedCount + " passed, " + notStartedCount + (ignoredCount > 0 ? " ignored" : " not started");
+          myType = ignoredCount == 0 ? MessageType.WARNING : MessageType.ERROR;
         }
         else {
           myTitle = ExecutionBundle.message("junit.runing.info.tests.passed.label");

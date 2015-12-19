@@ -35,6 +35,18 @@ public class TestSuiteStack {
   @NonNls private static final String EMPTY = "empty";
 
   private final Stack<SMTestProxy> myStack = new Stack<SMTestProxy>();
+  private final String myTestFrameworkName;
+
+  /**
+   * @deprecated use {@link #TestSuiteStack(String)} instead, to be removed in IDEA 16
+   */
+  public TestSuiteStack() {
+    this("<unspecified>");
+  }
+
+  public TestSuiteStack(@NotNull String testFrameworkName) {
+    myTestFrameworkName = testFrameworkName;
+  }
 
   public void pushSuite(@NotNull final SMTestProxy suite) {
     myStack.push(suite);
@@ -53,20 +65,25 @@ public class TestSuiteStack {
 
   /**
    * Pop element form stack and checks consistency
-   * @param suiteName Predictable name of top suite in stack. May be null if 
+   * @param suiteName Predictable name of top suite in stack. May be null if
    */
   @Nullable
   public SMTestProxy popSuite(final String suiteName) throws EmptyStackException {
     if (myStack.isEmpty()) {
       if (SMTestRunnerConnectionUtil.isInDebugMode()) {
         LOG.error(
-          "Pop error: Tests/suites stack is empty. Test runner tried to close test suite " +
-          "which has been already closed or wasn't started at all. Unexpected suite name [" +
-          suiteName + "]");
+                "Pop error: Tests/suites stack is empty. Test runner tried to close test suite " +
+                "which has been already closed or wasn't started at all. Unexpected suite name [" +
+                suiteName + "]");
       }
       return null;
     }
     final SMTestProxy topSuite = myStack.peek();
+    if (suiteName == null) {
+      String msg = "Pop error: undefined suite name. Rest of stack: " + getSuitePathPresentation();
+      GeneralTestEventsProcessor.logProblem(LOG, msg, true, myTestFrameworkName);
+      return null;
+    }
 
     if (!suiteName.equals(topSuite.getName())) {
       if (SMTestRunnerConnectionUtil.isInDebugMode()) {
@@ -106,7 +123,7 @@ public class TestSuiteStack {
   public final boolean isEmpty() {
     return getStackSize() == 0;
   }
-  
+
   protected int getStackSize() {
     return myStack.size();
   }
