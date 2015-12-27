@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
@@ -37,6 +38,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -102,6 +104,7 @@ public class EncodingUtil {
     }
   }
 
+  @RequiredDispatchThread
   public static void saveIn(@NotNull final Document document, final Editor editor, @NotNull final VirtualFile virtualFile, @NotNull final Charset charset) {
     FileDocumentManager documentManager = FileDocumentManager.getInstance();
     documentManager.saveDocument(document);
@@ -113,9 +116,15 @@ public class EncodingUtil {
     }
 
     // first, save the file in the new charset and then mark the file as having the correct encoding
-    virtualFile.setCharset(charset);
     try {
-      LoadTextUtil.write(project, virtualFile, virtualFile, document.getText(), document.getModificationStamp());
+      ApplicationManager.getApplication().runWriteAction(new ThrowableComputable<Object, IOException>() {
+        @Override
+        public Object compute() throws IOException {
+          virtualFile.setCharset(charset);
+          LoadTextUtil.write(project, virtualFile, virtualFile, document.getText(), document.getModificationStamp());
+          return null;
+        }
+      });
     }
     catch (IOException io) {
       Messages.showErrorDialog(project, io.getMessage(), "Error Writing File");
@@ -163,7 +172,7 @@ public class EncodingUtil {
         @Override
         public void run() {
           ((VirtualFileListener)documentManager).contentsChanged(
-            new VirtualFileEvent(null, virtualFile, virtualFile.getName(), virtualFile.getParent()));
+                  new VirtualFileEvent(null, virtualFile, virtualFile.getName(), virtualFile.getParent()));
         }
       });
     }
@@ -184,7 +193,7 @@ public class EncodingUtil {
   }
 
   @NotNull
-  // returns existing charset (null means N/A), failReason: null means enabled, notnull means disabled and contains error message
+  // returns pair (existing charset (null means N/A); failReason: null means enabled, notnull means disabled and contains error message)
   public static Pair<Charset, String> checkCanReload(@NotNull VirtualFile virtualFile) {
     if (virtualFile.isDirectory()) {
       return Pair.create(null, "file is a directory");
