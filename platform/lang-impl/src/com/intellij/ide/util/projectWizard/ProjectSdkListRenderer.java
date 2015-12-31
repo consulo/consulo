@@ -19,6 +19,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.SimpleTextAttributes;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 
@@ -26,6 +27,8 @@ import javax.swing.*;
  * @author Eugene Zhuravlev
  * @since May 18, 2005
  */
+@Deprecated
+@DeprecationInfo(value = "Use com.intellij.openapi.roots.ui.configuration.SdkComboBox instead of JComboBox", until = "1.0")
 public class ProjectSdkListRenderer extends ColoredListCellRendererWrapper {
   @Override
   public void doCustomize(JList list, Object value, int index, boolean selected, boolean hasFocus) {

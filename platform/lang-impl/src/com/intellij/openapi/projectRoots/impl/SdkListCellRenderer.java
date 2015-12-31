@@ -22,6 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.SimpleTextAttributes;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.sdk.SdkUtil;
 
 import javax.swing.*;
@@ -29,6 +30,8 @@ import javax.swing.*;
 /**
  * @author yole
 */
+@Deprecated
+@DeprecationInfo(value = "Use com.intellij.openapi.roots.ui.configuration.SdkComboBox instead of JComboBox", until = "1.0")
 public class SdkListCellRenderer extends ColoredListCellRendererWrapper<Sdk> {
   private final String myNullText;
   private final boolean myShowHomePath;

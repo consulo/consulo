@@ -76,7 +76,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
   private Icon myNullItemIcon = null;
 
-  private String myNullItemName = ProjectBundle.message("sdk.combo.box.none.item");
+  private String myNullItemName = ProjectBundle.message("sdk.combo.box.item");
 
   private Runnable myLaterUpdater;
 
