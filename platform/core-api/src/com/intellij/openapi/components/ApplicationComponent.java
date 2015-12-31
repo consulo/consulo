@@ -15,10 +15,27 @@
  */
 package com.intellij.openapi.components;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Application-level component's implementation class may implement the <code>ApplicationComponent</code> interface.<br>
  * It may have constructor with parameters that are also application components.
  * See <a href=../../../../../plugins.html>plugins.html</a> for more information.
  */
 public interface ApplicationComponent extends BaseComponent {
+  class Adapter implements ApplicationComponent {
+    @Override
+    public void initComponent() {
+    }
+
+    @Override
+    public void disposeComponent() {
+    }
+
+    @NotNull
+    @Override
+    public String getComponentName() {
+      return getClass().getSimpleName();
+    }
+  }
 }

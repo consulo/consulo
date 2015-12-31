@@ -19,18 +19,19 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.bundle.PredefinedBundlesProvider;
 
 /**
  * @author VISTALL
  * @since 15:05/22.11.13
  */
-public class PredefinedBundlesLoader implements ApplicationComponent {
+public class PredefinedBundlesLoader extends ApplicationComponent.Adapter {
   @Override
   public void initComponent() {
     Consumer<SdkImpl> consumer = new Consumer<SdkImpl>() {
       @Override
+      @RequiredDispatchThread
       public void consume(final SdkImpl sdk) {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
@@ -45,15 +46,5 @@ public class PredefinedBundlesLoader implements ApplicationComponent {
     for (PredefinedBundlesProvider predefinedBundlesProvider : PredefinedBundlesProvider.EP_NAME.getExtensions()) {
       predefinedBundlesProvider.createBundles(consumer);
     }
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @NotNull
-  @Override
-  public String getComponentName() {
-    return getClass().getCanonicalName();
   }
 }
