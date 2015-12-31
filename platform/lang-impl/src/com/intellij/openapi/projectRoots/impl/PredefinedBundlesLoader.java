@@ -19,6 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.util.Consumer;
+import com.intellij.util.SystemProperties;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.bundle.PredefinedBundlesProvider;
 
@@ -29,6 +30,10 @@ import org.mustbe.consulo.bundle.PredefinedBundlesProvider;
 public class PredefinedBundlesLoader extends ApplicationComponent.Adapter {
   @Override
   public void initComponent() {
+    if (SystemProperties.is("disable.predefined.bundles")) {
+      return;
+    }
+
     Consumer<SdkImpl> consumer = new Consumer<SdkImpl>() {
       @Override
       @RequiredDispatchThread
