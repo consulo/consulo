@@ -275,7 +275,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     if(itemCount > 0) {
       int index = 0;
       for (int i = 0; i < itemCount; i++) {
-        Object itemAt = getItemAt(0);
+        Object itemAt = getItemAt(i);
 
         if(itemAt instanceof NullSdkComboBoxItem || itemAt instanceof CustomSdkComboBoxItem) {
           index ++;
