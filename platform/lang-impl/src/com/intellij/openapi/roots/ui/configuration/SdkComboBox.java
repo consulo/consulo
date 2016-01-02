@@ -204,7 +204,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   public void setSetupButton(@NotNull final JButton setUpButton,
                              @Nullable final Project project,
                              @NotNull final ProjectSdksModel sdksModel,
-                             @NotNull final SdkComboBoxItem firstItem,
+                             @Nullable final SdkComboBoxItem firstItem,
                              @Nullable final Condition<Sdk> additionalSetup) {
     setUpButton.addActionListener(new ActionListener() {
       @Override
