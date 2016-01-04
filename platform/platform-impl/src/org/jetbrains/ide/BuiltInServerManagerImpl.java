@@ -8,23 +8,20 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.ShutDownTracker;
 import org.jboss.netty.channel.ChannelException;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.io.WebServer;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class BuiltInServerManagerImpl extends BuiltInServerManager {
+public class BuiltInServerManagerImpl extends BuiltInServerManager implements ApplicationComponent{
   private static final Logger LOG = Logger.getInstance(BuiltInServerManager.class);
 
   @NonNls
@@ -44,41 +41,26 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     return myDetectedPortNumber == -1 ? getDefaultPort() : myDetectedPortNumber;
   }
 
-  @Override
-  public BuiltInServerManager waitForStart() {
-    Future<?> serverStartFuture = startServerInPooledThread();
-    if (serverStartFuture != null) {
-      LOG.assertTrue(!ApplicationManager.getApplication().isDispatchThread());
-      try {
-        serverStartFuture.get();
-      }
-      catch (InterruptedException ignored) {
-      }
-      catch (ExecutionException ignored) {
-      }
-    }
-    return this;
-  }
-
   private static int getDefaultPort() {
     return System.getProperty(PROPERTY_RPC_PORT) == null ? FIRST_PORT_NUMBER : Integer.parseInt(System.getProperty(PROPERTY_RPC_PORT));
   }
 
-  static final class MyPostStartupActivity implements StartupActivity, DumbAware {
-    private boolean veryFirstProjectOpening = true;
+  @Override
+  public void initComponent() {
+    startServerInPooledThread();
+  }
 
-    @Override
-    public void runActivity(Project project) {
-      if (!veryFirstProjectOpening) {
-        return;
-      }
-
-      veryFirstProjectOpening = false;
-      BuiltInServerManager builtInServerManager = BuiltInServerManager.getInstance();
-      if (builtInServerManager instanceof BuiltInServerManagerImpl) {
-        ((BuiltInServerManagerImpl)builtInServerManager).startServerInPooledThread();
-      }
+  @Override
+  public void disposeComponent() {
+    if(myServer != null) {
+      Disposer.dispose(myServer);
     }
+  }
+
+  @NotNull
+  @Override
+  public String getComponentName() {
+    return "BuiltInServerManager";
   }
 
   private Future<?> startServerInPooledThread() {
@@ -108,17 +90,6 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
           return;
         }
 
-        Disposer.register(ApplicationManager.getApplication(), myServer);
-        ShutDownTracker.getInstance().registerShutdownTask(new Runnable() {
-          @Override
-          public void run() {
-            if (!Disposer.isDisposed(myServer)) {
-              // something went wrong
-              Disposer.dispose(myServer);
-            }
-          }
-        });
-
         myDetectedPortNumber = myServer.start(getDefaultPort(), PORTS_COUNT, true);
         if (myDetectedPortNumber == -1) {
           LOG.info("web server cannot be started, cannot bind to port");
@@ -143,5 +114,4 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
   public void setEnabledInUnitTestMode(boolean enabled) {
     myEnabledInUnitTestMode = enabled;
   }
-
 }

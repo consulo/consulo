@@ -16,14 +16,19 @@
 package org.jetbrains.ide;
 
 import com.intellij.openapi.Disposable;
-import org.consulo.lombok.annotations.ApplicationService;
+import com.intellij.openapi.application.ApplicationManager;
+import org.consulo.lombok.annotations.LazyInstance;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@ApplicationService
 public abstract class BuiltInServerManager {
-  public abstract int getPort();
+  @NotNull
+  @LazyInstance
+  public static BuiltInServerManager getInstance() {
+    return ApplicationManager.getApplication().getComponent(BuiltInServerManager.class);
+  }
 
-  public abstract BuiltInServerManager waitForStart();
+  public abstract int getPort();
 
   @Nullable
   public abstract Disposable getServerDisposable();

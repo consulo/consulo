@@ -30,22 +30,24 @@ import java.awt.*;
  */
 public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
   public static boolean activateFrame(@Nullable final IdeFrame frame) {
-    if (frame instanceof Frame) {
+    return frame instanceof Frame && activateFrame((Frame)frame);
+  }
+
+  public static boolean activateFrame(@Nullable final Frame frame) {
+    if (frame != null) {
       Runnable runnable = new Runnable() {
         @Override
         public void run() {
-          Frame awtFrame = (Frame)frame;
-
-          int extendedState = awtFrame.getExtendedState();
+          int extendedState = frame.getExtendedState();
           if (BitUtil.isSet(extendedState, Frame.ICONIFIED)) {
             extendedState = BitUtil.set(extendedState, Frame.ICONIFIED, false);
-            awtFrame.setExtendedState(extendedState);
+            frame.setExtendedState(extendedState);
           }
 
           // fixme [vistall] dirty hack - show frame on top
-          awtFrame.setAlwaysOnTop(true);
-          awtFrame.setAlwaysOnTop(false);
-          awtFrame.requestFocus();
+          frame.setAlwaysOnTop(true);
+          frame.setAlwaysOnTop(false);
+          frame.requestFocus();
         }
       };
       //noinspection SSBasedInspection
