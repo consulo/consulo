@@ -37,17 +37,22 @@ public class WatchInplaceEditor extends XDebuggerTreeInplaceEditor {
   private final WatchesRootNode myRootNode;
   private final XWatchesView myWatchesView;
   @Nullable private final WatchNode myOldNode;
+  private WatchEditorSessionListener mySessionListener;
 
   public WatchInplaceEditor(@NotNull WatchesRootNode rootNode,
-                            @NotNull XDebugSession session, XWatchesView watchesView, final WatchNode node,
+                            @Nullable XDebugSession session,
+                            @NotNull XWatchesView watchesView,
+                            @NotNull WatchNode node,
                             @NonNls final String historyId,
-                            final @Nullable WatchNode oldNode) {
+                            @Nullable WatchNode oldNode) {
     super((XDebuggerTreeNode)node, historyId);
     myRootNode = rootNode;
     myWatchesView = watchesView;
     myOldNode = oldNode;
     myExpressionEditor.setExpression(oldNode != null ? oldNode.getExpression() : null);
-    new WatchEditorSessionListener(session).install();
+    if (session != null) {
+      mySessionListener = new WatchEditorSessionListener(session).install();
+    }
   }
 
   @Override
@@ -63,6 +68,7 @@ public class WatchInplaceEditor extends XDebuggerTreeInplaceEditor {
     if (myOldNode != null && index != -1) {
       myWatchesView.addWatchExpression(myOldNode.getExpression(), index, false);
     }
+    getTree().setSelectionRow(index);
   }
 
   @Override
@@ -74,6 +80,15 @@ public class WatchInplaceEditor extends XDebuggerTreeInplaceEditor {
     if (!XDebuggerUtilImpl.isEmptyExpression(expression) && index != -1) {
       myWatchesView.addWatchExpression(expression, index, false);
     }
+    getTree().setSelectionRow(index);
+  }
+
+  @Override
+  protected void onHidden() {
+    super.onHidden();
+    if (mySessionListener != null) {
+      mySessionListener.remove();
+    }
   }
 
   private class WatchEditorSessionListener extends XDebugSessionAdapter {
@@ -83,12 +98,16 @@ public class WatchInplaceEditor extends XDebuggerTreeInplaceEditor {
       mySession = session;
     }
 
-    public void install() {
+    public WatchEditorSessionListener install() {
       mySession.addSessionListener(this);
+      return this;
+    }
+
+    public void remove() {
+      mySession.removeSessionListener(this);
     }
 
     private void cancel() {
-      mySession.removeSessionListener(this);
       AppUIUtil.invokeOnEdt(new Runnable() {
         @Override
         public void run() {

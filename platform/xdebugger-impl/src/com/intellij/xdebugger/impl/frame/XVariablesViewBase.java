@@ -81,12 +81,11 @@ public abstract class XVariablesViewBase extends XDebugView {
       myTreeRestorer = myTreeState.restoreState(tree);
     }
     if (position != null && Registry.is("debugger.valueTooltipAutoShowOnSelection")) {
-      registerInlineEvaluator(stackFrame, tree, position, project);
+      registerInlineEvaluator(stackFrame, position, project);
     }
   }
 
   private void registerInlineEvaluator(final XStackFrame stackFrame,
-                                       XDebuggerTree tree,
                                        final XSourcePosition position,
                                        final Project project) {
     final VirtualFile file = position.getFile();
@@ -111,6 +110,11 @@ public abstract class XVariablesViewBase extends XDebugView {
       mySelectionListener.remove();
       mySelectionListener = null;
     }
+  }
+
+  @Override
+  protected void clear() {
+    removeSelectionListener();
   }
 
   private void disposeTreeRestorer() {
@@ -152,7 +156,7 @@ public abstract class XVariablesViewBase extends XDebugView {
 
     @Override
     public void selectionChanged(final SelectionEvent e) {
-      if (!Registry.is("debugger.valueTooltipAutoShowOnSelection")) {
+      if (!Registry.is("debugger.valueTooltipAutoShowOnSelection") || myEditor.getCaretModel().getCaretCount() > 1) {
         return;
       }
       final String text = myEditor.getDocument().getText(e.getNewRange());
