@@ -18,18 +18,16 @@ package com.intellij.openapi.options.newEditor;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableGroup;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.*;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
-import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
@@ -38,25 +36,25 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.plaf.TreeUI;
-import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.*;
 import java.util.List;
 
 public class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
   Project myProject;
   final SimpleTree myTree;
-  List<ConfigurableGroup> myGroups;
+  Configurable[] myConfigurables;
   FilteringTreeBuilder myBuilder;
   Root myRoot;
   OptionsEditorContext myContext;
@@ -64,13 +62,12 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   Map<Configurable, EditorNode> myConfigurable2Node = new HashMap<Configurable, EditorNode>();
 
   MergingUpdateQueue mySelection;
-  private final OptionsTree.Renderer myRenderer;
 
-  public OptionsTree(Project project, ConfigurableGroup[] groups, OptionsEditorContext context) {
+  public OptionsTree(Project project, Configurable[] configurables, OptionsEditorContext context) {
+    super(new BorderLayout());
     myProject = project;
-    myGroups = Arrays.asList(groups);
+    myConfigurables = configurables;
     myContext = context;
-
 
     myRoot = new Root();
     final SimpleTreeStructure structure = new SimpleTreeStructure() {
@@ -80,21 +77,21 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       }
     };
 
-    myTree = new MyTree();
+    myTree = new SimpleTree() {
+      @Override
+      protected boolean paintNodes() {
+        return false;
+      }
+    };
     TreeUtil.installActions(myTree);
-    myTree.setBorder(new EmptyBorder(0, 0, 0, 0));
-
-    myTree.setRowHeight(-1);
+    myTree.setBorder(JBUI.Borders.empty());
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-    myRenderer = new Renderer();
-    myTree.setCellRenderer(myRenderer);
     myTree.setRootVisible(false);
-    myTree.setShowsRootHandles(false);
+    myTree.setShowsRootHandles(true);
+    myTree.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
     myBuilder = new MyBuilder(structure);
     myBuilder.setFilteringMerge(300, null);
     Disposer.register(this, myBuilder);
-
-    setLayout(new BorderLayout());
 
     myTree.addComponentListener(new ComponentAdapter() {
       @Override
@@ -163,18 +160,13 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
 
   }
 
-
   ActionCallback select(@Nullable Configurable configurable) {
     return queueSelection(configurable);
   }
 
   public void selectFirst() {
-    for (ConfigurableGroup eachGroup : myGroups) {
-      final Configurable[] kids = eachGroup.getConfigurables();
-      if (kids.length > 0) {
-        queueSelection(kids[0]);
-        return;
-      }
+    if (myConfigurables.length > 0) {
+      queueSelection(myConfigurables[0]);
     }
   }
 
@@ -214,7 +206,8 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
                     fireSelected(configurable, callback);
                   }
                 });
-              } else {
+              }
+              else {
                 myBuilder.scrollSelectionToVisible(new Runnable() {
                   @Override
                   public void run() {
@@ -240,7 +233,6 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   private void fireSelected(Configurable configurable, final ActionCallback callback) {
     myContext.fireSelected(configurable, this).doWhenProcessed(callback.createSetDoneRunnable());
   }
-
 
   public JTree getTree() {
     return myTree;
@@ -284,139 +276,13 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   public SearchableConfigurable findConfigurableById(@NotNull String configurableId) {
     for (Configurable configurable : myConfigurable2Node.keySet()) {
       if (configurable instanceof SearchableConfigurable) {
-        SearchableConfigurable searchableConfigurable = (SearchableConfigurable) configurable;
+        SearchableConfigurable searchableConfigurable = (SearchableConfigurable)configurable;
         if (configurableId.equals(searchableConfigurable.getId())) {
           return searchableConfigurable;
         }
       }
     }
     return null;
-  }
-
-  class Renderer extends GroupedElementsRenderer.Tree {
-
-
-    private JLabel myHandle;
-
-    @Override
-    protected void layout() {
-      myRendererComponent.setOpaqueActive(false);
-
-      myRendererComponent.add(mySeparatorComponent, BorderLayout.NORTH);
-
-      final NonOpaquePanel content = new NonOpaquePanel(new BorderLayout());
-      myHandle = new JLabel("", SwingConstants.CENTER);
-      if (!SystemInfo.isMac) {
-        myHandle.setBorder(new EmptyBorder(0, 2, 0, 2));
-      }
-      myHandle.setOpaque(false);
-      content.add(myHandle, BorderLayout.WEST);
-      content.add(myComponent, BorderLayout.CENTER);
-      myRendererComponent.add(content, BorderLayout.CENTER);
-    }
-
-    @Override
-    public Component getTreeCellRendererComponent(final JTree tree,
-                                                  final Object value,
-                                                  final boolean selected,
-                                                  final boolean expanded,
-                                                  final boolean leaf,
-                                                  final int row,
-                                                  final boolean hasFocus) {
-
-
-      JComponent result;
-      Color fg = UIUtil.getTreeTextForeground();
-
-      final Base base = extractNode(value);
-      if (base instanceof EditorNode) {
-
-        final EditorNode editor = (EditorNode)base;
-        ConfigurableGroup group = null;
-        if (editor.getParent() == myRoot) {
-          final DefaultMutableTreeNode prevValue = ((DefaultMutableTreeNode)value).getPreviousSibling();
-          if (prevValue == null || prevValue instanceof LoadingNode) {
-            group = editor.getGroup();
-          }
-          else {
-            final Base prevBase = extractNode(prevValue);
-            if (prevBase instanceof EditorNode) {
-              final EditorNode prevEditor = (EditorNode)prevBase;
-              if (prevEditor.getGroup() != editor.getGroup()) {
-                group = editor.getGroup();
-              }
-            }
-          }
-        }
-
-        TreePath path = tree.getPathForRow(row);
-        if (path == null) {
-          if (value instanceof DefaultMutableTreeNode) {
-            path = new TreePath(((DefaultMutableTreeNode)value).getPath());
-          }
-        }
-
-        final boolean toStretch = tree.isVisible() && path != null;
-
-        int forcedWidth = 2000;
-        if (toStretch) {
-          final Rectangle visibleRect = tree.getVisibleRect();
-
-          int nestingLevel = tree.isRootVisible() ? path.getPathCount() - 1 : path.getPathCount() - 2;
-
-          final int left = UIUtil.getTreeLeftChildIndent();
-          final int right = UIUtil.getTreeRightChildIndent();
-
-          final Insets treeInsets = tree.getInsets();
-
-          int indent = (left + right) * nestingLevel + (treeInsets != null ? treeInsets.left + treeInsets.right : 0);
-
-          forcedWidth = visibleRect.width > 0 ? visibleRect.width - indent : forcedWidth;
-        }
-
-        result = configureComponent(base.getText(), base.getText(), null, null, row == -1 || selected, group != null,
-                                    group != null ? group.getDisplayName() : null, forcedWidth - 4);
-
-
-        if (base.isError()) {
-          fg = JBColor.red;
-        }
-        else if (base.isModified()) {
-          fg = JBColor.blue;
-        }
-
-      }
-      else {
-        result = configureComponent(value.toString(), null, null, null, selected, false, null, -1);
-      }
-
-      if (value instanceof DefaultMutableTreeNode) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-        TreePath nodePath = new TreePath(node.getPath());
-        myHandle.setIcon(((SimpleTree)tree).getHandleIcon(node, nodePath));
-      } else {
-        myHandle.setIcon(null);
-      }
-
-
-      myTextLabel.setForeground(selected ? UIUtil.getTreeSelectionForeground() : fg);
-
-      myTextLabel.setOpaque(selected);
-
-      return result;
-    }
-
-    @Override
-    protected JComponent createItemComponent() {
-      myTextLabel = new ErrorLabel();
-      return myTextLabel;
-    }
-
-    public boolean isUnderHandle(final Point point) {
-      final Point handlePoint = SwingUtilities.convertPoint(myRendererComponent, point, myHandle);
-      final Rectangle bounds = myHandle.getBounds();
-      return bounds.x < handlePoint.x && bounds.getMaxX() >= handlePoint.x;
-    }
   }
 
   @Nullable
@@ -456,34 +322,25 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   }
 
   class Root extends Base {
-
     Root() {
       super(null);
     }
 
     @Override
     protected SimpleNode[] buildChildren() {
-      List<SimpleNode> result = new ArrayList<SimpleNode>();
-      for (ConfigurableGroup eachGroup : myGroups) {
-        result.addAll(buildGroup(eachGroup));
-      }
-
-      return result.isEmpty() ? NO_CHILDREN : result.toArray(new SimpleNode[result.size()]);
+      return ContainerUtil.toArray(map(myConfigurables), EMPTY_EN_ARRAY);
     }
 
-    private List<EditorNode> buildGroup(final ConfigurableGroup eachGroup) {
+    @NotNull
+    private List<EditorNode> map(final Configurable[] configurables) {
       List<EditorNode> result = new ArrayList<EditorNode>();
-      final Configurable[] kids = eachGroup.getConfigurables();
-      if (kids.length > 0) {
-        for (Configurable eachKid : kids) {
-          if (isInvisibleNode(eachKid)) {
-            result.addAll(OptionsTree.this.buildChildren(eachKid, this, eachGroup));
-          }
-          else {
-            result.add(new EditorNode(this, eachKid, eachGroup));
-          }
+      for (Configurable eachKid : configurables) {
+        if (isInvisibleNode(eachKid)) {
+          result.addAll(OptionsTree.this.buildChildren(eachKid, this));
         }
-
+        else {
+          result.add(new EditorNode(this, eachKid));
+        }
       }
       return sort(result);
     }
@@ -509,18 +366,18 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     return name != null ? name : "{ Unnamed Page:" + c.getClass().getSimpleName() + " }";
   }
 
-  private List<EditorNode> buildChildren(final Configurable configurable, SimpleNode parent, final ConfigurableGroup group) {
+  private List<EditorNode> buildChildren(final Configurable configurable, SimpleNode parent) {
     if (configurable instanceof Configurable.Composite) {
       final Configurable[] kids = ((Configurable.Composite)configurable).getConfigurables();
       final List<EditorNode> result = new ArrayList<EditorNode>(kids.length);
       for (Configurable child : kids) {
         if (isInvisibleNode(child)) {
-          result.addAll(buildChildren(child, parent, group));
+          result.addAll(buildChildren(child, parent));
         }
-        result.add(new EditorNode(parent, child, group));
+        result.add(new EditorNode(parent, child));
         myContext.registerKid(configurable, child);
       }
-      return result; // TODO: DECIDE IF INNERS SHOULD BE SORTED: sort(result);
+      return sort(result);
     }
     else {
       return Collections.emptyList();
@@ -528,24 +385,22 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   }
 
   private static final EditorNode[] EMPTY_EN_ARRAY = new EditorNode[0];
+
   class EditorNode extends Base {
     Configurable myConfigurable;
-    ConfigurableGroup myGroup;
 
-    EditorNode(SimpleNode parent, Configurable configurable, @Nullable ConfigurableGroup group) {
+    EditorNode(SimpleNode parent, Configurable configurable) {
       super(parent);
       myConfigurable = configurable;
-      myGroup = group;
       myConfigurable2Node.put(configurable, this);
       addPlainText(getConfigurableDisplayName(configurable));
     }
 
     @Override
     protected EditorNode[] buildChildren() {
-      List<EditorNode> list = OptionsTree.this.buildChildren(myConfigurable, this, null);
+      List<EditorNode> list = OptionsTree.this.buildChildren(myConfigurable, this);
       return list.isEmpty() ? EMPTY_EN_ARRAY : list.toArray(new EditorNode[list.size()]);
     }
-
 
     @Override
     public boolean isAlwaysLeaf() {
@@ -564,16 +419,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
 
     @Override
     public int getWeight() {
-      if (getParent() == myRoot) {
-        return Integer.MAX_VALUE - myGroups.indexOf(myGroup);
-      }
-      else {
-        return WeightBasedComparator.UNDEFINED_WEIGHT;
-      }
-    }
-
-    public ConfigurableGroup getGroup() {
-      return myGroup;
+      return WeightBasedComparator.UNDEFINED_WEIGHT;
     }
 
     @Override
@@ -623,148 +469,6 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     myTree.processKeyEvent(e);
   }
 
-  private class MyTree extends SimpleTree {
-
-    private MyTree() {
-      getInputMap().clear();
-    }
-
-    @Override
-    protected boolean highlightSingleNode() {
-      return false;
-    }
-
-    @Override
-    public void setUI(final TreeUI ui) {
-      TreeUI actualUI = ui;
-      if (!(ui instanceof MyTreeUi)) {
-        actualUI = new MyTreeUi();
-      }
-      super.setUI(actualUI);
-    }
-
-    @Override
-    protected boolean isCustomUI() {
-      return true;
-    }
-
-    @Override
-    protected void configureUiHelper(final TreeUIHelper helper) {
-    }
-
-    @Override
-    public boolean getScrollableTracksViewportWidth() {
-      return true;
-    }
-
-
-    @Override
-    public void processKeyEvent(final KeyEvent e) {
-      TreePath path = myTree.getSelectionPath();
-      if (path != null) {
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-          if (isExpanded(path)) {
-            collapsePath(path);
-            return;
-          }
-        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-          if (isCollapsed(path)) {
-            expandPath(path);
-            return;
-          }
-        }
-      }
-
-      super.processKeyEvent(e);
-    }
-
-    @Override
-    protected void processMouseEvent(final MouseEvent e) {
-      final MyTreeUi ui = (MyTreeUi)myTree.getUI();
-      final boolean toggleNow =
-        e.getID() == MouseEvent.MOUSE_RELEASED && UIUtil.isActionClick(e, MouseEvent.MOUSE_RELEASED) && !ui.isToggleEvent(e);
-
-      final boolean toggleLater =
-        e.getID() == MouseEvent.MOUSE_PRESSED;
-
-      if (toggleNow || toggleLater) {
-        final TreePath path = getPathForLocation(e.getX(), e.getY());
-        if (path != null) {
-          final Rectangle bounds = getPathBounds(path);
-          if (bounds != null && path.getLastPathComponent() instanceof DefaultMutableTreeNode) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-            final boolean selected = isPathSelected(path);
-            final boolean expanded = isExpanded(path);
-            final Component comp =
-              myRenderer.getTreeCellRendererComponent(this, node, selected, expanded, node.isLeaf(), getRowForPath(path), isFocusOwner());
-
-            comp.setBounds(bounds);
-            comp.validate();
-
-            Point point = new Point(e.getX() - bounds.x, e.getY() - bounds.y);
-            if (myRenderer.isUnderHandle(point)) {
-              if (toggleNow) {
-                ui.toggleExpandState(path);
-                e.consume();
-                return;
-              } else if (toggleLater) {
-                e.consume();
-                return;
-              }
-            }
-          }
-        }
-      }
-
-      super.processMouseEvent(e);
-    }
-
-    private class MyTreeUi extends BasicTreeUI {
-
-      @Override
-      public void toggleExpandState(final TreePath path) {
-        super.toggleExpandState(path);
-      }
-
-      @Override
-      public boolean isToggleEvent(final MouseEvent event) {
-        return super.isToggleEvent(event);
-      }
-
-      @Override
-      protected boolean shouldPaintExpandControl(final TreePath path,
-                                                 final int row,
-                                                 final boolean isExpanded,
-                                                 final boolean hasBeenExpanded,
-                                                 final boolean isLeaf) {
-        return false;
-      }
-
-      @Override
-      protected void paintHorizontalPartOfLeg(final Graphics g,
-                                              final Rectangle clipBounds,
-                                              final Insets insets,
-                                              final Rectangle bounds,
-                                              final TreePath path,
-                                              final int row,
-                                              final boolean isExpanded,
-                                              final boolean hasBeenExpanded,
-                                              final boolean isLeaf) {
-
-      }
-
-      @Override
-      protected void paintVerticalPartOfLeg(final Graphics g, final Rectangle clipBounds, final Insets insets, final TreePath path) {
-      }
-
-      @Override
-      public void paint(Graphics g, JComponent c) {
-        GraphicsUtil.setupAntialiasing(g);
-        super.paint(g, c);
-      }
-    }
-  }
-
   private class MyBuilder extends FilteringTreeBuilder {
 
     List<Object> myToExpandOnResetFilter;
@@ -812,7 +516,8 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       final List<Object> toRestore = new ArrayList<Object>();
       if (myContext.isHoldingFilter() && !myWasHoldingFilter && myToExpandOnResetFilter == null) {
         myToExpandOnResetFilter = myBuilder.getUi().getExpandedElements();
-      } else if (!myContext.isHoldingFilter() && myWasHoldingFilter && myToExpandOnResetFilter != null) {
+      }
+      else if (!myContext.isHoldingFilter() && myWasHoldingFilter && myToExpandOnResetFilter != null) {
         toRestore.addAll(myToExpandOnResetFilter);
         myToExpandOnResetFilter = null;
       }

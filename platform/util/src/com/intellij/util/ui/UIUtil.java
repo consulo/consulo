@@ -228,7 +228,7 @@ public class UIUtil {
     return new JBTreeTraverser<Component>(COMPONENT_CHILDREN).withRoot(component);
   }
 
-  public enum FontSize {NORMAL, SMALL, MINI}
+  public enum FontSize {BIGGER, NORMAL, SMALL, MINI}
 
   public enum ComponentStyle {REGULAR, SMALL, MINI}
 
@@ -571,6 +571,8 @@ public class UIUtil {
   public static float getFontSize(FontSize size) {
     int defSize = getLabelFont().getSize();
     switch (size) {
+      case BIGGER:
+        return Math.max(defSize + JBUI.scale(2f), JBUI.scale(13f));
       case SMALL:
         return Math.max(defSize - JBUI.scale(2f), JBUI.scale(11f));
       case MINI:

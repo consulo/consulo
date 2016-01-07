@@ -17,13 +17,11 @@
 package com.intellij.ide.ui.search;
 
 import com.intellij.application.options.SkipSelfSearchComponent;
+import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableGroup;
 import com.intellij.openapi.options.MasterDetails;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.GlassPanel;
-import com.intellij.openapi.options.ex.IdeConfigurablesGroup;
-import com.intellij.openapi.options.ex.ProjectConfigurablesGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -66,8 +64,8 @@ public class SearchUtil {
   }
 
   public static void processProjectConfigurables(Project project, HashMap<SearchableConfigurable, TreeSet<OptionDescription>> options) {
-    processConfigurables(new ProjectConfigurablesGroup(project).getConfigurables(), options);
-    processConfigurables(new IdeConfigurablesGroup().getConfigurables(), options);
+    Configurable[] configurables = ShowSettingsUtilImpl.buildConfigurables(project);
+    processConfigurables(configurables, options);
   }
 
   private static void processConfigurables(final Configurable[] configurables,
@@ -706,16 +704,11 @@ public class SearchUtil {
     }
   }
 
-  public static List<Configurable> expand(ConfigurableGroup[] groups) {
-    final ArrayList<Configurable> result = new ArrayList<Configurable>();
-    for (ConfigurableGroup eachGroup : groups) {
-      result.addAll(expandGroup(eachGroup));
-    }
-    return result;
+  public static List<Configurable> expand(Configurable[] configurables) {
+    return expandGroup(configurables);
   }
 
-  public static List<Configurable> expandGroup(final ConfigurableGroup group) {
-    final Configurable[] configurables = group.getConfigurables();
+  public static List<Configurable> expandGroup(final Configurable[] configurables) {
     List<Configurable> result = new ArrayList<Configurable>();
     ContainerUtil.addAll(result, configurables);
     for (Configurable each : configurables) {

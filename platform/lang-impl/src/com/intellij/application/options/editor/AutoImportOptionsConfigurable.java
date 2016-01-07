@@ -16,51 +16,14 @@
 
 package com.intellij.application.options.editor;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
+import com.intellij.openapi.options.ConfigurableAdapter;
 
 /**
  * @author Dmitry Avdeev
  */
-public class AutoImportOptionsConfigurable implements Configurable {
-  @Override
-  @Nls
-  public String getDisplayName() {
-    return null;
-  }
-
+public class AutoImportOptionsConfigurable extends ConfigurableAdapter {
   @Override
   public String getHelpTopic() {
     return "reference.settingsdialog.IDE.editor.autoimport";
-  }
-
-  @Nullable
-  @Override
-  public JComponent createComponent() {
-    return null;
-  }
-
-  @Override
-  public boolean isModified() {
-    return false;
-  }
-
-  @Override
-  public void apply() throws ConfigurationException {
-
-  }
-
-  @Override
-  public void reset() {
-
-  }
-
-  @Override
-  public void disposeUIResources() {
-
   }
 }

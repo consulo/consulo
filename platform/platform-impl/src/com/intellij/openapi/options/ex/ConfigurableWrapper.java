@@ -37,12 +37,13 @@ import java.util.List;
 public class ConfigurableWrapper implements SearchableConfigurable {
 
   private static final ConfigurableWrapper[] EMPTY_ARRAY = new ConfigurableWrapper[0];
-  private static final NullableFunction<ConfigurableEP<Configurable>,Configurable> CONFIGURABLE_FUNCTION = new NullableFunction<ConfigurableEP<Configurable>, Configurable>() {
-    @Override
-    public Configurable fun(ConfigurableEP<Configurable> ep) {
-      return wrapConfigurable(ep);
-    }
-  };
+  private static final NullableFunction<ConfigurableEP<Configurable>, Configurable> CONFIGURABLE_FUNCTION =
+          new NullableFunction<ConfigurableEP<Configurable>, Configurable>() {
+            @Override
+            public Configurable fun(ConfigurableEP<Configurable> ep) {
+              return wrapConfigurable(ep);
+            }
+          };
   private static final Logger LOG = Logger.getInstance(ConfigurableWrapper.class);
 
   @Nullable
@@ -79,17 +80,17 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   }
 
   public static <T> T cast(Configurable configurable, Class<T> clazz) {
-    if(configurable == null) {
+    if (configurable == null) {
       return null;
     }
 
-    if(clazz.isInstance(configurable)) {
+    if (clazz.isInstance(configurable)) {
       return clazz.cast(configurable);
     }
 
-    if(configurable instanceof ConfigurableWrapper) {
+    if (configurable instanceof ConfigurableWrapper) {
       UnnamedConfigurable unnamedConfigurable = ((ConfigurableWrapper)configurable).getConfigurable();
-      if(clazz.isInstance(unnamedConfigurable)) {
+      if (clazz.isInstance(unnamedConfigurable)) {
         return clazz.cast(unnamedConfigurable);
       }
     }
@@ -97,7 +98,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   }
 
   public static boolean isNonDefaultProject(Configurable configurable) {
-    if(cast(configurable, NonDefaultProjectConfigurable.class) != null) {
+    if (cast(configurable, NonDefaultProjectConfigurable.class) != null) {
       return true;
     }
     return configurable instanceof ConfigurableWrapper && ((ConfigurableWrapper)configurable).myEp.nonDefaultProject;
@@ -197,21 +198,19 @@ public class ConfigurableWrapper implements SearchableConfigurable {
         kids = ((Composite)getConfigurable()).getConfigurables();
       }
       else if (ep.children != null) {
-        kids = ContainerUtil.mapNotNull(ep.getChildren(),
-                                        new NullableFunction<ConfigurableEP, ConfigurableWrapper>() {
-                                          @Override
-                                          public ConfigurableWrapper fun(ConfigurableEP ep) {
-                                            return ep.isAvailable() ? (ConfigurableWrapper)wrapConfigurable(ep) : null;
-                                          }
-                                        }, EMPTY_ARRAY);
+        kids = ContainerUtil.mapNotNull(ep.getChildren(), new NullableFunction<ConfigurableEP, ConfigurableWrapper>() {
+          @Override
+          public ConfigurableWrapper fun(ConfigurableEP ep) {
+            return ep.isAvailable() ? (ConfigurableWrapper)wrapConfigurable(ep) : null;
+          }
+        }, EMPTY_ARRAY);
       }
       if (ep.childrenEPName != null) {
         ExtensionPoint<Object> childrenEP = Extensions.getArea(ep.getProject()).getExtensionPoint(ep.childrenEPName);
         Object[] extensions = childrenEP.getExtensions();
         if (extensions.length > 0) {
           if (extensions[0] instanceof ConfigurableEP) {
-            Configurable[] children = ContainerUtil.mapNotNull(((ConfigurableEP<Configurable>[])extensions),
-                                                         CONFIGURABLE_FUNCTION, new Configurable[0]);
+            Configurable[] children = ContainerUtil.mapNotNull(((ConfigurableEP<Configurable>[])extensions), CONFIGURABLE_FUNCTION, new Configurable[0]);
             kids = ArrayUtil.mergeArrays(kids, children);
           }
           else {

@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SimpleNode extends PresentableNodeDescriptor implements ComparableObject {
-
   protected static final SimpleNode[] NO_CHILDREN = new SimpleNode[0];
 
   protected SimpleNode(Project project) {

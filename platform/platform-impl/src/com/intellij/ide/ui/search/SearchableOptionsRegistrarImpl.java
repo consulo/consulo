@@ -25,7 +25,6 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableGroup;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -210,7 +209,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
   @Override
   @NotNull
-  public ConfigurableHit getConfigurables(ConfigurableGroup[] groups,
+  public ConfigurableHit getConfigurables(Configurable[] allConfigurables,
                                             final DocumentEvent.EventType type,
                                             Set<Configurable> configurables,
                                             String option,
@@ -221,9 +220,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
     Set<String> options = getProcessedWordsWithoutStemming(option);
     if (configurables == null) {
-      for (ConfigurableGroup group : groups) {
-        contentHits.addAll(SearchUtil.expandGroup(group));
-      }
+      contentHits.addAll(SearchUtil.expandGroup(allConfigurables));
     }
     else {
       contentHits.addAll(configurables);
@@ -289,7 +286,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
       }
     }
     if (currentConfigurables.equals(contentHits) && !(configurables == null && type == DocumentEvent.EventType.CHANGE)) {
-      return getConfigurables(groups, DocumentEvent.EventType.CHANGE, null, option, project);
+      return getConfigurables(allConfigurables, DocumentEvent.EventType.CHANGE, null, option, project);
     }
     return hits;
   }

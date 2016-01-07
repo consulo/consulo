@@ -298,6 +298,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     return hasFocus();
   }
 
+  @Deprecated
   protected boolean paintNodes() {
     return false;
   }

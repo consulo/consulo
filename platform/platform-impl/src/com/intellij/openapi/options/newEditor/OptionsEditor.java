@@ -96,7 +96,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   private final Map<Configurable, ActionCallback> myConfigurable2LoadCallback = new HashMap<Configurable, ActionCallback>();
 
   private final MergingUpdateQueue myModificationChecker;
-  private final ConfigurableGroup[] myGroups;
+  private final Configurable[] myConfigurables;
   private JPanel myRootPanel;
 
   private final SpotlightPainter mySpotlightPainter = new SpotlightPainter();
@@ -113,9 +113,9 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   private final PropertiesComponent myProperties;
   private volatile boolean myDisposed;
 
-  public OptionsEditor(Project project, ConfigurableGroup[] groups, Configurable preselectedConfigurable, final JPanel rootPanel) {
+  public OptionsEditor(Project project, Configurable[] configurables, Configurable preselectedConfigurable, final JPanel rootPanel) {
     myProject = project;
-    myGroups = groups;
+    myConfigurables = configurables;
     myRootPanel = rootPanel;
     myProperties = PropertiesComponent.getInstance(project);
 
@@ -143,7 +143,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       }
     });
     
-    myTree = new OptionsTree(myProject, groups, getContext()) {
+    myTree = new OptionsTree(myProject, configurables, getContext()) {
       @Override
       protected void onTreeKeyEvent(final KeyEvent e) {
         myFilterDocumentWasChanged = false;
@@ -883,7 +883,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         myFiltered = null;
       } else {
         myContext.setHoldingFilter(true);
-        myHits = myIndex.getConfigurables(myGroups, type, myFiltered, text, myProject);
+        myHits = myIndex.getConfigurables(myConfigurables, type, myFiltered, text, myProject);
         myFiltered = myHits.getAll();
       }
 

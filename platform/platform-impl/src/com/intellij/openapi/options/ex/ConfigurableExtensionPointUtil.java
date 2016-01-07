@@ -21,6 +21,7 @@ import com.intellij.openapi.options.ConfigurableEP;
 import com.intellij.openapi.options.ConfigurableProvider;
 import com.intellij.openapi.options.OptionalConfigurable;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ public class ConfigurableExtensionPointUtil {
   }
 
 
-  public static List<Configurable> buildConfigurablesList(final ConfigurableEP<Configurable>[] extensions, @Nullable ConfigurableFilter filter) {
+  public static List<Configurable> buildConfigurablesList(List<ConfigurableEP<Configurable>> extensions, @Nullable Condition<Configurable> filter) {
     final List<Configurable> result = new ArrayList<Configurable>();
 
     final Map<String, ConfigurableWrapper> idToConfigurable = new HashMap<String, ConfigurableWrapper>();
@@ -81,10 +82,10 @@ public class ConfigurableExtensionPointUtil {
     return result;
   }
 
-  private static boolean isSuppressed(Configurable each, ConfigurableFilter filter) {
+  private static boolean isSuppressed(Configurable each, Condition<Configurable> filter) {
     return each instanceof Configurable.Assistant
         || each instanceof OptionalConfigurable && !((OptionalConfigurable) each).needDisplay()
-        || filter != null && !filter.isIncluded(each);
+        || filter != null && !filter.value(each);
   }
 
   /*

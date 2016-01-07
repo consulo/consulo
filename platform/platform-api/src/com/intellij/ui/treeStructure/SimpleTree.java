@@ -263,6 +263,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
   }
 
   @Override
+  @Deprecated
   protected boolean paintNodes() {
     return true;
   }

@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableGroup;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.DumbModePermission;
@@ -52,7 +51,7 @@ import java.util.Map;
 public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataProvider{
 
   private Project myProject;
-  private ConfigurableGroup[] myGroups;
+  private Configurable[] myConfigurables;
   private Configurable myPreselected;
   private OptionsEditor myEditor;
 
@@ -64,35 +63,35 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
    *  will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
    *  @deprecated
    */
-  public OptionsEditorDialog(Project project, ConfigurableGroup[] groups,
+  public OptionsEditorDialog(Project project, Configurable[] configurables,
                              @Nullable Configurable preselectedConfigurable, boolean applicationModalIfPossible) {
     super(true, applicationModalIfPossible);
-    init(project, groups, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(groups, project));
+    init(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
   }
 
   /** This constructor should be eliminated after the new modality approach
    *  will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
    *  @deprecated
    */
-  public OptionsEditorDialog(Project project, ConfigurableGroup[] groups,
+  public OptionsEditorDialog(Project project, Configurable[] configurables,
                              @NotNull String preselectedConfigurableDisplayName, boolean applicationModalIfPossible) {
     super(true, applicationModalIfPossible);
-    init(project, groups, getPreselectedByDisplayName(groups, preselectedConfigurableDisplayName, project));
+    init(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
   }
 
-  public OptionsEditorDialog(Project project, ConfigurableGroup[] groups, @Nullable Configurable preselectedConfigurable) {
+  public OptionsEditorDialog(Project project, Configurable[] configurables, @Nullable Configurable preselectedConfigurable) {
     super(project, true);
-    init(project, groups, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(groups, project));
+    init(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
   }
 
-  public OptionsEditorDialog(Project project, ConfigurableGroup[] groups, @NotNull String preselectedConfigurableDisplayName) {
+  public OptionsEditorDialog(Project project, Configurable[] configurables, @NotNull String preselectedConfigurableDisplayName) {
     super(project, true);
-    init(project, groups, getPreselectedByDisplayName(groups, preselectedConfigurableDisplayName, project));
+    init(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
   }
 
-  private void init(final Project project, final ConfigurableGroup[] groups, @Nullable final Configurable preselected) {
+  private void init(final Project project, final Configurable[] configurables, @Nullable final Configurable preselected) {
     myProject = project;
-    myGroups = groups;
+    myConfigurables = configurables;
     myPreselected = preselected;
 
     setTitle(CommonBundle.settingsTitle());
@@ -101,11 +100,11 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   }
 
   @Nullable
-  private static Configurable getPreselectedByDisplayName(final ConfigurableGroup[] groups, final String preselectedConfigurableDisplayName,
+  private static Configurable getPreselectedByDisplayName(final Configurable[] configurables, final String preselectedConfigurableDisplayName,
                                                    final Project project) {
-    Configurable result = findPreselectedByDisplayName(preselectedConfigurableDisplayName, groups);
+    Configurable result = findPreselectedByDisplayName(preselectedConfigurableDisplayName, configurables);
 
-    return result == null ? findLastSavedConfigurable(groups, project) : result;
+    return result == null ? findLastSavedConfigurable(configurables, project) : result;
   }
 
   @Override
@@ -147,7 +146,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   @NotNull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
-    myEditor = new OptionsEditor(myProject, myGroups, myPreselected, rootPanel);
+    myEditor = new OptionsEditor(myProject, myConfigurables, myPreselected, rootPanel);
     myEditor.getContext().addColleague(new OptionsEditorColleague.Adapter() {
       @Override
       public ActionCallback onModifiedAdded(final Configurable configurable) {
@@ -247,34 +246,29 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   }
 
   @Nullable
-  private static Configurable findLastSavedConfigurable(ConfigurableGroup[] groups, final Project project) {
+  private static Configurable findLastSavedConfigurable(Configurable[] configurables, final Project project) {
     final String id = PropertiesComponent.getInstance(project).getValue(LAST_SELECTED_CONFIGURABLE);
     if (id == null) return null;
 
-    return findConfigurableInGroups(id, groups);
+    return findConfigurableInGroups(id, configurables);
   }
 
   @Nullable
-  private static Configurable findConfigurableInGroups(String id, Configurable.Composite... groups) {
+  private static Configurable findConfigurableInGroups(String id, Configurable[] configurables) {
     // avoid unnecessary group expand: check top-level configurables in all groups before looking at children
-    for (Configurable.Composite group : groups) {
-      final Configurable[] configurables = group.getConfigurables();
-      for (Configurable c : configurables) {
-        if (c instanceof SearchableConfigurable && id.equals(((SearchableConfigurable)c).getId())) {
-          return c;
-        } else if (id.equals(c.getClass().getName())) {
-          return c;
-        }
+    for (Configurable c : configurables) {
+      if (c instanceof SearchableConfigurable && id.equals(((SearchableConfigurable)c).getId())) {
+        return c;
+      } else if (id.equals(c.getClass().getName())) {
+        return c;
       }
     }
-    for (Configurable.Composite group : groups) {
-      final Configurable[] configurables = group.getConfigurables();
-      for (Configurable c : configurables) {
-        if (c instanceof Configurable.Composite) {
-          Configurable result = findConfigurableInGroups(id, (Configurable.Composite)c);
-          if (result != null) {
-            return result;
-          }
+
+    for (Configurable c : configurables) {
+      if (c instanceof Configurable.Composite) {
+        Configurable result = findConfigurableInGroups(id, ((Configurable.Composite)c).getConfigurables());
+        if (result != null) {
+          return result;
         }
       }
     }
@@ -282,8 +276,8 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   }
 
   @Nullable
-  private static Configurable findPreselectedByDisplayName(final String preselectedConfigurableDisplayName, ConfigurableGroup[] groups) {
-    final List<Configurable> all = SearchUtil.expand(groups);
+  private static Configurable findPreselectedByDisplayName(final String preselectedConfigurableDisplayName, Configurable[] configurables) {
+    final List<Configurable> all = SearchUtil.expand(configurables);
     for (Configurable each : all) {
       if (preselectedConfigurableDisplayName.equals(each.getDisplayName())) return each;
     }

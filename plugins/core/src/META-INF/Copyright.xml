@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
 <idea-plugin version="2">
   <extensions defaultExtensionNs="com.intellij">
-    <projectConfigurable instance="com.maddyhome.idea.copyright.ui.CopyrightProjectConfigurable"/>
-    <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+    <projectConfigurable displayName="Copyright"
+                         parentId="editor"
+                         dynamic="true"
+                         instance="com.maddyhome.idea.copyright.ui.CopyrightProjectConfigurable"/>
+
     <checkinHandlerFactory implementation="com.maddyhome.idea.copyright.actions.UpdateCopyrightCheckinHandlerFactory"/>
+
     <projectService serviceInterface="com.maddyhome.idea.copyright.actions.UpdateCopyrightCheckinHandlerState"
                     serviceImplementation="com.maddyhome.idea.copyright.actions.UpdateCopyrightCheckinHandlerState"/>
 

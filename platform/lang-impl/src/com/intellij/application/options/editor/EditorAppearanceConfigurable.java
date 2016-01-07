@@ -17,7 +17,6 @@
 package com.intellij.application.options.editor;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
-import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.CompositeConfigurable;
@@ -150,7 +149,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
   @Override
   @Nls
   public String getDisplayName() {
-    return ApplicationBundle.message("tab.editor.settings.appearance");
+    return "Gutters";
   }
 
   @Override

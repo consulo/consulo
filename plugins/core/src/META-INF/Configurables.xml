@@ -1,0 +1,117 @@
+<!--
+  - Copyright 2013-2016 must-be.org
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<idea-plugin>
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationConfigurable id="execution"
+                             displayName="Execution"
+                             instance="com.intellij.openapi.options.ConfigurableAdapter"/>
+
+    <applicationConfigurable instance="com.intellij.tools.ToolConfigurable"
+                             id="preferences.externalTools"
+                             key="tools.settings.title"
+                             parentId="execution"
+                             bundle="messages.ToolsBundle"/>
+
+    <applicationConfigurable instance="com.intellij.execution.console.ConsoleFoldingConfigurable"
+                             id="execution.console.folding"
+                             parentId="execution"
+                             displayName="Console Folding"/>
+
+    <applicationConfigurable id="editor"
+                             displayName="Editor"
+                             instance="com.intellij.openapi.options.ConfigurableAdapter"/>
+
+    <projectConfigurable displayName="Code Style"
+                         parentId="editor"
+                         dynamic="true"
+                         instance="com.intellij.application.options.CodeStyleSchemesConfigurable"/>
+
+    <applicationConfigurable instance="com.intellij.ide.todo.configurable.TodoConfigurable"
+                             id="preferences.toDoOptions"
+                             key="title.todo"
+                             parentId="editor"
+                             bundle="messages.IdeBundle"/>
+
+    <applicationConfigurable instance="com.intellij.application.options.editor.CodeFoldingConfigurable"
+                             id="editor.preferences.folding"
+                             parentId="editor"
+                             key="group.code.folding"
+                             bundle="messages.ApplicationBundle"/>
+
+    <applicationConfigurable instance="com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable"
+                             id="fileTemplates"
+                             parentId="editor"
+                             key="title.file.templates"
+                             bundle="messages.IdeBundle"/>
+
+    <applicationConfigurable instance="com.intellij.codeInsight.template.impl.LiveTemplatesConfigurable"
+                             id="editing.templates"
+                             parentId="editor.preferences.completion"
+                             key="templates.settings.page.title"
+                             bundle="messages.CodeInsightBundle"/>
+
+    <applicationConfigurable dynamic="true"
+                             key="debugger.configurable.display.name"
+                             bundle="messages.XDebuggerBundle"
+                             parentId="execution"
+                             instance="com.intellij.xdebugger.impl.settings.DebuggerConfigurable"/>
+
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorGeneralConfigurable"
+                             parentId="editor" key="title.editor"
+                             bundle="messages.ApplicationBundle"
+                             order="after appearance"/>
+
+    <applicationConfigurable instance="com.intellij.application.options.colors.ColorAndFontOptions"
+                             parentId="editor"
+                             id="editor.preferences.colors.and.fonts"
+                             dynamic="true"
+                             key="title.colors.and.fonts"
+                             bundle="messages.ApplicationBundle"/>
+
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorTabsConfigurable"
+                             id="editor.preferences.tabs"
+                             parentId="editor"
+                             displayName="Editor Tabs"/>
+
+    <applicationConfigurable instance="com.intellij.application.options.CodeCompletionOptions"
+                             id="editor.preferences.completion"
+                             parentId="editor"
+                             key="title.code.completion"
+                             bundle="messages.ApplicationBundle"/>
+
+    <applicationConfigurable instance="com.intellij.application.options.editor.AutoImportOptionsConfigurable"
+                             id="editor.preferences.import"
+                             parentId="editor"
+                             key="auto.import"
+                             bundle="messages.ApplicationBundle"/>
+
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorSmartKeysConfigurable"
+                             id="editor.preferences.smartKeys"
+                             parentId="editor"
+                             displayName="Smart Keys"/>
+
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorAppearanceConfigurable"
+                             id="editor.preferences.appearance"
+                             parentId="editor"
+                             displayName="Gutters"/>
+    <projectConfigurable instance="com.intellij.openapi.vfs.encoding.FileEncodingConfigurable"/>
+    <projectConfigurable instance="com.intellij.ui.tabs.FileColorsConfigurable"
+                         parentId="editor"
+                         id="fileColors"
+                         displayName="File Colors"/>
+
+  </extensions>
+</idea-plugin>

@@ -30,11 +30,6 @@ public abstract class NodeDescriptor<E> {
   protected String myName;
   protected Icon myClosedIcon;
 
-  /**
-   * Unused. It's there only for API compatibility.
-   */
-  @Deprecated
-  protected Icon myOpenIcon;
   protected Color myColor;
 
   private int myIndex = -1;

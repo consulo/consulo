@@ -56,6 +56,9 @@
   <xi:include href="/META-INF/XDebugger.xml" xpointer="xpointer(/idea-plugin/*)">
     <xi:fallback/>
   </xi:include>
+  <xi:include href="/META-INF/Configurables.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
 
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP"/>
@@ -1580,9 +1583,6 @@
     <applicationConfigurable instance="com.intellij.application.options.pathMacros.PathMacroConfigurable" id="preferences.pathVariables"
                              key="title.path.variables" bundle="messages.ApplicationBundle"/>
 
-    <applicationConfigurable instance="com.intellij.execution.console.ConsoleFoldingConfigurable" id="Console Folding"
-                             displayName="Console Folding"/>
-
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectDirCheckoutListener"/>
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
     <vcsAwareCheckoutListener implementation="com.intellij.openapi.vcs.checkout.NewProjectCheckoutListener"/>
@@ -1971,14 +1971,9 @@
     <projectService serviceInterface="com.intellij.codeInspection.ex.ProjectInspectionProfilesVisibleTreeState"
                     serviceImplementation="com.intellij.codeInspection.ex.ProjectInspectionProfilesVisibleTreeState"/>
 
-    <!-- Editor -->
-    <applicationConfigurable instance="com.intellij.application.options.editor.EditorOptions" id="editor" key="title.editor"
-                             bundle="messages.ApplicationBundle" order="after appearance"/>
 
     <projectService serviceInterface="com.intellij.semantic.SemService" serviceImplementation="com.intellij.semantic.SemServiceImpl"/>
 
-    <!-- Global Code Style -->
-    <projectConfigurable instance="com.intellij.application.options.CodeStyleSchemesConfigurable" order="after colors"/>
     <applicationService serviceInterface="com.intellij.application.options.codeStyle.CodeStyleSchemesUIConfiguration"
                         serviceImplementation="com.intellij.application.options.codeStyle.CodeStyleSchemesUIConfiguration"/>
 
@@ -1989,21 +1984,8 @@
     <applicationConfigurable instance="com.intellij.codeInsight.intention.impl.config.IntentionSettingsConfigurable" id="intentions"/>
 
     <!-- Live Templates -->
-    <applicationConfigurable instance="com.intellij.codeInsight.template.impl.LiveTemplatesConfigurable" id="editing.templates"
-                             key="templates.settings.page.title" bundle="messages.CodeInsightBundle"/>
     <lookup.actionProvider implementation="com.intellij.codeInsight.template.impl.LiveTemplateLookupActionProvider"/>
 
-    <!-- File Templates-->
-    <applicationConfigurable instance="com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable" id="fileTemplates"
-                             key="title.file.templates" bundle="messages.IdeBundle"/>
-
-    <!-- T.O.D.O -->
-    <applicationConfigurable instance="com.intellij.ide.todo.configurable.TodoConfigurable" id="preferences.toDoOptions" key="title.todo"
-                             bundle="messages.IdeBundle"/>
-
-    <!-- External Tools -->
-    <applicationConfigurable instance="com.intellij.tools.ToolConfigurable" id="preferences.externalTools" key="tools.settings.title"
-                             bundle="messages.ToolsBundle"/>
     <stepsBeforeRunProvider implementation="com.intellij.tools.ToolBeforeRunTaskProvider"/>
     <checkinHandlerFactory implementation="com.intellij.tools.ExternalToolsCheckinHandlerFactory"/>
     <projectService serviceInterface="com.intellij.tools.ToolsProjectConfig"
@@ -2195,46 +2177,13 @@
 
     <codeInsight.lineMarkerProvider language="" implementationClass="com.intellij.execution.lineMarker.RunLineMarkerProvider"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.editor.EditorSmartKeysConfigurable"
-                             id="editor.preferences.smartKeys"
-                             parentId="editor"
-                             displayName="Smart Keys"/>
-    <applicationConfigurable instance="com.intellij.application.options.editor.EditorAppearanceConfigurable"
-                             id="editor.preferences.appearance"
-                             parentId="editor"
-                             key="tab.editor.settings.appearance" bundle="messages.ApplicationBundle"/>
+
     <editorCustomization implementation="com.intellij.ui.SoftWrapsEditorCustomization"/>
     <editorCustomization implementation="com.intellij.ui.HorizontalScrollBarEditorCustomization"/>
     <editorCustomization implementation="com.intellij.ui.AdditionalPageAtBottomEditorCustomization"/>
     <editorCustomization implementation="com.intellij.ui.OneLineEditorCustomization"/>
     <editorCustomization implementation="com.intellij.ui.RightMarginEditorCustomization"/>
 
-    <!-- Colors & Fonts-->
-    <applicationConfigurable instance="com.intellij.application.options.colors.ColorAndFontOptions"
-                             parentId="editor"
-                             id="editor.preferences.colors.and.fonts"
-                             dynamic="true"
-                             key="title.colors.and.fonts"
-                             bundle="messages.ApplicationBundle"/>
-    <applicationConfigurable instance="com.intellij.application.options.editor.EditorTabsConfigurable"
-                             id="editor.preferences.tabs"
-                             parentId="editor"
-                             displayName="Editor Tabs"/>
-    <applicationConfigurable instance="com.intellij.application.options.editor.CodeFoldingConfigurable"
-                             id="editor.preferences.folding"
-                             parentId="editor"
-                             key="group.code.folding"
-                             bundle="messages.ApplicationBundle"/>
-    <applicationConfigurable instance="com.intellij.application.options.CodeCompletionOptions"
-                             id="editor.preferences.completion"
-                             parentId="editor"
-                             key="title.code.completion"
-                             bundle="messages.ApplicationBundle"/>
-    <applicationConfigurable instance="com.intellij.application.options.editor.AutoImportOptionsConfigurable"
-                             id="editor.preferences.import"
-                             parentId="editor"
-                             key="auto.import"
-                             bundle="messages.ApplicationBundle"/>
     <applicationConfigurable id="editor.preferences.folding.general"
                              parentId="editor.preferences.folding"
                              displayName="General"
@@ -2341,8 +2290,6 @@
 
     <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReferenceHelper"/>
     <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.JarFileReferenceHelper"/>
-    <projectConfigurable instance="com.intellij.openapi.vfs.encoding.FileEncodingConfigurable"/>
-    <projectConfigurable instance="com.intellij.ui.tabs.FileColorsConfigurable" id="fileColors" displayName="File Colors"/>
 
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.PlaybackDebugger"/>
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.ActionTracer"/>

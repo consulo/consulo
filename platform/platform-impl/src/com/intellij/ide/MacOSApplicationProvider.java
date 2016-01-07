@@ -29,8 +29,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.options.ex.IdeConfigurablesGroup;
-import com.intellij.openapi.options.ex.ProjectConfigurablesGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.SystemInfo;
@@ -103,8 +101,7 @@ public class MacOSApplicationProvider implements ApplicationComponent {
           }
 
           if (!((ShowSettingsUtilImpl)ShowSettingsUtil.getInstance()).isAlreadyShown()) {
-            ShowSettingsUtil.getInstance().showSettingsDialog(project, new ProjectConfigurablesGroup(project),
-                                                            new IdeConfigurablesGroup());
+            ShowSettingsUtil.getInstance().showSettingsDialog(project);
           }
           applicationEvent.setHandled(true);
         }

@@ -15,20 +15,22 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableGroup;
+import com.intellij.openapi.options.ConfigurableEP;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
-import com.intellij.openapi.options.ex.IdeConfigurablesGroup;
-import com.intellij.openapi.options.ex.ProjectConfigurablesGroup;
+import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,10 +50,12 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
   private AtomicBoolean myShown = new AtomicBoolean(false);
 
   @Override
-  public void showSettingsDialog(@NotNull Project project, @NotNull ConfigurableGroup[] group) {
+  public void showSettingsDialog(@Nullable Project project) {
     try {
       myShown.set(true);
-      _showSettingsDialog(project, group, null);
+      Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
+      Configurable[] configurables = buildConfigurables(project);
+      _showSettingsDialog(actualProject, configurables, null);
     }
     catch (Exception e) {
       LOG.error(e);
@@ -60,12 +65,12 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     }
   }
 
-  private static void _showSettingsDialog(@NotNull final Project project, @NotNull ConfigurableGroup[] group, @Nullable Configurable toSelect) {
-    group = filterEmptyGroups(group);
+  private static void _showSettingsDialog(@NotNull final Project project, @NotNull Configurable[] configurables, @Nullable Configurable toSelect) {
     if (Registry.is("ide.perProjectModality")) {
-      new OptionsEditorDialog(project, group, toSelect, true).show();
-    } else {
-      new OptionsEditorDialog(project, group, toSelect).show();
+      new OptionsEditorDialog(project, configurables, toSelect, true).show();
+    }
+    else {
+      new OptionsEditorDialog(project, configurables, toSelect).show();
     }
   }
 
@@ -73,24 +78,14 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
   public void showSettingsDialog(@Nullable final Project project, final Class configurableClass) {
     assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
 
-    ConfigurableGroup[] groups;
-    IdeConfigurablesGroup commonGroup = new IdeConfigurablesGroup();
-    ProjectConfigurablesGroup projectGroup = project == null ? null : new ProjectConfigurablesGroup(project);
-    if (projectGroup == null) {
-      groups = new ConfigurableGroup[] {commonGroup};
-    } else {
-      groups = new ConfigurableGroup[] {projectGroup, commonGroup};
-    }
+    Configurable[] configurables = buildConfigurables(project);
 
-    Configurable config = findByClass(commonGroup.getConfigurables(), configurableClass);
-    if (config == null && projectGroup != null) {
-      config = findByClass(projectGroup.getConfigurables(), configurableClass);
-    }
+    Configurable config = findByClass(configurables, configurableClass);
 
     assert config != null : "Cannot find configurable: " + configurableClass.getName();
 
     @NotNull Project nnProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
-    _showSettingsDialog(nnProject, groups, config);
+    _showSettingsDialog(nnProject, configurables, config);
   }
 
   @Nullable
@@ -105,47 +100,33 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
   @Override
   public void showSettingsDialog(@Nullable final Project project, @NotNull final String nameToSelect) {
-    ConfigurableGroup[] group;
-    if (project == null) {
-      group = new ConfigurableGroup[]{new IdeConfigurablesGroup()};
-    }
-    else {
-      group = new ConfigurableGroup[]{new ProjectConfigurablesGroup(project), new IdeConfigurablesGroup()};
-    }
+    Configurable[] configurables = buildConfigurables(project);
 
     Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
 
-    group = filterEmptyGroups(group);
-
     OptionsEditorDialog dialog;
     if (Registry.is("ide.perProjectModality")) {
-      dialog = new OptionsEditorDialog(actualProject, group, nameToSelect, true);
+      dialog = new OptionsEditorDialog(actualProject, configurables, nameToSelect, true);
     }
     else {
-      dialog = new OptionsEditorDialog(actualProject, group, nameToSelect);
+      dialog = new OptionsEditorDialog(actualProject, configurables, nameToSelect);
     }
     dialog.show();
   }
 
   public static void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
-    ConfigurableGroup[] group;
-    if (project == null) {
-      group = new ConfigurableGroup[]{new IdeConfigurablesGroup()};
-    }
-    else {
-      group = new ConfigurableGroup[]{new ProjectConfigurablesGroup(project), new IdeConfigurablesGroup()};
-    }
+    Configurable[] configurables = buildConfigurables(project);
 
     Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
 
-    group = filterEmptyGroups(group);
-    final Configurable configurable2Select = findConfigurable2Select(id2Select, group);
+    final Configurable configurable2Select = findConfigurable2Select(id2Select, configurables);
 
     final OptionsEditorDialog dialog;
     if (Registry.is("ide.perProjectModality")) {
-      dialog = new OptionsEditorDialog(actualProject, group, configurable2Select, true);
-    } else {
-      dialog = new OptionsEditorDialog(actualProject, group, configurable2Select);
+      dialog = new OptionsEditorDialog(actualProject, configurables, configurable2Select, true);
+    }
+    else {
+      dialog = new OptionsEditorDialog(actualProject, configurables, configurable2Select);
     }
 
     new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable.Adapter() {
@@ -159,13 +140,33 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     dialog.show();
   }
 
-  @Nullable
-  private static Configurable findConfigurable2Select(String id2Select, ConfigurableGroup[] group) {
-    for (ConfigurableGroup configurableGroup : group) {
-      for (Configurable configurable : configurableGroup.getConfigurables()) {
-        final Configurable conf = containsId(id2Select, configurable);
-        if (conf != null) return conf;
+  @NotNull
+  public static Configurable[] buildConfigurables(@Nullable Project project) {
+    if (project == null) {
+      project = ProjectManager.getInstance().getDefaultProject();
+    }
+
+    final Project tempProject = project;
+
+    List<ConfigurableEP<Configurable>> configurableEPs = new ArrayList<ConfigurableEP<Configurable>>();
+    Collections.addAll(configurableEPs, ApplicationManager.getApplication().getExtensions(Configurable.APPLICATION_CONFIGURABLE));
+    Collections.addAll(configurableEPs, project.getExtensions(Configurable.PROJECT_CONFIGURABLE));
+
+    List<Configurable> result = ConfigurableExtensionPointUtil.buildConfigurablesList(configurableEPs, new Condition<Configurable>() {
+      @Override
+      public boolean value(final Configurable configurable) {
+        return !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable);
       }
+    });
+
+    return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);
+  }
+
+  @Nullable
+  private static Configurable findConfigurable2Select(String id2Select, Configurable[] configurables) {
+    for (Configurable configurable : configurables) {
+      final Configurable conf = containsId(id2Select, configurable);
+      if (conf != null) return conf;
     }
     return null;
   }
@@ -186,21 +187,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
   @Override
   public void showSettingsDialog(@NotNull final Project project, final Configurable toSelect) {
-    _showSettingsDialog(project, new ConfigurableGroup[]{
-      new ProjectConfigurablesGroup(project),
-      new IdeConfigurablesGroup()
-    }, toSelect);
-  }
-
-  @NotNull
-  private static ConfigurableGroup[] filterEmptyGroups(@NotNull final ConfigurableGroup[] group) {
-    List<ConfigurableGroup> groups = new ArrayList<ConfigurableGroup>();
-    for (ConfigurableGroup g : group) {
-      if (g.getConfigurables().length > 0) {
-        groups.add(g);
-      }
-    }
-    return groups.toArray(new ConfigurableGroup[groups.size()]);
+    _showSettingsDialog(project, buildConfigurables(project), toSelect);
   }
 
   @Override
@@ -238,7 +225,10 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     return editConfigurable(parent, null, configurable, createDimensionKey(configurable), advancedInitialization);
   }
 
-  private static boolean editConfigurable(final @Nullable Component parent, @Nullable Project project, final Configurable configurable, final String dimensionKey,
+  private static boolean editConfigurable(final @Nullable Component parent,
+                                          @Nullable Project project,
+                                          final Configurable configurable,
+                                          final String dimensionKey,
                                           @Nullable final Runnable advancedInitialization) {
     SingleConfigurableEditor editor;
     if (parent != null) {
@@ -266,7 +256,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
   }
 
   @Override
-  public boolean editConfigurable(Component parent, String dimensionServiceKey,Configurable configurable) {
+  public boolean editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
     return editConfigurable(parent, null, configurable, dimensionServiceKey, null);
   }
 

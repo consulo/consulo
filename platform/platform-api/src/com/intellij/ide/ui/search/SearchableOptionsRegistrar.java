@@ -18,7 +18,6 @@ package com.intellij.ide.ui.search;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableGroup;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +37,7 @@ public abstract class SearchableOptionsRegistrar{
   }
 
   @NotNull
-  public abstract ConfigurableHit getConfigurables(final ConfigurableGroup[] groups,
+  public abstract ConfigurableHit getConfigurables(final Configurable[] allConfigurables,
                                                      final DocumentEvent.EventType type,
                                                      final Set<Configurable> configurables,
                                                      final String option,

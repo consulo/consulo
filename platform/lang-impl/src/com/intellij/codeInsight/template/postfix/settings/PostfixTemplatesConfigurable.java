@@ -19,7 +19,6 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.codeInsight.template.postfix.templates.LanguagePostfixTemplate;
-import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -32,6 +31,7 @@ import com.intellij.ui.components.JBCheckBox;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -44,14 +44,6 @@ import java.util.List;
 
 public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.Abstract
         implements Configurable.Composite, SearchableConfigurable, Configurable.NoScroll {
-
-  public static final Comparator<PostfixTemplate> TEMPLATE_COMPARATOR = new Comparator<PostfixTemplate>() {
-    @Override
-    public int compare(PostfixTemplate o1, PostfixTemplate o2) {
-      return o1.getKey().compareTo(o2.getKey());
-    }
-  };
-
   private PostfixTemplatesSettings myTemplatesSettings;
   private JComponent myPanel;
   private JBCheckBox myCompletionEnabledCheckbox;
@@ -65,19 +57,6 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
   @SuppressWarnings("unchecked")
   public PostfixTemplatesConfigurable() {
     myTemplatesSettings = PostfixTemplatesSettings.getInstance();
-     /*
-    LanguageExtensionPoint[] extensions = new ExtensionPointName<LanguageExtensionPoint>(LanguagePostfixTemplate.EP_NAME).getExtensions();
-
-
-    templateMultiMap = MultiMap.create();
-    for (LanguageExtensionPoint extension : extensions) {
-      List<PostfixTemplate> postfixTemplates =
-        ContainerUtil.newArrayList(((PostfixTemplateProvider)extension.getInstance()).getTemplates());
-      ContainerUtil.sort(postfixTemplates, TEMPLATE_COMPARATOR);
-
-      templateMultiMap.putValues(extension.getKey(), postfixTemplates);
-    }   */
-
     myPostfixTemplatesEnabled.addChangeListener(new ChangeListener() {
       @Override
       public void stateChanged(ChangeEvent e) {
@@ -107,6 +86,7 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
     return null;
   }
 
+  @RequiredDispatchThread
   @NotNull
   @Override
   public JComponent createComponent() {
@@ -115,6 +95,7 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
     return panel;
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     myTemplatesSettings.setPostfixTemplatesEnabled(myPostfixTemplatesEnabled.isSelected());
@@ -122,6 +103,7 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
     myTemplatesSettings.setShortcut(stringToShortcut((String)myShortcutComboBox.getSelectedItem()));
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     myPostfixTemplatesEnabled.setSelected(myTemplatesSettings.isPostfixTemplatesEnabled());
@@ -130,6 +112,7 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
     updateComponents();
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     return myPostfixTemplatesEnabled.isSelected() != myTemplatesSettings.isPostfixTemplatesEnabled() ||
@@ -137,6 +120,7 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
            stringToShortcut((String)myShortcutComboBox.getSelectedItem()) != myTemplatesSettings.getShortcut();
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
   }

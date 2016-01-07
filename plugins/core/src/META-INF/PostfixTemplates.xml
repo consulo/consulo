@@ -27,7 +27,7 @@
     <lookup.actionProvider implementation="com.intellij.codeInsight.template.postfix.completion.PostfixTemplateLookupActionProvider"/>
     <applicationConfigurable
         id="editing.postfixCompletion"
-        parentId="editor"
+        parentId="editor.preferences.completion"
         displayName="Postfix Completion"
         dynamic="true"
         instance="com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable"/>

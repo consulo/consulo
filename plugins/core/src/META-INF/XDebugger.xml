@@ -37,9 +37,6 @@
 
     <executor implementation="com.intellij.execution.executors.DefaultDebugExecutor" order="first,after run"/>
 
-    <applicationConfigurable dynamic="true" key="debugger.configurable.display.name" bundle="messages.XDebuggerBundle"
-                             instance="com.intellij.xdebugger.impl.settings.DebuggerConfigurable"/>
-
     <colorSettingsPage implementation="com.intellij.xdebugger.impl.ui.DebuggerColorsPage"/>
 
     <applicationService serviceInterface="com.intellij.xdebugger.settings.XDebuggerSettingsManager"

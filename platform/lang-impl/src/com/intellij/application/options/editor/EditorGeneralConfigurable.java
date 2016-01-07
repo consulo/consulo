@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class EditorOptions implements SearchableConfigurable {
+public class EditorGeneralConfigurable implements SearchableConfigurable {
   @NonNls public static final String ID = "preferences.editor";
   private EditorOptionsPanel myEditorOptionsPanel;
 

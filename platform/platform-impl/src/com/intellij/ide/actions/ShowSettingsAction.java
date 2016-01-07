@@ -17,11 +17,12 @@ package com.intellij.ide.actions;
 
 import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.options.ex.IdeConfigurablesGroup;
-import com.intellij.openapi.options.ex.ProjectConfigurablesGroup;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -60,7 +61,6 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
         }
       }
     });
-    ShowSettingsUtil.getInstance().showSettingsDialog(project, new ProjectConfigurablesGroup(project),
-                                                      new IdeConfigurablesGroup());
+    ShowSettingsUtil.getInstance().showSettingsDialog(project);
   }
 }
