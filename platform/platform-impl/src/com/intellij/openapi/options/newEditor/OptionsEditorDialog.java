@@ -120,7 +120,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
 
   @Override
   public Dimension getDefaultSize() {
-    return new Dimension(1028, 786);
+    return new Dimension(1028, 500);
   }
 
   @Nullable
