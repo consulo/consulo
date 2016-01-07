@@ -28,7 +28,7 @@ import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 
 public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigurable {
-  private static final Logger LOG = Logger.getInstance("#" + ProjectInspectionToolsConfigurable.class.getName());
+  private static final Logger LOG = Logger.getInstance("#" + ProjectInspectionToolsConfigurable.class);
   public ProjectInspectionToolsConfigurable(InspectionProfileManager profileManager, InspectionProjectProfileManager projectProfileManager) {
     super(projectProfileManager, profileManager);
   }

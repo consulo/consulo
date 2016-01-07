@@ -29,13 +29,12 @@ import javax.swing.*;
  * @author spleaner
  */
 public class NotificationsConfigurable implements Configurable, SearchableConfigurable, Configurable.NoScroll {
-  public static final String DISPLAY_NAME = "Notifications";
   private NotificationsConfigurablePanel myComponent;
 
   @Override
   @Nls
   public String getDisplayName() {
-    return DISPLAY_NAME;
+    return null;
   }
 
   @Override

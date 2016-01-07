@@ -15,18 +15,17 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.options.*;
-import com.intellij.openapi.options.ex.ConfigurableWrapper;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.ui.components.JBRadioButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.util.List;
 
 /**
  * To provide additional options in General section register implementation of {@link com.intellij.openapi.options.SearchableConfigurable} in the plugin.xml:
@@ -37,18 +36,17 @@ import java.util.List;
  * <p>
  * A new instance of the specified class will be created each time then the Settings dialog is opened
  */
-public class GeneralSettingsConfigurable extends CompositeConfigurable<SearchableConfigurable> implements SearchableConfigurable, Configurable.NoScroll {
-  private static ExtensionPointName<GeneralSettingsConfigurableEP> EP_NAME = ExtensionPointName.create("com.intellij.generalOptionsProvider");
-  
+public class GeneralSettingsConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+
   private MyComponent myComponent;
 
   public GeneralSettingsConfigurable() {
     myComponent = new MyComponent();
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
-    super.apply();
     GeneralSettings settings = GeneralSettings.getInstance();
 
     settings.setReopenLastProject(myComponent.myChkReopenLastProject.isSelected());
@@ -80,9 +78,9 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
-    if (super.isModified()) return true;
     boolean isModified = false;
     GeneralSettings settings = GeneralSettings.getInstance();
     isModified |= settings.isReopenLastProject() != myComponent.myChkReopenLastProject.isSelected();
@@ -104,6 +102,7 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     return isModified;
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
     if (myComponent == null) {
@@ -117,14 +116,6 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
       }
     });
 
-    List<SearchableConfigurable> list = getConfigurables();
-    if (!list.isEmpty()) {
-      myComponent.myPluginOptionsPanel.setLayout(new GridLayout(list.size(), 1));
-      for (Configurable c : list) {
-        myComponent.myPluginOptionsPanel.add(c.createComponent());
-      }
-    }
-
     return myComponent.myPanel;
   }
 
@@ -133,9 +124,9 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     return IdeBundle.message("title.general");
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
-    super.reset();
     GeneralSettings settings = GeneralSettings.getInstance();
     myComponent.myChkReopenLastProject.setSelected(settings.isReopenLastProject());
     myComponent.myChkSyncOnFrameActivation.setSelected(settings.isSyncOnFrameActivation());
@@ -158,9 +149,9 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
-    super.disposeUIResources();
     myComponent = null;
   }
 
@@ -197,10 +188,5 @@ public class GeneralSettingsConfigurable extends CompositeConfigurable<Searchabl
   @Nullable
   public Runnable enableSearch(String option) {
     return null;
-  }
-
-  @Override
-  protected List<SearchableConfigurable> createConfigurables() {
-    return ConfigurableWrapper.createConfigurables(EP_NAME);
   }
 }

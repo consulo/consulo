@@ -42,9 +42,6 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
   @NonNls private static final String POSTPONE = "&Postpone";
   public static final String ID = "preferences.pluginManager";
   public static final String DISPLAY_NAME = IdeBundle.message("title.plugins");
-  public boolean EXPANDED = false;
-  public String FIND = "";
-  public boolean TREE_VIEW = false;
 
   private PluginManagerMain myPluginManagerMain;
   protected final PluginManagerUISettings myUISettings;
