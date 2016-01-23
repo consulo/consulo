@@ -25,42 +25,34 @@ final class DelegatingHttpRequestHandler extends SimpleChannelUpstreamHandler {
 
     HttpRequest request = (HttpRequest)event.getMessage();
     QueryStringDecoder urlDecoder = new QueryStringDecoder(request.getUri());
-    HttpRequestHandler connectedHandler = (HttpRequestHandler)context.getAttachment();
-    if (connectedHandler == null) {
-      if (urlDecoder.getPath().equals("/favicon.ico")) {
-        Icon icon = IconLoader.findIcon(ApplicationInfoEx.getInstanceEx().getSmallIconUrl());
-        if (icon != null) {
-          //noinspection UndesirableClassUsage
-          BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-          icon.paintIcon(null, image.getGraphics(), 0, 0);
-          byte[] icoBytes = Sanselan.writeImageToBytes(image, ImageFormat.IMAGE_FORMAT_ICO, null);
-          Responses.send(FileResponses.createResponse(urlDecoder.getPath()), icoBytes, request, context);
+
+    if (urlDecoder.getPath().equals("/favicon.ico")) {
+      Icon icon = IconLoader.findIcon(ApplicationInfoEx.getInstanceEx().getSmallIconUrl());
+      if (icon != null) {
+        //noinspection UndesirableClassUsage
+        BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+        icon.paintIcon(null, image.getGraphics(), 0, 0);
+        byte[] icoBytes = Sanselan.writeImageToBytes(image, ImageFormat.IMAGE_FORMAT_ICO, null);
+        Responses.send(FileResponses.createResponse(urlDecoder.getPath()), icoBytes, request, context);
+        return;
+      }
+    }
+    else if (urlDecoder.getPath().equals(WebServer.START_TIME_PATH)) {
+      Responses.send(WebServer.getApplicationStartTime(), request, context);
+      return;
+    }
+
+    for (HttpRequestHandler handler : HttpRequestHandler.EP_NAME.getExtensions()) {
+      try {
+        if (handler.isSupported(request) && handler.process(urlDecoder, request, context)) {
           return;
         }
       }
-      else if (urlDecoder.getPath().equals(WebServer.START_TIME_PATH)) {
-        Responses.send(WebServer.getApplicationStartTime(), request, context);
-        return;
+      catch (Throwable e) {
+        WebServer.LOG.error(e);
       }
+    }
 
-      for (HttpRequestHandler handler : HttpRequestHandler.EP_NAME.getExtensions()) {
-        try {
-          if (handler.isSupported(request) && handler.process(urlDecoder, request, context)) {
-            if (context.getAttachment() == null) {
-              context.setAttachment(handler);
-            }
-            return;
-          }
-        }
-        catch (Throwable e) {
-          WebServer.LOG.error(e);
-        }
-      }
-    }
-    else if (connectedHandler.isSupported(request)) {
-      connectedHandler.process(urlDecoder, request, context);
-      return;
-    }
     Responses.sendError(request, context, NOT_FOUND);
   }
 
@@ -70,7 +62,6 @@ final class DelegatingHttpRequestHandler extends SimpleChannelUpstreamHandler {
       WebServer.LOG.error(event.getCause());
     }
     finally {
-      context.setAttachment(null);
       event.getChannel().close();
     }
   }
