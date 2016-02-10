@@ -84,12 +84,6 @@
     <extensionPoint name="diff.DiffExtension" interface="com.intellij.diff.DiffExtension"/>
   </extensionPoints>
   <extensions defaultExtensionNs="com.intellij">
-    <applicationConfigurable id="diff.base" displayName="Diff"
-                             instance="com.intellij.diff.settings.DiffSettingsConfigurable">
-      <configurable id="diff.external" displayName="External Diff Tools"
-                    instance="com.intellij.diff.settings.ExternalDiffSettingsConfigurable"/>
-    </applicationConfigurable>
-
     <applicationService serviceInterface="com.intellij.diff.impl.DiffSettingsHolder"
                         serviceImplementation="com.intellij.diff.impl.DiffSettingsHolder"/>
     <applicationService serviceInterface="com.intellij.diff.tools.util.base.TextDiffSettingsHolder"

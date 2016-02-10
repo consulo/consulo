@@ -20,6 +20,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -50,6 +51,7 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
     return "diff.base";
   }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -59,11 +61,13 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
     return mySettingsPane.getPanel();
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     return mySettingsPane != null && mySettingsPane.isModified();
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     if (mySettingsPane != null) {
@@ -71,6 +75,7 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     if (mySettingsPane != null) {
@@ -78,6 +83,7 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     mySettingsPane = null;
