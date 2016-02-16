@@ -53,6 +53,9 @@
     <key>NSHighResolutionCapable</key>
     <true/>
 
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+
     <key>LSArchitecturePriority</key>
     <array>
       <string>x86_64</string>
