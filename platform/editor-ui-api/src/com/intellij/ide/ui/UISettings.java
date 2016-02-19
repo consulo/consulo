@@ -34,6 +34,7 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,10 +101,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean ACTIVATE_MRU_EDITOR_ON_CLOSE = false;
   public boolean ACTIVATE_RIGHT_EDITOR_ON_CLOSE = false;
 
-  @Deprecated
-  public boolean ANTIALIASING_IN_EDITOR = true;
-  public boolean ANTIALIASING_IN_IDE = ANTIALIASING_IN_EDITOR;
-  public LCDRenderingScope LCD_RENDERING_SCOPE = UIUtil.isRetina() ? LCDRenderingScope.OFF : LCDRenderingScope.IDE;
+  public AntialiasingType IDE_AA_TYPE = AntialiasingType.SUBPIXEL;
+  public AntialiasingType EDITOR_AA_TYPE = AntialiasingType.SUBPIXEL;
   public ColorBlindness COLOR_BLINDNESS;
   public boolean MOVE_MOUSE_ON_DEFAULT_BUTTON = false;
   public boolean ENABLE_ALPHA_MODE = false;
@@ -260,21 +259,21 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
    */
   public static void setupAntialiasing(final Graphics g) {
 
+    Graphics2D g2d = (Graphics2D)g;
+    g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST,  UIUtil.getLcdContrastValue());
+
     Application application = ApplicationManager.getApplication();
     if (application == null) {
-      // We cannot use services while Aplication has not been loaded yet
+      // We cannot use services while Application has not been loaded yet
       // So let's apply the default hints.
       UIUtil.applyRenderingHints(g);
       return;
     }
 
-    Graphics2D g2d = (Graphics2D)g;
     UISettings uiSettings = getInstance();
 
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
     if (uiSettings != null) {
-      g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, LCDRenderingScope.getKeyForCurrentScope(false));
+      g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, AntialiasingType.getKeyForCurrentScope(false));
     } else {
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
     }
@@ -285,7 +284,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   /**
    * @return true when Remote Desktop (i.e. Windows RDP) is connected
    */
-  // TODO[neuro]: move to UIUtil
+  @Deprecated
+  @DeprecationInfo("Use RemoteDesktopDetector class - it should work in more cases")
   public static boolean isRemoteDesktopConnected() {
     if (System.getProperty("os.name").contains("Windows")) {
       final Map map = (Map)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");

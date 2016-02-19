@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.openapi.ui.impl;
 
 import com.intellij.ide.DataManager;
+import com.intellij.ide.RemoteDesktopDetector;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
@@ -132,8 +133,19 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
   private void createDialog(final Window owner) throws GlasspanePeerUnavailableException {
     Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
     if (!(active instanceof JDialog) && owner instanceof IdeFrame) {
-      final JFrame frame = (JFrame) owner;
-      final JComponent glassPane = (JComponent) frame.getGlassPane();
+
+      Component glassPane;
+
+      // Not all successor of IdeFrame are frames
+      if (owner instanceof JFrame) {
+        glassPane = ((JFrame)owner).getGlassPane();
+      }
+      else if (owner instanceof JDialog) {
+        glassPane = ((JDialog)owner).getGlassPane();
+      }
+      else {
+        throw new IllegalStateException("Cannot find glass pane for " + owner.getClass().getName());
+      }
 
       assert glassPane instanceof IdeGlassPaneEx : "GlassPane should be instance of IdeGlassPane!";
       myDialog = new MyDialog((IdeGlassPaneEx) glassPane, myWrapper, myProject);
@@ -261,7 +273,6 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     myTitle = title;
   }
 
-  // TODO: WTF?! VOID?!!!
   @Override
   public boolean isResizable() {
     return false;
@@ -317,7 +328,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
 
     myDialog.setVisible(true);
 
-    return new ActionCallback.Done();
+    return ActionCallback.DONE;
   }
 
   @Override
@@ -534,7 +545,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
 
     @Override
     public void paint(final Graphics g) {
-      UIUtil.applyRenderingHints(g);
+      UISettings.setupAntialiasing(g);
       super.paint(g);
     }
 
@@ -582,7 +593,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     }
 
     private void createShadow() {
-      if (!UISettings.isRemoteDesktopConnected() && !JBUI.isHiDPI()) {
+      if (!RemoteDesktopDetector.isRemoteSession() && !JBUI.isHiDPI()) {
         shadow = ShadowBorderPainter.createShadow(this, getWidth(), getHeight());
       }
     }
@@ -722,6 +733,14 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     @Override
     public void setDefaultButton(final JButton defaultButton) {
       myDialog.setDefaultButton(defaultButton);
+    }
+
+    @Override
+    public void setContentPane(Container contentPane) {
+      super.setContentPane(contentPane);
+      if (contentPane != null) {
+        contentPane.addMouseMotionListener(new MouseMotionAdapter() {}); // listen to mouse motion events for a11y
+      }
     }
   }
 

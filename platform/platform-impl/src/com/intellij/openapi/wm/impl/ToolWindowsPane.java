@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
+import com.intellij.ide.RemoteDesktopDetector;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
@@ -899,7 +900,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
       try {
         // Show component.
         final UISettings uiSettings = UISettings.getInstance();
-        if (!myDirtyMode && uiSettings.ANIMATE_WINDOWS && !UISettings.isRemoteDesktopConnected()) {
+        if (!myDirtyMode && uiSettings.ANIMATE_WINDOWS && !RemoteDesktopDetector.isRemoteSession()) {
           // Prepare top image. This image is scrolling over bottom image.
           final Image topImage = myLayeredPane.getTopImage();
           final Graphics topGraphics = topImage.getGraphics();
@@ -1116,7 +1117,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     public final void run() {
       try {
         final UISettings uiSettings = UISettings.getInstance();
-        if (!myDirtyMode && uiSettings.ANIMATE_WINDOWS && !UISettings.isRemoteDesktopConnected()) {
+        if (!myDirtyMode && uiSettings.ANIMATE_WINDOWS && !RemoteDesktopDetector.isRemoteSession()) {
           final Rectangle bounds = myComponent.getBounds();
           // Prepare top image. This image is scrolling over bottom image. It contains
           // picture of component is being removed.

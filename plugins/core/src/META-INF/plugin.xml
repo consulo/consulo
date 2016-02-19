@@ -1355,6 +1355,8 @@
     <applicationService serviceInterface="com.intellij.openapi.ui.popup.StackingPopupDispatcher"
                         serviceImplementation="com.intellij.ui.popup.StackingPopupDispatcherImpl"/>
 
+    <applicationService serviceImplementation="com.intellij.ide.RemoteDesktopDetector"/>
+
     <projectService serviceInterface="org.consulo.psi.PsiPackageManager"
                     serviceImplementation="org.mustbe.consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>

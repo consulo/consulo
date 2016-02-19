@@ -26,7 +26,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -35,6 +38,7 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.openapi.wm.impl.IdeMenuBar;
 import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.FocusTrackback;
+import com.intellij.ui.FrameState;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
@@ -312,17 +316,30 @@ public class FrameWrapper implements Disposable, DataProvider {
     private File myFile;
 
     private MyJFrame(IdeFrame parent) throws HeadlessException {
+      FrameState.setFrameStateListener(this);
       myParent = parent;
       setGlassPane(new IdeGlassPaneImpl(getRootPane()));
 
-      if (SystemInfo.isMac) {
+      boolean setMenuOnFrame = SystemInfo.isMac;
+
+      if (SystemInfo.isLinux && "Unity".equals(System.getenv("XDG_CURRENT_DESKTOP"))) {
+        try {
+          Class.forName("com.jarego.jayatana.Agent");
+          setMenuOnFrame = true;
+        }
+        catch (ClassNotFoundException e) {
+          // ignore
+        }
+      }
+
+      if (setMenuOnFrame) {
         setJMenuBar(new IdeMenuBar(ActionManagerEx.getInstanceEx(), DataManager.getInstance()));
       }
 
       MouseGestureManager.getInstance().add(this);
       setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
+      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
-
     @Override
     public JComponent getComponent() {
       return getRootPane();

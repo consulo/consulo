@@ -2808,6 +2808,33 @@ public class UIUtil {
     return null;
   }
 
+  public static int getLcdContrastValue() {
+    int lcdContrastValue  = Registry.get("lcd.contrast.value").asInteger();
+
+    // Evaluate the value depending on our current theme
+    if (lcdContrastValue == 0) {
+      if (SystemInfo.isMacIntel64) {
+        lcdContrastValue = isUnderDarcula() ? 140 : 200;
+      } else {
+        Map map = (Map)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+
+        if (map == null) {
+          lcdContrastValue = 140;
+        } else {
+          Object o = map.get(RenderingHints.KEY_TEXT_LCD_CONTRAST);
+          lcdContrastValue = (o == null) ? 140 : ((Integer)o);
+        }
+      }
+    }
+
+    if (lcdContrastValue < 100 || lcdContrastValue > 250) {
+      // the default value
+      lcdContrastValue = 140;
+    }
+
+    return lcdContrastValue;
+  }
+
   public static void addBorder(JComponent component, Border border) {
     if (component == null) return;
 
@@ -2856,6 +2883,14 @@ public class UIUtil {
       if (each.isVisible() && each.isActive()) return each;
     }
     return JOptionPane.getRootFrame();
+  }
+
+  public static void suppressFocusStealing (Window window) {
+    // Focus stealing is not a problem on Mac
+    if (SystemInfo.isMac) return;
+    if (Registry.is("suppress.focus.stealing")) {
+      setAutoRequestFocus(window, false);
+    }
   }
 
   public static void setAutoRequestFocus(final Window onWindow, final boolean set){
