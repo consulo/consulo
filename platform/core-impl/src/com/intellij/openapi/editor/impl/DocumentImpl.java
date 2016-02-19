@@ -28,6 +28,7 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
@@ -51,6 +52,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.intellij.openapi.editor.StripTrailingSpacesFilterFactory.EXTENSION_POINT;
 
 public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.DocumentImpl");
@@ -118,6 +121,11 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     this(chars, false);
   }
 
+  /**
+   * NOTE: if client sets forUseInNonAWTThread to true it's supposed that client will completely control document and its listeners.
+   * The noticable peculiarity of DocumentImpl behavior in this mode is that DocumentImpl won't suppress ProcessCancelledException
+   * thrown from listeners during changedUpdate event, so the exception will be rethrown and rest of the listeners WON'T be notified.
+   */
   public DocumentImpl(@NotNull CharSequence chars, boolean forUseInNonAWTThread) {
     this(chars, false, forUseInNonAWTThread);
   }
@@ -172,7 +180,12 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
   @TestOnly
   public boolean stripTrailingSpaces(Project project) {
-    return stripTrailingSpaces(project, false, false, new int[0]);
+    return stripTrailingSpaces(project, false);
+  }
+
+  @TestOnly
+  public boolean stripTrailingSpaces(Project project, boolean inChangedLinesOnly) {
+    return stripTrailingSpaces(project, inChangedLinesOnly, false, new int[0]);
   }
 
   /**
@@ -184,6 +197,19 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
                               @NotNull int[] caretOffsets) {
     if (!isStripTrailingSpacesEnabled) {
       return true;
+    }
+    List<StripTrailingSpacesFilter> filters = new ArrayList<StripTrailingSpacesFilter>();
+    for (StripTrailingSpacesFilterFactory filterFactory : EXTENSION_POINT.getExtensions()) {
+      StripTrailingSpacesFilter filter = filterFactory.createFilter(project, this);
+      if (filter == StripTrailingSpacesFilter.NOT_ALLOWED) {
+        return true;
+      }
+      else if (filter == StripTrailingSpacesFilter.POSTPONED) {
+        return false;
+      }
+      else {
+        filters.add(filter);
+      }
     }
 
     boolean markAsNeedsStrippingLater = false;
@@ -208,7 +234,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       lineLoop:
       for (int line = 0; line < getLineCount(); line++) {
         LineSet lineSet = getLineSet();
-        if (inChangedLinesOnly && !lineSet.isModified(line)) continue;
+        if (inChangedLinesOnly && !lineSet.isModified(line) || !canStripSpacesFrom(line, filters)) continue;
         int whiteSpaceStart = -1;
         final int lineEnd = lineSet.getLineEnd(line) - lineSet.getSeparatorLength(line);
         int lineStart = lineSet.getLineStart(line);
@@ -264,6 +290,13 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       });
     }
     return markAsNeedsStrippingLater;
+  }
+
+  private static boolean canStripSpacesFrom(int line, @NotNull List<StripTrailingSpacesFilter> filters) {
+    for (StripTrailingSpacesFilter filter :  filters) {
+      if (!filter.isStripSpacesAllowedForLine(line)) return false;
+    }
+    return true;
   }
 
   @Override
@@ -443,7 +476,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
     myText = myText.ensureChunked();
     ImmutableText newText = myText.insert(offset, ImmutableText.valueOf(s));
-    updateText(newText, offset, null, newText.subtext(offset, offset + s.length()), false, LocalTimeCounter.currentTime());
+    updateText(newText, offset, null, newText.subtext(offset, offset + s.length()), false, LocalTimeCounter.currentTime(), offset, 0);
     trimToSize();
   }
 
@@ -467,7 +500,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     myText = myText.ensureChunked();
-    updateText(myText.delete(startOffset, endOffset), startOffset, myText.subtext(startOffset, endOffset), null, false, LocalTimeCounter.currentTime());
+    updateText(myText.delete(startOffset, endOffset), startOffset, myText.subtext(startOffset, endOffset), null, false, LocalTimeCounter.currentTime(), startOffset, endOffset - startOffset);
   }
 
   @Override
@@ -512,8 +545,11 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       throw new ReadOnlyModificationException(this);
     }
 
+    int initialStartOffset = startOffset;
+    int initialOldLength = endOffset - startOffset;
+
     final int newStringLength = s.length();
-    final CharSequence chars = getCharsSequence();
+    final CharSequence chars = myText;
     int newStartInString = 0;
     int newEndInString = newStringLength;
     while (newStartInString < newStringLength &&
@@ -550,7 +586,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       newText = myText.delete(startOffset, endOffset).insert(startOffset, changedPart);
       changedPart = newText.subtext(startOffset, startOffset + changedPart.length());
     }
-    updateText(newText, startOffset, sToDelete, changedPart, wholeTextReplaced, newModificationStamp);
+    updateText(newText, startOffset, sToDelete, changedPart, wholeTextReplaced, newModificationStamp, initialStartOffset, initialOldLength);
     trimToSize();
   }
 
@@ -640,6 +676,11 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     myFrozen = null;
   }
 
+  public void clearLineModificationFlags(int startLine, int endLine) {
+    myLineSet = getLineSet().clearModificationFlags(startLine, endLine);
+    myFrozen = null;
+  }
+
   void clearLineModificationFlagsExcept(@NotNull int[] caretLines) {
     IntArrayList modifiedLines = new IntArrayList(caretLines.length);
     LineSet lineSet = getLineSet();
@@ -661,14 +702,16 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
                           @Nullable CharSequence oldString,
                           @Nullable CharSequence newString,
                           boolean wholeTextReplaced,
-                          long newModificationStamp) {
+                          long newModificationStamp,
+                          int initialStartOffset,
+                          int initialOldLength) {
     assertNotNestedModification();
     boolean enableRecursiveModifications = Registry.is("enable.recursive.document.changes"); // temporary property, to remove in IDEA 16
     myChangeInProgress = true;
     try {
-      final DocumentEvent event;
+      DocumentEvent event = new DocumentEventImpl(this, offset, oldString, newString, myModificationStamp, wholeTextReplaced, initialStartOffset, initialOldLength);
       try {
-        event = doBeforeChangedUpdate(offset, oldString, newString, wholeTextReplaced);
+        doBeforeChangedUpdate(event);
       }
       finally {
         if (enableRecursiveModifications) {
@@ -687,8 +730,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
-  @NotNull
-  private DocumentEvent doBeforeChangedUpdate(int offset, CharSequence oldString, CharSequence newString, boolean wholeTextReplaced) {
+  private void doBeforeChangedUpdate(DocumentEvent event) {
     Application app = ApplicationManager.getApplication();
     if (app != null) {
       FileDocumentManager manager = FileDocumentManager.getInstance();
@@ -700,8 +742,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     assertInsideCommand();
 
     getLineSet(); // initialize line set to track changed lines
-
-    DocumentEvent event = new DocumentEventImpl(this, offset, oldString, newString, myModificationStamp, wholeTextReplaced);
 
     if (!ShutDownTracker.isShutdownHookRunning()) {
       DocumentListener[] listeners = getCachedListeners();
@@ -716,7 +756,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     myEventsHandling = true;
-    return event;
   }
 
   private void assertInsideCommand() {
@@ -744,6 +783,14 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         for (DocumentListener listener : listeners) {
           try {
             listener.documentChanged(event);
+          }
+          catch (ProcessCanceledException e) {
+            if (!myAssertThreading) {
+              throw e;
+            }
+            else {
+              LOG.error("ProcessCanceledException must not be thrown from document listeners for real document", new Throwable(e));
+            }
           }
           catch (Throwable e) {
             LOG.error(e);
@@ -1022,7 +1069,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   @Override
   public boolean processRangeMarkersOverlappingWith(int start, int end, @NotNull Processor<RangeMarker> processor) {
     TextRangeInterval interval = new TextRangeInterval(start, end);
-    IntervalTreeImpl.PeekableIterator<RangeMarkerEx> iterator = IntervalTreeImpl
+    MarkupIterator<RangeMarkerEx> iterator = IntervalTreeImpl
             .mergingOverlappingIterator(myRangeMarkers, interval, myPersistentRangeMarkers, interval, RangeMarker.BY_START_OFFSET);
     try {
       return ContainerUtil.process(iterator, processor);

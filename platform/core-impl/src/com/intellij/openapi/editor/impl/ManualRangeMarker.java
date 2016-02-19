@@ -16,103 +16,76 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ProperTextRange;
+import com.intellij.openapi.util.Segment;
+import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A range marker that has to be manually updated with {@link #getUpdatedRange(DocumentEvent)} and {@link #applyState(ManualRangeMarker)}.
+ * A range marker that has to be manually updated with {@link #getUpdatedRange(DocumentEvent, FrozenDocument)}.
  * Can hold PSI-based range and be updated when the document is committed.
  */
-public class ManualRangeMarker {
-  private static int ourCount = 0;
-
-  private ProperTextRange myRange;
-  private boolean myValid = true;
+public class ManualRangeMarker implements Segment {
+  private final int myStart;
+  private final int myEnd;
   private final boolean myGreedyLeft;
   private final boolean myGreedyRight;
-  @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod") private final int myHash = ourCount++;
-  private PersistentRangeMarker.LinesCols myLinesCols;
+  private final boolean mySurviveOnExternalChange;
+  private final PersistentRangeMarker.LinesCols myLinesCols;
 
-  public ManualRangeMarker(@NotNull FrozenDocument document, @NotNull ProperTextRange range, boolean greedyLeft, boolean greedyRight, boolean surviveOnExternalChange) {
-    this(range, greedyLeft, greedyRight, surviveOnExternalChange ? PersistentRangeMarker.storeLinesAndCols(range, document) : null);
-  }
-
-  private ManualRangeMarker(ProperTextRange range,
+  public ManualRangeMarker(int start, int end,
                            boolean greedyLeft,
                            boolean greedyRight,
-                           PersistentRangeMarker.LinesCols linesCols) {
-    myRange = range;
+                           boolean surviveOnExternalChange,
+                           @Nullable PersistentRangeMarker.LinesCols linesCols) {
+    myStart = start;
+    myEnd = end;
     myGreedyLeft = greedyLeft;
     myGreedyRight = greedyRight;
+    mySurviveOnExternalChange = surviveOnExternalChange;
     myLinesCols = linesCols;
   }
 
   @Nullable
-  public ManualRangeMarker getUpdatedRange(@NotNull DocumentEvent event) {
-    Pair<ProperTextRange, PersistentRangeMarker.LinesCols> pair = getUpdatedState(event);
-    return pair == null ? null : new ManualRangeMarker(pair.first, myGreedyLeft, myGreedyRight, pair.second);
-  }
-
-  @Nullable
-  private Pair<ProperTextRange, PersistentRangeMarker.LinesCols> getUpdatedState(@NotNull DocumentEvent event) {
+  public ManualRangeMarker getUpdatedRange(@NotNull DocumentEvent event, @NotNull FrozenDocument documentBefore) {
     if (event instanceof RetargetRangeMarkers) {
       int start = ((RetargetRangeMarkers)event).getStartOffset();
-      if (myRange.getStartOffset() >= start && myRange.getEndOffset() <= ((RetargetRangeMarkers)event).getEndOffset()) {
-        ProperTextRange range = myRange.shiftRight(((RetargetRangeMarkers)event).getMoveDestinationOffset() - start);
-        return Pair.create(range, myLinesCols == null ? null : PersistentRangeMarker.storeLinesAndCols(range, event.getDocument()));
+      if (myStart >= start && myEnd <= ((RetargetRangeMarkers)event).getEndOffset()) {
+        int delta = ((RetargetRangeMarkers)event).getMoveDestinationOffset() - start;
+        return new ManualRangeMarker(myStart + delta, myEnd + delta, myGreedyLeft, myGreedyRight, mySurviveOnExternalChange, null);
       }
     }
 
-    if (myLinesCols != null) {
-      return PersistentRangeMarker
-        .applyChange(event, myRange, myRange.getStartOffset(), myRange.getEndOffset(), myGreedyLeft, myGreedyRight, myLinesCols);
+    if (mySurviveOnExternalChange && PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, myStart, myEnd)) {
+      PersistentRangeMarker.LinesCols linesCols = myLinesCols != null ? myLinesCols
+                                                                      : PersistentRangeMarker.storeLinesAndCols(documentBefore, myStart, myEnd);
+      Pair<TextRange, PersistentRangeMarker.LinesCols> pair =
+              linesCols == null ? null : PersistentRangeMarker.translateViaDiff((DocumentEventImpl)event, linesCols);
+      if (pair != null) {
+        return new ManualRangeMarker(pair.first.getStartOffset(), pair.first.getEndOffset(), myGreedyLeft, myGreedyRight, true, pair.second);
+      }
     }
 
-    ProperTextRange range = RangeMarkerImpl.applyChange(event, myRange.getStartOffset(), myRange.getEndOffset(), myGreedyLeft, myGreedyRight);
-    return range == null ? null : new Pair<ProperTextRange, PersistentRangeMarker.LinesCols>(range, null);
+    TextRange range = RangeMarkerImpl.applyChange(event, myStart, myEnd, myGreedyLeft, myGreedyRight);
+    return range == null ? null : new ManualRangeMarker(range.getStartOffset(), range.getEndOffset(), myGreedyLeft, myGreedyRight, mySurviveOnExternalChange, null);
   }
 
-  public void applyState(@Nullable ManualRangeMarker updated) {
-    if (updated == null || !updated.myValid) {
-      myValid = false;
-    }
-    if (!myValid) return;
-
-    myRange = updated.myRange;
-    myLinesCols = updated.myLinesCols;
+  @Override
+  public int getStartOffset() {
+    return myStart;
   }
 
-  public boolean isGreedyLeft() {
-    return myGreedyLeft;
-  }
-
-  public boolean isGreedyRight() {
-    return myGreedyRight;
-  }
-
-  public boolean isSurviveOnExternalChange() {
-    return myLinesCols != null;
-  }
-
-  @Nullable
-  public ProperTextRange getRange() {
-    return myValid ? myRange : null;
-  }
-
-  public boolean isValid() {
-    return myValid;
+  @Override
+  public int getEndOffset() {
+    return myEnd;
   }
 
   @Override
   public String toString() {
-    return "ManualRangeMarker" + (myValid ? myRange.toString() : " invalid");
+    return "ManualRangeMarker" + TextRange.create(this);
   }
 
-  @Override
-  public int hashCode() {
-    return myHash;
-  }
 }

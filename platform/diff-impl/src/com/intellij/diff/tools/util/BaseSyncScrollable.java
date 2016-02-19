@@ -17,6 +17,7 @@ package com.intellij.diff.tools.util;
 
 import com.intellij.diff.util.Side;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScrollable {
   /*
@@ -29,6 +30,7 @@ public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScroll
    */
   protected abstract void processHelper(@NotNull ScrollHelper helper);
 
+  @RequiredDispatchThread
   public int transfer(@NotNull Side baseSide, int line) {
     ScrollHelper helper = new ScrollHelper(baseSide, line);
     processHelper(helper);

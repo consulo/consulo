@@ -20,12 +20,13 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.editorActions.CopyPastePostProcessor;
 import com.intellij.codeInsight.editorActions.CopyPastePreProcessor;
 import com.intellij.ide.highlighter.HighlighterFactory;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.FontPreferences;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.ex.DisposableIterator;
+import com.intellij.openapi.editor.ex.MarkupIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
@@ -45,10 +46,11 @@ import com.intellij.openapi.editor.richcopy.view.RtfTransferableData;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
-import com.intellij.util.ObjectUtil;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -71,16 +73,11 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
   @NotNull
   @Override
   public List<RawTextWithMarkup> collectTransferableData(PsiFile file, Editor editor, int[] startOffsets, int[] endOffsets) {
-    if (!Registry.is("editor.richcopy.enable")) {
+    if (!RichCopySettings.getInstance().isEnabled()) {
       return Collections.emptyList();
     }
 
     try {
-      SelectionModel selectionModel = editor.getSelectionModel();
-      if (selectionModel.hasBlockSelection()) {
-        return Collections.emptyList(); // unsupported legacy mode
-      }
-
       RichCopySettings settings = RichCopySettings.getInstance();
       List<Caret> carets = editor.getCaretModel().getAllCarets();
       Caret firstCaret = carets.get(0);
@@ -98,7 +95,8 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       logInitial(editor, startOffsets, endOffsets, indentSymbolsToStrip, firstLineStartOffset);
       CharSequence text = editor.getDocument().getCharsSequence();
       EditorColorsScheme schemeToUse = settings.getColorsScheme(editor.getColorsScheme());
-      EditorHighlighter highlighter = HighlighterFactory.createHighlighter(file.getVirtualFile(), schemeToUse, file.getProject());
+      EditorHighlighter highlighter = HighlighterFactory.createHighlighter(file.getViewProvider().getVirtualFile(),
+                                                                           schemeToUse, file.getProject());
       highlighter.setText(text);
       MarkupModel markupModel = DocumentMarkupModel.forDocument(editor.getDocument(), file.getProject(), false);
       Context context = new Context(text, schemeToUse, indentSymbolsToStrip);
@@ -128,11 +126,11 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
         if (endOffset <= startOffsetToUse) {
           continue;
         }
-        MarkupIterator markupIterator = new MarkupIterator(text,
-                                                           new CompositeRangeIterator(schemeToUse,
-                                                                                      new HighlighterRangeIterator(highlighter, startOffsetToUse, endOffset),
-                                                                                      new MarkupModelRangeIterator(markupModel, schemeToUse, startOffsetToUse, endOffset)),
-                                                           schemeToUse);
+        MyMarkupIterator markupIterator = new MyMarkupIterator(text,
+                                                               new CompositeRangeIterator(schemeToUse,
+                                                                                          new HighlighterRangeIterator(highlighter, startOffsetToUse, endOffset),
+                                                                                          new MarkupModelRangeIterator(markupModel, schemeToUse, startOffsetToUse, endOffset)),
+                                                               schemeToUse);
         try {
           context.iterate(markupIterator, endOffset);
         }
@@ -144,7 +142,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       logSyntaxInfo(syntaxInfo);
 
       createResult(syntaxInfo, editor);
-      return ObjectUtil.notNull(myResult, Collections.<RawTextWithMarkup>emptyList());
+      return ObjectUtils.notNull(myResult, Collections.<RawTextWithMarkup>emptyList());
     }
     catch (Exception e) {
       // catching the exception so that the rest of copy/paste functionality can still work fine
@@ -276,7 +274,17 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       myText = charSequence;
       myDefaultForeground = scheme.getDefaultForeground();
       myDefaultBackground = scheme.getDefaultBackground();
-      builder = new SyntaxInfo.Builder(myDefaultForeground, myDefaultBackground, scheme.getEditorFontSize());
+
+      // Java assumes screen resolution of 72dpi when calculating font size in pixels. External applications are supposedly using correct
+      // resolution, so we need to adjust font size for copied text to look the same in them.
+      // (See https://docs.oracle.com/javase/7/docs/webnotes/tsg/TSG-Desktop/html/java2d.html#gdlwn)
+      // Java on Mac is not affected by this issue.
+      int javaFontSize = scheme.getEditorFontSize();
+      float fontSize = SystemInfo.isMac || ApplicationManager.getApplication().isHeadlessEnvironment() ?
+                       javaFontSize :
+                       javaFontSize * 72f / Toolkit.getDefaultToolkit().getScreenResolution();
+
+      builder = new SyntaxInfo.Builder(myDefaultForeground, myDefaultBackground, fontSize);
       myIndentSymbolsToStrip = indentSymbolsToStrip;
     }
 
@@ -286,7 +294,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       myIndentSymbolsToStripAtCurrentLine = 0;
     }
 
-    public void iterate(MarkupIterator iterator, int endOffset) {
+    public void iterate(MyMarkupIterator iterator, int endOffset) {
       while (!iterator.atEnd()) {
         iterator.advance();
         int startOffset = iterator.getStartOffset();
@@ -410,14 +418,14 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     }
   }
 
-  private static class MarkupIterator {
+  private static class MyMarkupIterator {
     private final SegmentIterator mySegmentIterator;
     private final RangeIterator myRangeIterator;
     private int myCurrentFontStyle;
     private Color myCurrentForegroundColor;
     private Color myCurrentBackgroundColor;
 
-    private MarkupIterator(@NotNull CharSequence charSequence, @NotNull RangeIterator rangeIterator, @NotNull EditorColorsScheme colorsScheme) {
+    private MyMarkupIterator(@NotNull CharSequence charSequence, @NotNull RangeIterator rangeIterator, @NotNull EditorColorsScheme colorsScheme) {
       myRangeIterator = rangeIterator;
       mySegmentIterator = new SegmentIterator(charSequence, colorsScheme.getFontPreferences());
     }
@@ -630,7 +638,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     private final EditorColorsScheme myColorsScheme;
     private final Color myDefaultForeground;
     private final Color myDefaultBackground;
-    private final DisposableIterator<RangeHighlighterEx> myIterator;
+    private final MarkupIterator<RangeHighlighterEx> myIterator;
 
     private int myCurrentStart;
     private int myCurrentEnd;
@@ -654,7 +662,17 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
         return;
       }
       myIterator = ((MarkupModelEx)markupModel).overlappingIterator(startOffset, endOffset);
-      findNextSuitableRange();
+      try {
+        findNextSuitableRange();
+      }
+      catch (RuntimeException e) {
+        myIterator.dispose();
+        throw e;
+      }
+      catch (Error e) {
+        myIterator.dispose();
+        throw e;
+      }
     }
 
     @Override

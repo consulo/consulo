@@ -95,7 +95,6 @@ public class EditorOptionsPanel {
   private JBLabel myQuickDocDelayLabel;
   private JTextField myQuickDocDelayTextField;
   private JComboBox myRichCopyColorSchemeComboBox;
-  private JCheckBox myRichCopyStripWhitespaceCheckBox;
 
   private static final String ACTIVE_COLOR_SCHEME = ApplicationBundle.message("combobox.richcopy.color.scheme.active");
 
@@ -220,8 +219,6 @@ public class EditorOptionsPanel {
     if (!StringUtil.isEmpty(toSelect)) {
       myRichCopyColorSchemeComboBox.setSelectedItem(toSelect);
     }
-
-    myRichCopyStripWhitespaceCheckBox.setSelected(settings.isStripIndents());
   }
 
   public void apply() throws ConfigurationException {
@@ -329,8 +326,6 @@ public class EditorOptionsPanel {
     if (item instanceof String) {
       settings.setSchemeName(item.toString());
     }
-    settings.setStripIndents(myRichCopyStripWhitespaceCheckBox.isSelected());
-
     restartDaemons();
   }
 
@@ -453,7 +448,6 @@ public class EditorOptionsPanel {
 
     RichCopySettings settings = RichCopySettings.getInstance();
     isModified |= !Comparing.equal(settings.getSchemeName(), myRichCopyColorSchemeComboBox.getSelectedItem());
-    isModified |= isModified(myRichCopyStripWhitespaceCheckBox, settings.isStripIndents());
 
     return isModified;
   }

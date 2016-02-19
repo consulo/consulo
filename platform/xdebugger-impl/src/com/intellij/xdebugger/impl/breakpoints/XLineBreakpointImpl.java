@@ -90,11 +90,14 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     TextAttributes attributes = scheme.getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
 
     RangeHighlighter highlighter = myHighlighter;
-    if (highlighter != null && (!highlighter.isValid() ||
-                                highlighter.getStartOffset() >= document.getTextLength() ||
-                                document.getLineNumber(highlighter.getStartOffset()) != getLine())) {
-      highlighter.dispose();
-      myHighlighter = null;
+    if (highlighter != null &&
+        (!highlighter.isValid()
+         || !DocumentUtil.isValidOffset(highlighter.getStartOffset(), document)
+         || !Comparing.equal(highlighter.getTextAttributes(), attributes)
+         // it seems that this check is not needed - we always update line number from the highlighter
+         // and highlighter is removed on line and file change anyway
+         /*|| document.getLineNumber(highlighter.getStartOffset()) != getLine()*/)) {
+      removeHighlighter();
       highlighter = null;
     }
 
@@ -126,14 +129,13 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
       markupModel = null;
     }
 
-
     updateIcon();
 
     if (markupModel == null) {
       markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, getProject(), false);
       if (markupModel != null) {
-        // renderersChanged false — we don't change gutter size
-        markupModel.fireAttributesChanged((RangeHighlighterEx)highlighter, false);
+        // renderersChanged false - we don't change gutter size
+        markupModel.fireAttributesChanged((RangeHighlighterEx)highlighter, false, false);
       }
     }
   }

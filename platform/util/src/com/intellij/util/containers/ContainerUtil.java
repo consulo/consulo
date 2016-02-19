@@ -1905,22 +1905,22 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure=true)
-  public static <T> boolean exists(@NotNull T[] iterable, @NotNull Condition<T> condition) {
+  public static <T> boolean exists(@NotNull T[] iterable, @NotNull Condition<? super T> condition) {
     return or(Arrays.asList(iterable), condition);
   }
 
   @Contract(pure=true)
-  public static <T> boolean exists(@NotNull Iterable<T> iterable, @NotNull Condition<T> condition) {
+  public static <T> boolean exists(@NotNull Iterable<T> iterable, @NotNull Condition<? super T> condition) {
     return or(iterable, condition);
   }
 
   @Contract(pure=true)
-  public static <T> boolean or(@NotNull T[] iterable, @NotNull Condition<T> condition) {
+  public static <T> boolean or(@NotNull T[] iterable, @NotNull Condition<? super T> condition) {
     return or(Arrays.asList(iterable), condition);
   }
 
   @Contract(pure=true)
-  public static <T> boolean or(@NotNull Iterable<T> iterable, @NotNull Condition<T> condition) {
+  public static <T> boolean or(@NotNull Iterable<T> iterable, @NotNull Condition<? super T> condition) {
     for (final T t : iterable) {
       if (condition.value(t)) return true;
     }
@@ -2377,8 +2377,15 @@ public class ContainerUtil extends ContainerUtilRt {
   @NotNull
   @Contract(pure=true)
   public static <K,V> ConcurrentMap<K,V> createConcurrentWeakKeyWeakValueMap() {
+    return createConcurrentWeakKeyWeakValueMap(ContainerUtil.<K>canonicalStrategy());
+  }
+
+  @NotNull
+  @Contract(pure=true)
+  public static <K,V> ConcurrentMap<K,V> createConcurrentWeakKeyWeakValueMap(@NotNull TObjectHashingStrategy<K> strategy) {
     //noinspection deprecation
-    return new ConcurrentWeakKeyWeakValueHashMap<K, V>(100, 0.75f, Runtime.getRuntime().availableProcessors(), ContainerUtil.<K>canonicalStrategy());
+    return new ConcurrentWeakKeyWeakValueHashMap<K, V>(100, 0.75f, Runtime.getRuntime().availableProcessors(),
+                                                       strategy);
   }
 
   @NotNull

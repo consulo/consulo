@@ -13,15 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui;
+package com.intellij.util.containers;
 
-// Use AntialiasingType instead
-@Deprecated
-public enum LCDRenderingScope {
-  @Deprecated
-  IDE,
-  @Deprecated
-  EXCLUDING_EDITOR,
-  @Deprecated
-  OFF
+import java.util.Iterator;
+
+public interface PeekableIterator<T> extends Iterator<T> {
+  T peek();
+
+  PeekableIterator EMPTY = new PeekableIterator() {
+    @Override
+    public Object peek() {
+      return null;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return false;
+    }
+
+    @Override
+    public Object next() {
+      return null;
+    }
+
+    @Override
+    public void remove() {
+      throw new UnsupportedOperationException("remove");
+    }
+  };
 }

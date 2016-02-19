@@ -25,7 +25,7 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class SmartPointerElementInfo {
+abstract class SmartPointerElementInfo {
   @Nullable
   public Document getDocumentToSynchronize() {
     return null;
@@ -51,4 +51,7 @@ public abstract class SmartPointerElementInfo {
 
   public void cleanup() {
   }
+
+  @Nullable
+  public abstract Segment getPsiRange();
 }

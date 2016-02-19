@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -186,7 +186,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
   }
 
   private class MappingSegments extends SegmentArrayWithData {
-    MappedRange[] myRanges = new MappedRange[INITIAL_SIZE];
+    private MappedRange[] myRanges = new MappedRange[INITIAL_SIZE];
 
     @Override
     public void removeAll() {
@@ -483,7 +483,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
   private class LayeredHighlighterIteratorImpl implements LayeredHighlighterIterator {
     private final HighlighterIterator myBaseIterator;
     private HighlighterIterator myLayerIterator;
-    private int myLayerStartOffset = 0;
+    private int myLayerStartOffset;
     private Mapper myCurrentMapper;
 
     private LayeredHighlighterIteratorImpl(int offset) {
@@ -528,7 +528,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         return myCurrentMapper.mySyntaxHighlighter;
       }
 
-      return LayeredLexerEditorHighlighter.this.getSyntaxHighlighter();
+      return getSyntaxHighlighter();
     }
 
     @Override
@@ -584,9 +584,9 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     }
   }
 
-  @SuppressWarnings({"unchecked"})
+  @SuppressWarnings("unchecked")
   @NotNull
-  protected static <T> T[] reallocateArray(@NotNull T[] array, int index) {
+  private static <T> T[] reallocateArray(@NotNull T[] array, int index) {
     if (index < array.length) return array;
 
     T[] newArray = (T[])Array.newInstance(array.getClass().getComponentType(), SegmentArray.calcCapacity(array.length, index));
@@ -595,4 +595,8 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     return newArray;
   }
 
+  @Override
+  public String toString() {
+    return myText.toString();
+  }
 }

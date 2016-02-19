@@ -56,6 +56,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   @NotNull private final FontPreferences           myFontPreferences        = new FontPreferences();
   @NotNull private final FontPreferences           myConsoleFontPreferences = new FontPreferences();
 
+  private final ValueElementReader myValueReader = new TextAttributesReader();
   private String myFallbackFontName;
   private String mySchemeName;
 
@@ -86,6 +87,8 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   @NonNls private static final String CONSOLE_LINE_SPACING           = "CONSOLE_LINE_SPACING";
   @NonNls private static final String EDITOR_FONT_SIZE               = "EDITOR_FONT_SIZE";
   @NonNls private static final String CONSOLE_FONT_SIZE              = "CONSOLE_FONT_SIZE";
+  @NonNls private static final String EDITOR_LIGATURES               = "EDITOR_LIGATURES";
+  @NonNls private static final String CONSOLE_LIGATURES              = "CONSOLE_LIGATURES";
   @NonNls private static final String EDITOR_QUICK_JAVADOC_FONT_SIZE = "EDITOR_QUICK_DOC_FONT_SIZE";
 
   protected AbstractColorsScheme(EditorColorsScheme parentScheme) {
@@ -395,27 +398,41 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
 
   private void readSettings(Element childNode) {
     String name = childNode.getAttributeValue(NAME_ATTR);
-    String value = getValue(childNode);
     if (LINE_SPACING.equals(name)) {
-      myLineSpacing = Float.parseFloat(value);
+      Float value = myValueReader.read(Float.class, childNode);
+      if (value != null) myLineSpacing = value;
     }
     else if (EDITOR_FONT_SIZE.equals(name)) {
-      setEditorFontSize(Integer.parseInt(value));
+      Integer value = myValueReader.read(Integer.class, childNode);
+      if (value  != null) setEditorFontSize(value);
     }
     else if (EDITOR_FONT_NAME.equals(name)) {
-      setEditorFontName(value);
+      String value = myValueReader.read(String.class, childNode);
+      if (value != null) setEditorFontName(value);
     }
     else if (CONSOLE_LINE_SPACING.equals(name)) {
-      setConsoleLineSpacing(Float.parseFloat(value));
+      Float value = myValueReader.read(Float.class, childNode);
+      if (value != null) setConsoleLineSpacing(value);
     }
     else if (CONSOLE_FONT_SIZE.equals(name)) {
-      setConsoleFontSize(Integer.parseInt(value));
+      Integer value = myValueReader.read(Integer.class, childNode);
+      if (value != null) setConsoleFontSize(value);
     }
     else if (CONSOLE_FONT_NAME.equals(name)) {
-      setConsoleFontName(value);
+      String value = myValueReader.read(String.class, childNode);
+      if (value != null) setConsoleFontName(value);
     }
     else if (EDITOR_QUICK_JAVADOC_FONT_SIZE.equals(name)) {
-      myQuickDocFontSize = FontSize.valueOf(value);
+      FontSize value = myValueReader.read(FontSize.class, childNode);
+      if (value != null) myQuickDocFontSize = value;
+    }
+    else if (EDITOR_LIGATURES.equals(name)) {
+      Boolean value = myValueReader.read(Boolean.class, childNode);
+      if (value != null) myFontPreferences.setUseLigatures(value);
+    }
+    else if (CONSOLE_LIGATURES.equals(name)) {
+      Boolean value = myValueReader.read(Boolean.class, childNode);
+      if (value != null) myConsoleFontPreferences.setUseLigatures(value);
     }
   }
 
@@ -477,6 +494,8 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
       writeFontPreferences(EDITOR_FONT, parentNode, myFontPreferences);
     }
 
+    writeLigaturesPreferences(parentNode, myFontPreferences, EDITOR_LIGATURES);
+
     if (!myFontPreferences.equals(myConsoleFontPreferences)) {
       if (myConsoleFontPreferences.getEffectiveFontFamilies().size() <= 1) {
         element = new Element(OPTION_ELEMENT);
@@ -494,6 +513,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
       else {
         writeFontPreferences(CONSOLE_FONT, parentNode, myConsoleFontPreferences);
       }
+      writeLigaturesPreferences(parentNode, myConsoleFontPreferences, CONSOLE_LIGATURES);
     }
 
     if (getConsoleLineSpacing() != getLineSpacing()) {
@@ -530,6 +550,16 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
       parentNode.addContent(attrElements);
     }
   }
+
+  private static void writeLigaturesPreferences(Element parentNode, FontPreferences preferences, String optionName) {
+    if (preferences.useLigatures()) {
+      Element element = new Element(OPTION_ELEMENT);
+      element.setAttribute(NAME_ATTR, optionName);
+      element.setAttribute(VALUE_ELEMENT, String.valueOf(true));
+      parentNode.addContent(element);
+    }
+  }
+
 
   private static void writeFontPreferences(@NotNull String key, @NotNull Element parent, @NotNull FontPreferences preferences) {
     for (String fontFamily : preferences.getRealFontFamilies()) {

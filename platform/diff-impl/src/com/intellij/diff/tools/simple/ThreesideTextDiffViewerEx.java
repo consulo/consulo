@@ -327,6 +327,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
       mySide = side;
     }
 
+    @RequiredDispatchThread
     @Override
     public boolean isSyncScrollEnabled() {
       return getTextSettings().isEnableSyncScroll();

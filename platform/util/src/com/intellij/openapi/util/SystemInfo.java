@@ -48,6 +48,7 @@ public class SystemInfo extends SystemInfoRt {
 
   public static final boolean isAppleJvm = isAppleJvm();
   public static final boolean isOracleJvm = isOracleJvm();
+  public static final boolean isJetbrainsJvm = isJetbrainsJvm();
   public static final boolean isSunJvm = isSunJvm();
 
   public static boolean isOsVersionAtLeast(@NotNull String version) {
@@ -84,16 +85,19 @@ public class SystemInfo extends SystemInfoRt {
           }
           return info;
         }
-        catch (IOException ignored) { }
+        catch (IOException ignored) {
+        }
       }
 
       return Collections.emptyMap();
     }
   };
+
   @Nullable
   public static String getUnixReleaseName() {
     return ourOsReleaseInfo.getValue().get("NAME");
   }
+
   @Nullable
   public static String getUnixReleaseVersion() {
     return ourOsReleaseInfo.getValue().get("VERSION");
@@ -116,6 +120,7 @@ public class SystemInfo extends SystemInfoRt {
       return isUnix && new File("/usr/bin/xdg-open").canExecute();
     }
   };
+
   public static boolean hasXdgOpen() {
     return ourHasXdgOpen.getValue();
   }
@@ -127,6 +132,7 @@ public class SystemInfo extends SystemInfoRt {
       return isUnix && new File("/usr/bin/xdg-mime").canExecute();
     }
   };
+
   public static boolean hasXdgMime() {
     return ourHasXdgOpen.getValue();
   }
@@ -221,5 +227,10 @@ public class SystemInfo extends SystemInfoRt {
   private static boolean isAppleJvm() {
     final String vendor = SystemProperties.getJavaVmVendor();
     return vendor != null && StringUtil.containsIgnoreCase(vendor, "Apple");
+  }
+
+  private static boolean isJetbrainsJvm() {
+    final String vendor = SystemProperties.getJavaVendor();
+    return vendor != null && StringUtil.containsIgnoreCase(vendor, "jetbrains");
   }
 }

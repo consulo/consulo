@@ -18,6 +18,7 @@ package com.intellij.diff.contents;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.util.UserDataHolder;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 
@@ -26,7 +27,7 @@ import org.mustbe.consulo.RequiredDispatchThread;
  *
  * @see DiffRequest
  */
-public interface DiffContent {
+public interface DiffContent extends UserDataHolder {
   @Nullable
   FileType getContentType();
 
@@ -36,8 +37,8 @@ public interface DiffContent {
   @Nullable
   OpenFileDescriptor getOpenFileDescriptor();
 
-  /*
-   * @See DiffRequest.onAssigned()
+  /**
+   * @see DiffRequest#onAssigned(boolean)
    */
   @RequiredDispatchThread
   void onAssigned(boolean isAssigned);

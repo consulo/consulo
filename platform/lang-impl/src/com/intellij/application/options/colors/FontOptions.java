@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,37 +17,45 @@
 package com.intellij.application.options.colors;
 
 import com.intellij.application.options.OptionsConstants;
+import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.ui.AntialiasingType;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.FontPreferences;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.FontComboBox;
+import com.intellij.ui.FontInfoRenderer;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.labels.LinkLabel;
+import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class FontOptions extends JPanel implements OptionsPanel{
-
-  private static List<String> myFontNames;
-  private static List<String> myMonospacedFontNames;
+  private static final FontInfoRenderer RENDERER = new FontInfoRenderer() {
+    @Override
+    protected AntialiasingType getAntialiasingType() {
+      return UISettings.getShadowInstance().EDITOR_AA_TYPE;
+    }
+  };
+  private static final String HELP_URL = "https://confluence.jetbrains.com/display/IDEADEV/Support+for+Ligatures+in+Editor";
 
   private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
 
@@ -55,9 +63,11 @@ public class FontOptions extends JPanel implements OptionsPanel{
 
   @NotNull private final JTextField myEditorFontSizeField = new JTextField(4);
   @NotNull private final JTextField myLineSpacingField    = new JTextField(4);
-  private final FontNameCombo myPrimaryCombo = new FontNameCombo(null);
+  private final FontComboBox myPrimaryCombo = new FontComboBox();
   private final JCheckBox myUseSecondaryFontCheckbox = new JCheckBox(ApplicationBundle.message("secondary.font"));
-  private final FontNameCombo mySecondaryCombo = new FontNameCombo(null);
+  private final JCheckBox myEnableLigaturesCheckbox = new JCheckBox(ApplicationBundle.message("use.ligatures"));
+  private final JLabel myLigaturesInfoLinkLabel;
+  private final FontComboBox mySecondaryCombo = new FontComboBox();
 
   @NotNull private final JBCheckBox myOnlyMonospacedCheckBox =
           new JBCheckBox(ApplicationBundle.message("checkbox.show.only.monospaced.fonts"));
@@ -91,6 +101,18 @@ public class FontOptions extends JPanel implements OptionsPanel{
                    SwingConstants.LEFT), "newline, sx 5");
     add(myUseSecondaryFontCheckbox, "newline, ax right");
     add(mySecondaryCombo, "sgx b");
+    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    myEnableLigaturesCheckbox.setBorder(null);
+    panel.add(myEnableLigaturesCheckbox);
+    myLigaturesInfoLinkLabel = new LinkLabel<String>(ApplicationBundle.message("ligatures.more.info"), null, new LinkListener<String>() {
+      @Override
+      public void linkSelected(LinkLabel aSource, String aLinkData) {
+        BrowserUtil.browse(HELP_URL);
+      }
+    });
+    myLigaturesInfoLinkLabel.setBorder(JBUI.Borders.emptyLeft(5));
+    panel.add(myLigaturesInfoLinkLabel);
+    add(panel, "newline, sx 2");
 
     myOnlyMonospacedCheckBox.setBorder(null);
     myUseSecondaryFontCheckbox.setBorder(null);
@@ -101,22 +123,28 @@ public class FontOptions extends JPanel implements OptionsPanel{
       @Override
       public void actionPerformed(ActionEvent e) {
         EditorColorsManager.getInstance().setUseOnlyMonospacedFonts(myOnlyMonospacedCheckBox.isSelected());
-        myPrimaryCombo.updateModel();
-        mySecondaryCombo.updateModel();
+        myPrimaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
+        mySecondaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
       }
     });
+    myPrimaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
+    myPrimaryCombo.setRenderer(RENDERER);
+
+    mySecondaryCombo.setMonospacedOnly(myOnlyMonospacedCheckBox.isSelected());
+    mySecondaryCombo.setRenderer(RENDERER);
+
     myUseSecondaryFontCheckbox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         mySecondaryCombo.setEnabled(myUseSecondaryFontCheckbox.isSelected());
-        syncFontFamilies();
+        FontOptions.this.syncFontFamilies();
       }
     });
     ItemListener itemListener = new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
-          syncFontFamilies();
+          FontOptions.this.syncFontFamilies();
         }
       }
     };
@@ -126,7 +154,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
     ActionListener actionListener = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        syncFontFamilies();
+        FontOptions.this.syncFontFamilies();
       }
     };
     myPrimaryCombo.addActionListener(actionListener);
@@ -136,10 +164,10 @@ public class FontOptions extends JPanel implements OptionsPanel{
       @Override
       public void textChanged(DocumentEvent event) {
         if (myIsInSchemeChange || !SwingUtilities.isEventDispatchThread()) return;
-        Object selectedFont = myPrimaryCombo.getSelectedItem();
-        if (selectedFont instanceof String) {
+        String selectedFont = myPrimaryCombo.getFontName();
+        if (selectedFont != null) {
           FontPreferences fontPreferences = getFontPreferences();
-          fontPreferences.register((String)selectedFont, getFontSizeFromField());
+          fontPreferences.register(selectedFont, getFontSizeFromField());
         }
         updateDescription(true);
       }
@@ -186,11 +214,18 @@ public class FontOptions extends JPanel implements OptionsPanel{
         }
       }
     });
+    myEnableLigaturesCheckbox.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        FontOptions.this.getFontPreferences().setUseLigatures(myEnableLigaturesCheckbox.isSelected());
+      }
+    });
   }
 
   private int getFontSizeFromField() {
     try {
-      return Math.min(OptionsConstants.MAX_EDITOR_FONT_SIZE, Math.max(OptionsConstants.MIN_EDITOR_FONT_SIZE, Integer.parseInt(myEditorFontSizeField.getText())));
+      return Math.min(OptionsConstants.MAX_EDITOR_FONT_SIZE,
+                      Math.max(OptionsConstants.MIN_EDITOR_FONT_SIZE, Integer.parseInt(myEditorFontSizeField.getText())));
     }
     catch (NumberFormatException e) {
       return OptionsConstants.DEFAULT_EDITOR_FONT_SIZE;
@@ -211,20 +246,20 @@ public class FontOptions extends JPanel implements OptionsPanel{
     }
     FontPreferences fontPreferences = getFontPreferences();
     fontPreferences.clearFonts();
-    String primaryFontFamily = (String)myPrimaryCombo.getSelectedItem();
-    String secondaryFontFamily = mySecondaryCombo.isEnabled() ? (String)mySecondaryCombo.getSelectedItem() : null;
+    String primaryFontFamily = myPrimaryCombo.getFontName();
+    String secondaryFontFamily = mySecondaryCombo.isEnabled() ? mySecondaryCombo.getFontName() : null;
     int fontSize = getFontSizeFromField();
     if (primaryFontFamily != null ) {
       if (!FontPreferences.DEFAULT_FONT_NAME.equals(primaryFontFamily)) {
         fontPreferences.addFontFamily(primaryFontFamily);
       }
-      fontPreferences.register(primaryFontFamily, fontSize);
+      fontPreferences.register(primaryFontFamily, JBUI.scale(fontSize));
     }
     if (secondaryFontFamily != null) {
       if (!FontPreferences.DEFAULT_FONT_NAME.equals(secondaryFontFamily)){
         fontPreferences.addFontFamily(secondaryFontFamily);
       }
-      fontPreferences.register(secondaryFontFamily, fontSize);
+      fontPreferences.register(secondaryFontFamily, JBUI.scale(fontSize));
     }
     updateDescription(true);
   }
@@ -256,10 +291,10 @@ public class FontOptions extends JPanel implements OptionsPanel{
     myLineSpacingField.setText(Float.toString(getLineSpacing()));
     FontPreferences fontPreferences = getFontPreferences();
     List<String> fontFamilies = fontPreferences.getEffectiveFontFamilies();
-    myPrimaryCombo.setSelectedItem(fontPreferences.getFontFamily());
+    myPrimaryCombo.setFontName(fontPreferences.getFontFamily());
     boolean isThereSecondaryFont = fontFamilies.size() > 1;
     myUseSecondaryFontCheckbox.setSelected(isThereSecondaryFont);
-    mySecondaryCombo.setSelectedItem(isThereSecondaryFont ? fontFamilies.get(1) : null);
+    mySecondaryCombo.setFontName(isThereSecondaryFont ? fontFamilies.get(1) : null);
     myEditorFontSizeField.setText(String.valueOf(fontPreferences.getSize(fontPreferences.getFontFamily())));
 
     boolean readOnly = ColorAndFontOptions.isReadOnly(myOptions.getSelectedScheme());
@@ -267,8 +302,12 @@ public class FontOptions extends JPanel implements OptionsPanel{
     mySecondaryCombo.setEnabled(isThereSecondaryFont && !readOnly);
     myOnlyMonospacedCheckBox.setEnabled(!readOnly);
     myLineSpacingField.setEnabled(!readOnly);
-    myEditorFontSizeField.setEditable(!readOnly);
+    myEditorFontSizeField.setEnabled(!readOnly);
     myUseSecondaryFontCheckbox.setEnabled(!readOnly);
+
+    myEnableLigaturesCheckbox.setEnabled(!readOnly);
+    myLigaturesInfoLinkLabel.setEnabled(!readOnly);
+    myEnableLigaturesCheckbox.setSelected(fontPreferences.useLigatures());
 
     myIsInSchemeChange = false;
   }
@@ -304,16 +343,6 @@ public class FontOptions extends JPanel implements OptionsPanel{
     return myOptions.getSelectedScheme();
   }
 
-  @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
-  private void initFontTables(FontNameCombo popupCallback) {
-    if (myFontNames == null) {
-      myFontNames = new ArrayList<String>();
-      myMonospacedFontNames = new ArrayList<String>();
-
-      ProgressManager.getInstance().runProcessWithProgressSynchronously(new InitFontsRunnable(popupCallback), ApplicationBundle.message("progress.analyzing.fonts"), false, null);
-    }
-  }
-
   public boolean updateDescription(boolean modified) {
     EditorColorsScheme scheme = myOptions.getSelectedScheme();
 
@@ -340,152 +369,5 @@ public class FontOptions extends JPanel implements OptionsPanel{
   @Override
   public Set<String> processListOptions() {
     return new HashSet<String>();
-  }
-
-  private class InitFontsRunnable implements Runnable {
-    private final FontNameCombo myPopupCallback;
-
-    private InitFontsRunnable(FontNameCombo popupCallback) {
-      myPopupCallback = popupCallback;
-    }
-
-    @Override
-    public void run() {
-      ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
-
-      GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      String[] fontNames = graphicsEnvironment.getAvailableFontFamilyNames();
-      for (final String fontName : fontNames) {
-        //noinspection HardCodedStringLiteral
-        if (fontName.endsWith(".bold") || fontName.endsWith(".italic")) {
-          continue;
-        }
-        try {
-          Font plainFont = new Font(fontName, Font.PLAIN, OptionsConstants.DEFAULT_EDITOR_FONT_SIZE);
-          if (plainFont.canDisplay('W')) {
-            Font boldFont = plainFont.deriveFont(Font.BOLD);
-            if (progress != null) {
-              progress.setText(ApplicationBundle.message("progress.analysing.font", fontName));
-            }
-            FontMetrics plainMetrics = getFontMetrics(plainFont);
-            FontMetrics boldMetrics = getFontMetrics(boldFont);
-            if (plainMetrics.getDescent() < 0 ||
-                boldMetrics.getDescent() < 0 ||
-                plainMetrics.getAscent() < 0 ||
-                boldMetrics.getAscent() < 0) {
-              continue;
-            }
-            int plainL = plainMetrics.charWidth('l');
-            int boldL = boldMetrics.charWidth('l');
-            int plainW = plainMetrics.charWidth('W');
-            int boldW = boldMetrics.charWidth('W');
-            int plainSpace = plainMetrics.charWidth(' ');
-            int boldSpace = boldMetrics.charWidth(' ');
-            if (plainL <= 0 || boldL <= 0 || plainW <= 0 || boldW <= 0 || plainSpace <= 0 || boldSpace <= 0) {
-              continue;
-            }
-            myFontNames.add(fontName);
-            if (plainL == plainW && plainL == boldL && plainW == boldW && plainSpace == boldSpace) {
-              myMonospacedFontNames.add(fontName);
-            }
-          }
-        }
-        catch (Throwable e) {
-          // JRE has problems working with the font. Just skip.
-        }
-      }
-
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          myPrimaryCombo.updateModel();
-          mySecondaryCombo.updateModel();
-          myPopupCallback.showPopup();
-        }
-      });
-    }
-  }
-
-  private class FontNameCombo extends JComboBox {
-    private final DefaultComboBoxModel myModel;
-    private Boolean myMonospacedOnly = null;
-
-    private FontNameCombo(String selectedName) {
-      setModel(myModel = new DefaultComboBoxModel());
-      updateModel();
-      setSelectedItem(selectedName);
-    }
-
-    private void updateModel() {
-      if (myFontNames == null || myMonospacedFontNames == null) return;
-
-      if (myMonospacedOnly == null || myMonospacedOnly.booleanValue() != EditorColorsManager.getInstance().isUseOnlyMonospacedFonts()) {
-        myMonospacedOnly = EditorColorsManager.getInstance().isUseOnlyMonospacedFonts();
-
-        Object tmp = getSelectedItem();
-        myModel.removeAllElements();
-        List toAdd = myMonospacedOnly ? myMonospacedFontNames : myFontNames;
-        for (Object o : toAdd) {
-          myModel.addElement(o);
-        }
-        if (myModel.getIndexOf(tmp) != -1) {
-          setSelectedItem(tmp);
-        } else {
-          setSelectedItem(FontPreferences.DEFAULT_FONT_NAME);
-        }
-
-        fireActionEvent();
-        revalidate();
-        repaint();
-      }
-    }
-
-    @Override
-    public void setSelectedItem(Object anObject) {
-      if (myModel.getSize() == 0 && anObject != null) {
-        myModel.addElement(anObject);
-      }
-      super.setSelectedItem(anObject);
-    }
-
-
-    @Nullable
-    private JList getPopupList() {
-      ComboPopup popup = ReflectionUtil.getField(getUI().getClass(), getUI(), ComboPopup.class, "popup");
-      return (popup != null) ? popup.getList() : null;
-    }
-
-    @Override
-    public void firePopupMenuWillBecomeVisible() {
-      super.firePopupMenuWillBecomeVisible();
-      if (myFontNames == null) {
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            initFontTables(FontNameCombo.this);
-          }
-        });
-      }
-      final JList list = getPopupList();
-      if (list != null && !(list.getCellRenderer() instanceof MyListCellRenderer)) {
-        list.setCellRenderer(new MyListCellRenderer());
-      }
-    }
-  }
-
-  private static class MyListCellRenderer extends DefaultListCellRenderer {
-    @Override
-    public Component getListCellRendererComponent(
-            JList list,
-            Object value,
-            int index,
-            boolean isSelected,
-            boolean cellHasFocus) {
-      Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-      if (value instanceof String) {
-        c.setFont(new Font((String) value, Font.PLAIN, JBUI.scaleFontSize(14)));
-      }
-      return c;
-    }
   }
 }

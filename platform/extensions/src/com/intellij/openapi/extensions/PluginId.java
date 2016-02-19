@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.extensions;
 
+import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,11 +28,11 @@ import java.util.Map;
 public class PluginId implements Comparable<PluginId> {
   public static final PluginId[] EMPTY_ARRAY = new PluginId[0];
 
-  private static final Map<String, PluginId> ourRegisteredIds = new HashMap<String, PluginId>();
+  private static final Map<String, PluginId> ourRegisteredIds = new THashMap<String, PluginId>();
 
   private final String myIdString;
 
-  private PluginId(String idString) {
+  private PluginId(@NotNull String idString) {
     myIdString = idString;
   }
 
@@ -41,7 +42,7 @@ public class PluginId implements Comparable<PluginId> {
   }
 
   @NotNull
-  public static PluginId getId(String idString) {
+  public static synchronized PluginId getId(@NotNull String idString) {
     PluginId pluginId = ourRegisteredIds.get(idString);
     if (pluginId == null) {
       pluginId = new PluginId(idString);
@@ -50,7 +51,19 @@ public class PluginId implements Comparable<PluginId> {
     return pluginId;
   }
 
+  @Nullable
+  public static synchronized PluginId findId(@NotNull String... idStrings) {
+    for (String idString : idStrings) {
+      PluginId pluginId = ourRegisteredIds.get(idString);
+      if (pluginId != null) {
+        return pluginId;
+      }
+    }
+    return null;
+  }
+
   @NonNls
+  @NotNull
   public String getIdString() {
     return myIdString;
   }
@@ -60,24 +73,8 @@ public class PluginId implements Comparable<PluginId> {
     return getIdString();
   }
 
-  public static Map<String, PluginId> getRegisteredIds() {
-    return ourRegisteredIds;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    PluginId pluginId = (PluginId)o;
-
-    if (myIdString != null ? !myIdString.equals(pluginId.myIdString) : pluginId.myIdString != null) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myIdString != null ? myIdString.hashCode() : 0;
+  @NotNull
+  public static synchronized Map<String, PluginId> getRegisteredIds() {
+    return new THashMap<String, PluginId>(ourRegisteredIds);
   }
 }

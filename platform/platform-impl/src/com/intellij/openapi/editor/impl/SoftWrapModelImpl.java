@@ -19,6 +19,7 @@ import com.intellij.diagnostic.Dumpable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.FontPreferences;
@@ -108,11 +109,11 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
   /**
    * Soft wraps need to be kept up-to-date on all editor modification (changing text, adding/removing/expanding/collapsing fold
    * regions etc). Hence, we need to react to all types of target changes. However, soft wraps processing uses various information
-   * provided by editor and there is a possible case that that information is inconsistent during update time (e.g. fold model 
+   * provided by editor and there is a possible case that that information is inconsistent during update time (e.g. fold model
    * advances fold region offsets when end-user types before it, hence, fold regions data is inconsistent between the moment
    * when text changes are applied to the document and fold data is actually updated).
    * <p/>
-   * Current field serves as a flag that indicates if all preliminary actions necessary for successful soft wraps processing is done. 
+   * Current field serves as a flag that indicates if all preliminary actions necessary for successful soft wraps processing is done.
    */
   private boolean myUpdateInProgress;
 
@@ -125,7 +126,7 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
    * and we lack information about visible area width. Hence, we will need to recalculate the whole soft wraps cache as soon
    * as target editor becomes visible.
    * <p/>
-   * Current field serves as a flag for that <code>'dirty document, need complete soft wraps cache recalculation'</code> state. 
+   * Current field serves as a flag for that <code>'dirty document, need complete soft wraps cache recalculation'</code> state.
    */
   private boolean myDirty;
 
@@ -158,7 +159,7 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
   }
 
   private boolean areSoftWrapsEnabledInEditor() {
-    return myEditor.getSettings().isUseSoftWraps()
+    return myEditor.getSettings().isUseSoftWraps() && (!myEditor.myUseNewRendering || !myEditor.isOneLineMode())
            && (!(myEditor.getDocument() instanceof DocumentImpl) || !((DocumentImpl)myEditor.getDocument()).acceptsSlashR());
   }
 
@@ -185,6 +186,9 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
       myApplianceManager.reset();
       myDeferredFoldRegions.clear();
       myStorage.removeAll();
+      if (myEditor.myUseNewRendering) {
+        myEditor.myView.reinitSettings();
+      }
       myEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
     }
   }
@@ -201,7 +205,7 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
 
   @Override
   public boolean isSoftWrappingEnabled() {
-    if (!myUseSoftWraps || myEditor.isOneLineMode() || myEditor.isPurePaintingMode()) {
+    if (!myUseSoftWraps || (!myEditor.myUseNewRendering && myEditor.isOneLineMode()) || myEditor.isPurePaintingMode()) {
       return false;
     }
 
@@ -219,7 +223,6 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
       }
     }
 
-    if (application.isUnitTestMode()) return true;
     Rectangle visibleArea = myEditor.getScrollingModel().getVisibleArea();
     return visibleArea.width > 0 && visibleArea.height > 0;
   }
@@ -316,7 +319,11 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
     if (!isSoftWrappingEnabled()) {
       return Collections.emptyList();
     }
-    return myStorage.getSoftWraps();
+    List<SoftWrapImpl> softWraps = myStorage.getSoftWraps();
+    if (!softWraps.isEmpty() && softWraps.get(softWraps.size() - 1).getStart() >= myEditor.getDocument().getTextLength()) {
+      LOG.error("Unexpected soft wrap location", new Attachment("editorState.txt", myEditor.dumpState()));
+    }
+    return softWraps;
   }
 
   @Override
@@ -338,6 +345,17 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
     if (!isSoftWrappingEnabled()) {
       return 0;
     }
+    if (!myEditor.getSettings().isAllSoftWrapsShown()) {
+      int visualLine = y / lineHeight;
+      LogicalPosition position = myEditor.visualToLogicalPosition(new VisualPosition(visualLine, 0));
+      if (position.line != myEditor.getCaretModel().getLogicalPosition().line) {
+        return myPainter.getDrawingHorizontalOffset(g, drawingType, x, y, lineHeight);
+      }
+    }
+    return doPaint(g, drawingType, x, y, lineHeight);
+  }
+
+  public int doPaint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     return myPainter.paint(g, drawingType, x, y, lineHeight);
   }
 
@@ -442,6 +460,7 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
     }
 
     if (myDirty) {
+      myStorage.removeAll();
       myApplianceManager.reset();
       myDeferredFoldRegions.clear();
       myDirty = false;
@@ -602,6 +621,7 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
   void onBulkDocumentUpdateFinished() {
     myBulkUpdateInProgress = false;
     if (!isSoftWrappingEnabled()) {
+      myDirty = true;
       return;
     }
     recalculate();
@@ -626,7 +646,12 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
     if (!isSoftWrappingEnabled()) {
       return;
     }
-    executeSafely(myFoldProcessingEndTask);
+    if (myEditor.myUseNewRendering) {
+      myFoldProcessingEndTask.run(true);
+    }
+    else {
+      executeSafely(myFoldProcessingEndTask);
+    }
   }
 
   @Override
@@ -658,7 +683,6 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
     myApplianceManager.reset();
     myStorage.removeAll();
     myDeferredFoldRegions.clear();
-    myEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
     myApplianceManager.recalculateIfNecessary();
   }
 
@@ -733,6 +757,10 @@ public class SoftWrapModelImpl implements SoftWrapModelEx, PrioritizedInternalDo
   @Override
   public String toString() {
     return dumpState();
+  }
+
+  public boolean isDirty() {
+    return myUseSoftWraps && myDirty;
   }
 
   /**

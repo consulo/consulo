@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.intellij.openapi.vfs.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.TraceableDisposable;
@@ -52,14 +53,11 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   @NonNls public static final String URL_ATTR = "url";
   private boolean myDisposed;
   private static final boolean TRACE_CREATION = LOG.isDebugEnabled() || ApplicationManager.getApplication().isUnitTestMode();
-
   public VirtualFilePointerContainerImpl(@NotNull VirtualFilePointerManager manager,
                                          @NotNull Disposable parentDisposable,
                                          @Nullable VirtualFilePointerListener listener) {
     //noinspection HardCodedStringLiteral
-    super(TRACE_CREATION
-          ? new Throwable("parent = '" + parentDisposable + "' (" + parentDisposable.getClass() + "); listener=" + listener)
-          : null);
+    super(TRACE_CREATION && !ApplicationInfoImpl.isInPerformanceTest());
     myVirtualFilePointerManager = manager;
     myParent = parentDisposable;
     myListener = listener;
@@ -153,8 +151,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
     assert !myDisposed;
     dropCaches();
 
-    List<VirtualFilePointer> thatList = ((VirtualFilePointerContainerImpl)that).myList;
-    for (final VirtualFilePointer pointer : thatList) {
+    for (final VirtualFilePointer pointer : that.getList()) {
       myList.add(duplicate(pointer));
     }
   }
@@ -179,7 +176,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   private static final Trinity<String[], VirtualFile[], VirtualFile[]> EMPTY =
-    Trinity.create(ArrayUtil.EMPTY_STRING_ARRAY, VirtualFile.EMPTY_ARRAY, VirtualFile.EMPTY_ARRAY);
+          Trinity.create(ArrayUtil.EMPTY_STRING_ARRAY, VirtualFile.EMPTY_ARRAY, VirtualFile.EMPTY_ARRAY);
 
   @NotNull
   private Trinity<String[], VirtualFile[], VirtualFile[]> cacheThings() {
@@ -188,12 +185,11 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
       result = EMPTY;
     }
     else {
-      VirtualFilePointer[] vf = myList.toArray(new VirtualFilePointer[myList.size()]);
-      List<VirtualFile> cachedFiles = new ArrayList<VirtualFile>(vf.length);
-      List<String> cachedUrls = new ArrayList<String>(vf.length);
-      List<VirtualFile> cachedDirectories = new ArrayList<VirtualFile>(vf.length / 3);
+      List<VirtualFile> cachedFiles = new ArrayList<VirtualFile>(myList.size());
+      List<String> cachedUrls = new ArrayList<String>(myList.size());
+      List<VirtualFile> cachedDirectories = new ArrayList<VirtualFile>(myList.size() / 3);
       boolean allFilesAreDirs = true;
-      for (VirtualFilePointer v : vf) {
+      for (VirtualFilePointer v : myList) {
         VirtualFile file = v.getFile();
         String url = v.getUrl();
         cachedUrls.add(url);
@@ -250,7 +246,6 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
     return myList.size();
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof VirtualFilePointerContainerImpl)) return false;
@@ -260,7 +255,6 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
     return myList.equals(virtualFilePointerContainer.myList);
   }
 
-  @Override
   public int hashCode() {
     return myList.hashCode();
   }

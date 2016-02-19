@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,15 +33,17 @@ import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
-import com.intellij.util.ui.JBUI;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -58,8 +60,8 @@ public final class EditorUtil {
    * @return true if the editor is in fact an ordinary file editor;
    * false if the editor is part of EditorTextField, CommitMessage and etc.
    */
-  public static boolean isRealFileEditor(@NotNull Editor editor) {
-    return TextEditorProvider.getInstance().getTextEditor(editor) instanceof TextEditorImpl;
+  public static boolean isRealFileEditor(@Nullable Editor editor) {
+    return editor != null && TextEditorProvider.getInstance().getTextEditor(editor) instanceof TextEditorImpl;
   }
 
   public static int getLastVisualLineColumnNumber(@NotNull Editor editor, final int line) {
@@ -199,6 +201,17 @@ public final class EditorUtil {
     int yPos = caretLocation.y;
     yPos -= viewArea.height * proportion;
     editor.getScrollingModel().scrollVertically(yPos);
+  }
+
+  public static int calcRelativeCaretPosition(@NotNull Editor editor) {
+    int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
+    int viewAreaPosition = editor.getScrollingModel().getVisibleAreaOnScrollingFinished().y;
+    return caretY - viewAreaPosition;
+  }
+
+  public static void setRelativeCaretPosition(@NotNull Editor editor, int position) {
+    int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
+    editor.getScrollingModel().scrollVertically(caretY - position);
   }
 
   public static void fillVirtualSpaceUntilCaret(@NotNull Editor editor) {
@@ -558,6 +571,10 @@ public final class EditorUtil {
     return width > 0 ? width : 1;
   }
 
+  public static int getPlainSpaceWidth(@NotNull Editor editor) {
+    return getSpaceWidth(Font.PLAIN, editor);
+  }
+
   public static int getTabSize(@NotNull Editor editor) {
     return editor.getSettings().getTabSize(editor.getProject());
   }
@@ -866,7 +883,7 @@ public final class EditorUtil {
   }
 
   public static int yPositionToLogicalLine(@NotNull Editor editor, int y) {
-    int line = y / editor.getLineHeight();
+    int line = editor instanceof EditorImpl ? ((EditorImpl)editor).yToVisibleLine(y): y / editor.getLineHeight();
     return line > 0 ? editor.visualToLogicalPosition(new VisualPosition(line, 0)).line : 0;
   }
 
@@ -882,7 +899,7 @@ public final class EditorUtil {
   /**
    * Setting selection using {@link SelectionModel#setSelection(int, int)} or {@link Caret#setSelection(int, int)} methods can result
    * in resulting selection range to be larger than requested (in case requested range intersects with collapsed fold regions).
-   * This method will make sure interfering collapsed regions are expanded first, so that resulting selection range is exactly as 
+   * This method will make sure interfering collapsed regions are expanded first, so that resulting selection range is exactly as
    * requested.
    */
   public static void setSelectionExpandingFoldedRegionsIfNeeded(@NotNull Editor editor, int startOffset, int endOffset) {
@@ -909,15 +926,11 @@ public final class EditorUtil {
     editor.getSelectionModel().setSelection(startOffset, endOffset);
   }
 
-  /**
-   * Return editor font with scaling
-   * @return font
-   */
   public static Font getEditorFont() {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     int size = UISettings.getInstance().PRESENTATION_MODE
-               ? UISettings.getInstance().PRESENTATION_MODE_FONT_SIZE - 4 : scheme.getEditorFontSize(false);
-    return new Font(scheme.getEditorFontName(), Font.PLAIN, JBUI.scale(size));
+               ? UISettings.getInstance().PRESENTATION_MODE_FONT_SIZE - 4 : scheme.getEditorFontSize();
+    return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
   }
 
   /**

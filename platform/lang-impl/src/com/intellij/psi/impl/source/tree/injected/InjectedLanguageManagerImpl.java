@@ -249,6 +249,36 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     }
   }
 
+  @NotNull
+  @Override
+  public List<TextRange> getNonEditableFragments(@NotNull DocumentWindow window) {
+    List<TextRange> result = ContainerUtil.newArrayList();
+    int offset = 0;
+    for (PsiLanguageInjectionHost.Shred shred : ((DocumentWindowImpl)window).getShreds()) {
+      Segment hostRange = shred.getHostRangeMarker();
+      if (hostRange == null) continue;
+
+      offset = appendRange(result, offset, shred.getPrefix().length());
+      offset += hostRange.getEndOffset() - hostRange.getStartOffset();
+      offset = appendRange(result, offset, shred.getSuffix().length());
+    }
+
+    return result;
+  }
+
+  private static int appendRange(List<TextRange> result, int start, int length) {
+    if (length > 0) {
+      int lastIndex = result.size() - 1;
+      TextRange lastRange = lastIndex >= 0 ? result.get(lastIndex) : null;
+      if (lastRange != null && lastRange.getEndOffset() == start) {
+        result.set(lastIndex, lastRange.grown(length));
+      } else {
+        result.add(TextRange.from(start, length));
+      }
+    }
+    return start + length;
+  }
+
   @Override
   public PsiLanguageInjectionHost getInjectionHost(@NotNull PsiElement element) {
     final PsiFile file = element.getContainingFile();

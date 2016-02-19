@@ -5,7 +5,7 @@
     <option name="USE_ALT_CONSULO_SDK" value="true" />
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/out/artifacts/distForRuntime" />
     <option name="INTERNAL_MODE" value="false" />
-    <java-sdk name="1.6" />
+    <java-sdk name="1.8" />
     <predefined_log_file id="IDEA_LOG" enabled="true" />
     <RunnerSettings RunnerId="ConsuloDebuggerRunner">
       <option name="DEBUG_PORT" value="" />

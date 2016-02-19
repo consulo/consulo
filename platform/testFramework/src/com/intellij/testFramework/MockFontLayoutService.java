@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphJustificationInfo;
-import java.awt.font.GlyphMetrics;
 import java.awt.font.GlyphVector;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
 
 public class MockFontLayoutService extends FontLayoutService {
   private final int myCharWidth;
@@ -46,7 +43,7 @@ public class MockFontLayoutService extends FontLayoutService {
                                        int start,
                                        int end,
                                        boolean isRtl) {
-    return new MockGlyphVector(end - start, isRtl);
+    return new MockGlyphVector(Arrays.copyOfRange(chars, start, end), isRtl);
   }
 
   @Override
@@ -60,27 +57,27 @@ public class MockFontLayoutService extends FontLayoutService {
   }
 
   @Override
-  public int getDescent(@NotNull FontMetrics fontMetrics) {
-    return myDescent;
+  public int getAscent(@NotNull FontMetrics fontMetrics) {
+    return myLineHeight - myDescent;
   }
 
-  private class MockGlyphVector extends GlyphVector {
-    private final int myCharCount;
+  private class MockGlyphVector extends AbstractMockGlyphVector {
+    private final char[] myChars;
     private final boolean myIsRtl;
 
-    private MockGlyphVector(int length, boolean isRtl) {
-      myCharCount = length;
+    private MockGlyphVector(char[] chars, boolean isRtl) {
+      myChars = chars;
       myIsRtl = isRtl;
     }
 
     @Override
     public int getNumGlyphs() {
-      return myCharCount;
+      return myChars.length;
     }
 
     @Override
     public int getGlyphCharIndex(int glyphIndex) {
-      return myIsRtl ? myCharCount - 1 - glyphIndex : glyphIndex;
+      return myIsRtl ? myChars.length - 1 - glyphIndex : glyphIndex;
     }
 
     @Override
@@ -89,99 +86,13 @@ public class MockFontLayoutService extends FontLayoutService {
     }
 
     @Override
-    public Font getFont() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public FontRenderContext getFontRenderContext() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void performDefaultLayout() {
-      throw new UnsupportedOperationException();
+    public Shape getGlyphLogicalBounds(int glyphIndex) {
+      return new Rectangle(glyphIndex * myCharWidth, -myDescent, myCharWidth, myLineHeight);
     }
 
     @Override
     public int getGlyphCode(int glyphIndex) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int[] getGlyphCodes(int beginGlyphIndex, int numEntries, int[] codeReturn) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Rectangle2D getLogicalBounds() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Rectangle2D getVisualBounds() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Shape getOutline() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Shape getOutline(float x, float y) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Shape getGlyphOutline(int glyphIndex) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setGlyphPosition(int glyphIndex, Point2D newPos) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public AffineTransform getGlyphTransform(int glyphIndex) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setGlyphTransform(int glyphIndex, AffineTransform newTX) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public float[] getGlyphPositions(int beginGlyphIndex, int numEntries, float[] positionReturn) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Shape getGlyphLogicalBounds(int glyphIndex) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Shape getGlyphVisualBounds(int glyphIndex) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public GlyphMetrics getGlyphMetrics(int glyphIndex) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public GlyphJustificationInfo getGlyphJustificationInfo(int glyphIndex) {
-      throw new UnsupportedOperationException();
-    }
-
-    @SuppressWarnings("CovariantEquals")
-    @Override
-    public boolean equals(GlyphVector set) {
-      throw new UnsupportedOperationException();
+      return myChars[glyphIndex];
     }
   }
 }

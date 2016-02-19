@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,24 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import java.util.Iterator;
+import com.intellij.util.containers.PeekableIterator;
+
 import java.util.NoSuchElementException;
 
 /**
  * An iterator you must to {@link #dispose()} after use
  */
-public interface DisposableIterator<T> extends Iterator<T> {
+public interface MarkupIterator<T> extends PeekableIterator<T> {
   void dispose();
-  DisposableIterator EMPTY = new DisposableIterator() {
+
+  MarkupIterator EMPTY = new MarkupIterator() {
     @Override
     public void dispose() {
+    }
+
+    @Override
+    public Object peek() {
+      return null;
     }
 
     @Override

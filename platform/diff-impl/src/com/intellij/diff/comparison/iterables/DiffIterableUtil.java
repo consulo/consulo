@@ -29,12 +29,32 @@ import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class DiffIterableUtil {
+  private static boolean SHOULD_VERIFY_ITERABLE = Registry.is("diff.verify.iterable");
+
+  /*
+   * Compare two integer arrays
+   */
+  @NotNull
+  public static <T> FairDiffIterable diff(@NotNull int[] data1, @NotNull int[] data2, @NotNull ProgressIndicator indicator) {
+    indicator.checkCanceled();
+
+    try {
+      // TODO: use ProgressIndicator inside
+      Diff.Change change = Diff.buildChanges(data1, data2);
+      return fair(create(change, data1.length, data2.length));
+    }
+    catch (FilesTooBigForDiffException e) {
+      throw new DiffTooBigException();
+    }
+  }
+
   /*
    * Compare two arrays, basing on equals() and hashCode() of it's elements
    */
@@ -186,8 +206,13 @@ public class DiffIterableUtil {
   // Verification
   //
 
+  @TestOnly
+  public static void setVerifyEnabled(boolean value) {
+    SHOULD_VERIFY_ITERABLE = value;
+  }
+
   private static boolean isVerifyEnabled() {
-    return Registry.is("diff.verify.iterable"); // TODO: Leave verification for tests only ?
+    return SHOULD_VERIFY_ITERABLE;
   }
 
   public static void verify(@NotNull DiffIterable iterable) {
@@ -311,11 +336,11 @@ public class DiffIterableUtil {
     }
   }
 
-  public static class TrimChangeBuilder extends ChangeBuilder {
+  public static class ExpandChangeBuilder extends ChangeBuilder {
     @NotNull private final List<?> myObjects1;
     @NotNull private final List<?> myObjects2;
 
-    public TrimChangeBuilder(@NotNull List<?> objects1, @NotNull List<?> objects2) {
+    public ExpandChangeBuilder(@NotNull List<?> objects1, @NotNull List<?> objects2) {
       super(objects1.size(), objects2.size());
       myObjects1 = objects1;
       myObjects2 = objects2;
@@ -324,7 +349,7 @@ public class DiffIterableUtil {
     @Override
     protected void addChange(int start1, int start2, int end1, int end2) {
       Range range = TrimUtil.expand(myObjects1, myObjects2, start1, start2, end1, end2);
-      super.addChange(range.start1, range.start2, range.end1, range.end2);
+      if (!range.isEmpty()) super.addChange(range.start1, range.start2, range.end1, range.end2);
     }
   }
 

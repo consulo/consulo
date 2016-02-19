@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ abstract class FoldRegionsTree {
     if (allValid.size() < myRegions.size()) {
       myRegions = allValid;
     }
-    Collections.sort(myRegions, RangeMarker.BY_START_OFFSET); // the order could have changed due to document changes 
+    Collections.sort(myRegions, RangeMarker.BY_START_OFFSET); // the order could have changed due to document changes
 
     FoldRegion currentCollapsed = null;
     for (FoldRegion region : myRegions) {
@@ -356,6 +356,14 @@ abstract class FoldRegionsTree {
   public FoldRegion getRegionAt(int startOffset, int endOffset) {
     int index = Collections.binarySearch(myRegions, new DummyFoldRegion(startOffset, endOffset), RangeMarker.BY_START_OFFSET);
     return index < 0 ? null : myRegions.get(index);
+  }
+
+  void clearDocumentRangesModificationStatus() {
+    for (FoldRegion region : myRegions) {
+      if (region instanceof FoldRegionImpl) {
+        ((FoldRegionImpl)region).resetDocumentRegionChanged();
+      }
+    }
   }
 
   private class CachedData implements Cloneable {

@@ -15,8 +15,9 @@
  */
 package com.intellij.diff.actions;
 
+import com.intellij.diff.contents.DiffContentBase;
 import com.intellij.diff.contents.DocumentContent;
-import com.intellij.openapi.diff.FragmentContent;
+import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.RangeMarker;
@@ -24,22 +25,20 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.LineSeparator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.nio.charset.Charset;
 
 /**
- * Represents sub text of other content. Original content should provide not null document.
+ * Represents sub text of other content.
  */
-public class DocumentFragmentContent implements DocumentContent {
+public class DocumentFragmentContent extends DiffContentBase implements DocumentContent {
   // TODO: reuse DocumentWindow ?
-
-  public static final Key<Document> ORIGINAL_DOCUMENT = FragmentContent.ORIGINAL_DOCUMENT; // TODO: replace with own one ?
 
   @NotNull private final DocumentContent myOriginal;
 
@@ -47,14 +46,19 @@ public class DocumentFragmentContent implements DocumentContent {
 
   private int myAssignments = 0;
 
-  public DocumentFragmentContent(@NotNull Project project, @NotNull DocumentContent original, @NotNull TextRange range) {
+  public DocumentFragmentContent(@Nullable Project project, @NotNull DocumentContent original, @NotNull TextRange range) {
     myOriginal = original;
 
-    RangeMarker rangeMarker = myOriginal.getDocument().createRangeMarker(range.getStartOffset(), range.getEndOffset(), true);
+    Document document1 = myOriginal.getDocument();
+
+    Document document2 = EditorFactory.getInstance().createDocument("");
+    document2.putUserData(UndoManager.ORIGINAL_DOCUMENT, document1);
+
+    RangeMarker rangeMarker = document1.createRangeMarker(range.getStartOffset(), range.getEndOffset(), true);
     rangeMarker.setGreedyToLeft(true);
     rangeMarker.setGreedyToRight(true);
 
-    mySynchonizer = new MyDocumentsSynchronizer(project, rangeMarker);
+    mySynchonizer = new MyDocumentsSynchronizer(project, rangeMarker, document1, document2);
   }
 
   @NotNull
@@ -99,6 +103,7 @@ public class DocumentFragmentContent implements DocumentContent {
     return getOpenFileDescriptor(0);
   }
 
+  @RequiredDispatchThread
   @Override
   public void onAssigned(boolean isAssigned) {
     if (isAssigned) {
@@ -115,9 +120,12 @@ public class DocumentFragmentContent implements DocumentContent {
   private static class MyDocumentsSynchronizer extends DocumentsSynchronizer {
     @NotNull private final RangeMarker myRangeMarker;
 
-    public MyDocumentsSynchronizer(@NotNull Project project, @NotNull RangeMarker originalRange) {
-      super(project, getOriginal(originalRange), getCopy(originalRange));
-      myRangeMarker = originalRange;
+    public MyDocumentsSynchronizer(@Nullable Project project,
+                                   @NotNull RangeMarker range,
+                                   @NotNull Document document1,
+                                   @NotNull Document document2) {
+      super(project, document1, document2);
+      myRangeMarker = range;
     }
 
     public int getStartOffset() {
@@ -168,19 +176,5 @@ public class DocumentFragmentContent implements DocumentContent {
       }
       super.startListen();
     }
-  }
-
-  @NotNull
-  protected static Document getOriginal(@NotNull RangeMarker rangeMarker) {
-    return rangeMarker.getDocument();
-  }
-
-  @NotNull
-  protected static Document getCopy(@NotNull RangeMarker rangeMarker) {
-    final Document originalDocument = rangeMarker.getDocument();
-
-    Document result = EditorFactory.getInstance().createDocument("");
-    result.putUserData(ORIGINAL_DOCUMENT, originalDocument);
-    return result;
   }
 }

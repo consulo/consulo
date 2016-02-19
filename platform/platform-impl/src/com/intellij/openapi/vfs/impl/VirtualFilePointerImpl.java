@@ -36,7 +36,7 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
   volatile FilePointerPartNode myNode; // null means disposed
 
   VirtualFilePointerImpl(VirtualFilePointerListener listener, @NotNull Disposable parentDisposable, Pair<VirtualFile, String> fileAndUrl) {
-    super(TRACE_CREATION ? new Throwable("parent = '" + parentDisposable + "' (" + parentDisposable.getClass() + "); URL="+fileAndUrl) : null);
+    super(TRACE_CREATION);
     myListener = listener;
   }
 

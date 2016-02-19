@@ -16,34 +16,33 @@
 package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageUtil;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.impl.PsiDocumentManagerBase;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * User: cdr
  */
-public class FileElementInfo extends SmartPointerElementInfo {
-  protected final VirtualFile myVirtualFile;
-  protected final Project myProject;
-  protected final Language myLanguage;
+class FileElementInfo extends SmartPointerElementInfo {
+  private final VirtualFile myVirtualFile;
+  private final Project myProject;
+  private final Language myLanguage;
 
-  public FileElementInfo(@NotNull PsiFile file) {
-    this(file.getProject(), file.getVirtualFile(), file.getLanguage());
-  }
-  protected FileElementInfo(@NotNull Project project, VirtualFile virtualFile) {
-    this(project, virtualFile, null);
-  }
-
-  protected FileElementInfo(@NotNull Project project, VirtualFile virtualFile, Language lang) {
-    myVirtualFile = virtualFile;
-    myProject = project;
-    myLanguage = lang;
+  public FileElementInfo(@NotNull final PsiFile file) {
+    myVirtualFile = file.getVirtualFile();
+    myProject = file.getProject();
+    myLanguage = LanguageUtil.getRootLanguage(file);
   }
 
   @Override
@@ -90,4 +89,17 @@ public class FileElementInfo extends SmartPointerElementInfo {
     return myProject;
   }
 
+  @Nullable
+  @Override
+  public Segment getPsiRange() {
+    Document currentDoc = FileDocumentManager.getInstance().getCachedDocument(myVirtualFile);
+    Document committedDoc = currentDoc == null ? null :
+                            ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject)).getLastCommittedDocument(currentDoc);
+    return committedDoc == null ? getRange() : new TextRange(0, committedDoc.getTextLength());
+  }
+
+  @Override
+  public String toString() {
+    return "file{" + myVirtualFile + ", " + myLanguage + "}";
+  }
 }

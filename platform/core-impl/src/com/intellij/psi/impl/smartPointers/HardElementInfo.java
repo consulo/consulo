@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * User: cdr
  */
-public class HardElementInfo extends SmartPointerElementInfo {
+class HardElementInfo extends SmartPointerElementInfo {
   @NotNull
   private final PsiElement myElement;
   @NotNull
@@ -68,10 +68,19 @@ public class HardElementInfo extends SmartPointerElementInfo {
     return myElement.getTextRange();
   }
 
+  @Override
+  public Segment getPsiRange() {
+    return getRange();
+  }
+
   @NotNull
   @Override
   public Project getProject() {
     return myProject;
   }
 
+  @Override
+  public String toString() {
+    return "hard{" + myElement + " of " + myElement.getClass() + "}";
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,14 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.MarkupModelWindow;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.util.containers.ConcurrentHashMap;
+import com.intellij.openapi.util.UserDataHolderEx;
+import com.intellij.util.ConcurrencyUtil;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,12 +33,10 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Manages per-project markup models of documents.
- * 
+ *
  * @author yole
  */
 public class DocumentMarkupModel {
-  private static final Object lock = new Object();
-
   private static final Key<MarkupModelEx> MARKUP_MODEL_KEY = Key.create("DocumentMarkupModel.MarkupModel");
   private static final Key<ConcurrentMap<Project, MarkupModelImpl>> MARKUP_MODEL_MAP_KEY = Key.create("DocumentMarkupModel.MarkupModelMap");
 
@@ -63,19 +64,16 @@ public class DocumentMarkupModel {
     if (project == null) {
       MarkupModelEx markupModel = document.getUserData(MARKUP_MODEL_KEY);
       if (create && markupModel == null) {
-        synchronized (lock) {
-          markupModel = document.getUserData(MARKUP_MODEL_KEY);
-          if (markupModel == null) {
-            markupModel = new MarkupModelImpl((DocumentImpl)document);
-            document.putUserData(MARKUP_MODEL_KEY, markupModel);
-          }
+        MarkupModelEx newModel = new MarkupModelImpl((DocumentEx)document);
+        if ((markupModel = ((UserDataHolderEx)document).putUserDataIfAbsent(MARKUP_MODEL_KEY, newModel)) != newModel) {
+          newModel.dispose();
         }
       }
       return markupModel;
     }
 
     final DocumentMarkupModelManager documentMarkupModelManager =
-      project.isDisposed() ? null : DocumentMarkupModelManager.getInstance(project);
+            project.isDisposed() ? null : DocumentMarkupModelManager.getInstance(project);
     if (documentMarkupModelManager == null || documentMarkupModelManager.isDisposed() || project.isDisposed()) {
       return new EmptyMarkupModel(document);
     }
@@ -84,13 +82,12 @@ public class DocumentMarkupModel {
 
     MarkupModelImpl model = markupModelMap.get(project);
     if (create && model == null) {
-      synchronized (lock) {
-        model = markupModelMap.get(project);
-        if (model == null) {
-          model = new MarkupModelImpl((DocumentImpl)document);
-          markupModelMap.put(project, model);
-          documentMarkupModelManager.registerDocument((DocumentImpl)document);
-        }
+      MarkupModelImpl newModel = new MarkupModelImpl((DocumentEx)document);
+      if ((model = ConcurrencyUtil.cacheOrGet(markupModelMap, project, newModel)) == newModel) {
+        documentMarkupModelManager.registerDocument(document);
+      }
+      else {
+        newModel.dispose();
       }
     }
 
@@ -100,14 +97,8 @@ public class DocumentMarkupModel {
   private static ConcurrentMap<Project, MarkupModelImpl> getMarkupModelMap(@NotNull Document document) {
     ConcurrentMap<Project, MarkupModelImpl> markupModelMap = document.getUserData(MARKUP_MODEL_MAP_KEY);
     if (markupModelMap == null) {
-      synchronized (lock) {
-        markupModelMap = document.getUserData(MARKUP_MODEL_MAP_KEY);
-        if (markupModelMap == null) {
-          markupModelMap = new ConcurrentHashMap<Project, MarkupModelImpl>();
-          document.putUserData(MARKUP_MODEL_MAP_KEY, markupModelMap);
-        }
-        
-      }
+      ConcurrentMap<Project, MarkupModelImpl> newMap = ContainerUtil.newConcurrentMap();
+      markupModelMap = ((UserDataHolderEx)document).putUserDataIfAbsent(MARKUP_MODEL_MAP_KEY, newMap);
     }
     return markupModelMap;
   }
