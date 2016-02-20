@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 
 package com.intellij.util.ui;
 
+import com.intellij.openapi.util.ScalableIcon;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
+import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +29,9 @@ import java.util.Map;
  * @author max
  * @author Konstantin Bulenkov
  *
- * @see com.intellij.util.ui.ColorIcon
+ * @see ColorIcon
  */
-public class EmptyIcon implements Icon {
+public class EmptyIcon implements Icon, ScalableIcon {
   private static final Map<Integer, Icon> cache = new HashMap<Integer, Icon>();
 
   public static final Icon ICON_16 = create(16);
@@ -40,6 +41,7 @@ public class EmptyIcon implements Icon {
 
   private final int width;
   private final int height;
+  private float scale = 1f;
 
   public static Icon create(int size) {
     Icon icon = cache.get(size);
@@ -57,8 +59,9 @@ public class EmptyIcon implements Icon {
     return create(base.getIconWidth(), base.getIconHeight());
   }
 
-  @Deprecated
-  @DeprecationInfo(value = "use #create(int) for caching.", until = "2.0")
+  /**
+   * @deprecated use {@linkplain #create(int)} for caching.
+   */
   public EmptyIcon(int size) {
     this(size, size);
   }
@@ -68,27 +71,27 @@ public class EmptyIcon implements Icon {
     this.height = height;
   }
 
-  @Deprecated
-  @DeprecationInfo(value = "use #create(Icon) for caching.", until = "2.0")
+  /**
+   * @deprecated use {@linkplain #create(javax.swing.Icon)} for caching.
+   */
   public EmptyIcon(@NotNull Icon base) {
     this(base.getIconWidth(), base.getIconHeight());
   }
 
   @Override
   public int getIconWidth() {
-    return width;
+    return scale == 1f ? width : (int) (width * scale);
   }
 
   @Override
   public int getIconHeight() {
-    return height;
+    return scale == 1f ? height : (int) (height * scale);
   }
 
   @Override
   public void paintIcon(Component component, Graphics g, int i, int j) {
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof EmptyIcon)) return false;
@@ -97,13 +100,45 @@ public class EmptyIcon implements Icon {
 
     if (height != icon.height) return false;
     if (width != icon.width) return false;
+    if (scale != icon.scale) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    int sum = width + height;
-    return sum * (sum + 1)/2 + width;
+    int result = width;
+    result = 31 * result + height;
+    result = 31 * result + (scale != +0.0f ? Float.floatToIntBits(scale) : 0);
+    return result;
+  }
+
+  public EmptyIconUIResource asUIResource() {
+    return new EmptyIconUIResource(this);
+  }
+
+  @Override
+  public Icon scale(float scaleFactor) {
+    if (scaleFactor != scale) {
+      EmptyIcon icon;
+      if (scale != 1f) {
+        icon = this;
+      } else {
+        icon = this instanceof UIResource ? new EmptyIconUIResource(width, height) : new EmptyIcon(width, height);
+      }
+      icon.scale = scaleFactor;
+      return icon;
+    }
+    return this;
+  }
+
+  public static class EmptyIconUIResource extends EmptyIcon implements UIResource {
+    public EmptyIconUIResource(EmptyIcon icon) {
+      super(icon.width, icon.height);
+    }
+
+    private EmptyIconUIResource(int width, int height) {
+      super(width, height);
+    }
   }
 }

@@ -1873,7 +1873,7 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
     assert strings != null;
     final List<String> actual = strings.subList(0, Math.min(expected.length, strings.size()));
     if (!actual.equals(Arrays.asList(expected))) {
-      UsefulTestCase.assertOrderedEquals(DumpLookupElementWeights.getLookupElementWeights(lookup), expected);
+      UsefulTestCase.assertOrderedEquals(DumpLookupElementWeights.getLookupElementWeights(lookup, false), expected);
     }
     Assert.assertEquals(selected, list.getSelectedIndex());
   }

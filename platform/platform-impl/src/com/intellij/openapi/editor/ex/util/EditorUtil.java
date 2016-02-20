@@ -562,6 +562,16 @@ public final class EditorUtil {
     return ComplementaryFontsRegistry.getFontAbleToDisplay(c, style, colorsScheme.getFontPreferences());
   }
 
+  public static Icon scaleIconAccordingEditorFont(Icon icon, Editor editor) {
+    if (Registry.is("editor.scale.gutter.icons") && editor instanceof EditorImpl && icon instanceof ScalableIcon) {
+      float scale = ((EditorImpl)editor).getScale();
+      if (Math.abs(1f - scale) > 0.1f) {
+        return ((ScalableIcon)icon).scale(scale);
+      }
+    }
+    return icon;
+  }
+
   public static int charWidth(char c, @JdkConstants.FontStyle int fontType, @NotNull Editor editor) {
     return fontForChar(c, fontType, editor).charWidth(c);
   }
