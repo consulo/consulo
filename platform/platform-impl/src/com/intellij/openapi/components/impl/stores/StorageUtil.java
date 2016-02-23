@@ -209,7 +209,7 @@ public class StorageUtil {
       // need refresh if the directory has just been created
       VirtualFile parentVirtualFile = parentFile == null ? null : LocalFileSystem.getInstance().refreshAndFindFileByIoFile(parentFile);
       if (parentVirtualFile == null) {
-        throw new IOException(ProjectBundle.message("project.configuration.save.file.not.found", parentFile == null ? "" : parentFile.getPath()));
+        throw new IOException(ProjectBundle.message("project.configuration.save.file.not.found", parentFile == null ? ioFile.getPath() : parentFile.getPath()));
       }
       virtualFile = parentVirtualFile.createChildData(requestor, ioFile.getName());
     }
