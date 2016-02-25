@@ -37,6 +37,7 @@ import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -76,6 +77,7 @@ public class ExecutionPointHighlighter {
     updateRequested.set(false);
     AppUIUtil.invokeLaterIfProjectAlive(myProject, new Runnable() {
       @Override
+      @RequiredDispatchThread
       public void run() {
         updateRequested.set(false);
 
@@ -139,7 +141,7 @@ public class ExecutionPointHighlighter {
     }
   }
 
-  public void updateGutterIcon(@NotNull final GutterIconRenderer renderer) {
+  public void updateGutterIcon(@Nullable final GutterIconRenderer renderer) {
     AppUIUtil.invokeOnEdt(new Runnable() {
       @Override
       public void run() {
@@ -150,6 +152,7 @@ public class ExecutionPointHighlighter {
     });
   }
 
+  @RequiredDispatchThread
   private void doShow(boolean navigate) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
