@@ -17,6 +17,7 @@ package org.mustbe.consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -27,6 +28,8 @@ import java.awt.*;
  * @since 22:37/31.10.13
  */
 public class ProductionResourceContentFolderTypeProvider extends BaseContentFolderTypeProvider {
+  @NotNull
+  @LazyInstance
   public static ProductionResourceContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(ProductionResourceContentFolderTypeProvider.class);
   }

@@ -18,6 +18,7 @@ package org.mustbe.consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
@@ -29,6 +30,8 @@ import java.awt.*;
  * @since 07.11.13.
  */
 public class WebResourcesFolderTypeProvider extends BaseContentFolderTypeProvider {
+  @NotNull
+  @LazyInstance
   public static ContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(WebResourcesFolderTypeProvider.class);
   }
