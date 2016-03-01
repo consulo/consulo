@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModuleRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.consulo.compiler.ModuleCompilerPathsManager;
@@ -51,14 +51,14 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
 
   @NotNull
   @Override
-  public VirtualFilePointer[] getExcludeRootsForModule(@NotNull final ModuleRootModel rootModel) {
-    ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(rootModel.getModule());
+  public VirtualFilePointer[] getExcludeRootsForModule(@NotNull final ModuleRootLayer moduleRootLayer) {
+    ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(moduleRootLayer.getModule());
     List<VirtualFilePointer> result = new ArrayList<VirtualFilePointer>(3);
 
     if (manager.isInheritedCompilerOutput()) {
       final VirtualFilePointer compilerOutputPointer = CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
-      for(ContentEntry contentEntry : rootModel.getContentEntries()) {
-        if(compilerOutputPointer.getUrl().contains(contentEntry.getUrl())) {
+      for (ContentEntry contentEntry : moduleRootLayer.getContentEntries()) {
+        if (compilerOutputPointer.getUrl().contains(contentEntry.getUrl())) {
           result.add(compilerOutputPointer);
         }
       }

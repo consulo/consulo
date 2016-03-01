@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.util.Disposer;
@@ -128,9 +129,14 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
       }
     }
 
+    Module module = getModuleRootLayer().getModule();
+    if(module.getModuleDirUrl() == null) {
+      return list;
+    }
+
     if (predicate.apply(ExcludedContentFolderTypeProvider.getInstance())) {
       for (DirectoryIndexExcludePolicy excludePolicy : DirectoryIndexExcludePolicy.EP_NAME.getExtensions(getRootModel().getProject())) {
-        final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
+        final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(myModuleRootLayer);
         for (VirtualFilePointer file : files) {
           list.add(new LightContentFolderImpl(file, ExcludedContentFolderTypeProvider.getInstance(), this));
         }
