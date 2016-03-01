@@ -169,12 +169,6 @@ public class HighlightDisplayLevel {
       return getColor();
     }
 
-    @NotNull
-    @Override
-    public Color getBorderColor() {
-      return JBColor.LIGHT_GRAY;
-    }
-
     @Override
     @NotNull
     public Color getColor() {
