@@ -22,12 +22,15 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 public class CommentUtilCore {
+  @RequiredReadAction
   public static boolean isComment(@Nullable final PsiElement element) {
     return element != null && isCommentToken(element.getNode().getElementType(), element.getLanguageVersion());
   }
 
+  @RequiredReadAction
   public static boolean isComment(@Nullable final ASTNode node) {
     if (node == null) {
       return false;
@@ -36,6 +39,7 @@ public class CommentUtilCore {
     return psi != null && isComment(psi);
   }
 
+  @RequiredReadAction
   public static boolean isCommentTextElement(final PsiElement element) {
     final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(element.getLanguage());
     if (commenter instanceof CodeDocumentationAwareCommenterEx) {
@@ -52,7 +56,6 @@ public class CommentUtilCore {
     if(language != languageVersion.getLanguage()) {
       return false;
     }
-    boolean inComments = false;
 
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
 
@@ -60,9 +63,9 @@ public class CommentUtilCore {
       final TokenSet commentTokens = parserDefinition.getCommentTokens(languageVersion);
 
       if (commentTokens.contains(tokenType)) {
-        inComments = true;
+        return true;
       }
     }
-    return inComments;
+    return false;
   }
 }

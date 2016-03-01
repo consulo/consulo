@@ -18,6 +18,7 @@ package com.intellij.psi.impl.cache.impl.id;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
@@ -60,17 +61,15 @@ import java.util.regex.Pattern;
 public abstract class PlatformIdTableBuilding {
   public static final Key<EditorHighlighter> EDITOR_HIGHLIGHTER = new Key<EditorHighlighter>("Editor");
   private static final Map<FileType, DataIndexer<TodoIndexEntry, Integer, FileContent>> ourTodoIndexers =
-    new HashMap<FileType, DataIndexer<TodoIndexEntry, Integer, FileContent>>();
+          new HashMap<FileType, DataIndexer<TodoIndexEntry, Integer, FileContent>>();
   private static final TokenSet ABSTRACT_FILE_COMMENT_TOKENS =
-    TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT);
+          TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT);
 
   private PlatformIdTableBuilding() {
   }
 
   @Nullable
-  public static DataIndexer<TodoIndexEntry, Integer, FileContent> getTodoIndexer(FileType fileType,
-                                                                                 Project project,
-                                                                                 final VirtualFile virtualFile) {
+  public static DataIndexer<TodoIndexEntry, Integer, FileContent> getTodoIndexer(FileType fileType, Project project, final VirtualFile virtualFile) {
     final DataIndexer<TodoIndexEntry, Integer, FileContent> indexer = ourTodoIndexers.get(fileType);
 
     if (indexer != null) {
@@ -93,15 +92,15 @@ public abstract class PlatformIdTableBuilding {
     if (fileType instanceof LanguageFileType) {
       final Language lang = ((LanguageFileType)fileType).getLanguage();
       final ParserDefinition parserDef = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
-      final TokenSet commentTokens =
-        parserDef != null ? parserDef.getCommentTokens(LanguageVersionUtil.findLanguageVersion(lang, project, virtualFile)) : null;
+      LanguageVersion<Language> languageVersion = LanguageVersionUtil.findLanguageVersion(lang, project, virtualFile);
+      final TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens(languageVersion) : null;
       if (commentTokens != null) {
-        return new TokenSetTodoIndexer(commentTokens, virtualFile, project);
+        return new TokenSetTodoIndexer(commentTokens, languageVersion, virtualFile, project);
       }
     }
 
     if (fileType instanceof CustomSyntaxTableFileType) {
-      return new TokenSetTodoIndexer(ABSTRACT_FILE_COMMENT_TOKENS, virtualFile, project);
+      return new TokenSetTodoIndexer(ABSTRACT_FILE_COMMENT_TOKENS, null, virtualFile, project);
     }
 
     return null;
@@ -123,8 +122,7 @@ public abstract class PlatformIdTableBuilding {
   }
 
   public static boolean isTodoIndexerRegistered(@NotNull FileType fileType) {
-    return ourTodoIndexers.containsKey(fileType) ||
-           TodoIndexers.INSTANCE.forFileType(fileType) != null;
+    return ourTodoIndexers.containsKey(fileType) || TodoIndexers.INSTANCE.forFileType(fileType) != null;
   }
 
   private static class CompositeTodoIndexer implements DataIndexer<TodoIndexEntry, Integer, FileContent> {
@@ -156,11 +154,17 @@ public abstract class PlatformIdTableBuilding {
   private static class TokenSetTodoIndexer implements DataIndexer<TodoIndexEntry, Integer, FileContent> {
     @NotNull
     private final TokenSet myCommentTokens;
+    @Nullable
+    private final LanguageVersion<Language> myLanguageVersion;
     private final VirtualFile myFile;
     private final Project myProject;
 
-    public TokenSetTodoIndexer(@NotNull final TokenSet commentTokens, @NotNull final VirtualFile file, Project project) {
+    public TokenSetTodoIndexer(@NotNull final TokenSet commentTokens,
+                               @Nullable LanguageVersion<Language> languageVersion,
+                               @NotNull final VirtualFile file,
+                               @Nullable Project project) {
       myCommentTokens = commentTokens;
+      myLanguageVersion = languageVersion;
       myFile = file;
       myProject = project;
     }
@@ -186,18 +190,21 @@ public abstract class PlatformIdTableBuilding {
         BaseFilterLexer.TodoScanningState todoScanningState = null;
         final HighlighterIterator iterator = highlighter.createIterator(0);
 
+        Map<Language, LanguageVersion<?>> languageVersionCache = ContainerUtil.newLinkedHashMap();
+        if(myLanguageVersion != null) {
+          languageVersionCache.put(myLanguageVersion.getLanguage(), myLanguageVersion);
+        }
 
         while (!iterator.atEnd()) {
           final IElementType token = iterator.getTokenType();
 
-          if (myCommentTokens.contains(token) ||
-              CommentUtilCore.isCommentToken(token, LanguageVersionUtil.findLanguageVersion(token.getLanguage(), myProject, myFile))) {
+          if (myCommentTokens.contains(token) || isCommentToken(languageVersionCache, token)) {
             int start = iterator.getStart();
             if (start >= documentLength) break;
             int end = iterator.getEnd();
 
-            todoScanningState = BaseFilterLexer
-              .advanceTodoItemsCount(chars.subSequence(start, Math.min(end, documentLength)), occurrenceConsumer, todoScanningState);
+            todoScanningState =
+                    BaseFilterLexer.advanceTodoItemsCount(chars.subSequence(start, Math.min(end, documentLength)), occurrenceConsumer, todoScanningState);
             if (end > documentLength) break;
           }
           iterator.advance();
@@ -212,6 +219,15 @@ public abstract class PlatformIdTableBuilding {
         return map;
       }
       return Collections.emptyMap();
+    }
+
+    private boolean isCommentToken(Map<Language, LanguageVersion<?>> cache, IElementType token) {
+      Language language = token.getLanguage();
+      LanguageVersion<?> languageVersion = cache.get(language);
+      if(languageVersion == null) {
+        cache.put(language, languageVersion = LanguageVersionUtil.findLanguageVersion(language, myProject, myFile));
+      }
+      return CommentUtilCore.isCommentToken(token, languageVersion);
     }
   }
 
