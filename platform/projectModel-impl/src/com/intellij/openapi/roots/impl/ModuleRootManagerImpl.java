@@ -19,6 +19,7 @@ package com.intellij.openapi.roots.impl;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.*;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
@@ -387,14 +388,14 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @RequiredReadAction
-  public void loadState(Element parent) {
-    loadState(parent, myRootModel != null);
+  public void loadState(Element parent, @Nullable ProgressIndicator indicator) {
+    loadState(parent, indicator, myRootModel != null);
   }
 
   @RequiredReadAction
-  protected void loadState(Element element, boolean throwEvent) {
+  protected void loadState(Element element, @Nullable ProgressIndicator indicator, boolean throwEvent) {
     try {
-      final RootModelImpl newModel = new RootModelImpl(element, this, throwEvent);
+      final RootModelImpl newModel = new RootModelImpl(element, indicator, this, throwEvent);
 
       if (throwEvent) {
         makeRootsChange(new Runnable() {

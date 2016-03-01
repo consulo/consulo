@@ -24,6 +24,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.module.*;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
@@ -244,6 +245,10 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     List<ModuleLoadingErrorDescription> errors = new ArrayList<ModuleLoadingErrorDescription>();
 
     for (ModuleLoadItem moduleLoadItem : myModuleLoadItems) {
+      if(progressIndicator != null) {
+        progressIndicator.checkCanceled();
+      }
+
       try {
         final Module module = moduleModel.loadModuleInternal(moduleLoadItem, progressIndicator);
         final String[] groups = moduleLoadItem.getGroups();
@@ -252,6 +257,9 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
         }
 
         myFailedModulePaths.remove(moduleLoadItem);
+      }
+      catch (ProcessCanceledException e) {
+        throw e;
       }
       catch (ModuleWithNameAlreadyExistsException e) {
         errors.add(ModuleLoadingErrorDescription.create(e.getMessage(), moduleLoadItem, this));
@@ -499,11 +507,13 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   }
 
   @NotNull
-  protected abstract ModuleEx createModule(@NotNull String name, @Nullable String dirUrl);
+  protected abstract ModuleEx createModule(@NotNull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
 
   @NotNull
-  protected ModuleEx createAndLoadModule(@NotNull final ModuleLoadItem moduleLoadItem, @NotNull ModuleModelImpl moduleModel) {
-    final ModuleEx module = createModule(moduleLoadItem.getName(), moduleLoadItem.getDirUrl());
+  protected ModuleEx createAndLoadModule(@NotNull final ModuleLoadItem moduleLoadItem,
+                                         @NotNull ModuleModelImpl moduleModel,
+                                         @Nullable final ProgressIndicator progressIndicator) {
+    final ModuleEx module = createModule(moduleLoadItem.getName(), moduleLoadItem.getDirUrl(), progressIndicator);
     moduleModel.initModule(module);
 
     collapseOrExpandMacros(module, moduleLoadItem.getElement(), false);
@@ -512,7 +522,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       @Override
       public void run() {
-        moduleRootManager.loadState(moduleLoadItem.getElement());
+        moduleRootManager.loadState(moduleLoadItem.getElement(), progressIndicator);
       }
     });
 
@@ -624,7 +634,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       }
 
       if (moduleEx == null) {
-        moduleEx = createModule(name, dirUrl);
+        moduleEx = createModule(name, dirUrl, null);
         if (options != null) {
           for (Map.Entry<String, String> option : options.entrySet()) {
             moduleEx.setOption(option.getKey(), option.getValue());
@@ -695,7 +705,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       }
 
       if (oldModule == null) {
-        oldModule = createAndLoadModule(item, this);
+        oldModule = createAndLoadModule(item, this, progressIndicator);
       }
       return oldModule;
     }

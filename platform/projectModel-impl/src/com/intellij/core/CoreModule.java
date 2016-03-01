@@ -26,6 +26,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.impl.ModuleEx;
 import com.intellij.openapi.module.impl.ModuleScopeProvider;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleFileIndex;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -39,6 +40,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author yole
@@ -68,9 +70,10 @@ public class CoreModule extends MockComponentManager implements ModuleEx {
 
     final ModuleRootManagerImpl moduleRootManager =
       new ModuleRootManagerImpl(this) {
+        @RequiredReadAction
         @Override
-        public void loadState(Element object) {
-          loadState(object, false);
+        public void loadState(Element object, ProgressIndicator progressIndicator) {
+          loadState(object, progressIndicator, false);
         }
       };
     Disposer.register(parentDisposable, new Disposable() {

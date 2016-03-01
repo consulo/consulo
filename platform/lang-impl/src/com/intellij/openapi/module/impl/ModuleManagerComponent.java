@@ -77,7 +77,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
   @NotNull
   @Override
-  protected ModuleEx createModule(@NotNull String name, @Nullable String dirUrl) {
+  protected ModuleEx createModule(@NotNull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
     return new ModuleImpl(name, dirUrl, myProject);
   }
 

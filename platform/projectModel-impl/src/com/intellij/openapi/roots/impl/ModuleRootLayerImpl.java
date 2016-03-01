@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.impl;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
@@ -32,7 +33,10 @@ import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.consulo.lombok.annotations.Logger;
-import org.consulo.module.extension.*;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionChangeListener;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -194,46 +198,53 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     }
   }
 
-  public void readExternal(@NotNull Element element) throws InvalidDataException {
+  public void loadState(@NotNull Element element, @Nullable ProgressIndicator progressIndicator) throws InvalidDataException {
     removeAllContentEntries();
     removeAllOrderEntries();
 
-    List<Element> moduleExtensionChild = element.getChildren("extension");
-
-    for (Element child : moduleExtensionChild) {
-      final String id = child.getAttributeValue("id");
-
-      ModuleExtensionProviderEP providerEP = ModuleExtensionProviderEP.findProviderEP(id);
-      if (providerEP != null) {
-        ModuleExtension<?> moduleExtension = getExtensionWithoutCheck(id);
-        assert moduleExtension != null;
-        moduleExtension.loadState(child);
-      }
-      else {
-        myUnknownModuleExtensions.add(child.clone());
-      }
-    }
-
-    final List<Element> contentChildren = element.getChildren(ContentEntryImpl.ELEMENT_NAME);
-    for (Element child : contentChildren) {
-      ContentEntryImpl contentEntry = new ContentEntryImpl(child, this);
-      myContent.add(contentEntry);
-    }
-
-    final List<Element> orderElements = element.getChildren(OrderEntryTypeProviders.ORDER_ENTRY_ELEMENT_NAME);
+    List<Element> children = element.getChildren();
+    int i = 0;
     boolean moduleSourceAdded = false;
-    for (Element child : orderElements) {
-      final OrderEntry orderEntry = OrderEntryTypeProviders.loadOrderEntry(child, this);
-      if (orderEntry == null) {
-        continue;
+    for (Element child : children) {
+      i++;
+
+      if(i % 10 == 0) {
+        if (progressIndicator != null) {
+          progressIndicator.checkCanceled();
+        }
       }
-      if (orderEntry instanceof ModuleSourceOrderEntry) {
-        if (moduleSourceAdded) {
+
+      String name = child.getName();
+      if("extension".equals(name))  {
+        final String id = child.getAttributeValue("id");
+
+        ModuleExtensionProviderEP providerEP = ModuleExtensionProviderEP.findProviderEP(id);
+        if (providerEP != null) {
+          ModuleExtension<?> moduleExtension = getExtensionWithoutCheck(id);
+          assert moduleExtension != null;
+          moduleExtension.loadState(child);
+        }
+        else {
+          myUnknownModuleExtensions.add(child.clone());
+        }
+      }
+      else if(ContentEntryImpl.ELEMENT_NAME.equals(name))  {
+        ContentEntryImpl contentEntry = new ContentEntryImpl(child, this);
+        myContent.add(contentEntry);
+      }
+      else if(OrderEntryTypeProviders.ORDER_ENTRY_ELEMENT_NAME.equals(name)) {
+        final OrderEntry orderEntry = OrderEntryTypeProviders.loadOrderEntry(child, this);
+        if (orderEntry == null) {
           continue;
         }
-        moduleSourceAdded = true;
+        if (orderEntry instanceof ModuleSourceOrderEntry) {
+          if (moduleSourceAdded) {
+            continue;
+          }
+          moduleSourceAdded = true;
+        }
+        myOrderEntries.add(orderEntry);
       }
-      myOrderEntries.add(orderEntry);
     }
 
     if (!moduleSourceAdded) {

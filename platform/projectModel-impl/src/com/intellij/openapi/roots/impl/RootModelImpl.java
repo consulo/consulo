@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
@@ -69,10 +70,14 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @RequiredReadAction
-  RootModelImpl(@NotNull Element element, @NotNull ModuleRootManagerImpl moduleRootManager, boolean writable) throws InvalidDataException {
+  RootModelImpl(@NotNull Element element,
+                @Nullable ProgressIndicator progressIndicator,
+                @NotNull ModuleRootManagerImpl moduleRootManager,
+                boolean writable)
+          throws InvalidDataException {
     myModuleRootManager = moduleRootManager;
 
-    loadState(element);
+    loadState(element, progressIndicator);
 
     myWritable = writable;
 
@@ -102,11 +107,11 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     myLayers.put(myCurrentLayerName, moduleRootLayer);
 
     if (element != null) {
-      moduleRootLayer.readExternal(element);
+      moduleRootLayer.loadState(element, null);
     }
   }
 
-  public void loadState(Element element) throws InvalidDataException {
+  private void loadState(Element element, @Nullable ProgressIndicator progressIndicator) throws InvalidDataException {
     String currentLayer = element.getAttributeValue("current-layer");
     if (currentLayer != null) {
       setCurrentLayerSafe(currentLayer);
@@ -115,7 +120,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         String name = moduleLayerElement.getAttributeValue("name");
 
         ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this);
-        moduleRootLayer.readExternal(moduleLayerElement);
+        moduleRootLayer.loadState(moduleLayerElement, progressIndicator);
 
         myLayers.put(name, moduleRootLayer);
       }
@@ -254,13 +259,13 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     ModuleRootLayerListener layerListener = getModule().getProject().getMessageBus().syncPublisher(ProjectTopics.MODULE_LAYERS);
 
     boolean extensionListenerAlreadyCalled = false;
-    if(!Comparing.equal(sourceModel.myCurrentLayerName, myCurrentLayerName)) {
+    if (!Comparing.equal(sourceModel.myCurrentLayerName, myCurrentLayerName)) {
       ModuleRootLayerImpl oldLayer = sourceModel.getCurrentLayer();
       String oldName = sourceModel.getCurrentLayerName();
 
       sourceModel.setCurrentLayerSafe(myCurrentLayerName);
 
-      if(notifyEvents) {
+      if (notifyEvents) {
         layerListener.currentLayerChanged(getModule(), oldName, oldLayer, myCurrentLayerName, getCurrentLayer());
         extensionListenerAlreadyCalled = true;
       }
@@ -277,8 +282,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         sourceModel.myLayers.put(entry.getKey(), toCommit);
       }
 
-      if(entry.getValue().copy(toCommit, notifyEvents && !extensionListenerAlreadyCalled && myCurrentLayerName.equals(entry.getKey())) && notifyEvents) {
-        if(sourceModuleLayer == null) {
+      if (entry.getValue().copy(toCommit, notifyEvents && !extensionListenerAlreadyCalled && myCurrentLayerName.equals(entry.getKey())) && notifyEvents) {
+        if (sourceModuleLayer == null) {
           layerListener.layerAdded(getModule(), toCommit);
         }
         else {
@@ -299,7 +304,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     for (String layerName : toRemove) {
       ModuleRootLayerImpl removed = sourceModel.myLayers.remove(layerName);
       assert removed != null;
-      if(notifyEvents) {
+      if (notifyEvents) {
         layerListener.layerRemove(getModule(), removed);
       }
 
@@ -373,25 +378,25 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     RootModelImpl sourceModel = getSourceModel();
 
-    if(!Comparing.equal(myCurrentLayerName, sourceModel.myCurrentLayerName)) {
+    if (!Comparing.equal(myCurrentLayerName, sourceModel.myCurrentLayerName)) {
       return true;
     }
 
     for (Map.Entry<String, ModuleRootLayerImpl> entry : myLayers.entrySet()) {
       ModuleRootLayerImpl sourceLayer = sourceModel.myLayers.get(entry.getKey());
       // new layer
-      if(sourceLayer == null) {
+      if (sourceLayer == null) {
         return true;
       }
 
-      if(entry.getValue().isChanged(sourceLayer)) {
+      if (entry.getValue().isChanged(sourceLayer)) {
         return true;
       }
     }
     // check for deleted layers
     for (String layerName : sourceModel.myLayers.keySet()) {
       ModuleRootLayerImpl layer = myLayers.get(layerName);
-      if(layer == null) {
+      if (layer == null) {
         return true;
       }
     }
@@ -419,7 +424,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @NotNull
   @Override
   public ModuleRootLayerImpl getCurrentLayer() {
-    if(myCachedCurrentLayer != null) {
+    if (myCachedCurrentLayer != null) {
       return myCachedCurrentLayer;
     }
     ModuleRootLayerImpl moduleRootLayer = myLayers.get(myCurrentLayerName);
@@ -431,20 +436,20 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Override
   public ModifiableModuleRootLayer addLayer(@NotNull String name, @Nullable String nameForCopy, boolean activate) {
     ModuleRootLayerImpl moduleRootLayer = myLayers.get(name);
-    if(moduleRootLayer != null) {
+    if (moduleRootLayer != null) {
       return moduleRootLayer;
     }
 
     ModuleRootLayerImpl layer = new ModuleRootLayerImpl(null, this);
 
-    if(nameForCopy != null) {
+    if (nameForCopy != null) {
       ModuleRootLayerImpl original = myLayers.get(nameForCopy);
-      if(original != null) {
+      if (original != null) {
         original.copy(layer, false);
       }
     }
     myLayers.put(name, layer);
-    if(activate) {
+    if (activate) {
       setCurrentLayerSafe(name);
     }
     return layer;
@@ -460,7 +465,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public ModifiableModuleRootLayer setCurrentLayer(@NotNull String name) {
     assertWritable();
     ModuleRootLayerImpl moduleRootLayer = myLayers.get(name);
-    if(moduleRootLayer == null) {
+    if (moduleRootLayer == null) {
       return null;
     }
     myCurrentLayerName = name;
@@ -472,10 +477,10 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public boolean removeLayer(@NotNull String name, boolean initDefault) {
     assertWritable();
     ModuleRootLayerImpl removedLayer = myLayers.remove(name);
-    if(removedLayer != null) {
+    if (removedLayer != null) {
       Disposer.dispose(removedLayer);
 
-      if(initDefault && myLayers.isEmpty()) {
+      if (initDefault && myLayers.isEmpty()) {
         try {
           initDefaultLayer(null);
         }
@@ -484,7 +489,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         }
       }
 
-      if(Comparing.equal(myCurrentLayerName, name)) {
+      if (Comparing.equal(myCurrentLayerName, name)) {
         setCurrentLayerSafe(myLayers.isEmpty() ? null : ContainerUtil.getFirstItem(myLayers.keySet()));
       }
     }

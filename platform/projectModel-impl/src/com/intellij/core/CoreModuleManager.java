@@ -18,6 +18,7 @@ package com.intellij.core;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.impl.ModuleEx;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +35,7 @@ public class CoreModuleManager extends ModuleManagerImpl {
 
   @NotNull
   @Override
-  protected ModuleEx createModule(@NotNull String name, String dirUrl) {
+  protected ModuleEx createModule(@NotNull String name, String dirUrl, ProgressIndicator progressIndicator) {
     return new CoreModule(myParentDisposable, myProject, name, dirUrl);
   }
 
