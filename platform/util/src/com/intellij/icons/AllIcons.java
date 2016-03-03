@@ -318,7 +318,6 @@ public class AllIcons {
     public static final Icon Idl = IconLoader.getIcon("/fileTypes/idl.png"); // 16x16
     public static final Icon Properties = IconLoader.getIcon("/fileTypes/properties.png"); // 16x16
     public static final Icon Text = IconLoader.getIcon("/fileTypes/text.png"); // 16x16
-    public static final Icon TypeScript = IconLoader.getIcon("/fileTypes/typeScript.png"); // 16x16
     public static final Icon UiForm = IconLoader.getIcon("/fileTypes/uiForm.png"); // 16x16
     public static final Icon Unknown = IconLoader.getIcon("/fileTypes/unknown.png"); // 16x16
     public static final Icon WsdlFile = IconLoader.getIcon("/fileTypes/wsdlFile.png"); // 16x16
