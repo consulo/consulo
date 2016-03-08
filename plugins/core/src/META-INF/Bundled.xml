@@ -47,5 +47,7 @@
     <bundledColorScheme path="/colorSchemes/twilight"/>
     <bundledColorScheme path="/colorSchemes/vibrant_ink"/>
     <bundledColorScheme path="/colorSchemes/WarmNeon"/>
+    <bundledColorScheme path="/colorSchemes/Visual Studio Light"/>
+    <bundledColorScheme path="/colorSchemes/Visual Studio Dark"/>
   </extensions>
 </idea-plugin>
