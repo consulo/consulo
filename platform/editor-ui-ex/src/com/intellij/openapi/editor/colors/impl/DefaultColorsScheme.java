@@ -37,16 +37,19 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
   @Override
   @Nullable
   public TextAttributes getAttributes(TextAttributesKey key) {
-    if (key == null) return null;
-    TextAttributes attrs = myAttributesMap.get(key);
-    if (attrs == null) {
-      if (key.getFallbackAttributeKey() != null) {
-        attrs = getFallbackAttributes(key.getFallbackAttributeKey());
-        if (attrs != null && !attrs.isFallbackEnabled()) return attrs;
+    if (key != null) {
+      TextAttributesKey fallbackKey = key.getFallbackAttributeKey();
+      TextAttributes attributes = myAttributesMap.get(key);
+      if (fallbackKey == null) {
+        if (attributes != null) return attributes;
       }
-      attrs = key.getDefaultAttributes();
+      else {
+        if (attributes != null && !attributes.isFallbackEnabled()) return attributes;
+        attributes = getFallbackAttributes(fallbackKey);
+        if (attributes != null) return attributes;
+      }
     }
-    return attrs;
+    return myParentScheme == null ? null : myParentScheme.getAttributes(key);
   }
 
   @Nullable
@@ -54,7 +57,16 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
   public Color getColor(ColorKey key) {
     if (key == null) return null;
     Color color = myColorsMap.get(key);
-    return color != null ? color : key.getDefaultColor();
+    if (color != null) {
+      return color;
+    }
+    if (myParentScheme != null) {
+      color = myParentScheme.getColor(key);
+      if (color != null) {
+        return color;
+      }
+    }
+    return key.getDefaultColor();
   }
 
   @Override
