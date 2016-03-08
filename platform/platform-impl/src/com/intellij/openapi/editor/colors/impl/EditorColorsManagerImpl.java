@@ -25,7 +25,6 @@ import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.colors.ex.DefaultColorSchemesManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
@@ -38,6 +37,7 @@ import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import org.consulo.annotations.Immutable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -45,9 +45,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @State(
         name = "EditorColorsManagerImpl",
@@ -57,25 +55,22 @@ import java.util.List;
 public class EditorColorsManagerImpl extends EditorColorsManager implements PersistentStateComponent<EditorColorsManagerImpl.State> {
   private static final Logger LOG = Logger.getInstance(EditorColorsManagerImpl.class);
 
-  @NonNls private static final String SCHEME_NODE_NAME = "scheme";
+  @NonNls
+  private static final String SCHEME_NODE_NAME = "scheme";
   private static final String DEFAULT_NAME = "Default";
-
-  private final EventDispatcher<EditorColorsListener> myListeners = EventDispatcher.create(EditorColorsListener.class);
-
-  private final DefaultColorSchemesManager myDefaultColorSchemesManager;
-  private final SchemesManager<EditorColorsScheme, EditorColorsSchemeImpl> mySchemesManager;
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/colors";
 
+  private final EventDispatcher<EditorColorsListener> myListeners = EventDispatcher.create(EditorColorsListener.class);
+  private final SchemesManager<EditorColorsScheme, EditorColorsSchemeImpl> mySchemesManager;
   private State myState = new State();
+  private final Map<String, EditorColorsScheme> myDefaultColorsSchemes = new LinkedHashMap<String, EditorColorsScheme>();
 
-  public EditorColorsManagerImpl(DefaultColorSchemesManager defaultColorSchemesManager, SchemesManagerFactory schemesManagerFactory) {
-    myDefaultColorSchemesManager = defaultColorSchemesManager;
-
+  public EditorColorsManagerImpl(SchemesManagerFactory schemesManagerFactory) {
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<EditorColorsSchemeImpl>() {
       @NotNull
       @Override
       public EditorColorsSchemeImpl readScheme(@NotNull Element element) {
-        EditorColorsSchemeImpl scheme = new EditorColorsSchemeImpl(null);
+        EditorColorsSchemeImpl scheme = new EditorColorsSchemeImpl(null, EditorColorsManagerImpl.this);
         scheme.readExternal(element);
         return scheme;
       }
@@ -120,30 +115,24 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     addDefaultSchemes();
 
     // Load default schemes from providers
-    if (!isUnitTestOrHeadlessMode()) {
-      for (BundledColorSchemeEP ep : BundledColorSchemeEP.EP_NAME.getExtensions()) {
-        mySchemesManager.loadBundledScheme(ep.path + ".xml", ep, new ThrowableConvertor<Element, EditorColorsScheme, Throwable>() {
-          @Override
-          public EditorColorsScheme convert(Element element) throws Throwable {
-            return new ReadOnlyColorsSchemeImpl(element);
-          }
-        });
-      }
+    for (BundledColorSchemeEP ep : BundledColorSchemeEP.EP_NAME.getExtensions()) {
+      mySchemesManager.loadBundledScheme(ep.path, ep, new ThrowableConvertor<Element, EditorColorsScheme, Throwable>() {
+        @Override
+        public EditorColorsScheme convert(Element element) throws Throwable {
+          DefaultColorsScheme defaultColorsScheme = new DefaultColorsScheme(EditorColorsManagerImpl.this);
+          defaultColorsScheme.readExternal(element);
+
+          myDefaultColorsSchemes.put(defaultColorsScheme.getName(), defaultColorsScheme);
+          return defaultColorsScheme;
+        }
+      });
     }
 
     mySchemesManager.loadSchemes();
 
     loadAdditionalTextAttributes();
 
-    setGlobalSchemeInner(myDefaultColorSchemesManager.getAllSchemes()[0]);
-  }
-
-  static class ReadOnlyColorsSchemeImpl extends EditorColorsSchemeImpl implements ReadOnlyColorsScheme {
-    public ReadOnlyColorsSchemeImpl(@NotNull Element element) {
-      super(null);
-
-      readExternal(element);
-    }
+    setGlobalSchemeInner(getDefaultScheme());
   }
 
   static class State {
@@ -198,8 +187,15 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     addDefaultSchemes();
   }
 
+  @Override
+  @NotNull
+  @Immutable
+  public Map<String, EditorColorsScheme> getBundledSchemes() {
+    return myDefaultColorsSchemes;
+  }
+
   private void addDefaultSchemes() {
-    for (DefaultColorsScheme defaultScheme : myDefaultColorSchemesManager.getAllSchemes()) {
+    for (EditorColorsScheme defaultScheme : myDefaultColorsSchemes.values()) {
       mySchemesManager.addNewScheme(defaultScheme, true);
     }
   }
@@ -237,8 +233,8 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   }
 
   @NotNull
-  private DefaultColorsScheme getDefaultScheme() {
-    return myDefaultColorSchemesManager.getAllSchemes()[0];
+  private EditorColorsScheme getDefaultScheme() {
+    return myDefaultColorsSchemes.get(DEFAULT_SCHEME_NAME);
   }
 
   @NotNull

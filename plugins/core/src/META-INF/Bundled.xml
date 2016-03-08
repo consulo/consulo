@@ -36,18 +36,19 @@
     <bundledKeymap file="/keymap/Keymap_Netbeans"/>
     <bundledKeymap file="/keymap/JBuilderKeymap"/>
 
-    <bundledColorScheme path="/colorSchemes/Consulo Light"/>
-    <bundledColorScheme path="/colorSchemes/Darcula"/>
-    <bundledColorScheme path="/colorSchemes/all_hallows_eve"/>
-    <bundledColorScheme path="/colorSchemes/blackboard"/>
-    <bundledColorScheme path="/colorSchemes/cobalt"/>
-    <bundledColorScheme path="/colorSchemes/github"/>
-    <bundledColorScheme path="/colorSchemes/monokai"/>
-    <bundledColorScheme path="/colorSchemes/rails_casts"/>
-    <bundledColorScheme path="/colorSchemes/twilight"/>
-    <bundledColorScheme path="/colorSchemes/vibrant_ink"/>
-    <bundledColorScheme path="/colorSchemes/WarmNeon"/>
-    <bundledColorScheme path="/colorSchemes/Visual Studio Light"/>
-    <bundledColorScheme path="/colorSchemes/Visual Studio Dark"/>
+    <bundledColorScheme path="/colorSchemes/Default.xml"/>
+    <bundledColorScheme path="/colorSchemes/Consulo Light.xml"/>
+    <bundledColorScheme path="/colorSchemes/Darcula.xml"/>
+    <bundledColorScheme path="/colorSchemes/all_hallows_eve.xml"/>
+    <bundledColorScheme path="/colorSchemes/blackboard.xml"/>
+    <bundledColorScheme path="/colorSchemes/cobalt.xml"/>
+    <bundledColorScheme path="/colorSchemes/github.xml"/>
+    <bundledColorScheme path="/colorSchemes/monokai.xml"/>
+    <bundledColorScheme path="/colorSchemes/rails_casts.xml"/>
+    <bundledColorScheme path="/colorSchemes/twilight.xml"/>
+    <bundledColorScheme path="/colorSchemes/vibrant_ink.xml"/>
+    <bundledColorScheme path="/colorSchemes/WarmNeon.xml"/>
+    <bundledColorScheme path="/colorSchemes/Visual Studio Light.xml"/>
+    <bundledColorScheme path="/colorSchemes/Visual Studio Dark.xml"/>
   </extensions>
 </idea-plugin>

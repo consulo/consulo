@@ -187,7 +187,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     scheme.apply(clone);
 
     clone.setName(name);
-    MyColorScheme newScheme = new MyColorScheme(clone);
+    MyColorScheme newScheme = new MyColorScheme(clone, EditorColorsManager.getInstance());
     initScheme(newScheme);
 
     newScheme.setIsNew();
@@ -198,7 +198,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   public void addImportedScheme(@NotNull final EditorColorsScheme imported) {
-    MyColorScheme newScheme = new MyColorScheme(imported);
+    MyColorScheme newScheme = new MyColorScheme(imported, EditorColorsManager.getInstance());
     initScheme(newScheme);
 
     mySchemes.put(imported.getName(), newScheme);
@@ -475,7 +475,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     mySchemes = new HashMap<String, MyColorScheme>();
     for (EditorColorsScheme allScheme : allSchemes) {
-      MyColorScheme schemeDelegate = new MyColorScheme(allScheme);
+      MyColorScheme schemeDelegate = new MyColorScheme(allScheme, colorsManager);
       initScheme(schemeDelegate);
       mySchemes.put(schemeDelegate.getName(), schemeDelegate);
     }
@@ -989,8 +989,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     private String                            myName;
     private boolean myIsNew = false;
 
-    private MyColorScheme(@NotNull EditorColorsScheme parentScheme) {
-      super(parentScheme);
+    private MyColorScheme(@NotNull EditorColorsScheme parentScheme, @NotNull EditorColorsManager manager) {
+      super(parentScheme, manager);
 
       parentScheme.getFontPreferences().copyTo(getFontPreferences());
       setLineSpacing(parentScheme.getLineSpacing());

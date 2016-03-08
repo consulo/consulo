@@ -19,10 +19,7 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
-import com.intellij.openapi.editor.colors.ColorKey;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.EditorFontType;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +30,8 @@ import java.awt.*;
 public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnlyColorsScheme {
   private String myName;
 
-  public DefaultColorsScheme() {
-    super(null);
+  public DefaultColorsScheme(@NotNull EditorColorsManager editorColorsManager) {
+    super(null, editorColorsManager);
   }
 
   @Override
@@ -86,9 +83,9 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
 
   @Override
   public EditorColorsScheme clone() {
-    EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(this);
+    EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(this, myEditorColorsManager);
     copyTo(newScheme);
-    newScheme.setName(DEFAULT_SCHEME_NAME);
+    newScheme.setName(myName);
     return newScheme;
   }
 }

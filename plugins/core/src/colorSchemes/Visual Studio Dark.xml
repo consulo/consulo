@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--License: Create Commons Attribution-ShareAlike (BY-SA), from http://color-themes.com/-->
-<scheme name="Visual Studio Dark" version="1" parent_scheme="Default">
+<scheme name="Visual Studio Dark" version="1" parent_scheme="Darcula">
   <option name="LINE_SPACING" value="1.0"/>
   <option name="EDITOR_FONT_SIZE" value="12"/>
   <option name="EDITOR_FONT_NAME" value="Consolas"/>

@@ -22,7 +22,6 @@ package com.intellij.openapi.editor.colors.impl;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.*;
-import com.intellij.openapi.editor.colors.ex.DefaultColorSchemesManager;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.FontSize;
@@ -36,6 +35,7 @@ import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -48,6 +48,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   private static final FontSize DEFAULT_FONT_SIZE = FontSize.SMALL;
 
   protected EditorColorsScheme myParentScheme;
+  protected final EditorColorsManager myEditorColorsManager;
 
   protected FontSize myQuickDocFontSize = DEFAULT_FONT_SIZE;
   protected float myLineSpacing;
@@ -91,17 +92,15 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   @NonNls private static final String CONSOLE_LIGATURES              = "CONSOLE_LIGATURES";
   @NonNls private static final String EDITOR_QUICK_JAVADOC_FONT_SIZE = "EDITOR_QUICK_DOC_FONT_SIZE";
 
-  protected AbstractColorsScheme(EditorColorsScheme parentScheme) {
+  protected AbstractColorsScheme(@Nullable EditorColorsScheme parentScheme, @NotNull EditorColorsManager editorColorsManager) {
     myParentScheme = parentScheme;
+    myEditorColorsManager = editorColorsManager;
     myFontPreferences.setChangeListener(new Runnable() {
       @Override
       public void run() {
         initFonts();
       }
     });
-  }
-
-  public AbstractColorsScheme() {
   }
 
   @NotNull
@@ -271,6 +270,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     return getName();
   }
 
+  @Override
   public void readExternal(Element parentNode) {
     if (SCHEME_ELEMENT.equals(parentNode.getName())) {
       readScheme(parentNode);
@@ -299,11 +299,11 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     myVersion = readVersion;
     String isDefaultScheme = node.getAttributeValue(DEFAULT_SCHEME_ATTR);
     if (isDefaultScheme == null || !Boolean.parseBoolean(isDefaultScheme)) {
-      myParentScheme = DefaultColorSchemesManager.getInstance().getScheme(node.getAttributeValue(PARENT_SCHEME_ATTR, DEFAULT_SCHEME_NAME));
+      String defaultAttributeValue = node.getAttributeValue(PARENT_SCHEME_ATTR, DEFAULT_SCHEME_NAME);
+      myParentScheme = myEditorColorsManager.getBundledSchemes().get(defaultAttributeValue);
     }
 
-    for (final Object o : node.getChildren()) {
-      Element childNode = (Element)o;
+    for (final Element childNode : node.getChildren()) {
       String childName = childNode.getName();
       if (OPTION_ELEMENT.equals(childName)) {
         readSettings(childNode);

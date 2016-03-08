@@ -17,8 +17,11 @@ package com.intellij.openapi.editor.colors;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
+import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 public abstract class EditorColorsManager {
   @NonNls public static final String DEFAULT_SCHEME_NAME = "Default";
@@ -33,6 +36,10 @@ public abstract class EditorColorsManager {
 
   @NotNull
   public abstract EditorColorsScheme[] getAllSchemes();
+
+  @NotNull
+  @Immutable
+  public abstract Map<String, EditorColorsScheme> getBundledSchemes();
 
   public abstract void setGlobalScheme(EditorColorsScheme scheme);
 

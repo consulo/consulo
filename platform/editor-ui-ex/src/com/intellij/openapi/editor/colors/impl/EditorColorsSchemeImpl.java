@@ -16,6 +16,7 @@
 package com.intellij.openapi.editor.colors.impl;
 
 import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -33,8 +34,8 @@ import java.awt.*;
 public class EditorColorsSchemeImpl extends AbstractColorsScheme implements ExternalizableScheme {
   private final ExternalInfo myExternalInfo = new ExternalInfo();
 
-  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme) {
-    super(parentScheme);
+  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme, @NotNull EditorColorsManager editorColorsManager) {
+    super(parentScheme, editorColorsManager);
   }
 
   @Override
@@ -85,7 +86,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
 
   @Override
   public EditorColorsScheme clone() {
-    EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(myParentScheme);
+    EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(myParentScheme, myEditorColorsManager);
     copyTo(newScheme);
     newScheme.setName(getName());
     return newScheme;
