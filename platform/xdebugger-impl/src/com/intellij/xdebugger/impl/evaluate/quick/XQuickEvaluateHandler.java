@@ -29,6 +29,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.impl.evaluate.quick.common.AbstractValueHint;
 import com.intellij.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueHintType;
+import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,17 +81,22 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
   }
 
   @Nullable
-  private static ExpressionInfo getExpressionInfo(final XDebuggerEvaluator evaluator, final Project project,
+  private static ExpressionInfo getExpressionInfo(final XDebuggerEvaluator evaluator,
+                                                  final Project project,
                                                   final ValueHintType type,
-                                                  final Editor editor, final int offset) {
+                                                  final Editor editor,
+                                                  final int offset) {
     SelectionModel selectionModel = editor.getSelectionModel();
     int selectionStart = selectionModel.getSelectionStart();
     int selectionEnd = selectionModel.getSelectionEnd();
-    if ((type == ValueHintType.MOUSE_CLICK_HINT || type == ValueHintType.MOUSE_ALT_OVER_HINT) && selectionModel.hasSelection()
-        && selectionStart <= offset && offset <= selectionEnd) {
+    if ((type == ValueHintType.MOUSE_CLICK_HINT || type == ValueHintType.MOUSE_ALT_OVER_HINT) &&
+        selectionModel.hasSelection() &&
+        selectionStart <= offset &&
+        offset <= selectionEnd) {
       return new ExpressionInfo(new TextRange(selectionStart, selectionEnd));
     }
-    return evaluator.getExpressionInfoAtOffset(project, editor.getDocument(), offset, type == ValueHintType.MOUSE_CLICK_HINT || type == ValueHintType.MOUSE_ALT_OVER_HINT);
+    return evaluator.getExpressionInfoAtOffset(project, editor.getDocument(), offset,
+                                               type == ValueHintType.MOUSE_CLICK_HINT || type == ValueHintType.MOUSE_ALT_OVER_HINT);
   }
 
   @Override
@@ -100,13 +106,6 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
 
   @Override
   public int getValueLookupDelay(final Project project) {
-    XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
-    if (session != null) {
-      XDebuggerEvaluator evaluator = session.getDebugProcess().getEvaluator();
-      if (evaluator != null) {
-        return evaluator.getValuePopupDelay();
-      }
-    }
-    return 700;
+    return XDebuggerSettingsManager.getInstance().getDataViewSettings().getValueLookupDelay();
   }
 }

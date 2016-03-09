@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.ide.DataManager;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -24,7 +25,6 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -32,6 +32,8 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.ClickListener;
+import com.intellij.util.ui.JBUI;
+import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
@@ -41,9 +43,9 @@ import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.lang.ref.WeakReference;
@@ -59,8 +61,8 @@ public abstract class XDebuggerEditorBase {
   private final XDebuggerEditorsProvider myDebuggerEditorsProvider;
   @NotNull private final EvaluationMode myMode;
   @Nullable private final String myHistoryId;
-  private final XSourcePosition mySourcePosition;
-  private int myHistoryIndex;
+  @Nullable private XSourcePosition mySourcePosition;
+  private int myHistoryIndex = -1;
 
   private final JLabel myChooseFactory = new JLabel();
   private WeakReference<ListPopup> myPopup;
@@ -76,21 +78,24 @@ public abstract class XDebuggerEditorBase {
     myHistoryId = historyId;
     mySourcePosition = sourcePosition;
 
-    myChooseFactory.setToolTipText("Click to change the language");
-    myChooseFactory.setBorder(new EmptyBorder(0, 3, 0, 3));
+    myChooseFactory.setToolTipText(XDebuggerBundle.message("xdebugger.evaluate.language.hint"));
+    myChooseFactory.setBorder(JBUI.Borders.empty(0, 3, 0, 3));
     new ClickListener() {
       @Override
       public boolean onClick(@NotNull MouseEvent e, int clickCount) {
-        ListPopup oldPopup = SoftReference.dereference(myPopup);
-        if (oldPopup != null && !oldPopup.isDisposed()) {
-          oldPopup.cancel();
-          myPopup = null;
+        if (myChooseFactory.isEnabled()) {
+          ListPopup oldPopup = SoftReference.dereference(myPopup);
+          if (oldPopup != null && !oldPopup.isDisposed()) {
+            oldPopup.cancel();
+            myPopup = null;
+            return true;
+          }
+          ListPopup popup = createLanguagePopup();
+          popup.showUnderneathOf(myChooseFactory);
+          myPopup = new WeakReference<ListPopup>(popup);
           return true;
         }
-        ListPopup popup = createLanguagePopup();
-        popup.showUnderneathOf(myChooseFactory);
-        myPopup = new WeakReference<ListPopup>(popup);
-        return true;
+        return false;
       }
     }.installOn(myChooseFactory);
   }
@@ -98,18 +103,20 @@ public abstract class XDebuggerEditorBase {
   private ListPopup createLanguagePopup() {
     DefaultActionGroup actions = new DefaultActionGroup();
     for (final Language language : getEditorsProvider().getSupportedLanguages(myProject, mySourcePosition)) {
+      //noinspection ConstantConditions
       actions.add(new AnAction(language.getDisplayName(), null, language.getAssociatedFileType().getIcon()) {
+        @RequiredDispatchThread
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@NotNull AnActionEvent e) {
           XExpression currentExpression = getExpression();
           setExpression(new XExpressionImpl(currentExpression.getExpression(), language, currentExpression.getCustomInfo()));
-          IdeFocusManager.getInstance(getProject()).requestFocus(getComponent(), true);
+          requestFocusInEditor();
         }
       });
     }
 
     DataContext dataContext = DataManager.getInstance().getDataContext(getComponent());
-    return JBPopupFactory.getInstance().createActionGroupPopup("Choose language", actions, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+    return JBPopupFactory.getInstance().createActionGroupPopup("Choose Language", actions, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
   }
 
   protected JPanel addChooseFactoryLabel(JComponent component, boolean top) {
@@ -122,6 +129,13 @@ public abstract class XDebuggerEditorBase {
     return panel;
   }
 
+  public void setSourcePosition(@Nullable XSourcePosition sourcePosition) {
+    if (mySourcePosition != sourcePosition) {
+      mySourcePosition = sourcePosition;
+      setExpression(getExpression());
+    }
+  }
+
   @NotNull
   public EvaluationMode getMode() {
     return myMode;
@@ -132,20 +146,23 @@ public abstract class XDebuggerEditorBase {
 
   public abstract JComponent getComponent();
 
+  public JComponent getEditorComponent() {
+    return getComponent();
+  }
+
   protected abstract void doSetText(XExpression text);
 
   public void setExpression(@Nullable XExpression text) {
     if (text == null) {
       text = getMode() == EvaluationMode.EXPRESSION ? XExpressionImpl.EMPTY_EXPRESSION : XExpressionImpl.EMPTY_CODE_FRAGMENT;
     }
-    saveTextInHistory(text);
     Language language = text.getLanguage();
     if (language == null) {
       if (mySourcePosition != null) {
-        language = getFileTypeLanguage(mySourcePosition.getFile().getFileType());
+        language = LanguageUtil.getFileLanguage(mySourcePosition.getFile());
       }
       if (language == null) {
-        language = getFileTypeLanguage(getEditorsProvider().getFileType());
+        language = LanguageUtil.getFileTypeLanguage(getEditorsProvider().getFileType());
       }
     }
     text = new XExpressionImpl(text.getExpression(), language, text.getCustomInfo(), getMode());
@@ -168,25 +185,24 @@ public abstract class XDebuggerEditorBase {
     doSetText(text);
   }
 
-  @Nullable
-  public static Language getFileTypeLanguage(@Nullable FileType fileType) {
-    if (fileType instanceof LanguageFileType) {
-      return ((LanguageFileType)fileType).getLanguage();
-    }
-    return null;
-  }
-
   public abstract XExpression getExpression();
 
   @Nullable
   public abstract JComponent getPreferredFocusedComponent();
+
+  public void requestFocusInEditor() {
+    JComponent preferredFocusedComponent = getPreferredFocusedComponent();
+    if (preferredFocusedComponent != null) {
+      IdeFocusManager.getInstance(myProject).requestFocus(preferredFocusedComponent, true);
+    }
+  }
 
   public abstract void selectAll();
 
   protected void onHistoryChanged() {
   }
 
-  protected List<XExpression> getRecentExpressions() {
+  public List<XExpression> getRecentExpressions() {
     if (myHistoryId != null) {
       return XDebuggerHistoryManager.getInstance(myProject).getRecentExpressions(myHistoryId);
     }
@@ -200,11 +216,20 @@ public abstract class XDebuggerEditorBase {
   private void saveTextInHistory(final XExpression text) {
     if (myHistoryId != null) {
       boolean update = XDebuggerHistoryManager.getInstance(myProject).addRecentExpression(myHistoryId, text);
-      myHistoryIndex = 0;
+      myHistoryIndex = -1; //meaning not from the history list
       if (update) {
         onHistoryChanged();
       }
     }
+  }
+
+  @NotNull
+  protected FileType getFileType(@NotNull XExpression expression) {
+    FileType fileType = LanguageUtil.getLanguageFileType(expression.getLanguage());
+    if (fileType != null) {
+      return fileType;
+    }
+    return getEditorsProvider().getFileType();
   }
 
   public XDebuggerEditorsProvider getEditorsProvider() {
@@ -231,7 +256,7 @@ public abstract class XDebuggerEditorBase {
     final List<XExpression> expressions = getRecentExpressions();
     if (myHistoryIndex < expressions.size() - 1) {
       myHistoryIndex++;
-      doSetText(expressions.get(myHistoryIndex));
+      setExpression(expressions.get(myHistoryIndex));
     }
   }
 
@@ -239,7 +264,7 @@ public abstract class XDebuggerEditorBase {
     final List<XExpression> expressions = getRecentExpressions();
     if (myHistoryIndex > 0) {
       myHistoryIndex--;
-      doSetText(expressions.get(myHistoryIndex));
+      setExpression(expressions.get(myHistoryIndex));
     }
   }
 }

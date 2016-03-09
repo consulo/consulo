@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,12 @@ package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.event.DocumentAdapter;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.EditorComboBoxEditor;
 import com.intellij.ui.EditorComboBoxRenderer;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
@@ -46,7 +45,9 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
   private EditorComboBoxEditor myEditor;
   private XExpression myExpression;
 
-  public XDebuggerExpressionComboBox(final @NotNull Project project, final @NotNull XDebuggerEditorsProvider debuggerEditorsProvider, final @Nullable @NonNls String historyId,
+  public XDebuggerExpressionComboBox(final @NotNull Project project,
+                                     final @NotNull XDebuggerEditorsProvider debuggerEditorsProvider,
+                                     final @Nullable @NonNls String historyId,
                                      final @Nullable XSourcePosition sourcePosition) {
     super(project, debuggerEditorsProvider, EvaluationMode.EXPRESSION, historyId, sourcePosition);
     myComboBox = new ComboBox(100);
@@ -69,11 +70,13 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     return myComponent;
   }
 
+  @Override
   @Nullable
   public Editor getEditor() {
     return myEditor.getEditor();
   }
 
+  @Override
   public JComponent getEditorComponent() {
     return myEditor.getEditorComponent();
   }
@@ -81,7 +84,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
   public void setEnabled(boolean enable) {
     if (enable == myComboBox.isEnabled()) return;
 
-    myComboBox.setEnabled(enable);
+    UIUtil.setEnabled(myComponent, enable, true);
     //myComboBox.setEditable(enable);
 
     if (enable) {
@@ -96,10 +99,22 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     myEditor = new EditorComboBoxEditor(getProject(), getEditorsProvider().getFileType()) {
       @Override
       public void setItem(Object anObject) {
-        if (anObject == null) {
-          anObject = XExpressionImpl.EMPTY_EXPRESSION;
+        if (anObject == null || anObject instanceof XExpression) {
+          if (anObject == null) {
+            anObject = XExpressionImpl.EMPTY_EXPRESSION;
+          }
+          XExpression expression = (XExpression)anObject;
+          getEditorComponent().setNewDocumentAndFileType(getFileType(expression), createDocument(expression));
         }
-        super.setItem(createDocument(((XExpression)anObject)));
+        else if (anObject instanceof Document) {
+          getEditorComponent().setDocument((Document)anObject);
+        }
+      }
+
+      @Override
+      protected void onEditorCreate(EditorEx editor) {
+        editor.putUserData(DebuggerCopyPastePreprocessor.REMOVE_NEWLINES_ON_PASTE, true);
+        editor.getColorsScheme().setEditorFontSize(myComboBox.getFont().getSize());
       }
     };
     myEditor.getEditorComponent().setFontInheritedFromLAF(false);
@@ -108,23 +123,6 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     myComboBox.setRenderer(new EditorComboBoxRenderer(myEditor));
     myComboBox.setMaximumRowCount(XDebuggerHistoryManager.MAX_RECENT_EXPRESSIONS);
   }
-
-  @Override
-  protected Document createDocument(XExpression text) {
-    Document document = super.createDocument(text);
-    document.addDocumentListener(REPLACE_NEWLINES_LISTENER);
-    return document;
-  }
-
-  private static DocumentListener REPLACE_NEWLINES_LISTENER = new DocumentAdapter() {
-    @Override
-    public void documentChanged(DocumentEvent e) {
-      String text = e.getNewFragment().toString();
-      if (text.contains("\n")) {
-        e.getDocument().replaceString(e.getOffset(), e.getOffset() + e.getNewLength(), text.replace('\n', ' '));
-      }
-    }
-  };
 
   @Override
   protected void onHistoryChanged() {
@@ -155,12 +153,11 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
 
   @Override
   public XExpression getExpression() {
-    if (myComboBox.isPopupVisible()) {
-      return (XExpression)myComboBox.getPopup().getList().getSelectedValue();
+    Object document = myEditor.getItem();
+    if (document instanceof Document) { // sometimes null on Mac
+      return getEditorsProvider().createExpression(getProject(), (Document)document, myExpression.getLanguage(), EvaluationMode.EXPRESSION);
     }
-    else {
-      return getEditorsProvider().createExpression(getProject(), (Document)myEditor.getItem(), myExpression.getLanguage(), EvaluationMode.EXPRESSION);
-    }
+    return myExpression;
   }
 
   @Override

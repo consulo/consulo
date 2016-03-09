@@ -64,5 +64,7 @@
 
     <eapDescriptor implementation="com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerWatchersInVariablesEapDescriptor" />
     <editor.linePainter implementation="com.intellij.xdebugger.impl.evaluate.XDebuggerEditorLinePainter" />
+
+    <copyPastePreProcessor implementation="com.intellij.xdebugger.impl.ui.DebuggerCopyPastePreprocessor"/>
   </extensions>
 </idea-plugin>

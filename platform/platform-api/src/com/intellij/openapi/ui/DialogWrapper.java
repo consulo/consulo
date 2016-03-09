@@ -1737,7 +1737,7 @@ public abstract class DialogWrapper {
   }
 
   protected class OkAction extends DialogWrapperAction {
-    protected OkAction() {
+    public OkAction() {
       super(CommonBundle.getOkButtonText());
       putValue(DEFAULT_ACTION, Boolean.TRUE);
     }
