@@ -62,6 +62,7 @@ import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 
 public abstract class PsiDocumentManagerBase extends PsiDocumentManager implements DocumentListener, ProjectComponent {
   static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.PsiDocumentManagerImpl");
@@ -581,12 +582,33 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   @NotNull
-  public FrozenDocument getLastCommittedDocument(@NotNull Document document) {
-    if (document instanceof FrozenDocument) return (FrozenDocument)document;
+  public DocumentEx getLastCommittedDocument(@NotNull Document document) {
+    if (document instanceof FrozenDocument) return (DocumentEx)document;
 
-    assert document instanceof DocumentImpl : "Document is not base impl: " + document.getClass().getName();
+    if (document instanceof DocumentWindow) {
+      DocumentWindow window = (DocumentWindow)document;
+      Document delegate = window.getDelegate();
+      if (delegate instanceof FrozenDocument) return (DocumentEx)window;
+
+      if (!window.isValid()) {
+        throw new AssertionError("host committed: " + isCommitted(delegate) + ", window=" + window);
+      }
+
+      UncommittedInfo info = myUncommittedInfos.get(delegate);
+      DocumentWindow answer = info == null ? null : info.myFrozenWindows.get(document);
+      if (answer == null) answer = freezeWindow(window);
+      if (info != null) answer = ConcurrencyUtil.cacheOrGet(info.myFrozenWindows, window, answer);
+      return (DocumentEx)answer;
+    }
+
+    assert document instanceof DocumentImpl;
     UncommittedInfo info = myUncommittedInfos.get(document);
     return info != null ? info.myFrozen : ((DocumentImpl)document).freeze();
+  }
+
+  @NotNull
+  protected DocumentWindow freezeWindow(@NotNull DocumentWindow document) {
+    throw new UnsupportedOperationException();
   }
 
   @NotNull
@@ -909,6 +931,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     final DocumentImpl myOriginal;
     final FrozenDocument myFrozen;
     final List<DocumentEvent> myEvents = ContainerUtil.newArrayList();
+    private final ConcurrentMap<DocumentWindow, DocumentWindow> myFrozenWindows = ContainerUtil.newConcurrentMap();
 
     public UncommittedInfo(DocumentImpl original) {
       myOriginal = original;
