@@ -24,6 +24,7 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * @author peter
@@ -31,6 +32,7 @@ import com.intellij.psi.PsiDocumentManager;
 public class ExpandLiveTemplateByTabAction extends EditorAction {
   public ExpandLiveTemplateByTabAction() {
     super(new EditorWriteActionHandler(true) {
+      @RequiredWriteAction
       @Override
       public void executeWriteAction(Editor editor, DataContext dataContext) {
         Project project = editor.getProject();

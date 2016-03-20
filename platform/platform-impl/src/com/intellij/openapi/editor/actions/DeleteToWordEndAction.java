@@ -30,6 +30,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.ide.CopyPasteManager;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class DeleteToWordEndAction extends TextComponentEditorAction {
   public DeleteToWordEndAction() {
@@ -45,6 +46,7 @@ public class DeleteToWordEndAction extends TextComponentEditorAction {
       myNegateCamelMode = negateCamelMode;
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);

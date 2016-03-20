@@ -24,6 +24,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class EnterHandler extends BaseEnterHandler {
   private final EditorActionHandler myOriginalHandler;
@@ -38,6 +39,7 @@ public class EnterHandler extends BaseEnterHandler {
     return myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
 
+  @RequiredWriteAction
   @Override
   public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
     final Project project = editor.getProject();

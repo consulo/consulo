@@ -28,6 +28,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * @author max
@@ -51,6 +52,7 @@ public class SplitLineAction extends EditorAction {
              !((EditorEx)editor).isEmbeddedIntoDialogWrapper();
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
       CopyPasteManager.getInstance().stopKillRings();

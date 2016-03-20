@@ -21,6 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * Stands for emacs 'reverse-kill-line' action, i.e.
@@ -37,7 +38,8 @@ public class CutLineBackwardAction extends EditorAction {
   }
 
   static class Handler extends EditorWriteActionHandler {
-    
+
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       final Document document = editor.getDocument();

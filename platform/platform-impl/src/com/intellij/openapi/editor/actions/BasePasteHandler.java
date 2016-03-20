@@ -24,6 +24,8 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.Producer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.awt.datatransfer.Transferable;
 
@@ -35,6 +37,7 @@ public class BasePasteHandler extends EditorWriteActionHandler {
     return !editor.isViewer();
   }
 
+  @RequiredDispatchThread
   @Override
   public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     // We capture the contents to paste here, so it that it won't be affected by possible clipboard operations later (e.g. during unlocking
@@ -48,6 +51,7 @@ public class BasePasteHandler extends EditorWriteActionHandler {
     }
   }
 
+  @RequiredWriteAction
   @Override
   public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     if (myTransferable != null) {

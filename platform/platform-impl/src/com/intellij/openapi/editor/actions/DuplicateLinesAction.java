@@ -21,6 +21,7 @@ import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.Pair;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * @author yole
@@ -35,6 +36,7 @@ public class DuplicateLinesAction extends EditorAction {
       super(true);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       if (editor.getSelectionModel().hasSelection()) {

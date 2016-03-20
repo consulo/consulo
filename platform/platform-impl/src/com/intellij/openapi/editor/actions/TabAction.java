@@ -43,6 +43,7 @@ import com.intellij.util.ui.MacUIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class TabAction extends EditorAction {
   public TabAction() {
@@ -55,6 +56,7 @@ public class TabAction extends EditorAction {
       super(true);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       Project project = CommonDataKeys.PROJECT.getData(dataContext);

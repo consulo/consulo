@@ -24,6 +24,7 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Producer;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.awt.datatransfer.Transferable;
 
@@ -39,6 +40,7 @@ public class PasteAction extends EditorAction {
   }
 
   private static class Handler extends BasePasteHandler {
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
       TextRange range = null;

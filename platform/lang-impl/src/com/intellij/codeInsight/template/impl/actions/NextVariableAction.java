@@ -33,6 +33,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class NextVariableAction extends EditorAction {
   public NextVariableAction() {
@@ -41,6 +42,7 @@ public class NextVariableAction extends EditorAction {
   }
 
   private static class Handler extends EditorWriteActionHandler {
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);

@@ -26,6 +26,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.ide.CopyPasteManager;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * @author max
@@ -45,6 +46,7 @@ public class StartNewLineAction extends EditorAction {
       return getEnterHandler().isEnabled(editor, caret, dataContext);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
       CopyPasteManager.getInstance().stopKillRings();

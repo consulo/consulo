@@ -35,6 +35,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class UnindentSelectionAction extends EditorAction {
   public UnindentSelectionAction() {
@@ -46,6 +47,7 @@ public class UnindentSelectionAction extends EditorAction {
       super(true);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       Project project = CommonDataKeys.PROJECT.getData(dataContext);

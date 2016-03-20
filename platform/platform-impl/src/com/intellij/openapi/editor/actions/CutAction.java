@@ -32,6 +32,7 @@ import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.registry.Registry;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class CutAction extends EditorAction {
   public CutAction() {
@@ -39,6 +40,7 @@ public class CutAction extends EditorAction {
   }
 
   public static class Handler extends EditorWriteActionHandler {
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(final Editor editor, DataContext dataContext) {
       if(!editor.getSelectionModel().hasSelection(true)) {

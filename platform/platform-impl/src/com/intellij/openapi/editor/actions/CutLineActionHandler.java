@@ -24,6 +24,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 class CutLineActionHandler extends EditorWriteActionHandler {
   private final boolean myToLineStart;
@@ -37,6 +38,7 @@ class CutLineActionHandler extends EditorWriteActionHandler {
     myCopyToClipboard = copyToClipboard;
   }
 
+  @RequiredWriteAction
   @Override
   public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     if (caret == null) {

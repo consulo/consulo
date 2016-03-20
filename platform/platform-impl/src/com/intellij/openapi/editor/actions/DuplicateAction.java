@@ -32,6 +32,7 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class DuplicateAction extends EditorAction {
   public DuplicateAction() {
@@ -43,6 +44,7 @@ public class DuplicateAction extends EditorAction {
       super(true);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       duplicateLineOrSelectedBlockAtCaret(editor);

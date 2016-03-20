@@ -33,6 +33,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIntHashMap;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class DeleteToWordStartAction extends TextComponentEditorAction {
 
@@ -78,6 +79,7 @@ public class DeleteToWordStartAction extends TextComponentEditorAction {
       myNegateCamelMode = negateCamelMode;
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);

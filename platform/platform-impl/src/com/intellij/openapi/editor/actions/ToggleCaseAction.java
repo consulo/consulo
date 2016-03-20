@@ -29,6 +29,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class ToggleCaseAction extends TextComponentEditorAction {
   public ToggleCaseAction() {
@@ -40,6 +41,7 @@ public class ToggleCaseAction extends TextComponentEditorAction {
       super(true);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       final SelectionModel selectionModel = editor.getSelectionModel();

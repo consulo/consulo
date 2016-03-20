@@ -49,6 +49,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import static com.intellij.codeInsight.editorActions.JoinLinesHandlerDelegate.CANNOT_JOIN;
 
@@ -67,6 +68,7 @@ public class JoinLinesHandler extends EditorWriteActionHandler {
     return new TextRange(start, end);
   }
 
+  @RequiredWriteAction
   @Override
   public void executeWriteAction(final Editor editor, final DataContext dataContext) {
     if (!(editor.getDocument() instanceof DocumentEx)) {

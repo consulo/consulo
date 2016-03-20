@@ -22,6 +22,8 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * Base class for {@link EditorActionHandler} instances, which need to modify the document.
@@ -38,6 +40,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
   }
 
   @Override
+  @RequiredDispatchThread
   public void doExecute(final Editor editor, @Nullable final Caret caret, final DataContext dataContext) {
     if (editor.isViewer()) return;
 
@@ -70,6 +73,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
    * {@link #executeWriteAction(Editor, Caret, DataContext)}
    * instead.
    */
+  @RequiredWriteAction
   public void executeWriteAction(Editor editor, DataContext dataContext) {
     if (inExecution) {
       return;
@@ -83,6 +87,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
     }
   }
 
+  @RequiredWriteAction
   public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     if (inExecution) {
       return;

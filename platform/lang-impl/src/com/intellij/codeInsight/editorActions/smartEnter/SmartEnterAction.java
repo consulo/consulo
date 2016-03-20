@@ -34,6 +34,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class SmartEnterAction extends EditorAction {
       return getEnterHandler().isEnabled(editor, caret, dataContext);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
       Project project = CommonDataKeys.PROJECT.getData(dataContext);

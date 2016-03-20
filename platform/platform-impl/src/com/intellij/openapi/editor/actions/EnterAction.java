@@ -32,6 +32,7 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.ui.MacUIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class EnterAction extends EditorAction {
   public EnterAction() {
@@ -44,6 +45,7 @@ public class EnterAction extends EditorAction {
       super(true);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));

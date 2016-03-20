@@ -18,6 +18,7 @@ package com.intellij.codeInsight.editorActions;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * @author yole
@@ -27,6 +28,7 @@ public class BackspaceToWordStartHandler extends BackspaceHandler {
     super(originalHandler);
   }
 
+  @RequiredWriteAction
   @Override
   public void executeWriteAction(Editor editor, DataContext dataContext) {
     if (!handleBackspace(editor, dataContext, true)) {

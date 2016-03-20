@@ -30,6 +30,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class JoinLinesAction extends TextComponentEditorAction {
   public JoinLinesAction() {
@@ -41,6 +42,7 @@ public class JoinLinesAction extends TextComponentEditorAction {
       super(true);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       final Document doc = editor.getDocument();

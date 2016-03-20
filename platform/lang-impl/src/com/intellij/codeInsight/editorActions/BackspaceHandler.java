@@ -39,6 +39,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.util.PsiUtilBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.List;
 
@@ -50,6 +51,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     myOriginalHandler = originalHandler;
   }
 
+  @RequiredWriteAction
   @Override
   public void executeWriteAction(Editor editor, DataContext dataContext) {
     if (!handleBackspace(editor, dataContext, false)) {

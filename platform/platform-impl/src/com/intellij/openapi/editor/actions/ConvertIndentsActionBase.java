@@ -24,6 +24,7 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * @author yole
@@ -97,6 +98,7 @@ public abstract class ConvertIndentsActionBase extends EditorAction {
   protected abstract int performAction(Editor editor, TextRange textRange);
 
   private class Handler extends EditorWriteActionHandler {
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(final Editor editor, DataContext dataContext) {
       final SelectionModel selectionModel = editor.getSelectionModel();

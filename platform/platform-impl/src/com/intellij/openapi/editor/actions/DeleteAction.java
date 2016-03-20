@@ -32,6 +32,7 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.MacUIUtil;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class DeleteAction extends EditorAction {
   public DeleteAction() {
@@ -43,6 +44,7 @@ public class DeleteAction extends EditorAction {
       super(true);
     }
 
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
       MacUIUtil.hideCursor();
