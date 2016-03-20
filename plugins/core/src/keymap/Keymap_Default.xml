@@ -620,6 +620,12 @@
   <action id="ToggleBookmarkWithMnemonic">
     <keyboard-shortcut first-keystroke="control F11"/>
   </action>
+  <action id="MoveElementLeft">
+    <keyboard-shortcut first-keystroke="control alt shift LEFT"/>
+  </action>
+  <action id="MoveElementRight">
+    <keyboard-shortcut first-keystroke="control alt shift RIGHT"/>
+  </action>
   <action id="MoveStatementDown">
     <keyboard-shortcut first-keystroke="control shift DOWN"/>
   </action>
