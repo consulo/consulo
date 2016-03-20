@@ -27,7 +27,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.ZipFileCache;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
@@ -480,7 +479,7 @@ public class PluginManagerCore {
       String fileURL = StringUtil.replace(file.toURI().toASCIIString(), "!", "%21");
       URL jarURL = new URL("jar:" + fileURL + "!/META-INF/" + fileName);
 
-      ZipFile zipFile = ZipFileCache.acquire(file.getPath());
+      ZipFile zipFile = new ZipFile(file.getPath());
       try {
         ZipEntry entry = zipFile.getEntry("META-INF/" + fileName);
         if (entry != null) {
@@ -491,7 +490,11 @@ public class PluginManagerCore {
         }
       }
       finally {
-        ZipFileCache.release(zipFile);
+        try {
+          zipFile.close();
+        }
+        catch (IOException ignored) {
+        }
       }
     }
     catch (XmlSerializationException e) {
@@ -947,12 +950,11 @@ public class PluginManagerCore {
 
     List<String> problemsWithPlugins = new SmartList<String>();
     if (!brokenPluginsList.isEmpty()) {
-      problemsWithPlugins.add("Following plugins are incompatible with current IDE build: " +
-                              StringUtil.join(brokenPluginsList, ", "));
+      problemsWithPlugins.add("Following plugins are incompatible with current IDE build: " + StringUtil.join(brokenPluginsList, ", "));
     }
 
     String badPluginMessage = filterBadPlugins(result, disabledPluginNames);
-    if(badPluginMessage != null) {
+    if (badPluginMessage != null) {
       problemsWithPlugins.add(badPluginMessage);
     }
 
