@@ -21,6 +21,10 @@ public class XDebuggerSettingsManager extends com.intellij.xdebugger.settings.XD
     return XDebuggerSettingManagerImpl.getInstanceImpl().getSettings(aClass);
   }
 
+  public XDebuggerGeneralSettings getGeneralSettings() {
+    return XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();
+  }
+
   @NotNull
   @Override
   public DataViewSettings getDataViewSettings() {
