@@ -26,6 +26,7 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.MessageView;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class MessageViewImpl implements MessageView {
 
   public MessageViewImpl(final Project project, final StartupManager startupManager, final ToolWindowManager toolWindowManager) {
     final Runnable runnable = new Runnable() {
+      @Override
       public void run() {
         myToolWindow = toolWindowManager.registerToolWindow(ToolWindowId.MESSAGES_WINDOW, true, ToolWindowAnchor.BOTTOM, project, true);
         myToolWindow.setIcon(AllIcons.Toolwindows.ToolWindowMessages);
@@ -54,6 +56,7 @@ public class MessageViewImpl implements MessageView {
     }
     else {
       startupManager.registerPostStartupActivity(new Runnable(){
+        @Override
         public void run() {
           runnable.run();
         }
@@ -62,11 +65,20 @@ public class MessageViewImpl implements MessageView {
 
   }
 
+  @NotNull
+  @Override
+  public ToolWindow getToolWindow() {
+    return myToolWindow;
+  }
+
+  @NotNull
+  @Override
   public ContentManager getContentManager() {
     return myToolWindow.getContentManager();
   }
 
-  public void runWhenInitialized(final Runnable runnable) {
+  @Override
+  public void runWhenInitialized(@NotNull Runnable runnable) {
     if (myToolWindow != null) {
       runnable.run();
     }

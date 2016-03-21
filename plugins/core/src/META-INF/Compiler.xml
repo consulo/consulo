@@ -61,8 +61,5 @@
 
     <projectService serviceInterface="com.intellij.compiler.CompilerWorkspaceConfiguration"
                     serviceImplementation="com.intellij.compiler.CompilerWorkspaceConfiguration"/>
-
-    <toolWindow id="Problems" canCloseContents="false" anchor="bottom" icon="AllIcons.Toolwindows.Problems"
-                factoryClass="com.intellij.compiler.impl.ProblemsToolWindowFactory"/>
   </extensions>
 </idea-plugin>

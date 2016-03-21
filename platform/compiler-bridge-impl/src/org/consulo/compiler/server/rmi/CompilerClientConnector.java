@@ -34,10 +34,6 @@ public abstract class CompilerClientConnector {
     // ignored
   }
 
-  public void updateIcon() {
-    // ignored
-  }
-
   public void selectFirstMessage() {
     // ignored
   }

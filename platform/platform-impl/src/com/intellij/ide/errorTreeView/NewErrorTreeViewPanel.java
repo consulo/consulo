@@ -44,6 +44,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -507,8 +508,9 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
   private JPanel createToolbarPanel(@Nullable Runnable rerunAction) {
     AnAction closeMessageViewAction = new CloseTabToolbarAction() {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         close();
       }
     };
@@ -590,14 +592,16 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       myCloseAction = closeAction;
     }
 
+    @RequiredDispatchThread
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
       myCloseAction.actionPerformed(e);
       myRerunAction.run();
     }
 
+    @RequiredDispatchThread
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@NotNull AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(canControlProcess() && isProcessStopped());
     }
@@ -608,8 +612,9 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       super(IdeBundle.message("action.stop"), null, AllIcons.Actions.Suspend);
     }
 
+    @RequiredDispatchThread
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
       if (canControlProcess()) {
         stopProcess();
       }
@@ -617,8 +622,9 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       myRightToolbar.updateActionsImmediately();
     }
 
+    @RequiredDispatchThread
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@NotNull AnActionEvent event) {
       Presentation presentation = event.getPresentation();
       presentation.setEnabled(canControlProcess() && !isProcessStopped());
       presentation.setVisible(canControlProcess());
@@ -647,6 +653,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       }
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
@@ -672,6 +679,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       }
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       super.update(e);

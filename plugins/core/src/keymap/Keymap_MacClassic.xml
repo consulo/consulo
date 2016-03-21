@@ -186,7 +186,7 @@
     <action id="ContextHelp">
       <keyboard-shortcut first-keystroke="F1"/>
     </action>
-    <action id="ActivateProblemsToolWindow">
+    <action id="ActivateMessagesToolWindow">
       <keyboard-shortcut first-keystroke="meta 0"/>
     </action>
     <action id="ActivateProjectToolWindow">

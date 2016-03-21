@@ -15,14 +15,19 @@
  */
 package com.intellij.ui.content;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
+import org.jetbrains.annotations.NotNull;
 
-public interface MessageView  {
+public interface MessageView {
+  @NotNull
+  ToolWindow getToolWindow();
 
+  @NotNull
   ContentManager getContentManager();
 
-  void runWhenInitialized(final Runnable runnable);
+  void runWhenInitialized(@NotNull Runnable runnable);
 
   class SERVICE {
     private SERVICE() {

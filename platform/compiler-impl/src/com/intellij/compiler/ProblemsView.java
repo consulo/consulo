@@ -16,7 +16,6 @@
 package com.intellij.compiler;
 
 import com.intellij.compiler.progress.CompilerTask;
-import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -27,6 +26,7 @@ import com.intellij.util.ArrayUtil;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +38,13 @@ import java.util.StringTokenizer;
  */
 @ProjectService
 public abstract class ProblemsView {
-  public static final String PROBLEMS_TOOLWINDOW_ID = "Problems";
-
   protected final Project myProject;
 
   protected ProblemsView(Project project) {
     myProject = project;
   }
 
-  public abstract void clearOldMessages(CompileScope scope);
+  public abstract void clearOldMessages();
 
   public abstract void addMessage(int type,
                                   @NotNull String[] text,
@@ -68,6 +66,7 @@ public abstract class ProblemsView {
     addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
   }
 
+  @RequiredDispatchThread
   public abstract void showOrHide(boolean hide);
 
   public abstract boolean isHideWarnings();

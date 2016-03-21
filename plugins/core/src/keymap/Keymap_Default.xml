@@ -753,7 +753,7 @@
   <action id="Unwrap">
     <keyboard-shortcut first-keystroke="control shift DELETE"/>
   </action>
-  <action id="ActivateProblemsToolWindow">
+  <action id="ActivateMessagesToolWindow">
     <keyboard-shortcut first-keystroke="alt 0"/>
   </action>
   <action id="ActivateProjectToolWindow">

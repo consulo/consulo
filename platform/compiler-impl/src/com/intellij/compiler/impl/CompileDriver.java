@@ -60,6 +60,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
+import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.packaging.artifacts.Artifact;
@@ -446,7 +447,7 @@ public class CompileDriver {
                        final boolean checkCachesVersion) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-    ProblemsView.getInstance(myProject).clearOldMessages(null);
+    ProblemsView.getInstance(myProject).clearOldMessages();
 
     final String contentName =
       forceCompile ? CompilerBundle.message("compiler.content.name.compile") : CompilerBundle.message("compiler.content.name.make");
@@ -647,7 +648,7 @@ public class CompileDriver {
             final String statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
             final MessageType messageType = errorCount > 0 ? MessageType.ERROR : warningCount > 0 ? MessageType.WARNING : MessageType.INFO;
             if (duration > ONE_MINUTE_MS) {
-              ToolWindowManager.getInstance(myProject).notifyByBalloon(ProblemsView.PROBLEMS_TOOLWINDOW_ID, messageType, statusMessage);
+              ToolWindowManager.getInstance(myProject).notifyByBalloon(ToolWindowId.MESSAGES_WINDOW, messageType, statusMessage);
             }
             CompilerManager.NOTIFICATION_GROUP.createNotification(statusMessage, messageType).notify(myProject);
             if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {

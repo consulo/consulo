@@ -17,9 +17,13 @@ package com.intellij.compiler.impl;
 
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.HelpID;
+import com.intellij.compiler.ProblemsView;
+import com.intellij.ide.actions.CloseTabToolbarAction;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanel {
   public ProblemsViewPanel(Project project) {
@@ -31,6 +35,13 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanel {
   protected void fillRightToolbarGroup(DefaultActionGroup group) {
     super.fillRightToolbarGroup(group);
     group.add(new CompilerPropertiesAction());
+    group.add(new CloseTabToolbarAction() {
+      @RequiredDispatchThread
+      @Override
+      public void actionPerformed(@NotNull AnActionEvent e) {
+        ProblemsView.getInstance(myProject).showOrHide(true);
+      }
+    });
   }
 
   @Override
