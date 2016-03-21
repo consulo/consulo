@@ -25,9 +25,11 @@ public abstract class XDebuggerSettingsManager {
 
     boolean isAutoExpressions();
 
-    boolean isShowVariablesInEditor();
-
     int getValueLookupDelay();
+
+    boolean isShowLibraryStackFrames();
+
+    boolean isShowValuesInline();
   }
 
   @NotNull

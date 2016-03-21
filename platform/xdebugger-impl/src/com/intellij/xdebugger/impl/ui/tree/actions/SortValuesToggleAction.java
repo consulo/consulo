@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,33 @@ package com.intellij.xdebugger.impl.ui.tree.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
-import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author nik
  */
 public class SortValuesToggleAction extends ToggleAction implements DumbAware {
+
+  @RequiredDispatchThread
+  @Override
+  public void update(@NotNull AnActionEvent e) {
+    super.update(e);
+    XDebugSession session = XDebugSession.DATA_KEY.getData(e.getDataContext());
+    e.getPresentation().setEnabledAndVisible(session != null && !session.getDebugProcess().isValuesCustomSorted());
+  }
+
   @Override
   public boolean isSelected(AnActionEvent e) {
-    return XDebuggerSettingsManager.getInstanceImpl().getDataViewSettings().isSortValues();
+    return XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().isSortValues();
   }
 
   @Override
   public void setSelected(AnActionEvent e, boolean state) {
-    XDebuggerSettingsManager.getInstanceImpl().getDataViewSettings().setSortValues(state);
+    XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setSortValues(state);
     XDebuggerUtilImpl.rebuildAllSessionsViews(e.getProject());
   }
 }

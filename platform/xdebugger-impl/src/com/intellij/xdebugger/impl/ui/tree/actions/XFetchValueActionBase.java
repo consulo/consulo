@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import com.intellij.xdebugger.frame.XFullValueEvaluator;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.HeadlessValueEvaluationCallback;
-import com.intellij.xdebugger.impl.ui.tree.nodes.WatchMessageNode;
+import com.intellij.xdebugger.impl.ui.tree.nodes.WatchNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,14 +60,10 @@ public abstract class XFetchValueActionBase extends AnAction {
 
   protected boolean isEnabled(@NotNull AnActionEvent event, @NotNull Object node) {
     if (node instanceof XValueNodeImpl) {
-      if (((XValueNodeImpl)node).isComputed()) {
+      if (node instanceof WatchNodeImpl || ((XValueNodeImpl)node).isComputed()) {
         event.getPresentation().setEnabled(true);
         return true;
       }
-    }
-    else if (node instanceof WatchMessageNode) {
-      event.getPresentation().setEnabled(true);
-      return true;
     }
     return false;
   }
@@ -104,9 +100,6 @@ public abstract class XFetchValueActionBase extends AnAction {
         }
       }
     }
-    else if (node instanceof WatchMessageNode) {
-      valueCollector.add(((WatchMessageNode)node).getExpression().getExpression());
-    }
   }
 
   @NotNull
@@ -114,7 +107,7 @@ public abstract class XFetchValueActionBase extends AnAction {
     return new ValueCollector(XDebuggerTree.getTree(e.getDataContext()));
   }
 
-  protected class ValueCollector {
+  public class ValueCollector {
     private final List<String> values = new SmartList<String>();
     private final IntIntHashMap indents = new IntIntHashMap();
     private final XDebuggerTree myTree;
@@ -170,7 +163,7 @@ public abstract class XFetchValueActionBase extends AnAction {
         @Override
         public void run() {
           values.set(index, value);
-          finish();
+          ValueCollector.this.finish();
         }
       });
     }

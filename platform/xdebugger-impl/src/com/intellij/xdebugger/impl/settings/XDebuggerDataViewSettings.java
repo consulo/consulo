@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,14 @@ public class XDebuggerDataViewSettings implements XDebuggerSettingsManager.DataV
   static final int DEFAULT_VALUE_TOOLTIP_DELAY = 700;
 
   private boolean mySortValues;
-  private boolean myShowVariablesInEditor = true;
 
   private boolean autoExpressions = true;
   private int valueLookupDelay = DEFAULT_VALUE_TOOLTIP_DELAY;
+
+  private boolean showLibraryStackFrames = true;
+
+  @Tag("show-values-inline")
+  private boolean showValuesInline = true;
 
   @Override
   @Tag("sort-values")
@@ -50,22 +54,30 @@ public class XDebuggerDataViewSettings implements XDebuggerSettingsManager.DataV
     valueLookupDelay = value;
   }
 
-  public void setShowVariablesInEditor(boolean showVariablesInEditor) {
-    myShowVariablesInEditor = showVariablesInEditor;
-  }
-
   @Override
   public boolean isAutoExpressions() {
     return autoExpressions;
   }
 
-  @Override
-  @Tag("show-variables-in-editor")
-  public boolean isShowVariablesInEditor() {
-    return myShowVariablesInEditor;
-  }
-
   public void setAutoExpressions(boolean autoExpressions) {
     this.autoExpressions = autoExpressions;
+  }
+
+  @Override
+  public boolean isShowLibraryStackFrames() {
+    return showLibraryStackFrames;
+  }
+
+  public void setShowLibraryStackFrames(boolean value) {
+    showLibraryStackFrames = value;
+  }
+
+  @Override
+  public boolean isShowValuesInline() {
+    return showValuesInline;
+  }
+
+  public void setShowValuesInline(boolean showValuesInline) {
+    this.showValuesInline = showValuesInline;
   }
 }

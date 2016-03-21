@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public abstract class DebuggerSessionTabBase extends RunTab {
       ObservableConsoleView observable = (ObservableConsoleView)myConsole;
       observable.addChangeListener(new ObservableConsoleView.ChangeListener() {
         @Override
-        public void contentAdded(final Collection<ConsoleViewContentType> types) {
+        public void contentAdded(Collection<ConsoleViewContentType> types) {
           if (types.contains(ConsoleViewContentType.ERROR_OUTPUT) || types.contains(ConsoleViewContentType.NORMAL_OUTPUT)) {
             content.fireAlert();
           }
@@ -101,8 +101,7 @@ public abstract class DebuggerSessionTabBase extends RunTab {
       @Override
       public void run() {
         if (myRunContentDescriptor != null) {
-          ToolWindow toolWindow = ExecutionManager.getInstance(myProject).getContentManager()
-                  .getToolWindowByDescriptor(myRunContentDescriptor);
+          ToolWindow toolWindow = ExecutionManager.getInstance(myProject).getContentManager().getToolWindowByDescriptor(myRunContentDescriptor);
           Content content = myRunContentDescriptor.getAttachedContent();
           if (toolWindow == null || content == null) return;
           ContentManager manager = toolWindow.getContentManager();
@@ -121,8 +120,7 @@ public abstract class DebuggerSessionTabBase extends RunTab {
       @Override
       public void run() {
         if (myRunContentDescriptor != null) {
-          ToolWindow toolWindow = ExecutionManager.getInstance(myProject).getContentManager()
-                  .getToolWindowByDescriptor(myRunContentDescriptor);
+          ToolWindow toolWindow = ExecutionManager.getInstance(myProject).getContentManager().getToolWindowByDescriptor(myRunContentDescriptor);
           if (toolWindow != null) {
             if (!toolWindow.isVisible()) {
               toolWindow.show(onShowCallback);

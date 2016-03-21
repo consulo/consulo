@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,24 @@ package com.intellij.xdebugger.impl.evaluate.quick.common;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.concurrency.ResultConsumer;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.xdebugger.XDebuggerBundle;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,6 +104,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
       super(CodeInsightBundle.message("quick.definition.forward"), null, AllIcons.Actions.Forward);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       if (myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1){
@@ -109,6 +113,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
       }
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1);
@@ -120,6 +125,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
       super(CodeInsightBundle.message("quick.definition.back"), null, AllIcons.Actions.Back);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       if (myHistory.size() > 1 && myCurrentIndex > 0) {
@@ -129,6 +135,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
     }
 
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(myHistory.size() > 1 && myCurrentIndex > 0);
@@ -136,7 +143,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
   }
 
   private class SetAsRootAction extends AnAction {
-    private Tree myTree;
+    private final Tree myTree;
 
     public SetAsRootAction(Tree tree) {
       super(XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"),
@@ -144,12 +151,14 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
       myTree = tree;
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       TreePath path = myTree.getSelectionPath();
       e.getPresentation().setEnabled(path != null && path.getPathCount() > 1);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       TreePath path = myTree.getSelectionPath();
@@ -170,11 +179,17 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
           }
 
           @Override
-          public void onFailure(Throwable t) {
+          public void onFailure(@NotNull Throwable t) {
             LOG.debug(t);
           }
         });
       }
+    }
+  }
+
+  protected static void registerTreeDisposable(Disposable disposable, Tree tree) {
+    if (tree instanceof Disposable) {
+      Disposer.register(disposable, (Disposable)tree);
     }
   }
 }

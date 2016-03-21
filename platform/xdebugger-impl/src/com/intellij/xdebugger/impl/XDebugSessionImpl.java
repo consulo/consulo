@@ -63,16 +63,14 @@ import com.intellij.xdebugger.impl.evaluate.XDebuggerEditorLinePainter;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
 import com.intellij.xdebugger.impl.frame.XValueMarkers;
 import com.intellij.xdebugger.impl.frame.XWatchesViewImpl;
-import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionData;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
-import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerWatchersInVariablesEapDescriptor;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.stepping.XSmartStepIntoVariant;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -600,10 +598,6 @@ public class XDebugSessionImpl implements XDebugSession {
     }
   }
 
-  @Override
-  public void setCurrentStackFrame(@NotNull XExecutionStack executionStack, @NotNull XStackFrame frame) {
-    setCurrentStackFrame(myCurrentExecutionStack, frame, frame == executionStack.getTopFrame());
-  }
 
   @Override
   public void setCurrentStackFrame(@NotNull XExecutionStack executionStack, @NotNull XStackFrame frame, boolean isTopFrame) {
@@ -719,7 +713,7 @@ public class XDebugSessionImpl implements XDebugSession {
       @Override
       public void run() {
         if (mySessionTab != null) {
-          if (XDebuggerSettingsManager.getInstanceImpl().getGeneralSettings().isShowDebuggerOnBreakpoint()) {
+          if (XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isShowDebuggerOnBreakpoint()) {
             mySessionTab.toFront(true, new Runnable() {
               @Override
               public void run() {
@@ -893,7 +887,7 @@ public class XDebugSessionImpl implements XDebugSession {
           if (myValueMarkers != null) {
             myValueMarkers.clear();
           }
-          if (XDebuggerSettingsManager.getInstanceImpl().getGeneralSettings().isUnmuteOnStop()) {
+          if (XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isUnmuteOnStop()) {
             mySessionData.setBreakpointsMuted(false);
           }
           myDebuggerManager.removeSession(XDebugSessionImpl.this);
@@ -983,7 +977,8 @@ public class XDebugSessionImpl implements XDebugSession {
     }
   }
 
-  private String getWatchesKey() {
+  @NotNull
+  private String getConfigurationName() {
     if (myEnvironment != null) {
       RunProfile profile = myEnvironment.getRunProfile();
       if (profile instanceof RunConfiguration) {
@@ -995,13 +990,10 @@ public class XDebugSessionImpl implements XDebugSession {
 
   public void setWatchExpressions(@NotNull XExpression[] watchExpressions) {
     mySessionData.setWatchExpressions(watchExpressions);
-    myDebuggerManager.getWatchesManager().setWatches(getWatchesKey(), watchExpressions);
-    if (EarlyAccessProgramManager.is(XDebuggerWatchersInVariablesEapDescriptor.class)) {
-      rebuildViews();
-    }
+    myDebuggerManager.getWatchesManager().setWatches(getConfigurationName(), watchExpressions);
   }
 
   XExpression[] getWatchExpressions() {
-    return myDebuggerManager.getWatchesManager().getWatches(getWatchesKey());
+    return myDebuggerManager.getWatchesManager().getWatches(getConfigurationName());
   }
 }

@@ -94,11 +94,6 @@ public interface XDebugSession extends AbstractDebuggerSession {
   void setCurrentStackFrame(@NotNull XExecutionStack executionStack, @NotNull XStackFrame frame, boolean isTopFrame);
 
   /**
-   * @deprecated use {@link #setCurrentStackFrame(com.intellij.xdebugger.frame.XExecutionStack, com.intellij.xdebugger.frame.XStackFrame, boolean)} instead
-   */
-  void setCurrentStackFrame(@NotNull XExecutionStack executionStack, @NotNull XStackFrame frame);
-
-  /**
    * Call this method to setup custom icon and/or error message (it will be shown in tooltip) for breakpoint
    *
    * @param breakpoint   breakpoint

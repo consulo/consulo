@@ -48,7 +48,7 @@ public abstract class XWatchesTreeActionBase extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull final AnActionEvent e) {
+  public void update(final AnActionEvent e) {
     final XDebuggerTree tree = XDebuggerTree.getTree(e);
     XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
     boolean enabled = tree != null && watchesView != null && isEnabled(e, tree);
@@ -57,7 +57,7 @@ public abstract class XWatchesTreeActionBase extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     final XDebuggerTree tree = XDebuggerTree.getTree(e);
     XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
     if (tree != null && watchesView != null) {

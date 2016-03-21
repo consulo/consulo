@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,17 @@ package com.intellij.xdebugger.impl.ui;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.*;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -34,6 +38,7 @@ import com.intellij.util.DocumentUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,7 +71,7 @@ public class ExecutionPointHighlighter {
       colorsManager.addEditorColorsListener(new EditorColorsListener() {
         @Override
         public void globalSchemeChange(EditorColorsScheme scheme) {
-          update(false);
+          ExecutionPointHighlighter.this.update(false);
         }
       }, project);
     }
@@ -83,15 +88,18 @@ public class ExecutionPointHighlighter {
 
         mySourcePosition = position;
 
-        clearDescriptor();
+        ExecutionPointHighlighter.this.clearDescriptor();
         myOpenFileDescriptor = XSourcePositionImpl.createOpenFileDescriptor(myProject, position);
+        if (!XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isScrollToCenter()) {
+          myOpenFileDescriptor.setScrollType(notTopFrame ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
+        }
         //see IDEA-125645 and IDEA-63459
         //myOpenFileDescriptor.setUseCurrentWindow(true);
 
         myGutterIconRenderer = gutterIconRenderer;
         myNotTopFrame = notTopFrame;
 
-        doShow(true);
+        ExecutionPointHighlighter.this.doShow(true);
       }
     });
   }
@@ -102,8 +110,8 @@ public class ExecutionPointHighlighter {
       public void run() {
         updateRequested.set(false);
 
-        removeHighlighter();
-        clearDescriptor();
+        ExecutionPointHighlighter.this.removeHighlighter();
+        ExecutionPointHighlighter.this.clearDescriptor();
         myEditor = null;
         myGutterIconRenderer = null;
       }
@@ -118,7 +126,7 @@ public class ExecutionPointHighlighter {
   }
 
   public void navigateTo() {
-    if (myOpenFileDescriptor != null) {
+    if (myOpenFileDescriptor != null && myOpenFileDescriptor.getFile().isValid()) {
       myOpenFileDescriptor.navigateInEditor(myProject, true);
     }
   }
@@ -134,7 +142,7 @@ public class ExecutionPointHighlighter {
         @Override
         public void run() {
           if (updateRequested.compareAndSet(true, false)) {
-            doShow(navigate);
+            ExecutionPointHighlighter.this.doShow(navigate);
           }
         }
       }, myProject.getDisposed());
@@ -164,7 +172,18 @@ public class ExecutionPointHighlighter {
     if (!navigate && myOpenFileDescriptor != null) {
       fileDescriptor = new OpenFileDescriptor(myProject, myOpenFileDescriptor.getFile());
     }
-    myEditor = fileDescriptor == null ? null : XDebuggerUtilImpl.createEditor(fileDescriptor);
+    myEditor = null;
+    if (fileDescriptor != null) {
+      if (!navigate) {
+        FileEditor editor = FileEditorManager.getInstance(fileDescriptor.getProject()).getSelectedEditor(fileDescriptor.getFile());
+        if (editor instanceof TextEditor) {
+          myEditor = ((TextEditor)editor).getEditor();
+        }
+      }
+      if (myEditor == null) {
+        myEditor = XDebuggerUtilImpl.createEditor(fileDescriptor);
+      }
+    }
     if (myEditor != null) {
       addHighlighter();
     }
@@ -205,8 +224,9 @@ public class ExecutionPointHighlighter {
     if (mySourcePosition instanceof HighlighterProvider) {
       TextRange range = ((HighlighterProvider)mySourcePosition).getHighlightRange();
       if (range != null) {
-        range = range.intersection(DocumentUtil.getLineTextRange(document, line));
-        if (range != null && !range.isEmpty()) {
+        TextRange lineRange = DocumentUtil.getLineTextRange(document, line);
+        range = range.intersection(lineRange);
+        if (range != null && !range.isEmpty() && !range.equals(lineRange)) {
           myRangeHighlighter = markupModel.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(),
                                                                DebuggerColors.EXECUTION_LINE_HIGHLIGHTERLAYER, attributes,
                                                                HighlighterTargetArea.EXACT_RANGE);
@@ -217,7 +237,13 @@ public class ExecutionPointHighlighter {
       myRangeHighlighter = markupModel.addLineHighlighter(line, DebuggerColors.EXECUTION_LINE_HIGHLIGHTERLAYER, attributes);
     }
     myRangeHighlighter.putUserData(EXECUTION_POINT_HIGHLIGHTER_KEY, true);
+    myRangeHighlighter.setEditorFilter(MarkupEditorFilterFactory.createIsNotDiffFilter());
     myRangeHighlighter.setGutterIconRenderer(myGutterIconRenderer);
+  }
+
+  public boolean isFullLineHighlighter() {
+    ApplicationManager.getApplication().assertIsDispatchThread();
+    return myRangeHighlighter != null && myRangeHighlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE;
   }
 
   private static void adjustCounter(@NotNull final Editor editor, final int increment) {

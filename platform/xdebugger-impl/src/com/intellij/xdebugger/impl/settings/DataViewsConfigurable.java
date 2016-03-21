@@ -48,6 +48,6 @@ class DataViewsConfigurable extends SubCompositeConfigurable implements Configur
   @NotNull
   @Override
   protected XDebuggerDataViewSettings getSettings() {
-    return XDebuggerSettingsManager.getInstanceImpl().getDataViewSettings();
+    return XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings();
   }
 }

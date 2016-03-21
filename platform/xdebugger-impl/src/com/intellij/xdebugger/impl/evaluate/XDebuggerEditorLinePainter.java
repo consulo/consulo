@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,14 +29,16 @@ import com.intellij.ui.*;
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.containers.ObjectLongHashMap;
 import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
+import com.intellij.xdebugger.impl.XDebuggerManagerImpl;
 import com.intellij.xdebugger.impl.frame.XDebugView;
 import com.intellij.xdebugger.impl.frame.XVariablesView;
-import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueTextRendererImpl;
+import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,15 +52,14 @@ import java.util.List;
  */
 public class XDebuggerEditorLinePainter extends EditorLinePainter {
   public static final Key<Map<Variable, VariableValue>> CACHE = Key.create("debug.inline.variables.cache");
-  // we want to limit number of line extentions to avoid very slow painting
+  // we want to limit number of line extensions to avoid very slow painting
   // the constant is rather random (feel free to adjust it upon getting a new information)
-  private static final int LINE_EXTENTIONS_MAX_COUNT = 200;
+  private static final int LINE_EXTENSIONS_MAX_COUNT = 200;
 
   @Nullable
   @Override
   public Collection<LineExtensionInfo> getLineExtensions(@NotNull Project project, @NotNull VirtualFile file, int lineNumber) {
-    com.intellij.xdebugger.settings.XDebuggerSettingsManager debuggerSettingsManager = XDebuggerSettingsManager.getInstance();
-    if(!debuggerSettingsManager.getDataViewSettings().isShowVariablesInEditor()) {
+    if (!XDebuggerSettingsManager.getInstance().getDataViewSettings().isShowValuesInline()) {
       return null;
     }
 
@@ -84,7 +85,9 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
       XDebugSession session = XDebugView.getSession(values.iterator().next().getTree());
       final int bpLine = getCurrentBreakPointLineInFile(session, file);
       boolean isTopFrame = session instanceof XDebugSessionImpl && ((XDebugSessionImpl)session).isTopFrameSelected();
-      final TextAttributes attributes = bpLine == lineNumber && isTopFrame ? getTopFrameSelectedAttributes() : getNormalAttributes();
+      final TextAttributes attributes = bpLine == lineNumber && isTopFrame &&
+                                        ((XDebuggerManagerImpl)XDebuggerManager.getInstance(project)).isFullLineHighlighter()
+                                        ? getTopFrameSelectedAttributes() : getNormalAttributes();
 
       ArrayList<VariableText> result = new ArrayList<VariableText>();
       for (XValueNodeImpl value : values) {
@@ -143,7 +146,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
       for (VariableText text : result) {
         infos.addAll(text.infos);
       }
-      return infos.size() > LINE_EXTENTIONS_MAX_COUNT ? infos.subList(0, LINE_EXTENTIONS_MAX_COUNT) : infos;
+      return infos.size() > LINE_EXTENSIONS_MAX_COUNT ? infos.subList(0, LINE_EXTENSIONS_MAX_COUNT) : infos;
     }
     return null;
   }
@@ -169,7 +172,6 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES);
     if (attributes == null || attributes.getForegroundColor() == null) {
       return new TextAttributes(new JBColor(new NotNullProducer<Color>() {
-        @SuppressWarnings("UseJBColor")
         @NotNull
         @Override
         public Color produce() {
@@ -184,7 +186,6 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES_MODIFIED);
     if (attributes == null || attributes.getForegroundColor() == null) {
       return new TextAttributes(new JBColor(new NotNullProducer<Color>() {
-        @SuppressWarnings("UseJBColor")
         @NotNull
         @Override
         public Color produce() {
@@ -281,7 +282,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   }
 
   private static class VariableText {
-    List<LineExtensionInfo> infos = new ArrayList<LineExtensionInfo>();
+    final List<LineExtensionInfo> infos = new ArrayList<LineExtensionInfo>();
     int length = 0;
 
     void add(LineExtensionInfo info) {

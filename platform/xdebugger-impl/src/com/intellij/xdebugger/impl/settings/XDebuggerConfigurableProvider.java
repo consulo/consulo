@@ -22,7 +22,7 @@ class XDebuggerConfigurableProvider extends DebuggerConfigurableProvider {
       list = new SmartList<Configurable>(SimpleConfigurable.create("debugger.general", "", GeneralConfigurableUi.class, new Getter<XDebuggerGeneralSettings>() {
         @Override
         public XDebuggerGeneralSettings get() {
-          return XDebuggerSettingsManager.getInstanceImpl().getGeneralSettings();
+          return XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();
         }
       }));
     }
@@ -30,7 +30,7 @@ class XDebuggerConfigurableProvider extends DebuggerConfigurableProvider {
       list = null;
     }
 
-    for (XDebuggerSettings<?> settings : XDebuggerSettingsManager.getInstanceImpl().getSettingsList()) {
+    for (XDebuggerSettings<?> settings : XDebuggerSettingManagerImpl.getInstanceImpl().getSettingsList()) {
       Collection<? extends Configurable> configurables = settings.createConfigurables(category);
       if (!configurables.isEmpty()) {
         if (list == null) {
@@ -41,7 +41,7 @@ class XDebuggerConfigurableProvider extends DebuggerConfigurableProvider {
     }
 
     if (category == DebuggerSettingsCategory.ROOT) {
-      for (XDebuggerSettings settings : XDebuggerSettingsManager.getInstanceImpl().getSettingsList()) {
+      for (XDebuggerSettings settings : XDebuggerSettingManagerImpl.getInstanceImpl().getSettingsList()) {
         @SuppressWarnings("deprecation")
         Configurable configurable = settings.createConfigurable();
         if (configurable != null) {
@@ -57,14 +57,14 @@ class XDebuggerConfigurableProvider extends DebuggerConfigurableProvider {
 
   @Override
   public void generalApplied(@NotNull DebuggerSettingsCategory category) {
-    for (XDebuggerSettings<?> settings : XDebuggerSettingsManager.getInstanceImpl().getSettingsList()) {
+    for (XDebuggerSettings<?> settings : XDebuggerSettingManagerImpl.getInstanceImpl().getSettingsList()) {
       settings.generalApplied(category);
     }
   }
 
   @Override
   public boolean isTargetedToProduct(@NotNull Configurable configurable) {
-    for (XDebuggerSettings<?> settings : XDebuggerSettingsManager.getInstanceImpl().getSettingsList()) {
+    for (XDebuggerSettings<?> settings : XDebuggerSettingManagerImpl.getInstanceImpl().getSettingsList()) {
       if (settings.isTargetedToProduct(configurable)) {
         return true;
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,26 +19,30 @@ import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.codeInsight.navigation.NavigationUtil;
+import com.intellij.ide.TooltipEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
+import com.intellij.openapi.editor.impl.EditorComponentImpl;
+import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.ui.ClickListener;
-import com.intellij.ui.HintListener;
-import com.intellij.ui.LightweightHint;
-import com.intellij.ui.SimpleColoredText;
+import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.IconUtil;
+import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,12 +102,15 @@ public abstract class AbstractValueHint {
       }
     }
     else {
-      int offset = calculateOffset(editor, point);
-      if (myCurrentRange != null && myCurrentRange.getStartOffset() <= offset && offset <= myCurrentRange.getEndOffset()) {
+      if (isInsideCurrentRange(editor, point)) {
         return true;
       }
     }
     return false;
+  }
+
+  boolean isInsideCurrentRange(Editor editor, Point point) {
+    return myCurrentRange != null && myCurrentRange.contains(calculateOffset(editor, point));
   }
 
   public static int calculateOffset(@NotNull Editor editor, @NotNull Point point) {
@@ -173,6 +180,7 @@ public abstract class AbstractValueHint {
     return myProject;
   }
 
+  @NotNull
   protected Editor getEditor() {
     return myEditor;
   }
@@ -181,17 +189,34 @@ public abstract class AbstractValueHint {
     return myType;
   }
 
+  private boolean myInsideShow = false;
+
   protected boolean showHint(final JComponent component) {
+    myInsideShow = true;
     if (myCurrentHint != null) {
       myCurrentHint.hide();
     }
-    myCurrentHint = new LightweightHint(component);
+    myCurrentHint = new LightweightHint(component) {
+      @Override
+      protected boolean canAutoHideOn(TooltipEvent event) {
+        InputEvent inputEvent = event.getInputEvent();
+        if (inputEvent instanceof MouseEvent) {
+          Component comp = inputEvent.getComponent();
+          if (comp instanceof EditorComponentImpl) {
+            EditorImpl editor = ((EditorComponentImpl)comp).getEditor();
+            return !isInsideCurrentRange(editor, ((MouseEvent)inputEvent).getPoint());
+          }
+        }
+        return true;
+      }
+    };
     myCurrentHint.addHintListener(new HintListener() {
       @Override
       public void hintHidden(EventObject event) {
-        if (myHideRunnable != null) {
+        if (myHideRunnable != null && !myInsideShow) {
           myHideRunnable.run();
         }
+        onHintHidden();
       }
     });
 
@@ -201,12 +226,19 @@ public abstract class AbstractValueHint {
     }
 
     Point p = HintManagerImpl.getHintPosition(myCurrentHint, myEditor, myEditor.xyToLogicalPosition(myPoint), HintManager.UNDER);
+    HintHint hint = HintManagerImpl.createHintHint(myEditor, p, myCurrentHint, HintManager.UNDER, true);
+    hint.setShowImmediately(true);
     HintManagerImpl.getInstanceImpl().showEditorHint(myCurrentHint, myEditor, p,
                                                      HintManager.HIDE_BY_ANY_KEY |
                                                      HintManager.HIDE_BY_TEXT_CHANGE |
                                                      HintManager.HIDE_BY_SCROLLING, 0, false,
-                                                     HintManagerImpl.createHintHint(myEditor, p, myCurrentHint, HintManager.UNDER, true));
+                                                     hint);
+    myInsideShow = false;
     return true;
+  }
+
+  protected void onHintHidden() {
+
   }
 
   protected boolean isHintHidden() {
@@ -238,16 +270,27 @@ public abstract class AbstractValueHint {
     }
   }
 
+  @Nullable
   protected TextRange getCurrentRange() {
     return myCurrentRange;
   }
 
   private static boolean isAltMask(@JdkConstants.InputEventMask int modifiers) {
-    return modifiers == InputEvent.ALT_MASK;
+    return KeymapUtil.matchActionMouseShortcutsModifiers(KeymapManager.getInstance().getActiveKeymap(),
+                                                         modifiers,
+                                                         XDebuggerActions.QUICK_EVALUATE_EXPRESSION);
   }
 
-  public static ValueHintType getType(final EditorMouseEvent e) {
-    return isAltMask(e.getMouseEvent().getModifiers()) ? ValueHintType.MOUSE_ALT_OVER_HINT : ValueHintType.MOUSE_OVER_HINT;
+  @Nullable
+  public static ValueHintType getHintType(final EditorMouseEvent e) {
+    int modifiers = e.getMouseEvent().getModifiers();
+    if (modifiers == 0) {
+      return ValueHintType.MOUSE_OVER_HINT;
+    }
+    else if (isAltMask(modifiers)) {
+      return ValueHintType.MOUSE_ALT_OVER_HINT;
+    }
+    return null;
   }
 
   public boolean isInsideHint(Editor editor, Point point) {
@@ -255,6 +298,30 @@ public abstract class AbstractValueHint {
   }
 
   protected <D> void showTreePopup(@NotNull DebuggerTreeCreator<D> creator, @NotNull D descriptor) {
-    DebuggerTreeWithHistoryPopup.showTreePopup(creator, descriptor, getEditor(), myPoint, getProject());
+    DebuggerTreeWithHistoryPopup.showTreePopup(creator, descriptor, getEditor(), myPoint, getProject(), myHideRunnable);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    AbstractValueHint hint = (AbstractValueHint)o;
+
+    if (!myProject.equals(hint.myProject)) return false;
+    if (!myEditor.equals(hint.myEditor)) return false;
+    if (myType != hint.myType) return false;
+    if (myCurrentRange != null ? !myCurrentRange.equals(hint.myCurrentRange) : hint.myCurrentRange != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = myProject.hashCode();
+    result = 31 * result + myEditor.hashCode();
+    result = 31 * result + myType.hashCode();
+    result = 31 * result + (myCurrentRange != null ? myCurrentRange.hashCode() : 0);
+    return result;
   }
 }
