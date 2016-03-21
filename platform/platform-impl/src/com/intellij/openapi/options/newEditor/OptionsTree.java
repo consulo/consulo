@@ -22,6 +22,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Weighted;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
@@ -355,10 +356,24 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     Collections.sort(cc, new Comparator<EditorNode>() {
       @Override
       public int compare(final EditorNode o1, final EditorNode o2) {
+        double weight1 = getWeight(o1);
+        double weight2 = getWeight(o2);
+        if(weight1 != weight2) {
+          return (int)(weight2 - weight1);
+        }
+
         return getConfigurableDisplayName(o1.getConfigurable()).compareToIgnoreCase(getConfigurableDisplayName(o2.getConfigurable()));
       }
     });
     return cc;
+  }
+
+  private static double getWeight(EditorNode node) {
+    Configurable configurable = node.getConfigurable();
+    if (configurable instanceof Weighted) {
+      return ((Weighted)configurable).getWeight();
+    }
+    return 0;
   }
 
   private static String getConfigurableDisplayName(final Configurable c) {

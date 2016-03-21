@@ -25,8 +25,7 @@ import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.psi.codeStyle.DisplayPriority;
-import com.intellij.psi.codeStyle.DisplayPrioritySortable;
+import com.intellij.openapi.util.Weighted;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,7 @@ import java.util.Map;
  *
  * @author Rustam Vishnyakov
  */
-public class DefaultLanguageColorsPage implements ColorSettingsPage, DisplayPrioritySortable {
+public class DefaultLanguageColorsPage implements ColorSettingsPage, Weighted {
 
   @NonNls private static final Map<String, TextAttributesKey> TAG_HIGHLIGHTING_MAP = new HashMap<String, TextAttributesKey>();
 
@@ -257,7 +256,7 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, DisplayPrio
   }
 
   @Override
-  public DisplayPriority getPriority() {
-    return DisplayPriority.GENERAL_SETTINGS;
+  public double getWeight() {
+    return Integer.MAX_VALUE - 1;
   }
 }

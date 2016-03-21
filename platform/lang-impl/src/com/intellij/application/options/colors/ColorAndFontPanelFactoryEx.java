@@ -16,13 +16,11 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.psi.codeStyle.DisplayPrioritySortable;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.Weighted;
 
 /**
  * @author Rustam Vishnyakov
  */
-public interface ColorAndFontPanelFactoryEx extends ColorAndFontPanelFactory, DisplayPrioritySortable {
+public interface ColorAndFontPanelFactoryEx extends ColorAndFontPanelFactory, Weighted {
 
 }

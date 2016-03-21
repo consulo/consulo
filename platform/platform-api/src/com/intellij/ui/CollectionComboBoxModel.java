@@ -24,22 +24,22 @@ import java.util.List;
 /**
  * @author yole
  */
-public class CollectionComboBoxModel extends AbstractCollectionComboBoxModel {
-  private final List myItems;
+public class CollectionComboBoxModel<T> extends AbstractCollectionComboBoxModel<T> {
+  private final List<T> myItems;
 
-  public CollectionComboBoxModel(final List items, @Nullable final Object selection) {
+  public CollectionComboBoxModel(final List<? extends T> items, @Nullable final T selection) {
     super(selection);
     myItems = Collections.unmodifiableList(items);
   }
 
-  public CollectionComboBoxModel(List items) {
+  public CollectionComboBoxModel(List<T> items) {
     super(items.isEmpty() ? null : items.get(0));
     myItems = items;
   }
 
   @Override
   @NotNull
-  final protected List getItems() {
+  final protected List<T> getItems() {
     return myItems;
   }
 }

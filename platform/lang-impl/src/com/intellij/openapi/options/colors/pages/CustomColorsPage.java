@@ -25,15 +25,13 @@ import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.psi.codeStyle.DisplayPriority;
-import com.intellij.psi.codeStyle.DisplayPrioritySortable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Map;
 
-public class CustomColorsPage implements ColorSettingsPage, DisplayPrioritySortable {
+public class CustomColorsPage implements ColorSettingsPage {
   private static final AttributesDescriptor[] ATTRS = {
     new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.keyword1"), CustomHighlighterColors.CUSTOM_KEYWORD1_ATTRIBUTES),
     new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.keyword2"), CustomHighlighterColors.CUSTOM_KEYWORD2_ATTRIBUTES),
@@ -116,10 +114,5 @@ public class CustomColorsPage implements ColorSettingsPage, DisplayPrioritySorta
   @Override
   public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
     return null;
-  }
-
-  @Override
-  public DisplayPriority getPriority() {
-    return DisplayPriority.COMMON_SETTINGS;
   }
 }

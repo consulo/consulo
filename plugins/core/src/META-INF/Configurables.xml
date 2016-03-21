@@ -176,7 +176,7 @@
 
     <applicationConfigurable displayName="System" parentId="general" instance="com.intellij.ide.GeneralSettingsConfigurable"/>
 
-    <applicationConfigurable parentId="general" instance="com.intellij.openapi.fileTypes.impl.FileTypeConfigurable" id="preferences.fileTypes"
+    <applicationConfigurable parentId="editor" instance="com.intellij.openapi.fileTypes.impl.FileTypeConfigurable" id="preferences.fileTypes"
                              key="filetype.settings.title" bundle="messages.FileTypesBundle"/>
 
     <projectConfigurable instance="com.intellij.openapi.vcs.configurable.VcsManagerConfigurable"

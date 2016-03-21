@@ -18,7 +18,6 @@ package com.intellij.application.options;
 
 import com.intellij.application.options.codeStyle.*;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -31,7 +30,10 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.Abstract implements OptionsContainingConfigurable, Configurable.NoMargin {
 
@@ -203,22 +205,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
   protected Configurable[] buildConfigurables() {
     myPanels = new ArrayList<CodeStyleConfigurableWrapper>();
 
-    final List<CodeStyleSettingsProvider> providers = Arrays.asList(Extensions.getExtensions(CodeStyleSettingsProvider.EXTENSION_POINT_NAME));
-    Collections.sort(providers, new Comparator<CodeStyleSettingsProvider>() {
-      @Override
-      public int compare(CodeStyleSettingsProvider p1, CodeStyleSettingsProvider p2) {
-        if (!p1.getPriority().equals(p2.getPriority())) {
-          return p1.getPriority().compareTo(p2.getPriority());
-        }
-        String name1 = p1.getConfigurableDisplayName();
-        if (name1 == null) name1 = "";
-        String name2 = p2.getConfigurableDisplayName();
-        if (name2 == null) name2 = "";
-        return name1.compareToIgnoreCase(name2);
-      }
-    });
-
-    for (final CodeStyleSettingsProvider provider : providers) {
+    for (final CodeStyleSettingsProvider provider : CodeStyleSettingsProvider.EXTENSION_POINT_NAME.getExtensions()) {
       if (provider.hasSettingsPage()) {
         myPanels.add(new CodeStyleConfigurableWrapper(provider, new CodeStyleSettingsPanelFactory() {
           @Override

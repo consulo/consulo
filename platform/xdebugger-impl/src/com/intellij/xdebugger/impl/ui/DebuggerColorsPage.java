@@ -23,8 +23,7 @@ import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.psi.codeStyle.DisplayPriority;
-import com.intellij.psi.codeStyle.DisplayPrioritySortable;
+import com.intellij.openapi.util.Weighted;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import org.jetbrains.annotations.NonNls;
@@ -37,7 +36,7 @@ import java.util.Map;
 /**
  * @author max
  */
-public class DebuggerColorsPage implements ColorSettingsPage, DisplayPrioritySortable {
+public class DebuggerColorsPage implements ColorSettingsPage, Weighted {
   @Override
   @NotNull
   public String getDisplayName() {
@@ -91,7 +90,7 @@ public class DebuggerColorsPage implements ColorSettingsPage, DisplayPrioritySor
   }
 
   @Override
-  public DisplayPriority getPriority() {
-    return DisplayPriority.COMMON_SETTINGS;
+  public double getWeight() {
+    return Integer.MAX_VALUE - 1;
   }
 }

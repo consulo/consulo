@@ -25,13 +25,14 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.Weighted;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class ScopeColorsPageFactory implements ColorAndFontPanelFactory {
+class ScopeColorsPageFactory implements ColorAndFontPanelFactory, Weighted {
   @Override
   public NewColorAndFontPanel createPanel(ColorAndFontOptions options) {
     final JPanel scopePanel = createChooseScopePanel();
@@ -87,5 +88,10 @@ class ScopeColorsPageFactory implements ColorAndFontPanelFactory {
       }
     });
     return panel;
+  }
+
+  @Override
+  public double getWeight() {
+    return Integer.MAX_VALUE - 1;
   }
 }

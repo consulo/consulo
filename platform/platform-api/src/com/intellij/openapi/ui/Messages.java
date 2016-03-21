@@ -1535,22 +1535,25 @@ public class Messages {
 
   @NotNull
   public static JTextPane configureMessagePaneUi(JTextPane messageComponent, String message) {
-    return configureMessagePaneUi(messageComponent, message, true);
+    JTextPane pane = configureMessagePaneUi(messageComponent, message, null);
+    if (UIUtil.HTML_MIME.equals(pane.getContentType())) {
+      pane.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
+    }
+    return pane;
   }
 
   @NotNull
-  public static JTextPane configureMessagePaneUi(JTextPane messageComponent,
-                                                 String message,
-                                                 final boolean addBrowserHyperlinkListener) {
-    messageComponent.setFont(UIUtil.getLabelFont());
+  public static JTextPane configureMessagePaneUi(@NotNull JTextPane messageComponent,
+                                                 @Nullable String message,
+                                                 @Nullable UIUtil.FontSize fontSize) {
+    UIUtil.FontSize fixedFontSize = fontSize == null ? UIUtil.FontSize.NORMAL : fontSize;
+    messageComponent.setFont(UIUtil.getLabelFont(fixedFontSize));
     if (BasicHTML.isHTMLString(message)) {
-      final HTMLEditorKit editorKit = new HTMLEditorKit();
-      editorKit.getStyleSheet().addRule(UIUtil.displayPropertiesToCSS(UIUtil.getLabelFont(), UIUtil.getLabelForeground()));
+      HTMLEditorKit editorKit = new HTMLEditorKit();
+      Font font = UIUtil.getLabelFont(fixedFontSize);
+      editorKit.getStyleSheet().addRule(UIUtil.displayPropertiesToCSS(font, UIUtil.getLabelForeground()));
       messageComponent.setEditorKit(editorKit);
       messageComponent.setContentType(UIUtil.HTML_MIME);
-      if (addBrowserHyperlinkListener) {
-        messageComponent.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
-      }
     }
     messageComponent.setText(message);
     messageComponent.setEditable(false);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,75 +16,63 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.ui.ListScrollingUtil;
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.components.JBList;
 import com.intellij.util.EventDispatcher;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Set;
 
 public class OptionsPanelImpl extends JPanel implements OptionsPanel {
-  private final JList myOptionsList;
+  public static final String SELECTED_COLOR_OPTION_PROPERTY = "selected.color.option.type";
+
+  private final ColorOptionsTree myOptionsTree;
   private final ColorAndFontDescriptionPanel myOptionsPanel;
 
   private final ColorAndFontOptions myOptions;
   private final SchemesPanel mySchemesProvider;
   private final String myCategoryName;
 
+  private final PropertiesComponent myProperties;
+
   private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
 
-  public OptionsPanelImpl(ColorAndFontDescriptionPanel optionsPanel, ColorAndFontOptions options, SchemesPanel schemesProvider,
-                      String categoryName) {
+  public OptionsPanelImpl(ColorAndFontOptions options,
+                          SchemesPanel schemesProvider,
+                          String categoryName) {
     super(new BorderLayout());
     myOptions = options;
     mySchemesProvider = schemesProvider;
     myCategoryName = categoryName;
+    myProperties = PropertiesComponent.getInstance();
 
-    optionsPanel.setActionListener(new ActionListener() {
+    myOptionsPanel = new ColorAndFontDescriptionPanel() {
       @Override
-      public void actionPerformed(final ActionEvent e) {
+      protected void onSettingsChanged(ActionEvent e) {
+        super.onSettingsChanged(e);
         myDispatcher.getMulticaster().settingsChanged();
       }
-    });
+    };
 
-    myOptionsList = new JBList();
+    myOptionsTree = new ColorOptionsTree(myCategoryName);
 
-    myOptionsList.addListSelectionListener(new ListSelectionListener() {
+    myOptionsTree.addTreeSelectionListener(new TreeSelectionListener() {
       @Override
-      public void valueChanged(ListSelectionEvent e) {
+      public void valueChanged(TreeSelectionEvent e) {
         if (!mySchemesProvider.areSchemesLoaded()) return;
         processListValueChanged();
       }
     });
-    myOptionsList.setCellRenderer(new DefaultListCellRenderer(){
-      @Override
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        if (value instanceof ColorAndFontDescription) {
-          setIcon(((ColorAndFontDescription)value).getIcon());
-          setToolTipText(((ColorAndFontDescription)value).getToolTip());
-        }
-        return component;
-      }
-    });
 
-    myOptionsList.setModel(new DefaultListModel());
-    myOptionsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myOptionsTree);
+    add(scrollPane, BorderLayout.CENTER);
+    add(myOptionsPanel, BorderLayout.EAST);
 
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myOptionsList);
-    scrollPane.setPreferredSize(new Dimension(230, 60));
-    JPanel north = new JPanel(new BorderLayout());
-    north.add(scrollPane, BorderLayout.CENTER);
-    north.add(optionsPanel, BorderLayout.EAST);
-    myOptionsPanel = optionsPanel;
-    add(north, BorderLayout.NORTH);
   }
 
   @Override
@@ -93,41 +81,29 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
   }
 
   private void processListValueChanged() {
-    Object selectedValue = myOptionsList.getSelectedValue();
-    ColorAndFontDescription description = (ColorAndFontDescription)selectedValue;
-    ColorAndFontDescriptionPanel optionsPanel = myOptionsPanel;
+    Object selectedValue = myOptionsTree.getSelectedValue();
+    ColorAndFontDescription description = selectedValue instanceof ColorAndFontDescription ? (ColorAndFontDescription)selectedValue : null;
     if (description == null) {
-      optionsPanel.resetDefault();
-      return;
+      if (selectedValue == null) {
+        String preselectedType = myProperties.getValue(SELECTED_COLOR_OPTION_PROPERTY);
+        if (preselectedType != null) {
+          myOptionsTree.selectOptionByType(preselectedType);
+          description = myOptionsTree.getSelectedDescriptor();
+        }
+      }
     }
-    optionsPanel.reset(description);
-
-    myDispatcher.getMulticaster().selectedOptionChanged(description);
-
+    if (description != null) {
+      myProperties.setValue(SELECTED_COLOR_OPTION_PROPERTY, description.getType());
+      myOptionsPanel.reset(description);
+      myDispatcher.getMulticaster().selectedOptionChanged(description);
+    }
+    else {
+      myOptionsPanel.resetDefault();
+    }
   }
 
   private void fillOptionsList() {
-    int selIndex = myOptionsList.getSelectedIndex();
-
-    DefaultListModel listModel = (DefaultListModel)myOptionsList.getModel();
-    listModel.removeAllElements();
-
-    EditorSchemeAttributeDescriptor[] descriptions = myOptions.getCurrentDescriptions();
-
-    for (EditorSchemeAttributeDescriptor description : descriptions) {
-      if (description.getGroup().equals(myCategoryName)) {
-        listModel.addElement(description);
-      }
-    }
-    if (selIndex >= 0) {
-      myOptionsList.setSelectedIndex(selIndex);
-    }
-    ListScrollingUtil.ensureSelectionExists(myOptionsList);
-
-    Object selected = myOptionsList.getSelectedValue();
-    if (selected instanceof EditorSchemeAttributeDescriptor) {
-      myDispatcher.getMulticaster().selectedOptionChanged(selected);
-    }
+    myOptionsTree.fillOptions(myOptions);
   }
 
   @Override
@@ -142,68 +118,37 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
   }
 
   @Override
-  public Runnable showOption(final String option) {
-    final String lowerCaseOption = option.toLowerCase();
-    DefaultListModel model = (DefaultListModel)myOptionsList.getModel();
-
-    for (int i = 0; i < model.size(); i++) {
-      Object o = model.get(i);
-      if (o instanceof EditorSchemeAttributeDescriptor) {
-        String type = ((EditorSchemeAttributeDescriptor)o).getType();
-        if (type.toLowerCase().contains(lowerCaseOption) ||
-            o.toString().toLowerCase().contains(lowerCaseOption)) {
-          final int i1 = i;
-          return new Runnable() {
-            @Override
-            public void run() {
-              ListScrollingUtil.selectItem(myOptionsList, i1);
-            }
-          };
-
-        }
+  public Runnable showOption(final String attributeDisplayName) {
+    return new Runnable() {
+      @Override
+      public void run() {
+        myOptionsTree.selectOptionByName(attributeDisplayName);
       }
-    }
-
-    return null;
+    };
   }
 
   @Override
   public void applyChangesToScheme() {
-    Object selectedValue = myOptionsList.getSelectedValue();
-    if (selectedValue instanceof ColorAndFontDescription) {
-      myOptionsPanel.apply((ColorAndFontDescription)selectedValue,myOptions.getSelectedScheme());
+    ColorAndFontDescription descriptor = myOptionsTree.getSelectedDescriptor();
+    if (descriptor != null) {
+      myOptionsPanel.apply(descriptor, myOptions.getSelectedScheme());
     }
-
   }
 
   @Override
-  public void selectOption(final String typeToSelect) {
-    DefaultListModel model = (DefaultListModel)myOptionsList.getModel();
-
-    for (int i = 0; i < model.size(); i++) {
-      Object o = model.get(i);
-      if (o instanceof EditorSchemeAttributeDescriptor) {
-        if (typeToSelect.equals(((EditorSchemeAttributeDescriptor)o).getType())) {
-          ListScrollingUtil.selectItem(myOptionsList, i);
-          return;
-        }
-      }
-    }
-
+  public void selectOption(String attributeType) {
+    myOptionsTree.selectOptionByType(attributeType);
   }
 
   @Override
   public Set<String> processListOptions() {
     HashSet<String> result = new HashSet<String>();
     EditorSchemeAttributeDescriptor[] descriptions = myOptions.getCurrentDescriptions();
-
     for (EditorSchemeAttributeDescriptor description : descriptions) {
       if (description.getGroup().equals(myCategoryName)) {
         result.add(description.toString());
       }
     }
-
-
     return result;
   }
 }

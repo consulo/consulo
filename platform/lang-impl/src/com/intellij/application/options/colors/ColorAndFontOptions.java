@@ -47,13 +47,12 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusFactory;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.packageDependencies.DependencyValidationManagerImpl;
-import com.intellij.psi.codeStyle.DisplayPriority;
-import com.intellij.psi.codeStyle.DisplayPrioritySortable;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
@@ -66,6 +65,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -334,6 +334,14 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     for (final ColorSettingsPage page : pages) {
       extensions.add(new ColorAndFontPanelFactoryEx() {
         @Override
+        public double getWeight() {
+          if(page instanceof Weighted) {
+            return ((Weighted)page).getWeight();
+          }
+          return 0;
+        }
+
+        @Override
         @NotNull
         public NewColorAndFontPanel createPanel(@NotNull ColorAndFontOptions options) {
           final SimpleEditorPreview preview = new SimpleEditorPreview(options, page);
@@ -345,37 +353,10 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         public String getPanelDisplayName() {
           return page.getDisplayName();
         }
-
-        @Override
-        public DisplayPriority getPriority() {
-          if (page instanceof DisplayPrioritySortable) {
-            return ((DisplayPrioritySortable)page).getPriority();
-          }
-          return DisplayPriority.LANGUAGE_SETTINGS;
-        }
       });
     }
     Collections.addAll(extensions, Extensions.getExtensions(ColorAndFontPanelFactory.EP_NAME));
-    Collections.sort(extensions, new Comparator<ColorAndFontPanelFactory>() {
-      @Override
-      public int compare(ColorAndFontPanelFactory f1, ColorAndFontPanelFactory f2) {
-        if (f1 instanceof DisplayPrioritySortable) {
-          if (f2 instanceof DisplayPrioritySortable) {
-            int result = ((DisplayPrioritySortable)f1).getPriority().compareTo(((DisplayPrioritySortable)f2).getPriority());
-            if (result != 0) return result;
-          }
-          else {
-            return 1;
-          }
-        }
-        else if (f2 instanceof DisplayPrioritySortable) {
-          return -1;
-        }
-        return f1.getPanelDisplayName().compareToIgnoreCase(f2.getPanelDisplayName());
-      }
-    });
     result.addAll(extensions);
-
     result.add(new DiffColorsPageFactory());
     result.add(new FileStatusColorsPageFactory());
     result.add(new ScopeColorsPageFactory());
@@ -383,7 +364,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     return result;
   }
 
-  private static class FontConfigurableFactory implements ColorAndFontPanelFactory {
+  private static class FontConfigurableFactory implements ColorAndFontPanelFactory, Weighted {
     @Override
     @NotNull
     public NewColorAndFontPanel createPanel(@NotNull ColorAndFontOptions options) {
@@ -400,6 +381,11 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     @NotNull
     public String getPanelDisplayName() {
       return "Font";
+    }
+
+    @Override
+    public double getWeight() {
+      return Integer.MAX_VALUE - 1;
     }
   }
 
@@ -427,14 +413,13 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       return "Console Font";
     }
 
-    @NotNull
     @Override
-    public DisplayPriority getPriority() {
-      return DisplayPriority.COMMON_SETTINGS;
+    public double getWeight() {
+      return Integer.MAX_VALUE - 1;
     }
   }
 
-  private class DiffColorsPageFactory implements ColorAndFontPanelFactory {
+  private class DiffColorsPageFactory implements ColorAndFontPanelFactory, Weighted {
     @Override
     @NotNull
     public NewColorAndFontPanel createPanel(@NotNull ColorAndFontOptions options) {
@@ -466,6 +451,11 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     @NotNull
     public String getPanelDisplayName() {
       return DIFF_GROUP;
+    }
+
+    @Override
+    public double getWeight() {
+      return Integer.MAX_VALUE - 1;
     }
   }
 
@@ -1140,7 +1130,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     return child == null ? null : child.createPanel();
   }
 
-  private class InnerSearchableConfigurable implements SearchableConfigurable, OptionsContainingConfigurable, NoScroll {
+  private class InnerSearchableConfigurable implements SearchableConfigurable, OptionsContainingConfigurable, NoScroll, Weighted {
     private NewColorAndFontPanel mySubPanel;
     private boolean mySubInitInvoked = false;
     @NotNull private final ColorAndFontPanelFactory myFactory;
@@ -1191,10 +1181,20 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
+    public double getWeight() {
+      if(myFactory instanceof Weighted) {
+        return ((Weighted)myFactory).getWeight();
+      }
+      return 0;
+    }
+
+    @RequiredDispatchThread
+    @Override
     public JComponent createComponent() {
       return createPanel().getPanel();
     }
 
+    @RequiredDispatchThread
     @Override
     public boolean isModified() {
       createPanel();
@@ -1220,11 +1220,13 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     }
 
+    @RequiredDispatchThread
     @Override
     public void apply() throws ConfigurationException {
       ColorAndFontOptions.this.apply();
     }
 
+    @RequiredDispatchThread
     @Override
     public void reset() {
       if (!mySubInitInvoked) {
@@ -1238,6 +1240,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       }
     }
 
+    @RequiredDispatchThread
     @Override
     public void disposeUIResources() {
       if (mySubPanel != null) {

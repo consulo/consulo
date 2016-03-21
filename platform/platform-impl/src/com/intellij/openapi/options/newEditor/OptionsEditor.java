@@ -551,7 +551,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
           @Override
           public void run() {
-            ApplicationManager.getApplication().runReadAction(new Runnable() {
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
               @Override
               public void run() {
                 if (myDisposed) return;

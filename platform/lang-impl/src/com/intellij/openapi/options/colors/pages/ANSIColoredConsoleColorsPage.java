@@ -10,8 +10,7 @@ import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.psi.codeStyle.DisplayPriority;
-import com.intellij.psi.codeStyle.DisplayPrioritySortable;
+import com.intellij.openapi.util.Weighted;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +21,7 @@ import java.util.Map;
 /**
  * @author oleg, Roman.Chernyatchik
  */
-public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, DisplayPrioritySortable {
+public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Weighted {
 
   private static final String DEMO_TEXT =
     "<stdsys>C:\\command.com</stdsys>\n" +
@@ -130,7 +129,7 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, DisplayP
   }
 
   @Override
-  public DisplayPriority getPriority() {
-    return DisplayPriority.COMMON_SETTINGS;
+  public double getWeight() {
+    return Integer.MAX_VALUE - 1;
   }
 }

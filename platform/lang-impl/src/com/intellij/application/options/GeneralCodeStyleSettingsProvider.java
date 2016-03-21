@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
-import com.intellij.psi.codeStyle.DisplayPriority;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -46,10 +45,5 @@ public class GeneralCodeStyleSettingsProvider extends CodeStyleSettingsProvider 
   @Override
   public String getConfigurableDisplayName() {
     return ApplicationBundle.message("title.general");
-  }
-
-  @Override
-  public DisplayPriority getPriority() {
-    return DisplayPriority.COMMON_SETTINGS;
   }
 }

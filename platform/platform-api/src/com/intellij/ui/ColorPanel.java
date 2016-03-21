@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,211 +15,192 @@
  */
 package com.intellij.ui;
 
+import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ColorPanel extends JPanel {
-  public static final Color DISABLED_COLOR = UIUtil.getPanelBackground();
-  private boolean isFiringEvent = false;
-  private ColorBox myFgSelectedColorBox;
-  private boolean isEditable = true;
+import static java.beans.EventHandler.create;
+import static java.util.Locale.ENGLISH;
+
+public class ColorPanel extends JComponent {
+  private static final RelativeFont MONOSPACED_FONT = RelativeFont.SMALL.family(Font.MONOSPACED);
+  private final List<ActionListener> myListeners = new CopyOnWriteArrayList<ActionListener>();
+  private final JTextField myTextField = new JTextField(8);
+  private boolean myEditable;
+  private ActionEvent myEvent;
+  private Color myColor;
 
   public ColorPanel() {
-    this(JBUI.scale(10));
+    addImpl(myTextField, null, 0);
+    setEditable(true);
+    setMinimumSize(JBUI.size(10, 10));
+    myTextField.addMouseListener(create(MouseListener.class, this, "onPressed", null, "mousePressed"));
+    myTextField.addKeyListener(create(KeyListener.class, this, "onPressed", "keyCode", "keyPressed"));
+    myTextField.setEditable(false);
+    MONOSPACED_FONT.install(myTextField);
+    Painter.BACKGROUND.install(myTextField, true);
   }
 
-  public ColorPanel(int boxSize) {
-    myFgSelectedColorBox = new ColorBox(null, (boxSize + JBUI.scale(2)) * 2, true);
-    myFgSelectedColorBox.setSelectColorAction(
-      new Runnable() {
-        @Override
-        public void run() {
-          fireActionEvent();
+  @SuppressWarnings("unused") // used from event handler
+  public void onPressed(int keyCode) {
+    if (keyCode == KeyEvent.VK_SPACE) {
+      onPressed();
+    }
+  }
+
+  public void onPressed() {
+    if (myEditable && isEnabled()) {
+      Color color = ColorChooser.chooseColor(this, UIBundle.message("color.panel.select.color.dialog.description"), myColor);
+      if (color != null) {
+        setSelectedColor(color);
+        if (!myListeners.isEmpty() && (myEvent == null)) {
+          try {
+            myEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "colorPanelChanged");
+            for (ActionListener listener : myListeners) {
+              listener.actionPerformed(myEvent);
+            }
+          }
+          finally {
+            myEvent = null;
+          }
         }
       }
-    );
+    }
+  }
 
-    JPanel selectedColorPanel = new JPanel(new GridBagLayout());
-    selectedColorPanel.setBorder(JBUI.Borders.empty(4, 4, 4, 4));
-    myFgSelectedColorBox.setBorder(BorderFactory.createEtchedBorder());
-    selectedColorPanel.add(myFgSelectedColorBox, new GridBagConstraints());
+  @Override
+  public void doLayout() {
+    Rectangle bounds = new Rectangle(getWidth(), getHeight());
+    JBInsets.removeFrom(bounds, getInsets());
+    myTextField.setBounds(bounds);
+  }
 
-    setLayout(new BorderLayout());
-    add(selectedColorPanel, BorderLayout.WEST);
+  @Override
+  public Dimension getPreferredSize() {
+    if (isPreferredSizeSet()) {
+      return super.getPreferredSize();
+    }
+    Dimension size = myTextField.getPreferredSize();
+    JBInsets.addTo(size, getInsets());
+    return size;
+  }
+
+  @Override
+  public String getToolTipText() {
+    return myTextField.getToolTipText();
+  }
+
+  public void removeActionListener(ActionListener actionlistener) {
+    myListeners.remove(actionlistener);
+  }
+
+  public void addActionListener(ActionListener actionlistener) {
+    myListeners.add(actionlistener);
+  }
+
+  @Nullable
+  public Color getSelectedColor() {
+    return myColor;
+  }
+
+  public void setSelectedColor(@Nullable Color color) {
+    myColor = color;
+    updateSelectedColor();
+  }
+
+  @SuppressWarnings("UseJBColor")
+  private void updateSelectedColor() {
+    boolean enabled = isEnabled();
+    if (enabled && myEditable) {
+      myTextField.setEnabled(true);
+      myTextField.setToolTipText(UIBundle.message("color.panel.select.color.tooltip.text"));
+    }
+    else {
+      myTextField.setEnabled(false);
+      myTextField.setToolTipText(null);
+    }
+    Color color = enabled ? myColor : null;
+    if (color != null) {
+      myTextField.setText(' ' + ColorUtil.toHex(color).toUpperCase(ENGLISH) + ' ');
+    }
+    else {
+      myTextField.setText(null);
+      color = getBackground();
+    }
+    myTextField.setBackground(color);
+    myTextField.setSelectedTextColor(color);
+    if (color != null) {
+      int gray = (int)(0.212656 * color.getRed() + 0.715158 * color.getGreen() + 0.072186 * color.getBlue());
+      int delta = gray < 0x20 ? 0x60 : gray < 0x50 ? 0x40 : gray < 0x80 ? 0x20 : gray < 0xB0 ? -0x20 : gray < 0xE0 ? -0x40 : -0x60;
+      gray += delta;
+      color = new Color(gray, gray, gray);
+      myTextField.setDisabledTextColor(color);
+      myTextField.setSelectionColor(color);
+      gray += delta;
+      color = new Color(gray, gray, gray);
+      myTextField.setForeground(color);
+    }
+  }
+
+  public void setEditable(boolean editable) {
+    myEditable = editable;
+    updateSelectedColor();
   }
 
   @Override
   public void setEnabled(boolean enabled) {
-    myFgSelectedColorBox.setEnabled(enabled);
     super.setEnabled(enabled);
-    repaint();
+    updateSelectedColor();
   }
 
-  private void fireActionEvent() {
-    if (!isEditable) return;
-    if (!isFiringEvent){
-      isFiringEvent = true;
-      ActionEvent actionevent = null;
-      Object[] listeners = listenerList.getListenerList();
-      for(int i = listeners.length - 2; i >= 0; i -= 2){
-        if (listeners[i] != ActionListener.class) continue;
-        if (actionevent == null){
-          actionevent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "colorPanelChanged");
-        }
-        ((ActionListener)listeners[i + 1]).actionPerformed(actionevent);
-      }
-      isFiringEvent = false;
-    }
+  @Override
+  public void repaint() {
+    super.repaint();
   }
 
-  public void removeActionListener(ActionListener actionlistener) {
-    listenerList.remove(ActionListener.class, actionlistener);
-  }
+  private static class Painter implements Highlighter.HighlightPainter, PropertyChangeListener {
+    private static final String PROPERTY = "highlighter";
+    private static final Painter BACKGROUND = new Painter();
 
-  public void addActionListener(ActionListener actionlistener) {
-    listenerList.add(ActionListener.class, actionlistener);
-  }
-
-  public Color getSelectedColor() {
-    return myFgSelectedColorBox.getColor();
-  }
-
-  public void setSelectedColor(Color color) {
-    myFgSelectedColorBox.setColor(color);
-  }
-
-  public void setEditable(boolean isEditable) {
-    this.isEditable = isEditable;
-    myFgSelectedColorBox.setSelectable(isEditable);
-  }
-
-  private class ColorBox extends JComponent {
-    private final Dimension mySize;
-    private boolean isSelectable;
-    private Runnable mySelectColorAction = null;
-    private Color myColor;
-    @NonNls public static final String RGB = "RGB";
-
-    public ColorBox(Color color, int size, boolean isSelectable) {
-      mySize = new Dimension(size, size);
-      this.isSelectable = isSelectable;
-      myColor = color;
-      updateToolTip();
-      //TODO[anton,vova] investigate
-      addMouseListener(new MouseAdapter(){
-        @Override
-        public void mouseReleased(MouseEvent mouseevent) {
-          if (!isEnabled()){
-            return;
-          }
-          if (mouseevent.isPopupTrigger()){
-            selectColor();
-          }
-        }
-
-        @Override
-        public void mousePressed(MouseEvent mouseevent) {
-          if (!isEnabled()){
-            return;
-          }
-          if (mouseevent.getClickCount() == 2){
-            selectColor();
-          }
-          else{
-            if (SwingUtilities.isLeftMouseButton(mouseevent)){
-              setSelectedColor(myColor);
-              fireActionEvent();
-            }
-            else{
-              if (mouseevent.isPopupTrigger()){
-                selectColor();
-              }
-            }
-          }
-        }
-      });
-    }
-
-    public void setSelectColorAction(Runnable selectColorAction) {
-      mySelectColorAction = selectColorAction;
-    }
-
-    private void selectColor() {
-      if (isSelectable){
-        Color color = ColorChooser.chooseColor(ColorPanel.this, UIBundle.message("color.panel.select.color.dialog.description"), myColor);
-        if (color != null){
-          setColor(color);
-          if (mySelectColorAction != null){
-            mySelectColorAction.run();
-          }
-        }
+    @Override
+    public void paint(Graphics g, int p0, int p1, Shape shape, JTextComponent component) {
+      Color color = component.getBackground();
+      if (color != null) {
+        g.setColor(color);
+        Rectangle bounds = shape instanceof Rectangle ? (Rectangle)shape : shape.getBounds();
+        g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
       }
     }
 
     @Override
-    public Dimension getMinimumSize() {
-      return mySize;
-    }
-
-    @Override
-    public Dimension getMaximumSize() {
-      return mySize;
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-      return mySize;
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-      if (isEnabled()){
-        g.setColor(myColor);
+    public void propertyChange(PropertyChangeEvent event) {
+      Object source = event.getSource();
+      if ((source instanceof JTextComponent) && PROPERTY.equals(event.getPropertyName())) {
+        install((JTextComponent)source, false);
       }
-      else{
-        g.setColor(DISABLED_COLOR);
+    }
+
+    private void install(JTextComponent component, boolean listener) {
+      try {
+        Highlighter highlighter = component.getHighlighter();
+        if (highlighter != null) highlighter.addHighlight(0, 0, this);
       }
-      g.fillRect(0, 0, getWidth(), getHeight());
-    }
-
-    private void updateToolTip() {
-      if (myColor == null){
-        return;
+      catch (BadLocationException ignored) {
       }
-      StringBuilder buffer = new StringBuilder(64);
-      buffer.append(RGB + ": ");
-      buffer.append(myColor.getRed());
-      buffer.append(", ");
-      buffer.append(myColor.getGreen());
-      buffer.append(", ");
-      buffer.append(myColor.getBlue());
-
-      if (isSelectable) {
-        buffer.append(" (").append(UIBundle.message("color.panel.right.click.to.customize.tooltip.suffix")).append(")");
+      if (listener) {
+        component.addPropertyChangeListener(PROPERTY, this);
       }
-      setToolTipText(buffer.toString());
-    }
-
-    public void setColor(Color color) {
-      myColor = color;
-      updateToolTip();
-      repaint();
-    }
-
-    public Color getColor() {
-      return myColor;
-    }
-
-    private void setSelectable(boolean selectable) {
-      isSelectable = selectable;
     }
   }
 }
