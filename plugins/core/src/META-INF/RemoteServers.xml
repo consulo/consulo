@@ -49,7 +49,7 @@
                         serviceImplementation="com.intellij.remoteServer.impl.runtime.ServerConnectionManagerImpl"/>
     <applicationService serviceInterface="com.intellij.remoteServer.agent.RemoteAgentManager"
                         serviceImplementation="com.intellij.remoteServer.agent.impl.RemoteAgentManagerImpl"/>
-    <applicationConfigurable instance="com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable"/>
+    <applicationConfigurable parentId="execution" instance="com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable"/>
     <programRunner implementation="com.intellij.remoteServer.impl.runtime.DeployToServerRunner"/>
 
     <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType"/>
