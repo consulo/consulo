@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -129,10 +130,18 @@ public class CompilerPaths {
   }
 
   @NonNls
+  @NotNull
   public static String getGenerationOutputPath(IntermediateOutputCompiler compiler, Module module, final boolean forTestSources) {
     final String generatedCompilerDirectoryPath = getGeneratedDataDirectory(module.getProject(), compiler).getPath();
-    //noinspection HardCodedStringLiteral
-    final String moduleDir = module.getName().replaceAll("\\s+", "_") + "." + Integer.toHexString(module.getModuleDirPath().hashCode());
+    String moduleHash = null;
+    String moduleDirPath = module.getModuleDirPath();
+    if(moduleDirPath != null) {
+      moduleHash = Integer.toHexString(moduleDirPath.hashCode());
+    }
+    else {
+      moduleHash = module.getProject().getLocationHash();
+    }
+    final String moduleDir = module.getName().replaceAll("\\s+", "_") + "." + moduleHash;
     return generatedCompilerDirectoryPath.replace(File.separatorChar, '/') +
            "/" +
            moduleDir +
