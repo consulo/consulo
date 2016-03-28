@@ -13,6 +13,7 @@ import com.intellij.remoteServer.runtime.ConnectionStatus;
 import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.util.concurrency.Semaphore;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,6 +71,7 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
         testConnection();
       }
     });
+    myMainPanel.setBorder(JBUI.Borders.empty(0, 10, 0, 10));
     return myMainPanel;
   }
 
