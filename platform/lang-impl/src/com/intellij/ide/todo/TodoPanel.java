@@ -153,7 +153,6 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
 
     myUsagePreviewPanel = new UsagePreviewPanel(myProject, new UsageViewPresentation());
-    myUsagePreviewPanel.setBorder(IdeBorderFactory.createBorder(SideBorder.LEFT));
     Disposer.register(this, myUsagePreviewPanel);
     myUsagePreviewPanel.setVisible(mySettings.isShowPreview());
 
@@ -233,7 +232,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
   }
 
   protected JComponent createCenterComponent() {
-    final Splitter splitter = new Splitter(false);
+    Splitter splitter = new OnePixelSplitter(false);
     splitter.setSecondComponent(myUsagePreviewPanel);
     splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myTree));
     return splitter;
