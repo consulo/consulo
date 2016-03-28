@@ -22,10 +22,15 @@ import com.intellij.openapi.compiler.CompileStatusNotification;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class CompileProjectAction extends CompileActionBase {
+  @RequiredDispatchThread
+  @Override
   protected void doAction(DataContext dataContext, final Project project) {
     CompilerManager.getInstance(project).rebuild(new CompileStatusNotification() {
+      @Override
       public void finished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {
         if (aborted) return;
 
@@ -37,7 +42,9 @@ public class CompileProjectAction extends CompileActionBase {
     });
   }
 
-  public void update(AnActionEvent event) {
+  @Override
+  @RequiredDispatchThread
+  public void update(@NotNull AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();
     if (!presentation.isEnabled()) {

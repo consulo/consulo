@@ -19,13 +19,17 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public abstract class CompileActionBase extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredDispatchThread
+  @Override
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
@@ -39,9 +43,12 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
     doAction(dataContext, project);
   }
 
+  @RequiredDispatchThread
   protected abstract void doAction(final DataContext dataContext, final Project project);
 
-  public void update(final AnActionEvent e) {
+  @RequiredDispatchThread
+  @Override
+  public void update(@NotNull final AnActionEvent e) {
     super.update(e);
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {

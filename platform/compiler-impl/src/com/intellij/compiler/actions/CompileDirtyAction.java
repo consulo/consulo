@@ -18,14 +18,18 @@ package com.intellij.compiler.actions;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class CompileDirtyAction extends CompileActionBase {
 
+  @RequiredDispatchThread
   protected void doAction(DataContext dataContext, Project project) {
     CompilerManager.getInstance(project).make(null);
   }
 
-  public void update(AnActionEvent event){
+  @RequiredDispatchThread
+  public void update(@NotNull AnActionEvent event){
     super.update(event);
     Presentation presentation = event.getPresentation();
     if (!presentation.isEnabled()) {

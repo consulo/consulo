@@ -35,12 +35,15 @@ import com.intellij.psi.PsiManager;
 import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class CompileAction extends CompileActionBase {
+  @RequiredDispatchThread
   protected void doAction(DataContext dataContext, Project project) {
     final Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
     if (module != null) {
@@ -55,7 +58,8 @@ public class CompileAction extends CompileActionBase {
 
   }
 
-  public void update(AnActionEvent event) {
+  @RequiredDispatchThread
+  public void update(@NotNull AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();
     if (!presentation.isEnabled()) {

@@ -21,10 +21,13 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class MakeModuleAction extends CompileActionBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.actions.MakeModuleAction");
 
+  @RequiredDispatchThread
   protected void doAction(DataContext dataContext, Project project) {
     Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
     Module module;
@@ -43,7 +46,8 @@ public class MakeModuleAction extends CompileActionBase {
     }
   }
 
-  public void update(AnActionEvent event){
+  @RequiredDispatchThread
+  public void update(@NotNull AnActionEvent event){
     super.update(event);
     Presentation presentation = event.getPresentation();
     if (!presentation.isEnabled()) {
