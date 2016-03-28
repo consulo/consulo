@@ -45,8 +45,7 @@ public class ServersToolWindow {
       }
     });
 
-    myToolWindow = ToolWindowManager.getInstance(project).registerToolWindow(ID, false,
-                                                                              ToolWindowAnchor.BOTTOM);
+    myToolWindow = ToolWindowManager.getInstance(project).registerToolWindow(ID, false, ToolWindowAnchor.BOTTOM);
 
     myToolWindow.setIcon(RemoteServersIcons.ServersToolWindow);
 

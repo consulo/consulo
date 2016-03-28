@@ -24,6 +24,7 @@ import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionListener;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.ui.DoubleClickListener;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SideBorder;
 import com.intellij.ui.components.panels.Wrapper;
@@ -82,7 +83,7 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
     myTree.setLineStyleAngled();
 
     getMainPanel().add(createToolbar(), BorderLayout.WEST);
-    Splitter splitter = new Splitter(false, 0.3f);
+    Splitter splitter = new OnePixelSplitter(false, 0.3f);
     splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myTree, SideBorder.LEFT));
     myPropertiesPanelLayout = new CardLayout();
     myPropertiesPanel = new JPanel(myPropertiesPanelLayout);

@@ -16,10 +16,13 @@ public class ServersToolWindowOpener extends AbstractProjectComponent {
     super(project);
   }
 
+  @Override
   public void projectOpened() {
     StartupManager.getInstance(myProject).registerPostStartupActivity(new Runnable() {
+      @Override
       public void run() {
         ToolWindowManager.getInstance(myProject).invokeLater(new Runnable() {
+          @Override
           public void run() {
             new ServersToolWindow(myProject);
           }
@@ -28,6 +31,7 @@ public class ServersToolWindowOpener extends AbstractProjectComponent {
     });
   }
 
+  @Override
   @NotNull
   public String getComponentName() {
     return "ServersToolWindowOpener";
