@@ -129,24 +129,30 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
 
   @Nullable
   public ModuleExtension<?> createImmutable(@NotNull ModuleRootLayer modifiableRootModel) {
-    Constructor<ModuleExtension> value = myImmutableConstructorValue.getValue();
-    if(value != null) {
-      return ReflectionUtil.createInstance(value, key, modifiableRootModel);
+    try {
+      Constructor<ModuleExtension> value = myImmutableConstructorValue.getValue();
+      if(value != null) {
+        return ReflectionUtil.createInstance(value, key, modifiableRootModel);
+      }
     }
-    else {
-      return null;
+    catch (Error e) {
+      LOGGER.error("Problem with module extension: " + key, e);
     }
+    return null;
   }
 
   @Nullable
   public MutableModuleExtension<?> createMutable(@NotNull ModuleRootLayer modifiableRootModel) {
-    Constructor<MutableModuleExtension> value = myMutableConstructorValue.getValue();
-    if(value != null) {
-      return ReflectionUtil.createInstance(value, key, modifiableRootModel);
+    try {
+      Constructor<MutableModuleExtension> value = myMutableConstructorValue.getValue();
+      if(value != null) {
+        return ReflectionUtil.createInstance(value, key, modifiableRootModel);
+      }
     }
-    else {
-      return null;
+    catch (Error e) {
+      LOGGER.error("Problem with module extension: " + key, e);
     }
+    return null;
   }
 
   @NotNull
