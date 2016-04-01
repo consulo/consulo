@@ -214,9 +214,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
         addToResults(new Place(shreds), null);
         return;
       }
-      PsiDocumentManagerImpl documentManager = (PsiDocumentManagerImpl)PsiDocumentManager.getInstance(myProject);
-      //todo restore
-      //assert !documentManager.getUncommittedDocumentsUnsafe().contains(myHostDocument) : "document is uncommitted: "+myHostDocument;
+      PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject);
 
       Place place = new Place(shreds);
       DocumentWindowImpl documentWindow = new DocumentWindowImpl(myHostDocument, isOneLineEditor, place);
@@ -250,7 +248,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
 
         assert parsedNode instanceof FileElement : "Parsed to " + parsedNode + " instead of FileElement";
 
-        String documentText = documentWindow.getText();
+        String documentText = documentManager.getLastCommittedDocument(documentWindow).getText();
         assert outChars.toString().equals(parsedNode.getText()) : exceptionContext(
                 "Before patch: doc:\n'" + documentText + "'\n---PSI:\n'" + parsedNode.getText() + "'\n---chars:\n'" + outChars + "'");
 
@@ -362,7 +360,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     return node;
   }
 
-  private void assertEverythingIsAllright(PsiDocumentManager documentManager, DocumentWindowImpl documentWindow, PsiFile psiFile) {
+  private void assertEverythingIsAllright(PsiDocumentManagerBase documentManager, DocumentWindowImpl documentWindow, PsiFile psiFile) {
     boolean isAncestor = false;
     for (PsiLanguageInjectionHost.Shred shred : shreds) {
       PsiLanguageInjectionHost host = shred.getHost();
@@ -372,14 +370,15 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
 
     InjectedFileViewProvider injectedFileViewProvider = (InjectedFileViewProvider)psiFile.getViewProvider();
     assert injectedFileViewProvider.isValid() : "Invalid view provider: " + injectedFileViewProvider;
-    assert documentWindow.getText().equals(psiFile.getText()) : "Document window text mismatch";
+    DocumentEx frozenWindow = documentManager.getLastCommittedDocument(documentWindow);
+    assert psiFile.textMatches(frozenWindow.getText()) : "Document window text mismatch";
     assert injectedFileViewProvider.getDocument() == documentWindow : "Provider document mismatch";
     assert documentManager.getCachedDocument(psiFile) == documentWindow : "Cached document mismatch";
     assert Comparing.equal(psiFile.getVirtualFile(), injectedFileViewProvider.getVirtualFile()) : "Virtual file mismatch: " +
                                                                                                   psiFile.getVirtualFile() +
                                                                                                   "; " +
                                                                                                   injectedFileViewProvider.getVirtualFile();
-    PsiDocumentManagerImpl.checkConsistency(psiFile, documentWindow);
+    PsiDocumentManagerBase.checkConsistency(psiFile, frozenWindow);
   }
 
   public void addToResults(Place place, PsiFile psiFile, MultiHostRegistrarImpl from) {
