@@ -14,6 +14,7 @@ Here you can found more information for each repository.
  * [consulo-java](http://github.com/consulo/consulo-java) - contains **Java** language implementation. Here you can report any problem with **Java** language, **JVM** debugger, etc.
 
     * [consulo-junit](http://github.com/consulo/consulo-junit) - contains **JUnit** implementation.
+    * [consulo-groovy](http://github.com/consulo/consulo-groovy) - contains **Groovy** implementation.
     * [consulo-testng](http://github.com/consulo/consulo-testng) - contains **TestNG** implementation.
 
 ## .NET Platform
