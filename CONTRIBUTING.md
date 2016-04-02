@@ -1,9 +1,11 @@
 # Contributing guide
 
-First of all you need select correct repository for report issue. Consulo organization have more that 100 repositories. Please don't create issue in random repository.
+First of all you need select correct repository for report issue. Consulo organization have more that 100 repositories. Please don't create issue in random repository. 
+
+If you want contribute code, you need setup IDE for it, visit [Plugin-Development-Starter-Guide](https://github.com/consulo/consulo/wiki/Plugin-Development-Starter-Guide)
+
 
 Here you can found more information for each repository.
-
 
 ## Core
  * [consulo](http://github.com/consulo/consulo) - main repository of **Consulo** organization on **github**. It contains **Consulo** platform code without **any language implementations**. 
