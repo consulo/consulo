@@ -14,6 +14,7 @@ To run the project, use the "Consulo" shared run configuration.
 
 ## Links
 
+* [Contributing Guide] (https://github.com/consulo/consulo/CONTRIBUTING.md)
 * [Download] (https://github.com/consulo/consulo/wiki/Downloads)
 * [Issues] (https://github.com/consulo/consulo/issues)
 * [Forum] (https://groups.google.com/forum/#!forum/consulo)
