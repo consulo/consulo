@@ -1,10 +1,12 @@
-## Information
+# Consulo - multi-language ide
 
-This is IDE based on IntelliJ Platform. The main goal of our project is creating one IDE for all programming languages.
+## Goal
+
+Main goal - create **open** IDE where you don't need select IDE for different languages. Provide standart for language implementation inside IDE. 
 
 ## Building
 
-First you need setup enviroment, please visit this [link](https://github.com/consulo/consulo/wiki/Plugin-Development-Starter-Guide)
+Please read conntribuing guide.
 
 Use 'Build | Build Artifacts... | dist' to build the project
 
@@ -14,6 +16,7 @@ To run the project, use the "Consulo" shared run configuration.
 
 ## Links
 
+* [Contributing Guide] (https://github.com/consulo/consulo/CONTRIBUTING.md)
 * [Download] (https://github.com/consulo/consulo/wiki/Downloads)
 * [Issues] (https://github.com/consulo/consulo/issues)
 * [Forum] (https://groups.google.com/forum/#!forum/consulo)
