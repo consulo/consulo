@@ -9,12 +9,14 @@ Here you can found more information for each repository.
 
 ## Core
  * [consulo](http://github.com/consulo/consulo) - main repository of **Consulo** organization on **github**. It contains **Consulo** platform code without **any language implementations**. 
- 
+ * [consulo-spellchecker](http://github.com/consulo/consulo-spellchecker) - contains **spellchecker** implementation.
+ * [consulo-images](http://github.com/consulo/consulo-images) - contains image support. 
+
 ## JVM Platform
  * [consulo-java](http://github.com/consulo/consulo-java) - contains **Java** language implementation. Here you can report any problem with **Java** language, **JVM** debugger, etc.
 
-    * [consulo-junit](http://github.com/consulo/consulo-junit) - contains **JUnit** implementation.
     * [consulo-groovy](http://github.com/consulo/consulo-groovy) - contains **Groovy** implementation.
+    * [consulo-junit](http://github.com/consulo/consulo-junit) - contains **JUnit** implementation.
     * [consulo-testng](http://github.com/consulo/consulo-testng) - contains **TestNG** implementation.
 
 ## .NET Platform
