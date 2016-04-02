@@ -32,4 +32,6 @@ Here you can found more information for each repository.
 
     * [consulo-nunit](http://github.com/consulo/consulo-nunit) - contains **NUnit** implementation.
 
- 
+## JavaScript Platform
+ * [consulo-javascript](http://github.com/consulo/consulo-javascript) - contains **JavaScript**, **ECMAScript**, **JSON** language implementation. Here you can report problems with **JavaScript** language, debugger, etc.
+    * [consulo-nodejs](http://github.com/consulo/consulo-nodejs) - contains **NodeJS**, **Mocha** framework implementations.
