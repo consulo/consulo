@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ public class CommandLineProcessor {
   public static void openFileOrProject(final String name) {
     //noinspection SSBasedInspection
     SwingUtilities.invokeLater(new Runnable() {
+      @Override
       public void run() {
         if (name != null) {
           doOpenFileOrProject(name);
@@ -119,6 +120,7 @@ public class CommandLineProcessor {
   public static Project processExternalCommandLine(List<String> args, @Nullable String currentDirectory) {
     if (args.size() > 0) {
       LOG.info("External command line:");
+      LOG.info("Dir: " + currentDirectory);
       for (String arg : args) {
         LOG.info(arg);
       }
@@ -126,9 +128,11 @@ public class CommandLineProcessor {
     LOG.info("-----");
 
     if (args.size() > 0) {
-      String command = args.get(0);
+      final String command = args.get(0);
       for(ApplicationStarter starter: Extensions.getExtensions(ApplicationStarter.EP_NAME)) {
-        if (starter instanceof ApplicationStarterEx && command.equals(starter.getCommandName())) {
+        if (command.equals(starter.getCommandName()) &&
+            starter instanceof ApplicationStarterEx &&
+            ((ApplicationStarterEx)starter).canProcessExternalCommandLine()) {
           LOG.info("Processing command with " + starter);
           ((ApplicationStarterEx) starter).processExternalCommandLine(ArrayUtil.toStringArray(args), currentDirectory);
           return null;
@@ -160,8 +164,8 @@ public class CommandLineProcessor {
         if (StringUtil.isQuotedString(arg)) {
           arg = StringUtil.stripQuotesAroundValue(arg);
         }
-        if (currentDirectory != null && !new File(arg).isAbsolute()) {
-          arg = new File(currentDirectory, arg).getAbsolutePath();
+        if (!new File(arg).isAbsolute()) {
+          arg = currentDirectory != null ? new File(currentDirectory, arg).getAbsolutePath() : new File(arg).getAbsolutePath();
         }
         if (line != -1) {
           final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(arg);

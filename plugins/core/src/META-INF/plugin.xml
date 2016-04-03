@@ -1126,9 +1126,6 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
-    <appStarter implementation="com.intellij.openapi.diff.DiffApplication"/>
-    <appStarter implementation="com.intellij.openapi.diff.MergeApplication"/>
-
 
     <applicationService serviceInterface="com.intellij.openapi.application.ApplicationInfo"
                         serviceImplementation="com.intellij.openapi.application.impl.ApplicationInfoImpl"/>
@@ -1592,10 +1589,6 @@
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                         serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
-
-    <!--Lang-->
-    <appStarter implementation="com.intellij.codeInspection.InspectionMain"/>
-    <appStarter implementation="com.intellij.ide.ui.search.TraverseUIStarter"/>
 
     <referencesSearch implementation="com.intellij.psi.impl.search.CachesBasedRefSearcher"/>
     <referencesSearch implementation="com.intellij.psi.impl.search.NonPhysicalReferenceSearcher"/>

@@ -99,20 +99,12 @@ public class Main {
     }
 
     String firstArg = args[0];
-    return Comparing.strEqual(firstArg, "ant") ||
-           Comparing.strEqual(firstArg, "duplocate") ||
-           Comparing.strEqual(firstArg, "testrun") ||
-           Comparing.strEqual(firstArg, "traverseUI") ||
-           (firstArg.length() < 20 && firstArg.endsWith("inspect"));
+    return Comparing.strEqual(firstArg, "testrun");
   }
 
   private static boolean isCommandLine(String[] args) {
     if (isHeadless()) return true;
-    return args.length > 0 && Comparing.strEqual(args[0], "diff");
-  }
-
-  public static boolean isUITraverser(final String[] args) {
-    return args.length > 0 && Comparing.strEqual(args[0], "traverseUI");
+    return false;
   }
 
   private static void installPatch() throws IOException {
