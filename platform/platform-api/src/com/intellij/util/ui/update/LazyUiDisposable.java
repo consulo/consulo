@@ -27,6 +27,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.application.ApplicationProperties;
 
 import javax.swing.*;
 
@@ -40,7 +41,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
   private final T myChild;
 
   public LazyUiDisposable(@Nullable Disposable parent, @NotNull JComponent ui, @NotNull T child) {
-    if (Boolean.TRUE.toString().equalsIgnoreCase(System.getProperty("idea.is.internal"))) {
+    if (Boolean.getBoolean(ApplicationProperties.IDEA_IS_INTERNAL)) {
       myAllocation = new Exception();
     }
 

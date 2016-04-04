@@ -23,6 +23,7 @@ import com.intellij.vcs.log.graph.utils.IntList;
 import com.intellij.vcs.log.graph.utils.TimestampGetter;
 import com.intellij.vcs.log.graph.utils.impl.CompressedIntList;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.application.ApplicationProperties;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class BekSorter {
     if (Registry.is("vcs.log.bek.sort.disabled")) {
       return false;
     }
-    boolean isInternal = Boolean.valueOf(System.getProperty("idea.is.internal"));
+    boolean isInternal = Boolean.getBoolean(ApplicationProperties.IDEA_IS_INTERNAL);
     boolean isBekEnabled = Registry.is("vcs.log.bek.sort");
     return isBekEnabled || isInternal;
   }

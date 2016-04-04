@@ -20,6 +20,7 @@ import com.intellij.openapi.extensions.PluginId;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.application.ApplicationProperties;
 
 import java.util.*;
 
@@ -54,7 +55,7 @@ class PluginClassCache {
   }
 
   public void dumpPluginClassStatistics() {
-    if (!Boolean.valueOf(System.getProperty("idea.is.internal")).booleanValue()) return;
+    if (!Boolean.getBoolean(ApplicationProperties.IDEA_IS_INTERNAL)) return;
 
     List<PluginId> counters;
     synchronized (ourLock) {
@@ -63,6 +64,7 @@ class PluginClassCache {
     }
 
     Collections.sort(counters, new Comparator<PluginId>() {
+      @Override
       public int compare(PluginId o1, PluginId o2) {
         return myClassCounts.get(o2) - myClassCounts.get(o1);
       }

@@ -53,6 +53,7 @@ import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.application.ApplicationProperties;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +62,8 @@ import java.util.Arrays;
 
 public class IdeaApplication {
   @NonNls
-  public static final String IDEA_IS_INTERNAL_PROPERTY = "idea.is.internal";
+  @Deprecated
+  public static final String IDEA_IS_INTERNAL_PROPERTY = ApplicationProperties.IDEA_IS_INTERNAL;
   @NonNls
   public static final String IDEA_IS_UNIT_TEST = "idea.is.unit.test";
 
@@ -88,7 +90,7 @@ public class IdeaApplication {
     ourInstance = this;
 
     myArgs = args;
-    boolean isInternal = Boolean.getBoolean(IDEA_IS_INTERNAL_PROPERTY);
+    boolean isInternal = Boolean.getBoolean(ApplicationProperties.IDEA_IS_INTERNAL);
     boolean isUnitTest = Boolean.getBoolean(IDEA_IS_UNIT_TEST);
 
     boolean headless = Main.isHeadless();

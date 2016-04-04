@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package org.mustbe.consulo.application;
 
-import com.intellij.openapi.util.NotNullLazyValue;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.application.ApplicationProperties;
 
 /**
  * @author VISTALL
- * @since 15.09.14
+ * @since 04.04.2016
  */
-public class SandboxUtil {
-  private static final NotNullLazyValue<Boolean> ourSandboxLazyValue = new NotNullLazyValue<Boolean>() {
-    @NotNull
-    @Override
-    protected Boolean compute() {
-      return SystemProperties.getBooleanProperty(ApplicationProperties.CONSULO_IN_SANDBOX, false);
-    }
-  };
+public interface ApplicationProperties {
+  @NotNull
+  @NonNls
+  String IDEA_IS_INTERNAL = "idea.is.internal";
 
-  public static boolean isInsideSandbox() {
-    return ourSandboxLazyValue.getValue();
-  }
+  @NotNull
+  @NonNls
+  String CONSULO_IN_SANDBOX = "consulo.in.sandbox";
 }
