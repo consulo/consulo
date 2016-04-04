@@ -17,12 +17,12 @@ package com.intellij.idea;
 
 import com.intellij.ide.Bootstrap;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Restarter;
 import org.mustbe.consulo.SharedConstants;
+import org.mustbe.consulo.application.ApplicationProperties;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +43,8 @@ public class Main {
   private static boolean isHeadless;
   private static boolean isCommandLine;
 
-  private Main() { }
+  private Main() {
+  }
 
   public static void main(final String[] args) {
     setFlags(args);
@@ -85,26 +86,11 @@ public class Main {
   }
 
   public static void setFlags(String[] args) {
-    isHeadless = isHeadless(args);
-    isCommandLine = isCommandLine(args);
+    isHeadless = isCommandLine = isHeadless(args);
   }
 
   private static boolean isHeadless(String[] args) {
-    if (Boolean.valueOf(System.getProperty(AWT_HEADLESS))) {
-      return true;
-    }
-
-    if (args.length == 0) {
-      return false;
-    }
-
-    String firstArg = args[0];
-    return Comparing.strEqual(firstArg, "testrun");
-  }
-
-  private static boolean isCommandLine(String[] args) {
-    if (isHeadless()) return true;
-    return false;
+    return Boolean.getBoolean(AWT_HEADLESS) || Boolean.getBoolean(ApplicationProperties.CONSULO_IN_UNIT_TEST);
   }
 
   private static void installPatch() throws IOException {
@@ -133,14 +119,8 @@ public class Main {
         args.add(Restarter.createTempExecutable(launcher).getPath());
       }
 
-      Collections.addAll(args,
-                         System.getProperty("java.home") + "/bin/java",
-                         "-Xmx500m",
-                         "-classpath",
-                         copyPatchFile.getPath(),
-                         "com.intellij.updater.Runner",
-                         "install",
-                         PathManager.getHomePath());
+      Collections.addAll(args, System.getProperty("java.home") + "/bin/java", "-Xmx500m", "-classpath", copyPatchFile.getPath(), "com.intellij.updater.Runner",
+                         "install", PathManager.getHomePath());
 
       status = Restarter.scheduleRestart(ArrayUtilRt.toStringArray(args));
     }
@@ -166,16 +146,18 @@ public class Main {
       stream.println("\n" + title + ": " + message);
     }
     else {
-      try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
-      catch (Throwable ignore) { }
+      try {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+      }
+      catch (Throwable ignore) {
+      }
 
       JTextPane textPane = new JTextPane();
       textPane.setEditable(false);
       textPane.setText(message.replaceAll("\t", "    "));
       textPane.setBackground(Color.white);
       textPane.setCaretPosition(0);
-      JScrollPane scrollPane = new JScrollPane(
-        textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+      JScrollPane scrollPane = new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
       int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height - 150;
       Dimension component = scrollPane.getPreferredSize();

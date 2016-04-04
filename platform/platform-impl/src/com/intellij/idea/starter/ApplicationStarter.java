@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.application;
+package com.intellij.idea.starter;
 
+import com.intellij.ui.Splash;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Implementers of the interface declared via {@link ApplicationStarter#EP_NAME}
- * may be capable of processing an external command line within a running IntelliJ Platform instance.
- *
- * @author yole
- */
-public abstract class ApplicationStarterEx implements ApplicationStarter {
-  public abstract boolean isHeadless();
-
-  public boolean canProcessExternalCommandLine() {
-    return false;
+public abstract class ApplicationStarter {
+  @Nullable
+  public Splash createSplash(@NotNull String[] args) {
+    return null;
   }
 
-  public void processExternalCommandLine(String[] args, @Nullable String currentDirectory) {
+  public void premain(String[] args) {
+  }
+
+  public void main(String[] args) {
   }
 }

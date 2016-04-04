@@ -17,10 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.idea.StartupUtil;
-import com.intellij.openapi.application.ApplicationStarter;
-import com.intellij.openapi.application.ApplicationStarterEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -33,7 +30,6 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -126,19 +122,6 @@ public class CommandLineProcessor {
       }
     }
     LOG.info("-----");
-
-    if (args.size() > 0) {
-      final String command = args.get(0);
-      for(ApplicationStarter starter: Extensions.getExtensions(ApplicationStarter.EP_NAME)) {
-        if (command.equals(starter.getCommandName()) &&
-            starter instanceof ApplicationStarterEx &&
-            ((ApplicationStarterEx)starter).canProcessExternalCommandLine()) {
-          LOG.info("Processing command with " + starter);
-          ((ApplicationStarterEx) starter).processExternalCommandLine(ArrayUtil.toStringArray(args), currentDirectory);
-          return null;
-        }
-      }
-    }
 
     Project lastOpenedProject = null;
     int line = -1;

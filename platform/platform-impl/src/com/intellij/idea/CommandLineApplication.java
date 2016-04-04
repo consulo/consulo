@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
+@Deprecated
 public class CommandLineApplication {
   private static final Logger LOG = Logger.getInstance("#com.intellij.idea.CommandLineApplication");
 

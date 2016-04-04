@@ -780,6 +780,7 @@
           <orderEntry type="module" module-name="vcs-impl" />
           <orderEntry type="module" module-name="platform-resources" exported="" />
           <orderEntry type="module" module-name="compiler-api" />
+          <orderEntry type="library" name="tcServiceMessages" level="project" />
         </module-layer>
       </module>
       <module name="platform/testRunner" dirurl="file://$PROJECT_DIR$/platform/testRunner" current-layer="Default">

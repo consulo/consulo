@@ -30,4 +30,8 @@ public interface ApplicationProperties {
   @NotNull
   @NonNls
   String CONSULO_IN_SANDBOX = "consulo.in.sandbox";
+
+  @NotNull
+  @NonNls
+  String CONSULO_IN_UNIT_TEST = "consulo.is.unit.test";
 }

@@ -79,9 +79,9 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private Map<PluginId, String> myOptionalConfigs;
   private Map<PluginId, IdeaPluginDescriptorImpl> myOptionalDescriptors;
   @Nullable private List<Element> myActionsElements;
-  private ComponentConfig[] myAppComponents = null;
-  private ComponentConfig[] myProjectComponents = null;
-  private ComponentConfig[] myModuleComponents = null;
+  private ComponentConfig[] myAppComponents = ComponentConfig.EMPTY_ARRAY;
+  private ComponentConfig[] myProjectComponents = ComponentConfig.EMPTY_ARRAY;
+  private ComponentConfig[] myModuleComponents = ComponentConfig.EMPTY_ARRAY;
   private boolean myDeleted = false;
   private ClassLoader myLoader;
   private HelpSetPath[] myHelpSets;
@@ -370,6 +370,19 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @SuppressWarnings({"HardCodedStringLiteral"})
   @NotNull
   public List<File> getClassPath() {
+    // special hack for unit test loader
+    if(PluginManagerCore.UNIT_TEST_PLUGIN.equals(getPluginId())) {
+      final List<File> result = new ArrayList<File>();
+      String testClasspath = System.getProperty("consulo.test.classpath");
+      if (!StringUtil.isEmpty(testClasspath)) {
+        List<String> paths = StringUtil.split(testClasspath, ";");
+        for (String path : paths) {
+          result.add(new File(path));
+        }
+      }
+      return result;
+    }
+
     if (myPath.isDirectory()) {
       final List<File> result = new ArrayList<File>();
       final File classesDir = new File(myPath, "classes");
@@ -543,6 +556,14 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
 
     return CommonBundle.messageOrDefault(bundle, createDescriptionKey(myId), myDescriptionChildText == null ? "" : myDescriptionChildText);
+  }
+
+  public void setId(PluginId id) {
+    myId = id;
+  }
+
+  public void setDependencies(PluginId[] dependencies) {
+    myDependencies = dependencies;
   }
 
   @Override

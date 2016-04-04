@@ -32,6 +32,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.Graph;
@@ -44,6 +45,7 @@ import org.jdom.Document;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.application.ApplicationProperties;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -62,6 +64,11 @@ public class PluginManagerCore {
   public static final String CORE_PLUGIN_ID = "com.intellij";
   @NonNls
   public static final PluginId CORE_PLUGIN = PluginId.getId(CORE_PLUGIN_ID);
+  @NonNls
+  public static final String UNIT_TEST_PLUGIN_ID = "consulo.unittest";
+  @NonNls
+  public static final PluginId UNIT_TEST_PLUGIN = PluginId.getId(UNIT_TEST_PLUGIN_ID);
+
   @NonNls
   public static final String META_INF = "META-INF";
   @NonNls
@@ -725,32 +732,6 @@ public class PluginManagerCore {
     return null;
   }
 
-  @SuppressWarnings({"UseOfSystemOutOrSystemErr", "CallToPrintStackTrace"})
-  private static void loadDescriptorsFromClassPath(final List<IdeaPluginDescriptorImpl> result, @Nullable StartupProgress progress) {
-    try {
-      final Collection<URL> urls = getClassLoaderUrls();
-      int i = 0;
-      for (URL url : urls) {
-        i++;
-        final String protocol = url.getProtocol();
-        if ("file".equals(protocol)) {
-          final File file = new File(URLDecoder.decode(url.getFile()));
-          IdeaPluginDescriptorImpl pluginDescriptor = loadDescriptor(file, PLUGIN_XML);
-          if (pluginDescriptor != null && !result.contains(pluginDescriptor)) {
-            result.add(pluginDescriptor);
-            if (progress != null) {
-              progress.showProgress("Plugin loaded: " + pluginDescriptor.getName(), PLUGINS_PROGRESS_MAX_VALUE * ((float)i / urls.size()));
-            }
-          }
-        }
-      }
-    }
-    catch (Exception e) {
-      System.err.println("Error loading plugins from classpath:");
-      e.printStackTrace();
-    }
-  }
-
   @SuppressWarnings("deprecation")
   private static String decodeUrl(String file) {
     String quotePluses = StringUtil.replace(file, "+", "%2B");
@@ -781,7 +762,20 @@ public class PluginManagerCore {
     loadDescriptors(PathManager.getPluginsPath(), result, progress, pluginsCount);
     loadDescriptors(PathManager.getPreInstalledPluginsPath(), result, progress, pluginsCount);
     loadDescriptorsFromProperty(result);
-    loadDescriptorsFromClassPath(result, progress);
+
+    // insert consulo unit dummy plugin
+    if(Boolean.getBoolean(ApplicationProperties.CONSULO_IN_UNIT_TEST)) {
+      IdeaPluginDescriptorImpl pluginDescriptor = new IdeaPluginDescriptorImpl(new File(PathManager.getPreInstalledPluginsPath(), "unittest"));
+      pluginDescriptor.setId(UNIT_TEST_PLUGIN);
+      List<PluginId> map = ContainerUtil.map(result, new Function<IdeaPluginDescriptorImpl, PluginId>() {
+        @Override
+        public PluginId fun(IdeaPluginDescriptorImpl ideaPluginDescriptor) {
+          return ideaPluginDescriptor.getPluginId();
+        }
+      });
+      pluginDescriptor.setDependencies(ContainerUtil.toArray(map, PluginId.EMPTY_ARRAY));
+      result.add(pluginDescriptor);
+    }
 
     IdeaPluginDescriptorImpl[] pluginDescriptors = result.toArray(new IdeaPluginDescriptorImpl[result.size()]);
     final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap = new THashMap<PluginId, IdeaPluginDescriptorImpl>();

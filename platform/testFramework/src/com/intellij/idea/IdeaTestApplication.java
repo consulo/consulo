@@ -29,6 +29,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.PsiTestExtensionUtil;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated
 public class IdeaTestApplication extends CommandLineApplication implements Disposable {
   private DataProvider myDataContext;
 

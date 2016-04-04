@@ -76,9 +76,6 @@
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
-    <extensionPoint name="appStarter"
-                    interface="com.intellij.openapi.application.ApplicationStarter"/>
-
     <extensionPoint name="postStartupActivity"
                     interface="com.intellij.openapi.startup.StartupActivity"/>
 
