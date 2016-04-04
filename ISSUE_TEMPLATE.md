@@ -1,4 +1,4 @@
-# Please read contributing guide first. 
+# Please read contributing guide first
 
 - IDE build number:
 - Java version:
