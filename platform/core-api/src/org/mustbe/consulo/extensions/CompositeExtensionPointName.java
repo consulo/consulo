@@ -21,9 +21,8 @@ import java.lang.reflect.Proxy;
 
 /**
  * @author VISTALL
- * @since 20.04.2015
- *
  * @see com.intellij.util.EventDispatcher
+ * @since 20.04.2015
  */
 @Logger
 public abstract class CompositeExtensionPointName<T> {
@@ -82,16 +81,16 @@ public abstract class CompositeExtensionPointName<T> {
           return proxy == args[0] ? Boolean.TRUE : Boolean.FALSE;
         }
         else {
-          CompositeExtensionPointName.LOGGER.error("Incorrect Object's method invoked for proxy:" + methodName);
+          LOGGER.error("Incorrect Object's method invoked for proxy:" + methodName);
           return null;
         }
       }
       else {
         Class<?> returnType = method.getReturnType();
-        if(returnType == Void.TYPE) {
+        if (returnType == Void.TYPE) {
           return invokeVoidMethod(method, args);
         }
-        else if(returnType == Boolean.TYPE) {
+        else if (returnType == Boolean.TYPE) {
           return invokeBooleanMethod(method, args);
         }
         return invokeMethod(method, args);
@@ -104,7 +103,7 @@ public abstract class CompositeExtensionPointName<T> {
       for (T listener : myExtensions) {
         try {
           Object value = method.invoke(listener, args);
-          if(value != null) {
+          if (value != null) {
             return value;
           }
         }
@@ -122,7 +121,7 @@ public abstract class CompositeExtensionPointName<T> {
             throw (RuntimeException)cause;
           }
           else if (!(cause instanceof AbstractMethodError)) { // AbstractMethodError means this listener doesn't implement some new method in interface
-            CompositeExtensionPointName.LOGGER.error(cause);
+            LOGGER.error(cause);
           }
         }
       }
@@ -135,14 +134,14 @@ public abstract class CompositeExtensionPointName<T> {
 
       Boolean breakValue = Boolean.TRUE;
       BooleanBreakResult annotation = method.getAnnotation(BooleanBreakResult.class);
-      if(annotation != null) {
+      if (annotation != null) {
         breakValue = annotation.breakValue();
       }
 
       for (T listener : myExtensions) {
         try {
           Boolean value = (Boolean)method.invoke(listener, args);
-          if(breakValue.equals(value)) {
+          if (breakValue.equals(value)) {
             return value;
           }
         }
@@ -160,7 +159,7 @@ public abstract class CompositeExtensionPointName<T> {
             throw (RuntimeException)cause;
           }
           else if (!(cause instanceof AbstractMethodError)) { // AbstractMethodError means this listener doesn't implement some new method in interface
-            CompositeExtensionPointName.LOGGER.error(cause);
+            LOGGER.error(cause);
           }
         }
       }
@@ -188,7 +187,7 @@ public abstract class CompositeExtensionPointName<T> {
             throw (RuntimeException)cause;
           }
           else if (!(cause instanceof AbstractMethodError)) { // AbstractMethodError means this listener doesn't implement some new method in interface
-            CompositeExtensionPointName.LOGGER.error(cause);
+            LOGGER.error(cause);
           }
         }
       }
@@ -274,7 +273,7 @@ public abstract class CompositeExtensionPointName<T> {
 
   @NotNull
   public T composite(@Nullable AreaInstance areaInstance) {
-    if(!validateArea(areaInstance)) {
+    if (!validateArea(areaInstance)) {
       throw new IllegalArgumentException("Wrong area instance for '" + myName + "' extension point");
     }
     T compositeValue = getCompositeValue(areaInstance);
