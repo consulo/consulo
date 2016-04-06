@@ -50,6 +50,10 @@ public class VfsRootAccess {
   private static boolean insideGettingRoots;
 
   @TestOnly
+  /**
+   * Unused, due Consulo test system have different between IDEA. For tests we loading all plugins, and start tests
+   * Other plugins can load other files, and this check is became useless
+   */
   static void assertAccessInTests(@NotNull VirtualFileSystemEntry child, @NotNull NewVirtualFileSystem delegate) {
     final Application application = ApplicationManager.getApplication();
     if (SHOULD_PERFORM_ACCESS_CHECK &&
@@ -73,6 +77,7 @@ public class VfsRootAccess {
       });
       boolean isUnder = allowed == null || allowed.isEmpty();
 
+      System.out.println(allowed);
       if (!isUnder) {
         String childPath = child.getPath();
         if (delegate instanceof ArchiveFileSystem) {

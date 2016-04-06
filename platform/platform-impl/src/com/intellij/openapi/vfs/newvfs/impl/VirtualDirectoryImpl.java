@@ -193,7 +193,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     if (!child.isDirectory()) {
       // access check should only be called when child is actually added to the parent, otherwise it may break VirtualFilePointers validity
       //noinspection TestOnlyProblems
-      VfsRootAccess.assertAccessInTests(child, getFileSystem());
+      //VfsRootAccess.assertAccessInTests(child, getFileSystem());
     }
 
     return child;

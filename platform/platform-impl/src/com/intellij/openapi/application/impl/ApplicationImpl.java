@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.application.impl;
 
-import com.intellij.BundleBase;
 import com.intellij.CommonBundle;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
@@ -189,8 +188,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
 
     getPicoContainer().registerComponentInstance(Application.class, this);
-
-    BundleBase.assertKeyIsFound = IconLoader.STRICT = isUnitTestMode;
 
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
 
