@@ -85,8 +85,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
-  protected ProjectImpl(@NotNull ProjectManager manager, @NotNull String filePath, boolean isOptimiseTestLoadSpeed, String projectName) {
-    super(ApplicationManager.getApplication(), "Project "+(projectName == null ? filePath : projectName));
+  protected ProjectImpl(@NotNull ProjectManager manager, @NotNull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName) {
+    super(ApplicationManager.getApplication(), "Project "+(projectName == null ? dirPath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
 
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -96,7 +96,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     getPicoContainer().registerComponentInstance(Project.class, this);
 
     if (!isDefault()) {
-      getStateStore().setProjectFilePath(filePath);
+      getStateStore().setProjectFilePath(dirPath);
     }
 
     myOptimiseTestLoadSpeed = isOptimiseTestLoadSpeed;

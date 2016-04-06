@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.impl.TrailingSpacesStripper;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
 import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class StripTrailingSpacesTest extends LightPlatformCodeInsightTestCase {
   private EditorSettingsExternalizable.OptionSet oldSettings;
 
+  @RequiredDispatchThread
   @Override
   protected void setUp() throws Exception {
     super.setUp();

@@ -16,7 +16,7 @@
 
 package com.intellij.testFramework.fixtures.impl;
 
-import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.TestModuleDescriptor;
 import com.intellij.testFramework.builders.EmptyModuleFixtureBuilder;
 import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.*;
@@ -65,13 +65,13 @@ public class IdeaTestFixtureFactoryImpl extends IdeaTestFixtureFactory {
   @Override
   public TestFixtureBuilder<IdeaProjectTestFixture> createLightFixtureBuilder() {
     return new LightTestFixtureBuilderImpl<IdeaProjectTestFixture>(new LightIdeaTestFixtureImpl(
-      LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR));
+            TestModuleDescriptor.EMPTY));
   }
 
   @Override
-  public TestFixtureBuilder<IdeaProjectTestFixture> createLightFixtureBuilder(@Nullable LightProjectDescriptor projectDescriptor) {
+  public TestFixtureBuilder<IdeaProjectTestFixture> createLightFixtureBuilder(@Nullable TestModuleDescriptor projectDescriptor) {
     if (projectDescriptor == null) {
-      projectDescriptor = LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
+      projectDescriptor = TestModuleDescriptor.EMPTY;
     }
     return new LightTestFixtureBuilderImpl<IdeaProjectTestFixture>(new LightIdeaTestFixtureImpl(projectDescriptor));
   }

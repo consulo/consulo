@@ -17,7 +17,7 @@ package com.intellij.execution.testframework.sm;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.TestModuleDescriptor;
 import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
@@ -68,7 +68,7 @@ public abstract class SMLightFixtureTestCase extends UsefulTestCase {
   }
 
   @Nullable
-  protected LightProjectDescriptor getProjectDescriptor() {
+  protected TestModuleDescriptor getProjectDescriptor() {
     return null;
   }
 

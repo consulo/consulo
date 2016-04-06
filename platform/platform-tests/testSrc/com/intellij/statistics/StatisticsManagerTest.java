@@ -9,6 +9,7 @@ import com.intellij.psi.statistics.StatisticsManager;
 import com.intellij.psi.statistics.impl.StatisticsManagerImpl;
 import com.intellij.testFramework.LightPlatformTestCase;
 import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author peter
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NonNls;
 public class StatisticsManagerTest extends LightPlatformTestCase {
   @NonNls private static final String TEST_CONTEXT = "testContext";
 
+  @RequiredDispatchThread
   @Override
   protected void setUp() throws Exception {
     super.setUp();

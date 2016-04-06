@@ -43,6 +43,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.DeprecationInfo;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.*;
@@ -169,9 +170,6 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
         addExtensionTab(ep);
       }
       else if (predicateResult.equals(Boolean.FALSE) && epContent != null) {
-        if (!(epContent.getComponent() instanceof ContentStub)) {
-          ep.getInstance(myProject).disposeContent();
-        }
         myContentManager.removeContent(epContent, true);
       }
     }
@@ -284,16 +282,20 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
 
   private class MyContentManagerListener extends ContentManagerAdapter {
     @Override
+    @RequiredDispatchThread
     public void selectionChanged(final ContentManagerEvent event) {
       Content content = event.getContent();
       if (content.getComponent() instanceof ContentStub) {
         ChangesViewContentEP ep = ((ContentStub) content.getComponent()).getEP();
-        ChangesViewContentProvider provider = ep.getInstance(myProject);
+        final ChangesViewContentProvider provider = ep.getInstance(myProject);
         final JComponent contentComponent = provider.initContent();
         content.setComponent(contentComponent);
-        if (contentComponent instanceof Disposable) {
-          content.setDisposer((Disposable) contentComponent);
-        }
+        content.setDisposer(new Disposable() {
+          @Override
+          public void dispose() {
+            provider.disposeContent();
+          }
+        });
       }
     }
   }

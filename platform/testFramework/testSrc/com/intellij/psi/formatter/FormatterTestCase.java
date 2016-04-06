@@ -62,6 +62,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -96,6 +97,7 @@ public abstract class FormatterTestCase extends LightPlatformTestCase {
     }
   }
 
+  @RequiredDispatchThread
   @Override
   protected void setUp() throws Exception {
     super.setUp();

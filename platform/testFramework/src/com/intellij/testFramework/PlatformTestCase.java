@@ -18,8 +18,8 @@ package com.intellij.testFramework;
 import com.intellij.history.integration.LocalHistoryImpl;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
+import com.intellij.idea.IdeaApplication;
 import com.intellij.idea.IdeaLogger;
-import com.intellij.idea.IdeaTestApplication;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
@@ -30,7 +30,6 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentListener;
@@ -41,8 +40,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.project.impl.TooManyProjectLeakedException;
-import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.roots.impl.DirectoryIndexImpl;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.EmptyRunnable;
@@ -92,7 +89,7 @@ import java.util.Set;
 public abstract class PlatformTestCase extends UsefulTestCase implements DataProvider {
   public static final String TEST_DIR_PREFIX = "idea_test_";
 
-  protected static IdeaTestApplication ourApplication;
+  protected static IdeaApplication ourApplication;
   protected ProjectManagerEx myProjectManager;
   protected Project myProject;
   protected Module myModule;
@@ -107,25 +104,15 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
 
   private static Set<VirtualFile> ourEternallyLivingFilesCache;
 
-  static {
-    Logger.setFactory(TestLoggerFactory.class);
-  }
-
-
   protected static long getTimeRequired() {
     return DEFAULT_TEST_TIME;
-  }
-
-  @Nullable
-  protected String getApplicationConfigDirPath() throws Exception {
-    return null;
   }
 
   protected void initApplication() throws Exception {
     boolean firstTime = ourApplication == null;
 
-    ourApplication = IdeaTestApplication.getInstance(getApplicationConfigDirPath());
-    ourApplication.setDataProvider(this);
+    ourApplication = IdeaApplication.getInstance();
+   // ourApplication.setDataProvider(this);
 
     if (firstTime) {
       cleanPersistedVFSContent();
@@ -207,10 +194,10 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   }
 
   @NotNull
-  public static Project createProject(File projectFile, String creationPlace) {
+  public static Project createProject(File projectDir, String creationPlace) {
     try {
       Project project =
-        ProjectManagerEx.getInstanceEx().newProject(FileUtil.getNameWithoutExtension(projectFile), projectFile.getPath(), false, false);
+        ProjectManagerEx.getInstanceEx().newProject(FileUtil.getNameWithoutExtension(projectDir), projectDir.getPath(), false, false);
       assert project != null;
 
       project.putUserData(CREATION_PLACE, creationPlace);
@@ -374,7 +361,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
     try {
       Project project = getProject();
-      DirectoryIndexImpl directoryIndex = project != null ? (DirectoryIndexImpl)DirectoryIndex.getInstance(project) : null;
       disposeProject(result);
 
       if (project != null) {

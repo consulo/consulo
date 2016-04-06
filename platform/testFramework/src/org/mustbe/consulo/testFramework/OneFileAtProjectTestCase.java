@@ -50,7 +50,6 @@ import java.io.IOException;
  * @since 19.04.2015
  */
 public class OneFileAtProjectTestCase extends UsefulTestCase {
-  protected String myFilePrefix = "";
   protected String myExtension;
   @NonNls
   protected final String myFullDataPath;

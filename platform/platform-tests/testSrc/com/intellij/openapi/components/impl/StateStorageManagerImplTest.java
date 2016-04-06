@@ -25,6 +25,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.LightPlatformLangTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -36,6 +37,7 @@ import static org.junit.Assert.assertThat;
 public class StateStorageManagerImplTest extends LightPlatformLangTestCase {
   private StateStorageManagerImpl myStateStorageManager;
 
+  @RequiredDispatchThread
   @Override
   public final void setUp() throws Exception {
     super.setUp();

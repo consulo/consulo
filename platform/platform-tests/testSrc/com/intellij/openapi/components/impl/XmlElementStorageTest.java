@@ -27,6 +27,7 @@ import com.intellij.testFramework.LightPlatformLangTestCase;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,6 +42,7 @@ import static com.intellij.openapi.util.JDOMBuilder.tag;
 public class XmlElementStorageTest extends LightPlatformLangTestCase {
   private Disposable myParentDisposable;
 
+  @RequiredDispatchThread
   @Override
   public void setUp() throws Exception {
     super.setUp();

@@ -49,7 +49,7 @@ public abstract class ParsingTestCase extends OneFileAtProjectTestCase {
     myFile = createPsiFile("a", code);
     ensureParsed(myFile);
     assertEquals(code, myFile.getText());
-    checkResult(myFilePrefix + name, myFile);
+    checkResult(name, myFile);
   }
 
   protected void doTest(boolean checkResult) {

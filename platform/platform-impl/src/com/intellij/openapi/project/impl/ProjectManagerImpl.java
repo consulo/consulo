@@ -225,8 +225,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
   @Override
   @Nullable
-  public Project newProject(final String projectName, @NotNull String filePath, boolean useDefaultProjectSettings, boolean isDummy) {
-    filePath = toCanonicalName(filePath);
+  public Project newProject(final String projectName, @NotNull String dirPath, boolean useDefaultProjectSettings, boolean isDummy) {
+    dirPath = toCanonicalName(dirPath);
 
     //noinspection ConstantConditions
     if (LOG_PROJECT_LEAKAGE_IN_TESTS && ApplicationManager.getApplication().isUnitTestMode()) {
@@ -244,7 +244,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       }
     }
 
-    ProjectImpl project = createProject(projectName, filePath, false, ApplicationManager.getApplication().isUnitTestMode());
+    ProjectImpl project = createProject(projectName, dirPath, false, ApplicationManager.getApplication().isUnitTestMode());
     try {
       initProject(project, useDefaultProjectSettings ? (ProjectImpl)getDefaultProject() : null);
       if (LOG_PROJECT_LEAKAGE_IN_TESTS) {
@@ -305,11 +305,11 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   private ProjectImpl createProject(@Nullable String projectName,
-                                    @NotNull String filePath,
+                                    @NotNull String dirPath,
                                     boolean isDefault,
                                     boolean isOptimiseTestLoadSpeed) {
     return isDefault ? new DefaultProject(this, "", isOptimiseTestLoadSpeed)
-                     : new ProjectImpl(this, new File(filePath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName);
+                     : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName);
   }
 
   private static void scheduleDispose(final ProjectImpl project) {

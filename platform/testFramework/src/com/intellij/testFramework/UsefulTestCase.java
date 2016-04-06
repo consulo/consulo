@@ -24,7 +24,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.StartMarkAction;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
@@ -69,7 +68,6 @@ import java.util.regex.Pattern;
  * @author peter
  */
 public abstract class UsefulTestCase extends TestCase {
-  public static final String IDEA_MARKER_CLASS = "com.intellij.openapi.components.impl.stores.IdeaProjectStoreImpl";
   public static final String TEMP_DIR_MARKER = "unitTest_";
 
   protected static boolean OVERWRITE_TESTDATA = false;
@@ -214,7 +212,6 @@ public abstract class UsefulTestCase extends TestCase {
       result.add(error);
     }
 
-    currentCodeStyleSettings.getIndentOptions(InternalStdFileTypes.JAVA);
     try {
       checkSettingsEqual(oldCodeStyleSettings, currentCodeStyleSettings, "Code style settings damaged");
     }
@@ -244,7 +241,6 @@ public abstract class UsefulTestCase extends TestCase {
   protected void storeSettings() {
     if (!isPerformanceTest() && ApplicationManager.getApplication() != null) {
       myOldCodeStyleSettings = getCurrentCodeStyleSettings().clone();
-      myOldCodeStyleSettings.getIndentOptions(InternalStdFileTypes.JAVA);
     }
   }
 

@@ -17,15 +17,15 @@ package com.intellij.execution.testframework.sm;
 
 import com.intellij.execution.Location;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.TestModuleDescriptor;
 
 /**
  * @author Roman Chernyatchik
  */
 public class FileUrlLocationTest extends SMLightFixtureTestCase {
   @Override
-  protected LightProjectDescriptor getProjectDescriptor() {
-    return LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR;
+  protected TestModuleDescriptor getProjectDescriptor() {
+    return TestModuleDescriptor.EMPTY;
   }
 
   public void testSpecNavigation() throws Throwable {

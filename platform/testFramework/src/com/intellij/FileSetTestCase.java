@@ -14,6 +14,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.util.ArrayUtil;
 import junit.framework.TestSuite;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -97,6 +98,7 @@ public abstract class FileSetTestCase extends TestSuite {
       myTestName = testName;
     }
 
+    @RequiredDispatchThread
     @Override
     protected void setUp() throws Exception {
       super.setUp();

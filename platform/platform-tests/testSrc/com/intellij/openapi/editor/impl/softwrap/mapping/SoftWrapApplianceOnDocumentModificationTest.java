@@ -28,6 +28,7 @@ import com.intellij.testFramework.TestFileType;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntProcedure;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +42,8 @@ import java.util.List;
 public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorProcessingOnDocumentModificationTest {
 
   private boolean mySmartHome;
-  
+
+  @RequiredDispatchThread
   @Override
   protected void setUp() throws Exception {
     super.setUp();

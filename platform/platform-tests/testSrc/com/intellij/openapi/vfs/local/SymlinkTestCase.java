@@ -22,6 +22,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.testFramework.LightPlatformLangTestCase;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.File;
 
@@ -31,6 +32,7 @@ public abstract class SymlinkTestCase extends LightPlatformLangTestCase {
   protected LocalFileSystem myFileSystem;
   protected File myTempDir;
 
+  @RequiredDispatchThread
   @Override
   protected void setUp() throws Exception {
     super.setUp();

@@ -46,6 +46,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.util.*;
 
@@ -87,6 +88,7 @@ public class RangeMarkerTest extends LightPlatformTestCase {
     if (ex[0] != null) throw ex[0];
   }
 
+  @RequiredDispatchThread
   @Override
   protected void setUp() throws Exception {
     super.setUp();

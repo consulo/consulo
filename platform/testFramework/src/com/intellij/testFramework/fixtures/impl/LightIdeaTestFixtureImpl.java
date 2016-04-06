@@ -18,7 +18,7 @@ package com.intellij.testFramework.fixtures.impl;
 
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
-import com.intellij.idea.IdeaTestApplication;
+import com.intellij.idea.IdeaApplication;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
@@ -27,8 +27,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
 import com.intellij.testFramework.LightPlatformTestCase;
-import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.TestDataProvider;
+import com.intellij.testFramework.TestModuleDescriptor;
 import com.intellij.testFramework.fixtures.LightIdeaTestFixture;
 import gnu.trove.THashMap;
 
@@ -37,9 +36,9 @@ import gnu.trove.THashMap;
  */
 @SuppressWarnings("TestOnlyProblems")
 public class LightIdeaTestFixtureImpl extends BaseFixture implements LightIdeaTestFixture {
-  private final LightProjectDescriptor myProjectDescriptor;
+  private final TestModuleDescriptor myProjectDescriptor;
 
-  public LightIdeaTestFixtureImpl(LightProjectDescriptor projectDescriptor) {
+  public LightIdeaTestFixtureImpl(TestModuleDescriptor projectDescriptor) {
     myProjectDescriptor = projectDescriptor;
   }
 
@@ -47,11 +46,11 @@ public class LightIdeaTestFixtureImpl extends BaseFixture implements LightIdeaTe
   public void setUp() throws Exception {
     super.setUp();
 
-    IdeaTestApplication application = LightPlatformTestCase.initApplication();
+    IdeaApplication application = LightPlatformTestCase.initApplication();
     LightPlatformTestCase.doSetup(myProjectDescriptor, LocalInspectionTool.EMPTY_ARRAY, new THashMap<String, InspectionToolWrapper>());
     InjectedLanguageManagerImpl.pushInjectors(getProject());
 
-    application.setDataProvider(new TestDataProvider(getProject()));
+   // application.setDataProvider(new TestDataProvider(getProject()));
   }
 
   @Override

@@ -16,7 +16,7 @@
 
 package com.intellij.testFramework.fixtures;
 
-import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.TestModuleDescriptor;
 import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +61,7 @@ public abstract class IdeaTestFixtureFactory {
 
   public abstract TestFixtureBuilder<IdeaProjectTestFixture> createLightFixtureBuilder();
 
-  public abstract TestFixtureBuilder<IdeaProjectTestFixture> createLightFixtureBuilder(@Nullable LightProjectDescriptor projectDescriptor);
+  public abstract TestFixtureBuilder<IdeaProjectTestFixture> createLightFixtureBuilder(@Nullable TestModuleDescriptor projectDescriptor);
 
   public abstract CodeInsightTestFixture createCodeInsightFixture(@NotNull IdeaProjectTestFixture projectFixture);
 

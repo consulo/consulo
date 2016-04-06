@@ -16,18 +16,27 @@
 package com.intellij.testFramework;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.util.Consumer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author yole
  */
-public interface LightProjectDescriptor {
-  void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry);
+public interface TestModuleDescriptor {
+  void configureSdk(@NotNull Consumer<Sdk> consumer);
 
-  LightProjectDescriptor EMPTY_PROJECT_DESCRIPTOR = new LightProjectDescriptor() {
+  void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry);
+
+  TestModuleDescriptor EMPTY = new TestModuleDescriptor() {
     @Override
-    public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
+    public void configureSdk(@NotNull Consumer<Sdk> consumer) {
+    }
+
+    @Override
+    public void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
     }
   };
 }

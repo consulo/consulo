@@ -34,10 +34,10 @@ public abstract class ProjectManagerEx extends ProjectManager {
   }
 
   /**
-   * @param filePath path to .ipr file or directory where .idea directory is located
+   * @param dirPath path to directory where .consulo directory is located
    */
   @Nullable
-  public abstract Project newProject(final String projectName, @NotNull String filePath, boolean useDefaultProjectSettings, boolean isDummy);
+  public abstract Project newProject(final String projectName, @NotNull String dirPath, boolean useDefaultProjectSettings, boolean isDummy);
 
   @Nullable
   public abstract Project loadProject(@NotNull String filePath) throws IOException, JDOMException, InvalidDataException;

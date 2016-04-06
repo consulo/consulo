@@ -26,11 +26,9 @@ package com.intellij;
 
 import com.intellij.idea.RecordExecution;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.testFramework.*;
-import com.intellij.tests.ExternalClasspathClassLoader;
 import com.intellij.util.ArrayUtil;
 import junit.framework.*;
 import org.jetbrains.annotations.Nullable;
@@ -418,31 +416,17 @@ public class TestAll implements Test {
       System.out.println("Collecting tests from roots specified by test.roots property: " + testRoots);
       return testRoots.split(";");
     }
-    String[] roots = ExternalClasspathClassLoader.getRoots();
-    if (roots != null) {
-      if (Comparing.equal(System.getProperty(TestCaseLoader.SKIP_COMMUNITY_TESTS), "true")) {
-        System.out.println("Skipping community tests");
-        Set<String> set = normalizePaths(roots);
-        set.removeAll(normalizePaths(ExternalClasspathClassLoader.getExcludeRoots()));
-        roots = set.toArray(new String[set.size()]);
+    final ClassLoader loader = TestAll.class.getClassLoader();
+    if (loader instanceof URLClassLoader) {
+      final URL[] urls = ((URLClassLoader)loader).getURLs();
+      final String[] classLoaderRoots = new String[urls.length];
+      for (int i = 0; i < urls.length; i++) {
+        classLoaderRoots[i] = VfsUtil.urlToPath(VfsUtil.convertFromUrl(urls[i]));
       }
-      
-      System.out.println("Collecting tests from roots specified by classpath.file property: " + Arrays.toString(roots));
-      return roots;
+      System.out.println("Collecting tests from classloader: " + Arrays.toString(classLoaderRoots));
+      return classLoaderRoots;
     }
-    else {
-      final ClassLoader loader = TestAll.class.getClassLoader();
-      if (loader instanceof URLClassLoader) {
-        final URL[] urls = ((URLClassLoader)loader).getURLs();
-        final String[] classLoaderRoots = new String[urls.length];
-        for (int i = 0; i < urls.length; i++) {
-          classLoaderRoots[i] = VfsUtil.urlToPath(VfsUtil.convertFromUrl(urls[i]));
-        }
-        System.out.println("Collecting tests from classloader: " + Arrays.toString(classLoaderRoots));
-        return classLoaderRoots;
-      }
-      return System.getProperty("java.class.path").split(File.pathSeparator);
-    }
+    return System.getProperty("java.class.path").split(File.pathSeparator);
   }
 
   public TestAll(String packageRoot) throws Throwable {
