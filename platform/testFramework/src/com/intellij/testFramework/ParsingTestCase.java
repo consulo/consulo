@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.DeprecationInfo;
 
 @Deprecated
-@DeprecationInfo(value = "Use 'org.mustbe.consulo.testFramework.ParsingTestCase'", until = "2.0")
-public abstract class ParsingTestCase extends org.mustbe.consulo.testFramework.ParsingTestCase {
+@DeprecationInfo(value = "Use 'consulo.testFramework.ParsingTestCase'", until = "2.0")
+public abstract class ParsingTestCase extends consulo.testFramework.ParsingTestCase {
   public ParsingTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
     super(dataPath, ext);
   }
