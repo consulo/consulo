@@ -50,7 +50,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
 
   public ResolvingTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
     myFullDataPath = PathManagerEx.getTestDataPath(dataPath);
-    if (StringUtil.endsWithChar(dataPath, '/')) {
+    if (!StringUtil.endsWithChar(dataPath, '/')) {
       throw new IllegalArgumentException("directory required endWiths '/'");
     }
     myExtension = ext;
