@@ -22,6 +22,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ import java.util.List;
  * @author cdr
  */
 public interface LineMarkersProcessor {
+  @RequiredReadAction
   void addLineMarkers(@NotNull List<PsiElement> elements,
                       @NotNull List<LineMarkerProvider> providers,
                       @NotNull List<LineMarkerInfo> result,

@@ -32,13 +32,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class SlowLineMarkersPass extends TextEditorHighlightingPass implements LineMarkersProcessor, DumbAware {
+class SlowLineMarkersPass extends TextEditorHighlightingPass implements LineMarkersProcessor, DumbAware {
   private final PsiFile myFile;
   @NotNull private final Editor myEditor;
   @NotNull private final TextRange myBounds;
@@ -69,6 +70,7 @@ public class SlowLineMarkersPass extends TextEditorHighlightingPass implements L
     myMarkers = LineMarkersPass.mergeLineMarkers(markers, myEditor);
   }
 
+  @RequiredReadAction
   @Override
   public void addLineMarkers(@NotNull List<PsiElement> elements,
                              @NotNull List<LineMarkerProvider> providers,
@@ -81,10 +83,10 @@ public class SlowLineMarkersPass extends TextEditorHighlightingPass implements L
 
   @Override
   public void doApplyInformationToEditor() {
-    LineMarkersUtil.setLineMarkersToEditor(myProject, myDocument, myBounds, myMarkers, getId());
+    LineMarkersUtil.setLineMarkersToEditor(myProject, getDocument(), myBounds, myMarkers, getId());
 
     DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
-    daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
+    daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(getDocument(), getId());
   }
 }
 

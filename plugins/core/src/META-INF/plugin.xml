@@ -69,7 +69,7 @@
     <extensionPoint name="contentFolderTypeProvider" interface="org.mustbe.consulo.roots.ContentFolderTypeProvider"/>
     <extensionPoint name="contentFolderPropertyProvider" interface="org.mustbe.consulo.roots.ContentFolderPropertyProvider"/>
     <extensionPoint name="contentFolderSupportPatcher" interface="org.mustbe.consulo.roots.ContentFolderSupportPatcher"/>
-    <extensionPoint name="possibleModuleForFileResolver" interface="org.mustbe.consulo.roots.ContentEntryFileListener$PossibleModuleForFileResolver" />
+    <extensionPoint name="possibleModuleForFileResolver" interface="org.mustbe.consulo.roots.ContentEntryFileListener$PossibleModuleForFileResolver"/>
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="projectModelProcessor" interface="org.consulo.projectImport.ProjectModelProcessor"/>
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
@@ -583,7 +583,7 @@
       <with attribute="mutableClass" implements="org.consulo.module.extension.MutableModuleExtension"/>
     </extensionPoint>
 
-    <extensionPoint name="moduleRootsProcessor" interface="com.intellij.openapi.roots.impl.ModuleRootsProcessor" />
+    <extensionPoint name="moduleRootsProcessor" interface="com.intellij.openapi.roots.impl.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
     <extensionPoint name="orderEntryTypeProvider" interface="org.mustbe.consulo.roots.OrderEntryTypeProvider"/>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
@@ -827,7 +827,7 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.IndentStrategy"/>
     </extensionPoint>
 
-    <extensionPoint name="disabledIndentRangesProvider" interface="com.intellij.psi.impl.source.DisabledIndentRangesProvider" />
+    <extensionPoint name="disabledIndentRangesProvider" interface="com.intellij.psi.impl.source.DisabledIndentRangesProvider"/>
 
     <extensionPoint name="gotoDeclarationHandler"
                     interface="com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler"/>
@@ -968,7 +968,7 @@
     <extensionPoint name="testSrcLocator"
                     interface="com.intellij.testIntegration.TestLocationProvider"/>
     <extensionPoint name="testStatusListener"
-                    interface="com.intellij.execution.testframework.TestStatusListener" />
+                    interface="com.intellij.execution.testframework.TestStatusListener"/>
 
     <extensionPoint name="testCreator"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -1007,7 +1007,7 @@
     <extensionPoint name="templateCompletionProcessor"
                     interface="com.intellij.codeInsight.template.macro.TemplateCompletionProcessor"/>
 
-    <extensionPoint name="targetElementUtilEx" interface="com.intellij.codeInsight.TargetElementUtilEx" />
+    <extensionPoint name="targetElementUtilEx" interface="com.intellij.codeInsight.TargetElementUtilEx"/>
 
     <extensionPoint name="statementUpDownMover" interface="com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover"/>
 
@@ -1037,7 +1037,7 @@
     <extensionPoint name="uiDebuggerExtension" interface="com.intellij.ui.debugger.UiDebuggerExtension"/>
 
     <extensionPoint name="projectViewPane" interface="com.intellij.ide.projectView.impl.AbstractProjectViewPane" area="CONSULO_PROJECT"/>
-    <extensionPoint name="projectViewOptionProvider" interface="com.intellij.ide.projectView.impl.ProjectViewPaneOptionProvider" />
+    <extensionPoint name="projectViewOptionProvider" interface="com.intellij.ide.projectView.impl.ProjectViewPaneOptionProvider"/>
 
     <extensionPoint name="inlineActionHandler" interface="com.intellij.lang.refactoring.InlineActionHandler"/>
 
@@ -1127,7 +1127,7 @@
     <applicationService serviceInterface="com.intellij.openapi.application.ApplicationInfo"
                         serviceImplementation="com.intellij.openapi.application.impl.ApplicationInfoImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.openapi.editor.ex.EditorSettingsExternalizable" />
+    <applicationService serviceImplementation="com.intellij.openapi.editor.ex.EditorSettingsExternalizable"/>
     <applicationService serviceImplementation="com.intellij.openapi.keymap.KeyboardSettingsExternalizable"/>
 
     <applicationService serviceInterface="com.intellij.ide.util.PropertiesComponent"
@@ -1277,9 +1277,12 @@
     <applicationService serviceImplementation="com.intellij.internal.statistic.UsageTrigger"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.actions.FormatChangedTextUtil"
-                        serviceImplementation="com.intellij.codeInsight.actions.VcsAwareFormatChangedTextUtil" />
+                        serviceImplementation="com.intellij.codeInsight.actions.VcsAwareFormatChangedTextUtil"/>
 
-    <applicationService serviceImplementation="com.intellij.util.net.ssl.CertificateManager" />
+    <applicationService serviceImplementation="com.intellij.util.net.ssl.CertificateManager"/>
+
+    <applicationService serviceInterface="com.intellij.codeInsight.daemon.LineMarkerSettings"
+                        serviceImplementation="com.intellij.codeInsight.daemon.impl.LineMarkerSettingsImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
@@ -1402,7 +1405,7 @@
     <applicationService serviceInterface="com.intellij.ide.XmlRpcServer" serviceImplementation="com.intellij.ide.XmlRpcServerImpl"/>
 
     <httpRequestHandler implementation="com.intellij.ide.XmlRpcServerImpl$XmlRpcRequestHandler"/>
-    <httpRequestHandler implementation="org.mustbe.buildInWebServer.api.RequestFocusHttpRequestHandler" />
+    <httpRequestHandler implementation="org.mustbe.buildInWebServer.api.RequestFocusHttpRequestHandler"/>
 
     <editorNotificationProvider implementation="com.intellij.openapi.editor.impl.ForcedSoftWrapsNotificationProvider"/>
     <editorNotificationProvider implementation="com.intellij.ide.FileChangedNotificationProvider"/>
@@ -1458,7 +1461,7 @@
 
     <!--Rich-->
     <projectViewPane implementation="com.intellij.ide.projectView.impl.ProjectViewPane"/>
-    <projectViewOptionProvider implementation="com.intellij.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider" />
+    <projectViewOptionProvider implementation="com.intellij.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider"/>
     <projectViewPane implementation="com.intellij.ide.projectView.impl.PackageViewPane"/>
 
     <renameHandler implementation="com.intellij.ide.projectView.impl.RenameModuleHandler"/>
@@ -1472,7 +1475,6 @@
     <packaging.artifactType implementation="com.intellij.packaging.impl.artifacts.PlainArtifactType" order="last"/>
     <compiler.additionalCompileScopeProvider implementation="com.intellij.packaging.impl.compiler.ArtifactAdditionalCompileScopeProvider"/>
     <gotoRelatedProvider implementation="com.intellij.testIntegration.GotoTestRelatedProvider"/>
-
 
 
     <applicationService serviceInterface="com.intellij.packaging.elements.PackagingElementFactory"
@@ -1895,7 +1897,7 @@
     <projectService serviceInterface="com.intellij.openapi.roots.impl.LibraryScopeCache"
                     serviceImplementation="com.intellij.openapi.roots.impl.LibraryScopeCache"/>
 
-    <applicationService serviceImplementation="com.intellij.openapi.util.DimensionService" />
+    <applicationService serviceImplementation="com.intellij.openapi.util.DimensionService"/>
     <applicationService serviceInterface="com.intellij.openapi.util.WindowStateService"
                         serviceImplementation="com.intellij.openapi.util.WindowStateApplicationService"/>
     <projectService serviceInterface="com.intellij.openapi.util.WindowStateService"
@@ -2112,6 +2114,7 @@
     <codeInsight.linkHandler prefix="#navigation/" handlerClass="com.intellij.codeInsight.hint.NavigationLinkHandler"/>
 
     <codeInsight.lineMarkerProvider language="" implementationClass="com.intellij.execution.lineMarker.RunLineMarkerProvider"/>
+    <codeInsight.lineMarkerProvider language="" implementationClass="com.intellij.ui.ColorLineMarkerProvider"/>
 
 
     <editorCustomization implementation="com.intellij.ui.SoftWrapsEditorCustomization"/>
@@ -2463,16 +2466,16 @@
 
     <editorNotificationProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectedIndentOptionsNotificationProvider"/>
 
-    <predefinedBundlesProvider implementation="org.mustbe.consulo.bundle.DefaultPredefinedBundlesProvider" order="first" />
+    <predefinedBundlesProvider implementation="org.mustbe.consulo.bundle.DefaultPredefinedBundlesProvider" order="first"/>
 
     <ui.suitableFontProvider implementation="com.intellij.ui.SuitableFontProviderImpl"/>
 
-    <moduleRootsProcessor implementation="com.intellij.openapi.roots.impl.NullModuleDirModuleRootsProcessor" order="last" />
+    <moduleRootsProcessor implementation="com.intellij.openapi.roots.impl.NullModuleDirModuleRootsProcessor" order="last"/>
 
-    <targetElementUtilEx implementation="com.intellij.codeInsight.TargetElementUtilExImpl" />
+    <targetElementUtilEx implementation="com.intellij.codeInsight.TargetElementUtilExImpl"/>
 
     <bidiRegionsSeparator language="" implementationClass="com.intellij.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
 
-    <smartPointerElementInfoFactory implementation="com.intellij.psi.impl.smartPointers.AnchorElementInfoFactory" />
+    <smartPointerElementInfoFactory implementation="com.intellij.psi.impl.smartPointers.AnchorElementInfoFactory"/>
   </extensions>
 </idea-plugin>

@@ -473,20 +473,26 @@ public class PsiUtilCore {
 
   @Nullable
   public static VirtualFile getVirtualFile(@Nullable PsiElement element) {
-    if (element == null || !element.isValid()) {
+    // optimisation: call isValid() on file only to reduce walks up and down
+    if (element == null) {
       return null;
     }
-
     if (element instanceof PsiFileSystemItem) {
-      return ((PsiFileSystemItem)element).getVirtualFile();
+      return element.isValid() ? ((PsiFileSystemItem)element).getVirtualFile() : null;
     }
-
     final PsiFile containingFile = element.getContainingFile();
-    if (containingFile == null) {
+    if (containingFile == null || !containingFile.isValid()) {
       return null;
     }
 
-    return containingFile.getVirtualFile();
+    VirtualFile file = containingFile.getVirtualFile();
+    if (file == null) {
+      PsiFile originalFile = containingFile.getOriginalFile();
+      if (originalFile != containingFile && originalFile.isValid()) {
+        file = originalFile.getVirtualFile();
+      }
+    }
+    return file;
   }
 
   public static int compareElementsByPosition(final PsiElement element1, final PsiElement element2) {

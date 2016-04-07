@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.psi.PsiElement;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.consulo.lombok.annotations.ApplicationService;
 
-import java.awt.event.MouseEvent;
+/**
+ * @author Dmitry Avdeev
+ */
+@ApplicationService
+public abstract class LineMarkerSettings {
+  public abstract boolean isEnabled(GutterIconDescriptor descriptor);
 
-public interface GutterIconNavigationHandler<T extends PsiElement> {
-  @RequiredDispatchThread
-  void navigate(MouseEvent e, T elt);
+  public abstract void setEnabled(GutterIconDescriptor descriptor, boolean selected);
 }

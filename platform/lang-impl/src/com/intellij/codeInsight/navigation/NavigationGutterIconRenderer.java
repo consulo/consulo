@@ -36,6 +36,7 @@ import com.intellij.util.PsiNavigateUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -100,6 +101,7 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
     };
   }
 
+  @RequiredDispatchThread
   public void navigate(@Nullable final MouseEvent event, @Nullable final PsiElement elt) {
     final List<PsiElement> list = getTargetElements();
     if (list.isEmpty()) {

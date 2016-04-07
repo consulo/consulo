@@ -31,6 +31,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -129,6 +130,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
 
     private static GutterIconNavigationHandler<PsiElement> getCommonNavigationHandler(@NotNull final List<MergeableLineMarkerInfo> markers) {
       return new GutterIconNavigationHandler<PsiElement>() {
+        @RequiredDispatchThread
         @Override
         public void navigate(final MouseEvent e, PsiElement elt) {
           final List<LineMarkerInfo> infos = new ArrayList<LineMarkerInfo>(markers);

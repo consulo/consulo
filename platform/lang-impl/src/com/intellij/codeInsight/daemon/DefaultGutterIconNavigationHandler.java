@@ -4,6 +4,7 @@ import com.intellij.codeInsight.daemon.impl.PsiElementListNavigator;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -25,6 +26,7 @@ public class DefaultGutterIconNavigationHandler<T extends PsiElement> implements
     return myReferences;
   }
 
+  @RequiredDispatchThread
   @Override
   public void navigate(MouseEvent e, T elt) {
     PsiElementListNavigator.openTargets(e,

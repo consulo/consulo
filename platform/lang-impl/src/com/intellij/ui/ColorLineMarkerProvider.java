@@ -44,29 +44,7 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public final class ColorLineMarkerProvider implements LineMarkerProvider {
-  private final ElementColorProvider[] myExtensions = ElementColorProvider.EP_NAME.getExtensions();
-
-  @RequiredReadAction
-  @Override
-  public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
-    for (ElementColorProvider colorProvider : myExtensions) {
-      final Color color = colorProvider.getColorFrom(element);
-      if (color != null) {
-        MyInfo info = new MyInfo(element, color, colorProvider);
-        NavigateAction.setNavigateAction(info, "Choose color", null);
-        return info;
-      }
-    }
-    return null;
-  }
-
-  @RequiredReadAction
-  @Override
-  public void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
-  }
-
   private static class MyInfo extends MergeableLineMarkerInfo<PsiElement> {
-
     private final Color myColor;
 
     @RequiredReadAction
@@ -118,5 +96,26 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     public Function<? super PsiElement, String> getCommonTooltip(@NotNull List<MergeableLineMarkerInfo> infos) {
       return FunctionUtil.nullConstant();
     }
+  }
+
+  private final ElementColorProvider[] myExtensions = ElementColorProvider.EP_NAME.getExtensions();
+
+  @RequiredReadAction
+  @Override
+  public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
+    for (ElementColorProvider colorProvider : myExtensions) {
+      final Color color = colorProvider.getColorFrom(element);
+      if (color != null) {
+        MyInfo info = new MyInfo(element, color, colorProvider);
+        NavigateAction.setNavigateAction(info, "Choose color", null);
+        return info;
+      }
+    }
+    return null;
+  }
+
+  @RequiredReadAction
+  @Override
+  public void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
   }
 }

@@ -24,6 +24,7 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.impl.LineMarkersPass;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,18 +38,24 @@ public class FileSeparatorUtil {
   @NotNull
   public static List<LineMarkerInfo> getFileSeparators(final PsiFile file, final Document document, @Nullable final Editor editor) {
     final List<LineMarkerInfo> result = new ArrayList<LineMarkerInfo>();
-    LineMarkersPass pass = new LineMarkersPass(file.getProject(), file, editor, document, file.getTextRange());
-    for (LineMarkerInfo lineMarkerInfo : pass.queryLineMarkers()) {
+    for (LineMarkerInfo lineMarkerInfo : LineMarkersPass.queryLineMarkers(file, document)) {
       if (lineMarkerInfo.separatorColor != null) {
         result.add(lineMarkerInfo);
       }
     }
 
     Collections.sort(result, new Comparator<LineMarkerInfo>() {
+      @Override
       public int compare(final LineMarkerInfo i1, final LineMarkerInfo i2) {
-        return i1.startOffset - i2.startOffset;
+        return getDisplayLine(i1, document) - getDisplayLine(i2, document);
       }
     });
     return result;
+  }
+
+  public static int getDisplayLine(@NotNull LineMarkerInfo lineMarkerInfo, @NotNull Document document) {
+    int offset = lineMarkerInfo.separatorPlacement == SeparatorPlacement.TOP ? lineMarkerInfo.startOffset : lineMarkerInfo.endOffset;
+    return document.getLineNumber(Math.min(document.getTextLength(), Math.max(0, offset))) +
+           (lineMarkerInfo.separatorPlacement == SeparatorPlacement.TOP ? 0 : 1);
   }
 }
