@@ -15,7 +15,7 @@
  */
 package consulo.testFramework;
 
-import com.intellij.openapi.application.ex.PathManagerEx;
+import consulo.testFramework.util.PathManagerEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

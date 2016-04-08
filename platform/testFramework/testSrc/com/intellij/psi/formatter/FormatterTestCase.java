@@ -36,7 +36,7 @@ import com.intellij.codeInsight.daemon.impl.CodeFoldingPassFactory;
 import com.intellij.lang.Language;
 import com.intellij.mock.MockProgressIndicator;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.PathManagerEx;
+import consulo.testFramework.util.PathManagerEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.command.undo.UndoManager;

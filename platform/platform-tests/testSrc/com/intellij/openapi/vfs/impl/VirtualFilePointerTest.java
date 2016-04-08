@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.impl;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.PathManagerEx;
+import consulo.testFramework.util.PathManagerEx;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;

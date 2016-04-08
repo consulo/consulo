@@ -1,6 +1,6 @@
 package com.intellij.ide.plugins;
 
-import com.intellij.openapi.application.ex.PathManagerEx;
+import consulo.testFramework.util.PathManagerEx;
 import junit.framework.TestCase;
 
 import java.io.File;

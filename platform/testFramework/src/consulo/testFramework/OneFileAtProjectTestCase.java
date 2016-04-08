@@ -19,7 +19,7 @@ package consulo.testFramework;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.PathManagerEx;
+import consulo.testFramework.util.PathManagerEx;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;

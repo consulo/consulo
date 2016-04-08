@@ -22,7 +22,7 @@
  * To change template for new class use 
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package com.intellij.openapi.application.ex;
+package consulo.testFramework.util;
 
 import org.jetbrains.annotations.NonNls;
 
