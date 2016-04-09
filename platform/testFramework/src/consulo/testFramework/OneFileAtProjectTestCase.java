@@ -19,7 +19,7 @@ package consulo.testFramework;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.testFramework.util.PathManagerEx;
+import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
@@ -40,6 +40,7 @@ import com.intellij.util.FileComparisonFailure;
 import com.intellij.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,12 +55,12 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
   @NonNls
   protected final String myFullDataPath;
   protected PsiFile myFile;
-  private PsiManager myPsiManager;
-  private PsiFileFactoryImpl myFileFactory;
+  protected PsiManager myPsiManager;
+  protected PsiFileFactoryImpl myFileFactory;
   protected ProjectEx myProject;
 
   public OneFileAtProjectTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
-    myFullDataPath = PathManagerEx.getTestDataPath(getTestDataPath() + "/" + dataPath);
+    myFullDataPath = TestPathUtil.getTestDataPath(getTestDataPath() + "/" + dataPath);
     myExtension = ext;
   }
 
@@ -90,15 +91,8 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
     myFileFactory = (PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject);
   }
 
-  public ProjectEx getProject() {
-    return myProject;
-  }
-
-  public PsiManager getPsiManager() {
-    return myPsiManager;
-  }
-
   @Override
+  @RequiredDispatchThread
   protected void tearDown() throws Exception {
     super.tearDown();
     myFile = null;
@@ -124,13 +118,14 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
   }
 
   @NotNull
-  public LanguageVersion<?> resolveLanguageVersion(@NotNull FileType fileType) {
+  protected LanguageVersion<?> resolveLanguageVersion(@NotNull FileType fileType) {
     if(fileType instanceof LanguageFileType) {
       return LanguageVersionUtil.findDefaultVersion(((LanguageFileType)fileType).getLanguage());
     }
     throw new IllegalArgumentException(fileType.getName() + " is not extends 'LanguageFileType'");
   }
 
+  @NotNull
   protected PsiFile createFile(@NonNls String name, @NotNull FileType fileType, String text) {
     LanguageVersion<?> languageVersion = resolveLanguageVersion(fileType);
 

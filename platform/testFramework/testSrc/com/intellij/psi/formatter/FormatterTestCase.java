@@ -36,7 +36,7 @@ import com.intellij.codeInsight.daemon.impl.CodeFoldingPassFactory;
 import com.intellij.lang.Language;
 import com.intellij.mock.MockProgressIndicator;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.testFramework.util.PathManagerEx;
+import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.command.undo.UndoManager;
@@ -321,7 +321,7 @@ public abstract class FormatterTestCase extends LightPlatformTestCase {
   }
 
   protected String getTestDataPath() {
-    return PathManagerEx.getTestDataPath();
+    return TestPathUtil.getTestDataPath();
   }
 
   protected String prepareText(final String text) {

@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
-import consulo.testFramework.util.PathManagerEx;
+import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.SystemInfo;
@@ -85,7 +85,7 @@ public class VfsUtilTest extends PlatformLangTestCase {
 
   public void testFindFileByUrl() throws Exception {
 
-    File file1 = new File(PathManagerEx.getTestDataPath());
+    File file1 = new File(TestPathUtil.getTestDataPath());
     file1 = new File(file1, "vfs");
     file1 = new File(file1, "findFileByUrl");
     VirtualFile file0 = VfsUtil.findFileByURL(file1.toURI().toURL());
@@ -124,7 +124,7 @@ public class VfsUtilTest extends PlatformLangTestCase {
   }
 
   public void testRelativePath() throws Exception {
-    final File root = new File(PathManagerEx.getTestDataPath());
+    final File root = new File(TestPathUtil.getTestDataPath());
     final File testRoot = new File(new File(root, "vfs"), "relativePath");
     VirtualFile vTestRoot = LocalFileSystem.getInstance().findFileByIoFile(testRoot);
     assertNotNull(vTestRoot);

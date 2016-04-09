@@ -15,7 +15,7 @@
  */
 package consulo.testFramework;
 
-import consulo.testFramework.util.PathManagerEx;
+import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -49,7 +49,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
   protected final String myFullDataPath;
 
   public ResolvingTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
-    myFullDataPath = PathManagerEx.getTestDataPath(dataPath);
+    myFullDataPath = TestPathUtil.getTestDataPath(dataPath);
     if (!StringUtil.endsWithChar(dataPath, '/')) {
       throw new IllegalArgumentException("directory required endWiths '/'");
     }

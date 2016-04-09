@@ -21,7 +21,7 @@ import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.testFramework.util.PathManagerEx;
+import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
@@ -133,7 +133,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
   @NonNls
   @NotNull
   protected String getTestDataPath() {
-    return PathManagerEx.getTestDataPath();
+    return TestPathUtil.getTestDataPath();
   }
 
   protected VirtualFile getVirtualFile(@NonNls String filePath) {

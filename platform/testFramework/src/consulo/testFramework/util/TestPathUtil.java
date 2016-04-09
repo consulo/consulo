@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: mike
- * Date: Aug 19, 2002
- * Time: 8:21:52 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.testFramework.util;
 
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 
-public class PathManagerEx {
-  private PathManagerEx() {
+public class TestPathUtil {
+  private TestPathUtil() {
   }
 
   @NonNls

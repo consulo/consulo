@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.impl;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.testFramework.util.PathManagerEx;
+import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
@@ -236,7 +236,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     final File jarParent = new File(tempDir, "jarParent");
     jarParent.mkdir();
     final File jar = new File(jarParent, "x.jar");
-    final File originalJar = new File(PathManagerEx.getTestDataPath() + "/psi/generics22/collect-2.2.jar");
+    final File originalJar = new File(TestPathUtil.getTestDataPath() + "/psi/generics22/collect-2.2.jar");
     FileUtil.copy(originalJar, jar);
 
     LocalFileSystem.getInstance().refreshAndFindFileByIoFile(jar); // Make sure we receive events when jar changes
@@ -300,7 +300,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     final File jarParent = new File(tempDir, "jarParent");
     jarParent.mkdir();
     final File jar = new File(jarParent, "x.jar");
-    final File originalJar = new File(PathManagerEx.getTestDataPath() + "/psi/generics22/collect-2.2.jar");
+    final File originalJar = new File(TestPathUtil.getTestDataPath() + "/psi/generics22/collect-2.2.jar");
     FileUtil.copy(originalJar, jar);
 
     LocalFileSystem.getInstance().refreshAndFindFileByIoFile(jar); // Make sure we receive events when jar changes

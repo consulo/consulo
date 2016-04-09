@@ -482,8 +482,6 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
 
   <T extends PsiElement> T findElementByText(String text, Class<T> elementClass);
 
-  void testFolding(String fileName);
-  void testFoldingWithCollapseStatus(String fileName);
 
   void assertPreferredCompletionItems(int selected, @NonNls String... expected);
 

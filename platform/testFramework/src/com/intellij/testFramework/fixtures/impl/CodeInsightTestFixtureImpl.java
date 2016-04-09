@@ -28,7 +28,6 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.GutterMark;
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.impl.*;
-import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.codeInsight.highlighting.actions.HighlightUsagesAction;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.ShowIntentionActionsHandler;
@@ -57,7 +56,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -1768,99 +1770,6 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
 
   public void canChangeDocumentDuringHighlighting(boolean canI) {
     myAllowDirt = canI;
-  }
-
-  private static final String START_FOLD = "<fold\\stext=\'[^\']*\'(\\sexpand=\'[^\']*\')*>";
-  private static final String END_FOLD = "</fold>";
-
-  private class Border implements Comparable<Border> {
-    public static final boolean LEFT = true;
-    public static final boolean RIGHT = false;
-    public boolean mySide;
-    public int myOffset;
-    public String myText;
-    public boolean myIsExpanded;
-
-    private Border(boolean side, int offset, String text, boolean isExpanded) {
-      mySide = side;
-      myOffset = offset;
-      myText = text;
-      myIsExpanded = isExpanded;
-    }
-
-    public boolean isExpanded() {
-      return myIsExpanded;
-    }
-
-    public boolean isSide() {
-      return mySide;
-    }
-
-    public int getOffset() {
-      return myOffset;
-    }
-
-    public String getText() {
-      return myText;
-    }
-
-    @Override
-    public int compareTo(Border o) {
-      return getOffset() < o.getOffset() ? 1 : -1;
-    }
-  }
-
-  private String getFoldingDescription(@NotNull String content, @NotNull String initialFileName, boolean doCheckCollapseStatus) {
-    configureByText(FileTypeManager.getInstance().getFileTypeByFileName(initialFileName), content);
-    CodeFoldingManager.getInstance(getProject()).buildInitialFoldings(myEditor);
-
-    final FoldingModel model = myEditor.getFoldingModel();
-    final FoldRegion[] foldingRegions = model.getAllFoldRegions();
-    final List<Border> borders = new LinkedList<Border>();
-
-    for (FoldRegion region : foldingRegions) {
-      borders.add(new Border(Border.LEFT, region.getStartOffset(), region.getPlaceholderText(), region.isExpanded()));
-      borders.add(new Border(Border.RIGHT, region.getEndOffset(), "", region.isExpanded()));
-    }
-    Collections.sort(borders);
-
-    StringBuilder result = new StringBuilder(myEditor.getDocument().getText());
-    for (Border border : borders) {
-      result.insert(border.getOffset(), border.isSide() == Border.LEFT ? "<fold text=\'" + border.getText() + "\'" +
-                                                                         (doCheckCollapseStatus ? " expand=\'" +
-                                                                                                  border.isExpanded() +
-                                                                                                  "\'" : "") +
-                                                                         ">" : END_FOLD);
-    }
-
-    return result.toString();
-  }
-
-  private void testFoldingRegions(final String verificationFileName, boolean doCheckCollapseStatus) {
-    String expectedContent;
-    try {
-      expectedContent = FileUtil.loadFile(new File(verificationFileName));
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    Assert.assertNotNull(expectedContent);
-
-    expectedContent = StringUtil.replace(expectedContent, "\r", "");
-    final String cleanContent = expectedContent.replaceAll(START_FOLD, "").replaceAll(END_FOLD, "");
-    final String actual = getFoldingDescription(cleanContent, verificationFileName, doCheckCollapseStatus);
-
-    Assert.assertEquals(expectedContent, actual);
-  }
-
-  @Override
-  public void testFoldingWithCollapseStatus(final String verificationFileName) {
-    testFoldingRegions(verificationFileName, true);
-  }
-
-  @Override
-  public void testFolding(final String verificationFileName) {
-    testFoldingRegions(verificationFileName, false);
   }
 
   @Override
