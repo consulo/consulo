@@ -24,21 +24,21 @@ import java.util.Set;
 /**
  * @author nik
  */
-public class DependentJarsEvaluator {
-  private final Set<JarInfo> myJars = new LinkedHashSet<JarInfo>();
+public class DependentArchivesEvaluator {
+  private final Set<ArchivePackageInfo> myArchivePackageInfos = new LinkedHashSet<ArchivePackageInfo>();
 
-  public void addJarWithDependencies(final JarInfo jarInfo) {
-    if (myJars.add(jarInfo)) {
-      for (JarDestinationInfo destination : jarInfo.getJarDestinations()) {
-        addJarWithDependencies(destination.getJarInfo());
+  public void addArchiveWithDependencies(final ArchivePackageInfo archivePackageInfo) {
+    if (myArchivePackageInfos.add(archivePackageInfo)) {
+      for (ArchiveDestinationInfo destination : archivePackageInfo.getArchiveDestinations()) {
+        addArchiveWithDependencies(destination.getArchivePackageInfo());
       }
-      for (Pair<String, JarInfo> pair : jarInfo.getPackedJars()) {
-        addJarWithDependencies(pair.getSecond());
+      for (Pair<String, ArchivePackageInfo> pair : archivePackageInfo.getPackedArchives()) {
+        addArchiveWithDependencies(pair.getSecond());
       }
     }
   }
 
-  public Set<JarInfo> getJars() {
-    return myJars;
+  public Set<ArchivePackageInfo> getArchivePackageInfos() {
+    return myArchivePackageInfos;
   }
 }

@@ -16,9 +16,10 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.compiler.impl.packagingCompiler.DestinationInfo;
-import com.intellij.compiler.impl.packagingCompiler.JarDestinationInfo;
-import com.intellij.compiler.impl.packagingCompiler.JarInfo;
+import com.intellij.compiler.impl.packagingCompiler.ArchiveDestinationInfo;
+import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.packaging.elements.ArchivePackageWriter;
 import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,22 +27,23 @@ import org.jetbrains.annotations.NotNull;
  * @author nik
  */
 public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstructionCreatorBase {
-  private final DestinationInfo myJarDestination;
-  private final JarInfo myJarInfo;
+  private final DestinationInfo myDestinationInfo;
+  private final ArchivePackageInfo myArchivePackageInfo;
   private final String myPathInJar;
 
-  public PackIntoArchiveInstructionCreator(ArtifactsProcessingItemsBuilderContext context, JarInfo jarInfo,
-                                           String pathInJar, DestinationInfo jarDestination) {
+  public PackIntoArchiveInstructionCreator(ArtifactsProcessingItemsBuilderContext context, ArchivePackageInfo archivePackageInfo,
+                                           String pathInJar, DestinationInfo destinationInfo) {
     super(context);
-    myJarInfo = jarInfo;
+    myArchivePackageInfo = archivePackageInfo;
     myPathInJar = pathInJar;
-    myJarDestination = jarDestination;
+    myDestinationInfo = destinationInfo;
   }
 
+  @Override
   public void addFileCopyInstruction(@NotNull VirtualFile file, @NotNull String outputFileName) {
     final String pathInJar = childPathInJar(outputFileName);
-    if (myContext.addDestination(file, new JarDestinationInfo(pathInJar, myJarInfo, myJarDestination))) {
-      myJarInfo.addContent(pathInJar, file);
+    if (myContext.addDestination(file, new ArchiveDestinationInfo(pathInJar, myArchivePackageInfo, myDestinationInfo))) {
+      myArchivePackageInfo.addContent(pathInJar, file);
     }
   }
 
@@ -49,18 +51,21 @@ public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstru
     return myPathInJar.length() == 0 ? fileName : myPathInJar + "/" + fileName;
   }
 
+  @Override
   public PackIntoArchiveInstructionCreator subFolder(@NotNull String directoryName) {
-    return new PackIntoArchiveInstructionCreator(myContext, myJarInfo, childPathInJar(directoryName), myJarDestination);
+    return new PackIntoArchiveInstructionCreator(myContext, myArchivePackageInfo, childPathInJar(directoryName), myDestinationInfo);
   }
 
-  public IncrementalCompilerInstructionCreator archive(@NotNull String archiveFileName) {
-    final JarInfo jarInfo = new JarInfo();
-    final String outputPath = myJarDestination.getOutputPath() + "/" + archiveFileName;
-    if (!myContext.registerJarFile(jarInfo, outputPath)) {
+  @NotNull
+  @Override
+  public IncrementalCompilerInstructionCreator archive(@NotNull String archiveFileName, @NotNull ArchivePackageWriter<?> packageWriter) {
+    final ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
+    final String outputPath = myDestinationInfo.getOutputPath() + "/" + archiveFileName;
+    if (!myContext.registerJarFile(archivePackageInfo, outputPath)) {
       return new SkipAllInstructionCreator(myContext);
     }
-    final JarDestinationInfo destination = new JarDestinationInfo(childPathInJar(archiveFileName), myJarInfo, myJarDestination);
-    jarInfo.addDestination(destination);
-    return new PackIntoArchiveInstructionCreator(myContext, jarInfo, "", destination);
+    final ArchiveDestinationInfo destination = new ArchiveDestinationInfo(childPathInJar(archiveFileName), myArchivePackageInfo, myDestinationInfo);
+    archivePackageInfo.addDestination(destination);
+    return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);
   }
 }

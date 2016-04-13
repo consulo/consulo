@@ -21,6 +21,7 @@ import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
@@ -37,11 +38,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -55,8 +56,8 @@ public class ArtifactCompilerUtil {
   private ArtifactCompilerUtil() {
   }
 
-  @Nullable
-  public static BufferedInputStream getJarEntryInputStream(VirtualFile sourceFile, final CompileContext context) throws IOException {
+  @NotNull
+  public static Pair<InputStream, Long> getArchiveEntryInputStream(VirtualFile sourceFile, final CompileContext context) throws IOException {
     final String fullPath = sourceFile.getPath();
     final int jarEnd = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
     LOG.assertTrue(jarEnd != -1, fullPath);
@@ -66,23 +67,23 @@ public class ArtifactCompilerUtil {
     final ZipEntry entry = jarFile.getEntry(pathInJar);
     if (entry == null) {
       context.addMessage(CompilerMessageCategory.ERROR, "Cannot extract '" + pathInJar + "' from '" + jarFile.getName() + "': entry not found", null, -1, -1);
-      return null;
+      return Pair.empty();
     }
 
-    return new BufferedInputStream(jarFile.getInputStream(entry)) {
+    BufferedInputStream bufferedInputStream = new BufferedInputStream(jarFile.getInputStream(entry)) {
       @Override
       public void close() throws IOException {
         super.close();
         jarFile.close();
       }
     };
+    return Pair.<InputStream, Long>create(bufferedInputStream, entry.getSize());
   }
 
-  public static File getJarFile(VirtualFile jarEntry) {
-    String fullPath = jarEntry.getPath();
+  public static File getArchiveFile(VirtualFile file) {
+    String fullPath = file.getPath();
     return new File(FileUtil.toSystemDependentName(fullPath.substring(fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR))));
   }
-
 
   @NotNull
   public static Set<VirtualFile> getArtifactOutputsContainingSourceFiles(final @NotNull Project project) {
@@ -119,14 +120,17 @@ public class ArtifactCompilerUtil {
     }
     return affectedOutputPaths;
   }
+
   public static MultiMap<String, Artifact> createOutputToArtifactMap(final Project project) {
     final MultiMap<String, Artifact> result = new MultiMap<String, Artifact>() {
+      @NotNull
       @Override
       protected Map<String, Collection<Artifact>> createMap() {
         return new THashMap<String, Collection<Artifact>>(FileUtil.PATH_HASHING_STRATEGY);
       }
     };
     new ReadAction() {
+      @Override
       protected void run(final Result r) {
         for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
           String outputPath = artifact.getOutputFilePath();

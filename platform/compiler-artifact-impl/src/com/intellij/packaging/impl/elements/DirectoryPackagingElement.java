@@ -16,10 +16,7 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
-import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
+import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.DirectoryElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
@@ -30,10 +27,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author nik
- *
- * classpath is used for exploded WAR and EJB directories under exploded EAR
  */
-public class DirectoryPackagingElement extends CompositeElementWithManifest<DirectoryPackagingElement> {
+public class DirectoryPackagingElement extends CompositePackagingElement<DirectoryPackagingElement> {
   @NonNls public static final String NAME_ATTRIBUTE = "name";
   private String myDirectoryName;
 

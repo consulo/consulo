@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.compiler;
 
 import com.intellij.compiler.impl.packagingCompiler.DestinationInfo;
 import com.intellij.compiler.impl.packagingCompiler.ExplodedDestinationInfo;
-import com.intellij.compiler.impl.packagingCompiler.JarInfo;
+import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
@@ -34,7 +34,7 @@ import java.util.Map;
 public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrementalCompilerContext {
   protected final Map<VirtualFile, ArtifactCompilerCompileItem> myItemsBySource;
   private final Map<String, VirtualFile> mySourceByOutput;
-  private final Map<String, JarInfo> myJarByPath;
+  private final Map<String, ArchivePackageInfo> myJarByPath;
   private final CompileContext myCompileContext;
   private final boolean myPrintToLog;
 
@@ -42,7 +42,7 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
     myCompileContext = compileContext;
     myItemsBySource = new HashMap<VirtualFile, ArtifactCompilerCompileItem>();
     mySourceByOutput = new HashMap<String, VirtualFile>();
-    myJarByPath = new HashMap<String, JarInfo>();
+    myJarByPath = new HashMap<String, ArchivePackageInfo>();
     myPrintToLog = ArtifactsCompilerInstance.FULL_LOG.isDebugEnabled();
   }
 
@@ -79,16 +79,16 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
     return myItemsBySource.get(source);
   }
 
-  public boolean registerJarFile(@NotNull JarInfo jarInfo, @NotNull String outputPath) {
+  public boolean registerJarFile(@NotNull ArchivePackageInfo archivePackageInfo, @NotNull String outputPath) {
     if (mySourceByOutput.containsKey(outputPath) || myJarByPath.containsKey(outputPath)) {
       return false;
     }
-    myJarByPath.put(outputPath, jarInfo);
+    myJarByPath.put(outputPath, archivePackageInfo);
     return true;
   }
 
   @Nullable
-  public JarInfo getJarInfo(String outputPath) {
+  public ArchivePackageInfo getJarInfo(String outputPath) {
     return myJarByPath.get(outputPath);
   }
 

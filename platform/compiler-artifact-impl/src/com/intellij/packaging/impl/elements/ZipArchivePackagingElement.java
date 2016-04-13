@@ -15,18 +15,69 @@
  */
 package com.intellij.packaging.impl.elements;
 
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.packaging.elements.ArchivePackageWriter;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author VISTALL
  * @since 16:02/18.06.13
  */
 public class ZipArchivePackagingElement extends ArchivePackagingElement {
+  public static class ZipArchivePackageWriter implements ArchivePackageWriter<ZipOutputStream> {
+    public static final ZipArchivePackageWriter INSTANCE = new ZipArchivePackageWriter();
+
+    @NotNull
+    @Override
+    public ZipOutputStream createArchiveObject(@NotNull File tempFile) throws IOException {
+      final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(tempFile));
+      return new ZipOutputStream(outputStream);
+    }
+
+    @Override
+    public void addDirectory(@NotNull ZipOutputStream zipOutputStream, @NotNull String relativePath) throws IOException {
+      ZipEntry e = new ZipEntry(relativePath);
+      e.setMethod(ZipEntry.STORED);
+      e.setSize(0);
+      e.setCrc(0);
+
+      zipOutputStream.putNextEntry(e);
+      zipOutputStream.closeEntry();
+    }
+
+    @Override
+    public void addFile(@NotNull ZipOutputStream zipOutputStream, @NotNull InputStream stream, @NotNull String relativePath, long fileLength, long lastModified)
+            throws IOException {
+      ZipEntry e = new ZipEntry(relativePath);
+      e.setTime(lastModified);
+      e.setSize(fileLength);
+
+      zipOutputStream.putNextEntry(e);
+      FileUtil.copy(stream, zipOutputStream);
+      zipOutputStream.closeEntry();
+    }
+
+    @Override
+    public void
+    close(@NotNull ZipOutputStream zipOutputStream) throws IOException {
+      zipOutputStream.close();
+    }
+  }
+
   public ZipArchivePackagingElement() {
     super(ZipArchiveElementType.getInstance());
   }
 
   public ZipArchivePackagingElement(@NotNull String archiveFileName) {
     super(ZipArchiveElementType.getInstance(), archiveFileName);
+  }
+
+  @Override
+  public ArchivePackageWriter<?> getPackageWriter() {
+    return ZipArchivePackageWriter.INSTANCE;
   }
 }

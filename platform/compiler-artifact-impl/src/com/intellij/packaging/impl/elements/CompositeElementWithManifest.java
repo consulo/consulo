@@ -21,6 +21,7 @@ import com.intellij.packaging.elements.PackagingElementType;
 /**
  * @author nik
  */
+@Deprecated
 public abstract class CompositeElementWithManifest<T> extends CompositePackagingElement<T> {
   protected CompositeElementWithManifest(PackagingElementType type) {
     super(type);

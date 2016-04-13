@@ -167,7 +167,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     final boolean testMode = ApplicationManager.getApplication().isUnitTestMode();
 
     final FileFilter fileFilter = new IgnoredFileFilter();
-    final Set<JarInfo> changedJars = new THashSet<JarInfo>();
+    final Set<ArchivePackageInfo> changedJars = new THashSet<ArchivePackageInfo>();
     for (String deletedJar : deletedJars) {
       ContainerUtil.addIfNotNull(myBuilderContext.getJarInfo(deletedJar), changedJars);
     }
@@ -212,7 +212,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
                 }
               }
               else {
-                changedJars.add(((JarDestinationInfo)destination).getJarInfo());
+                changedJars.add(((ArchiveDestinationInfo)destination).getArchivePackageInfo());
               }
             }
           }
@@ -228,14 +228,14 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         }
       }
 
-      JarsBuilder builder = new JarsBuilder(changedJars, fileFilter, myContext);
-      final boolean processed = builder.buildJars(writtenPaths);
+      ArchivesBuilder builder = new ArchivesBuilder(changedJars, fileFilter, myContext);
+      final boolean processed = builder.buildArchives(writtenPaths);
       if (!processed) {
         return false;
       }
 
       Set<VirtualFile> recompiledSources = new HashSet<VirtualFile>();
-      for (JarInfo info : builder.getJarsToBuild()) {
+      for (ArchivePackageInfo info : builder.getArchivesToBuild()) {
         for (Pair<String, VirtualFile> pair : info.getPackedFiles()) {
           recompiledSources.add(pair.getSecond());
         }
@@ -272,7 +272,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
       return;
     }
 
-    final BufferedInputStream input = ArtifactCompilerUtil.getJarEntryInputStream(sourceFile, myContext);
+    InputStream input = ArtifactCompilerUtil.getArchiveEntryInputStream(sourceFile, myContext).getFirst();
     if (input == null) return;
     final BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(toFile));
     try {

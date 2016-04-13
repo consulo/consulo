@@ -16,8 +16,9 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.compiler.impl.packagingCompiler.ExplodedDestinationInfo;
-import com.intellij.compiler.impl.packagingCompiler.JarInfo;
+import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.packaging.elements.ArchivePackageWriter;
 import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,24 +37,28 @@ public class CopyToDirectoryInstructionCreator extends IncrementalCompilerInstru
     myOutputFile = outputFile;
   }
 
+  @Override
   public void addFileCopyInstruction(@NotNull VirtualFile file, @NotNull String outputFileName) {
     myContext.addDestination(file, new ExplodedDestinationInfo(myOutputPath + "/" + outputFileName, outputChild(outputFileName)));
   }
 
+  @Override
   public CopyToDirectoryInstructionCreator subFolder(@NotNull String directoryName) {
     return new CopyToDirectoryInstructionCreator(myContext, myOutputPath + "/" + directoryName, outputChild(directoryName));
   }
 
-  public IncrementalCompilerInstructionCreator archive(@NotNull String archiveFileName) {
+  @NotNull
+  @Override
+  public IncrementalCompilerInstructionCreator archive(@NotNull String archiveFileName, @NotNull ArchivePackageWriter<?> packageWriter) {
     String jarOutputPath = myOutputPath + "/" + archiveFileName;
-    final JarInfo jarInfo = new JarInfo();
-    if (!myContext.registerJarFile(jarInfo, jarOutputPath)) {
+    final ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
+    if (!myContext.registerJarFile(archivePackageInfo, jarOutputPath)) {
       return new SkipAllInstructionCreator(myContext);
     }
     VirtualFile outputFile = outputChild(archiveFileName);
     final ExplodedDestinationInfo destination = new ExplodedDestinationInfo(jarOutputPath, outputFile);
-    jarInfo.addDestination(destination);
-    return new PackIntoArchiveInstructionCreator(myContext, jarInfo, "", destination);
+    archivePackageInfo.addDestination(destination);
+    return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);
   }
 
   @Nullable

@@ -39,10 +39,12 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
     myContext = context;
   }
 
+  @Override
   public void addDirectoryCopyInstructions(@NotNull VirtualFile directory) {
     addDirectoryCopyInstructions(directory, null);
   }
 
+  @Override
   public void addDirectoryCopyInstructions(@NotNull VirtualFile directory, @Nullable PackagingFileFilter filter) {
     final ProjectFileIndex index = ProjectRootManager.getInstance(myContext.getCompileContext().getProject()).getFileIndex();
     final boolean copyExcluded = index.isExcluded(directory);
@@ -87,6 +89,7 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
   @Override
   public abstract IncrementalCompilerInstructionCreatorBase subFolder(@NotNull String directoryName);
 
+  @Override
   public IncrementalCompilerInstructionCreator subFolderByRelativePath(@NotNull String relativeDirectoryPath) {
     final List<String> folders = StringUtil.split(relativeDirectoryPath, "/");
     IncrementalCompilerInstructionCreator current = this;

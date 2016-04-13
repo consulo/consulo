@@ -18,6 +18,8 @@ package com.intellij.compiler.impl.packagingCompiler;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.packaging.elements.ArchivePackageWriter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -26,22 +28,24 @@ import java.util.List;
 /**
  * @author nik
  */
-public class JarInfo {
+public class ArchivePackageInfo {
   private final List<Pair<String, VirtualFile>> myPackedFiles;
-  private final LinkedHashSet<Pair<String, JarInfo>> myPackedJars;
+  private final LinkedHashSet<Pair<String, ArchivePackageInfo>> myPackedArchives;
   private final List<DestinationInfo> myDestinations;
+  private final ArchivePackageWriter<?> myPackageWriter;
 
-  public JarInfo() {
+  public ArchivePackageInfo(ArchivePackageWriter<?> packageWriter) {
+    myPackageWriter = packageWriter;
     myDestinations = new ArrayList<DestinationInfo>();
     myPackedFiles = new ArrayList<Pair<String, VirtualFile>>();
-    myPackedJars = new LinkedHashSet<Pair<String, JarInfo>>();
+    myPackedArchives = new LinkedHashSet<Pair<String, ArchivePackageInfo>>();
   }
 
   public void addDestination(DestinationInfo info) {
     myDestinations.add(info);
-    if (info instanceof JarDestinationInfo) {
-      JarDestinationInfo destinationInfo = (JarDestinationInfo)info;
-      destinationInfo.getJarInfo().myPackedJars.add(Pair.create(destinationInfo.getPathInJar(), this));
+    if (info instanceof ArchiveDestinationInfo) {
+      ArchiveDestinationInfo destinationInfo = (ArchiveDestinationInfo)info;
+      destinationInfo.getArchivePackageInfo().myPackedArchives.add(Pair.create(destinationInfo.getPathInJar(), this));
     }
   }
 
@@ -53,15 +57,20 @@ public class JarInfo {
     return myPackedFiles;
   }
 
-  public LinkedHashSet<Pair<String, JarInfo>> getPackedJars() {
-    return myPackedJars;
+  public LinkedHashSet<Pair<String, ArchivePackageInfo>> getPackedArchives() {
+    return myPackedArchives;
   }
 
-  public List<JarDestinationInfo> getJarDestinations() {
-    final ArrayList<JarDestinationInfo> list = new ArrayList<JarDestinationInfo>();
+  @NotNull
+  public ArchivePackageWriter<?> getPackageWriter() {
+    return myPackageWriter;
+  }
+
+  public List<ArchiveDestinationInfo> getArchiveDestinations() {
+    final ArrayList<ArchiveDestinationInfo> list = new ArrayList<ArchiveDestinationInfo>();
     for (DestinationInfo destination : myDestinations) {
-      if (destination instanceof JarDestinationInfo) {
-        list.add((JarDestinationInfo)destination);
+      if (destination instanceof ArchiveDestinationInfo) {
+        list.add((ArchiveDestinationInfo)destination);
       }
     }
     return list;

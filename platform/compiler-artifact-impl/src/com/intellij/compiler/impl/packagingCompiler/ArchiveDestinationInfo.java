@@ -16,28 +16,28 @@
 
 package com.intellij.compiler.impl.packagingCompiler;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
+import org.consulo.lombok.annotations.Logger;
 
 /**
  * @author nik
  */
-public class JarDestinationInfo extends DestinationInfo {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.packagingCompiler.JarDestinationInfo");
+@Logger
+public class ArchiveDestinationInfo extends DestinationInfo {
   private final String myPathInJar;
-  private final JarInfo myJarInfo;
+  private final ArchivePackageInfo myArchivePackageInfo;
 
-  public JarDestinationInfo(final String pathInJar, final JarInfo jarInfo, DestinationInfo jarDestination) {
+  public ArchiveDestinationInfo(final String pathInJar, final ArchivePackageInfo archivePackageInfo, DestinationInfo jarDestination) {
     super(appendPathInJar(jarDestination.getOutputPath(), pathInJar), jarDestination.getOutputFile(), jarDestination.getOutputFilePath());
-    LOG.assertTrue(!pathInJar.startsWith(".."), pathInJar);
+    LOGGER.assertTrue(!pathInJar.startsWith(".."), pathInJar);
     myPathInJar = StringUtil.startsWithChar(pathInJar, '/') ? pathInJar : "/" + pathInJar;
-    myJarInfo = jarInfo;
+    myArchivePackageInfo = archivePackageInfo;
   }
 
   private static String appendPathInJar(String outputPath, String pathInJar) {
-    LOG.assertTrue(outputPath.length() > 0 && outputPath.charAt(outputPath.length() - 1) != '/');
-    LOG.assertTrue(pathInJar.length() > 0 && pathInJar.charAt(0) != '/');
+    LOGGER.assertTrue(outputPath.length() > 0 && outputPath.charAt(outputPath.length() - 1) != '/');
+    LOGGER.assertTrue(pathInJar.length() > 0 && pathInJar.charAt(0) != '/');
     return outputPath + ArchiveFileSystem.ARCHIVE_SEPARATOR + pathInJar;
   }
 
@@ -45,8 +45,8 @@ public class JarDestinationInfo extends DestinationInfo {
     return myPathInJar;
   }
 
-  public JarInfo getJarInfo() {
-    return myJarInfo;
+  public ArchivePackageInfo getArchivePackageInfo() {
+    return myArchivePackageInfo;
   }
 
   @Override

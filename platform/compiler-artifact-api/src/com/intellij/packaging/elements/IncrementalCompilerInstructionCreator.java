@@ -32,7 +32,8 @@ public interface IncrementalCompilerInstructionCreator {
 
   IncrementalCompilerInstructionCreator subFolder(@NotNull String directoryName);
 
-  IncrementalCompilerInstructionCreator archive(@NotNull String archiveFileName);
+  @NotNull
+  IncrementalCompilerInstructionCreator archive(@NotNull String archiveFileName, @NotNull ArchivePackageWriter<?> packageWriter);
 
   IncrementalCompilerInstructionCreator subFolderByRelativePath(@NotNull String relativeDirectoryPath);
 }

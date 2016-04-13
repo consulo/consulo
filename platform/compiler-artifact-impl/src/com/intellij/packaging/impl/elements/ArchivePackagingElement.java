@@ -28,8 +28,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author nik
  */
-public abstract class ArchivePackagingElement extends CompositeElementWithManifest<ArchivePackagingElement> {
-  @NonNls public static final String NAME_ATTRIBUTE = "name";
+public abstract class ArchivePackagingElement extends CompositePackagingElement<ArchivePackagingElement> {
+
+  @NonNls
+  public static final String NAME_ATTRIBUTE = "name";
+
   protected String myArchiveFileName;
 
   public ArchivePackagingElement(@NotNull PackagingElementType<? extends ArchivePackagingElement> type) {
@@ -49,16 +52,20 @@ public abstract class ArchivePackagingElement extends CompositeElementWithManife
   @Override
   public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
                                                      @NotNull PackagingElementResolvingContext resolvingContext,
-                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext, @NotNull ArtifactType artifactType) {
-    computeChildrenInstructions(creator.archive(myArchiveFileName), resolvingContext, compilerContext, artifactType);
+                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext,
+                                                     @NotNull ArtifactType artifactType) {
+    computeChildrenInstructions(creator.archive(myArchiveFileName, getPackageWriter()), resolvingContext, compilerContext, artifactType);
   }
+
+  public abstract ArchivePackageWriter<?> getPackageWriter();
 
   @Attribute(NAME_ATTRIBUTE)
   public String getArchiveFileName() {
     return myArchiveFileName;
   }
 
-  @NonNls @Override
+  @NonNls
+  @Override
   public String toString() {
     return "archive:" + myArchiveFileName;
   }
