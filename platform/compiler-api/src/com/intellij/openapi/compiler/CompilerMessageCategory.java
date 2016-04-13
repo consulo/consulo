@@ -26,6 +26,7 @@ public enum CompilerMessageCategory {
     public String toString() {
       return CompilerBundle.message("message.category.error");
     }
+    @Override
     public String getPresentableText() {
       return toString();
     }
@@ -34,6 +35,7 @@ public enum CompilerMessageCategory {
     public String toString() {
       return CompilerBundle.message("message.category.warning");
     }
+    @Override
     public String getPresentableText() {
       return toString();
     }
@@ -42,6 +44,7 @@ public enum CompilerMessageCategory {
     public String toString() {
       return CompilerBundle.message("message.category.information");
     }
+    @Override
     public String getPresentableText() {
       return toString();
     }
@@ -50,6 +53,7 @@ public enum CompilerMessageCategory {
     public String toString() {
       return CompilerBundle.message("message.category.statistics");
     }
+    @Override
     public String getPresentableText() {
       return toString();
     }

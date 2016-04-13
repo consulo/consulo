@@ -48,7 +48,6 @@ import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.util.EventDispatcher;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.ThreeStateCheckBox;
 import com.intellij.util.ui.UIUtil;
@@ -79,7 +78,6 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   private final ActionGroup myShowSpecificContentOptionsGroup;
   private final Project myProject;
   private final ComplexElementSubstitutionParameters mySubstitutionParameters = new ComplexElementSubstitutionParameters();
-  private final EventDispatcher<ArtifactEditorListener> myDispatcher = EventDispatcher.create(ArtifactEditorListener.class);
   private final ArtifactEditorContextImpl myContext;
   private final SourceItemsTree mySourceItemsTree;
   private final Artifact myOriginalArtifact;
@@ -157,17 +155,9 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     return mySourceItemsTree;
   }
 
-  public void addListener(@NotNull final ArtifactEditorListener listener) {
-    myDispatcher.addListener(listener);
-  }
-
   @Override
   public ArtifactEditorContextImpl getContext() {
     return myContext;
-  }
-
-  public void removeListener(@NotNull final ArtifactEditorListener listener) {
-    myDispatcher.removeListener(listener);
   }
 
   @Override

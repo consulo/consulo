@@ -16,9 +16,7 @@
 package com.intellij.openapi.compiler;
 
 public class CompilationStatusAdapter implements CompilationStatusListener {
+  @Override
   public void compilationFinished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {
-  }
-
-  public void fileGenerated(String outputRoot, String relativePath) {
   }
 }
