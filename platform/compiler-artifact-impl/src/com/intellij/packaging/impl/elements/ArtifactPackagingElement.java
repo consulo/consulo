@@ -15,13 +15,14 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.compiler.ant.BuildProperties;
-import com.intellij.compiler.ant.Generator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packaging.artifacts.*;
+import com.intellij.packaging.artifacts.Artifact;
+import com.intellij.packaging.artifacts.ArtifactPointer;
+import com.intellij.packaging.artifacts.ArtifactPointerUtil;
+import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.ArtifactElementPresentation;
 import com.intellij.packaging.impl.ui.DelegatedPackagingElementPresentation;
@@ -33,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -76,21 +76,6 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
       return elements;
     }
     return null;
-  }
-
-  @Override
-  public List<? extends Generator> computeAntInstructions(@NotNull PackagingElementResolvingContext resolvingContext, @NotNull AntCopyInstructionCreator creator,
-                                                          @NotNull ArtifactAntGenerationContext generationContext,
-                                                          @NotNull ArtifactType artifactType) {
-    final Artifact artifact = findArtifact(resolvingContext);
-    if (artifact != null) {
-      if (artifact.getArtifactType().getSubstitution(artifact, resolvingContext, artifactType) != null) {
-        return super.computeAntInstructions(resolvingContext, creator, generationContext, artifactType);
-      }
-      final String outputPath = BuildProperties.propertyRef(generationContext.getArtifactOutputProperty(artifact));
-      return Collections.singletonList(creator.createDirectoryContentCopyInstruction(outputPath));
-    }
-    return Collections.emptyList();
   }
 
   @Override

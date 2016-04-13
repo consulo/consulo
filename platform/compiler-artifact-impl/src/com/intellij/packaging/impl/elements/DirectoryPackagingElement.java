@@ -15,9 +15,11 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.compiler.ant.Generator;
 import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.*;
+import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
+import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
+import com.intellij.packaging.elements.PackagingElement;
+import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.ui.DirectoryElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
@@ -25,9 +27,6 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author nik
@@ -47,22 +46,9 @@ public class DirectoryPackagingElement extends CompositeElementWithManifest<Dire
     myDirectoryName = directoryName;
   }
 
+  @Override
   public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
     return new DirectoryElementPresentation(this); 
-  }
-
-  @Override
-  public List<? extends Generator> computeAntInstructions(@NotNull PackagingElementResolvingContext resolvingContext, @NotNull AntCopyInstructionCreator creator,
-                                                          @NotNull ArtifactAntGenerationContext generationContext,
-                                                          @NotNull ArtifactType artifactType) {
-
-    final List<Generator> children = new ArrayList<Generator>();
-    final Generator command = creator.createSubFolderCommand(myDirectoryName);
-    if (command != null) {
-      children.add(command);
-    }
-    children.addAll(computeChildrenGenerators(resolvingContext, creator.subFolder(myDirectoryName), generationContext, artifactType));
-    return children;
   }
 
   @Override
@@ -72,6 +58,7 @@ public class DirectoryPackagingElement extends CompositeElementWithManifest<Dire
     computeChildrenInstructions(creator.subFolder(myDirectoryName), resolvingContext, compilerContext, artifactType);
   }
 
+  @Override
   public DirectoryPackagingElement getState() {
     return this;
   }
@@ -90,10 +77,12 @@ public class DirectoryPackagingElement extends CompositeElementWithManifest<Dire
     myDirectoryName = directoryName;
   }
 
+  @Override
   public void rename(@NotNull String newName) {
     myDirectoryName = newName;
   }
 
+  @Override
   public String getName() {
     return myDirectoryName;
   }
@@ -103,6 +92,7 @@ public class DirectoryPackagingElement extends CompositeElementWithManifest<Dire
     return element instanceof DirectoryPackagingElement && ((DirectoryPackagingElement)element).getDirectoryName().equals(myDirectoryName);
   }
 
+  @Override
   public void loadState(DirectoryPackagingElement state) {
     XmlSerializerUtil.copyBean(state, this);
   }

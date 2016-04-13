@@ -15,8 +15,6 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import com.intellij.compiler.ant.BuildProperties;
-import com.intellij.compiler.ant.Generator;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -75,19 +73,6 @@ public class ModuleOutputPackagingElementImpl
     super(type);
     myProject = project;
     myContentFolderType = contentFolderType;
-  }
-
-  @Override
-  public List<? extends Generator> computeAntInstructions(@NotNull PackagingElementResolvingContext resolvingContext,
-                                                          @NotNull AntCopyInstructionCreator creator,
-                                                          @NotNull ArtifactAntGenerationContext generationContext,
-                                                          @NotNull ArtifactType artifactType) {
-    if (myModulePointer != null) {
-      final String moduleOutput =
-        BuildProperties.propertyRef(generationContext.getModuleOutputPath(myModulePointer.getName(), myContentFolderType));
-      return Collections.singletonList(creator.createDirectoryContentCopyInstruction(moduleOutput));
-    }
-    return Collections.emptyList();
   }
 
   @Override

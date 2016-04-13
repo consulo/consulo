@@ -15,17 +15,15 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.compiler.ant.Generator;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.*;
+import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
+import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
+import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.ui.DirectoryCopyPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author nik
@@ -43,15 +41,6 @@ public class DirectoryCopyPackagingElement extends FileOrDirectoryCopyPackagingE
   @Override
   public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
     return new DirectoryCopyPresentation(myFilePath);
-  }
-
-  @Override
-  public List<? extends Generator> computeAntInstructions(@NotNull PackagingElementResolvingContext resolvingContext,
-                                                          @NotNull AntCopyInstructionCreator creator,
-                                                          @NotNull ArtifactAntGenerationContext generationContext,
-                                                          @NotNull ArtifactType artifactType) {
-    final String path = generationContext.getSubstitutedPath(myFilePath);
-    return Collections.singletonList(creator.createDirectoryContentCopyInstruction(path));
   }
 
   @Override

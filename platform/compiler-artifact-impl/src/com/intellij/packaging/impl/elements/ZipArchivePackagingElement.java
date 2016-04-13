@@ -15,19 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.compiler.ant.BuildProperties;
-import com.intellij.compiler.ant.Generator;
-import com.intellij.compiler.ant.Tag;
-import com.intellij.compiler.ant.artifacts.ArchiveAntCopyInstructionCreator;
-import com.intellij.compiler.ant.taskdefs.Zip;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.AntCopyInstructionCreator;
-import com.intellij.packaging.elements.ArtifactAntGenerationContext;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -40,19 +28,5 @@ public class ZipArchivePackagingElement extends ArchivePackagingElement {
 
   public ZipArchivePackagingElement(@NotNull String archiveFileName) {
     super(ZipArchiveElementType.getInstance(), archiveFileName);
-  }
-
-  @Override
-  public List<? extends Generator> computeAntInstructions(@NotNull PackagingElementResolvingContext resolvingContext, @NotNull AntCopyInstructionCreator creator,
-                                                          @NotNull ArtifactAntGenerationContext generationContext,
-                                                          @NotNull ArtifactType artifactType) {
-    final String tempJarProperty = generationContext.createNewTempFileProperty("temp.zaip.path." + myArchiveFileName, myArchiveFileName);
-    String jarPath = BuildProperties.propertyRef(tempJarProperty);
-    final Tag jar = new Zip(jarPath);
-    for (Generator generator : computeChildrenGenerators(resolvingContext, new ArchiveAntCopyInstructionCreator(""), generationContext, artifactType)) {
-      jar.add(generator);
-    }
-    generationContext.runBeforeCurrentArtifact(jar);
-    return Collections.singletonList(creator.createFileCopyInstruction(jarPath, myArchiveFileName));
   }
 }

@@ -15,7 +15,6 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.compiler.ant.Generator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -33,8 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author nik
@@ -57,19 +54,9 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
     myRenamedOutputFileName = outputFileName;
   }
 
+  @Override
   public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
     return new FileCopyPresentation(myFilePath, getOutputFileName());
-  }
-
-  @Override
-  public List<? extends Generator> computeAntInstructions(@NotNull PackagingElementResolvingContext resolvingContext, @NotNull AntCopyInstructionCreator creator,
-                                                          @NotNull ArtifactAntGenerationContext generationContext,
-                                                          @NotNull ArtifactType artifactType) {
-    if (isDirectory()) {
-      return Collections.emptyList();
-    }
-    final String path = generationContext.getSubstitutedPath(myFilePath);
-    return Collections.singletonList((Generator)creator.createFileCopyInstruction(path, getOutputFileName()));
   }
 
   public String getOutputFileName() {
@@ -102,10 +89,12 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
            && Comparing.equal(myRenamedOutputFileName, ((FileCopyPackagingElement)element).getRenamedOutputFileName());
   }
 
+  @Override
   public FileCopyPackagingElement getState() {
     return this;
   }
 
+  @Override
   public void loadState(FileCopyPackagingElement state) {
     setFilePath(state.getFilePath());
     setRenamedOutputFileName(state.getRenamedOutputFileName());
@@ -121,14 +110,17 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
     myRenamedOutputFileName = renamedOutputFileName;
   }
 
+  @Override
   public String getName() {
     return getOutputFileName();
   }
 
+  @Override
   public boolean canBeRenamed() {
     return !isDirectory();
   }
 
+  @Override
   public void rename(@NotNull String newName) {
     myRenamedOutputFileName = newName.equals(PathUtil.getFileName(myFilePath)) ? null : newName;
   }
