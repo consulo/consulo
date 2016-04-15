@@ -36,6 +36,7 @@ import com.intellij.diff.requests.ContentDiffRequest;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.tools.util.base.HighlightPolicy;
 import com.intellij.diff.tools.util.base.IgnorePolicy;
+import com.intellij.diff.tools.util.base.TextDiffViewerUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -95,6 +96,7 @@ import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredWriteAction;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -113,9 +115,7 @@ public class DiffUtil {
   //
 
   @Nullable
-  public static EditorHighlighter initEditorHighlighter(@Nullable Project project,
-                                                        @NotNull DocumentContent content,
-                                                        @NotNull CharSequence text) {
+  public static EditorHighlighter initEditorHighlighter(@Nullable Project project, @NotNull DocumentContent content, @NotNull CharSequence text) {
     EditorHighlighter highlighter = createEditorHighlighter(project, content);
     if (highlighter == null) return null;
     highlighter.setText(text);
@@ -194,7 +194,8 @@ public class DiffUtil {
 
     if (enableFolding) {
       setFoldingModelSupport(editor);
-    } else {
+    }
+    else {
       editor.getSettings().setFoldingOutlineShown(false);
       editor.getFoldingModel().setFoldingEnabled(false);
     }
@@ -301,9 +302,7 @@ public class DiffUtil {
     }.setCopyable(true);
     label.setForeground(UIUtil.getInactiveTextColor());
 
-    JPanel panel = new CenteredPanel(label);
-    panel.setBorder(JBUI.Borders.empty(5));
-    return panel;
+    return new CenteredPanel(label, JBUI.Borders.empty(5));
   }
 
   public static void addActionBlock(@NotNull DefaultActionGroup group, AnAction... actions) {
@@ -382,23 +381,8 @@ public class DiffUtil {
     List<DiffContent> contents = request.getContents();
     List<String> titles = request.getContentTitles();
 
-    List<Charset> charsets = ContainerUtil.map(contents, new Function<DiffContent, Charset>() {
-      @Override
-      public Charset fun(DiffContent content) {
-        if (content instanceof EmptyContent) return null;
-        return ((DocumentContent)content).getCharset();
-      }
-    });
-    List<LineSeparator> separators = ContainerUtil.map(contents, new Function<DiffContent, LineSeparator>() {
-      @Override
-      public LineSeparator fun(DiffContent content) {
-        if (content instanceof EmptyContent) return null;
-        return ((DocumentContent)content).getLineSeparator();
-      }
-    });
-
-    boolean equalCharsets = isEqualElements(charsets);
-    boolean equalSeparators = isEqualElements(separators);
+    boolean equalCharsets = TextDiffViewerUtil.areEqualCharsets(contents);
+    boolean equalSeparators = TextDiffViewerUtil.areEqualLineSeparators(contents);
 
     List<JComponent> result = new ArrayList<JComponent>(contents.size());
 
@@ -416,8 +400,7 @@ public class DiffUtil {
   }
 
   @Nullable
-  private static JComponent createTitleWithNotifications(@Nullable JComponent title,
-                                                         @NotNull DiffContent content) {
+  private static JComponent createTitleWithNotifications(@Nullable JComponent title, @NotNull DiffContent content) {
     List<JComponent> notifications = getCustomNotifications(content);
     if (notifications.isEmpty()) return title;
 
@@ -425,20 +408,6 @@ public class DiffUtil {
     if (title != null) components.add(title);
     components.addAll(notifications);
     return createStackedComponents(components, TITLE_GAP);
-  }
-
-  private static boolean isEqualElements(@NotNull List elements) {
-    for (int i = 0; i < elements.size(); i++) {
-      for (int j = i + 1; j < elements.size(); j++) {
-        if (!isEqualElements(elements.get(i), elements.get(j))) return false;
-      }
-    }
-    return true;
-  }
-
-  private static boolean isEqualElements(@Nullable Object element1, @Nullable Object element2) {
-    if (element1 == null || element2 == null) return true;
-    return element1.equals(element2);
   }
 
   @Nullable
@@ -462,10 +431,7 @@ public class DiffUtil {
   }
 
   @NotNull
-  public static JComponent createTitle(@NotNull String title,
-                                       @Nullable Charset charset,
-                                       @Nullable LineSeparator separator,
-                                       boolean readOnly) {
+  public static JComponent createTitle(@NotNull String title, @Nullable Charset charset, @Nullable LineSeparator separator, boolean readOnly) {
     if (readOnly) title += " " + DiffBundle.message("diff.content.read.only.content.title.suffix");
 
     JPanel panel = new JPanel(new BorderLayout());
@@ -593,8 +559,7 @@ public class DiffUtil {
     }
 
     indicator.checkCanceled();
-    return ComparisonManager.getInstance().processBlocks(fragments, text1, text2,
-                                                         config.policy, config.squashFragments, config.trimFragments);
+    return ComparisonManager.getInstance().processBlocks(fragments, text1, text2, config.policy, config.squashFragments, config.trimFragments);
   }
 
   @Nullable
@@ -604,8 +569,7 @@ public class DiffUtil {
     if (chunks[0] == null && chunks[1] == null && chunks[2] == null) return null; // ---
 
     if (comparisonPolicy == ComparisonPolicy.IGNORE_WHITESPACES) {
-      if (isChunksEquals(chunks[0], chunks[1], comparisonPolicy) &&
-          isChunksEquals(chunks[0], chunks[2], comparisonPolicy)) {
+      if (isChunksEquals(chunks[0], chunks[1], comparisonPolicy) && isChunksEquals(chunks[0], chunks[2], comparisonPolicy)) {
         return Collections.emptyList(); // whitespace-only changes, ex: empty lines added/removed
       }
     }
@@ -636,9 +600,7 @@ public class DiffUtil {
     });
   }
 
-  private static boolean isChunksEquals(@Nullable CharSequence chunk1,
-                                        @Nullable CharSequence chunk2,
-                                        @NotNull ComparisonPolicy comparisonPolicy) {
+  private static boolean isChunksEquals(@Nullable CharSequence chunk1, @Nullable CharSequence chunk2, @NotNull ComparisonPolicy comparisonPolicy) {
     if (chunk1 == null) chunk1 = "";
     if (chunk2 == null) chunk2 = "";
     return ComparisonManager.getInstance().isEquals(chunk1, chunk2, comparisonPolicy);
@@ -729,12 +691,7 @@ public class DiffUtil {
     replaceLines(document1, line1, line2, getLinesContent(document2, oLine1, oLine2));
   }
 
-  public static void applyModification(@NotNull Document document1,
-                                       int line1,
-                                       int line2,
-                                       @NotNull Document document2,
-                                       int oLine1,
-                                       int oLine2) {
+  public static void applyModification(@NotNull Document document1, int line1, int line2, @NotNull Document document2, int oLine1, int oLine2) {
     if (line1 == line2 && oLine1 == oLine2) return;
     if (line1 == line2) {
       insertLines(document1, line1, document2, oLine1, oLine2);
@@ -798,8 +755,7 @@ public class DiffUtil {
   @NotNull
   public static List<String> getLines(@NotNull Document document, int startLine, int endLine) {
     if (startLine < 0 || startLine > endLine || endLine > getLineCount(document)) {
-      throw new IndexOutOfBoundsException(String.format("Wrong line range: [%d, %d); lineCount: '%d'",
-                                                        startLine, endLine, document.getLineCount()));
+      throw new IndexOutOfBoundsException(String.format("Wrong line range: [%d, %d); lineCount: '%d'", startLine, endLine, document.getLineCount()));
     }
 
     List<String> result = new ArrayList<String>();
@@ -842,16 +798,14 @@ public class DiffUtil {
     int newChangeEnd = changeEnd + shift;
 
     if (start >= changeStart && end <= changeEnd) { // fully inside change
-      return greedy ? new UpdatedLineRange(changeStart, newChangeEnd, true) :
-             new UpdatedLineRange(newChangeEnd, newChangeEnd, true);
+      return greedy ? new UpdatedLineRange(changeStart, newChangeEnd, true) : new UpdatedLineRange(newChangeEnd, newChangeEnd, true);
     }
 
     if (start < changeStart) { // bottom boundary damaged
-      return greedy ? new UpdatedLineRange(start, newChangeEnd, true) :
-             new UpdatedLineRange(start, changeStart, true);
-    } else { // top boundary damaged
-      return greedy ? new UpdatedLineRange(changeStart, end + shift, true) :
-             new UpdatedLineRange(newChangeEnd, end + shift, true);
+      return greedy ? new UpdatedLineRange(start, newChangeEnd, true) : new UpdatedLineRange(start, changeStart, true);
+    }
+    else { // top boundary damaged
+      return greedy ? new UpdatedLineRange(changeStart, end + shift, true) : new UpdatedLineRange(newChangeEnd, end + shift, true);
     }
   }
 
@@ -913,9 +867,7 @@ public class DiffUtil {
     @NotNull private final UndoConfirmationPolicy myConfirmationPolicy;
     private final boolean myUnderBulkUpdate;
 
-    public DiffCommandAction(@Nullable Project project,
-                             @NotNull Document document,
-                             @Nullable String commandName) {
+    public DiffCommandAction(@Nullable Project project, @NotNull Document document, @Nullable String commandName) {
       this(project, document, commandName, null, UndoConfirmationPolicy.DEFAULT);
     }
 
@@ -983,7 +935,6 @@ public class DiffUtil {
                                          @Nullable final String name,
                                          @NotNull final Runnable task) {
     new DiffCommandAction(project, document, name) {
-      @RequiredWriteAction
       @Override
       protected void execute() {
         task.run();
@@ -1232,8 +1183,7 @@ public class DiffUtil {
     }
 
     public DiffConfig(@NotNull IgnorePolicy ignorePolicy, @NotNull HighlightPolicy highlightPolicy) {
-      this(ignorePolicy.getComparisonPolicy(), highlightPolicy.isFineFragments(), highlightPolicy.isShouldSquash(),
-           ignorePolicy.isShouldTrimChunks());
+      this(ignorePolicy.getComparisonPolicy(), highlightPolicy.isFineFragments(), highlightPolicy.isShouldSquash(), ignorePolicy.isShouldTrimChunks());
     }
   }
 
@@ -1242,9 +1192,7 @@ public class DiffUtil {
     @NotNull private final ThreeSide mySide2;
     @NotNull private final DiffFragment myFragment;
 
-    public MyWordFragment(@NotNull ThreeSide side1,
-                          @NotNull ThreeSide side2,
-                          @NotNull DiffFragment fragment) {
+    public MyWordFragment(@NotNull ThreeSide side1, @NotNull ThreeSide side2, @NotNull DiffFragment fragment) {
       assert side1 != side2;
       mySide1 = side1;
       mySide2 = side2;
@@ -1293,12 +1241,17 @@ public class DiffUtil {
     }
   }
 
-  private static class CenteredPanel extends JPanel {
+  public static class CenteredPanel extends JPanel {
     private final JComponent myComponent;
 
     public CenteredPanel(@NotNull JComponent component) {
       myComponent = component;
       add(component);
+    }
+
+    public CenteredPanel(@NotNull JComponent component, @NotNull Border border) {
+      this(component);
+      setBorder(border);
     }
 
     @Override

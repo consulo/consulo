@@ -37,6 +37,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.command.undo.*;
 import com.intellij.openapi.diff.DiffBundle;
@@ -58,6 +59,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
@@ -350,15 +352,6 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       // It could happen between this init() EDT chunk and invokeLater().
       getEditor().setViewer(true);
 
-      // we have to collect contents here, because someone can modify document while we're starting rediff
-      List<DocumentContent> contents = myMergeRequest.getContents();
-      final List<CharSequence> sequences = ContainerUtil.map(contents, new Function<DocumentContent, CharSequence>() {
-        @Override
-        public CharSequence fun(DocumentContent content) {
-          return content.getDocument().getImmutableCharSequence();
-        }
-      });
-
       // we need invokeLater() here because viewer is partially-initialized (ex: there are no toolbar or status panel)
       // user can see this state while we're showing progress indicator, so we want let init() to finish.
       ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -369,7 +362,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-              myCallback = doPerformRediff(sequences, indicator);
+              myCallback = doPerformRediff(indicator);
             }
 
             @RequiredDispatchThread
@@ -390,10 +383,22 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     }
 
     @NotNull
-    protected Runnable doPerformRediff(@NotNull List<CharSequence> sequences,
-                                       @NotNull ProgressIndicator indicator) {
+    protected Runnable doPerformRediff(@NotNull ProgressIndicator indicator) {
       try {
         indicator.checkCanceled();
+
+        final List<DocumentContent> contents = myMergeRequest.getContents();
+        List<CharSequence> sequences = ReadAction.compute(new ThrowableComputable<List<CharSequence>, Throwable>() {
+          @Override
+          public List<CharSequence> compute() throws Throwable {
+            return ContainerUtil.map(contents, new Function<DocumentContent, CharSequence>() {
+              @Override
+              public CharSequence fun(DocumentContent content) {
+                return content.getDocument().getImmutableCharSequence();
+              }
+            });
+          }
+        });
 
         List<MergeLineFragment> lineFragments = ByLine.compareTwoStep(sequences.get(0), sequences.get(1), sequences.get(2),
                                                                       ComparisonPolicy.DEFAULT, indicator);
@@ -449,6 +454,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     }
 
     @Override
+    @RequiredDispatchThread
     protected void destroyChangedBlocks() {
       super.destroyChangedBlocks();
       myInnerDiffWorker.stop();
@@ -506,6 +512,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
       }
 
+      @RequiredDispatchThread
       public void stop() {
         if (myProgress != null) myProgress.cancel();
         myProgress = null;
@@ -513,6 +520,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         myAlarm.cancelAllRequests();
       }
 
+      @RequiredDispatchThread
       private void putChanges(@NotNull Collection<TextMergeChange> changes) {
         for (TextMergeChange change : changes) {
           if (change.isResolved()) continue;
@@ -603,10 +611,13 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       enterBulkChangeUpdateBlock();
       if (myAllMergeChanges.isEmpty()) return;
 
-      ThreeSide side = null;
-      if (e.getDocument() == getEditor(ThreeSide.LEFT).getDocument()) side = ThreeSide.LEFT;
-      if (e.getDocument() == getEditor(ThreeSide.RIGHT).getDocument()) side = ThreeSide.RIGHT;
-      if (e.getDocument() == getEditor(ThreeSide.BASE).getDocument()) side = ThreeSide.BASE;
+      List<Document> documents = ContainerUtil.map(getEditors(), new Function<EditorEx, Document>() {
+        @Override
+        public Document fun(EditorEx editorEx) {
+          return editorEx.getDocument();
+        }
+      });
+      ThreeSide side = ThreeSide.fromValue(documents, e.getDocument());
       if (side == null) {
         LOG.warn("Unknown document changed");
         return;
@@ -658,8 +669,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         myChangesToUpdate.add(change);
       }
       else {
-        change.markInnerFragmentsDamaged();
-        change.doReinstallHighlighter();
+        change.reinstallHighlighters();
         myInnerDiffWorker.scheduleRediff(change);
       }
     }
@@ -676,8 +686,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
       if (myBulkChangeUpdateDepth == 0) {
         for (TextMergeChange change : myChangesToUpdate) {
-          change.markInnerFragmentsDamaged();
-          change.doReinstallHighlighter();
+          change.reinstallHighlighters();
         }
         myInnerDiffWorker.scheduleRediff(myChangesToUpdate);
         myChangesToUpdate.clear();
@@ -1442,7 +1451,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
   }
 
   private static class MyUndoableAction extends BasicUndoableAction {
-    private final WeakReference<TextMergeViewer> myViewerRef;
+    @NotNull private final WeakReference<TextMergeViewer> myViewerRef;
     @NotNull private final List<TextMergeChange.State> myStates;
     private final boolean myUndo;
 

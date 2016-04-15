@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,8 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
     public boolean SHOW_LINE_NUMBERS = true;
     public boolean SHOW_INDENT_LINES = false;
     public boolean USE_SOFT_WRAPS = false;
+    public HighlightingLevel HIGHLIGHTING_LEVEL = HighlightingLevel.INSPECTIONS;
+    public boolean READ_ONLY_LOCK = true;
 
     // Fragments settings
     public boolean EXPAND_BY_DEFAULT = true;
@@ -139,6 +141,15 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
       PLACE_SETTINGS.USE_SOFT_WRAPS = state;
     }
 
+    @NotNull
+    public HighlightingLevel getHighlightingLevel() {
+      return PLACE_SETTINGS.HIGHLIGHTING_LEVEL;
+    }
+
+    public void setHighlightingLevel(@NotNull HighlightingLevel state) {
+      PLACE_SETTINGS.HIGHLIGHTING_LEVEL = state;
+    }
+
     public int getContextRange() {
       return SHARED_SETTINGS.CONTEXT_RANGE;
     }
@@ -153,6 +164,14 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
 
     public void setExpandByDefault(boolean value) {
       PLACE_SETTINGS.EXPAND_BY_DEFAULT = value;
+    }
+
+    public boolean isReadOnlyLock() {
+      return PLACE_SETTINGS.READ_ONLY_LOCK;
+    }
+
+    public void setReadOnlyLock(boolean state) {
+      PLACE_SETTINGS.READ_ONLY_LOCK = state;
     }
 
     //
@@ -191,10 +210,12 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
   private State myState = new State();
 
   @NotNull
+  @Override
   public State getState() {
     return myState;
   }
 
+  @Override
   public void loadState(State state) {
     myState = state;
   }
