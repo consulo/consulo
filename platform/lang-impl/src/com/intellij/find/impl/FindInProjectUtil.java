@@ -30,6 +30,9 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -397,9 +400,16 @@ public class FindInProjectUtil {
     return processPresentation;
   }
 
+  /**
+   * FIXME [VISTALL] find way found regexp plugin
+   */
   @RequiredReadAction
   private static List<PsiElement> getTopLevelRegExpChars(String regExpText, Project project) {
-    @SuppressWarnings("deprecation") PsiFile file = PsiFileFactory.getInstance(project).createFileFromText("A.regexp", regExpText);
+    FileType regexpFileType = FileTypeRegistry.getInstance().getFileTypeByExtension("regexp");
+    if (regexpFileType == UnknownFileType.INSTANCE) {
+      return Collections.emptyList();
+    }
+    PsiFile file = PsiFileFactory.getInstance(project).createFileFromText("A.regexp", regexpFileType, regExpText);
     List<PsiElement> result = null;
     final PsiElement[] children = file.getChildren();
 

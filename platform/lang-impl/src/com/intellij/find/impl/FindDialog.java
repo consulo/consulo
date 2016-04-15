@@ -37,9 +37,7 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -945,14 +943,16 @@ public class FindDialog extends DialogWrapper {
     findOptionsPanel.add(myCbWholeWordsOnly);
 
     myCbRegularExpressions = createCheckbox(FindBundle.message("find.options.regular.expressions"));
+    boolean supportRegexpFind = FileTypeRegistry.getInstance().getFileTypeByExtension("regexp") != UnknownFileType.INSTANCE;
+    myCbRegularExpressions.setVisible(supportRegexpFind);
     myCbRegularExpressions.addItemListener(liveResultsPreviewUpdateListener);
 
     final JPanel regExPanel = new JPanel();
     regExPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
     regExPanel.setLayout(new BoxLayout(regExPanel, BoxLayout.X_AXIS));
     regExPanel.add(myCbRegularExpressions);
-
     regExPanel.add(RegExHelpPopup.createRegExLink("[Help]", regExPanel, LOG));
+    regExPanel.setVisible(supportRegexpFind);
 
     findOptionsPanel.add(regExPanel);
 
