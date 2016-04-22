@@ -37,8 +37,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 
 /**
@@ -77,7 +77,7 @@ public class ProblemsViewImpl extends ProblemsView {
 
   private static final Key<Boolean> ourViewKey = Key.create("ProblemsViewImpl");
 
-  private List<TempMessage> myTempMessages = new ArrayList<TempMessage>();
+  private List<TempMessage> myTempMessages = new CopyOnWriteArrayList<TempMessage>();
 
   @Nullable
   private ProblemsViewPanel myPanel;
