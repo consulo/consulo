@@ -236,6 +236,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     visitor.visitElement(this);
   }
 
+  @RequiredReadAction
   @Override
   public String getName() {
     return null;

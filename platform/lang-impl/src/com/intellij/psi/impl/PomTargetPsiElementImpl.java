@@ -30,6 +30,8 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import javax.swing.*;
 
@@ -56,6 +58,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     return myTarget;
   }
 
+  @RequiredReadAction
   @Override
   public String getName() {
     if (myTarget instanceof PomNamedTarget) {
@@ -106,6 +109,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     return myTarget.isValid();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
     if (myTarget instanceof PomRenameableTarget) {

@@ -40,6 +40,8 @@ import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.*;
 
@@ -116,6 +118,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     return result == null ? PsiDirectory.EMPTY_ARRAY : result.toArray(new PsiDirectory[result.size()]);
   }
 
+  @RequiredReadAction
   @Override
   public String getName() {
     if (DebugUtil.CHECK_INSIDE_ATOMIC_ACTION_ENABLED) {
@@ -142,6 +145,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
   }
 
+  @RequiredWriteAction
   @Override
   @Nullable
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {

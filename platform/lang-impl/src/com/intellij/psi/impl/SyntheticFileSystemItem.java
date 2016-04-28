@@ -17,6 +17,7 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public abstract class SyntheticFileSystemItem extends PsiElementBase implements PsiFileSystemItem {
   public static final Logger LOG = Logger.getInstance("#" + SyntheticFileSystemItem.class.getPackage().getName());
@@ -107,6 +108,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
     throw new IncorrectOperationException("Frameworks cannot be renamed");
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException {
     throw new IncorrectOperationException("Frameworks cannot be renamed");

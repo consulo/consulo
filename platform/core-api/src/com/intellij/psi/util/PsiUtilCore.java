@@ -44,6 +44,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -409,6 +411,7 @@ public class PsiUtilCore {
       throw createException();
     }
 
+    @RequiredReadAction
     @NotNull
     @Override
     public String getName() {
@@ -446,6 +449,7 @@ public class PsiUtilCore {
       throw createException();
     }
 
+    @RequiredWriteAction
     @Override
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
       throw createException();

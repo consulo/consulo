@@ -22,6 +22,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public class MockPsiFile extends MockPsiElement implements PsiFile {
   public static final LanguageVersion<Language> DUMMY_LANG_VERSION = new BaseLanguageVersion<Language>("DUMMY_LANG_VERSION", Language.ANY);
@@ -56,6 +58,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
     return true;
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public String getName() {
@@ -68,6 +71,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
     return null;
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
     throw new IncorrectOperationException("Not implemented");

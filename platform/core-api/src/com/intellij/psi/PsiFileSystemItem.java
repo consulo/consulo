@@ -20,6 +20,7 @@ import com.intellij.psi.search.PsiElementProcessor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * Represents a file or directory which can be renamed.
@@ -36,6 +37,7 @@ public interface PsiFileSystemItem extends PsiCheckedRenameElement, NavigatableP
   @Nullable
   VirtualFile getVirtualFile();
 
+  @RequiredReadAction
   @Override
   @NotNull @NonNls
   String getName();

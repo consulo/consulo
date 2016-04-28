@@ -16,25 +16,27 @@
 package com.intellij.psi;
 
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * A PSI element which has a name and can be renamed (for example, a class or a method).
  */
-public interface PsiNamedElement extends PsiElement{
-  /**
-   * The empty array of PSI named elements which can be reused to avoid unnecessary allocations.
-   */
-  PsiNamedElement[] EMPTY_ARRAY = new PsiNamedElement[0];
-
+@ArrayFactoryFields
+public interface PsiNamedElement extends PsiElement {
   /**
    * Returns the name of the element.
    *
    * @return the element name.
    */
-  @Nullable @NonNls String getName();
+  @Nullable
+  @NonNls
+  @RequiredReadAction
+  String getName();
 
   /**
    * Renames the element.
@@ -44,5 +46,6 @@ public interface PsiNamedElement extends PsiElement{
    * or a different element if the rename caused the element to be replaced).
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
+  @RequiredWriteAction
   PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException;
 }

@@ -34,6 +34,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFileEx {
 
@@ -105,12 +107,14 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     return clone;
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public String getName() {
     return getViewProvider().getVirtualFile().getName();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
     checkSetName(name);

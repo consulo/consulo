@@ -16,12 +16,16 @@
 
 package com.intellij.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author yole
  */
+@ArrayFactoryFields
 public interface PsiNameIdentifierOwner extends PsiNamedElement {
   @Nullable
+  @RequiredReadAction
   PsiElement getNameIdentifier();
 }

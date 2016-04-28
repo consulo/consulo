@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 /**
  * Represents a file system directory and allows to access its contents.
@@ -40,10 +41,12 @@ public interface PsiDirectory extends PsiFileSystemItem {
   @NotNull
   VirtualFile getVirtualFile();
 
+  @RequiredReadAction
   @Override
   @NotNull
   String getName();
 
+  @RequiredWriteAction
   @Override
   @NotNull
   PsiElement setName(@NotNull String name) throws IncorrectOperationException;

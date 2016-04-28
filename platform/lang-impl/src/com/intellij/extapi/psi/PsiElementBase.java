@@ -34,6 +34,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -228,6 +229,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public String getName() {
     return null;

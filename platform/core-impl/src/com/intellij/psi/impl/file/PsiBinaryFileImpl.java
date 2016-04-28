@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import java.io.IOException;
 import java.util.Map;
@@ -67,12 +68,14 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     return myContents;
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public String getName() {
     return !isCopy() ? getVirtualFile().getName() : myName;
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
     checkSetName(name);

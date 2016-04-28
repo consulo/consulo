@@ -24,6 +24,7 @@ import com.intellij.util.ArrayFactory;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -60,6 +61,7 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
   @NotNull
   PsiPackage[] getSubPackages(@NotNull GlobalSearchScope scope);
 
+  @RequiredReadAction
   @Override
   @Nullable("default package")
   @NonNls

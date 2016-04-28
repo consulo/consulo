@@ -55,6 +55,7 @@ import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.RequiredWriteAction;
 
 import javax.swing.*;
 import java.lang.ref.Reference;
@@ -457,11 +458,13 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     return clone;
   }
 
+  @RequiredReadAction
   @Override
   @NotNull public String getName() {
     return getViewProvider().getVirtualFile().getName();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
     checkSetName(name);
