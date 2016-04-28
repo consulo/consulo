@@ -21,20 +21,34 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
- * See {@link InspectionManager#createProblemDescriptor(com.intellij.psi.PsiElement, String, LocalQuickFix, ProblemHighlightType,boolean) } for method descriptions.
+ * See {@link InspectionManager#createProblemDescriptor(com.intellij.psi.PsiElement, String, LocalQuickFix, ProblemHighlightType, boolean) } for method descriptions.
  */
-public interface ProblemDescriptor extends CommonProblemDescriptor{
+public interface ProblemDescriptor extends CommonProblemDescriptor {
   ProblemDescriptor[] EMPTY_ARRAY = new ProblemDescriptor[0];
 
+  @Nullable
+  @RequiredReadAction
   PsiElement getPsiElement();
+
+  @Nullable
+  @RequiredReadAction
   PsiElement getStartElement();
+
+  @Nullable
+  @RequiredReadAction
   PsiElement getEndElement();
+
+  @Nullable
   TextRange getTextRangeInElement();
+
   int getLineNumber();
+
   @NotNull
   ProblemHighlightType getHighlightType();
+
   boolean isAfterEndOfLine();
 
   /**

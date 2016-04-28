@@ -30,6 +30,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * User: cdr
@@ -45,6 +46,7 @@ class FileElementInfo extends SmartPointerElementInfo {
     myLanguage = LanguageUtil.getRootLanguage(file);
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement restoreElement() {
     return SelfElementInfo.restoreFileFromVirtual(myVirtualFile, myProject, myLanguage);

@@ -50,6 +50,7 @@ import com.intellij.util.containers.IntStack;
 import com.intellij.util.text.CharArrayUtil;
 import gnu.trove.TIntIntHashMap;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.awt.*;
 import java.util.*;
@@ -215,6 +216,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
     myFile = file;
   }
 
+  @RequiredReadAction
   @Override
   public void doCollectInformation(@NotNull ProgressIndicator progress) {
     assert myDocument != null;

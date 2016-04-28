@@ -27,6 +27,7 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * User: cdr
@@ -63,6 +64,7 @@ class AnchorElementInfo extends SelfElementInfo {
     return (int)myStubElementTypeAndId;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public PsiElement restoreElement() {

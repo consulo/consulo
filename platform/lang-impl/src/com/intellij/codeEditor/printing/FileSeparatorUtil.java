@@ -23,11 +23,10 @@ package com.intellij.codeEditor.printing;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.impl.LineMarkersPass;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +35,8 @@ import java.util.List;
 
 public class FileSeparatorUtil {
   @NotNull
-  public static List<LineMarkerInfo> getFileSeparators(final PsiFile file, final Document document, @Nullable final Editor editor) {
+  @RequiredReadAction
+  public static List<LineMarkerInfo> getFileSeparators(final PsiFile file, final Document document) {
     final List<LineMarkerInfo> result = new ArrayList<LineMarkerInfo>();
     for (LineMarkerInfo lineMarkerInfo : LineMarkersPass.queryLineMarkers(file, document)) {
       if (lineMarkerInfo.separatorColor != null) {

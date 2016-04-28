@@ -26,6 +26,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -69,6 +70,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     advanceProgress(Math.max(1, myProgressLimit - myProgressCount.get()));
   }
 
+  @RequiredReadAction
   @Override
   public final void doCollectInformation(@NotNull final ProgressIndicator progress) {
     if (!(progress instanceof DaemonProgressIndicator)) {
@@ -154,6 +156,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
       super(project, document, false);
     }
 
+    @RequiredReadAction
     @Override
     public void doCollectInformation(@NotNull final ProgressIndicator progress) {
     }

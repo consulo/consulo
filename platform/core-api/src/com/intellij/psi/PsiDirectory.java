@@ -20,6 +20,7 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * Represents a file system directory and allows to access its contents.
@@ -73,6 +74,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
    * @return the array of files.
    */
   @NotNull
+  @RequiredReadAction
   PsiFile[] getFiles();
 
   /**

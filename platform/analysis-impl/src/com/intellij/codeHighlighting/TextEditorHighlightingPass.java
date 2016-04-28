@@ -31,6 +31,7 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,6 +58,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     this(project, document, true);
   }
 
+  @RequiredReadAction
   @Override
   public final void collectInformation(@NotNull ProgressIndicator progress) {
     if (!isValid()) return; //Document has changed.
@@ -108,6 +110,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     doApplyInformationToEditor();
   }
 
+  @RequiredReadAction
   public abstract void doCollectInformation(@NotNull ProgressIndicator progress);
   public abstract void doApplyInformationToEditor();
 

@@ -32,6 +32,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -57,6 +58,7 @@ public class HTMLExporter {
     myGeneratedReferences = new HashSet<RefEntity>();
   }
 
+  @RequiredReadAction
   public void createPage(RefEntity element) throws IOException {
     final String currentFileName = fileNameForElement(element);
     StringBuffer buf = new StringBuffer();
@@ -132,6 +134,7 @@ public class HTMLExporter {
     return result;
   }
 
+  @RequiredReadAction
   public void generateReferencedPages() throws IOException {
     Set<RefEntity> extras = getReferencesWithoutPages();
     while (extras.size() > 0) {

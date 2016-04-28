@@ -92,6 +92,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements LineM
     }
   }
 
+  @RequiredReadAction
   @Override
   public void doCollectInformation(@NotNull ProgressIndicator progress) {
     final List<LineMarkerInfo> lineMarkers = new ArrayList<LineMarkerInfo>();
@@ -246,6 +247,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements LineM
   }
 
   @NotNull
+  @RequiredReadAction
   public static Collection<LineMarkerInfo> queryLineMarkers(@NotNull PsiFile file, @NotNull Document document) {
     if (file.getNode() == null) {
       // binary file? see IDEADEV-2809

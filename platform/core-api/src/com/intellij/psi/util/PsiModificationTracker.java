@@ -80,7 +80,7 @@ public interface PsiModificationTracker extends ModificationTracker {
   Key JAVA_STRUCTURE_MODIFICATION_COUNT = Key.create("JAVA_STRUCTURE_MODIFICATION_COUNT");
 
   /**
-   * A topic to subscribe for all PSI modification count changes.
+   * A topic to subscribe for all PSIntroduceFieldHandlerI modification count changes.
    * @see com.intellij.util.messages.MessageBus
    */
   Topic<Listener> TOPIC = new Topic<Listener>("modification tracker", Listener.class, Topic.BroadcastDirection.TO_PARENT);

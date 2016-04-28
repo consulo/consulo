@@ -24,6 +24,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 abstract class SmartPointerElementInfo {
   @Nullable
@@ -35,6 +36,7 @@ abstract class SmartPointerElementInfo {
   }
 
   @Nullable
+  @RequiredReadAction
   public abstract PsiElement restoreElement();
 
   public abstract PsiFile restoreFile();

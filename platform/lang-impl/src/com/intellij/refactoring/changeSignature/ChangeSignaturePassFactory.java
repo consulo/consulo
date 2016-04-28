@@ -36,6 +36,7 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class ChangeSignaturePassFactory extends AbstractProjectComponent impleme
       myEditor = editor;
     }
 
+    @RequiredReadAction
     @Override
     public void doCollectInformation(@NotNull ProgressIndicator progress) {
       myRange = null;

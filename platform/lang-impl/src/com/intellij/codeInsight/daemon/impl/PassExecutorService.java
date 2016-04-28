@@ -55,6 +55,7 @@ import gnu.trove.TIntObjectProcedure;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -250,6 +251,7 @@ class PassExecutorService implements Disposable {
     else {
       // run all passes in sequence
       textEditorHighlightingPass = new TextEditorHighlightingPass(myProject, document, true) {
+        @RequiredReadAction
         @Override
         public void doCollectInformation(@NotNull ProgressIndicator progress) {
           pass.collectInformation(progress);

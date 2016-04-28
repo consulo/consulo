@@ -20,6 +20,7 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * A pointer to a PSI element which can survive PSI reparse.
@@ -35,9 +36,11 @@ public interface SmartPsiElementPointer<E extends PsiElement> {
    * the element referenced by the pointer has been deleted).
    */
   @Nullable
+  @RequiredReadAction
   E getElement();
 
   @Nullable
+  @RequiredReadAction
   PsiFile getContainingFile();
 
   @NotNull

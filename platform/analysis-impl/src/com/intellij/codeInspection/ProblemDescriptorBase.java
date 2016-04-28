@@ -27,6 +27,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implements ProblemDescriptor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.ProblemDescriptorImpl");
@@ -88,6 +89,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
     }
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getPsiElement() {
     PsiElement startElement = getStartElement();
@@ -102,16 +104,19 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
     return PsiTreeUtil.findCommonParent(startElement, endElement);
   }
 
+  @Override
   @Nullable
   public TextRange getTextRangeInElement() {
     return myTextRangeInElement;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getStartElement() {
     return myStartSmartPointer.getElement();
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getEndElement() {
     return myEndSmartPointer == null ? getStartElement() : myEndSmartPointer.getElement();

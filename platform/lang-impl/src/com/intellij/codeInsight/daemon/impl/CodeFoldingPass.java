@@ -27,6 +27,7 @@ import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDumbAware {
   private static final Key<Boolean> THE_FIRST_TIME = Key.create("FirstFoldingPass");
@@ -36,6 +37,7 @@ class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDum
     super(editor, file, false);
   }
 
+  @RequiredReadAction
   @Override
   public void doCollectInformation(@NotNull ProgressIndicator progress) {
     final boolean firstTime = isFirstTime(myFile, myEditor, THE_FIRST_TIME);

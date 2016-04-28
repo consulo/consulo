@@ -24,6 +24,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * User: cdr
@@ -38,6 +39,7 @@ class DirElementInfo extends SmartPointerElementInfo {
     myVirtualFile = directory.getVirtualFile();
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement restoreElement() {
     return SelfElementInfo.restoreDirectoryFromVirtual(myVirtualFile, myProject);

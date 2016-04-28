@@ -42,6 +42,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -79,10 +80,12 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
     }
   }
 
+  @RequiredReadAction
   public abstract void compose(StringBuffer buf, RefEntity refEntity);
 
   public void compose(StringBuffer buf, RefEntity refElement, CommonProblemDescriptor descriptor) {}
 
+  @RequiredReadAction
   public void composeWithExporter(StringBuffer buf, RefEntity refEntity, HTMLExporter exporter) {
     myExporter = exporter;
     compose(buf, refEntity);
@@ -121,6 +124,7 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
   }
 
   @Nullable
+  @RequiredReadAction
   private HTMLComposerExtension getLanguageExtension(final RefElement refElement) {
     final PsiElement element = refElement.getElement();
     return element != null ? myLanguageExtensions.get(element.getLanguage()) : null;

@@ -35,9 +35,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.file.PsiPackageHelper;
-import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.awt.*;
 import java.io.*;
@@ -63,6 +63,7 @@ class HTMLTextPainter {
   private final Project myProject;
   private final Map<TextAttributes, String> myStyleMap = new HashMap<TextAttributes, String>();
 
+  @RequiredReadAction
   public HTMLTextPainter(PsiFile psiFile, Project project, String dirName, boolean printLineNumbers) {
     myProject = project;
     myPsiFile = psiFile;
@@ -86,7 +87,7 @@ class HTMLTextPainter {
 
     List<LineMarkerInfo> methodSeparators = new ArrayList<LineMarkerInfo>();
     if (document != null) {
-      final List<LineMarkerInfo> separators = FileSeparatorUtil.getFileSeparators(psiFile, document, PsiUtilBase.findEditor(psiFile));
+      final List<LineMarkerInfo> separators = FileSeparatorUtil.getFileSeparators(psiFile, document);
       methodSeparators.addAll(separators);
     }
 

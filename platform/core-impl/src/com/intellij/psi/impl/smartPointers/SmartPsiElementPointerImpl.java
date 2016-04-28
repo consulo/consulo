@@ -49,9 +49,12 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   private final Class<? extends PsiElement> myElementClass;
   private byte myReferenceCount = 1;
 
+  @RequiredReadAction
   SmartPsiElementPointerImpl(@NotNull Project project, @NotNull E element, @Nullable PsiFile containingFile) {
     this(element, createElementInfo(project, element, containingFile), element.getClass());
   }
+
+  @RequiredReadAction
   SmartPsiElementPointerImpl(@NotNull E element,
                              @NotNull SmartPointerElementInfo elementInfo,
                              @NotNull Class<? extends PsiElement> elementClass) {
@@ -62,6 +65,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   }
 
   @Override
+  @RequiredReadAction
   public boolean equals(Object obj) {
     return obj instanceof SmartPsiElementPointer && pointsToTheSameElementAs(this, (SmartPsiElementPointer)obj);
   }
@@ -77,6 +81,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return myElementInfo.getProject();
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public E getElement() {
@@ -89,6 +94,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   }
 
   @Nullable
+  @RequiredReadAction
   E doRestoreElement() {
     //noinspection unchecked
     E element = (E)myElementInfo.restoreElement();
@@ -109,6 +115,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return com.intellij.reference.SoftReference.dereference(myElement);
   }
 
+  @RequiredReadAction
   @Override
   public PsiFile getContainingFile() {
     PsiFile file = getElementInfo().restoreFile();
@@ -213,6 +220,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return myElementInfo;
   }
 
+  @RequiredReadAction
   static boolean pointsToTheSameElementAs(@NotNull SmartPsiElementPointer pointer1, @NotNull SmartPsiElementPointer pointer2) {
     if (pointer1 == pointer2) return true;
     if (pointer1 instanceof SmartPsiElementPointerImpl && pointer2 instanceof SmartPsiElementPointerImpl) {

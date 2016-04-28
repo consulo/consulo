@@ -28,6 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,6 +46,7 @@ public class DescriptorComposer extends HTMLComposerImpl {
     myTool = tool;
   }
 
+  @RequiredReadAction
   @Override
   public void compose(StringBuffer buf, RefEntity refEntity) {
     genPageHeader(buf, refEntity);
@@ -89,6 +91,7 @@ public class DescriptorComposer extends HTMLComposerImpl {
 
   protected void composeAdditionalDescription(@NotNull StringBuffer buf, @NotNull RefEntity refEntity) {}
 
+  @RequiredReadAction
   @Override
   public void compose(StringBuffer buf, RefEntity refElement, CommonProblemDescriptor descriptor) {
     CommonProblemDescriptor[] descriptions = myTool.getDescriptions(refElement);
@@ -129,7 +132,7 @@ public class DescriptorComposer extends HTMLComposerImpl {
       for (QuickFix fix : fixes) {
         //noinspection HardCodedStringLiteral
         //noinspection HardCodedStringLiteral
-        buf.append("<a HREF=\"file://bred.txt#invokelocal:" + (idx++));
+        buf.append("<a HREF=\"file://bred.txt#invokelocal:").append(idx++);
         buf.append("\">");
         buf.append(fix.getName());
         //noinspection HardCodedStringLiteral
@@ -141,6 +144,7 @@ public class DescriptorComposer extends HTMLComposerImpl {
     }
   }
 
+  @RequiredReadAction
   protected void composeDescription(@NotNull CommonProblemDescriptor description, int i, @NotNull StringBuffer buf, @NotNull RefEntity refElement) {
     PsiElement expression = description instanceof ProblemDescriptor ? ((ProblemDescriptor)description).getPsiElement() : null;
     StringBuilder anchor = new StringBuilder();

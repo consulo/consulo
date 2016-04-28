@@ -50,6 +50,7 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -178,6 +179,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     return dirs.toArray(new PsiDirectory[dirs.size()]);
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public PsiFile[] getFiles() {

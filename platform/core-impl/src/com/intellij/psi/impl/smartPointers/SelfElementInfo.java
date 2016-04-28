@@ -29,6 +29,7 @@ import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.List;
 
@@ -89,6 +90,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
+  @RequiredReadAction
   public PsiElement restoreElement() {
     Segment segment = getPsiRange();
     if (segment == null) return null;
@@ -115,6 +117,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     return restoreFileFromVirtual(getVirtualFile(), getProject(), myType.getFileLanguage());
   }
 
+  @RequiredReadAction
   public static PsiElement findElementInside(@NotNull PsiFile file,
                                              int syncStartOffset,
                                              int syncEndOffset,
@@ -141,6 +144,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Nullable
+  @RequiredReadAction
   private static PsiElement findParent(int syncStartOffset, int syncEndOffset, @NotNull AnchorTypeInfo type, PsiElement anchor) {
     TextRange range = anchor.getTextRange();
 

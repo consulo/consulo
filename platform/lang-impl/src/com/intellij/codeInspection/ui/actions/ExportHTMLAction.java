@@ -19,7 +19,10 @@ package com.intellij.codeInspection.ui.actions;
 import com.intellij.codeEditor.printing.ExportToHTMLSettings;
 import com.intellij.codeInspection.InspectionApplication;
 import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.codeInspection.ex.*;
+import com.intellij.codeInspection.ex.GlobalInspectionContextImpl;
+import com.intellij.codeInspection.ex.InspectionToolWrapper;
+import com.intellij.codeInspection.ex.ScopeToolState;
+import com.intellij.codeInspection.ex.Tools;
 import com.intellij.codeInspection.export.ExportToHTMLDialog;
 import com.intellij.codeInspection.export.HTMLExportFrameMaker;
 import com.intellij.codeInspection.export.HTMLExportUtil;
@@ -55,6 +58,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.io.File;
@@ -76,8 +81,9 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     myView = view;
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final ListPopup popup = JBPopupFactory.getInstance().createListPopup(
       new BaseListPopupStep<String>(InspectionsBundle.message("inspection.action.export.popup.title"), new String[]{HTML, XML}) {
         @Override
@@ -120,7 +126,12 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
                   @Override
                   public boolean accept(final Object node) {
                     if (node instanceof InspectionNode) {
-                      exportHTML(maker, (InspectionNode)node);
+                      ApplicationManager.getApplication().runReadAction(new Runnable() {
+                        @Override
+                        public void run() {
+                          exportHTML(maker, (InspectionNode)node);
+                        }
+                      });
                     }
                     return true;
                   }
@@ -221,6 +232,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     return result;
   }
 
+  @RequiredReadAction
   private void exportHTML(HTMLExportFrameMaker frameMaker, InspectionNode node) {
     final Set<InspectionToolWrapper> toolWrappers = getWorkedTools(node);
     final InspectionToolWrapper toolWrapper = node.getToolWrapper();
@@ -230,6 +242,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     frameMaker.startInspection(toolWrapper);
     HTMLExportUtil.runExport(myView.getProject(), new ThrowableRunnable<IOException>() {
       @Override
+      @RequiredReadAction
       public void run() throws IOException {
         exportHTML(toolWrappers, exporter);
         exporter.generateReferencedPages();
@@ -238,6 +251,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @RequiredReadAction
   private void exportHTML(@NotNull Set<InspectionToolWrapper> toolWrappers, HTMLExporter exporter) throws IOException {
     StringBuffer packageIndex = new StringBuffer();
     packageIndex.append("<html><body>");

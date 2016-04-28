@@ -23,6 +23,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * User: cdr
@@ -38,6 +39,7 @@ class HardElementInfo extends SmartPointerElementInfo {
     myProject = project;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement restoreElement() {
     return myElement;

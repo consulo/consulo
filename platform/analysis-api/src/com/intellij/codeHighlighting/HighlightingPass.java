@@ -17,6 +17,7 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.openapi.progress.ProgressIndicator;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 public interface HighlightingPass {
   HighlightingPass[] EMPTY_ARRAY = new HighlightingPass[0];
@@ -28,6 +29,7 @@ public interface HighlightingPass {
    * @param progress to check for highlighting process is cancelled. Pass is to check progress.isCanceled() as often as possible and
    * throw {@link com.intellij.openapi.progress.ProcessCanceledException} if <code>true</code> is returned.
    */
+  @RequiredReadAction
   void collectInformation(@NotNull ProgressIndicator progress);
 
   /**

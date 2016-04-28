@@ -53,6 +53,7 @@ class SlowLineMarkersPass extends TextEditorHighlightingPass implements LineMark
     myBounds = bounds;
   }
 
+  @RequiredReadAction
   @Override
   public void doCollectInformation(@NotNull ProgressIndicator progress) {
     final FileViewProvider viewProvider = myFile.getViewProvider();

@@ -32,6 +32,7 @@ import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collections;
 import java.util.List;
@@ -99,6 +100,7 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
     return getInjectedRange(true);
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement restoreElement() {
     PsiFile hostFile = myHostContext.getContainingFile();

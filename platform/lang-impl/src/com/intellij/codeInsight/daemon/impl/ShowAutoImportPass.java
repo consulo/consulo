@@ -42,6 +42,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     myFile = file;
   }
 
+  @RequiredReadAction
   @Override
   public void doCollectInformation(@NotNull ProgressIndicator progress) {
   }

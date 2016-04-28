@@ -34,6 +34,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.update.Update;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.*;
 
@@ -81,6 +82,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
     myExternalToolPassFactory = externalToolPassFactory;
   }
 
+  @RequiredReadAction
   @Override
   public void doCollectInformation(@NotNull ProgressIndicator progress) {
     myDocumentChanged = false;

@@ -24,6 +24,7 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 @Deprecated
 public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiElementPointer<T> {
@@ -50,6 +51,7 @@ public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiEleme
     return myFile.getVirtualFile();
   }
 
+  @RequiredReadAction
   @Override
   public T getElement() {
     T element = myElement;
@@ -66,6 +68,7 @@ public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiEleme
            && SmartPointerManager.getInstance(getProject()).pointToTheSameElement(this, (SmartPsiElementPointer)obj);
   }
 
+  @RequiredReadAction
   @Override
   public PsiFile getContainingFile() {
     return myFile;

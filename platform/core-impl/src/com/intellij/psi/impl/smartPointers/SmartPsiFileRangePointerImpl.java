@@ -22,6 +22,7 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * User: cdr
@@ -45,6 +46,7 @@ class SmartPsiFileRangePointerImpl extends SmartPsiElementPointerImpl<PsiFile> i
     return new SelfElementInfo(project, range, AnchorTypeInfo.obtainInfo(PsiElement.class, null, LanguageUtil.getRootLanguage(containingFile)), containingFile, forInjected);
   }
 
+  @RequiredReadAction
   @Override
   public PsiFile getElement() {
     if (getRange() == null) return null; // range is invalid

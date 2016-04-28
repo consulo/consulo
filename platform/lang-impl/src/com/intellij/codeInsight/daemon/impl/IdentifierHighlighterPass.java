@@ -44,6 +44,7 @@ import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.*;
 
@@ -66,6 +67,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     myCaretOffset = myEditor.getCaretModel().getOffset();
   }
 
+  @RequiredReadAction
   @Override
   public void doCollectInformation(@NotNull final ProgressIndicator progress) {
     @SuppressWarnings("unchecked") HighlightUsagesHandlerBase<PsiElement> handler = HighlightUsagesHandler.createCustomHandler(myEditor, myFile);
