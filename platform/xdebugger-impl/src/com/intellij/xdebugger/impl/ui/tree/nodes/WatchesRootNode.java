@@ -45,7 +45,9 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
   private final XWatchesView myWatchesView;
   private final List<WatchNodeImpl> myChildren;
 
-  public WatchesRootNode(@NotNull XDebuggerTree tree, @NotNull XWatchesView watchesView, @NotNull XExpression[] expressions) {
+  public WatchesRootNode(@NotNull XDebuggerTree tree,
+                         @NotNull XWatchesView watchesView,
+                         @NotNull XExpression[] expressions) {
     this(tree, watchesView, expressions, null, false);
   }
 
@@ -97,15 +99,27 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
     myChildren.clear();
   }
 
+  public void computeWatches() {
+    for (WatchNodeImpl child : myChildren) {
+      child.computePresentationIfNeeded();
+    }
+  }
+
   /**
    * @deprecated Use {@link #addWatchExpression(XStackFrame, XExpression, int, boolean)}
    */
   @Deprecated
-  public void addWatchExpression(@Nullable XDebuggerEvaluator evaluator, @NotNull XExpression expression, int index, boolean navigateToWatchNode) {
+  public void addWatchExpression(@Nullable XDebuggerEvaluator evaluator,
+                                 @NotNull XExpression expression,
+                                 int index,
+                                 boolean navigateToWatchNode) {
     addWatchExpression((XStackFrame)null, expression, index, navigateToWatchNode);
   }
 
-  public void addWatchExpression(@Nullable XStackFrame stackFrame, @NotNull XExpression expression, int index, boolean navigateToWatchNode) {
+  public void addWatchExpression(@Nullable XStackFrame stackFrame,
+                                 @NotNull XExpression expression,
+                                 int index,
+                                 boolean navigateToWatchNode) {
     WatchNodeImpl message = new WatchNodeImpl(myTree, this, expression, stackFrame);
     if (index == -1) {
       myChildren.add(message);
@@ -174,7 +188,7 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
     int index = node != null ? myChildren.indexOf(node) : -1;
     if (index == -1) {
       int selectedIndex = myChildren.indexOf(ArrayUtil.getFirstElement(myTree.getSelectedNodes(WatchNodeImpl.class, null)));
-      int targetIndex = selectedIndex == -1 ? myChildren.size() : selectedIndex + 1;
+      int targetIndex = selectedIndex == - 1 ? myChildren.size() : selectedIndex + 1;
       messageNode = new WatchNodeImpl(myTree, this, XExpressionImpl.EMPTY_EXPRESSION, null);
       myChildren.add(targetIndex, messageNode);
       fireNodeInserted(targetIndex);

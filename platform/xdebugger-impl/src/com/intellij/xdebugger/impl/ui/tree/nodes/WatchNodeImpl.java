@@ -31,24 +31,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.Promise;
 
-import javax.swing.*;
-
 /**
  * @author nik
  */
 public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
   private final XExpression myExpression;
 
-  public WatchNodeImpl(@NotNull XDebuggerTree tree, @NotNull WatchesRootNode parent, @NotNull XExpression expression, @Nullable XStackFrame stackFrame) {
-    super(tree, parent, expression.getExpression(),
-          new XWatchValue(expression, tree.isShowing() || ApplicationManager.getApplication().isUnitTestMode() ? stackFrame : null));
+  public WatchNodeImpl(@NotNull XDebuggerTree tree,
+                       @NotNull WatchesRootNode parent,
+                       @NotNull XExpression expression,
+                       @Nullable XStackFrame stackFrame) {
+    super(tree, parent, expression.getExpression(), new XWatchValue(expression, tree, stackFrame));
     myExpression = expression;
-  }
-
-  @Nullable
-  @Override
-  public Icon getIcon() {
-    return getValuePresentation() instanceof XErrorValuePresentation ? XDebuggerUIConstants.ERROR_MESSAGE_ICON : AllIcons.Debugger.Watch;
   }
 
   @Override
@@ -57,14 +51,30 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
     return myExpression;
   }
 
+  @NotNull
+  @Override
+  public XValue getValueContainer() {
+    XValue container = super.getValueContainer();
+    XValue value = ((XWatchValue)container).myValue;
+    return value != null ? value : container;
+  }
+
+  void computePresentationIfNeeded() {
+    if (getValuePresentation() == null) {
+      getValueContainer().computePresentation(this, XValuePlace.TREE);
+    }
+  }
+
   private static class XWatchValue extends XNamedValue {
     private final XExpression myExpression;
+    private final XDebuggerTree myTree;
     private final XStackFrame myStackFrame;
     private volatile XValue myValue;
 
-    public XWatchValue(XExpression expression, XStackFrame stackFrame) {
+    public XWatchValue(XExpression expression, XDebuggerTree tree, XStackFrame stackFrame) {
       super(expression.getExpression());
       myExpression = expression;
+      myTree = tree;
       myStackFrame = stackFrame;
     }
 
@@ -78,13 +88,15 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
     @Override
     public void computePresentation(@NotNull XValueNode node, @NotNull XValuePlace place) {
       if (myStackFrame != null) {
-        XDebuggerEvaluator evaluator = myStackFrame.getEvaluator();
-        if (evaluator != null) {
-          evaluator.evaluate(myExpression, new MyEvaluationCallback(node, place), myStackFrame.getSourcePosition());
+        if (myTree.isShowing() || ApplicationManager.getApplication().isUnitTestMode()) {
+          XDebuggerEvaluator evaluator = myStackFrame.getEvaluator();
+          if (evaluator != null) {
+            evaluator.evaluate(myExpression, new MyEvaluationCallback(node, place), myStackFrame.getSourcePosition());
+          }
         }
       }
       else {
-        node.setPresentation(null, EMPTY_PRESENTATION, false);
+        node.setPresentation(AllIcons.Debugger.Watch, EMPTY_PRESENTATION, false);
       }
     }
 

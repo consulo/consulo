@@ -136,7 +136,7 @@ public class XLineBreakpointManager {
   public void updateBreakpointsUI() {
     if (myProject.isDefault()) return;
 
-    Runnable runnable = new DumbAwareRunnable() {
+    DumbAwareRunnable runnable = new DumbAwareRunnable() {
       @Override
       public void run() {
         for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
