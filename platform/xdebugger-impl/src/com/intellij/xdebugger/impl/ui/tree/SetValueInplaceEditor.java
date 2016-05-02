@@ -16,16 +16,15 @@
 package com.intellij.xdebugger.impl.ui.tree;
 
 import com.intellij.codeInsight.hint.HintManager;
-import com.intellij.ide.DataManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.SimpleColoredComponent;
+import com.intellij.util.Consumer;
 import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
-import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
-import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
+import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
@@ -101,45 +100,20 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
     if (myModifier == null) return;
 
     myExpressionEditor.saveTextInHistory();
-    final XDebuggerTreeState treeState = XDebuggerTreeState.saveState(myTree);
-    myValueNode.setValueModificationStarted();
-    myModifier.setValue(myExpressionEditor.getExpression().getExpression(), new XValueModifier.XModificationCallback() {
+
+    DebuggerUIUtil.setTreeNodeValue(myValueNode, myExpressionEditor.getExpression().getExpression(), new Consumer<String>() {
       @Override
-      public void valueModified() {
-        if (isDetachedTree(myTree)) {
-          AppUIUtil.invokeOnEdt(new Runnable() {
-            @Override
-            public void run() {
-              myTree.rebuildAndRestore(treeState);
-            }
-          });
+      public void consume(String errorMessage) {
+        Editor editor = myExpressionEditor.getEditor();
+        if (editor != null) {
+          HintManager.getInstance().showErrorHint(editor, errorMessage);
         }
-        XDebuggerUtilImpl.rebuildAllSessionsViews(getProject());
-      }
-
-      @Override
-      public void errorOccurred(@NotNull final String errorMessage) {
-        AppUIUtil.invokeOnEdt(new Runnable() {
-          @Override
-          public void run() {
-            myTree.rebuildAndRestore(treeState);
-
-            Editor editor = myExpressionEditor.getEditor();
-            if (editor != null) {
-              HintManager.getInstance().showErrorHint(editor, errorMessage);
-            }
-            else {
-              Messages.showErrorDialog(myTree, errorMessage);
-            }
-          }
-        });
-        XDebuggerUtilImpl.rebuildAllSessionsViews(getProject());
-      }
-
-      boolean isDetachedTree(XDebuggerTree tree) {
-        return XDebugSessionTab.TAB_KEY.getData(DataManager.getInstance().getDataContext(tree)) == null;
+        else {
+          Messages.showErrorDialog(myTree, errorMessage);
+        }
       }
     });
+
     super.doOKAction();
   }
 }

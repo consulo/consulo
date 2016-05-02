@@ -143,7 +143,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         else {
           List<? extends XLineBreakpointType<P>.XLineBreakpointVariant> variants = type.computeVariants(project, position);
           if (!variants.isEmpty() && editor != null) {
-            RelativePoint relativePoint = DebuggerUIUtil.calcPopupLocation(editor, line);
+            RelativePoint relativePoint = DebuggerUIUtil.getPositionForPopup(editor, line);
             if (variants.size() > 1 && relativePoint != null) {
               final AsyncResult<XLineBreakpoint> res = new AsyncResult<XLineBreakpoint>();
               class MySelectionListener implements ListSelectionListener {
@@ -233,6 +233,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
                 }
               });
               DebuggerUIUtil.registerExtraHandleShortcuts(popup, IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT);
+              popup.setAdText(DebuggerUIUtil.getSelectionShortcutsAdText(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT));
               popup.addListSelectionListener(selectionListener);
               popup.show(relativePoint);
               result.setResult(res);
