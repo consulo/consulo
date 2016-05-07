@@ -17,10 +17,13 @@
 package com.intellij.xdebugger.breakpoints;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
@@ -28,7 +31,8 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
+import org.mustbe.consulo.Exported;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -49,15 +53,6 @@ import java.util.List;
 public abstract class XLineBreakpointType<P extends XBreakpointProperties> extends XBreakpointType<XLineBreakpoint<P>,P> {
   protected XLineBreakpointType(@NonNls @NotNull final String id, @Nls @NotNull final String title) {
     super(id, title);
-  }
-
-  /**
-   * Return <code>true<code> if breakpoint can be put on <code>line</code> in <code>file</code>
-   */
-  @Deprecated
-  @DeprecationInfo(value = "Use XLineBreakpointResolver", until = "1.0")
-  public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project) {
-    return false;
   }
 
   /**
@@ -130,15 +125,85 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   }
 
   public abstract class XLineBreakpointVariant {
+    @RequiredReadAction
+    @NotNull
     public abstract String getText();
 
     @Nullable
+    @RequiredReadAction
     public abstract Icon getIcon();
 
     @Nullable
+    @RequiredReadAction
     public abstract TextRange getHighlightRange();
 
     @Nullable
     public abstract P createProperties();
+  }
+
+  public class XLineBreakpointAllVariant extends XLineBreakpointVariant {
+    protected final XSourcePosition mySourcePosition;
+
+    public XLineBreakpointAllVariant(@NotNull XSourcePosition position) {
+      mySourcePosition = position;
+    }
+
+    @NotNull
+    @RequiredReadAction
+    @Override
+    public String getText() {
+      return "All";
+    }
+
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public Icon getIcon() {
+      return null;
+    }
+
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public TextRange getHighlightRange() {
+      return null;
+    }
+
+    @Override
+    @Nullable
+    public P createProperties() {
+      return createBreakpointProperties(mySourcePosition.getFile(),
+                                        mySourcePosition.getLine());
+    }
+  }
+
+  @Exported
+  public class XLinePsiElementBreakpointVariant extends XLineBreakpointAllVariant {
+    private final PsiElement myElement;
+
+    public XLinePsiElementBreakpointVariant(@NotNull XSourcePosition position, PsiElement element) {
+      super(position);
+
+      myElement = element;
+    }
+
+    @RequiredReadAction
+    @Override
+    public Icon getIcon() {
+      return IconDescriptorUpdaters.getIcon(myElement, 0);
+    }
+
+    @NotNull
+    @RequiredReadAction
+    @Override
+    public String getText() {
+      return StringUtil.shortenTextWithEllipsis(myElement.getText(), 100, 0);
+    }
+
+    @RequiredReadAction
+    @Override
+    public TextRange getHighlightRange() {
+      return myElement.getTextRange();
+    }
   }
 }

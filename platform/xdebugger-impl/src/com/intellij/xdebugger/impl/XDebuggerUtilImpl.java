@@ -66,6 +66,7 @@ import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import com.intellij.xdebugger.ui.DebuggerColors;
+import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -101,7 +102,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   public void toggleLineBreakpoint(@NotNull final Project project, @NotNull final VirtualFile file, final int line, boolean temporary) {
-    XLineBreakpointType<?> breakpointType = XLineBreakpointResolverExtension.INSTANCE.resolveBreakpointType(project, file, line);
+    XLineBreakpointType<?> breakpointType = XLineBreakpointResolverTypeExtension.INSTANCE.resolveBreakpointType(project, file, line);
     if (breakpointType != null) {
       toggleLineBreakpoint(project, breakpointType, file, line, temporary);
     }
@@ -109,7 +110,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   public boolean canPutBreakpointAt(@NotNull Project project, @NotNull VirtualFile file, int line) {
-    return XLineBreakpointResolverExtension.INSTANCE.resolveBreakpointType(project, file, line) != null;
+    return XLineBreakpointResolverTypeExtension.INSTANCE.resolveBreakpointType(project, file, line) != null;
   }
 
   @Override

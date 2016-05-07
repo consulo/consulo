@@ -40,7 +40,7 @@ import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.breakpoints.XLineBreakpointResolverExtension;
+import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import org.jetbrains.annotations.NotNull;
@@ -242,7 +242,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
 
   private boolean canMoveTo(int line, VirtualFile file) {
     return file != null &&
-           XLineBreakpointResolverExtension.INSTANCE.resolveBreakpointType(getProject(), file, line) != null &&
+           XLineBreakpointResolverTypeExtension.INSTANCE.resolveBreakpointType(getProject(), file, line) != null &&
            getBreakpointManager().findBreakpointAtLine(myType, file, line) == null;
   }
 

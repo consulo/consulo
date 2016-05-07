@@ -34,6 +34,7 @@ import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
+import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -166,7 +167,7 @@ public class XBreakpointUtil {
         }
       }
 
-      XLineBreakpointType<?> breakpointType = XLineBreakpointResolverExtension.INSTANCE.resolveBreakpointType(project, file, line);
+      XLineBreakpointType<?> breakpointType = XLineBreakpointResolverTypeExtension.INSTANCE.resolveBreakpointType(project, file, line);
       if(breakpointType != null) {
         typeWinner = breakpointType;
         lineWinner = line;
