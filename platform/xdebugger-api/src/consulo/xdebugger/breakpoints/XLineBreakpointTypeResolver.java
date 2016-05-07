@@ -20,6 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -27,5 +28,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface XLineBreakpointTypeResolver {
   @Nullable
+  @RequiredReadAction
   XLineBreakpointType<?> resolveBreakpointType(@NotNull Project project, @NotNull VirtualFile virtualFile, int line);
 }
