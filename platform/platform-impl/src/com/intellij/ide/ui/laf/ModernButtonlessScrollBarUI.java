@@ -247,7 +247,7 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
       w += JBUI.scale(1);
     }
 
-    g.setColor(adjustColor(new JBColor(Gray._251, Gray._80)));
+    g.setColor(adjustColor(new JBColor(Gray._230, Gray._80)));
     g.fillRect(hGap, vGap, w, h);
 
     g.setColor(new JBColor(Gray._201, Gray._85));
