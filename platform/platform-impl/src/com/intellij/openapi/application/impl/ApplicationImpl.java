@@ -70,6 +70,7 @@ import org.jetbrains.ide.PooledThreadExecutor;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.RequiredWriteAction;
+import org.mustbe.consulo.application.ApplicationProperties;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.*;
@@ -199,7 +200,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     myName = appName;
 
     myIsInternal = isInternal;
-    myTestModeFlag = isUnitTestMode;
+    myTestModeFlag = isUnitTestMode || Boolean.getBoolean(ApplicationProperties.CONSULO_AS_WEB_APP);
     myHeadlessMode = isHeadless;
     myCommandLineMode = isCommandLine;
 

@@ -1,0 +1,18 @@
+#leftGutter {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  background-color: #D8D8D8;
+  border-right: #D8D8D8 solid 1px;
+
+  padding-left: 5px;
+  padding-right: 5px;
+
+  margin-right: 5px;
+
+  text-align: right;
+}

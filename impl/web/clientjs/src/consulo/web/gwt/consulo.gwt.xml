@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='consulo'>
+
+  <inherits name='com.google.gwt.user.RemoteService' />
+  <inherits name='com.google.gwt.user.User' />
+  <inherits name='com.google.gwt.user.theme.standard.Standard' />
+
+  <entry-point class='consulo.web.gwt.client.GwtMain' />
+
+  <source path='client' />
+
+
+
+
+</module>

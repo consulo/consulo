@@ -1082,6 +1082,57 @@
           <orderEntry type="module" module-name="core-api" exported="" />
         </module-layer>
       </module>
+      <module name="web" dirurl="file://$PROJECT_DIR$/impl/web" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="java-web" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="WEB_RESOURCES" url="file://$MODULE_DIR$/webapp" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/lib/servlet-api.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
+          <orderEntry type="module" module-name="bootstrap" />
+          <orderEntry type="module" module-name="core-impl" />
+          <orderEntry type="library" name="Log4J" level="project" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/lib/gwt-servlet-deps.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/lib/gwt-servlet.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
+          <orderEntry type="module" module-name="lang-impl" />
+        </module-layer>
+      </module>
+      <module name="clientjs" dirurl="file://$PROJECT_DIR$/impl/web/clientjs" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <extension id="java-web" />
+          <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="DETAILED" compiler-path="R:\_github.com\consulo\consulo\impl\web\clientjs\target" compiler-max-heap-size="256" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="module-extension-sdk" extension-id="javaee-google-gwt" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
+      </module>
     </modules>
   </component>
 </project>

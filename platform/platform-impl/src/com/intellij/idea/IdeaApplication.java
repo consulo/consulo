@@ -19,7 +19,6 @@ import com.intellij.Patches;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeRepaintManager;
 import com.intellij.idea.starter.ApplicationStarter;
-import com.intellij.idea.starter.DefaultApplicationStarter;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
@@ -34,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.application.ApplicationProperties;
 
 import javax.swing.*;
+import java.lang.reflect.Constructor;
 
 public class IdeaApplication {
   private static final Logger LOG = Logger.getInstance(IdeaApplication.class);
@@ -61,12 +61,13 @@ public class IdeaApplication {
     myArgs = args;
     boolean isInternal = Boolean.getBoolean(ApplicationProperties.IDEA_IS_INTERNAL);
     boolean isUnitTest = Boolean.getBoolean(ApplicationProperties.CONSULO_IN_UNIT_TEST);
+    boolean asWebApp = Boolean.getBoolean(ApplicationProperties.CONSULO_AS_WEB_APP);
 
     boolean headless = Main.isHeadless();
 
     patchSystem(headless);
 
-    myStarter = createStarter(isUnitTest);
+    myStarter = createStarter(isUnitTest, asWebApp);
 
     Splash splash = myStarter.createSplash(myArgs);
 
@@ -100,13 +101,26 @@ public class IdeaApplication {
   }
 
   @NotNull
-  private ApplicationStarter createStarter(boolean isUnitTest) {
-    if(isUnitTest) {
-      // this class exists in another module. We can't move it to this module, due it will provide junit dependency
-      Class unityTestStarter = ReflectionUtil.forName("com.intellij.idea.starter.UnitTestStarter");
-      return (ApplicationStarter)ReflectionUtil.newInstance(unityTestStarter);
+  private ApplicationStarter createStarter(boolean isUnitTest, boolean asWebApp) {
+    Class<?> starterClass = ReflectionUtil.forName(getStarterClass(isUnitTest, asWebApp));
+
+    try {
+      Constructor constructor = starterClass.getConstructor(IdeaApplication.class);
+      constructor.setAccessible(true);
+      return (ApplicationStarter)ReflectionUtil.createInstance(constructor, this);
     }
-    return new DefaultApplicationStarter(this);
+    catch (NoSuchMethodException e) {
+      throw new Error(e);
+    }
+  }
+
+  @NotNull
+  private static String getStarterClass(boolean isUnitTest, boolean asWebApp) {
+    if (isUnitTest) {
+      return "com.intellij.idea.starter.UnitTestStarter";
+    }
+
+    return asWebApp ? "consulo.web.main.WebStarter" : "com.intellij.idea.starter.DefaultApplicationStarter";
   }
 
   public void run() {

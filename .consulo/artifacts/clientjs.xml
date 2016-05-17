@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact name="clientjs">
+    <output-path>$PROJECT_DIR$/out/artifacts/clientjs</output-path>
+    <root id="root">
+      <element id="dir-copy" path="$PROJECT_DIR$/impl/web/clientjs/target" />
+    </root>
+  </artifact>
+</component>
