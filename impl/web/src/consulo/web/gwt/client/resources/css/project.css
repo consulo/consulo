@@ -15,6 +15,10 @@ pre {
   margin-bottom: 0;
 }
 
+.alert {
+  margin-bottom: 0;
+}
+
 #leftGutter {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -31,9 +35,6 @@ pre {
   margin-right: 5px;
 
   text-align: right;
-}
-
-.textAfterIcon16 {
 }
 
 .textAfterIcon18 {

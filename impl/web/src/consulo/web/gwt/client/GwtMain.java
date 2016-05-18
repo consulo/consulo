@@ -68,7 +68,6 @@ public class GwtMain implements EntryPoint {
     serviceAsync.getProjectDirectory(new AsyncCallback<GwtVirtualFile>() {
       @Override
       public void onFailure(Throwable caught) {
-        Window.alert(caught.getMessage());
       }
 
       @Override
@@ -102,7 +101,6 @@ public class GwtMain implements EntryPoint {
         serviceAsync.getContent(virtualFile.getUrl(), new AsyncCallback<String>() {
           @Override
           public void onFailure(Throwable caught) {
-            Window.alert(caught.getMessage());
           }
 
           @Override
@@ -160,7 +158,6 @@ public class GwtMain implements EntryPoint {
     serviceAsync.runHighlightPasses(virtualFile.getUrl(), new AsyncCallback<List<GwtHighlightInfo>>() {
       @Override
       public void onFailure(Throwable caught) {
-        Window.alert(caught.getMessage());
       }
 
       @Override
@@ -176,7 +173,6 @@ public class GwtMain implements EntryPoint {
     String rightIcon = virtualFile.getRightIcon();
     if (rightIcon != null) {
       Widget rightIconWidget = icon(Arrays.asList(rightIcon));
-      rightIconWidget.addStyleName("textAfterIcon16");
       panel.add(rightIconWidget);
     }
 
