@@ -71,3 +71,12 @@ pre {
   top: 0;
   left: 0;
 }
+
+.disableOverflow {
+  overflow: visible;
+}
+
+.gwt-HorizontalSplitPanel2 .hsplitter {
+  width: 2px;
+  background-color: silver;
+}

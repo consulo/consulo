@@ -117,11 +117,25 @@ public class Editor {
       grid.setWidget(i, 1, lineSpan);
     }
 
-    ScrollPanel scrollPanel = new ScrollPanel(grid);
+    CustomScrollPanel scrollPanel = new CustomScrollPanel(grid);
     scrollPanel.setAlwaysShowScrollBars(true);
     scrollPanel.setHeight("100%");
     scrollPanel.setWidth("100%");
-    myPanel.setWidget(grid);
+
+    DockPanel panel = new DockPanel();
+    panel.add(grid, DockPanel.CENTER);
+
+    VerticalPanel markerPanel = new VerticalPanel();
+    markerPanel.add(new HTML("1"));
+    markerPanel.add(new HTML("2"));
+    markerPanel.add(new HTML("3"));
+
+    markerPanel.setWidth("16px");
+    markerPanel.setHeight("100%");
+
+    panel.add(markerPanel, DockPanel.EAST);
+
+    myPanel.setWidget(panel);
   }
 
   public Widget getComponent() {

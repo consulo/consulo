@@ -21,17 +21,14 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtVirtualFile;
+import consulo.web.gwt.client.ui.DoubleClickTree;
 import consulo.web.gwt.client.ui.DoubleClickTreeEvent;
 import consulo.web.gwt.client.ui.DoubleClickTreeHandler;
 import consulo.web.gwt.client.ui.Editor;
-import consulo.web.gwt.client.ui.DoubleClickTree;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.GwtTransportServiceAsync;
 import org.cafesip.gwtcomp.client.ui.SuperTreeItem;
@@ -50,8 +47,8 @@ public class GwtMain implements EntryPoint {
 
   @Override
   public void onModuleLoad() {
-    final VerticalPanel globalPanel = new VerticalPanel();
-    globalPanel.setWidth("100%");
+    final SimplePanel globalPanel = new SimplePanel();
+    /*globalPanel.setWidth("100%");
     globalPanel.setHeight(Window.getClientHeight() + "px");
     Window.addResizeHandler(new ResizeHandler() {
       @Override
@@ -59,13 +56,13 @@ public class GwtMain implements EntryPoint {
         int height = event.getHeight();
         globalPanel.setHeight(height + "px");
       }
-    });
+    });*/
 
     final GwtTransportServiceAsync serviceAsync = GWT.create(GwtTransportService.class);
 
     final com.github.gwtbootstrap.client.ui.TabPanel tabPanel = new com.github.gwtbootstrap.client.ui.TabPanel();
 
-    HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
+    consulo.web.gwt.client.ui.HorizontalSplitPanel splitPanel = new consulo.web.gwt.client.ui.HorizontalSplitPanel();
     splitPanel.setSplitPosition("20%");
 
     final DoubleClickTree tree = new DoubleClickTree();
@@ -131,6 +128,10 @@ public class GwtMain implements EntryPoint {
             tabPanel.add(tabLink);
 
             TabPane tabPane = tabLink.getTabPane();
+            tabPane.setHeight("100%");
+            tabPane.setWidth("100%");
+            tabPane.addStyleName("disableOverflow");
+
             tabPane.add(editor.getComponent());
 
             // TabPanel can't return tab size???
