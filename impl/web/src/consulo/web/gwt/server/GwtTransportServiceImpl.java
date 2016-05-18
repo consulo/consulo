@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.servlet;
+package consulo.web.gwt.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
@@ -39,12 +39,14 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import consulo.web.gwt.client.GwtTransportService;
+import consulo.web.gwt.client.transport.GwtColor;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtTextRange;
 import consulo.web.gwt.client.transport.GwtVirtualFile;
+import consulo.web.gwt.shared.GwtTransportService;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -82,7 +84,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
 
   @Override
   public GwtVirtualFile getProjectDirectory() {
-    return new GwtVirtualFile(getProject(), getProject().getBaseDir());
+    return GwtVirtualFileUtil.createVirtualFile(getProject(), getProject().getBaseDir());
   }
 
   @Override
@@ -124,7 +126,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
             int end = iterator.getEnd();
             TextAttributes textAttributes = iterator.getTextAttributes();
 
-            GwtHighlightInfo highlightInfo = new GwtHighlightInfo(textAttributes, new GwtTextRange(start, end));
+            GwtHighlightInfo highlightInfo = createHighlightInfo(textAttributes, new GwtTextRange(start, end));
             if (!highlightInfo.isEmpty()) {
               list.add(highlightInfo);
             }
@@ -136,6 +138,28 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     }
 
     return Collections.emptyList();
+  }
+
+
+  public static GwtHighlightInfo createHighlightInfo(TextAttributes textAttributes, GwtTextRange textRange) {
+    GwtColor foreground = null;
+    boolean bold = false;
+    boolean italic = false;
+    GwtTextRange myTextRange = null;
+
+    Color foreColor = textAttributes.getForegroundColor();
+    if (foreColor != null) {
+      foreground = new GwtColor(foreColor.getRed(), foreColor.getGreen(), foreColor.getBlue());
+
+    }
+    if ((textAttributes.getFontType() & Font.BOLD) != 0) {
+      bold = true;
+    }
+    if ((textAttributes.getFontType() & Font.ITALIC) != 0) {
+      italic = true;
+    }
+    myTextRange = textRange;
+    return new GwtHighlightInfo(foreground, bold, italic, myTextRange);
   }
 
   @Override
@@ -169,7 +193,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
                   if (textAttributes == null) {
                     continue;
                   }
-                  GwtHighlightInfo info = new GwtHighlightInfo(textAttributes, new GwtTextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()));
+                  GwtHighlightInfo info = createHighlightInfo(textAttributes, new GwtTextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()));
                   list.add(info);
                 }
               }

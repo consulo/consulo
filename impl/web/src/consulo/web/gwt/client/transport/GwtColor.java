@@ -17,8 +17,6 @@ package consulo.web.gwt.client.transport;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import java.awt.*;
-
 /**
  * @author VISTALL
  * @since 17-May-16
@@ -34,9 +32,9 @@ public class GwtColor implements IsSerializable{
     myGreen = green;
   }
 
-  public GwtColor(Color color) {
-    this(color.getRed(), color.getGreen(), color.getBlue());
+  public GwtColor() {
   }
+
 
   public int getRed() {
     return myRed;

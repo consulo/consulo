@@ -35,83 +35,27 @@ import java.util.List;
  * @since 16-May-16
  */
 public class GwtVirtualFile implements IsSerializable {
-  private String url;
+  public String url;
 
-  private List<String> iconLayers = new ArrayList<String>();
+  public List<String> iconLayers = new ArrayList<String>();
 
-  private String rightIcon;
+  public String rightIcon;
 
-  private String name;
+  public String name;
 
-  private List<GwtVirtualFile> children = new ArrayList<GwtVirtualFile>();
+  public List<GwtVirtualFile> children = new ArrayList<GwtVirtualFile>();
 
-  private boolean isDirectory;
+  public boolean isDirectory;
 
-  public GwtVirtualFile(final Project project, final VirtualFile virtualFile) {
-    url = virtualFile.getUrl();
-    name = virtualFile.getName();
-    isDirectory = virtualFile.isDirectory();
-
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        Icon icon = IconUtil.getIcon(virtualFile, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY, project);
-        if (icon instanceof DeferredIcon) {
-          icon = ((DeferredIcon)icon).evaluate();
-        }
-
-        if(setIconLayers(icon, iconLayers)) {
-          return;
-        }
-
-        if (icon instanceof RowIcon) {
-          int iconCount = ((RowIcon)icon).getIconCount();
-          for (int i = 0; i < iconCount; i++) {
-            Icon nextIcon = ((RowIcon)icon).getIcon(i);
-
-            if(i == 0) {
-              setIconLayers(nextIcon, iconLayers);
-            }
-            else if(i == 1) {
-              List<String> list = new SmartList<String>();
-              setIconLayers(nextIcon, list);
-              if(!list.isEmpty()) {
-                rightIcon = list.get(0);
-              }
-            }
-          }
-        }
-      }
-    });
-
-    VirtualFile[] children = virtualFile.getChildren();
-    for (VirtualFile child : children) {
-      this.children.add(new GwtVirtualFile(project, child));
-    }
+  public GwtVirtualFile() {
   }
 
-  private static boolean setIconLayers(Icon icon, List<String> list) {
-    if(icon instanceof RowIcon) {
-      return false;
-    }
-    if (icon instanceof LayeredIcon) {
-      Icon[] allLayers = ((LayeredIcon)icon).getAllLayers();
-      for (Icon layerIcon : allLayers) {
-        String maybeUrl = layerIcon.toString();
-        int i = maybeUrl.indexOf("!/");
-        if (i != -1) {
-          list.add(maybeUrl.substring(i + 2, maybeUrl.length()));
-        }
-      }
-    }
-    else {
-      String maybeUrl = icon.toString();
-      int i = maybeUrl.indexOf("!/");
-      if (i != -1) {
-        list.add(maybeUrl.substring(i + 2, maybeUrl.length()));
-      }
-    }
-    return true;
+  public List<String> getIconLayers() {
+    return iconLayers;
+  }
+
+  public String getRightIcon() {
+    return rightIcon;
   }
 
   public String getUrl() {

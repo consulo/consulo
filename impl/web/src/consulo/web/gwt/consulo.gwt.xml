@@ -9,6 +9,7 @@
 
   <entry-point class='consulo.web.gwt.client.GwtMain' />
 
+  <source path='shared' />
   <source path='client' />
 
 

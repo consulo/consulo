@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client;
+package consulo.web.gwt.shared;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;

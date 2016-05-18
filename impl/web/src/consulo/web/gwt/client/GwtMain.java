@@ -27,6 +27,8 @@ import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtVirtualFile;
 import consulo.web.gwt.client.ui.Editor;
+import consulo.web.gwt.shared.GwtTransportService;
+import consulo.web.gwt.shared.GwtTransportServiceAsync;
 
 import java.util.Arrays;
 import java.util.HashMap;

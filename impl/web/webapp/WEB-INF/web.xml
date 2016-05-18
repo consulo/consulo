@@ -28,7 +28,7 @@
 
   <servlet>
     <servlet-name>gwtTransportServerImpl</servlet-name>
-    <servlet-class>consulo.web.servlet.GwtTransportServiceImpl</servlet-class>
+    <servlet-class>consulo.web.gwt.server.GwtTransportServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>

@@ -40,20 +40,6 @@ public class GwtHighlightInfo implements IsSerializable {
     myTextRange = textRange;
   }
 
-  public GwtHighlightInfo(TextAttributes textAttributes, GwtTextRange textRange) {
-    Color foreColor = textAttributes.getForegroundColor();
-    if (foreColor != null) {
-      myForeground = new GwtColor(foreColor);
-    }
-    if ((textAttributes.getFontType() & Font.BOLD) != 0) {
-      myBold = true;
-    }
-    if ((textAttributes.getFontType() & Font.ITALIC) != 0) {
-      myItalic = true;
-    }
-    myTextRange = textRange;
-  }
-
   public boolean isEmpty() {
     return !myBold && !myItalic && myForeground == null;
   }

@@ -13,38 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.transport;
+package consulo.web.gwt.shared;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import consulo.web.gwt.client.transport.GwtVirtualFile;
+import consulo.web.gwt.client.transport.GwtHighlightInfo;
+
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 17-May-16
+ * @since 15-May-16
  */
-public class GwtColor implements IsSerializable{
-  private int myRed;
-  private int myGreen;
-  private int myBlue;
+@RemoteServiceRelativePath("transport")
+public interface GwtTransportService extends RemoteService {
+  GwtVirtualFile getProjectDirectory();
 
-  public GwtColor(int red, int green, int blue) {
-    myRed = red;
-    myBlue = blue;
-    myGreen = green;
-  }
+  String getContent(String fileUrl);
 
-  public GwtColor() {
-  }
+  List<GwtHighlightInfo> getLexerHighlight(String fileUrl);
 
-
-  public int getRed() {
-    return myRed;
-  }
-
-  public int getGreen() {
-    return myGreen;
-  }
-
-  public int getBlue() {
-    return myBlue;
-  }
+  List<GwtHighlightInfo> runHighlightPasses(String fileUrl);
 }

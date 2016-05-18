@@ -113,10 +113,11 @@
           <element id="file-copy" path="$PROJECT_DIR$/impl/web/lib/gwt-servlet.jar" />
         </element>
       </element>
-      <element id="artifact" artifact-name="clientjs" />
       <element id="directory" name="icons">
         <element id="module-production-resource-output" name="icons" />
+        <element id="dir-copy" path="$PROJECT_DIR$/impl/web/gwt-out" />
       </element>
+      <element id="dir-copy" path="$PROJECT_DIR$/impl/web/gwt-out" />
     </root>
   </artifact>
 </component>
