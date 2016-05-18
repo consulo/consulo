@@ -43,6 +43,8 @@ public class SegmentBuilder {
         case '<':
         case '>':
         case '\"':
+        case ' ':
+        case '\t':
           if (otherSimpleOffset != -1) {
             mySegments.add(new SimpleSegment(new GwtTextRange(otherSimpleOffset, i), text.substring(otherSimpleOffset, i)));
             otherSimpleOffset = -1;
@@ -149,6 +151,10 @@ public class SegmentBuilder {
         return "&gt;";
       case '\"':
         return "&quot;";
+      case '\t':
+        return "&emsp;";
+      case ' ':
+        return "&nbsp;";
     }
     return String.valueOf(c);
   }

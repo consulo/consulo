@@ -19,22 +19,34 @@ pre {
   margin-bottom: 0;
 }
 
-#leftGutter {
+.editorLineRow {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
-  border-right: #D8D8D8 solid 1px;
-
   padding-left: 5px;
   padding-right: 5px;
-
   margin-right: 5px;
-
   text-align: right;
+}
+
+.editorLineColumn {
+  border-right: #D8D8D8 solid 1px;
+}
+
+.editorCodeColumn {
+
+}
+
+.editorLine {
+  font-family:Monaco,Menlo,Consolas,"Courier New",monospace;
+  font-size:12px
+}
+
+.lineEnter {
+  background-color: yellow;
 }
 
 .textAfterIcon18 {

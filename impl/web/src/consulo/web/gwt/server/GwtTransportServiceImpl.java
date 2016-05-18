@@ -22,6 +22,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
@@ -98,7 +99,9 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
         @Override
         public String compute() {
           PsiFile file = PsiManager.getInstance(getProject()).findFile(fileByUrl);
-          return file.getText();
+
+          Document document = PsiDocumentManager.getInstance(getProject()).getDocument(file);
+          return document.getText();
         }
       });
     }

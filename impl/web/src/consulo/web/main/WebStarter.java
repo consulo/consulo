@@ -46,7 +46,7 @@ public class WebStarter extends ApplicationStarter {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
           public void run() {
-            setupSdk("JDK", "1.6", "C:\\Program Files\\Java\\jdk1.6.0_45");
+          //  setupSdk("JDK", "1.6", "C:\\Program Files\\Java\\jdk1.6.0_45");
           }
         });
       }

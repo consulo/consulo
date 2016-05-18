@@ -19,6 +19,8 @@ import com.github.gwtbootstrap.client.ui.TabLink;
 import com.github.gwtbootstrap.client.ui.TabPane;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -76,9 +78,9 @@ public class GwtMain implements EntryPoint {
       }
     });
 
-    splitPanel.add(tree);
+    splitPanel.setLeftWidget(tree);
 
-    splitPanel.add(tabPanel);
+    splitPanel.setRightWidget(tabPanel);
 
     tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
       @Override
@@ -112,12 +114,15 @@ public class GwtMain implements EntryPoint {
             final Editor editor = new Editor(result);
             editor.update();
 
-            TabLink tabLink = new TabLink();
-            HorizontalPanel tab = new HorizontalPanel();
+            final TabLink tabLink = new TabLink();
+            final HorizontalPanel tab = new HorizontalPanel();
             tab.add(icon(virtualFile.getIconLayers()));
             InlineHTML span = new InlineHTML(virtualFile.getName());
             span.setStyleName("textAfterIcon18");
             tab.add(span);
+            Image closeImage = new Image("/icons/actions/closeNew.png");
+
+            tab.add(closeImage);
 
             tabLink.add(tab);
 
@@ -130,6 +135,20 @@ public class GwtMain implements EntryPoint {
             int index = opened.size();
             tabPanel.selectTab(index);
             opened.put(virtualFile.getUrl(), index);
+
+            closeImage.addClickHandler(new ClickHandler() {
+              @Override
+              public void onClick(ClickEvent event) {
+                opened.remove(virtualFile.getUrl());
+
+                tabPanel.remove(tabLink);
+
+                int size = opened.size();
+                if (size > 0) {
+                  tabPanel.selectTab(size - 1);
+                }
+              }
+            });
 
             serviceAsync.getLexerHighlight(virtualFile.getUrl(), new AsyncCallback<List<GwtHighlightInfo>>() {
               @Override
