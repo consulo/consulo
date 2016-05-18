@@ -29,5 +29,5 @@ public interface GwtTransportServiceAsync {
 
   void getLexerHighlight(String fileUrl, AsyncCallback<List<GwtHighlightInfo>> async);
 
-  void runHighlightPasses(String fileUrl, AsyncCallback<List<GwtHighlightInfo>> async);
+  void runHighlightPasses(String fileUrl, int offset, AsyncCallback<List<GwtHighlightInfo>> async);
 }

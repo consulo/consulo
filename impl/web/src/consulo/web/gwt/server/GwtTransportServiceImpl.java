@@ -19,6 +19,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
@@ -146,15 +147,21 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
 
   public static GwtHighlightInfo createHighlightInfo(TextAttributes textAttributes, GwtTextRange textRange) {
     GwtColor foreground = null;
+    GwtColor background = null;
     boolean bold = false;
     boolean italic = false;
     GwtTextRange myTextRange = null;
 
-    Color foreColor = textAttributes.getForegroundColor();
-    if (foreColor != null) {
-      foreground = new GwtColor(foreColor.getRed(), foreColor.getGreen(), foreColor.getBlue());
-
+    Color foregroundColor = textAttributes.getForegroundColor();
+    if (foregroundColor != null) {
+      foreground = new GwtColor(foregroundColor.getRed(), foregroundColor.getGreen(), foregroundColor.getBlue());
     }
+
+    Color backgroundColor = textAttributes.getBackgroundColor();
+    if (backgroundColor != null) {
+      background = new GwtColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue());
+    }
+
     if ((textAttributes.getFontType() & Font.BOLD) != 0) {
       bold = true;
     }
@@ -162,16 +169,17 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
       italic = true;
     }
     myTextRange = textRange;
-    return new GwtHighlightInfo(foreground, bold, italic, myTextRange);
+    return new GwtHighlightInfo(foreground, background, bold, italic, myTextRange);
   }
 
   @Override
-  public List<GwtHighlightInfo> runHighlightPasses(String fileUrl) {
+  public List<GwtHighlightInfo> runHighlightPasses(String fileUrl, final int offset) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl != null) {
       if (fileByUrl.isDirectory() || fileByUrl.getFileType().isBinary()) {
         return null;
       }
+      IdentifierHighlighterPassFactory.ourTestingIdentifierHighlighting = true;
       return ApplicationManager.getApplication().runReadAction(new Computable<List<GwtHighlightInfo>>() {
         @Override
         public List<GwtHighlightInfo> compute() {
@@ -185,7 +193,9 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
               @Override
               public void run() {
                 Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, fileByUrl, 0), false);
-
+                if(offset != -1) {
+                  editor.getCaretModel().moveToOffset(offset);
+                }
                 DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzerEx.getInstanceEx(project);
                 TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
                 List<HighlightInfo> highlightInfos =

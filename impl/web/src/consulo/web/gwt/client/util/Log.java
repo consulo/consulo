@@ -13,26 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared;
-
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import consulo.web.gwt.client.transport.GwtVirtualFile;
-import consulo.web.gwt.client.transport.GwtHighlightInfo;
-
-import java.util.List;
+package consulo.web.gwt.client.util;
 
 /**
  * @author VISTALL
- * @since 15-May-16
+ * @since 18-May-16
  */
-@RemoteServiceRelativePath("transport")
-public interface GwtTransportService extends RemoteService {
-  GwtVirtualFile getProjectDirectory();
-
-  String getContent(String fileUrl);
-
-  List<GwtHighlightInfo> getLexerHighlight(String fileUrl);
-
-  List<GwtHighlightInfo> runHighlightPasses(String fileUrl, int offset);
+public class Log {
+  public static native void log(String message) /*-{
+    console.log("consulo:" + message);
+  }-*/;
 }

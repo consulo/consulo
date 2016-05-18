@@ -26,6 +26,7 @@ import java.awt.*;
  */
 public class GwtHighlightInfo implements IsSerializable {
   private GwtColor myForeground;
+  private GwtColor myBackground;
   private boolean myBold;
   private boolean myItalic;
   private GwtTextRange myTextRange;
@@ -33,15 +34,20 @@ public class GwtHighlightInfo implements IsSerializable {
   public GwtHighlightInfo() {
   }
 
-  public GwtHighlightInfo(GwtColor foreground, boolean bold, boolean italic, GwtTextRange textRange) {
+  public GwtHighlightInfo(GwtColor foreground, GwtColor background,boolean bold, boolean italic, GwtTextRange textRange) {
     myForeground = foreground;
+    myBackground = background;
     myBold = bold;
     myItalic = italic;
     myTextRange = textRange;
   }
 
   public boolean isEmpty() {
-    return !myBold && !myItalic && myForeground == null;
+    return !myBold && !myItalic && myForeground == null && myBackground == null;
+  }
+
+  public GwtColor getBackground() {
+    return myBackground;
   }
 
   public GwtColor getForeground() {

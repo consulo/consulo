@@ -15,7 +15,6 @@
  */
 package consulo.web.gwt.client.text;
 
-import com.google.gwt.user.client.ui.HTML;
 import consulo.web.gwt.client.transport.GwtColor;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtTextRange;
@@ -65,14 +64,14 @@ public class SegmentBuilder {
     }
   }
 
-  public void addHighlight(GwtHighlightInfo highlightInfo) {
+  public void addHighlight(GwtHighlightInfo highlightInfo, int flag) {
     boolean foundInsideSegment = false;
     GwtTextRange highlightTextRange = highlightInfo.getTextRange();
     for (int i = 0; i < mySegments.size(); i++) {
       Segment segment = mySegments.get(i);
 
       if (segment.getTextRange().containsRange(highlightTextRange)) {
-        insertHighlightInsideSegment(highlightInfo, i, segment, highlightTextRange);
+        insertHighlightInsideSegment(highlightInfo, i, segment, highlightTextRange, flag);
         foundInsideSegment = true;
         break;
       }
@@ -85,14 +84,15 @@ public class SegmentBuilder {
         GwtTextRange textRange = highlightInfo.getTextRange();
         if(textRange.containsRange(segment.getTextRange())) {
           WrappedStyledSegment wrappedStyledSegment = new WrappedStyledSegment(segment);
-          add(wrappedStyledSegment, highlightInfo);
+          add(wrappedStyledSegment, highlightInfo, flag);
+          copy(segment, wrappedStyledSegment);
           mySegments.set(i, wrappedStyledSegment);
         }
       }
     }
   }
 
-  private void insertHighlightInsideSegment(GwtHighlightInfo highlightInfo, int index, Segment segment, GwtTextRange highlightTextRange) {
+  private void insertHighlightInsideSegment(GwtHighlightInfo highlightInfo, int index, Segment segment, GwtTextRange highlightTextRange, int flag) {
     // if segment equal highlight info
     GwtTextRange segmentTextRange = segment.getTextRange();
     if (segmentTextRange.equals(highlightTextRange)) {
@@ -102,7 +102,7 @@ public class SegmentBuilder {
         mySegments.set(index, segment);
       }
 
-      add((OriginalStyledSegment)segment, highlightInfo);
+      add((OriginalStyledSegment)segment, highlightInfo, flag);
     }
     else {
       int start = highlightTextRange.getStartOffset() - segmentTextRange.getStartOffset();
@@ -113,7 +113,9 @@ public class SegmentBuilder {
       }
 
       OriginalStyledSegment element = new OriginalStyledSegment(myText, highlightTextRange);
-      add(element, highlightInfo);
+      copy(segment, element);
+
+      add(element, highlightInfo, flag);
 
       mySegments.set(index++, element);
 
@@ -126,18 +128,29 @@ public class SegmentBuilder {
     }
   }
 
-  private void add(StyledSegment styledSegment, GwtHighlightInfo highlightInfo) {
+  private static void copy(Segment from, Segment to) {
+    if(from instanceof StyledSegment && to instanceof StyledSegment) {
+      ((StyledSegment)from).copy((StyledSegment)to);
+    }
+  }
+
+  private void add(StyledSegment styledSegment, GwtHighlightInfo highlightInfo, int flag) {
     GwtColor foreground = highlightInfo.getForeground();
     if (foreground != null) {
-      styledSegment.add("color", "rgb(" + foreground.getRed() + ", " + foreground.getGreen() + ", " + foreground.getBlue() + ");");
+      styledSegment.add("color", "rgb(" + foreground.getRed() + ", " + foreground.getGreen() + ", " + foreground.getBlue() + ");", flag);
+    }
+
+    GwtColor background = highlightInfo.getBackground();
+    if (background != null) {
+      styledSegment.add("background-color", "rgb(" + background.getRed() + ", " + background.getGreen() + ", " + background.getBlue() + ");", flag);
     }
 
     if (highlightInfo.isBold()) {
-      styledSegment.add("font-weight", "bold;");
+      styledSegment.add("font-weight", "bold;", flag);
     }
 
     if (highlightInfo.isItalic()) {
-      styledSegment.add("font-style", "italic;");
+      styledSegment.add("font-style", "italic;", flag);
     }
   }
 
@@ -158,18 +171,19 @@ public class SegmentBuilder {
     }
     return String.valueOf(c);
   }
-
-  public HTML toHtml() {
-    HTML html = new HTML(toHtmlAsText());
-
-    return html;
-  }
-
   public String toHtmlAsText() {
     StringBuilder builder = new StringBuilder();
     for (Segment segment : mySegments) {
       builder.append(segment.getText());
     }
     return builder.toString();
+  }
+
+  public void removeHighlightByFlag(int flag) {
+    for (Segment segment : mySegments) {
+      if(segment instanceof StyledSegment) {
+        ((StyledSegment)segment).removeByFlag(flag);
+      }
+    }
   }
 }

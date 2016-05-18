@@ -15,9 +15,18 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.bfr.client.selection.Range;
+import com.bfr.client.selection.RangeEndPoint;
+import com.bfr.client.selection.Selection;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Text;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.text.SegmentBuilder;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
+import consulo.web.gwt.client.transport.GwtTextRange;
 
 import java.util.List;
 
@@ -25,13 +34,12 @@ import java.util.List;
  * @author VISTALL
  * @since 17-May-16
  */
-public class Editor {
-  private SimplePanel myPanel = new SimplePanel();
+public class Editor extends SimplePanel {
   private SegmentBuilder myBuilder;
 
   private int myLineCount;
 
-  private HTML myLineNumberPanel;
+  private EditorCaretHandler myCaretHandler;
 
   public Editor(String text) {
     myBuilder = new SegmentBuilder(text);
@@ -43,11 +51,11 @@ public class Editor {
       }
     }
     myLineCount = lineCount;
-    myPanel.setWidth("100%");
-    myPanel.setHeight("100%");
+    setWidth("100%");
+    setHeight("100%");
   }
 
-  public void update() {
+  public void repaint() {
 
    /* StringBuilder builder = new StringBuilder();
     builder.append("<div id=\"leftGutter\"><pre id=\"linePanel\">");
@@ -60,7 +68,7 @@ public class Editor {
     final HTML codePanel = myBuilder.toHtml();
     myPanel.add(codePanel);        */
 
-    String s = myBuilder.toHtmlAsText();
+    String htmlAsText = myBuilder.toHtmlAsText();
 
     Grid grid = new Grid(myLineCount + 1, 2);
     grid.setWidth("100%");
@@ -93,14 +101,14 @@ public class Editor {
       grid.setWidget(i, 0, panel);
     }
 
-    String[] split = s.split("\n");
+    String[] split = htmlAsText.split("\n");
     for (int i = 0; i < split.length; i++) {
       final String line = split[i];
 
       final InlineHTML lineSpan = new InlineHTML(line);
       lineSpan.setWidth("100%");
       lineSpan.addStyleName("editorLine");
-      lineSpan.addStyleName("editorCodeLine" + i);
+      lineSpan.addStyleName("gen_Line_" + i);
 
       /*lineSpan.addMouseOverHandler(new MouseOverHandler() {
         @Override
@@ -119,6 +127,51 @@ public class Editor {
 
       grid.setWidget(i, 1, lineSpan);
       grid.getCellFormatter().setWordWrap(i, 1, false);
+
+      lineSpan.addClickHandler(new ClickHandler() {
+        @Override
+        public void onClick(ClickEvent event) {
+          Range browserRange = Selection.getBrowserRange();
+
+          RangeEndPoint startPoint = browserRange.getStartPoint();
+          Text text = startPoint.getTextNode();
+          if (text == null) {
+            return;
+          }
+          int offset = startPoint.getOffset();
+          Node parentNode = text.getParentNode();
+          if (parentNode == null) {
+            return;
+          }
+
+          if (!parentNode.getNodeName().equalsIgnoreCase("span")) {
+            return;
+          }
+
+          String styleName = ((Element)parentNode).getClassName();
+
+          // TODO [VISTALL]  ge_Line_%% is not handled
+          String[] iter = styleName.split("\\s+");
+          for (String s1 : iter) {
+            String prefix = "gen_TextRage_";
+            if (s1.startsWith(prefix)) {
+              String startEnd = s1.substring(prefix.length(), s1.length());
+              String[] startAndEnd = startEnd.split("_");
+              GwtTextRange textRange = new GwtTextRange(Integer.parseInt(startAndEnd[0]), Integer.parseInt(startAndEnd[1]));
+
+              if (myCaretHandler != null) {
+                myCaretHandler.caretPlaced(textRange.getStartOffset() + offset);
+              }
+              break;
+            }
+          }
+          /*PopupPanel popupPanel = new PopupPanel(true);
+
+          popupPanel.setWidget(new HTML("Style " + styleName + " offset = " + offset));
+          popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
+          popupPanel.show();  */
+        }
+      });
     }
 
     ScrollPanel scrollPanel = new ScrollPanel(grid);
@@ -139,19 +192,25 @@ public class Editor {
     markerPanel.setHeight("100%");
     markerPanel.getElement().getStyle().setBackgroundColor("silver");        */
 
-   // panel.add(markerPanel, DockPanel.EAST);
+    // panel.add(markerPanel, DockPanel.EAST);
 
-    myPanel.setWidget(panel);
+    setWidget(panel);
+  }
+
+  public void setCaretHandler(EditorCaretHandler caretHandler) {
+    myCaretHandler = caretHandler;
   }
 
   public Widget getComponent() {
-    return myPanel;
+    return this;
   }
 
-  public void addHighlightInfos(List<GwtHighlightInfo> result) {
+  public void addHighlightInfos(List<GwtHighlightInfo> result, int flag) {
+    myBuilder.removeHighlightByFlag(flag);
+
     for (GwtHighlightInfo highlightInfo : result) {
-      myBuilder.addHighlight(highlightInfo);
+      myBuilder.addHighlight(highlightInfo, flag);
     }
-    update();
+    repaint();
   }
 }

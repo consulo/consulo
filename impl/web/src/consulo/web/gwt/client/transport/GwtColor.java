@@ -47,4 +47,14 @@ public class GwtColor implements IsSerializable{
   public int getBlue() {
     return myBlue;
   }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("GwtColor{");
+    sb.append("myRed=").append(myRed);
+    sb.append(", myGreen=").append(myGreen);
+    sb.append(", myBlue=").append(myBlue);
+    sb.append('}');
+    return sb.toString();
+  }
 }

@@ -25,10 +25,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtVirtualFile;
-import consulo.web.gwt.client.ui.DoubleClickTree;
-import consulo.web.gwt.client.ui.DoubleClickTreeEvent;
-import consulo.web.gwt.client.ui.DoubleClickTreeHandler;
-import consulo.web.gwt.client.ui.Editor;
+import consulo.web.gwt.client.ui.*;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.GwtTransportServiceAsync;
 import org.cafesip.gwtcomp.client.ui.SuperTreeItem;
@@ -43,6 +40,9 @@ import java.util.Map;
  * @since 15-May-16
  */
 public class GwtMain implements EntryPoint {
+  private static final int ourLexerFlag = 1;
+  private static final int ourEditorFlag = 2;
+
   private Map<String, Integer> opened = new HashMap<String, Integer>();
 
   @Override
@@ -111,7 +111,7 @@ public class GwtMain implements EntryPoint {
             }
 
             final Editor editor = new Editor(result);
-            editor.update();
+            editor.repaint();
 
             final TabLink tabLink = new TabLink();
             final HorizontalPanel tab = new HorizontalPanel();
@@ -161,9 +161,16 @@ public class GwtMain implements EntryPoint {
 
               @Override
               public void onSuccess(List<GwtHighlightInfo> result) {
-                editor.addHighlightInfos(result);
+                editor.addHighlightInfos(result, ourLexerFlag);
 
-                runHighlightPasses(serviceAsync, virtualFile, editor);
+                runHighlightPasses(serviceAsync, virtualFile, editor, -1);
+
+                editor.setCaretHandler(new EditorCaretHandler() {
+                  @Override
+                  public void caretPlaced(int offset) {
+                    runHighlightPasses(serviceAsync, virtualFile, editor, offset);
+                  }
+                });
               }
             });
           }
@@ -176,15 +183,15 @@ public class GwtMain implements EntryPoint {
     RootPanel.get().add(globalPanel);
   }
 
-  private void runHighlightPasses(GwtTransportServiceAsync serviceAsync, GwtVirtualFile virtualFile, final Editor editor) {
-    serviceAsync.runHighlightPasses(virtualFile.getUrl(), new AsyncCallback<List<GwtHighlightInfo>>() {
+  private void runHighlightPasses(GwtTransportServiceAsync serviceAsync, GwtVirtualFile virtualFile, final Editor editor, int offset) {
+    serviceAsync.runHighlightPasses(virtualFile.getUrl(), offset, new AsyncCallback<List<GwtHighlightInfo>>() {
       @Override
       public void onFailure(Throwable caught) {
       }
 
       @Override
       public void onSuccess(List<GwtHighlightInfo> result) {
-        editor.addHighlightInfos(result);
+        editor.addHighlightInfos(result, ourEditorFlag);
       }
     });
   }

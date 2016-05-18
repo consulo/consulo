@@ -48,4 +48,13 @@ public class GwtTextRange implements IsSerializable {
   public boolean containsRange(int startOffset, int endOffset) {
     return getStartOffset() <= startOffset && getEndOffset() >= endOffset;
   }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("GwtTextRange{");
+    sb.append("myStartOffset=").append(myStartOffset);
+    sb.append(", myEndOffset=").append(myEndOffset);
+    sb.append('}');
+    return sb.toString();
+  }
 }

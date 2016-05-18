@@ -17,38 +17,62 @@ package consulo.web.gwt.client.text;
 
 import consulo.web.gwt.client.transport.GwtTextRange;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 17-May-16
  */
 public abstract class StyledSegment extends Segment {
-  private Map<String, String> myStyles = new HashMap<String, String>();
+  public static class StyleInfo {
+    private String key;
+    private String value;
+    private int flag;
+
+    public StyleInfo(String key, String value, int flag) {
+      this.key = key;
+      this.value = value;
+      this.flag = flag;
+    }
+  }
+
+  private List<StyleInfo> myStyles = new ArrayList<StyleInfo>();
 
   public StyledSegment(GwtTextRange textRange) {
     super(textRange);
   }
 
+  public void add(String key, String value, int flag) {
+    myStyles.add(new StyleInfo(key, value, flag));
+  }
 
-  public void add(String key, String value) {
-    myStyles.put(key, value);
+  public void copy(StyledSegment to) {
+    for (StyleInfo style : myStyles) {
+      to.add(style.key, style.value, style.flag);
+    }
+  }
+
+  public void removeByFlag(int flag) {
+    StyleInfo[] styleInfos = myStyles.toArray(new StyleInfo[myStyles.size()]);
+    for (StyleInfo styleInfo : styleInfos) {
+      if (styleInfo.flag == flag) {
+
+        myStyles.remove(styleInfo);
+      }
+    }
   }
 
   public abstract String getTextInner();
 
   @Override
   public String getText() {
-    if (myStyles.isEmpty()) {
-      return getTextInner();
-    }
-
     StringBuilder builder = new StringBuilder();
 
-    builder.append("<span style=\"");
-    for (Map.Entry<String, String> entry : myStyles.entrySet()) {
-      builder.append(entry.getKey()).append(":").append(entry.getValue());
+    GwtTextRange textRange = getTextRange();
+    builder.append("<span class=\"gen_TextRage_").append(textRange.getStartOffset()).append("_").append(textRange.getEndOffset()).append("\" style=\"");
+    for (StyleInfo entry : myStyles) {
+      builder.append(entry.key).append(":").append(entry.value);
     }
     builder.append("\">");
     builder.append(getTextInner());
