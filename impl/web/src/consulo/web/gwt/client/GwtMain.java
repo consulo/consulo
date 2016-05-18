@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
+import consulo.web.gwt.client.transport.GwtProjectInfo;
 import consulo.web.gwt.client.transport.GwtVirtualFile;
 import consulo.web.gwt.client.ui.*;
 import consulo.web.gwt.shared.GwtTransportService;
@@ -66,14 +67,14 @@ public class GwtMain implements EntryPoint {
     splitPanel.setSplitPosition("20%");
 
     final DoubleClickTree tree = new DoubleClickTree();
-    serviceAsync.getProjectDirectory(new AsyncCallback<GwtVirtualFile>() {
+    serviceAsync.getProjectInfo("ignored", new AsyncCallback<GwtProjectInfo>() {
       @Override
       public void onFailure(Throwable caught) {
       }
 
       @Override
-      public void onSuccess(GwtVirtualFile result) {
-        addNodes(tree, result);
+      public void onSuccess(GwtProjectInfo result) {
+        addNodes(tree, null, result);
       }
     });
 
@@ -196,25 +197,30 @@ public class GwtMain implements EntryPoint {
     });
   }
 
-  private static void addNodes(HasTreeItems parent, GwtVirtualFile virtualFile) {
+  private static void addNodes(HasTreeItems parent, GwtVirtualFile virtualFile, GwtProjectInfo projectInfo) {
+    GwtVirtualFile targetFile = virtualFile != null ? virtualFile : projectInfo.getBaseDirectory();
+
     HorizontalPanel panel = new HorizontalPanel();
-    panel.add(icon(virtualFile.getIconLayers()));
-    String rightIcon = virtualFile.getRightIcon();
+    panel.add(icon(targetFile.getIconLayers()));
+    String rightIcon = targetFile.getRightIcon();
     if (rightIcon != null) {
       Widget rightIconWidget = icon(Arrays.asList(rightIcon));
       panel.add(rightIconWidget);
     }
 
-    InlineHTML span = new InlineHTML(virtualFile.getName());
-    span.setStyleName("textAfterIcon18");
-    panel.add(span);
+    Label label = new Label(targetFile.getName());
+    label.addStyleName("textAfterIcon18");
+    if (projectInfo.getModuleDirectoryUrls().contains(targetFile.getUrl())) {
+      label.addStyleName("bolded");
+    }
+    panel.add(label);
 
     SuperTreeItem item = new SuperTreeItem(panel, 1);
     item.addStyleName("noselectable");
-    item.setUserObject(virtualFile);
+    item.setUserObject(targetFile);
 
-    for (GwtVirtualFile child : virtualFile.getChildren()) {
-      addNodes(item, child);
+    for (GwtVirtualFile child : targetFile.getChildren()) {
+      addNodes(item, child, projectInfo);
     }
 
     if (parent instanceof Tree) {

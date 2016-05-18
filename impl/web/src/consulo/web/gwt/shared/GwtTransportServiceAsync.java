@@ -17,13 +17,13 @@ package consulo.web.gwt.shared;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
-import consulo.web.gwt.client.transport.GwtVirtualFile;
+import consulo.web.gwt.client.transport.GwtProjectInfo;
 
 import java.util.List;
 
 public interface GwtTransportServiceAsync {
 
-  void getProjectDirectory(AsyncCallback<GwtVirtualFile> async);
+  void getProjectInfo(String path, AsyncCallback<GwtProjectInfo> async);
 
   void getContent(String fileUrl, AsyncCallback<String> async);
 

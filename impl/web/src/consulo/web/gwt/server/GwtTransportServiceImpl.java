@@ -32,6 +32,8 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
@@ -41,10 +43,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import consulo.web.gwt.client.transport.GwtColor;
-import consulo.web.gwt.client.transport.GwtHighlightInfo;
-import consulo.web.gwt.client.transport.GwtTextRange;
-import consulo.web.gwt.client.transport.GwtVirtualFile;
+import consulo.web.gwt.client.transport.*;
 import consulo.web.gwt.shared.GwtTransportService;
 
 import javax.swing.*;
@@ -85,8 +84,23 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
   @Override
-  public GwtVirtualFile getProjectDirectory() {
-    return GwtVirtualFileUtil.createVirtualFile(getProject(), getProject().getBaseDir());
+  public GwtProjectInfo getProjectInfo(String path) {
+    final Project project = getProject();
+    GwtVirtualFile virtualFile = GwtVirtualFileUtil.createVirtualFile(project, project.getBaseDir());
+    final List<String> moduleFileUrls = new ArrayList<String>();
+    ApplicationManager.getApplication().runReadAction(new Runnable() {
+      @Override
+      public void run() {
+        Module[] modules = ModuleManager.getInstance(project).getModules();
+        for (Module module : modules) {
+          String moduleDirUrl = module.getModuleDirUrl();
+          if(moduleDirUrl != null) {
+            moduleFileUrls.add(moduleDirUrl);
+          }
+        }
+      }
+    });
+    return new GwtProjectInfo(virtualFile, moduleFileUrls);
   }
 
   @Override

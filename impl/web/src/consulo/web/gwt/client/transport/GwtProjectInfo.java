@@ -13,26 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared;
+package consulo.web.gwt.client.transport;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import consulo.web.gwt.client.transport.GwtHighlightInfo;
-import consulo.web.gwt.client.transport.GwtProjectInfo;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 15-May-16
+ * @since 18-May-16
  */
-@RemoteServiceRelativePath("transport")
-public interface GwtTransportService extends RemoteService {
-  GwtProjectInfo getProjectInfo(String path);
+public class GwtProjectInfo implements IsSerializable{
+  private GwtVirtualFile myBaseDirectory;
+  private List<String> myModuleDirectoryUrls;
 
-  String getContent(String fileUrl);
+  public GwtProjectInfo(GwtVirtualFile baseDirectory, List<String> moduleDirectoryUrls) {
+    myBaseDirectory = baseDirectory;
+    myModuleDirectoryUrls = moduleDirectoryUrls;
+  }
 
-  List<GwtHighlightInfo> getLexerHighlight(String fileUrl);
+  public GwtProjectInfo() {
+  }
 
-  List<GwtHighlightInfo> runHighlightPasses(String fileUrl, int offset);
+  public GwtVirtualFile getBaseDirectory() {
+    return myBaseDirectory;
+  }
+
+  public List<String> getModuleDirectoryUrls() {
+    return myModuleDirectoryUrls;
+  }
 }

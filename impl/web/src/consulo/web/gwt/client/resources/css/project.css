@@ -28,6 +28,10 @@ pre {
   user-select: none;
 }
 
+.bolded {
+  font-weight:bold;
+}
+
 .editorLineRow {
   padding-left: 5px;
   padding-right: 5px;
@@ -44,7 +48,7 @@ pre {
 }
 
 .gwtcomp-SuperTree-SelectedItem {
-  /*background-color: silver;  */
+
 }
 
 .editorLine {
