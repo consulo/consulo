@@ -15,8 +15,6 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.text.SegmentBuilder;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
@@ -72,20 +70,26 @@ public class Editor {
 
     for (int i = 0; i < myLineCount; i++) {
       final HorizontalPanel panel = new HorizontalPanel();
+      panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+      panel.setWidth("100%");
+      panel.setHeight("100%");
 
       InlineHTML lineSpan = new InlineHTML(String.valueOf(i + 1));
       lineSpan.addStyleName("editorLine");
       lineSpan.addStyleName("editorGutterLine" + i);
 
-      lineSpan.addClickHandler(new ClickHandler() {
+      /*lineSpan.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(ClickEvent event) {
           panel.add(new Image("/icons/debugger/db_set_breakpoint.png"));
         }
-      });
+      });*/
 
       panel.add(lineSpan);
 
+      HTMLTable.CellFormatter cellFormatter = grid.getCellFormatter();
+      cellFormatter.addStyleName(i, 0, "noselectable");
+      cellFormatter.addStyleName(i, 0, "editorLineRow");
       grid.setWidget(i, 0, panel);
     }
 
@@ -115,6 +119,7 @@ public class Editor {
       }) ;   */
 
       grid.setWidget(i, 1, lineSpan);
+      grid.getCellFormatter().setWordWrap(i, 1, false);
     }
 
     CustomScrollPanel scrollPanel = new CustomScrollPanel(grid);

@@ -167,12 +167,9 @@ public class SegmentBuilder {
 
   public String toHtmlAsText() {
     StringBuilder builder = new StringBuilder();
-    builder.append("<pre>");
     for (Segment segment : mySegments) {
       builder.append(segment.getText());
     }
-    builder.append("</pre>");
-
     return builder.toString();
   }
 }

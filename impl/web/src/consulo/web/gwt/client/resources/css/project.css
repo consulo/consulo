@@ -32,7 +32,7 @@ pre {
   padding-left: 5px;
   padding-right: 5px;
   margin-right: 5px;
-  text-align: right;
+  white-space: nowrap;
 }
 
 .editorLineColumn {
@@ -77,6 +77,6 @@ pre {
 }
 
 .gwt-HorizontalSplitPanel2 .hsplitter {
-  width: 2px;
-  background-color: silver;
+  width: 1px;
+  background-color: #D8D8D8;
 }
