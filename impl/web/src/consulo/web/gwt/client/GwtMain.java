@@ -23,16 +23,18 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtVirtualFile;
+import consulo.web.gwt.client.ui.DoubleClickTreeEvent;
+import consulo.web.gwt.client.ui.DoubleClickTreeHandler;
 import consulo.web.gwt.client.ui.Editor;
+import consulo.web.gwt.client.ui.DoubleClickTree;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.GwtTransportServiceAsync;
+import org.cafesip.gwtcomp.client.ui.SuperTreeItem;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -66,7 +68,7 @@ public class GwtMain implements EntryPoint {
     HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
     splitPanel.setSplitPosition("20%");
 
-    final Tree tree = new Tree();
+    final DoubleClickTree tree = new DoubleClickTree();
     serviceAsync.getProjectDirectory(new AsyncCallback<GwtVirtualFile>() {
       @Override
       public void onFailure(Throwable caught) {
@@ -82,10 +84,10 @@ public class GwtMain implements EntryPoint {
 
     splitPanel.setRightWidget(tabPanel);
 
-    tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
+    tree.addDoubleClickHandler(new DoubleClickTreeHandler() {
       @Override
-      public void onSelection(SelectionEvent<TreeItem> event) {
-        TreeItem selectedItem = event.getSelectedItem();
+      public void onDoubleClick(DoubleClickTreeEvent event) {
+        TreeItem selectedItem = event.getItem();
 
         final GwtVirtualFile virtualFile = (GwtVirtualFile)selectedItem.getUserObject();
         if (virtualFile.isDirectory()) {
@@ -199,7 +201,8 @@ public class GwtMain implements EntryPoint {
     span.setStyleName("textAfterIcon18");
     panel.add(span);
 
-    TreeItem item = new TreeItem(panel);
+    SuperTreeItem item = new SuperTreeItem(panel, 1);
+    item.addStyleName("noselectable");
     item.setUserObject(virtualFile);
 
     for (GwtVirtualFile child : virtualFile.getChildren()) {
@@ -209,6 +212,7 @@ public class GwtMain implements EntryPoint {
     if (parent instanceof Tree) {
       item.setState(true);
     }
+
     parent.addItem(item);
   }
 
