@@ -1,3 +1,20 @@
+body {
+  padding-top: 0px;
+}
+
+pre {
+  padding: 0px;
+  margion: 0px;
+  word-break: normal;
+  white-space: pre;
+  background-color: white;
+  border: none;
+}
+
+.nav {
+  margin-bottom: 0;
+}
+
 #leftGutter {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -6,7 +23,6 @@
   -ms-user-select: none;
   user-select: none;
 
-  background-color: #D8D8D8;
   border-right: #D8D8D8 solid 1px;
 
   padding-left: 5px;
@@ -18,15 +34,16 @@
 }
 
 .textAfterIcon16 {
-  margin-left: 16px;
 }
 
 .textAfterIcon18 {
-  margin-left: 18px;
+  margin-left: 2px;
 }
 
 .imageWrapper {
   position: relative;
+  width: 16px;
+  height: 16px;
 }
 
 .overlayImage {

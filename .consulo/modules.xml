@@ -1120,6 +1120,16 @@
             </library>
           </orderEntry>
           <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module-library" scope="PROVIDED">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/lib/gwt-bootstrap-2.3.2.0.jar!/" />
+              </binaries>
+              <sources>
+                <root url="jar://$MODULE_DIR$/lib/gwt-bootstrap-2.3.2.0.jar!/" />
+              </sources>
+            </library>
+          </orderEntry>
         </module-layer>
       </module>
     </modules>

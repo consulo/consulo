@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='consulo'>
 
-  <collapse-all-properties />
+  <collapse-all-properties/>
 
-  <inherits name='com.google.gwt.user.RemoteService' />
-  <inherits name='com.google.gwt.user.User' />
-  <inherits name='com.google.gwt.user.theme.standard.Standard' />
+  <inherits name='com.google.gwt.user.RemoteService'/>
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+  <inherits name="com.github.gwtbootstrap.Bootstrap"/>
 
-  <entry-point class='consulo.web.gwt.client.GwtMain' />
+  <stylesheet src="css/project.css"/>
 
-  <source path='shared' />
-  <source path='client' />
+  <public path="client/resources"/>
 
+  <entry-point class='consulo.web.gwt.client.GwtMain'/>
 
-
+  <source path='shared'/>
+  <source path='client'/>
 
 </module>

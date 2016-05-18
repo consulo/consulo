@@ -19,7 +19,6 @@ public class ProjectServlet extends HttpServlet {
     writer.println("<html>");
     writer.println("<head>");
     writer.println("<title>Project</title>");
-    writer.println(" <link rel=\"stylesheet\" href=\"main.css\">");
     writer.println("</head>");
     writer.println("<body>");
     if (!AppInit.init()) {

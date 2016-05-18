@@ -15,6 +15,8 @@
  */
 package consulo.web.gwt.client;
 
+import com.github.gwtbootstrap.client.ui.TabLink;
+import com.github.gwtbootstrap.client.ui.TabPane;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -57,7 +59,7 @@ public class GwtMain implements EntryPoint {
 
     final GwtTransportServiceAsync serviceAsync = GWT.create(GwtTransportService.class);
 
-    final TabPanel tabPanel = new TabPanel();
+    final com.github.gwtbootstrap.client.ui.TabPanel tabPanel = new com.github.gwtbootstrap.client.ui.TabPanel();
 
     HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
     splitPanel.setSplitPosition("20%");
@@ -109,13 +111,25 @@ public class GwtMain implements EntryPoint {
               return;
             }
 
-            String tabText = icon(virtualFile.getIconLayers()) + " <span class=\"textAfterIcon18\">" + virtualFile.getName() + "</span>";
-
             final Editor editor = new Editor(result);
             editor.update();
 
-            tabPanel.add(editor.getComponent(), tabText, true);
-            int index = tabPanel.getWidgetCount() - 1;
+            TabLink tabLink = new TabLink();
+            HorizontalPanel tab = new HorizontalPanel();
+            tab.add(icon(virtualFile.getIconLayers()));
+            InlineHTML span = new InlineHTML(virtualFile.getName());
+            span.setStyleName("textAfterIcon18");
+            tab.add(span);
+
+            tabLink.add(tab);
+
+            tabPanel.add(tabLink);
+
+            TabPane tabPane = tabLink.getTabPane();
+            tabPane.add(editor.getComponent());
+
+            // TabPanel can't return tab size???
+            int index = opened.size();
             tabPanel.selectTab(index);
             opened.put(virtualFile.getUrl(), index);
 
