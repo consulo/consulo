@@ -97,7 +97,6 @@ public class Editor {
     for (int i = 0; i < split.length; i++) {
       final String line = split[i];
 
-
       final InlineHTML lineSpan = new InlineHTML(line);
       lineSpan.setWidth("100%");
       lineSpan.addStyleName("editorLine");
@@ -116,29 +115,31 @@ public class Editor {
           Element parentElement = lineSpan.getElement().getParentElement();
           parentElement.getStyle().clearBackgroundColor();
         }
-      }) ;   */
+      }) ;*/
 
       grid.setWidget(i, 1, lineSpan);
       grid.getCellFormatter().setWordWrap(i, 1, false);
     }
 
-    CustomScrollPanel scrollPanel = new CustomScrollPanel(grid);
-    scrollPanel.setAlwaysShowScrollBars(true);
+    ScrollPanel scrollPanel = new ScrollPanel(grid);
     scrollPanel.setHeight("100%");
     scrollPanel.setWidth("100%");
 
     DockPanel panel = new DockPanel();
-    panel.add(grid, DockPanel.CENTER);
+    panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+    panel.setWidth("100%");
+    panel.add(scrollPanel, DockPanel.CENTER);
 
-    VerticalPanel markerPanel = new VerticalPanel();
+  /*  VerticalPanel markerPanel = new VerticalPanel();
     markerPanel.add(new HTML("1"));
     markerPanel.add(new HTML("2"));
     markerPanel.add(new HTML("3"));
 
     markerPanel.setWidth("16px");
     markerPanel.setHeight("100%");
+    markerPanel.getElement().getStyle().setBackgroundColor("silver");        */
 
-    panel.add(markerPanel, DockPanel.EAST);
+   // panel.add(markerPanel, DockPanel.EAST);
 
     myPanel.setWidget(panel);
   }
