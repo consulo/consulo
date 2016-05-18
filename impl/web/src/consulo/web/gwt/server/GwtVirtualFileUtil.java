@@ -15,6 +15,7 @@
  */
 package consulo.web.gwt.server;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
@@ -24,6 +25,7 @@ import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.IconUtil;
 import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.web.gwt.client.transport.GwtVirtualFile;
 
 import javax.swing.*;
@@ -76,6 +78,10 @@ public class GwtVirtualFileUtil {
     for (VirtualFile child : children) {
       gwtVirtualFile.children.add(createVirtualFile(project, child));
     }
+
+    if(gwtVirtualFile.iconLayers.isEmpty()) {
+      gwtVirtualFile.iconLayers.add(iconUrl(AllIcons.FileTypes.Unknown));
+    }
     return gwtVirtualFile;
   }
 
@@ -86,20 +92,21 @@ public class GwtVirtualFileUtil {
     if (icon instanceof LayeredIcon) {
       Icon[] allLayers = ((LayeredIcon)icon).getAllLayers();
       for (Icon layerIcon : allLayers) {
-        String maybeUrl = layerIcon.toString();
-        int i = maybeUrl.indexOf("!/");
-        if (i != -1) {
-          list.add(maybeUrl.substring(i + 2, maybeUrl.length()));
-        }
+        ContainerUtil.addIfNotNull(list, iconUrl(layerIcon));
       }
     }
     else {
-      String maybeUrl = icon.toString();
-      int i = maybeUrl.indexOf("!/");
-      if (i != -1) {
-        list.add(maybeUrl.substring(i + 2, maybeUrl.length()));
-      }
+      ContainerUtil.addIfNotNull(list, iconUrl(icon));
     }
     return true;
+  }
+
+  private static String iconUrl(Icon icon) {
+    String maybeUrl = icon.toString();
+    int i = maybeUrl.indexOf("!/");
+    if (i != -1) {
+       return maybeUrl.substring(i + 2, maybeUrl.length());
+    }
+    return null;
   }
 }

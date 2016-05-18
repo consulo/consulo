@@ -8,6 +8,6 @@
 /out-ant
 /.consulo/workspace.xml
 /.consulo/sandbox
-/impl/web/clientjs/target
-/impl/web/clientjs/gwt-unitCache
 /impl/web/dep
+/impl/web/gwt-out
+/impl/web/gwt-unitCache
