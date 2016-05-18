@@ -163,7 +163,7 @@ public class GwtMain implements EntryPoint {
               public void onSuccess(List<GwtHighlightInfo> result) {
                 editor.addHighlightInfos(result, ourLexerFlag);
 
-                runHighlightPasses(serviceAsync, virtualFile, editor, -1);
+                runHighlightPasses(serviceAsync, virtualFile, editor, 0);
 
                 editor.setCaretHandler(new EditorCaretHandler() {
                   @Override

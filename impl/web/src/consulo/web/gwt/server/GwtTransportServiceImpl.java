@@ -193,9 +193,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
               @Override
               public void run() {
                 Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, fileByUrl, 0), false);
-                if(offset != -1) {
-                  editor.getCaretModel().moveToOffset(offset);
-                }
+                editor.getCaretModel().moveToOffset(offset);
                 DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzerEx.getInstanceEx(project);
                 TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
                 List<HighlightInfo> highlightInfos =

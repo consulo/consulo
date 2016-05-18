@@ -41,6 +41,8 @@ public class Editor extends SimplePanel {
 
   private EditorCaretHandler myCaretHandler;
 
+  private int myLastCaretOffset  = 0;
+
   public Editor(String text) {
     myBuilder = new SegmentBuilder(text);
 
@@ -131,21 +133,40 @@ public class Editor extends SimplePanel {
       lineSpan.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(ClickEvent event) {
+          int caretOffset = findCaretOffset();
+
+          if (caretOffset == myLastCaretOffset) {
+            return;
+          }
+          myLastCaretOffset = caretOffset;
+
+          if (myCaretHandler != null) {
+            myCaretHandler.caretPlaced(caretOffset);
+          }
+
+          /*PopupPanel popupPanel = new PopupPanel(true);
+
+          popupPanel.setWidget(new HTML("Style " + styleName + " offset = " + offset));
+          popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
+          popupPanel.show();  */
+        }
+
+        private int findCaretOffset() {
           Range browserRange = Selection.getBrowserRange();
 
           RangeEndPoint startPoint = browserRange.getStartPoint();
           Text text = startPoint.getTextNode();
           if (text == null) {
-            return;
+            return 0;
           }
           int offset = startPoint.getOffset();
           Node parentNode = text.getParentNode();
           if (parentNode == null) {
-            return;
+            return 0;
           }
 
           if (!parentNode.getNodeName().equalsIgnoreCase("span")) {
-            return;
+            return 0;
           }
 
           String styleName = ((Element)parentNode).getClassName();
@@ -159,17 +180,11 @@ public class Editor extends SimplePanel {
               String[] startAndEnd = startEnd.split("_");
               GwtTextRange textRange = new GwtTextRange(Integer.parseInt(startAndEnd[0]), Integer.parseInt(startAndEnd[1]));
 
-              if (myCaretHandler != null) {
-                myCaretHandler.caretPlaced(textRange.getStartOffset() + offset);
-              }
-              break;
+              return textRange.getStartOffset() + offset;
             }
           }
-          /*PopupPanel popupPanel = new PopupPanel(true);
 
-          popupPanel.setWidget(new HTML("Style " + styleName + " offset = " + offset));
-          popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
-          popupPanel.show();  */
+          return 0;
         }
       });
     }
