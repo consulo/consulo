@@ -1124,7 +1124,7 @@
         <module-layer name="Default">
           <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
           <extension id="java-web" />
-          <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="DETAILED" compiler-path="R:\_github.com\consulo\consulo\impl\web\clientjs\target" compiler-max-heap-size="256" />
+          <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-path="R:\_github.com\consulo\consulo\impl\web\clientjs\target" compiler-max-heap-size="256" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>

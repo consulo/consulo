@@ -27,7 +27,9 @@ import java.util.List;
 public class GwtVirtualFile implements IsSerializable {
   private String url;
 
-  private String icon;
+  private List<String> iconLayers = new ArrayList<String>();
+
+  private String rightIcon;
 
   private String name;
 
@@ -38,8 +40,12 @@ public class GwtVirtualFile implements IsSerializable {
   public GwtVirtualFile() {
   }
 
-  public String getIcon() {
-    return icon;
+  public List<String> getIconLayers() {
+    return iconLayers;
+  }
+
+  public String getRightIcon() {
+    return rightIcon;
   }
 
   public String getUrl() {

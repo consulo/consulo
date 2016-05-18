@@ -28,6 +28,7 @@ import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtVirtualFile;
 import consulo.web.gwt.client.ui.Editor;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +107,7 @@ public class GwtMain implements EntryPoint {
               return;
             }
 
-            String tabText = "<img src=\"/icons/" + virtualFile.getIcon() + "\">" + virtualFile.getName();
+            String tabText = icon(virtualFile.getIconLayers()) + " <span class=\"textAfterIcon18\">" + virtualFile.getName() + "</span>";
 
             final Editor editor = new Editor(result);
             editor.update();
@@ -155,8 +156,17 @@ public class GwtMain implements EntryPoint {
 
   private static void addNodes(HasTreeItems parent, GwtVirtualFile virtualFile) {
     HorizontalPanel panel = new HorizontalPanel();
-    panel.add(new Image("/icons/" + virtualFile.getIcon()));
-    panel.add(new HTML(virtualFile.getName()));
+    panel.add(icon(virtualFile.getIconLayers()));
+    String rightIcon = virtualFile.getRightIcon();
+    if (rightIcon != null) {
+      Widget rightIconWidget = icon(Arrays.asList(rightIcon));
+      rightIconWidget.addStyleName("textAfterIcon16");
+      panel.add(rightIconWidget);
+    }
+
+    InlineHTML span = new InlineHTML(virtualFile.getName());
+    span.setStyleName("textAfterIcon18");
+    panel.add(span);
 
     TreeItem item = new TreeItem(panel);
     item.setUserObject(virtualFile);
@@ -169,5 +179,18 @@ public class GwtMain implements EntryPoint {
       item.setState(true);
     }
     parent.addItem(item);
+  }
+
+  private static Widget icon(List<String> icons) {
+    FlowPanel panel = new FlowPanel();
+    panel.setStyleName("imageWrapper");
+
+    for (String icon : icons) {
+      Image image = new Image("/icons/" + icon);
+      image.setStyleName("overlayImage");
+
+      panel.add(image);
+    }
+    return panel;
   }
 }

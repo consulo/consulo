@@ -16,3 +16,21 @@
 
   text-align: right;
 }
+
+.textAfterIcon16 {
+  margin-left: 16px;
+}
+
+.textAfterIcon18 {
+  margin-left: 18px;
+}
+
+.imageWrapper {
+  position: relative;
+}
+
+.overlayImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
