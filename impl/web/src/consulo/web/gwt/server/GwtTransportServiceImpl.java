@@ -205,6 +205,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
                     continue;
                   }
                   GwtHighlightInfo info = createHighlightInfo(textAttributes, new GwtTextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()));
+                  info.setTooltip(highlightInfo.getToolTip());
                   list.add(info);
                 }
               }

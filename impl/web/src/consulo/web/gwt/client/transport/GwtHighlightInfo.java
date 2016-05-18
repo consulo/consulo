@@ -30,6 +30,7 @@ public class GwtHighlightInfo implements IsSerializable {
   private boolean myBold;
   private boolean myItalic;
   private GwtTextRange myTextRange;
+  private String myTooltip;
 
   public GwtHighlightInfo() {
   }
@@ -43,7 +44,15 @@ public class GwtHighlightInfo implements IsSerializable {
   }
 
   public boolean isEmpty() {
-    return !myBold && !myItalic && myForeground == null && myBackground == null;
+    return !myBold && !myItalic && myForeground == null && myBackground == null && myTooltip == null;
+  }
+
+  public String getTooltip() {
+    return myTooltip;
+  }
+
+  public void setTooltip(String tooltip) {
+    myTooltip = tooltip;
   }
 
   public GwtColor getBackground() {

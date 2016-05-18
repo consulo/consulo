@@ -20,7 +20,9 @@ import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtTextRange;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -28,6 +30,7 @@ import java.util.List;
  */
 public class SegmentBuilder {
   private List<Segment> mySegments = new ArrayList<Segment>();
+  private Map<Integer, List<GwtHighlightInfo>> myHighlights = new HashMap<Integer, List<GwtHighlightInfo>>();
   private String myText;
 
   public SegmentBuilder(String text) {
@@ -64,6 +67,16 @@ public class SegmentBuilder {
     }
   }
 
+  public void addHighlights(List<GwtHighlightInfo> result, int flag) {
+    removeHighlightByFlag(flag);
+
+    myHighlights.put(flag, result);
+
+    for (GwtHighlightInfo highlightInfo : result) {
+      addHighlight(highlightInfo, flag);
+    }
+  }
+
   public void addHighlight(GwtHighlightInfo highlightInfo, int flag) {
     boolean foundInsideSegment = false;
     GwtTextRange highlightTextRange = highlightInfo.getTextRange();
@@ -82,7 +95,7 @@ public class SegmentBuilder {
         Segment segment = mySegments.get(i);
 
         GwtTextRange textRange = highlightInfo.getTextRange();
-        if(textRange.containsRange(segment.getTextRange())) {
+        if (textRange.containsRange(segment.getTextRange())) {
           WrappedStyledSegment wrappedStyledSegment = new WrappedStyledSegment(segment);
           add(wrappedStyledSegment, highlightInfo, flag);
           copy(segment, wrappedStyledSegment);
@@ -129,7 +142,7 @@ public class SegmentBuilder {
   }
 
   private static void copy(Segment from, Segment to) {
-    if(from instanceof StyledSegment && to instanceof StyledSegment) {
+    if (from instanceof StyledSegment && to instanceof StyledSegment) {
       ((StyledSegment)from).copy((StyledSegment)to);
     }
   }
@@ -171,6 +184,7 @@ public class SegmentBuilder {
     }
     return String.valueOf(c);
   }
+
   public String toHtmlAsText() {
     StringBuilder builder = new StringBuilder();
     for (Segment segment : mySegments) {
@@ -180,8 +194,9 @@ public class SegmentBuilder {
   }
 
   public void removeHighlightByFlag(int flag) {
+    myHighlights.remove(flag);
     for (Segment segment : mySegments) {
-      if(segment instanceof StyledSegment) {
+      if (segment instanceof StyledSegment) {
         ((StyledSegment)segment).removeByFlag(flag);
       }
     }

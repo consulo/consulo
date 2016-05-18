@@ -18,6 +18,8 @@ package consulo.web.gwt.client.ui;
 import com.bfr.client.selection.Range;
 import com.bfr.client.selection.RangeEndPoint;
 import com.bfr.client.selection.Selection;
+import com.github.gwtbootstrap.client.ui.Tooltip;
+import com.github.gwtbootstrap.client.ui.constants.Placement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Text;
@@ -41,7 +43,7 @@ public class Editor extends SimplePanel {
 
   private EditorCaretHandler myCaretHandler;
 
-  private int myLastCaretOffset  = 0;
+  private int myLastCaretOffset = 0;
 
   public Editor(String text) {
     myBuilder = new SegmentBuilder(text);
@@ -212,6 +214,15 @@ public class Editor extends SimplePanel {
     setWidget(panel);
   }
 
+  private void setupTooltip(Widget w, String message) {
+    Tooltip tooltip = new Tooltip();
+    tooltip.setWidget(w);
+    tooltip.setText(message);
+    tooltip.setPlacement(Placement.BOTTOM);
+    tooltip.reconfigure();
+  }
+
+
   public void setCaretHandler(EditorCaretHandler caretHandler) {
     myCaretHandler = caretHandler;
   }
@@ -221,11 +232,8 @@ public class Editor extends SimplePanel {
   }
 
   public void addHighlightInfos(List<GwtHighlightInfo> result, int flag) {
-    myBuilder.removeHighlightByFlag(flag);
+    myBuilder.addHighlights(result, flag);
 
-    for (GwtHighlightInfo highlightInfo : result) {
-      myBuilder.addHighlight(highlightInfo, flag);
-    }
     repaint();
   }
 }
