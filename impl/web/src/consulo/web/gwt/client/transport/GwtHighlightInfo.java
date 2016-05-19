@@ -22,10 +22,14 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @since 17-May-16
  */
 public class GwtHighlightInfo implements IsSerializable {
+  public static int BOLD = 1 << 1;
+  public static int ITALIC = 1 << 2;
+  public static int UNDERLINE = 1 << 3;
+  public static int LINE_THROUGH = 1 << 4;
+
   private GwtColor myForeground;
   private GwtColor myBackground;
-  private boolean myBold;
-  private boolean myItalic;
+  private int myFlags;
   private GwtTextRange myTextRange;
   private String myTooltip;
   private int mySeverity;
@@ -33,17 +37,16 @@ public class GwtHighlightInfo implements IsSerializable {
   public GwtHighlightInfo() {
   }
 
-  public GwtHighlightInfo(GwtColor foreground, GwtColor background, boolean bold, boolean italic, GwtTextRange textRange, int severity) {
+  public GwtHighlightInfo(GwtColor foreground, GwtColor background, int flags, GwtTextRange textRange, int severity) {
     myForeground = foreground;
     myBackground = background;
-    myBold = bold;
-    myItalic = italic;
+    myFlags = flags;
     myTextRange = textRange;
     mySeverity = severity;
   }
 
   public boolean isEmpty() {
-    return !myBold && !myItalic && myForeground == null && myBackground == null && myTooltip == null;
+    return myFlags == 0 && myForeground == null && myBackground == null && myTooltip == null;
   }
 
   public int getSeverity() {
@@ -66,12 +69,8 @@ public class GwtHighlightInfo implements IsSerializable {
     return myForeground;
   }
 
-  public boolean isBold() {
-    return myBold;
-  }
-
-  public boolean isItalic() {
-    return myItalic;
+  public int getFlags() {
+    return myFlags;
   }
 
   public GwtTextRange getTextRange() {

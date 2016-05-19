@@ -15,6 +15,7 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.transport.GwtColor;
@@ -36,11 +37,13 @@ public class EditorSegmentBuilder {
   public static class Fragment {
     public static class StyleInfo {
       private String key;
+      private String value;
       private int flag;
 
-      public StyleInfo(String key, int flag) {
+      public StyleInfo(String key, String value, int flag) {
         this.key = key;
         this.flag = flag;
+        this.value = value;
       }
     }
 
@@ -62,7 +65,7 @@ public class EditorSegmentBuilder {
         return;
       }
 
-      if(severity != 0) {
+      if (severity != 0) {
         if (mySeverityMap == null) {
           mySeverityMap = new HashMap<String, Integer>();
         }
@@ -73,9 +76,18 @@ public class EditorSegmentBuilder {
       if (myStyles == null) {
         myStyles = new ArrayList<StyleInfo>();
       }
-      myStyles.add(new StyleInfo(key, flag));
+      myStyles.add(new StyleInfo(key, value, flag));
 
-      widget.getElement().getStyle().setProperty(key, value);
+      Style style = widget.getElement().getStyle();
+      if (key.equals("textDecoration")) {
+        String oldValue = style.getProperty(key);
+        if (oldValue != null) {
+          style.setProperty(key, oldValue + " " + value);
+          return;
+        }
+      }
+
+      style.setProperty(key, value);
     }
 
     public void removeByFlag(int flag) {
@@ -88,14 +100,31 @@ public class EditorSegmentBuilder {
 
         StyleInfo[] styleInfos = myStyles.toArray(new StyleInfo[myStyles.size()]);
         for (StyleInfo styleInfo : styleInfos) {
-          if(mySeverityMap != null) {
+          if (mySeverityMap != null) {
             mySeverityMap.remove(styleInfo.key);
           }
 
           if (styleInfo.flag == flag) {
-            widget.getElement().getStyle().setProperty(styleInfo.key, null);
-
             myStyles.remove(styleInfo);
+
+            Style style = widget.getElement().getStyle();
+            if (styleInfo.key.equals("textDecoration")) {
+              String oldValue = style.getProperty(styleInfo.key);
+              if (oldValue == null) {
+                continue;
+              }
+
+              // it mixin - need removed only our value
+              if (oldValue.contains(" ")) {
+                continue;
+              }
+
+              oldValue = oldValue.replace(" " + styleInfo.value, "");
+              style.setProperty(styleInfo.key, oldValue);
+              continue;
+            }
+
+            style.setProperty(styleInfo.key, null);
           }
         }
       }
@@ -173,12 +202,20 @@ public class EditorSegmentBuilder {
       fragment.add("backgroundColor", "rgb(" + background.getRed() + ", " + background.getGreen() + ", " + background.getBlue() + ")", severity, flag);
     }
 
-    if (highlightInfo.isBold()) {
+    if (BitUtil.isSet(highlightInfo.getFlags(), GwtHighlightInfo.BOLD)) {
       fragment.add("fontWeight", "bold", severity, flag);
     }
 
-    if (highlightInfo.isItalic()) {
+    if (BitUtil.isSet(highlightInfo.getFlags(), GwtHighlightInfo.ITALIC)) {
       fragment.add("fontStyle", "italic", severity, flag);
+    }
+
+    if (BitUtil.isSet(highlightInfo.getFlags(), GwtHighlightInfo.UNDERLINE)) {
+      fragment.add("textDecoration", "underline", severity, flag);
+    }
+
+    if (BitUtil.isSet(highlightInfo.getFlags(), GwtHighlightInfo.LINE_THROUGH)) {
+      fragment.add("textDecoration", "line-through", severity, flag);
     }
   }
 

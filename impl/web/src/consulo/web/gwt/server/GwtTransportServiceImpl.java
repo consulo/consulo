@@ -27,6 +27,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -44,6 +45,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.*;
+import com.intellij.util.BitUtil;
 import consulo.web.gwt.client.transport.*;
 import consulo.web.gwt.shared.GwtTransportService;
 import org.jetbrains.annotations.NotNull;
@@ -236,9 +238,6 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   public static GwtHighlightInfo createHighlightInfo(TextAttributes textAttributes, GwtTextRange textRange, int severity) {
     GwtColor foreground = null;
     GwtColor background = null;
-    boolean bold = false;
-    boolean italic = false;
-    GwtTextRange range = null;
 
     Color foregroundColor = textAttributes.getForegroundColor();
     if (foregroundColor != null) {
@@ -250,14 +249,13 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
       background = new GwtColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue());
     }
 
-    if ((textAttributes.getFontType() & Font.BOLD) != 0) {
-      bold = true;
-    }
-    if ((textAttributes.getFontType() & Font.ITALIC) != 0) {
-      italic = true;
-    }
-    range = textRange;
-    return new GwtHighlightInfo(foreground, background, bold, italic, range, severity);
+    int flags = 0;
+    flags = BitUtil.set(flags, GwtHighlightInfo.BOLD, (textAttributes.getFontType() & Font.BOLD) != 0);
+    flags = BitUtil.set(flags, GwtHighlightInfo.ITALIC, (textAttributes.getFontType() & Font.ITALIC) != 0);
+    flags = BitUtil.set(flags, GwtHighlightInfo.UNDERLINE, textAttributes.getEffectType() == EffectType.LINE_UNDERSCORE);
+    flags = BitUtil.set(flags, GwtHighlightInfo.LINE_THROUGH, textAttributes.getEffectType() == EffectType.STRIKEOUT);
+
+    return new GwtHighlightInfo(foreground, background, flags, textRange, severity);
   }
 
   @NotNull
