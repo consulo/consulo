@@ -28,20 +28,26 @@ public class GwtHighlightInfo implements IsSerializable {
   private boolean myItalic;
   private GwtTextRange myTextRange;
   private String myTooltip;
+  private int mySeverity;
 
   public GwtHighlightInfo() {
   }
 
-  public GwtHighlightInfo(GwtColor foreground, GwtColor background, boolean bold, boolean italic, GwtTextRange textRange) {
+  public GwtHighlightInfo(GwtColor foreground, GwtColor background, boolean bold, boolean italic, GwtTextRange textRange, int severity) {
     myForeground = foreground;
     myBackground = background;
     myBold = bold;
     myItalic = italic;
     myTextRange = textRange;
+    mySeverity = severity;
   }
 
   public boolean isEmpty() {
     return !myBold && !myItalic && myForeground == null && myBackground == null && myTooltip == null;
+  }
+
+  public int getSeverity() {
+    return mySeverity;
   }
 
   public String getTooltip() {

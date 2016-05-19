@@ -135,7 +135,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
           PsiElement resolvedElement = referenceAt.resolve();
           if (resolvedElement != null) {
             PsiElement navigationElement = resolvedElement.getNavigationElement();
-            if(navigationElement == null) {
+            if (navigationElement == null) {
               navigationElement = resolvedElement;
             }
 
@@ -158,14 +158,14 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
       }
       BinaryFileDecompiler binaryFileDecompiler = null;
       FileType fileType = fileByUrl.getFileType();
-      if(fileType.isBinary()) {
+      if (fileType.isBinary()) {
         binaryFileDecompiler = BinaryFileTypeDecompilers.INSTANCE.forFileType(fileType);
-        if(binaryFileDecompiler == null) {
+        if (binaryFileDecompiler == null) {
           return null;
         }
       }
 
-      if(binaryFileDecompiler != null) {
+      if (binaryFileDecompiler != null) {
         return binaryFileDecompiler.decompile(fileByUrl).toString();
       }
 
@@ -202,7 +202,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
             int end = iterator.getEnd();
             TextAttributes textAttributes = iterator.getTextAttributes();
 
-            GwtHighlightInfo highlightInfo = createHighlightInfo(textAttributes, new GwtTextRange(start, end));
+            GwtHighlightInfo highlightInfo = createHighlightInfo(textAttributes, new GwtTextRange(start, end), 0);
             if (!highlightInfo.isEmpty()) {
               list.add(highlightInfo);
             }
@@ -219,9 +219,9 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   @RequiredReadAction
   private static CharSequence getFileText(Project project, VirtualFile virtualFile) {
     FileType fileType = virtualFile.getFileType();
-    if(fileType.isBinary()) {
+    if (fileType.isBinary()) {
       BinaryFileDecompiler binaryFileDecompiler = BinaryFileTypeDecompilers.INSTANCE.forFileType(fileType);
-      if(binaryFileDecompiler != null) {
+      if (binaryFileDecompiler != null) {
         return binaryFileDecompiler.decompile(virtualFile);
       }
     }
@@ -233,12 +233,12 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
 
-  public static GwtHighlightInfo createHighlightInfo(TextAttributes textAttributes, GwtTextRange textRange) {
+  public static GwtHighlightInfo createHighlightInfo(TextAttributes textAttributes, GwtTextRange textRange, int severity) {
     GwtColor foreground = null;
     GwtColor background = null;
     boolean bold = false;
     boolean italic = false;
-    GwtTextRange myTextRange = null;
+    GwtTextRange range = null;
 
     Color foregroundColor = textAttributes.getForegroundColor();
     if (foregroundColor != null) {
@@ -256,8 +256,8 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     if ((textAttributes.getFontType() & Font.ITALIC) != 0) {
       italic = true;
     }
-    myTextRange = textRange;
-    return new GwtHighlightInfo(foreground, background, bold, italic, myTextRange);
+    range = textRange;
+    return new GwtHighlightInfo(foreground, background, bold, italic, range, severity);
   }
 
   @NotNull
@@ -275,7 +275,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
           final List<GwtHighlightInfo> list = new ArrayList<GwtHighlightInfo>();
           final Project project = getProject();
           final PsiFile file = PsiManager.getInstance(project).findFile(fileByUrl);
-          if(file == null) {
+          if (file == null) {
             return Collections.emptyList();
           }
           try {
@@ -295,7 +295,8 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
                   if (textAttributes == null) {
                     continue;
                   }
-                  GwtHighlightInfo info = createHighlightInfo(textAttributes, new GwtTextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()));
+                  GwtHighlightInfo info = createHighlightInfo(textAttributes, new GwtTextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()),
+                                                              highlightInfo.getSeverity().myVal);
                   info.setTooltip(highlightInfo.getToolTip());
                   list.add(info);
                 }

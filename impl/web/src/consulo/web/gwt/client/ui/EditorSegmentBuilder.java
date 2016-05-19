@@ -23,7 +23,9 @@ import consulo.web.gwt.client.transport.GwtTextRange;
 import consulo.web.gwt.client.util.BitUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -33,10 +35,12 @@ public class EditorSegmentBuilder {
   public static class Fragment {
     public static class StyleInfo {
       private String key;
+      private int severity;
       private int flag;
 
-      public StyleInfo(String key, int flag) {
+      public StyleInfo(String key, int severity, int flag) {
         this.key = key;
+        this.severity = severity;
         this.flag = flag;
       }
     }
@@ -47,11 +51,17 @@ public class EditorSegmentBuilder {
     private int highlightFlags;
 
     private List<StyleInfo> myStyles = new ArrayList<StyleInfo>();
+    private Map<String, Integer> mySeverityMap = new HashMap<String, Integer>();
 
-    public void add(String key, String value, int flag) {
+    public void add(String key, String value, int severity, int flag) {
       highlightFlags = BitUtil.set(highlightFlags, flag, true);
 
-      myStyles.add(new StyleInfo(key, flag));
+      Integer integer = mySeverityMap.get(key);
+      if (integer != null && severity <= integer) {
+        return;
+      }
+      mySeverityMap.put(key, severity);
+      myStyles.add(new StyleInfo(key, severity, flag));
 
       widget.getElement().getStyle().setProperty(key, value);
     }
@@ -62,6 +72,7 @@ public class EditorSegmentBuilder {
 
         StyleInfo[] styleInfos = myStyles.toArray(new StyleInfo[myStyles.size()]);
         for (StyleInfo styleInfo : styleInfos) {
+          mySeverityMap.remove(styleInfo.key);
           if (styleInfo.flag == flag) {
             widget.getElement().getStyle().setProperty(styleInfo.key, null);
 
@@ -118,29 +129,29 @@ public class EditorSegmentBuilder {
 
       for (GwtHighlightInfo highlightInfo : result) {
         if (highlightInfo.getTextRange().containsRange(fragment.range)) {
-          add(fragment, highlightInfo, flag);
+          add(fragment, highlightInfo, highlightInfo.getSeverity(), flag);
         }
       }
     }
   }
 
-  private void add(Fragment fragment, GwtHighlightInfo highlightInfo, int flag) {
+  private void add(Fragment fragment, GwtHighlightInfo highlightInfo, int severity, int flag) {
     GwtColor foreground = highlightInfo.getForeground();
     if (foreground != null) {
-      fragment.add("color", "rgb(" + foreground.getRed() + ", " + foreground.getGreen() + ", " + foreground.getBlue() + ")", flag);
+      fragment.add("color", "rgb(" + foreground.getRed() + ", " + foreground.getGreen() + ", " + foreground.getBlue() + ")", severity, flag);
     }
 
     GwtColor background = highlightInfo.getBackground();
     if (background != null) {
-      fragment.add("backgroundColor", "rgb(" + background.getRed() + ", " + background.getGreen() + ", " + background.getBlue() + ")", flag);
+      fragment.add("backgroundColor", "rgb(" + background.getRed() + ", " + background.getGreen() + ", " + background.getBlue() + ")", severity, flag);
     }
 
     if (highlightInfo.isBold()) {
-      fragment.add("fontWeight", "bold", flag);
+      fragment.add("fontWeight", "bold", severity, flag);
     }
 
     if (highlightInfo.isItalic()) {
-      fragment.add("fontStyle", "italic", flag);
+      fragment.add("fontStyle", "italic", severity, flag);
     }
   }
 
