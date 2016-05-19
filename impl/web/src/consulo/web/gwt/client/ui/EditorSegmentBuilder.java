@@ -18,10 +18,10 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
-import consulo.web.gwt.client.transport.GwtColor;
-import consulo.web.gwt.client.transport.GwtHighlightInfo;
-import consulo.web.gwt.client.transport.GwtTextRange;
 import consulo.web.gwt.client.util.BitUtil;
+import consulo.web.gwt.shared.transport.GwtColor;
+import consulo.web.gwt.shared.transport.GwtHighlightInfo;
+import consulo.web.gwt.shared.transport.GwtTextRange;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -116,12 +116,10 @@ public class EditorSegmentBuilder {
 
               // it mixin - need removed only our value
               if (oldValue.contains(" ")) {
+                oldValue = oldValue.replace(" " + styleInfo.value, "");
+                style.setProperty(styleInfo.key, oldValue);
                 continue;
               }
-
-              oldValue = oldValue.replace(" " + styleInfo.value, "");
-              style.setProperty(styleInfo.key, oldValue);
-              continue;
             }
 
             style.setProperty(styleInfo.key, null);
@@ -188,6 +186,14 @@ public class EditorSegmentBuilder {
 
         add(fragment, highlightInfo, highlightInfo.getSeverity(), flag);
       }
+    }
+  }
+
+  public void removeHighlightByRange(GwtTextRange textRange, int flag) {
+    for (int i = textRange.getStartOffset(); i < textRange.getEndOffset(); i++) {
+      Fragment fragment = myFragments[i];
+
+      fragment.removeByFlag(flag);
     }
   }
 

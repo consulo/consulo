@@ -26,7 +26,7 @@ import com.intellij.ui.RowIcon;
 import com.intellij.util.IconUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.web.gwt.client.transport.GwtVirtualFile;
+import consulo.web.gwt.shared.transport.GwtVirtualFile;
 
 import javax.swing.*;
 import java.util.List;

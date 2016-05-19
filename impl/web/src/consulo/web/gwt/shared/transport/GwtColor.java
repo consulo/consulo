@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.transport;
+package consulo.web.gwt.shared.transport;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 

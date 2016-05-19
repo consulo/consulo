@@ -42,13 +42,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.*;
 import com.intellij.util.BitUtil;
-import consulo.web.gwt.client.transport.*;
 import consulo.web.gwt.shared.GwtTransportService;
+import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
@@ -117,23 +119,31 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     return GwtVirtualFileUtil.createVirtualFile(getProject(), fileByUrl);
   }
 
-  @NotNull
+  @Nullable
   @Override
-  public List<GwtNavigatable> getNavigationInfo(String fileUrl, final int offset) {
+  public GwtNavigateInfo getNavigationInfo(String fileUrl, final int offset) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl == null) {
-      return Collections.emptyList();
+      return null;
     }
 
+    final GwtTextRange[] range = new GwtTextRange[1];
     final List<GwtNavigatable> navigatables = new ArrayList<GwtNavigatable>();
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       @Override
       @RequiredReadAction
       public void run() {
-        PsiFile file = PsiManager.getInstance(getProject()).findFile(fileByUrl);
+        Project project = getProject();
+        PsiFile file = PsiManager.getInstance(project).findFile(fileByUrl);
         assert file != null;
         PsiReference referenceAt = file.findReferenceAt(offset);
         if (referenceAt != null) {
+          List<TextRange> absoluteRanges = ReferenceRange.getAbsoluteRanges(referenceAt);
+          if(absoluteRanges.isEmpty()) {
+            return;
+          }
+          range[0] = new GwtTextRange(absoluteRanges.get(0).getStartOffset(), absoluteRanges.get(0).getEndOffset());
+
           PsiElement resolvedElement = referenceAt.resolve();
           if (resolvedElement != null) {
             PsiElement navigationElement = resolvedElement.getNavigationElement();
@@ -143,12 +153,15 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
 
             VirtualFile virtualFile = navigationElement.getContainingFile().getVirtualFile();
             assert virtualFile != null;
-            navigatables.add(new GwtNavigatable(virtualFile.getUrl(), navigationElement.getTextOffset()));
+            navigatables.add(new GwtNavigatable(GwtVirtualFileUtil.createVirtualFile(project, virtualFile), navigationElement.getTextOffset()));
           }
         }
       }
     });
-    return navigatables;
+    if(range[0] == null || navigatables.isEmpty()) {
+      return null;
+    }
+    return new GwtNavigateInfo(range[0], navigatables);
   }
 
   @Override

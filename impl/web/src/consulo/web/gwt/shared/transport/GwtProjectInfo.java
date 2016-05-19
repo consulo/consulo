@@ -13,31 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.transport;
+package consulo.web.gwt.shared.transport;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import java.util.List;
+
 /**
  * @author VISTALL
- * @since 19-May-16
+ * @since 18-May-16
  */
-public class GwtNavigatable implements IsSerializable {
-  private String myFileUrl;
-  private int myOffset;
+public class GwtProjectInfo implements IsSerializable{
+  private GwtVirtualFile myBaseDirectory;
+  private List<String> myModuleDirectoryUrls;
 
-  public GwtNavigatable(String fileUrl, int offset) {
-    myFileUrl = fileUrl;
-    myOffset = offset;
+  public GwtProjectInfo(GwtVirtualFile baseDirectory, List<String> moduleDirectoryUrls) {
+    myBaseDirectory = baseDirectory;
+    myModuleDirectoryUrls = moduleDirectoryUrls;
   }
 
-  public GwtNavigatable() {
+  public GwtProjectInfo() {
   }
 
-  public String getFileUrl() {
-    return myFileUrl;
+  public GwtVirtualFile getBaseDirectory() {
+    return myBaseDirectory;
   }
 
-  public int getOffset() {
-    return myOffset;
+  public List<String> getModuleDirectoryUrls() {
+    return myModuleDirectoryUrls;
   }
 }

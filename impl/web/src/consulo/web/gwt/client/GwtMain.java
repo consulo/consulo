@@ -15,67 +15,29 @@
  */
 package consulo.web.gwt.client;
 
-import com.github.gwtbootstrap.client.ui.TabLink;
-import com.github.gwtbootstrap.client.ui.TabPane;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import consulo.web.gwt.client.transport.GwtHighlightInfo;
-import consulo.web.gwt.client.transport.GwtNavigatable;
-import consulo.web.gwt.client.transport.GwtProjectInfo;
-import consulo.web.gwt.client.transport.GwtVirtualFile;
-import consulo.web.gwt.client.ui.*;
-import consulo.web.gwt.shared.GwtTransportService;
-import consulo.web.gwt.shared.GwtTransportServiceAsync;
+import consulo.web.gwt.client.ui.DoubleClickTree;
+import consulo.web.gwt.client.ui.DoubleClickTreeEvent;
+import consulo.web.gwt.client.ui.DoubleClickTreeHandler;
+import consulo.web.gwt.client.ui.EditorTabPanel;
+import consulo.web.gwt.client.util.GwtUtil;
+import consulo.web.gwt.client.util.ReportableCallable;
+import consulo.web.gwt.shared.transport.GwtProjectInfo;
+import consulo.web.gwt.shared.transport.GwtVirtualFile;
 import org.cafesip.gwtcomp.client.ui.SuperTreeItem;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 15-May-16
  */
 public class GwtMain implements EntryPoint {
-  public class EditorTab {
-    private Editor myEditor;
-    private int myIndex;
-
-    public EditorTab(Editor editor, int index) {
-
-      myEditor = editor;
-      myIndex = index;
-    }
-  }
-
-  private static final int ourLexerFlag = 1 << 1;
-  private static final int ourEditorFlag = 1 << 2;
-
-  private static final GwtTransportServiceAsync ourAsyncService = GWT.create(GwtTransportService.class);
-
-  private Map<String, EditorTab> myOpenedFiles = new HashMap<String, EditorTab>();
-  private final com.github.gwtbootstrap.client.ui.TabPanel myTabPanel = new com.github.gwtbootstrap.client.ui.TabPanel();
 
   @Override
   public void onModuleLoad() {
-    //final SimplePanel globalPanel = new SimplePanel();
-    /*globalPanel.setWidth("100%");
-    globalPanel.setHeight(Window.getClientHeight() + "px");
-    Window.addResizeHandler(new ResizeHandler() {
-      @Override
-      public void onResize(ResizeEvent event) {
-        int height = event.getHeight();
-        globalPanel.setHeight(height + "px");
-      }
-    });*/
-
     FlowPanel flowPanel = new FlowPanel();
     Command cmd = new Command() {
       @Override
@@ -97,7 +59,7 @@ public class GwtMain implements EntryPoint {
     splitPanel.setSplitPosition("20%");
 
     final DoubleClickTree tree = new DoubleClickTree();
-    ourAsyncService.getProjectInfo("ignored", new ReportableCallable<GwtProjectInfo>() {
+    GwtUtil.rpc().getProjectInfo("ignored", new ReportableCallable<GwtProjectInfo>() {
       @Override
       public void onSuccess(GwtProjectInfo result) {
         addNodes(tree, null, result);
@@ -105,7 +67,9 @@ public class GwtMain implements EntryPoint {
     });
 
     splitPanel.setLeftWidget(tree);
-    splitPanel.setRightWidget(myTabPanel);
+
+    final EditorTabPanel tabPanel = new EditorTabPanel();
+    splitPanel.setRightWidget(tabPanel);
 
     tree.addDoubleClickHandler(new DoubleClickTreeHandler() {
       @Override
@@ -118,7 +82,7 @@ public class GwtMain implements EntryPoint {
           return;
         }
 
-        openFileInEditor(virtualFile, 0);
+        tabPanel.openFileInEditor(virtualFile, 0);
       }
     });
 
@@ -127,145 +91,14 @@ public class GwtMain implements EntryPoint {
     RootPanel.get().add(flowPanel);
   }
 
-  private void openFileInEditor(final GwtVirtualFile virtualFile, final int offset) {
-    EditorTab editorTab = myOpenedFiles.get(virtualFile.getUrl());
-    if (editorTab != null) {
-      myTabPanel.selectTab(editorTab.myIndex);
-
-      editorTab.myEditor.focusOffset(offset);
-      return;
-    }
-
-    ourAsyncService.getContent(virtualFile.getUrl(), new AsyncCallback<String>() {
-      @Override
-      public void onFailure(Throwable caught) {
-      }
-
-      @Override
-      public void onSuccess(String result) {
-        if (result == null) {
-          return;
-        }
-
-        final Editor editor = new Editor(result);
-
-        final TabLink tabLink = new TabLink();
-        final HorizontalPanel tab = new HorizontalPanel();
-        tab.add(icon(virtualFile.getIconLayers()));
-        InlineHTML span = new InlineHTML(virtualFile.getName());
-        span.setStyleName("textAfterIcon18");
-        tab.add(span);
-        Image closeImage = new Image("/icons/actions/closeNew.png");
-
-        tab.add(closeImage);
-
-        tabLink.add(tab);
-
-        myTabPanel.add(tabLink);
-
-        TabPane tabPane = tabLink.getTabPane();
-        tabPane.setHeight("100%");
-        tabPane.setWidth("100%");
-        tabPane.addStyleName("disableOverflow");
-
-        tabPane.add(editor.getComponent());
-
-        // TabPanel can't return tab size???
-        int index = myOpenedFiles.size();
-        myTabPanel.selectTab(index);
-        editor.focusOffset(offset);
-
-        myOpenedFiles.put(virtualFile.getUrl(), new EditorTab(editor, index));
-
-        closeImage.addClickHandler(new ClickHandler() {
-          @Override
-          public void onClick(ClickEvent event) {
-            myOpenedFiles.remove(virtualFile.getUrl());
-
-            myTabPanel.remove(tabLink);
-
-            int size = myOpenedFiles.size();
-            if (size > 0) {
-              myTabPanel.selectTab(size - 1);
-            }
-          }
-        });
-
-        ourAsyncService.getLexerHighlight(virtualFile.getUrl(), new ReportableCallable<List<GwtHighlightInfo>>() {
-          @Override
-          public void onSuccess(List<GwtHighlightInfo> result) {
-            editor.addHighlightInfos(result, ourLexerFlag);
-
-            runHighlightPasses(virtualFile, editor, 0, null);
-
-            editor.setCaretHandler(new EditorCaretHandler() {
-              @Override
-              public void caretPlaced(@NotNull final EditorCaretEvent event) {
-                runHighlightPasses(virtualFile, editor, event.getOffset(), new Runnable() {
-                  @Override
-                  public void run() {
-                    showNavigationPopup(event, virtualFile);
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-  }
-
-  private void showNavigationPopup(@NotNull final EditorCaretEvent event, GwtVirtualFile virtualFile) {
-    ourAsyncService.getNavigationInfo(virtualFile.getUrl(), event.getOffset(), new ReportableCallable<List<GwtNavigatable>>() {
-      @Override
-      public void onSuccess(List<GwtNavigatable> result) {
-        if (!result.isEmpty()) {
-
-          final PopupPanel popupPanel = new PopupPanel(true);
-          for (final GwtNavigatable navigatable : result) {
-            Anchor anchor = new Anchor("Navigate to declaration");
-            anchor.addClickHandler(new ClickHandler() {
-              @Override
-              public void onClick(ClickEvent event) {
-                ourAsyncService.findFileByUrl(navigatable.getFileUrl(), new ReportableCallable<GwtVirtualFile>() {
-                  @Override
-                  public void onSuccess(GwtVirtualFile result) {
-                    popupPanel.hide();
-                    openFileInEditor(result, navigatable.getOffset());
-                  }
-                });
-              }
-            });
-            popupPanel.add(anchor);
-          }
-          popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
-          popupPanel.show();
-        }
-      }
-    });
-  }
-
-  private static void runHighlightPasses(GwtVirtualFile virtualFile, final Editor editor, int offset, final Runnable callback) {
-    ourAsyncService.runHighlightPasses(virtualFile.getUrl(), offset, new ReportableCallable<List<GwtHighlightInfo>>() {
-      @Override
-      public void onSuccess(List<GwtHighlightInfo> result) {
-        editor.addHighlightInfos(result, ourEditorFlag);
-
-        if(callback != null) {
-          callback.run();
-        }
-      }
-    });
-  }
-
   private static void addNodes(HasTreeItems parent, GwtVirtualFile virtualFile, GwtProjectInfo projectInfo) {
     GwtVirtualFile targetFile = virtualFile != null ? virtualFile : projectInfo.getBaseDirectory();
 
     HorizontalPanel panel = new HorizontalPanel();
-    panel.add(icon(targetFile.getIconLayers()));
+    panel.add(GwtUtil.icon(targetFile.getIconLayers()));
     String rightIcon = targetFile.getRightIcon();
     if (rightIcon != null) {
-      Widget rightIconWidget = icon(Arrays.asList(rightIcon));
+      Widget rightIconWidget = GwtUtil.icon(Arrays.asList(rightIcon));
       panel.add(rightIconWidget);
     }
 
@@ -289,18 +122,5 @@ public class GwtMain implements EntryPoint {
     }
 
     parent.addItem(item);
-  }
-
-  private static Widget icon(List<String> icons) {
-    FlowPanel panel = new FlowPanel();
-    panel.setStyleName("imageWrapper");
-
-    for (String icon : icons) {
-      Image image = new Image("/icon?path=\"" + icon + "\"");
-      image.setStyleName("overlayImage");
-
-      panel.add(image);
-    }
-    return panel;
   }
 }

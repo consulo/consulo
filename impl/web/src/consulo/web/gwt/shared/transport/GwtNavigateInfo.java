@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.transport;
+package consulo.web.gwt.shared.transport;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -21,25 +21,26 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 18-May-16
+ * @since 19-May-16
  */
-public class GwtProjectInfo implements IsSerializable{
-  private GwtVirtualFile myBaseDirectory;
-  private List<String> myModuleDirectoryUrls;
+public class GwtNavigateInfo implements IsSerializable{
+  private GwtTextRange myRange;
 
-  public GwtProjectInfo(GwtVirtualFile baseDirectory, List<String> moduleDirectoryUrls) {
-    myBaseDirectory = baseDirectory;
-    myModuleDirectoryUrls = moduleDirectoryUrls;
+  private List<GwtNavigatable> myNavigates;
+
+  public GwtNavigateInfo(GwtTextRange range, List<GwtNavigatable> navigates) {
+    myRange = range;
+    myNavigates = navigates;
   }
 
-  public GwtProjectInfo() {
+  public GwtNavigateInfo() {
   }
 
-  public GwtVirtualFile getBaseDirectory() {
-    return myBaseDirectory;
+  public GwtTextRange getRange() {
+    return myRange;
   }
 
-  public List<String> getModuleDirectoryUrls() {
-    return myModuleDirectoryUrls;
+  public List<GwtNavigatable> getNavigates() {
+    return myNavigates;
   }
 }
