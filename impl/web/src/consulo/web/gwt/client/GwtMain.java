@@ -272,7 +272,7 @@ public class GwtMain implements EntryPoint {
     panel.setStyleName("imageWrapper");
 
     for (String icon : icons) {
-      Image image = new Image("/icons/" + icon);
+      Image image = new Image("/icon?path=\"" + icon + "\"");
       image.setStyleName("overlayImage");
 
       panel.add(image);

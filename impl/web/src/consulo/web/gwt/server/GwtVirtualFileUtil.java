@@ -105,7 +105,7 @@ public class GwtVirtualFileUtil {
     String maybeUrl = icon.toString();
     int i = maybeUrl.indexOf("!/");
     if (i != -1) {
-       return maybeUrl.substring(i + 2, maybeUrl.length());
+       return maybeUrl.substring(i + 1, maybeUrl.length());
     }
     return null;
   }

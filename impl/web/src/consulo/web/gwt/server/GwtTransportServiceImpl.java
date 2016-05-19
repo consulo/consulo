@@ -62,7 +62,7 @@ import java.util.List;
 public class GwtTransportServiceImpl extends RemoteServiceServlet implements GwtTransportService {
 
   private Project getProject() {
-    String path = "R:/_github.com/consulo/cold";
+    String path = "R:/_github.com/consulo/mssdw";
 
     try {
       final Project project;
