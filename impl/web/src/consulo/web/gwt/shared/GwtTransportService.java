@@ -18,7 +18,9 @@ package consulo.web.gwt.shared;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
+import consulo.web.gwt.client.transport.GwtNavigatable;
 import consulo.web.gwt.client.transport.GwtProjectInfo;
+import consulo.web.gwt.client.transport.GwtVirtualFile;
 
 import java.util.List;
 
@@ -30,9 +32,13 @@ import java.util.List;
 public interface GwtTransportService extends RemoteService {
   GwtProjectInfo getProjectInfo(String path);
 
+  GwtVirtualFile findFileByUrl(String fileUrl);
+
   String getContent(String fileUrl);
 
   List<GwtHighlightInfo> getLexerHighlight(String fileUrl);
 
   List<GwtHighlightInfo> runHighlightPasses(String fileUrl, int offset);
+
+  List<GwtNavigatable> getNavigationInfo(String fileUrl, int offset);
 }

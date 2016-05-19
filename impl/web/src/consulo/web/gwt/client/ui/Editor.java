@@ -143,14 +143,8 @@ public class Editor extends SimplePanel {
           myLastCaretOffset = caretOffset;
 
           if (myCaretHandler != null) {
-            myCaretHandler.caretPlaced(caretOffset);
+            myCaretHandler.caretPlaced(event, caretOffset);
           }
-
-          /*PopupPanel popupPanel = new PopupPanel(true);
-
-          popupPanel.setWidget(new HTML("Style " + styleName + " offset = " + offset));
-          popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
-          popupPanel.show();  */
         }
 
         private int findCaretOffset() {

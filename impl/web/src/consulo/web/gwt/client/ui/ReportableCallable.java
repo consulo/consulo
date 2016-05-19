@@ -15,12 +15,15 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * @author VISTALL
- * @since 18-May-16
+ * @since 19-May-16
  */
-public interface EditorCaretHandler {
-  void caretPlaced(ClickEvent event, int offset);
+public abstract class ReportableCallable<T> implements AsyncCallback<T> {
+  @Override
+  public void onFailure(Throwable caught) {
+
+  }
 }

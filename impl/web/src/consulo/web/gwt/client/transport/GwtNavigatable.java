@@ -13,14 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwt.client.transport;
 
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * @author VISTALL
- * @since 18-May-16
+ * @since 19-May-16
  */
-public interface EditorCaretHandler {
-  void caretPlaced(ClickEvent event, int offset);
+public class GwtNavigatable implements IsSerializable {
+  private String myFileUrl;
+  private int myOffset;
+
+  public GwtNavigatable(String fileUrl, int offset) {
+    myFileUrl = fileUrl;
+    myOffset = offset;
+  }
+
+  public GwtNavigatable() {
+  }
+
+  public String getFileUrl() {
+    return myFileUrl;
+  }
+
+  public int getOffset() {
+    return myOffset;
+  }
 }

@@ -17,7 +17,9 @@ package consulo.web.gwt.shared;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
+import consulo.web.gwt.client.transport.GwtNavigatable;
 import consulo.web.gwt.client.transport.GwtProjectInfo;
+import consulo.web.gwt.client.transport.GwtVirtualFile;
 
 import java.util.List;
 
@@ -25,9 +27,13 @@ public interface GwtTransportServiceAsync {
 
   void getProjectInfo(String path, AsyncCallback<GwtProjectInfo> async);
 
+  void findFileByUrl(String fileUrl, AsyncCallback<GwtVirtualFile> async);
+
   void getContent(String fileUrl, AsyncCallback<String> async);
 
   void getLexerHighlight(String fileUrl, AsyncCallback<List<GwtHighlightInfo>> async);
 
   void runHighlightPasses(String fileUrl, int offset, AsyncCallback<List<GwtHighlightInfo>> async);
+
+  void getNavigationInfo(String fileUrl, int offset, AsyncCallback<List<GwtNavigatable>> async);
 }
