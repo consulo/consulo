@@ -132,11 +132,16 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
         assert file != null;
         PsiReference referenceAt = file.findReferenceAt(offset);
         if (referenceAt != null) {
-          PsiElement resolve = referenceAt.resolve();
-          if (resolve != null) {
-            VirtualFile virtualFile = resolve.getContainingFile().getVirtualFile();
+          PsiElement resolvedElement = referenceAt.resolve();
+          if (resolvedElement != null) {
+            PsiElement navigationElement = resolvedElement.getNavigationElement();
+            if(navigationElement == null) {
+              navigationElement = resolvedElement;
+            }
+
+            VirtualFile virtualFile = navigationElement.getContainingFile().getVirtualFile();
             assert virtualFile != null;
-            navigatables.add(new GwtNavigatable(virtualFile.getUrl(), resolve.getTextOffset()));
+            navigatables.add(new GwtNavigatable(virtualFile.getUrl(), navigationElement.getTextOffset()));
           }
         }
       }
