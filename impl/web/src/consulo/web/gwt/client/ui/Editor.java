@@ -17,6 +17,7 @@ package consulo.web.gwt.client.ui;
 
 import com.github.gwtbootstrap.client.ui.Tooltip;
 import com.github.gwtbootstrap.client.ui.constants.Placement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -61,7 +62,6 @@ public class Editor extends SimplePanel {
     myLineCount = myBuilder.getLineCount();
 
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
-
     setWidth("100%");
     setHeight("100%");
   }
@@ -74,6 +74,7 @@ public class Editor extends SimplePanel {
 
         Object range = element == null ? null : element.getPropertyObject("range");
         if (!(range instanceof GwtTextRange)) {
+          myLastCaretOffset = -1;
           return;
         }
 
@@ -110,9 +111,11 @@ public class Editor extends SimplePanel {
             }
           });
         }
+        event.preventDefault();
         break;
       case Event.ONMOUSEOUT:
         onMouseOut();
+        event.preventDefault();
         break;
       case Event.ONCLICK:
         if (event.getCtrlKey()) {
@@ -127,13 +130,11 @@ public class Editor extends SimplePanel {
           }
         }
         else {
-          if (myLastCaretOffset == -1) {
-            return;
-          }
           if (myCaretHandler != null) {
             myCaretHandler.caretPlaced(myLastCaretOffset);
           }
         }
+        event.preventDefault();
         break;
       default:
         super.onBrowserEvent(event);
@@ -174,6 +175,7 @@ public class Editor extends SimplePanel {
       HTMLTable.CellFormatter cellFormatter = grid.getCellFormatter();
       cellFormatter.addStyleName(i, 0, "noselectable");
       cellFormatter.addStyleName(i, 0, "editorLineRow");
+
       grid.setWidget(i, 0, panel);
     }
 
@@ -182,10 +184,23 @@ public class Editor extends SimplePanel {
 
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
-        lineElement = new FlowPanel();
+        lineElement = new FlowPanel() {
+          {
+            sinkEvents(Event.ONCHANGE | Event.ONPASTE | Event.KEYEVENTS);
+          }
+
+          @Override
+          public void onBrowserEvent(Event event) {
+            event.preventDefault();
+          }
+        };
         lineElement.setWidth("100%");
         lineElement.addStyleName("editorLine");
         lineElement.addStyleName("gen_Line_" + lineCount);
+        // dont provide red code
+        lineElement.getElement().setAttribute("spellcheck", "false");
+        // editable
+        lineElement.getElement().setAttribute("contenteditable", "true");
       }
 
       lineElement.add(fragment.widget);
@@ -250,8 +265,23 @@ public class Editor extends SimplePanel {
         fragment.widget.getElement().focus();
         fragment.widget.getElement().scrollIntoView();
 
+        set(fragment.widget.getElement());
         break;
       }
     }
   }
+
+  public native void set(Element element) /*-{
+    var range = $doc.createRange();
+    var sel = $wnd.getSelection();
+
+    console.log(element);
+
+    range.setStart(element, 1);
+    range.setEnd(element, 1);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    element.focus();
+  }-*/;
 }
