@@ -44,12 +44,23 @@ import java.util.Map;
  * @since 15-May-16
  */
 public class GwtMain implements EntryPoint {
+  public class EditorTab {
+    private Editor myEditor;
+    private int myIndex;
+
+    public EditorTab(Editor editor, int index) {
+
+      myEditor = editor;
+      myIndex = index;
+    }
+  }
+
   private static final int ourLexerFlag = 1;
   private static final int ourEditorFlag = 2;
 
   private static final GwtTransportServiceAsync ourAsyncService = GWT.create(GwtTransportService.class);
 
-  private Map<String, Integer> myOpenedFiles = new HashMap<String, Integer>();
+  private Map<String, EditorTab> myOpenedFiles = new HashMap<String, EditorTab>();
   private final com.github.gwtbootstrap.client.ui.TabPanel myTabPanel = new com.github.gwtbootstrap.client.ui.TabPanel();
 
   @Override
@@ -107,7 +118,7 @@ public class GwtMain implements EntryPoint {
           return;
         }
 
-        openFileInEditor(virtualFile);
+        openFileInEditor(virtualFile, 0);
       }
     });
 
@@ -116,10 +127,12 @@ public class GwtMain implements EntryPoint {
     RootPanel.get().add(flowPanel);
   }
 
-  private void openFileInEditor(final GwtVirtualFile virtualFile) {
-    Integer indexOfOpened = myOpenedFiles.get(virtualFile.getUrl());
-    if (indexOfOpened != null) {
-      myTabPanel.selectTab(indexOfOpened);
+  private void openFileInEditor(final GwtVirtualFile virtualFile, final int offset) {
+    EditorTab editorTab = myOpenedFiles.get(virtualFile.getUrl());
+    if (editorTab != null) {
+      myTabPanel.selectTab(editorTab.myIndex);
+
+      editorTab.myEditor.focusOffset(offset);
       return;
     }
 
@@ -160,7 +173,9 @@ public class GwtMain implements EntryPoint {
         // TabPanel can't return tab size???
         int index = myOpenedFiles.size();
         myTabPanel.selectTab(index);
-        myOpenedFiles.put(virtualFile.getUrl(), index);
+        editor.focusOffset(offset);
+
+        myOpenedFiles.put(virtualFile.getUrl(), new EditorTab(editor, index));
 
         closeImage.addClickHandler(new ClickHandler() {
           @Override
@@ -181,39 +196,15 @@ public class GwtMain implements EntryPoint {
           public void onSuccess(List<GwtHighlightInfo> result) {
             editor.addHighlightInfos(result, ourLexerFlag);
 
-            runHighlightPasses(virtualFile, editor, 0);
+            runHighlightPasses(virtualFile, editor, 0, null);
 
             editor.setCaretHandler(new EditorCaretHandler() {
               @Override
               public void caretPlaced(@NotNull final EditorCaretEvent event) {
-                runHighlightPasses(virtualFile, editor, event.getOffset());
-
-                ourAsyncService.getNavigationInfo(virtualFile.getUrl(), event.getOffset(), new ReportableCallable<List<GwtNavigatable>>() {
+                runHighlightPasses(virtualFile, editor, event.getOffset(), new Runnable() {
                   @Override
-                  public void onSuccess(List<GwtNavigatable> result) {
-                    if (!result.isEmpty()) {
-
-                      final PopupPanel popupPanel = new PopupPanel(true);
-                      for (final GwtNavigatable navigatable : result) {
-                        Anchor anchor = new Anchor("Navigate to declaration");
-                        anchor.addClickHandler(new ClickHandler() {
-                          @Override
-                          public void onClick(ClickEvent event) {
-                            ourAsyncService.findFileByUrl(navigatable.getFileUrl(), new ReportableCallable<GwtVirtualFile>() {
-                              @Override
-                              public void onSuccess(GwtVirtualFile result) {
-                                popupPanel.hide();
-                                openFileInEditor(result);
-                              }
-                            });
-                          }
-                        });
-                        popupPanel.add(anchor);
-                      }
-
-                      popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
-                      popupPanel.show();
-                    }
+                  public void run() {
+                    showNavigationPopup(event, virtualFile);
                   }
                 });
               }
@@ -224,11 +215,45 @@ public class GwtMain implements EntryPoint {
     });
   }
 
-  private static void runHighlightPasses(GwtVirtualFile virtualFile, final Editor editor, int offset) {
+  private void showNavigationPopup(@NotNull final EditorCaretEvent event, GwtVirtualFile virtualFile) {
+    ourAsyncService.getNavigationInfo(virtualFile.getUrl(), event.getOffset(), new ReportableCallable<List<GwtNavigatable>>() {
+      @Override
+      public void onSuccess(List<GwtNavigatable> result) {
+        if (!result.isEmpty()) {
+
+          final PopupPanel popupPanel = new PopupPanel(true);
+          for (final GwtNavigatable navigatable : result) {
+            Anchor anchor = new Anchor("Navigate to declaration");
+            anchor.addClickHandler(new ClickHandler() {
+              @Override
+              public void onClick(ClickEvent event) {
+                ourAsyncService.findFileByUrl(navigatable.getFileUrl(), new ReportableCallable<GwtVirtualFile>() {
+                  @Override
+                  public void onSuccess(GwtVirtualFile result) {
+                    popupPanel.hide();
+                    openFileInEditor(result, navigatable.getOffset());
+                  }
+                });
+              }
+            });
+            popupPanel.add(anchor);
+          }
+          popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
+          popupPanel.show();
+        }
+      }
+    });
+  }
+
+  private static void runHighlightPasses(GwtVirtualFile virtualFile, final Editor editor, int offset, final Runnable callback) {
     ourAsyncService.runHighlightPasses(virtualFile.getUrl(), offset, new ReportableCallable<List<GwtHighlightInfo>>() {
       @Override
       public void onSuccess(List<GwtHighlightInfo> result) {
         editor.addHighlightInfos(result, ourEditorFlag);
+
+        if(callback != null) {
+          callback.run();
+        }
       }
     });
   }

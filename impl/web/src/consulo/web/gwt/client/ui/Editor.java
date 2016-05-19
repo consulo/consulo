@@ -187,4 +187,15 @@ public class Editor extends SimplePanel {
   public void addHighlightInfos(List<GwtHighlightInfo> result, int flag) {
     myBuilder.addHighlights(result, flag);
   }
+
+  public void focusOffset(int offset) {
+    for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
+      if(fragment.range.containsRange(offset, offset)) {
+        fragment.widget.getElement().focus();
+        fragment.widget.getElement().scrollIntoView();
+
+        break;
+      }
+    }
+  }
 }
