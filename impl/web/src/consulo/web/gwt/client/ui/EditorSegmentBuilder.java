@@ -21,6 +21,7 @@ import consulo.web.gwt.client.transport.GwtColor;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtTextRange;
 import consulo.web.gwt.client.util.BitUtil;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,17 +51,30 @@ public class EditorSegmentBuilder {
     public boolean lineWrap;
     private int highlightFlags;
 
-    private List<StyleInfo> myStyles = new ArrayList<StyleInfo>();
-    private Map<String, Integer> mySeverityMap = new HashMap<String, Integer>();
+    @Nullable
+    private List<StyleInfo> myStyles;
+    @Nullable
+    private Map<String, Integer> mySeverityMap;
 
     public void add(String key, String value, int severity, int flag) {
       highlightFlags = BitUtil.set(highlightFlags, flag, true);
 
-      Integer integer = mySeverityMap.get(key);
-      if (integer != null && severity <= integer) {
+      Integer oldSeverity = mySeverityMap == null ? null : mySeverityMap.get(key);
+      if (oldSeverity != null && severity <= oldSeverity) {
         return;
       }
-      mySeverityMap.put(key, severity);
+
+      if(severity != 0) {
+        if (mySeverityMap == null) {
+          mySeverityMap = new HashMap<String, Integer>();
+        }
+
+        mySeverityMap.put(key, severity);
+      }
+
+      if (myStyles == null) {
+        myStyles = new ArrayList<StyleInfo>();
+      }
       myStyles.add(new StyleInfo(key, severity, flag));
 
       widget.getElement().getStyle().setProperty(key, value);
@@ -70,9 +84,16 @@ public class EditorSegmentBuilder {
       if (BitUtil.isSet(highlightFlags, flag)) {
         highlightFlags = BitUtil.set(highlightFlags, flag, false);
 
+        if (myStyles == null) {
+          return;
+        }
+
         StyleInfo[] styleInfos = myStyles.toArray(new StyleInfo[myStyles.size()]);
         for (StyleInfo styleInfo : styleInfos) {
-          mySeverityMap.remove(styleInfo.key);
+          if(mySeverityMap != null) {
+            mySeverityMap.remove(styleInfo.key);
+          }
+
           if (styleInfo.flag == flag) {
             widget.getElement().getStyle().setProperty(styleInfo.key, null);
 
