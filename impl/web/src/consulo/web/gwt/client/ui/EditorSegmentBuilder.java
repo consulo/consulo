@@ -36,12 +36,10 @@ public class EditorSegmentBuilder {
   public static class Fragment {
     public static class StyleInfo {
       private String key;
-      private int severity;
       private int flag;
 
-      public StyleInfo(String key, int severity, int flag) {
+      public StyleInfo(String key, int flag) {
         this.key = key;
-        this.severity = severity;
         this.flag = flag;
       }
     }
@@ -75,7 +73,7 @@ public class EditorSegmentBuilder {
       if (myStyles == null) {
         myStyles = new ArrayList<StyleInfo>();
       }
-      myStyles.add(new StyleInfo(key, severity, flag));
+      myStyles.add(new StyleInfo(key, flag));
 
       widget.getElement().getStyle().setProperty(key, value);
     }
