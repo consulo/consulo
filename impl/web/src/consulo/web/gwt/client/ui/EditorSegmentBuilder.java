@@ -57,7 +57,7 @@ public class EditorSegmentBuilder {
     }
 
     public void removeByFlag(int flag) {
-      if(BitUtil.isSet(highlightFlags, flag)) {
+      if (BitUtil.isSet(highlightFlags, flag)) {
         highlightFlags = BitUtil.set(highlightFlags, flag, false);
 
         StyleInfo[] styleInfos = myStyles.toArray(new StyleInfo[myStyles.size()]);
@@ -82,7 +82,22 @@ public class EditorSegmentBuilder {
 
       Fragment fragment = new Fragment();
 
-      fragment.range = new GwtTextRange(i, i + 1);
+      final int startIndex = i;
+      if (c == ' ' || c == '\t') {
+        for (int k = startIndex + 1; k < text.length(); k++) {
+          char nextChar = text.charAt(k);
+
+          if (nextChar == c) {
+            labelText += mapChar(nextChar);
+            i++;
+          }
+          else {
+            break;
+          }
+        }
+      }
+
+      fragment.range = new GwtTextRange(startIndex, i + 1);
       fragment.widget = new InlineHTML(labelText);
       fragment.widget.setStyleName(null);
       fragment.widget.getElement().setPropertyObject("range", fragment.range);
