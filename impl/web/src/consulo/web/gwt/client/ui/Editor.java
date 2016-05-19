@@ -48,8 +48,22 @@ public class Editor extends SimplePanel {
     myBuilder = new EditorSegmentBuilder(text);
     myLineCount = myBuilder.getLineCount();
 
+    sinkEvents(Event.ONCLICK);
+
     setWidth("100%");
     setHeight("100%");
+  }
+
+  @Override
+  public void onBrowserEvent(Event event) {
+    switch (DOM.eventGetType(event)) {
+      case Event.ONCLICK:
+        fireBrowseEventImpl(event);
+        break;
+      default:
+        super.onBrowserEvent(event);
+        break;
+    }
   }
 
   private void build() {
@@ -82,23 +96,7 @@ public class Editor extends SimplePanel {
 
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
-        lineElement = new FlowPanel() {
-          {
-            sinkEvents(Event.ONCLICK);
-          }
-
-          @Override
-          public void onBrowserEvent(Event event) {
-            switch (DOM.eventGetType(event)) {
-              case Event.ONCLICK:
-                fireBrowseEventImpl(event);
-                break;
-              default:
-                super.onBrowserEvent(event);
-                break;
-            }
-          }
-        };
+        lineElement = new FlowPanel();
         lineElement.setWidth("100%");
         lineElement.addStyleName("editorLine");
         lineElement.addStyleName("gen_Line_" + lineCount);
