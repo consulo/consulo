@@ -15,12 +15,10 @@
  */
 package consulo.web.gwt.client.ui;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author VISTALL
  * @since 18-May-16
  */
 public interface EditorCaretHandler {
-  void caretPlaced(@NotNull EditorCaretEvent event);
+  void caretPlaced(int offset);
 }

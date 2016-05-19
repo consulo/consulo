@@ -127,11 +127,11 @@ public class Editor extends SimplePanel {
           }
         }
         else {
-          if(myLastCaretOffset == -1) {
+          if (myLastCaretOffset == -1) {
             return;
           }
           if (myCaretHandler != null) {
-            myCaretHandler.caretPlaced(new EditorCaretEvent(event.getClientX(), event.getClientY(), myLastCaretOffset));
+            myCaretHandler.caretPlaced(myLastCaretOffset);
           }
         }
         break;
@@ -233,7 +233,18 @@ public class Editor extends SimplePanel {
     myBuilder.addHighlights(result, flag);
   }
 
+  public void setCaretOffset(int offset) {
+    myLastCaretOffset = offset;
+
+    focusOffset(offset);
+
+    if (myCaretHandler != null) {
+      myCaretHandler.caretPlaced(myLastCaretOffset);
+    }
+  }
+
   public void focusOffset(int offset) {
+    myLastCaretOffset = offset;
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (fragment.range.containsRange(offset, offset)) {
         fragment.widget.getElement().focus();

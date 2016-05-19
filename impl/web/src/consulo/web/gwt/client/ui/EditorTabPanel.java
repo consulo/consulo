@@ -27,7 +27,6 @@ import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
 import consulo.web.gwt.shared.transport.GwtHighlightInfo;
 import consulo.web.gwt.shared.transport.GwtVirtualFile;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +60,7 @@ public class EditorTabPanel extends SimplePanel {
     if (editorTab != null) {
       myTabPanel.selectTab(editorTab.myIndex);
 
-      editorTab.myEditor.focusOffset(offset);
+      editorTab.myEditor.setCaretOffset(offset);
       return;
     }
 
@@ -121,12 +120,12 @@ public class EditorTabPanel extends SimplePanel {
           public void onSuccess(List<GwtHighlightInfo> result) {
             editor.addHighlightInfos(result, Editor.ourLexerFlag);
 
-            runHighlightPasses(virtualFile, editor, 0, null);
+            runHighlightPasses(virtualFile, editor, offset, null);
 
             editor.setCaretHandler(new EditorCaretHandler() {
               @Override
-              public void caretPlaced(@NotNull final EditorCaretEvent event) {
-                runHighlightPasses(virtualFile, editor, event.getOffset(), null);
+              public void caretPlaced(int offset) {
+                runHighlightPasses(virtualFile, editor, offset, null);
               }
             });
           }
@@ -135,7 +134,7 @@ public class EditorTabPanel extends SimplePanel {
     });
   }
 
-  private static void runHighlightPasses(GwtVirtualFile virtualFile, final Editor editor, int offset, final Runnable callback) {
+  public static void runHighlightPasses(GwtVirtualFile virtualFile, final Editor editor, int offset, final Runnable callback) {
     GwtUtil.rpc().runHighlightPasses(virtualFile.getUrl(), offset, new ReportableCallable<List<GwtHighlightInfo>>() {
       @Override
       public void onSuccess(List<GwtHighlightInfo> result) {
