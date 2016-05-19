@@ -16,9 +16,6 @@
 package consulo.web.gwt.client.transport;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
-import com.intellij.openapi.editor.markup.TextAttributes;
-
-import java.awt.*;
 
 /**
  * @author VISTALL
@@ -35,7 +32,7 @@ public class GwtHighlightInfo implements IsSerializable {
   public GwtHighlightInfo() {
   }
 
-  public GwtHighlightInfo(GwtColor foreground, GwtColor background,boolean bold, boolean italic, GwtTextRange textRange) {
+  public GwtHighlightInfo(GwtColor foreground, GwtColor background, boolean bold, boolean italic, GwtTextRange textRange) {
     myForeground = foreground;
     myBackground = background;
     myBold = bold;

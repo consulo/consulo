@@ -135,7 +135,6 @@ public class GwtMain implements EntryPoint {
         }
 
         final Editor editor = new Editor(result);
-        editor.repaint();
 
         final TabLink tabLink = new TabLink();
         final HorizontalPanel tab = new HorizontalPanel();

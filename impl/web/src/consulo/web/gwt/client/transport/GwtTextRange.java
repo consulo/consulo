@@ -50,6 +50,26 @@ public class GwtTextRange implements IsSerializable {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    GwtTextRange textRange = (GwtTextRange)o;
+
+    if (myStartOffset != textRange.myStartOffset) return false;
+    if (myEndOffset != textRange.myEndOffset) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = myStartOffset;
+    result = 31 * result + myEndOffset;
+    return result;
+  }
+
+  @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("GwtTextRange{");
     sb.append("myStartOffset=").append(myStartOffset);
