@@ -8,7 +8,6 @@
   <inherits name='com.google.gwt.user.theme.standard.Standard'/>
   <inherits name="com.github.gwtbootstrap.Bootstrap"/>
   <inherits name="org.cafesip.gwtcomp.GWTComponents"/>
-  <inherits name="com.bfr.client.Selection"/>
 
   <stylesheet src="css/project.css"/>
 
