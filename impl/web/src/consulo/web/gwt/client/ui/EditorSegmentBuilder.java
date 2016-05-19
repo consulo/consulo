@@ -102,19 +102,21 @@ public class EditorSegmentBuilder {
     }
   }
 
-  private List<Fragment> myFragments = new ArrayList<Fragment>();
+  private Fragment[] myFragments;
   private int myLineCount;
 
   public EditorSegmentBuilder(String text) {
+    myFragments = new Fragment[text.length()];
+
     for (int i = 0; i < text.length(); i++) {
       char c = text.charAt(i);
       String labelText = mapChar(c);
 
       Fragment fragment = new Fragment();
 
-      final int startIndex = i;
+      final int startOffset = i;
       if (c == ' ' || c == '\t') {
-        for (int k = startIndex + 1; k < text.length(); k++) {
+        for (int k = startOffset + 1; k < text.length(); k++) {
           char nextChar = text.charAt(k);
 
           if (nextChar == c) {
@@ -127,7 +129,8 @@ public class EditorSegmentBuilder {
         }
       }
 
-      fragment.range = new GwtTextRange(startIndex, i + 1);
+      int endOffset = i + 1;
+      fragment.range = new GwtTextRange(startOffset, endOffset);
       fragment.widget = new InlineHTML(labelText);
       fragment.widget.setStyleName(null);
       fragment.widget.getElement().setPropertyObject("range", fragment.range);
@@ -138,18 +141,23 @@ public class EditorSegmentBuilder {
         myLineCount++;
       }
 
-      myFragments.add(fragment);
+      for (int k = startOffset; k < endOffset; k++) {
+        myFragments[k] = fragment;
+      }
     }
   }
 
   public void addHighlights(List<GwtHighlightInfo> result, int flag) {
     for (Fragment fragment : myFragments) {
       fragment.removeByFlag(flag);
+    }
 
-      for (GwtHighlightInfo highlightInfo : result) {
-        if (highlightInfo.getTextRange().containsRange(fragment.range)) {
-          add(fragment, highlightInfo, highlightInfo.getSeverity(), flag);
-        }
+    for (GwtHighlightInfo highlightInfo : result) {
+      GwtTextRange textRange = highlightInfo.getTextRange();
+      for (int i = textRange.getStartOffset(); i < textRange.getEndOffset(); i++) {
+        Fragment fragment = myFragments[i];
+
+        add(fragment, highlightInfo, highlightInfo.getSeverity(), flag);
       }
     }
   }
@@ -178,7 +186,7 @@ public class EditorSegmentBuilder {
     return myLineCount;
   }
 
-  public List<Fragment> getFragments() {
+  public Fragment[] getFragments() {
     return myFragments;
   }
 
