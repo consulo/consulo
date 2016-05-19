@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.transport.GwtColor;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtTextRange;
+import consulo.web.gwt.client.util.BitUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,21 +44,29 @@ public class EditorSegmentBuilder {
     public Widget widget;
     public GwtTextRange range;
     public boolean lineWrap;
+    private int highlightFlags;
 
     private List<StyleInfo> myStyles = new ArrayList<StyleInfo>();
 
     public void add(String key, String value, int flag) {
+      highlightFlags = BitUtil.set(highlightFlags, flag, true);
+
       myStyles.add(new StyleInfo(key, flag));
 
       widget.getElement().getStyle().setProperty(key, value);
     }
 
     public void removeByFlag(int flag) {
-      StyleInfo[] styleInfos = myStyles.toArray(new StyleInfo[myStyles.size()]);
-      for (StyleInfo styleInfo : styleInfos) {
-        if (styleInfo.flag == flag) {
+      if(BitUtil.isSet(highlightFlags, flag)) {
+        highlightFlags = BitUtil.set(highlightFlags, flag, false);
 
-          widget.getElement().getStyle().setProperty(styleInfo.key, null);
+        StyleInfo[] styleInfos = myStyles.toArray(new StyleInfo[myStyles.size()]);
+        for (StyleInfo styleInfo : styleInfos) {
+          if (styleInfo.flag == flag) {
+            widget.getElement().getStyle().setProperty(styleInfo.key, null);
+
+            myStyles.remove(styleInfo);
+          }
         }
       }
     }

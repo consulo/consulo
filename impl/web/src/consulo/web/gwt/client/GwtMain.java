@@ -55,8 +55,8 @@ public class GwtMain implements EntryPoint {
     }
   }
 
-  private static final int ourLexerFlag = 1;
-  private static final int ourEditorFlag = 2;
+  private static final int ourLexerFlag = 1 << 1;
+  private static final int ourEditorFlag = 1 << 2;
 
   private static final GwtTransportServiceAsync ourAsyncService = GWT.create(GwtTransportService.class);
 
