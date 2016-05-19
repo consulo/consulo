@@ -32,6 +32,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
+import com.intellij.openapi.fileTypes.BinaryFileDecompiler;
+import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -40,11 +43,11 @@ import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.*;
 import consulo.web.gwt.client.transport.*;
 import consulo.web.gwt.shared.GwtTransportService;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +62,7 @@ import java.util.List;
 public class GwtTransportServiceImpl extends RemoteServiceServlet implements GwtTransportService {
 
   private Project getProject() {
-    String path = "R:/_github.com/consulo/mssdw";
+    String path = "R:/_github.com/consulo/cold";
 
     try {
       final Project project;
@@ -94,7 +97,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
         Module[] modules = ModuleManager.getInstance(project).getModules();
         for (Module module : modules) {
           String moduleDirUrl = module.getModuleDirUrl();
-          if(moduleDirUrl != null) {
+          if (moduleDirUrl != null) {
             moduleFileUrls.add(moduleDirUrl);
           }
         }
@@ -104,39 +107,89 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
   @Override
+  public GwtVirtualFile findFileByUrl(String fileUrl) {
+    final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
+    if (fileByUrl == null) {
+      return null;
+    }
+    return GwtVirtualFileUtil.createVirtualFile(getProject(), fileByUrl);
+  }
+
+  @NotNull
+  @Override
+  public List<GwtNavigatable> getNavigationInfo(String fileUrl, final int offset) {
+    final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
+    if (fileByUrl == null) {
+      return null;
+    }
+
+    final List<GwtNavigatable> navigatables = new ArrayList<GwtNavigatable>();
+    ApplicationManager.getApplication().runReadAction(new Runnable() {
+      @Override
+      @RequiredReadAction
+      public void run() {
+        PsiFile file = PsiManager.getInstance(getProject()).findFile(fileByUrl);
+        assert file != null;
+        PsiReference referenceAt = file.findReferenceAt(offset);
+        if (referenceAt != null) {
+          PsiElement resolve = referenceAt.resolve();
+          if (resolve != null) {
+            VirtualFile virtualFile = resolve.getContainingFile().getVirtualFile();
+            assert virtualFile != null;
+            navigatables.add(new GwtNavigatable(virtualFile.getUrl(), resolve.getTextOffset()));
+          }
+        }
+      }
+    });
+    return navigatables;
+  }
+
+  @Override
   public String getContent(final String fileUrl) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl != null) {
-      if (fileByUrl.isDirectory() || fileByUrl.getFileType().isBinary()) {
+      if (fileByUrl.isDirectory()) {
         return null;
       }
+      BinaryFileDecompiler binaryFileDecompiler = null;
+      FileType fileType = fileByUrl.getFileType();
+      if(fileType.isBinary()) {
+        binaryFileDecompiler = BinaryFileTypeDecompilers.INSTANCE.forFileType(fileType);
+        if(binaryFileDecompiler == null) {
+          return null;
+        }
+      }
+
+      if(binaryFileDecompiler != null) {
+        return binaryFileDecompiler.decompile(fileByUrl).toString();
+      }
+
       return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
         @Override
         public String compute() {
-          PsiFile file = PsiManager.getInstance(getProject()).findFile(fileByUrl);
-
-          Document document = PsiDocumentManager.getInstance(getProject()).getDocument(file);
-          return document.getText();
+          return getFileText(getProject(), fileByUrl).toString();
         }
       });
     }
     return null;
   }
 
+  @NotNull
   @Override
   public List<GwtHighlightInfo> getLexerHighlight(String fileUrl) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl != null) {
-      if (fileByUrl.isDirectory() || fileByUrl.getFileType().isBinary()) {
-        return null;
+      if (fileByUrl.isDirectory()) {
+        return Collections.emptyList();
       }
       return ApplicationManager.getApplication().runReadAction(new Computable<List<GwtHighlightInfo>>() {
         @Override
         public List<GwtHighlightInfo> compute() {
           List<GwtHighlightInfo> list = new ArrayList<GwtHighlightInfo>();
-          EditorHighlighter highlighter = HighlighterFactory.createHighlighter(getProject(), fileByUrl);
-          PsiFile file = PsiManager.getInstance(getProject()).findFile(fileByUrl);
-          highlighter.setText(file.getText());
+          Project project = getProject();
+
+          EditorHighlighter highlighter = HighlighterFactory.createHighlighter(project, fileByUrl);
+          highlighter.setText(getFileText(project, fileByUrl));
 
           HighlighterIterator iterator = highlighter.createIterator(0);
           while (!iterator.atEnd()) {
@@ -156,6 +209,22 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     }
 
     return Collections.emptyList();
+  }
+
+  @RequiredReadAction
+  private static CharSequence getFileText(Project project, VirtualFile virtualFile) {
+    FileType fileType = virtualFile.getFileType();
+    if(fileType.isBinary()) {
+      BinaryFileDecompiler binaryFileDecompiler = BinaryFileTypeDecompilers.INSTANCE.forFileType(fileType);
+      if(binaryFileDecompiler != null) {
+        return binaryFileDecompiler.decompile(virtualFile);
+      }
+    }
+    PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
+    assert file != null;
+    Document document = PsiDocumentManager.getInstance(project).getDocument(file);
+    assert document != null;
+    return document.getText();
   }
 
 
@@ -186,12 +255,13 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     return new GwtHighlightInfo(foreground, background, bold, italic, myTextRange);
   }
 
+  @NotNull
   @Override
   public List<GwtHighlightInfo> runHighlightPasses(String fileUrl, final int offset) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl != null) {
       if (fileByUrl.isDirectory() || fileByUrl.getFileType().isBinary()) {
-        return null;
+        return Collections.emptyList();
       }
       IdentifierHighlighterPassFactory.ourTestingIdentifierHighlighting = true;
       return ApplicationManager.getApplication().runReadAction(new Computable<List<GwtHighlightInfo>>() {
@@ -200,7 +270,9 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
           final List<GwtHighlightInfo> list = new ArrayList<GwtHighlightInfo>();
           final Project project = getProject();
           final PsiFile file = PsiManager.getInstance(project).findFile(fileByUrl);
-
+          if(file == null) {
+            return Collections.emptyList();
+          }
           try {
 
             SwingUtilities.invokeAndWait(new Runnable() {
@@ -233,6 +305,6 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
         }
       });
     }
-    return null;
+    return Collections.emptyList();
   }
 }

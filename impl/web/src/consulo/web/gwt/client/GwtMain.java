@@ -32,6 +32,7 @@ import consulo.web.gwt.client.ui.*;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.GwtTransportServiceAsync;
 import org.cafesip.gwtcomp.client.ui.SuperTreeItem;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -185,23 +186,31 @@ public class GwtMain implements EntryPoint {
 
             editor.setCaretHandler(new EditorCaretHandler() {
               @Override
-              public void caretPlaced(final ClickEvent event, int offset) {
-                runHighlightPasses(virtualFile, editor, offset);
+              public void caretPlaced(@NotNull final EditorCaretEvent event) {
+                runHighlightPasses(virtualFile, editor, event.getOffset());
 
-                ourAsyncService.getNavigationInfo(virtualFile.getUrl(), offset, new ReportableCallable<List<GwtNavigatable>>() {
+                ourAsyncService.getNavigationInfo(virtualFile.getUrl(), event.getOffset(), new ReportableCallable<List<GwtNavigatable>>() {
                   @Override
                   public void onSuccess(List<GwtNavigatable> result) {
                     if (!result.isEmpty()) {
 
-                      PopupPanel popupPanel = new PopupPanel(true);
-                      Anchor anchor = new Anchor("Navigate ");
-                      anchor.addClickHandler(new ClickHandler() {
-                        @Override
-                        public void onClick(ClickEvent event) {
-
-                        }
-                      });
-                      popupPanel.add(anchor);
+                      final PopupPanel popupPanel = new PopupPanel(true);
+                      for (final GwtNavigatable navigatable : result) {
+                        Anchor anchor = new Anchor("Navigate to declaration");
+                        anchor.addClickHandler(new ClickHandler() {
+                          @Override
+                          public void onClick(ClickEvent event) {
+                            ourAsyncService.findFileByUrl(navigatable.getFileUrl(), new ReportableCallable<GwtVirtualFile>() {
+                              @Override
+                              public void onSuccess(GwtVirtualFile result) {
+                                popupPanel.hide();
+                                openFileInEditor(result);
+                              }
+                            });
+                          }
+                        });
+                        popupPanel.add(anchor);
+                      }
 
                       popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
                       popupPanel.show();

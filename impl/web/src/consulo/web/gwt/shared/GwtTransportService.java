@@ -21,6 +21,8 @@ import consulo.web.gwt.client.transport.GwtHighlightInfo;
 import consulo.web.gwt.client.transport.GwtNavigatable;
 import consulo.web.gwt.client.transport.GwtProjectInfo;
 import consulo.web.gwt.client.transport.GwtVirtualFile;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,11 +36,15 @@ public interface GwtTransportService extends RemoteService {
 
   GwtVirtualFile findFileByUrl(String fileUrl);
 
+  @Nullable
   String getContent(String fileUrl);
 
+  @NotNull
   List<GwtHighlightInfo> getLexerHighlight(String fileUrl);
 
+  @NotNull
   List<GwtHighlightInfo> runHighlightPasses(String fileUrl, int offset);
 
+  @NotNull
   List<GwtNavigatable> getNavigationInfo(String fileUrl, int offset);
 }

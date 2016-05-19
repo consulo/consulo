@@ -143,7 +143,7 @@ public class Editor extends SimplePanel {
           myLastCaretOffset = caretOffset;
 
           if (myCaretHandler != null) {
-            myCaretHandler.caretPlaced(event, caretOffset);
+            myCaretHandler.caretPlaced(new EditorCaretEvent(event.getClientX(), event.getClientY(), caretOffset));
           }
         }
 
