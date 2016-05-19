@@ -21,6 +21,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.transport.GwtHighlightInfo;
@@ -48,7 +49,7 @@ public class GwtMain implements EntryPoint {
 
   @Override
   public void onModuleLoad() {
-    final SimplePanel globalPanel = new SimplePanel();
+    //final SimplePanel globalPanel = new SimplePanel();
     /*globalPanel.setWidth("100%");
     globalPanel.setHeight(Window.getClientHeight() + "px");
     Window.addResizeHandler(new ResizeHandler() {
@@ -58,6 +59,23 @@ public class GwtMain implements EntryPoint {
         globalPanel.setHeight(height + "px");
       }
     });*/
+
+    FlowPanel flowPanel = new FlowPanel();
+    Command cmd = new Command() {
+      @Override
+      public void execute() {
+      }
+    };
+
+    MenuBar fileMenu = new MenuBar(true);
+    fileMenu.addItem("Settings", cmd);
+    fileMenu.addItem("Project Structure", cmd);
+
+
+    MenuBar menu = new MenuBar();
+    menu.addItem("File", fileMenu);
+
+    flowPanel.add(menu);
 
     final GwtTransportServiceAsync serviceAsync = GWT.create(GwtTransportService.class);
 
@@ -179,9 +197,9 @@ public class GwtMain implements EntryPoint {
       }
     });
 
-    globalPanel.add(splitPanel);
+    flowPanel.add(splitPanel);
 
-    RootPanel.get().add(globalPanel);
+    RootPanel.get().add(flowPanel);
   }
 
   private void runHighlightPasses(GwtTransportServiceAsync serviceAsync, GwtVirtualFile virtualFile, final Editor editor, int offset) {
