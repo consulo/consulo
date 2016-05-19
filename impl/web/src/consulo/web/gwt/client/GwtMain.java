@@ -46,6 +46,8 @@ public class GwtMain implements EntryPoint {
   private static final int ourLexerFlag = 1;
   private static final int ourEditorFlag = 2;
 
+  private static final GwtTransportServiceAsync ourAsyncService = GWT.create(GwtTransportService.class);
+
   private Map<String, Integer> myOpenedFiles = new HashMap<String, Integer>();
   private final com.github.gwtbootstrap.client.ui.TabPanel myTabPanel = new com.github.gwtbootstrap.client.ui.TabPanel();
 
@@ -79,13 +81,11 @@ public class GwtMain implements EntryPoint {
 
     flowPanel.add(menu);
 
-    final GwtTransportServiceAsync serviceAsync = GWT.create(GwtTransportService.class);
-
     consulo.web.gwt.client.ui.HorizontalSplitPanel splitPanel = new consulo.web.gwt.client.ui.HorizontalSplitPanel();
     splitPanel.setSplitPosition("20%");
 
     final DoubleClickTree tree = new DoubleClickTree();
-    serviceAsync.getProjectInfo("ignored", new ReportableCallable<GwtProjectInfo>() {
+    ourAsyncService.getProjectInfo("ignored", new ReportableCallable<GwtProjectInfo>() {
       @Override
       public void onSuccess(GwtProjectInfo result) {
         addNodes(tree, null, result);
@@ -105,7 +105,8 @@ public class GwtMain implements EntryPoint {
           selectedItem.setState(!state);
           return;
         }
-        openFileInEditor(serviceAsync, virtualFile);
+
+        openFileInEditor(virtualFile);
       }
     });
 
@@ -114,14 +115,14 @@ public class GwtMain implements EntryPoint {
     RootPanel.get().add(flowPanel);
   }
 
-  private void openFileInEditor(final GwtTransportServiceAsync serviceAsync, final GwtVirtualFile virtualFile) {
+  private void openFileInEditor(final GwtVirtualFile virtualFile) {
     Integer indexOfOpened = myOpenedFiles.get(virtualFile.getUrl());
     if (indexOfOpened != null) {
       myTabPanel.selectTab(indexOfOpened);
       return;
     }
 
-    serviceAsync.getContent(virtualFile.getUrl(), new AsyncCallback<String>() {
+    ourAsyncService.getContent(virtualFile.getUrl(), new AsyncCallback<String>() {
       @Override
       public void onFailure(Throwable caught) {
       }
@@ -175,26 +176,31 @@ public class GwtMain implements EntryPoint {
           }
         });
 
-        serviceAsync.getLexerHighlight(virtualFile.getUrl(), new ReportableCallable<List<GwtHighlightInfo>>() {
+        ourAsyncService.getLexerHighlight(virtualFile.getUrl(), new ReportableCallable<List<GwtHighlightInfo>>() {
           @Override
           public void onSuccess(List<GwtHighlightInfo> result) {
             editor.addHighlightInfos(result, ourLexerFlag);
 
-            runHighlightPasses(serviceAsync, virtualFile, editor, 0);
+            runHighlightPasses(virtualFile, editor, 0);
 
             editor.setCaretHandler(new EditorCaretHandler() {
               @Override
               public void caretPlaced(final ClickEvent event, int offset) {
-                runHighlightPasses(serviceAsync, virtualFile, editor, offset);
+                runHighlightPasses(virtualFile, editor, offset);
 
-                serviceAsync.getNavigationInfo(virtualFile.getUrl(), offset, new ReportableCallable<List<GwtNavigatable>>() {
+                ourAsyncService.getNavigationInfo(virtualFile.getUrl(), offset, new ReportableCallable<List<GwtNavigatable>>() {
                   @Override
                   public void onSuccess(List<GwtNavigatable> result) {
                     if (!result.isEmpty()) {
 
-
                       PopupPanel popupPanel = new PopupPanel(true);
                       Anchor anchor = new Anchor("Navigate ");
+                      anchor.addClickHandler(new ClickHandler() {
+                        @Override
+                        public void onClick(ClickEvent event) {
+
+                        }
+                      });
                       popupPanel.add(anchor);
 
                       popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
@@ -210,8 +216,8 @@ public class GwtMain implements EntryPoint {
     });
   }
 
-  private static void runHighlightPasses(GwtTransportServiceAsync serviceAsync, GwtVirtualFile virtualFile, final Editor editor, int offset) {
-    serviceAsync.runHighlightPasses(virtualFile.getUrl(), offset, new ReportableCallable<List<GwtHighlightInfo>>() {
+  private static void runHighlightPasses(GwtVirtualFile virtualFile, final Editor editor, int offset) {
+    ourAsyncService.runHighlightPasses(virtualFile.getUrl(), offset, new ReportableCallable<List<GwtHighlightInfo>>() {
       @Override
       public void onSuccess(List<GwtHighlightInfo> result) {
         editor.addHighlightInfos(result, ourEditorFlag);
