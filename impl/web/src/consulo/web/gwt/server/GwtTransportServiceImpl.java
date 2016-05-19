@@ -120,7 +120,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   public List<GwtNavigatable> getNavigationInfo(String fileUrl, final int offset) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl == null) {
-      return null;
+      return Collections.emptyList();
     }
 
     final List<GwtNavigatable> navigatables = new ArrayList<GwtNavigatable>();
