@@ -178,11 +178,13 @@ public class Editor extends SimplePanel {
   private void build() {
     final EditorColorSchemeService editorColorSchemeService = GwtUtil.get(EditorColorSchemeService.KEY);
 
-    HorizontalPanel gridPanel = new HorizontalPanel();
+    Grid gridPanel = new Grid(1, 2);
+    // try to fill area by code
+    gridPanel.getColumnFormatter().getElement(1).getStyle().setWidth(100, Style.Unit.PCT);
     GwtUtil.fill(gridPanel);
 
     VerticalPanel editorLinePanel = new VerticalPanel();
-    gridPanel.add(editorLinePanel);
+    gridPanel.setWidget(0, 0, editorLinePanel);
 
     editorLinePanel.addStyleName("noselectable");
     editorLinePanel.addStyleName("editorLinePanel");
@@ -215,7 +217,7 @@ public class Editor extends SimplePanel {
         event.preventDefault();
       }
     };
-    gridPanel.add(editorCodePanel);
+    gridPanel.setWidget(0, 1, editorCodePanel);
 
     GwtUtil.fill(editorCodePanel);
 
