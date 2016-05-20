@@ -54,6 +54,12 @@ public class GwtUtil {
     return panel;
   }
 
+  public static <T extends UIObject> T fillAndReturn(T object) {
+    object.setWidth("100%");
+    object.setHeight("100%");
+    return object;
+  }
+
   public static void fill(UIObject object) {
     object.setWidth("100%");
     object.setHeight("100%");

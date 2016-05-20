@@ -37,8 +37,14 @@ import java.util.List;
  */
 public class Editor extends SimplePanel {
   private class CodeLinePanel extends FlowPanel {
-    {
+
+    public CodeLinePanel() {
       sinkEvents(Event.ONCLICK);
+      refreshStyles();
+    }
+
+    public void refreshStyles() {
+      setDefaultColors(this);
     }
 
     @Override
@@ -75,7 +81,9 @@ public class Editor extends SimplePanel {
 
   private GwtNavigateInfo myLastNavigationInfo;
 
-  private Widget myLastLine;
+  private CodeLinePanel myLastLine;
+
+  private GwtEditorColorScheme myScheme;
 
   public Editor(EditorTabPanel editorTabPanel, String fileUrl, String text) {
     myEditorTabPanel = editorTabPanel;
@@ -85,9 +93,27 @@ public class Editor extends SimplePanel {
 
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
 
+    final EditorColorSchemeService editorColorSchemeService = GwtUtil.get(EditorColorSchemeService.KEY);
+    myScheme = editorColorSchemeService.getScheme();
+
+    setDefaultColors(this);
     GwtUtil.fill(this);
   }
 
+  private void setDefaultColors(Widget widget) {
+    GwtTextAttributes textAttr = myScheme.getAttributes(GwtEditorColorScheme.TEXT);
+    if (textAttr != null) {
+      GwtColor background = textAttr.getBackground();
+      if (background != null) {
+        widget.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(background));
+      }
+
+      GwtColor foreground = textAttr.getForeground();
+      if (foreground != null) {
+        widget.getElement().getStyle().setColor(GwtStyleUtil.toString(foreground));
+      }
+    }
+  }
   @Override
   public void onBrowserEvent(final Event event) {
     switch (DOM.eventGetType(event)) {
@@ -125,7 +151,7 @@ public class Editor extends SimplePanel {
               }
               myLastCursorPsiElementTextRange = resultElementRange;
               GwtHighlightInfo highlightInfo =
-                      new GwtHighlightInfo(new GwtColor(0, 0, 255), null, GwtHighlightInfo.UNDERLINE, resultElementRange, Integer.MAX_VALUE);
+                      new GwtHighlightInfo(myScheme.getAttributes(GwtEditorColorScheme.HYPERLINK_ATTRIBUTES), resultElementRange, Integer.MAX_VALUE);
 
               myLastNavigationInfo = result;
 
@@ -176,33 +202,40 @@ public class Editor extends SimplePanel {
   }
 
   private void build() {
-    final EditorColorSchemeService editorColorSchemeService = GwtUtil.get(EditorColorSchemeService.KEY);
+    Grid gridPanel = GwtUtil.fillAndReturn(new Grid(1, 2));
+    setDefaultColors(gridPanel);
 
-    Grid gridPanel = new Grid(1, 2);
     // try to fill area by code
     gridPanel.getColumnFormatter().getElement(1).getStyle().setWidth(100, Style.Unit.PCT);
-    GwtUtil.fill(gridPanel);
 
     VerticalPanel editorLinePanel = new VerticalPanel();
     gridPanel.setWidget(0, 0, editorLinePanel);
 
     editorLinePanel.addStyleName("noselectable");
-    editorLinePanel.addStyleName("editorLinePanel");
-    editorLinePanel.getElement().getStyle()
-            .setBackgroundColor(GwtStyleUtil.toString(editorColorSchemeService.getScheme().getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
+
+    editorLinePanel.getElement().getStyle().setProperty("borderRightColor", GwtStyleUtil.toString(myScheme.getColor(GwtEditorColorScheme.TEARLINE_COLOR)));
+    editorLinePanel.getElement().getStyle().setProperty("borderRightStyle", "solid");
+    editorLinePanel.getElement().getStyle().setProperty("borderRightWidth", "1px");
+    editorLinePanel.getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
+    editorLinePanel.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(myScheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
 
     for (int i = 0; i < myLineCount; i++) {
-      final HorizontalPanel panel = new HorizontalPanel();
-      panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-      GwtUtil.fill(panel);
+      final Grid panel = GwtUtil.fillAndReturn(new Grid(1, 5)); // 5 fake size
+      // place lines to right
+      panel.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_RIGHT);
+
+      panel.getCellFormatter().getElement(0, 0).getStyle().setPaddingLeft(5, Style.Unit.PX);
+      panel.getCellFormatter().getElement(0, 4).getStyle().setPaddingRight(5, Style.Unit.PX);
+
+      // try fill line number as primary panel
+      panel.getColumnFormatter().getElement(0).getStyle().setWidth(100, Style.Unit.PCT);
 
       InlineHTML lineSpan = new InlineHTML(String.valueOf(i + 1));
-      lineSpan.addStyleName("editorLineRow");
       lineSpan.addStyleName("editorLine");
       lineSpan.addStyleName("editorGutterLine" + i);
-      lineSpan.getElement().getStyle().setColor(GwtStyleUtil.toString(editorColorSchemeService.getScheme().getColor(GwtEditorColorScheme.LINE_NUMBERS_COLOR)));
+      lineSpan.getElement().getStyle().setColor(GwtStyleUtil.toString(myScheme.getColor(GwtEditorColorScheme.LINE_NUMBERS_COLOR)));
 
-      panel.add(lineSpan);
+      panel.setWidget(0, 0, lineSpan);
 
       editorLinePanel.add(panel);
     }
@@ -303,7 +336,7 @@ public class Editor extends SimplePanel {
         set(fragment.widget.getElement());
         Widget parent = fragment.widget.getParent();
         if (parent instanceof CodeLinePanel) {
-          changeLine(parent);
+          changeLine((CodeLinePanel)parent);
         }
 
         break;
@@ -311,16 +344,15 @@ public class Editor extends SimplePanel {
     }
   }
 
-  public void changeLine(Widget widget) {
+  public void changeLine(CodeLinePanel widget) {
     if (myLastLine == widget) {
       return;
     }
     if (myLastLine != null) {
-      myLastLine.getElement().getStyle().clearBackgroundColor();
+      myLastLine.refreshStyles();
     }
 
-    EditorColorSchemeService o = GwtUtil.get(EditorColorSchemeService.KEY);
-    widget.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(o.getScheme().getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
+    widget.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(myScheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
     myLastLine = widget;
   }
 

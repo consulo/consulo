@@ -28,6 +28,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.markup.EffectType;
@@ -167,8 +168,9 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     return new GwtNavigateInfo(range[0], navigatables);
   }
 
+  @NotNull
   @Override
-  public GwtEditorColorScheme serviceEditorColorScheme(String[] colorKeys) {
+  public GwtEditorColorScheme serviceEditorColorScheme(String[] colorKeys, String[] attributes) {
     GwtEditorColorScheme colorScheme = new GwtEditorColorScheme();
     EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
     for (String colorKey : colorKeys) {
@@ -176,6 +178,14 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
       assert key != null;
 
       colorScheme.putColor(colorKey, createColor(globalScheme.getColor(key)));
+    }
+    for (String attribute : attributes) {
+      TextAttributesKey textAttributesKey = TextAttributesKey.find(attribute);
+
+      TextAttributes textAttributes = globalScheme.getAttributes(textAttributesKey);
+      if(textAttributes != null) {
+        colorScheme.putAttributes(attribute, createTextAttributes(textAttributes));
+      }
     }
     return colorScheme;
   }
@@ -264,7 +274,13 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
 
+  @NotNull
   public static GwtHighlightInfo createHighlightInfo(TextAttributes textAttributes, GwtTextRange textRange, int severity) {
+    return new GwtHighlightInfo(createTextAttributes(textAttributes), textRange, severity);
+  }
+
+  @NotNull
+  public static GwtTextAttributes createTextAttributes(TextAttributes textAttributes) {
     GwtColor foreground = null;
     GwtColor background = null;
 
@@ -279,12 +295,12 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     }
 
     int flags = 0;
-    flags = BitUtil.set(flags, GwtHighlightInfo.BOLD, (textAttributes.getFontType() & Font.BOLD) != 0);
-    flags = BitUtil.set(flags, GwtHighlightInfo.ITALIC, (textAttributes.getFontType() & Font.ITALIC) != 0);
-    flags = BitUtil.set(flags, GwtHighlightInfo.UNDERLINE, textAttributes.getEffectType() == EffectType.LINE_UNDERSCORE);
-    flags = BitUtil.set(flags, GwtHighlightInfo.LINE_THROUGH, textAttributes.getEffectType() == EffectType.STRIKEOUT);
+    flags = BitUtil.set(flags, GwtTextAttributes.BOLD, (textAttributes.getFontType() & Font.BOLD) != 0);
+    flags = BitUtil.set(flags, GwtTextAttributes.ITALIC, (textAttributes.getFontType() & Font.ITALIC) != 0);
+    flags = BitUtil.set(flags, GwtTextAttributes.UNDERLINE, textAttributes.getEffectType() == EffectType.LINE_UNDERSCORE);
+    flags = BitUtil.set(flags, GwtTextAttributes.LINE_THROUGH, textAttributes.getEffectType() == EffectType.STRIKEOUT);
 
-    return new GwtHighlightInfo(foreground, background, flags, textRange, severity);
+    return new GwtTextAttributes(foreground, background, flags);
   }
 
   @NotNull

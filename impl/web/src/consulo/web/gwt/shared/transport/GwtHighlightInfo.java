@@ -22,14 +22,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @since 17-May-16
  */
 public class GwtHighlightInfo implements IsSerializable {
-  public static int BOLD = 1 << 1;
-  public static int ITALIC = 1 << 2;
-  public static int UNDERLINE = 1 << 3;
-  public static int LINE_THROUGH = 1 << 4;
-
-  private GwtColor myForeground;
-  private GwtColor myBackground;
-  private int myFlags;
+  private GwtTextAttributes myTextAttributes;
   private GwtTextRange myTextRange;
   private String myTooltip;
   private int mySeverity;
@@ -37,16 +30,14 @@ public class GwtHighlightInfo implements IsSerializable {
   public GwtHighlightInfo() {
   }
 
-  public GwtHighlightInfo(GwtColor foreground, GwtColor background, int flags, GwtTextRange textRange, int severity) {
-    myForeground = foreground;
-    myBackground = background;
-    myFlags = flags;
+  public GwtHighlightInfo(GwtTextAttributes textAttributes, GwtTextRange textRange, int severity) {
+    myTextAttributes = textAttributes;
     myTextRange = textRange;
     mySeverity = severity;
   }
 
   public boolean isEmpty() {
-    return myFlags == 0 && myForeground == null && myBackground == null && myTooltip == null;
+    return myTextAttributes == null && myTooltip == null;
   }
 
   public int getSeverity() {
@@ -61,16 +52,8 @@ public class GwtHighlightInfo implements IsSerializable {
     myTooltip = tooltip;
   }
 
-  public GwtColor getBackground() {
-    return myBackground;
-  }
-
-  public GwtColor getForeground() {
-    return myForeground;
-  }
-
-  public int getFlags() {
-    return myFlags;
+  public GwtTextAttributes getTextAttributes() {
+    return myTextAttributes;
   }
 
   public GwtTextRange getTextRange() {

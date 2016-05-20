@@ -11,6 +11,10 @@ pre {
   border: none;
 }
 
+td {
+  padding: 0px;
+}
+
 .navbar {
   margin-bottom: 0;
 }
@@ -37,15 +41,7 @@ pre {
 }
 
 .editorLinePanel {
-  margin-right: 5px;
   white-space: nowrap;
-
-  border-right: #D8D8D8 solid 1px;
-}
-
-.editorLineRow {
-  padding-left: 5px;
-  padding-right: 5px;
 }
 
 .gwtcomp-SuperTree-SelectedItem {
@@ -57,9 +53,6 @@ pre {
   font-size:12px
 }
 
-.lineEnter {
-  background-color: yellow;
-}
 
 .textAfterIcon18 {
   margin-left: 2px;

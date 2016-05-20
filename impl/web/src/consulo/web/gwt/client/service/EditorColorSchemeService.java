@@ -33,12 +33,13 @@ public class EditorColorSchemeService implements FetchService {
 
   @Override
   public void fetch(Runnable onError, Runnable onOk) {
-    GwtUtil.rpc().serviceEditorColorScheme(GwtEditorColorScheme.fetchColors, new ServiceCallback<GwtEditorColorScheme>(onError, onOk) {
-      @Override
-      public void handle(GwtEditorColorScheme result) {
-        myScheme = result;
-      }
-    });
+    GwtUtil.rpc().serviceEditorColorScheme(GwtEditorColorScheme.fetchColors, GwtEditorColorScheme.fetchAttributes,
+                                           new ServiceCallback<GwtEditorColorScheme>(onError, onOk) {
+                                             @Override
+                                             public void handle(GwtEditorColorScheme result) {
+                                               myScheme = result;
+                                             }
+                                           });
   }
 
   @Override

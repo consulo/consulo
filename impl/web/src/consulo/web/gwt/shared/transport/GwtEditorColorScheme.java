@@ -28,10 +28,16 @@ public class GwtEditorColorScheme implements IsSerializable {
   public static final String LINE_NUMBERS_COLOR = "LINE_NUMBERS_COLOR";
   public static final String GUTTER_BACKGROUND = "GUTTER_BACKGROUND";
   public static final String CARET_ROW_COLOR = "GUTTER_BACKGROUND";
+  public static final String TEARLINE_COLOR = "TEARLINE_COLOR";
 
-  public static String[] fetchColors = new String[]{LINE_NUMBERS_COLOR, GUTTER_BACKGROUND, CARET_ROW_COLOR};
+  public static final String TEXT = "TEXT";
+  public static final String HYPERLINK_ATTRIBUTES = "HYPERLINK_ATTRIBUTES";
+
+  public static String[] fetchColors = new String[]{LINE_NUMBERS_COLOR, GUTTER_BACKGROUND, CARET_ROW_COLOR, TEARLINE_COLOR};
+  public static String[] fetchAttributes = new String[]{TEXT, HYPERLINK_ATTRIBUTES};
 
   private Map<String, GwtColor> myColors = new HashMap<String, GwtColor>();
+  private Map<String, GwtTextAttributes> myAttributes = new HashMap<String, GwtTextAttributes>();
 
   public GwtColor getColor(String colorKey) {
     return myColors.get(colorKey);
@@ -39,5 +45,13 @@ public class GwtEditorColorScheme implements IsSerializable {
 
   public void putColor(String key, GwtColor colorKey) {
     myColors.put(key, colorKey);
+  }
+
+  public GwtTextAttributes getAttributes(String colorKey) {
+    return myAttributes.get(colorKey);
+  }
+
+  public void putAttributes(String key, GwtTextAttributes attributes) {
+    myAttributes.put(key, attributes);
   }
 }

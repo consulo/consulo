@@ -19,6 +19,8 @@ import com.intellij.idea.IdeaApplication;
 import com.intellij.idea.starter.ApplicationStarter;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
@@ -38,6 +40,10 @@ public class WebStarter extends ApplicationStarter {
 
   @Override
   public void main(String[] args) {
+
+    EditorColorsManager colorsManager = EditorColorsManager.getInstance();
+    EditorColorsScheme darcula = colorsManager.getScheme("Darcula");
+    colorsManager.setGlobalScheme(darcula);
     AppInit.inited = ThreeState.YES;
 
     ApplicationManager.getApplication().invokeAndWait(new Runnable() {

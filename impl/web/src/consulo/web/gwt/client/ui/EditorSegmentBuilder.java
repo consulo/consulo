@@ -22,6 +22,7 @@ import consulo.web.gwt.client.util.BitUtil;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.transport.GwtColor;
 import consulo.web.gwt.shared.transport.GwtHighlightInfo;
+import consulo.web.gwt.shared.transport.GwtTextAttributes;
 import consulo.web.gwt.shared.transport.GwtTextRange;
 import org.jetbrains.annotations.Nullable;
 
@@ -185,7 +186,10 @@ public class EditorSegmentBuilder {
       for (int i = textRange.getStartOffset(); i < textRange.getEndOffset(); i++) {
         Fragment fragment = myFragments[i];
 
-        add(fragment, highlightInfo, highlightInfo.getSeverity(), flag);
+        GwtTextAttributes textAttributes = highlightInfo.getTextAttributes();
+        if(textAttributes != null) {
+          add(fragment, textAttributes, highlightInfo.getSeverity(), flag);
+        }
       }
     }
   }
@@ -198,30 +202,30 @@ public class EditorSegmentBuilder {
     }
   }
 
-  private void add(Fragment fragment, GwtHighlightInfo highlightInfo, int severity, int flag) {
-    GwtColor foreground = highlightInfo.getForeground();
+  private void add(Fragment fragment, GwtTextAttributes textAttributes, int severity, int flag) {
+    GwtColor foreground = textAttributes.getForeground();
     if (foreground != null) {
       fragment.add("color", GwtStyleUtil.toString(foreground), severity, flag);
     }
 
-    GwtColor background = highlightInfo.getBackground();
+    GwtColor background = textAttributes.getBackground();
     if (background != null) {
       fragment.add("backgroundColor", GwtStyleUtil.toString(background), severity, flag);
     }
 
-    if (BitUtil.isSet(highlightInfo.getFlags(), GwtHighlightInfo.BOLD)) {
+    if (BitUtil.isSet(textAttributes.getFlags(), GwtTextAttributes.BOLD)) {
       fragment.add("fontWeight", "bold", severity, flag);
     }
 
-    if (BitUtil.isSet(highlightInfo.getFlags(), GwtHighlightInfo.ITALIC)) {
+    if (BitUtil.isSet(textAttributes.getFlags(), GwtTextAttributes.ITALIC)) {
       fragment.add("fontStyle", "italic", severity, flag);
     }
 
-    if (BitUtil.isSet(highlightInfo.getFlags(), GwtHighlightInfo.UNDERLINE)) {
+    if (BitUtil.isSet(textAttributes.getFlags(), GwtTextAttributes.UNDERLINE)) {
       fragment.add("textDecoration", "underline", severity, flag);
     }
 
-    if (BitUtil.isSet(highlightInfo.getFlags(), GwtHighlightInfo.LINE_THROUGH)) {
+    if (BitUtil.isSet(textAttributes.getFlags(), GwtTextAttributes.LINE_THROUGH)) {
       fragment.add("textDecoration", "line-through", severity, flag);
     }
   }
