@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.client.util.GwtUtil;
-import consulo.web.gwt.client.util.Log;
 import consulo.web.gwt.client.util.ReportableCallable;
 import consulo.web.gwt.shared.transport.*;
 
@@ -85,8 +84,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     @Override
     public void updateUI() {
-      Log.log("MainGrid.LineNumberSpan");
-
       GwtEditorColorScheme scheme = myEditor.getScheme();
 
       getElement().getStyle().setColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.LINE_NUMBERS_COLOR)));
@@ -105,7 +102,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     @Override
     public void updateUI() {
-      Log.log("MainGrid.updateUI");
       myEditor.setDefaultTextColors(this);
     }
   }
@@ -160,8 +156,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     @Override
     public void schemeChanged(GwtEditorColorScheme scheme) {
       myScheme = scheme;
-
-      Log.log("scheme changed to " + scheme.getName());
 
       Scheduler.get().scheduleDeferred(new Command() {
         @Override
