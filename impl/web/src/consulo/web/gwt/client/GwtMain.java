@@ -134,7 +134,7 @@ public class GwtMain implements EntryPoint {
           return;
         }
 
-        tabPanel.openFileInEditor(virtualFile, 0);
+        tabPanel.openFileInEditor(virtualFile, -1);
       }
     });
 

@@ -57,7 +57,9 @@ public class EditorTabPanel extends SimplePanel {
     if (editorTab != null) {
       myTabPanel.selectTab(editorTab.myIndex);
 
-      editorTab.myEditor.setCaretOffset(offset);
+      if(offset != -1) {
+        editorTab.myEditor.setCaretOffset(offset);
+      }
       return;
     }
 
@@ -94,7 +96,9 @@ public class EditorTabPanel extends SimplePanel {
         // TabPanel can't return tab size???
         int index = myOpenedFiles.size();
         myTabPanel.selectTab(index);
-        editor.focusOffset(offset);
+        if(offset != -1) {
+          editor.focusOffset(offset);
+        }
 
         myOpenedFiles.put(virtualFile.getUrl(), new EditorTabInfo(editor, index));
 
