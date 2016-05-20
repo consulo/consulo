@@ -152,6 +152,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   private GwtEditorColorScheme myScheme;
 
+  private GutterPanel myGutterPanel;
+
+  private boolean myInsideGutter;
+
   private EditorColorSchemeService.Listener myListener = new EditorColorSchemeService.Listener() {
     @Override
     public void schemeChanged(GwtEditorColorScheme scheme) {
@@ -261,11 +265,35 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     schemeService.removeListener(myListener);
   }
 
+  private boolean insideGutter(Element element) {
+    Element temp = element;
+    while (temp != null) {
+      // if we entered editor element
+      if (temp == getElement()) {
+        break;
+      }
+
+      if (myGutterPanel.getElement() == temp) {
+        getElement().getStyle().setCursor(Style.Cursor.DEFAULT);
+        return true;
+      }
+
+      temp = temp.getParentElement();
+    }
+
+    return false;
+  }
+
   @Override
   public void onBrowserEvent(final Event event) {
     switch (DOM.eventGetType(event)) {
       case Event.ONMOUSEOVER:
         com.google.gwt.dom.client.Element element = DOM.eventGetToElement(event);
+
+        myInsideGutter = insideGutter(element);
+        if(myInsideGutter) {
+          return;
+        }
 
         Object range = element == null ? null : element.getPropertyObject("range");
         if (!(range instanceof GwtTextRange)) {
@@ -307,10 +335,25 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         event.preventDefault();
         break;
       case Event.ONMOUSEOUT:
+        boolean old = myInsideGutter;
+        myInsideGutter = insideGutter(DOM.eventGetToElement(event));
+        if(old != myInsideGutter) {
+          getElement().getStyle().clearCursor();
+        }
+        if(myInsideGutter) {
+          event.preventDefault();
+          return;
+        }
+
         onMouseOut();
         event.preventDefault();
         break;
       case Event.ONCLICK:
+        if(myInsideGutter) {
+          event.preventDefault();
+          return;
+        }
+
         if (event.getCtrlKey()) {
           if (myLastNavigationInfo != null) {
             List<GwtNavigatable> navigates = myLastNavigationInfo.getNavigates();
@@ -352,10 +395,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     // try to fill area by code
     gridPanel.getColumnFormatter().getElement(1).getStyle().setWidth(100, Style.Unit.PCT);
 
-    GutterPanel editorLinePanel = new GutterPanel(this);
-    gridPanel.setWidget(0, 0, editorLinePanel);
+    myGutterPanel = new GutterPanel(this);
+    gridPanel.setWidget(0, 0, myGutterPanel);
 
-    editorLinePanel.addStyleName("noselectable");
+    myGutterPanel.addStyleName("noselectable");
 
     for (int i = 0; i < myLineCount; i++) {
       final Grid panel = GwtUtil.fillAndReturn(new Grid(1, 5)); // 5 fake size
@@ -374,7 +417,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
       panel.setWidget(0, 0, lineSpan);
 
-      editorLinePanel.add(panel);
+      myGutterPanel.add(panel);
     }
 
     Grid editorCodePanel = new Grid(myLineCount + 1, 1) {
