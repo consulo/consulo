@@ -25,8 +25,12 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
-import consulo.web.gwt.client.util.*;
+import consulo.web.gwt.client.util.GwtStyleUtil;
+import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.client.util.GwtUtil;
+import consulo.web.gwt.client.util.ReportableCallable;
 import consulo.web.gwt.shared.transport.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -174,11 +178,14 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   public static final int ourSelectFlag = 1 << 24;
 
+  @Nullable
   private EditorSegmentBuilder myBuilder;
 
   private int myLineCount;
 
   private EditorCaretHandler myCaretHandler;
+
+  private int myDelayedCaredOffset = -1;
 
   private int myLastCaretOffset = -1;
 
@@ -238,6 +245,11 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         myLineCount = myBuilder.getLineCount();
 
         setWidget(build());
+
+        if (myDelayedCaredOffset != -1) {
+          focusOffset(myDelayedCaredOffset);
+          myDelayedCaredOffset = -1;
+        }
 
         doHighlightImpl();
       }
@@ -358,8 +370,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         final int startOffset = ((GwtTextRange)range).getStartOffset();
 
         if (event.getCtrlKey()) {
-          getElement().getStyle().setCursor(Style.Cursor.POINTER);
-
           GwtUtil.rpc().getNavigationInfo(myFileUrl, startOffset, new ReportableCallable<GwtNavigateInfo>() {
             @Override
             public void onSuccess(GwtNavigateInfo result) {
@@ -371,6 +381,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
               if (myLastCursorPsiElementTextRange != null && myLastCursorPsiElementTextRange.containsRange(resultElementRange)) {
                 return;
               }
+
+              getElement().getStyle().setCursor(Style.Cursor.POINTER);
+
               myLastCursorPsiElementTextRange = resultElementRange;
               GwtHighlightInfo highlightInfo =
                       new GwtHighlightInfo(myScheme.getAttributes(GwtEditorColorScheme.CTRL_CLICKABLE), resultElementRange, Integer.MAX_VALUE);
@@ -409,12 +422,12 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
         int offset = 0;
         Object spanRange = element.getPropertyObject("range");
-        if(spanRange != null) {
+        if (spanRange != null) {
           offset = ((GwtTextRange)spanRange).getStartOffset();
         }
         else {
           Object lineRange = element.getPropertyObject("lineRange");
-          if(lineRange != null) {
+          if (lineRange != null) {
             offset = ((GwtTextRange)lineRange).getStartOffset();
           }
         }
@@ -450,7 +463,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   private void onMouseOut() {
-    if(myBuilder == null) {
+    if (myBuilder == null) {
       return;
     }
 
@@ -574,6 +587,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   public void addHighlightInfos(List<GwtHighlightInfo> result, int flag) {
+    if (myBuilder == null) {
+      return;
+    }
     myBuilder.addHighlights(result, flag);
   }
 
@@ -588,6 +604,11 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   public void focusOffset(int offset) {
+    if (myBuilder == null) {
+      myDelayedCaredOffset = offset;
+      return;
+    }
+
     myLastCaretOffset = offset;
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (fragment.range.containsRange(offset, offset)) {
