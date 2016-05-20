@@ -54,10 +54,14 @@ import java.util.List;
 public class GwtMain implements EntryPoint {
   @Override
   public void onModuleLoad() {
+    final SimplePanel panel = GwtUIUtil.fillAndReturn(new SimplePanel());
+    panel.add(GwtUIUtil.loadingPanel());
+    RootPanel.get().add(panel);
+
     fetch(new Runnable() {
       @Override
       public void run() {
-        initContentPanel();
+        initContentPanel(panel);
       }
     }, 0, new EditorColorSchemeListService(), new EditorColorSchemeService());
   }
@@ -167,7 +171,7 @@ public class GwtMain implements EntryPoint {
     }
   }
 
-  private static void initContentPanel() {
+  private static void initContentPanel(final SimplePanel rootPanel) {
     FlowPanel flowPanel = new FlowPanel();
     Command cmd = new Command() {
       @Override
@@ -225,6 +229,6 @@ public class GwtMain implements EntryPoint {
 
     flowPanel.add(splitPanel);
 
-    RootPanel.get().add(flowPanel);
+    rootPanel.setWidget(flowPanel);
   }
 }
