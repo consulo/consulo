@@ -44,8 +44,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     public CodeLinePanel(Editor editor) {
       myEditor = editor;
       sinkEvents(Event.ONCLICK);
-
-      updateUI();
     }
 
     @Override
@@ -60,15 +58,23 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       }
     }
 
-    @Override
-    public void updateUI() {
+    public void updateUI(boolean selected) {
+      Element parentElement = getElement().getParentElement();
+
       GwtEditorColorScheme scheme = myEditor.getScheme();
-      if (myEditor.myCurrentLinePanel == this) {
-        getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
+      if (selected) {
+
+        // we need change color td element, due we have padding
+        parentElement.getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
       }
       else {
-        myEditor.setDefaultTextColors(this);
+        myEditor.setDefaultTextColors(parentElement);
       }
+    }
+
+    @Override
+    public void updateUI() {
+      updateUI(myEditor.myCurrentLinePanel == this);
     }
   }
 
@@ -240,22 +246,26 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   private void setDefaultTextColors(Widget widget) {
+    setDefaultTextColors(widget.getElement());
+  }
+
+  private void setDefaultTextColors(Element element) {
     GwtTextAttributes textAttr = myScheme.getAttributes(GwtEditorColorScheme.TEXT);
     if (textAttr != null) {
       GwtColor background = textAttr.getBackground();
       if (background != null) {
-        widget.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(background));
+        element.getStyle().setBackgroundColor(GwtStyleUtil.toString(background));
       }
       else {
-        widget.getElement().getStyle().clearBackgroundColor();
+        element.getStyle().clearBackgroundColor();
       }
 
       GwtColor foreground = textAttr.getForeground();
       if (foreground != null) {
-        widget.getElement().getStyle().setColor(GwtStyleUtil.toString(foreground));
+        element.getStyle().setColor(GwtStyleUtil.toString(foreground));
       }
       else {
-        widget.getElement().getStyle().clearColor();
+        element.getStyle().clearColor();
       }
     }
   }
@@ -291,7 +301,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         com.google.gwt.dom.client.Element element = DOM.eventGetToElement(event);
 
         myInsideGutter = insideGutter(element);
-        if(myInsideGutter) {
+        if (myInsideGutter) {
           return;
         }
 
@@ -337,10 +347,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       case Event.ONMOUSEOUT:
         boolean old = myInsideGutter;
         myInsideGutter = insideGutter(DOM.eventGetToElement(event));
-        if(old != myInsideGutter) {
+        if (old != myInsideGutter) {
           getElement().getStyle().clearCursor();
         }
-        if(myInsideGutter) {
+        if (myInsideGutter) {
           event.preventDefault();
           return;
         }
@@ -349,7 +359,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         event.preventDefault();
         break;
       case Event.ONCLICK:
-        if(myInsideGutter) {
+        if (myInsideGutter) {
           event.preventDefault();
           return;
         }
@@ -442,7 +452,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     editorCodePanel.addStyleName("noFocusBorder");
 
     int lineCount = 0;
-    FlowPanel lineElement = null;
+    CodeLinePanel lineElement = null;
 
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
@@ -460,6 +470,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         editorCodePanel.getCellFormatter().getElement(lineCount, 0).getStyle().setPaddingLeft(5, Style.Unit.PX);
 
         editorCodePanel.setWidget(lineCount, 0, lineElement);
+
+        lineElement.updateUI(); // update after adding
+
         lineElement = null;
 
         lineCount++;
@@ -537,11 +550,11 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     }
 
     if (myCurrentLinePanel != null) {
-      setDefaultTextColors(myCurrentLinePanel);
+      myCurrentLinePanel.updateUI(false);
     }
 
-    widget.updateUI();
     myCurrentLinePanel = widget;
+    widget.updateUI();
   }
 
   public native void set(Element element) /*-{
