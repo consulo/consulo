@@ -334,7 +334,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
               }
               myLastCursorPsiElementTextRange = resultElementRange;
               GwtHighlightInfo highlightInfo =
-                      new GwtHighlightInfo(myScheme.getAttributes(GwtEditorColorScheme.HYPERLINK_ATTRIBUTES), resultElementRange, Integer.MAX_VALUE);
+                      new GwtHighlightInfo(myScheme.getAttributes(GwtEditorColorScheme.CTRL_CLICKABLE), resultElementRange, Integer.MAX_VALUE);
 
               myLastNavigationInfo = result;
 

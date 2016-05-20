@@ -31,10 +31,10 @@ public class GwtEditorColorScheme implements IsSerializable {
   public static final String TEARLINE_COLOR = "TEARLINE_COLOR";
 
   public static final String TEXT = "TEXT";
-  public static final String HYPERLINK_ATTRIBUTES = "HYPERLINK_ATTRIBUTES";
+  public static final String CTRL_CLICKABLE = "CTRL_CLICKABLE";
 
   public static String[] fetchColors = new String[]{LINE_NUMBERS_COLOR, GUTTER_BACKGROUND, CARET_ROW_COLOR, TEARLINE_COLOR};
-  public static String[] fetchAttributes = new String[]{TEXT, HYPERLINK_ATTRIBUTES};
+  public static String[] fetchAttributes = new String[]{TEXT, CTRL_CLICKABLE};
 
   private String myName;
   private Map<String, GwtColor> myColors = new HashMap<String, GwtColor>();
