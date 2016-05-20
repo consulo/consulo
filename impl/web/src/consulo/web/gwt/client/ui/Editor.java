@@ -40,9 +40,12 @@ import java.util.List;
 public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   private static class CodeLinePanel extends FlowPanel implements WidgetWithUpdateUI {
     private Editor myEditor;
+    private int myLine;
 
-    public CodeLinePanel(Editor editor) {
+    public CodeLinePanel(Editor editor, int line) {
       myEditor = editor;
+      myLine = line;
+
       sinkEvents(Event.ONCLICK);
     }
 
@@ -75,6 +78,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     @Override
     public void updateUI() {
       updateUI(myEditor.myCurrentLinePanel == this);
+    }
+
+    public int getLine() {
+      return myLine;
     }
   }
 
@@ -115,10 +122,37 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   public static class GutterPanel extends VerticalPanel implements WidgetWithUpdateUI {
     private Editor myEditor;
 
+    private Grid[] myGutterLines;
+
     public GutterPanel(Editor editor) {
       myEditor = editor;
+      myGutterLines = new Grid[editor.myLineCount];
 
       updateUI();
+    }
+
+    public void set(int line, Grid grid) {
+      myGutterLines[line] = grid;
+
+      add(grid);
+    }
+
+
+    public void updateUI(int line, boolean selected) {
+      Grid widget = myGutterLines[line];
+      if (widget == null) {
+        return;
+      }
+
+      Style style = widget.getRowFormatter().getElement(0).getStyle();
+
+      GwtEditorColorScheme scheme = myEditor.getScheme();
+      if (selected) {
+        style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
+      }
+      else {
+        style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
+      }
     }
 
     @Override
@@ -130,6 +164,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       getElement().getStyle().setProperty("borderRightWidth", "1px");
       getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
       getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
+
+      if (myEditor.myCurrentLinePanel != null) {
+        updateUI(myEditor.myCurrentLinePanel.getLine(), true);
+      }
     }
   }
 
@@ -423,14 +461,13 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
       LineNumberSpan lineSpan = new LineNumberSpan(String.valueOf(i + 1), this);
       lineSpan.addStyleName("editorLine");
-      lineSpan.addStyleName("editorGutterLine" + i);
 
       panel.setWidget(0, 0, lineSpan);
 
-      myGutterPanel.add(panel);
+      myGutterPanel.set(i, panel);
     }
 
-    Grid editorCodePanel = new Grid(myLineCount + 1, 1) {
+    Grid editorCodePanel = new Grid(myLineCount, 1) {
       {
         sinkEvents(Event.ONCHANGE | Event.ONPASTE | Event.KEYEVENTS);
       }
@@ -456,7 +493,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
-        lineElement = new CodeLinePanel(this);
+        lineElement = new CodeLinePanel(this, lineCount);
         setDefaultTextColors(lineElement);
 
         lineElement.setWidth("100%");
@@ -551,9 +588,12 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     if (myCurrentLinePanel != null) {
       myCurrentLinePanel.updateUI(false);
+
+      myGutterPanel.updateUI(myCurrentLinePanel.getLine(), false);
     }
 
     myCurrentLinePanel = widget;
+    myGutterPanel.updateUI(myCurrentLinePanel.getLine(), true);
     widget.updateUI();
   }
 
