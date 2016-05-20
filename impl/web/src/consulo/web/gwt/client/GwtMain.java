@@ -107,8 +107,13 @@ public class GwtMain implements EntryPoint {
 
     flowPanel.add(menu);
 
-    consulo.web.gwt.client.ui.HorizontalSplitPanel splitPanel = new consulo.web.gwt.client.ui.HorizontalSplitPanel();
-    splitPanel.setSplitPosition("20%");
+    Grid splitPanel = GwtUtil.fillAndReturn(new Grid(1, 2));
+    splitPanel.getCellFormatter().setWidth(0, 0, "20%");
+    splitPanel.getCellFormatter().addStyleName(0, 0, "projectTreeBorder");
+    splitPanel.getCellFormatter().setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_TOP);
+    splitPanel.getCellFormatter().setVerticalAlignment(0, 1, HasVerticalAlignment.ALIGN_TOP);
+
+    //splitPanel.setSplitPosition("20%");
 
     final DoubleClickTree tree = new DoubleClickTree();
     GwtUtil.rpc().getProjectInfo("ignored", new ReportableCallable<GwtProjectInfo>() {
@@ -118,10 +123,10 @@ public class GwtMain implements EntryPoint {
       }
     });
 
-    splitPanel.setLeftWidget(tree);
+    splitPanel.setWidget(0, 0, tree);
 
     final EditorTabPanel tabPanel = new EditorTabPanel();
-    splitPanel.setRightWidget(tabPanel);
+    splitPanel.setWidget(0, 1, tabPanel);
 
     tree.addDoubleClickHandler(new DoubleClickTreeHandler() {
       @Override
