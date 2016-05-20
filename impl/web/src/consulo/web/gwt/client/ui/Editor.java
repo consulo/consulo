@@ -36,6 +36,24 @@ import java.util.List;
  * @since 17-May-16
  */
 public class Editor extends SimplePanel {
+  private class CodeLinePanel extends FlowPanel {
+    {
+      sinkEvents(Event.ONCLICK);
+    }
+
+    @Override
+    public void onBrowserEvent(Event event) {
+      switch (DOM.eventGetType(event)) {
+        case Event.ONCLICK:
+          changeLine(this);
+          break;
+        default:
+          event.preventDefault();
+          break;
+      }
+    }
+  }
+
   public static final int ourLexerFlag = 1 << 1;
   public static final int ourEditorFlag = 1 << 2;
 
@@ -56,6 +74,8 @@ public class Editor extends SimplePanel {
   private GwtTextRange myLastCursorPsiElementTextRange;
 
   private GwtNavigateInfo myLastNavigationInfo;
+
+  private Widget myLastLine;
 
   public Editor(EditorTabPanel editorTabPanel, String fileUrl, String text) {
     myEditorTabPanel = editorTabPanel;
@@ -156,7 +176,7 @@ public class Editor extends SimplePanel {
   }
 
   private void build() {
-    EditorColorSchemeService editorColorSchemeService = GwtUtil.get(EditorColorSchemeService.KEY);
+    final EditorColorSchemeService editorColorSchemeService = GwtUtil.get(EditorColorSchemeService.KEY);
 
     HorizontalPanel gridPanel = new HorizontalPanel();
     GwtUtil.fill(gridPanel);
@@ -211,7 +231,8 @@ public class Editor extends SimplePanel {
 
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
-        lineElement = new FlowPanel();
+        lineElement = new CodeLinePanel();
+
         lineElement.setWidth("100%");
         lineElement.addStyleName("editorLine");
         lineElement.addStyleName("gen_Line_" + lineCount);
@@ -278,9 +299,27 @@ public class Editor extends SimplePanel {
         fragment.widget.getElement().scrollIntoView();
 
         set(fragment.widget.getElement());
+        Widget parent = fragment.widget.getParent();
+        if (parent instanceof CodeLinePanel) {
+          changeLine(parent);
+        }
+
         break;
       }
     }
+  }
+
+  public void changeLine(Widget widget) {
+    if (myLastLine == widget) {
+      return;
+    }
+    if (myLastLine != null) {
+      myLastLine.getElement().getStyle().clearBackgroundColor();
+    }
+
+    EditorColorSchemeService o = GwtUtil.get(EditorColorSchemeService.KEY);
+    widget.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(o.getScheme().getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
+    myLastLine = widget;
   }
 
   public native void set(Element element) /*-{

@@ -25,10 +25,11 @@ import java.util.Map;
  * @since 20-May-16
  */
 public class GwtEditorColorScheme implements IsSerializable {
-  public static String[] fetchColors = new String[]{GwtEditorColorScheme.LINE_NUMBERS_COLOR, GwtEditorColorScheme.GUTTER_BACKGROUND};
-
   public static final String LINE_NUMBERS_COLOR = "LINE_NUMBERS_COLOR";
   public static final String GUTTER_BACKGROUND = "GUTTER_BACKGROUND";
+  public static final String CARET_ROW_COLOR = "GUTTER_BACKGROUND";
+
+  public static String[] fetchColors = new String[]{LINE_NUMBERS_COLOR, GUTTER_BACKGROUND, CARET_ROW_COLOR};
 
   private Map<String, GwtColor> myColors = new HashMap<String, GwtColor>();
 
