@@ -177,9 +177,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   public static final int ourSelectFlag = 1 << 24;
 
-  private final EditorSegmentBuilder myBuilder;
+  private EditorSegmentBuilder myBuilder;
 
-  private final int myLineCount;
+  private int myLineCount;
 
   private EditorCaretHandler myCaretHandler;
 
@@ -217,11 +217,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     }
   };
 
-  public Editor(EditorTabPanel editorTabPanel, String fileUrl, String text) {
+  public Editor(final EditorTabPanel editorTabPanel, String fileUrl, final String text) {
     myEditorTabPanel = editorTabPanel;
     myFileUrl = fileUrl;
-    myBuilder = new EditorSegmentBuilder(text);
-    myLineCount = myBuilder.getLineCount();
 
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
 
@@ -231,12 +229,19 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     myScheme = schemeService.getScheme();
 
     setDefaultTextColors(this);
-  }
 
-  public void doHighlight() {
+    GwtUIUtil.fill(this);
+
+    setWidget(GwtUIUtil.loadingPanel());
+
     Scheduler.get().scheduleDeferred(new Command() {
       @Override
       public void execute() {
+        myBuilder = new EditorSegmentBuilder(text);
+        myLineCount = myBuilder.getLineCount();
+
+        setWidget(build());
+
         doHighlightImpl();
       }
     });
@@ -335,6 +340,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   @Override
   public void onBrowserEvent(final Event event) {
+    if(myBuilder == null) {
+      return;
+    }
+
     switch (DOM.eventGetType(event)) {
       case Event.ONMOUSEOVER:
         com.google.gwt.dom.client.Element element = DOM.eventGetToElement(event);
@@ -438,7 +447,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     }
   }
 
-  private void build() {
+  private Widget build() {
     Grid gridPanel = GwtUIUtil.fillAndReturn(new MainGrid(this, 1, 2));
 
     // try to fill area by code
@@ -525,7 +534,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     panel.setWidth("100%");
     panel.add(scrollPanel, DockPanel.CENTER);
 
-    setWidget(panel);
+    return panel;
   }
 
   public GwtEditorColorScheme getScheme() {
@@ -542,12 +551,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   public void setCaretHandler(EditorCaretHandler caretHandler) {
     myCaretHandler = caretHandler;
-  }
-
-  public Widget getComponent() {
-    build();
-
-    return this;
   }
 
   public void addHighlightInfos(List<GwtHighlightInfo> result, int flag) {

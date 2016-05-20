@@ -71,7 +71,7 @@ public class EditorTabPanel extends SimplePanel {
           return;
         }
 
-        final Editor editor = GwtUIUtil.fillAndReturn(new Editor(EditorTabPanel.this, virtualFile.getUrl(), result));
+        final Editor editor = new Editor(EditorTabPanel.this, virtualFile.getUrl(), result);
 
         final TabLink tabLink = new TabLink();
         final HorizontalPanel tab = new HorizontalPanel();
@@ -92,7 +92,7 @@ public class EditorTabPanel extends SimplePanel {
         tabPane.setWidth("100%");
         tabPane.addStyleName("disableOverflow");
 
-        tabPane.add(editor.getComponent());
+        tabPane.add(editor);
 
         // TabPanel can't return tab size???
         int index = myOpenedFiles.size();
@@ -119,8 +119,6 @@ public class EditorTabPanel extends SimplePanel {
             }
           }
         });
-
-        editor.doHighlight();
       }
     });
   }
