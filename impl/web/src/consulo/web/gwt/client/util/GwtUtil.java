@@ -18,11 +18,15 @@ package consulo.web.gwt.client.util;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import consulo.web.gwt.client.service.FetchService;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.GwtTransportServiceAsync;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -30,6 +34,8 @@ import java.util.List;
  */
 public class GwtUtil {
   private static final GwtTransportServiceAsync ourAsyncService = GWT.create(GwtTransportService.class);
+
+  private static final Map<String, FetchService> ourServices = new HashMap<String, FetchService>();
 
   public static GwtTransportServiceAsync rpc() {
     return ourAsyncService;
@@ -46,5 +52,19 @@ public class GwtUtil {
       panel.add(image);
     }
     return panel;
+  }
+
+  public static void fill(UIObject object) {
+    object.setWidth("100%");
+    object.setHeight("100%");
+  }
+
+  public static void put(String key, FetchService fetchService) {
+    ourServices.put(key, fetchService);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T get(String key) {
+    return (T)ourServices.get(key);
   }
 }

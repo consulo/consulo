@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.util.BitUtil;
+import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.transport.GwtColor;
 import consulo.web.gwt.shared.transport.GwtHighlightInfo;
 import consulo.web.gwt.shared.transport.GwtTextRange;
@@ -200,12 +201,12 @@ public class EditorSegmentBuilder {
   private void add(Fragment fragment, GwtHighlightInfo highlightInfo, int severity, int flag) {
     GwtColor foreground = highlightInfo.getForeground();
     if (foreground != null) {
-      fragment.add("color", "rgb(" + foreground.getRed() + ", " + foreground.getGreen() + ", " + foreground.getBlue() + ")", severity, flag);
+      fragment.add("color", GwtStyleUtil.toString(foreground), severity, flag);
     }
 
     GwtColor background = highlightInfo.getBackground();
     if (background != null) {
-      fragment.add("backgroundColor", "rgb(" + background.getRed() + ", " + background.getGreen() + ", " + background.getBlue() + ")", severity, flag);
+      fragment.add("backgroundColor", GwtStyleUtil.toString(background), severity, flag);
     }
 
     if (BitUtil.isSet(highlightInfo.getFlags(), GwtHighlightInfo.BOLD)) {

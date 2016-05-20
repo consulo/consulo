@@ -17,7 +17,10 @@ package consulo.web.gwt.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import consulo.web.gwt.client.service.EditorColorSchemeService;
+import consulo.web.gwt.client.service.FetchService;
 import consulo.web.gwt.client.ui.DoubleClickTree;
 import consulo.web.gwt.client.ui.DoubleClickTreeEvent;
 import consulo.web.gwt.client.ui.DoubleClickTreeHandler;
@@ -38,6 +41,38 @@ public class GwtMain implements EntryPoint {
 
   @Override
   public void onModuleLoad() {
+    fetch(new Runnable() {
+      @Override
+      public void run() {
+        initContentPanel();
+      }
+    }, 0, new EditorColorSchemeService());
+  }
+
+  private static void fetch(final Runnable after, final int index, final FetchService... fetchServices) {
+    if (index == fetchServices.length) {
+      after.run();
+      return;
+    }
+
+    final FetchService fetchService = fetchServices[index];
+    fetchService.fetch(new Runnable() {
+                         @Override
+                         public void run() {
+                           Window.alert("Error initialization");
+                         }
+                       }, new Runnable() {
+                         @Override
+                         public void run() {
+                           GwtUtil.put(fetchService.getKey(), fetchService);
+
+                           fetch(after, index + 1, fetchServices);
+                         }
+                       }
+    );
+  }
+
+  private static void initContentPanel() {
     FlowPanel flowPanel = new FlowPanel();
     Command cmd = new Command() {
       @Override

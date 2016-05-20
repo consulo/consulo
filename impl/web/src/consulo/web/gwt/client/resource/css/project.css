@@ -36,19 +36,16 @@ pre {
   font-weight:bold;
 }
 
-.editorLineRow {
-  padding-left: 5px;
-  padding-right: 5px;
+.editorLinePanel {
   margin-right: 5px;
   white-space: nowrap;
-}
 
-.editorLineColumn {
   border-right: #D8D8D8 solid 1px;
 }
 
-.editorCodeColumn {
-
+.editorLineRow {
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .gwtcomp-SuperTree-SelectedItem {
@@ -87,4 +84,8 @@ pre {
 .gwt-HorizontalSplitPanel2 .hsplitter {
   width: 1px;
   background-color: #D8D8D8;
+}
+
+.noFocusBorder:read-write:focus {
+  outline: none;
 }

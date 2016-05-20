@@ -11,7 +11,7 @@
 
   <stylesheet src="css/project.css"/>
 
-  <public path="client/resources"/>
+  <public path="client/resource"/>
 
   <entry-point class='consulo.web.gwt.client.GwtMain'/>
 

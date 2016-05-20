@@ -25,6 +25,9 @@ import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.markup.EffectType;
@@ -165,6 +168,19 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
   @Override
+  public GwtEditorColorScheme serviceEditorColorScheme(String[] colorKeys) {
+    GwtEditorColorScheme colorScheme = new GwtEditorColorScheme();
+    EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
+    for (String colorKey : colorKeys) {
+      ColorKey key = ColorKey.find(colorKey);
+      assert key != null;
+
+      colorScheme.putColor(colorKey, createColor(globalScheme.getColor(key)));
+    }
+    return colorScheme;
+  }
+
+  @Override
   public String getContent(final String fileUrl) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl != null) {
@@ -254,12 +270,12 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
 
     Color foregroundColor = textAttributes.getForegroundColor();
     if (foregroundColor != null) {
-      foreground = new GwtColor(foregroundColor.getRed(), foregroundColor.getGreen(), foregroundColor.getBlue());
+      foreground = createColor(foregroundColor);
     }
 
     Color backgroundColor = textAttributes.getBackgroundColor();
     if (backgroundColor != null) {
-      background = new GwtColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue());
+      background = createColor(backgroundColor);
     }
 
     int flags = 0;
@@ -269,6 +285,11 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     flags = BitUtil.set(flags, GwtHighlightInfo.LINE_THROUGH, textAttributes.getEffectType() == EffectType.STRIKEOUT);
 
     return new GwtHighlightInfo(foreground, background, flags, textRange, severity);
+  }
+
+  @NotNull
+  private static GwtColor createColor(Color color) {
+    return new GwtColor(color.getRed(), color.getGreen(), color.getBlue());
   }
 
   @NotNull

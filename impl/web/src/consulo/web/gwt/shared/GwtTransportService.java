@@ -17,10 +17,7 @@ package consulo.web.gwt.shared;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import consulo.web.gwt.shared.transport.GwtHighlightInfo;
-import consulo.web.gwt.shared.transport.GwtNavigateInfo;
-import consulo.web.gwt.shared.transport.GwtProjectInfo;
-import consulo.web.gwt.shared.transport.GwtVirtualFile;
+import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,5 +45,6 @@ public interface GwtTransportService extends RemoteService {
   @Nullable
   GwtNavigateInfo getNavigationInfo(String fileUrl, int offset);
 
+  GwtEditorColorScheme serviceEditorColorScheme(String[] colorKeys);
   //String getQuickDocInfo(String fileUrl, int offset);
 }

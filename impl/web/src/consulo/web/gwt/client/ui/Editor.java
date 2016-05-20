@@ -22,6 +22,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
+import consulo.web.gwt.client.service.EditorColorSchemeService;
+import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
 import consulo.web.gwt.shared.transport.*;
@@ -62,8 +64,8 @@ public class Editor extends SimplePanel {
     myLineCount = myBuilder.getLineCount();
 
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
-    setWidth("100%");
-    setHeight("100%");
+
+    GwtUtil.fill(this);
   }
 
   @Override
@@ -78,11 +80,11 @@ public class Editor extends SimplePanel {
           return;
         }
 
+
         int startOffset = ((GwtTextRange)range).getStartOffset();
         if (startOffset == myLastCaretOffset) {
           return;
         }
-
         myLastCaretOffset = startOffset;
 
         if (event.getCtrlKey()) {
@@ -154,69 +156,79 @@ public class Editor extends SimplePanel {
   }
 
   private void build() {
-    Grid grid = new Grid(myLineCount + 1, 2);
-    grid.setWidth("100%");
+    EditorColorSchemeService editorColorSchemeService = GwtUtil.get(EditorColorSchemeService.KEY);
 
-    grid.getColumnFormatter().addStyleName(0, "editorLineColumn");
-    grid.getColumnFormatter().addStyleName(1, "editorCodeColumn");
+    HorizontalPanel gridPanel = new HorizontalPanel();
+    GwtUtil.fill(gridPanel);
+
+    VerticalPanel editorLinePanel = new VerticalPanel();
+    gridPanel.add(editorLinePanel);
+
+    editorLinePanel.addStyleName("noselectable");
+    editorLinePanel.addStyleName("editorLinePanel");
+    editorLinePanel.getElement().getStyle()
+            .setBackgroundColor(GwtStyleUtil.toString(editorColorSchemeService.getScheme().getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
 
     for (int i = 0; i < myLineCount; i++) {
       final HorizontalPanel panel = new HorizontalPanel();
       panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-      panel.setWidth("100%");
-      panel.setHeight("100%");
+      GwtUtil.fill(panel);
 
       InlineHTML lineSpan = new InlineHTML(String.valueOf(i + 1));
+      lineSpan.addStyleName("editorLineRow");
       lineSpan.addStyleName("editorLine");
       lineSpan.addStyleName("editorGutterLine" + i);
+      lineSpan.getElement().getStyle().setColor(GwtStyleUtil.toString(editorColorSchemeService.getScheme().getColor(GwtEditorColorScheme.LINE_NUMBERS_COLOR)));
 
       panel.add(lineSpan);
 
-      HTMLTable.CellFormatter cellFormatter = grid.getCellFormatter();
-      cellFormatter.addStyleName(i, 0, "noselectable");
-      cellFormatter.addStyleName(i, 0, "editorLineRow");
-
-      grid.setWidget(i, 0, panel);
+      editorLinePanel.add(panel);
     }
+
+    VerticalPanel editorCodePanel = new VerticalPanel() {
+      {
+        sinkEvents(Event.ONCHANGE | Event.ONPASTE | Event.KEYEVENTS);
+      }
+
+      @Override
+      public void onBrowserEvent(Event event) {
+        event.preventDefault();
+      }
+    };
+    gridPanel.add(editorCodePanel);
+
+    GwtUtil.fill(editorCodePanel);
+
+    // dont provide red code
+    editorCodePanel.getElement().setAttribute("spellcheck", "false");
+    // editable
+    editorCodePanel.getElement().setAttribute("contenteditable", "true");
+    // disable border
+    editorCodePanel.addStyleName("noFocusBorder");
 
     int lineCount = 0;
     FlowPanel lineElement = null;
 
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
-        lineElement = new FlowPanel() {
-          {
-            sinkEvents(Event.ONCHANGE | Event.ONPASTE | Event.KEYEVENTS);
-          }
-
-          @Override
-          public void onBrowserEvent(Event event) {
-            event.preventDefault();
-          }
-        };
+        lineElement = new FlowPanel();
         lineElement.setWidth("100%");
         lineElement.addStyleName("editorLine");
         lineElement.addStyleName("gen_Line_" + lineCount);
-        // dont provide red code
-        lineElement.getElement().setAttribute("spellcheck", "false");
-        // editable
-        lineElement.getElement().setAttribute("contenteditable", "true");
       }
 
       lineElement.add(fragment.widget);
 
       if (fragment.lineWrap) {
-        grid.setWidget(lineCount, 1, lineElement);
-        grid.getCellFormatter().setWordWrap(lineCount, 1, false);
+        editorCodePanel.add(lineElement);
         lineElement = null;
 
         lineCount++;
       }
     }
 
-    ScrollPanel scrollPanel = new ScrollPanel(grid);
-    scrollPanel.setHeight("100%");
-    scrollPanel.setWidth("100%");
+    ScrollPanel scrollPanel = new ScrollPanel(gridPanel);
+    GwtUtil.fill(scrollPanel);
 
     DockPanel panel = new DockPanel();
     panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
