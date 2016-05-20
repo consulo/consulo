@@ -158,7 +158,7 @@ public class EditorSegmentBuilder {
 
       int endOffset = i + 1;
       fragment.range = new GwtTextRange(startOffset, endOffset);
-      fragment.widget = new InlineHTML(labelText);
+      fragment.widget = new InlineHTML(labelText.isEmpty() ? "&#8205;" : labelText);
       fragment.widget.setStyleName(null);
       fragment.widget.getElement().setPropertyObject("range", fragment.range);
 
