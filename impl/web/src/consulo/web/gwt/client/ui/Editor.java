@@ -377,7 +377,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       editorLinePanel.add(panel);
     }
 
-    VerticalPanel editorCodePanel = new VerticalPanel() {
+    Grid editorCodePanel = new Grid(myLineCount + 1, 1) {
       {
         sinkEvents(Event.ONCHANGE | Event.ONPASTE | Event.KEYEVENTS);
       }
@@ -387,9 +387,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         event.preventDefault();
       }
     };
-    gridPanel.setWidget(0, 1, editorCodePanel);
-
     GwtUtil.fill(editorCodePanel);
+
+    gridPanel.setWidget(0, 1, editorCodePanel);
 
     // dont provide red code
     editorCodePanel.getElement().setAttribute("spellcheck", "false");
@@ -414,7 +414,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       lineElement.add(fragment.widget);
 
       if (fragment.lineWrap) {
-        editorCodePanel.add(lineElement);
+        editorCodePanel.getCellFormatter().getElement(lineCount, 0).getStyle().setPaddingLeft(5, Style.Unit.PX);
+
+        editorCodePanel.setWidget(lineCount, 0, lineElement);
         lineElement = null;
 
         lineCount++;
