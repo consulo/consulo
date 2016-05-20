@@ -37,14 +37,8 @@ import java.util.List;
  */
 public class Editor extends SimplePanel {
   private class CodeLinePanel extends FlowPanel {
-
     public CodeLinePanel() {
       sinkEvents(Event.ONCLICK);
-      refreshStyles();
-    }
-
-    public void refreshStyles() {
-      setDefaultColors(this);
     }
 
     @Override
@@ -107,13 +101,20 @@ public class Editor extends SimplePanel {
       if (background != null) {
         widget.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(background));
       }
+      else {
+        widget.getElement().getStyle().clearBackgroundColor();
+      }
 
       GwtColor foreground = textAttr.getForeground();
       if (foreground != null) {
         widget.getElement().getStyle().setColor(GwtStyleUtil.toString(foreground));
       }
+      else {
+        widget.getElement().getStyle().clearColor();
+      }
     }
   }
+
   @Override
   public void onBrowserEvent(final Event event) {
     switch (DOM.eventGetType(event)) {
@@ -267,6 +268,7 @@ public class Editor extends SimplePanel {
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
         lineElement = new CodeLinePanel();
+        setDefaultColors(lineElement);
 
         lineElement.setWidth("100%");
         lineElement.addStyleName("editorLine");
@@ -348,8 +350,9 @@ public class Editor extends SimplePanel {
     if (myLastLine == widget) {
       return;
     }
+
     if (myLastLine != null) {
-      myLastLine.refreshStyles();
+      setDefaultColors(myLastLine);
     }
 
     widget.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(myScheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
