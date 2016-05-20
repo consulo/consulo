@@ -27,7 +27,7 @@ import java.util.Map;
 public class GwtEditorColorScheme implements IsSerializable {
   public static final String LINE_NUMBERS_COLOR = "LINE_NUMBERS_COLOR";
   public static final String GUTTER_BACKGROUND = "GUTTER_BACKGROUND";
-  public static final String CARET_ROW_COLOR = "GUTTER_BACKGROUND";
+  public static final String CARET_ROW_COLOR = "CARET_ROW_COLOR";
   public static final String TEARLINE_COLOR = "TEARLINE_COLOR";
 
   public static final String TEXT = "TEXT";
