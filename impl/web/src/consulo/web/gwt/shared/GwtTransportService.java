@@ -46,7 +46,10 @@ public interface GwtTransportService extends RemoteService {
   GwtNavigateInfo getNavigationInfo(String fileUrl, int offset);
 
   @NotNull
-  GwtEditorColorScheme serviceEditorColorScheme(String[] colorKeys, String[] attributes);
+  GwtEditorColorScheme serviceEditorColorScheme(String name, String[] colorKeys, String[] attributes);
+
+  @NotNull
+  List<String> serviceEditorColorSchemeList();
 
   //String getQuickDocInfo(String fileUrl, int offset);
 }

@@ -40,5 +40,9 @@ public interface GwtTransportServiceAsync {
   @Nullable
   void getNavigationInfo(String fileUrl, int offset, AsyncCallback<GwtNavigateInfo> async);
 
-  void serviceEditorColorScheme(String[] colorKeys, String[] fetchAttributes, AsyncCallback<GwtEditorColorScheme> async);
+  @NotNull
+  void serviceEditorColorScheme(String name, String[] colorKeys, String[] attributes, AsyncCallback<GwtEditorColorScheme> async);
+
+  @NotNull
+  void serviceEditorColorSchemeList(AsyncCallback<List<String>> async);
 }

@@ -19,6 +19,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import consulo.web.gwt.client.service.EditorColorSchemeListService;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.service.FetchService;
 import consulo.web.gwt.client.ui.DoubleClickTree;
@@ -46,7 +47,7 @@ public class GwtMain implements EntryPoint {
       public void run() {
         initContentPanel();
       }
-    }, 0, new EditorColorSchemeService());
+    }, 0, new EditorColorSchemeListService(), new EditorColorSchemeService());
   }
 
   private static void fetch(final Runnable after, final int index, final FetchService... fetchServices) {
@@ -87,6 +88,22 @@ public class GwtMain implements EntryPoint {
 
     MenuBar menu = new MenuBar();
     menu.addItem("File", fileMenu);
+
+    final EditorColorSchemeService schemeService = GwtUtil.get(EditorColorSchemeService.KEY);
+    EditorColorSchemeListService listService = GwtUtil.get(EditorColorSchemeListService.KEY);
+
+    MenuBar schemeMenu = new MenuBar(true);
+
+    for (final String schemeName : listService.getSchemes()) {
+      schemeMenu.addItem(schemeName, new Command() {
+        @Override
+        public void execute() {
+          schemeService.setScheme(schemeName);
+        }
+      });
+    }
+
+    menu.addItem("Scheme", schemeMenu);
 
     flowPanel.add(menu);
 

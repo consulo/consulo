@@ -23,6 +23,7 @@ import com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.ColorKey;
@@ -143,7 +144,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
         PsiReference referenceAt = file.findReferenceAt(offset);
         if (referenceAt != null) {
           List<TextRange> absoluteRanges = ReferenceRange.getAbsoluteRanges(referenceAt);
-          if(absoluteRanges.isEmpty()) {
+          if (absoluteRanges.isEmpty()) {
             return;
           }
           range[0] = new GwtTextRange(absoluteRanges.get(0).getStartOffset(), absoluteRanges.get(0).getEndOffset());
@@ -162,7 +163,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
         }
       }
     });
-    if(range[0] == null || navigatables.isEmpty()) {
+    if (range[0] == null || navigatables.isEmpty()) {
       return null;
     }
     return new GwtNavigateInfo(range[0], navigatables);
@@ -170,24 +171,53 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
 
   @NotNull
   @Override
-  public GwtEditorColorScheme serviceEditorColorScheme(String[] colorKeys, String[] attributes) {
-    GwtEditorColorScheme colorScheme = new GwtEditorColorScheme();
-    EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
+  public GwtEditorColorScheme serviceEditorColorScheme(String scheme, String[] colorKeys, String[] attributes) {
+    GwtEditorColorScheme gwtScheme = new GwtEditorColorScheme(scheme);
+
+    final EditorColorsManager colorsManager = EditorColorsManager.getInstance();
+
+    EditorColorsScheme globalScheme = colorsManager.getScheme(scheme);
+    if (globalScheme != null) {
+      final EditorColorsScheme finalGlobalScheme = globalScheme;
+      ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+        @Override
+        public void run() {
+          colorsManager.setGlobalScheme(finalGlobalScheme);
+        }
+      }, ModalityState.any());
+    }
+
+    if (globalScheme == null) {
+      globalScheme = colorsManager.getGlobalScheme();
+    }
+
     for (String colorKey : colorKeys) {
       ColorKey key = ColorKey.find(colorKey);
       assert key != null;
 
-      colorScheme.putColor(colorKey, createColor(globalScheme.getColor(key)));
+      gwtScheme.putColor(colorKey, createColor(globalScheme.getColor(key)));
     }
     for (String attribute : attributes) {
       TextAttributesKey textAttributesKey = TextAttributesKey.find(attribute);
 
       TextAttributes textAttributes = globalScheme.getAttributes(textAttributesKey);
-      if(textAttributes != null) {
-        colorScheme.putAttributes(attribute, createTextAttributes(textAttributes));
+      if (textAttributes != null) {
+        gwtScheme.putAttributes(attribute, createTextAttributes(textAttributes));
       }
     }
-    return colorScheme;
+    return gwtScheme;
+  }
+
+  @NotNull
+  @Override
+  public List<String> serviceEditorColorSchemeList() {
+    List<String> list = new ArrayList<String>();
+    EditorColorsScheme[] allSchemes = EditorColorsManager.getInstance().getAllSchemes();
+    for (EditorColorsScheme allScheme : allSchemes) {
+      list.add(allScheme.getName());
+    }
+
+    return list;
   }
 
   @Override

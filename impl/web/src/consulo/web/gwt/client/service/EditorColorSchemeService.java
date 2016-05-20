@@ -15,25 +15,56 @@
  */
 package consulo.web.gwt.client.service;
 
+import consulo.web.gwt.client.util.AsyncCallbackAdapter;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.shared.transport.GwtEditorColorScheme;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 20-May-16
  */
 public class EditorColorSchemeService implements FetchService {
+  public interface Listener {
+    void schemeChanged(GwtEditorColorScheme scheme);
+  }
+
   public static final String KEY = "EditorColorSchemeService";
 
+  private List<Listener> myListeners = new ArrayList<Listener>();
   private GwtEditorColorScheme myScheme;
 
   public GwtEditorColorScheme getScheme() {
     return myScheme;
   }
 
+  public void setScheme(String scheme) {
+    AsyncCallbackAdapter<GwtEditorColorScheme> callback = new AsyncCallbackAdapter<GwtEditorColorScheme>() {
+      @Override
+      public void onSuccess(GwtEditorColorScheme result) {
+        myScheme = result;
+        for (Listener listener : myListeners) {
+          listener.schemeChanged(myScheme);
+        }
+      }
+    };
+
+    GwtUtil.rpc().serviceEditorColorScheme(scheme, GwtEditorColorScheme.fetchColors, GwtEditorColorScheme.fetchAttributes, callback);
+  }
+
+  public void addListener(Listener listener) {
+    myListeners.add(listener);
+  }
+
+  public void removeListener(Listener listener) {
+    myListeners.add(listener);
+  }
+
   @Override
   public void fetch(Runnable onError, Runnable onOk) {
-    GwtUtil.rpc().serviceEditorColorScheme(GwtEditorColorScheme.fetchColors, GwtEditorColorScheme.fetchAttributes,
+    GwtUtil.rpc().serviceEditorColorScheme("Default", GwtEditorColorScheme.fetchColors, GwtEditorColorScheme.fetchAttributes,
                                            new ServiceCallback<GwtEditorColorScheme>(onError, onOk) {
                                              @Override
                                              public void handle(GwtEditorColorScheme result) {

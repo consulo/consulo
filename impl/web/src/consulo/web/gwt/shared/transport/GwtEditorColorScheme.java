@@ -36,8 +36,20 @@ public class GwtEditorColorScheme implements IsSerializable {
   public static String[] fetchColors = new String[]{LINE_NUMBERS_COLOR, GUTTER_BACKGROUND, CARET_ROW_COLOR, TEARLINE_COLOR};
   public static String[] fetchAttributes = new String[]{TEXT, HYPERLINK_ATTRIBUTES};
 
+  private String myName;
   private Map<String, GwtColor> myColors = new HashMap<String, GwtColor>();
   private Map<String, GwtTextAttributes> myAttributes = new HashMap<String, GwtTextAttributes>();
+
+  public GwtEditorColorScheme() {
+  }
+
+  public GwtEditorColorScheme(String name) {
+    myName = name;
+  }
+
+  public String getName() {
+    return myName;
+  }
 
   public GwtColor getColor(String colorKey) {
     return myColors.get(colorKey);

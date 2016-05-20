@@ -25,11 +25,9 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
-import consulo.web.gwt.shared.transport.GwtHighlightInfo;
 import consulo.web.gwt.shared.transport.GwtVirtualFile;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,7 +40,6 @@ public class EditorTabPanel extends SimplePanel {
     private int myIndex;
 
     public EditorTabInfo(Editor editor, int index) {
-
       myEditor = editor;
       myIndex = index;
     }
@@ -71,7 +68,7 @@ public class EditorTabPanel extends SimplePanel {
           return;
         }
 
-        final Editor editor = new Editor(EditorTabPanel.this, virtualFile.getUrl(), result);
+        final Editor editor = GwtUtil.fillAndReturn(new Editor(EditorTabPanel.this, virtualFile.getUrl(), result));
 
         final TabLink tabLink = new TabLink();
         final HorizontalPanel tab = new HorizontalPanel();
@@ -104,7 +101,10 @@ public class EditorTabPanel extends SimplePanel {
         closeImage.addClickHandler(new ClickHandler() {
           @Override
           public void onClick(ClickEvent event) {
-            myOpenedFiles.remove(virtualFile.getUrl());
+            EditorTabInfo tabInfo = myOpenedFiles.remove(virtualFile.getUrl());
+            if (tabInfo != null) {
+              tabInfo.myEditor.dispose();
+            }
 
             myTabPanel.remove(tabLink);
 
@@ -115,34 +115,7 @@ public class EditorTabPanel extends SimplePanel {
           }
         });
 
-        GwtUtil.rpc().getLexerHighlight(virtualFile.getUrl(), new ReportableCallable<List<GwtHighlightInfo>>() {
-          @Override
-          public void onSuccess(List<GwtHighlightInfo> result) {
-            editor.addHighlightInfos(result, Editor.ourLexerFlag);
-
-            runHighlightPasses(virtualFile, editor, offset, null);
-
-            editor.setCaretHandler(new EditorCaretHandler() {
-              @Override
-              public void caretPlaced(int offset) {
-                runHighlightPasses(virtualFile, editor, offset, null);
-              }
-            });
-          }
-        });
-      }
-    });
-  }
-
-  public static void runHighlightPasses(GwtVirtualFile virtualFile, final Editor editor, int offset, final Runnable callback) {
-    GwtUtil.rpc().runHighlightPasses(virtualFile.getUrl(), offset, new ReportableCallable<List<GwtHighlightInfo>>() {
-      @Override
-      public void onSuccess(List<GwtHighlightInfo> result) {
-        editor.addHighlightInfos(result, Editor.ourEditorFlag);
-
-        if (callback != null) {
-          callback.run();
-        }
+        editor.doHighlight();
       }
     });
   }

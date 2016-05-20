@@ -16,11 +16,9 @@
 package consulo.web.gwt.client.util;
 
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.service.FetchService;
+import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.GwtTransportServiceAsync;
 
@@ -52,6 +50,31 @@ public class GwtUtil {
       panel.add(image);
     }
     return panel;
+  }
+
+  public static void updateUI(Widget widget) {
+    if (widget instanceof WidgetWithUpdateUI) {
+      ((WidgetWithUpdateUI)widget).updateUI();
+    }
+
+    if (widget instanceof HasWidgets) {
+      for (Widget child : (HasWidgets) widget) {
+        updateUI(child);
+      }
+    }
+
+    if (widget instanceof Grid) {
+      Grid grid = (Grid)widget;
+      for (int c = 0; c < grid.getColumnCount(); c++) {
+        for (int r = 0; r < grid.getRowCount(); r++) {
+          Widget temp = grid.getWidget(r, c);
+
+          if (temp != null) {
+            GwtUtil.updateUI(temp);
+          }
+        }
+      }
+    }
   }
 
   public static <T extends UIObject> T fillAndReturn(T object) {

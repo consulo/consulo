@@ -17,14 +17,17 @@ package consulo.web.gwt.client.ui;
 
 import com.github.gwtbootstrap.client.ui.Tooltip;
 import com.github.gwtbootstrap.client.ui.constants.Placement;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.client.util.GwtUtil;
+import consulo.web.gwt.client.util.Log;
 import consulo.web.gwt.client.util.ReportableCallable;
 import consulo.web.gwt.shared.transport.*;
 
@@ -35,22 +38,96 @@ import java.util.List;
  * @author VISTALL
  * @since 17-May-16
  */
-public class Editor extends SimplePanel {
-  private class CodeLinePanel extends FlowPanel {
-    public CodeLinePanel() {
+public class Editor extends SimplePanel implements WidgetWithUpdateUI {
+  private static class CodeLinePanel extends FlowPanel implements WidgetWithUpdateUI {
+    private Editor myEditor;
+
+    public CodeLinePanel(Editor editor) {
+      myEditor = editor;
       sinkEvents(Event.ONCLICK);
+
+      updateUI();
     }
 
     @Override
     public void onBrowserEvent(Event event) {
       switch (DOM.eventGetType(event)) {
         case Event.ONCLICK:
-          changeLine(this);
+          myEditor.changeLine(this);
           break;
         default:
           event.preventDefault();
           break;
       }
+    }
+
+    @Override
+    public void updateUI() {
+      GwtEditorColorScheme scheme = myEditor.getScheme();
+      if (myEditor.myCurrentLinePanel == this) {
+        getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
+      }
+      else {
+        myEditor.setDefaultTextColors(this);
+      }
+    }
+  }
+
+  public static class LineNumberSpan extends InlineHTML implements WidgetWithUpdateUI {
+    private Editor myEditor;
+
+    public LineNumberSpan(String html, Editor editor) {
+      super(html);
+      myEditor = editor;
+
+      updateUI();
+    }
+
+    @Override
+    public void updateUI() {
+      Log.log("MainGrid.LineNumberSpan");
+
+      GwtEditorColorScheme scheme = myEditor.getScheme();
+
+      getElement().getStyle().setColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.LINE_NUMBERS_COLOR)));
+    }
+  }
+
+  public static class MainGrid extends Grid implements WidgetWithUpdateUI {
+    private Editor myEditor;
+
+    public MainGrid(Editor editor, int rows, int columns) {
+      super(rows, columns);
+      myEditor = editor;
+
+      updateUI();
+    }
+
+    @Override
+    public void updateUI() {
+      Log.log("MainGrid.updateUI");
+      myEditor.setDefaultTextColors(this);
+    }
+  }
+
+  public static class GutterPanel extends VerticalPanel implements WidgetWithUpdateUI {
+    private Editor myEditor;
+
+    public GutterPanel(Editor editor) {
+      myEditor = editor;
+
+      updateUI();
+    }
+
+    @Override
+    public void updateUI() {
+      GwtEditorColorScheme scheme = myEditor.getScheme();
+
+      getElement().getStyle().setProperty("borderRightColor", GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.TEARLINE_COLOR)));
+      getElement().getStyle().setProperty("borderRightStyle", "solid");
+      getElement().getStyle().setProperty("borderRightWidth", "1px");
+      getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
+      getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
     }
   }
 
@@ -75,9 +152,27 @@ public class Editor extends SimplePanel {
 
   private GwtNavigateInfo myLastNavigationInfo;
 
-  private CodeLinePanel myLastLine;
+  private CodeLinePanel myCurrentLinePanel;
 
   private GwtEditorColorScheme myScheme;
+
+  private EditorColorSchemeService.Listener myListener = new EditorColorSchemeService.Listener() {
+    @Override
+    public void schemeChanged(GwtEditorColorScheme scheme) {
+      myScheme = scheme;
+
+      Log.log("scheme changed to " + scheme.getName());
+
+      Scheduler.get().scheduleDeferred(new Command() {
+        @Override
+        public void execute() {
+          GwtUtil.updateUI(Editor.this);
+
+          doHighlightImpl();
+        }
+      });
+    }
+  };
 
   public Editor(EditorTabPanel editorTabPanel, String fileUrl, String text) {
     myEditorTabPanel = editorTabPanel;
@@ -87,14 +182,66 @@ public class Editor extends SimplePanel {
 
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
 
-    final EditorColorSchemeService editorColorSchemeService = GwtUtil.get(EditorColorSchemeService.KEY);
-    myScheme = editorColorSchemeService.getScheme();
+    final EditorColorSchemeService schemeService = GwtUtil.get(EditorColorSchemeService.KEY);
+    schemeService.addListener(myListener);
 
-    setDefaultColors(this);
-    GwtUtil.fill(this);
+    myScheme = schemeService.getScheme();
+
+    setDefaultTextColors(this);
   }
 
-  private void setDefaultColors(Widget widget) {
+  public void doHighlight() {
+    Scheduler.get().scheduleDeferred(new Command() {
+      @Override
+      public void execute() {
+        doHighlightImpl();
+      }
+    });
+  }
+
+  private void doHighlightImpl() {
+    GwtUtil.rpc().getLexerHighlight(myFileUrl, new ReportableCallable<List<GwtHighlightInfo>>() {
+      @Override
+      public void onSuccess(List<GwtHighlightInfo> result) {
+        addHighlightInfos(result, Editor.ourLexerFlag);
+
+        runHighlightPasses(myLastCaretOffset, null);
+
+        setCaretHandler(new EditorCaretHandler() {
+          @Override
+          public void caretPlaced(int offset) {
+            runHighlightPasses(offset, null);
+          }
+        });
+      }
+    });
+  }
+
+  private void runHighlightPasses(int offset, final Runnable callback) {
+    GwtUtil.rpc().runHighlightPasses(myFileUrl, offset, new ReportableCallable<List<GwtHighlightInfo>>() {
+      @Override
+      public void onSuccess(List<GwtHighlightInfo> result) {
+        addHighlightInfos(result, Editor.ourEditorFlag);
+
+        if (callback != null) {
+          callback.run();
+        }
+      }
+    });
+  }
+
+  @Override
+  public void updateUI() {
+    // update main panel
+    setDefaultTextColors(this);
+
+    // update current line
+    if (myCurrentLinePanel != null) {
+      myCurrentLinePanel.updateUI();
+    }
+  }
+
+  private void setDefaultTextColors(Widget widget) {
     GwtTextAttributes textAttr = myScheme.getAttributes(GwtEditorColorScheme.TEXT);
     if (textAttr != null) {
       GwtColor background = textAttr.getBackground();
@@ -113,6 +260,11 @@ public class Editor extends SimplePanel {
         widget.getElement().getStyle().clearColor();
       }
     }
+  }
+
+  public void dispose() {
+    final EditorColorSchemeService schemeService = GwtUtil.get(EditorColorSchemeService.KEY);
+    schemeService.removeListener(myListener);
   }
 
   @Override
@@ -143,8 +295,6 @@ public class Editor extends SimplePanel {
               if (result == null) {
                 return;
               }
-
-              event.getRelatedEventTarget();
 
               GwtTextRange resultElementRange = result.getRange();
               if (myLastCursorPsiElementTextRange != null && myLastCursorPsiElementTextRange.containsRange(resultElementRange)) {
@@ -203,22 +353,15 @@ public class Editor extends SimplePanel {
   }
 
   private void build() {
-    Grid gridPanel = GwtUtil.fillAndReturn(new Grid(1, 2));
-    setDefaultColors(gridPanel);
+    Grid gridPanel = GwtUtil.fillAndReturn(new MainGrid(this, 1, 2));
 
     // try to fill area by code
     gridPanel.getColumnFormatter().getElement(1).getStyle().setWidth(100, Style.Unit.PCT);
 
-    VerticalPanel editorLinePanel = new VerticalPanel();
+    GutterPanel editorLinePanel = new GutterPanel(this);
     gridPanel.setWidget(0, 0, editorLinePanel);
 
     editorLinePanel.addStyleName("noselectable");
-
-    editorLinePanel.getElement().getStyle().setProperty("borderRightColor", GwtStyleUtil.toString(myScheme.getColor(GwtEditorColorScheme.TEARLINE_COLOR)));
-    editorLinePanel.getElement().getStyle().setProperty("borderRightStyle", "solid");
-    editorLinePanel.getElement().getStyle().setProperty("borderRightWidth", "1px");
-    editorLinePanel.getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
-    editorLinePanel.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(myScheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
 
     for (int i = 0; i < myLineCount; i++) {
       final Grid panel = GwtUtil.fillAndReturn(new Grid(1, 5)); // 5 fake size
@@ -231,10 +374,9 @@ public class Editor extends SimplePanel {
       // try fill line number as primary panel
       panel.getColumnFormatter().getElement(0).getStyle().setWidth(100, Style.Unit.PCT);
 
-      InlineHTML lineSpan = new InlineHTML(String.valueOf(i + 1));
+      LineNumberSpan lineSpan = new LineNumberSpan(String.valueOf(i + 1), this);
       lineSpan.addStyleName("editorLine");
       lineSpan.addStyleName("editorGutterLine" + i);
-      lineSpan.getElement().getStyle().setColor(GwtStyleUtil.toString(myScheme.getColor(GwtEditorColorScheme.LINE_NUMBERS_COLOR)));
 
       panel.setWidget(0, 0, lineSpan);
 
@@ -267,8 +409,8 @@ public class Editor extends SimplePanel {
 
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
-        lineElement = new CodeLinePanel();
-        setDefaultColors(lineElement);
+        lineElement = new CodeLinePanel(this);
+        setDefaultTextColors(lineElement);
 
         lineElement.setWidth("100%");
         lineElement.addStyleName("editorLine");
@@ -294,6 +436,10 @@ public class Editor extends SimplePanel {
     panel.add(scrollPanel, DockPanel.CENTER);
 
     setWidget(panel);
+  }
+
+  public GwtEditorColorScheme getScheme() {
+    return myScheme;
   }
 
   private void setupTooltip(Widget w, String message) {
@@ -347,23 +493,21 @@ public class Editor extends SimplePanel {
   }
 
   public void changeLine(CodeLinePanel widget) {
-    if (myLastLine == widget) {
+    if (myCurrentLinePanel == widget) {
       return;
     }
 
-    if (myLastLine != null) {
-      setDefaultColors(myLastLine);
+    if (myCurrentLinePanel != null) {
+      setDefaultTextColors(myCurrentLinePanel);
     }
 
-    widget.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(myScheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
-    myLastLine = widget;
+    widget.updateUI();
+    myCurrentLinePanel = widget;
   }
 
   public native void set(Element element) /*-{
     var range = $doc.createRange();
     var sel = $wnd.getSelection();
-
-    console.log(element);
 
     range.setStart(element, 1);
     range.setEnd(element, 1);
