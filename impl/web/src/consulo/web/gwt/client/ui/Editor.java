@@ -26,6 +26,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.util.GwtStyleUtil;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
 import consulo.web.gwt.shared.transport.*;
@@ -208,7 +209,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       Scheduler.get().scheduleDeferred(new Command() {
         @Override
         public void execute() {
-          GwtUtil.updateUI(Editor.this);
+          GwtUIUtil.updateUI(Editor.this);
 
           doHighlightImpl();
         }
@@ -438,7 +439,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   private void build() {
-    Grid gridPanel = GwtUtil.fillAndReturn(new MainGrid(this, 1, 2));
+    Grid gridPanel = GwtUIUtil.fillAndReturn(new MainGrid(this, 1, 2));
 
     // try to fill area by code
     gridPanel.getColumnFormatter().getElement(1).getStyle().setWidth(100, Style.Unit.PCT);
@@ -449,7 +450,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     myGutterPanel.addStyleName("noselectable");
 
     for (int i = 0; i < myLineCount; i++) {
-      final Grid panel = GwtUtil.fillAndReturn(new Grid(1, 5)); // 5 fake size
+      final Grid panel = GwtUIUtil.fillAndReturn(new Grid(1, 5)); // 5 fake size
       // place lines to right
       panel.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_RIGHT);
 
@@ -477,7 +478,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         event.preventDefault();
       }
     };
-    GwtUtil.fill(editorCodePanel);
+    GwtUIUtil.fill(editorCodePanel);
 
     gridPanel.setWidget(0, 1, editorCodePanel);
 
@@ -517,7 +518,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     }
 
     ScrollPanel scrollPanel = new ScrollPanel(gridPanel);
-    GwtUtil.fill(scrollPanel);
+    GwtUIUtil.fill(scrollPanel);
 
     DockPanel panel = new DockPanel();
     panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);

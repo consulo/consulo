@@ -74,11 +74,6 @@ public class GwtVirtualFileUtil {
       }
     });
 
-    VirtualFile[] children = virtualFile.getChildren();
-    for (VirtualFile child : children) {
-      gwtVirtualFile.children.add(createVirtualFile(project, child));
-    }
-
     if(gwtVirtualFile.iconLayers.isEmpty()) {
       gwtVirtualFile.iconLayers.add(iconUrl(AllIcons.FileTypes.Unknown));
     }

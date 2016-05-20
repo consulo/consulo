@@ -1130,26 +1130,6 @@
               </sources>
             </library>
           </orderEntry>
-          <orderEntry type="module-library" scope="PROVIDED">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/gwtcomp-components-1.1.0.jar!/" />
-              </binaries>
-              <sources>
-                <root url="jar://$MODULE_DIR$/lib/gwtcomp-components-1.1.0.jar!/" />
-              </sources>
-            </library>
-          </orderEntry>
-          <orderEntry type="module-library" scope="PROVIDED">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/gchart-2.2.jar!/" />
-              </binaries>
-              <sources>
-                <root url="jar://$MODULE_DIR$/lib/gchart-2.2.jar!/" />
-              </sources>
-            </library>
-          </orderEntry>
         </module-layer>
       </module>
     </modules>

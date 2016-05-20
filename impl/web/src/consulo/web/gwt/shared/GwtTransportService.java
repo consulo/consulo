@@ -31,6 +31,9 @@ import java.util.List;
 public interface GwtTransportService extends RemoteService {
   GwtProjectInfo getProjectInfo(String path);
 
+  @NotNull
+  List<GwtVirtualFile> listChildren(String fileUrl);
+
   GwtVirtualFile findFileByUrl(String fileUrl);
 
   @Nullable

@@ -33,8 +33,6 @@ public class GwtVirtualFile implements IsSerializable {
 
   public String name;
 
-  public List<GwtVirtualFile> children = new ArrayList<GwtVirtualFile>();
-
   public boolean isDirectory;
 
   public GwtVirtualFile() {
@@ -54,10 +52,6 @@ public class GwtVirtualFile implements IsSerializable {
 
   public String getName() {
     return name;
-  }
-
-  public List<GwtVirtualFile> getChildren() {
-    return children;
   }
 
   public boolean isDirectory() {

@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.SimplePanel;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
 import consulo.web.gwt.shared.transport.GwtVirtualFile;
@@ -70,11 +71,11 @@ public class EditorTabPanel extends SimplePanel {
           return;
         }
 
-        final Editor editor = GwtUtil.fillAndReturn(new Editor(EditorTabPanel.this, virtualFile.getUrl(), result));
+        final Editor editor = GwtUIUtil.fillAndReturn(new Editor(EditorTabPanel.this, virtualFile.getUrl(), result));
 
         final TabLink tabLink = new TabLink();
         final HorizontalPanel tab = new HorizontalPanel();
-        tab.add(GwtUtil.icon(virtualFile.getIconLayers()));
+        tab.add(GwtUIUtil.icon(virtualFile.getIconLayers()));
         InlineHTML span = new InlineHTML(virtualFile.getName());
         span.setStyleName("textAfterIcon18");
         tab.add(span);

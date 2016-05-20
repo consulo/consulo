@@ -26,6 +26,9 @@ public interface GwtTransportServiceAsync {
 
   void getProjectInfo(String path, AsyncCallback<GwtProjectInfo> async);
 
+  @NotNull
+  void listChildren(String fileUrl, AsyncCallback<List<GwtVirtualFile>> async);
+
   void findFileByUrl(String fileUrl, AsyncCallback<GwtVirtualFile> async);
 
   @Nullable

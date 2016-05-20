@@ -95,6 +95,21 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     return null;
   }
 
+  @NotNull
+  @Override
+  public List<GwtVirtualFile> listChildren(String fileUrl) {
+    final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
+    if (fileByUrl == null) {
+      return Collections.emptyList();
+    }
+    Project project = getProject();
+    List<GwtVirtualFile> list = new ArrayList<GwtVirtualFile>();
+    for (VirtualFile virtualFile : fileByUrl.getChildren()) {
+      list.add(GwtVirtualFileUtil.createVirtualFile(project, virtualFile));
+    }
+    return list;
+  }
+
   @Override
   public GwtProjectInfo getProjectInfo(String path) {
     final Project project = getProject();
@@ -112,7 +127,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
         }
       }
     });
-    return new GwtProjectInfo(virtualFile, moduleFileUrls);
+    return new GwtProjectInfo(project.getName(), virtualFile, moduleFileUrls);
   }
 
   @Override

@@ -24,15 +24,21 @@ import java.util.List;
  * @since 18-May-16
  */
 public class GwtProjectInfo implements IsSerializable{
+  private String myProjectName;
   private GwtVirtualFile myBaseDirectory;
   private List<String> myModuleDirectoryUrls;
 
-  public GwtProjectInfo(GwtVirtualFile baseDirectory, List<String> moduleDirectoryUrls) {
+  public GwtProjectInfo(String projectName, GwtVirtualFile baseDirectory, List<String> moduleDirectoryUrls) {
+    myProjectName = projectName;
     myBaseDirectory = baseDirectory;
     myModuleDirectoryUrls = moduleDirectoryUrls;
   }
 
   public GwtProjectInfo() {
+  }
+
+  public String getProjectName() {
+    return myProjectName;
   }
 
   public GwtVirtualFile getBaseDirectory() {
