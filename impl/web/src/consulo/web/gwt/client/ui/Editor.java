@@ -25,10 +25,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
-import consulo.web.gwt.client.util.GwtStyleUtil;
-import consulo.web.gwt.client.util.GwtUIUtil;
-import consulo.web.gwt.client.util.GwtUtil;
-import consulo.web.gwt.client.util.ReportableCallable;
+import consulo.web.gwt.client.util.*;
 import consulo.web.gwt.shared.transport.*;
 
 import java.util.Arrays;
@@ -340,12 +337,12 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   @Override
   public void onBrowserEvent(final Event event) {
-    if(myBuilder == null) {
+    if (myBuilder == null) {
       return;
     }
 
     switch (DOM.eventGetType(event)) {
-      case Event.ONMOUSEOVER:
+      case Event.ONMOUSEOVER: {
         com.google.gwt.dom.client.Element element = DOM.eventGetToElement(event);
 
         myInsideGutter = insideGutter(element);
@@ -355,21 +352,15 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
         Object range = element == null ? null : element.getPropertyObject("range");
         if (!(range instanceof GwtTextRange)) {
-          myLastCaretOffset = -1;
           return;
         }
 
-
-        int startOffset = ((GwtTextRange)range).getStartOffset();
-        if (startOffset == myLastCaretOffset) {
-          return;
-        }
-        myLastCaretOffset = startOffset;
+        final int startOffset = ((GwtTextRange)range).getStartOffset();
 
         if (event.getCtrlKey()) {
           getElement().getStyle().setCursor(Style.Cursor.POINTER);
 
-          GwtUtil.rpc().getNavigationInfo(myFileUrl, myLastCaretOffset, new ReportableCallable<GwtNavigateInfo>() {
+          GwtUtil.rpc().getNavigationInfo(myFileUrl, startOffset, new ReportableCallable<GwtNavigateInfo>() {
             @Override
             public void onSuccess(GwtNavigateInfo result) {
               if (result == null) {
@@ -392,7 +383,8 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         }
         event.preventDefault();
         break;
-      case Event.ONMOUSEOUT:
+      }
+      case Event.ONMOUSEOUT: {
         boolean old = myInsideGutter;
         myInsideGutter = insideGutter(DOM.eventGetToElement(event));
         if (old != myInsideGutter) {
@@ -406,11 +398,31 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         onMouseOut();
         event.preventDefault();
         break;
-      case Event.ONCLICK:
+      }
+      case Event.ONCLICK: {
         if (myInsideGutter) {
           event.preventDefault();
           return;
         }
+
+        com.google.gwt.dom.client.Element element = DOM.eventGetTarget(event);
+
+        int offset = 0;
+        Object spanRange = element.getPropertyObject("range");
+        if(spanRange != null) {
+          offset = ((GwtTextRange)spanRange).getStartOffset();
+        }
+        else {
+          Object lineRange = element.getPropertyObject("lineRange");
+          if(lineRange != null) {
+            offset = ((GwtTextRange)lineRange).getStartOffset();
+          }
+        }
+        if (offset == myLastCaretOffset) {
+          return;
+        }
+
+        myLastCaretOffset = offset;
 
         if (event.getCtrlKey()) {
           if (myLastNavigationInfo != null) {
@@ -430,6 +442,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         }
         event.preventDefault();
         break;
+      }
       default:
         super.onBrowserEvent(event);
         break;
@@ -437,6 +450,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   private void onMouseOut() {
+    if(myBuilder == null) {
+      return;
+    }
+
     if (myLastCursorPsiElementTextRange != null) {
       getElement().getStyle().clearCursor();
 
@@ -500,6 +517,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     int lineCount = 0;
     CodeLinePanel lineElement = null;
+    int startOffset = 0;
 
     for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
@@ -508,7 +526,8 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
         lineElement.setWidth("100%");
         lineElement.addStyleName("editorLine");
-        lineElement.addStyleName("gen_Line_" + lineCount);
+
+        startOffset = fragment.range.getStartOffset();
       }
 
       lineElement.add(fragment.widget);
@@ -518,6 +537,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
         editorCodePanel.setWidget(lineCount, 0, lineElement);
 
+        lineElement.getElement().setPropertyObject("lineRange", new GwtTextRange(startOffset, fragment.range.getEndOffset()));
         lineElement.updateUI(); // update after adding
 
         lineElement = null;

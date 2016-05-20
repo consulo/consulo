@@ -15,6 +15,9 @@
  */
 package consulo.web.gwt.client.util;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
 
@@ -33,6 +36,18 @@ public class GwtUIUtil {
     verticalPanel.add(new Label("Loading..."));
 
     return verticalPanel;
+  }
+
+  public static Widget getWidget(Element element) {
+    EventListener listener = DOM.getEventListener(element);
+
+    if (listener == null) {
+      return null;
+    }
+    if (listener instanceof Widget) {
+      return (Widget)listener;
+    }
+    return null;
   }
 
   public static Widget icon(List<String> icons) {
@@ -54,7 +69,7 @@ public class GwtUIUtil {
     }
 
     if (widget instanceof HasWidgets) {
-      for (Widget child : (HasWidgets) widget) {
+      for (Widget child : (HasWidgets)widget) {
         updateUI(child);
       }
     }
