@@ -15,6 +15,10 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.wm.impl.welcomeScreen.NewWelcomeScreen;
+
 /**
  * @author Dmitry Avdeev
  *         Date: 11/6/12
@@ -23,5 +27,12 @@ public class ImportProjectAction extends ImportModuleAction {
   @Override
   public boolean canCreateNewProject() {
     return true;
+  }
+
+  @Override
+  public void update(AnActionEvent e) {
+    if (NewWelcomeScreen.isNewWelcomeScreen(e)) {
+      e.getPresentation().setIcon(AllIcons.Welcome.ImportProject);
+    }
   }
 }

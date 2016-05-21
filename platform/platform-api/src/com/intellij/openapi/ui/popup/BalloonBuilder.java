@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,6 @@ import java.awt.event.ActionListener;
  * @see JBPopupFactory#createBalloonBuilder(javax.swing.JComponent)
  */
 public interface BalloonBuilder {
-  /** @deprecated use {@link Balloon#show(com.intellij.ui.awt.RelativePoint, Balloon.Position)} (to remove in IDEA 14) */
-  @SuppressWarnings("UnusedDeclaration")
-  @NotNull
-  BalloonBuilder setPreferredPosition(Balloon.Position position);
-
   @NotNull
   BalloonBuilder setBorderColor(@NotNull Color color);
 
@@ -76,10 +71,6 @@ public interface BalloonBuilder {
   @NotNull
   BalloonBuilder setPositionChangeYShift(int positionChangeYShift);
 
-  /** @deprecated to remove in IDEA 14 */
-  @SuppressWarnings("UnusedDeclaration")
-  boolean isHideOnAction();
-
   @NotNull
   BalloonBuilder setHideOnAction(boolean hideOnAction);
 
@@ -103,6 +94,9 @@ public interface BalloonBuilder {
 
   @NotNull
   BalloonBuilder setBlockClicksThroughBalloon(boolean block);
+
+  @NotNull
+  BalloonBuilder setRequestFocus(boolean requestFocus);
 
   /**
    * Links target balloon life cycle to the given object. I.e. current balloon will be auto-hide and collected as soon

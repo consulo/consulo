@@ -30,18 +30,20 @@ import javax.swing.*;
  * @author spleaner
  */
 public class NotificationsConfigurable implements Configurable, SearchableConfigurable, Configurable.NoScroll {
+  public static final String DISPLAY_NAME = "Notifications";
+  static final String ID = "reference.settings.ide.settings.notifications";
   private NotificationsConfigurablePanel myComponent;
 
   @Override
   @Nls
   public String getDisplayName() {
-    return "Notifications";
+    return DISPLAY_NAME;
   }
 
   @Override
   @NotNull
   public String getHelpTopic() {
-    return "reference.settings.ide.settings.notifications";
+    return ID;
   }
 
   @RequiredDispatchThread
@@ -87,6 +89,11 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
 
   @Override
   public Runnable enableSearch(final String option) {
-    return null;
+    return new Runnable() {
+      @Override
+      public void run() {
+        myComponent.selectGroup(option);
+      }
+    };
   }
 }

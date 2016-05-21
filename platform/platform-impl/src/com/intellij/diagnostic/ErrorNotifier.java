@@ -21,8 +21,8 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
-import com.intellij.openapi.wm.impl.status.IdeStatusBarImpl;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -47,19 +47,21 @@ public class ErrorNotifier {
     NotificationListener listener = new NotificationListener() {
       @Override
       public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
-        openFatals(event, message);
+        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+          openFatals(event, message);
+        }
       }
     };
     Notification notification = new Notification(NOTIFICATION_GROUP.getDisplayId(), title, notificationText, NotificationType.ERROR, listener) {
-        @Override
-        public void expire() {
-          super.expire();
-          if (!message.isRead()) {
-            message.setRead(true);
-          }
-          pool.notifyListenersRead();
+      @Override
+      public void expire() {
+        super.expire();
+        if (!message.isRead()) {
+          message.setRead(true);
         }
-      };
+        pool.notifyListenersRead();
+      }
+    };
     notification.notify(null);
     message.setNotification(notification);
   }
@@ -69,7 +71,8 @@ public class ErrorNotifier {
     if (source instanceof Component) {
       Window window = SwingUtilities.getWindowAncestor((Component)source);
       if (window instanceof IdeFrame) {
-        StatusBarWidget widget = ((IdeStatusBarImpl)((IdeFrame)window).getStatusBar()).getWidget(IdeMessagePanel.FATAL_ERROR);
+        final StatusBar statusBar = ((IdeFrame)window).getStatusBar();
+        StatusBarWidget widget = statusBar == null ? null : statusBar.getWidget(IdeMessagePanel.FATAL_ERROR);
         if (widget instanceof IdeMessagePanel) {
           ((IdeMessagePanel)widget).openFatals(message);
         }

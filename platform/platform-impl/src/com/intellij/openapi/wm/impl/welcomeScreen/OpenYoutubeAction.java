@@ -19,10 +19,13 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 public class OpenYoutubeAction extends AnAction implements DumbAware {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    BrowserUtil.launchBrowser("http://www.youtube.com/user/ConsuloIDE");
+  public void actionPerformed(@NotNull AnActionEvent e) {
+    BrowserUtil.browse("http://www.youtube.com/user/ConsuloIDE");
   }
 }

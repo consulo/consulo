@@ -23,21 +23,23 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
+import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.JBCardLayout;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
 import com.intellij.util.ui.CenteredIcon;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
-import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CardActionsPanel extends JPanel {
+  private final boolean USE_ICONS = true;
   private final JBCardLayout myLayout = new JBCardLayout();
   private final JPanel myContent = new JPanel(myLayout);
   private int nCards = 0;
@@ -50,63 +52,105 @@ public class CardActionsPanel extends JPanel {
 
   private void createCardForGroup(ActionGroup group, String cardId, final String parentId) {
     JPanel card = new JPanel(new BorderLayout());
+    if (!USE_ICONS) {
+      card.setOpaque(false);
+    }
 
     JPanel withBottomFiller = new JPanel(new BorderLayout());
+    if (!USE_ICONS) {
+      withBottomFiller.setOpaque(true);
+      withBottomFiller.setBackground(Color.white);
+    }
     withBottomFiller.add(card, BorderLayout.NORTH);
     myContent.add(withBottomFiller, cardId);
 
-    List<Button> buttons = buildButtons(group, cardId);
-    if(parentId != null)
-    {
-      AnAction back = new AnAction(null, null, null) {
-        @RequiredDispatchThread
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-          myLayout.swipe(myContent, parentId, JBCardLayout.SwipeDirection.BACKWARD);
-        }
-      };
+    List<JComponent> components = buildComponents(group, cardId);
 
-      Presentation p = new Presentation("Back");
-      p.setIcon(AllIcons.Actions.Back);
-      buttons.add(0, new Button(back, p));
+    JPanel componentsPanel = new JPanel(new GridLayout(components.size(), 1, 5, 5));
+    if (!USE_ICONS) {
+      componentsPanel.setOpaque(false);
     }
-
-    JPanel buttonsPanel = new JPanel(new GridLayout(buttons.size(), 1, JBUI.scale(5), JBUI.scale(5)));
-    buttonsPanel.setBorder(JBUI.Borders.empty(15, 15, 15, 15));
-    for (Button button : buttons) {
-      buttonsPanel.add(button);
+    componentsPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+    for (JComponent component : components) {
+      componentsPanel.add(component);
     }
-    card.add(buttonsPanel, BorderLayout.CENTER);
+    card.add(componentsPanel, BorderLayout.CENTER);
+    String title;
+    title = group.getTemplatePresentation().getText();
+    card.add(new HeaderPanel(title, parentId), BorderLayout.NORTH);
   }
 
-  private List<Button> buildButtons(ActionGroup group, String parentId) {
+  private List<JComponent> buildComponents(ActionGroup group, String parentId) {
     AnAction[] actions = group.getChildren(null);
 
-    List<Button> buttons = new ArrayList<Button>();
+    List<JComponent> components = new ArrayList<JComponent>();
+    PresentationFactory factory = new PresentationFactory();
 
     for (AnAction action : actions) {
-      Presentation presentation = action.getTemplatePresentation();
+      Presentation presentation = action.getTemplatePresentation().clone();
+      if (!USE_ICONS) {
+        presentation.setIcon(null);
+      }
       if (action instanceof ActionGroup) {
         ActionGroup childGroup = (ActionGroup)action;
         if (childGroup.isPopup()) {
           final String id = String.valueOf(++nCards);
           createCardForGroup(childGroup, id, parentId);
 
-          buttons.add(new Button(new ActivateCard(id), presentation));
+          components.add(new Button(new ActivateCard(id), presentation));
         }
         else {
-          buttons.addAll(buildButtons(childGroup, parentId));
+          components.addAll(buildComponents(childGroup, parentId));
         }
+      }
+      else if (action instanceof AbstractActionWithPanel){
+        final JPanel panel = ((AbstractActionWithPanel)action).createPanel();
+        components.add(panel);
       }
       else {
         action.update(new AnActionEvent(null, DataManager.getInstance().getDataContext(this),
                                         ActionPlaces.WELCOME_SCREEN, presentation, ActionManager.getInstance(), 0));
         if (presentation.isVisible()) {
-          buttons.add(new Button(action, presentation));
+          components.add(new Button(action, presentation));
         }
       }
     }
-    return buttons;
+    return components;
+  }
+
+  private class HeaderPanel extends JPanel {
+    private HeaderPanel(String text, final String parentId) {
+      super(new BorderLayout(5, 5));
+
+      setBackground(WelcomeScreenColors.CAPTION_BACKGROUND);
+
+      if (parentId != null) {
+        AnAction back = new AnAction("Back", null, AllIcons.Actions.Back) {
+          @Override
+          public void actionPerformed(AnActionEvent e) {
+            myLayout.swipe(myContent, parentId, JBCardLayout.SwipeDirection.BACKWARD);
+          }
+        };
+
+        ActionToolbar toolbar =
+                ActionManager.getInstance().createActionToolbar(ActionPlaces.CONTEXT_TOOLBAR, new DefaultActionGroup(back), true);
+
+        JComponent toolbarComponent = toolbar.getComponent();
+        toolbarComponent.setOpaque(false);
+        add(toolbarComponent, BorderLayout.WEST);
+      }
+
+      JLabel title = new JLabel(text);
+      title.setHorizontalAlignment(SwingConstants.CENTER);
+      title.setForeground(WelcomeScreenColors.CAPTION_FOREGROUND);
+      add(title, BorderLayout.CENTER);
+      setBorder(new BottomLineBorder());
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+      return new Dimension(super.getPreferredSize().width, 28);
+    }
   }
 
   private static class Button extends ActionButtonWithText {
@@ -114,21 +158,19 @@ public class CardActionsPanel extends JPanel {
       @Override
       public void paintIcon(Component c, Graphics g, int x, int y) {
         g.setColor(LightColors.SLIGHTLY_GREEN);
-        int scale4 = JBUI.scale(4);
-        int scale8 = JBUI.scale(8);
-        g.fillRoundRect(x + scale4, y + scale4, getIconWidth() - scale8, getIconHeight() - scale8, scale8, scale8);
-        g.setColor(Color.GRAY);
-        g.drawRoundRect(x + scale4, y + scale4, getIconWidth() - scale8, getIconHeight() - scale8, scale8, scale8);
+        g.fillRoundRect(x + 4, y + 4, 32 - 8, 32 - 8, 8, 8);
+        g.setColor(JBColor.GRAY);
+        g.drawRoundRect(x + 4, y + 4, 32 - 8, 32 - 8, 8, 8);
       }
 
       @Override
       public int getIconWidth() {
-        return JBUI.scale(32);
+        return 32;
       }
 
       @Override
       public int getIconHeight() {
-        return JBUI.scale(32);
+        return 32;
       }
     };
 
@@ -142,17 +184,15 @@ public class CardActionsPanel extends JPanel {
 
         Icon icon = AllIcons.Actions.Forward; //AllIcons.Icons.Ide.NextStepGrayed;
         int y = (bounds.height - icon.getIconHeight()) / 2;
-        int x = bounds.width - icon.getIconWidth() - JBUI.scale(15);
+        int x = bounds.width - icon.getIconWidth() - 15;
 
         if (getPopState() == POPPED) {
           final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
           g.setColor(WelcomeScreenColors.CAPTION_BACKGROUND);
-          int scale3 = JBUI.scale(3);
-          int scale6 = JBUI.scale(6);
-          g.fillOval(x - scale3, y - scale3, icon.getIconWidth() + scale6, icon.getIconHeight() + scale6);
+          g.fillOval(x - 3, y - 3, icon.getIconWidth() + 6, icon.getIconHeight() + 6);
 
           g.setColor(WelcomeScreenColors.GROUP_ICON_BORDER_COLOR);
-          g.drawOval(x - scale3, y - scale3, icon.getIconWidth() + scale6, icon.getIconHeight() + scale6);
+          g.drawOval(x - 3, y - 3, icon.getIconWidth() + 6, icon.getIconHeight() + 6);
           config.restore();
         }
         else {
@@ -167,8 +207,8 @@ public class CardActionsPanel extends JPanel {
       super(action,
             wrapIcon(presentation),
             ActionPlaces.WELCOME_SCREEN,
-            JBUI.size(32, 32));
-      setBorder(JBUI.Borders.empty(3, 3, 3, 3));
+            new Dimension(32, 32));
+      setBorder(new EmptyBorder(3, 3, 3, 3));
     }
 
     @Override
@@ -183,12 +223,12 @@ public class CardActionsPanel extends JPanel {
 
     @Override
     protected int iconTextSpace() {
-      return JBUI.scale(8);
+      return 8;
     }
 
     private static Presentation wrapIcon(Presentation presentation) {
       Icon original = presentation.getIcon();
-      CenteredIcon centered = new CenteredIcon(original != null ? original : DEFAULT_ICON, JBUI.scale(40), JBUI.scale(40), false);
+      CenteredIcon centered = new CenteredIcon(original != null ? original : DEFAULT_ICON, 40, 40, false);
       presentation.setIcon(centered);
       return presentation;
     }
@@ -201,7 +241,6 @@ public class CardActionsPanel extends JPanel {
       myId = id;
     }
 
-    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       myLayout.swipe(myContent, myId, JBCardLayout.SwipeDirection.FORWARD);

@@ -377,7 +377,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
       return;
     }
 
-    Balloon balloon = NotificationsManagerImpl.createBalloon(component, notification, false, true);
+    Balloon balloon = NotificationsManagerImpl.createBalloon(component, notification, false, true, null, viewer);
     Disposer.register(viewer, balloon);
 
     Dimension componentSize = component.getSize();

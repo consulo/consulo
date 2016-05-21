@@ -24,6 +24,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Condition;
 import com.intellij.ui.awt.RelativePoint;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,6 +128,10 @@ public abstract class JBPopupFactory {
     List<JBPopup> popups = getChildPopups(parent);
     for (JBPopup each : popups) {
       if (each.isFocused()) return each;
+      JBPopup childFocusedPopup = getChildFocusedPopup(each.getContent());
+      if (childFocusedPopup != null) {
+        return childFocusedPopup;
+      }
     }
     return null;
   }
@@ -168,7 +173,7 @@ public abstract class JBPopupFactory {
    * @return the popup instance.
    */
   @NotNull
-  public abstract ListPopup createActionGroupPopup(@Nullable String title,
+  public abstract ListPopup createActionGroupPopup(@Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
                                                    @NotNull ActionGroup actionGroup,
                                                    @NotNull DataContext dataContext,
                                                    ActionSelectionAid selectionAidMethod,
@@ -186,11 +191,12 @@ public abstract class JBPopupFactory {
    * @return the popup instance.
    */
   @NotNull
-  public abstract ListPopup createActionGroupPopup(String title,
+  public abstract ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
                                                    @NotNull ActionGroup actionGroup,
                                                    @NotNull DataContext dataContext,
                                                    ActionSelectionAid selectionAidMethod,
-                                                   boolean showDisabledActions, @Nullable final String actionPlace);
+                                                   boolean showDisabledActions,
+                                                   @Nullable String actionPlace);
 
   /**
    * Creates a popup allowing to choose one of the actions from the specified action group.
@@ -206,7 +212,7 @@ public abstract class JBPopupFactory {
    * @return the popup instance.
    */
   @NotNull
-  public abstract ListPopup createActionGroupPopup(String title,
+  public abstract ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
                                                    @NotNull ActionGroup actionGroup,
                                                    @NotNull DataContext dataContext,
                                                    ActionSelectionAid selectionAidMethod,
@@ -215,7 +221,7 @@ public abstract class JBPopupFactory {
                                                    int maxRowCount);
 
   @NotNull
-  public abstract ListPopup createActionGroupPopup(String title,
+  public abstract ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
                                                    @NotNull ActionGroup actionGroup,
                                                    @NotNull DataContext dataContext,
                                                    boolean showNumbers,
@@ -224,6 +230,17 @@ public abstract class JBPopupFactory {
                                                    @Nullable Runnable disposeCallback,
                                                    int maxRowCount,
                                                    @Nullable Condition<AnAction> preselectActionCondition);
+
+  @NotNull
+  public abstract ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
+                                                   @NotNull ActionGroup actionGroup,
+                                                   @NotNull DataContext dataContext,
+                                                   ActionSelectionAid selectionAidMethod,
+                                                   boolean showDisabledActions,
+                                                   @Nullable Runnable disposeCallback,
+                                                   int maxRowCount,
+                                                   @Nullable Condition<AnAction> preselectActionCondition,
+                                                   @Nullable String actionPlace);
 
   /**
    * @deprecated use {@link #createListPopup(ListPopupStep)} instead (<code>step</code> must be a ListPopupStep in any case)
@@ -239,6 +256,18 @@ public abstract class JBPopupFactory {
    */
   @NotNull
   public abstract ListPopup createListPopup(@NotNull ListPopupStep step);
+
+  /**
+   * Creates a custom list popup with the specified step.
+   *
+   * @param step        the custom step for the list popup.
+   * @param maxRowCount the number of visible rows to show in the popup (if the popup has more items,
+   *                    a scrollbar will be displayed).
+   * @return the popup instance.
+   * @since 14.1
+   */
+  @NotNull
+  public abstract ListPopup createListPopup(@NotNull ListPopupStep step, int maxRowCount);
 
   @NotNull
   public abstract TreePopup createTree(JBPopup parent, @NotNull TreePopupStep step, Object parentValue);
@@ -278,7 +307,7 @@ public abstract class JBPopupFactory {
   public abstract boolean isBestPopupLocationVisible(@NotNull Editor editor);
 
   public abstract Point getCenterOf(JComponent container, JComponent content);
-  
+
   @NotNull
   public abstract List<JBPopup> getChildPopups(@NotNull Component parent);
 
