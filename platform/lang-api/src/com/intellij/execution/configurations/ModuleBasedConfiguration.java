@@ -37,20 +37,20 @@ import java.util.Set;
  * Base class for a configuration that is associated with a specific module. For example, Java run configurations use the selected module
  * to determine the run classpath.
  */
-public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunConfigurationModule> extends RuntimeConfiguration {
+public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunConfigurationModule> extends LocatableConfigurationBase
+        implements Cloneable, ModuleRunConfiguration {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.configurations.ModuleBasedConfiguration");
   private final ConfigurationModule myModule;
   @NonNls
   protected static final String TO_CLONE_ELEMENT_NAME = "toClone";
 
-  public ModuleBasedConfiguration(final String name,
-                                  final ConfigurationModule configurationModule, final ConfigurationFactory factory) {
-    super(name, configurationModule.getProject(), factory);
+  public ModuleBasedConfiguration(final String name, final ConfigurationModule configurationModule, final ConfigurationFactory factory) {
+    super(configurationModule.getProject(), factory, name);
     myModule = configurationModule;
   }
 
   public ModuleBasedConfiguration(final ConfigurationModule configurationModule, final ConfigurationFactory factory) {
-    super("", configurationModule.getProject(), factory);
+    super(configurationModule.getProject(), factory, "");
     myModule = configurationModule;
   }
 
@@ -65,11 +65,12 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   }
 
   @Override
-  public void readExternal(Element element) throws InvalidDataException{
+  public void readExternal(Element element) throws InvalidDataException {
     super.readExternal(element);
   }
+
   @Override
-  public void writeExternal(Element element) throws WriteExternalException{
+  public void writeExternal(Element element) throws WriteExternalException {
     super.writeExternal(element);
   }
 
@@ -87,7 +88,7 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
 
   protected ModuleBasedConfiguration createInstance() {
     ModuleBasedConfiguration<ConfigurationModule> configuration =
-      (ModuleBasedConfiguration<ConfigurationModule>)getFactory().createTemplateConfiguration(getProject());
+            (ModuleBasedConfiguration<ConfigurationModule>)getFactory().createTemplateConfiguration(getProject());
     configuration.setName(getName());
     return configuration;
   }
@@ -102,10 +103,12 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
       configuration.readExternal(element);
 
       return configuration;
-    } catch (InvalidDataException e) {
+    }
+    catch (InvalidDataException e) {
       LOG.error(e);
       return null;
-    } catch (WriteExternalException e) {
+    }
+    catch (WriteExternalException e) {
       LOG.error(e);
       return null;
     }
@@ -119,7 +122,7 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
       @SuppressWarnings({"ConstantConditions"})
       public Module[] compute() {
         final Module module = getConfigurationModule().getModule();
-        return module == null ? Module.EMPTY_ARRAY : new Module[] {module};
+        return module == null ? Module.EMPTY_ARRAY : new Module[]{module};
       }
     });
   }

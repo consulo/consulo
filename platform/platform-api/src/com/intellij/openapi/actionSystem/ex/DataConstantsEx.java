@@ -54,7 +54,7 @@ public interface DataConstantsEx {
   @NonNls String NONEMPTY_CONTENT_MANAGER = "nonemptyContentManager";
 
   /**
-   * Returns {@link com.intellij.execution.configurations.RuntimeConfiguration}
+   * Returns {@link com.intellij.execution.configurations.RunProfile}
    */
   @NonNls String RUNTIME_CONFIGURATION = "runtimeConfiguration";
 
