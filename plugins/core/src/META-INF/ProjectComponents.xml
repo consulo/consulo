@@ -304,11 +304,7 @@
       <option name="workspace" value="true"/>
       <loadForDefaultProject/>
     </component>
-    <component>
-      <interface-class>com.intellij.openapi.vcs.impl.VcsGlobalMessageManager</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.impl.VcsGlobalMessageManager</implementation-class>
-      <skipForDefaultProject/>
-    </component>
+
     <component>
       <interface-class>com.intellij.openapi.vcs.changes.VcsChangeDetailsManager</interface-class>
       <implementation-class>com.intellij.openapi.vcs.changes.VcsChangeDetailsManager</implementation-class>

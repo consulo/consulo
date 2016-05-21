@@ -16,7 +16,6 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.AnAction;
 
 import javax.swing.*;
 
@@ -27,6 +26,4 @@ public interface WelcomeScreen extends Disposable {
   JComponent getWelcomePanel();
 
   void setupFrame(JFrame frame);
-
-  void removeRecentProjectItem(AnAction anActiona);
 }

@@ -1114,6 +1114,9 @@
     <extensionPoint name="actionFromOptionDescriptorProvider" interface="com.intellij.ide.ui.search.ActionFromOptionDescriptorProvider"/>
 
     <extensionPoint name="stripTrailingSpacesFilterFactory" interface="com.intellij.openapi.editor.StripTrailingSpacesFilterFactory"/>
+
+    <extensionPoint name="notification.parentGroup" beanClass="com.intellij.notification.impl.NotificationParentGroupBean"/>
+    <extensionPoint name="notification.group" beanClass="com.intellij.notification.impl.NotificationGroupBean"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -1374,7 +1377,7 @@
     <virtualFileSystem key="https" implementationClass="com.intellij.openapi.vfs.impl.http.HttpsFileSystem"/>
 
     <toolWindow id="Event Log" anchor="bottom" secondary="true"
-                icon="AllIcons.Ide.NoNotifications13"
+                icon="AllIcons.Ide.Notification.NoEvents"
                 factoryClass="com.intellij.notification.EventLogToolWindowFactory"/>
 
     <projectService serviceInterface="com.intellij.openapi.wm.impl.ProjectFrameBounds"
@@ -2237,7 +2240,7 @@
     <globalInspection shortName="SyntaxError" displayName="Syntax error" groupName="General" enabledByDefault="true" level="ERROR"
                       implementationClass="com.intellij.codeInspection.DefaultHighlightVisitorBasedInspection$SyntaxErrorInspection"/>
     <localInspection shortName="LossyEncoding" bundle="messages.InspectionsBundle" key="lossy.encoding"
-                     groupKey="group.names.internationalization.issues" enabledByDefault="false" level="WARNING"
+                     groupKey="group.names.internationalization.issues" enabledByDefault="true" level="WARNING"
                      implementationClass="com.intellij.codeInspection.LossyEncodingInspection"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.template.TemplateBuilderFactory"

@@ -15,12 +15,13 @@
  */
 package com.intellij.ui.win;
 
-import com.intellij.ide.RecentProjectsManagerBase;
+import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
 import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.wm.impl.SystemDock;
+
 import java.io.File;
 
 /**
@@ -40,8 +41,9 @@ public class WinDockDelegate implements SystemDock.Delegate {
 
   private WinDockDelegate() {}
 
+  @Override
   public void updateRecentProjectsMenu () {
-    final AnAction[] recentProjectActions = RecentProjectsManagerBase.getInstance().getRecentProjectsActions(false);
+    final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
     RecentTasks.clear();
     Task[] tasks = new Task[recentProjectActions.length];
     for (int i = 0; i < recentProjectActions.length; i ++) {

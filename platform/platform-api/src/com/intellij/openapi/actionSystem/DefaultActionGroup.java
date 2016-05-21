@@ -61,6 +61,10 @@ public class DefaultActionGroup extends ActionGroup {
     this(Arrays.asList(actions));
   }
 
+  public DefaultActionGroup(String shortName, boolean popup) {
+    super(shortName, popup);
+  }
+
   /**
    * Creates an action group containing the specified actions.
    *
@@ -69,13 +73,18 @@ public class DefaultActionGroup extends ActionGroup {
    */
   public DefaultActionGroup(@NotNull List<? extends AnAction> actions) {
     this(null, false);
+    addActions(actions);
+  }
+
+  public DefaultActionGroup(@NotNull String name, @NotNull List<? extends AnAction> actions) {
+    this(name, false);
+    addActions(actions);
+  }
+
+  private void addActions(@NotNull List<? extends AnAction> actions) {
     for (AnAction action : actions) {
       add(action);
     }
-  }
-
-  public DefaultActionGroup(String shortName, boolean popup) {
-    super(shortName, popup);
   }
 
   /**

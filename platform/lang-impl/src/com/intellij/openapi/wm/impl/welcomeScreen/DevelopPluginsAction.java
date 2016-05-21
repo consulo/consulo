@@ -18,31 +18,22 @@ package com.intellij.openapi.wm.impl.welcomeScreen;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.DumbAware;
 import org.jetbrains.annotations.NonNls;
-
-import java.io.File;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * @author yole
  */
 public class DevelopPluginsAction extends AnAction implements DumbAware {
-  @NonNls private static final String PLUGIN_URL = PathManager.getHomePath() + "/Plugin Development Readme.html";
-  @NonNls private static final String PLUGIN_WEBSITE = "http://www.jetbrains.com/idea/plugins/plugin_developers.html";
+  @NonNls
+  private static final String PLUGIN_WEBSITE = "https://github.com/consulo/consulo/wiki/Plugin-Development-Starter-Guide";
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(final AnActionEvent e) {
-    try {
-      if (new File(PLUGIN_URL).isFile()) {
-        BrowserUtil.launchBrowser(PLUGIN_URL);
-      }
-      else {
-        BrowserUtil.launchBrowser(PLUGIN_WEBSITE);
-      }
-    }
-    catch(IllegalStateException ex) {
-      // ignore
-    }
+  public void actionPerformed(@NotNull final AnActionEvent e) {
+    BrowserUtil.browse(PLUGIN_WEBSITE);
+
   }
 }

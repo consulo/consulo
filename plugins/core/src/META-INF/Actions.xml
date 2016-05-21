@@ -54,7 +54,7 @@
     <action id="Switcher" class="com.intellij.ide.actions.Switcher" text="Switcher"/>
     <action id="QuickDocCopy" class="com.intellij.codeInsight.documentation.actions.CopyQuickDocAction" use-shortcut-of="$Copy"/>
     <action id="EditSourceInNewWindow" class="com.intellij.ide.actions.EditSourceInNewWindowAction"/>
-    <action id="SearchEverywhere" class="com.intellij.ide.actions.SearchEverywhereAction" />
+    <action id="SearchEverywhere" class="com.intellij.ide.actions.SearchEverywhereAction"/>
 
     <group id="TemplateParametersNavigation">
       <action id="NextTemplateParameter" class="com.intellij.codeInsight.completion.NextPrevParameterAction$Next" text="Next Parameter">
@@ -173,7 +173,6 @@
     <action id="ScrollTreeToCenter" class="com.intellij.ide.actions.ScrollTreeToCenterAction" use-shortcut-of="EditorScrollToCenter"/>
     <action id="PinToolwindowTab" class="com.intellij.ui.content.tabs.PinToolwindowTabAction"/>
     <action id="CloseEditor" class="com.intellij.ide.actions.CloseEditorAction"/>
-    <action id="WelcomeScreen.ReopenRecent" class="com.intellij.openapi.wm.impl.welcomeScreen.RecentProjectsAction"/>
 
     <group id="MainMenu">
       <group id="FileMenu" popup="true">
@@ -300,7 +299,7 @@
             <reference ref="CompareTwoFiles"/>
             <reference ref="CompareFileWithEditor"/>
           </group>
-          <reference ref="CompareClipboardWithSelection" />
+          <reference ref="CompareClipboardWithSelection"/>
         </group>
         <separator/>
         <action id="QuickChangeScheme" class="com.intellij.ide.actions.QuickChangeSchemesAction"/>
@@ -521,6 +520,11 @@
       <action id="WelcomeScreen.ShowTips" class="com.intellij.ide.actions.ShowTipsAction"
               icon="AllIcons.General.TipsOfTheDay"/>
       <reference ref="Help.KeymapReference"/>
+
+      <action id="WelcomeScreen.Youtube" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"
+              icon="AllIcons.General.Youtube"/>
+      <action id="WelcomeScreen.DevelopPlugins" class="com.intellij.openapi.wm.impl.welcomeScreen.DevelopPluginsAction"
+              icon="AllIcons.General.PluginManager"/>
     </group>
 
     <group id="WelcomeScreen.Configure">
@@ -665,6 +669,8 @@
             icon="AllIcons.Actions.Export"/>
 
     <action id="SaveDocument" class="com.intellij.ide.actions.SaveDocumentAction"/>
+
+    <action id="MarkNotificationsAsRead" class="com.intellij.notification.impl.actions.MarkAllNotificationsAsReadAction"/>
 
     <action id="Vcs.ShowTabbedFileHistory" class="com.intellij.openapi.vcs.actions.TabbedShowHistoryAction"
             icon="AllIcons.Vcs.History"/>
@@ -926,17 +932,15 @@
 
     <action id="Vcs.CopyRevisionNumberAction" class="com.intellij.openapi.vcs.history.CopyRevisionNumberAction"
             text="Copy Revision Number" description="Copy short revision numbers of selected commits to the clipboard"
-            icon="AllIcons.Actions.Copy" />
+            icon="AllIcons.Actions.Copy"/>
 
     <group id="DebuggerActions">
     </group>
 
     <group id="WelcomeScreen.QuickStart.IDEA">
-      <action id="WelcomeScreen.CreateNewProject" class="com.intellij.platform.NewDirectoryProjectAction"
-              icon="AllIcons.General.CreateNewProject"/>
+      <action id="WelcomeScreen.CreateNewProject" class="com.intellij.platform.NewProjectAction"  icon="AllIcons.General.CreateNewProject"/>
       <action id="WelcomeScreen.ImportProject" class="com.intellij.ide.actions.ImportProjectAction" icon="AllIcons.General.ImportProject"/>
-      <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenProjectAction"
-              icon="AllIcons.General.OpenProject"/>
+      <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenFileAction" icon="AllIcons.General.OpenProject"/>
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
     </group>
 
@@ -1644,7 +1648,7 @@
       <reference ref="StepOut"/>
       <reference ref="RunToCursor"/>
       <separator/>
-      <reference ref="EvaluateExpression" />
+      <reference ref="EvaluateExpression"/>
     </group>
 
     <group id="XDebugger.ToolWindow.LeftToolbar">
@@ -1719,7 +1723,7 @@
       <!--<action id="XDebugger.AutoTooltip" class="com.intellij.xdebugger.impl.actions.ValueTooltipAutoShowAction"/>-->
       <!--<action id="XDebugger.AutoTooltipOnSelection" class="com.intellij.xdebugger.impl.actions.ValueTooltipAutoShowOnSelectionAction"/>-->
       <separator/>
-      <action id="XDebugger.UnmuteOnStop" class="com.intellij.xdebugger.impl.actions.UnmuteOnStopAction" />
+      <action id="XDebugger.UnmuteOnStop" class="com.intellij.xdebugger.impl.actions.UnmuteOnStopAction"/>
     </group>
 
     <group id="RunnerLayoutActions">
@@ -1849,7 +1853,7 @@
 
     <!-- File -->
     <group id="OpenProjectGroup">
-      <action id="NewProject" class="com.intellij.platform.NewDirectoryProjectAction"/>
+      <action id="NewProject" class="com.intellij.platform.NewProjectAction"/>
       <action id="NewModule" class="com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction"/>
       <action id="ImportProject" class="com.intellij.ide.actions.ImportProjectAction" text="Import Project..."/>
       <action id="ImportModule" class="com.intellij.ide.actions.ImportModuleAction" text="Import Module..."/>
@@ -1920,7 +1924,6 @@
     <action id="ConsoleView.FoldLinesLikeThis" class="com.intellij.execution.console.FoldLinesLikeThis" text="Fold Lines Like This">
       <add-to-group group-id="ConsoleEditorPopupMenu" anchor="after" relative-to-action="$SearchWeb"/>
     </action>
-
 
 
     <group id="Internal1" text="IDEA Internal Actions" internal="true">
@@ -2181,15 +2184,6 @@
 
     <!-- ****************************************************************** -->
 
-
-    <group id="WelcomeScreen.Documentation.IDEA">
-      <action id="WelcomeScreen.Youtube" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"
-              icon="AllIcons.General.Youtube"/>
-      <action id="WelcomeScreen.DevelopPlugins" class="com.intellij.openapi.wm.impl.welcomeScreen.DevelopPluginsAction"
-              icon="AllIcons.General.PluginManager"/>
-
-      <add-to-group group-id="WelcomeScreen.Documentation" anchor="last"/>
-    </group>
 
     <group id="WelcomeScreen.Configure.IDEA">
       <action class="com.intellij.ide.actions.TemplateProjectSettingsGroup"/>

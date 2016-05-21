@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
@@ -40,15 +40,17 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.BalloonLayoutImpl;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import org.jetbrains.annotations.Nullable;
 
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
-public class WelcomeFrame extends JFrame implements IdeFrame {
+public class WelcomeFrame extends JFrame implements IdeFrame, AccessibleContextAccessor {
   static final String DIMENSION_KEY = "WELCOME_SCREEN";
   private static IdeFrame ourInstance;
   private final WelcomeScreen myScreen;
@@ -56,7 +58,7 @@ public class WelcomeFrame extends JFrame implements IdeFrame {
 
   public WelcomeFrame() {
     JRootPane rootPane = getRootPane();
-    final WelcomeScreen screen = new NewWelcomeScreen2();
+    final WelcomeScreen screen = createScreen(rootPane);
 
     final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
     setGlassPane(glassPane);
@@ -75,9 +77,15 @@ public class WelcomeFrame extends JFrame implements IdeFrame {
     myBalloonLayout = new BalloonLayoutImpl(rootPane, new Insets(8, 8, 8, 8));
 
     myScreen = screen;
-    setupCloseAction();
-    new MnemonicHelper().register(this);
+    setupCloseAction(this);
+    MnemonicHelper.init(this);
     myScreen.setupFrame(this);
+    Disposer.register(ApplicationManager.getApplication(), new Disposable() {
+      @Override
+      public void dispose() {
+        WelcomeFrame.this.dispose();
+      }
+    });
   }
 
   public static IdeFrame getInstance() {
@@ -92,8 +100,7 @@ public class WelcomeFrame extends JFrame implements IdeFrame {
 
     Disposer.dispose(myScreen);
 
-    //noinspection AssignmentToStaticFieldFromInstanceMethod
-    ourInstance = null;
+    resetInstance();
   }
 
   private static void saveLocation(Rectangle location) {
@@ -101,39 +108,43 @@ public class WelcomeFrame extends JFrame implements IdeFrame {
     DimensionService.getInstance().setLocation(DIMENSION_KEY, middle, null);
   }
 
-  private void setupCloseAction() {
-    setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    addWindowListener(
-      new WindowAdapter() {
-        public void windowClosing(final WindowEvent e) {
-          dispose();
+  static void setupCloseAction(final JFrame frame) {
+    frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    frame.addWindowListener(
+            new WindowAdapter() {
+              public void windowClosing(final WindowEvent e) {
+                frame.dispose();
 
-          final Application app = ApplicationManager.getApplication();
-          app.invokeLater(new DumbAwareRunnable() {
-            public void run() {
-              if (app.isDisposed()) {
-                ApplicationManagerEx.getApplicationEx().exit();
-                return;
-              }
-
-              final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-              if (openProjects.length == 0) {
-                ApplicationManagerEx.getApplicationEx().exit();
+                if (ProjectManager.getInstance().getOpenProjects().length == 0) {
+                  ApplicationManagerEx.getApplicationEx().exit();
+                }
               }
             }
-          }, ModalityState.NON_MODAL);
-        }
-      }
     );
   }
 
   public static void clearRecents() {
+    if (ourInstance != null) {
+      if (ourInstance instanceof WelcomeFrame) {
+        WelcomeScreen screen = ((WelcomeFrame)ourInstance).myScreen;
+        // todo clear recent projects
+      }
+    }
+  }
 
+  private static WelcomeScreen createScreen(JRootPane rootPane) {
+    WelcomeScreen screen = null;
+
+    return screen = new NewWelcomeScreen();
+  }
+
+  public static void resetInstance() {
+    ourInstance = null;
   }
 
   public static void showNow() {
     if (ourInstance == null) {
-      IdeFrame frame = new WelcomeFrame();
+      IdeFrame         frame = new FlatWelcomeFrame();
       ((JFrame)frame).setVisible(true);
       ourInstance = frame;
     }
@@ -196,11 +207,8 @@ public class WelcomeFrame extends JFrame implements IdeFrame {
     return getRootPane();
   }
 
-  public static void notifyFrameClosed(JFrame frame) {
-    saveLocation(frame.getBounds());
-  }
-
-  public WelcomeScreen getScreen() {
-    return myScreen;
+  @Override
+  public AccessibleContext getCurrentAccessibleContext() {
+    return accessibleContext;
   }
 }

@@ -461,10 +461,11 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
       return;
     }
     MouseGestureManager.getInstance().remove(this);
-    WelcomeFrame.notifyFrameClosed(this);
 
+    // clear both our and swing hard refs
     if (myRootPane != null) {
       myRootPane = null;
+      setRootPane(new JRootPane());
     }
 
     if (myFrameDecorator != null) {
