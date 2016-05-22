@@ -121,7 +121,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       updateUI();
     }
 
-    public void set(int line, Grid grid) {
+    public void set(Grid grid) {
       add(grid);
     }
 
@@ -505,7 +505,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
       panel.setWidget(0, 0, lineSpan);
 
-      myGutterPanel.set(i, panel);
+      myGutterPanel.set(panel);
     }
 
     Grid editorCodePanel = new Grid(myLineCount, 1) {
