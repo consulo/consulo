@@ -15,7 +15,10 @@
  */
 package consulo.web.gwt.client.util;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.DecoratedPopupPanel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author VISTALL
@@ -24,6 +27,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public abstract class ReportableCallable<T> implements AsyncCallback<T> {
   @Override
   public void onFailure(Throwable caught) {
+    DecoratedPopupPanel popupPanel = new DecoratedPopupPanel(true);
 
+    popupPanel.setWidget(new Label("Connection problem"));
+
+    popupPanel.setPopupPosition(Window.getClientWidth() / 2, 0);
+    popupPanel.show();
   }
 }
