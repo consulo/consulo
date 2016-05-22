@@ -149,7 +149,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     @Override
     public void updateUI() {
-      Log.log("GutterLineGrid");
       final Style style = getElement().getStyle();
       GwtEditorColorScheme scheme = myEditor.getScheme();
       if (myEditor.myCurrentLinePanel != null && myEditor.myCurrentLinePanel.myLine == myLine) {
