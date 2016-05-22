@@ -16,10 +16,7 @@
 package consulo.web.gwt.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory;
+import com.intellij.codeInsight.daemon.impl.*;
 import com.intellij.codeInsight.navigation.CtrlMouseHandler;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
@@ -397,7 +394,9 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
                   }
                   GwtHighlightInfo info = createHighlightInfo(textAttributes, new GwtTextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()),
                                                               highlightInfo.getSeverity().myVal);
-                  info.setTooltip(highlightInfo.getToolTip());
+                  if (highlightInfo.getSeverity() != HighlightInfoType.ELEMENT_UNDER_CARET_SEVERITY) {
+                    info.setTooltip(highlightInfo.getToolTip());
+                  }
                   list.add(info);
                 }
               }

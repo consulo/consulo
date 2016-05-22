@@ -194,6 +194,8 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   private DecoratedPopupPanel myLastTooltip;
 
+  private GwtTextRange myLastTooltipRange;
+
   private EditorColorSchemeService.Listener myListener = new EditorColorSchemeService.Listener() {
     @Override
     public void schemeChanged(GwtEditorColorScheme scheme) {
@@ -358,10 +360,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
         final int startOffset = ((GwtTextRange)range).getStartOffset();
 
+        final Widget widget = (Widget)element.getPropertyObject("widget");
+
         if (event.getCtrlKey()) {
-
-          final Widget widget = (Widget)element.getPropertyObject("widget");
-
           GwtUtil.rpc().getNavigationInfo(myFileUrl, startOffset, new ReportableCallable<GwtNavigateInfo>() {
             @Override
             public void onSuccess(GwtNavigateInfo result) {
@@ -377,7 +378,11 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
               getElement().getStyle().setCursor(Style.Cursor.POINTER);
 
               if (result.getDocText() != null) {
+                myLastTooltipRange = myLastCursorPsiElementTextRange;
                 showTooltip(widget, result.getDocText());
+              }
+              else {
+                removeTooltip();
               }
 
               myLastCursorPsiElementTextRange = resultElementRange;
@@ -389,6 +394,20 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
               addHighlightInfos(Arrays.asList(highlightInfo), ourSelectFlag);
             }
           });
+        }
+        else {
+          if(widget instanceof EditorSegmentBuilder.CharSpan) {
+            myLastTooltipRange = ((EditorSegmentBuilder.CharSpan)widget).range;
+            String toolTip = ((EditorSegmentBuilder.CharSpan)widget).getToolTip();
+            if(toolTip != null) {
+              showTooltip(widget, toolTip);
+            }
+          }
+          else {
+            myLastTooltipRange = null;
+
+            removeTooltip();
+          }
         }
         event.preventDefault();
         break;
@@ -405,6 +424,13 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         if (myInsideGutter) {
           event.preventDefault();
           return;
+        }
+
+        com.google.gwt.dom.client.Element element = DOM.eventGetToElement(event);
+        GwtTextRange range = element == null ? null : (GwtTextRange)element.getPropertyObject("range");
+
+        if(range == null || myLastTooltipRange != null && !myLastTooltipRange.containsRange(range)) {
+           removeTooltip();
         }
 
         onMouseOut();
@@ -533,7 +559,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     CodeLinePanel lineElement = null;
     int startOffset = 0;
 
-    for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
+    for (EditorSegmentBuilder.CharSpan fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
         lineElement = new CodeLinePanel(this, lineCount);
         setDefaultTextColors(lineElement);
@@ -544,7 +570,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         startOffset = fragment.range.getStartOffset();
       }
 
-      lineElement.add(fragment.widget);
+      lineElement.add(fragment);
 
       if (fragment.lineWrap) {
         editorCodePanel.getCellFormatter().getElement(lineCount, 0).getStyle().setPaddingLeft(5, Style.Unit.PX);
@@ -576,6 +602,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   private void removeTooltip() {
+    myLastTooltipRange = null;
     if (myLastTooltip != null) {
       myLastTooltip.hide();
       myLastTooltip = null;
@@ -622,13 +649,13 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     }
 
     myLastCaretOffset = offset;
-    for (EditorSegmentBuilder.Fragment fragment : myBuilder.getFragments()) {
+    for (EditorSegmentBuilder.CharSpan fragment : myBuilder.getFragments()) {
       if (fragment.range.containsRange(offset, offset)) {
-        fragment.widget.getElement().focus();
-        fragment.widget.getElement().scrollIntoView();
+        fragment.getElement().focus();
+        fragment.getElement().scrollIntoView();
 
-        set(fragment.widget.getElement());
-        Widget parent = fragment.widget.getParent();
+        set(fragment.getElement());
+        Widget parent = fragment.getParent();
         if (parent instanceof CodeLinePanel) {
           changeLine((CodeLinePanel)parent);
         }

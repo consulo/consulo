@@ -726,6 +726,7 @@ select {
 }
 
 .gwt-TabBar .gwt-TabBarFirst {
+  width: 0px;
 }
 
 .gwt-TabBar .gwt-TabBarRest {

@@ -17,7 +17,6 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.util.BitUtil;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.transport.GwtColor;
@@ -36,20 +35,21 @@ import java.util.Map;
  * @since 19-May-16
  */
 public class EditorSegmentBuilder {
-  public static class Fragment {
+  public static class CharSpan extends InlineHTML {
     public static class StyleInfo {
       private String key;
       private String value;
+      private String tooltip;
       private int flag;
 
-      public StyleInfo(String key, String value, int flag) {
+      public StyleInfo(String key, String value, String tooltip,int flag) {
         this.key = key;
         this.flag = flag;
         this.value = value;
+        this.tooltip = tooltip;
       }
     }
 
-    public Widget widget;
     public GwtTextRange range;
     public boolean lineWrap;
     private int highlightFlags;
@@ -59,7 +59,28 @@ public class EditorSegmentBuilder {
     @Nullable
     private Map<String, Integer> mySeverityMap;
 
-    public void add(String key, String value, int severity, int flag) {
+    public CharSpan(String html) {
+      super(html);
+    }
+
+    public String getToolTip() {
+      if(myStyles == null) {
+        return null;
+      }
+      for (StyleInfo style : myStyles) {
+        if(style.flag == Editor.ourLexerFlag) {
+          continue;
+        }
+
+        String tooltip = style.tooltip;
+        if(tooltip != null) {
+          return tooltip;
+        }
+      }
+        return null;
+    }
+
+    public void add(String key, String value, String tooltip, int severity, int flag) {
       highlightFlags = BitUtil.set(highlightFlags, flag, true);
 
       Integer oldSeverity = mySeverityMap == null ? null : mySeverityMap.get(key);
@@ -78,9 +99,9 @@ public class EditorSegmentBuilder {
       if (myStyles == null) {
         myStyles = new ArrayList<StyleInfo>();
       }
-      myStyles.add(new StyleInfo(key, value, flag));
+      myStyles.add(new StyleInfo(key, value, tooltip, flag));
 
-      Style style = widget.getElement().getStyle();
+      Style style = getElement().getStyle();
       if (key.equals("textDecoration")) {
         String oldValue = style.getProperty(key);
         if (oldValue != null) {
@@ -109,7 +130,7 @@ public class EditorSegmentBuilder {
           if (styleInfo.flag == flag) {
             myStyles.remove(styleInfo);
 
-            Style style = widget.getElement().getStyle();
+            Style style = getElement().getStyle();
             if (styleInfo.key.equals("textDecoration")) {
               String oldValue = style.getProperty(styleInfo.key);
               if (oldValue == null) {
@@ -131,17 +152,16 @@ public class EditorSegmentBuilder {
     }
   }
 
-  private Fragment[] myFragments;
+  private CharSpan[] myFragments;
   private int myLineCount;
 
   public EditorSegmentBuilder(String text) {
-    myFragments = new Fragment[text.length()];
+    myFragments = new CharSpan[text.length()];
 
     for (int i = 0; i < text.length(); i++) {
       char c = text.charAt(i);
       String labelText = mapChar(c);
 
-      Fragment fragment = new Fragment();
 
       final int startOffset = i;
       if (c == ' ' || c == '\t') {
@@ -159,37 +179,38 @@ public class EditorSegmentBuilder {
       }
 
       int endOffset = i + 1;
-      fragment.range = new GwtTextRange(startOffset, endOffset);
-      fragment.widget = new InlineHTML(labelText.isEmpty() ? "&#8205;" : labelText);
-      fragment.widget.setStyleName(null);
-      fragment.widget.getElement().setPropertyObject("range", fragment.range);
-      fragment.widget.getElement().setPropertyObject("widget", fragment.widget);
 
-      fragment.lineWrap = labelText.isEmpty();
+      CharSpan charSpan = new CharSpan(labelText.isEmpty() ? "&#8205;" : labelText);
+      charSpan.range = new GwtTextRange(startOffset, endOffset);
+      charSpan.setStyleName(null);
+      charSpan.getElement().setPropertyObject("range", charSpan.range);
+      charSpan.getElement().setPropertyObject("widget", charSpan);
 
-      if (fragment.lineWrap) {
+      charSpan.lineWrap = labelText.isEmpty();
+
+      if (charSpan.lineWrap) {
         myLineCount++;
       }
 
       for (int k = startOffset; k < endOffset; k++) {
-        myFragments[k] = fragment;
+        myFragments[k] = charSpan;
       }
     }
   }
 
   public void addHighlights(List<GwtHighlightInfo> result, int flag) {
-    for (Fragment fragment : myFragments) {
+    for (CharSpan fragment : myFragments) {
       fragment.removeByFlag(flag);
     }
 
     for (GwtHighlightInfo highlightInfo : result) {
       GwtTextRange textRange = highlightInfo.getTextRange();
       for (int i = textRange.getStartOffset(); i < textRange.getEndOffset(); i++) {
-        Fragment fragment = myFragments[i];
+        CharSpan fragment = myFragments[i];
 
         GwtTextAttributes textAttributes = highlightInfo.getTextAttributes();
         if(textAttributes != null) {
-          add(fragment, textAttributes, highlightInfo.getSeverity(), flag);
+          add(fragment, textAttributes, highlightInfo.getTooltip(), highlightInfo.getSeverity(), flag);
         }
       }
     }
@@ -197,37 +218,37 @@ public class EditorSegmentBuilder {
 
   public void removeHighlightByRange(GwtTextRange textRange, int flag) {
     for (int i = textRange.getStartOffset(); i < textRange.getEndOffset(); i++) {
-      Fragment fragment = myFragments[i];
+      CharSpan fragment = myFragments[i];
 
       fragment.removeByFlag(flag);
     }
   }
 
-  private void add(Fragment fragment, GwtTextAttributes textAttributes, int severity, int flag) {
+  private void add(CharSpan fragment, GwtTextAttributes textAttributes, String tooltip, int severity, int flag) {
     GwtColor foreground = textAttributes.getForeground();
     if (foreground != null) {
-      fragment.add("color", GwtStyleUtil.toString(foreground), severity, flag);
+      fragment.add("color", GwtStyleUtil.toString(foreground), tooltip, severity, flag);
     }
 
     GwtColor background = textAttributes.getBackground();
     if (background != null) {
-      fragment.add("backgroundColor", GwtStyleUtil.toString(background), severity, flag);
+      fragment.add("backgroundColor", GwtStyleUtil.toString(background), tooltip, severity, flag);
     }
 
     if (BitUtil.isSet(textAttributes.getFlags(), GwtTextAttributes.BOLD)) {
-      fragment.add("fontWeight", "bold", severity, flag);
+      fragment.add("fontWeight", "bold", tooltip, severity, flag);
     }
 
     if (BitUtil.isSet(textAttributes.getFlags(), GwtTextAttributes.ITALIC)) {
-      fragment.add("fontStyle", "italic", severity, flag);
+      fragment.add("fontStyle", "italic", tooltip, severity, flag);
     }
 
     if (BitUtil.isSet(textAttributes.getFlags(), GwtTextAttributes.UNDERLINE)) {
-      fragment.add("textDecoration", "underline", severity, flag);
+      fragment.add("textDecoration", "underline", tooltip, severity, flag);
     }
 
     if (BitUtil.isSet(textAttributes.getFlags(), GwtTextAttributes.LINE_THROUGH)) {
-      fragment.add("textDecoration", "line-through", severity, flag);
+      fragment.add("textDecoration", "line-through", tooltip, severity, flag);
     }
   }
 
@@ -235,7 +256,7 @@ public class EditorSegmentBuilder {
     return myLineCount;
   }
 
-  public Fragment[] getFragments() {
+  public CharSpan[] getFragments() {
     return myFragments;
   }
 
