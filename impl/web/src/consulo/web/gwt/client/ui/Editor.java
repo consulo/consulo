@@ -18,6 +18,7 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -137,7 +138,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     }
   }
 
-  public static class GutterLineGrid extends Grid implements WidgetWithUpdateUI{
+  public static class GutterLineGrid extends Grid implements WidgetWithUpdateUI {
     private Editor myEditor;
     private int myLine;
 
@@ -170,8 +171,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   private int myLineCount;
 
-  private EditorCaretHandler myCaretHandler;
-
   private int myDelayedCaredOffset = -1;
 
   private int myLastCaretOffset = -1;
@@ -195,6 +194,14 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   private DecoratedPopupPanel myLastTooltip;
 
   private GwtTextRange myLastTooltipRange;
+
+  enum HighlightState {
+    UNKNOWN,
+    LEXER,
+    PASS
+  }
+
+  private HighlightState myHighlightState = HighlightState.UNKNOWN;
 
   private EditorColorSchemeService.Listener myListener = new EditorColorSchemeService.Listener() {
     @Override
@@ -253,14 +260,11 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       public void onSuccess(List<GwtHighlightInfo> result) {
         addHighlightInfos(result, Editor.ourLexerFlag);
 
+        myHighlightState = HighlightState.LEXER;
+
         runHighlightPasses(myLastCaretOffset, null);
 
-        setCaretHandler(new EditorCaretHandler() {
-          @Override
-          public void caretPlaced(int offset) {
-            runHighlightPasses(offset, null);
-          }
-        });
+        myHighlightState = HighlightState.PASS;
       }
     });
   }
@@ -363,6 +367,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         final Widget widget = (Widget)element.getPropertyObject("widget");
 
         if (event.getCtrlKey()) {
+          if(myHighlightState == HighlightState.UNKNOWN) {
+            return;
+          }
           GwtUtil.rpc().getNavigationInfo(myFileUrl, startOffset, new ReportableCallable<GwtNavigateInfo>() {
             @Override
             public void onSuccess(GwtNavigateInfo result) {
@@ -396,10 +403,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
           });
         }
         else {
-          if(widget instanceof EditorSegmentBuilder.CharSpan) {
+          if (widget instanceof EditorSegmentBuilder.CharSpan) {
             myLastTooltipRange = ((EditorSegmentBuilder.CharSpan)widget).range;
             String toolTip = ((EditorSegmentBuilder.CharSpan)widget).getToolTip();
-            if(toolTip != null) {
+            if (toolTip != null) {
               showTooltip(widget, toolTip);
             }
           }
@@ -413,7 +420,12 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         break;
       }
       case Event.ONKEYUP:
-        removeTooltip();
+        if (event.getKeyCode() == KeyCodes.KEY_CTRL) {
+          removeTooltip();
+        }
+        break;
+      case Event.ONKEYDOWN:
+        Log.log("from parent");
         break;
       case Event.ONMOUSEOUT: {
         boolean old = myInsideGutter;
@@ -429,8 +441,8 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         com.google.gwt.dom.client.Element element = DOM.eventGetToElement(event);
         GwtTextRange range = element == null ? null : (GwtTextRange)element.getPropertyObject("range");
 
-        if(range == null || myLastTooltipRange != null && !myLastTooltipRange.containsRange(range)) {
-           removeTooltip();
+        if (range == null || myLastTooltipRange != null && !myLastTooltipRange.containsRange(range)) {
+          removeTooltip();
         }
 
         onMouseOut();
@@ -474,9 +486,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
           }
         }
         else {
-          if (myCaretHandler != null) {
-            myCaretHandler.caretPlaced(myLastCaretOffset);
-          }
+          onOffsetChangeImpl();
         }
         event.preventDefault();
         break;
@@ -485,6 +495,14 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         super.onBrowserEvent(event);
         break;
     }
+  }
+
+  private void onOffsetChangeImpl() {
+    if (myLastCaretOffset == -1 || myHighlightState != HighlightState.PASS) {
+      return;
+    }
+
+    runHighlightPasses(myLastCaretOffset, null);
   }
 
   private void onMouseOut() {
@@ -541,6 +559,29 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
       @Override
       public void onBrowserEvent(Event event) {
+        int type = DOM.eventGetType(event);
+        switch (type) {
+          case Event.ONKEYDOWN:
+            switch (event.getKeyCode()) {
+              case KeyCodes.KEY_B:
+                if (event.getCtrlKey()) {
+                  GwtUtil.rpc().getNavigationInfo(myFileUrl, myLastCaretOffset, new ReportableCallable<GwtNavigateInfo>() {
+                    @Override
+                    public void onSuccess(GwtNavigateInfo result) {
+                      if (result == null) {
+                        return;
+                      }
+
+                      GwtNavigatable navigatable = result.getNavigates().get(0);
+
+                      myEditorTabPanel.openFileInEditor(navigatable.getFile(), navigatable.getOffset());
+                    }
+                  });
+                }
+                break;
+            }
+            break;
+        }
         event.preventDefault();
       }
     };
@@ -612,7 +653,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   private void showTooltip(Widget widget, String html) {
     removeTooltip();
 
-    myLastTooltip  = new DecoratedPopupPanel(true);
+    myLastTooltip = new DecoratedPopupPanel(true);
     myLastTooltip.setWidget(new HTML(html));
 
     int left = widget.getAbsoluteLeft();
@@ -621,9 +662,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     myLastTooltip.show();
   }
 
-  public void setCaretHandler(EditorCaretHandler caretHandler) {
-    myCaretHandler = caretHandler;
-  }
 
   public void addHighlightInfos(List<GwtHighlightInfo> result, int flag) {
     if (myBuilder == null) {
@@ -637,9 +675,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     focusOffset(offset);
 
-    if (myCaretHandler != null) {
-      myCaretHandler.caretPlaced(myLastCaretOffset);
-    }
+    onOffsetChangeImpl();
   }
 
   public void focusOffset(int offset) {
