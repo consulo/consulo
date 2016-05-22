@@ -1088,6 +1088,8 @@
           <extension id="java-web" />
           <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-path="R:\_github.com\consulo\consulo\impl\web\gwt-out" compiler-max-heap-size="256" />
           <content url="file://$MODULE_DIR$">
+            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-out" />
+            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-unitCache" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
             <content-folder type="WEB_RESOURCES" url="file://$MODULE_DIR$/webapp" />
           </content>
