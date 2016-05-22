@@ -7,6 +7,10 @@ pre {
   font-size: small;
 }
 
+table {
+  border-spacing: 0px;
+}
+
 body {
   color: black;
   margin: 0px;
@@ -718,15 +722,20 @@ select {
 
 .gwt-TabBar {
   background: #ccc;
-  padding-top: 6px;
+  border-bottom: #e0e0e0 solid 1px;
 }
+
 .gwt-TabBar .gwt-TabBarFirst {
-  width: 5px;
 }
+
 .gwt-TabBar .gwt-TabBarRest {
 }
+
 .gwt-TabBar .gwt-TabBarItem {
-  margin-left: 4px;
+  border-left: #e0e0e0 solid 1px;
+  border-right: #e0e0e0 solid 1px;
+
+
   padding: 4px 8px 4px 8px;
 
   cursor: default;
