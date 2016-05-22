@@ -5,10 +5,9 @@
 
   <inherits name='com.google.gwt.user.RemoteService'/>
   <inherits name='com.google.gwt.user.User'/>
-  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
-  <inherits name="com.github.gwtbootstrap.Bootstrap"/>
 
-  <stylesheet src="css/project.css"/>
+  <stylesheet src="css/project.css"/> <!--deprecated -->
+  <stylesheet src="css/gwt.css"/>
 
   <public path="client/resource"/>
 

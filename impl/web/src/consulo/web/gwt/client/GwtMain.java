@@ -211,7 +211,7 @@ public class GwtMain implements EntryPoint {
     splitPanel.getCellFormatter().setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_TOP);
     splitPanel.getCellFormatter().setVerticalAlignment(0, 1, HasVerticalAlignment.ALIGN_TOP);
 
-    final EditorTabPanel editorTabPanel = new EditorTabPanel();
+    final EditorTabPanel editorTabPanel = GwtUIUtil.fillAndReturn(new EditorTabPanel());
     splitPanel.setWidget(0, 1, editorTabPanel);
 
     splitPanel.setWidget(0, 0, GwtUIUtil.loadingPanel());

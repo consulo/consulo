@@ -15,14 +15,9 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.github.gwtbootstrap.client.ui.TabLink;
-import com.github.gwtbootstrap.client.ui.TabPane;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
@@ -38,25 +33,25 @@ import java.util.Map;
 public class EditorTabPanel extends SimplePanel {
   public class EditorTabInfo {
     private Editor myEditor;
-    private int myIndex;
 
-    public EditorTabInfo(Editor editor, int index) {
+    public EditorTabInfo(Editor editor) {
       myEditor = editor;
-      myIndex = index;
     }
   }
 
   private Map<String, EditorTabInfo> myOpenedFiles = new HashMap<String, EditorTabInfo>();
-  private final com.github.gwtbootstrap.client.ui.TabPanel myTabPanel = new com.github.gwtbootstrap.client.ui.TabPanel();
+  private final TabPanel myTabPanel = new TabPanel();
 
   public EditorTabPanel() {
-    setWidget(myTabPanel);
+    setWidget(GwtUIUtil.fillAndReturn(myTabPanel));
   }
 
   public void openFileInEditor(final GwtVirtualFile virtualFile, final int offset) {
     EditorTabInfo editorTab = myOpenedFiles.get(virtualFile.getUrl());
     if (editorTab != null) {
-      myTabPanel.selectTab(editorTab.myIndex);
+      final int index = myTabPanel.getWidgetIndex(editorTab.myEditor);
+
+      myTabPanel.selectTab(index);
 
       if(offset != -1) {
         editorTab.myEditor.setCaretOffset(offset);
@@ -73,35 +68,24 @@ public class EditorTabPanel extends SimplePanel {
 
         final Editor editor = new Editor(EditorTabPanel.this, virtualFile.getUrl(), result);
 
-        final TabLink tabLink = new TabLink();
-        final HorizontalPanel tab = new HorizontalPanel();
-        tab.add(GwtUIUtil.icon(virtualFile.getIconLayers()));
+        final HorizontalPanel tabHeader = new HorizontalPanel();
+        tabHeader.add(GwtUIUtil.icon(virtualFile.getIconLayers()));
         InlineHTML span = new InlineHTML(virtualFile.getName());
         span.setStyleName("textAfterIcon18");
-        tab.add(span);
+        tabHeader.add(span);
         Image closeImage = new Image("/icons/actions/closeNew.png");
 
-        tab.add(closeImage);
+        tabHeader.add(closeImage);
 
-        tabLink.add(tab);
+        myTabPanel.add(editor, tabHeader);
 
-        myTabPanel.add(tabLink);
-
-        TabPane tabPane = tabLink.getTabPane();
-        tabPane.setHeight("100%");
-        tabPane.setWidth("100%");
-        tabPane.addStyleName("disableOverflow");
-
-        tabPane.add(editor);
-
-        // TabPanel can't return tab size???
         int index = myOpenedFiles.size();
         myTabPanel.selectTab(index);
         if(offset != -1) {
           editor.focusOffset(offset);
         }
 
-        myOpenedFiles.put(virtualFile.getUrl(), new EditorTabInfo(editor, index));
+        myOpenedFiles.put(virtualFile.getUrl(), new EditorTabInfo(editor));
 
         closeImage.addClickHandler(new ClickHandler() {
           @Override
@@ -111,7 +95,7 @@ public class EditorTabPanel extends SimplePanel {
               tabInfo.myEditor.dispose();
             }
 
-            myTabPanel.remove(tabLink);
+            myTabPanel.remove(editor);
 
             int size = myOpenedFiles.size();
             if (size > 0) {
