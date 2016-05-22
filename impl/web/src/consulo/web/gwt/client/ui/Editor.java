@@ -58,11 +58,12 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       }
     }
 
-    public void updateUI(boolean selected) {
+    @Override
+    public void updateUI() {
       Element parentElement = getElement().getParentElement();
 
       GwtEditorColorScheme scheme = myEditor.getScheme();
-      if (selected) {
+      if (myEditor.myCurrentLinePanel == this) {
 
         // we need change color td element, due we have padding
         parentElement.getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
@@ -70,11 +71,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       else {
         myEditor.setDefaultTextColors(parentElement);
       }
-    }
-
-    @Override
-    public void updateUI() {
-      updateUI(myEditor.myCurrentLinePanel == this);
     }
 
     public int getLine() {
@@ -119,37 +115,14 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   public static class GutterPanel extends VerticalPanel implements WidgetWithUpdateUI {
     private Editor myEditor;
 
-    private Grid[] myGutterLines;
-
     public GutterPanel(Editor editor) {
       myEditor = editor;
-      myGutterLines = new Grid[editor.myLineCount];
 
       updateUI();
     }
 
     public void set(int line, Grid grid) {
-      myGutterLines[line] = grid;
-
       add(grid);
-    }
-
-
-    public void updateUI(int line, boolean selected) {
-      Grid widget = myGutterLines[line];
-      if (widget == null) {
-        return;
-      }
-
-      Style style = widget.getRowFormatter().getElement(0).getStyle();
-
-      GwtEditorColorScheme scheme = myEditor.getScheme();
-      if (selected) {
-        style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
-      }
-      else {
-        style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
-      }
     }
 
     @Override
@@ -161,9 +134,29 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       getElement().getStyle().setProperty("borderRightWidth", "1px");
       getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
       getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
+    }
+  }
 
-      if (myEditor.myCurrentLinePanel != null) {
-        updateUI(myEditor.myCurrentLinePanel.getLine(), true);
+  public static class GutterLineGrid extends Grid implements WidgetWithUpdateUI{
+    private Editor myEditor;
+    private int myLine;
+
+    public GutterLineGrid(int rows, int columns, Editor editor, int line) {
+      super(rows, columns);
+      myEditor = editor;
+      myLine = line;
+    }
+
+    @Override
+    public void updateUI() {
+      Log.log("GutterLineGrid");
+      final Style style = getElement().getStyle();
+      GwtEditorColorScheme scheme = myEditor.getScheme();
+      if (myEditor.myCurrentLinePanel != null && myEditor.myCurrentLinePanel.myLine == myLine) {
+        style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
+      }
+      else {
+        style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
       }
     }
   }
@@ -496,7 +489,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     myGutterPanel.addStyleName("noselectable");
 
     for (int i = 0; i < myLineCount; i++) {
-      final Grid panel = GwtUIUtil.fillAndReturn(new Grid(1, 5)); // 5 fake size
+      final GutterLineGrid panel = GwtUIUtil.fillAndReturn(new GutterLineGrid(1, 5, this, i)); // 5 fake size
+      panel.updateUI();
+
       // place lines to right
       panel.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_RIGHT);
 
@@ -649,15 +644,19 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       return;
     }
 
-    if (myCurrentLinePanel != null) {
-      myCurrentLinePanel.updateUI(false);
+    CodeLinePanel currentLinePanel = myCurrentLinePanel;
+    if (currentLinePanel != null) {
+      myCurrentLinePanel = null; // drop current line
 
-      myGutterPanel.updateUI(myCurrentLinePanel.getLine(), false);
+      currentLinePanel.updateUI();
+
+      GwtUIUtil.updateUI(myGutterPanel);
     }
 
     myCurrentLinePanel = widget;
-    myGutterPanel.updateUI(myCurrentLinePanel.getLine(), true);
-    widget.updateUI();
+
+    myCurrentLinePanel.updateUI();
+    GwtUIUtil.updateUI(myGutterPanel);
   }
 
   public native void set(Element element) /*-{
