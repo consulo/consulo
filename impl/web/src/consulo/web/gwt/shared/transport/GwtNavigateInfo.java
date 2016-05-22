@@ -24,13 +24,19 @@ import java.util.List;
  * @since 19-May-16
  */
 public class GwtNavigateInfo implements IsSerializable{
+  private String myDocText;
   private GwtTextRange myRange;
 
   private List<GwtNavigatable> myNavigates;
 
-  public GwtNavigateInfo(GwtTextRange range, List<GwtNavigatable> navigates) {
+  public GwtNavigateInfo(String docText, GwtTextRange range, List<GwtNavigatable> navigates) {
+    myDocText = docText;
     myRange = range;
     myNavigates = navigates;
+  }
+
+  public String getDocText() {
+    return myDocText;
   }
 
   public GwtNavigateInfo() {

@@ -20,6 +20,7 @@ import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory;
+import com.intellij.codeInsight.navigation.CtrlMouseHandler;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
@@ -34,6 +35,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.TextEditor;
@@ -148,6 +150,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     }
 
     final GwtTextRange[] range = new GwtTextRange[1];
+    final String[] text = new String[1];
     final List<GwtNavigatable> navigatables = new ArrayList<GwtNavigatable>();
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       @Override
@@ -156,6 +159,11 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
         Project project = getProject();
         PsiFile file = PsiManager.getInstance(project).findFile(fileByUrl);
         assert file != null;
+
+        final CtrlMouseHandler.Info infoAt =
+                CtrlMouseHandler.getInfoAt(findEditor(project, fileByUrl, offset), file, offset, CtrlMouseHandler.BrowseMode.Declaration);
+
+        text[0] = infoAt == null ? null : infoAt.getInfo().text;
         PsiReference referenceAt = file.findReferenceAt(offset);
         if (referenceAt != null) {
           List<TextRange> absoluteRanges = ReferenceRange.getAbsoluteRanges(referenceAt);
@@ -181,7 +189,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     if (range[0] == null || navigatables.isEmpty()) {
       return null;
     }
-    return new GwtNavigateInfo(range[0], navigatables);
+    return new GwtNavigateInfo(text[0], range[0], navigatables);
   }
 
   @NotNull
@@ -376,8 +384,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
             SwingUtilities.invokeAndWait(new Runnable() {
               @Override
               public void run() {
-                Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, fileByUrl, 0), false);
-                editor.getCaretModel().moveToOffset(offset);
+                Editor editor = findEditor(project, fileByUrl, offset);
                 DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzerEx.getInstanceEx(project);
                 TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
                 List<HighlightInfo> highlightInfos =
@@ -405,5 +412,27 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
       });
     }
     return Collections.emptyList();
+  }
+
+  @NotNull
+  private static Editor findEditor(Project project, VirtualFile fileByUrl, final int offset) {
+    final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+    final FileEditor[] editors = fileEditorManager.getEditors(fileByUrl);
+    for (FileEditor fileEditor : editors) {
+      if (fileEditor instanceof TextEditor) {
+        final Editor editor = ((TextEditor)fileEditor).getEditor();
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            editor.getCaretModel().moveToOffset(offset);
+          }
+        });
+        return editor;
+      }
+    }
+
+    final Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, fileByUrl, offset), false);
+    assert editor != null;
+    return editor;
   }
 }

@@ -15,8 +15,6 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.github.gwtbootstrap.client.ui.Tooltip;
-import com.github.gwtbootstrap.client.ui.constants.Placement;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -25,10 +23,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
-import consulo.web.gwt.client.util.GwtStyleUtil;
-import consulo.web.gwt.client.util.GwtUIUtil;
-import consulo.web.gwt.client.util.GwtUtil;
-import consulo.web.gwt.client.util.ReportableCallable;
+import consulo.web.gwt.client.util.*;
 import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -205,6 +200,8 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   private boolean myInsideGutter;
 
+  private DecoratedPopupPanel myLastTooltip;
+
   private EditorColorSchemeService.Listener myListener = new EditorColorSchemeService.Listener() {
     @Override
     public void schemeChanged(GwtEditorColorScheme scheme) {
@@ -225,7 +222,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     myEditorTabPanel = editorTabPanel;
     myFileUrl = fileUrl;
 
-    sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
+    sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.ONKEYUP);
 
     final EditorColorSchemeService schemeService = GwtUtil.get(EditorColorSchemeService.KEY);
     schemeService.addListener(myListener);
@@ -370,6 +367,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         final int startOffset = ((GwtTextRange)range).getStartOffset();
 
         if (event.getCtrlKey()) {
+
+          final Widget widget = (Widget)element.getPropertyObject("widget");
+
           GwtUtil.rpc().getNavigationInfo(myFileUrl, startOffset, new ReportableCallable<GwtNavigateInfo>() {
             @Override
             public void onSuccess(GwtNavigateInfo result) {
@@ -384,6 +384,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
               getElement().getStyle().setCursor(Style.Cursor.POINTER);
 
+              if (result.getDocText() != null) {
+                showTooltip(widget, result.getDocText());
+              }
+
               myLastCursorPsiElementTextRange = resultElementRange;
               GwtHighlightInfo highlightInfo =
                       new GwtHighlightInfo(myScheme.getAttributes(GwtEditorColorScheme.CTRL_CLICKABLE), resultElementRange, Integer.MAX_VALUE);
@@ -397,6 +401,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         event.preventDefault();
         break;
       }
+      case Event.ONKEYUP:
+        removeTooltip();
+        break;
       case Event.ONMOUSEOUT: {
         boolean old = myInsideGutter;
         myInsideGutter = insideGutter(DOM.eventGetToElement(event));
@@ -574,12 +581,23 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     return myScheme;
   }
 
-  private void setupTooltip(Widget w, String message) {
-    Tooltip tooltip = new Tooltip();
-    tooltip.setWidget(w);
-    tooltip.setText(message);
-    tooltip.setPlacement(Placement.BOTTOM);
-    tooltip.reconfigure();
+  private void removeTooltip() {
+    if (myLastTooltip != null) {
+      myLastTooltip.hide();
+      myLastTooltip = null;
+    }
+  }
+
+  private void showTooltip(Widget widget, String html) {
+    removeTooltip();
+
+    myLastTooltip  = new DecoratedPopupPanel(true);
+    myLastTooltip.setWidget(new HTML(html));
+
+    int left = widget.getAbsoluteLeft();
+    int top = widget.getAbsoluteTop() + 16;
+    myLastTooltip.setPopupPosition(left, top);
+    myLastTooltip.show();
   }
 
   public void setCaretHandler(EditorCaretHandler caretHandler) {

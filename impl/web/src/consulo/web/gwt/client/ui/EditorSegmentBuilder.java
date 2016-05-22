@@ -163,6 +163,7 @@ public class EditorSegmentBuilder {
       fragment.widget = new InlineHTML(labelText.isEmpty() ? "&#8205;" : labelText);
       fragment.widget.setStyleName(null);
       fragment.widget.getElement().setPropertyObject("range", fragment.range);
+      fragment.widget.getElement().setPropertyObject("widget", fragment.widget);
 
       fragment.lineWrap = labelText.isEmpty();
 
