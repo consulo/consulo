@@ -424,9 +424,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
           removeTooltip();
         }
         break;
-      case Event.ONKEYDOWN:
-        Log.log("from parent");
-        break;
       case Event.ONMOUSEOUT: {
         boolean old = myInsideGutter;
         myInsideGutter = insideGutter(DOM.eventGetToElement(event));
