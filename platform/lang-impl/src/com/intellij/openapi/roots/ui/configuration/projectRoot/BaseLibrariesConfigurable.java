@@ -62,7 +62,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
       return ProjectLibrariesConfigurable.getInstance(project);
     }
     else {
-      return GlobalLibrariesConfigurable.getInstance(project);
+      return null;
     }
   }
 
@@ -208,7 +208,6 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     final ArrayList<AnAction> actions = new ArrayList<AnAction>();
     actions.add(new CopyLibraryAction());
     if (fromPopup) {
-      final BaseLibrariesConfigurable targetGroup = getOppositeGroup();
      // actions.add(new ChangeLibraryLevelAction(myProject, myTree, this, targetGroup));
       actions.add(new AddLibraryToModuleDependenciesAction(myProject, this));
     }
@@ -229,8 +228,6 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
   protected abstract String getAddText();
 
   public abstract StructureLibraryTableModifiableModelProvider getModelProvider();
-
-  public abstract BaseLibrariesConfigurable getOppositeGroup();
 
   @Override
   protected void updateSelection(@Nullable NamedConfigurable configurable) {

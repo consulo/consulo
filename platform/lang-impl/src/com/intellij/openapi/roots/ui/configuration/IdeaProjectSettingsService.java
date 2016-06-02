@@ -20,7 +20,6 @@ import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
@@ -46,17 +45,6 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
       @Override
       public void run() {
         config.selectProjectGeneralSettings(true);
-      }
-    });
-  }
-
-  @Override
-  public void openGlobalLibraries() {
-    final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(myProject);
-    ShowSettingsUtil.getInstance().editConfigurable(myProject, config, new Runnable() {
-      @Override
-      public void run() {
-        config.selectGlobalLibraries(true);
       }
     });
   }
@@ -143,11 +131,6 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
   @Override
   public void showModuleConfigurationDialog(String moduleToSelect, String editorNameToSelect) {
     ModulesConfigurator.showDialog(myProject, moduleToSelect, editorNameToSelect);
-  }
-
-  @Override
-  public Sdk chooseAndSetSdk() {
-    return null;
   }
 
   @Override

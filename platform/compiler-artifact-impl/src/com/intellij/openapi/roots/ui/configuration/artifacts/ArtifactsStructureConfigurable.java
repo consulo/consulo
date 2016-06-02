@@ -70,7 +70,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   }
 
   public void init(StructureConfigurableContext context, ModuleStructureConfigurable moduleStructureConfigurable,
-                   ProjectLibrariesConfigurable projectLibrariesConfig, GlobalLibrariesConfigurable globalLibrariesConfig) {
+                   ProjectLibrariesConfigurable projectLibrariesConfig) {
     super.init(context);
     myPackagingEditorContext = new ArtifactsStructureConfigurableContextImpl(myContext, myProject, myDefaultSettings, new ArtifactAdapter() {
       @Override
@@ -104,7 +104,6 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     };
     moduleStructureConfigurable.addItemsChangeListener(listener);
     projectLibrariesConfig.addItemsChangeListener(listener);
-    globalLibrariesConfig.addItemsChangeListener(listener);
 
     context.addLibraryEditorListener(new LibraryEditorListener() {
       @Override
