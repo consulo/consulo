@@ -17,6 +17,7 @@ package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootLayer;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.consulo.module.extension.ui.ModuleExtensionSdkBoxBuilder;
@@ -45,7 +46,9 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
   @Override
   @RequiredDispatchThread
   public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
-    return wrapToNorth(ModuleExtensionSdkBoxBuilder.createAndDefine(this, updateOnCheck).build());
+    JPanel panel = new JPanel(new VerticalFlowLayout(true, false));
+    panel.add(ModuleExtensionSdkBoxBuilder.createAndDefine(this, updateOnCheck).build());
+    return panel;
   }
 
   @Override
