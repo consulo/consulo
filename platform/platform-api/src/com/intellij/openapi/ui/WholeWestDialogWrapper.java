@@ -29,7 +29,6 @@ import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.annotation.ElementType;
 
 /**
  * @author VISTALL
@@ -133,27 +132,5 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
         DimensionService.getInstance().setSize(dimensionKey, JBUI.size(getDefaultSize()));
       }
     }
-  }
-
-  public static void main(String[] args) throws Exception {
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        new WholeWestDialogWrapper(false) {
-          @RequiredDispatchThread
-          @NotNull
-          @Override
-          public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
-            return Couple.<JComponent>of(new JList(ElementType.values()), new JLabel("Hello World"));
-          }
-
-          {
-            setTitle("Hello World");
-            init();
-          }
-        }.show();
-      }
-    });
   }
 }
