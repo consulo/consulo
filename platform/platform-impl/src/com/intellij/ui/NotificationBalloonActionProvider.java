@@ -40,9 +40,9 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
   private final BalloonLayoutData myLayoutData;
   private final String myDisplayGroupId;
   private final Component myRepaintPanel;
-  private BalloonImpl.BalloonActionButton mySettingButton;
-  private BalloonImpl.BalloonActionButton myCloseButton;
-  private List<BalloonImpl.BalloonActionButton> myActions;
+  private BalloonImpl.ActionButton mySettingButton;
+  private BalloonImpl.ActionButton myCloseButton;
+  private List<BalloonImpl.ActionButton> myActions;
 
   private static final Rectangle CloseHoverBounds = new JBRectangle(5, 5, 12, 10);
 
@@ -58,25 +58,30 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
 
   @NotNull
   @Override
-  public List<BalloonImpl.BalloonActionButton> createActions() {
-    myActions = new ArrayList<BalloonImpl.BalloonActionButton>();
+  public List<BalloonImpl.ActionButton> createActions() {
+    myActions = new ArrayList<BalloonImpl.ActionButton>();
 
     if (!myLayoutData.showSettingButton || myDisplayGroupId == null ||
         !NotificationsConfigurationImpl.getInstanceImpl().isRegistered(myDisplayGroupId)) {
       mySettingButton = null;
     }
     else {
-      mySettingButton = myBalloon.new BalloonActionButton(
+      mySettingButton = myBalloon.new ActionButton(
               AllIcons.Ide.Notification.Gear, AllIcons.Ide.Notification.GearHover,
               "Configure Notification", new Consumer<MouseEvent>() {
         @Override
         public void consume(MouseEvent event) {
-          final NotificationsConfigurable configurable = new NotificationsConfigurable();
-          ShowSettingsUtil.getInstance().editConfigurable(myLayoutData.project, configurable, new Runnable() {
+          myBalloon.runWithSmartFadeoutPause(new Runnable() {
             @Override
             public void run() {
-              //noinspection ConstantConditions
-              configurable.enableSearch(myDisplayGroupId).run();
+              final NotificationsConfigurable configurable = new NotificationsConfigurable();
+              ShowSettingsUtil.getInstance().editConfigurable(myLayoutData.project, configurable, new Runnable() {
+                @Override
+                public void run() {
+                  //noinspection ConstantConditions
+                  configurable.enableSearch(myDisplayGroupId).run();
+                }
+              });
             }
           });
         }
@@ -95,7 +100,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
         myLayoutData.showActions = new Computable<Boolean>() {
           @Override
           public Boolean compute() {
-            for (BalloonImpl.BalloonActionButton action : myActions) {
+            for (BalloonImpl.ActionButton action : myActions) {
               if (!action.isShowing() || !action.hasPaint()) {
                 return Boolean.FALSE;
               }
@@ -106,7 +111,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
       }
     }
 
-    myCloseButton = myBalloon.new BalloonActionButton(
+    myCloseButton = myBalloon.new ActionButton(
             AllIcons.Ide.Notification.Close, AllIcons.Ide.Notification.CloseHover,
             "Close Notification (Alt-Click close all notifications)", new Consumer<MouseEvent>() {
       @Override

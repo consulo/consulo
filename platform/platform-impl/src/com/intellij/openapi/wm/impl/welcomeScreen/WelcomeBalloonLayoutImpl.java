@@ -124,12 +124,12 @@ public class WelcomeBalloonLayoutImpl extends BalloonLayoutImpl {
         }
       });
       myPopupBalloon.setActionProvider(new BalloonImpl.ActionProvider() {
-        private BalloonImpl.BalloonActionButton myAction;
+        private BalloonImpl.ActionButton myAction;
 
         @NotNull
         @Override
-        public List<BalloonImpl.BalloonActionButton> createActions() {
-          myAction = myPopupBalloon.new BalloonActionButton(AllIcons.Ide.Notification.Close, null, null, Consumer.EMPTY_CONSUMER);
+        public List<BalloonImpl.ActionButton> createActions() {
+          myAction = myPopupBalloon.new ActionButton(AllIcons.Ide.Notification.Close, null, null, Consumer.EMPTY_CONSUMER);
           return Collections.singletonList(myAction);
         }
 
