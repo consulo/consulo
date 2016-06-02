@@ -28,7 +28,5 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class RunProfileStarter {
   @Nullable
-  public RunContentDescriptor execute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
-    throw new AbstractMethodError();
-  }
+  public abstract RunContentDescriptor execute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException;
 }
