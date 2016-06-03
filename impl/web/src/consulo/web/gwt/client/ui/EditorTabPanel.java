@@ -30,31 +30,18 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-May-16
  */
-public class EditorTabPanel extends SimplePanel {
-  public class EditorTabInfo {
-    private Editor myEditor;
-
-    public EditorTabInfo(Editor editor) {
-      myEditor = editor;
-    }
-  }
-
-  private Map<String, EditorTabInfo> myOpenedFiles = new HashMap<String, EditorTabInfo>();
-  private final TabPanel myTabPanel = new TabPanel();
-
-  public EditorTabPanel() {
-    setWidget(GwtUIUtil.fillAndReturn(myTabPanel));
-  }
+public class EditorTabPanel extends TabPanel {
+  private Map<String, Editor> myOpenedFiles = new HashMap<String, Editor>();
 
   public void openFileInEditor(final GwtVirtualFile virtualFile, final int offset) {
-    EditorTabInfo editorTab = myOpenedFiles.get(virtualFile.getUrl());
+    Editor editorTab = myOpenedFiles.get(virtualFile.getUrl());
     if (editorTab != null) {
-      final int index = myTabPanel.getWidgetIndex(editorTab.myEditor);
+      final int index = getWidgetIndex(editorTab);
 
-      myTabPanel.selectTab(index);
+      selectTab(index);
 
       if(offset != -1) {
-        editorTab.myEditor.setCaretOffset(offset);
+        editorTab.setCaretOffset(offset);
       }
       return;
     }
@@ -77,29 +64,29 @@ public class EditorTabPanel extends SimplePanel {
 
         tabHeader.add(closeImage);
 
-        myTabPanel.add(editor, tabHeader);
+        add(editor, tabHeader);
 
         int index = myOpenedFiles.size();
-        myTabPanel.selectTab(index);
+        selectTab(index);
         if(offset != -1) {
           editor.focusOffset(offset);
         }
 
-        myOpenedFiles.put(virtualFile.getUrl(), new EditorTabInfo(editor));
+        myOpenedFiles.put(virtualFile.getUrl(), editor);
 
         closeImage.addClickHandler(new ClickHandler() {
           @Override
           public void onClick(ClickEvent event) {
-            EditorTabInfo tabInfo = myOpenedFiles.remove(virtualFile.getUrl());
+            Editor tabInfo = myOpenedFiles.remove(virtualFile.getUrl());
             if (tabInfo != null) {
-              tabInfo.myEditor.dispose();
+              tabInfo.dispose();
             }
 
-            myTabPanel.remove(editor);
+            remove(editor);
 
             int size = myOpenedFiles.size();
             if (size > 0) {
-              myTabPanel.selectTab(size - 1);
+              selectTab(size - 1);
             }
           }
         });

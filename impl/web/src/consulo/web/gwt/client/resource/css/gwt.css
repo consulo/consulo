@@ -765,6 +765,9 @@ select {
 .gwt-TabPanel {
 }
 .gwt-TabPanelBottom {
+  display: block;
+  height: 100%;
+  overflow: auto;
 }
 
 .gwt-DecoratedTabBar {
@@ -1117,4 +1120,8 @@ td.datePickerYear {
 .gwt-SplitLayoutPanel-VDragger {
   background: #e7e7e7 url(images/thumb_horz.png) center center no-repeat;
   cursor: row-resize;
+}
+
+.scroll {
+  overflow: auto;
 }

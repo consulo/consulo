@@ -1086,7 +1086,7 @@
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
           <extension id="java-web" />
-          <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-path="R:\_github.com\consulo\consulo\impl\web\gwt-out" compiler-max-heap-size="256" />
+          <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/gwt-out" compiler-max-heap-size="256" compiler-parameters="-draftCompile" compiler-vm-parameters="" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-out" />
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-unitCache" />

@@ -54,14 +54,14 @@ import java.util.List;
 public class GwtMain implements EntryPoint {
   @Override
   public void onModuleLoad() {
-    final SimplePanel panel = GwtUIUtil.fillAndReturn(new SimplePanel());
-    panel.add(GwtUIUtil.loadingPanel());
-    RootPanel.get().add(panel);
+    final RootPanel rootPanel = RootPanel.get();
+    rootPanel.add(GwtUIUtil.loadingPanel());
 
     fetch(new Runnable() {
       @Override
       public void run() {
-        initContentPanel(panel);
+        rootPanel.clear();
+        initContentPanel(rootPanel);
       }
     }, 0, new EditorColorSchemeListService(), new EditorColorSchemeService());
   }
@@ -171,8 +171,8 @@ public class GwtMain implements EntryPoint {
     }
   }
 
-  private static void initContentPanel(final SimplePanel rootPanel) {
-    FlowPanel flowPanel = new FlowPanel();
+  private static void initContentPanel(final InsertPanel rootPanel) {
+    Grid grid = GwtUIUtil.fillAndReturn(new Grid(2, 1));
     Command cmd = new Command() {
       @Override
       public void execute() {
@@ -203,18 +203,19 @@ public class GwtMain implements EntryPoint {
 
     menu.addItem("Scheme", schemeMenu);
 
-    flowPanel.add(menu);
+    grid.getRowFormatter().getElement(0).getStyle().setHeight(26, Style.Unit.PX);
+    grid.setWidget(0, 0, menu);
 
-    final Grid splitPanel = GwtUIUtil.fillAndReturn(new Grid(1, 2));
-    splitPanel.getCellFormatter().setWidth(0, 0, "20%");
-    splitPanel.getCellFormatter().addStyleName(0, 0, "projectTreeBorder");
-    splitPanel.getCellFormatter().setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_TOP);
-    splitPanel.getCellFormatter().setVerticalAlignment(0, 1, HasVerticalAlignment.ALIGN_TOP);
+    final HorizontalSplitPanel splitPanel = GwtUIUtil.fillAndReturn(new HorizontalSplitPanel());
+    splitPanel.setSplitPosition("20%");
 
     final EditorTabPanel editorTabPanel = GwtUIUtil.fillAndReturn(new EditorTabPanel());
-    splitPanel.setWidget(0, 1, editorTabPanel);
 
-    splitPanel.setWidget(0, 0, GwtUIUtil.loadingPanel());
+    splitPanel.setLeftWidget(GwtUIUtil.loadingPanel());
+    splitPanel.setRightWidget(editorTabPanel);
+
+    Element parentElement = editorTabPanel.getElement().getParentElement();
+    parentElement.getStyle().setProperty("overflow", "hidden");
 
     GwtUtil.rpc().getProjectInfo("ignored", new ReportableCallable<GwtProjectInfo>() {
       @Override
@@ -223,12 +224,12 @@ public class GwtMain implements EntryPoint {
                 new CellTree(new ProjectTreeViewModel(result, editorTabPanel), result, GWT.<CellTree.Resources>create(DefaultCellTreeResources.class));
         projectTree.getRootTreeNode().setChildOpen(0, true);
 
-        splitPanel.setWidget(0, 0, projectTree);
+        splitPanel.setLeftWidget(GwtUIUtil.fillAndReturn(projectTree));
       }
     });
 
-    flowPanel.add(splitPanel);
+    grid.setWidget(1, 0, splitPanel);
 
-    rootPanel.setWidget(flowPanel);
+    rootPanel.add(grid);
   }
 }

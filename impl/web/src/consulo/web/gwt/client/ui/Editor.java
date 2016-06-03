@@ -24,7 +24,10 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
-import consulo.web.gwt.client.util.*;
+import consulo.web.gwt.client.util.GwtStyleUtil;
+import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.client.util.GwtUtil;
+import consulo.web.gwt.client.util.ReportableCallable;
 import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,17 +116,23 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     }
   }
 
-  public static class GutterPanel extends VerticalPanel implements WidgetWithUpdateUI {
+  public static class GutterPanel extends Grid implements WidgetWithUpdateUI {
     private Editor myEditor;
 
-    public GutterPanel(Editor editor) {
+    public GutterPanel(int lineCount, Editor editor) {
+      super(lineCount + 1, 1);
       myEditor = editor;
+
+      // dummy element - fill free space with same background and resize it
+      set(lineCount, new InlineHTML("&#8205;"));
+
+      getCellFormatter().getElement(lineCount, 0).getStyle().setHeight(100, Style.Unit.PCT);
 
       updateUI();
     }
 
-    public void set(Grid grid) {
-      add(grid);
+    public void set(int row, Widget widget) {
+      setWidget(row, 0, widget);
     }
 
     @Override
@@ -231,6 +240,8 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     myScheme = schemeService.getScheme();
 
     setDefaultTextColors(this);
+
+    addStyleName("scroll");
 
     GwtUIUtil.fill(this);
 
@@ -367,7 +378,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         final Widget widget = (Widget)element.getPropertyObject("widget");
 
         if (event.getCtrlKey()) {
-          if(myHighlightState == HighlightState.UNKNOWN) {
+          if (myHighlightState == HighlightState.UNKNOWN) {
             return;
           }
           GwtUtil.rpc().getNavigationInfo(myFileUrl, startOffset, new ReportableCallable<GwtNavigateInfo>() {
@@ -523,20 +534,23 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     // try to fill area by code
     gridPanel.getColumnFormatter().getElement(1).getStyle().setWidth(100, Style.Unit.PCT);
 
-    myGutterPanel = new GutterPanel(this);
+    gridPanel.getRowFormatter().setVerticalAlign(0, HasVerticalAlignment.ALIGN_TOP);
+
+    myGutterPanel = GwtUIUtil.fillAndReturn(new GutterPanel(myLineCount, this));
     gridPanel.setWidget(0, 0, myGutterPanel);
 
     myGutterPanel.addStyleName("noselectable");
 
     for (int i = 0; i < myLineCount; i++) {
-      final GutterLineGrid panel = GwtUIUtil.fillAndReturn(new GutterLineGrid(1, 5, this, i)); // 5 fake size
+      final GutterLineGrid panel = GwtUIUtil.fillAndReturn(new GutterLineGrid(1, 2, this, i));
       panel.updateUI();
 
       // place lines to right
       panel.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_RIGHT);
 
       panel.getCellFormatter().getElement(0, 0).getStyle().setPaddingLeft(5, Style.Unit.PX);
-      panel.getCellFormatter().getElement(0, 4).getStyle().setPaddingRight(5, Style.Unit.PX);
+      panel.getCellFormatter().getElement(0, 1).getStyle().setPaddingRight(5, Style.Unit.PX);
+      panel.getCellFormatter().getElement(0, 1).addClassName("editorLine");
 
       // try fill line number as primary panel
       panel.getColumnFormatter().getElement(0).getStyle().setWidth(100, Style.Unit.PCT);
@@ -546,7 +560,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
       panel.setWidget(0, 0, lineSpan);
 
-      myGutterPanel.set(panel);
+      myGutterPanel.set(i, panel);
     }
 
     Grid editorCodePanel = new Grid(myLineCount, 1) {
@@ -582,7 +596,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
         event.preventDefault();
       }
     };
-    GwtUIUtil.fill(editorCodePanel);
 
     gridPanel.setWidget(0, 1, editorCodePanel);
 
@@ -624,15 +637,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       }
     }
 
-    ScrollPanel scrollPanel = new ScrollPanel(gridPanel);
-    GwtUIUtil.fill(scrollPanel);
-
-    DockPanel panel = new DockPanel();
-    panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-    panel.setWidth("100%");
-    panel.add(scrollPanel, DockPanel.CENTER);
-
-    return panel;
+    return gridPanel;
   }
 
   public GwtEditorColorScheme getScheme() {
