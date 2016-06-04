@@ -563,7 +563,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       myGutterPanel.set(i, panel);
     }
 
-    Grid editorCodePanel = new Grid(myLineCount, 1) {
+    Grid editorCodePanel = new Grid(myLineCount + 1, 1) {
       {
         sinkEvents(Event.ONCHANGE | Event.ONPASTE | Event.KEYEVENTS);
       }
@@ -599,12 +599,17 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     gridPanel.setWidget(0, 1, editorCodePanel);
 
+    GwtUIUtil.fill(editorCodePanel);
     // dont provide red code
     editorCodePanel.getElement().setAttribute("spellcheck", "false");
     // editable
     editorCodePanel.getElement().setAttribute("contenteditable", "true");
     // disable border
     editorCodePanel.addStyleName("noFocusBorder");
+
+    // inside one row - with fully fill
+    editorCodePanel.setWidget(myLineCount, 0, new InlineHTML("&#8205;"));
+    editorCodePanel.getCellFormatter().getElement(myLineCount, 0).getStyle().setHeight(100, Style.Unit.PCT);
 
     int lineCount = 0;
     CodeLinePanel lineElement = null;
