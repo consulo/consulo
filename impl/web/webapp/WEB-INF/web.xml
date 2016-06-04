@@ -12,11 +12,6 @@
   </servlet>
 
   <servlet>
-    <servlet-name>OpenServlet</servlet-name>
-    <servlet-class>consulo.web.servlet.OpenServlet</servlet-class>
-  </servlet>
-
-  <servlet>
     <servlet-name>IconServlet</servlet-name>
     <servlet-class>consulo.web.servlet.IconServlet</servlet-class>
   </servlet>
@@ -24,11 +19,6 @@
   <servlet-mapping>
     <servlet-name>ProjectServlet</servlet-name>
     <url-pattern>/project</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>OpenServlet</servlet-name>
-    <url-pattern>/open</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
