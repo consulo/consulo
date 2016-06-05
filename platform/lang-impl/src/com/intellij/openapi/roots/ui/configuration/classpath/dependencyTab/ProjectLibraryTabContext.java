@@ -135,7 +135,7 @@ public class ProjectLibraryTabContext extends AddModuleDependencyTabContext {
   @NotNull
   @Override
   public String getTabName() {
-    return "Project Library";
+    return "Library";
   }
 
   @NotNull
