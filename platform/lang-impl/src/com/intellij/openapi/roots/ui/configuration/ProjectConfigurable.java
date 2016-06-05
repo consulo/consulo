@@ -20,7 +20,6 @@ import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -34,6 +33,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigur
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureDaemonAnalyzer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.DetailsComponent;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.EmptyRunnable;
@@ -45,6 +45,7 @@ import com.intellij.ui.FieldPanel;
 import com.intellij.ui.InsertPathAction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -67,15 +68,17 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   private final StructureConfigurableContext myContext;
   private final ModulesConfigurator myModulesConfigurator;
-  private JPanel myWholePanel;
 
   private boolean myFreeze = false;
   private DetailsComponent myDetailsComponent;
   private final GeneralProjectSettingsElement mySettingsElement;
 
+  private final ConfigurationErrorsComponent myErrorsComponent;
+
   public ProjectConfigurable(Project project, final StructureConfigurableContext context, ModulesConfigurator configurator) {
     myProject = project;
     myContext = context;
+    myErrorsComponent = new ConfigurationErrorsComponent(project);
     myModulesConfigurator = configurator;
     mySettingsElement = new GeneralProjectSettingsElement(context);
     final ProjectStructureDaemonAnalyzer daemonAnalyzer = context.getDaemonAnalyzer();
@@ -103,41 +106,39 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     myDetailsComponent = new DetailsComponent(false, false);
     myDetailsComponent.setContent(myPanel);
     myDetailsComponent.setText(getBannerSlogan());
-
-
     return myDetailsComponent.getComponent();
   }
 
   private void init() {
-    myPanel = new JPanel(new GridBagLayout());
-    myPanel.setPreferredSize(new Dimension(700, 500));
+    myPanel = new JPanel(new VerticalFlowLayout(true, false));
 
-    if (((ProjectEx)myProject).getStateStore().getStorageScheme().equals(StorageScheme.DIRECTORY_BASED)) {
-      final JPanel namePanel = new JPanel(new BorderLayout());
-      final JLabel label =
-        new JLabel("<html><body><b>Project name:</b></body></html>", SwingConstants.LEFT);
-      namePanel.add(label, BorderLayout.NORTH);
+    final JPanel namePanel = new JPanel(new BorderLayout());
+    final JLabel label = new JLabel("<html><body><b>Project name:</b></body></html>", SwingConstants.LEFT);
+    namePanel.add(label, BorderLayout.NORTH);
 
-      myProjectName = new JTextField();
-      myProjectName.setColumns(40);
+    myProjectName = new JTextField();
+    myProjectName.setColumns(40);
 
-      final JPanel nameFieldPanel = new JPanel();
-      nameFieldPanel.setLayout(new BoxLayout(nameFieldPanel, BoxLayout.X_AXIS));
-      nameFieldPanel.add(Box.createHorizontalStrut(4));
-      nameFieldPanel.add(myProjectName);
+    final JPanel nameFieldPanel = new JPanel();
+    nameFieldPanel.setLayout(new BoxLayout(nameFieldPanel, BoxLayout.X_AXIS));
+    nameFieldPanel.add(Box.createHorizontalStrut(4));
+    nameFieldPanel.add(myProjectName);
 
-      namePanel.add(nameFieldPanel, BorderLayout.CENTER);
-      final JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
-      wrapper.add(namePanel);
-      wrapper.setAlignmentX(0);
-      myPanel.add(wrapper, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0,
-                                                        GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                                                        new Insets(4, 0, 10, 0), 0, 0));
-    }
+    namePanel.add(nameFieldPanel, BorderLayout.CENTER);
+    final JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    wrapper.add(namePanel);
+    wrapper.setAlignmentX(0);
+    myPanel.add(wrapper);
 
-     myPanel.add(myWholePanel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
-                                                     GridBagConstraints.NONE, new Insets(4, 0, 0, 0), 0, 0));
+    myPanel.add(new JLabel(ProjectBundle.message("project.compiler.output")));
 
+    final JTextField textField = new JTextField();
+    final FileChooserDescriptor outputPathsChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+    InsertPathAction.addTo(textField, outputPathsChooserDescriptor);
+    outputPathsChooserDescriptor.setHideIgnored(false);
+    BrowseFilesListener listener = new BrowseFilesListener(textField, "", ProjectBundle.message("project.compiler.output"), outputPathsChooserDescriptor);
+    myProjectCompilerOutput = new FieldPanel(textField, null, null, listener, EmptyRunnable.getInstance());
+    FileChooserFactory.getInstance().installFileCompletion(myProjectCompilerOutput.getTextField(), outputPathsChooserDescriptor, true, null);
 
     myProjectCompilerOutput.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
@@ -146,13 +147,17 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
         myModulesConfigurator.processModuleCompilerOutputChanged(getCompilerOutputUrl());
       }
     });
+
+    myPanel.add(myProjectCompilerOutput);
+    myPanel.add(myErrorsComponent);
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
-
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     myFreeze = true;
@@ -174,6 +179,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   }
 
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     final CompilerConfiguration compilerProjectExtension = CompilerConfiguration.getInstance(myProject);
@@ -243,27 +249,20 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   }
 
 
+  @RequiredDispatchThread
   @Override
   @SuppressWarnings({"SimplifiableIfStatement"})
   public boolean isModified() {
     final String compilerOutput = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
     if (!Comparing.strEqual(FileUtil.toSystemIndependentName(VfsUtil.urlToPath(compilerOutput)),
-                            FileUtil.toSystemIndependentName(myProjectCompilerOutput.getText()))) return true;
+                            FileUtil.toSystemIndependentName(myProjectCompilerOutput.getText()))) {
+      return true;
+    }
     if (myProjectName != null) {
       if (!myProjectName.getText().trim().equals(myProject.getName())) return true;
     }
 
     return false;
-  }
-
-  private void createUIComponents() {
-    final JTextField textField = new JTextField();
-    final FileChooserDescriptor outputPathsChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-    InsertPathAction.addTo(textField, outputPathsChooserDescriptor);
-    outputPathsChooserDescriptor.setHideIgnored(false);
-    BrowseFilesListener listener = new BrowseFilesListener(textField, "", ProjectBundle.message("project.compiler.output"), outputPathsChooserDescriptor);
-    myProjectCompilerOutput = new FieldPanel(textField, null, null, listener, EmptyRunnable.getInstance());
-    FileChooserFactory.getInstance().installFileCompletion(myProjectCompilerOutput.getTextField(), outputPathsChooserDescriptor, true, null);
   }
 
   public String getCompilerOutputUrl() {
