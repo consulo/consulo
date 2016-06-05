@@ -33,6 +33,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.TreeViewModel;
+import com.sksamuel.gwt.websockets.Websocket;
+import com.sksamuel.gwt.websockets.WebsocketListener;
 import consulo.web.gwt.client.service.EditorColorSchemeListService;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.service.FetchService;
@@ -57,6 +59,26 @@ public class GwtMain implements EntryPoint {
   public void onModuleLoad() {
     final RootPanel rootPanel = RootPanel.get();
     rootPanel.add(GwtUIUtil.loadingPanel());
+
+    String url = "ws://" + Window.Location.getHost() + "/ws";
+    Websocket websocket = new Websocket(url);
+    websocket.addListener(new WebsocketListener() {
+      @Override
+      public void onClose() {
+
+      }
+
+      @Override
+      public void onMessage(String msg) {
+        Log.log(msg);
+      }
+
+      @Override
+      public void onOpen() {
+
+      }
+    });
+    websocket.open();
 
     fetchAppStatus(rootPanel);
   }

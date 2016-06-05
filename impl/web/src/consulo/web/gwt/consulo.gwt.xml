@@ -5,6 +5,7 @@
 
   <inherits name='com.google.gwt.user.RemoteService'/>
   <inherits name='com.google.gwt.user.User'/>
+  <inherits name="com.sksamuel.gwt.GwtWebsockets"/>
 
   <stylesheet src="css/project.css"/> <!--deprecated -->
   <stylesheet src="css/gwt.css"/>

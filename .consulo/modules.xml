@@ -1125,11 +1125,18 @@
           <orderEntry type="module-library">
             <library>
               <binaries>
-                <root url="jar://$MODULE_DIR$/lib/gwtbootstrap3-0.9.3.jar!/" />
+                <root url="jar://$MODULE_DIR$/lib/gwt-websockets-1.0.4.jar!/" />
               </binaries>
               <sources>
-                <root url="jar://$MODULE_DIR$/lib/gwtbootstrap3-0.9.3.jar!/" />
+                <root url="jar://$MODULE_DIR$/lib/gwt-websockets-1.0.4.jar!/" />
               </sources>
+            </library>
+          </orderEntry>
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/lib/javax.websocket-api-1.1.jar!/" />
+              </binaries>
             </library>
           </orderEntry>
         </module-layer>
