@@ -16,6 +16,7 @@
 package consulo.web.gwt.client.service;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import consulo.web.gwt.client.util.Log;
 
 /**
  * @author VISTALL
@@ -32,6 +33,12 @@ public interface FetchService {
     }
     @Override
     public void onFailure(Throwable caught) {
+      String string = caught.getMessage() + "\n";
+      for (StackTraceElement element : caught.getStackTrace()) {
+        string += element + "\n";
+      }
+
+      Log.log(string);
       myOnError.run();
     }
 

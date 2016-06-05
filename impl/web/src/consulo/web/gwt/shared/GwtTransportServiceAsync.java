@@ -24,6 +24,8 @@ import java.util.List;
 
 public interface GwtTransportServiceAsync {
 
+  void getApplicationStatus(AsyncCallback<Boolean> async);
+
   void getProjectInfo(String path, AsyncCallback<GwtProjectInfo> async);
 
   @NotNull

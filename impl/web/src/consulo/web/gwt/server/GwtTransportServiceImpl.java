@@ -20,8 +20,10 @@ import com.intellij.codeInsight.daemon.impl.*;
 import com.intellij.codeInsight.navigation.CtrlMouseHandler;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.ColorKey;
@@ -51,6 +53,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.*;
 import com.intellij.util.BitUtil;
+import consulo.web.AppInit;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.NotNull;
@@ -92,6 +95,14 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
       e.getMessage();
     }
     return null;
+  }
+
+  @Override
+  public boolean getApplicationStatus() {
+    AppInit.initApplication();
+
+    Application application = ApplicationManager.getApplication();
+    return application instanceof ApplicationEx && ((ApplicationEx)application).isLoaded();
   }
 
   @NotNull

@@ -19,39 +19,32 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.Main;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ThreeState;
 import org.mustbe.consulo.application.ApplicationProperties;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
  * @since 15-May-16
  */
 public class AppInit {
-  public static ThreeState inited = ThreeState.NO;
+  private static AtomicBoolean ourState = new AtomicBoolean();
 
-  public static boolean init() {
-    switch (inited) {
-      case YES:
-        return true;
-      case NO:
-        inited = ThreeState.UNSURE;
-        new Thread() {
-          @Override
-          public void run() {
-            initApplication();
-          }
-        }.start();
-        return false;
-      default:
-        return false;
+  public static void initApplication() {
+    if(ourState.compareAndSet(false, true))  {
+      new Thread() {
+        @Override
+        public void run() {
+          initApplicationImpl();
+        }
+      }.start();
     }
   }
 
-  private static void initApplication()  {
+  private static void initApplicationImpl()  {
     try {
      // Logger.setFactory(OurWebLoggerFactory.class);
 

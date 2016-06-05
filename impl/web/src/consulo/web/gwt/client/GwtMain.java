@@ -28,6 +28,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
@@ -57,6 +58,29 @@ public class GwtMain implements EntryPoint {
     final RootPanel rootPanel = RootPanel.get();
     rootPanel.add(GwtUIUtil.loadingPanel());
 
+    fetchAppStatus(rootPanel);
+  }
+
+  private static void fetchAppStatus(final RootPanel rootPanel) {
+    GwtUtil.rpc().getApplicationStatus(new ReportableCallable<Boolean>() {
+      @Override
+      public void onSuccess(Boolean result) {
+        if (result) {
+          fetchServices(rootPanel);
+        }
+        else {
+          new Timer() {
+            @Override
+            public void run() {
+              fetchAppStatus(rootPanel);
+            }
+          }.schedule(500);
+        }
+      }
+    });
+  }
+
+  private static void fetchServices(final RootPanel rootPanel) {
     fetch(new Runnable() {
       @Override
       public void run() {

@@ -7,8 +7,8 @@
   <display-name>Consulo</display-name>
 
   <servlet>
-    <servlet-name>ProjectServlet</servlet-name>
-    <servlet-class>consulo.web.servlet.ProjectServlet</servlet-class>
+    <servlet-name>AppServlet</servlet-name>
+    <servlet-class>consulo.web.servlet.AppServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -17,8 +17,8 @@
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>ProjectServlet</servlet-name>
-    <url-pattern>/project</url-pattern>
+    <servlet-name>AppServlet</servlet-name>
+    <url-pattern>/app</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -38,6 +38,6 @@
 
 
   <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>app</welcome-file>
   </welcome-file-list>
 </web-app>
