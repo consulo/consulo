@@ -27,7 +27,9 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureLibraryT
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -53,6 +56,13 @@ public class ProjectLibraryTabContext extends AddModuleDependencyTabContext {
     final Condition<Library> condition = LibraryEditingUtil.getNotAddedLibrariesCondition(myClasspathPanel.getRootModel());
 
     myItems = ContainerUtil.filter(condition, libraries);
+    ContainerUtil.sort(myItems, new Comparator<Library>() {
+      @Override
+      public int compare(Library o1, Library o2) {
+        return StringUtil.compare(o1.getName(), o2.getName(), false);
+      }
+    });
+
     myLibraryList = new JBList(myItems);
     myLibraryList.setCellRenderer(new ColoredListCellRendererWrapper<Library>() {
       @Override
@@ -62,6 +72,7 @@ public class ProjectLibraryTabContext extends AddModuleDependencyTabContext {
         appearance.customize(this);
       }
     });
+    new ListSpeedSearch(myLibraryList);
   }
 
   @Override
