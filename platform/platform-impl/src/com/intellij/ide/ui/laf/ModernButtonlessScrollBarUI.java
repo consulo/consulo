@@ -21,6 +21,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.OwnScrollBarUI;
+import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -173,6 +174,11 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
   protected void paintTrack(Graphics g, JComponent c, Rectangle bounds) {
     g.setColor(new JBColor(LightColors.SLIGHTLY_GRAY, UIUtil.getListBackground()));
     g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+    RegionPainter<Object> painter = UIUtil.getClientProperty(c, TRACK);
+    if (painter != null) {
+      painter.paint((Graphics2D)g, bounds.x, bounds.y, bounds.width, bounds.height, null);
+    }
   }
 
   @Override

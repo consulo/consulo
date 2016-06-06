@@ -16,6 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.openapi.util.Factory;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -27,5 +28,13 @@ import javax.swing.*;
  * This is marker class
  */
 public interface OwnScrollBarUI {
+  /**
+   * This key defines a region painter, which is used by the custom ScrollBarUI
+   * to draw additional paintings (i.e. error stripes) on the scrollbar's track.
+   *
+   * @see UIUtil#putClientProperty
+   */
+  Key<RegionPainter<Object>> TRACK = Key.create("JB_SCROLL_BAR_TRACK");
+
   void setIncreaseButtonFactory(@NotNull Factory<JButton> buttonFactory);
 }
