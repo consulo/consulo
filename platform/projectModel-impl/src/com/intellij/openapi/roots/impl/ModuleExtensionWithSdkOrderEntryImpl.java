@@ -22,11 +22,11 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.Comparing;
+import consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryType;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.impl.ModuleExtensionWithSdkOrderEntryTypeProvider;
 
 /**
  * @author dsl
@@ -39,7 +39,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   public ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull ModuleRootLayerImpl rootModel, boolean init) {
-    super(ModuleExtensionWithSdkOrderEntryTypeProvider.getInstance(), rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
+    super(ModuleExtensionWithSdkOrderEntryType.getInstance(), rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myModuleExtensionId = moduleExtensionId;
     if (init) {
       init();

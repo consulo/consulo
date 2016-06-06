@@ -16,7 +16,6 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
@@ -278,18 +277,6 @@ public abstract class AnAction implements PossiblyDumbAware {
 
   protected void setShortcutSet(ShortcutSet shortcutSet) {
     myShortcutSet = shortcutSet;
-  }
-
-  public static String createTooltipText(String s, @NotNull AnAction action) {
-    String toolTipText = s == null ? "" : s;
-    while (StringUtil.endsWithChar(toolTipText, '.')) {
-      toolTipText = toolTipText.substring(0, toolTipText.length() - 1);
-    }
-    String shortcutsText = KeymapUtil.getFirstKeyboardShortcutText(action);
-    if (!shortcutsText.isEmpty()) {
-      toolTipText += " (" + shortcutsText + ")";
-    }
-    return toolTipText;
   }
 
   /**

@@ -24,9 +24,10 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.packaging.artifacts.Artifact;
+import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import consulo.roots.orderEntry.OrderEntryType;
 
 /**
  * @author yole
@@ -105,12 +106,15 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
     });
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void openLibraryOrSdkSettings(@NotNull final OrderEntry orderEntry) {
-    OrderEntryTypeProvider provider = orderEntry.getProvider();
+    OrderEntryType type = orderEntry.getType();
 
-    //noinspection unchecked
-    provider.navigate(orderEntry);
+    OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
+    if (editor != null) {
+      editor.navigate(orderEntry);
+    }
   }
 
   @Override

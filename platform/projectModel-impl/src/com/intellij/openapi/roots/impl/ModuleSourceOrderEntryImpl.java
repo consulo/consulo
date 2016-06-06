@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderScopes;
-import org.mustbe.consulo.roots.impl.ModuleSourceOrderEntryTypeProvider;
+import consulo.roots.orderEntry.ModuleSourceOrderEntryType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +34,7 @@ import java.util.Collections;
  */
 public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements ModuleSourceOrderEntry, ClonableOrderEntry {
   public ModuleSourceOrderEntryImpl(ModuleRootLayerImpl rootModel) {
-    super(ModuleSourceOrderEntryTypeProvider.getInstance(), rootModel);
+    super(ModuleSourceOrderEntryType.getInstance(), rootModel);
   }
 
   @Override

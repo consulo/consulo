@@ -19,7 +19,7 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.ExportableUserDataHolderBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.roots.FileIndex;
-import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +41,6 @@ public abstract class FileIndexCompileScope extends ExportableUserDataHolderBase
     for (final FileIndex fileIndex : fileIndices) {
       fileIndex.iterateContent(new CompilerContentIterator(fileType, fileIndex, inSourceOnly, files));
     }
-    return VfsUtil.toVirtualFileArray(files);
+    return VfsUtilCore.toVirtualFileArray(files);
   }
 }

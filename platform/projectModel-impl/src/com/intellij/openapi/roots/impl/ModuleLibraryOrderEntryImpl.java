@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.PathUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.impl.ModuleLibraryOrderEntryTypeProvider;
+import consulo.roots.orderEntry.ModuleLibraryOrderEntryType;
 
 /**
  * Library entry for module ("in-place") libraries
@@ -40,7 +40,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   private boolean myExported;
 
   public ModuleLibraryOrderEntryImpl(Library library, ModuleRootLayerImpl rootLayer, boolean isExported, DependencyScope scope, boolean init) {
-    super(ModuleLibraryOrderEntryTypeProvider.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+    super(ModuleLibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     myLibrary = library;
     myExported = isExported;
     myScope = scope;
@@ -51,7 +51,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   }
 
   ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
-    super(ModuleLibraryOrderEntryTypeProvider.getInstance(), moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
+    super(ModuleLibraryOrderEntryType.getInstance(), moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
     myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, moduleRootLayer);
     Disposer.register(this, myLibrary);
     init();

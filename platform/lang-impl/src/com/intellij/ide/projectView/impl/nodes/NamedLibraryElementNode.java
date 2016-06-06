@@ -28,14 +28,16 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
+import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
+import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import consulo.roots.orderEntry.OrderEntryType;
 import org.mustbe.consulo.sdk.SdkUtil;
 
 import javax.swing.*;
@@ -110,11 +112,8 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
       presentation.setTooltip(StringUtil.capitalize(IdeBundle.message("node.projectview.library", ((LibraryOrderEntry)orderEntry).getLibraryLevel())));
     }
     else if(orderEntry instanceof OrderEntryWithTracking) {
-      OrderEntryTypeProvider provider = orderEntry.getProvider();
-
       Icon icon = null;
-      //noinspection unchecked
-      CellAppearanceEx cellAppearance = provider.getCellAppearance(orderEntry);
+      CellAppearanceEx cellAppearance = OrderEntryAppearanceService.getInstance().forOrderEntry(orderEntry);
       if(cellAppearance instanceof ModifiableCellAppearanceEx) {
         icon = ((ModifiableCellAppearanceEx)cellAppearance).getIcon();
       }
@@ -133,10 +132,13 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void navigate(final boolean requestFocus) {
-    OrderEntryTypeProvider provider = getValue().getOrderEntry().getProvider();
-    //noinspection unchecked
-    provider.navigate(getValue().getOrderEntry());
+    OrderEntryType type = getValue().getOrderEntry().getType();
+    OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
+    if(editor != null) {
+      editor.navigate(getValue().getOrderEntry());
+    }
   }
 
   @Override

@@ -17,6 +17,7 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
@@ -25,6 +26,7 @@ import com.intellij.psi.PsiFile;
 
 public class CommonDataKeys {
   public static final DataKey<Project> PROJECT = DataKey.create("project");
+  public static final DataKey<Module> MODULE = DataKey.create("module");
   public static final DataKey<Editor> EDITOR = DataKey.create("editor");
   /**
    * This key can be used to obtain reference to host editor instance, in case {@link #EDITOR} key is referring to an injected editor.

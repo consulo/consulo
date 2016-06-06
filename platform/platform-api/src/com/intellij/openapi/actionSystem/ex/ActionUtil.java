@@ -164,7 +164,7 @@ public class ActionUtil {
       }
     }
     else {
-      Module module = e.getData(LangDataKeys.MODULE);
+      Module module = e.getData(CommonDataKeys.MODULE);
       if(module != null) {
         boolean result = checkModuleForModuleExtensions(module, moduleExtensionIds);
         if(result) {

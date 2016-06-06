@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.TObjectIntHashMap;
@@ -37,7 +37,7 @@ public abstract class ModuleRootsProcessorFromModuleDir extends ModuleRootsProce
     return !roots.forEachKey(new TObjectProcedure<VirtualFile>() {
       @Override
       public boolean execute(VirtualFile object) {
-        return !VfsUtil.isAncestor(object, virtualFile, false);
+        return !VfsUtilCore.isAncestor(object, virtualFile, false);
       }
     });
   }

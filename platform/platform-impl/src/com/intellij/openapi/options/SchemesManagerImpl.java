@@ -59,7 +59,7 @@ import java.net.URL;
 import java.util.*;
 
 public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme> extends AbstractSchemesManager<T, E> {
-  private static final Logger LOG = Logger.getInstance(SchemesManagerFactoryImpl.class);
+  private static final Logger LOG = Logger.getInstance(SchemesManagerImpl.class);
 
   private final String myFileSpec;
   private final SchemeProcessor<E> myProcessor;

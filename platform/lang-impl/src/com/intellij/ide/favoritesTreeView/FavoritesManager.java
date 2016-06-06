@@ -29,18 +29,21 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.vcs.ObjectsConvertor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
+import com.intellij.util.Function;
 import com.intellij.util.TreeItem;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
@@ -57,12 +60,12 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   private final ArrayList<String> myListOrder = new ArrayList<String>();
   // fav list name -> list of (root: root url, root class)
   private final Map<String, List<TreeItem<Pair<AbstractUrl, String>>>> myName2FavoritesRoots =
-    new TreeMap<String, List<TreeItem<Pair<AbstractUrl, String>>>>(new Comparator<String>() {
-      @Override
-      public int compare(String o1, String o2) {
-        return myListOrder.indexOf(o1) - myListOrder.indexOf(o2);
-      }
-    });
+          new TreeMap<String, List<TreeItem<Pair<AbstractUrl, String>>>>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+              return myListOrder.indexOf(o1) - myListOrder.indexOf(o2);
+            }
+          });
   private final Map<String, String> myDescriptions = new HashMap<String, String>();
   private final Project myProject;
   private final List<FavoritesListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -88,25 +91,27 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   }
 
   public void renameList(final Project project, @NotNull String listName) {
-    final String newName = Messages
-      .showInputDialog(project, IdeBundle.message("prompt.input.favorites.list.new.name", listName), IdeBundle.message("title.rename.favorites.list"),
-                       Messages.getInformationIcon(), listName, new InputValidator() {
-        @Override
-        public boolean checkInput(String inputString) {
-          return inputString != null && inputString.trim().length() > 0;
-        }
+    final String newName = Messages.showInputDialog(project, IdeBundle.message("prompt.input.favorites.list.new.name", listName),
+                                                    IdeBundle.message("title.rename.favorites.list"), Messages.getInformationIcon(), listName,
+                                                    new InputValidator() {
+                                                      @Override
+                                                      public boolean checkInput(String inputString) {
+                                                        return inputString != null && inputString.trim().length() > 0;
+                                                      }
 
-        @Override
-        public boolean canClose(String inputString) {
-          inputString = inputString.trim();
-          if (myName2FavoritesRoots.keySet().contains(inputString) || myProviders.keySet().contains(inputString)) {
-            Messages.showErrorDialog(project, IdeBundle.message("error.favorites.list.already.exists", inputString.trim()),
-                                     IdeBundle.message("title.unable.to.add.favorites.list"));
-            return false;
-          }
-          return !inputString.isEmpty();
-        }
-      });
+                                                      @Override
+                                                      public boolean canClose(String inputString) {
+                                                        inputString = inputString.trim();
+                                                        if (myName2FavoritesRoots.keySet().contains(inputString) ||
+                                                            myProviders.keySet().contains(inputString)) {
+                                                          Messages.showErrorDialog(project,
+                                                                                   IdeBundle.message("error.favorites.list.already.exists", inputString.trim()),
+                                                                                   IdeBundle.message("title.unable.to.add.favorites.list"));
+                                                          return false;
+                                                        }
+                                                        return !inputString.isEmpty();
+                                                      }
+                                                    });
 
     if (newName != null && renameFavoritesList(listName, newName)) {
       rootsChanged();
@@ -196,13 +201,12 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   public boolean addRoots(final String name, final Collection<AbstractTreeNode> nodes) {
     final Collection<TreeItem<Pair<AbstractUrl, String>>> list = getFavoritesListRootUrls(name);
 
-    final HashSet<AbstractUrl> set =
-      new HashSet<AbstractUrl>(ObjectsConvertor.convert(list, new Convertor<TreeItem<Pair<AbstractUrl, String>>, AbstractUrl>() {
-        @Override
-        public AbstractUrl convert(TreeItem<Pair<AbstractUrl, String>> o) {
-          return o.getData().getFirst();
-        }
-      }));
+    final HashSet<AbstractUrl> set = new HashSet<AbstractUrl>(ContainerUtil.map(list, new Function<TreeItem<Pair<AbstractUrl, String>>, AbstractUrl>() {
+      @Override
+      public AbstractUrl fun(TreeItem<Pair<AbstractUrl, String>> item) {
+        return item.getData().getFirst();
+      }
+    }));
     for (AbstractTreeNode node : nodes) {
       final Pair<AbstractUrl, String> pair = createPairForNode(node);
       if (pair != null) {
@@ -234,8 +238,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     if (items == null) return false;
     AbstractUrl url = createUrlByElement(newElement.getValue(), myProject);
     if (url == null) return false;
-    final TreeItem<Pair<AbstractUrl, String>> newItem =
-      new TreeItem<Pair<AbstractUrl, String>>(Pair.create(url, newElement.getClass().getName()));
+    final TreeItem<Pair<AbstractUrl, String>> newItem = new TreeItem<Pair<AbstractUrl, String>>(Pair.create(url, newElement.getClass().getName()));
 
     if (parentElements.isEmpty()) {
       // directly to list
@@ -297,8 +300,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     return true;
   }
 
-  private <T> boolean findListToRemoveFrom(@NotNull String name, @NotNull final List<T> elements,
-                                           final Convertor<T, AbstractUrl> convertor) {
+  private <T> boolean findListToRemoveFrom(@NotNull String name, @NotNull final List<T> elements, final Convertor<T, AbstractUrl> convertor) {
     Collection<TreeItem<Pair<AbstractUrl, String>>> list = getFavoritesListRootUrls(name);
     if (elements.size() > 1) {
       final List<T> sublist = elements.subList(0, elements.size() - 1);
@@ -600,9 +602,8 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
         ModuleRootManager.getInstance((Module)element).getFileIndex().iterateContent(contentIterator);
       }
       if (element instanceof LibraryGroupElement) {
-        final boolean inLibrary =
-          ModuleRootManager.getInstance(((LibraryGroupElement)element).getModule()).getFileIndex().isInContent(vFile) &&
-          projectFileIndex.isInLibraryClasses(vFile);
+        final boolean inLibrary = ModuleRootManager.getInstance(((LibraryGroupElement)element).getModule()).getFileIndex().isInContent(vFile) &&
+                                  projectFileIndex.isInLibraryClasses(vFile);
         if (inLibrary) {
           return true;
         }
@@ -636,8 +637,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     return false;
   }
 
-  private static void iterateTreeItems(final Collection<TreeItem<Pair<AbstractUrl, String>>> coll,
-                                       Consumer<TreeItem<Pair<AbstractUrl, String>>> consumer) {
+  private static void iterateTreeItems(final Collection<TreeItem<Pair<AbstractUrl, String>>> coll, Consumer<TreeItem<Pair<AbstractUrl, String>>> consumer) {
     final ArrayDeque<TreeItem<Pair<AbstractUrl, String>>> queue = new ArrayDeque<TreeItem<Pair<AbstractUrl, String>>>();
     queue.addAll(coll);
     while (!queue.isEmpty()) {
@@ -664,8 +664,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
           childUrl = new PsiFileUrl(((PsiDirectory)newParent).getVirtualFile().getUrl() + "/" + ((PsiFile)child).getName());
         }
         else if (child instanceof PsiDirectory) {
-          childUrl =
-            new DirectoryUrl(((PsiDirectory)newParent).getVirtualFile().getUrl() + "/" + ((PsiDirectory)child).getName(), module.getName());
+          childUrl = new DirectoryUrl(((PsiDirectory)newParent).getVirtualFile().getUrl() + "/" + ((PsiDirectory)child).getName(), module.getName());
         }
 
         for (String listName : myName2FavoritesRoots.keySet()) {
@@ -696,8 +695,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
 
     @Override
     public void beforePropertyChange(@NotNull final PsiTreeChangeEvent event) {
-      if (event.getPropertyName().equals(PsiTreeChangeEvent.PROP_FILE_NAME) ||
-          event.getPropertyName().equals(PsiTreeChangeEvent.PROP_DIRECTORY_NAME)) {
+      if (event.getPropertyName().equals(PsiTreeChangeEvent.PROP_FILE_NAME) || event.getPropertyName().equals(PsiTreeChangeEvent.PROP_DIRECTORY_NAME)) {
         final PsiElement psiElement = event.getChild();
         if (psiElement instanceof PsiFile || psiElement instanceof PsiDirectory) {
           final Module module = ModuleUtil.findModuleForPsiElement(psiElement);

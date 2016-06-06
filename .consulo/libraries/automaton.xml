@@ -1,0 +1,7 @@
+<component name="libraryTable">
+  <library name="automaton">
+    <binaries>
+      <root url="jar://$PROJECT_DIR$/lib/automaton.jar!/" />
+    </binaries>
+  </library>
+</component>

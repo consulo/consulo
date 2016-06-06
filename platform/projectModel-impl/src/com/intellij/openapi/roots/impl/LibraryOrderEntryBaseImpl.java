@@ -26,7 +26,7 @@ import com.intellij.util.ArrayUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import consulo.roots.orderEntry.OrderEntryType;
 
 import java.util.Arrays;
 
@@ -41,7 +41,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
   @Nullable
   private RootProvider myCurrentlySubscribedRootProvider = null;
 
-  public LibraryOrderEntryBaseImpl(@NotNull OrderEntryTypeProvider<?> provider, @NotNull ModuleRootLayerImpl rootModel,
+  public LibraryOrderEntryBaseImpl(@NotNull OrderEntryType<?> provider, @NotNull ModuleRootLayerImpl rootModel,
                                    @NotNull ProjectRootManagerImpl instanceImpl) {
     super(provider, rootModel);
     myProjectRootManagerImpl = instanceImpl;

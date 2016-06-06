@@ -15,7 +15,6 @@
  */
 package com.intellij.application.options.pathMacros;
 
-import com.intellij.application.options.PathMacrosCollector;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.diagnostic.Logger;
@@ -23,6 +22,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.Table;
+import consulo.application.options.PathMacrosService;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -254,7 +254,7 @@ public class PathMacroTable extends Table {
 
     public boolean checkName(String name) {
       if (name.length() == 0) return false;
-      return PathMacrosCollector.MACRO_PATTERN.matcher("$" + name + "$").matches();
+      return PathMacrosService.MACRO_PATTERN.matcher("$" + name + "$").matches();
     }
 
     public boolean isOK(String name, String value) {
@@ -273,7 +273,7 @@ public class PathMacroTable extends Table {
       if (name.length() == 0) return false;
       if (PathMacros.getInstance().getSystemMacroNames().contains(name)) return false;
 
-      return PathMacrosCollector.MACRO_PATTERN.matcher("$" + name + "$").matches();
+      return PathMacrosService.MACRO_PATTERN.matcher("$" + name + "$").matches();
     }
 
     public boolean isOK(String name, String value) {

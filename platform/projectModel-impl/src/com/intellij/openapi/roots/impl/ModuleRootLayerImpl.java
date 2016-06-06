@@ -32,6 +32,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.roots.orderEntry.OrderEntrySerializationUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
@@ -44,8 +45,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.OrderEntryTypeProviders;
 
 import java.util.*;
 
@@ -232,8 +231,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
         ContentEntryImpl contentEntry = new ContentEntryImpl(child, this);
         myContent.add(contentEntry);
       }
-      else if(OrderEntryTypeProviders.ORDER_ENTRY_ELEMENT_NAME.equals(name)) {
-        final OrderEntry orderEntry = OrderEntryTypeProviders.loadOrderEntry(child, this);
+      else if(OrderEntrySerializationUtil.ORDER_ENTRY_ELEMENT_NAME.equals(name)) {
+        final OrderEntry orderEntry = OrderEntrySerializationUtil.loadOrderEntry(child, this);
         if (orderEntry == null) {
           continue;
         }
@@ -283,7 +282,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     }
 
     for (OrderEntry orderEntry : getOrderEntries()) {
-      Element newElement = OrderEntryTypeProviders.storeOrderEntry(orderEntry);
+      Element newElement = OrderEntrySerializationUtil.storeOrderEntry(orderEntry);
       element.addContent(newElement);
     }
   }
@@ -548,7 +547,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public VirtualFile[] getExcludeRoots() {
     final List<VirtualFile> result = new SmartList<VirtualFile>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderFiles(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance())));
+      Collections.addAll(result, contentEntry.getFolderFiles(ContentFolderScopes.excluded()));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }
@@ -558,7 +557,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public String[] getExcludeRootUrls() {
     final List<String> result = new SmartList<String>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance())));
+      Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderScopes.excluded()));
     }
     return ArrayUtil.toStringArray(result);
   }

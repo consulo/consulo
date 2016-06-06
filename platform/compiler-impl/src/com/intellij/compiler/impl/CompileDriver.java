@@ -48,8 +48,6 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
-import com.intellij.openapi.roots.ui.configuration.ContentEntriesEditor;
-import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.*;
@@ -59,7 +57,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.StatusBar;
+import com.intellij.openapi.wm.ToolWindowId;
+import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.impl.artifacts.ArtifactImpl;
@@ -2195,12 +2196,12 @@ public class CompileDriver {
         }
 
         Messages.showMessageDialog(myProject, message, CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-        ProjectSettingsService.getInstance(myProject).openProjectSettings();
+        //FIXME [VISTALL] ProjectSettingsService.getInstance(myProject).openProjectSettings();
         return false;
       }
 
       if (!modulesWithoutOutputPathSpecified.isEmpty()) {
-        showNotSpecifiedError("error.output.not.specified", modulesWithoutOutputPathSpecified, ContentEntriesEditor.NAME);
+        showNotSpecifiedError("error.output.not.specified", modulesWithoutOutputPathSpecified, null/*ContentEntriesEditor.NAME*/);
         return false;
       }
 
@@ -2333,7 +2334,7 @@ public class CompileDriver {
   }
 
   private void showConfigurationDialog(String moduleNameToSelect, String tabNameToSelect) {
-    ProjectSettingsService.getInstance(myProject).showModuleConfigurationDialog(moduleNameToSelect, tabNameToSelect);
+    //FIXME [VISTALL] ProjectSettingsService.getInstance(myProject).showModuleConfigurationDialog(moduleNameToSelect, tabNameToSelect);
   }
 
   private static VirtualFile lookupVFile(final LocalFileSystem lfs, final String path) {
