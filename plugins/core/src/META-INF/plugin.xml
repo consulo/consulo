@@ -580,7 +580,10 @@
 
     <extensionPoint name="moduleRootsProcessor" interface="com.intellij.openapi.roots.impl.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
-    <extensionPoint name="orderEntryTypeProvider" interface="org.mustbe.consulo.roots.OrderEntryTypeProvider"/>
+    <extensionPoint qualifiedName="consulo.orderEntryType" interface="consulo.roots.orderEntry.OrderEntryType"/>
+    <extensionPoint qualifiedName="consulo.orderEntryTypeEditor" beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
+      <with attribute="implementationClass" implements="consulo.roots.orderEntry.OrderEntryTypeEditor"/>
+    </extensionPoint>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
     <extensionPoint name="directoryIndexExcludePolicy" interface="com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy"
                     area="CONSULO_PROJECT"/>
@@ -1267,6 +1270,8 @@
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.TextAttributeKeyDefaultsProviderImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.editor.colors.EditorColorsManager"
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl"/>
+    <applicationService serviceInterface="consulo.application.options.PathMacrosService"
+                        serviceImplementation="com.intellij.application.options.PathMacrosServiceImpl" />
     <schemeOwner serviceInterface="com.intellij.openapi.editor.colors.EditorColorsManager"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.FileAppearanceService"
@@ -1518,7 +1523,6 @@
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
-    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.GlobalLibrariesConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
 
     <!-- Compiler -->
@@ -1546,12 +1550,6 @@
     <orderRootType implementation="com.intellij.openapi.roots.types.DocumentationOrderRootType"/>
     <orderRootTypeEditor key="documentation"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
-
-    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.LibraryOrderEntryTypeProvider"/>
-    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleExtensionWithSdkOrderEntryTypeProvider"/>
-    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleLibraryOrderEntryTypeProvider"/>
-    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleOrderEntryTypeProvider"/>
-    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleSourceOrderEntryTypeProvider"/>
 
     <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
 
@@ -2475,5 +2473,19 @@
     <bidiRegionsSeparator language="" implementationClass="com.intellij.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
 
     <smartPointerElementInfoFactory implementation="com.intellij.psi.impl.smartPointers.AnchorElementInfoFactory"/>
+  </extensions>
+
+  <extensions defaultExtensionNs="consulo">
+    <orderEntryType implementation="consulo.roots.orderEntry.LibraryOrderEntryType"/>
+    <orderEntryType implementation="consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryType"/>
+    <orderEntryType implementation="consulo.roots.orderEntry.ModuleLibraryOrderEntryType"/>
+    <orderEntryType implementation="consulo.roots.orderEntry.ModuleOrderEntryType"/>
+    <orderEntryType implementation="consulo.roots.orderEntry.ModuleSourceOrderEntryType"/>
+
+    <orderEntryTypeEditor key="library" implementationClass="consulo.roots.orderEntry.LibraryOrderEntryTypeEditor" />
+    <orderEntryTypeEditor key="module-extension-sdk" implementationClass="consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryTypeEditor" />
+    <orderEntryTypeEditor key="module-library" implementationClass="consulo.roots.orderEntry.ModuleLibraryOrderEntryTypeEditor" />
+    <orderEntryTypeEditor key="module" implementationClass="consulo.roots.orderEntry.ModuleOrderEntryTypeEditor" />
+    <orderEntryTypeEditor key="sourceFolder" implementationClass="consulo.roots.orderEntry.ModuleSourceOrderEntryTypeEditor" />
   </extensions>
 </idea-plugin>

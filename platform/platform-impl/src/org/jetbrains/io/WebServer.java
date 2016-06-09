@@ -106,7 +106,7 @@ public class WebServer implements Disposable {
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
           try {
-            LOG.error(e.getCause());
+            LOG.warn(e.getCause());
           }
           finally {
             semaphore.up();

@@ -24,6 +24,7 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 public abstract class OrderEntryAppearanceService {
   public static OrderEntryAppearanceService getInstance() {
@@ -31,7 +32,14 @@ public abstract class OrderEntryAppearanceService {
   }
 
   @NotNull
-  public abstract CellAppearanceEx forOrderEntry(Project project, @NotNull OrderEntry orderEntry, boolean selected);
+  @Deprecated
+  @DeprecationInfo("Use #forOrderEntry(@ OrderEntry)")
+  public CellAppearanceEx forOrderEntry(@Deprecated Project project, @NotNull OrderEntry orderEntry, @Deprecated boolean selected) {
+    return forOrderEntry(orderEntry);
+  }
+
+  @NotNull
+  public abstract CellAppearanceEx forOrderEntry(@NotNull OrderEntry orderEntry);
 
   @NotNull
   public abstract CellAppearanceEx forLibrary(Project project, @NotNull Library library, boolean hasInvalidRoots);

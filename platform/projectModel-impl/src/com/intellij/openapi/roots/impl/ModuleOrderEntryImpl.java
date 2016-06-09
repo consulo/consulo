@@ -25,7 +25,7 @@ import com.intellij.util.ArrayUtil;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.impl.ModuleOrderEntryTypeProvider;
+import consulo.roots.orderEntry.ModuleOrderEntryType;
 
 /**
  * @author dsl
@@ -38,7 +38,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   private boolean myProductionOnTestDependency;
 
   ModuleOrderEntryImpl(@NotNull Module module, @NotNull ModuleRootLayerImpl rootLayer) {
-    super(ModuleOrderEntryTypeProvider.getInstance(), rootLayer);
+    super(ModuleOrderEntryType.getInstance(), rootLayer);
     myModulePointer = ModuleUtilCore.createPointer(module);
   }
 
@@ -48,7 +48,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
 
   public ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull ModuleRootLayerImpl rootLayer, @NotNull DependencyScope dependencyScope, boolean exported,
                        boolean productionOnTestDependency) {
-    super(ModuleOrderEntryTypeProvider.getInstance(), rootLayer);
+    super(ModuleOrderEntryType.getInstance(), rootLayer);
     myModulePointer = ModuleUtilCore.createPointer(rootLayer.getProject(), moduleName);
     myScope = dependencyScope;
     myExported = exported;
@@ -56,7 +56,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   private ModuleOrderEntryImpl(ModuleOrderEntryImpl that, ModuleRootLayerImpl rootLayer) {
-    super(ModuleOrderEntryTypeProvider.getInstance(), rootLayer);
+    super(ModuleOrderEntryType.getInstance(), rootLayer);
     final NamedPointer<Module> thatModule = that.myModulePointer;
     myModulePointer = ModuleUtilCore.createPointer(rootLayer.getProject(), thatModule.getName());
     myExported = that.myExported;

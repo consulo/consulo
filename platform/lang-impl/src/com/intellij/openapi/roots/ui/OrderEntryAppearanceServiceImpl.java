@@ -39,9 +39,10 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
+import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import consulo.roots.orderEntry.OrderEntryType;
 import org.mustbe.consulo.sdk.SdkUtil;
 
 import javax.swing.*;
@@ -53,9 +54,13 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @NotNull
   @Override
   @SuppressWarnings("unchecked")
-  public CellAppearanceEx forOrderEntry(Project project, @NotNull final OrderEntry orderEntry, final boolean selected) {
-    OrderEntryTypeProvider provider = orderEntry.getProvider();
-    return provider.getCellAppearance(orderEntry);
+  public CellAppearanceEx forOrderEntry(@NotNull OrderEntry orderEntry) {
+    OrderEntryType<?> type = orderEntry.getType();
+    OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
+    if(editor != null) {
+      return editor.getCellAppearance(orderEntry);
+    }
+    return new SimpleTextCellAppearance(orderEntry.getPresentableName(), null, SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
   @NotNull

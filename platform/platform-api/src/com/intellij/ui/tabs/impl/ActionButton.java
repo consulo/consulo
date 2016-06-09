@@ -18,6 +18,7 @@ package com.intellij.ui.tabs.impl;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pass;
@@ -84,7 +85,7 @@ class ActionButton extends IconButton implements ActionListener {
 
     if (changed) {
       myButton.setIcons(this);
-      String tooltipText = AnAction.createTooltipText(p.getText(), myAction);
+      String tooltipText = KeymapUtil.createTooltipText(p.getText(), myAction);
       myButton.setToolTipText(tooltipText.length() > 0 ? tooltipText : null);
       myButton.setVisible(p.isEnabled() && p.isVisible());
     }

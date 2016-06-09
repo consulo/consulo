@@ -15,9 +15,10 @@
  */
 package com.intellij.run;
 
-import com.intellij.application.options.PathMacrosCollector;
+import com.intellij.application.options.PathMacrosCollectorImpl;
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.PathMacroFilter;
+import consulo.application.options.PathMacrosService;
 import junit.framework.TestCase;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -42,7 +43,7 @@ public class PathMacrosCollectorTest extends TestCase {
     root.addContent(new Text("$c:\\a\\b\\c$ "));
     root.addContent(new Text("$Revision 1.23$"));
 
-    final Set<String> macros = PathMacrosCollector.getMacroNames(root, null, new PathMacrosImpl());
+    final Set<String> macros = PathMacrosService.getInstance().getMacroNames(root, null, new PathMacrosImpl());
 
     assertEquals(5, macros.size());
     assertTrue(macros.contains("MACro1"));
@@ -58,7 +59,7 @@ public class PathMacrosCollectorTest extends TestCase {
     configuration.setAttribute("value", "some text$macro5$fdsjfhdskjfsd$MACRO$");
     root.addContent(configuration);
 
-    final Set<String> macros = PathMacrosCollector.getMacroNames(root, new PathMacroFilter() {
+    final Set<String> macros = PathMacrosCollectorImpl.getMacroNames(root, new PathMacroFilter() {
                                                                     @Override
                                                                     public boolean recursePathMacros(Attribute attribute) {
                                                                       return "value".equals(attribute.getName());
@@ -77,12 +78,12 @@ public class PathMacrosCollectorTest extends TestCase {
     testTag.setAttribute("ignore", "$PATH$");
     root.addContent(testTag);
 
-    final Set<String> macros = PathMacrosCollector.getMacroNames(root, null, new PathMacrosImpl());
+    final Set<String> macros = PathMacrosCollectorImpl.getMacroNames(root, null, new PathMacrosImpl());
     assertEquals(2, macros.size());
     assertTrue(macros.contains("MACRO"));
     assertTrue(macros.contains("PATH"));
 
-    final Set<String> filtered = PathMacrosCollector.getMacroNames(root, new PathMacroFilter() {
+    final Set<String> filtered = PathMacrosCollectorImpl.getMacroNames(root, new PathMacroFilter() {
                                                                      @Override
                                                                      public boolean skipPathMacros(Attribute attribute) {
                                                                        return "ignore".equals(attribute.getName());

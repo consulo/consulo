@@ -220,6 +220,11 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
     else {
       g.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y);
     }
+
+    RegionPainter<Object> painter = UIUtil.getClientProperty(c, TRACK);
+    if (painter != null) {
+      painter.paint((Graphics2D)g, bounds.x, bounds.y, bounds.width, bounds.height, null);
+    }
   }
 
   @Override

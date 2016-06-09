@@ -16,8 +16,8 @@
           <orderEntry type="library" name="JDOM" level="project" />
           <orderEntry type="module" module-name="extensions" />
           <orderEntry type="module" module-name="core-api" />
-          <orderEntry type="module" module-name="editor-ui-api" exported="" />
           <orderEntry type="module" module-name="projectModel-api" />
+          <orderEntry type="module" module-name="editor-ui-api" exported="" />
         </module-layer>
       </module>
       <module name="platform/analysis-impl" dirurl="file://$PROJECT_DIR$/platform/analysis-impl" current-layer="Default">
@@ -36,6 +36,7 @@
           <orderEntry type="module" module-name="extensions" />
           <orderEntry type="module" module-name="projectModel-impl" />
           <orderEntry type="module" module-name="editor-ui-ex" />
+          <orderEntry type="module" module-name="indexing-impl" />
         </module-layer>
       </module>
       <module name="platform/annotations" dirurl="file://$PROJECT_DIR$/platform/annotations" current-layer="Default">
@@ -79,38 +80,8 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
-          <orderEntry type="module" module-name="projectModel-api" exported="" />
-          <orderEntry type="module" module-name="platform-api" exported="" />
-          <orderEntry type="module" module-name="lang-api" exported="" />
-          <orderEntry type="module" module-name="compiler-artifact-api" />
-        </module-layer>
-      </module>
-      <module name="platform/compiler/compiler-artifact-api" dirurl="file://$PROJECT_DIR$/platform/compiler-artifact-api" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-          <extension id="lombok" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="compiler-api" />
-        </module-layer>
-      </module>
-      <module name="platform/compiler/compiler-artifact-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-artifact-impl" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
-          <extension id="lombok" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="compiler-api" exported="" />
-          <orderEntry type="module" module-name="compiler-impl" />
-          <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
-          <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="library" name="Lombok" level="project" />
+          <orderEntry type="module" module-name="projectModel-api" />
+          <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
       <module name="platform/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-bridge-impl" current-layer="Default">
@@ -122,7 +93,6 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
@@ -138,12 +108,12 @@
           <orderEntry type="module" module-name="compiler-api" exported="" />
           <orderEntry type="module" module-name="resources-en" exported="" />
           <orderEntry type="module" module-name="platform-impl" />
-          <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="library" name="Netty" level="project" />
           <orderEntry type="library" name="OroMatcher" level="project" />
-          <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
-          <orderEntry type="module" module-name="compiler-artifact-impl" />
           <orderEntry type="module" module-name="compiler-bridge-impl" />
+          <orderEntry type="module" module-name="indexing-impl" />
+          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="lang-api" />
         </module-layer>
       </module>
       <module name="platform/compiler-server-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-server-impl" current-layer="Default">
@@ -157,7 +127,6 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="testFramework" />
-          <orderEntry type="module" module-name="compiler-artifact-impl" />
           <orderEntry type="module" module-name="compiler-impl" />
           <orderEntry type="module" module-name="compiler-bridge-impl" />
         </module-layer>
@@ -233,6 +202,7 @@
           <orderEntry type="module" module-name="platform-resources-en" exported="" />
           <orderEntry type="library" exploded="" name="Lombok" level="project" />
           <orderEntry type="library" name="JUnit4" level="project" />
+          <orderEntry type="library" name="automaton" level="project" />
         </module-layer>
       </module>
       <module name="platform/core-impl" dirurl="file://$PROJECT_DIR$/platform/core-impl" current-layer="Default">
@@ -319,7 +289,6 @@
           <orderEntry type="module" module-name="platform-api" exported="" />
           <orderEntry type="module" module-name="lang-api" exported="" />
           <orderEntry type="module" module-name="compiler-api" exported="" />
-          <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
         </module-layer>
       </module>
       <module name="platform/external-system-impl" dirurl="file://$PROJECT_DIR$/platform/external-system-impl" current-layer="Default">
@@ -336,7 +305,6 @@
           <orderEntry type="module" module-name="projectModel-impl" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module" module-name="compiler-artifact-api" />
           <orderEntry type="module" module-name="vcs-impl" />
           <orderEntry type="module" module-name="xdebugger-impl" />
         </module-layer>
@@ -395,6 +363,7 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
           <orderEntry type="module" module-name="projectModel-api" />
+          <orderEntry type="library" name="NanoXML" level="project" />
         </module-layer>
       </module>
       <module name="platform/indexing-impl" dirurl="file://$PROJECT_DIR$/platform/indexing-impl" current-layer="Default">
@@ -430,7 +399,6 @@
           <orderEntry type="module" module-name="analysis-api" exported="" />
           <orderEntry type="module" module-name="compiler-api" />
           <orderEntry type="module" module-name="resources-en" />
-          <orderEntry type="module" module-name="compiler-artifact-api" />
         </module-layer>
       </module>
       <module name="platform/lang-impl" dirurl="file://$PROJECT_DIR$/platform/lang-impl" current-layer="Default">
@@ -448,7 +416,6 @@
           <orderEntry type="library" name="OroMatcher" level="project" />
           <orderEntry type="library" name="JUnit4" level="project" />
           <orderEntry type="library" name="Velocity" level="project" />
-          <orderEntry type="module" module-name="vcs-impl" />
           <orderEntry type="module" module-name="platform-impl" exported="" />
           <orderEntry type="module" module-name="usageView" exported="" />
           <orderEntry type="library" name="xpp3-1.1.4-min" level="project" />
@@ -462,10 +429,7 @@
           <orderEntry type="library" name="Guava" level="project" />
           <orderEntry type="library" name="gson" level="project" />
           <orderEntry type="module" module-name="analysis-impl" exported="" />
-          <orderEntry type="module" module-name="compiler-api" />
           <orderEntry type="module" module-name="compiler-impl" />
-          <orderEntry type="module" module-name="compiler-artifact-api" />
-          <orderEntry type="module" module-name="compiler-artifact-impl" />
           <orderEntry type="library" name="jsr166" level="project" />
         </module-layer>
       </module>
@@ -517,13 +481,6 @@
           <orderEntry type="module" module-name="platform-resources-en" exported="" />
           <orderEntry type="library" name="OroMatcher" level="project" />
           <orderEntry type="module" module-name="icons" />
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/../../lib/automaton.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
           <orderEntry type="module" module-name="projectModel-api" exported="" />
           <orderEntry type="library" name="Netty" level="project" />
           <orderEntry type="library" name="proxy-vole" level="project" />
@@ -655,7 +612,6 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
-          <orderEntry type="module" module-name="lang-api" exported="" />
           <orderEntry type="module" module-name="resources-en" exported="" />
           <orderEntry type="library" exploded="" name="Guava" level="project" />
         </module-layer>
@@ -671,9 +627,8 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="projectModel-api" exported="" />
           <orderEntry type="module" module-name="core-impl" />
-          <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module" module-name="compiler-api" />
           <orderEntry type="library" name="Snappy-Java" level="project" />
+          <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
       <module name="remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/platform/remote-servers-agent-rt" current-layer="Default">
@@ -695,9 +650,9 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
-          <orderEntry type="module" module-name="platform-api" exported="" />
-          <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
           <orderEntry type="module" module-name="remote-servers-agent-rt" exported="" />
+          <orderEntry type="module" module-name="compiler-api" />
+          <orderEntry type="module" module-name="lang-api" />
         </module-layer>
       </module>
       <module name="platform/remote-servers-impl" dirurl="file://$PROJECT_DIR$/platform/remote-servers-impl" current-layer="Default">
@@ -960,7 +915,6 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="compiler-impl" />
-          <orderEntry type="module" module-name="compiler-artifact-impl" />
         </module-layer>
       </module>
       <module name="platform/coverage-impl" dirurl="file://$PROJECT_DIR$/platform/coverage-impl" current-layer="Default">

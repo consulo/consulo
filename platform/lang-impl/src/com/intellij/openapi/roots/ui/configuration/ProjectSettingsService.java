@@ -22,7 +22,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
@@ -40,9 +39,6 @@ public class ProjectSettingsService {
   }
 
   public void openProjectSettings() {
-  }
-
-  public void openGlobalLibraries() {
   }
 
   public void openLibrary(@NotNull Library library) {
@@ -108,9 +104,5 @@ public class ProjectSettingsService {
   }
 
   public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
-  }
-
-  public Sdk chooseAndSetSdk() {
-    return null;
   }
 }

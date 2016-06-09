@@ -54,11 +54,6 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable {
     return myContext.getProjectLibrariesProvider();
   }
 
-  @Override
-  public BaseLibrariesConfigurable getOppositeGroup() {
-    return GlobalLibrariesConfigurable.getInstance(myProject);
-  }
-
   public static ProjectLibrariesConfigurable getInstance(final Project project) {
     return ServiceManager.getService(project, ProjectLibrariesConfigurable.class);
   }

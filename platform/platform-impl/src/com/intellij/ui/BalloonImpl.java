@@ -16,9 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.IdeTooltip;
-import com.intellij.ide.RemoteDesktopDetector;
+import com.intellij.ide.*;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -86,6 +84,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   private long myFadeoutRequestMillis = 0;
   private int myFadeoutRequestDelay = 0;
 
+  private boolean mySmartFadeout;
+  private boolean mySmartFadeoutPaused;
+  private int mySmartFadeoutDelay;
+
   private MyComponent myComp;
   private JLayeredPane myLayeredPane;
   private AbstractPosition myPosition;
@@ -104,11 +106,16 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   private Rectangle myForcedBounds;
 
   private ActionProvider myActionProvider;
-  private List<BalloonActionButton> myActionButtons;
+  private List<ActionButton> myActionButtons;
 
   private final AWTEventListener myAwtActivityListener = new AWTEventListener() {
     @Override
     public void eventDispatched(final AWTEvent e) {
+      if (mySmartFadeoutDelay > 0) {
+        startFadeoutTimer(mySmartFadeoutDelay);
+        mySmartFadeoutDelay = 0;
+      }
+
       final int id = e.getID();
       if (e instanceof MouseEvent) {
         final MouseEvent me = (MouseEvent)e;
@@ -244,7 +251,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     if (!cmp.isShowing()) return true;
     if (cmp instanceof MenuElement) return false;
     if (myActionButtons != null) {
-      for (BalloonActionButton button : myActionButtons) {
+      for (ActionButton button : myActionButtons) {
         if (cmp == button) return true;
       }
     }
@@ -339,26 +346,22 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     MnemonicHelper.init(content);
 
     if (!myDialogMode) {
-      new AwtVisitor(content) {
-        @Override
-        public boolean visit(Component component) {
-          if (component instanceof JLabel) {
-            JLabel label = (JLabel)component;
-            if (label.getDisplayedMnemonic() != '\0' || label.getDisplayedMnemonicIndex() >= 0) {
-              myDialogMode = true;
-              return true;
-            }
+      for (Component component : UIUtil.uiTraverser(myContent)) {
+        if (component instanceof JLabel) {
+          JLabel label = (JLabel)component;
+          if (label.getDisplayedMnemonic() != '\0' || label.getDisplayedMnemonicIndex() >= 0) {
+            myDialogMode = true;
+            break;
           }
-          else if (component instanceof JCheckBox) {
-            JCheckBox checkBox = (JCheckBox)component;
-            if (checkBox.getMnemonic() >= 0 || checkBox.getDisplayedMnemonicIndex() >= 0) {
-              myDialogMode = true;
-              return true;
-            }
-          }
-          return false;
         }
-      };
+        else if (component instanceof JCheckBox) {
+          JCheckBox checkBox = (JCheckBox)component;
+          if (checkBox.getMnemonic() >= 0 || checkBox.getDisplayedMnemonicIndex() >= 0) {
+            myDialogMode = true;
+            break;
+          }
+        }
+      }
     }
 
     myShadow = shadow;
@@ -369,13 +372,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     myAnimationCycle = animationCycle;
 
     if (smallVariant) {
-      new AwtVisitor(myContent) {
-        @Override
-        public boolean visit(Component component) {
-          UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, component);
-          return false;
-        }
-      };
+      for (Component component : UIUtil.uiTraverser(myContent)) {
+        UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, component);
+      }
     }
   }
 
@@ -589,19 +588,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     }
 
     if (myHideOnLinkClick) {
-      final Ref<JEditorPane> ref = Ref.create(null);
-      new AwtVisitor(myContent) {
-        @Override
-        public boolean visit(Component component) {
-          if (component instanceof JEditorPane) {
-            ref.set((JEditorPane)component);
-            return true;
-          }
-          return false;
-        }
-      };
-      if (!ref.isNull()) {
-        ref.get().addHyperlinkListener(new HyperlinkAdapter() {
+      JEditorPane editorPane = UIUtil.uiTraverser(myContent).traverse().filter(JEditorPane.class).first();
+      if (editorPane != null) {
+        editorPane.addHyperlinkListener(new HyperlinkAdapter() {
           @Override
           protected void hyperlinkActivated(HyperlinkEvent e) {
             hide();
@@ -661,7 +650,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     return size;
   }
 
-  private void disposeButton(BalloonActionButton button) {
+  private void disposeButton(ActionButton button) {
     if (button != null && button.getParent() != null) {
       Container parent = button.getParent();
       parent.remove(button);
@@ -698,11 +687,11 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
       };
 
       myActionProvider = new ActionProvider() {
-        private BalloonActionButton myCloseButton;
+        private ActionButton myCloseButton;
 
         @NotNull
         @Override
-        public List<BalloonActionButton> createActions() {
+        public List<ActionButton> createActions() {
           myCloseButton = new CloseButton(listener);
           return Collections.singletonList(myCloseButton);
         }
@@ -874,6 +863,39 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     myAnimator.resume();
   }
 
+  public void runWithSmartFadeoutPause(@NotNull Runnable handler) {
+    if (mySmartFadeout) {
+      mySmartFadeoutPaused = true;
+      handler.run();
+      if (mySmartFadeoutPaused) {
+        mySmartFadeoutPaused = false;
+      }
+      else {
+        hide();
+      }
+    }
+    else {
+      handler.run();
+    }
+  }
+
+  public void startSmartFadeoutTimer(int delay) {
+    mySmartFadeout = true;
+    mySmartFadeoutDelay = delay;
+    FrameStateManager.getInstance().addListener(new FrameStateListener.Adapter() {
+      @Override
+      public void onFrameDeactivated() {
+        if (myFadeoutAlarm.getActiveRequestCount() > 0) {
+          myFadeoutAlarm.cancelAllRequests();
+          mySmartFadeoutDelay = myFadeoutRequestDelay - (int)(System.currentTimeMillis() - myFadeoutRequestMillis);
+          if (mySmartFadeoutDelay <= 0) {
+            mySmartFadeoutDelay = 1;
+          }
+        }
+      }
+    }, this);
+  }
+
   public void startFadeoutTimer(final int fadeoutDelay) {
     if (fadeoutDelay > 0) {
       myFadeoutAlarm.cancelAllRequests();
@@ -946,6 +968,11 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
 
   private void hideAndDispose(final boolean ok) {
     if (myDisposed) return;
+
+    if (mySmartFadeoutPaused) {
+      mySmartFadeoutPaused = false;
+      return;
+    }
 
     if (myTraceDispose) {
       Logger.getInstance("#com.intellij.ui.BalloonImpl").error("Dispose balloon before showing", new Throwable());
@@ -1479,19 +1506,19 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
 
   public interface ActionProvider {
     @NotNull
-    List<BalloonActionButton> createActions();
+    List<ActionButton> createActions();
 
     void layout(@NotNull Rectangle bounds);
   }
 
-  public class BalloonActionButton extends NonOpaquePanel {
+  public class ActionButton extends NonOpaquePanel {
     private final Icon myIcon;
     private final Icon myHoverIcon;
     private final String myHint;
     private final Consumer<MouseEvent> myListener;
     protected final BaseButtonBehavior myButton;
 
-    public BalloonActionButton(@NotNull Icon icon, @Nullable Icon hoverIcon, @Nullable String hint, @NotNull Consumer<MouseEvent> listener) {
+    public ActionButton(@NotNull Icon icon, @Nullable Icon hoverIcon, @Nullable String hint, @NotNull Consumer<MouseEvent> listener) {
       myIcon = icon;
       myHoverIcon = hoverIcon;
       myHint = hint;
@@ -1540,7 +1567,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     }
   }
 
-  private class CloseButton extends BalloonActionButton {
+  private class CloseButton extends ActionButton {
     private CloseButton(@NotNull Consumer<MouseEvent> listener) {
       super(getCloseButton(), null, null, listener);
       setVisible(myEnableButtons);
@@ -1751,14 +1778,14 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
         return;
       }
 
-      final List<BalloonActionButton> buttons = myActionButtons;
+      final List<ActionButton> buttons = myActionButtons;
       myActionButtons = null;
       if (buttons != null) {
         //noinspection SSBasedInspection
         SwingUtilities.invokeLater(new Runnable() {
           @Override
           public void run() {
-            for (BalloonActionButton button : buttons) {
+            for (ActionButton button : buttons) {
               BalloonImpl.this.disposeButton(button);
             }
           }
@@ -1785,7 +1812,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
           myActionButtons = myActionProvider.createActions();
         }
 
-        for (BalloonActionButton button : myActionButtons) {
+        for (ActionButton button : myActionButtons) {
           if (button.getParent() == null) {
             myLayeredPane.add(button);
             myLayeredPane.setLayer(button, JLayeredPane.DRAG_LAYER);
@@ -1813,7 +1840,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
 
     public void repaintButton() {
       if (myActionButtons != null) {
-        for (BalloonActionButton button : myActionButtons) {
+        for (ActionButton button : myActionButtons) {
           button.repaint();
         }
       }

@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.roots.OrderEntry;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import consulo.roots.orderEntry.OrderEntryType;
 
 @org.consulo.lombok.annotations.Logger
 public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
@@ -28,20 +28,21 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
   private final int hc = _hc++;
 
   private int myIndex;
-  private OrderEntryTypeProvider<?> myProvider;
+  private OrderEntryType<?> myType;
 
-  protected OrderEntryBaseImpl(@NotNull OrderEntryTypeProvider<?> provider, @NotNull ModuleRootLayerImpl rootLayer) {
+  protected OrderEntryBaseImpl(@NotNull OrderEntryType<?> provider, @NotNull ModuleRootLayerImpl rootLayer) {
     super(rootLayer);
-    myProvider = provider;
+    myType = provider;
   }
 
   void setIndex(int index) {
     myIndex = index;
   }
 
+  @NotNull
   @Override
-  public OrderEntryTypeProvider<?> getProvider() {
-    return myProvider;
+  public OrderEntryType<?> getType() {
+    return myType;
   }
 
   @Override

@@ -24,14 +24,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import consulo.roots.orderEntry.OrderEntryType;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements ClonableOrderEntry {
-  public UnknownOrderEntryImpl(@NotNull OrderEntryTypeProvider<?> provider, @NotNull ModuleRootLayerImpl rootLayer) {
+  public UnknownOrderEntryImpl(@NotNull OrderEntryType<?> provider, @NotNull ModuleRootLayerImpl rootLayer) {
     super(provider, rootLayer);
   }
 
@@ -50,7 +50,7 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
   @NotNull
   @Override
   public String getPresentableName() {
-    return "Unknown Order Entry. Type: " + StringUtil.capitalize(getProvider().getId());
+    return "Unknown Order Entry. Type: " + StringUtil.capitalize(getType().getId());
   }
 
   @Override
@@ -71,7 +71,7 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
 
   @Override
   public boolean isEquivalentTo(@NotNull OrderEntry other) {
-    return getProvider() == other.getProvider();
+    return getType() == other.getType();
   }
 
   @Override
@@ -81,6 +81,6 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
 
   @Override
   public OrderEntry cloneEntry(ModuleRootLayerImpl layer) {
-    return new UnknownOrderEntryImpl(getProvider(), layer);
+    return new UnknownOrderEntryImpl(getType(), layer);
   }
 }

@@ -22,10 +22,10 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Comparing;
+import consulo.roots.orderEntry.LibraryOrderEntryType;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.impl.LibraryOrderEntryTypeProvider;
 
 /**
  * @author dsl
@@ -43,7 +43,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   private final MyOrderEntryLibraryTableListener myLibraryListener = new MyOrderEntryLibraryTableListener();
 
   public LibraryOrderEntryImpl(@NotNull Library library, @NotNull ModuleRootLayerImpl rootLayer) {
-    super(LibraryOrderEntryTypeProvider.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+    super(LibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     LOGGER.assertTrue(library.getTable() != null);
     myLibrary = library;
     addListeners();
@@ -51,7 +51,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   }
 
   private LibraryOrderEntryImpl(@NotNull LibraryOrderEntryImpl that, @NotNull ModuleRootLayerImpl rootLayer) {
-    super(LibraryOrderEntryTypeProvider.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+    super(LibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     if (that.myLibrary == null) {
       myLibraryName = that.myLibraryName;
       myLibraryLevel = that.myLibraryLevel;
@@ -75,7 +75,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
                                DependencyScope dependencyScope,
                                boolean exported,
                                boolean init) {
-    super(LibraryOrderEntryTypeProvider.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+    super(LibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     myScope = dependencyScope;
     myExported = exported;
     searchForLibrary(name, level);

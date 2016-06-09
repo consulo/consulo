@@ -37,15 +37,11 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.AbstractVcs;
-import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.VcsException;
-import com.intellij.openapi.vcs.VcsKey;
+import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.actions.ActiveAnnotationGutter;
 import com.intellij.openapi.vcs.actions.VcsContextFactory;
 import com.intellij.openapi.vcs.annotate.AnnotationSource;
 import com.intellij.openapi.vcs.annotate.ShowAllAffectedGenericAction;
-import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vcs.history.VcsHistoryProvider;
 import com.intellij.openapi.vcs.history.VcsHistorySession;
@@ -109,7 +105,7 @@ class AnnotateStackTraceAction extends AnAction {
               if (info instanceof FileHyperlinkInfo) {
                 final VirtualFile file = ((FileHyperlinkInfo)info).getDescriptor().getFile();
                 final Project project = getProject();
-                final AbstractVcs vcs = ProjectLevelVcsManagerEx.getInstanceEx(project).getVcsFor(file);
+                final AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
                 if (vcs != null) {
                   final VcsRevisionNumber number = revision.getRevisionNumber();
                   final VcsKey vcsKey = vcs.getKeyInstanceMethod();

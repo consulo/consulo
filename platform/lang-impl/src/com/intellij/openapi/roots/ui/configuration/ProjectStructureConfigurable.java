@@ -74,7 +74,6 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
 
   private ProjectConfigurable myProjectConfig;
   private final ProjectLibrariesConfigurable myProjectLibrariesConfig;
-  private final GlobalLibrariesConfigurable myGlobalLibrariesConfig;
   private ModuleStructureConfigurable myModulesConfig;
 
   private final List<Configurable> myName2Config = new ArrayList<Configurable>();
@@ -86,7 +85,6 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
 
   public ProjectStructureConfigurable(final Project project,
                                       final ProjectLibrariesConfigurable projectLibrariesConfigurable,
-                                      final GlobalLibrariesConfigurable globalLibrariesConfigurable,
                                       final ModuleStructureConfigurable moduleStructureConfigurable,
                                       ArtifactsStructureConfigurable artifactsStructureConfigurable) {
     myProject = project;
@@ -97,14 +95,12 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     myModuleConfigurator.setContext(myContext);
 
     myProjectLibrariesConfig = projectLibrariesConfigurable;
-    myGlobalLibrariesConfig = globalLibrariesConfigurable;
     myModulesConfig = moduleStructureConfigurable;
     
     myProjectLibrariesConfig.init(myContext);
-    myGlobalLibrariesConfig.init(myContext);
     myModulesConfig.init(myContext);
     if (!project.isDefault()) {
-      myArtifactsStructureConfigurable.init(myContext, myModulesConfig, myProjectLibrariesConfig, myGlobalLibrariesConfig);
+      myArtifactsStructureConfigurable.init(myContext, myModulesConfig, myProjectLibrariesConfig);
     }
 
     myProjectConfig = new ProjectConfigurable(project, getContext(), getModuleConfigurator());
@@ -277,11 +273,6 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return navigateTo(place, requestFocus);
   }
 
-  public ActionCallback selectGlobalLibraries(final boolean requestFocus) {
-    Place place = createPlaceFor(myGlobalLibrariesConfig);
-    return navigateTo(place, requestFocus);
-  }
-
   public ActionCallback selectProjectOrGlobalLibrary(@NotNull Library library, boolean requestFocus) {
     Place place = createProjectOrGlobalLibraryPlace(library);
     return navigateTo(place, requestFocus);
@@ -392,10 +383,6 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return myProjectLibrariesConfig;
   }
 
-  public GlobalLibrariesConfigurable getGlobalLibrariesConfig() {
-    return myGlobalLibrariesConfig;
-  }
-
   public ModuleStructureConfigurable getModulesConfigurable() {
     return myModulesConfig;
   }
@@ -424,7 +411,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     if (LibraryTablesRegistrar.PROJECT_LEVEL.equals(library.getTable().getTableLevel())) {
       return myProjectLibrariesConfig;
     } else {
-      return myGlobalLibrariesConfig;
+      return null;
     }
   }
 

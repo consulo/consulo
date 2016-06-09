@@ -87,7 +87,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   }
 
   @NotNull
-  public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@NotNull final Class<? extends SdkType> clazz) {
+  public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@NotNull final Class<? extends SdkTypeId> clazz) {
     mySdkFilter = new Condition<SdkTypeId>() {
       @Override
       public boolean value(SdkTypeId sdkTypeId) {

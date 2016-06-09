@@ -21,10 +21,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
-import com.intellij.util.ui.Animator;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.OwnScrollBarUI;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.ui.components.JBScrollBar;
+import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -242,6 +240,11 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
     }
     else {
       g.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y);
+    }
+
+    RegionPainter<Object> painter = UIUtil.getClientProperty(c, TRACK);
+    if (painter != null) {
+      painter.paint((Graphics2D)g, bounds.x, bounds.y, bounds.width, bounds.height, null);
     }
   }
 

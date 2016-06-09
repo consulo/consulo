@@ -25,11 +25,6 @@
       <implementation-class>com.intellij.openapi.components.impl.ModuleServiceManagerImpl</implementation-class>
     </component>
 
-    <component>
-      <interface-class>com.intellij.openapi.vcs.impl.VcsManagerPerModuleConfiguration</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.impl.VcsManagerPerModuleConfiguration</implementation-class>
-      <option name="workspace" value="true"/>
-    </component>
   </module-components>
 
 </idea-plugin>

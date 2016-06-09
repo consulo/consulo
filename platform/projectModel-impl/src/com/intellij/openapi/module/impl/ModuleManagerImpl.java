@@ -40,7 +40,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ExceptionUtil;
@@ -626,7 +626,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     public Module newModule(@NotNull @NonNls String name, @Nullable @NonNls String dirPath, @Nullable Map<String, String> options) {
       assertWritable();
 
-      final String dirUrl = dirPath == null ? null : VirtualFileManager.constructUrl(LocalFileSystem.PROTOCOL, dirPath);
+      final String dirUrl = dirPath == null ? null : VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, dirPath);
 
       ModuleEx moduleEx = null;
       if (dirUrl != null) {
