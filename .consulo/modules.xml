@@ -1095,6 +1095,28 @@
           </orderEntry>
         </module-layer>
       </module>
+      <module name="ui-api" dirurl="file://$PROJECT_DIR$/api/ui-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="annotations" exported="" />
+        </module-layer>
+      </module>
+      <module name="desktop-ui-impl" dirurl="file://$PROJECT_DIR$/impl/desktop-ui-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="ui-api" />
+        </module-layer>
+      </module>
     </modules>
   </component>
 </project>

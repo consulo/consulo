@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.servlet;
+package consulo.web.servlet.ui;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -21,10 +21,10 @@ import java.io.IOException;
 
 /**
  * @author VISTALL
- * @since 05-Jun-16
+ * @since 09-Jun-16
  */
-@ServerEndpoint(value = "/ws")
-public class WebSocketHandler {
+@ServerEndpoint(value = "/ui")
+public class UIWebSocketHandler {
   @OnOpen
   public void onOpen(Session session) {
     System.out.println("Connected ... " + session.getId());
