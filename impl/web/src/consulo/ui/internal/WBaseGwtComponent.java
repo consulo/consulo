@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import consulo.ui.Component;
@@ -94,8 +95,15 @@ public class WBaseGwtComponent implements Component {
 
   @Override
   @RequiredUIThread
-  public void setVisible(boolean value) {
-    myVisible = value;
+  public void setVisible(final boolean value) {
+    makeChange(new Consumer<UIComponent>() {
+      @Override
+      public void consume(UIComponent component) {
+        myVisible = value;
+
+        putIfNotDefault("visible", myVisible, true, component.getVariables());
+      }
+    });
   }
 
   @Override
@@ -105,8 +113,15 @@ public class WBaseGwtComponent implements Component {
 
   @Override
   @RequiredUIThread
-  public void setEnabled(boolean enabled) {
-    myEnabled = enabled;
+  public void setEnabled(final boolean enabled) {
+    makeChange(new Consumer<UIComponent>() {
+      @Override
+      public void consume(UIComponent component) {
+        myEnabled = enabled;
+
+        putIfNotDefault("enabled", myEnabled, true, component.getVariables());
+      }
+    });
   }
 
   public UIComponent convert(UIEventFactory factory) {
@@ -135,7 +150,9 @@ public class WBaseGwtComponent implements Component {
   }
 
   protected void initVariables(Map<String, String> map) {
-    map.put("visible", String.valueOf(myVisible));
+    putIfNotDefault("visible", myVisible, true, map);
+
+    putIfNotDefault("enabled", myEnabled, true, map);
   }
 
   public void invokeListeners(Map<String, String> variables) {
@@ -144,8 +161,14 @@ public class WBaseGwtComponent implements Component {
 
   public void visitChanges(List<UIComponent> components) {
     final UIComponent notifyComponent = getNotifyComponent();
-    if(notifyComponent != null) {
+    if (notifyComponent != null) {
       components.add(notifyComponent);
+    }
+  }
+
+  private <T> void putIfNotDefault(String key, T value, T defaultValue, Map<String, String> map) {
+    if(!Comparing.equal(value, defaultValue)) {
+      map.put(key, String.valueOf(value));
     }
   }
 }

@@ -30,7 +30,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtCheckBoxImpl extends CheckBox implements GwtComponentImpl {
+public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponent {
   @Override
   public void init(final WebSocketProxy proxy, final String componentId) {
     addValueChangeHandler(new ValueChangeHandler<Boolean>() {
@@ -60,6 +60,8 @@ public class GwtCheckBoxImpl extends CheckBox implements GwtComponentImpl {
     if(selected != null) {
       setValue(Boolean.valueOf(selected));
     }
+
+    DefaultVariables.updateState(map, this);
   }
 
   @Override

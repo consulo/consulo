@@ -17,7 +17,7 @@ package consulo.web.gwtUI.client;
 
 import com.google.gwt.user.client.Window;
 import consulo.web.gwtUI.client.ui.GwtCheckBoxImpl;
-import consulo.web.gwtUI.client.ui.GwtComponentImpl;
+import consulo.web.gwtUI.client.ui.InternalGwtComponent;
 import consulo.web.gwtUI.client.ui.GwtDockLayoutImpl;
 import consulo.web.gwtUI.client.ui.GwtVerticalLayoutImpl;
 import consulo.web.gwtUI.shared.UIComponent;
@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class UIConverter {
   interface Factory {
-    GwtComponentImpl create();
+    InternalGwtComponent create();
   }
 
   private static Map<String, Factory> ourMap = new HashMap<String, Factory>();
@@ -40,27 +40,27 @@ public class UIConverter {
   static {
     ourMap.put("consulo.ui.internal.WGwtCheckBoxImpl", new Factory() {
       @Override
-      public GwtComponentImpl create() {
+      public InternalGwtComponent create() {
         return new GwtCheckBoxImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtDockLayoutImpl", new Factory() {
       @Override
-      public GwtComponentImpl create() {
+      public InternalGwtComponent create() {
         return new GwtDockLayoutImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtVerticalLayoutImpl", new Factory() {
       @Override
-      public GwtComponentImpl create() {
+      public InternalGwtComponent create() {
         return new GwtVerticalLayoutImpl();
       }
     });
   }
 
-  private static Map<String, GwtComponentImpl> ourCache = new HashMap<String, GwtComponentImpl>();
+  private static Map<String, InternalGwtComponent> ourCache = new HashMap<String, InternalGwtComponent>();
 
-  public static GwtComponentImpl create(WebSocketProxy proxy, UIComponent component) {
+  public static InternalGwtComponent create(WebSocketProxy proxy, UIComponent component) {
     final String type = component.getType();
     Factory factory = ourMap.get(type);
     if (factory == null) {
@@ -68,7 +68,7 @@ public class UIConverter {
       return null;
     }
 
-    final GwtComponentImpl widget = factory.create();
+    final InternalGwtComponent widget = factory.create();
 
     ourCache.put(component.getId(), widget);
 
@@ -88,7 +88,7 @@ public class UIConverter {
     return widget;
   }
 
-  public static GwtComponentImpl get(String id) {
+  public static InternalGwtComponent get(String id) {
     return ourCache.get(id);
   }
 }

@@ -16,7 +16,7 @@
 package consulo.ui.internal;
 
 import com.intellij.codeInspection.SmartHashMap;
-import com.intellij.util.containers.hash.HashMap;
+import com.intellij.util.containers.hash.LinkedHashMap;
 import consulo.ui.Component;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
@@ -30,7 +30,7 @@ import java.util.Map;
  * @since 12-Jun-16
  */
 public class WGwtLayoutImpl<C> extends WBaseGwtComponent {
-  private Map<C, WBaseGwtComponent> myComponents = new HashMap<C, WBaseGwtComponent>();
+  private Map<C, WBaseGwtComponent> myComponents = new LinkedHashMap<C, WBaseGwtComponent>();
 
   @Override
   public void registerComponent(Map<String, WBaseGwtComponent> map) {

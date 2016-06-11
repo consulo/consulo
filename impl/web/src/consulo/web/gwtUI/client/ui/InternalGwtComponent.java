@@ -25,7 +25,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface GwtComponentImpl extends IsWidget {
+public interface InternalGwtComponent extends IsWidget {
   void init(WebSocketProxy proxy, String componentId);
 
   void updateState(Map<String, String> map);

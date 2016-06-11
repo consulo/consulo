@@ -25,7 +25,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListener;
-import consulo.web.gwtUI.client.ui.GwtComponentImpl;
+import consulo.web.gwtUI.client.ui.InternalGwtComponent;
 import consulo.web.gwtUI.client.util.Log;
 import consulo.web.gwtUI.client.util.UIUtil;
 import consulo.web.gwtUI.shared.*;
@@ -85,7 +85,7 @@ public class UIEntryPoint implements EntryPoint {
           case stateChanged:
             if (components != null) {
               for (UIComponent component : components) {
-                final GwtComponentImpl temp = UIConverter.get(component.getId());
+                final InternalGwtComponent temp = UIConverter.get(component.getId());
                 final Map<String, String> variables = component.getVariables();
                 if(variables != null) {
                   temp.updateState(variables);

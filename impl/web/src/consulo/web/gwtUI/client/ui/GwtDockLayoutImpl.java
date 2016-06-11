@@ -27,7 +27,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtDockLayoutImpl extends DockPanel implements GwtComponentImpl {
+public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponent {
   public GwtDockLayoutImpl() {
     UIUtil.fill(this);
     setHorizontalAlignment(ALIGN_LEFT);
@@ -41,7 +41,7 @@ public class GwtDockLayoutImpl extends DockPanel implements GwtComponentImpl {
 
   @Override
   public void updateState(Map<String, String> map) {
-
+    DefaultVariables.updateState(map, this);
   }
 
   @Override

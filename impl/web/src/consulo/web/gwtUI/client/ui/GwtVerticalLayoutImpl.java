@@ -29,7 +29,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtVerticalLayoutImpl extends Grid implements GwtComponentImpl {
+public class GwtVerticalLayoutImpl extends Grid implements InternalGwtComponent {
   private SimplePanel myPanel = UIUtil.fillAndReturn(new SimplePanel());
 
   public GwtVerticalLayoutImpl() {
@@ -47,7 +47,7 @@ public class GwtVerticalLayoutImpl extends Grid implements GwtComponentImpl {
 
   @Override
   public void updateState(Map<String, String> map) {
-
+    DefaultVariables.updateState(map, this);
   }
 
   @Override
