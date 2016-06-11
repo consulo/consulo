@@ -22,6 +22,7 @@ import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIClientEventType;
 import consulo.web.gwtUI.shared.UIComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,15 +52,13 @@ public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponent {
   }
 
   @Override
-  public void updateState(Map<String, String> map) {
+  public void updateState(@NotNull Map<String, String> map) {
     final String text = map.get("text");
     if(text != null) {
       setText(text);
     }
-    final String selected = map.get("selected");
-    if(selected != null) {
-      setValue(Boolean.valueOf(selected));
-    }
+
+    setValue(DefaultVariables.parseBoolAsTrue(map, "selected"));
 
     DefaultVariables.updateState(map, this);
   }

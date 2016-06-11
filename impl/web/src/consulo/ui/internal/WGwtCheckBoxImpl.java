@@ -15,11 +15,10 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.util.Consumer;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartList;
 import consulo.ui.CheckBox;
 import consulo.ui.RequiredUIThread;
-import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -47,22 +46,22 @@ public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
 
   @Override
   public void setText(@NotNull final String text) {
-    makeChange(new Consumer<UIComponent>() {
-      @Override
-      public void consume(UIComponent component) {
-        myText = text;
+    if (Comparing.equal(myText, text)) {
+      return;
+    }
 
-        component.getVariables().put("text", text);
-      }
-    });
+    myText = text;
+
+    markAsChanged();
   }
 
   @Override
-  protected void initVariables(Map<String, String> map) {
-    super.initVariables(map);
+  protected void getState(Map<String, String> map) {
+    super.getState(map);
 
     map.put("text", myText);
-    map.put("selected", String.valueOf(mySelected));
+
+    putIfNotDefault("selected", mySelected, true, map);
   }
 
   @Override
@@ -86,14 +85,13 @@ public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
   @Override
   @RequiredUIThread
   public void setSelected(final boolean value) {
-    makeChange(new Consumer<UIComponent>() {
-      @Override
-      public void consume(UIComponent component) {
-        mySelected = value;
+    if (mySelected == value) {
+      return;
+    }
 
-        component.getVariables().put("selected", String.valueOf(value));
-      }
-    });
+    mySelected = value;
+
+    markAsChanged();
 
     fireSelectListeners();
   }

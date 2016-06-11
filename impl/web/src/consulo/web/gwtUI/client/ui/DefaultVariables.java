@@ -15,6 +15,7 @@
  */
 package consulo.web.gwtUI.client.ui;
 
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 
 import java.util.Map;
@@ -27,13 +28,14 @@ public class DefaultVariables {
   public static void updateState(Map<String, String> map, InternalGwtComponent component) {
     final Widget widget = component.asWidget();
 
-    // no support for enabled?
-    //widget.setEnabled(parseBool(map, "enabled"));
+    if (widget instanceof HasEnabled) {
+      ((HasEnabled)widget).setEnabled(parseBoolAsTrue(map, "enabled"));
+    }
 
-    widget.setVisible(parseBool(map, "visible"));
+    widget.setVisible(parseBoolAsTrue(map, "visible"));
   }
 
-  public static boolean parseBool(Map<String, String> map, String key) {
+  public static boolean parseBoolAsTrue(Map<String, String> map, String key) {
     final String temp = map.get(key);
     return temp == null || Boolean.parseBoolean(temp);
   }

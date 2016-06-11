@@ -17,7 +17,6 @@ package consulo.ui.internal;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIThread;
@@ -25,7 +24,6 @@ import consulo.ui.UIAccess;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
 import consulo.web.servlet.ui.UISessionManager;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -50,25 +48,27 @@ public class WBaseGwtComponent implements Component {
   }
 
   @RequiredUIThread
-  protected void makeChange(@NotNull Consumer<UIComponent> consumer) {
+  protected void markAsChanged() {
     UIAccess.assertIsUIThread();
 
     if (myNotifyComponent != null) {
-      consumer.consume(myNotifyComponent);
+      getState(myNotifyComponent.getVariables());
     }
     else {
       final AutoBean<UIComponent> bean = UISessionManager.ourEventFactory.component();
       myNotifyComponent = bean.as();
       myNotifyComponent.setId(getId());
 
-      myNotifyComponent.setVariables(new HashMap<String, String>());
+      final HashMap<String, String> map = new HashMap<String, String>();
 
-      consumer.consume(myNotifyComponent);
+      getState(map);
+
+      myNotifyComponent.setVariables(map);
     }
   }
 
   @Nullable
-  public UIComponent getNotifyComponent() {
+  public UIComponent getNotifyComponentAndClear() {
     final UIComponent notifyComponent = myNotifyComponent;
     myNotifyComponent = null;
     return notifyComponent;
@@ -96,14 +96,13 @@ public class WBaseGwtComponent implements Component {
   @Override
   @RequiredUIThread
   public void setVisible(final boolean value) {
-    makeChange(new Consumer<UIComponent>() {
-      @Override
-      public void consume(UIComponent component) {
-        myVisible = value;
+    if (myVisible == value) {
+      return;
+    }
 
-        putIfNotDefault("visible", myVisible, true, component.getVariables());
-      }
-    });
+    myVisible = value;
+
+    markAsChanged();
   }
 
   @Override
@@ -113,15 +112,14 @@ public class WBaseGwtComponent implements Component {
 
   @Override
   @RequiredUIThread
-  public void setEnabled(final boolean enabled) {
-    makeChange(new Consumer<UIComponent>() {
-      @Override
-      public void consume(UIComponent component) {
-        myEnabled = enabled;
+  public void setEnabled(final boolean value) {
+    if (myEnabled == value) {
+      return;
+    }
 
-        putIfNotDefault("enabled", myEnabled, true, component.getVariables());
-      }
-    });
+    myEnabled = value;
+
+    markAsChanged();
   }
 
   public UIComponent convert(UIEventFactory factory) {
@@ -132,7 +130,7 @@ public class WBaseGwtComponent implements Component {
     component.setId(myId);
 
     Map<String, String> map = new HashMap<String, String>();
-    initVariables(map);
+    getState(map);
     if (!map.isEmpty()) {
       component.setVariables(map);
     }
@@ -149,9 +147,8 @@ public class WBaseGwtComponent implements Component {
 
   }
 
-  protected void initVariables(Map<String, String> map) {
+  protected void getState(Map<String, String> map) {
     putIfNotDefault("visible", myVisible, true, map);
-
     putIfNotDefault("enabled", myEnabled, true, map);
   }
 
@@ -160,14 +157,14 @@ public class WBaseGwtComponent implements Component {
   }
 
   public void visitChanges(List<UIComponent> components) {
-    final UIComponent notifyComponent = getNotifyComponent();
+    final UIComponent notifyComponent = getNotifyComponentAndClear();
     if (notifyComponent != null) {
       components.add(notifyComponent);
     }
   }
 
-  private <T> void putIfNotDefault(String key, T value, T defaultValue, Map<String, String> map) {
-    if(!Comparing.equal(value, defaultValue)) {
+  protected <T> void putIfNotDefault(String key, T value, T defaultValue, Map<String, String> map) {
+    if (!Comparing.equal(value, defaultValue)) {
       map.put(key, String.valueOf(value));
     }
   }

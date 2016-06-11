@@ -22,6 +22,7 @@ import consulo.web.gwtUI.client.ui.GwtDockLayoutImpl;
 import consulo.web.gwtUI.client.ui.GwtVerticalLayoutImpl;
 import consulo.web.gwtUI.shared.UIComponent;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,9 +76,7 @@ public class UIConverter {
     final Map<String, String> variables = component.getVariables();
     widget.init(proxy, component.getId());
 
-    if(variables != null) {
-      widget.updateState(variables);
-    }
+    widget.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
 
     final List<UIComponent.Child> children = component.getChildren();
     if(children != null) {

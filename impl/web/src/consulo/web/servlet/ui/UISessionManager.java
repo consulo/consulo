@@ -137,6 +137,9 @@ public class UISessionManager {
         serverEvent.setType(UIServerEventType.createRoot);
         serverEvent.setComponents(Arrays.asList(component.convert(ourEventFactory)));
 
+        // we don't interest in first states - because they will send anyway to client
+        component.visitChanges(new ArrayList<UIComponent>());
+
         context.send(bean);
       }
     });

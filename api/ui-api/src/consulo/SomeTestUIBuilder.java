@@ -28,6 +28,7 @@ public class SomeTestUIBuilder {
     VerticalLayout dockLayout = UIFactory.Layouts.vertical();
 
     final CheckBox top = create("top");
+    top.setEnabled(false);
     dockLayout.add(top);
     final CheckBox left = create("left");
     dockLayout.add(left);

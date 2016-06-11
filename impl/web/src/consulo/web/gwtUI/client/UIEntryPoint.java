@@ -30,6 +30,7 @@ import consulo.web.gwtUI.client.util.Log;
 import consulo.web.gwtUI.client.util.UIUtil;
 import consulo.web.gwtUI.shared.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -86,10 +87,9 @@ public class UIEntryPoint implements EntryPoint {
             if (components != null) {
               for (UIComponent component : components) {
                 final InternalGwtComponent temp = UIConverter.get(component.getId());
+
                 final Map<String, String> variables = component.getVariables();
-                if(variables != null) {
-                  temp.updateState(variables);
-                }
+                temp.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
               }
             }
             break;

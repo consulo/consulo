@@ -20,6 +20,7 @@ import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.client.util.UIUtil;
 import consulo.web.gwtUI.shared.UIComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponent
   }
 
   @Override
-  public void updateState(Map<String, String> map) {
+  public void updateState(@NotNull Map<String, String> map) {
     DefaultVariables.updateState(map, this);
   }
 
