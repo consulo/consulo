@@ -15,10 +15,19 @@
  */
 package consulo.ui.internal;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import consulo.ui.CheckBox;
+import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwtUI.shared.UIServerEvent;
+import consulo.web.gwtUI.shared.UIServerEventType;
+import consulo.web.servlet.ui.UIAccessHelper;
+import consulo.web.servlet.ui.UISessionManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,8 +72,23 @@ public class WGwtCheckBoxImpl extends WGwtComponentImpl implements CheckBox {
   }
 
   @Override
-  public void setSelected(boolean value) {
-    mySelected = value;
+  public void setSelected(final boolean value) {
+    UIAccessHelper.atUI(UIServerEventType.stateChanged, new Consumer<UIServerEvent>() {
+      @Override
+      public void consume(UIServerEvent event) {
+        mySelected = value;
+
+        final AutoBean<UIComponent> bean = UISessionManager.ourEventFactory.component();
+        final UIComponent component = bean.as();
+        component.setId(getId());
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("selected", String.valueOf(mySelected));
+        component.setVariables(map);
+
+        event.setComponents(Arrays.asList(component));
+      }
+    });
   }
 
   @Override

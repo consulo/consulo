@@ -15,8 +15,7 @@
  */
 package consulo.web.gwtUI.client;
 
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Window;
 import consulo.web.gwtUI.client.ui.GwtCheckBoxImpl;
 import consulo.web.gwtUI.client.ui.GwtComponentImpl;
 import consulo.web.gwtUI.client.ui.GwtDockPanelImpl;
@@ -32,7 +31,7 @@ import java.util.Map;
  */
 public class UIConverter {
   interface Factory {
-    Widget create();
+    GwtComponentImpl create();
   }
 
   private static Map<String, Factory> ourMap = new HashMap<String, Factory>();
@@ -40,42 +39,49 @@ public class UIConverter {
   static {
     ourMap.put("consulo.ui.internal.WGwtCheckBoxImpl", new Factory() {
       @Override
-      public Widget create() {
+      public GwtComponentImpl create() {
         return new GwtCheckBoxImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtDockPanelImpl", new Factory() {
       @Override
-      public Widget create() {
+      public GwtComponentImpl create() {
         return new GwtDockPanelImpl();
       }
     });
   }
 
-  public static Widget create(WebSocketProxy proxy, UIComponent component) {
+  private static Map<String, GwtComponentImpl> ourCache = new HashMap<String, GwtComponentImpl>();
+
+  public static GwtComponentImpl create(WebSocketProxy proxy, UIComponent component) {
     final String type = component.getType();
     Factory factory = ourMap.get(type);
     if (factory == null) {
-      return new Label("Type " + type + " is not resolved");
+      Window.alert("Type " + type + " is not resolved");
+      return null;
     }
 
-    final Widget widget = factory.create();
+    final GwtComponentImpl widget = factory.create();
+
+    ourCache.put(component.getId(), widget);
 
     final Map<String, String> variables = component.getVariables();
+    widget.init(proxy, component.getId());
+
     if(variables != null) {
-      if(widget instanceof GwtComponentImpl) {
-        ((GwtComponentImpl)widget).init(proxy, component.getId(), variables);
-      }
+      widget.updateState(variables);
     }
 
     final List<UIComponent.Child> children = component.getChildren();
     if(children != null) {
       for (UIComponent.Child child : children) {
-        if(widget instanceof GwtComponentImpl) {
-          ((GwtComponentImpl)widget).addChildren(proxy, child);
-        }
+        widget.addChildren(proxy, child);
       }
     }
     return widget;
+  }
+
+  public static GwtComponentImpl get(String id) {
+    return ourCache.get(id);
   }
 }

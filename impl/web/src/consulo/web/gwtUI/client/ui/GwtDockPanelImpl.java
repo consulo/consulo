@@ -35,7 +35,13 @@ public class GwtDockPanelImpl extends DockPanel implements GwtComponentImpl {
   }
 
   @Override
-  public void init(WebSocketProxy proxy, String componentId, Map<String, String> map) {
+  public void init(WebSocketProxy proxy, String componentId) {
+
+  }
+
+  @Override
+  public void updateState(Map<String, String> map) {
+
   }
 
   @Override

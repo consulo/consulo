@@ -25,10 +25,12 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListener;
+import consulo.web.gwtUI.client.ui.GwtComponentImpl;
 import consulo.web.gwtUI.client.util.UIUtil;
 import consulo.web.gwtUI.shared.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -66,15 +68,30 @@ public class UIEntryPoint implements EntryPoint {
         AutoBean<UIServerEvent> bean = AutoBeanCodex.decode(ourEventFactory, UIServerEvent.class, msg);
 
         final UIServerEvent event = bean.as();
+        final List<UIComponent> components = event.getComponents();
+
         switch (event.getType()) {
           case createRoot:
             rootPanel.clear();
-            final List<UIComponent> components = event.getComponents();
             if (components != null) {
               for (UIComponent component : components) {
                 rootPanel.add(UIConverter.create(proxy, component));
               }
             }
+            break;
+          case stateChanged:
+            if (components != null) {
+              for (UIComponent component : components) {
+                final GwtComponentImpl temp = UIConverter.get(component.getId());
+                final Map<String, String> variables = component.getVariables();
+                if(variables != null) {
+                  temp.updateState(variables);
+                }
+              }
+            }
+            break;
+          default:
+            Window.alert("Unknown event: " + event.getType());
             break;
         }
       }

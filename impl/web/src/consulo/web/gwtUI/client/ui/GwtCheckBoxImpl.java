@@ -32,10 +32,7 @@ import java.util.Map;
  */
 public class GwtCheckBoxImpl extends CheckBox implements GwtComponentImpl {
   @Override
-  public void init(final WebSocketProxy proxy, final String componentId, final Map<String, String> map) {
-    setText(map.get("text"));
-    setValue(Boolean.valueOf(map.get("selected")));
-
+  public void init(final WebSocketProxy proxy, final String componentId) {
     addValueChangeHandler(new ValueChangeHandler<Boolean>() {
       @Override
       public void onValueChange(final ValueChangeEvent<Boolean> event) {
@@ -51,6 +48,18 @@ public class GwtCheckBoxImpl extends CheckBox implements GwtComponentImpl {
         });
       }
     });
+  }
+
+  @Override
+  public void updateState(Map<String, String> map) {
+    final String text = map.get("text");
+    if(text != null) {
+      setText(text);
+    }
+    final String selected = map.get("selected");
+    if(selected != null) {
+      setValue(Boolean.valueOf(selected));
+    }
   }
 
   @Override

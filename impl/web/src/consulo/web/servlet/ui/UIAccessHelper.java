@@ -15,6 +15,12 @@
  */
 package consulo.web.servlet.ui;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.intellij.util.Consumer;
+import consulo.web.gwtUI.shared.UIServerEvent;
+import consulo.web.gwtUI.shared.UIServerEventType;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -47,5 +53,22 @@ public class UIAccessHelper {
 
   public boolean isUIThread() {
     return ourLocal.get() != null;
+  }
+
+  public static void atUI(@NotNull UIServerEventType type, @NotNull Consumer<UIServerEvent> consumer) {
+    final UISessionManager.UIContext context = ourLocal.get();
+    if (context == null) {
+      throw new IllegalArgumentException("Call must be wrapped inside UI thread");
+    }
+
+    final AutoBean<UIServerEvent> bean = UISessionManager.ourEventFactory.serverEvent();
+
+    final UIServerEvent event = bean.as();
+    event.setType(type);
+    event.setSessionId(context.getId());
+
+    consumer.consume(event);
+
+    context.send(bean);
   }
 }

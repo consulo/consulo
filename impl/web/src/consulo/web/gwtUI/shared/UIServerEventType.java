@@ -20,5 +20,6 @@ package consulo.web.gwtUI.shared;
  * @since 11-Jun-16
  */
 public enum UIServerEventType {
-  createRoot
+  createRoot,
+  stateChanged
 }

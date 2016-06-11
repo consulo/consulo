@@ -36,14 +36,35 @@ public class TestUIServlet extends UIServlet {
     return new UIRoot() {
       @NotNull
       @Override
-      public Component create(@NotNull UIAccess uiAccess) {
+      public Component create(@NotNull final UIAccess uiAccess) {
         DockLayout dockLayout = UIFactory.Layouts.dock();
 
         dockLayout.top(create("top"));
         dockLayout.left(create("left"));
         dockLayout.right(create("right"));
         dockLayout.bottom(create("bottom"));
-        dockLayout.center(create("center"));
+
+        final CheckBox centerCheckBox = create("center");
+        dockLayout.center(centerCheckBox);
+
+        new Thread(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              Thread.sleep(5000L);
+            }
+            catch (InterruptedException e) {
+              //
+            }
+
+            uiAccess.give(new Runnable() {
+              @Override
+              public void run() {
+                centerCheckBox.setSelected(false);
+              }
+            });
+          }
+        }).start();
         return dockLayout;
       }
 
@@ -53,14 +74,12 @@ public class TestUIServlet extends UIServlet {
           @Override
           @RequiredUIThread
           public void selectChanged(@NotNull CheckBox checkBox) {
-            // swing api start
             try {
               System.out.println("Test ME " + checkBox.isSelected() + " " + UIAccess.isUIThread());
             }
             catch (Exception e) {
               e.printStackTrace();
             }
-            // swing api stop
           }
         });
         return checkBox;

@@ -16,6 +16,7 @@
 package consulo.web.servlet.ui;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
 import com.intellij.util.containers.ConcurrentHashMap;
 import consulo.ui.UIAccess;
 import consulo.ui.internal.WGwtComponentImpl;
@@ -34,15 +35,21 @@ import java.util.Map;
  */
 public class UISessionManager {
   public static class UIContext extends UIAccess {
+    private String myId;
     private UIRoot myRoot;
     private Session mySession;
     private WGwtComponentImpl myComponent;
 
     private Map<String, WGwtComponentImpl> myComponents = new HashMap<String, WGwtComponentImpl>();
 
-    public UIContext(UIRoot root, Session session) {
+    public UIContext(String id, UIRoot root, Session session) {
+      myId = id;
       myRoot = root;
       mySession = session;
+    }
+
+    public String getId() {
+      return myId;
     }
 
     public void setSession(Session session) {
@@ -77,15 +84,16 @@ public class UISessionManager {
     }
   }
 
+  public static UIEventFactory ourEventFactory = AutoBeanFactorySource.create(UIEventFactory.class);
   public static final UISessionManager ourInstance = new UISessionManager();
 
   private Map<String, UIContext> myUIs = new ConcurrentHashMap<String, UIContext>();
 
   public void registerSession(String id, UIRoot uiRoot) {
-    myUIs.put(id, new UIContext(uiRoot, null));
+    myUIs.put(id, new UIContext(id, uiRoot, null));
   }
 
-  public void onSessionOpen(final Session session, final UIClientEvent clientEvent, final UIEventFactory factory) {
+  public void onSessionOpen(final Session session, final UIClientEvent clientEvent) {
     final UIContext context = myUIs.get(clientEvent.getSessionId());
     if (context == null) {
       return;
@@ -101,18 +109,18 @@ public class UISessionManager {
 
         context.setComponent(component);
 
-        AutoBean<UIServerEvent> bean = factory.serverEvent();
+        AutoBean<UIServerEvent> bean = ourEventFactory.serverEvent();
         UIServerEvent serverEvent = bean.as();
         serverEvent.setSessionId(clientEvent.getSessionId());
         serverEvent.setType(UIServerEventType.createRoot);
-        serverEvent.setComponents(Arrays.asList(component.convert(factory)));
+        serverEvent.setComponents(Arrays.asList(component.convert(ourEventFactory)));
 
         context.send(bean);
       }
     });
   }
 
-  public void onInvokeEvent(Session session, final UIClientEvent clientEvent, UIEventFactory eventFactory) {
+  public void onInvokeEvent(Session session, final UIClientEvent clientEvent) {
     final UIContext uiContext = myUIs.get(clientEvent.getSessionId());
     if (uiContext == null) {
       return;
