@@ -24,6 +24,11 @@ import javax.swing.*;
  * @since 11-Jun-16
  */
 public class DesktopUIAccessImpl extends UIAccess {
+  public static UIAccess ourInstance = new DesktopUIAccessImpl();
+
+  private DesktopUIAccessImpl() {
+  }
+
   @Override
   public void give(@NotNull Runnable runnable) {
     SwingUtilities.invokeLater(runnable);
