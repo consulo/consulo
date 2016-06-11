@@ -32,19 +32,19 @@ public class UIFactory {
 
     @NotNull
     public static CheckBox checkBox(@NotNull String text, boolean selected) {
-      return UIBindingInternalHolder.INSTANCE.createComponentsCheckBox(text, selected);
+      return UIBindingInternalHolder.ourInstance._components_checkBox(text, selected);
     }
   }
 
   public static class Layouts {
     @NotNull
     public static DockLayout dock() {
-      return UIBindingInternalHolder.INSTANCE.createLayoutsDock();
+      return UIBindingInternalHolder.ourInstance._layouts_dock();
     }
   }
 
   private static class UIBindingInternalHolder {
-    public static UIBindingInternal INSTANCE = impl();
+    public static UIBindingInternal ourInstance = impl();
 
     private static UIBindingInternal impl() {
       UIBindingInternal bindingInternal = null;

@@ -111,6 +111,9 @@
           </element>
           <element id="file-copy" path="$PROJECT_DIR$/impl/web/lib/gwt-servlet-deps.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/impl/web/lib/gwt-servlet.jar" />
+          <element id="zip-archive" name="consulo-ui.jar">
+            <element id="module-output" name="ui-api" />
+          </element>
         </element>
       </element>
       <element id="directory" name="icons">

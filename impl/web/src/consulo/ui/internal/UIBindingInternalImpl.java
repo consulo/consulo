@@ -21,16 +21,16 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 11-Jun-16
  */
 public class UIBindingInternalImpl implements UIBindingInternal {
   @Override
   public CheckBox _components_checkBox(@NotNull String text, boolean selected) {
-    return new DesktopCheckBoxImpl(text, selected);
+    return new WGwtCheckBoxImpl(selected, text);
   }
 
   @Override
   public DockLayout _layouts_dock() {
-    return new DesktopDockLayoutImpl();
+    return null;
   }
 }

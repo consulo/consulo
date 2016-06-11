@@ -13,24 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.web.gwtUI.client.util;
 
-import consulo.ui.CheckBox;
-import consulo.ui.layout.DockLayout;
-import org.jetbrains.annotations.NotNull;
+import com.google.gwt.user.client.ui.*;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 11-Jun-16
  */
-public class UIBindingInternalImpl implements UIBindingInternal {
-  @Override
-  public CheckBox _components_checkBox(@NotNull String text, boolean selected) {
-    return new DesktopCheckBoxImpl(text, selected);
+public class UIUtil {
+  public static Widget loadingPanel() {
+    VerticalPanel verticalPanel = fillAndReturn(new VerticalPanel());
+    verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+    verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+
+    verticalPanel.add(new Label("Loading..."));
+
+    return verticalPanel;
   }
 
-  @Override
-  public DockLayout _layouts_dock() {
-    return new DesktopDockLayoutImpl();
+  public static <T extends UIObject> T fillAndReturn(T object) {
+    object.setWidth("100%");
+    object.setHeight("100%");
+    return object;
   }
 }

@@ -15,6 +15,8 @@
  */
 package consulo.web.servlet.ui;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -35,11 +37,17 @@ public abstract class UIServlet extends HttpServlet {
     myGwtModuleName = gwtModuleName;
   }
 
+  @NotNull
+  public abstract UIRoot createUIRoot();
+
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html");
 
-    response.addCookie(new Cookie("ConsuloSessionId", UUID.randomUUID().toString()));
+    String id = UUID.randomUUID().toString();
+    response.addCookie(new Cookie("ConsuloSessionId", id));
+
+    UISessionManager.INSTANCE.registerSession(id, createUIRoot());
 
     final PrintWriter writer = response.getWriter();
     writer.println("<html>");

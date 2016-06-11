@@ -1093,6 +1093,7 @@
               </binaries>
             </library>
           </orderEntry>
+          <orderEntry type="module" module-name="ui-api" />
         </module-layer>
       </module>
       <module name="ui-api" dirurl="file://$PROJECT_DIR$/api/ui-api" current-layer="Default">

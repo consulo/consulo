@@ -15,14 +15,39 @@
  */
 package consulo.web.servlet;
 
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.UIFactory;
+import consulo.web.servlet.ui.UIRoot;
 import consulo.web.servlet.ui.UIServlet;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 11-Jun-16
  */
 public class TestUIServlet extends UIServlet {
   public TestUIServlet() {
-    super("consulo");
+    super("ui");
+  }
+
+  @NotNull
+  @Override
+  public UIRoot createUIRoot() {
+    return new UIRoot() {
+
+      @NotNull
+      @Override
+      public Component create() {
+        CheckBox checkBox = UIFactory.Components.checkBox("Hello world?");
+        checkBox.addSelectListener(new CheckBox.SelectListener() {
+          @Override
+          public void selectChanged(@NotNull CheckBox checkBox) {
+            System.out.println("test me " + checkBox.isSelected());
+          }
+        });
+        return checkBox;
+      }
+    };
   }
 }

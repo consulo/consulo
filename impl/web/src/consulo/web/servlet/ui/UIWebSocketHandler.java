@@ -15,35 +15,41 @@
  */
 package consulo.web.servlet.ui;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
+import consulo.web.gwtUI.shared.UIClientEvent;
+import consulo.web.gwtUI.shared.UIEventFactory;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-@ServerEndpoint(value = "/ui")
+@ServerEndpoint(value = "/ws")
 public class UIWebSocketHandler {
+  private static UIEventFactory ourEventFactory = AutoBeanFactorySource.create(UIEventFactory.class);
+
   @OnOpen
   public void onOpen(Session session) {
     System.out.println("Connected ... " + session.getId());
-
-    session.getAsyncRemote().sendText("test me");
   }
 
   @OnMessage
-  public String onMessage(String message, Session session) {
-    if (message.equals("quit")) {
-      try {
-        session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Game ended"));
-      }
-      catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+  public void onMessage(String message, Session session) {
+    AutoBean<UIClientEvent> bean = AutoBeanCodex.decode(ourEventFactory, UIClientEvent.class, message);
 
+    UIClientEvent clientEvent = bean.as();
+    switch (clientEvent.getType()) {
+      case sessionOpen:
+        UISessionManager.INSTANCE.onSessionOpen(session, clientEvent, ourEventFactory);
+        break;
+      case invokeEvent:
+        UISessionManager.INSTANCE.onInvokeEvent(session, clientEvent, ourEventFactory);
+        break;
     }
-    return message;
   }
 
   @OnClose

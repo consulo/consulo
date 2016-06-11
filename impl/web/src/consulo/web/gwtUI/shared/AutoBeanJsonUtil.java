@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.web.gwtUI.shared;
 
-import consulo.ui.CheckBox;
-import consulo.ui.layout.DockLayout;
-import org.jetbrains.annotations.NotNull;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 11-Jun-16
  */
-public class UIBindingInternalImpl implements UIBindingInternal {
-  @Override
-  public CheckBox _components_checkBox(@NotNull String text, boolean selected) {
-    return new DesktopCheckBoxImpl(text, selected);
-  }
-
-  @Override
-  public DockLayout _layouts_dock() {
-    return new DesktopDockLayoutImpl();
+public class AutoBeanJsonUtil {
+  public static <T> String toJson(AutoBean<T> o) {
+    return AutoBeanCodex.encode(o).getPayload();
   }
 }

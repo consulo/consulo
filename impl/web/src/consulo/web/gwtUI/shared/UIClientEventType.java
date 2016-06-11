@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.servlet.ui;
+package consulo.web.gwtUI.shared;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 11-Jun-16
  */
-public class UIServletManager {
+public enum UIClientEventType {
+  sessionOpen,
+  invokeEvent
 }

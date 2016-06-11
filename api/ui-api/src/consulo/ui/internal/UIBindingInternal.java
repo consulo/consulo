@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 09-Jun-16
  */
 public interface UIBindingInternal {
-  CheckBox createComponentsCheckBox(@NotNull String text, boolean selected);
+  CheckBox _components_checkBox(@NotNull String text, boolean selected);
 
-  DockLayout createLayoutsDock();
+  DockLayout _layouts_dock();
 }
