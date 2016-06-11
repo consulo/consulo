@@ -16,7 +16,9 @@
 package consulo.ui.internal;
 
 import consulo.ui.CheckBox;
+import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -52,6 +54,12 @@ public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
 
   public DesktopCheckBoxImpl(String text, boolean selected) {
     super(text, selected);
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
   }
 
   @Override

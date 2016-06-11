@@ -18,6 +18,7 @@ package consulo.ui.internal;
 import consulo.ui.Component;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -35,5 +36,11 @@ public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout 
   public VerticalLayout add(@NotNull Component component) {
     add((java.awt.Component)component);
     return this;
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
   }
 }

@@ -17,17 +17,18 @@ package consulo.web.servlet.ui;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
+import com.intellij.util.Function;
 import com.intellij.util.containers.ConcurrentHashMap;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIThread;
 import consulo.ui.UIAccess;
-import consulo.ui.internal.WGwtComponentImpl;
+import consulo.ui.internal.WBaseGwtComponent;
 import consulo.web.gwtUI.shared.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.websocket.Session;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -36,15 +37,15 @@ import java.util.Map;
 public class UISessionManager {
   public static class UIContext extends UIAccess {
     private String myId;
-    private UIRoot myRoot;
+    private Function<UIAccess, Component> myUIFactory;
     private Session mySession;
-    private WGwtComponentImpl myComponent;
+    private WBaseGwtComponent myRootComponent;
 
-    private Map<String, WGwtComponentImpl> myComponents = new HashMap<String, WGwtComponentImpl>();
+    private Map<String, WBaseGwtComponent> myComponents = new HashMap<String, WBaseGwtComponent>();
 
-    public UIContext(String id, UIRoot root, Session session) {
+    public UIContext(String id, Function<UIAccess, Component> UIFactory, Session session) {
       myId = id;
-      myRoot = root;
+      myUIFactory = UIFactory;
       mySession = session;
     }
 
@@ -56,8 +57,8 @@ public class UISessionManager {
       mySession = session;
     }
 
-    public void setComponent(WGwtComponentImpl component) {
-      myComponent = component;
+    public void setRootComponent(WBaseGwtComponent rootComponent) {
+      myRootComponent = rootComponent;
     }
 
     public Session getSession() {
@@ -65,14 +66,15 @@ public class UISessionManager {
     }
 
     @Override
-    public void give(@NotNull Runnable runnable) {
+    public void give(@RequiredUIThread @NotNull Runnable runnable) {
       UIAccessHelper.ourInstance.run(this, runnable);
     }
 
+    /**
+     * Must be called inside write executor
+     */
     public void send(AutoBean<UIServerEvent> bean) {
-      if (!UIAccessHelper.ourInstance.isUIThread()) {
-        throw new IllegalArgumentException("Call must be wrapped inside UI thread");
-      }
+      UIAccess.assertIsUIThread();
 
       final String json = AutoBeanJsonUtil.toJson(bean);
       try {
@@ -82,6 +84,26 @@ public class UISessionManager {
         e.printStackTrace();
       }
     }
+
+    public void repaint() {
+      UIAccess.assertIsUIThread();
+
+      final WBaseGwtComponent rootComponent = myRootComponent;
+
+      List<UIComponent> components = new ArrayList<UIComponent>();
+
+      rootComponent.visitChanges(components);
+
+      if (!components.isEmpty()) {
+        AutoBean<UIServerEvent> bean = ourEventFactory.serverEvent();
+        UIServerEvent serverEvent = bean.as();
+        serverEvent.setSessionId(myId);
+        serverEvent.setType(UIServerEventType.stateChanged);
+        serverEvent.setComponents(components);
+
+        send(bean);
+      }
+    }
   }
 
   public static UIEventFactory ourEventFactory = AutoBeanFactorySource.create(UIEventFactory.class);
@@ -89,7 +111,7 @@ public class UISessionManager {
 
   private Map<String, UIContext> myUIs = new ConcurrentHashMap<String, UIContext>();
 
-  public void registerSession(String id, UIRoot uiRoot) {
+  public void registerSession(String id, Function<UIAccess, Component> uiRoot) {
     myUIs.put(id, new UIContext(id, uiRoot, null));
   }
 
@@ -104,10 +126,10 @@ public class UISessionManager {
     UIAccessHelper.ourInstance.run(context, new Runnable() {
       @Override
       public void run() {
-        WGwtComponentImpl component = (WGwtComponentImpl)context.myRoot.create(context);
+        final WBaseGwtComponent component = (WBaseGwtComponent)context.myUIFactory.fun(context);
         component.registerComponent(context.myComponents);
 
-        context.setComponent(component);
+        context.setRootComponent(component);
 
         AutoBean<UIServerEvent> bean = ourEventFactory.serverEvent();
         UIServerEvent serverEvent = bean.as();
@@ -131,7 +153,7 @@ public class UISessionManager {
       public void run() {
         final String componentId = clientEvent.getVariables().get("componentId");
 
-        final WGwtComponentImpl gwtComponent = uiContext.myComponents.get(componentId);
+        final WBaseGwtComponent gwtComponent = uiContext.myComponents.get(componentId);
         if (gwtComponent != null) {
           gwtComponent.invokeListeners(clientEvent.getVariables());
         }

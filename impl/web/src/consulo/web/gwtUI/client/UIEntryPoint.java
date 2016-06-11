@@ -26,6 +26,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListener;
 import consulo.web.gwtUI.client.ui.GwtComponentImpl;
+import consulo.web.gwtUI.client.util.Log;
 import consulo.web.gwtUI.client.util.UIUtil;
 import consulo.web.gwtUI.shared.*;
 
@@ -65,6 +66,8 @@ public class UIEntryPoint implements EntryPoint {
 
       @Override
       public void onMessage(String msg) {
+        Log.log("receive: " + msg);
+
         AutoBean<UIServerEvent> bean = AutoBeanCodex.decode(ourEventFactory, UIServerEvent.class, msg);
 
         final UIServerEvent event = bean.as();

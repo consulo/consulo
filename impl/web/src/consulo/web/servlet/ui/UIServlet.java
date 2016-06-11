@@ -15,6 +15,9 @@
  */
 package consulo.web.servlet.ui;
 
+import com.intellij.util.Function;
+import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
@@ -38,7 +41,7 @@ public abstract class UIServlet extends HttpServlet {
   }
 
   @NotNull
-  public abstract UIRoot createUIRoot();
+  public abstract Function<UIAccess, Component> uiFactory();
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
@@ -47,7 +50,7 @@ public abstract class UIServlet extends HttpServlet {
     String id = UUID.randomUUID().toString();
     response.addCookie(new Cookie("ConsuloSessionId", id));
 
-    UISessionManager.ourInstance.registerSession(id, createUIRoot());
+    UISessionManager.ourInstance.registerSession(id, uiFactory());
 
     final PrintWriter writer = response.getWriter();
     writer.println("<html>");

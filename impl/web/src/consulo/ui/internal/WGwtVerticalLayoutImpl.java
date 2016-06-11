@@ -15,49 +15,21 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.util.SmartList;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIThread;
 import consulo.ui.layout.VerticalLayout;
-import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIEventFactory;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class WGwtVerticalLayoutImpl extends WGwtComponentImpl implements VerticalLayout {
-  private List<WGwtComponentImpl> myComponents = new SmartList<WGwtComponentImpl>();
-
-  @Override
-  public void registerComponent(Map<String, WGwtComponentImpl> map) {
-    super.registerComponent(map);
-    for (WGwtComponentImpl component : myComponents) {
-      component.registerComponent(map);
-    }
-  }
-
-  @Override
-  protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
-    for (WGwtComponentImpl component : myComponents) {
-      final UIComponent.Child child = factory.componentChild().as();
-
-      final UIComponent uiComponent = component.convert(factory);
-      child.setComponent(uiComponent);
-
-      children.add(child);
-    }
-  }
-
+public class WGwtVerticalLayoutImpl extends WGwtLayoutImpl<Object> implements VerticalLayout {
   @NotNull
   @Override
   @RequiredUIThread
   public VerticalLayout add(@NotNull Component component) {
-    myComponents.add((WGwtComponentImpl)component);
+    addChild((WBaseGwtComponent)component, new Object());
     return this;
   }
 }

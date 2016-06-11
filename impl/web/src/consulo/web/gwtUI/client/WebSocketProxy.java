@@ -17,6 +17,7 @@ package consulo.web.gwtUI.client;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.sksamuel.gwt.websockets.Websocket;
+import consulo.web.gwtUI.client.util.Log;
 import consulo.web.gwtUI.shared.AutoBeanJsonUtil;
 import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIClientEventType;
@@ -50,6 +51,9 @@ public class WebSocketProxy {
 
     consumer.consume(clientEvent);
 
-    myWebsocket.send(AutoBeanJsonUtil.toJson(bean));
+    final String json = AutoBeanJsonUtil.toJson(bean);
+    myWebsocket.send(json);
+
+    Log.log("send: " + json);
   }
 }

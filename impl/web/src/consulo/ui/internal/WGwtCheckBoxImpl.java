@@ -15,19 +15,13 @@
  */
 package consulo.ui.internal;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import consulo.ui.CheckBox;
+import consulo.ui.RequiredUIThread;
 import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIServerEvent;
-import consulo.web.gwtUI.shared.UIServerEventType;
-import consulo.web.servlet.ui.UIAccessHelper;
-import consulo.web.servlet.ui.UISessionManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +29,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class WGwtCheckBoxImpl extends WGwtComponentImpl implements CheckBox {
+public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
   private boolean mySelected;
   private String myText;
   private List<SelectListener> mySelectListenerList = new SmartList<SelectListener>();
@@ -53,20 +47,12 @@ public class WGwtCheckBoxImpl extends WGwtComponentImpl implements CheckBox {
 
   @Override
   public void setText(@NotNull final String text) {
-    UIAccessHelper.atUI(UIServerEventType.stateChanged, new Consumer<UIServerEvent>() {
+    makeChange(new Consumer<UIComponent>() {
       @Override
-      public void consume(UIServerEvent event) {
+      public void consume(UIComponent component) {
         myText = text;
 
-        final AutoBean<UIComponent> bean = UISessionManager.ourEventFactory.component();
-        final UIComponent component = bean.as();
-        component.setId(getId());
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("text", text);
-        component.setVariables(map);
-
-        event.setComponents(Arrays.asList(component));
+        component.getVariables().put("text", text);
       }
     });
   }
@@ -83,6 +69,10 @@ public class WGwtCheckBoxImpl extends WGwtComponentImpl implements CheckBox {
   public void invokeListeners(Map<String, String> variables) {
     mySelected = Boolean.parseBoolean(variables.get("selected"));
 
+    fireSelectListeners();
+  }
+
+  private void fireSelectListeners() {
     for (SelectListener selectListener : mySelectListenerList) {
       selectListener.selectChanged(this);
     }
@@ -94,23 +84,18 @@ public class WGwtCheckBoxImpl extends WGwtComponentImpl implements CheckBox {
   }
 
   @Override
+  @RequiredUIThread
   public void setSelected(final boolean value) {
-    UIAccessHelper.atUI(UIServerEventType.stateChanged, new Consumer<UIServerEvent>() {
+    makeChange(new Consumer<UIComponent>() {
       @Override
-      public void consume(UIServerEvent event) {
+      public void consume(UIComponent component) {
         mySelected = value;
 
-        final AutoBean<UIComponent> bean = UISessionManager.ourEventFactory.component();
-        final UIComponent component = bean.as();
-        component.setId(getId());
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("selected", String.valueOf(mySelected));
-        component.setVariables(map);
-
-        event.setComponents(Arrays.asList(component));
+        component.getVariables().put("selected", String.valueOf(value));
       }
     });
+
+    fireSelectListeners();
   }
 
   @Override

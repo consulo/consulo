@@ -30,7 +30,7 @@ public class DesktopUIAccessImpl extends UIAccess {
   }
 
   @Override
-  public void give(@NotNull Runnable runnable) {
+  public void give(@RequiredUIThread @NotNull Runnable runnable) {
     SwingUtilities.invokeLater(runnable);
   }
 }

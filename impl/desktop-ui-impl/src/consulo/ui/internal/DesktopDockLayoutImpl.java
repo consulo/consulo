@@ -18,6 +18,7 @@ package consulo.ui.internal;
 import consulo.ui.Component;
 import consulo.ui.layout.DockLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,5 +65,11 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout {
   public DockLayout right(@NotNull Component component) {
     add((java.awt.Component)component, BorderLayout.EAST);
     return this;
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
   }
 }

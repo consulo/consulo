@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 09-Jun-16
@@ -24,4 +26,12 @@ public interface Component {
 
   @RequiredUIThread
   void setVisible(boolean value);
+
+  boolean isEnabled();
+
+  @RequiredUIThread
+  void setEnabled(boolean value);
+
+  @Nullable
+  Component getParentComponent();
 }

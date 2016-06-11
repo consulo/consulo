@@ -16,10 +16,16 @@
 package consulo.ui.internal;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import consulo.ui.Component;
+import consulo.ui.RequiredUIThread;
+import consulo.ui.UIAccess;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
+import consulo.web.servlet.ui.UISessionManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,15 +36,54 @@ import java.util.UUID;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class WGwtComponentImpl implements Component {
+public class WBaseGwtComponent implements Component {
   private String myId = UUID.randomUUID().toString();
   private boolean myVisible = true;
+  private boolean myEnabled = true;
+  private Component myParent;
+
+  private UIComponent myNotifyComponent;
 
   public String getId() {
     return myId;
   }
 
-  public void registerComponent(Map<String, WGwtComponentImpl> map) {
+  @RequiredUIThread
+  protected void makeChange(@NotNull Consumer<UIComponent> consumer) {
+    UIAccess.assertIsUIThread();
+
+    if (myNotifyComponent != null) {
+      consumer.consume(myNotifyComponent);
+    }
+    else {
+      final AutoBean<UIComponent> bean = UISessionManager.ourEventFactory.component();
+      myNotifyComponent = bean.as();
+      myNotifyComponent.setId(getId());
+
+      myNotifyComponent.setVariables(new HashMap<String, String>());
+
+      consumer.consume(myNotifyComponent);
+    }
+  }
+
+  @Nullable
+  public UIComponent getNotifyComponent() {
+    final UIComponent notifyComponent = myNotifyComponent;
+    myNotifyComponent = null;
+    return notifyComponent;
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return myParent;
+  }
+
+  protected void setParentComponent(Component parent) {
+    myParent = parent;
+  }
+
+  public void registerComponent(Map<String, WBaseGwtComponent> map) {
     map.put(getId(), this);
   }
 
@@ -48,8 +93,20 @@ public class WGwtComponentImpl implements Component {
   }
 
   @Override
+  @RequiredUIThread
   public void setVisible(boolean value) {
     myVisible = value;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return myEnabled;
+  }
+
+  @Override
+  @RequiredUIThread
+  public void setEnabled(boolean enabled) {
+    myEnabled = enabled;
   }
 
   public UIComponent convert(UIEventFactory factory) {
@@ -83,5 +140,12 @@ public class WGwtComponentImpl implements Component {
 
   public void invokeListeners(Map<String, String> variables) {
 
+  }
+
+  public void visitChanges(List<UIComponent> components) {
+    final UIComponent notifyComponent = getNotifyComponent();
+    if(notifyComponent != null) {
+      components.add(notifyComponent);
+    }
   }
 }
