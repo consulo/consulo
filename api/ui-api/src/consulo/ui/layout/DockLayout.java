@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.RequiredUIThread;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,17 +25,22 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DockLayout extends Layout {
   @NotNull
+  @RequiredUIThread
   DockLayout top(@NotNull Component component);
 
   @NotNull
+  @RequiredUIThread
   DockLayout bottom(@NotNull Component component);
 
   @NotNull
+  @RequiredUIThread
   DockLayout center(@NotNull Component component);
 
   @NotNull
+  @RequiredUIThread
   DockLayout left(@NotNull Component component);
 
   @NotNull
+  @RequiredUIThread
   DockLayout right(@NotNull Component component);
 }

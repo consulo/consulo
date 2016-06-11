@@ -45,8 +45,30 @@ public class WGwtCheckBoxImpl extends WGwtComponentImpl implements CheckBox {
     myText = text;
   }
 
+  @Override
+  @NotNull
   public String getText() {
     return myText;
+  }
+
+  @Override
+  public void setText(@NotNull final String text) {
+    UIAccessHelper.atUI(UIServerEventType.stateChanged, new Consumer<UIServerEvent>() {
+      @Override
+      public void consume(UIServerEvent event) {
+        myText = text;
+
+        final AutoBean<UIComponent> bean = UISessionManager.ourEventFactory.component();
+        final UIComponent component = bean.as();
+        component.setId(getId());
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("text", text);
+        component.setVariables(map);
+
+        event.setComponents(Arrays.asList(component));
+      }
+    });
   }
 
   @Override

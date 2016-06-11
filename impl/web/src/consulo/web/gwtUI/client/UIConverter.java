@@ -18,7 +18,8 @@ package consulo.web.gwtUI.client;
 import com.google.gwt.user.client.Window;
 import consulo.web.gwtUI.client.ui.GwtCheckBoxImpl;
 import consulo.web.gwtUI.client.ui.GwtComponentImpl;
-import consulo.web.gwtUI.client.ui.GwtDockPanelImpl;
+import consulo.web.gwtUI.client.ui.GwtDockLayoutImpl;
+import consulo.web.gwtUI.client.ui.GwtVerticalLayoutImpl;
 import consulo.web.gwtUI.shared.UIComponent;
 
 import java.util.HashMap;
@@ -43,10 +44,16 @@ public class UIConverter {
         return new GwtCheckBoxImpl();
       }
     });
-    ourMap.put("consulo.ui.internal.WGwtDockPanelImpl", new Factory() {
+    ourMap.put("consulo.ui.internal.WGwtDockLayoutImpl", new Factory() {
       @Override
       public GwtComponentImpl create() {
-        return new GwtDockPanelImpl();
+        return new GwtDockLayoutImpl();
+      }
+    });
+    ourMap.put("consulo.ui.internal.WGwtVerticalLayoutImpl", new Factory() {
+      @Override
+      public GwtComponentImpl create() {
+        return new GwtVerticalLayoutImpl();
       }
     });
   }

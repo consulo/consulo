@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -47,6 +48,10 @@ abstract class _UIInternals {
   protected abstract CheckBox _Components_checkBox(@NotNull String text, boolean selected);
 
   protected abstract DockLayout _Layouts_dock();
+
+  protected abstract VerticalLayout _Layouts_vertical();
+
+  protected abstract Label _Components_label(String text);
 
   protected abstract boolean isUIThread();
 }

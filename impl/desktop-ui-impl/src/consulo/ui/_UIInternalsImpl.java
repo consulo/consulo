@@ -17,7 +17,9 @@ package consulo.ui;
 
 import consulo.ui.internal.DesktopCheckBoxImpl;
 import consulo.ui.internal.DesktopDockLayoutImpl;
+import consulo.ui.internal.DesktopVerticalLayoutImpl;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -35,6 +37,16 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   public DockLayout _Layouts_dock() {
     return new DesktopDockLayoutImpl();
+  }
+
+  @Override
+  protected VerticalLayout _Layouts_vertical() {
+    return new DesktopVerticalLayoutImpl();
+  }
+
+  @Override
+  protected Label _Components_label(String text) {
+    return null;
   }
 
   @Override

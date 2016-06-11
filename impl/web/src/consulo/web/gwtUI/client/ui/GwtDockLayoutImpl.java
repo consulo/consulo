@@ -27,8 +27,8 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtDockPanelImpl extends DockPanel implements GwtComponentImpl {
-  public GwtDockPanelImpl() {
+public class GwtDockLayoutImpl extends DockPanel implements GwtComponentImpl {
+  public GwtDockLayoutImpl() {
     UIUtil.fill(this);
     setHorizontalAlignment(ALIGN_LEFT);
     setVerticalAlignment(ALIGN_TOP);

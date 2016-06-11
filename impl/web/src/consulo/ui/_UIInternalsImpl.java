@@ -16,8 +16,10 @@
 package consulo.ui;
 
 import consulo.ui.internal.WGwtCheckBoxImpl;
-import consulo.ui.internal.WGwtDockPanelImpl;
+import consulo.ui.internal.WGwtDockLayoutImpl;
+import consulo.ui.internal.WGwtVerticalLayoutImpl;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.web.servlet.ui.UIAccessHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +35,17 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   public DockLayout _Layouts_dock() {
-    return new WGwtDockPanelImpl();
+    return new WGwtDockLayoutImpl();
+  }
+
+  @Override
+  protected VerticalLayout _Layouts_vertical() {
+    return new WGwtVerticalLayoutImpl();
+  }
+
+  @Override
+  protected Label _Components_label(String text) {
+    return null;
   }
 
   @Override

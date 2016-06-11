@@ -29,7 +29,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class WGwtDockPanelImpl extends WGwtComponentImpl implements DockLayout {
+public class WGwtDockLayoutImpl extends WGwtComponentImpl implements DockLayout {
   private Map<String, WGwtComponentImpl> myComponents = new HashMap<String, WGwtComponentImpl>();
 
   @Override

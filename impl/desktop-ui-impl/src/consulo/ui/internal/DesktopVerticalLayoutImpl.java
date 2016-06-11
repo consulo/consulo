@@ -13,32 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.internal;
 
+import consulo.ui.Component;
+import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 11-Jun-16
  */
-public interface CheckBox extends Component {
-  interface SelectListener {
-    @RequiredUIThread
-    void selectChanged(@NotNull CheckBox checkBox);
+public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout {
+  public DesktopVerticalLayoutImpl() {
+    super(new TempVerticalFlowLayout());
   }
 
   @NotNull
-  String getText();
-
-  @RequiredUIThread
-  void setText(@NotNull String text);
-
-  boolean isSelected();
-
-  @RequiredUIThread
-  void setSelected(boolean value);
-
-  void addSelectListener(@NotNull SelectListener selectListener);
-
-  void removeSelectListener(@NotNull SelectListener selectListener);
+  @Override
+  public VerticalLayout add(@NotNull Component component) {
+    add((java.awt.Component)component);
+    return this;
+  }
 }

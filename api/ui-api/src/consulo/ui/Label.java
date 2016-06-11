@@ -19,26 +19,12 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 11-Jun-16
  */
-public interface CheckBox extends Component {
-  interface SelectListener {
-    @RequiredUIThread
-    void selectChanged(@NotNull CheckBox checkBox);
-  }
-
+public interface Label extends Component {
   @NotNull
   String getText();
 
   @RequiredUIThread
   void setText(@NotNull String text);
-
-  boolean isSelected();
-
-  @RequiredUIThread
-  void setSelected(boolean value);
-
-  void addSelectListener(@NotNull SelectListener selectListener);
-
-  void removeSelectListener(@NotNull SelectListener selectListener);
 }

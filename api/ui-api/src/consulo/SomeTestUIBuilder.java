@@ -16,7 +16,7 @@
 package consulo;
 
 import consulo.ui.*;
-import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,16 +25,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SomeTestUIBuilder {
   public static Component build(UIAccess uiAccess) {
-    DockLayout dockLayout = UIFactory.Layouts.dock();
+    VerticalLayout dockLayout = UIFactory.Layouts.vertical();
 
     final CheckBox top = create("top");
-    dockLayout.top(top);
+    dockLayout.add(top);
     final CheckBox left = create("left");
-    dockLayout.left(left);
+    dockLayout.add(left);
     final CheckBox right = create("right");
-    dockLayout.right(right);
+    dockLayout.add(right);
     final CheckBox bottom = create("bottom");
-    dockLayout.bottom(bottom);
+    dockLayout.add(bottom);
 
     final CheckBox center = create("center");
     center.addSelectListener(new CheckBox.SelectListener() {
@@ -47,7 +47,7 @@ public class SomeTestUIBuilder {
         bottom.setSelected(checkBox.isSelected());
       }
     });
-    dockLayout.center(center);
+    dockLayout.add(center);
 
     return dockLayout;
   }

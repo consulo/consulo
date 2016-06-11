@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,12 +34,22 @@ public class UIFactory {
     public static CheckBox checkBox(@NotNull String text, boolean selected) {
       return _UIInternals.impl()._Components_checkBox(text, selected);
     }
+
+    @NotNull
+    public static Label label(@NotNull String text) {
+      return _UIInternals.impl()._Components_label(text);
+    }
   }
 
   public static class Layouts {
     @NotNull
     public static DockLayout dock() {
       return _UIInternals.impl()._Layouts_dock();
+    }
+
+    @NotNull
+    public static VerticalLayout vertical() {
+      return _UIInternals.impl()._Layouts_vertical();
     }
   }
 }
