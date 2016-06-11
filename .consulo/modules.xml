@@ -431,6 +431,7 @@
           <orderEntry type="module" module-name="analysis-impl" exported="" />
           <orderEntry type="module" module-name="compiler-impl" />
           <orderEntry type="library" name="jsr166" level="project" />
+          <orderEntry type="module" module-name="desktop-ui-impl" />
         </module-layer>
       </module>
       <module name="platform/lvcs-api" dirurl="file://$PROJECT_DIR$/platform/lvcs-api" current-layer="Default">
@@ -614,6 +615,7 @@
           <orderEntry type="module" module-name="core-api" exported="" />
           <orderEntry type="module" module-name="resources-en" exported="" />
           <orderEntry type="library" exploded="" name="Guava" level="project" />
+          <orderEntry type="module" module-name="ui-api" exported="" />
         </module-layer>
       </module>
       <module name="platform/projectModel-impl" dirurl="file://$PROJECT_DIR$/platform/projectModel-impl" current-layer="Default">
