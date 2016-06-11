@@ -31,6 +31,6 @@ public class UIBindingInternalImpl implements UIBindingInternal {
 
   @Override
   public DockLayout _layouts_dock() {
-    return null;
+    return new WGwtDockPanelImpl();
   }
 }

@@ -15,13 +15,19 @@
  */
 package consulo.web.gwtUI.shared;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface UIComponent {
+public interface UIComponent extends UIVariablesOwner {
+  interface Child extends UIVariablesOwner {
+    UIComponent getComponent();
+
+    void setComponent(UIComponent component);
+  }
+
   String getId();
 
   void setId(String id);
@@ -30,7 +36,7 @@ public interface UIComponent {
 
   void setType(String type);
 
-  Map<String, String> getVariables();
+  List<Child> getChildren();
 
-  void setVariables(Map<String, String> map);
+  void setChildren(List<Child> children);
 }

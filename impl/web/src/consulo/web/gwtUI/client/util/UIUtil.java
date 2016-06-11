@@ -37,4 +37,9 @@ public class UIUtil {
     object.setHeight("100%");
     return object;
   }
+
+  public static void fill(UIObject object) {
+    object.setWidth("100%");
+    object.setHeight("100%");
+  }
 }

@@ -15,13 +15,11 @@
  */
 package consulo.web.gwtUI.shared;
 
-import java.util.Map;
-
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface UIClientEvent {
+public interface UIClientEvent extends UIVariablesOwner{
   void setType(UIClientEventType type);
 
   UIClientEventType getType();
@@ -29,8 +27,4 @@ public interface UIClientEvent {
   void setSessionId(String id);
 
   String getSessionId();
-
-  Map<String, String> getVariables();
-
-  void setVariables(Map<String, String> map);
 }

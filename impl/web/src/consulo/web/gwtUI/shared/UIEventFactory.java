@@ -28,4 +28,6 @@ public interface UIEventFactory extends AutoBeanFactory {
   AutoBean<UIServerEvent> serverEvent();
 
   AutoBean<UIComponent> component();
+
+  AutoBean<UIComponent.Child> componentChild();
 }

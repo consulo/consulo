@@ -16,11 +16,13 @@
 package consulo.ui.internal;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.intellij.util.SmartList;
 import consulo.ui.Component;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -59,10 +61,20 @@ public class WGwtComponentImpl implements Component {
 
     Map<String, String> map = new HashMap<String, String>();
     initVariables(map);
-    if(!map.isEmpty()) {
+    if (!map.isEmpty()) {
       component.setVariables(map);
     }
+
+    List<UIComponent.Child> children = new SmartList<UIComponent.Child>();
+    initChildren(factory, children);
+    if (!children.isEmpty()) {
+      component.setChildren(children);
+    }
     return component;
+  }
+
+  protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
+
   }
 
   protected void initVariables(Map<String, String> map) {

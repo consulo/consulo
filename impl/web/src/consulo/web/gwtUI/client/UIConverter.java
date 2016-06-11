@@ -19,9 +19,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwtUI.client.ui.GwtCheckBoxImpl;
 import consulo.web.gwtUI.client.ui.GwtComponentImpl;
+import consulo.web.gwtUI.client.ui.GwtDockPanelImpl;
 import consulo.web.gwtUI.shared.UIComponent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,9 +44,15 @@ public class UIConverter {
         return new GwtCheckBoxImpl();
       }
     });
+    ourMap.put("consulo.ui.internal.WGwtDockPanelImpl", new Factory() {
+      @Override
+      public Widget create() {
+        return new GwtDockPanelImpl();
+      }
+    });
   }
 
-  public static Widget create(WebSocketProxy proxy, String sessionId, UIComponent component) {
+  public static Widget create(WebSocketProxy proxy, UIComponent component) {
     final String type = component.getType();
     Factory factory = ourMap.get(type);
     if (factory == null) {
@@ -57,6 +65,15 @@ public class UIConverter {
     if(variables != null) {
       if(widget instanceof GwtComponentImpl) {
         ((GwtComponentImpl)widget).init(proxy, component.getId(), variables);
+      }
+    }
+
+    final List<UIComponent.Child> children = component.getChildren();
+    if(children != null) {
+      for (UIComponent.Child child : children) {
+        if(widget instanceof GwtComponentImpl) {
+          ((GwtComponentImpl)widget).addChildren(proxy, child);
+        }
       }
     }
     return widget;

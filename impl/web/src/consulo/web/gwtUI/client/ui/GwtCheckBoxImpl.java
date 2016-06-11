@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIClientEventType;
+import consulo.web.gwtUI.shared.UIComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,5 +51,9 @@ public class GwtCheckBoxImpl extends CheckBox implements GwtComponentImpl {
         });
       }
     });
+  }
+
+  @Override
+  public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
   }
 }

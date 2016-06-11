@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.client.ui;
-
-import consulo.web.gwtUI.client.WebSocketProxy;
-import consulo.web.gwtUI.shared.UIComponent;
+package consulo.web.gwtUI.shared;
 
 import java.util.Map;
 
@@ -24,8 +21,9 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface GwtComponentImpl {
-  void init(WebSocketProxy proxy, String componentId, Map<String, String> map);
+public interface UIVariablesOwner {
 
-  void addChildren(WebSocketProxy proxy, UIComponent.Child child);
+  Map<String, String> getVariables();
+
+  void setVariables(Map<String, String> map);
 }

@@ -72,7 +72,7 @@ public class UIEntryPoint implements EntryPoint {
             final List<UIComponent> components = event.getComponents();
             if (components != null) {
               for (UIComponent component : components) {
-                rootPanel.add(UIConverter.create(proxy, event.getSessionId(), component));
+                rootPanel.add(UIConverter.create(proxy, component));
               }
             }
             break;
