@@ -15,14 +15,19 @@
  */
 package consulo.ui;
 
-import java.lang.annotation.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 11-Jun-16
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-public @interface AtUI {
+public abstract class UIAccess {
+  /**
+   * @return if current thread can access to ui write mode
+   */
+  public static boolean isUIThread() {
+    return _UIInternals.impl().isUIThread();
+  }
+
+  public abstract void give(@NotNull Runnable runnable);
 }

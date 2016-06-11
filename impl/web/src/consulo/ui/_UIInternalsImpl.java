@@ -13,24 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui;
 
-import consulo.ui.CheckBox;
+import consulo.ui.internal.WGwtCheckBoxImpl;
+import consulo.ui.internal.WGwtDockPanelImpl;
 import consulo.ui.layout.DockLayout;
+import consulo.web.servlet.ui.UIAccessHelper;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class UIBindingInternalImpl implements UIBindingInternal {
+class _UIInternalsImpl extends _UIInternals {
   @Override
-  public CheckBox _components_checkBox(@NotNull String text, boolean selected) {
+  public CheckBox _Components_checkBox(@NotNull String text, boolean selected) {
     return new WGwtCheckBoxImpl(selected, text);
   }
 
   @Override
-  public DockLayout _layouts_dock() {
+  public DockLayout _Layouts_dock() {
     return new WGwtDockPanelImpl();
+  }
+
+  @Override
+  protected boolean isUIThread() {
+    return UIAccessHelper.ourInstance.isUIThread();
   }
 }

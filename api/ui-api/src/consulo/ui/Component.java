@@ -22,6 +22,6 @@ package consulo.ui;
 public interface Component {
   boolean isVisible();
 
-  @AtUI
+  @RequiredUIThread
   void setVisible(boolean value);
 }

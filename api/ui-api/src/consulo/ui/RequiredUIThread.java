@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui;
 
-import consulo.ui.CheckBox;
-import consulo.ui.layout.DockLayout;
-import org.jetbrains.annotations.NotNull;
+import java.lang.annotation.*;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public class UIBindingInternalImpl implements UIBindingInternal {
-  @Override
-  public CheckBox _components_checkBox(@NotNull String text, boolean selected) {
-    return new DesktopCheckBoxImpl(text, selected);
-  }
-
-  @Override
-  public DockLayout _layouts_dock() {
-    return new DesktopDockLayoutImpl();
-  }
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+public @interface RequiredUIThread {
 }

@@ -44,10 +44,10 @@ public class UIWebSocketHandler {
     UIClientEvent clientEvent = bean.as();
     switch (clientEvent.getType()) {
       case sessionOpen:
-        UISessionManager.INSTANCE.onSessionOpen(session, clientEvent, ourEventFactory);
+        UISessionManager.ourInstance.onSessionOpen(session, clientEvent, ourEventFactory);
         break;
       case invokeEvent:
-        UISessionManager.INSTANCE.onInvokeEvent(session, clientEvent, ourEventFactory);
+        UISessionManager.ourInstance.onInvokeEvent(session, clientEvent, ourEventFactory);
         break;
     }
   }

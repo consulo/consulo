@@ -17,8 +17,10 @@ package consulo.web.servlet.ui;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.intellij.util.containers.ConcurrentHashMap;
+import consulo.ui.UIAccess;
 import consulo.ui.internal.WGwtComponentImpl;
 import consulo.web.gwtUI.shared.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.websocket.Session;
 import java.io.IOException;
@@ -31,7 +33,7 @@ import java.util.Map;
  * @since 09-Jun-16
  */
 public class UISessionManager {
-  public static class UIContext {
+  public static class UIContext extends UIAccess {
     private UIRoot myRoot;
     private Session mySession;
     private WGwtComponentImpl myComponent;
@@ -50,9 +52,32 @@ public class UISessionManager {
     public void setComponent(WGwtComponentImpl component) {
       myComponent = component;
     }
+
+    public Session getSession() {
+      return mySession;
+    }
+
+    @Override
+    public void give(@NotNull Runnable runnable) {
+      UIAccessHelper.ourInstance.run(this, runnable);
+    }
+
+    public void send(AutoBean<UIServerEvent> bean) {
+      if (!UIAccessHelper.ourInstance.isUIThread()) {
+        throw new IllegalArgumentException("Call must be wrapped inside UI thread");
+      }
+
+      final String json = AutoBeanJsonUtil.toJson(bean);
+      try {
+        mySession.getBasicRemote().sendText(json);
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
-  public static final UISessionManager INSTANCE = new UISessionManager();
+  public static final UISessionManager ourInstance = new UISessionManager();
 
   private Map<String, UIContext> myUIs = new ConcurrentHashMap<String, UIContext>();
 
@@ -60,45 +85,49 @@ public class UISessionManager {
     myUIs.put(id, new UIContext(uiRoot, null));
   }
 
-  public void onSessionOpen(Session session, UIClientEvent clientEvent, UIEventFactory factory) {
-    UIContext uiContext = myUIs.get(clientEvent.getSessionId());
-    if (uiContext == null) {
+  public void onSessionOpen(final Session session, final UIClientEvent clientEvent, final UIEventFactory factory) {
+    final UIContext context = myUIs.get(clientEvent.getSessionId());
+    if (context == null) {
       return;
     }
 
-    uiContext.setSession(session);
+    context.setSession(session);
 
-    WGwtComponentImpl component = (WGwtComponentImpl)uiContext.myRoot.create();
-    component.registerComponent(uiContext.myComponents);
+    UIAccessHelper.ourInstance.run(context, new Runnable() {
+      @Override
+      public void run() {
+        WGwtComponentImpl component = (WGwtComponentImpl)context.myRoot.create(context);
+        component.registerComponent(context.myComponents);
 
-    uiContext.setComponent(component);
+        context.setComponent(component);
 
-    AutoBean<UIServerEvent> bean = factory.serverEvent();
-    UIServerEvent serverEvent = bean.as();
-    serverEvent.setSessionId(clientEvent.getSessionId());
-    serverEvent.setType(UIServerEventType.createRoot);
-    serverEvent.setComponents(Arrays.asList(component.convert(factory)));
+        AutoBean<UIServerEvent> bean = factory.serverEvent();
+        UIServerEvent serverEvent = bean.as();
+        serverEvent.setSessionId(clientEvent.getSessionId());
+        serverEvent.setType(UIServerEventType.createRoot);
+        serverEvent.setComponents(Arrays.asList(component.convert(factory)));
 
-    try {
-      final String json = AutoBeanJsonUtil.toJson(bean);
-      session.getBasicRemote().sendText(json);
-    }
-    catch (IOException e) {
-      e.printStackTrace();
-    }
+        context.send(bean);
+      }
+    });
   }
 
-  public void onInvokeEvent(Session session, UIClientEvent clientEvent, UIEventFactory eventFactory) {
-    UIContext uiContext = myUIs.get(clientEvent.getSessionId());
+  public void onInvokeEvent(Session session, final UIClientEvent clientEvent, UIEventFactory eventFactory) {
+    final UIContext uiContext = myUIs.get(clientEvent.getSessionId());
     if (uiContext == null) {
       return;
     }
 
-    final String componentId = clientEvent.getVariables().get("componentId");
+    UIAccessHelper.ourInstance.run(uiContext, new Runnable() {
+      @Override
+      public void run() {
+        final String componentId = clientEvent.getVariables().get("componentId");
 
-    final WGwtComponentImpl gwtComponent = uiContext.myComponents.get(componentId);
-    if(gwtComponent != null) {
-      gwtComponent.invokeListeners(clientEvent.getVariables());
-    }
+        final WGwtComponentImpl gwtComponent = uiContext.myComponents.get(componentId);
+        if (gwtComponent != null) {
+          gwtComponent.invokeListeners(clientEvent.getVariables());
+        }
+      }
+    });
   }
 }

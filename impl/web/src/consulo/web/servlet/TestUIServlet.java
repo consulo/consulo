@@ -15,16 +15,11 @@
  */
 package consulo.web.servlet;
 
-import consulo.ui.AtUI;
-import consulo.ui.CheckBox;
-import consulo.ui.Component;
-import consulo.ui.UIFactory;
+import consulo.ui.*;
 import consulo.ui.layout.DockLayout;
 import consulo.web.servlet.ui.UIRoot;
 import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -39,10 +34,9 @@ public class TestUIServlet extends UIServlet {
   @Override
   public UIRoot createUIRoot() {
     return new UIRoot() {
-
       @NotNull
       @Override
-      public Component create() {
+      public Component create(@NotNull UIAccess uiAccess) {
         DockLayout dockLayout = UIFactory.Layouts.dock();
 
         dockLayout.top(create("top"));
@@ -57,10 +51,15 @@ public class TestUIServlet extends UIServlet {
         CheckBox checkBox = UIFactory.Components.checkBox("UI proxy?=" + text, true);
         checkBox.addSelectListener(new CheckBox.SelectListener() {
           @Override
-          @AtUI
+          @RequiredUIThread
           public void selectChanged(@NotNull CheckBox checkBox) {
             // swing api start
-            JOptionPane.showMessageDialog(null, "Test ME " + checkBox.isSelected());
+            try {
+              System.out.println("Test ME " + checkBox.isSelected() + " " + UIAccess.isUIThread());
+            }
+            catch (Exception e) {
+              e.printStackTrace();
+            }
             // swing api stop
           }
         });

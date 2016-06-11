@@ -16,6 +16,7 @@
 package consulo.web.servlet.ui;
 
 import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,5 +25,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class UIRoot {
   @NotNull
-  public abstract Component create();
+  public abstract Component create(@NotNull UIAccess uiAccess);
 }

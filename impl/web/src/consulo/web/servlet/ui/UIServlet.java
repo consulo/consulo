@@ -47,7 +47,7 @@ public abstract class UIServlet extends HttpServlet {
     String id = UUID.randomUUID().toString();
     response.addCookie(new Cookie("ConsuloSessionId", id));
 
-    UISessionManager.INSTANCE.registerSession(id, createUIRoot());
+    UISessionManager.ourInstance.registerSession(id, createUIRoot());
 
     final PrintWriter writer = response.getWriter();
     writer.println("<html>");

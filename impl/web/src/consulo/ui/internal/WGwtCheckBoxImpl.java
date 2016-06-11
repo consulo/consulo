@@ -50,9 +50,7 @@ public class WGwtCheckBoxImpl extends WGwtComponentImpl implements CheckBox {
 
   @Override
   public void invokeListeners(Map<String, String> variables) {
-    boolean value = Boolean.parseBoolean(variables.get("selected"));
-
-    mySelected = value;
+    mySelected = Boolean.parseBoolean(variables.get("selected"));
 
     for (SelectListener selectListener : mySelectListenerList) {
       selectListener.selectChanged(this);

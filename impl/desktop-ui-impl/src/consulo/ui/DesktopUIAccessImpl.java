@@ -17,10 +17,15 @@ package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 11-Jun-16
  */
-public interface UI {
-  void at(@NotNull Runnable task);
+public class DesktopUIAccessImpl extends UIAccess {
+  @Override
+  public void give(@NotNull Runnable runnable) {
+    SwingUtilities.invokeLater(runnable);
+  }
 }

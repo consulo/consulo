@@ -23,13 +23,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface CheckBox extends Component {
   interface SelectListener {
-    @AtUI
+    @RequiredUIThread
     void selectChanged(@NotNull CheckBox checkBox);
   }
 
   boolean isSelected();
 
-  @AtUI
+  @RequiredUIThread
   void setSelected(boolean value);
 
   void addSelectListener(@NotNull SelectListener selectListener);

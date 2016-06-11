@@ -22,23 +22,31 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 09-Jun-16
  */
-public class UIFactory {
-  public static class Components {
-    @NotNull
-    public static CheckBox checkBox(@NotNull String text) {
-      return checkBox(text, false);
-    }
+abstract class _UIInternals {
+  public static _UIInternals impl() {
+    return Holder.ourInstance;
+  }
 
-    @NotNull
-    public static CheckBox checkBox(@NotNull String text, boolean selected) {
-      return _UIInternals.impl()._Components_checkBox(text, selected);
+  private static class Holder {
+    public static _UIInternals ourInstance = impl();
+
+    private static _UIInternals impl() {
+      _UIInternals bindingInternal = null;
+
+      try {
+        Class<?> bindingClass = Class.forName(_UIInternals.class.getName() + "Impl");
+        bindingInternal = (_UIInternals)bindingClass.newInstance();
+      }
+      catch (Exception e) {
+        throw new Error("Fail to init ui binding", e);
+      }
+      return bindingInternal;
     }
   }
 
-  public static class Layouts {
-    @NotNull
-    public static DockLayout dock() {
-      return _UIInternals.impl()._Layouts_dock();
-    }
-  }
+  protected abstract CheckBox _Components_checkBox(@NotNull String text, boolean selected);
+
+  protected abstract DockLayout _Layouts_dock();
+
+  protected abstract boolean isUIThread();
 }
