@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.module.extension;
+package consulo.module.extension;
 
 import consulo.ui.Component;
 import consulo.ui.RequiredUIThread;
 import consulo.ui.UIAccess;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public interface MutableModuleExtension2<T extends ModuleExtension<T>> extends MutableModuleExtension<T> {
+public interface MutableModuleExtension<T extends ModuleExtension<T>> extends org.consulo.module.extension.MutableModuleExtension<T> {
   @Nullable
   @RequiredUIThread
   Component createConfigurablePanel2(@NotNull UIAccess uiAccess, @NotNull Runnable updateOnCheck);

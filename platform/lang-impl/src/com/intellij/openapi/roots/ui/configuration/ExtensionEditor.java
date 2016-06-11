@@ -32,8 +32,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ui.DesktopUIAccessImpl;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.consulo.module.extension.MutableModuleExtension;
-import org.consulo.module.extension.MutableModuleExtension2;
+import consulo.module.extension.MutableModuleExtension;
 import org.consulo.psi.PsiPackageManager;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.Nls;
@@ -129,8 +128,8 @@ public class ExtensionEditor extends ModuleElementsEditor {
       @Override
       @RequiredDispatchThread
       public void valueChanged(final TreeSelectionEvent e) {
-        final List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
-        updateSecondComponent(ContainerUtil.<MutableModuleExtension>getFirstItem(selected));
+        final List<org.consulo.module.extension.MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, org.consulo.module.extension.MutableModuleExtension.class);
+        updateSecondComponent(ContainerUtil.<org.consulo.module.extension.MutableModuleExtension>getFirstItem(selected));
       }
     });
     TreeUtil.expandAll(myTree);
@@ -144,7 +143,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   @Nullable
   @RequiredDispatchThread
-  private JComponent createConfigurationPanel(final @NotNull MutableModuleExtension<?> extension) {
+  private JComponent createConfigurationPanel(final @NotNull org.consulo.module.extension.MutableModuleExtension extension) {
     myConfigurablePanelExtension = extension;
     final Runnable updateOnCheck = new Runnable() {
       @Override
@@ -155,8 +154,8 @@ public class ExtensionEditor extends ModuleElementsEditor {
     };
 
     JComponent configurablePanel = null;
-    if (extension instanceof MutableModuleExtension2) {
-      final consulo.ui.Component component = ((MutableModuleExtension2)extension).createConfigurablePanel2(DesktopUIAccessImpl.ourInstance, updateOnCheck);
+    if (extension instanceof MutableModuleExtension) {
+      final consulo.ui.Component component = ((MutableModuleExtension)extension).createConfigurablePanel2(DesktopUIAccessImpl.ourInstance, updateOnCheck);
       // we need this ugly cast for now
       configurablePanel = (JComponent)component;
     }
@@ -171,7 +170,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   }
 
   @RequiredDispatchThread
-  private void updateSecondComponent(@Nullable MutableModuleExtension<?> extension) {
+  private void updateSecondComponent(@Nullable org.consulo.module.extension.MutableModuleExtension extension) {
     if (extension == null || !extension.isEnabled()) {
       mySplitter.setSecondComponent(null);
     }
@@ -181,7 +180,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   }
 
   @RequiredDispatchThread
-  public void extensionChanged(MutableModuleExtension<?> extension) {
+  public void extensionChanged(org.consulo.module.extension.MutableModuleExtension extension) {
     final JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
     if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
       updateSecondComponent(!extension.isEnabled() ? null : extension);

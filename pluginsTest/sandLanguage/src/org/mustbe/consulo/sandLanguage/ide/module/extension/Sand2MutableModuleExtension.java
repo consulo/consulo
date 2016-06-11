@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.ModuleRootLayer;
 import consulo.ui.UIAccess;
 import consulo.ui.UIFactory;
 import consulo.ui.layout.VerticalLayout;
-import org.consulo.module.extension.MutableModuleExtension2;
+import consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -30,7 +30,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 30.08.14
  */
-public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements MutableModuleExtension2<Sand2ModuleExtension> {
+public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements MutableModuleExtension<Sand2ModuleExtension> {
   public Sand2MutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
   }
