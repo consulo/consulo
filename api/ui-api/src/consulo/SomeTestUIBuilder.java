@@ -37,7 +37,7 @@ public class SomeTestUIBuilder {
     final CheckBox bottom = create("bottom");
     dockLayout.add(bottom);
 
-    final CheckBox center = create("center");
+    final CheckBox center = UIFactory.Components.checkBox("UI proxy?=center", false);
     center.addSelectListener(new CheckBox.SelectListener() {
       @Override
       @RequiredUIThread
@@ -46,8 +46,10 @@ public class SomeTestUIBuilder {
         left.setSelected(checkBox.isSelected());
         right.setSelected(checkBox.isSelected());
         bottom.setSelected(checkBox.isSelected());
+        bottom.setVisible(!checkBox.isSelected());
       }
     });
+    center.setSelected(true);
     dockLayout.add(center);
 
     return dockLayout;

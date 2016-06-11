@@ -52,7 +52,9 @@ public class WBaseGwtComponent implements Component {
     UIAccess.assertIsUIThread();
 
     if (myNotifyComponent != null) {
-      getState(myNotifyComponent.getVariables());
+      final HashMap<String, String> map = new HashMap<String, String>();
+      getState(map);
+      myNotifyComponent.setVariables(map);
     }
     else {
       final AutoBean<UIComponent> bean = UISessionManager.ourEventFactory.component();

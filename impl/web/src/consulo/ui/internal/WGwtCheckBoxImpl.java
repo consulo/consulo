@@ -91,9 +91,9 @@ public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
 
     mySelected = value;
 
-    markAsChanged();
-
     fireSelectListeners();
+
+    markAsChanged();
   }
 
   @Override
