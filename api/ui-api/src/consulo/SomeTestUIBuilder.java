@@ -19,12 +19,16 @@ import consulo.ui.*;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
 public class SomeTestUIBuilder {
-  public static Component build(UIAccess uiAccess) {
+  @RequiredUIThread
+  public static Component build() {
     VerticalLayout layout = UIFactory.Layouts.vertical();
 
     final CheckBox top = create("top");
@@ -32,7 +36,7 @@ public class SomeTestUIBuilder {
     layout.add(top);
     final CheckBox left = create("left");
     layout.add(left);
-    final CheckBox right = create("right");
+    final CheckBox right = create("right (this item will blink every 5 sec)");
     layout.add(right);
     final CheckBox bottom = create("bottom");
     layout.add(bottom);
@@ -47,8 +51,23 @@ public class SomeTestUIBuilder {
         right.setSelected(checkBox.isSelected());
         bottom.setSelected(checkBox.isSelected());
         bottom.setVisible(!checkBox.isSelected());
+
+        final UIAccess uiAccess = UIAccess.get();
+
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
+          @Override
+          public void run() {
+            uiAccess.give(new Runnable() {
+              @Override
+              public void run() {
+                right.setSelected(!right.isSelected());
+              }
+            });
+          }
+        }, 5, 5, TimeUnit.SECONDS);
       }
     });
+
     center.setSelected(true);
     layout.add(center);
     layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.checkBox("Test 1")).add(UIFactory.Components.checkBox("Test 2")));

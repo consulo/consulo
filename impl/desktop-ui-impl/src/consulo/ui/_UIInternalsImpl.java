@@ -61,6 +61,12 @@ class _UIInternalsImpl extends _UIInternals {
     return new DesktopHorizontalLayoutImpl();
   }
 
+  @NotNull
+  @Override
+  protected UIAccess get() {
+    return DesktopUIAccessImpl.ourInstance;
+  }
+
   @Override
   protected boolean isUIThread() {
     return SwingUtilities.isEventDispatchThread();

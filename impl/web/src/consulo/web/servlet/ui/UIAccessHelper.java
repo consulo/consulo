@@ -32,7 +32,7 @@ public class UIAccessHelper {
   private static ThreadLocal<UISessionManager.UIContext> ourLocal = new ThreadLocal<UISessionManager.UIContext>();
 
   public void run(final UISessionManager.UIContext context, @RequiredUIThread final Runnable runnable) {
-    if(!context.getSession().isOpen()) {
+    if (!context.getSession().isOpen()) {
       return;
     }
     myUIExecutor.execute(new Runnable() {
@@ -51,5 +51,9 @@ public class UIAccessHelper {
 
   public boolean isUIThread() {
     return ourLocal.get() != null;
+  }
+
+  public UISessionManager.UIContext get() {
+    return ourLocal.get();
   }
 }

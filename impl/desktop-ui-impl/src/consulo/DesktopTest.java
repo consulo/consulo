@@ -15,7 +15,6 @@ package consulo;/*
  */
 
 import consulo.ui.Component;
-import consulo.ui.DesktopUIAccessImpl;
 
 import javax.swing.*;
 
@@ -25,18 +24,23 @@ import javax.swing.*;
  */
 public class DesktopTest {
   public static void main(String[] args) {
-    // swing api start
-    JFrame main = new JFrame();
-    main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    main.setSize(400, 320);
-    main.setLocationRelativeTo(null);
-    // swing api stop
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        // swing api start
+        JFrame main = new JFrame();
+        main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        main.setSize(400, 320);
+        main.setLocationRelativeTo(null);
+        // swing api stop
 
-    final Component component = SomeTestUIBuilder.build(DesktopUIAccessImpl.ourInstance);
+        final Component component = SomeTestUIBuilder.build();
 
-    // swing api start
-    main.add((java.awt.Component)component);
-    main.setVisible(true);
-    // swing api stop
+        // swing api start
+        main.add((java.awt.Component)component);
+        main.setVisible(true);
+        // swing api stop
+      }
+    });
   }
 }

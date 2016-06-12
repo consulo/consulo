@@ -39,7 +39,7 @@ public class TestUIServlet extends UIServlet {
       @Override
       @RequiredUIThread
       public Component fun(UIAccess uiAccess) {
-        return SomeTestUIBuilder.build(uiAccess);
+        return SomeTestUIBuilder.build();
       }
     };
   }

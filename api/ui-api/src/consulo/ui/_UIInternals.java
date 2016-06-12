@@ -59,5 +59,9 @@ abstract class _UIInternals {
 
   protected abstract HorizontalLayout _Layouts_horizontal();
 
+  @RequiredUIThread
+  @NotNull
+  protected abstract UIAccess get();
+
   protected abstract boolean isUIThread();
 }

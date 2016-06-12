@@ -57,6 +57,12 @@ class _UIInternalsImpl extends _UIInternals {
     return new WGwtHorizontalLayoutImpl();
   }
 
+  @NotNull
+  @Override
+  protected UIAccess get() {
+    return UIAccessHelper.ourInstance.get();
+  }
+
   @Override
   protected boolean isUIThread() {
     return UIAccessHelper.ourInstance.isUIThread();

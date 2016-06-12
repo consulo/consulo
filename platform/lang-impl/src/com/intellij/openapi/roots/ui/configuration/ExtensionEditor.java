@@ -29,10 +29,10 @@ import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.ui.DesktopUIAccessImpl;
+import consulo.module.extension.MutableModuleExtension;
+import consulo.ui.UIAccess;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.module.extension.MutableModuleExtension;
 import org.consulo.psi.PsiPackageManager;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.Nls;
@@ -155,7 +155,9 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     JComponent configurablePanel = null;
     if (extension instanceof MutableModuleExtension) {
-      final consulo.ui.Component component = ((MutableModuleExtension)extension).createConfigurablePanel2(DesktopUIAccessImpl.ourInstance, updateOnCheck);
+      // we can call UIAccess.get() due we inside dispatch thread and on desktop
+      final consulo.ui.Component component = ((MutableModuleExtension)extension).createConfigurablePanel2(UIAccess.get(), updateOnCheck);
+
       // we need this ugly cast for now
       configurablePanel = (JComponent)component;
     }

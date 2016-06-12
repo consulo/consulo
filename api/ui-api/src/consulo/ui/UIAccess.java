@@ -29,6 +29,19 @@ public abstract class UIAccess {
     return _UIInternals.impl().isUIThread();
   }
 
+  /**
+   * If we inside ui thread, we can get ui access
+   *
+   * @return ui access - or throw exception
+   */
+  @RequiredUIThread
+  @NotNull
+  public static UIAccess get() {
+    assertIsUIThread();
+
+    return _UIInternals.impl().get();
+  }
+
   @RequiredUIThread
   public static void assertIsUIThread() {
     if (!isUIThread()) {
