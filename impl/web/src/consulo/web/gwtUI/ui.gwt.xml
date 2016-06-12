@@ -31,4 +31,5 @@
   <public path="client/resource"/>
 
   <stylesheet src="css/advanced-gwt.css"/>
+  <stylesheet src="css/gwt.css"/>
 </module>
