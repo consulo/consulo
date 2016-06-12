@@ -72,6 +72,7 @@ public class SomeTestUIBuilder {
     layout.add(center);
     layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.checkBox("Test 1")).add(UIFactory.Components.checkBox("Test 2")));
     layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("Test 1")).add(UIFactory.Components.label("Test 2")));
+    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.htmlLabel("<b>Test 1</b>")).add(UIFactory.Components.label("<b>Test 1</b>")));
     //layout.add(UIFactory.Components.comboBox("test", "test2"));
 
     return layout;

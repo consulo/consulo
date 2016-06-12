@@ -48,6 +48,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  protected HtmlLabel _Components_htmlLabel(String html) {
+    return new WGwtHtmlLabelImpl(html);
+  }
+
+  @Override
   protected <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
     return new WGwtComboBoxImpl<E>(model);
   }

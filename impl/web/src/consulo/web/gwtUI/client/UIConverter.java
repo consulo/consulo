@@ -80,6 +80,13 @@ public class UIConverter {
         return new GwtLabelImpl();
       }
     });
+    ourMap.put("consulo.ui.internal.WGwtHtmlLabelImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtHtmlLabelImpl();
+      }
+    });
   }
 
   private static Map<String, InternalGwtComponent> ourCache = new HashMap<String, InternalGwtComponent>();
@@ -102,7 +109,7 @@ public class UIConverter {
     widget.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
 
     final List<UIComponent.Child> children = component.getChildren();
-    if(children != null) {
+    if (children != null) {
       for (UIComponent.Child child : children) {
         widget.addChildren(proxy, child);
       }

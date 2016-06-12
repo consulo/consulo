@@ -27,6 +27,22 @@ public class DesktopTest {
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
+        try {
+          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (ClassNotFoundException e) {
+          e.printStackTrace();
+        }
+        catch (InstantiationException e) {
+          e.printStackTrace();
+        }
+        catch (IllegalAccessException e) {
+          e.printStackTrace();
+        }
+        catch (UnsupportedLookAndFeelException e) {
+          e.printStackTrace();
+        }
+
         // swing api start
         JFrame main = new JFrame();
         main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -43,6 +43,11 @@ public class UIFactory {
     }
 
     @NotNull
+    public static HtmlLabel htmlLabel(@NotNull String html) {
+      return _UIInternals.impl()._Components_htmlLabel(html);
+    }
+
+    @NotNull
     public static <E> ComboBox<E> comboBox(@NotNull E... elements) {
       return _UIInternals.impl()._Components_comboBox(new ImmutableListModel<E>(elements));
     }

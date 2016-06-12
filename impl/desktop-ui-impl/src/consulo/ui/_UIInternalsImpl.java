@@ -49,6 +49,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  protected HtmlLabel _Components_htmlLabel(String html) {
+    return new DesktopHtmlLabelImpl(html);
+  }
+
+  @Override
   protected <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
     return null;
   }

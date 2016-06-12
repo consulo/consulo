@@ -55,6 +55,8 @@ abstract class _UIInternals {
 
   protected abstract Label _Components_label(String text);
 
+  protected abstract HtmlLabel _Components_htmlLabel(String html);
+
   protected abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
   protected abstract HorizontalLayout _Layouts_horizontal();
