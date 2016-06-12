@@ -16,7 +16,6 @@
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
 import com.intellij.openapi.roots.ModuleRootLayer;
-import consulo.ui.UIAccess;
 import consulo.ui.UIFactory;
 import consulo.ui.layout.VerticalLayout;
 import consulo.module.extension.MutableModuleExtension;
@@ -54,7 +53,7 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
 
   @Nullable
   @Override
-  public consulo.ui.Component createConfigurablePanel2(@NotNull UIAccess uiAccess, @NotNull Runnable updateOnCheck) {
+  public consulo.ui.Component createConfigurablePanel2(@NotNull Runnable updateOnCheck) {
     final VerticalLayout vertical = UIFactory.Layouts.vertical();
     vertical.add(UIFactory.Components.checkBox("Omg new UI?"));
     return vertical;
