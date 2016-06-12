@@ -15,10 +15,7 @@
  */
 package consulo.ui;
 
-import consulo.ui.internal.DesktopCheckBoxImpl;
-import consulo.ui.internal.DesktopDockLayoutImpl;
-import consulo.ui.internal.DesktopHorizontalLayoutImpl;
-import consulo.ui.internal.DesktopVerticalLayoutImpl;
+import consulo.ui.internal.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -48,7 +45,7 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   protected Label _Components_label(String text) {
-    return null;
+    return new DesktopLabelImpl(text);
   }
 
   @Override

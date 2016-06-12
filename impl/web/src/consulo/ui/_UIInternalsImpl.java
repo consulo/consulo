@@ -44,7 +44,7 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   protected Label _Components_label(String text) {
-    return null;
+    return new WGwtLabelImpl(text);
   }
 
   @Override
