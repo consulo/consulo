@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.model.ImmutableListModel;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,6 +39,16 @@ public class UIFactory {
     @NotNull
     public static Label label(@NotNull String text) {
       return _UIInternals.impl()._Components_label(text);
+    }
+
+    @NotNull
+    public static <E> ComboBox<E> comboBox(@NotNull E... elements) {
+      return _UIInternals.impl()._Components_comboBox(new ImmutableListModel<E>(elements));
+    }
+
+    @NotNull
+    public static <E> ComboBox<E> comboBox(@NotNull ListModel<E> model) {
+      return _UIInternals.impl()._Components_comboBox(model);
     }
   }
 

@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.internal.WGwtComboBoxImpl;
 import consulo.ui.internal.WGwtCheckBoxImpl;
 import consulo.ui.internal.WGwtDockLayoutImpl;
 import consulo.ui.internal.WGwtVerticalLayoutImpl;
@@ -46,6 +47,11 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   protected Label _Components_label(String text) {
     return null;
+  }
+
+  @Override
+  protected <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+    return new WGwtComboBoxImpl<E>(model);
   }
 
   @Override

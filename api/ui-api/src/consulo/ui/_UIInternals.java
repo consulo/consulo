@@ -53,5 +53,7 @@ abstract class _UIInternals {
 
   protected abstract Label _Components_label(String text);
 
+  protected abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
+
   protected abstract boolean isUIThread();
 }

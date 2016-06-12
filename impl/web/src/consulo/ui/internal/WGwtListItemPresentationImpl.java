@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.internal;
 
+import consulo.ui.ListItemPresentation;
+import consulo.ui.TextStyle;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 12-Jun-16
  */
-public interface ComboBox<E> extends Component {
-  @NotNull
-  ListModel<E> getModel();
+public class WGwtListItemPresentationImpl implements ListItemPresentation {
+  @Override
+  public void append(@NotNull String text) {
 
-  void setRender(@NotNull ListItemRender<E> render);
+  }
+
+  @Override
+  public void append(@NotNull String text, @NotNull TextStyle... styles) {
+
+  }
 }

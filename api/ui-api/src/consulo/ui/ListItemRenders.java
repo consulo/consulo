@@ -16,14 +16,23 @@
 package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 12-Jun-16
  */
-public interface ComboBox<E> extends Component {
-  @NotNull
-  ListModel<E> getModel();
+public class ListItemRenders {
+  private static final ListItemRender ourDefaultRender = new ListItemRender() {
+    @Override
+    public void render(@NotNull ListItemPresentation render, @Nullable Object item) {
+      render.append(item == null ? "" : item.toString());
+    }
+  };
 
-  void setRender(@NotNull ListItemRender<E> render);
+  @SuppressWarnings("unchecked")
+  @NotNull
+  public static <E> ListItemRender<E> defaultRender() {
+    return ourDefaultRender;
+  }
 }

@@ -16,14 +16,12 @@
 package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 12-Jun-16
  */
-public interface ComboBox<E> extends Component {
-  @NotNull
-  ListModel<E> getModel();
-
-  void setRender(@NotNull ListItemRender<E> render);
+public interface ListItemRender<E> {
+  void render(@NotNull ListItemPresentation render, @Nullable E item);
 }

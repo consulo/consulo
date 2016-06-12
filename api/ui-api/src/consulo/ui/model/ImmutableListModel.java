@@ -13,17 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.model;
 
-import org.jetbrains.annotations.NotNull;
+import consulo.ui.ListModel;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 12-Jun-16
  */
-public interface ComboBox<E> extends Component {
-  @NotNull
-  ListModel<E> getModel();
+public class ImmutableListModel<E> implements ListModel<E> {
+  private final List<E> myItems = new ArrayList<E>();
 
-  void setRender(@NotNull ListItemRender<E> render);
+  public ImmutableListModel(E... items) {
+    myItems.addAll(Arrays.asList(items));
+  }
+
+  @Override
+  public int getSize() {
+    return myItems.size();
+  }
+
+  @Override
+  public Iterator<E> iterator() {
+    return myItems.iterator();
+  }
 }

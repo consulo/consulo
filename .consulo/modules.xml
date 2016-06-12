@@ -1096,6 +1096,16 @@
             </library>
           </orderEntry>
           <orderEntry type="module" module-name="ui-api" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/lib/advanced-components-2.0.7.jar!/" />
+              </binaries>
+              <sources>
+                <root url="jar://$MODULE_DIR$/lib/advanced-components-2.0.7.jar!/" />
+              </sources>
+            </library>
+          </orderEntry>
         </module-layer>
       </module>
       <module name="ui-api" dirurl="file://$PROJECT_DIR$/api/ui-api" current-layer="Default">

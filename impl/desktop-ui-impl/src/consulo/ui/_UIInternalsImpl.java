@@ -50,6 +50,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  protected <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+    return null;
+  }
+
+  @Override
   protected boolean isUIThread() {
     return SwingUtilities.isEventDispatchThread();
   }

@@ -15,15 +15,10 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 12-Jun-16
  */
-public interface ComboBox<E> extends Component {
-  @NotNull
-  ListModel<E> getModel();
-
-  void setRender(@NotNull ListItemRender<E> render);
+public interface ListModel<E> extends Iterable<E> {
+  int getSize();
 }

@@ -29,6 +29,7 @@ import consulo.web.gwtUI.client.ui.InternalGwtComponent;
 import consulo.web.gwtUI.client.util.Log;
 import consulo.web.gwtUI.client.util.UIUtil;
 import consulo.web.gwtUI.shared.*;
+import org.gwt.advanced.client.util.ThemeHelper;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +44,8 @@ public class UIEntryPoint implements EntryPoint {
 
   @Override
   public void onModuleLoad() {
+    ThemeHelper.getInstance().setThemeName("classic");
+
     Widget widget = UIUtil.loadingPanel();
 
     final RootPanel rootPanel = RootPanel.get();

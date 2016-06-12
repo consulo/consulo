@@ -25,17 +25,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SomeTestUIBuilder {
   public static Component build(UIAccess uiAccess) {
-    VerticalLayout dockLayout = UIFactory.Layouts.vertical();
+    VerticalLayout layout = UIFactory.Layouts.vertical();
 
     final CheckBox top = create("top");
     top.setEnabled(false);
-    dockLayout.add(top);
+    layout.add(top);
     final CheckBox left = create("left");
-    dockLayout.add(left);
+    layout.add(left);
     final CheckBox right = create("right");
-    dockLayout.add(right);
+    layout.add(right);
     final CheckBox bottom = create("bottom");
-    dockLayout.add(bottom);
+    layout.add(bottom);
 
     final CheckBox center = UIFactory.Components.checkBox("UI proxy?=center", false);
     center.addSelectListener(new CheckBox.SelectListener() {
@@ -50,9 +50,10 @@ public class SomeTestUIBuilder {
       }
     });
     center.setSelected(true);
-    dockLayout.add(center);
+    layout.add(center);
+    layout.add(UIFactory.Components.comboBox("test", "test2"));
 
-    return dockLayout;
+    return layout;
   }
 
   private static CheckBox create(String text) {

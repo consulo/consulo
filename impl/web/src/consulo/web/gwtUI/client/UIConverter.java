@@ -16,10 +16,7 @@
 package consulo.web.gwtUI.client;
 
 import com.google.gwt.user.client.Window;
-import consulo.web.gwtUI.client.ui.GwtCheckBoxImpl;
-import consulo.web.gwtUI.client.ui.InternalGwtComponent;
-import consulo.web.gwtUI.client.ui.GwtDockLayoutImpl;
-import consulo.web.gwtUI.client.ui.GwtVerticalLayoutImpl;
+import consulo.web.gwtUI.client.ui.*;
 import consulo.web.gwtUI.shared.UIComponent;
 
 import java.util.Collections;
@@ -55,6 +52,12 @@ public class UIConverter {
       @Override
       public InternalGwtComponent create() {
         return new GwtVerticalLayoutImpl();
+      }
+    });
+    ourMap.put("consulo.ui.internal.WGwtComboBoxImpl", new Factory() {
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtComboBoxImpl();
       }
     });
   }
