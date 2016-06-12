@@ -51,22 +51,22 @@ public class SomeTestUIBuilder {
         right.setSelected(checkBox.isSelected());
         bottom.setSelected(checkBox.isSelected());
         bottom.setVisible(!checkBox.isSelected());
-
-        final UIAccess uiAccess = UIAccess.get();
-
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
-          @Override
-          public void run() {
-            uiAccess.give(new Runnable() {
-              @Override
-              public void run() {
-                right.setSelected(!right.isSelected());
-              }
-            });
-          }
-        }, 5, 5, TimeUnit.SECONDS);
       }
     });
+
+    final UIAccess uiAccess = UIAccess.get();
+
+    Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
+      @Override
+      public void run() {
+        uiAccess.give(new Runnable() {
+          @Override
+          public void run() {
+            right.setSelected(!right.isSelected());
+          }
+        });
+      }
+    }, 5, 5, TimeUnit.SECONDS);
 
     center.setSelected(true);
     layout.add(center);
