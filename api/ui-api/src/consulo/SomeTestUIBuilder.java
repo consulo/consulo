@@ -91,7 +91,8 @@ public class SomeTestUIBuilder {
         }
       }
     });
-    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(comboBox));
+    layout.add(UIFactory.Layouts.dock().left(UIFactory.Components.label("SDK:")).center(comboBox));
+    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(UIFactory.Components.comboBox("test1", "tet2")));
 
     return layout;
   }
