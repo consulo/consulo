@@ -13,40 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.model;
+package consulo.ui.internal;
 
 import consulo.ui.ListModel;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.swing.*;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class ImmutableListModel<E> implements ListModel<E> {
-  private final List<E> myItems = new ArrayList<E>();
+public class DesktopComboBoxModelWrapper<E> extends AbstractListModel implements ListModel<E>, ComboBoxModel {
+  private ListModel<E> myModel;
+  private Object mySelectedItem;
 
-  public ImmutableListModel(E... items) {
-    myItems.addAll(Arrays.asList(items));
+  public DesktopComboBoxModelWrapper(ListModel<E> model) {
+
+    myModel = model;
+    mySelectedItem = model.get(0);
   }
 
   @Nullable
   @Override
   public E get(int index) {
-    return myItems.get(index);
+    return myModel.get(index);
   }
 
   @Override
   public int getSize() {
-    return myItems.size();
+    return myModel.getSize();
+  }
+
+  @Override
+  public Object getElementAt(int index) {
+    return myModel.get(index);
   }
 
   @Override
   public Iterator<E> iterator() {
-    return myItems.iterator();
+    return myModel.iterator();
+  }
+
+  @Override
+  public void setSelectedItem(Object anItem) {
+    if (mySelectedItem != null && !mySelectedItem.equals(anItem) || mySelectedItem == null && anItem != null) {
+      mySelectedItem = anItem;
+      fireContentsChanged(this, -1, -1);
+    }
+  }
+
+  @Override
+  public Object getSelectedItem() {
+    return mySelectedItem;
   }
 }

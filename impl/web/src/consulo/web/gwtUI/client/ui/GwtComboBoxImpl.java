@@ -33,7 +33,6 @@ import java.util.Map;
  */
 public class GwtComboBoxImpl extends WidgetComboBox<ComboBoxDataModel> implements InternalGwtComponent {
   public GwtComboBoxImpl() {
-    setWidth("100%");
     setLazyRenderingEnabled(false);
 
     setListItemFactory(new ListItemFactory() {

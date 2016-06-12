@@ -15,31 +15,33 @@
  */
 package consulo.ui.internal;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
 import consulo.ui.*;
-import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIEventFactory;
+import consulo.ui.ListModel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
+import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E> {
+public class DesktopComboBoxImpl<E> extends JComboBox implements ComboBox<E> {
+  private DesktopComboBoxModelWrapper<E> myModel;
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
-  private ListModel<E> myModel;
 
-  public WGwtComboBoxImpl(ListModel<E> model) {
-    myModel = model;
-  }
+  public DesktopComboBoxImpl(ListModel<E> model) {
+    myModel = new DesktopComboBoxModelWrapper<E>(model);
 
-  @Override
-  protected void getState(Map<String, String> map) {
-    super.getState(map);
-    map.put("size", String.valueOf(myModel.getSize()));
+    setModel(myModel);
+    setRenderer(new ListCellRenderer() {
+      @Override
+      public java.awt.Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        DesktopListItemPresentationImpl presentation = new DesktopListItemPresentationImpl();
+        myRender.render(presentation, index, (E)value);
+        return presentation.getLayout();
+      }
+    });
   }
 
   @NotNull
@@ -53,19 +55,9 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
     myRender = render;
   }
 
+  @Nullable
   @Override
-  protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
-    int i = 0;
-
-    for (E e : myModel) {
-      final AutoBean<UIComponent> bean = factory.component();
-      final UIComponent component = bean.as();
-      component.setId(String.valueOf(i));
-
-      WGwtListItemPresentationImpl render = new WGwtListItemPresentationImpl();
-      myRender.render(render, i, e);
-
-      i++;
-    }
+  public Component getParentComponent() {
+    return (Component)getParent();
   }
 }

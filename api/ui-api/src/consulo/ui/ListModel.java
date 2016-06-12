@@ -15,10 +15,15 @@
  */
 package consulo.ui;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public interface ListModel<E> extends Iterable<E> {
   int getSize();
+
+  @Nullable
+  E get(int index);
 }

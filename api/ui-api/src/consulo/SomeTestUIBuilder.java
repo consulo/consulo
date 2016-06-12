@@ -18,6 +18,7 @@ package consulo;
 import consulo.ui.*;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -73,7 +74,24 @@ public class SomeTestUIBuilder {
     layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.checkBox("Test 1")).add(UIFactory.Components.checkBox("Test 2")));
     layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("Test 1")).add(UIFactory.Components.label("Test 2")));
     layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.htmlLabel("<b>Test 1</b>")).add(UIFactory.Components.label("<b>Test 1</b>")));
-    //layout.add(UIFactory.Components.comboBox("test", "test2"));
+    final ComboBox<String> comboBox = UIFactory.Components.comboBox("test", "test2");
+    comboBox.setRender(new ListItemRender<String>() {
+      @Override
+      public void render(@NotNull ListItemPresentation render, int index, @Nullable String item) {
+        if (item == null) {
+          render.append("<null>");
+          return;
+        }
+
+        if (item.equals("test2")) {
+          render.append(item, TextStyle.BOLD);
+        }
+        else {
+          render.append(item);
+        }
+      }
+    });
+    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(comboBox));
 
     return layout;
   }

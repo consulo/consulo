@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ComboBox<E> extends Component {
   @NotNull
-  ListModel<E> getModel();
+  ListModel<E> getListModel();
 
   void setRender(@NotNull ListItemRender<E> render);
 }

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class ListItemRenders {
   private static final ListItemRender ourDefaultRender = new ListItemRender() {
     @Override
-    public void render(@NotNull ListItemPresentation render, @Nullable Object item) {
+    public void render(@NotNull ListItemPresentation render, int index, @Nullable Object item) {
       render.append(item == null ? "" : item.toString());
     }
   };

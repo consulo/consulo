@@ -55,7 +55,7 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   protected <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
-    return null;
+    return new DesktopComboBoxImpl<E>(model);
   }
 
   @Override
