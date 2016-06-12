@@ -21,18 +21,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
 public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
-  private static class ActionListenerImpl implements ActionListener {
+  private static class ItemListenerImpl implements ItemListener {
     private SelectListener mySelectListener;
 
-    public ActionListenerImpl(SelectListener selectListener) {
+    public ItemListenerImpl(SelectListener selectListener) {
       mySelectListener = selectListener;
     }
 
@@ -43,12 +43,14 @@ public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
 
     @Override
     public boolean equals(Object obj) {
-      return obj instanceof ActionListenerImpl && ((ActionListenerImpl)obj).mySelectListener.equals(((ActionListenerImpl)obj).mySelectListener);
+      return obj instanceof ItemListenerImpl && ((ItemListenerImpl)obj).mySelectListener.equals(((ItemListenerImpl)obj).mySelectListener);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-      mySelectListener.selectChanged((CheckBox)e.getSource());
+    public void itemStateChanged(ItemEvent e) {
+      if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
+        mySelectListener.selectChanged((CheckBox)e.getSource());
+      }
     }
   }
 
@@ -64,11 +66,11 @@ public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
 
   @Override
   public void addSelectListener(@NotNull SelectListener selectListener) {
-    addActionListener(new ActionListenerImpl(selectListener));
+    addItemListener(new ItemListenerImpl(selectListener));
   }
 
   @Override
   public void removeSelectListener(@NotNull SelectListener selectListener) {
-    removeActionListener(new ActionListenerImpl(selectListener));
+    removeItemListener(new ItemListenerImpl(selectListener));
   }
 }
