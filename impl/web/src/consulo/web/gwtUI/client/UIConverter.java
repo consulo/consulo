@@ -18,6 +18,7 @@ package consulo.web.gwtUI.client;
 import com.google.gwt.user.client.Window;
 import consulo.web.gwtUI.client.ui.*;
 import consulo.web.gwtUI.shared.UIComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import java.util.Map;
  */
 public class UIConverter {
   interface Factory {
+    @NotNull
     InternalGwtComponent create();
   }
 
@@ -37,27 +39,38 @@ public class UIConverter {
 
   static {
     ourMap.put("consulo.ui.internal.WGwtCheckBoxImpl", new Factory() {
+      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtCheckBoxImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtDockLayoutImpl", new Factory() {
+      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtDockLayoutImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtVerticalLayoutImpl", new Factory() {
+      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtVerticalLayoutImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtComboBoxImpl", new Factory() {
+      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtComboBoxImpl();
+      }
+    });
+    ourMap.put("consulo.ui.internal.WGwtHorizontalLayoutImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtHorizontalLayoutImpl();
       }
     });
   }

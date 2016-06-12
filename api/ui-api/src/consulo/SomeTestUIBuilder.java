@@ -51,7 +51,8 @@ public class SomeTestUIBuilder {
     });
     center.setSelected(true);
     layout.add(center);
-    layout.add(UIFactory.Components.comboBox("test", "test2"));
+    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.checkBox("Test 1")).add(UIFactory.Components.checkBox("Test 2")));
+    //layout.add(UIFactory.Components.comboBox("test", "test2"));
 
     return layout;
   }

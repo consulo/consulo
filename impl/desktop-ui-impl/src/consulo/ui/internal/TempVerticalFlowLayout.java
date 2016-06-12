@@ -20,7 +20,7 @@ import org.intellij.lang.annotations.MagicConstant;
 import java.awt.*;
 import java.io.Serializable;
 
-class TempVerticalFlowLayout extends FlowLayout implements Serializable {
+final class TempVerticalFlowLayout extends FlowLayout implements Serializable {
   public static final int BOTTOM = 2;
   public static final int MIDDLE = 1;
   public static final int TOP = 0;

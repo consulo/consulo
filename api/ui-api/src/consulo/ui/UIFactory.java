@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ImmutableListModel;
 import org.jetbrains.annotations.NotNull;
@@ -61,6 +62,11 @@ public class UIFactory {
     @NotNull
     public static VerticalLayout vertical() {
       return _UIInternals.impl()._Layouts_vertical();
+    }
+
+    @NotNull
+    public static HorizontalLayout horizontal() {
+      return _UIInternals.impl()._Layouts_horizontal();
     }
   }
 }

@@ -17,8 +17,10 @@ package consulo.ui;
 
 import consulo.ui.internal.DesktopCheckBoxImpl;
 import consulo.ui.internal.DesktopDockLayoutImpl;
+import consulo.ui.internal.DesktopHorizontalLayoutImpl;
 import consulo.ui.internal.DesktopVerticalLayoutImpl;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,6 +54,11 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   protected <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
     return null;
+  }
+
+  @Override
+  protected HorizontalLayout _Layouts_horizontal() {
+    return new DesktopHorizontalLayoutImpl();
   }
 
   @Override

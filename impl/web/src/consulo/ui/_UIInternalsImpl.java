@@ -15,11 +15,9 @@
  */
 package consulo.ui;
 
-import consulo.ui.internal.WGwtComboBoxImpl;
-import consulo.ui.internal.WGwtCheckBoxImpl;
-import consulo.ui.internal.WGwtDockLayoutImpl;
-import consulo.ui.internal.WGwtVerticalLayoutImpl;
+import consulo.ui.internal.*;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.web.servlet.ui.UIAccessHelper;
 import org.jetbrains.annotations.NotNull;
@@ -52,6 +50,11 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   protected <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
     return new WGwtComboBoxImpl<E>(model);
+  }
+
+  @Override
+  protected HorizontalLayout _Layouts_horizontal() {
+    return new WGwtHorizontalLayoutImpl();
   }
 
   @Override
