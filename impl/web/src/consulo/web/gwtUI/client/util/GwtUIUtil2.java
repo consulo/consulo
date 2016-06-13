@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.*;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class UIUtil {
+public class GwtUIUtil2 {
   public static Widget loadingPanel() {
     VerticalPanel verticalPanel = fillAndReturn(new VerticalPanel());
     verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
