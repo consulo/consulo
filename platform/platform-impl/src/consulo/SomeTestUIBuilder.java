@@ -111,7 +111,7 @@ public class SomeTestUIBuilder {
     component.setValue("tet2");
     splitLayout.setSecondComponent(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(component));
 
-    splitLayout.setProportion(30);
+    splitLayout.setProportion(20);
 
     layout.add(splitLayout);
     return layout;
