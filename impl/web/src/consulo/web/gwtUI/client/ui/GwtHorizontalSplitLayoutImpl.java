@@ -15,7 +15,9 @@
  */
 package consulo.web.gwtUI.client.ui;
 
-import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.client.util.GwtUIUtil2;
@@ -26,44 +28,33 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 13-Jun-16
  */
-public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponent {
-  public GwtDockLayoutImpl() {
-    GwtUIUtil2.fill(this);
-    setHorizontalAlignment(ALIGN_LEFT);
-    setVerticalAlignment(ALIGN_TOP);
+public class GwtHorizontalSplitLayoutImpl extends Grid implements InternalGwtComponent {
+  public GwtHorizontalSplitLayoutImpl() {
+    super(1, 3);
+
+    Label label = GwtUIUtil2.fillAndReturn(new Label());
+    label.getElement().getStyle().setBackgroundColor("gray");
+    setWidget(0, 1, label);
   }
 
   @Override
   public void updateState(@NotNull Map<String, String> map) {
-    DefaultVariables.updateState(map, this);
+    getCellFormatter().setWidth(0, 1, "3px");
+    getCellFormatter().setWidth(0, 0, map.get("proportion") + "%");
   }
 
   @Override
   public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
-    final Map<String, String> variables = child.getVariables();
+    boolean first = Boolean.parseBoolean(child.getVariables().get("position"));
 
-    final String side = variables.get("side");
-    DockLayoutConstant direction = null;
-    if (side.equals("top")) {
-      direction = NORTH;
+    final InternalGwtComponent component = UIConverter.create(proxy, child.getComponent());
+    if (first) {
+      setWidget(0, 0, (Widget)component);
     }
-    else if (side.equals("bottom")) {
-      direction = SOUTH;
+    else {
+      setWidget(0, 2, (Widget)component);
     }
-    else if (side.equals("left")) {
-      direction = WEST;
-    }
-    else if (side.equals("right")) {
-      direction = EAST;
-    }
-    else if (side.equals("center")) {
-      direction = CENTER;
-    }
-
-    final InternalGwtComponent widget = UIConverter.create(proxy, child.getComponent());
-    widget.asWidget().setWidth("100%");
-    add(widget, direction);
   }
 }

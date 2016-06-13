@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.SplitLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +55,10 @@ abstract class _UIInternals {
   protected abstract DockLayout _Layouts_dock();
 
   protected abstract VerticalLayout _Layouts_vertical();
+
+  protected abstract SplitLayout _Layouts_horizontalSplit();
+
+  protected abstract SplitLayout _Layouts_verticalSplit();
 
   protected abstract Label _Components_label(String text);
 

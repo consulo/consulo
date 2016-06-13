@@ -19,6 +19,7 @@ import com.intellij.openapi.util.IconLoader;
 import consulo.ui.internal.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.SplitLayout;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +32,7 @@ import java.net.URL;
  */
 class _UIInternalsImpl extends _UIInternals {
   static {
-    IconLoader.activate();
+    IconLoader.activate(); // TODO [VISTALL] hack until we not start Consulo app
   }
 
   @Override
@@ -52,6 +53,18 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   protected VerticalLayout _Layouts_vertical() {
     return new DesktopVerticalLayoutImpl();
+  }
+
+  @Override
+  protected SplitLayout _Layouts_horizontalSplit() {
+    return new DesktopSplitLayoutImpl();
+  }
+
+  @Override
+  protected SplitLayout _Layouts_verticalSplit() {
+    DesktopSplitLayoutImpl impl = new DesktopSplitLayoutImpl();
+    impl.setOrientation(true);
+    return impl;
   }
 
   @Override

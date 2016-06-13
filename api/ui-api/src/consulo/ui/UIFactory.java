@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.SplitLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
@@ -78,6 +79,16 @@ public class UIFactory {
     @NotNull
     public static HorizontalLayout horizontal() {
       return _UIInternals.impl()._Layouts_horizontal();
+    }
+
+    @NotNull
+    public static SplitLayout horizontalSplit() {
+      return _UIInternals.impl()._Layouts_horizontalSplit();
+    }
+
+    @NotNull
+    public static SplitLayout verticalSplit() {
+      return _UIInternals.impl()._Layouts_verticalSplit();
     }
   }
 }

@@ -18,6 +18,7 @@ package consulo;
 import com.intellij.icons.AllIcons;
 import consulo.ui.*;
 import consulo.ui.hack.IconWithURL;
+import consulo.ui.layout.SplitLayout;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -97,7 +98,9 @@ public class SomeTestUIBuilder {
         }
       }
     });
-    layout.add(UIFactory.Layouts.dock().left(UIFactory.Components.label("SDK:")).center(comboBox));
+    final SplitLayout splitLayout = UIFactory.Layouts.horizontalSplit();
+
+    splitLayout.setFirstComponent(UIFactory.Layouts.dock().left(UIFactory.Components.label("SDK:")).center(comboBox));
     final ComboBox<String> component = UIFactory.Components.comboBox("test1", "tet2");
     component.addValueListener(new ValueComponent.ValueListener<String>() {
       @Override
@@ -106,8 +109,11 @@ public class SomeTestUIBuilder {
       }
     });
     component.setValue("tet2");
-    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(component));
+    splitLayout.setSecondComponent(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(component));
 
+    splitLayout.setProportion(30);
+
+    layout.add(splitLayout);
     return layout;
   }
 
@@ -116,7 +122,7 @@ public class SomeTestUIBuilder {
   }
 
   public static ImageRef fromIcon(Icon icon) {
-    if(icon instanceof IconWithURL) {
+    if (icon instanceof IconWithURL) {
       return ImageRefs.fromURL(((IconWithURL)icon).getURL());
     }
     throw new UnsupportedOperationException();

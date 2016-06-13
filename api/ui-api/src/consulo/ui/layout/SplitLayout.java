@@ -13,34 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.servlet;
+package consulo.ui.layout;
 
-import com.intellij.util.Function;
-import consulo.SomeTestUIBuilder;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIThread;
-import consulo.ui.UIAccess;
-import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 13-Jun-16
  */
-public class TestUIServlet extends UIServlet {
-  public TestUIServlet() {
-    super("ui");
-  }
+public interface SplitLayout extends Layout {
+  /**
+   * @param percent from 0 to 100
+   */
+  void setProportion(int percent);
 
-  @NotNull
-  @Override
-  public Function<UIAccess, Component> uiFactory() {
-    return new Function<UIAccess, Component>() {
-      @Override
-      @RequiredUIThread
-      public Component fun(UIAccess uiAccess) {
-        return SomeTestUIBuilder.build();
-      }
-    };
-  }
+  @RequiredUIThread
+  void setFirstComponent(@NotNull Component component);
+
+  @RequiredUIThread
+  void setSecondComponent(@NotNull Component component);
 }

@@ -101,6 +101,13 @@ public class UIConverter {
         return new GwtLayeredImageImpl();
       }
     });
+    ourMap.put("consulo.ui.internal.WGwtHorizontalSplitLayoutImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtHorizontalSplitLayoutImpl();
+      }
+    });
   }
 
   private static Map<String, InternalGwtComponent> ourCache = new HashMap<String, InternalGwtComponent>();
@@ -126,7 +133,7 @@ public class UIConverter {
       }
     }
     widget.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
-    if(widget instanceof InternalGwtComponentWithListeners) {
+    if (widget instanceof InternalGwtComponentWithListeners) {
       ((InternalGwtComponentWithListeners)widget).addListeners(proxy, component.getId());
     }
     return widget;
