@@ -15,30 +15,12 @@
  */
 package consulo.web.gwtUI.client.ui;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
-import consulo.web.gwtUI.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 13-Jun-16
  */
-public class GwtHorizontalLayoutImpl extends HorizontalPanel implements InternalGwtComponent {
-  public GwtHorizontalLayoutImpl() {
-    setHorizontalAlignment(ALIGN_CENTER);
-  }
-
-  @Override
-  public void updateState(@NotNull Map<String, String> map) {
-    DefaultVariables.updateState(map, this);
-  }
-
-  @Override
-  public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
-    add(UIConverter.create(proxy, child.getComponent()));
-  }
+public interface InternalGwtComponentWithListeners extends InternalGwtComponent {
+  void addListeners(final WebSocketProxy proxy, final String componentId);
 }

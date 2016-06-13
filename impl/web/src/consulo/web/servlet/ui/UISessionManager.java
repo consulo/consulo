@@ -154,11 +154,14 @@ public class UISessionManager {
     UIAccessHelper.ourInstance.run(uiContext, new Runnable() {
       @Override
       public void run() {
-        final String componentId = clientEvent.getVariables().get("componentId");
+        final Map<String, String> variables = clientEvent.getVariables();
+
+        final String componentId = variables.get("componentId");
+        final String type = variables.get("type");
 
         final WBaseGwtComponent gwtComponent = uiContext.myComponents.get(componentId);
         if (gwtComponent != null) {
-          gwtComponent.invokeListeners(clientEvent.getVariables());
+          gwtComponent.invokeListeners(type, variables);
         }
       }
     });

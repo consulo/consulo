@@ -154,7 +154,7 @@ public class WBaseGwtComponent implements Component {
     putIfNotDefault("enabled", myEnabled, true, map);
   }
 
-  public void invokeListeners(Map<String, String> variables) {
+  public void invokeListeners(String type, Map<String, String> variables) {
 
   }
 

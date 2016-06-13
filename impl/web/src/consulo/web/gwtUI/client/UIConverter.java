@@ -104,7 +104,6 @@ public class UIConverter {
     ourCache.put(component.getId(), widget);
 
     final Map<String, String> variables = component.getVariables();
-    widget.init(proxy, component.getId());
 
     final List<UIComponent.Child> children = component.getChildren();
     if (children != null) {
@@ -113,7 +112,9 @@ public class UIConverter {
       }
     }
     widget.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
-
+    if(widget instanceof InternalGwtComponentWithListeners) {
+      ((InternalGwtComponentWithListeners)widget).addListeners(proxy, component.getId());
+    }
     return widget;
   }
 

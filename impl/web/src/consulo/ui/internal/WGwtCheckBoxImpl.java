@@ -67,10 +67,12 @@ public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
   }
 
   @Override
-  public void invokeListeners(Map<String, String> variables) {
-    mySelected = Boolean.parseBoolean(variables.get("selected"));
+  public void invokeListeners(String type, Map<String, String> variables) {
+    if ("select".equals(type)) {
+      mySelected = Boolean.parseBoolean(variables.get("selected"));
 
-    fireValueListeners();
+      fireValueListeners();
+    }
   }
 
   private void fireValueListeners() {

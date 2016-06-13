@@ -32,6 +32,10 @@ import org.gwt.advanced.client.ui.widget.combo.DropDownPosition;
 import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
 
 /**
+ * By VISTALL. This is copy-paste version of {@link org.gwt.advanced.client.ui.widget.ListPopupPanel}  with changes:
+ * - use our {@link WidgetComboBox}
+ * - we don't need call #selectRow in #prepareList()
+ *
  * This widget displays a scrollable list of items.<p/>
  * Don't try to use it directly. It's just for the combo box widget.
  *
@@ -371,7 +375,7 @@ public class ListPopupPanel2 extends PopupPanel implements AdvancedWidget, HasCh
     fillList();
 
     int selected = getComboBox().getModel().getSelectedIndex();
-    selectRow(selected);
+    setHighlightRow(selected);
     if (selected >= 0 && selected < getItemCount())
       ensureVisible(getItem(selected));
   }

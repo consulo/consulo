@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * By VISTALL. This is copypaste version of {@link org.gwt.advanced.client.ui.widget.ComboBox}  with change:
+ * By VISTALL. This is copy-paste version of {@link org.gwt.advanced.client.ui.widget.ComboBox}  with change:
  * - Current item is Widget too as List Items (in original current item is TextEditor),
  * this need for show current item as in list, not only text variant
  * <p/>

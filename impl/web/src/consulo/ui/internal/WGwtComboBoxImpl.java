@@ -21,6 +21,7 @@ import consulo.web.gwtUI.shared.UIEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import java.util.Map;
  */
 public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E> {
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
+  private List<ValueListener<E>> myValueListeners = new ArrayList<ValueListener<E>>();
   private ListModel<E> myModel;
   private int myIndex = -1;
 
@@ -82,13 +84,22 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
   }
 
   @Override
-  public void addValueListener(@NotNull ValueListener<E> valueListener) {
+  public void invokeListeners(String type, Map<String, String> variables) {
+    if("select".equals(type)) {
+      myIndex = Integer.parseInt(variables.get("index"));
 
+      setValueImpl(myModel.get(myIndex));
+    }
+  }
+
+  @Override
+  public void addValueListener(@NotNull ValueListener<E> valueListener) {
+    myValueListeners.add(valueListener);
   }
 
   @Override
   public void removeValueListener(@NotNull ValueListener<E> valueListener) {
-
+    myValueListeners.remove(valueListener);
   }
 
   @Nullable
@@ -103,13 +114,17 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
   @Override
   @RequiredUIThread
   public void setValue(int index) {
-    final E e = myModel.get(index);
-    setValue(e);
+    setValue(myModel.get(index));
   }
 
   @Override
   @RequiredUIThread
   public void setValue(@Nullable E value) {
+    setValueImpl(value);
+    markAsChanged();
+  }
+
+  public void setValueImpl(@Nullable E value) {
     if (value == null) {
       myIndex = -1;
     }
@@ -121,6 +136,9 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
       myIndex = i;
     }
 
-    markAsChanged();
+    final ValueEvent<E> event = new ValueEvent<E>(this, value);
+    for (ValueListener<E> valueListener : myValueListeners) {
+      valueListener.valueChanged(event);
+    }
   }
 }

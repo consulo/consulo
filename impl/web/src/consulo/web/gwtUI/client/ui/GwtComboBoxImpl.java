@@ -19,12 +19,17 @@ import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.client.ui.advancedGwt.WidgetComboBox;
+import consulo.web.gwtUI.shared.UIClientEvent;
+import consulo.web.gwtUI.shared.UIClientEventType;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.gwt.advanced.client.datamodel.ListDataModel;
+import org.gwt.advanced.client.datamodel.ListModelEvent;
+import org.gwt.advanced.client.datamodel.ListModelListener;
 import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +37,10 @@ import java.util.Map;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtComponent {
+public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtComponentWithListeners {
   /**
    * Item list with by index
-   *
+   * <p/>
    * Contains null item too, that why - get component by index, need +1
    */
   private List<UIComponent.Child> myItemsWithNullItem = new ArrayList<UIComponent.Child>();
@@ -61,8 +66,25 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
   }
 
   @Override
-  public void init(WebSocketProxy proxy, String componentId) {
+  public void addListeners(final WebSocketProxy proxy, final String componentId) {
+    getModel().addListModelListener(new ListModelListener() {
+      @Override
+      public void onModelEvent(final ListModelEvent event) {
+        if (event.getType() == ListModelEvent.SELECT_ITEM) {
+          proxy.send(UIClientEventType.invokeEvent, new WebSocketProxy.Consumer<UIClientEvent>() {
+            @Override
+            public void consume(UIClientEvent clientEvent) {
+              Map<String, String> vars = new HashMap<String, String>();
+              vars.put("type", "select");
+              vars.put("componentId", componentId);
+              vars.put("index", String.valueOf(event.getItemIndex()));
 
+              clientEvent.setVariables(vars);
+            }
+          });
+        }
+      }
+    });
   }
 
   @Override

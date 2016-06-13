@@ -24,8 +24,9 @@ import org.gwt.advanced.client.datamodel.ListModelListener;
 import java.util.*;
 
 /**
- * By VISTALL. This is copypaste version of {@link org.gwt.advanced.client.datamodel.ComboBoxDataModel}  with change:
+ * By VISTALL. This is copy-paste version of {@link org.gwt.advanced.client.datamodel.ComboBoxDataModel}  with changes:
  * -  setSelectedIndex() not ignore listeners
+ * - don't need call listeners on setSelectedId() if value equals current
  * <p/>
  * <p/>
  * This is an implementation of the data model interface for the ComboBox widget.
@@ -157,6 +158,9 @@ public class ComboBoxDataModel2 implements ListDataModel {
    */
   @Override
   public int getSelectedIndex() {
+    if(getSelectedId() == null) {
+      return -1;
+    }
     return getItemIds().indexOf(getSelectedId());
   }
 
@@ -173,6 +177,10 @@ public class ComboBoxDataModel2 implements ListDataModel {
    */
   @Override
   public void setSelectedId(String id) {
+    if(selectedId == null && id == null || selectedId != null && selectedId.equals(id)) {
+      return;
+    }
+
     this.selectedId = id;
 
     fireEvent(new ListModelEvent(this, id, getSelectedIndex(), ListModelEvent.SELECT_ITEM));

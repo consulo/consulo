@@ -27,8 +27,6 @@ import java.util.Map;
  * @since 11-Jun-16
  */
 public interface InternalGwtComponent extends IsWidget {
-  void init(WebSocketProxy proxy, String componentId);
-
   void updateState(@NotNull Map<String, String> map);
 
   void addChildren(WebSocketProxy proxy, UIComponent.Child child);

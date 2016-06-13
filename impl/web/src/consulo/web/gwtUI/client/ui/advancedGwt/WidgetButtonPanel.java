@@ -25,6 +25,10 @@ import org.gwt.advanced.client.ui.widget.LockingPanel;
 import org.gwt.advanced.client.ui.widget.theme.ThemeImage;
 
 /**
+ * By VISTALL. This is copy-paste version of {@link org.gwt.advanced.client.ui.widget.TextButtonPanel}  with change:
+ * -  use {@link ComboBoxSelectItem} as default widget - not text area
+ * <p/>
+ * <p/>
  * This is a basic class for all text boxs with a button.
  *
  * @author <a href="mailto:sskladchikov@gmail.com">Sergey Skladchikov</a>
