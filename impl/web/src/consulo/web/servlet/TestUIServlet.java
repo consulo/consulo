@@ -15,6 +15,7 @@
  */
 package consulo.web.servlet;
 
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.Function;
 import consulo.SomeTestUIBuilder;
 import consulo.ui.Component;
@@ -28,6 +29,10 @@ import org.jetbrains.annotations.NotNull;
  * @since 11-Jun-16
  */
 public class TestUIServlet extends UIServlet {
+  static {
+    IconLoader.activate(); // TODO [VISTALL] hack until we not start Consulo app
+  }
+
   public TestUIServlet() {
     super("ui");
   }

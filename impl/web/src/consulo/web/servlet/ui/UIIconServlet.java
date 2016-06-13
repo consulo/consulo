@@ -15,7 +15,6 @@
  */
 package consulo.web.servlet.ui;
 
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
@@ -37,10 +36,6 @@ import java.net.URL;
  * @since 13-Jun-16
  */
 public class UIIconServlet extends HttpServlet {
-  static {
-    IconLoader.activate();
-  }
-
   private static ConcurrentFactoryMap<URL, byte[]> ourCache = new ConcurrentFactoryMap<URL, byte[]>() {
     @Nullable
     @Override
