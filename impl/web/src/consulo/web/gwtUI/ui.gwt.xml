@@ -33,4 +33,5 @@
   <stylesheet src="css/advanced-gwt-custom.css"/>
   <stylesheet src="css/advanced-gwt.css"/>
   <stylesheet src="css/gwt.css"/>
+  <stylesheet src="css/ui.css"/>
 </module>

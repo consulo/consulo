@@ -29,8 +29,15 @@ public class WGwtListItemPresentationImpl implements ListItemPresentation {
 
   @Override
   public void append(@NotNull ImageRef... imageRefs) {
-    for (ImageRef imageRef : imageRefs) {
-      myLayout.add(new WGwtImageImpl((WGwtImageRefImpl)imageRef));
+    if (imageRefs.length == 0) {
+      throw new IllegalArgumentException();
+    }
+
+    if (imageRefs.length == 1) {
+      myLayout.add(new WGwtImageImpl((WGwtImageRefImpl)imageRefs[0]));
+    }
+    else {
+      myLayout.add(new WGwtLayeredImageImpl(imageRefs));
     }
   }
 

@@ -94,6 +94,13 @@ public class UIConverter {
         return new GwtImageImpl();
       }
     });
+    ourMap.put("consulo.ui.internal.WGwtLayeredImageImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtLayeredImageImpl();
+      }
+    });
   }
 
   private static Map<String, InternalGwtComponent> ourCache = new HashMap<String, InternalGwtComponent>();
