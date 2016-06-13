@@ -43,15 +43,14 @@ public class SomeTestUIBuilder {
     layout.add(bottom);
 
     final CheckBox center = UIFactory.Components.checkBox("UI proxy?=center", false);
-    center.addSelectListener(new CheckBox.SelectListener() {
+    center.addValueListener(new ValueComponent.ValueListener<CheckBox, Boolean>() {
       @Override
-      @RequiredUIThread
-      public void selectChanged(@NotNull CheckBox checkBox) {
-        top.setSelected(checkBox.isSelected());
-        left.setSelected(checkBox.isSelected());
-        right.setSelected(checkBox.isSelected());
-        bottom.setSelected(checkBox.isSelected());
-        bottom.setVisible(!checkBox.isSelected());
+      public void valueChanged(@NotNull ValueComponent.ValueEvent<CheckBox, Boolean> event) {
+        top.setValue(event.getValue());
+        left.setValue(event.getValue());
+        right.setValue(event.getValue());
+        bottom.setValue(event.getValue());
+        bottom.setVisible(!event.getValue());
       }
     });
 
@@ -63,13 +62,13 @@ public class SomeTestUIBuilder {
         uiAccess.give(new Runnable() {
           @Override
           public void run() {
-            right.setSelected(!right.isSelected());
+            right.setValue(!right.getValue());
           }
         });
       }
     }, 5, 5, TimeUnit.SECONDS);
 
-    center.setSelected(true);
+    center.setValue(true);
     layout.add(center);
     layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.checkBox("Test 1")).add(UIFactory.Components.checkBox("Test 2")));
     layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("Test 1")).add(UIFactory.Components.label("Test 2")));

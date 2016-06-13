@@ -17,6 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
+import consulo.ui.ValueComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,32 +31,44 @@ import java.awt.event.ItemListener;
  */
 public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
   private static class ItemListenerImpl implements ItemListener {
-    private SelectListener mySelectListener;
+    private ValueComponent.ValueListener<CheckBox, Boolean> myValueListener;
 
-    public ItemListenerImpl(SelectListener selectListener) {
-      mySelectListener = selectListener;
+    public ItemListenerImpl(ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+      myValueListener = valueListener;
     }
 
     @Override
     public int hashCode() {
-      return mySelectListener.hashCode();
+      return myValueListener.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-      return obj instanceof ItemListenerImpl && ((ItemListenerImpl)obj).mySelectListener.equals(((ItemListenerImpl)obj).mySelectListener);
+      return obj instanceof ItemListenerImpl && ((ItemListenerImpl)obj).myValueListener.equals(((ItemListenerImpl)obj).myValueListener);
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
       if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
-        mySelectListener.selectChanged((CheckBox)e.getSource());
+        final CheckBox source = (CheckBox)e.getSource();
+        myValueListener.valueChanged(new ValueEvent<CheckBox, Boolean>(source, source.getValue()));
       }
     }
   }
 
   public DesktopCheckBoxImpl(String text, boolean selected) {
     super(text, selected);
+  }
+
+  @NotNull
+  @Override
+  public Boolean getValue() {
+    return isSelected();
+  }
+
+  @Override
+  public void setValue(@NotNull Boolean value) {
+    setSelected(value);
   }
 
   @Nullable
@@ -65,12 +78,13 @@ public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
   }
 
   @Override
-  public void addSelectListener(@NotNull SelectListener selectListener) {
-    addItemListener(new ItemListenerImpl(selectListener));
+  public void addValueListener(@NotNull ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+    addItemListener(new ItemListenerImpl(valueListener));
+
   }
 
   @Override
-  public void removeSelectListener(@NotNull SelectListener selectListener) {
-    removeItemListener(new ItemListenerImpl(selectListener));
+  public void removeValueListener(@NotNull ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+    removeItemListener(new ItemListenerImpl(valueListener));
   }
 }

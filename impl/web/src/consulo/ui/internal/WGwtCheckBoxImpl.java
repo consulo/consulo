@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartList;
 import consulo.ui.CheckBox;
 import consulo.ui.RequiredUIThread;
+import consulo.ui.ValueComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.Map;
 public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
   private boolean mySelected;
   private String myText;
-  private List<SelectListener> mySelectListenerList = new SmartList<SelectListener>();
+  private List<ValueComponent.ValueListener<CheckBox, Boolean>> myValueListeners = new SmartList<ValueComponent.ValueListener<CheckBox, Boolean>>();
 
   public WGwtCheckBoxImpl(boolean selected, String text) {
     mySelected = selected;
@@ -68,41 +69,43 @@ public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
   public void invokeListeners(Map<String, String> variables) {
     mySelected = Boolean.parseBoolean(variables.get("selected"));
 
-    fireSelectListeners();
+    fireValueListeners();
   }
 
-  private void fireSelectListeners() {
-    for (SelectListener selectListener : mySelectListenerList) {
-      selectListener.selectChanged(this);
+  private void fireValueListeners() {
+    ValueEvent<CheckBox, Boolean> event = new ValueEvent<CheckBox, Boolean>(this, getValue());
+    for (ValueComponent.ValueListener<CheckBox, Boolean> valueListener : myValueListeners) {
+      valueListener.valueChanged(event);
     }
   }
 
+  @NotNull
   @Override
-  public boolean isSelected() {
+  public Boolean getValue() {
     return mySelected;
   }
 
   @Override
   @RequiredUIThread
-  public void setSelected(final boolean value) {
+  public void setValue(@NotNull final Boolean value) {
     if (mySelected == value) {
       return;
     }
 
     mySelected = value;
 
-    fireSelectListeners();
+    fireValueListeners();
 
     markAsChanged();
   }
 
   @Override
-  public void addSelectListener(@NotNull SelectListener selectListener) {
-    mySelectListenerList.add(selectListener);
+  public void addValueListener(@NotNull ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+    myValueListeners.add(valueListener);
   }
 
   @Override
-  public void removeSelectListener(@NotNull SelectListener selectListener) {
-    mySelectListenerList.remove(selectListener);
+  public void removeValueListener(@NotNull ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+    myValueListeners.remove(valueListener);
   }
 }
