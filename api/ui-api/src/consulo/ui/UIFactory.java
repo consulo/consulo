@@ -19,9 +19,8 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ImmutableListModel;
+import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
-
-import java.net.URL;
 
 /**
  * @author VISTALL
@@ -60,8 +59,8 @@ public class UIFactory {
     }
 
     @NotNull
-    public static Image image(@NotNull URL url) {
-      return _UIInternals.impl()._Components_image(url);
+    public static Image image(@NotNull ImageRef imageRef) {
+      return _UIInternals.impl()._Components_image(imageRef);
     }
   }
 

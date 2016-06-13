@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.*;
+import consulo.ui.model.ListModel;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
 import org.jetbrains.annotations.NotNull;

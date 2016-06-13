@@ -26,7 +26,7 @@ public abstract class UIAccess {
    * @return if current thread can access to ui write mode
    */
   public static boolean isUIThread() {
-    return _UIInternals.impl().isUIThread();
+    return _UIInternals.impl()._isUIThread();
   }
 
   /**
@@ -39,7 +39,7 @@ public abstract class UIAccess {
   public static UIAccess get() {
     assertIsUIThread();
 
-    return _UIInternals.impl().get();
+    return _UIInternals.impl()._get();
   }
 
   @RequiredUIThread

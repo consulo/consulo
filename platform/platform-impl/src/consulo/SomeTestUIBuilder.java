@@ -15,11 +15,14 @@
  */
 package consulo;
 
+import com.intellij.icons.AllIcons;
 import consulo.ui.*;
+import consulo.ui.hack.IconWithURL;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -78,14 +81,18 @@ public class SomeTestUIBuilder {
       @Override
       public void render(@NotNull ListItemPresentation render, int index, @Nullable String item) {
         if (item == null) {
+          render.append(fromIcon(AllIcons.Actions.Help));
           render.append("<null>");
           return;
         }
 
         if (item.equals("test2")) {
+          render.append(fromIcon(AllIcons.Actions.IntentionBulb));
           render.append(item, TextStyle.BOLD);
         }
         else {
+          render.append(fromIcon(AllIcons.Nodes.Class), fromIcon(AllIcons.Nodes.JunitTestMark));
+
           render.append(item);
         }
       }
@@ -106,5 +113,12 @@ public class SomeTestUIBuilder {
 
   private static CheckBox create(String text) {
     return UIFactory.Components.checkBox("UI proxy?=" + text, true);
+  }
+
+  public static ImageRef fromIcon(Icon icon) {
+    if(icon instanceof IconWithURL) {
+      return ImageRefs.fromURL(((IconWithURL)icon).getURL());
+    }
+    throw new UnsupportedOperationException();
   }
 }

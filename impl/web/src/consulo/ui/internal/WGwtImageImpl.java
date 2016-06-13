@@ -13,15 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.internal;
 
+import consulo.ui.Image;
+import consulo.ui.ImageRef;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public interface Image extends Component {
+public class WGwtImageImpl extends WBaseGwtComponent implements Image {
+  private WGwtImageRefImpl myImageRef;
+
+  public WGwtImageImpl(WGwtImageRefImpl imageRef) {
+    myImageRef = imageRef;
+  }
+
+  @Override
+  protected void getState(Map<String, String> map) {
+    super.getState(map);
+    map.put("url",  myImageRef.getUrlForBrowser());
+  }
+
   @NotNull
-  ImageRef getImageRef();
+  @Override
+  public ImageRef getImageRef() {
+    return myImageRef;
+  }
 }

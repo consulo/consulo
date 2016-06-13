@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.util.IconLoader;
 import consulo.ui.internal.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
@@ -29,6 +30,15 @@ import java.net.URL;
  * @since 09-Jun-16
  */
 class _UIInternalsImpl extends _UIInternals {
+  static {
+    IconLoader.activate();
+  }
+
+  @Override
+  protected ImageRef _imageRef(URL url) {
+    return new DesktopImageRefImpl(url);
+  }
+
   @Override
   public CheckBox _Components_checkBox(@NotNull String text, boolean selected) {
     return new DesktopCheckBoxImpl(text, selected);
@@ -55,7 +65,7 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  protected <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+  protected <E> ComboBox<E> _Components_comboBox(consulo.ui.model.ListModel<E> model) {
     return new DesktopComboBoxImpl<E>(model);
   }
 
@@ -65,18 +75,18 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  protected Image _Components_image(URL url) {
+  protected Image _Components_image(ImageRef imageRef) {
     return null;
   }
 
   @NotNull
   @Override
-  protected UIAccess get() {
+  protected UIAccess _get() {
     return DesktopUIAccessImpl.ourInstance;
   }
 
   @Override
-  protected boolean isUIThread() {
+  protected boolean _isUIThread() {
     return SwingUtilities.isEventDispatchThread();
   }
 }

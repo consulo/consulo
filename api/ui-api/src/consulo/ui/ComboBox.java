@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
 
 /**

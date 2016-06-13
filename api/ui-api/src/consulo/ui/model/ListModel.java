@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.model;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 12-Jun-16
  */
-public interface Image extends Component {
+public interface ListModel<E> extends Iterable<E> {
+  int getSize();
+
   @NotNull
-  ImageRef getImageRef();
+  E get(int index);
+
+  int indexOf(@NotNull E value);
 }

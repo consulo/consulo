@@ -15,13 +15,12 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public interface Image extends Component {
-  @NotNull
-  ImageRef getImageRef();
+public interface ImageRef {
+  int getHeight();
+
+  int getWidth();
 }

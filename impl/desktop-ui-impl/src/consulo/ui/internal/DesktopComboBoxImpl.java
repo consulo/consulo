@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.ui.ColoredListCellRendererWrapper2;
 import consulo.ui.*;
-import consulo.ui.ListModel;
+import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -19,8 +19,11 @@ import consulo.ui.internal.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.model.ListModel;
 import consulo.web.servlet.ui.UIAccessHelper;
 import org.jetbrains.annotations.NotNull;
+
+import java.net.URL;
 
 /**
  * @author VISTALL
@@ -62,14 +65,24 @@ class _UIInternalsImpl extends _UIInternals {
     return new WGwtHorizontalLayoutImpl();
   }
 
+  @Override
+  protected Image _Components_image(ImageRef imageRef) {
+    return new WGwtImageImpl((WGwtImageRefImpl)imageRef);
+  }
+
+  @Override
+  protected ImageRef _imageRef(URL url) {
+    return new WGwtImageRefImpl(url);
+  }
+
   @NotNull
   @Override
-  protected UIAccess get() {
+  protected UIAccess _get() {
     return UIAccessHelper.ourInstance.get();
   }
 
   @Override
-  protected boolean isUIThread() {
+  protected boolean _isUIThread() {
     return UIAccessHelper.ourInstance.isUIThread();
   }
 }

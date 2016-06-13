@@ -17,11 +17,15 @@ package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URL;
+
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public interface Image extends Component {
+public class ImageRefs {
   @NotNull
-  ImageRef getImageRef();
+  public static ImageRef fromURL(@NotNull URL url) {
+    return _UIInternals.impl()._imageRef(url);
+  }
 }

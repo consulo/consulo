@@ -13,19 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.internal;
 
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.IconLoader;
+import consulo.ui.ImageRef;
+
+import javax.swing.*;
+import java.net.URL;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 13-Jun-16
  */
-public interface ListModel<E> extends Iterable<E> {
-  int getSize();
+public class DesktopImageRefImpl implements ImageRef {
+  private Icon myIcon;
 
-  @NotNull
-  E get(int index);
+  public DesktopImageRefImpl(URL url) {
+    myIcon = IconLoader.findIcon(url);
+  }
 
-  int indexOf(@NotNull E value);
+  @Override
+  public int getHeight() {
+    return myIcon.getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return myIcon.getIconWidth();
+  }
+
+  public Icon getIcon() {
+    return myIcon;
+  }
 }

@@ -18,6 +18,7 @@ package consulo.ui;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -30,6 +31,7 @@ abstract class _UIInternals {
   public static _UIInternals impl() {
     return Holder.ourInstance;
   }
+
   private static class Holder {
     public static _UIInternals ourInstance = impl();
 
@@ -61,12 +63,13 @@ abstract class _UIInternals {
 
   protected abstract HorizontalLayout _Layouts_horizontal();
 
-  protected abstract Image _Components_image(URL url);
+  protected abstract Image _Components_image(ImageRef imageRef);
 
+  protected abstract ImageRef _imageRef(URL url);
 
   @RequiredUIThread
   @NotNull
-  protected abstract UIAccess get();
+  protected abstract UIAccess _get();
 
-  protected abstract boolean isUIThread();
+  protected abstract boolean _isUIThread();
 }

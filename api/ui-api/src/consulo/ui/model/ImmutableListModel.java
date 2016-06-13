@@ -15,7 +15,6 @@
  */
 package consulo.ui.model;
 
-import consulo.ui.ListModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

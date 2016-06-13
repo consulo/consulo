@@ -13,15 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.web.gwtUI.client.ui;
 
+import com.google.gwt.user.client.ui.Image;
+import consulo.web.gwtUI.client.WebSocketProxy;
+import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public interface Image extends Component {
-  @NotNull
-  ImageRef getImageRef();
+public class GwtImageImpl extends Image implements InternalGwtComponent {
+  @Override
+  public void updateState(@NotNull Map<String, String> map) {
+    setUrl(map.get("url"));
+  }
+
+  @Override
+  public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
+
+  }
 }

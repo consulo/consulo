@@ -16,6 +16,11 @@
     <servlet-class>consulo.web.servlet.IconServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>UIIconServlet</servlet-name>
+    <servlet-class>consulo.web.servlet.ui.UIIconServlet</servlet-class>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>AppServlet</servlet-name>
     <url-pattern>/app</url-pattern>
@@ -34,6 +39,11 @@
   <servlet-mapping>
     <servlet-name>IconServlet</servlet-name>
     <url-pattern>/icon</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>UIIconServlet</servlet-name>
+    <url-pattern>/uiIcon</url-pattern>
   </servlet-mapping>
 
   <servlet>

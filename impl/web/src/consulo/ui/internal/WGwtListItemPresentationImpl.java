@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import consulo.ui.ImageRef;
 import consulo.ui.ListItemPresentation;
 import consulo.ui.TextStyle;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class WGwtListItemPresentationImpl implements ListItemPresentation {
   private WGwtHorizontalLayoutImpl myLayout = new WGwtHorizontalLayoutImpl();
+
+  @Override
+  public void append(@NotNull ImageRef... imageRefs) {
+    for (ImageRef imageRef : imageRefs) {
+      myLayout.add(new WGwtImageImpl((WGwtImageRefImpl)imageRef));
+    }
+  }
 
   @Override
   public void append(@NotNull String text) {

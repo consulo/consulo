@@ -22,6 +22,11 @@ import org.jetbrains.annotations.NotNull;
  * @since 12-Jun-16
  */
 public interface ListItemPresentation {
+  /**
+   * Append many icons into one layered icon
+   */
+  void append(@NotNull ImageRef... imageRefs);
+
   void append(@NotNull String text);
 
   void append(@NotNull String text, @NotNull TextStyle... styles);

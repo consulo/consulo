@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.hack;
 
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import java.net.URL;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public interface Image extends Component {
+public interface IconWithURL extends Icon {
   @NotNull
-  ImageRef getImageRef();
+  URL getURL();
 }

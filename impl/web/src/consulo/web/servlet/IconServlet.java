@@ -43,6 +43,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-May-16
  */
+@Deprecated
 public class IconServlet extends HttpServlet {
   private static final String[][] ourImagePluginInfos =
           new String[][]{{"org.mustbe.consulo.csharp", "org.mustbe.consulo.csharp.CSharpIcons"}, {"org.consulo.java", "org.mustbe.consulo.java.JavaIcons"},

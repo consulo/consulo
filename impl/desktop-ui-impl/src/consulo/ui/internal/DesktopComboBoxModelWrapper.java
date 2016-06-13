@@ -15,7 +15,7 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.ListModel;
+import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -30,7 +30,6 @@ public class DesktopComboBoxModelWrapper<E> extends AbstractListModel implements
   private Object mySelectedItem;
 
   public DesktopComboBoxModelWrapper(ListModel<E> model) {
-
     myModel = model;
   }
 
