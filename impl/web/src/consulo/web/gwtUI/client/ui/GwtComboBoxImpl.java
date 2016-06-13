@@ -15,16 +15,19 @@
  */
 package consulo.web.gwtUI.client.ui;
 
-import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
+import consulo.web.gwtUI.client.ui.advancedGwt.WidgetComboBox;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.gwt.advanced.client.datamodel.ComboBoxDataModel;
 import org.gwt.advanced.client.datamodel.ListDataModel;
-import consulo.web.gwtUI.client.ui.advancedGwt.WidgetComboBox;
 import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,13 +35,21 @@ import java.util.Map;
  * @since 12-Jun-16
  */
 public class GwtComboBoxImpl extends WidgetComboBox<ComboBoxDataModel> implements InternalGwtComponent {
+  private List<UIComponent.Child> myItems = new ArrayList<UIComponent.Child>();
+  private WebSocketProxy myProxy;
+
   public GwtComboBoxImpl() {
     setLazyRenderingEnabled(false);
 
     setListItemFactory(new ListItemFactory() {
       @Override
       public Widget createWidget(Object value) {
-        return new InlineHTML("<b>" + value + "</b>");
+        final UIComponent.Child child = myItems.get((Integer)value);
+        if(child == null) {
+          return new Label(" ... ");
+        }
+
+        return (Widget)UIConverter.create(myProxy, child.getComponent());
       }
 
       @Override
@@ -67,6 +78,7 @@ public class GwtComboBoxImpl extends WidgetComboBox<ComboBoxDataModel> implement
 
   @Override
   public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
-
+    myProxy = proxy;
+    myItems.add(child);
   }
 }

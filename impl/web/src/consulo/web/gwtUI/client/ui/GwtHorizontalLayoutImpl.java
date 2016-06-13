@@ -28,6 +28,10 @@ import java.util.Map;
  * @since 12-Jun-16
  */
 public class GwtHorizontalLayoutImpl extends HorizontalPanel implements InternalGwtComponent {
+  public GwtHorizontalLayoutImpl() {
+    setHorizontalAlignment(ALIGN_CENTER);
+  }
+
   @Override
   public void init(WebSocketProxy proxy, String componentId) {
 

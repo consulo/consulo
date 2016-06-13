@@ -81,7 +81,7 @@ public abstract class WidgetButtonPanel extends SimplePanel implements AdvancedW
   protected WidgetButtonPanel() {
     getLayout().setWidget(0, 0, getSelectedValue());
     setChoiceButtonVisible(true);
-    setStyleName("advanced-TextButtonPanel");
+    setStyleName("advanced-WidgetButtonPanel");
     setWidget(getLayout());
     addComponentListeners();
   }

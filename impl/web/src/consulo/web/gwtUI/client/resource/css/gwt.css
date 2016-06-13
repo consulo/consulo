@@ -1,7 +1,14 @@
 body, table td, select, button {
   font-family: Arial Unicode MS, Arial, sans-serif;
   font-size: small;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
+
 pre {
   font-family: "courier new", courier;
   font-size: small;

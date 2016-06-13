@@ -24,13 +24,24 @@ import org.jetbrains.annotations.NotNull;
  * @since 12-Jun-16
  */
 public class WGwtListItemPresentationImpl implements ListItemPresentation {
+  private WGwtHorizontalLayoutImpl myLayout = new WGwtHorizontalLayoutImpl();
+
   @Override
   public void append(@NotNull String text) {
-
+    myLayout.add(new WGwtLabelImpl(text));
   }
 
   @Override
   public void append(@NotNull String text, @NotNull TextStyle... styles) {
+    if (styles[0] == TextStyle.BOLD) {
+      myLayout.add(new WGwtHtmlLabelImpl("<b>" + text + "</b>"));
+    }
+    else {
+      append(text);
+    }
+  }
 
+  public WGwtHorizontalLayoutImpl getLayout() {
+    return myLayout;
   }
 }

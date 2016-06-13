@@ -15,8 +15,10 @@
  */
 package consulo.ui.internal;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import consulo.ui.*;
+import consulo.ui.ComboBox;
+import consulo.ui.ListItemRender;
+import consulo.ui.ListItemRenders;
+import consulo.ui.ListModel;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
 import org.jetbrains.annotations.NotNull;
@@ -58,13 +60,16 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
     int i = 0;
 
     for (E e : myModel) {
-      final AutoBean<UIComponent> bean = factory.component();
-      final UIComponent component = bean.as();
-      component.setId(String.valueOf(i));
-
       WGwtListItemPresentationImpl render = new WGwtListItemPresentationImpl();
       myRender.render(render, i, e);
 
+      final UIComponent component = render.getLayout().convert(factory);
+      component.setId(String.valueOf(i));
+
+      final UIComponent.Child child = factory.componentChild().as();
+      child.setComponent(component);
+
+      children.add(child);
       i++;
     }
   }

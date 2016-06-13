@@ -27,6 +27,10 @@ import java.util.Map;
  * @since 12-Jun-16
  */
 public class GwtHtmlLabelImpl extends InlineHTML implements InternalGwtComponent {
+  public GwtHtmlLabelImpl() {
+    setHorizontalAlignment(ALIGN_CENTER);
+  }
+
   @Override
   public void init(WebSocketProxy proxy, String componentId) {
 
@@ -35,7 +39,7 @@ public class GwtHtmlLabelImpl extends InlineHTML implements InternalGwtComponent
   @Override
   public void updateState(@NotNull Map<String, String> map) {
     final String text = map.get("text");
-    if(text != null) {
+    if (text != null) {
       setHTML(text);
     }
   }
