@@ -15,7 +15,6 @@
  */
 package consulo.web.gwtUI.client.ui;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
@@ -44,11 +43,12 @@ public class GwtComboBoxImpl extends WidgetComboBox<ComboBoxDataModel> implement
     setListItemFactory(new ListItemFactory() {
       @Override
       public Widget createWidget(Object value) {
-        final UIComponent.Child child = myItems.get((Integer)value);
-        if(child == null) {
-          return new Label(" ... ");
+        if (value == null) {
+          return null;
         }
 
+        final UIComponent.Child child = myItems.get((Integer)value);
+        assert child != null;
         return (Widget)UIConverter.create(myProxy, child.getComponent());
       }
 
@@ -73,7 +73,8 @@ public class GwtComboBoxImpl extends WidgetComboBox<ComboBoxDataModel> implement
     for (int i = 0; i < size; i++) {
       model.add(String.valueOf(i), i);
     }
-    setSelectedIndex(0);
+
+    setSelectedIndex(Integer.parseInt(map.get("index")));
   }
 
   @Override

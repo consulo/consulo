@@ -67,7 +67,11 @@ public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
   }
 
   @Override
-  public void setValue(@NotNull Boolean value) {
+  public void setValue(@Nullable Boolean value) {
+    if (value == null) {
+      throw new IllegalArgumentException();
+    }
+
     setSelected(value);
   }
 

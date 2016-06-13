@@ -49,9 +49,8 @@ public interface ValueComponent<V> extends Component {
 
   void removeValueListener(@NotNull ValueComponent.ValueListener<V> valueListener);
 
-  @NotNull
   V getValue();
 
   @RequiredUIThread
-  void setValue(@NotNull V value);
+  void setValue(V value);
 }

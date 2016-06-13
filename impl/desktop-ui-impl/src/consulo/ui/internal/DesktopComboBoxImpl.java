@@ -38,6 +38,9 @@ public class DesktopComboBoxImpl<E> extends JComboBox implements ComboBox<E> {
       @Override
       public java.awt.Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         DesktopListItemPresentationImpl presentation = new DesktopListItemPresentationImpl();
+        if(value == null) {
+          return presentation.getLayout();
+        }
         myRender.render(presentation, index, (E)value);
         return presentation.getLayout();
       }
@@ -53,6 +56,11 @@ public class DesktopComboBoxImpl<E> extends JComboBox implements ComboBox<E> {
   @Override
   public void setRender(@NotNull ListItemRender<E> render) {
     myRender = render;
+  }
+
+  @Override
+  public void setValue(int index) {
+
   }
 
   @Nullable

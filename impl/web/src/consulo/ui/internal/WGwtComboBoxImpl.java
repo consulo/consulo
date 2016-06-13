@@ -19,6 +19,7 @@ import consulo.ui.*;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import java.util.Map;
 public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E> {
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
   private ListModel<E> myModel;
+  private int myIndex = -1;
 
   public WGwtComboBoxImpl(ListModel<E> model) {
     myModel = model;
@@ -39,6 +41,7 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
   protected void getState(Map<String, String> map) {
     super.getState(map);
     map.put("size", String.valueOf(myModel.getSize()));
+    map.put("index", String.valueOf(myIndex));
   }
 
   @NotNull
@@ -81,14 +84,36 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
 
   }
 
-  @NotNull
+  @Nullable
   @Override
   public E getValue() {
-    return null;
+    if (myIndex == -1) {
+      return null;
+    }
+    return myModel.get(myIndex);
   }
 
   @Override
-  public void setValue(@NotNull E value) {
+  @RequiredUIThread
+  public void setValue(int index) {
+    final E e = myModel.get(index);
+    setValue(e);
+  }
 
+  @Override
+  @RequiredUIThread
+  public void setValue(@Nullable E value) {
+    if (value == null) {
+      myIndex = -1;
+    }
+    else {
+      final int i = myModel.indexOf(value);
+      if (i == -1) {
+        throw new IndexOutOfBoundsException();
+      }
+      myIndex = i;
+    }
+
+    markAsChanged();
   }
 }

@@ -23,6 +23,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface CheckBox extends ValueComponent<Boolean> {
   @NotNull
+  @Override
+  Boolean getValue();
+
+  @NotNull
   String getText();
 
   @RequiredUIThread

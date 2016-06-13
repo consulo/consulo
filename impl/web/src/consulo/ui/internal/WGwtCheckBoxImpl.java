@@ -21,6 +21,7 @@ import consulo.ui.CheckBox;
 import consulo.ui.RequiredUIThread;
 import consulo.ui.ValueComponent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,7 @@ public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
   }
 
   private void fireValueListeners() {
-    ValueEvent<Boolean> event = new ValueEvent< Boolean>(this, getValue());
+    ValueEvent<Boolean> event = new ValueEvent<Boolean>(this, getValue());
     for (ValueComponent.ValueListener<Boolean> valueListener : myValueListeners) {
       valueListener.valueChanged(event);
     }
@@ -87,7 +88,11 @@ public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
 
   @Override
   @RequiredUIThread
-  public void setValue(@NotNull final Boolean value) {
+  public void setValue(@Nullable final Boolean value) {
+    if (value == null) {
+      throw new IllegalArgumentException();
+    }
+
     if (mySelected == value) {
       return;
     }

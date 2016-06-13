@@ -26,4 +26,6 @@ public interface ComboBox<E> extends ValueComponent<E> {
   ListModel<E> getListModel();
 
   void setRender(@NotNull ListItemRender<E> render);
+
+  void setValue(int index);
 }

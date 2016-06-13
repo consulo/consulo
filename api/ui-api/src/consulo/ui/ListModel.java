@@ -15,7 +15,7 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
@@ -24,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 public interface ListModel<E> extends Iterable<E> {
   int getSize();
 
-  @Nullable
+  @NotNull
   E get(int index);
+
+  int indexOf(@NotNull E value);
 }

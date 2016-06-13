@@ -16,7 +16,7 @@
 package consulo.ui.model;
 
 import consulo.ui.ListModel;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,10 +34,15 @@ public class ImmutableListModel<E> implements ListModel<E> {
     myItems.addAll(Arrays.asList(items));
   }
 
-  @Nullable
+  @NotNull
   @Override
   public E get(int index) {
     return myItems.get(index);
+  }
+
+  @Override
+  public int indexOf(@NotNull E value) {
+    return myItems.indexOf(value);
   }
 
   @Override
