@@ -21,6 +21,8 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ImmutableListModel;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URL;
+
 /**
  * @author VISTALL
  * @since 09-Jun-16
@@ -55,6 +57,11 @@ public class UIFactory {
     @NotNull
     public static <E> ComboBox<E> comboBox(@NotNull ListModel<E> model) {
       return _UIInternals.impl()._Components_comboBox(model);
+    }
+
+    @NotNull
+    public static Image image(@NotNull URL url) {
+      return _UIInternals.impl()._Components_image(url);
     }
   }
 

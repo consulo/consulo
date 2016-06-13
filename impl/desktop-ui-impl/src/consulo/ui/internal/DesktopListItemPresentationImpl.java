@@ -15,7 +15,7 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRendererWrapper2;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.ui.ListItemPresentation;
 import consulo.ui.TextStyle;
@@ -28,9 +28,9 @@ import org.jetbrains.annotations.NotNull;
  * some dummy impl
  */
 public class DesktopListItemPresentationImpl<E> implements ListItemPresentation {
-  private ColoredListCellRendererWrapper<E> myRenderer;
+  private ColoredListCellRendererWrapper2<E> myRenderer;
 
-  public DesktopListItemPresentationImpl(ColoredListCellRendererWrapper<E> renderer) {
+  public DesktopListItemPresentationImpl(ColoredListCellRendererWrapper2<E> renderer) {
     myRenderer = renderer;
   }
 

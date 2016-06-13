@@ -15,19 +15,18 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.ValueComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
+public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox {
   public DesktopCheckBoxImpl(String text, boolean selected) {
     super(text, selected);
   }

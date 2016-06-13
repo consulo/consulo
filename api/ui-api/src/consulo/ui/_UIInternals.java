@@ -20,6 +20,8 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URL;
+
 /**
  * @author VISTALL
  * @since 09-Jun-16
@@ -28,8 +30,6 @@ abstract class _UIInternals {
   public static _UIInternals impl() {
     return Holder.ourInstance;
   }
-
-
   private static class Holder {
     public static _UIInternals ourInstance = impl();
 
@@ -60,6 +60,9 @@ abstract class _UIInternals {
   protected abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
   protected abstract HorizontalLayout _Layouts_horizontal();
+
+  protected abstract Image _Components_image(URL url);
+
 
   @RequiredUIThread
   @NotNull

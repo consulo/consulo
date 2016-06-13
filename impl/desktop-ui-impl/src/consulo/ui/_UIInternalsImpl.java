@@ -22,6 +22,7 @@ import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.net.URL;
 
 /**
  * @author VISTALL
@@ -61,6 +62,11 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   protected HorizontalLayout _Layouts_horizontal() {
     return new DesktopHorizontalLayoutImpl();
+  }
+
+  @Override
+  protected Image _Components_image(URL url) {
+    return null;
   }
 
   @NotNull

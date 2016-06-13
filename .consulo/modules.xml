@@ -489,6 +489,7 @@
           <orderEntry type="module" module-name="analysis-api" exported="" />
           <orderEntry type="library" name="pty4" level="project" />
           <orderEntry type="library" name="httpmime" level="project" />
+          <orderEntry type="module" module-name="desktop-ui-impl" exported="" />
         </module-layer>
       </module>
       <module name="platform/platform-impl" dirurl="file://$PROJECT_DIR$/platform/platform-impl" current-layer="Default">
@@ -1127,8 +1128,8 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="ui-api" />
-          <orderEntry type="module" module-name="platform-api" />
+          <orderEntry type="module" module-name="ui-api" exported="" />
+          <orderEntry type="module" module-name="core-api" />
         </module-layer>
       </module>
     </modules>
