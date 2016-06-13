@@ -43,9 +43,9 @@ public class SomeTestUIBuilder {
     layout.add(bottom);
 
     final CheckBox center = UIFactory.Components.checkBox("UI proxy?=center", false);
-    center.addValueListener(new ValueComponent.ValueListener<CheckBox, Boolean>() {
+    center.addValueListener(new ValueComponent.ValueListener<Boolean>() {
       @Override
-      public void valueChanged(@NotNull ValueComponent.ValueEvent<CheckBox, Boolean> event) {
+      public void valueChanged(@NotNull ValueComponent.ValueEvent<Boolean> event) {
         top.setValue(event.getValue());
         left.setValue(event.getValue());
         right.setValue(event.getValue());

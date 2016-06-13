@@ -31,9 +31,9 @@ import java.awt.event.ItemListener;
  */
 public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
   private static class ItemListenerImpl implements ItemListener {
-    private ValueComponent.ValueListener<CheckBox, Boolean> myValueListener;
+    private ValueComponent.ValueListener<Boolean> myValueListener;
 
-    public ItemListenerImpl(ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+    public ItemListenerImpl(ValueComponent.ValueListener<Boolean> valueListener) {
       myValueListener = valueListener;
     }
 
@@ -51,7 +51,7 @@ public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
     public void itemStateChanged(ItemEvent e) {
       if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
         final CheckBox source = (CheckBox)e.getSource();
-        myValueListener.valueChanged(new ValueEvent<CheckBox, Boolean>(source, source.getValue()));
+        myValueListener.valueChanged(new ValueEvent<Boolean>(source, source.getValue()));
       }
     }
   }
@@ -78,13 +78,13 @@ public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
   }
 
   @Override
-  public void addValueListener(@NotNull ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+  public void addValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
     addItemListener(new ItemListenerImpl(valueListener));
 
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+  public void removeValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
     removeItemListener(new ItemListenerImpl(valueListener));
   }
 }

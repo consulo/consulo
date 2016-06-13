@@ -22,11 +22,11 @@ import org.jetbrains.annotations.NotNull;
  * @since 13-Jun-16
  */
 public interface ValueComponent<V> extends Component {
-  class ValueEvent<C, V> {
-    private C myComponent;
+  class ValueEvent<V> {
+    private Component myComponent;
     private V myValue;
 
-    public ValueEvent(C component, V value) {
+    public ValueEvent(Component component, V value) {
       myComponent = component;
       myValue = value;
     }
@@ -35,19 +35,19 @@ public interface ValueComponent<V> extends Component {
       return myValue;
     }
 
-    public C getComponent() {
+    public Component getComponent() {
       return myComponent;
     }
   }
 
-  interface ValueListener<C, V> {
+  interface ValueListener<V> {
     @RequiredUIThread
-    void valueChanged(@NotNull ValueEvent<C, V> event);
+    void valueChanged(@NotNull ValueEvent<V> event);
   }
 
-  void addValueListener(@NotNull ValueComponent.ValueListener<CheckBox, V> valueListener);
+  void addValueListener(@NotNull ValueComponent.ValueListener<V> valueListener);
 
-  void removeValueListener(@NotNull ValueComponent.ValueListener<CheckBox, V> valueListener);
+  void removeValueListener(@NotNull ValueComponent.ValueListener<V> valueListener);
 
   @NotNull
   V getValue();

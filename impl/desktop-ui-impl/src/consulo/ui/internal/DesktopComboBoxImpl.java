@@ -60,4 +60,25 @@ public class DesktopComboBoxImpl<E> extends JComboBox implements ComboBox<E> {
   public Component getParentComponent() {
     return (Component)getParent();
   }
+
+  @Override
+  public void addValueListener(@NotNull ValueListener<E> valueListener) {
+
+  }
+
+  @Override
+  public void removeValueListener(@NotNull ValueListener<E> valueListener) {
+
+  }
+
+  @NotNull
+  @Override
+  public E getValue() {
+    return null;
+  }
+
+  @Override
+  public void setValue(@NotNull E value) {
+
+  }
 }

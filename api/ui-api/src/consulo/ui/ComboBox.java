@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface ComboBox<E> extends Component {
+public interface ComboBox<E> extends ValueComponent<E> {
   @NotNull
   ListModel<E> getListModel();
 

@@ -32,7 +32,7 @@ import java.util.Map;
 public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
   private boolean mySelected;
   private String myText;
-  private List<ValueComponent.ValueListener<CheckBox, Boolean>> myValueListeners = new SmartList<ValueComponent.ValueListener<CheckBox, Boolean>>();
+  private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<ValueComponent.ValueListener<Boolean>>();
 
   public WGwtCheckBoxImpl(boolean selected, String text) {
     mySelected = selected;
@@ -73,8 +73,8 @@ public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
   }
 
   private void fireValueListeners() {
-    ValueEvent<CheckBox, Boolean> event = new ValueEvent<CheckBox, Boolean>(this, getValue());
-    for (ValueComponent.ValueListener<CheckBox, Boolean> valueListener : myValueListeners) {
+    ValueEvent<Boolean> event = new ValueEvent< Boolean>(this, getValue());
+    for (ValueComponent.ValueListener<Boolean> valueListener : myValueListeners) {
       valueListener.valueChanged(event);
     }
   }
@@ -100,12 +100,12 @@ public class WGwtCheckBoxImpl extends WBaseGwtComponent implements CheckBox {
   }
 
   @Override
-  public void addValueListener(@NotNull ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+  public void addValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
     myValueListeners.add(valueListener);
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueComponent.ValueListener<CheckBox, Boolean> valueListener) {
+  public void removeValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
     myValueListeners.remove(valueListener);
   }
 }

@@ -15,10 +15,7 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.ComboBox;
-import consulo.ui.ListItemRender;
-import consulo.ui.ListItemRenders;
-import consulo.ui.ListModel;
+import consulo.ui.*;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
 import org.jetbrains.annotations.NotNull;
@@ -72,5 +69,26 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
       children.add(child);
       i++;
     }
+  }
+
+  @Override
+  public void addValueListener(@NotNull ValueListener<E> valueListener) {
+
+  }
+
+  @Override
+  public void removeValueListener(@NotNull ValueListener<E> valueListener) {
+
+  }
+
+  @NotNull
+  @Override
+  public E getValue() {
+    return null;
+  }
+
+  @Override
+  public void setValue(@NotNull E value) {
+
   }
 }
