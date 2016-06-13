@@ -20,7 +20,6 @@ import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.client.ui.advancedGwt.WidgetComboBox;
 import consulo.web.gwtUI.shared.UIComponent;
-import org.gwt.advanced.client.datamodel.ComboBoxDataModel;
 import org.gwt.advanced.client.datamodel.ListDataModel;
 import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +32,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtComboBoxImpl extends WidgetComboBox<ComboBoxDataModel> implements InternalGwtComponent {
+public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtComponent {
   /**
    * Item list with by index
    *

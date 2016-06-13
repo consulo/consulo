@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
-import org.gwt.advanced.client.datamodel.ComboBoxDataModel;
 import org.gwt.advanced.client.datamodel.ListDataModel;
 import org.gwt.advanced.client.datamodel.ListModelEvent;
 import org.gwt.advanced.client.datamodel.ListModelListener;
@@ -41,16 +40,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * By VISTALL. This is copypaste version of {@link org.gwt.advanced.client.ui.widget.ComboBox}  with change:
+ * - Current item is Widget too as List Items (in original current item is TextEditor),
+ * this need for show current item as in list, not only text variant
+ * <p/>
+ * <p/>
  * This is a combo box widget implementation.
  *
- * Update. This is copypaste version of {@link org.gwt.advanced.client.ui.widget.ComboBox}  with change:
- *  - Current item is Widget too as List Items (in original current item is TextEditor), this need for show current item as in list, not only text variant
- *
  * @author <a href="mailto:sskladchikov@gmail.com">Sergey Skladchikov</a>
- * @author VISTALL
  * @since 1.2.0
  */
-public class WidgetComboBox<T extends ListDataModel> extends WidgetButtonPanel
+public class WidgetComboBox extends WidgetButtonPanel
         implements HasAllFocusHandlers, HasAllKeyHandlers, HasClickHandlers, ListModelListener, HasChangeHandlers {
   /**
    * a combo box data model
@@ -82,7 +82,7 @@ public class WidgetComboBox<T extends ListDataModel> extends WidgetButtonPanel
    *
    * @param model Value to set for property 'model'.
    */
-  public void setModel(T model) {
+  public void setModel(ListDataModel model) {
     if (model != null && this.model != model) {
       if (this.model != null) this.model.removeListModelListener(this);
       this.model = model;
@@ -150,7 +150,7 @@ public class WidgetComboBox<T extends ListDataModel> extends WidgetButtonPanel
    */
   public ListDataModel getModel() {
     if (model == null) {
-      model = new ComboBoxDataModel();
+      model = new ComboBoxDataModel2();
       model.addListModelListener(this);
     }
     return model;
@@ -556,15 +556,13 @@ public class WidgetComboBox<T extends ListDataModel> extends WidgetButtonPanel
    * @param event is an event that contains data about selected item.
    */
   protected void select(ListModelEvent event) {
-    if (event.getItemIndex() >= 0) {
-      if (isListPanelOpened()) {
-        getListPanel().setHighlightRow(event.getItemIndex());
-      }
-
-      final Widget widget = getListItemFactory().createWidget(model.getSelected());
-      final SimplePanel selectedValue = getSelectedValue();
-      selectedValue.setWidget(widget);
+    if (isListPanelOpened()) {
+      getListPanel().setHighlightRow(event.getItemIndex());
     }
+
+    final Widget widget = getListItemFactory().createWidget(model.getSelected());
+    final SimplePanel selectedValue = getSelectedValue();
+    selectedValue.setWidget(widget);
   }
 
   /**

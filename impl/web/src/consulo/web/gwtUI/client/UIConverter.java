@@ -106,14 +106,14 @@ public class UIConverter {
     final Map<String, String> variables = component.getVariables();
     widget.init(proxy, component.getId());
 
-    widget.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
-
     final List<UIComponent.Child> children = component.getChildren();
     if (children != null) {
       for (UIComponent.Child child : children) {
         widget.addChildren(proxy, child);
       }
     }
+    widget.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
+
     return widget;
   }
 
