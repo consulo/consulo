@@ -16,6 +16,7 @@
 package consulo.web.gwtUI.client.ui;
 
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.client.util.GwtUIUtil2;
@@ -62,8 +63,8 @@ public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponent
       direction = CENTER;
     }
 
-    final InternalGwtComponent widget = UIConverter.create(proxy, child.getComponent());
-    widget.asWidget().setWidth("100%");
+    final Widget widget = UIConverter.create(proxy, child.getComponent()).asWidget();
+    widget.setWidth("100%");
     add(widget, direction);
   }
 }

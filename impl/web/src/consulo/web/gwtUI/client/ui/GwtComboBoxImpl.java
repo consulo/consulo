@@ -55,7 +55,7 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
         int index = value == null ? 0 : ((Integer)value + 1);
         final UIComponent.Child child = myItemsWithNullItem.get(index);
         assert child != null;
-        return (Widget)UIConverter.create(myProxy, child.getComponent());
+        return UIConverter.create(myProxy, child.getComponent()).asWidget();
       }
 
       @Override

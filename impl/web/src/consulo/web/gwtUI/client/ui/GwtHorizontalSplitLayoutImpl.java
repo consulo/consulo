@@ -15,12 +15,11 @@
  */
 package consulo.web.gwtUI.client.ui;
 
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
-import consulo.web.gwtUI.client.util.GwtUIUtil2;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,31 +29,40 @@ import java.util.Map;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class GwtHorizontalSplitLayoutImpl extends Grid implements InternalGwtComponent {
-  public GwtHorizontalSplitLayoutImpl() {
-    super(1, 3);
+public class GwtHorizontalSplitLayoutImpl implements InternalGwtComponent {
+  private HorizontalSplitPanel myPanel = new HorizontalSplitPanel();
 
-    Label label = GwtUIUtil2.fillAndReturn(new Label());
-    label.getElement().getStyle().setBackgroundColor("gray");
-    setWidget(0, 1, label);
+  public GwtHorizontalSplitLayoutImpl() {
+
   }
 
   @Override
   public void updateState(@NotNull Map<String, String> map) {
-    getCellFormatter().setWidth(0, 1, "3px");
-    getCellFormatter().setWidth(0, 0, map.get("proportion") + "%");
+    myPanel.setSplitPosition(map.get("proportion") + "%");
   }
 
   @Override
   public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
     boolean first = Boolean.parseBoolean(child.getVariables().get("position"));
 
-    final InternalGwtComponent component = UIConverter.create(proxy, child.getComponent());
+    final Widget component = UIConverter.create(proxy, child.getComponent()).asWidget();
+
     if (first) {
-      setWidget(0, 0, (Widget)component);
+      component.addAttachHandler(new AttachEvent.Handler() {
+        @Override
+        public void onAttachOrDetach(AttachEvent event) {
+          myPanel.setHeight(component.getElement().getClientHeight() + "px");
+        }
+      });
+      myPanel.setLeftWidget(component);
     }
     else {
-      setWidget(0, 2, (Widget)component);
+      myPanel.setRightWidget(component);
     }
+  }
+
+  @Override
+  public Widget asWidget() {
+    return myPanel;
   }
 }
