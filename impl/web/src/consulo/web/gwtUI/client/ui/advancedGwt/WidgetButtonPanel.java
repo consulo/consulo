@@ -27,6 +27,7 @@ import org.gwt.advanced.client.ui.widget.theme.ThemeImage;
 /**
  * By VISTALL. This is copy-paste version of {@link org.gwt.advanced.client.ui.widget.TextButtonPanel}  with change:
  * -  use {@link ComboBoxSelectItem} as default widget - not text area
+ * - now we extends FlexTable - without SimplePanel, simplified tree
  * <p/>
  * <p/>
  * This is a basic class for all text boxs with a button.
@@ -36,11 +37,7 @@ import org.gwt.advanced.client.ui.widget.theme.ThemeImage;
  * @see org.gwt.advanced.client.ui.widget.DatePicker
  * @since 1.2.0
  */
-public abstract class WidgetButtonPanel extends SimplePanel implements AdvancedWidget {
-  /**
-   * widget layout
-   */
-  private FlexTable layout;
+public abstract class WidgetButtonPanel extends FlexTable implements AdvancedWidget {
   /**
    * a selected value box
    */
@@ -69,25 +66,27 @@ public abstract class WidgetButtonPanel extends SimplePanel implements AdvancedW
    * choice button visibility flag
    */
   private boolean choiceButtonVisible;
-  /**
-   * widget width
-   */
-  private String width;
-  /**
-   * widget height
-   */
-  private String height;
+
   /**
    * enabled panel controls flag
    */
   private boolean enabled;
 
   protected WidgetButtonPanel() {
-    getLayout().setWidget(0, 0, getSelectedValue());
+    setCellPadding(0);
+    setCellSpacing(0);
+    setWidget(0, 0, getSelectedValue());
     setChoiceButtonVisible(true);
     setStyleName("advanced-WidgetButtonPanel");
-    setWidget(getLayout());
+
     addComponentListeners();
+  }
+
+  @Override
+  protected void onAttach() {
+    super.onAttach();
+
+    prepareSelectedValue();
   }
 
   /**
@@ -125,10 +124,10 @@ public abstract class WidgetButtonPanel extends SimplePanel implements AdvancedW
    */
   public void setChoiceButtonVisible(boolean choiceButtonVisible) {
     if (!choiceButtonVisible && isChoiceButtonVisible()) {
-      getLayout().removeCell(0, 1);
+      removeCell(0, 1);
     }
     else if (choiceButtonVisible && !isChoiceButtonVisible()) {
-      getLayout().setWidget(0, 1, getChoiceButton());
+      setWidget(0, 1, getChoiceButton());
       prepareChoiceButton();
     }
     this.choiceButtonVisible = choiceButtonVisible;
@@ -139,58 +138,10 @@ public abstract class WidgetButtonPanel extends SimplePanel implements AdvancedW
    *
    * @deprecated you don't have to use this method to display the widget any more
    */
+  @Override
   public void display() {
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setWidth(String width) {
-    super.setWidth(width);
-    this.width = width;
-    prepareSelectedValue();
-  }
-
-
-  /**
-   * {@inheritDoc}
-   */
-  public void setHeight(String height) {
-    super.setHeight(height);
-    this.height = height;
-    prepareSelectedValue();
-  }
-
-  /**
-   * This method gets a maximum length of the text box.<p/>
-   * It makes sence if you allow custom values entering.<p/>
-   * See also {@link #isCustomTextAllowed()} and {@link #setCustomTextAllowed(boolean)}.
-   *
-   * @return a maximum length of the text box.
-   */
-  //public int getMaxLength() {
-  //  return getSelectedValue().getMaxLength();
-  //}
-
-  /**
-   * This method sets a maximum length of the text box.<p/>
-   * It makes sence if you allow custom values entering.<p/>
-   * See also {@link #isCustomTextAllowed()} and {@link #setCustomTextAllowed(boolean)}.
-   *
-   * @param length is a maximum length of the text box.
-   */
-  //public void setMaxLength(int length) {
-  //  getSelectedValue().setMaxLength(length);
-  //}
-
-  /**
-   * This method sets a tab index for this component.
-   *
-   * @param index is a tab order number.
-   */
-  //public void setTabIndex(int index) {
-  //  getSelectedValue().setTabIndex(index);
-  //}
 
   /**
    * Checks whether the controls palced on this panel are enabled.
@@ -240,17 +191,13 @@ public abstract class WidgetButtonPanel extends SimplePanel implements AdvancedW
     //selectedValue.setReadOnly(!isCustomTextAllowed());
     selectedValue.setStyleName("selected-value");
 
-    if (getHeight() != null) {
-      getLayout().setHeight("100%");
-      getLayout().getCellFormatter().setHeight(0, 0, "100%");
-      getSelectedValue().setHeight("100%");
-    }
+    setHeight("100%");
+    getCellFormatter().setHeight(0, 0, "100%");
+    getSelectedValue().setHeight("100%");
 
-    if (getWidth() != null) {
-      getLayout().setWidth("100%");
-      getLayout().getCellFormatter().setWidth(0, 0, "100%");
-      getSelectedValue().setWidth("100%");
-    }
+    setWidth("100%");
+    getCellFormatter().setWidth(0, 0, "100%");
+    getSelectedValue().setWidth("100%");
   }
 
   /**
@@ -261,20 +208,6 @@ public abstract class WidgetButtonPanel extends SimplePanel implements AdvancedW
     dropDownButton.getUpFace().setImage(getChoiceButtonImage());
     dropDownButton.getDownFace().setImage(getChoiceButtonImage());
     dropDownButton.setStyleName("choice-button");
-  }
-
-  /**
-   * Getter for property 'layout'.
-   *
-   * @return Value for property 'layout'.
-   */
-  protected FlexTable getLayout() {
-    if (layout == null) {
-      layout = new FlexTable();
-      layout.setCellPadding(0);
-      layout.setCellSpacing(0);
-    }
-    return layout;
   }
 
   /**
@@ -351,23 +284,5 @@ public abstract class WidgetButtonPanel extends SimplePanel implements AdvancedW
   protected LockingPanel getLockingPanel() {
     if (lockingPanel == null) lockingPanel = new LockingPanel();
     return lockingPanel;
-  }
-
-  /**
-   * Getter for property 'width'.
-   *
-   * @return Value for property 'width'.
-   */
-  protected String getWidth() {
-    return width;
-  }
-
-  /**
-   * Getter for property 'height'.
-   *
-   * @return Value for property 'height'.
-   */
-  protected String getHeight() {
-    return height;
   }
 }

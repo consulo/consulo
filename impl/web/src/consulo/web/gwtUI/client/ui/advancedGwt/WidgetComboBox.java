@@ -77,19 +77,6 @@ public class WidgetComboBox extends WidgetButtonPanel
    */
   private boolean keyPressed;
 
-  /**
-   * Setter for property 'model'.
-   *
-   * @param model Value to set for property 'model'.
-   */
-  public void setModel(ListDataModel model) {
-    if (model != null && this.model != model) {
-      if (this.model != null) this.model.removeListModelListener(this);
-      this.model = model;
-      this.model.addListModelListener(this);
-      prepareSelectedValue();
-    }
-  }
 
   /**
    * Setter for property 'listItemFactory'.
