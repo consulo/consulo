@@ -34,7 +34,12 @@ import java.util.Map;
  * @since 12-Jun-16
  */
 public class GwtComboBoxImpl extends WidgetComboBox<ComboBoxDataModel> implements InternalGwtComponent {
-  private List<UIComponent.Child> myItems = new ArrayList<UIComponent.Child>();
+  /**
+   * Item list with by index
+   *
+   * Contains null item too, that why - get component by index, need +1
+   */
+  private List<UIComponent.Child> myItemsWithNullItem = new ArrayList<UIComponent.Child>();
   private WebSocketProxy myProxy;
 
   public GwtComboBoxImpl() {
@@ -43,11 +48,8 @@ public class GwtComboBoxImpl extends WidgetComboBox<ComboBoxDataModel> implement
     setListItemFactory(new ListItemFactory() {
       @Override
       public Widget createWidget(Object value) {
-        if (value == null) {
-          return null;
-        }
-
-        final UIComponent.Child child = myItems.get((Integer)value);
+        int index = value == null ? 0 : ((Integer)value + 1);
+        final UIComponent.Child child = myItemsWithNullItem.get(index);
         assert child != null;
         return (Widget)UIConverter.create(myProxy, child.getComponent());
       }
@@ -80,6 +82,6 @@ public class GwtComboBoxImpl extends WidgetComboBox<ComboBoxDataModel> implement
   @Override
   public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
     myProxy = proxy;
-    myItems.add(child);
+    myItemsWithNullItem.add(child);
   }
 }

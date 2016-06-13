@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.ui.Component;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +29,7 @@ import javax.swing.*;
  */
 public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout {
   public DesktopVerticalLayoutImpl() {
-    super(new TempVerticalFlowLayout());
+    super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
   }
 
   @NotNull

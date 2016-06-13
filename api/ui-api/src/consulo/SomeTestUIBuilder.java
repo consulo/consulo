@@ -91,7 +91,9 @@ public class SomeTestUIBuilder {
       }
     });
     layout.add(UIFactory.Layouts.dock().left(UIFactory.Components.label("SDK:")).center(comboBox));
-    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(UIFactory.Components.comboBox("test1", "tet2")));
+    final ComboBox<String> component = UIFactory.Components.comboBox("test1", "tet2");
+    component.setValue("tet2");
+    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(component));
 
     return layout;
   }

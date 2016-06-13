@@ -43,7 +43,11 @@ import java.util.Set;
 /**
  * This is a combo box widget implementation.
  *
+ * Update. This is copypaste version of {@link org.gwt.advanced.client.ui.widget.ComboBox}  with change:
+ *  - Current item is Widget too as List Items (in original current item is TextEditor), this need for show current item as in list, not only text variant
+ *
  * @author <a href="mailto:sskladchikov@gmail.com">Sergey Skladchikov</a>
+ * @author VISTALL
  * @since 1.2.0
  */
 public class WidgetComboBox<T extends ListDataModel> extends WidgetButtonPanel

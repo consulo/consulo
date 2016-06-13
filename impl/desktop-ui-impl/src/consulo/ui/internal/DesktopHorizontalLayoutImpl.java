@@ -28,7 +28,7 @@ import javax.swing.*;
  */
 public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLayout {
   public DesktopHorizontalLayoutImpl() {
-    super(new TempHorizontalLayout(0));
+    super(new com.intellij.ui.components.panels.HorizontalLayout(0));
   }
 
   @NotNull

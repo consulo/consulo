@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.ui.ColoredListCellRendererWrapper;
 import consulo.ui.*;
 import consulo.ui.ListModel;
 import org.jetbrains.annotations.NotNull;
@@ -34,15 +35,11 @@ public class DesktopComboBoxImpl<E> extends JComboBox implements ComboBox<E> {
     myModel = new DesktopComboBoxModelWrapper<E>(model);
 
     setModel(myModel);
-    setRenderer(new ListCellRenderer() {
+    setRenderer(new ColoredListCellRendererWrapper<E>() {
       @Override
-      public java.awt.Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        DesktopListItemPresentationImpl presentation = new DesktopListItemPresentationImpl();
-        if(value == null) {
-          return presentation.getLayout();
-        }
-        myRender.render(presentation, index, (E)value);
-        return presentation.getLayout();
+      protected void doCustomize(JList list, E value, int index, boolean selected, boolean hasFocus) {
+        DesktopListItemPresentationImpl<E> render = new DesktopListItemPresentationImpl<E>(this);
+        myRender.render(render, index, value);
       }
     });
   }
@@ -60,7 +57,12 @@ public class DesktopComboBoxImpl<E> extends JComboBox implements ComboBox<E> {
 
   @Override
   public void setValue(int index) {
+    setSelectedIndex(index);
+  }
 
+  @Override
+  public void setValue(@NotNull E value) {
+    setSelectedItem(value);
   }
 
   @Nullable
@@ -79,14 +81,10 @@ public class DesktopComboBoxImpl<E> extends JComboBox implements ComboBox<E> {
 
   }
 
+  @SuppressWarnings("unchecked")
   @NotNull
   @Override
   public E getValue() {
-    return null;
-  }
-
-  @Override
-  public void setValue(@NotNull E value) {
-
+    return (E)getSelectedItem();
   }
 }

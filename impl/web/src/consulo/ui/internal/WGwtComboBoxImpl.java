@@ -57,21 +57,28 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
 
   @Override
   protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
-    int i = 0;
+    // need render null value
+    renderItem(factory, children, -1, null);
 
-    for (E e : myModel) {
-      WGwtListItemPresentationImpl render = new WGwtListItemPresentationImpl();
-      myRender.render(render, i, e);
+    for (int i = 0; i < myModel.getSize(); i++) {
+      E value = myModel.get(i);
 
-      final UIComponent component = render.getLayout().convert(factory);
-      component.setId(String.valueOf(i));
-
-      final UIComponent.Child child = factory.componentChild().as();
-      child.setComponent(component);
-
-      children.add(child);
-      i++;
+      renderItem(factory, children, i, value);
     }
+  }
+
+  private void renderItem(UIEventFactory factory, List<UIComponent.Child> children, int i, @Nullable E e) {
+    WGwtListItemPresentationImpl render;
+    render = new WGwtListItemPresentationImpl();
+    myRender.render(render, i, e);
+
+    final UIComponent component = render.getLayout().convert(factory);
+    component.setId(String.valueOf(i));
+
+    final UIComponent.Child child = factory.componentChild().as();
+    child.setComponent(component);
+
+    children.add(child);
   }
 
   @Override

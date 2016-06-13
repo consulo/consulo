@@ -1128,6 +1128,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="ui-api" />
+          <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
     </modules>

@@ -15,6 +15,8 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.SimpleTextAttributes;
 import consulo.ui.ListItemPresentation;
 import consulo.ui.TextStyle;
 import org.jetbrains.annotations.NotNull;
@@ -25,25 +27,25 @@ import org.jetbrains.annotations.NotNull;
  * <p/>
  * some dummy impl
  */
-public class DesktopListItemPresentationImpl implements ListItemPresentation {
-  private DesktopHorizontalLayoutImpl myLayout = new DesktopHorizontalLayoutImpl();
+public class DesktopListItemPresentationImpl<E> implements ListItemPresentation {
+  private ColoredListCellRendererWrapper<E> myRenderer;
+
+  public DesktopListItemPresentationImpl(ColoredListCellRendererWrapper<E> renderer) {
+    myRenderer = renderer;
+  }
 
   @Override
   public void append(@NotNull String text) {
-    myLayout.add((consulo.ui.Component)new DesktopLabelImpl(text));
+    myRenderer.append(text);
   }
 
   @Override
   public void append(@NotNull String text, @NotNull TextStyle... styles) {
     if (styles[0] == TextStyle.BOLD) {
-      myLayout.add((consulo.ui.Component)new DesktopHtmlLabelImpl("<b>" + text + "</b>"));
+      myRenderer.append(text, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
     }
     else {
       append(text);
     }
-  }
-
-  public DesktopHorizontalLayoutImpl getLayout() {
-    return myLayout;
   }
 }
