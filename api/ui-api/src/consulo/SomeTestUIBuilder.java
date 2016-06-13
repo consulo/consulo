@@ -92,6 +92,12 @@ public class SomeTestUIBuilder {
     });
     layout.add(UIFactory.Layouts.dock().left(UIFactory.Components.label("SDK:")).center(comboBox));
     final ComboBox<String> component = UIFactory.Components.comboBox("test1", "tet2");
+    component.addValueListener(new ValueComponent.ValueListener<String>() {
+      @Override
+      public void valueChanged(@NotNull ValueComponent.ValueEvent<String> event) {
+        System.out.println(event.getValue() + " selected");
+      }
+    });
     component.setValue("tet2");
     layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(component));
 

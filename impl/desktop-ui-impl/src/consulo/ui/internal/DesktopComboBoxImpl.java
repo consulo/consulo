@@ -72,13 +72,13 @@ public class DesktopComboBoxImpl<E> extends JComboBox implements ComboBox<E> {
   }
 
   @Override
-  public void addValueListener(@NotNull ValueListener<E> valueListener) {
-
+  public void addValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
+    addItemListener(new DesktopValueListenerAsItemListenerImpl<E>(valueListener, true));
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueListener<E> valueListener) {
-
+  public void removeValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
+    removeItemListener(new DesktopValueListenerAsItemListenerImpl<E>(valueListener, true));
   }
 
   @SuppressWarnings("unchecked")

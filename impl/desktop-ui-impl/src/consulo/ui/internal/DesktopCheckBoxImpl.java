@@ -22,40 +22,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
 public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
-  private static class ItemListenerImpl implements ItemListener {
-    private ValueComponent.ValueListener<Boolean> myValueListener;
-
-    public ItemListenerImpl(ValueComponent.ValueListener<Boolean> valueListener) {
-      myValueListener = valueListener;
-    }
-
-    @Override
-    public int hashCode() {
-      return myValueListener.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      return obj instanceof ItemListenerImpl && ((ItemListenerImpl)obj).myValueListener.equals(((ItemListenerImpl)obj).myValueListener);
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-      if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
-        final CheckBox source = (CheckBox)e.getSource();
-        myValueListener.valueChanged(new ValueEvent<Boolean>(source, source.getValue()));
-      }
-    }
-  }
-
   public DesktopCheckBoxImpl(String text, boolean selected) {
     super(text, selected);
   }
@@ -83,12 +55,12 @@ public class DesktopCheckBoxImpl extends JCheckBox implements CheckBox {
 
   @Override
   public void addValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
-    addItemListener(new ItemListenerImpl(valueListener));
+    addItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
 
   }
 
   @Override
   public void removeValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
-    removeItemListener(new ItemListenerImpl(valueListener));
+    removeItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
   }
 }
