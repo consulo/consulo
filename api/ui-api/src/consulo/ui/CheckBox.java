@@ -26,6 +26,10 @@ public interface CheckBox extends ValueComponent<Boolean> {
   @Override
   Boolean getValue();
 
+  @Override
+  @RequiredUIThread
+  void setValue(@NotNull Boolean value);
+
   @NotNull
   String getText();
 

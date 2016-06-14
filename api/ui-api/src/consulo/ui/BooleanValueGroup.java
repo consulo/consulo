@@ -38,17 +38,29 @@ public class BooleanValueGroup implements ValueComponent.ValueListener<Boolean> 
 
   @Override
   @RequiredUIThread
+  @SuppressWarnings("unchecked")
   public void valueChanged(@NotNull ValueComponent.ValueEvent<Boolean> event) {
-    if (event.getValue()) {
+    final Boolean value = event.getValue();
+    if (value) {
       final Component selectComponent = event.getComponent();
 
       for (ValueComponent<Boolean> component : myComponents) {
         if (component == selectComponent) {
           continue;
         }
-
-        component.setValue(false);
+        setValueNoListener(component, false);
       }
     }
+    else {
+      // we can't set false
+      final ValueComponent<Boolean> component = (ValueComponent<Boolean>)event.getComponent();
+      setValueNoListener(component, true);
+    }
+  }
+
+  private void setValueNoListener(ValueComponent<Boolean> component, boolean value) {
+    component.removeValueListener(this);
+    component.setValue(value);
+    component.addValueListener(this);
   }
 }

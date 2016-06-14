@@ -83,6 +83,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  protected RadioButton _Components_radioButton(String text, boolean selected) {
+    return new WGwtRadioButtonImpl(selected, text);
+  }
+
+  @Override
   protected HorizontalLayout _Layouts_horizontal() {
     return new WGwtHorizontalLayoutImpl();
   }

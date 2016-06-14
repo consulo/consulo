@@ -60,13 +60,15 @@ abstract class _UIInternals {
 
   protected abstract TableLayout _Layouts_table(int rows, int columns);
 
+  protected abstract HorizontalLayout _Layouts_horizontal();
+
   protected abstract Label _Components_label(String text);
 
   protected abstract HtmlLabel _Components_htmlLabel(String html);
 
   protected abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
-  protected abstract HorizontalLayout _Layouts_horizontal();
+  protected abstract RadioButton _Components_radioButton(String text, boolean selected);
 
   protected abstract Image _Components_image(ImageRef imageRef);
 

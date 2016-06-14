@@ -35,6 +35,16 @@ public class Components {
   }
 
   @NotNull
+  public static RadioButton radioButton(@NotNull String text) {
+    return radioButton(text, false);
+  }
+
+  @NotNull
+  public static RadioButton radioButton(@NotNull String text, boolean selected) {
+    return _UIInternals.impl()._Components_radioButton(text, selected);
+  }
+
+  @NotNull
   public static Label label(@NotNull String text) {
     return _UIInternals.impl()._Components_label(text);
   }

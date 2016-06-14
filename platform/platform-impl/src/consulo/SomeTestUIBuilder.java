@@ -129,9 +129,9 @@ public class SomeTestUIBuilder {
 
     BooleanValueGroup group = new BooleanValueGroup();
 
-    final CheckBox component = Components.checkBox("Test 1");
+    final RadioButton component = Components.radioButton("Test 1", true);
     vertical.add(component);
-    final CheckBox component1 = Components.checkBox("Test 2");
+    final RadioButton component1 = Components.radioButton("Test 2");
     vertical.add(component1);
 
     group.add(component).add(component1);
@@ -144,10 +144,6 @@ public class SomeTestUIBuilder {
     splitLayout.setProportion(20);
 
     window.setContent(splitLayout);
-  }
-
-  private static CheckBox create(String text) {
-    return Components.checkBox("UI proxy?=" + text, true);
   }
 
   public static ImageRef fromIcon(Icon icon) {

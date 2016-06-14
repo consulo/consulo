@@ -13,47 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui;
 
-import com.intellij.openapi.util.Comparing;
-import consulo.ui.CheckBox;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 14-Jun-16
  */
-public class WGwtCheckBoxImpl extends WGwtBooleanValueComponentImpl implements CheckBox {
-  private String myText;
-
-  public WGwtCheckBoxImpl(boolean selected, String text) {
-    super(selected);
-    myText = text;
-  }
-
-  @Override
+public interface RadioButton extends ValueComponent<Boolean> {
   @NotNull
-  public String getText() {
-    return myText;
-  }
+  @Override
+  Boolean getValue();
 
   @Override
-  public void setText(@NotNull final String text) {
-    if (Comparing.equal(myText, text)) {
-      return;
-    }
+  @RequiredUIThread
+  void setValue(@NotNull Boolean value);
 
-    myText = text;
+  @NotNull
+  String getText();
 
-    markAsChanged();
-  }
-
-  @Override
-  protected void getState(Map<String, String> map) {
-    super.getState(map);
-
-    map.put("text", myText);
-  }
+  @RequiredUIThread
+  void setText(@NotNull String text);
 }

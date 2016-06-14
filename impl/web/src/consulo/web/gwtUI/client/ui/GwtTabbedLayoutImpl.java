@@ -40,7 +40,7 @@ public class GwtTabbedLayoutImpl extends TabPanel implements InternalGwtComponen
     for (int i = 0; i < children.size(); i ++) {
       final UIComponent.Child tabChild = children.get(i);
       // inc i
-      final UIComponent.Child contentChild = children.get(i++);
+      final UIComponent.Child contentChild = children.get(++i);
 
       final InternalGwtComponent tab = UIConverter.create(proxy, tabChild.getComponent());
       final InternalGwtComponent content = UIConverter.create(proxy, contentChild.getComponent());

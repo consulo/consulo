@@ -16,19 +16,19 @@
 package consulo.ui.internal;
 
 import com.intellij.openapi.util.Comparing;
-import consulo.ui.CheckBox;
+import consulo.ui.RadioButton;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 14-Jun-16
  */
-public class WGwtCheckBoxImpl extends WGwtBooleanValueComponentImpl implements CheckBox {
+public class WGwtRadioButtonImpl extends WGwtBooleanValueComponentImpl implements RadioButton {
   private String myText;
 
-  public WGwtCheckBoxImpl(boolean selected, String text) {
+  public WGwtRadioButtonImpl(boolean selected, String text) {
     super(selected);
     myText = text;
   }

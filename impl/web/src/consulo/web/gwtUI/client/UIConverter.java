@@ -46,6 +46,13 @@ public class UIConverter {
         return new GwtCheckBoxImpl();
       }
     });
+    ourMap.put("consulo.ui.internal.WGwtRadioButtonImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtRadioButtonImpl();
+      }
+    });
     ourMap.put("consulo.ui.internal.WGwtDockLayoutImpl", new Factory() {
       @NotNull
       @Override

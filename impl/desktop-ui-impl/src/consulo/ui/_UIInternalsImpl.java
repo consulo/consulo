@@ -104,6 +104,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  protected RadioButton _Components_radioButton(String text, boolean selected) {
+    return new DesktopRadioButtonImpl(text, selected);
+  }
+
+  @Override
   protected HorizontalLayout _Layouts_horizontal() {
     return new DesktopHorizontalLayoutImpl();
   }

@@ -15,20 +15,30 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.ui.components.JBCheckBox;
-import consulo.ui.CheckBox;
 import consulo.ui.Component;
-import consulo.ui.ValueComponent;
+import consulo.ui.RadioButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 14-Jun-16
  */
-public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox {
-  public DesktopCheckBoxImpl(String text, boolean selected) {
+public class DesktopRadioButtonImpl extends JRadioButton implements RadioButton {
+  public DesktopRadioButtonImpl(String text, boolean selected) {
     super(text, selected);
+  }
+
+  @Override
+  public void addValueListener(@NotNull ValueListener<Boolean> valueListener) {
+    addItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
+  }
+
+  @Override
+  public void removeValueListener(@NotNull ValueListener<Boolean> valueListener) {
+    removeItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
   }
 
   @NotNull
@@ -38,11 +48,7 @@ public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox {
   }
 
   @Override
-  public void setValue(@Nullable Boolean value) {
-    if (value == null) {
-      throw new IllegalArgumentException();
-    }
-
+  public void setValue(@NotNull Boolean value) {
     setSelected(value);
   }
 
@@ -55,15 +61,5 @@ public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox {
   @Override
   public void dispose() {
 
-  }
-
-  @Override
-  public void addValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
-    addItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
-  }
-
-  @Override
-  public void removeValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
-    removeItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
   }
 }
