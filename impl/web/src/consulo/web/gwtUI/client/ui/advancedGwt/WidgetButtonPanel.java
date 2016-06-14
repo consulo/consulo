@@ -16,10 +16,7 @@
 
 package consulo.web.gwtUI.client.ui.advancedGwt;
 
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.ToggleButton;
+import com.google.gwt.user.client.ui.*;
 import org.gwt.advanced.client.ui.AdvancedWidget;
 import org.gwt.advanced.client.ui.widget.LockingPanel;
 import org.gwt.advanced.client.ui.widget.theme.ThemeImage;
@@ -37,7 +34,7 @@ import org.gwt.advanced.client.ui.widget.theme.ThemeImage;
  * @see org.gwt.advanced.client.ui.widget.DatePicker
  * @since 1.2.0
  */
-public abstract class WidgetButtonPanel extends FlexTable implements AdvancedWidget {
+public abstract class WidgetButtonPanel extends FlexTable implements AdvancedWidget, HasEnabled {
   /**
    * a selected value box
    */
@@ -148,6 +145,7 @@ public abstract class WidgetButtonPanel extends FlexTable implements AdvancedWid
    *
    * @return a result of check.
    */
+  @Override
   public boolean isEnabled() {
     return enabled;
   }
@@ -157,6 +155,7 @@ public abstract class WidgetButtonPanel extends FlexTable implements AdvancedWid
    *
    * @param enabled is a flag that means whether the controls must be enabled.
    */
+  @Override
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
     //getSelectedValue().setEnabled(enabled);
