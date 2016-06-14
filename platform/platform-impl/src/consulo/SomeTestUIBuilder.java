@@ -124,7 +124,19 @@ public class SomeTestUIBuilder {
 
     final SplitLayout splitLayout = Layouts.horizontalSplit();
     final TabbedLayout tabbed = Layouts.tabbed();
-    tabbed.addTab("Hello", Components.label("test"));
+
+    final VerticalLayout vertical = Layouts.vertical();
+
+    BooleanValueGroup group = new BooleanValueGroup();
+
+    final CheckBox component = Components.checkBox("Test 1");
+    vertical.add(component);
+    final CheckBox component1 = Components.checkBox("Test 2");
+    vertical.add(component1);
+
+    group.add(component).add(component1);
+
+    tabbed.addTab("Hello", vertical);
     tabbed.addTab("Hello2", Components.label("test 1"));
 
     splitLayout.setFirstComponent(Components.label("tree"));
