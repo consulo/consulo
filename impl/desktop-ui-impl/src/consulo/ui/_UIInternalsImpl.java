@@ -69,6 +69,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  protected TableLayout _Layouts_table(int rows, int columns) {
+    return null;
+  }
+
+  @Override
   protected Label _Components_label(String text) {
     return new DesktopLabelImpl(text);
   }

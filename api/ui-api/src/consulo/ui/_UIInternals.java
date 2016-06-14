@@ -58,6 +58,8 @@ abstract class _UIInternals {
 
   protected abstract TabbedLayout _Layouts_tabbed();
 
+  protected abstract TableLayout _Layouts_table(int rows, int columns);
+
   protected abstract Label _Components_label(String text);
 
   protected abstract HtmlLabel _Components_htmlLabel(String html);

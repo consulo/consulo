@@ -51,4 +51,9 @@ public class Layouts {
   public static TabbedLayout tabbed() {
     return _UIInternals.impl()._Layouts_tabbed();
   }
+
+  @NotNull
+  public static TableLayout table(int rows, int columns) {
+    return _UIInternals.impl()._Layouts_table(rows, columns);
+  }
 }
