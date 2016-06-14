@@ -17,6 +17,7 @@ package consulo.web.servlet.ui;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
+import com.intellij.openapi.util.Factory;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ConcurrentHashMap;
 import consulo.ui.Component;
@@ -37,13 +38,13 @@ import java.util.*;
 public class UISessionManager {
   public static class UIContext extends UIAccess {
     private String myId;
-    private Function<UIAccess, Component> myUIFactory;
+    private Factory<Component> myUIFactory;
     private Session mySession;
     private WBaseGwtComponent myRootComponent;
 
     private Map<String, WBaseGwtComponent> myComponents = new HashMap<String, WBaseGwtComponent>();
 
-    public UIContext(String id, Function<UIAccess, Component> UIFactory, Session session) {
+    public UIContext(String id, Factory<Component> UIFactory, Session session) {
       myId = id;
       myUIFactory = UIFactory;
       mySession = session;
@@ -111,7 +112,7 @@ public class UISessionManager {
 
   private Map<String, UIContext> myUIs = new ConcurrentHashMap<String, UIContext>();
 
-  public void registerSession(String id, Function<UIAccess, Component> uiRoot) {
+  public void registerSession(String id, Factory<Component> uiRoot) {
     myUIs.put(id, new UIContext(id, uiRoot, null));
   }
 
@@ -126,7 +127,7 @@ public class UISessionManager {
     UIAccessHelper.ourInstance.run(context, new Runnable() {
       @Override
       public void run() {
-        final WBaseGwtComponent component = (WBaseGwtComponent)context.myUIFactory.fun(context);
+        final WBaseGwtComponent component = (WBaseGwtComponent)context.myUIFactory.create();
         component.registerComponent(context.myComponents);
 
         context.setRootComponent(component);

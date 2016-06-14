@@ -15,11 +15,9 @@
  */
 package consulo.web.servlet;
 
-import com.intellij.util.Function;
+import com.intellij.openapi.util.Factory;
 import consulo.SomeTestUIBuilder;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIThread;
-import consulo.ui.UIAccess;
 import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,11 +32,10 @@ public class TestUIServlet extends UIServlet {
 
   @NotNull
   @Override
-  public Function<UIAccess, Component> uiFactory() {
-    return new Function<UIAccess, Component>() {
+  public Factory<Component> uiFactory() {
+    return new Factory<Component>() {
       @Override
-      @RequiredUIThread
-      public Component fun(UIAccess uiAccess) {
+      public Component create() {
         return SomeTestUIBuilder.build();
       }
     };
