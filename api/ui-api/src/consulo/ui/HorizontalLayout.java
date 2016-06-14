@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
+package consulo.ui;
 
-import consulo.ui.Component;
-import consulo.ui.RequiredUIThread;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public interface HorizontalLayout extends Layout{
+public interface HorizontalLayout extends Layout {
   @NotNull
   @RequiredUIThread
   HorizontalLayout add(@NotNull Component component);

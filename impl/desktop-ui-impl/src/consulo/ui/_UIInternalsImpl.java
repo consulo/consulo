@@ -17,10 +17,6 @@ package consulo.ui;
 
 import com.intellij.openapi.util.IconLoader;
 import consulo.ui.internal.*;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.SplitLayout;
-import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,7 +32,7 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  protected ImageRef _imageRef(URL url) {
+  protected ImageRef _Images_imageRef(URL url) {
     return new DesktopImageRefImpl(url);
   }
 
@@ -94,12 +90,12 @@ class _UIInternalsImpl extends _UIInternals {
 
   @NotNull
   @Override
-  protected UIAccess _get() {
+  protected UIAccess _UIAccess_get() {
     return DesktopUIAccessImpl.ourInstance;
   }
 
   @Override
-  protected boolean _isUIThread() {
+  protected boolean _UIAccess_isUIThread() {
     return SwingUtilities.isEventDispatchThread();
   }
 }

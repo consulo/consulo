@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
+package consulo.ui;
 
-import consulo.ui.Component;
-import consulo.ui.RequiredUIThread;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -13,13 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
+package consulo.ui;
 
-import consulo.ui.Component;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface Layout extends Component {
+public interface DockLayout extends Layout {
+  @NotNull
+  @RequiredUIThread
+  DockLayout top(@NotNull Component component);
+
+  @NotNull
+  @RequiredUIThread
+  DockLayout bottom(@NotNull Component component);
+
+  @NotNull
+  @RequiredUIThread
+  DockLayout center(@NotNull Component component);
+
+  @NotNull
+  @RequiredUIThread
+  DockLayout left(@NotNull Component component);
+
+  @NotNull
+  @RequiredUIThread
+  DockLayout right(@NotNull Component component);
 }

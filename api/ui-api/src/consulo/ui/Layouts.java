@@ -13,34 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
+package consulo.ui;
 
-import consulo.ui.Component;
-import consulo.ui.RequiredUIThread;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author VISTALL
- * @since 09-Jun-16
- */
-public interface DockLayout extends Layout {
+* @author VISTALL
+* @since 14-Jun-16
+*/
+public class Layouts {
   @NotNull
-  @RequiredUIThread
-  DockLayout top(@NotNull Component component);
+  public static DockLayout dock() {
+    return _UIInternals.impl()._Layouts_dock();
+  }
 
   @NotNull
-  @RequiredUIThread
-  DockLayout bottom(@NotNull Component component);
+  public static VerticalLayout vertical() {
+    return _UIInternals.impl()._Layouts_vertical();
+  }
 
   @NotNull
-  @RequiredUIThread
-  DockLayout center(@NotNull Component component);
+  public static HorizontalLayout horizontal() {
+    return _UIInternals.impl()._Layouts_horizontal();
+  }
 
   @NotNull
-  @RequiredUIThread
-  DockLayout left(@NotNull Component component);
+  public static SplitLayout horizontalSplit() {
+    return _UIInternals.impl()._Layouts_horizontalSplit();
+  }
 
   @NotNull
-  @RequiredUIThread
-  DockLayout right(@NotNull Component component);
+  public static SplitLayout verticalSplit() {
+    return _UIInternals.impl()._Layouts_verticalSplit();
+  }
 }

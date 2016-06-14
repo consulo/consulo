@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import com.intellij.openapi.ui.Splitter;
 import consulo.ui.Component;
-import consulo.ui.layout.SplitLayout;
+import consulo.ui.SplitLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

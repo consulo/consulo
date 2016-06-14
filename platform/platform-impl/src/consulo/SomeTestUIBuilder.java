@@ -18,8 +18,8 @@ package consulo;
 import com.intellij.icons.AllIcons;
 import consulo.ui.*;
 import consulo.ui.hack.IconWithURL;
-import consulo.ui.layout.SplitLayout;
-import consulo.ui.layout.VerticalLayout;
+import consulo.ui.SplitLayout;
+import consulo.ui.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class SomeTestUIBuilder {
   @RequiredUIThread
   public static Component build() {
-    VerticalLayout layout = UIFactory.Layouts.vertical();
+    VerticalLayout layout = Layouts.vertical();
 
     final CheckBox top = create("top");
     top.setEnabled(false);
@@ -46,7 +46,7 @@ public class SomeTestUIBuilder {
     final CheckBox bottom = create("bottom");
     layout.add(bottom);
 
-    final CheckBox center = UIFactory.Components.checkBox("UI proxy?=center", false);
+    final CheckBox center = Components.checkBox("UI proxy?=center", false);
     center.addValueListener(new ValueComponent.ValueListener<Boolean>() {
       @Override
       public void valueChanged(@NotNull ValueComponent.ValueEvent<Boolean> event) {
@@ -74,10 +74,10 @@ public class SomeTestUIBuilder {
 
     center.setValue(true);
     layout.add(center);
-    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.checkBox("Test 1")).add(UIFactory.Components.checkBox("Test 2")));
-    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("Test 1")).add(UIFactory.Components.label("Test 2")));
-    layout.add(UIFactory.Layouts.horizontal().add(UIFactory.Components.htmlLabel("<b>Test 1</b>")).add(UIFactory.Components.label("<b>Test 1</b>")));
-    final ComboBox<String> comboBox = UIFactory.Components.comboBox("test", "test2");
+    layout.add(Layouts.horizontal().add(Components.checkBox("Test 1")).add(Components.checkBox("Test 2")));
+    layout.add(Layouts.horizontal().add(Components.label("Test 1")).add(Components.label("Test 2")));
+    layout.add(Layouts.horizontal().add(Components.htmlLabel("<b>Test 1</b>")).add(Components.label("<b>Test 1</b>")));
+    final ComboBox<String> comboBox = Components.comboBox("test", "test2");
     comboBox.setRender(new ListItemRender<String>() {
       @Override
       public void render(@NotNull ListItemPresentation render, int index, @Nullable String item) {
@@ -98,10 +98,10 @@ public class SomeTestUIBuilder {
         }
       }
     });
-    final SplitLayout splitLayout = UIFactory.Layouts.horizontalSplit();
+    final SplitLayout splitLayout = Layouts.horizontalSplit();
 
-    splitLayout.setFirstComponent(UIFactory.Layouts.dock().left(UIFactory.Components.label("SDK:")).center(comboBox));
-    final ComboBox<String> component = UIFactory.Components.comboBox("test1", "tet2");
+    splitLayout.setFirstComponent(Layouts.dock().left(Components.label("SDK:")).center(comboBox));
+    final ComboBox<String> component = Components.comboBox("test1", "tet2");
     component.addValueListener(new ValueComponent.ValueListener<String>() {
       @Override
       public void valueChanged(@NotNull ValueComponent.ValueEvent<String> event) {
@@ -109,7 +109,7 @@ public class SomeTestUIBuilder {
       }
     });
     component.setValue("tet2");
-    splitLayout.setSecondComponent(UIFactory.Layouts.horizontal().add(UIFactory.Components.label("SDK:")).add(component));
+    splitLayout.setSecondComponent(Layouts.horizontal().add(Components.label("SDK:")).add(component));
 
     splitLayout.setProportion(20);
 
@@ -118,7 +118,7 @@ public class SomeTestUIBuilder {
   }
 
   private static CheckBox create(String text) {
-    return UIFactory.Components.checkBox("UI proxy?=" + text, true);
+    return Components.checkBox("UI proxy?=" + text, true);
   }
 
   public static ImageRef fromIcon(Icon icon) {

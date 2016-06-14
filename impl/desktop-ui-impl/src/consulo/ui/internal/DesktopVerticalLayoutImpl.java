@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.ui.Component;
-import consulo.ui.layout.VerticalLayout;
+import consulo.ui.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

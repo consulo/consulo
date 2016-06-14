@@ -16,7 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.Component;
-import consulo.ui.layout.SplitLayout;
+import consulo.ui.SplitLayout;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

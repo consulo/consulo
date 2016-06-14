@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.RequiredUIThread;
-import consulo.ui.layout.VerticalLayout;
+import consulo.ui.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 
 /**

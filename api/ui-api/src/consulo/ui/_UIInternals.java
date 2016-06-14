@@ -15,10 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.SplitLayout;
-import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,11 +66,11 @@ abstract class _UIInternals {
 
   protected abstract Image _Components_image(ImageRef imageRef);
 
-  protected abstract ImageRef _imageRef(URL url);
+  protected abstract ImageRef _Images_imageRef(URL url);
 
   @RequiredUIThread
   @NotNull
-  protected abstract UIAccess _get();
+  protected abstract UIAccess _UIAccess_get();
 
-  protected abstract boolean _isUIThread();
+  protected abstract boolean _UIAccess_isUIThread();
 }

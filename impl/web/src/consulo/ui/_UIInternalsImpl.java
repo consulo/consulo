@@ -17,10 +17,6 @@ package consulo.ui;
 
 import com.intellij.openapi.util.IconLoader;
 import consulo.ui.internal.*;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.SplitLayout;
-import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ListModel;
 import consulo.web.servlet.ui.UIAccessHelper;
 import org.jetbrains.annotations.NotNull;
@@ -87,18 +83,18 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  protected ImageRef _imageRef(URL url) {
+  protected ImageRef _Images_imageRef(URL url) {
     return new WGwtImageRefImpl(url);
   }
 
   @NotNull
   @Override
-  protected UIAccess _get() {
+  protected UIAccess _UIAccess_get() {
     return UIAccessHelper.ourInstance.get();
   }
 
   @Override
-  protected boolean _isUIThread() {
+  protected boolean _UIAccess_isUIThread() {
     return UIAccessHelper.ourInstance.isUIThread();
   }
 }

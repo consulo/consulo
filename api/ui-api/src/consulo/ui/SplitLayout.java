@@ -15,17 +15,24 @@
  */
 package consulo.ui;
 
+import consulo.ui.Component;
+import consulo.ui.Layout;
+import consulo.ui.RequiredUIThread;
 import org.jetbrains.annotations.NotNull;
-
-import java.net.URL;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class ImageRefs {
-  @NotNull
-  public static ImageRef fromURL(@NotNull URL url) {
-    return _UIInternals.impl()._Images_imageRef(url);
-  }
+public interface SplitLayout extends Layout {
+  /**
+   * @param percent from 0 to 100
+   */
+  void setProportion(int percent);
+
+  @RequiredUIThread
+  void setFirstComponent(@NotNull Component component);
+
+  @RequiredUIThread
+  void setSecondComponent(@NotNull Component component);
 }

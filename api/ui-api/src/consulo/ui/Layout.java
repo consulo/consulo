@@ -13,25 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
+package consulo.ui;
 
 import consulo.ui.Component;
-import consulo.ui.RequiredUIThread;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 09-Jun-16
  */
-public interface SplitLayout extends Layout {
-  /**
-   * @param percent from 0 to 100
-   */
-  void setProportion(int percent);
-
-  @RequiredUIThread
-  void setFirstComponent(@NotNull Component component);
-
-  @RequiredUIThread
-  void setSecondComponent(@NotNull Component component);
+public interface Layout extends Component {
 }
