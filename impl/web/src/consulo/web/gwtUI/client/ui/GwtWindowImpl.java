@@ -15,6 +15,7 @@
  */
 package consulo.web.gwtUI.client.ui;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Grid;
 import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
@@ -56,6 +57,14 @@ public class GwtWindowImpl extends Grid implements InternalGwtComponentWithChild
     }
 
     resizeRows(rows);
+
+    if(menuComponent != null) {
+      final InternalGwtComponent component = UIConverter.create(proxy, menuComponent);
+
+      getRowFormatter().getElement(0).getStyle().setHeight(26, Style.Unit.PX);
+
+      setWidget(0, 0, component.asWidget());
+    }
 
     //FIXME [VISTALL] handle menu bar
 

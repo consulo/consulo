@@ -120,7 +120,7 @@ public class SomeTestUIBuilder {
     file.separate();
     file.add(MenuItems.item("Exit"));
 
-    window.setMenuBar(MenuItems.menuBar().add(file).add(MenuItems.menu("Help")));
+    window.setMenuBar(MenuItems.menuBar().add(file).add(MenuItems.item("Help")));
 
     final SplitLayout splitLayout = Layouts.horizontalSplit();
     final TabbedLayout tabbed = Layouts.tabbed();

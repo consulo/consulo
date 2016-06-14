@@ -97,6 +97,21 @@ class _UIInternalsImpl extends _UIInternals {
     return new WGwtImageRefImpl(url);
   }
 
+  @Override
+  protected MenuItem _MenuItems_item(String text) {
+    return new WGwtMenuItemImpl(text);
+  }
+
+  @Override
+  protected Menu _MenuItems_menu(String text) {
+    return new WGwtMenuImpl(text);
+  }
+
+  @Override
+  protected MenuBar _MenuItems_menuBar() {
+    return new WGwtMenuBarImpl();
+  }
+
   @NotNull
   @Override
   protected UIAccess _UIAccess_get() {

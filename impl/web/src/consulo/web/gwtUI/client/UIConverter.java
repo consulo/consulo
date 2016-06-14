@@ -16,6 +16,7 @@
 package consulo.web.gwtUI.client;
 
 import com.google.gwt.user.client.Window;
+import consulo.ui.internal.WGwtMenuSeparatorImpl;
 import consulo.web.gwtUI.client.ui.*;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
@@ -120,6 +121,34 @@ public class UIConverter {
       @Override
       public InternalGwtComponent create() {
         return new GwtWindowImpl();
+      }
+    });
+    ourMap.put("consulo.ui.internal.WGwtMenuBarImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtMenuBarImpl();
+      }
+    });
+    ourMap.put("consulo.ui.internal.WGwtMenuImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtMenuImpl();
+      }
+    });
+    ourMap.put("consulo.ui.internal.WGwtMenuItemImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtMenuItemImpl();
+      }
+    });
+    ourMap.put("consulo.ui.internal.WGwtMenuSeparatorImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtMenuSeparatorImpl();
       }
     });
   }
