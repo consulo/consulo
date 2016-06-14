@@ -31,7 +31,12 @@ public class DesktopMenuBarImpl extends JMenuBar implements MenuBar {
   @NotNull
   @Override
   public MenuBar add(@NotNull MenuItem menuItem) {
-    add((JMenuItem)menuItem);
+    if(menuItem instanceof JMenu) {
+      add((JMenu)menuItem);
+    }
+    else {
+      add((JMenu)new DesktopMenuImpl(menuItem.getText()));
+    }
     return this;
   }
 

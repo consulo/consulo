@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.MenuItem;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
@@ -23,5 +24,12 @@ import consulo.ui.MenuItem;
  */
 public class WGwtMenuSeparatorImpl extends WBaseGwtComponent implements MenuItem{
   public WGwtMenuSeparatorImpl() {
+  }
+
+  @NotNull
+  @Override
+  public String getText() {
+    throw new UnsupportedOperationException();
+
   }
 }

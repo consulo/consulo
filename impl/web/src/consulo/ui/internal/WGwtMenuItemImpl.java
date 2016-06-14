@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.MenuItem;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -28,6 +29,12 @@ public class WGwtMenuItemImpl extends WBaseGwtComponent implements MenuItem {
 
   public WGwtMenuItemImpl(String text) {
     myText = text;
+  }
+
+  @NotNull
+  @Override
+  public String getText() {
+    return myText;
   }
 
   @Override

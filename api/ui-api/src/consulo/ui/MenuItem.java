@@ -15,9 +15,13 @@
  */
 package consulo.ui;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface MenuItem extends Component {
+  @NotNull
+  String getText();
 }
