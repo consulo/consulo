@@ -46,4 +46,9 @@ public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout
   public Component getParentComponent() {
     return (Component)getParent();
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

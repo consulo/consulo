@@ -43,4 +43,9 @@ public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLay
   public Component getParentComponent() {
     return (Component)getParent();
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

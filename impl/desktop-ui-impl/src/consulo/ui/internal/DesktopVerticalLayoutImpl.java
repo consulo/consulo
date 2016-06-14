@@ -44,4 +44,9 @@ public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout 
   public Component getParentComponent() {
     return (Component)getParent();
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

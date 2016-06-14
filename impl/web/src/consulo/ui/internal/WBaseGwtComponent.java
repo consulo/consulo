@@ -79,6 +79,10 @@ public class WBaseGwtComponent implements Component {
     return notifyComponent;
   }
 
+  @Override
+  public void dispose() {
+  }
+
   @Nullable
   @Override
   public Component getParentComponent() {

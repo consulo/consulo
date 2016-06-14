@@ -73,6 +73,11 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
   }
 
   @Override
+  public void dispose() {
+
+  }
+
+  @Override
   public void addValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
     addItemListener(new DesktopValueListenerAsItemListenerImpl<E>(valueListener, true));
   }

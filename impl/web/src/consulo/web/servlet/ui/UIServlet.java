@@ -49,7 +49,7 @@ public abstract class UIServlet extends HttpServlet {
     String id = UUID.randomUUID().toString();
     response.addCookie(new Cookie("ConsuloSessionId", id));
 
-    UISessionManager.ourInstance.registerSession(id, uiFactory());
+    UISessionManager.ourInstance.registerInitialSession(id, uiFactory());
 
     final PrintWriter writer = response.getWriter();
     writer.println("<html>");

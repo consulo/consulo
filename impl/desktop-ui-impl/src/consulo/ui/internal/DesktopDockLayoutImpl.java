@@ -72,4 +72,9 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout {
   public Component getParentComponent() {
     return (Component)getParent();
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

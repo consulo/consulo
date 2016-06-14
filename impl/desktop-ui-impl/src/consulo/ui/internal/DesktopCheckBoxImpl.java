@@ -53,6 +53,11 @@ public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox {
   }
 
   @Override
+  public void dispose() {
+
+  }
+
+  @Override
   public void addValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
     addItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
 

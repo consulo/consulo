@@ -25,4 +25,9 @@ public class DesktopHtmlLabelImpl extends DesktopLabelImpl implements HtmlLabel 
   public DesktopHtmlLabelImpl(String text) {
     super("<html><body>" + text + "</body></html>");
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

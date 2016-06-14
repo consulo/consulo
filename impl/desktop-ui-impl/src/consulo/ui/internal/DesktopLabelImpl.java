@@ -35,4 +35,9 @@ public class DesktopLabelImpl extends JLabel implements Label {
   public Component getParentComponent() {
     return (Component)getParent();
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

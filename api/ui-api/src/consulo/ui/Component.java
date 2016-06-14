@@ -34,4 +34,6 @@ public interface Component {
 
   @Nullable
   Component getParentComponent();
+
+  void dispose();
 }

@@ -51,6 +51,6 @@ public class UIWebSocketHandler {
 
   @OnClose
   public void onClose(Session session, CloseReason closeReason) {
-    System.out.println(String.format("Session %s closed because of %s", session.getId(), closeReason));
+    UISessionManager.ourInstance.onClose(session);
   }
 }

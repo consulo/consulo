@@ -25,6 +25,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.internal.WBaseGwtComponent;
 import consulo.web.gwtUI.shared.*;
 import gnu.trove.TLongObjectHashMap;
+import gnu.trove.TObjectProcedure;
 import org.jetbrains.annotations.NotNull;
 
 import javax.websocket.Session;
@@ -115,15 +116,20 @@ public class UISessionManager {
 
   private Map<String, UIContext> myUIs = new ConcurrentHashMap<String, UIContext>();
 
-  public void registerSession(String id, Factory<Component> uiRoot) {
-    myUIs.put(id, new UIContext(id, uiRoot, null));
+  private Map<String, UIContext> myTempSessions = new ConcurrentHashMap<String, UIContext>();
+
+  public void registerInitialSession(String id, Factory<Component> uiRoot) {
+    myTempSessions.put(id, new UIContext(id, uiRoot, null));
   }
 
   public void onSessionOpen(final Session session, final UIClientEvent clientEvent) {
-    final UIContext context = myUIs.get(clientEvent.getSessionId());
+    // when websocket come to use - remove it from temp sessions, and register it as default
+    final UIContext context = myTempSessions.remove(clientEvent.getSessionId());
     if (context == null) {
       return;
     }
+
+    myUIs.put(session.getId(), context);
 
     context.setSession(session);
 
@@ -149,8 +155,29 @@ public class UISessionManager {
     });
   }
 
+  public void onClose(Session session) {
+    final UIContext uiContext = myUIs.remove(session.getId());
+    if (uiContext == null) {
+      return;
+    }
+
+    uiContext.myComponents.forEachValue(new TObjectProcedure<WBaseGwtComponent>() {
+      @Override
+      public boolean execute(WBaseGwtComponent object) {
+        try {
+          object.dispose();
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
+
+        return true;
+      }
+    });
+  }
+
   public void onInvokeEvent(Session session, final UIClientEvent clientEvent) {
-    final UIContext uiContext = myUIs.get(clientEvent.getSessionId());
+    final UIContext uiContext = myUIs.get(session.getId());
     if (uiContext == null) {
       return;
     }
