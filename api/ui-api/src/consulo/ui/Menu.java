@@ -21,8 +21,12 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface MenuBar extends Component {
+public interface Menu extends MenuItem {
   @RequiredUIThread
   @NotNull
-  MenuBar add(@NotNull MenuItem menuItem);
+  Menu add(@NotNull MenuItem menuItem);
+
+  @RequiredUIThread
+  @NotNull
+  Menu separate();
 }

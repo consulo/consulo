@@ -114,6 +114,14 @@ public class SomeTestUIBuilder {
     catch (InterruptedException e) {
       e.printStackTrace();
     }
+
+    final Menu file = MenuItems.menu("File");
+    file.add(MenuItems.menu("New").add(MenuItems.item("Class")));
+    file.separate();
+    file.add(MenuItems.item("Exit"));
+
+    window.setMenuBar(MenuItems.menuBar().add(file).add(MenuItems.menu("Help")));
+
     final SplitLayout splitLayout = Layouts.horizontalSplit();
     final TabbedLayout tabbed = Layouts.tabbed();
     tabbed.addTab("Hello", Components.label("test"));

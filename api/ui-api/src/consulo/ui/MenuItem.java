@@ -15,14 +15,9 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface MenuBar extends Component {
-  @RequiredUIThread
-  @NotNull
-  MenuBar add(@NotNull MenuItem menuItem);
+public interface MenuItem extends Component {
 }

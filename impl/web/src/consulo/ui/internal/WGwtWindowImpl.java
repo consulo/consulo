@@ -51,13 +51,13 @@ public class WGwtWindowImpl extends WBaseGwtComponent implements Window {
   protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
     // add menu bar always
     UIComponent.Child menuChild = factory.componentChild().as();
-    if(myMenuBar != null) {
+    if (myMenuBar != null) {
       menuChild.setComponent(((WBaseGwtComponent)myMenuBar).convert(factory));
     }
     children.add(menuChild);
 
     UIComponent.Child contentChild = factory.componentChild().as();
-    if(myContent != null) {
+    if (myContent != null) {
       contentChild.setComponent(myContent.convert(factory));
     }
     children.add(contentChild);

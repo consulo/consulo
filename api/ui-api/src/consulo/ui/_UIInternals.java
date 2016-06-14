@@ -72,6 +72,12 @@ abstract class _UIInternals {
 
   protected abstract ImageRef _Images_imageRef(URL url);
 
+  protected abstract MenuItem _MenuItems_item(String text);
+
+  protected abstract Menu _MenuItems_menu(String text);
+
+  protected abstract MenuBar _MenuItems_menuBar();
+
   @RequiredUIThread
   @NotNull
   protected abstract UIAccess _UIAccess_get();

@@ -37,6 +37,21 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  protected MenuItem _MenuItems_item(String text) {
+    return new DesktopMenuItemImpl(text);
+  }
+
+  @Override
+  protected Menu _MenuItems_menu(String text) {
+    return new DesktopMenuImpl(text);
+  }
+
+  @Override
+  protected MenuBar _MenuItems_menuBar() {
+    return new DesktopMenuBarImpl();
+  }
+
+  @Override
   public CheckBox _Components_checkBox(@NotNull String text, boolean selected) {
     return new DesktopCheckBoxImpl(text, selected);
   }

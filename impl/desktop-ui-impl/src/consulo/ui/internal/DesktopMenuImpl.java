@@ -13,16 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.internal;
 
+import consulo.ui.Component;
+import consulo.ui.Menu;
+import consulo.ui.MenuItem;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface MenuBar extends Component {
-  @RequiredUIThread
+public class DesktopMenuImpl extends JMenu implements Menu {
+  public DesktopMenuImpl(String text) {
+    super(text);
+  }
+
   @NotNull
-  MenuBar add(@NotNull MenuItem menuItem);
+  @Override
+  public Menu add(@NotNull MenuItem menuItem) {
+    add((JMenuItem)menuItem);
+    return this;
+  }
+
+  @NotNull
+  @Override
+  public Menu separate() {
+    addSeparator();
+    return this;
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
+  }
+
+  @Override
+  public void dispose() {
+
+  }
 }
