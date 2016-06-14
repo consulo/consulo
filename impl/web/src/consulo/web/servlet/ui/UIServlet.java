@@ -15,10 +15,6 @@
  */
 package consulo.web.servlet.ui;
 
-import com.intellij.openapi.util.Factory;
-import consulo.ui.Component;
-import org.jetbrains.annotations.NotNull;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -33,14 +29,13 @@ import java.util.UUID;
  * @since 09-Jun-16
  */
 public abstract class UIServlet extends HttpServlet {
-  private String myGwtModuleName;
+  private static final String ourGwtModuleName = "ui";
 
-  public UIServlet(String gwtModuleName) {
-    myGwtModuleName = gwtModuleName;
+  private final Class<? extends UIBuilder> myClass;
+
+  public UIServlet(Class<? extends UIBuilder> aClass) {
+    myClass = aClass;
   }
-
-  @NotNull
-  public abstract Factory<Component> uiFactory();
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
@@ -49,7 +44,7 @@ public abstract class UIServlet extends HttpServlet {
     String id = UUID.randomUUID().toString();
     response.addCookie(new Cookie("ConsuloSessionId", id));
 
-    UISessionManager.ourInstance.registerInitialSession(id, uiFactory());
+    UISessionManager.ourInstance.registerInitialSession(id, myClass);
 
     final PrintWriter writer = response.getWriter();
     writer.println("<html>");
@@ -57,7 +52,7 @@ public abstract class UIServlet extends HttpServlet {
     writer.println("<title>Project</title>");
     writer.println("</head>");
     writer.println("<body>");
-    writer.println("<script type='text/javascript' src='" + myGwtModuleName + "/" + myGwtModuleName + ".nocache.js?" + System.currentTimeMillis() +
+    writer.println("<script type='text/javascript' src='" + ourGwtModuleName + "/" + ourGwtModuleName + ".nocache.js?" + System.currentTimeMillis() +
                    "'></script>");
     writer.println("</body>");
     writer.println("</html>");

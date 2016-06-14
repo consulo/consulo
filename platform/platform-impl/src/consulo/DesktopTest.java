@@ -15,6 +15,10 @@ package consulo;/*
  */
 
 import consulo.ui.Component;
+import consulo.ui.MenuBar;
+import consulo.ui.Window;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -23,6 +27,25 @@ import javax.swing.*;
  * @since 09-Jun-16
  */
 public class DesktopTest {
+  public static class JFrameWrapper extends JFrame implements Window {
+
+    @Override
+    public void setContent(@NotNull Component content) {
+      setContentPane((java.awt.Container)content);
+    }
+
+    @Override
+    public void setMenuBar(@Nullable MenuBar menuBar) {
+      setJMenuBar((JMenuBar)menuBar);
+    }
+
+    @Nullable
+    @Override
+    public Component getParentComponent() {
+      return null;
+    }
+  }
+
   public static void main(String[] args) {
     SwingUtilities.invokeLater(new Runnable() {
       @Override
@@ -44,16 +67,15 @@ public class DesktopTest {
         }
 
         // swing api start
-        JFrame main = new JFrame();
+        JFrameWrapper main = new JFrameWrapper();
         main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         main.setSize(400, 320);
         main.setLocationRelativeTo(null);
         // swing api stop
 
-        final Component component = SomeTestUIBuilder.build();
+        SomeTestUIBuilder.build(main);
 
         // swing api start
-        main.setContentPane((java.awt.Container)component);
         main.setVisible(true);
         // swing api stop
       }

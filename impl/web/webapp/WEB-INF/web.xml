@@ -26,16 +26,6 @@
     <url-pattern>/app</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>TestServlet</servlet-name>
-    <servlet-class>consulo.web.servlet.TestUIServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>TestServlet</servlet-name>
-    <url-pattern>/test</url-pattern>
-  </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>IconServlet</servlet-name>
     <url-pattern>/icon</url-pattern>

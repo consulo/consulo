@@ -115,6 +115,13 @@ public class UIConverter {
         return new GwtTabbedLayoutImpl();
       }
     });
+    ourMap.put("consulo.ui.internal.WGwtWindowImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtWindowImpl();
+      }
+    });
   }
 
   private static Map<Long, InternalGwtComponent> ourCache = new HashMap<Long, InternalGwtComponent>();
@@ -133,7 +140,7 @@ public class UIConverter {
 
     final Map<String, String> variables = uiComponent.getVariables();
 
-    if(widget instanceof InternalGwtComponentWithChildren) {
+    if (widget instanceof InternalGwtComponentWithChildren) {
       final List<UIComponent.Child> children = uiComponent.getChildren();
       ((InternalGwtComponentWithChildren)widget).addChildren(proxy, children == null ? Collections.<UIComponent.Child>emptyList() : children);
     }

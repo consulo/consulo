@@ -85,7 +85,7 @@ public class UIEntryPoint implements EntryPoint {
 
               assert root != null;
               rootPanel.clear();
-              rootPanel.add(GwtUIUtil2.fillAndReturn(root.asWidget()));
+              rootPanel.add(root.asWidget());
             }
             break;
           case stateChanged:

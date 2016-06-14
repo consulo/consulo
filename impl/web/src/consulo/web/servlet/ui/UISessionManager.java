@@ -17,12 +17,13 @@ package consulo.web.servlet.ui;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
-import com.intellij.openapi.util.Factory;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ConcurrentHashMap;
-import consulo.ui.Component;
 import consulo.ui.RequiredUIThread;
 import consulo.ui.UIAccess;
+import consulo.ui.Window;
 import consulo.ui.internal.WBaseGwtComponent;
+import consulo.ui.internal.WGwtWindowImpl;
 import consulo.web.gwtUI.shared.*;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TObjectProcedure;
@@ -41,29 +42,27 @@ import java.util.Map;
  */
 public class UISessionManager {
   public static class UIContext extends UIAccess {
-    private String myId;
-    private Factory<Component> myUIFactory;
+    private String myCookieId;
     private Session mySession;
-    private WBaseGwtComponent myRootComponent;
+    private Window myWindow;
 
     private TLongObjectHashMap<WBaseGwtComponent> myComponents = new TLongObjectHashMap<WBaseGwtComponent>();
 
-    public UIContext(String id, Factory<Component> UIFactory, Session session) {
-      myId = id;
-      myUIFactory = UIFactory;
+    public UIContext(String cookieId, Session session) {
+      myCookieId = cookieId;
       mySession = session;
     }
 
-    public String getId() {
-      return myId;
+    public String getCookieId() {
+      return myCookieId;
     }
 
     public void setSession(Session session) {
       mySession = session;
     }
 
-    public void setRootComponent(WBaseGwtComponent rootComponent) {
-      myRootComponent = rootComponent;
+    public void setWindow(Window window) {
+      myWindow = window;
     }
 
     public Session getSession() {
@@ -93,16 +92,16 @@ public class UISessionManager {
     public void repaint() {
       UIAccess.assertIsUIThread();
 
-      final WBaseGwtComponent rootComponent = myRootComponent;
+      final WBaseGwtComponent window = (WBaseGwtComponent)myWindow;
 
       List<UIComponent> components = new ArrayList<UIComponent>();
 
-      rootComponent.visitChanges(components);
+      window.visitChanges(components);
 
       if (!components.isEmpty()) {
         AutoBean<UIServerEvent> bean = ourEventFactory.serverEvent();
         UIServerEvent serverEvent = bean.as();
-        serverEvent.setSessionId(myId);
+        serverEvent.setSessionId(myCookieId);
         serverEvent.setType(UIServerEventType.stateChanged);
         serverEvent.setComponents(components);
 
@@ -116,19 +115,22 @@ public class UISessionManager {
 
   private Map<String, UIContext> myUIs = new ConcurrentHashMap<String, UIContext>();
 
-  private Map<String, UIContext> myTempSessions = new ConcurrentHashMap<String, UIContext>();
+  private Map<String, Class<? extends UIBuilder>> myTempSessions = new ConcurrentHashMap<String, Class<? extends UIBuilder>>();
 
-  public void registerInitialSession(String id, Factory<Component> uiRoot) {
-    myTempSessions.put(id, new UIContext(id, uiRoot, null));
+  public void registerInitialSession(String id, Class<? extends UIBuilder> builderClass) {
+    myTempSessions.put(id, builderClass);
   }
 
   public void onSessionOpen(final Session session, final UIClientEvent clientEvent) {
     // when websocket come to use - remove it from temp sessions, and register it as default
-    final UIContext context = myTempSessions.remove(clientEvent.getSessionId());
-    if (context == null) {
+    final Class<? extends UIBuilder> builderClass = myTempSessions.remove(clientEvent.getSessionId());
+    if (builderClass == null) {
       return;
     }
 
+    final UIBuilder uiBuilder = ReflectionUtil.newInstance(builderClass);
+
+    final UIContext context = new UIContext(clientEvent.getSessionId(), session);
     myUIs.put(session.getId(), context);
 
     context.setSession(session);
@@ -136,19 +138,22 @@ public class UISessionManager {
     UIAccessHelper.ourInstance.run(context, new Runnable() {
       @Override
       public void run() {
-        final WBaseGwtComponent component = (WBaseGwtComponent)context.myUIFactory.create();
-        component.registerComponent(context.myComponents);
+        WGwtWindowImpl window = new WGwtWindowImpl();
 
-        context.setRootComponent(component);
+        uiBuilder.build(window);
+
+        window.registerComponent(context.myComponents);
+
+        context.setWindow(window);
 
         AutoBean<UIServerEvent> bean = ourEventFactory.serverEvent();
         UIServerEvent serverEvent = bean.as();
         serverEvent.setSessionId(clientEvent.getSessionId());
         serverEvent.setType(UIServerEventType.createRoot);
-        serverEvent.setComponents(Arrays.asList(component.convert(ourEventFactory)));
+        serverEvent.setComponents(Arrays.asList(window.convert(ourEventFactory)));
 
         // we don't interest in first states - because they will send anyway to client
-        component.visitChanges(new ArrayList<UIComponent>());
+        window.visitChanges(new ArrayList<UIComponent>());
 
         context.send(bean);
       }

@@ -26,7 +26,7 @@ import javax.swing.*;
  */
 public class SomeTestUIBuilder {
   @RequiredUIThread
-  public static Component build() {
+  public static void build(Window window) {
     /*VerticalLayout layout = Layouts.vertical();
 
     final CheckBox top = create("top");
@@ -122,7 +122,8 @@ public class SomeTestUIBuilder {
     splitLayout.setFirstComponent(Components.label("tree"));
     splitLayout.setSecondComponent(tabbed);
     splitLayout.setProportion(20);
-    return splitLayout;
+
+    window.setContent(splitLayout);
   }
 
   private static CheckBox create(String text) {

@@ -13,31 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.servlet;
-
-import com.intellij.openapi.util.Factory;
-import consulo.SomeTestUIBuilder;
-import consulo.ui.Component;
-import consulo.web.servlet.ui.UIServlet;
-import org.jetbrains.annotations.NotNull;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 14-Jun-16
  */
-public class TestUIServlet extends UIServlet {
-  public TestUIServlet() {
-    super("ui");
-  }
-
-  @NotNull
-  @Override
-  public Factory<Component> uiFactory() {
-    return new Factory<Component>() {
-      @Override
-      public Component create() {
-        return SomeTestUIBuilder.build();
-      }
-    };
-  }
+public interface MenuBar {
 }
