@@ -15,17 +15,10 @@
  */
 package consulo;
 
-import com.intellij.icons.AllIcons;
 import consulo.ui.*;
 import consulo.ui.hack.IconWithURL;
-import consulo.ui.SplitLayout;
-import consulo.ui.VerticalLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
@@ -34,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class SomeTestUIBuilder {
   @RequiredUIThread
   public static Component build() {
-    VerticalLayout layout = Layouts.vertical();
+    /*VerticalLayout layout = Layouts.vertical();
 
     final CheckBox top = create("top");
     top.setEnabled(false);
@@ -113,8 +106,18 @@ public class SomeTestUIBuilder {
 
     splitLayout.setProportion(20);
 
-    layout.add(splitLayout);
-    return layout;
+    layout.add(splitLayout);   */
+
+    try {
+      Thread.sleep(1000L);
+    }
+    catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    final SplitLayout splitLayout = Layouts.horizontalSplit();
+    splitLayout.setFirstComponent(Components.label("test"));
+    splitLayout.setFirstComponent(Components.label("test1"));
+    return splitLayout;
   }
 
   private static CheckBox create(String text) {

@@ -51,7 +51,10 @@ public class GwtHorizontalSplitLayoutImpl implements InternalGwtComponent {
       component.addAttachHandler(new AttachEvent.Handler() {
         @Override
         public void onAttachOrDetach(AttachEvent event) {
-          myPanel.setHeight(component.getElement().getClientHeight() + "px");
+          final String height = myPanel.getElement().getStyle().getHeight();
+          if(height == null) {
+            myPanel.setHeight(component.getElement().getClientHeight() + "px");
+          }
         }
       });
       myPanel.setLeftWidget(component);
