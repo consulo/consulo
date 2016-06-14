@@ -58,6 +58,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  protected TabbedLayout _Layouts_tabbed() {
+    return new WGwtTabbedLayoutImpl();
+  }
+
+  @Override
   protected Label _Components_label(String text) {
     return new WGwtLabelImpl(text);
   }

@@ -16,8 +16,6 @@
 package consulo.web.gwtUI.client.ui;
 
 import com.google.gwt.user.client.ui.Image;
-import consulo.web.gwtUI.client.WebSocketProxy;
-import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -30,10 +28,5 @@ public class GwtImageImpl extends Image implements InternalGwtComponent {
   @Override
   public void updateState(@NotNull Map<String, String> map) {
     setUrl(map.get("url"));
-  }
-
-  @Override
-  public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
-
   }
 }

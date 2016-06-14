@@ -15,7 +15,7 @@
  */
 package consulo.web.gwtUI.client.ui;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.TabPanel;
 import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.shared.UIComponent;
@@ -26,22 +26,26 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 14-Jun-16
  */
-public class GwtHorizontalLayoutImpl extends HorizontalPanel implements InternalGwtComponentWithChildren {
-  public GwtHorizontalLayoutImpl() {
-    setHorizontalAlignment(ALIGN_CENTER);
-  }
-
+public class GwtTabbedLayoutImpl extends TabPanel implements InternalGwtComponentWithChildren {
   @Override
   public void updateState(@NotNull Map<String, String> map) {
     DefaultVariables.updateState(map, this);
+    selectTab(Integer.parseInt(map.get("selected")));
   }
 
   @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-    for (UIComponent.Child child : children) {
-      add(UIConverter.create(proxy, child.getComponent()));
+    for (int i = 0; i < children.size(); i ++) {
+      final UIComponent.Child tabChild = children.get(i);
+      // inc i
+      final UIComponent.Child contentChild = children.get(i++);
+
+      final InternalGwtComponent tab = UIConverter.create(proxy, tabChild.getComponent());
+      final InternalGwtComponent content = UIConverter.create(proxy, contentChild.getComponent());
+
+      add(content, tab);
     }
   }
 }

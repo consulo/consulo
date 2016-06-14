@@ -46,4 +46,9 @@ public class Layouts {
   public static SplitLayout verticalSplit() {
     return _UIInternals.impl()._Layouts_verticalSplit();
   }
+
+  @NotNull
+  public static TabbedLayout tabbed() {
+    return _UIInternals.impl()._Layouts_tabbed();
+  }
 }

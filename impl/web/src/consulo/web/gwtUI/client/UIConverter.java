@@ -108,12 +108,19 @@ public class UIConverter {
         return new GwtHorizontalSplitLayoutImpl();
       }
     });
+    ourMap.put("consulo.ui.internal.WGwtTabbedLayoutImpl", new Factory() {
+      @NotNull
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtTabbedLayoutImpl();
+      }
+    });
   }
 
   private static Map<Long, InternalGwtComponent> ourCache = new HashMap<Long, InternalGwtComponent>();
 
-  public static InternalGwtComponent create(WebSocketProxy proxy, UIComponent component) {
-    final String type = component.getType();
+  public static InternalGwtComponent create(WebSocketProxy proxy, UIComponent uiComponent) {
+    final String type = uiComponent.getType();
     Factory factory = ourMap.get(type);
     if (factory == null) {
       Window.alert("Type " + type + " is not resolved");
@@ -122,19 +129,18 @@ public class UIConverter {
 
     final InternalGwtComponent widget = factory.create();
 
-    ourCache.put(component.getId(), widget);
+    ourCache.put(uiComponent.getId(), widget);
 
-    final Map<String, String> variables = component.getVariables();
+    final Map<String, String> variables = uiComponent.getVariables();
 
-    final List<UIComponent.Child> children = component.getChildren();
-    if (children != null) {
-      for (UIComponent.Child child : children) {
-        widget.addChildren(proxy, child);
-      }
+    if(widget instanceof InternalGwtComponentWithChildren) {
+      final List<UIComponent.Child> children = uiComponent.getChildren();
+      ((InternalGwtComponentWithChildren)widget).addChildren(proxy, children == null ? Collections.<UIComponent.Child>emptyList() : children);
     }
+
     widget.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
     if (widget instanceof InternalGwtComponentWithListeners) {
-      ((InternalGwtComponentWithListeners)widget).addListeners(proxy, component.getId());
+      ((InternalGwtComponentWithListeners)widget).setupListeners(proxy, uiComponent.getId());
     }
     return widget;
   }

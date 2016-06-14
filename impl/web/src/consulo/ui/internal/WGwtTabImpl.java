@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.client.ui;
+package consulo.ui.internal;
 
-import consulo.web.gwtUI.client.WebSocketProxy;
+import consulo.ui.Tab;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 14-Jun-16
  */
-public interface InternalGwtComponentWithListeners extends InternalGwtComponent {
-  void setupListeners(final WebSocketProxy proxy, final long componentId);
+public class WGwtTabImpl extends WGwtListItemPresentationImpl implements Tab {
 }

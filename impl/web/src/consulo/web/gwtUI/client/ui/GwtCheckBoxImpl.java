@@ -21,7 +21,6 @@ import com.google.gwt.user.client.ui.CheckBox;
 import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIClientEventType;
-import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -33,7 +32,7 @@ import java.util.Map;
  */
 public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWithListeners {
   @Override
-  public void addListeners(final WebSocketProxy proxy, final long componentId) {
+  public void setupListeners(final WebSocketProxy proxy, final long componentId) {
     addValueChangeHandler(new ValueChangeHandler<Boolean>() {
       @Override
       public void onValueChange(final ValueChangeEvent<Boolean> event) {
@@ -62,9 +61,5 @@ public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWit
     setValue(DefaultVariables.parseBoolAsTrue(map, "selected"));
 
     DefaultVariables.updateState(map, this);
-  }
-
-  @Override
-  public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
   }
 }

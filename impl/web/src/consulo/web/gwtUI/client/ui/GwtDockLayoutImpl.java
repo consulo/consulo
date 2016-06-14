@@ -23,13 +23,14 @@ import consulo.web.gwtUI.client.util.GwtUIUtil2;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponent {
+public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponentWithChildren {
   public GwtDockLayoutImpl() {
     GwtUIUtil2.fill(this);
     setHorizontalAlignment(ALIGN_LEFT);
@@ -42,29 +43,31 @@ public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponent
   }
 
   @Override
-  public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
-    final Map<String, String> variables = child.getVariables();
+  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
+    for (UIComponent.Child child : children) {
+      final Map<String, String> variables = child.getVariables();
 
-    final String side = variables.get("side");
-    DockLayoutConstant direction = null;
-    if (side.equals("top")) {
-      direction = NORTH;
-    }
-    else if (side.equals("bottom")) {
-      direction = SOUTH;
-    }
-    else if (side.equals("left")) {
-      direction = WEST;
-    }
-    else if (side.equals("right")) {
-      direction = EAST;
-    }
-    else if (side.equals("center")) {
-      direction = CENTER;
-    }
+      final String side = variables.get("side");
+      DockLayoutConstant direction = null;
+      if (side.equals("top")) {
+        direction = NORTH;
+      }
+      else if (side.equals("bottom")) {
+        direction = SOUTH;
+      }
+      else if (side.equals("left")) {
+        direction = WEST;
+      }
+      else if (side.equals("right")) {
+        direction = EAST;
+      }
+      else if (side.equals("center")) {
+        direction = CENTER;
+      }
 
-    final Widget widget = UIConverter.create(proxy, child.getComponent()).asWidget();
-    widget.setWidth("100%");
-    add(widget, direction);
+      final Widget widget = UIConverter.create(proxy, child.getComponent()).asWidget();
+      widget.setWidth("100%");
+      add(widget, direction);
+    }
   }
 }

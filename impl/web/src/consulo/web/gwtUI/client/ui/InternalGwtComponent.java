@@ -16,8 +16,6 @@
 package consulo.web.gwtUI.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import consulo.web.gwtUI.client.WebSocketProxy;
-import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -28,6 +26,4 @@ import java.util.Map;
  */
 public interface InternalGwtComponent extends IsWidget {
   void updateState(@NotNull Map<String, String> map);
-
-  void addChildren(WebSocketProxy proxy, UIComponent.Child child);
 }

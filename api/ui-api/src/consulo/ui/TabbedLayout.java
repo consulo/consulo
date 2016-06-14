@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.client.ui;
+package consulo.ui;
 
-import consulo.web.gwtUI.client.WebSocketProxy;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 14-Jun-16
  */
-public interface InternalGwtComponentWithListeners extends InternalGwtComponent {
-  void setupListeners(final WebSocketProxy proxy, final long componentId);
+public interface TabbedLayout extends Layout {
+  @NotNull
+  @RequiredUIThread
+  TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component);
+
+  @NotNull
+  @RequiredUIThread
+  TabbedLayout addTab(@NotNull String tabName, @NotNull Component component);
 }

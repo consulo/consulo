@@ -13,34 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.client.ui;
+package consulo.ui.internal;
 
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
+import consulo.ui.Component;
+import consulo.ui.Tab;
+import consulo.ui.TabbedLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 14-Jun-16
  */
-public class GwtLayeredImageImpl extends FlowPanel implements InternalGwtComponent {
-  public GwtLayeredImageImpl() {
-    setStyleName("gwtLayeredImage");
+public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout {
+  @NotNull
+  @Override
+  public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
+    return this;
   }
 
+  @NotNull
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
-    setWidth(map.get("width") + "px");
-    setHeight(map.get("height") + "px");
+  public TabbedLayout addTab(@NotNull String tabName, @NotNull Component component) {
+    addTab(tabName, (java.awt.Component)component);
+    return this;
+  }
 
-    final int size = Integer.parseInt(map.get("size"));
-    for (int i = 0; i < size; i++) {
-      final String url = map.get("url" + i);
-
-      Image image = new Image(url);
-      add(image);
-    }
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
   }
 }

@@ -37,7 +37,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtComponentWithListeners {
+public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtComponentWithListeners, InternalGwtComponentWithChildren {
   /**
    * Item list with by index
    * <p/>
@@ -66,7 +66,7 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
   }
 
   @Override
-  public void addListeners(final WebSocketProxy proxy, final long componentId) {
+  public void setupListeners(final WebSocketProxy proxy, final long componentId) {
     getModel().addListModelListener(new ListModelListener() {
       @Override
       public void onModelEvent(final ListModelEvent event) {
@@ -101,8 +101,10 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
   }
 
   @Override
-  public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
+  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     myProxy = proxy;
-    myItemsWithNullItem.add(child);
+    for (UIComponent.Child child : children) {
+      myItemsWithNullItem.add(child);
+    }
   }
 }

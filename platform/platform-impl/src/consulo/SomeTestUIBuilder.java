@@ -115,8 +115,12 @@ public class SomeTestUIBuilder {
       e.printStackTrace();
     }
     final SplitLayout splitLayout = Layouts.horizontalSplit();
-    splitLayout.setFirstComponent(Components.label("test"));
-    splitLayout.setSecondComponent(Components.label("test1"));
+    final TabbedLayout tabbed = Layouts.tabbed();
+    tabbed.addTab("Hello", Components.label("test"));
+    tabbed.addTab("Hello2", Components.label("test 1"));
+
+    splitLayout.setFirstComponent(Components.label("tree"));
+    splitLayout.setSecondComponent(tabbed);
     splitLayout.setProportion(20);
     return splitLayout;
   }

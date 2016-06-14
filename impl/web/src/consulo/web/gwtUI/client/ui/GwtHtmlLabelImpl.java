@@ -16,8 +16,6 @@
 package consulo.web.gwtUI.client.ui;
 
 import com.google.gwt.user.client.ui.InlineHTML;
-import consulo.web.gwtUI.client.WebSocketProxy;
-import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -37,10 +35,5 @@ public class GwtHtmlLabelImpl extends InlineHTML implements InternalGwtComponent
     if (text != null) {
       setHTML(text);
     }
-  }
-
-  @Override
-  public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
-
   }
 }

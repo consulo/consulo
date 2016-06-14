@@ -24,13 +24,14 @@ import consulo.web.gwtUI.client.util.GwtUIUtil2;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtVerticalLayoutImpl extends Grid implements InternalGwtComponent {
+public class GwtVerticalLayoutImpl extends Grid implements InternalGwtComponentWithChildren {
   private SimplePanel myPanel = GwtUIUtil2.fillAndReturn(new SimplePanel());
 
   public GwtVerticalLayoutImpl() {
@@ -47,13 +48,16 @@ public class GwtVerticalLayoutImpl extends Grid implements InternalGwtComponent 
   }
 
   @Override
-  public void addChildren(WebSocketProxy proxy, UIComponent.Child child) {
-    final int rowCount = getRowCount();
-    resizeRows(rowCount + 1);
+  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
+    //FIXME [VISTALL] improve, we can call resizeRows once at time
+    for (UIComponent.Child child : children) {
+      final int rowCount = getRowCount();
+      resizeRows(rowCount + 1);
 
-    setWidget(rowCount - 1, 0, UIConverter.create(proxy, child.getComponent()));
+      setWidget(rowCount - 1, 0, UIConverter.create(proxy, child.getComponent()));
 
-    updateLastRow(rowCount - 1);
+      updateLastRow(rowCount - 1);
+    }
   }
 
   private void updateLastRow(int prevRow) {

@@ -64,6 +64,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  protected TabbedLayout _Layouts_tabbed() {
+    return new DesktopTabbedLayoutImpl();
+  }
+
+  @Override
   protected Label _Components_label(String text) {
     return new DesktopLabelImpl(text);
   }
