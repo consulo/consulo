@@ -23,13 +23,24 @@ import com.google.gwt.user.client.ui.*;
  */
 public class GwtUIUtil2 {
   public static Widget loadingPanel() {
-    VerticalPanel verticalPanel = fillAndReturn(new VerticalPanel());
-    verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-    verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+    // http://tobiasahlin.com/spinkit/
+    // MIT
+    FlowPanel flowPanel = new FlowPanel();
+    flowPanel.addStyleName("sk-cube-grid");
 
-    verticalPanel.add(new Label("Loading..."));
+    for(int i = 1; i <= 9; i++) {
+      FlowPanel child = new FlowPanel();
+      child.addStyleName("sk-cube sk-cube" + i);
+      flowPanel.add(child);
+    }
 
-    return verticalPanel;
+    FlowPanel container = fillAndReturn(new FlowPanel());
+    container.getElement().getStyle().setProperty("display", "flex");
+    container.getElement().getStyle().setProperty("justifyContent", "center");
+
+    flowPanel.getElement().getStyle().setProperty("alignSelf", "center");
+    container.add(flowPanel);
+    return container;
   }
 
   public static <T extends UIObject> T fillAndReturn(T object) {

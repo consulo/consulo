@@ -19,6 +19,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -26,11 +27,12 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListener;
 import consulo.web.gwtUI.client.ui.InternalGwtComponent;
-import consulo.web.gwtUI.client.util.Log;
 import consulo.web.gwtUI.client.util.GwtUIUtil2;
+import consulo.web.gwtUI.client.util.Log;
 import consulo.web.gwtUI.shared.*;
 import org.gwt.advanced.client.util.ThemeHelper;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -79,10 +81,15 @@ public class UIEntryPoint implements EntryPoint {
 
         switch (event.getType()) {
           case createRoot:
-            rootPanel.clear();
+            List<IsWidget> widgets = new ArrayList<IsWidget>();
             if (components != null) {
               for (UIComponent component : components) {
-                rootPanel.add(UIConverter.create(proxy, component));
+                widgets.add(UIConverter.create(proxy, component));
+              }
+
+              rootPanel.clear();
+              for (IsWidget isWidget : widgets) {
+                rootPanel.add(isWidget);
               }
             }
             break;
