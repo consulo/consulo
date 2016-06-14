@@ -116,7 +116,7 @@ public class SomeTestUIBuilder {
     }
     final SplitLayout splitLayout = Layouts.horizontalSplit();
     splitLayout.setFirstComponent(Components.label("test"));
-    splitLayout.setFirstComponent(Components.label("test1"));
+    splitLayout.setSecondComponent(Components.label("test1"));
     splitLayout.setProportion(20);
     return splitLayout;
   }

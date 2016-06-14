@@ -76,7 +76,7 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
     myRender.render(render, i, e);
 
     final UIComponent component = render.getLayout().convert(factory);
-    component.setId(String.valueOf(i));
+    component.setId(-1);
 
     final UIComponent.Child child = factory.componentChild().as();
     child.setComponent(component);

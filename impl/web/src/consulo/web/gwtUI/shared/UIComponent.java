@@ -28,9 +28,9 @@ public interface UIComponent extends UIVariablesOwner {
     void setComponent(UIComponent component);
   }
 
-  String getId();
+  long getId();
 
-  void setId(String id);
+  void setId(long id);
 
   String getType();
 

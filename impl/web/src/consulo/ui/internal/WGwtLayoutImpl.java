@@ -20,6 +20,7 @@ import com.intellij.util.containers.hash.LinkedHashMap;
 import consulo.ui.Component;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
+import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class WGwtLayoutImpl<C> extends WBaseGwtComponent {
   private Map<C, WBaseGwtComponent> myComponents = new LinkedHashMap<C, WBaseGwtComponent>();
 
   @Override
-  public void registerComponent(Map<String, WBaseGwtComponent> map) {
+  public void registerComponent(TLongObjectHashMap<WBaseGwtComponent> map) {
     super.registerComponent(map);
 
     for (WBaseGwtComponent component : myComponents.values()) {

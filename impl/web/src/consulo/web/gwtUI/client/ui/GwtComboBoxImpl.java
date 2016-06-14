@@ -66,7 +66,7 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
   }
 
   @Override
-  public void addListeners(final WebSocketProxy proxy, final String componentId) {
+  public void addListeners(final WebSocketProxy proxy, final long componentId) {
     getModel().addListModelListener(new ListModelListener() {
       @Override
       public void onModelEvent(final ListModelEvent event) {
@@ -76,7 +76,7 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
             public void consume(UIClientEvent clientEvent) {
               Map<String, String> vars = new HashMap<String, String>();
               vars.put("type", "select");
-              vars.put("componentId", componentId);
+              vars.put("componentId", String.valueOf(componentId));
               vars.put("index", String.valueOf(event.getItemIndex()));
 
               clientEvent.setVariables(vars);

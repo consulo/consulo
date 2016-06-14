@@ -53,7 +53,7 @@ public class DesktopTest {
         final Component component = SomeTestUIBuilder.build();
 
         // swing api start
-        main.add((java.awt.Component)component);
+        main.setContentPane((java.awt.Container)component);
         main.setVisible(true);
         // swing api stop
       }

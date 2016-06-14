@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWithListeners {
   @Override
-  public void addListeners(final WebSocketProxy proxy, final String componentId) {
+  public void addListeners(final WebSocketProxy proxy, final long componentId) {
     addValueChangeHandler(new ValueChangeHandler<Boolean>() {
       @Override
       public void onValueChange(final ValueChangeEvent<Boolean> event) {
@@ -42,7 +42,7 @@ public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWit
           public void consume(UIClientEvent clientEvent) {
             Map<String, String> vars = new HashMap<String, String>();
             vars.put("type", "select");
-            vars.put("componentId", componentId);
+            vars.put("componentId", String.valueOf(componentId));
             vars.put("selected", String.valueOf(event.getValue()));
 
             clientEvent.setVariables(vars);

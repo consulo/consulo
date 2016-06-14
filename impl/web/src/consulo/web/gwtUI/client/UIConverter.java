@@ -110,7 +110,7 @@ public class UIConverter {
     });
   }
 
-  private static Map<String, InternalGwtComponent> ourCache = new HashMap<String, InternalGwtComponent>();
+  private static Map<Long, InternalGwtComponent> ourCache = new HashMap<Long, InternalGwtComponent>();
 
   public static InternalGwtComponent create(WebSocketProxy proxy, UIComponent component) {
     final String type = component.getType();
@@ -139,7 +139,7 @@ public class UIConverter {
     return widget;
   }
 
-  public static InternalGwtComponent get(String id) {
+  public static InternalGwtComponent get(long id) {
     return ourCache.get(id);
   }
 }

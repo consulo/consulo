@@ -24,26 +24,29 @@ import consulo.ui.UIAccess;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIEventFactory;
 import consulo.web.servlet.ui.UISessionManager;
+import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
 public class WBaseGwtComponent implements Component {
-  private String myId = UUID.randomUUID().toString();
+  private static final AtomicLong ourIndex = new AtomicLong();
+
+  private long myId = ourIndex.incrementAndGet();
   private boolean myVisible = true;
   private boolean myEnabled = true;
   private Component myParent;
 
   private UIComponent myNotifyComponent;
 
-  public String getId() {
+  public long getId() {
     return myId;
   }
 
@@ -86,7 +89,7 @@ public class WBaseGwtComponent implements Component {
     myParent = parent;
   }
 
-  public void registerComponent(Map<String, WBaseGwtComponent> map) {
+  public void registerComponent(TLongObjectHashMap<WBaseGwtComponent> map) {
     map.put(getId(), this);
   }
 

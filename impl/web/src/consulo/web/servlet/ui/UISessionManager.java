@@ -18,18 +18,21 @@ package consulo.web.servlet.ui;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
 import com.intellij.openapi.util.Factory;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ConcurrentHashMap;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIThread;
 import consulo.ui.UIAccess;
 import consulo.ui.internal.WBaseGwtComponent;
 import consulo.web.gwtUI.shared.*;
+import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 
 import javax.websocket.Session;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -42,7 +45,7 @@ public class UISessionManager {
     private Session mySession;
     private WBaseGwtComponent myRootComponent;
 
-    private Map<String, WBaseGwtComponent> myComponents = new HashMap<String, WBaseGwtComponent>();
+    private TLongObjectHashMap<WBaseGwtComponent> myComponents = new TLongObjectHashMap<WBaseGwtComponent>();
 
     public UIContext(String id, Factory<Component> UIFactory, Session session) {
       myId = id;
@@ -157,7 +160,7 @@ public class UISessionManager {
       public void run() {
         final Map<String, String> variables = clientEvent.getVariables();
 
-        final String componentId = variables.get("componentId");
+        final long componentId = Long.parseLong(variables.get("componentId"));
         final String type = variables.get("type");
 
         final WBaseGwtComponent gwtComponent = uiContext.myComponents.get(componentId);
