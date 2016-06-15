@@ -25,13 +25,13 @@ import java.util.Map;
  * @since 11-Jun-16
  */
 public class UIVariablesOwner implements Serializable {
-  private LinkedHashMap<String, String> myVariables;
+  private LinkedHashMap<String, Serializable> myVariables;
 
-  public Map<String, String> getVariables() {
+  public Map<String, Serializable> getVariables() {
     return myVariables;
   }
 
-  public void setVariables(Map<String, String> map) {
-    myVariables = new LinkedHashMap<String, String>(map);
+  public void setVariables(Map<String, Serializable> map) {
+    myVariables = new LinkedHashMap<String, Serializable>(map);
   }
 }

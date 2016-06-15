@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.ui.Label;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -50,7 +51,7 @@ public class WGwtLabelImpl extends WBaseGwtComponent implements Label {
   }
 
   @Override
-  protected void getState(Map<String, String> map) {
+  protected void getState(Map<String, Serializable> map) {
     super.getState(map);
 
     map.put("text", myText);

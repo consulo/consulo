@@ -30,6 +30,5 @@ public class WGwtMenuSeparatorImpl extends WBaseGwtComponent implements MenuItem
   @Override
   public String getText() {
     throw new UnsupportedOperationException();
-
   }
 }

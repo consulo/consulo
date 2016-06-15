@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -189,10 +190,10 @@ public class UISessionManager {
     UIAccessHelper.ourInstance.run(uiContext, new Runnable() {
       @Override
       public void run() {
-        final Map<String, String> variables = clientEvent.getVariables();
+        final Map<String, Serializable> variables = clientEvent.getVariables();
 
-        final long componentId = Long.parseLong(variables.get("componentId"));
-        final String type = variables.get("type");
+        final long componentId = (Long)variables.get("componentId");
+        final String type = (String)variables.get("type");
 
         final WBaseGwtComponent gwtComponent = uiContext.myComponents.get(componentId);
         if (gwtComponent != null) {

@@ -22,6 +22,7 @@ import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 public class GwtMenuBarImpl extends MenuBar implements InternalGwtComponent, InternalGwtComponentWithChildren {
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
+  public void updateState(@NotNull Map<String, Serializable> map) {
   }
 
   @Override

@@ -24,6 +24,7 @@ import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +39,8 @@ public class GwtMenuImpl extends MenuItem implements InternalGwtComponent, Inter
   }
 
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
-    setText(map.get("text"));
+  public void updateState(@NotNull Map<String, Serializable> map) {
+    setText((String)map.get("text"));
   }
 
   @Override

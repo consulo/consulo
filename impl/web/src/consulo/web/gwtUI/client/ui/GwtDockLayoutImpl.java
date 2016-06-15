@@ -23,6 +23,7 @@ import consulo.web.gwtUI.client.util.GwtUIUtil2;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -38,15 +39,15 @@ public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponent
   }
 
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
+  public void updateState(@NotNull Map<String, Serializable> map) {
   }
 
   @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     for (UIComponent.Child child : children) {
-      final Map<String, String> variables = child.getVariables();
+      final Map<String, Serializable> variables = child.getVariables();
 
-      final String side = variables.get("side");
+      final Serializable side = variables.get("side");
       DockLayoutConstant direction = null;
       if (side.equals("top")) {
         direction = NORTH;

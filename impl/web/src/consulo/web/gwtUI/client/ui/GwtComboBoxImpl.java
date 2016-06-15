@@ -28,6 +28,7 @@ import org.gwt.advanced.client.datamodel.ListModelListener;
 import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,10 +75,10 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
           proxy.send(UIClientEventType.invokeEvent, new WebSocketProxy.Consumer<UIClientEvent>() {
             @Override
             public void consume(UIClientEvent clientEvent) {
-              Map<String, String> vars = new HashMap<String, String>();
+              Map<String, Serializable> vars = new HashMap<String, Serializable>();
               vars.put("type", "select");
-              vars.put("componentId", String.valueOf(componentId));
-              vars.put("index", String.valueOf(event.getItemIndex()));
+              vars.put("componentId", componentId);
+              vars.put("index", event.getItemIndex());
 
               clientEvent.setVariables(vars);
             }
@@ -88,8 +89,8 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
   }
 
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
-    final int size = Integer.parseInt(map.get("size"));
+  public void updateState(@NotNull Map<String, Serializable> map) {
+    final int size = (Integer)map.get("size");
 
     final ListDataModel model = getModel();
     model.clear();
@@ -97,7 +98,7 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
       model.add(String.valueOf(i), i);
     }
 
-    setSelectedIndex(Integer.parseInt(map.get("index")));
+    setSelectedIndex((Integer)map.get("index"));
   }
 
   @Override

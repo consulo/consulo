@@ -24,6 +24,7 @@ import consulo.web.gwtUI.client.util.GwtUIUtil2;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +39,9 @@ public class GwtHorizontalSplitLayoutImpl implements InternalGwtComponentWithChi
   }
 
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
-    myPanel.setSplitPosition(map.get("proportion") + "%");
+  public void updateState(@NotNull Map<String, Serializable> map) {
+    final int proportion = (Integer)map.get("proportion");
+    myPanel.setSplitPosition(proportion + "%");
   }
 
   @Override
@@ -50,7 +52,7 @@ public class GwtHorizontalSplitLayoutImpl implements InternalGwtComponentWithChi
   @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     for (UIComponent.Child child : children) {
-      boolean first = Boolean.parseBoolean(child.getVariables().get("position"));
+      boolean first = (Boolean)child.getVariables().get("position");
 
       final Widget component = UIConverter.create(proxy, child.getComponent()).asWidget();
       GwtUIUtil2.fillAndReturn(component);
@@ -60,7 +62,7 @@ public class GwtHorizontalSplitLayoutImpl implements InternalGwtComponentWithChi
           @Override
           public void onAttachOrDetach(AttachEvent event) {
             final String height = myPanel.getElement().getStyle().getHeight();
-            if(height == null) {
+            if (height == null) {
               myPanel.setHeight(component.getElement().getClientHeight() + "px");
             }
           }

@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -31,13 +32,15 @@ public class GwtLayeredImageImpl extends FlowPanel implements InternalGwtCompone
   }
 
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
-    setWidth(map.get("width") + "px");
-    setHeight(map.get("height") + "px");
+  public void updateState(@NotNull Map<String, Serializable> map) {
+    final int width = (Integer)map.get("width");
+    setWidth(width + "px");
+    final int height = (Integer)map.get("height");
+    setHeight(height + "px");
 
-    final int size = Integer.parseInt(map.get("size"));
+    final int size = (Integer)map.get("size");
     for (int i = 0; i < size; i++) {
-      final String url = map.get("url" + i);
+      final String url = (String)map.get("url" + i);
 
       Image image = new Image(url);
       add(image);

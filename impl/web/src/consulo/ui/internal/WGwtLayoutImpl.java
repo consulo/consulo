@@ -22,6 +22,7 @@ import consulo.web.gwtUI.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class WGwtLayoutImpl<C> extends WBaseGwtComponent {
       final UIComponent uiComponent = entry.getValue().convert();
       child.setComponent(uiComponent);
 
-      Map<String, String> vars = new SmartHashMap<String, String>();
+      Map<String, Serializable> vars = new SmartHashMap<String, Serializable>();
 
       convertConstraint(vars, entry.getKey());
 
@@ -71,7 +72,7 @@ public class WGwtLayoutImpl<C> extends WBaseGwtComponent {
     return myComponents.put(constraint, component);
   }
 
-  protected void convertConstraint(Map<String, String> map, C constraint) {
+  protected void convertConstraint(Map<String, Serializable> map, C constraint) {
   }
 
   @Override

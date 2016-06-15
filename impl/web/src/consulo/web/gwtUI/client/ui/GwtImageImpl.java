@@ -18,6 +18,7 @@ package consulo.web.gwtUI.client.ui;
 import com.google.gwt.user.client.ui.Image;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 public class GwtImageImpl extends Image implements InternalGwtComponent {
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
-    setUrl(map.get("url"));
+  public void updateState(@NotNull Map<String, Serializable> map) {
+    setUrl((String)map.get("url"));
   }
 }

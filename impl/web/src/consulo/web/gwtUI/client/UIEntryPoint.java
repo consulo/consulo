@@ -35,6 +35,7 @@ import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIServerEvent;
 import org.gwt.advanced.client.util.ThemeHelper;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,6 @@ public class UIEntryPoint implements EntryPoint {
           return;
         }
 
-        Log.log("receive2: " + msg);
         final List<UIComponent> components = event.getComponents();
 
         switch (event.getType()) {
@@ -106,8 +106,8 @@ public class UIEntryPoint implements EntryPoint {
               for (UIComponent component : components) {
                 final InternalGwtComponent temp = UIConverter.get(component.getId());
 
-                final Map<String, String> variables = component.getVariables();
-                temp.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
+                final Map<String, Serializable> variables = component.getVariables();
+                temp.updateState(variables == null ? Collections.<String, Serializable>emptyMap() : variables);
               }
             }
             break;

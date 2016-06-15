@@ -15,12 +15,16 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.*;
+import consulo.ui.ComboBox;
+import consulo.ui.ListItemRender;
+import consulo.ui.ListItemRenders;
+import consulo.ui.RequiredUIThread;
 import consulo.ui.model.ListModel;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,10 +44,10 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
   }
 
   @Override
-  protected void getState(Map<String, String> map) {
+  protected void getState(Map<String, Serializable> map) {
     super.getState(map);
-    map.put("size", String.valueOf(myModel.getSize()));
-    map.put("index", String.valueOf(myIndex));
+    map.put("size", myModel.getSize());
+    map.put("index", myIndex);
   }
 
   @NotNull
@@ -84,9 +88,9 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
   }
 
   @Override
-  public void invokeListeners(String type, Map<String, String> variables) {
-    if("select".equals(type)) {
-      myIndex = Integer.parseInt(variables.get("index"));
+  public void invokeListeners(String type, Map<String, Serializable> variables) {
+    if ("select".equals(type)) {
+      myIndex = (Integer)variables.get("index");
 
       setValueImpl(myModel.get(myIndex));
     }

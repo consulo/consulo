@@ -19,6 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -33,7 +34,7 @@ public class WGwtLabeledLayoutImpl extends WGwtLayoutImpl<Object> implements Lab
   }
 
   @Override
-  protected void getState(Map<String, String> map) {
+  protected void getState(Map<String, Serializable> map) {
     super.getState(map);
     map.put("text", myText);
   }

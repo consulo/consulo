@@ -24,6 +24,7 @@ import consulo.web.gwtUI.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class WBaseGwtComponent implements Component {
     UIAccess.assertIsUIThread();
 
     if (myNotifyComponent != null) {
-      final HashMap<String, String> map = new HashMap<String, String>();
+      final HashMap<String, Serializable> map = new HashMap<String, Serializable>();
       getState(map);
       myNotifyComponent.setVariables(map);
     }
@@ -60,7 +61,7 @@ public class WBaseGwtComponent implements Component {
       myNotifyComponent = new UIComponent();
       myNotifyComponent.setId(getId());
 
-      final HashMap<String, String> map = new HashMap<String, String>();
+      final HashMap<String, Serializable> map = new HashMap<String, Serializable>();
 
       getState(map);
 
@@ -132,7 +133,7 @@ public class WBaseGwtComponent implements Component {
     component.setType(getClass().getName());
     component.setId(myId);
 
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, Serializable> map = new HashMap<String, Serializable>();
     getState(map);
     if (!map.isEmpty()) {
       component.setVariables(map);
@@ -150,12 +151,12 @@ public class WBaseGwtComponent implements Component {
 
   }
 
-  protected void getState(Map<String, String> map) {
+  protected void getState(Map<String, Serializable> map) {
     putIfNotDefault("visible", myVisible, true, map);
     putIfNotDefault("enabled", myEnabled, true, map);
   }
 
-  public void invokeListeners(String type, Map<String, String> variables) {
+  public void invokeListeners(String type, Map<String, Serializable> variables) {
 
   }
 
@@ -166,9 +167,15 @@ public class WBaseGwtComponent implements Component {
     }
   }
 
-  protected <T> void putIfNotDefault(String key, T value, T defaultValue, Map<String, String> map) {
+  protected <T> void putIfNotDefault(String key, T value, T defaultValue, Map<String, Serializable> map) {
     if (!Comparing.equal(value, defaultValue)) {
       map.put(key, String.valueOf(value));
+    }
+  }
+
+  protected void putIfNotDefault(String key, boolean value, boolean defaultValue, Map<String, Serializable> map) {
+    if (value != defaultValue) {
+      map.put(key, value);
     }
   }
 }

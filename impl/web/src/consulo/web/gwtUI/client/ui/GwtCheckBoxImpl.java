@@ -23,6 +23,7 @@ import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIClientEventType;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,10 +40,10 @@ public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWit
         proxy.send(UIClientEventType.invokeEvent, new WebSocketProxy.Consumer<UIClientEvent>() {
           @Override
           public void consume(UIClientEvent clientEvent) {
-            Map<String, String> vars = new HashMap<String, String>();
+            Map<String, Serializable> vars = new HashMap<String, Serializable>();
             vars.put("type", "select");
-            vars.put("componentId", String.valueOf(componentId));
-            vars.put("selected", String.valueOf(event.getValue()));
+            vars.put("componentId", componentId);
+            vars.put("selected", event.getValue());
 
             clientEvent.setVariables(vars);
           }
@@ -52,8 +53,8 @@ public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWit
   }
 
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
-    final String text = map.get("text");
+  public void updateState(@NotNull Map<String, Serializable> map) {
+    final String text = (String)map.get("text");
     if(text != null) {
       setText(text);
     }

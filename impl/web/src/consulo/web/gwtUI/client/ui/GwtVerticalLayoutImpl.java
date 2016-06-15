@@ -24,6 +24,7 @@ import consulo.web.gwtUI.client.util.GwtUIUtil2;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class GwtVerticalLayoutImpl extends Grid implements InternalGwtComponentW
   }
 
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
+  public void updateState(@NotNull Map<String, Serializable> map) {
   }
 
   @Override

@@ -19,6 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.DockLayout;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -62,7 +63,7 @@ public class WGwtDockLayoutImpl extends WGwtLayoutImpl<String> implements DockLa
   }
 
   @Override
-  protected void convertConstraint(Map<String, String> map, String constraint) {
+  protected void convertConstraint(Map<String, Serializable> map, String constraint) {
     map.put("side", constraint);
   }
 }

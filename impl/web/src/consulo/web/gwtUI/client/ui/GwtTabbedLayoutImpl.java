@@ -21,6 +21,7 @@ import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +31,8 @@ import java.util.Map;
  */
 public class GwtTabbedLayoutImpl extends TabPanel implements InternalGwtComponentWithChildren {
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
-    selectTab(Integer.parseInt(map.get("selected")));
+  public void updateState(@NotNull Map<String, Serializable> map) {
+    selectTab((Integer)map.get("selected"));
   }
 
   @Override

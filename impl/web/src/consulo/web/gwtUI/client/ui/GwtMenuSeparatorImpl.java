@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -27,7 +28,7 @@ import java.util.Map;
  */
 public class GwtMenuSeparatorImpl extends UIObject implements InternalGwtComponent {
   @Override
-  public void updateState(@NotNull Map<String, String> map) {
+  public void updateState(@NotNull Map<String, Serializable> map) {
 
   }
 

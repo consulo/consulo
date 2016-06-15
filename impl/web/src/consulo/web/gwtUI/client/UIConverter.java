@@ -19,6 +19,7 @@ import com.google.gwt.user.client.Window;
 import consulo.web.gwtUI.client.ui.*;
 import consulo.web.gwtUI.shared.UIComponent;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -160,14 +161,14 @@ public class UIConverter {
 
     ourCache.put(uiComponent.getId(), widget);
 
-    final Map<String, String> variables = uiComponent.getVariables();
+    final Map<String, Serializable> variables = uiComponent.getVariables();
 
     if (widget instanceof InternalGwtComponentWithChildren) {
       final List<UIComponent.Child> children = uiComponent.getChildren();
       ((InternalGwtComponentWithChildren)widget).addChildren(proxy, children == null ? Collections.<UIComponent.Child>emptyList() : children);
     }
 
-    final Map<String, String> map = variables == null ? Collections.<String, String>emptyMap() : variables;
+    final Map<String, Serializable> map = variables == null ? Collections.<String, Serializable>emptyMap() : variables;
     DefaultVariables.updateState(map, widget);
     widget.updateState(map);
     if (widget instanceof InternalGwtComponentWithListeners) {
