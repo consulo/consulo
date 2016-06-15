@@ -137,7 +137,9 @@ public class SomeTestUIBuilder {
     group.add(component).add(component1);
 
     tabbed.addTab("Hello", vertical);
-    tabbed.addTab("Hello2", Components.label("test 1"));
+
+    final LabeledLayout labeled = Layouts.labeled("Some Panel Label");
+    tabbed.addTab("Hello2", labeled.set(Components.label("test 1")));
 
     splitLayout.setFirstComponent(Components.label("tree"));
     splitLayout.setSecondComponent(tabbed);

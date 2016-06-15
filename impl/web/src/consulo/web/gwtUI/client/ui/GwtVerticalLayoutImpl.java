@@ -44,7 +44,6 @@ public class GwtVerticalLayoutImpl extends Grid implements InternalGwtComponentW
 
   @Override
   public void updateState(@NotNull Map<String, String> map) {
-    DefaultVariables.updateState(map, this);
   }
 
   @Override

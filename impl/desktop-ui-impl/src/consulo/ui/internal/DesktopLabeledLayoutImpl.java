@@ -13,36 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.client.ui;
+package consulo.ui.internal;
 
-import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.Widget;
+import com.intellij.ui.IdeBorderFactory2;
+import consulo.ui.Component;
+import consulo.ui.LabeledLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 15-Jun-16
  */
-public class GwtMenuSeparatorImpl extends UIObject implements InternalGwtComponent {
-  @Override
-  public void updateState(@NotNull Map<String, String> map) {
+public class DesktopLabeledLayoutImpl extends JPanel implements LabeledLayout {
+  public DesktopLabeledLayoutImpl(String text) {
+    super(new BorderLayout());
 
+    setBorder(IdeBorderFactory2.createTitledBorder(text));
+  }
+
+  @NotNull
+  @Override
+  public LabeledLayout set(@NotNull Component component) {
+    add((java.awt.Component)component, BorderLayout.CENTER);
+    return this;
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
   }
 
   @Override
-  public void setVisible(boolean visible) {
-    // can't change
-  }
+  public void dispose() {
 
-  @Override
-  public boolean isVisible() {
-    return true;
-  }
-
-  @Override
-  public Widget asWidget() {
-    return null;
   }
 }

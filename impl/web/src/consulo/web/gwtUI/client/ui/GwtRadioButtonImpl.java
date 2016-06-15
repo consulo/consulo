@@ -63,7 +63,5 @@ public class GwtRadioButtonImpl extends RadioButton implements InternalGwtCompon
     }
 
     setValue(DefaultVariables.parseBoolAsTrue(map, "selected"));
-
-    DefaultVariables.updateState(map, this);
   }
 }

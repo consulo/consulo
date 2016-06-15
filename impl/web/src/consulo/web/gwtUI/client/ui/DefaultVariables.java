@@ -15,8 +15,9 @@
  */
 package consulo.web.gwtUI.client.ui;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.UIObject;
 
 import java.util.Map;
 
@@ -26,7 +27,17 @@ import java.util.Map;
  */
 public class DefaultVariables {
   public static void updateState(Map<String, String> map, InternalGwtComponent component) {
-    final Widget widget = component.asWidget();
+    UIObject widget = component.asWidget();
+    if(widget == null) {
+      if(component instanceof UIObject) {
+        widget = (UIObject)component;
+      }
+    }
+
+    if(widget == null) {
+      Window.alert("UIObject is null: " + component.getClass().getName());
+      return;
+    }
 
     if (widget instanceof HasEnabled) {
       ((HasEnabled)widget).setEnabled(parseBoolAsTrue(map, "enabled"));

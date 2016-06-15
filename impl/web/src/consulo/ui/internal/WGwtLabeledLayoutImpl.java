@@ -13,36 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.client.ui;
+package consulo.ui.internal;
 
-import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.Widget;
+import consulo.ui.Component;
+import consulo.ui.LabeledLayout;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 15-Jun-16
  */
-public class GwtMenuSeparatorImpl extends UIObject implements InternalGwtComponent {
-  @Override
-  public void updateState(@NotNull Map<String, String> map) {
+public class WGwtLabeledLayoutImpl extends WGwtLayoutImpl<Object> implements LabeledLayout {
+  private String myText;
 
+  public WGwtLabeledLayoutImpl(String text) {
+    myText = text;
   }
 
   @Override
-  public void setVisible(boolean visible) {
-    // can't change
+  protected void getState(Map<String, String> map) {
+    super.getState(map);
+    map.put("text", myText);
   }
 
+  @NotNull
   @Override
-  public boolean isVisible() {
-    return true;
-  }
-
-  @Override
-  public Widget asWidget() {
-    return null;
+  public LabeledLayout set(@NotNull Component component) {
+    addChild((WBaseGwtComponent)component, new Object());
+    return this;
   }
 }

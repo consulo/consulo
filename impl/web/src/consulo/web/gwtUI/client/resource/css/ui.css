@@ -1,3 +1,15 @@
+.gwtLabeledLayout {
+  border: 0px;
+  border-top: 1px solid gray;
+  padding: 0px;
+  margin: 0px;
+  margin-top: -1px;
+}
+
+.gwtLabeledLayout legend {
+  padding-right: 6px;
+}
+
 .gwtLayeredImage {
   position: relative;
 }

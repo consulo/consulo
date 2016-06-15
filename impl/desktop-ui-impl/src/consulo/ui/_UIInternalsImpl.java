@@ -32,22 +32,22 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  protected ImageRef _Images_imageRef(URL url) {
+  ImageRef _Images_imageRef(URL url) {
     return new DesktopImageRefImpl(url);
   }
 
   @Override
-  protected MenuItem _MenuItems_item(String text) {
+  MenuItem _MenuItems_item(String text) {
     return new DesktopMenuItemImpl(text);
   }
 
   @Override
-  protected Menu _MenuItems_menu(String text) {
+  Menu _MenuItems_menu(String text) {
     return new DesktopMenuImpl(text);
   }
 
   @Override
-  protected MenuBar _MenuItems_menuBar() {
+  MenuBar _MenuItems_menuBar() {
     return new DesktopMenuBarImpl();
   }
 
@@ -62,70 +62,75 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  protected VerticalLayout _Layouts_vertical() {
+  VerticalLayout _Layouts_vertical() {
     return new DesktopVerticalLayoutImpl();
   }
 
   @Override
-  protected SplitLayout _Layouts_horizontalSplit() {
+  SplitLayout _Layouts_horizontalSplit() {
     return new DesktopSplitLayoutImpl();
   }
 
   @Override
-  protected SplitLayout _Layouts_verticalSplit() {
+  SplitLayout _Layouts_verticalSplit() {
     DesktopSplitLayoutImpl impl = new DesktopSplitLayoutImpl();
     impl.setOrientation(true);
     return impl;
   }
 
   @Override
-  protected TabbedLayout _Layouts_tabbed() {
+  TabbedLayout _Layouts_tabbed() {
     return new DesktopTabbedLayoutImpl();
   }
 
   @Override
-  protected TableLayout _Layouts_table(int rows, int columns) {
+  LabeledLayout _Layouts_labeled(String label) {
+    return new DesktopLabeledLayoutImpl(label);
+  }
+
+  @Override
+  TableLayout _Layouts_table(int rows, int columns) {
     return null;
   }
 
   @Override
-  protected Label _Components_label(String text) {
+  Label _Components_label(String text) {
     return new DesktopLabelImpl(text);
   }
 
   @Override
-  protected HtmlLabel _Components_htmlLabel(String html) {
+  HtmlLabel _Components_htmlLabel(String html) {
     return new DesktopHtmlLabelImpl(html);
   }
 
   @Override
-  protected <E> ComboBox<E> _Components_comboBox(consulo.ui.model.ListModel<E> model) {
+  <E> ComboBox<E> _Components_comboBox(consulo.ui.model.ListModel<E> model) {
     return new DesktopComboBoxImpl<E>(model);
   }
 
   @Override
-  protected RadioButton _Components_radioButton(String text, boolean selected) {
+  RadioButton _Components_radioButton(String text, boolean selected) {
     return new DesktopRadioButtonImpl(text, selected);
   }
 
   @Override
-  protected HorizontalLayout _Layouts_horizontal() {
+  HorizontalLayout _Layouts_horizontal() {
     return new DesktopHorizontalLayoutImpl();
   }
 
   @Override
-  protected Image _Components_image(ImageRef imageRef) {
+  Image _Components_image(ImageRef imageRef) {
     return null;
   }
 
   @NotNull
   @Override
-  protected UIAccess _UIAccess_get() {
+  UIAccess _UIAccess_get() {
     return DesktopUIAccessImpl.ourInstance;
   }
 
   @Override
-  protected boolean _UIAccess_isUIThread() {
+  boolean _UIAccess_isUIThread() {
     return SwingUtilities.isEventDispatchThread();
   }
 }

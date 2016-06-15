@@ -56,4 +56,9 @@ public class Layouts {
   public static TableLayout table(int rows, int columns) {
     return _UIInternals.impl()._Layouts_table(rows, columns);
   }
+
+  @NotNull
+  public static LabeledLayout labeled(@NotNull String label) {
+    return _UIInternals.impl()._Layouts_labeled(label);
+  }
 }

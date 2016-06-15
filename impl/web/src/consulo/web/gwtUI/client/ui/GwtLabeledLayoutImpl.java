@@ -15,7 +15,8 @@
  */
 package consulo.web.gwtUI.client.ui;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.CaptionPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import consulo.web.gwtUI.client.UIConverter;
 import consulo.web.gwtUI.client.WebSocketProxy;
 import consulo.web.gwtUI.shared.UIComponent;
@@ -26,21 +27,27 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 15-Jun-16
  */
-public class GwtHorizontalLayoutImpl extends HorizontalPanel implements InternalGwtComponentWithChildren {
-  public GwtHorizontalLayoutImpl() {
-    setHorizontalAlignment(ALIGN_CENTER);
-  }
+public class GwtLabeledLayoutImpl extends CaptionPanel implements InternalGwtComponentWithChildren {
+  public GwtLabeledLayoutImpl() {
+    final SimplePanel widget = (SimplePanel)getWidget();
 
-  @Override
-  public void updateState(@NotNull Map<String, String> map) {
+    widget.addStyleName("gwtLabeledLayout");
   }
 
   @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-    for (UIComponent.Child child : children) {
-      add(UIConverter.create(proxy, child.getComponent()));
+    if(!children.isEmpty()) {
+      final UIComponent.Child child = children.get(0);
+
+      final InternalGwtComponent childComponent = UIConverter.create(proxy, child.getComponent());
+      add(childComponent);
     }
+  }
+
+  @Override
+  public void updateState(@NotNull Map<String, String> map) {
+    setCaptionText(map.get("text"));
   }
 }

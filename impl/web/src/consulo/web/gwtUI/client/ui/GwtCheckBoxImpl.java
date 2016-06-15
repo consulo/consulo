@@ -59,7 +59,5 @@ public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWit
     }
 
     setValue(DefaultVariables.parseBoolAsTrue(map, "selected"));
-
-    DefaultVariables.updateState(map, this);
   }
 }

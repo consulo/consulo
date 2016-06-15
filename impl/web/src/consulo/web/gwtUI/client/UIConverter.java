@@ -16,10 +16,8 @@
 package consulo.web.gwtUI.client;
 
 import com.google.gwt.user.client.Window;
-import consulo.ui.internal.WGwtMenuSeparatorImpl;
 import consulo.web.gwtUI.client.ui.*;
 import consulo.web.gwtUI.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +30,6 @@ import java.util.Map;
  */
 public class UIConverter {
   interface Factory {
-    @NotNull
     InternalGwtComponent create();
   }
 
@@ -40,122 +37,111 @@ public class UIConverter {
 
   static {
     ourMap.put("consulo.ui.internal.WGwtCheckBoxImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtCheckBoxImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtRadioButtonImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtRadioButtonImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtDockLayoutImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtDockLayoutImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtVerticalLayoutImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtVerticalLayoutImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtComboBoxImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtComboBoxImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtHorizontalLayoutImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtHorizontalLayoutImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtLabelImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtLabelImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtHtmlLabelImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtHtmlLabelImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtImageImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtImageImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtLayeredImageImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtLayeredImageImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtHorizontalSplitLayoutImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtHorizontalSplitLayoutImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtTabbedLayoutImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtTabbedLayoutImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtWindowImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtWindowImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtMenuBarImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtMenuBarImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtMenuImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtMenuImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtMenuItemImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtMenuItemImpl();
       }
     });
     ourMap.put("consulo.ui.internal.WGwtMenuSeparatorImpl", new Factory() {
-      @NotNull
       @Override
       public InternalGwtComponent create() {
         return new GwtMenuSeparatorImpl();
+      }
+    });
+    ourMap.put("consulo.ui.internal.WGwtLabeledLayoutImpl", new Factory() {
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtLabeledLayoutImpl();
       }
     });
   }
@@ -181,7 +167,9 @@ public class UIConverter {
       ((InternalGwtComponentWithChildren)widget).addChildren(proxy, children == null ? Collections.<UIComponent.Child>emptyList() : children);
     }
 
-    widget.updateState(variables == null ? Collections.<String, String>emptyMap() : variables);
+    final Map<String, String> map = variables == null ? Collections.<String, String>emptyMap() : variables;
+    DefaultVariables.updateState(map, widget);
+    widget.updateState(map);
     if (widget instanceof InternalGwtComponentWithListeners) {
       ((InternalGwtComponentWithListeners)widget).setupListeners(proxy, uiComponent.getId());
     }

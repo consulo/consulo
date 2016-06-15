@@ -31,7 +31,6 @@ import java.util.Map;
 public class GwtTabbedLayoutImpl extends TabPanel implements InternalGwtComponentWithChildren {
   @Override
   public void updateState(@NotNull Map<String, String> map) {
-    DefaultVariables.updateState(map, this);
     selectTab(Integer.parseInt(map.get("selected")));
   }
 

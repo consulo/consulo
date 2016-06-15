@@ -33,98 +33,103 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  public CheckBox _Components_checkBox(@NotNull String text, boolean selected) {
+  CheckBox _Components_checkBox(@NotNull String text, boolean selected) {
     return new WGwtCheckBoxImpl(selected, text);
   }
 
   @Override
-  public DockLayout _Layouts_dock() {
+  DockLayout _Layouts_dock() {
     return new WGwtDockLayoutImpl();
   }
 
   @Override
-  protected VerticalLayout _Layouts_vertical() {
+  VerticalLayout _Layouts_vertical() {
     return new WGwtVerticalLayoutImpl();
   }
 
   @Override
-  protected SplitLayout _Layouts_horizontalSplit() {
+  SplitLayout _Layouts_horizontalSplit() {
     return new WGwtHorizontalSplitLayoutImpl();
   }
 
   @Override
-  protected SplitLayout _Layouts_verticalSplit() {
+  SplitLayout _Layouts_verticalSplit() {
     return new WGwtVerticalSplitLayoutImpl();
   }
 
   @Override
-  protected TabbedLayout _Layouts_tabbed() {
+  TabbedLayout _Layouts_tabbed() {
     return new WGwtTabbedLayoutImpl();
   }
 
   @Override
-  protected TableLayout _Layouts_table(int rows, int columns) {
+  LabeledLayout _Layouts_labeled(String label) {
+    return new WGwtLabeledLayoutImpl(label);
+  }
+
+  @Override
+  TableLayout _Layouts_table(int rows, int columns) {
     return null;
   }
 
   @Override
-  protected Label _Components_label(String text) {
+  Label _Components_label(String text) {
     return new WGwtLabelImpl(text);
   }
 
   @Override
-  protected HtmlLabel _Components_htmlLabel(String html) {
+  HtmlLabel _Components_htmlLabel(String html) {
     return new WGwtHtmlLabelImpl(html);
   }
 
   @Override
-  protected <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+  <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
     return new WGwtComboBoxImpl<E>(model);
   }
 
   @Override
-  protected RadioButton _Components_radioButton(String text, boolean selected) {
+  RadioButton _Components_radioButton(String text, boolean selected) {
     return new WGwtRadioButtonImpl(selected, text);
   }
 
   @Override
-  protected HorizontalLayout _Layouts_horizontal() {
+  HorizontalLayout _Layouts_horizontal() {
     return new WGwtHorizontalLayoutImpl();
   }
 
   @Override
-  protected Image _Components_image(ImageRef imageRef) {
+  Image _Components_image(ImageRef imageRef) {
     return new WGwtImageImpl((WGwtImageRefImpl)imageRef);
   }
 
   @Override
-  protected ImageRef _Images_imageRef(URL url) {
+  ImageRef _Images_imageRef(URL url) {
     return new WGwtImageRefImpl(url);
   }
 
   @Override
-  protected MenuItem _MenuItems_item(String text) {
+  MenuItem _MenuItems_item(String text) {
     return new WGwtMenuItemImpl(text);
   }
 
   @Override
-  protected Menu _MenuItems_menu(String text) {
+  Menu _MenuItems_menu(String text) {
     return new WGwtMenuImpl(text);
   }
 
   @Override
-  protected MenuBar _MenuItems_menuBar() {
+  MenuBar _MenuItems_menuBar() {
     return new WGwtMenuBarImpl();
   }
 
   @NotNull
   @Override
-  protected UIAccess _UIAccess_get() {
+  UIAccess _UIAccess_get() {
     return UIAccessHelper.ourInstance.get();
   }
 
   @Override
-  protected boolean _UIAccess_isUIThread() {
+  boolean _UIAccess_isUIThread() {
     return UIAccessHelper.ourInstance.isUIThread();
   }
 }

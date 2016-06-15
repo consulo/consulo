@@ -25,7 +25,7 @@ import java.net.URL;
  * @since 09-Jun-16
  */
 abstract class _UIInternals {
-  public static _UIInternals impl() {
+  static _UIInternals impl() {
     return Holder.ourInstance;
   }
 
@@ -46,43 +46,45 @@ abstract class _UIInternals {
     }
   }
 
-  protected abstract CheckBox _Components_checkBox(@NotNull String text, boolean selected);
+  abstract CheckBox _Components_checkBox(@NotNull String text, boolean selected);
 
-  protected abstract DockLayout _Layouts_dock();
+  abstract DockLayout _Layouts_dock();
 
-  protected abstract VerticalLayout _Layouts_vertical();
+  abstract VerticalLayout _Layouts_vertical();
 
-  protected abstract SplitLayout _Layouts_horizontalSplit();
+  abstract SplitLayout _Layouts_horizontalSplit();
 
-  protected abstract SplitLayout _Layouts_verticalSplit();
+  abstract SplitLayout _Layouts_verticalSplit();
 
-  protected abstract TabbedLayout _Layouts_tabbed();
+  abstract TabbedLayout _Layouts_tabbed();
 
-  protected abstract TableLayout _Layouts_table(int rows, int columns);
+  abstract LabeledLayout _Layouts_labeled(String label);
 
-  protected abstract HorizontalLayout _Layouts_horizontal();
+  abstract TableLayout _Layouts_table(int rows, int columns);
 
-  protected abstract Label _Components_label(String text);
+  abstract HorizontalLayout _Layouts_horizontal();
 
-  protected abstract HtmlLabel _Components_htmlLabel(String html);
+  abstract Label _Components_label(String text);
 
-  protected abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
+  abstract HtmlLabel _Components_htmlLabel(String html);
 
-  protected abstract RadioButton _Components_radioButton(String text, boolean selected);
+  abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
-  protected abstract Image _Components_image(ImageRef imageRef);
+  abstract RadioButton _Components_radioButton(String text, boolean selected);
 
-  protected abstract ImageRef _Images_imageRef(URL url);
+  abstract Image _Components_image(ImageRef imageRef);
 
-  protected abstract MenuItem _MenuItems_item(String text);
+  abstract ImageRef _Images_imageRef(URL url);
 
-  protected abstract Menu _MenuItems_menu(String text);
+  abstract MenuItem _MenuItems_item(String text);
 
-  protected abstract MenuBar _MenuItems_menuBar();
+  abstract Menu _MenuItems_menu(String text);
+
+  abstract MenuBar _MenuItems_menuBar();
 
   @RequiredUIThread
   @NotNull
-  protected abstract UIAccess _UIAccess_get();
+  abstract UIAccess _UIAccess_get();
 
-  protected abstract boolean _UIAccess_isUIThread();
+  abstract boolean _UIAccess_isUIThread();
 }

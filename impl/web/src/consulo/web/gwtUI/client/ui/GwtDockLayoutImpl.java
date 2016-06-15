@@ -39,7 +39,6 @@ public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponent
 
   @Override
   public void updateState(@NotNull Map<String, String> map) {
-    DefaultVariables.updateState(map, this);
   }
 
   @Override
