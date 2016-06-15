@@ -18,11 +18,14 @@ package com.intellij.idea;
 import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
+import com.intellij.ui.Splash;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -46,7 +49,20 @@ public class CommandLineApplication {
     LOG.assertTrue(ourInstance == null, "Only one instance allowed.");
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     ourInstance = this;
-    ApplicationManagerEx.createApplication(isInternal, isUnitTestMode, isHeadless, true, appName, null);
+    createApplication(isInternal, isUnitTestMode, isHeadless, true, appName, null);
+  }
+
+
+  /**
+   * @param appName used to load default configs; if you are not sure, use {@link #IDEA_APPLICATION}.
+   */
+  public static void createApplication(boolean internal,
+                                       boolean isUnitTestMode,
+                                       boolean isHeadlessMode,
+                                       boolean isCommandline,
+                                       @NotNull @NonNls String appName,
+                                       @Nullable Splash splash) {
+    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, appName, splash);
   }
 
   public Object getData(String dataId) {

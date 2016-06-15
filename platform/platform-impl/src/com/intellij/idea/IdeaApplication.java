@@ -26,7 +26,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.X11UiUtil;
-import com.intellij.ui.Splash;
 import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,9 +68,7 @@ public class IdeaApplication {
 
     myStarter = createStarter(isUnitTest, asWebApp);
 
-    Splash splash = myStarter.createSplash(myArgs);
-
-    ApplicationManagerEx.createApplication(isInternal, isUnitTest, headless, isUnitTest, ApplicationManagerEx.IDEA_APPLICATION, splash);
+    myStarter.createApplication(isInternal, isUnitTest, headless, isUnitTest, args);
 
     myStarter.premain(args);
   }

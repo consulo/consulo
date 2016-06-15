@@ -60,7 +60,7 @@ public class DefaultApplicationStarter extends ApplicationStarter {
 
   @Override
   @Nullable
-  public Splash createSplash(@NotNull String[] args) {
+  protected Splash createSplash(@NotNull String[] args) {
     if (StartupUtil.shouldShowSplash(args)) {
       final ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
       final SplashScreen splashScreen = getSplashScreen();
