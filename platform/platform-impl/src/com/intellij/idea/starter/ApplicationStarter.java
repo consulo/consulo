@@ -16,26 +16,13 @@
 package com.intellij.idea.starter;
 
 import com.intellij.openapi.application.impl.ApplicationImpl;
-import com.intellij.ui.Splash;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class ApplicationStarter {
   public static final String IDEA_APPLICATION = "idea";
 
-  @Nullable
-  protected Splash createSplash(@NotNull String[] args) {
-    return null;
-  }
 
-  public void createApplication(boolean internal,
-                                       boolean isUnitTestMode,
-                                       boolean isHeadlessMode,
-                                       boolean isCommandline,
-                                       String[] args) {
-    Splash splash = createSplash(args);
-
-    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, IDEA_APPLICATION, splash);
+  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, String[] args) {
+    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, IDEA_APPLICATION, null);
   }
 
   public void premain(String[] args) {

@@ -29,6 +29,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -41,7 +42,6 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.Splash;
 import com.intellij.util.SandboxUtil;
 import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -59,18 +59,17 @@ public class DefaultApplicationStarter extends ApplicationStarter {
   }
 
   @Override
-  @Nullable
-  protected Splash createSplash(@NotNull String[] args) {
+  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, String[] args) {
     if (StartupUtil.shouldShowSplash(args)) {
       final ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
         mySplash = new Splash(appInfo);
         mySplash.show();
-        return mySplash;
       }
     }
-    return null;
+
+    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, IDEA_APPLICATION, mySplash);
   }
 
   @Nullable
