@@ -15,15 +15,12 @@
  */
 package consulo.ui.internal;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartList;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIThread;
 import consulo.ui.UIAccess;
 import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIEventFactory;
-import consulo.web.servlet.ui.UISessionManager;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,8 +57,7 @@ public class WBaseGwtComponent implements Component {
       myNotifyComponent.setVariables(map);
     }
     else {
-      final AutoBean<UIComponent> bean = UISessionManager.ourEventFactory.component();
-      myNotifyComponent = bean.as();
+      myNotifyComponent = new UIComponent();
       myNotifyComponent.setId(getId());
 
       final HashMap<String, String> map = new HashMap<String, String>();
@@ -131,10 +127,8 @@ public class WBaseGwtComponent implements Component {
     markAsChanged();
   }
 
-  public UIComponent convert(UIEventFactory factory) {
-    AutoBean<UIComponent> bean = factory.component();
-
-    UIComponent component = bean.as();
+  public UIComponent convert() {
+    UIComponent component = new UIComponent();
     component.setType(getClass().getName());
     component.setId(myId);
 
@@ -145,14 +139,14 @@ public class WBaseGwtComponent implements Component {
     }
 
     List<UIComponent.Child> children = new SmartList<UIComponent.Child>();
-    initChildren(factory, children);
+    initChildren(children);
     if (!children.isEmpty()) {
       component.setChildren(children);
     }
     return component;
   }
 
-  protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
+  protected void initChildren(List<UIComponent.Child> children) {
 
   }
 

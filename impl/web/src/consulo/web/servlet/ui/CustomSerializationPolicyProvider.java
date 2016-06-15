@@ -13,29 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.shared;
+package consulo.web.servlet.ui;
+
+import com.google.gwt.user.server.rpc.SerializationPolicy;
+import com.google.gwt.user.server.rpc.SerializationPolicyProvider;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 15-Jun-16
  */
-public class UIClientEvent extends UIVariablesOwner{
-  private UIClientEventType myType;
-  private String mySessionId;
-
-  public void setType(UIClientEventType type) {
-    myType = type;
-  }
-
-  public UIClientEventType getType() {
-    return myType;
-  }
-
-  public void setSessionId(String id) {
-    mySessionId = id;
-  }
-
-  public String getSessionId() {
-    return mySessionId;
+public class CustomSerializationPolicyProvider implements SerializationPolicyProvider {
+  @Override
+  public SerializationPolicy getSerializationPolicy(String moduleBaseURL, String serializationPolicyStrongName) {
+    return new SimpleSerializationPolicy();
   }
 }

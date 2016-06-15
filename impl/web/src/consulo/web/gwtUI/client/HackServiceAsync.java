@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.shared;
+package consulo.web.gwtUI.client;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import consulo.web.gwtUI.shared.UIClientEvent;
+import consulo.web.gwtUI.shared.UIServerEvent;
 
-/**
- * @author VISTALL
- * @since 11-Jun-16
- */
-public class AutoBeanJsonUtil {
-  public static <T> String toJson(AutoBean<T> o) {
-    return AutoBeanCodex.encode(o).getPayload();
-  }
+public interface HackServiceAsync {
+  void clientEvent(UIClientEvent event, AsyncCallback<UIClientEvent> async);
+
+  void serverEvent(UIServerEvent event, AsyncCallback<UIServerEvent> async);
 }

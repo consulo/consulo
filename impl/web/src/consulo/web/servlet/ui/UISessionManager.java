@@ -15,8 +15,8 @@
  */
 package consulo.web.servlet.ui;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamWriter;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ConcurrentHashMap;
 import consulo.ui.RequiredUIThread;
@@ -24,7 +24,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.internal.WBaseGwtComponent;
 import consulo.ui.internal.WGwtWindowImpl;
-import consulo.web.gwtUI.shared.*;
+import consulo.web.gwtUI.shared.UIClientEvent;
+import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwtUI.shared.UIServerEvent;
+import consulo.web.gwtUI.shared.UIServerEventType;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TObjectProcedure;
 import org.jetbrains.annotations.NotNull;
@@ -77,12 +80,11 @@ public class UISessionManager {
     /**
      * Must be called inside write executor
      */
-    public void send(AutoBean<UIServerEvent> bean) {
+    public void send(UIServerEvent bean) {
       UIAccess.assertIsUIThread();
 
-      final String json = AutoBeanJsonUtil.toJson(bean);
       try {
-        mySession.getBasicRemote().sendText(json);
+        mySession.getBasicRemote().sendText(encode(bean));
       }
       catch (IOException e) {
         e.printStackTrace();
@@ -99,18 +101,16 @@ public class UISessionManager {
       window.visitChanges(components);
 
       if (!components.isEmpty()) {
-        AutoBean<UIServerEvent> bean = ourEventFactory.serverEvent();
-        UIServerEvent serverEvent = bean.as();
+        UIServerEvent serverEvent = new UIServerEvent();
         serverEvent.setSessionId(myCookieId);
         serverEvent.setType(UIServerEventType.stateChanged);
         serverEvent.setComponents(components);
 
-        send(bean);
+        send(serverEvent);
       }
     }
   }
 
-  public static UIEventFactory ourEventFactory = AutoBeanFactorySource.create(UIEventFactory.class);
   public static final UISessionManager ourInstance = new UISessionManager();
 
   private Map<String, UIContext> myUIs = new ConcurrentHashMap<String, UIContext>();
@@ -146,16 +146,15 @@ public class UISessionManager {
 
         context.setWindow(window);
 
-        AutoBean<UIServerEvent> bean = ourEventFactory.serverEvent();
-        UIServerEvent serverEvent = bean.as();
+        UIServerEvent serverEvent = new UIServerEvent();
         serverEvent.setSessionId(clientEvent.getSessionId());
         serverEvent.setType(UIServerEventType.createRoot);
-        serverEvent.setComponents(Arrays.asList(window.convert(ourEventFactory)));
+        serverEvent.setComponents(Arrays.asList(window.convert()));
 
         // we don't interest in first states - because they will send anyway to client
         window.visitChanges(new ArrayList<UIComponent>());
 
-        context.send(bean);
+        context.send(serverEvent);
       }
     });
   }
@@ -201,5 +200,18 @@ public class UISessionManager {
         }
       }
     });
+  }
+
+  private static String encode(final UIServerEvent messageDto)  {
+    try {
+      final ServerSerializationStreamWriter serverSerializationStreamWriter = new ServerSerializationStreamWriter(new SimpleSerializationPolicy());
+
+      serverSerializationStreamWriter.writeObject(messageDto);
+      return serverSerializationStreamWriter.toString();
+    }
+    catch (SerializationException e) {
+      e.printStackTrace();
+      throw new Error(e);
+    }
   }
 }

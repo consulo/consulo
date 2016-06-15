@@ -18,7 +18,6 @@ package consulo.ui.internal;
 import consulo.ui.*;
 import consulo.ui.model.ListModel;
 import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,26 +58,26 @@ public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E
   }
 
   @Override
-  protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
+  protected void initChildren(List<UIComponent.Child> children) {
     // need render null value
-    renderItem(factory, children, -1, null);
+    renderItem(children, -1, null);
 
     for (int i = 0; i < myModel.getSize(); i++) {
       E value = myModel.get(i);
 
-      renderItem(factory, children, i, value);
+      renderItem(children, i, value);
     }
   }
 
-  private void renderItem(UIEventFactory factory, List<UIComponent.Child> children, int i, @Nullable E e) {
+  private void renderItem(List<UIComponent.Child> children, int i, @Nullable E e) {
     WGwtListItemPresentationImpl render;
     render = new WGwtListItemPresentationImpl();
     myRender.render(render, i, e);
 
-    final UIComponent component = render.getLayout().convert(factory);
+    final UIComponent component = render.getLayout().convert();
     component.setId(-1);
 
-    final UIComponent.Child child = factory.componentChild().as();
+    final UIComponent.Child child = new UIComponent.Child();
     child.setComponent(component);
 
     children.add(child);

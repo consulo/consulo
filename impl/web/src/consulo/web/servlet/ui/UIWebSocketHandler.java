@@ -15,8 +15,8 @@
  */
 package consulo.web.servlet.ui;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamReader;
 import consulo.web.gwtUI.shared.UIClientEvent;
 
 import javax.websocket.*;
@@ -36,9 +36,8 @@ public class UIWebSocketHandler {
 
   @OnMessage
   public void onMessage(String message, Session session) {
-    AutoBean<UIClientEvent> bean = AutoBeanCodex.decode(UISessionManager.ourEventFactory, UIClientEvent.class, message);
+    UIClientEvent clientEvent = decode(message);
 
-    UIClientEvent clientEvent = bean.as();
     switch (clientEvent.getType()) {
       case sessionOpen:
         UISessionManager.ourInstance.onSessionOpen(session, clientEvent);
@@ -46,6 +45,19 @@ public class UIWebSocketHandler {
       case invokeEvent:
         UISessionManager.ourInstance.onInvokeEvent(session, clientEvent);
         break;
+    }
+  }
+
+  private static UIClientEvent decode(String data) {
+    final ServerSerializationStreamReader streamReader =
+            new ServerSerializationStreamReader(Thread.currentThread().getContextClassLoader(), new CustomSerializationPolicyProvider());
+    try {
+      streamReader.prepareToRead(data);
+      return (UIClientEvent)streamReader.readObject();
+    }
+    catch (SerializationException e) {
+      e.printStackTrace();
+      throw new Error(e);
     }
   }
 

@@ -15,28 +15,51 @@
  */
 package consulo.web.gwtUI.shared;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface UIComponent extends UIVariablesOwner {
-  interface Child extends UIVariablesOwner {
-    UIComponent getComponent();
+public class UIComponent extends UIVariablesOwner {
+  public static class Child extends UIVariablesOwner {
+    private UIComponent myComponent;
 
-    void setComponent(UIComponent component);
+    public UIComponent getComponent() {
+      return myComponent;
+    }
+
+    public void setComponent(UIComponent component) {
+      myComponent = component;
+    }
   }
 
-  long getId();
+  private long myId;
+  private String myType;
+  private ArrayList<Child> myChildren;
 
-  void setId(long id);
+  public long getId() {
+    return myId;
+  }
 
-  String getType();
+  public void setId(long id) {
+    myId = id;
+  }
 
-  void setType(String type);
+  public String getType() {
+    return myType;
+  }
 
-  List<Child> getChildren();
+  public void setType(String type) {
+    myType = type;
+  }
 
-  void setChildren(List<Child> children);
+  public List<Child> getChildren() {
+    return myChildren;
+  }
+
+  public void setChildren(List<Child> children) {
+    myChildren = new ArrayList<Child>(children);
+  }
 }

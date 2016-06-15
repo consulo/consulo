@@ -15,15 +15,23 @@
  */
 package consulo.web.gwtUI.shared;
 
+
+import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface UIVariablesOwner {
+public class UIVariablesOwner implements Serializable {
+  private LinkedHashMap<String, String> myVariables;
 
-  Map<String, String> getVariables();
+  public Map<String, String> getVariables() {
+    return myVariables;
+  }
 
-  void setVariables(Map<String, String> map);
+  public void setVariables(Map<String, String> map) {
+    myVariables = new LinkedHashMap<String, String>(map);
+  }
 }

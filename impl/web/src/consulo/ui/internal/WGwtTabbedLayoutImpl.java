@@ -20,7 +20,6 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
 import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIEventFactory;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,16 +58,16 @@ public class WGwtTabbedLayoutImpl extends WBaseGwtComponent implements TabbedLay
   }
 
   @Override
-  protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
+  protected void initChildren(List<UIComponent.Child> children) {
     for (Map.Entry<Tab, WBaseGwtComponent> entry : myTabs.entrySet()) {
       // send tab
-      UIComponent.Child child = factory.componentChild().as();
-      child.setComponent(((WGwtTabImpl)entry.getKey()).getLayout().convert(factory));
+      UIComponent.Child child = new UIComponent.Child();
+      child.setComponent(((WGwtTabImpl)entry.getKey()).getLayout().convert());
       children.add(child);
 
       // send tab content
-      child = factory.componentChild().as();
-      child.setComponent(entry.getValue().convert(factory));
+      child = new UIComponent.Child();
+      child.setComponent(entry.getValue().convert());
       children.add(child);
     }
   }

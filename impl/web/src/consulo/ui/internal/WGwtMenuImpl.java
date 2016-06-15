@@ -18,7 +18,6 @@ package consulo.ui.internal;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIEventFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -50,11 +49,11 @@ public class WGwtMenuImpl extends WGwtMenuItemImpl implements Menu {
   }
 
   @Override
-  protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
+  protected void initChildren(List<UIComponent.Child> children) {
     for (MenuItem menuItem : myMenuItems) {
-      final UIComponent.Child child = factory.componentChild().as();
+      final UIComponent.Child child = new UIComponent.Child();
 
-      final UIComponent uiComponent = ((WBaseGwtComponent)menuItem).convert(factory);
+      final UIComponent uiComponent = ((WBaseGwtComponent)menuItem).convert();
       child.setComponent(uiComponent);
 
       children.add(child);

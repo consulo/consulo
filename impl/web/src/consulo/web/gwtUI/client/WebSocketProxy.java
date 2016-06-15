@@ -15,10 +15,10 @@
  */
 package consulo.web.gwtUI.client;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.sksamuel.gwt.websockets.Websocket;
 import consulo.web.gwtUI.client.util.Log;
-import consulo.web.gwtUI.shared.AutoBeanJsonUtil;
 import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIClientEventType;
 
@@ -43,17 +43,25 @@ public class WebSocketProxy {
   }
 
   public void send(UIClientEventType eventType, Consumer<UIClientEvent> consumer) {
-    final AutoBean<UIClientEvent> bean = UIEntryPoint.ourEventFactory.clientEvent();
-    final UIClientEvent clientEvent = bean.as();
+    try {
+      final UIClientEvent clientEvent = new UIClientEvent();
 
-    clientEvent.setSessionId(mySessionId);
-    clientEvent.setType(eventType);
+      clientEvent.setSessionId(mySessionId);
+      clientEvent.setType(eventType);
 
-    consumer.consume(clientEvent);
+      consumer.consume(clientEvent);
 
-    final String json = AutoBeanJsonUtil.toJson(bean);
-    myWebsocket.send(json);
+      final SerializationStreamWriter writer = UIEntryPoint.factory.createStreamWriter();
+      writer.writeObject(clientEvent);
+      // Sending serialized object content
+      final String data = writer.toString();
 
-    Log.log("send: " + json);
+      Log.log("send: " + data);
+
+      myWebsocket.send(data);
+    }
+    catch (SerializationException e) {
+      e.printStackTrace();
+    }
   }
 }

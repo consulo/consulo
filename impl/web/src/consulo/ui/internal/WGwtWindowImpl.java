@@ -19,7 +19,6 @@ import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.Window;
 import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIEventFactory;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,17 +47,17 @@ public class WGwtWindowImpl extends WBaseGwtComponent implements Window {
   }
 
   @Override
-  protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
+  protected void initChildren(List<UIComponent.Child> children) {
     // add menu bar always
-    UIComponent.Child menuChild = factory.componentChild().as();
+    UIComponent.Child menuChild = new UIComponent.Child();
     if (myMenuBar != null) {
-      menuChild.setComponent(((WBaseGwtComponent)myMenuBar).convert(factory));
+      menuChild.setComponent(((WBaseGwtComponent)myMenuBar).convert());
     }
     children.add(menuChild);
 
-    UIComponent.Child contentChild = factory.componentChild().as();
+    UIComponent.Child contentChild = new UIComponent.Child();
     if (myContent != null) {
-      contentChild.setComponent(myContent.convert(factory));
+      contentChild.setComponent(myContent.convert());
     }
     children.add(contentChild);
   }

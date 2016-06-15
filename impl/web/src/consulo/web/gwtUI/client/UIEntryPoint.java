@@ -19,16 +19,20 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.client.rpc.SerializationStreamFactory;
+import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListener;
 import consulo.web.gwtUI.client.ui.InternalGwtComponent;
 import consulo.web.gwtUI.client.util.GwtUIUtil2;
 import consulo.web.gwtUI.client.util.Log;
-import consulo.web.gwtUI.shared.*;
+import consulo.web.gwtUI.shared.UIClientEvent;
+import consulo.web.gwtUI.shared.UIClientEventType;
+import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwtUI.shared.UIServerEvent;
 import org.gwt.advanced.client.util.ThemeHelper;
 
 import java.util.Collections;
@@ -40,7 +44,7 @@ import java.util.Map;
  * @since 11-Jun-16
  */
 public class UIEntryPoint implements EntryPoint {
-  public static final UIEventFactory ourEventFactory = GWT.create(UIEventFactory.class);
+  public static final SerializationStreamFactory factory = (SerializationStreamFactory)GWT.create(HackService.class);
 
   @Override
   public void onModuleLoad() {
@@ -69,9 +73,18 @@ public class UIEntryPoint implements EntryPoint {
       public void onMessage(String msg) {
         Log.log("receive: " + msg);
 
-        AutoBean<UIServerEvent> bean = AutoBeanCodex.decode(ourEventFactory, UIServerEvent.class, msg);
+        final UIServerEvent event;
+        try {
+          final SerializationStreamReader streamReader = factory.createStreamReader(msg);
+          event = (UIServerEvent)streamReader.readObject();
+        }
+        catch (SerializationException e) {
+          Window.alert(e.getMessage());
+          e.printStackTrace();
+          return;
+        }
 
-        final UIServerEvent event = bean.as();
+        Log.log("receive2: " + msg);
         final List<UIComponent> components = event.getComponents();
 
         switch (event.getType()) {

@@ -15,22 +15,40 @@
  */
 package consulo.web.gwtUI.shared;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface UIServerEvent {
-  void setType(UIServerEventType type);
+public class UIServerEvent implements Serializable {
+  private UIServerEventType myType;
+  private String myId;
+  private ArrayList<UIComponent> myComponents;
 
-  UIServerEventType getType();
+  public void setType(UIServerEventType type) {
+    myType = type;
+  }
 
-  void setSessionId(String id);
+  public UIServerEventType getType() {
+    return myType;
+  }
 
-  String getSessionId();
+  public void setSessionId(String id) {
+    myId = id;
+  }
 
-  List<UIComponent> getComponents();
+  public String getSessionId() {
+    return myId;
+  }
 
-  void setComponents(List<UIComponent> components);
+  public List<UIComponent> getComponents() {
+    return myComponents;
+  }
+
+  public void setComponents(List<UIComponent> components) {
+    myComponents = new ArrayList<UIComponent>(components);
+  }
 }

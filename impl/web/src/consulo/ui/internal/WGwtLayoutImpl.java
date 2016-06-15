@@ -19,7 +19,6 @@ import com.intellij.codeInspection.SmartHashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import consulo.ui.Component;
 import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIEventFactory;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,11 +42,11 @@ public class WGwtLayoutImpl<C> extends WBaseGwtComponent {
   }
 
   @Override
-  protected void initChildren(UIEventFactory factory, List<UIComponent.Child> children) {
+  protected void initChildren(List<UIComponent.Child> children) {
     for (Map.Entry<C, WBaseGwtComponent> entry : myComponents.entrySet()) {
-      final UIComponent.Child child = factory.componentChild().as();
+      final UIComponent.Child child = new UIComponent.Child();
 
-      final UIComponent uiComponent = entry.getValue().convert(factory);
+      final UIComponent uiComponent = entry.getValue().convert();
       child.setComponent(uiComponent);
 
       Map<String, String> vars = new SmartHashMap<String, String>();

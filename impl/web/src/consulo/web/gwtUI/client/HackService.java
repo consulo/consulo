@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.shared;
+package consulo.web.gwtUI.client;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import consulo.web.gwtUI.shared.UIClientEvent;
+import consulo.web.gwtUI.shared.UIServerEvent;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 15-Jun-16
+ *
+ * this is hack service - gwt will generate serialize reader/writer for types
  */
-public interface UIEventFactory extends AutoBeanFactory {
-  AutoBean<UIClientEvent> clientEvent();
+@RemoteServiceRelativePath("HackService")
+public interface HackService extends RemoteService {
+  UIClientEvent clientEvent(UIClientEvent event);
 
-  AutoBean<UIServerEvent> serverEvent();
-
-  AutoBean<UIComponent> component();
-
-  AutoBean<UIComponent.Child> componentChild();
+  UIServerEvent serverEvent(UIServerEvent event);
 }
