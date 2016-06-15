@@ -18,7 +18,7 @@ package com.intellij.idea;
 import com.intellij.Patches;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeRepaintManager;
-import com.intellij.idea.starter.ApplicationStarter;
+import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
@@ -34,13 +34,13 @@ import org.mustbe.consulo.application.ApplicationProperties;
 import javax.swing.*;
 import java.lang.reflect.Constructor;
 
-public class IdeaApplication {
-  private static final Logger LOG = Logger.getInstance(IdeaApplication.class);
+public class ApplicationStarter {
+  private static final Logger LOG = Logger.getInstance(ApplicationStarter.class);
 
-  private static IdeaApplication ourInstance;
+  private static ApplicationStarter ourInstance;
   public volatile static boolean ourLoaded;
 
-  public static IdeaApplication getInstance() {
+  public static ApplicationStarter getInstance() {
     return ourInstance;
   }
 
@@ -50,9 +50,9 @@ public class IdeaApplication {
 
   private final String[] myArgs;
   private boolean myPerformProjectLoad = true;
-  private ApplicationStarter myStarter;
+  private ApplicationPostStarter myPostStarter;
 
-  public IdeaApplication(String[] args) {
+  public ApplicationStarter(String[] args) {
     LOG.assertTrue(ourInstance == null);
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     ourInstance = this;
@@ -66,11 +66,9 @@ public class IdeaApplication {
 
     patchSystem(headless);
 
-    myStarter = createStarter(isUnitTest, asWebApp);
-
-    myStarter.createApplication(isInternal, isUnitTest, headless, isUnitTest, args);
-
-    myStarter.premain(args);
+    myPostStarter = createPostStarter(isUnitTest, asWebApp);
+    myPostStarter.createApplication(isInternal, isUnitTest, headless, isUnitTest, args);
+    myPostStarter.premain(args);
   }
 
   private static void patchSystem(boolean headless) {
@@ -98,13 +96,13 @@ public class IdeaApplication {
   }
 
   @NotNull
-  private ApplicationStarter createStarter(boolean isUnitTest, boolean asWebApp) {
+  private ApplicationPostStarter createPostStarter(boolean isUnitTest, boolean asWebApp) {
     Class<?> starterClass = ReflectionUtil.forName(getStarterClass(isUnitTest, asWebApp));
 
     try {
-      Constructor constructor = starterClass.getConstructor(IdeaApplication.class);
+      Constructor constructor = starterClass.getConstructor(ApplicationStarter.class);
       constructor.setAccessible(true);
-      return (ApplicationStarter)ReflectionUtil.createInstance(constructor, this);
+      return (ApplicationPostStarter)ReflectionUtil.createInstance(constructor, this);
     }
     catch (NoSuchMethodException e) {
       throw new Error(e);
@@ -114,10 +112,10 @@ public class IdeaApplication {
   @NotNull
   private static String getStarterClass(boolean isUnitTest, boolean asWebApp) {
     if (isUnitTest) {
-      return "com.intellij.idea.starter.UnitTestStarter";
+      return "com.intellij.idea.starter.UnitTestPostStarter";
     }
 
-    return asWebApp ? "consulo.web.main.WebStarter" : "com.intellij.idea.starter.DefaultApplicationStarter";
+    return asWebApp ? "consulo.web.main.WebPostStarter" : "com.intellij.idea.starter.DefaultApplicationPostStarter";
   }
 
   public void run() {
@@ -125,8 +123,8 @@ public class IdeaApplication {
       ApplicationEx app = ApplicationManagerEx.getApplicationEx();
       app.load(PathManager.getOptionsPath());
 
-      myStarter.main(myArgs);
-      myStarter = null; //GC it
+      myPostStarter.main(myArgs);
+      myPostStarter = null; //GC it
 
       ourLoaded = true;
     }

@@ -17,7 +17,7 @@ package com.intellij.idea.starter;
 
 import com.intellij.openapi.application.impl.ApplicationImpl;
 
-public abstract class ApplicationStarter {
+public abstract class ApplicationPostStarter {
   public static final String IDEA_APPLICATION = "idea";
 
 

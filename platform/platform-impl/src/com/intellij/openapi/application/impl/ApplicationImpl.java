@@ -20,7 +20,7 @@ import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
@@ -254,7 +254,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       };
     }
     if (isUnitTestMode) {
-      IdeaApplication.ourLoaded = true;
+      ApplicationStarter.ourLoaded = true;
     }
   }
 

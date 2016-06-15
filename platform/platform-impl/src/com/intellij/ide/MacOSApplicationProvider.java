@@ -22,7 +22,7 @@ import com.intellij.ide.actions.AboutAction;
 import com.intellij.ide.actions.OpenFileAction;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
@@ -117,7 +117,7 @@ public class MacOSApplicationProvider implements ApplicationComponent {
 
           File file = new File(filename);
           if (ProjectUtil.openOrImport(file.getAbsolutePath(), project, true) != null) {
-            IdeaApplication.getInstance().setPerformProjectLoad(false);
+            ApplicationStarter.getInstance().setPerformProjectLoad(false);
             return;
           }
           if (project != null && file.exists()) {

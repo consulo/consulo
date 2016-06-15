@@ -21,7 +21,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.customize.CustomizeUtil;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.application.ApplicationManager;
@@ -48,14 +48,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class DefaultApplicationStarter extends ApplicationStarter {
-  private static final Logger LOG = Logger.getInstance(DefaultApplicationStarter.class);
+public class DefaultApplicationPostStarter extends ApplicationPostStarter {
+  private static final Logger LOG = Logger.getInstance(DefaultApplicationPostStarter.class);
 
-  private IdeaApplication myIdeaApplication;
+  private ApplicationStarter myApplicationStarter;
   private Splash mySplash;
 
-  public DefaultApplicationStarter(IdeaApplication ideaApplication) {
-    myIdeaApplication = ideaApplication;
+  public DefaultApplicationPostStarter(ApplicationStarter applicationStarter) {
+    myApplicationStarter = applicationStarter;
   }
 
   @Override
@@ -127,7 +127,7 @@ public class DefaultApplicationStarter extends ApplicationStarter {
       @Override
       public void run() {
         Project projectFromCommandLine = null;
-        if (myIdeaApplication.isPerformProjectLoad()) {
+        if (myApplicationStarter.isPerformProjectLoad()) {
           projectFromCommandLine = loadProjectFromExternalCommandLine();
         }
 
@@ -149,7 +149,7 @@ public class DefaultApplicationStarter extends ApplicationStarter {
   }
 
   private Project loadProjectFromExternalCommandLine() {
-    String[] args = myIdeaApplication.getCommandLineArguments();
+    String[] args = myApplicationStarter.getCommandLineArguments();
     Project project = null;
     if (args != null && args.length > 0 && args[0] != null) {
       LOG.info("DefaultApplicationStarter.loadProjectFromExternalCommandLine");

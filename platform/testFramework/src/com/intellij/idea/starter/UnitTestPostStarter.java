@@ -19,7 +19,7 @@ import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -33,12 +33,12 @@ import java.util.List;
  * @since 04.04.2016
  *
  * Used via reflection
- * @see com.intellij.idea.IdeaApplication#getStarterClass(boolean, boolean)
+ * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
  */
-public class UnitTestStarter extends ApplicationStarter {
-  private static final Logger LOGGER = Logger.getInstance(UnitTestStarter.class);
+public class UnitTestPostStarter extends ApplicationPostStarter {
+  private static final Logger LOGGER = Logger.getInstance(UnitTestPostStarter.class);
 
-  public UnitTestStarter(IdeaApplication application) {
+  public UnitTestPostStarter(ApplicationStarter application) {
   }
 
   @Override

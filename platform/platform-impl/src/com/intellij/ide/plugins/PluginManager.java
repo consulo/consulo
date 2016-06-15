@@ -18,7 +18,7 @@ package com.intellij.ide.plugins;
 import com.intellij.ide.ClassUtilCore;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.Main;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
@@ -107,7 +107,7 @@ public class PluginManager extends PluginManagerCore {
     else if (t.getCause() instanceof StartupAbortedException) {
       se = (StartupAbortedException)t.getCause();
     }
-    else if (!IdeaApplication.isLoaded()) {
+    else if (!ApplicationStarter.isLoaded()) {
       se = new StartupAbortedException(t);
     }
 

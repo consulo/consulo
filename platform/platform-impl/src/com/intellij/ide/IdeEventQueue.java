@@ -19,7 +19,7 @@ import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.dnd.DnDManagerImpl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -348,7 +348,7 @@ public class IdeEventQueue extends EventQueue {
 
   private static boolean appIsLoaded() {
     if (ourAppIsLoaded) return true;
-    boolean loaded = IdeaApplication.isLoaded();
+    boolean loaded = ApplicationStarter.isLoaded();
     if (loaded) ourAppIsLoaded = true;
     return loaded;
   }

@@ -15,8 +15,8 @@
  */
 package consulo.web.main;
 
-import com.intellij.idea.IdeaApplication;
-import com.intellij.idea.starter.ApplicationStarter;
+import com.intellij.idea.ApplicationStarter;
+import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.projectRoots.SdkTable;
@@ -25,13 +25,13 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 
 /**
  * @author VISTALL
- * @see com.intellij.idea.IdeaApplication#getStarterClass(boolean, boolean)
+ * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
  * @since 15-May-16
  * <p/>
  * Used via reflection
  */
-public class WebStarter extends ApplicationStarter {
-  public WebStarter(IdeaApplication application) {
+public class WebPostStarter extends ApplicationPostStarter {
+  public WebPostStarter(ApplicationStarter application) {
   }
 
   @Override

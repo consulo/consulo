@@ -18,7 +18,7 @@ package com.intellij.testFramework;
 import com.intellij.history.integration.LocalHistoryImpl;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.IdeaLogger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -89,7 +89,7 @@ import java.util.Set;
 public abstract class PlatformTestCase extends UsefulTestCase implements DataProvider {
   public static final String TEST_DIR_PREFIX = "idea_test_";
 
-  protected static IdeaApplication ourApplication;
+  protected static ApplicationStarter ourApplication;
   protected ProjectManagerEx myProjectManager;
   protected Project myProject;
   protected Module myModule;
@@ -111,7 +111,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   protected void initApplication() throws Exception {
     boolean firstTime = ourApplication == null;
 
-    ourApplication = IdeaApplication.getInstance();
+    ourApplication = ApplicationStarter.getInstance();
    // ourApplication.setDataProvider(this);
 
     if (firstTime) {
