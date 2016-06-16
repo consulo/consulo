@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class WBaseGwtComponent implements Component {
+public class WGwtBaseComponent implements Component {
   private static final AtomicLong ourIndex = new AtomicLong();
 
   private long myId = ourIndex.incrementAndGet();
@@ -101,7 +101,7 @@ public class WBaseGwtComponent implements Component {
     myParent = parent;
   }
 
-  public void registerComponent(TLongObjectHashMap<WBaseGwtComponent> map) {
+  public void registerComponent(TLongObjectHashMap<WGwtBaseComponent> map) {
     map.put(getId(), this);
   }
 
@@ -166,7 +166,7 @@ public class WBaseGwtComponent implements Component {
     putIfNotDefault("visible", myVisible, true, map);
     putIfNotDefault("enabled", myEnabled, true, map);
     if (mySize != Size.UNDEFINED) {
-      map.put("size", mySize);
+      map.put("componentSize", mySize);
     }
   }
 

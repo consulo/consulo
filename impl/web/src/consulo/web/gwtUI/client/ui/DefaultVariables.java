@@ -49,7 +49,7 @@ public class DefaultVariables {
       widget.setVisible(parseBoolAsTrue(map, "visible"));
     }
 
-    final Size size = (Size)map.get("size");
+    final Size size = (Size)map.get("componentSize");
     if(size != null) {
       final int height = size.getHeight();
       if(height != -1) {

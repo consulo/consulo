@@ -30,21 +30,21 @@ import java.util.Map;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtLayoutImpl<C> extends WBaseGwtComponent {
-  private Map<C, WBaseGwtComponent> myComponents = new LinkedHashMap<C, WBaseGwtComponent>();
+public class WGwtLayoutImpl<C> extends WGwtBaseComponent {
+  private Map<C, WGwtBaseComponent> myComponents = new LinkedHashMap<C, WGwtBaseComponent>();
 
   @Override
-  public void registerComponent(TLongObjectHashMap<WBaseGwtComponent> map) {
+  public void registerComponent(TLongObjectHashMap<WGwtBaseComponent> map) {
     super.registerComponent(map);
 
-    for (WBaseGwtComponent component : myComponents.values()) {
+    for (WGwtBaseComponent component : myComponents.values()) {
       component.registerComponent(map);
     }
   }
 
   @Override
   protected void initChildren(List<UIComponent.Child> children) {
-    for (Map.Entry<C, WBaseGwtComponent> entry : myComponents.entrySet()) {
+    for (Map.Entry<C, WGwtBaseComponent> entry : myComponents.entrySet()) {
       final UIComponent.Child child = new UIComponent.Child();
 
       final UIComponent uiComponent = entry.getValue().convert();
@@ -62,7 +62,7 @@ public class WGwtLayoutImpl<C> extends WBaseGwtComponent {
     }
   }
 
-  protected WBaseGwtComponent addChild(@NotNull WBaseGwtComponent component, C constraint) {
+  protected WGwtBaseComponent addChild(@NotNull WGwtBaseComponent component, C constraint) {
     final Component parentComponent = component.getParentComponent();
     if(parentComponent != null) {
       throw new IllegalArgumentException("We can't change child");
@@ -79,7 +79,7 @@ public class WGwtLayoutImpl<C> extends WBaseGwtComponent {
   public void visitChanges(List<UIComponent> components) {
     super.visitChanges(components);
 
-    for (WBaseGwtComponent component : myComponents.values()) {
+    for (WGwtBaseComponent component : myComponents.values()) {
       component.visitChanges(components);
     }
   }

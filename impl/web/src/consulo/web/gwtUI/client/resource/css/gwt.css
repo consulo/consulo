@@ -257,6 +257,7 @@ select {
 }
 
 .gwt-Label {
+  cursor: default;
 }
 
 .gwt-ListBox {
@@ -377,7 +378,7 @@ select {
 
 .gwt-PopupPanel {
   border: 1px solid gray;
-  padding: 3px;
+  padding: 0px;
   background: white;
 }
 

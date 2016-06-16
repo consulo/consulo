@@ -40,13 +40,15 @@ public class DesktopSplitLayoutImpl extends Splitter implements SplitLayout {
   }
 
   @Override
-  public void setFirstComponent(@NotNull Component component) {
+  public SplitLayout setFirstComponent(@NotNull Component component) {
     setFirstComponent((javax.swing.JComponent)component);
+    return this;
   }
 
   @Override
-  public void setSecondComponent(@NotNull Component component) {
+  public SplitLayout setSecondComponent(@NotNull Component component) {
     setSecondComponent((javax.swing.JComponent)component);
+    return this;
   }
 
   @Nullable

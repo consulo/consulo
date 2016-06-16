@@ -30,35 +30,35 @@ public class WGwtDockLayoutImpl extends WGwtLayoutImpl<String> implements DockLa
   @NotNull
   @Override
   public DockLayout top(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, "top");
+    addChild((WGwtBaseComponent)component, "top");
     return this;
   }
 
   @NotNull
   @Override
   public DockLayout bottom(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, "bottom");
+    addChild((WGwtBaseComponent)component, "bottom");
     return this;
   }
 
   @NotNull
   @Override
   public DockLayout center(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, "center");
+    addChild((WGwtBaseComponent)component, "center");
     return this;
   }
 
   @NotNull
   @Override
   public DockLayout left(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, "left");
+    addChild((WGwtBaseComponent)component, "left");
     return this;
   }
 
   @NotNull
   @Override
   public DockLayout right(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, "right");
+    addChild((WGwtBaseComponent)component, "right");
     return this;
   }
 

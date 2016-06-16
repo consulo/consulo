@@ -29,7 +29,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtBooleanValueComponentImpl extends WBaseGwtComponent implements ValueComponent<Boolean> {
+public class WGwtBooleanValueComponentImpl extends WGwtBaseComponent implements ValueComponent<Boolean> {
   private boolean mySelected;
   private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<ValueComponent.ValueListener<Boolean>>();
 

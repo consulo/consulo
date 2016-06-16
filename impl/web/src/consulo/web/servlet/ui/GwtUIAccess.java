@@ -20,8 +20,9 @@ import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamWriter;
 import consulo.ui.RequiredUIThread;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.internal.WBaseGwtComponent;
+import consulo.ui.internal.WGwtBaseComponent;
 import consulo.ui.internal.WGwtModalWindowImpl;
+import consulo.ui.internal.WGwtWindowImpl;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIServerEvent;
 import consulo.web.gwtUI.shared.UIServerEventType;
@@ -31,9 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.websocket.Session;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -47,11 +46,11 @@ public class GwtUIAccess extends UIAccess {
 
   private String myCookieId;
   private Session mySession;
-  private Window myWindow;
   private boolean myDisposed;
 
-  private TLongObjectHashMap<WBaseGwtComponent> myComponents = new TLongObjectHashMap<WBaseGwtComponent>();
-  private List<WGwtModalWindowImpl> myModals = new ArrayList<WGwtModalWindowImpl>();
+  private TLongObjectHashMap<WGwtBaseComponent> myComponents = new TLongObjectHashMap<WGwtBaseComponent>();
+
+  private Deque<WGwtWindowImpl> myWindows = new ArrayDeque<WGwtWindowImpl>();
 
   public GwtUIAccess(String cookieId, Session session) {
     myCookieId = cookieId;
@@ -62,7 +61,7 @@ public class GwtUIAccess extends UIAccess {
     return myCookieId;
   }
 
-  public TLongObjectHashMap<WBaseGwtComponent> getComponents() {
+  public TLongObjectHashMap<WGwtBaseComponent> getComponents() {
     return myComponents;
   }
 
@@ -71,7 +70,7 @@ public class GwtUIAccess extends UIAccess {
   }
 
   public void setWindow(Window window) {
-    myWindow = window;
+    myWindows.add((WGwtWindowImpl)window);
   }
 
   public Session getSession() {
@@ -121,11 +120,12 @@ public class GwtUIAccess extends UIAccess {
 
     UIAccess.assertIsUIThread();
 
-    final WBaseGwtComponent window = (WBaseGwtComponent)myWindow;
 
     List<UIComponent> components = new ArrayList<UIComponent>();
 
-    window.visitChanges(components);
+    for (WGwtWindowImpl window : myWindows) {
+      window.visitChanges(components);
+    }
 
     if (!components.isEmpty()) {
       UIServerEvent serverEvent = new UIServerEvent();
@@ -152,7 +152,7 @@ public class GwtUIAccess extends UIAccess {
     // we don't interest in first states - because they will send anyway to client
     modalWindow.visitChanges(new ArrayList<UIComponent>());
 
-    myModals.add(modalWindow);
+    myWindows.addLast(modalWindow);
 
     send(serverEvent);
   }
@@ -160,13 +160,15 @@ public class GwtUIAccess extends UIAccess {
   public void dispose() {
     myDisposed = true;
     // free resources
-    for (WGwtModalWindowImpl modal : myModals) {
-      modal.disposeImpl();
+    for (Window modal : myWindows) {
+      if (modal instanceof WGwtModalWindowImpl) {
+        ((WGwtModalWindowImpl)modal).disposeImpl();
+      }
     }
 
-    myComponents.forEachValue(new TObjectProcedure<WBaseGwtComponent>() {
+    myComponents.forEachValue(new TObjectProcedure<WGwtBaseComponent>() {
       @Override
-      public boolean execute(WBaseGwtComponent object) {
+      public boolean execute(WGwtBaseComponent object) {
         try {
           object.dispose();
         }
@@ -178,7 +180,7 @@ public class GwtUIAccess extends UIAccess {
       }
     });
 
-    myModals.clear();
+    myWindows.clear();
     myComponents.clear();
   }
 }

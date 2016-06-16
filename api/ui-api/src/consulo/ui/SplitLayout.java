@@ -15,9 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.ui.Component;
-import consulo.ui.Layout;
-import consulo.ui.RequiredUIThread;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -31,8 +28,8 @@ public interface SplitLayout extends Layout {
   void setProportion(int percent);
 
   @RequiredUIThread
-  void setFirstComponent(@NotNull Component component);
+  SplitLayout setFirstComponent(@NotNull Component component);
 
   @RequiredUIThread
-  void setSecondComponent(@NotNull Component component);
+  SplitLayout setSecondComponent(@NotNull Component component);
 }

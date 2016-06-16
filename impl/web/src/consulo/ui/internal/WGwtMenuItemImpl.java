@@ -25,7 +25,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuItemImpl extends WBaseGwtComponent implements MenuItem {
+public class WGwtMenuItemImpl extends WGwtBaseComponent implements MenuItem {
   private String myText;
 
   public WGwtMenuItemImpl(String text) {

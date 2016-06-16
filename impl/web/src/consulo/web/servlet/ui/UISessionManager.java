@@ -17,7 +17,7 @@ package consulo.web.servlet.ui;
 
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ConcurrentHashMap;
-import consulo.ui.internal.WBaseGwtComponent;
+import consulo.ui.internal.WGwtBaseComponent;
 import consulo.ui.internal.WGwtWindowImpl;
 import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIComponent;
@@ -64,12 +64,11 @@ public class UISessionManager {
       @Override
       public void run() {
         WGwtWindowImpl window = new WGwtWindowImpl();
+        uiAccess.setWindow(window);
 
         uiBuilder.build(window);
 
         window.registerComponent(uiAccess.getComponents());
-
-        uiAccess.setWindow(window);
 
         UIServerEvent serverEvent = new UIServerEvent();
         serverEvent.setSessionId(clientEvent.getSessionId());
@@ -107,7 +106,7 @@ public class UISessionManager {
         final long componentId = (Long)variables.get("componentId");
         final String type = (String)variables.get("type");
 
-        final WBaseGwtComponent gwtComponent = uiAccess.getComponents().get(componentId);
+        final WGwtBaseComponent gwtComponent = uiAccess.getComponents().get(componentId);
         if (gwtComponent != null) {
           gwtComponent.invokeListeners(type, variables);
         }

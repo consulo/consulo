@@ -16,133 +16,19 @@
 package consulo.ui.internal;
 
 import consulo.ui.ComboBox;
-import consulo.ui.ListItemRender;
-import consulo.ui.ListItemRenders;
-import consulo.ui.RequiredUIThread;
 import consulo.ui.model.ListModel;
-import consulo.web.gwtUI.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtComboBoxImpl<E> extends WBaseGwtComponent implements ComboBox<E> {
-  private ListItemRender<E> myRender = ListItemRenders.defaultRender();
-  private List<ValueListener<E>> myValueListeners = new ArrayList<ValueListener<E>>();
-  private ListModel<E> myModel;
-  private int myIndex = -1;
-
+public class WGwtComboBoxImpl<E> extends WGwtSingleListComponentImpl<E> implements ComboBox<E> {
   public WGwtComboBoxImpl(ListModel<E> model) {
-    myModel = model;
+    super(model);
   }
 
   @Override
-  protected void getState(Map<String, Serializable> map) {
-    super.getState(map);
-    map.put("size", myModel.getSize());
-    map.put("index", myIndex);
-  }
-
-  @NotNull
-  @Override
-  public ListModel<E> getListModel() {
-    return myModel;
-  }
-
-  @Override
-  public void setRender(@NotNull ListItemRender<E> render) {
-    myRender = render;
-  }
-
-  @Override
-  protected void initChildren(List<UIComponent.Child> children) {
-    // need render null value
-    renderItem(children, -1, null);
-
-    for (int i = 0; i < myModel.getSize(); i++) {
-      E value = myModel.get(i);
-
-      renderItem(children, i, value);
-    }
-  }
-
-  private void renderItem(List<UIComponent.Child> children, int i, @Nullable E e) {
-    WGwtListItemPresentationImpl render;
-    render = new WGwtListItemPresentationImpl();
-    myRender.render(render, i, e);
-
-    final UIComponent component = render.getLayout().convert();
-    component.setId(-1);
-
-    final UIComponent.Child child = new UIComponent.Child();
-    child.setComponent(component);
-
-    children.add(child);
-  }
-
-  @Override
-  public void invokeListeners(String type, Map<String, Serializable> variables) {
-    if ("select".equals(type)) {
-      myIndex = (Integer)variables.get("index");
-
-      setValueImpl(myModel.get(myIndex));
-    }
-  }
-
-  @Override
-  public void addValueListener(@NotNull ValueListener<E> valueListener) {
-    myValueListeners.add(valueListener);
-  }
-
-  @Override
-  public void removeValueListener(@NotNull ValueListener<E> valueListener) {
-    myValueListeners.remove(valueListener);
-  }
-
-  @Nullable
-  @Override
-  public E getValue() {
-    if (myIndex == -1) {
-      return null;
-    }
-    return myModel.get(myIndex);
-  }
-
-  @Override
-  @RequiredUIThread
-  public void setValue(int index) {
-    setValue(myModel.get(index));
-  }
-
-  @Override
-  @RequiredUIThread
-  public void setValue(@Nullable E value) {
-    setValueImpl(value);
-    markAsChanged();
-  }
-
-  public void setValueImpl(@Nullable E value) {
-    if (value == null) {
-      myIndex = -1;
-    }
-    else {
-      final int i = myModel.indexOf(value);
-      if (i == -1) {
-        throw new IndexOutOfBoundsException();
-      }
-      myIndex = i;
-    }
-
-    final ValueEvent<E> event = new ValueEvent<E>(this, value);
-    for (ValueListener<E> valueListener : myValueListeners) {
-      valueListener.valueChanged(event);
-    }
+  protected boolean needRenderNullValue() {
+    return true;
   }
 }

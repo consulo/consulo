@@ -29,7 +29,7 @@ public class WGwtVerticalLayoutImpl extends WGwtLayoutImpl<Object> implements Ve
   @Override
   @RequiredUIThread
   public VerticalLayout add(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, new Object());
+    addChild((WGwtBaseComponent)component, new Object());
     return this;
   }
 }

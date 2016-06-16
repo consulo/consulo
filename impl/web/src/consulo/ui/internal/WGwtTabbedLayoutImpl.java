@@ -31,14 +31,14 @@ import java.util.Map;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtTabbedLayoutImpl extends WBaseGwtComponent implements TabbedLayout {
-  private Map<Tab, WBaseGwtComponent> myTabs = new LinkedHashMap<Tab, WBaseGwtComponent>();
+public class WGwtTabbedLayoutImpl extends WGwtBaseComponent implements TabbedLayout {
+  private Map<Tab, WGwtBaseComponent> myTabs = new LinkedHashMap<Tab, WGwtBaseComponent>();
   private int mySelected = 0;
 
   @Override
-  public void registerComponent(TLongObjectHashMap<WBaseGwtComponent> map) {
+  public void registerComponent(TLongObjectHashMap<WGwtBaseComponent> map) {
     super.registerComponent(map);
-    for (WBaseGwtComponent component : myTabs.values()) {
+    for (WGwtBaseComponent component : myTabs.values()) {
       component.registerComponent(map);
     }
   }
@@ -47,7 +47,7 @@ public class WGwtTabbedLayoutImpl extends WBaseGwtComponent implements TabbedLay
   public void visitChanges(List<UIComponent> components) {
     super.visitChanges(components);
 
-    for (WBaseGwtComponent component : myTabs.values()) {
+    for (WGwtBaseComponent component : myTabs.values()) {
       component.visitChanges(components);
     }
   }
@@ -60,7 +60,7 @@ public class WGwtTabbedLayoutImpl extends WBaseGwtComponent implements TabbedLay
 
   @Override
   protected void initChildren(List<UIComponent.Child> children) {
-    for (Map.Entry<Tab, WBaseGwtComponent> entry : myTabs.entrySet()) {
+    for (Map.Entry<Tab, WGwtBaseComponent> entry : myTabs.entrySet()) {
       // send tab
       UIComponent.Child child = new UIComponent.Child();
       child.setComponent(((WGwtTabImpl)entry.getKey()).getLayout().convert());
@@ -76,7 +76,7 @@ public class WGwtTabbedLayoutImpl extends WBaseGwtComponent implements TabbedLay
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
-    myTabs.put(tab, (WBaseGwtComponent)component);
+    myTabs.put(tab, (WGwtBaseComponent)component);
     markAsChanged();
     return this;
   }

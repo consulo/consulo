@@ -46,12 +46,14 @@ public abstract class WGwtSplitLayoutImpl extends WGwtLayoutImpl<Boolean> implem
   }
 
   @Override
-  public void setFirstComponent(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, Boolean.TRUE);
+  public SplitLayout setFirstComponent(@NotNull Component component) {
+    addChild((WGwtBaseComponent)component, Boolean.TRUE);
+    return this;
   }
 
   @Override
-  public void setSecondComponent(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, Boolean.FALSE);
+  public SplitLayout setSecondComponent(@NotNull Component component) {
+    addChild((WGwtBaseComponent)component, Boolean.FALSE);
+    return this;
   }
 }

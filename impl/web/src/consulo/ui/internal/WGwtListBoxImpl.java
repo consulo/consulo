@@ -15,31 +15,20 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.util.NotNullFunction;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
-import java.util.Collections;
+import consulo.ui.model.ListModel;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class WGwtTreeImpl<N> extends WGwtBaseComponent {
-  private N myRootNode;
-  private NotNullFunction<N, Collection<N>> myNodeResolver = new NotNullFunction<N, Collection<N>>() {
-    @NotNull
-    @Override
-    public Collection<N> fun(N dom) {
-      return Collections.emptyList();
-    }
-  };
+public class WGwtListBoxImpl<E> extends WGwtSingleListComponentImpl<E> {
 
-  public WGwtTreeImpl(N rootNode) {
-    myRootNode = rootNode;
+  public WGwtListBoxImpl(ListModel<E> model) {
+    super(model);
   }
 
-  public void setNodeResolver(@NotNull NotNullFunction<N, Collection<N>> resolver) {
-    myNodeResolver = resolver;
+  @Override
+  protected boolean needRenderNullValue() {
+    return false;
   }
 }

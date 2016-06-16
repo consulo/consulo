@@ -29,8 +29,8 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtWindowImpl extends WBaseGwtComponent implements Window {
-  private WBaseGwtComponent myContent;
+public class WGwtWindowImpl extends WGwtBaseComponent implements Window {
+  private WGwtBaseComponent myContent;
   private MenuBar myMenuBar;
 
   @Override
@@ -38,7 +38,7 @@ public class WGwtWindowImpl extends WBaseGwtComponent implements Window {
     if (myContent != null) {
       throw new IllegalArgumentException();
     }
-    myContent = (WBaseGwtComponent)content;
+    myContent = (WGwtBaseComponent)content;
   }
 
   @Override
@@ -51,7 +51,7 @@ public class WGwtWindowImpl extends WBaseGwtComponent implements Window {
     // add menu bar always
     UIComponent.Child menuChild = new UIComponent.Child();
     if (myMenuBar != null) {
-      menuChild.setComponent(((WBaseGwtComponent)myMenuBar).convert());
+      menuChild.setComponent(((WGwtBaseComponent)myMenuBar).convert());
     }
     children.add(menuChild);
 
@@ -63,7 +63,7 @@ public class WGwtWindowImpl extends WBaseGwtComponent implements Window {
   }
 
   @Override
-  public void registerComponent(TLongObjectHashMap<WBaseGwtComponent> map) {
+  public void registerComponent(TLongObjectHashMap<WGwtBaseComponent> map) {
     super.registerComponent(map);
 
     if (myContent != null) {

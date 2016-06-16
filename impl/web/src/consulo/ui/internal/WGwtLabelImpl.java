@@ -26,7 +26,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtLabelImpl extends WBaseGwtComponent implements Label {
+public class WGwtLabelImpl extends WGwtBaseComponent implements Label {
   private String myText;
 
   public WGwtLabelImpl(String text) {

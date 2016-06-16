@@ -26,7 +26,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WGwtImageImpl extends WBaseGwtComponent implements Image {
+public class WGwtImageImpl extends WGwtBaseComponent implements Image {
   private WGwtImageRefImpl myImageRef;
 
   public WGwtImageImpl(WGwtImageRefImpl imageRef) {

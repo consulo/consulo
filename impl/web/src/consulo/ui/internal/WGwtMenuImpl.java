@@ -53,7 +53,7 @@ public class WGwtMenuImpl extends WGwtMenuItemImpl implements Menu {
     for (MenuItem menuItem : myMenuItems) {
       final UIComponent.Child child = new UIComponent.Child();
 
-      final UIComponent uiComponent = ((WBaseGwtComponent)menuItem).convert();
+      final UIComponent uiComponent = ((WGwtBaseComponent)menuItem).convert();
       child.setComponent(uiComponent);
 
       children.add(child);

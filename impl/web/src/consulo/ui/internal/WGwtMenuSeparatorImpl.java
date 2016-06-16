@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuSeparatorImpl extends WBaseGwtComponent implements MenuItem{
+public class WGwtMenuSeparatorImpl extends WGwtBaseComponent implements MenuItem{
   public WGwtMenuSeparatorImpl() {
   }
 

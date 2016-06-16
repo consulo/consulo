@@ -42,7 +42,7 @@ public class WGwtLabeledLayoutImpl extends WGwtLayoutImpl<Object> implements Lab
   @NotNull
   @Override
   public LabeledLayout set(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, new Object());
+    addChild((WGwtBaseComponent)component, new Object());
     return this;
   }
 }

@@ -29,7 +29,7 @@ public class WGwtHorizontalLayoutImpl extends WGwtLayoutImpl<Object> implements 
   @Override
   @RequiredUIThread
   public HorizontalLayout add(@NotNull Component component) {
-    addChild((WBaseGwtComponent)component, new Object());
+    addChild((WGwtBaseComponent)component, new Object());
     return this;
   }
 }

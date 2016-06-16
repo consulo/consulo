@@ -17,10 +17,7 @@ package consulo.ui.model;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -31,6 +28,10 @@ public class ImmutableListModel<E> implements ListModel<E> {
 
   public ImmutableListModel(E... items) {
     myItems.addAll(Arrays.asList(items));
+  }
+
+  public ImmutableListModel(Collection<? extends E> items) {
+    myItems.addAll(items);
   }
 
   @NotNull

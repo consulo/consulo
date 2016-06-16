@@ -27,7 +27,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuBarImpl extends WBaseGwtComponent implements MenuBar {
+public class WGwtMenuBarImpl extends WGwtBaseComponent implements MenuBar {
   private List<MenuItem> myMenuItems = new ArrayList<MenuItem>();
 
   @NotNull
@@ -42,7 +42,7 @@ public class WGwtMenuBarImpl extends WBaseGwtComponent implements MenuBar {
     for (MenuItem menuItem : myMenuItems) {
       final UIComponent.Child child = new UIComponent.Child();
 
-      final UIComponent uiComponent = ((WBaseGwtComponent)menuItem).convert();
+      final UIComponent uiComponent = ((WGwtBaseComponent)menuItem).convert();
       child.setComponent(uiComponent);
 
       children.add(child);
