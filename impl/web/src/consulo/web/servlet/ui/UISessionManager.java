@@ -15,29 +15,19 @@
  */
 package consulo.web.servlet.ui;
 
-import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamWriter;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ConcurrentHashMap;
-import consulo.ui.RequiredUIThread;
-import consulo.ui.UIAccess;
-import consulo.ui.Window;
 import consulo.ui.internal.WBaseGwtComponent;
 import consulo.ui.internal.WGwtWindowImpl;
 import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIComponent;
 import consulo.web.gwtUI.shared.UIServerEvent;
 import consulo.web.gwtUI.shared.UIServerEventType;
-import gnu.trove.TLongObjectHashMap;
-import gnu.trove.TObjectProcedure;
-import org.jetbrains.annotations.NotNull;
 
 import javax.websocket.Session;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,76 +35,10 @@ import java.util.Map;
  * @since 09-Jun-16
  */
 public class UISessionManager {
-  public static class UIContext extends UIAccess {
-    private String myCookieId;
-    private Session mySession;
-    private Window myWindow;
-
-    private TLongObjectHashMap<WBaseGwtComponent> myComponents = new TLongObjectHashMap<WBaseGwtComponent>();
-
-    public UIContext(String cookieId, Session session) {
-      myCookieId = cookieId;
-      mySession = session;
-    }
-
-    public String getCookieId() {
-      return myCookieId;
-    }
-
-    public void setSession(Session session) {
-      mySession = session;
-    }
-
-    public void setWindow(Window window) {
-      myWindow = window;
-    }
-
-    public Session getSession() {
-      return mySession;
-    }
-
-    @Override
-    public void give(@RequiredUIThread @NotNull Runnable runnable) {
-      UIAccessHelper.ourInstance.run(this, runnable);
-    }
-
-    /**
-     * Must be called inside write executor
-     */
-    public void send(UIServerEvent bean) {
-      UIAccess.assertIsUIThread();
-
-      try {
-        mySession.getBasicRemote().sendText(encode(bean));
-      }
-      catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-
-    public void repaint() {
-      UIAccess.assertIsUIThread();
-
-      final WBaseGwtComponent window = (WBaseGwtComponent)myWindow;
-
-      List<UIComponent> components = new ArrayList<UIComponent>();
-
-      window.visitChanges(components);
-
-      if (!components.isEmpty()) {
-        UIServerEvent serverEvent = new UIServerEvent();
-        serverEvent.setSessionId(myCookieId);
-        serverEvent.setType(UIServerEventType.stateChanged);
-        serverEvent.setComponents(components);
-
-        send(serverEvent);
-      }
-    }
-  }
 
   public static final UISessionManager ourInstance = new UISessionManager();
 
-  private Map<String, UIContext> myUIs = new ConcurrentHashMap<String, UIContext>();
+  private Map<String, GwtUIAccess> myUIs = new ConcurrentHashMap<String, GwtUIAccess>();
 
   private Map<String, Class<? extends UIBuilder>> myTempSessions = new ConcurrentHashMap<String, Class<? extends UIBuilder>>();
 
@@ -131,21 +55,21 @@ public class UISessionManager {
 
     final UIBuilder uiBuilder = ReflectionUtil.newInstance(builderClass);
 
-    final UIContext context = new UIContext(clientEvent.getSessionId(), session);
-    myUIs.put(session.getId(), context);
+    final GwtUIAccess uiAccess = new GwtUIAccess(clientEvent.getSessionId(), session);
+    myUIs.put(session.getId(), uiAccess);
 
-    context.setSession(session);
+    uiAccess.setSession(session);
 
-    UIAccessHelper.ourInstance.run(context, new Runnable() {
+    UIAccessHelper.ourInstance.run(uiAccess, new Runnable() {
       @Override
       public void run() {
         WGwtWindowImpl window = new WGwtWindowImpl();
 
         uiBuilder.build(window);
 
-        window.registerComponent(context.myComponents);
+        window.registerComponent(uiAccess.getComponents());
 
-        context.setWindow(window);
+        uiAccess.setWindow(window);
 
         UIServerEvent serverEvent = new UIServerEvent();
         serverEvent.setSessionId(clientEvent.getSessionId());
@@ -155,39 +79,27 @@ public class UISessionManager {
         // we don't interest in first states - because they will send anyway to client
         window.visitChanges(new ArrayList<UIComponent>());
 
-        context.send(serverEvent);
+        uiAccess.send(serverEvent);
       }
     });
   }
 
   public void onClose(Session session) {
-    final UIContext uiContext = myUIs.remove(session.getId());
-    if (uiContext == null) {
+    final GwtUIAccess uiAccess = myUIs.remove(session.getId());
+    if (uiAccess == null) {
       return;
     }
 
-    uiContext.myComponents.forEachValue(new TObjectProcedure<WBaseGwtComponent>() {
-      @Override
-      public boolean execute(WBaseGwtComponent object) {
-        try {
-          object.dispose();
-        }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-
-        return true;
-      }
-    });
+    uiAccess.dispose();
   }
 
   public void onInvokeEvent(Session session, final UIClientEvent clientEvent) {
-    final UIContext uiContext = myUIs.get(session.getId());
-    if (uiContext == null) {
+    final GwtUIAccess uiAccess = myUIs.get(session.getId());
+    if (uiAccess == null) {
       return;
     }
 
-    UIAccessHelper.ourInstance.run(uiContext, new Runnable() {
+    UIAccessHelper.ourInstance.run(uiAccess, new Runnable() {
       @Override
       public void run() {
         final Map<String, Serializable> variables = clientEvent.getVariables();
@@ -195,24 +107,11 @@ public class UISessionManager {
         final long componentId = (Long)variables.get("componentId");
         final String type = (String)variables.get("type");
 
-        final WBaseGwtComponent gwtComponent = uiContext.myComponents.get(componentId);
+        final WBaseGwtComponent gwtComponent = uiAccess.getComponents().get(componentId);
         if (gwtComponent != null) {
           gwtComponent.invokeListeners(type, variables);
         }
       }
     });
-  }
-
-  private static String encode(final UIServerEvent messageDto)  {
-    try {
-      final ServerSerializationStreamWriter serverSerializationStreamWriter = new ServerSerializationStreamWriter(new SimpleSerializationPolicy());
-
-      serverSerializationStreamWriter.writeObject(messageDto);
-      return serverSerializationStreamWriter.toString();
-    }
-    catch (SerializationException e) {
-      e.printStackTrace();
-      throw new Error(e);
-    }
   }
 }

@@ -15,9 +15,13 @@
  */
 package consulo.web.gwtUI.client;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.sksamuel.gwt.websockets.Websocket;
+import com.sksamuel.gwt.websockets.WebsocketListener;
 import consulo.web.gwtUI.client.util.Log;
 import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIClientEventType;
@@ -31,15 +35,28 @@ public class WebSocketProxy {
     void consume(T value);
   }
 
-  private Websocket myWebsocket;
-  private String mySessionId;
+  private final Websocket myWebsocket;
+  private final String mySessionId;
 
-  public WebSocketProxy(Websocket websocket) {
-    myWebsocket = websocket;
+  public WebSocketProxy(String consuloSessionId) {
+    mySessionId = consuloSessionId;
+    String url = "ws://" + Window.Location.getHost() + "/ws";
+    myWebsocket = new Websocket(url);
+
+    Window.addCloseHandler(new CloseHandler<Window>() {
+      @Override
+      public void onClose(CloseEvent<Window> event) {
+        myWebsocket.close();
+      }
+    });
   }
 
-  public void setSessionId(String sessionId) {
-    mySessionId = sessionId;
+  public void open() {
+    myWebsocket.open();
+  }
+
+  public void addListener(WebsocketListener websocketListener) {
+    myWebsocket.addListener(websocketListener);
   }
 
   public void send(UIClientEventType eventType, Consumer<UIClientEvent> consumer) {

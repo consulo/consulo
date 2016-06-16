@@ -44,6 +44,10 @@ public class GwtWindowImpl extends Grid implements InternalGwtComponentWithChild
 
   @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
+    handleComponents(proxy, this, children);
+  }
+
+  public static void handleComponents(WebSocketProxy proxy, Grid grid, List<UIComponent.Child> children) {
     int rows = 0;
     final UIComponent.Child menuChild = children.get(0);
     final UIComponent menuComponent = menuChild.getComponent();
@@ -57,22 +61,20 @@ public class GwtWindowImpl extends Grid implements InternalGwtComponentWithChild
       rows++;
     }
 
-    resizeRows(rows);
+    grid.resizeRows(rows);
 
-    if(menuComponent != null) {
+    if (menuComponent != null) {
       final InternalGwtComponent component = UIConverter.create(proxy, menuComponent);
 
-      getRowFormatter().getElement(0).getStyle().setHeight(26, Style.Unit.PX);
+      grid.getRowFormatter().getElement(0).getStyle().setHeight(26, Style.Unit.PX);
 
-      setWidget(0, 0, component.asWidget());
+      grid.setWidget(0, 0, component.asWidget());
     }
 
-    //FIXME [VISTALL] handle menu bar
-
-    if(contentComponent != null) {
+    if (contentComponent != null) {
       final InternalGwtComponent component = UIConverter.create(proxy, contentComponent);
 
-      setWidget(rows - 1, 0, component.asWidget());
+      grid.setWidget(rows - 1, 0, component.asWidget());
     }
   }
 }

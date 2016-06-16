@@ -15,8 +15,10 @@
  */
 package consulo.web.gwtUI.client.ui;
 
-import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.PopupPanel;
 import consulo.web.gwtUI.client.WebSocketProxy;
+import consulo.web.gwtUI.client.util.GwtUIUtil2;
 import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,14 +30,29 @@ import java.util.Map;
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class GwtModalWindowImpl extends DialogBox implements InternalGwtComponentWithChildren {
+public class GwtModalWindowImpl extends PopupPanel implements InternalGwtComponentWithChildren {
+  private Grid myGrid = GwtUIUtil2.fillAndReturn(new Grid(2, 1));
+
+  public GwtModalWindowImpl() {
+    super(false, true);
+    setWidget(myGrid);
+    setGlassEnabled(true);
+  }
+
   @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-
+    GwtWindowImpl.handleComponents(proxy, myGrid, children);
   }
 
   @Override
   public void updateState(@NotNull Map<String, Serializable> map) {
+    final boolean visible = DefaultVariables.parseBoolAsTrue(map, "visible");
 
+    if (visible) {
+      center();
+    }
+    else {
+      hide();
+    }
   }
 }

@@ -29,9 +29,9 @@ public class UIAccessHelper {
 
   private Executor myUIExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-  private static ThreadLocal<UISessionManager.UIContext> ourLocal = new ThreadLocal<UISessionManager.UIContext>();
+  private static ThreadLocal<GwtUIAccess> ourLocal = new ThreadLocal<GwtUIAccess>();
 
-  public void run(final UISessionManager.UIContext context, @RequiredUIThread final Runnable runnable) {
+  public void run(final GwtUIAccess context, @RequiredUIThread final Runnable runnable) {
     if (!context.getSession().isOpen()) {
       return;
     }
@@ -53,7 +53,7 @@ public class UIAccessHelper {
     return ourLocal.get() != null;
   }
 
-  public UISessionManager.UIContext get() {
+  public GwtUIAccess get() {
     return ourLocal.get();
   }
 }

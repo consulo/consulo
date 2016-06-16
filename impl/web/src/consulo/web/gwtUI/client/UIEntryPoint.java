@@ -24,8 +24,8 @@ import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListener;
+import consulo.web.gwtUI.client.ui.GwtModalWindowImpl;
 import consulo.web.gwtUI.client.ui.InternalGwtComponent;
 import consulo.web.gwtUI.client.util.GwtUIUtil2;
 import consulo.web.gwtUI.client.util.Log;
@@ -58,14 +58,8 @@ public class UIEntryPoint implements EntryPoint {
     if (consuloSessionId == null) {
       return;
     }
-
-    String url = "ws://" + Window.Location.getHost() + "/ws";
-    final Websocket websocket = new Websocket(url);
-
-    final WebSocketProxy proxy = new WebSocketProxy(websocket);
-    proxy.setSessionId(consuloSessionId);
-
-    websocket.addListener(new WebsocketListener() {
+    final WebSocketProxy proxy = new WebSocketProxy(consuloSessionId);
+    proxy.addListener(new WebsocketListener() {
       @Override
       public void onClose() {
       }
@@ -101,6 +95,17 @@ public class UIEntryPoint implements EntryPoint {
               rootPanel.add(root.asWidget());
             }
             break;
+          case showModal:
+            GwtModalWindowImpl modal = null;
+            if (components != null) {
+              for (UIComponent component : components) {
+                modal = (GwtModalWindowImpl)UIConverter.create(proxy, component);
+                break;
+              }
+
+              //FIXME [VISTALL] nothing?
+            }
+            break;
           case stateChanged:
             if (components != null) {
               for (UIComponent component : components) {
@@ -128,6 +133,6 @@ public class UIEntryPoint implements EntryPoint {
       }
     });
 
-    websocket.open();
+    proxy.open();
   }
 }

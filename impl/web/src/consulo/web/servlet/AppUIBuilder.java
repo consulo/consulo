@@ -38,11 +38,11 @@ public class AppUIBuilder extends UIBuilder {
       }
     }
 
-    window.setContent(Components.label("Loaded"));
-
     WGwtModalWindowImpl modalWindow = new WGwtModalWindowImpl();
     modalWindow.setSize(new Size(777, 460));
     modalWindow.setContent(Components.label("Hello World"));
     modalWindow.setVisible(true);
+
+    window.setContent(Components.label("Loaded"));
   }
 }

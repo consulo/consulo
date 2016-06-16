@@ -40,7 +40,7 @@ public class WBaseGwtComponent implements Component {
   private static final AtomicLong ourIndex = new AtomicLong();
 
   private long myId = ourIndex.incrementAndGet();
-  private boolean myVisible = true;
+  protected boolean myVisible = true;
   private boolean myEnabled = true;
   private Size mySize = Size.UNDEFINED;
   private Component myParent;

@@ -376,7 +376,7 @@ select {
 }
 
 .gwt-PopupPanel {
-  border: 3px solid #e7e7e7;
+  border: 1px solid gray;
   padding: 3px;
   background: white;
 }

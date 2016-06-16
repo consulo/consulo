@@ -15,9 +15,46 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.util.concurrency.Semaphore;
+import consulo.ui.RequiredUIThread;
+import consulo.web.servlet.ui.GwtUIAccess;
+
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
 public class WGwtModalWindowImpl extends WGwtWindowImpl {
+  private Semaphore mySemaphore = new Semaphore();
+
+  public WGwtModalWindowImpl() {
+    myVisible = false;
+  }
+
+  @Override
+  @RequiredUIThread
+  public void setVisible(boolean value) {
+    if (myVisible == value) {
+      return;
+    }
+
+    myVisible = value;
+
+    if (myVisible) {
+      mySemaphore.down();
+
+      GwtUIAccess gwtUIAccess = GwtUIAccess.get();
+      gwtUIAccess.showModal(this);
+
+      mySemaphore.waitFor();
+    }
+    else {
+      disposeImpl();
+    }
+
+    markAsChanged();
+  }
+
+  public void disposeImpl() {
+    mySemaphore.tryUp();
+  }
 }

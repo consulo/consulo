@@ -45,7 +45,9 @@ public class DefaultVariables {
       ((HasEnabled)widget).setEnabled(parseBoolAsTrue(map, "enabled"));
     }
 
-    widget.setVisible(parseBoolAsTrue(map, "visible"));
+    if(!(widget instanceof GwtModalWindowImpl)) {
+      widget.setVisible(parseBoolAsTrue(map, "visible"));
+    }
 
     final Size size = (Size)map.get("size");
     if(size != null) {

@@ -21,5 +21,6 @@ package consulo.web.gwtUI.shared;
  */
 public enum UIServerEventType {
   createRoot,
-  stateChanged
+  stateChanged,
+  showModal
 }
