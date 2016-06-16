@@ -17,11 +17,13 @@ package consulo.ui.internal;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.ui.Component;
+import consulo.ui.shared.Size;
 import consulo.ui.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -30,6 +32,11 @@ import javax.swing.*;
 public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout {
   public DesktopVerticalLayoutImpl() {
     super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @NotNull

@@ -13,39 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.web.gwtUI.client.ui;
 
-import consulo.ui.Component;
-import consulo.ui.MenuItem;
-import consulo.ui.shared.Size;
+import com.google.gwt.user.client.ui.DialogBox;
+import consulo.web.gwtUI.client.WebSocketProxy;
+import consulo.web.gwtUI.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 16-Jun-16
  */
-public class DesktopMenuItemImpl extends JMenuItem implements MenuItem {
-  public DesktopMenuItemImpl(String text) {
-    super(text);
+public class GwtModalWindowImpl extends DialogBox implements InternalGwtComponentWithChildren {
+  @Override
+  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
+
   }
 
   @Override
-  public void setSize(@NotNull Size size) {
-    setSize(new Dimension(size.getWidth(), size.getHeight()));
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @Override
-  public void dispose() {
+  public void updateState(@NotNull Map<String, Serializable> map) {
 
   }
 }

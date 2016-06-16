@@ -16,6 +16,10 @@
 package consulo.ui.internal;
 
 import consulo.ui.HtmlLabel;
+import consulo.ui.shared.Size;
+import org.jetbrains.annotations.NotNull;
+
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -24,6 +28,11 @@ import consulo.ui.HtmlLabel;
 public class DesktopHtmlLabelImpl extends DesktopLabelImpl implements HtmlLabel {
   public DesktopHtmlLabelImpl(String text) {
     super("<html><body>" + text + "</body></html>");
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @Override

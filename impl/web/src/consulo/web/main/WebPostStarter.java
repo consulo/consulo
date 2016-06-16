@@ -17,8 +17,6 @@ package consulo.web.main;
 
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.starter.ApplicationPostStarter;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
@@ -36,7 +34,7 @@ public class WebPostStarter extends ApplicationPostStarter {
 
   @Override
   public void main(String[] args) {
-    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+    /*ApplicationManager.getApplication().invokeAndWait(new Runnable() {
       @Override
       public void run() {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -46,7 +44,7 @@ public class WebPostStarter extends ApplicationPostStarter {
           }
         });
       }
-    }, ModalityState.any());
+    }, ModalityState.any());  */
 
     System.out.println("We started");
   }

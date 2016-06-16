@@ -18,16 +18,23 @@ package consulo.ui.internal;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public class DesktopMenuBarImpl extends JMenuBar implements MenuBar {
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
+  }
+
   @NotNull
   @Override
   public MenuBar add(@NotNull MenuItem menuItem) {

@@ -18,11 +18,14 @@ package consulo.ui.internal;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.ui.ColoredListCellRendererWrapper2;
 import consulo.ui.*;
+import consulo.ui.Component;
 import consulo.ui.model.ListModel;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -43,6 +46,11 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
         myRender.render(render, index, value);
       }
     });
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @NotNull

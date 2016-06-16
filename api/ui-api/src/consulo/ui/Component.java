@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import consulo.ui.shared.Size;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -34,6 +36,9 @@ public interface Component {
 
   @Nullable
   Component getParentComponent();
+
+  @RequiredUIThread
+  void setSize(@NotNull Size size);
 
   void dispose();
 }

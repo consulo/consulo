@@ -145,6 +145,12 @@ public class UIConverter {
         return new GwtLabeledLayoutImpl();
       }
     });
+    ourMap.put("consulo.ui.internal.WGwtModalWindowImpl", new Factory() {
+      @Override
+      public InternalGwtComponent create() {
+        return new GwtModalWindowImpl();
+      }
+    });
   }
 
   private static Map<Long, InternalGwtComponent> ourCache = new HashMap<Long, InternalGwtComponent>();

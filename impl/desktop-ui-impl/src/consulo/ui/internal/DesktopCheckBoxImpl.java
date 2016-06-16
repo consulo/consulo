@@ -18,9 +18,12 @@ package consulo.ui.internal;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
+import consulo.ui.shared.Size;
 import consulo.ui.ValueComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -50,6 +53,11 @@ public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox {
   @Override
   public Component getParentComponent() {
     return (Component)getParent();
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @Override

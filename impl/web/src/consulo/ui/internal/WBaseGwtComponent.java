@@ -20,8 +20,10 @@ import com.intellij.util.SmartList;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIThread;
 import consulo.ui.UIAccess;
+import consulo.ui.shared.Size;
 import consulo.web.gwtUI.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -40,6 +42,7 @@ public class WBaseGwtComponent implements Component {
   private long myId = ourIndex.incrementAndGet();
   private boolean myVisible = true;
   private boolean myEnabled = true;
+  private Size mySize = Size.UNDEFINED;
   private Component myParent;
 
   private UIComponent myNotifyComponent;
@@ -78,6 +81,14 @@ public class WBaseGwtComponent implements Component {
 
   @Override
   public void dispose() {
+  }
+
+  @Override
+  @RequiredUIThread
+  public void setSize(@NotNull Size size) {
+    mySize = size;
+
+    markAsChanged();
   }
 
   @Nullable
@@ -154,6 +165,9 @@ public class WBaseGwtComponent implements Component {
   protected void getState(Map<String, Serializable> map) {
     putIfNotDefault("visible", myVisible, true, map);
     putIfNotDefault("enabled", myEnabled, true, map);
+    if (mySize != Size.UNDEFINED) {
+      map.put("size", mySize);
+    }
   }
 
   public void invokeListeners(String type, Map<String, Serializable> variables) {

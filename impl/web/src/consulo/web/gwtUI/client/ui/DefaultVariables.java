@@ -18,6 +18,7 @@ package consulo.web.gwtUI.client.ui;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.UIObject;
+import consulo.ui.shared.Size;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -45,6 +46,19 @@ public class DefaultVariables {
     }
 
     widget.setVisible(parseBoolAsTrue(map, "visible"));
+
+    final Size size = (Size)map.get("size");
+    if(size != null) {
+      final int height = size.getHeight();
+      if(height != -1) {
+        widget.setHeight(height + "px");
+      }
+
+      final int width = size.getWidth();
+      if(width != -1) {
+        widget.setWidth(width + "px");
+      }
+    }
   }
 
   public static boolean parseBoolAsTrue(Map<String, Serializable> map, String key) {

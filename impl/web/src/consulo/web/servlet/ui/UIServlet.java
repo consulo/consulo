@@ -29,7 +29,7 @@ import java.util.UUID;
  * @since 09-Jun-16
  */
 public abstract class UIServlet extends HttpServlet {
-  private static final String ourGwtModuleName = "ui";
+  private static final String ourGwtModuleName = "consulo.web.gwtUI.impl";
 
   private final Class<? extends UIBuilder> myClass;
 

@@ -17,10 +17,12 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -29,6 +31,11 @@ import javax.swing.*;
 public class DesktopRadioButtonImpl extends JRadioButton implements RadioButton {
   public DesktopRadioButtonImpl(String text, boolean selected) {
     super(text, selected);
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @Override

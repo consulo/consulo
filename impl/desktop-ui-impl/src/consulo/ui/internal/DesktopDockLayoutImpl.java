@@ -17,6 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.DockLayout;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +31,11 @@ import java.awt.*;
 public class DesktopDockLayoutImpl extends JPanel implements DockLayout {
   public DesktopDockLayoutImpl() {
     super(new BorderLayout());
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @NotNull

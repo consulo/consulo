@@ -15,37 +15,31 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.Component;
-import consulo.ui.MenuItem;
-import consulo.ui.shared.Size;
+import com.intellij.util.NotNullFunction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 16-Jun-16
  */
-public class DesktopMenuItemImpl extends JMenuItem implements MenuItem {
-  public DesktopMenuItemImpl(String text) {
-    super(text);
+public class WGwtTreeImpl<N> extends WBaseGwtComponent {
+  private N myRootNode;
+  private NotNullFunction<N, Collection<N>> myNodeResolver = new NotNullFunction<N, Collection<N>>() {
+    @NotNull
+    @Override
+    public Collection<N> fun(N dom) {
+      return Collections.emptyList();
+    }
+  };
+
+  public WGwtTreeImpl(N rootNode) {
+    myRootNode = rootNode;
   }
 
-  @Override
-  public void setSize(@NotNull Size size) {
-    setSize(new Dimension(size.getWidth(), size.getHeight()));
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @Override
-  public void dispose() {
-
+  public void setNodeResolver(@NotNull NotNullFunction<N, Collection<N>> resolver) {
+    myNodeResolver = resolver;
   }
 }

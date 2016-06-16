@@ -18,10 +18,12 @@ package consulo.ui.internal;
 import consulo.ui.Component;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -30,6 +32,11 @@ import javax.swing.*;
 public class DesktopMenuImpl extends JMenu implements Menu {
   public DesktopMenuImpl(String text) {
     super(text);
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @NotNull

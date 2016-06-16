@@ -33,6 +33,16 @@ public class GwtMenuSeparatorImpl extends UIObject implements InternalGwtCompone
   }
 
   @Override
+  public void setWidth(String width) {
+    // can't change
+  }
+
+  @Override
+  public void setHeight(String height) {
+    // can't change
+  }
+
+  @Override
   public void setVisible(boolean visible) {
     // can't change
   }

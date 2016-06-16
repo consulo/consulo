@@ -18,6 +18,7 @@ package consulo.ui.internal;
 import com.intellij.ui.IdeBorderFactory2;
 import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +34,11 @@ public class DesktopLabeledLayoutImpl extends JPanel implements LabeledLayout {
     super(new BorderLayout());
 
     setBorder(IdeBorderFactory2.createTitledBorder(text));
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @NotNull

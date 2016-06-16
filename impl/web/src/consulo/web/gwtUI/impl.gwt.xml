@@ -14,13 +14,14 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<module rename-to='ui'>
+<module>
 
   <collapse-all-properties/>
 
   <inherits name='com.google.gwt.user.User'/>
   <inherits name="com.sksamuel.gwt.GwtWebsockets"/>
   <inherits name="org.gwt.advanced.Grid"/>
+  <inherits name="consulo.ui.api" />
 
   <entry-point class='consulo.web.gwtUI.client.UIEntryPoint'/>
 

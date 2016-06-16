@@ -17,9 +17,12 @@ package consulo.ui.internal;
 
 import com.intellij.openapi.ui.Splitter;
 import consulo.ui.Component;
+import consulo.ui.shared.Size;
 import consulo.ui.SplitLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -29,6 +32,11 @@ public class DesktopSplitLayoutImpl extends Splitter implements SplitLayout {
   @Override
   public void setProportion(int percent) {
     setProportion(percent / 100f);
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @Override

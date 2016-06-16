@@ -17,9 +17,12 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.shared.Size;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -28,6 +31,11 @@ import javax.swing.*;
 public class DesktopLabelImpl extends JLabel implements Label {
   public DesktopLabelImpl(String text) {
     super(text);
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @Nullable

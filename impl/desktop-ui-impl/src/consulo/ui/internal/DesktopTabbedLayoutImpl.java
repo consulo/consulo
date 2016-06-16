@@ -16,12 +16,14 @@
 package consulo.ui.internal;
 
 import consulo.ui.Component;
+import consulo.ui.shared.Size;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -32,6 +34,11 @@ public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout
   @Override
   public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
     return this;
+  }
+
+  @Override
+  public void setSize(@NotNull Size size) {
+    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @NotNull

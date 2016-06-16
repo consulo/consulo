@@ -16,11 +16,13 @@ package consulo;/*
 
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
+import consulo.ui.shared.Size;
 import consulo.ui.Window;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -28,6 +30,11 @@ import javax.swing.*;
  */
 public class DesktopTest {
   public static class JFrameWrapper extends JFrame implements Window {
+
+    @Override
+    public void setSize(@NotNull Size size) {
+      setSize(new Dimension(size.getWidth(), size.getHeight()));
+    }
 
     @Override
     public void setContent(@NotNull Component content) {
