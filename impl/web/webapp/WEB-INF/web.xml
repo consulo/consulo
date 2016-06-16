@@ -7,19 +7,10 @@
   <display-name>Consulo</display-name>
 
   <servlet>
-    <servlet-name>IconServlet</servlet-name>
-    <servlet-class>consulo.web.servlet.IconServlet</servlet-class>
-  </servlet>
-
-  <servlet>
     <servlet-name>UIIconServlet</servlet-name>
     <servlet-class>consulo.web.servlet.ui.UIIconServlet</servlet-class>
   </servlet>
 
-  <servlet-mapping>
-    <servlet-name>UIIconServlet</servlet-name>
-    <url-pattern>/uiIcon</url-pattern>
-  </servlet-mapping>
 
   <servlet>
     <servlet-name>gwtTransportServerImpl</servlet-name>
