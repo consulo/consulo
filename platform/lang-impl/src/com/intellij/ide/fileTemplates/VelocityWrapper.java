@@ -15,7 +15,12 @@
  */
 package com.intellij.ide.fileTemplates;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.SystemInfo;
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
@@ -29,8 +34,9 @@ import org.apache.velocity.runtime.log.LogSystem;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.apache.velocity.runtime.resource.Resource;
+import org.apache.velocity.runtime.resource.ResourceManager;
+import org.apache.velocity.runtime.resource.ResourceManagerImpl;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
-import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -40,14 +46,18 @@ import java.io.*;
  *
  * @author peter
  */
-@Logger
 class VelocityWrapper {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.VelocityWrapper");
   private static final ThreadLocal<FileTemplateManager> ourTemplateManager = new ThreadLocal<FileTemplateManager>();
 
   static {
-    try {
-      long time = System.currentTimeMillis();
-      final FileTemplateManager templateManager = FileTemplateManager.getInstance();
+    try{
+      final Class<?>[] interfaces = ResourceManagerImpl.class.getInterfaces();
+      if (interfaces.length != 1 || !interfaces[0].equals(ResourceManager.class)) {
+        throw new IllegalStateException("Incorrect velocity version in the classpath" +
+                                        ", ResourceManager in " + PathManager.getJarPathForClass(ResourceManager.class) +
+                                        ", ResourceManagerImpl in " + PathManager.getJarPathForClass(ResourceManagerImpl.class));
+      }
 
       LogSystem emptyLogSystem = new LogSystem() {
         @Override
@@ -70,6 +80,7 @@ class VelocityWrapper {
 
         @Override
         public InputStream getResourceStream(String resourceName) throws ResourceNotFoundException {
+          FileTemplateManager templateManager = ourTemplateManager.get();
           final FileTemplate include = templateManager.getPattern(resourceName);
           if (include == null) {
             throw new ResourceNotFoundException("Template not found: " + resourceName);
@@ -93,11 +104,25 @@ class VelocityWrapper {
           return 0L;
         }
       });
-      Velocity.init();
-      System.out.println(time - System.currentTimeMillis());
+
+      Thread thread = Thread.currentThread();
+      ClassLoader classLoader = thread.getContextClassLoader();
+      Application application = ApplicationManager.getApplication();
+
+      if (application.isInternal() && !application.isUnitTestMode() &&
+          SystemInfo.isJavaVersionAtLeast("1.6.0_33") && SystemInfo.isAppleJvm) {
+        thread.setContextClassLoader(FileTemplate.class.getClassLoader());
+      }
+
+      try {
+        Velocity.init();
+      }
+      finally {
+        thread.setContextClassLoader(classLoader);
+      }
     }
-    catch (Exception e) {
-      LOGGER.error("Unable to init Velocity", e);
+    catch (Exception e){
+      LOG.error("Unable to init Velocity", e);
     }
   }
 
