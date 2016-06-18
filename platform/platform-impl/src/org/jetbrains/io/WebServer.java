@@ -248,7 +248,7 @@ public class WebServer implements Disposable {
       openChannels.close().awaitUninterruptibly();
     }
     finally {
-      channelFactory.releaseExternalResources();
+      channelFactory.shutdown();
     }
     LOG.info("web server stopped");
   }
