@@ -81,6 +81,7 @@ class VelocityWrapper {
         @Override
         public InputStream getResourceStream(String resourceName) throws ResourceNotFoundException {
           FileTemplateManager templateManager = ourTemplateManager.get();
+          if (templateManager == null) templateManager = FileTemplateManager.getInstance();
           final FileTemplate include = templateManager.getPattern(resourceName);
           if (include == null) {
             throw new ResourceNotFoundException("Template not found: " + resourceName);
