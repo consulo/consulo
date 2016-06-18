@@ -15,24 +15,46 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.util.concurrency.Semaphore;
+import com.intellij.openapi.util.EmptyRunnable;
 import consulo.ui.RequiredUIThread;
 import consulo.web.servlet.ui.GwtUIAccess;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
 public class WGwtModalWindowImpl extends WGwtWindowImpl {
-  private Semaphore mySemaphore = new Semaphore();
+  private Runnable myCallback = EmptyRunnable.getInstance();
 
   public WGwtModalWindowImpl() {
     myVisible = false;
   }
 
+  @RequiredUIThread
+  public void show(@NotNull Runnable callback) {
+    myCallback = callback;
+
+    setVisibleImpl(true);
+  }
+
+  @RequiredUIThread
+  public void hide(boolean callCallback) {
+    setVisibleImpl(false);
+
+    if(callCallback) {
+      myCallback.run();
+    }
+  }
+
   @Override
   @RequiredUIThread
+  @Deprecated
   public void setVisible(boolean value) {
+    throw new IllegalArgumentException("Use show() or hide()");
+  }
+
+  private void setVisibleImpl(boolean value) {
     if (myVisible == value) {
       return;
     }
@@ -40,12 +62,8 @@ public class WGwtModalWindowImpl extends WGwtWindowImpl {
     myVisible = value;
 
     if (myVisible) {
-      mySemaphore.down();
-
       GwtUIAccess gwtUIAccess = GwtUIAccess.get();
       gwtUIAccess.showModal(this);
-
-      mySemaphore.waitFor();
     }
     else {
       disposeImpl();
@@ -55,6 +73,5 @@ public class WGwtModalWindowImpl extends WGwtWindowImpl {
   }
 
   public void disposeImpl() {
-    mySemaphore.tryUp();
   }
 }

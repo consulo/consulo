@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwtUI.client.ui;
 
 import com.google.gwt.user.cellview.client.CellTree;
 
@@ -25,6 +25,6 @@ public interface DefaultCellTreeResources extends CellTree.Resources {
   /**
    * The styles used in this widget.
    */
-  @Source("consulo/web/gwt/client/resource/css/cellTree.css")
+  @Source("consulo/web/gwtUI/client/resource/css/gwt-cell-tree.css")
   CellTree.Style cellTreeStyle();
 }
