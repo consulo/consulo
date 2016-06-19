@@ -18,7 +18,6 @@ package com.intellij.codeInsight.generation.actions;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.DumbService;
@@ -29,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 
-public class GenerateAction extends DumbAwareAction implements PreloadableAction {
+public class GenerateAction extends DumbAwareAction {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull final AnActionEvent e) {
@@ -94,11 +93,6 @@ public class GenerateAction extends DumbAwareAction implements PreloadableAction
       }
     }
     return copy;
-  }
-
-  @Override
-  public void preload() {
-    ((ActionManagerImpl) ActionManager.getInstance()).preloadActionGroup(IdeActions.GROUP_GENERATE);
   }
 
   private static class GenerateWrappingGroup extends ActionGroup {

@@ -30,7 +30,10 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationActivationListener;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -40,8 +43,8 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.registry.Registry;
@@ -131,7 +134,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   private final Map<AnAction, DataContext> myQueuedNotifications = new LinkedHashMap<AnAction, DataContext>();
   private final Map<AnAction, AnActionEvent> myQueuedNotificationsEvents = new LinkedHashMap<AnAction, AnActionEvent>();
 
-  private Runnable myPreloadActionsRunnable;
   private boolean myTransparentOnlyUpdate;
 
   ActionManagerImpl(KeymapManager keymapManager, DataManager dataManager) {
@@ -1182,76 +1184,20 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
-  private int myActionsPreloaded = 0;
-
-  public void preloadActions() {
-    if (myPreloadActionsRunnable == null) {
-      myPreloadActionsRunnable = new Runnable() {
-        @Override
-        public void run() {
-          try {
-            doPreloadActions();
-          }
-          catch (RuntimeInterruptedException ignore) {
-          }
-        }
-      };
-      ApplicationManager.getApplication().executeOnPooledThread(myPreloadActionsRunnable);
-    }
-  }
-
-  private void doPreloadActions() {
-    try {
-      Thread.sleep(5000); // wait for project initialization to complete
-    }
-    catch (InterruptedException e) {
-      return; // IDEA exited
-    }
-    preloadActionGroup(IdeActions.GROUP_EDITOR_POPUP);
-    preloadActionGroup(IdeActions.GROUP_EDITOR_TAB_POPUP);
-    preloadActionGroup(IdeActions.GROUP_PROJECT_VIEW_POPUP);
-    preloadActionGroup(IdeActions.GROUP_MAIN_MENU);
-    // TODO anything else?
-    LOG.debug("Actions preloading completed");
-  }
-
-  public void preloadActionGroup(final String groupId) {
-    final AnAction action = getAction(groupId);
-    if (action instanceof ActionGroup) {
-      preloadActionGroup((ActionGroup)action);
-    }
-  }
-
-  private void preloadActionGroup(final ActionGroup group) {
+  public void preloadActions(ProgressIndicator indicator) {
     final Application application = ApplicationManager.getApplication();
-    final AnAction[] children = application.runReadAction(new Computable<AnAction[]>() {
-      @Override
-      public AnAction[] compute() {
-        if (application.isDisposed()) {
-          return AnAction.EMPTY_ARRAY;
-        }
 
-        return group.getChildren(null);
-      }
-    });
-    for (AnAction action : children) {
+    for (String id : getActionIds()) {
+      indicator.checkCanceled();
+      if (application.isDisposed()) return;
+
+      final AnAction action = getAction(id);
       if (action instanceof PreloadableAction) {
         ((PreloadableAction)action).preload();
       }
-      else if (action instanceof ActionGroup) {
-        preloadActionGroup((ActionGroup)action);
-      }
-
-      myActionsPreloaded++;
-      if (myActionsPreloaded % 10 == 0) {
-        try {
-          //noinspection BusyWait
-          Thread.sleep(300);
-        }
-        catch (InterruptedException ignored) {
-          throw new RuntimeInterruptedException(ignored);
-        }
-      }
+      // don't preload ActionGroup.getChildren() because that would unstub child actions
+      // and make it impossible to replace the corresponding actions later
+      // (via unregisterAction+registerAction, as some app components do)
     }
   }
 

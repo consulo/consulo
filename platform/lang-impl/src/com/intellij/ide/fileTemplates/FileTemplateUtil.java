@@ -37,28 +37,22 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ArrayUtil;
-import org.apache.commons.collections.ExtendedProperties;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.exception.VelocityException;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.RuntimeServices;
-import org.apache.velocity.runtime.RuntimeSingleton;
-import org.apache.velocity.runtime.log.LogSystem;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.ASTReference;
 import org.apache.velocity.runtime.parser.node.ASTSetDirective;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
-import org.apache.velocity.runtime.resource.Resource;
-import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -69,61 +63,6 @@ public class FileTemplateUtil{
   private static final CreateFromTemplateHandler ourDefaultCreateFromTemplateHandler = new DefaultCreateFromTemplateHandler();
 
   private FileTemplateUtil() {
-  }
-
-  static {
-    try{
-      final FileTemplateManager templateManager = FileTemplateManager.getInstance();
-
-      LogSystem emptyLogSystem = new LogSystem() {
-        @Override
-        public void init(RuntimeServices runtimeServices) throws Exception {
-        }
-
-        @Override
-        public void logVelocityMessage(int i, String s) {
-          //todo[myakovlev] log somethere?
-        }
-      };
-      Velocity.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM, emptyLogSystem);
-      Velocity.setProperty(RuntimeConstants.INPUT_ENCODING, FileTemplate.ourEncoding);
-      Velocity.setProperty(RuntimeConstants.PARSER_POOL_SIZE, 3);
-      Velocity.setProperty(RuntimeConstants.RESOURCE_LOADER, "includes");
-      Velocity.setProperty("includes.resource.loader.instance", new ResourceLoader() {
-        @Override
-        public void init(ExtendedProperties configuration) {
-        }
-
-        @Override
-        public InputStream getResourceStream(String resourceName) throws ResourceNotFoundException {
-          final FileTemplate include = templateManager.getPattern(resourceName);
-          if (include == null) {
-            throw new ResourceNotFoundException("Template not found: " + resourceName);
-          }
-          final String text = include.getText();
-          try {
-            return new ByteArrayInputStream(text.getBytes(FileTemplate.ourEncoding));
-          }
-          catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-          }
-        }
-
-        @Override
-        public boolean isSourceModified(Resource resource) {
-          return true;
-        }
-
-        @Override
-        public long getLastModified(Resource resource) {
-          return 0L;
-        }
-      });
-      Velocity.init();
-    }
-    catch (Exception e){
-      LOG.error("Unable to init Velocity", e);
-    }
   }
 
   public static String[] calculateAttributes(String templateContent, Properties properties, boolean includeDummies) throws ParseException {
@@ -142,7 +81,7 @@ public class FileTemplateUtil{
     final Set<String> unsetAttributes = new LinkedHashSet<String>();
     final Set<String> definedAttributes = new HashSet<String>();
     //noinspection HardCodedStringLiteral
-    SimpleNode template = RuntimeSingleton.parse(new StringReader(templateContent), "MyTemplate");
+    SimpleNode template = VelocityWrapper.parse(new StringReader(templateContent), "MyTemplate");
     collectAttributes(unsetAttributes, definedAttributes, template, propertiesNames, includeDummies);
     for (String definedAttribute : definedAttributes) {
       unsetAttributes.remove(definedAttribute);
@@ -248,7 +187,7 @@ public class FileTemplateUtil{
   private static String mergeTemplate(String templateContent, final VelocityContext context, boolean useSystemLineSeparators) throws IOException {
     final StringWriter stringWriter = new StringWriter();
     try {
-      Velocity.evaluate(context, stringWriter, "", templateContent);
+      VelocityWrapper.evaluate(null, context, stringWriter, templateContent);
     }
     catch (final VelocityException e) {
       LOG.error("Error evaluating template:\n"+templateContent,e);

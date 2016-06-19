@@ -290,16 +290,6 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @SuppressWarnings("unchecked")
   public boolean copy(@NotNull ModuleRootLayerImpl toSet, boolean notifyExtensionListener) {
     boolean changed = false;
-    if (areOrderEntriesChanged(toSet)) {
-      toSet.setOrderEntriesFrom(this);
-      changed = true;
-    }
-
-    if (areContentEntriesChanged(toSet)) {
-      toSet.setContentEntriesFrom(this);
-      changed = true;
-    }
-
     ModuleExtensionChangeListener moduleExtensionChangeListener = getModule().getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC);
 
     for (ModuleExtension extension : myExtensions) {
@@ -317,6 +307,16 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
         changed = true;
       }
+    }
+
+    if (areOrderEntriesChanged(toSet)) {
+      toSet.setOrderEntriesFrom(this);
+      changed = true;
+    }
+
+    if (areContentEntriesChanged(toSet)) {
+      toSet.setContentEntriesFrom(this);
+      changed = true;
     }
 
     toSet.myUnknownModuleExtensions.addAll(myUnknownModuleExtensions);

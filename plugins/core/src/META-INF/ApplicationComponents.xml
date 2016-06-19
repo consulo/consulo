@@ -133,6 +133,10 @@
     </component>
 
     <component>
+      <implementation-class>com.intellij.openapi.application.Preloader</implementation-class>
+    </component>
+
+    <component>
       <interface-class>com.intellij.notification.NotificationsConfiguration</interface-class>
       <implementation-class>com.intellij.notification.impl.NotificationsConfigurationImpl</implementation-class>
     </component>

@@ -257,35 +257,12 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, AccessibleCont
     private JComponent createSettingsAndDocs() {
       JPanel panel = new NonOpaquePanel(new BorderLayout());
       NonOpaquePanel toolbar = new NonOpaquePanel();
-      AnAction register = ActionManager.getInstance().getAction("Register");
-      boolean registeredVisible = false;
-      if (register != null) {
-        AnActionEvent e =
-                AnActionEvent.createFromAnAction(register, null, ActionPlaces.WELCOME_SCREEN, DataManager.getInstance().getDataContext(this));
-        register.update(e);
-        Presentation presentation = e.getPresentation();
-        if (presentation.isEnabled()) {
-          ActionLink registerLink = new ActionLink("Register", register);
-          // Don't allow focus, as the containing panel is going to focusable.
-          registerLink.setFocusable(false);
-          registerLink.setNormalColor(getLinkNormalColor());
-          NonOpaquePanel button = new NonOpaquePanel(new BorderLayout());
-          button.setBorder(JBUI.Borders.empty(4, 10));
-          button.add(registerLink);
-          installFocusable(button, register, KeyEvent.VK_UP, KeyEvent.VK_RIGHT, true);
-          NonOpaquePanel wrap = new NonOpaquePanel();
-          wrap.setBorder(JBUI.Borders.emptyLeft(10));
-          wrap.add(button);
-          panel.add(wrap, BorderLayout.WEST);
-          registeredVisible = true;
-        }
-      }
 
       toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.X_AXIS));
       if (NotificationsManagerImpl.newEnabled()) {
         toolbar.add(createEventsLink());
       }
-      toolbar.add(createActionLink("Configure", IdeActions.GROUP_WELCOME_SCREEN_CONFIGURE, AllIcons.General.GearPlain, !registeredVisible));
+      toolbar.add(createActionLink("Configure", IdeActions.GROUP_WELCOME_SCREEN_CONFIGURE, AllIcons.General.GearPlain, true));
       toolbar.add(createActionLink("Get Help", IdeActions.GROUP_WELCOME_SCREEN_DOC, null, false));
 
       panel.add(toolbar, BorderLayout.EAST);

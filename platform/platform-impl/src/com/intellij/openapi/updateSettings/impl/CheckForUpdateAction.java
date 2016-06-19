@@ -17,6 +17,7 @@ package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginHostsConfigurable;
+import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -35,10 +36,16 @@ import org.mustbe.consulo.RequiredDispatchThread;
 import java.util.List;
 
 public class CheckForUpdateAction extends AnAction implements DumbAware {
-
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setVisible(!SystemInfo.isMacSystemMenu);
+  public void update(@NotNull AnActionEvent e) {
+    String place = e.getPlace();
+    if (ActionPlaces.WELCOME_SCREEN.equals(place)) {
+      e.getPresentation().setEnabledAndVisible(true);
+    }
+    else {
+      e.getPresentation().setVisible(!SystemInfo.isMacSystemMenu || !ActionPlaces.MAIN_MENU.equals(place));
+    }
   }
 
   @Override
@@ -69,7 +76,7 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
         }
 
         final List<Couple<IdeaPluginDescriptor>> updatedPlugins = UpdateChecker.loadPluginsForUpdate(true, hostsConfigurable, indicator);
-        if(updatedPlugins != null && updatedPlugins.isEmpty()) {
+        if(updatedPlugins == null) {
           return;
         }
         ApplicationManager.getApplication().invokeLater(new Runnable() {
