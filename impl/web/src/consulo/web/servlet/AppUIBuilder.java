@@ -1,20 +1,20 @@
 package consulo.web.servlet;
 
+import com.intellij.ide.projectView.ViewSettings;
+import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
+import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.TimeoutUtil;
 import consulo.ui.*;
-import consulo.ui.internal.WGwtListBoxImpl;
-import consulo.ui.internal.WGwtModalWindowImpl;
-import consulo.ui.model.ImmutableListModel;
-import consulo.ui.shared.Size;
+import consulo.ui.internal.WGwtTreeImpl;
 import consulo.web.AppInit;
 import consulo.web.servlet.ui.UIBuilder;
 import consulo.web.servlet.ui.UIServlet;
@@ -22,10 +22,51 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.annotation.WebServlet;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AppUIBuilder extends UIBuilder {
+  private static final ViewSettings ourViewSettings = new ViewSettings() {
+    @Override
+    public boolean isShowMembers() {
+      return false;
+    }
+
+    @Override
+    public boolean isAbbreviatePackageNames() {
+      return false;
+    }
+
+    @Override
+    public boolean isFlattenPackages() {
+      return false;
+    }
+
+    @Override
+    public boolean isHideEmptyMiddlePackages() {
+      return false;
+    }
+
+    @Override
+    public boolean isShowLibraryContents() {
+      return true;
+    }
+
+    @NotNull
+    @Override
+    public <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option) {
+      return option.getDefaultValue();
+    }
+
+    @Override
+    public boolean isStructureView() {
+      return false;
+    }
+
+    @Override
+    public boolean isShowModules() {
+      return true;
+    }
+  };
+
   @WebServlet("/app")
   public static class Servlet extends UIServlet {
     public Servlet() {
@@ -49,39 +90,12 @@ public class AppUIBuilder extends UIBuilder {
       }
     }
 
-    final WGwtModalWindowImpl modalWindow = new WGwtModalWindowImpl();
-    modalWindow.setSize(new Size(777, 460));
+    final Project project = getOrLoadProject("R:/_github.com/consulo/mssdw");
+    if(project == null) {
+      return;
+    }
 
-    List<String> projectList = new ArrayList<String>();
-    projectList.add("R:/_github.com/consulo/mssdw");
-
-    final Ref<String> selected = Ref.create();
-    WGwtListBoxImpl<String> listBox = new WGwtListBoxImpl<String>(new ImmutableListModel<String>(projectList));
-    listBox.addValueListener(new ValueComponent.ValueListener<String>() {
-      @Override
-      public void valueChanged(@NotNull ValueComponent.ValueEvent<String> event) {
-        selected.set(event.getValue());
-
-        modalWindow.hide(true);
-      }
-    });
-
-    modalWindow.setContent(Layouts.horizontalSplit().setFirstComponent(listBox).setSecondComponent(Components.label("Choose project")));
-    modalWindow.show(new Runnable() {
-      @Override
-      public void run() {
-        final String projectPath = selected.get();
-        System.out.println(projectPath + " selected");
-
-        final Project project = getOrLoadProject(projectPath);
-        if (project == null) {
-          System.out.println("project is null");
-          return;
-        }
-
-        buildContent(window, project);
-      }
-    });
+    buildContent(window, project);
   }
 
   private void buildContent(@NotNull Window window, @NotNull Project project) {
@@ -111,7 +125,11 @@ public class AppUIBuilder extends UIBuilder {
     final LabeledLayout labeled = Layouts.labeled("Some Panel Label");
     tabbed.addTab("Hello2", labeled.set(Components.label("test 1")));
 
-    splitLayout.setFirstComponent(Components.label("tree"));
+    ProjectViewProjectNode rootNode = new ProjectViewProjectNode(project, ourViewSettings);
+
+    WGwtTreeImpl<AbstractTreeNode<?>> tree = new WGwtTreeImpl<AbstractTreeNode<?>>(rootNode);
+
+    splitLayout.setFirstComponent(tree);
     splitLayout.setSecondComponent(tabbed);
     splitLayout.setProportion(20);
 
