@@ -39,6 +39,7 @@ public class UIComponent extends UIVariablesOwner {
   private String myType;
   private ArrayList<Child> myChildren;
 
+
   public long getId() {
     return myId;
   }

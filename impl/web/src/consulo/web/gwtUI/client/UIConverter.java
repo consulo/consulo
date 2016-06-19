@@ -15,6 +15,7 @@
  */
 package consulo.web.gwtUI.client;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
 import consulo.web.gwtUI.client.ui.*;
 import consulo.web.gwtUI.shared.UIComponent;
@@ -30,152 +31,18 @@ import java.util.Map;
  * @since 11-Jun-16
  */
 public class UIConverter {
-  interface Factory {
-    InternalGwtComponent create();
-  }
-
-  private static Map<String, Factory> ourMap = new HashMap<String, Factory>();
-
-  static {
-    ourMap.put("consulo.ui.internal.WGwtCheckBoxImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtCheckBoxImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtRadioButtonImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtRadioButtonImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtDockLayoutImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtDockLayoutImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtVerticalLayoutImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtVerticalLayoutImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtComboBoxImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtComboBoxImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtHorizontalLayoutImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtHorizontalLayoutImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtLabelImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtLabelImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtHtmlLabelImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtHtmlLabelImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtImageImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtImageImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtLayeredImageImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtLayeredImageImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtHorizontalSplitLayoutImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtHorizontalSplitLayoutImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtTabbedLayoutImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtTabbedLayoutImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtWindowImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtWindowImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtMenuBarImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtMenuBarImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtMenuImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtMenuImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtMenuItemImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtMenuItemImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtMenuSeparatorImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtMenuSeparatorImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtLabeledLayoutImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtLabeledLayoutImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtModalWindowImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtModalWindowImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtListBoxImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtListBoxImpl();
-      }
-    });
-    ourMap.put("consulo.ui.internal.WGwtTreeImpl", new Factory() {
-      @Override
-      public InternalGwtComponent create() {
-        return new GwtTreeImpl();
-      }
-    });
-  }
+  private static final UIFactory ourFactory = GWT.create(UIFactory.class);
 
   private static Map<Long, InternalGwtComponent> ourCache = new HashMap<Long, InternalGwtComponent>();
 
   public static InternalGwtComponent create(WebSocketProxy proxy, UIComponent uiComponent) {
     final String type = uiComponent.getType();
-    Factory factory = ourMap.get(type);
-    if (factory == null) {
-      Window.alert("Type " + type + " is not resolved");
+    InternalGwtComponent widget = ourFactory.create(type);
+    if (widget == null) {
+      Window.alert("Type " + type + " is not handled.");
+
       return null;
     }
-
-    final InternalGwtComponent widget = factory.create();
 
     ourCache.put(uiComponent.getId(), widget);
 
