@@ -165,7 +165,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
       return file;
     }
 
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
+    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DirectoryBasedStorage.class);
     try {
       return parentVirtualFile.createChildData(requestor, fileName);
     }

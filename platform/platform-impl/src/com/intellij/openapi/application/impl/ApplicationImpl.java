@@ -1208,7 +1208,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   @RequiredDispatchThread
   @NotNull
   @Override
-  public AccessToken acquireWriteActionLock(Class clazz) {
+  public AccessToken acquireWriteActionLock(@NotNull Class clazz) {
     assertIsDispatchThread(getStatus(), "Write access is allowed from event dispatch thread only");
     return new WriteAccessToken(clazz);
   }
@@ -1216,7 +1216,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   private class WriteAccessToken extends AccessToken {
     private final Class clazz;
 
-    public WriteAccessToken(Class clazz) {
+    public WriteAccessToken(@NotNull Class clazz) {
       this.clazz = clazz;
       startWrite(clazz);
       markThreadNameInStackTrace();
