@@ -797,14 +797,7 @@ public class CompositeElement extends TreeElement {
   }
 
   protected PsiElement createPsiNoLock() {
-    final Language lang = getElementType().getLanguage();
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
-    if (parserDefinition != null) {
-      return parserDefinition.createElement(this);
-    }
-
-    //noinspection ConstantConditions
-    return null;
+    return PsiElementFactory.EP.getValue(getElementType()).createElement(this);
   }
 
   public void setPsi(@NotNull PsiElement psi) {
