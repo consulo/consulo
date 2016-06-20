@@ -24,6 +24,7 @@ package com.intellij.openapi.vfs.encoding;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -41,7 +42,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -321,7 +321,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
         Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
         if (cachedDocument == null) return true;
         ProgressManager.progress("Reloading files...", file.getPresentableUrl());
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
+        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), new Runnable() {
           @Override
           public void run() {
             clearAndReload(file);
@@ -396,7 +396,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
             Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
             if (cachedDocument != null) {
               ProgressManager.progress("Reloading file...", file.getPresentableUrl());
-              UIUtil.invokeLaterIfNeeded(new Runnable() {
+              TransactionGuard.submitTransaction(myProject, new Runnable() {
                 @Override
                 public void run() {
                   reload(file);

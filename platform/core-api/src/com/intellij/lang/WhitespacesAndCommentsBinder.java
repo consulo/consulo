@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -31,7 +32,15 @@ public interface WhitespacesAndCommentsBinder {
    * Provides an ability for the processor to get a text of any of given tokens.
    */
   interface TokenTextGetter {
+    @NotNull
     CharSequence get(int i);
+  }
+
+  /**
+   * Recursive binder is allowed to adjust nested elements positions.
+   */
+  interface RecursiveBinder extends WhitespacesAndCommentsBinder {
+
   }
 
   /**

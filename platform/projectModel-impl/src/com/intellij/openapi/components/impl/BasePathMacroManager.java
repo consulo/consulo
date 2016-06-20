@@ -199,7 +199,7 @@ public class BasePathMacroManager extends PathMacroManager {
     }
 
     @Override
-    public Collection<String> getComponents(final Collection<String> macros) {
+    public Set<String> getComponents(final Collection<String> macros) {
       final Set<String> result = new HashSet<String>();
       for (String macro : myMacroToComponentNames.keySet()) {
         if (macros.contains(macro)) {
@@ -211,10 +211,10 @@ public class BasePathMacroManager extends PathMacroManager {
     }
 
     @Override
-    public Collection<String> getUnknownMacros(final String componentName) {
+    public Set<String> getUnknownMacros(final String componentName) {
       final Set<String> result = new HashSet<String>();
       result.addAll(componentName == null ? myMacroToComponentNames.keySet() : myComponentNameToMacros.get(componentName));
-      return Collections.unmodifiableCollection(result);
+      return Collections.unmodifiableSet(result);
     }
 
     @Override

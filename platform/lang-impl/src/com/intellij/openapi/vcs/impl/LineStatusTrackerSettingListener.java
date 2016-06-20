@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.application;
+package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.util.messages.Topic;
 
-public abstract class ApplicationAdapter implements ApplicationListener {
-  public boolean canExitApplication() {
-    return true;
-  }
+public interface LineStatusTrackerSettingListener {
+  Topic<LineStatusTrackerSettingListener> TOPIC = Topic.create("line status tracker settings changed", LineStatusTrackerSettingListener.class);
 
-  public void applicationExiting() {
-  }
-
-  public void beforeWriteActionStart(Object action) {
-  }
-
-  public void writeActionStarted(Object action) {
-  }
-
-  public void writeActionFinished(Object action) {
-  }
+  void settingsUpdated();
 }

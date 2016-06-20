@@ -119,8 +119,8 @@ public class XmlElementStorageTest extends LightPlatformLangTestCase {
 
     @NotNull
     @Override
-    public Collection<String> getComponents(@NotNull Collection<String> macros) {
-      return Collections.emptyList();
+    public Set<String> getComponents(@NotNull Collection<String> macros) {
+      return Collections.emptySet();
     }
 
     @Override
@@ -139,7 +139,7 @@ public class XmlElementStorageTest extends LightPlatformLangTestCase {
 
     @NotNull
     @Override
-    public Collection<String> getUnknownMacros(final String componentName) {
+    public Set<String> getUnknownMacros(final String componentName) {
       return Collections.emptySet();
     }
 

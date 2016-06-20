@@ -35,6 +35,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbService;
@@ -119,7 +120,8 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void compileAndRun(@NotNull final Runnable startRunnable, @NotNull final ExecutionEnvironment environment,
+  public void compileAndRun(@NotNull final Runnable startRunnable,
+                            @NotNull final ExecutionEnvironment environment,
                             @Nullable final RunProfileState state,
                             @Nullable final Runnable onCancelRunnable) {
     long id = environment.getExecutionId();
@@ -151,8 +153,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
             if (myProject.isDisposed()) {
               return;
             }
-            @SuppressWarnings("unchecked")
-            BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myProject, task.getProviderId());
+            @SuppressWarnings("unchecked") BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myProject, task.getProviderId());
             if (provider == null) {
               LOG.warn("Cannot find BeforeRunTaskProvider for id='" + task.getProviderId() + "'");
               continue;
@@ -183,9 +184,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void startRunProfile(@NotNull final RunProfileStarter starter,
-                              @NotNull final RunProfileState state,
-                              @NotNull final ExecutionEnvironment environment) {
+  public void startRunProfile(@NotNull final RunProfileStarter starter, @NotNull final RunProfileState state, @NotNull final ExecutionEnvironment environment) {
     final Project project = environment.getProject();
     final RunContentDescriptor reuseContent = getContentManager().getReuseContent(environment);
     if (reuseContent != null) {
@@ -195,7 +194,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     final Executor executor = environment.getExecutor();
     project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStartScheduled(executor.getId(), environment);
 
-    Runnable startRunnable = new Runnable() {
+    final Runnable startRunnable = new Runnable() {
       @Override
       public void run() {
         if (project.isDisposed()) {
@@ -247,14 +246,20 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       startRunnable.run();
     }
     else {
-      compileAndRun(startRunnable, environment, state, new Runnable() {
-        @Override
-        public void run() {
-          if (!project.isDisposed()) {
-            project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
-          }
-        }
-      });
+      compileAndRun(new Runnable() {
+                      @Override
+                      public void run() {
+                        TransactionGuard.submitTransaction(project, startRunnable);
+                      }
+                    }, environment, state, new Runnable() {
+                      @Override
+                      public void run() {
+                        if (!project.isDisposed()) {
+                          project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
+                        }
+                      }
+                    }
+      );
     }
   }
 
@@ -277,7 +282,9 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @NotNull
-  private static ExecutionEnvironmentBuilder createEnvironmentBuilder(@NotNull Project project, @NotNull Executor executor, @Nullable RunnerAndConfigurationSettings configuration) {
+  private static ExecutionEnvironmentBuilder createEnvironmentBuilder(@NotNull Project project,
+                                                                      @NotNull Executor executor,
+                                                                      @Nullable RunnerAndConfigurationSettings configuration) {
     ExecutionEnvironmentBuilder builder = new ExecutionEnvironmentBuilder(project, executor);
 
     ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), configuration != null ? configuration.getConfiguration() : null);
@@ -302,8 +309,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void restartRunProfile(@Nullable ProgramRunner runner, @NotNull ExecutionEnvironment environment,
-                                @Nullable RunContentDescriptor currentDescriptor) {
+  public void restartRunProfile(@Nullable ProgramRunner runner, @NotNull ExecutionEnvironment environment, @Nullable RunContentDescriptor currentDescriptor) {
     ExecutionEnvironmentBuilder builder = new ExecutionEnvironmentBuilder(environment).contentToReuse(currentDescriptor);
     if (runner != null) {
       builder.runner(runner);
@@ -340,13 +346,11 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     List<RunContentDescriptor> runningToStop = ContainerUtil.concat(runningOfTheSameType, runningIncompatible);
     if (!runningToStop.isEmpty()) {
       if (configuration != null) {
-        if (!runningOfTheSameType.isEmpty()
-            && (runningOfTheSameType.size() > 1 || contentToReuse == null || runningOfTheSameType.get(0) != contentToReuse) &&
+        if (!runningOfTheSameType.isEmpty() && (runningOfTheSameType.size() > 1 || contentToReuse == null || runningOfTheSameType.get(0) != contentToReuse) &&
             !userApprovesStopForSameTypeConfigurations(environment.getProject(), configuration.getName(), runningOfTheSameType.size())) {
           return;
         }
-        if (!runningIncompatible.isEmpty()
-            && !userApprovesStopForIncompatibleConfigurations(myProject, configuration.getName(), runningIncompatible)) {
+        if (!runningIncompatible.isEmpty() && !userApprovesStopForIncompatibleConfigurations(myProject, configuration.getName(), runningIncompatible)) {
           return;
         }
       }
@@ -413,13 +417,10 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
         return CommonBundle.message("dialog.options.do.not.show");
       }
     };
-    return Messages.showOkCancelDialog(
-            project,
-            ExecutionBundle.message("rerun.singleton.confirmation.message", configName, instancesCount),
-            ExecutionBundle.message("process.is.running.dialog.title", configName),
-            ExecutionBundle.message("rerun.confirmation.button.text"),
-            CommonBundle.message("button.cancel"),
-            Messages.getQuestionIcon(), option) == Messages.OK;
+    return Messages.showOkCancelDialog(project, ExecutionBundle.message("rerun.singleton.confirmation.message", configName, instancesCount),
+                                       ExecutionBundle.message("process.is.running.dialog.title", configName),
+                                       ExecutionBundle.message("rerun.confirmation.button.text"), CommonBundle.message("button.cancel"),
+                                       Messages.getQuestionIcon(), option) == Messages.OK;
   }
 
   private static boolean userApprovesStopForIncompatibleConfigurations(Project project,
@@ -463,19 +464,15 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       if (names.length() > 0) {
         names.append(", ");
       }
-      names.append(StringUtil.isEmpty(name) ? ExecutionBundle.message("run.configuration.no.name")
-                                            : String.format("'%s'", name));
+      names.append(StringUtil.isEmpty(name) ? ExecutionBundle.message("run.configuration.no.name") : String.format("'%s'", name));
     }
 
     //noinspection DialogTitleCapitalization
-    return Messages.showOkCancelDialog(
-            project,
-            ExecutionBundle.message("stop.incompatible.confirmation.message",
-                                    configName, names.toString(), runningIncompatibleDescriptors.size()),
-            ExecutionBundle.message("incompatible.configuration.is.running.dialog.title", runningIncompatibleDescriptors.size()),
-            ExecutionBundle.message("stop.incompatible.confirmation.button.text"),
-            CommonBundle.message("button.cancel"),
-            Messages.getQuestionIcon(), option) == Messages.OK;
+    return Messages.showOkCancelDialog(project, ExecutionBundle
+            .message("stop.incompatible.confirmation.message", configName, names.toString(), runningIncompatibleDescriptors.size()),
+                                       ExecutionBundle.message("incompatible.configuration.is.running.dialog.title", runningIncompatibleDescriptors.size()),
+                                       ExecutionBundle.message("stop.incompatible.confirmation.button.text"), CommonBundle.message("button.cancel"),
+                                       Messages.getQuestionIcon(), option) == Messages.OK;
   }
 
   @NotNull
@@ -547,30 +544,30 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     return result;
   }
 
-  private static class ProcessExecutionListener extends ProcessAdapter {
-    private final Project myProject;
-    private final RunProfile myProfile;
-    private final ProcessHandler myProcessHandler;
+private static class ProcessExecutionListener extends ProcessAdapter {
+  private final Project myProject;
+  private final RunProfile myProfile;
+  private final ProcessHandler myProcessHandler;
 
-    public ProcessExecutionListener(Project project, RunProfile profile, ProcessHandler processHandler) {
-      myProject = project;
-      myProfile = profile;
-      myProcessHandler = processHandler;
-    }
-
-    @Override
-    public void processTerminated(ProcessEvent event) {
-      if (myProject.isDisposed()) return;
-
-      myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminated(myProfile, myProcessHandler);
-      VirtualFileManager.getInstance().asyncRefresh(null);
-    }
-
-    @Override
-    public void processWillTerminate(ProcessEvent event, boolean willBeDestroyed) {
-      if (myProject.isDisposed()) return;
-
-      myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminating(myProfile, myProcessHandler);
-    }
+  public ProcessExecutionListener(Project project, RunProfile profile, ProcessHandler processHandler) {
+    myProject = project;
+    myProfile = profile;
+    myProcessHandler = processHandler;
   }
+
+  @Override
+  public void processTerminated(ProcessEvent event) {
+    if (myProject.isDisposed()) return;
+
+    myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminated(myProfile, myProcessHandler);
+    VirtualFileManager.getInstance().asyncRefresh(null);
+  }
+
+  @Override
+  public void processWillTerminate(ProcessEvent event, boolean willBeDestroyed) {
+    if (myProject.isDisposed()) return;
+
+    myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminating(myProfile, myProcessHandler);
+  }
+}
 }

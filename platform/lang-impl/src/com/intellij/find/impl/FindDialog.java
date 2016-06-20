@@ -29,6 +29,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentAdapter;
@@ -546,7 +547,12 @@ public class FindDialog extends DialogWrapper {
     alarm.addRequest(new Runnable() {
       @Override
       public void run() {
-        findSettingsChanged();
+        TransactionGuard.submitTransaction(myDisposable, new Runnable() {
+          @Override
+          public void run() {
+            FindDialog.this.findSettingsChanged();
+          }
+        });
       }
     }, 100);
   }

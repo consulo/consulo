@@ -21,6 +21,7 @@ import com.intellij.conversion.ConversionService;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.Disposable;
@@ -54,10 +55,8 @@ import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.SingleAlarm;
-import com.intellij.util.SmartList;
-import com.intellij.util.TimeoutUtil;
+import com.intellij.ui.GuiUtils;
+import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
@@ -69,6 +68,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,10 +77,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @State(
         name = "ProjectManager",
-        storages = {
-                @Storage(
-                        file = StoragePathMacros.APP_CONFIG + "/project.default.xml"
-                )}
+        storages = {@Storage(
+                file = StoragePathMacros.APP_CONFIG + "/project.default.xml"
+        )}
 )
 public class ProjectManagerImpl extends ProjectManagerEx implements PersistentStateComponent<Element>, ExportableApplicationComponent {
   private static final Logger LOG = Logger.getInstance(ProjectManagerImpl.class);
@@ -94,11 +93,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @SuppressWarnings({"FieldAccessedSynchronizedAndUnsynchronized"})
   private Element myDefaultProjectRootElement; // Only used asynchronously in save and dispose, which itself are synchronized.
 
-  private final List<Project> myOpenProjects = new ArrayList<Project>();
-  private Project[] myOpenProjectsArrayCache = {};
+  private Project[] myOpenProjects = {}; // guarded by lock
+  private final Object lock = new Object();
   private final List<ProjectManagerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-
-  private final Set<Project> myTestProjects = new THashSet<Project>();
 
   private final MultiMap<Project, Pair<VirtualFile, StateStorage>> myChangedProjectFiles = MultiMap.createSet();
   private final SingleAlarm myChangedFilesAlarm;
@@ -124,7 +121,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return array;
   }
 
-  /** @noinspection UnusedParameters*/
+  /**
+   * @noinspection UnusedParameters
+   */
   public ProjectManagerImpl(@NotNull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
     myProgressManager = progressManager;
     Application app = ApplicationManager.getApplication();
@@ -138,50 +137,48 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     });
 
     final ProjectManagerListener busPublisher = messageBus.syncPublisher(TOPIC);
-    addProjectManagerListener(
-            new ProjectManagerListener() {
-              @Override
-              public void projectOpened(final Project project) {
-                project.getMessageBus().connect(project).subscribe(StateStorage.PROJECT_STORAGE_TOPIC, new StateStorage.Listener() {
-                  @Override
-                  public void storageFileChanged(@NotNull VirtualFileEvent event, @NotNull StateStorage storage) {
-                    projectStorageFileChanged(event, storage, project);
-                  }
-                });
+    addProjectManagerListener(new ProjectManagerListener() {
+      @Override
+      public void projectOpened(final Project project) {
+        project.getMessageBus().connect(project).subscribe(StateStorage.PROJECT_STORAGE_TOPIC, new StateStorage.Listener() {
+          @Override
+          public void storageFileChanged(@NotNull VirtualFileEvent event, @NotNull StateStorage storage) {
+            projectStorageFileChanged(event, storage, project);
+          }
+        });
 
-                busPublisher.projectOpened(project);
-                for (ProjectManagerListener listener : getListeners(project)) {
-                  listener.projectOpened(project);
-                }
-              }
+        busPublisher.projectOpened(project);
+        for (ProjectManagerListener listener : getListeners(project)) {
+          listener.projectOpened(project);
+        }
+      }
 
-              @Override
-              public void projectClosed(Project project) {
-                busPublisher.projectClosed(project);
-                for (ProjectManagerListener listener : getListeners(project)) {
-                  listener.projectClosed(project);
-                }
-              }
+      @Override
+      public void projectClosed(Project project) {
+        busPublisher.projectClosed(project);
+        for (ProjectManagerListener listener : getListeners(project)) {
+          listener.projectClosed(project);
+        }
+      }
 
-              @Override
-              public boolean canCloseProject(Project project) {
-                for (ProjectManagerListener listener : getListeners(project)) {
-                  if (!listener.canCloseProject(project)) {
-                    return false;
-                  }
-                }
-                return true;
-              }
+      @Override
+      public boolean canCloseProject(Project project) {
+        for (ProjectManagerListener listener : getListeners(project)) {
+          if (!listener.canCloseProject(project)) {
+            return false;
+          }
+        }
+        return true;
+      }
 
-              @Override
-              public void projectClosing(Project project) {
-                busPublisher.projectClosing(project);
-                for (ProjectManagerListener listener : getListeners(project)) {
-                  listener.projectClosing(project);
-                }
-              }
-            }
-    );
+      @Override
+      public void projectClosing(Project project) {
+        busPublisher.projectClosing(project);
+        for (ProjectManagerListener listener : getListeners(project)) {
+          listener.projectClosing(project);
+        }
+      }
+    });
 
     virtualFileManager.addVirtualFileManagerListener(new VirtualFileManagerAdapter() {
       @Override
@@ -205,7 +202,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
-  public void initComponent() { }
+  public void initComponent() {
+  }
 
   @Override
   public void disposeComponent() {
@@ -276,7 +274,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return message;
   }
 
-  private void initProject(@NotNull ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
+  private void initProject(@NotNull final ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
     ProgressIndicator indicator = myProgressManager.getProgressIndicator();
     if (indicator != null && !project.isDefault()) {
       indicator.setText(ProjectBundle.message("loading.components.for", project.getName()));
@@ -298,25 +296,29 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       succeed = true;
     }
     finally {
-      if (!succeed) {
-        scheduleDispose(project);
+      if (!succeed && !project.isDefault()) {
+        TransactionGuard.submitTransaction(project, new Runnable() {
+          @Override
+          public void run() {
+            WriteAction.run(new ThrowableRunnable<RuntimeException>() {
+              @Override
+              public void run() throws RuntimeException {
+                Disposer.dispose(project);
+              }
+            });
+          }
+        });
       }
     }
   }
 
-  private ProjectImpl createProject(@Nullable String projectName,
-                                    @NotNull String dirPath,
-                                    boolean isDefault,
-                                    boolean isOptimiseTestLoadSpeed) {
-    return isDefault ? new DefaultProject(this, "", isOptimiseTestLoadSpeed)
-                     : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName);
+  private ProjectImpl createProject(@Nullable String projectName, @NotNull String dirPath, boolean isDefault, boolean isOptimiseTestLoadSpeed) {
+    return isDefault
+           ? new DefaultProject(this, "", isOptimiseTestLoadSpeed)
+           : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName);
   }
 
   private static void scheduleDispose(final ProjectImpl project) {
-    if (project.isDefault()) {
-      return;
-    }
-
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -393,73 +395,51 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @Override
   @NotNull
   public Project[] getOpenProjects() {
-    synchronized (myOpenProjects) {
-      if (myOpenProjectsArrayCache.length != myOpenProjects.size()) {
-        LOG.error("Open projects: " + myOpenProjects + "; cache: " + Arrays.asList(myOpenProjectsArrayCache));
-      }
-      if (myOpenProjectsArrayCache.length > 0 && myOpenProjectsArrayCache[0] != myOpenProjects.get(0)) {
-        LOG.error("Open projects cache corrupted. Open projects: " + myOpenProjects + "; cache: " + Arrays.asList(myOpenProjectsArrayCache));
-      }
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        Project[] testProjects = myTestProjects.toArray(new Project[myTestProjects.size()]);
-        for (Project testProject : testProjects) {
-          assert !testProject.isDisposed() : testProject;
-        }
-        return ArrayUtil.mergeArrays(myOpenProjectsArrayCache, testProjects);
-      }
-      return myOpenProjectsArrayCache;
+    synchronized (lock) {
+      return myOpenProjects;
     }
   }
 
   @Override
   public boolean isProjectOpened(Project project) {
-    synchronized (myOpenProjects) {
-      return ApplicationManager.getApplication().isUnitTestMode() && myTestProjects.contains(project) || myOpenProjects.contains(project);
+    synchronized (lock) {
+      return ArrayUtil.contains(project, myOpenProjects);
     }
   }
 
   @Override
   public boolean openProject(final Project project) {
     if (isLight(project)) {
-      throw new AssertionError("must not open light project");
+      ((ProjectImpl)project).setTemporarilyDisposed(false);
+      boolean isInitialized = StartupManagerEx.getInstanceEx(project).startupActivityPassed();
+      if (isInitialized) {
+        addToOpened(project);
+        // events already fired
+        return true;
+      }
     }
 
-    final Application application = ApplicationManager.getApplication();
-    if (!application.isUnitTestMode() && !((ProjectEx)project).getStateStore().checkVersion()) {
+    if (!addToOpened(project)) {
       return false;
     }
 
-    synchronized (myOpenProjects) {
-      if (myOpenProjects.contains(project)) {
-        return false;
-      }
-      myOpenProjects.add(project);
-      cacheOpenProjects();
-    }
-
-    fireProjectOpened(project);
-    DumbService.getInstance(project).queueTask(new DumbModeTask() {
-      @Override
-      public void performInDumbMode(@NotNull ProgressIndicator indicator) {
-        waitForFileWatcher(indicator);
-      }
-
-      @Override
-      public String toString() {
-        return "wait for file watcher";
-      }
-    });
-
-    final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-    boolean ok = myProgressManager.runProcessWithProgressSynchronously(new Runnable() {
+    Runnable process = new Runnable() {
       @Override
       public void run() {
+        TransactionGuard.getInstance().submitTransactionAndWait(new Runnable() {
+          @Override
+          public void run() {
+            fireProjectOpened(project);
+          }
+        });
+
+        final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
         startupManager.runStartupActivities();
 
-        // dumb mode should start before post-startup activities
-        // only when startCacheUpdate is called from UI thread, we can guarantee that
-        // when the method returns, the application has entered dumb mode
-        UIUtil.invokeAndWaitIfNeeded(new Runnable() {
+        // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
+        // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
+        // Post-startup activities should not ever see unindexed and at the same time non-dumb state
+        TransactionGuard.getInstance().submitTransactionAndWait(new Runnable() {
           @Override
           public void run() {
             startupManager.startCacheUpdate();
@@ -468,47 +448,65 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
         startupManager.runPostStartupActivitiesFromExtensions();
 
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
+        GuiUtils.invokeLaterIfNeeded(new Runnable() {
           @Override
           public void run() {
             if (!project.isDisposed()) {
               startupManager.runPostStartupActivities();
+
+
+              Application application = ApplicationManager.getApplication();
+              if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
+                final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
+                if (macroSubstitutor != null) {
+                  StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
+                }
+              }
             }
           }
-        });
+        }, ModalityState.NON_MODAL);
       }
-    }, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
+    };
+    if (myProgressManager.getProgressIndicator() != null) {
+      process.run();
+      return true;
+    }
 
+    boolean ok =
+            myProgressManager.runProcessWithProgressSynchronously(process, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
     if (!ok) {
       closeProject(project, false, false, true);
       notifyProjectOpenFailed();
       return false;
     }
 
-    if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
-      // should be invoked last
-      startupManager.runWhenProjectIsInitialized(new Runnable() {
-        @Override
-        public void run() {
-          final TrackingPathMacroSubstitutor macroSubstitutor =
-                  ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
-          if (macroSubstitutor != null) {
-            StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
-          }
-        }
-      });
-    }
-
     return true;
+  }
+
+  private boolean addToOpened(@NotNull Project project) {
+    assert !project.isDisposed() : "Must not open already disposed project";
+    synchronized (lock) {
+      if (isProjectOpened(project)) {
+        return false;
+      }
+      myOpenProjects = ArrayUtil.append(myOpenProjects, project);
+      ProjectCoreUtil.theProject = myOpenProjects.length == 1 ? project : null;
+    }
+    return true;
+  }
+
+  @NotNull
+  private Collection<Project> removeFromOpened(@NotNull Project project) {
+    synchronized (lock) {
+      myOpenProjects = ArrayUtil.remove(myOpenProjects, project);
+      ProjectCoreUtil.theProject = myOpenProjects.length == 1 ? myOpenProjects[0] : null;
+      return Arrays.asList(myOpenProjects);
+    }
   }
 
   private static boolean canCancelProjectLoading() {
     ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     return !(indicator instanceof NonCancelableSection);
-  }
-
-  private void cacheOpenProjects() {
-    myOpenProjectsArrayCache = myOpenProjects.toArray(new Project[myOpenProjects.size()]);
   }
 
   private static void waitForFileWatcher(ProgressIndicator indicator) {
@@ -712,28 +710,25 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
   @Override
   public void openTestProject(@NotNull final Project project) {
-    synchronized (myOpenProjects) {
-      assert ApplicationManager.getApplication().isUnitTestMode();
-      assert !project.isDisposed() : "Must not open already disposed project";
-      myTestProjects.add(project);
-    }
+    assert ApplicationManager.getApplication().isUnitTestMode();
+    openProject(project);
+    UIUtil.dispatchAllInvocationEvents(); // post init activities are invokeLatered
   }
 
   @Override
   public Collection<Project> closeTestProject(@NotNull Project project) {
-    synchronized (myOpenProjects) {
-      assert ApplicationManager.getApplication().isUnitTestMode();
-      myTestProjects.remove(project);
-      return myTestProjects;
-    }
+    assert ApplicationManager.getApplication().isUnitTestMode();
+    closeProject(project, false, false, false);
+    Project[] projects = getOpenProjects();
+    return projects.length == 0 ? Collections.<Project>emptyList() : Arrays.asList(projects);
   }
 
   @Override
   public void saveChangedProjectFile(@NotNull VirtualFile file, @NotNull Project project) {
     StateStorageManager storageManager = ((ProjectEx)project).getStateStore().getStateStorageManager();
     String fileSpec = storageManager.collapseMacros(file.getPath());
-    Couple<Collection<FileBasedStorage>> storages = storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec),
-                                                                                              Collections.<String>emptyList());
+    Couple<Collection<FileBasedStorage>> storages =
+            storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec), Collections.<String>emptyList());
     FileBasedStorage storage = ContainerUtil.getFirstItem(storages.first);
     // if empty, so, storage is not yet loaded, so, we don't have to reload
     if (storage != null) {
@@ -799,11 +794,16 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return closeProject(project, true, false, true);
   }
 
+  @RequiredDispatchThread
   public boolean closeProject(@NotNull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
     if (isLight(project)) {
-      throw new AssertionError("must not close light project");
+      removeFromOpened(project);
+      return true;
     }
-    if (!isProjectOpened(project)) return true;
+    else {
+      if (!isProjectOpened(project)) return true;
+    }
+
     if (checkCanClose && !canClose(project)) return false;
     final ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
     shutDownTracker.registerStopperThread(Thread.currentThread());
@@ -822,13 +822,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
-          synchronized (myOpenProjects) {
-            myOpenProjects.remove(project);
-            cacheOpenProjects();
-            myTestProjects.remove(project);
-          }
-
-          myChangedProjectFiles.remove(project);
+          removeFromOpened(project);
 
           fireProjectClosed(project);
 
@@ -895,8 +889,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   public void addProjectManagerListener(@NotNull Project project, @NotNull ProjectManagerListener listener) {
     List<ProjectManagerListener> listeners = project.getUserData(LISTENERS_IN_PROJECT_KEY);
     if (listeners == null) {
-      listeners = ((UserDataHolderEx)project)
-              .putUserDataIfAbsent(LISTENERS_IN_PROJECT_KEY, ContainerUtil.<ProjectManagerListener>createLockFreeCopyOnWriteList());
+      listeners =
+              ((UserDataHolderEx)project).putUserDataIfAbsent(LISTENERS_IN_PROJECT_KEY, ContainerUtil.<ProjectManagerListener>createLockFreeCopyOnWriteList());
     }
     listeners.add(listener);
   }

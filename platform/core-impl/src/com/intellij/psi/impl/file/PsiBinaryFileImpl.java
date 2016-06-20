@@ -23,9 +23,7 @@ import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.CheckUtil;
-import com.intellij.psi.impl.PsiElementBase;
-import com.intellij.psi.impl.PsiManagerImpl;
+import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.util.ArrayUtil;
@@ -39,12 +37,13 @@ import org.mustbe.consulo.RequiredWriteAction;
 import java.io.IOException;
 import java.util.Map;
 
-public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, Cloneable, Queryable {
+public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, PsiElementWithSubtreeChangeNotifier, PsiFileEx, Cloneable, Queryable {
   private final PsiManagerImpl myManager;
   private String myName; // for myFile == null only
   private byte[] myContents; // for myFile == null only
   private final long myModificationStamp;
   private final FileViewProvider myViewProvider;
+  private boolean myInvalidated;
 
   public PsiBinaryFileImpl(PsiManagerImpl manager, FileViewProvider viewProvider) {
     myViewProvider = viewProvider;
@@ -80,7 +79,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
     checkSetName(name);
 
-    if (isCopy()){
+    if (isCopy()) {
       myName = name;
       return this; // not absolutely correct - might change type
     }
@@ -145,6 +144,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     return this;
   }
 
+  @NotNull
   @RequiredReadAction
   @Override
   public TextRange getTextRange() {
@@ -206,10 +206,10 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   public PsiElement copy() {
     PsiBinaryFileImpl clone = (PsiBinaryFileImpl)clone();
     clone.myName = getName();
-    try{
+    try {
       clone.myContents = !isCopy() ? getVirtualFile().contentsToByteArray() : myContents;
     }
-    catch(IOException e){
+    catch (IOException e) {
     }
     return clone;
   }
@@ -239,14 +239,14 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
-  public void delete() throws IncorrectOperationException{
+  public void delete() throws IncorrectOperationException {
     checkDelete();
     PsiFileImplUtil.doDelete(this);
   }
 
   @Override
-  public void checkDelete() throws IncorrectOperationException{
-    if (isCopy()){
+  public void checkDelete() throws IncorrectOperationException {
+    if (isCopy()) {
       throw new IncorrectOperationException();
     }
     CheckUtil.checkWritable(this);
@@ -260,7 +260,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   @Override
   public boolean isValid() {
     if (isCopy()) return true; // "dummy" file
-    return getVirtualFile().isValid() && !myManager.getProject().isDisposed() && myManager.getFileManager().findFile(getVirtualFile()) == this;
+    return getVirtualFile().isValid() && !myManager.getProject().isDisposed() && !myInvalidated;
   }
 
   @Override
@@ -308,6 +308,10 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
+  public void subtreeChanged() {
+  }
+
+  @Override
   public PsiElement getContext() {
     return FileContextUtil.getFileContext(this);
   }
@@ -316,5 +320,20 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   public void putInfo(@NotNull Map<String, String> info) {
     info.put("fileName", getName());
     info.put("fileType", getFileType().getName());
+  }
+
+  @Override
+  public boolean isContentsLoaded() {
+    return false;
+  }
+
+  @Override
+  public void onContentReload() {
+  }
+
+  @Override
+  public void markInvalidated() {
+    myInvalidated = true;
+    DebugUtil.onInvalidated(this);
   }
 }

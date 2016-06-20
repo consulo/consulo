@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,20 +50,21 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.List;
 
 //todo listen & notifyListeners readonly events?
 public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements SettingsSavingComponent {
-  private final DocumentCommitThread myDocumentCommitThread;
+  private final DocumentCommitProcessor myDocumentCommitThread;
   private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
   public PsiDocumentManagerImpl(@NotNull final Project project,
                                 @NotNull PsiManager psiManager,
                                 @NotNull EditorFactory editorFactory,
                                 @NotNull MessageBus bus,
-                                @NonNls @NotNull final DocumentCommitThread documentCommitThread) {
+                                @NonNls @NotNull final DocumentCommitProcessor documentCommitThread) {
     super(project, psiManager, bus, documentCommitThread);
     myDocumentCommitThread = documentCommitThread;
     editorFactory.getEventMulticaster().addDocumentListener(this, project);
@@ -83,11 +84,12 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
     busConnection.subscribe(DocumentBulkUpdateListener.TOPIC, new DocumentBulkUpdateListener.Adapter() {
       @Override
       public void updateFinished(@NotNull Document doc) {
-        documentCommitThread.queueCommit(project, doc, "Bulk update finished", ApplicationManager.getApplication().getCurrentModalityState());
+        documentCommitThread.commitAsynchronously(project, doc, "Bulk update finished", ApplicationManager.getApplication().getDefaultModalityState());
       }
     });
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiFile getPsiFile(@NotNull Document document) {
@@ -114,7 +116,8 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
       if (myUnitTestMode) {
         myStopTrackingDocuments = true;
         try {
-          LOG.error("Too many uncommitted documents for " + myProject + ":\n" + StringUtil.join(myUncommittedDocuments, "\n") +
+          LOG.error("Too many uncommitted documents for " + myProject + "(" +myUncommittedDocuments.size()+")"+
+                    ":\n" + StringUtil.join(myUncommittedDocuments, "\n") +
                     "\n\n Project creation trace: " + myProject.getUserData(ProjectImpl.CREATION_TRACE));
         }
         finally {
@@ -139,7 +142,9 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   protected boolean finishCommitInWriteAction(@NotNull Document document,
                                               @NotNull List<Processor<Document>> finishProcessors,
                                               boolean synchronously) {
-    EditorWindowImpl.disposeInvalidEditors();  // in write action
+    if (ApplicationManager.getApplication().isWriteAccessAllowed()) { // can be false for non-physical PSI
+      EditorWindowImpl.disposeInvalidEditors();
+    }
     return super.finishCommitInWriteAction(document, finishProcessors, synchronously);
   }
 
@@ -154,7 +159,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
     if (doc instanceof DocumentWindow) doc = ((DocumentWindow)doc).getDelegate();
     final PostprocessReformattingAspect component = myProject.getComponent(PostprocessReformattingAspect.class);
     final FileViewProvider viewProvider = getCachedViewProvider(doc);
-    if (viewProvider != null) component.doPostponedFormatting(viewProvider);
+    if (viewProvider != null && component != null) component.doPostponedFormatting(viewProvider);
   }
 
   @Override
@@ -177,7 +182,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   @TestOnly
   public void clearUncommittedDocuments() {
     super.clearUncommittedDocuments();
-    myDocumentCommitThread.clearQueue();
+    ((DocumentCommitThread)myDocumentCommitThread).clearQueue();
   }
 
   @NonNls

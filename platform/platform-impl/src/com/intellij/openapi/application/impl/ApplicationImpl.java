@@ -473,22 +473,22 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @Override
   public void invokeLater(@NotNull final Runnable runnable) {
-    myInvokator.invokeLater(runnable);
+    invokeLater(runnable, getDisposed());
   }
 
   @Override
   public void invokeLater(@NotNull final Runnable runnable, @NotNull final Condition expired) {
-    myInvokator.invokeLater(runnable, expired);
+    invokeLater(runnable, ModalityState.defaultModalityState(), expired);
   }
 
   @Override
   public void invokeLater(@NotNull final Runnable runnable, @NotNull final ModalityState state) {
-    myInvokator.invokeLater(runnable, state);
+    invokeLater(runnable, state, getDisposed());
   }
 
   @Override
   public void invokeLater(@NotNull final Runnable runnable, @NotNull final ModalityState state, @NotNull final Condition expired) {
-    myInvokator.invokeLater(runnable, state, expired);
+    myInvokator.invokeLater(((TransactionGuardImpl)TransactionGuard.getInstance()).wrapLaterInvocation(runnable, state), state, expired);
   }
 
   @Override
@@ -1165,7 +1165,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return myWriteActionPending;
   }
 
-  private void startWrite(Class clazz) {
+  private void startWrite(@NotNull Class clazz) {
     boolean writeActionPending = myWriteActionPending;
     myWriteActionPending = true;
 
@@ -1345,15 +1345,15 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     myDispatcher.getMulticaster().applicationExiting();
   }
 
-  private void fireBeforeWriteActionStart(Class action) {
+  private void fireBeforeWriteActionStart(@NotNull Class action) {
     myDispatcher.getMulticaster().beforeWriteActionStart(action);
   }
 
-  private void fireWriteActionStarted(Class action) {
+  private void fireWriteActionStarted(@NotNull Class action) {
     myDispatcher.getMulticaster().writeActionStarted(action);
   }
 
-  private void fireWriteActionFinished(Class action) {
+  private void fireWriteActionFinished(@NotNull Class action) {
     myDispatcher.getMulticaster().writeActionFinished(action);
   }
 

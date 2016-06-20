@@ -422,7 +422,7 @@ public class RangeMarkerTest extends LightPlatformTestCase {
     synchronizer.replaceString(document, 3, 5, "bb");
     buffer.replace(3, 5, "bb");
     final PsiToDocumentSynchronizer.DocumentChangeTransaction transaction = synchronizer.getTransaction(document);
-    final Set<Pair<PsiToDocumentSynchronizer.MutableTextRange, StringBuffer>> affectedFragments = transaction.getAffectedFragments();
+    final Map<TextRange, CharSequence> affectedFragments = transaction.getAffectedFragments();
     assertEquals(affectedFragments.size(), 2);
 
     synchronizer.commitTransaction(document);
@@ -445,7 +445,7 @@ public class RangeMarkerTest extends LightPlatformTestCase {
       buffer.insert(i, "" + i);
     }
     final PsiToDocumentSynchronizer.DocumentChangeTransaction transaction = synchronizer.getTransaction(document);
-    final Set<Pair<PsiToDocumentSynchronizer.MutableTextRange, StringBuffer>> affectedFragments = transaction.getAffectedFragments();
+    final Map<TextRange, CharSequence> affectedFragments = transaction.getAffectedFragments();
     assertEquals(1, affectedFragments.size());
 
     synchronizer.commitTransaction(document);
@@ -461,7 +461,7 @@ public class RangeMarkerTest extends LightPlatformTestCase {
     RangeMarker marker = createMarker(buffer.toString(), 2, 5);
     synchronizer.startTransaction(getProject(), document, psiFile);
     final PsiToDocumentSynchronizer.DocumentChangeTransaction transaction = synchronizer.getTransaction(document);
-    final Set<Pair<PsiToDocumentSynchronizer.MutableTextRange, StringBuffer>> affectedFragments = transaction.getAffectedFragments();
+    final Map<TextRange, CharSequence> affectedFragments = transaction.getAffectedFragments();
 
 
     for (int i = 0; i < 10; i++) {
@@ -497,7 +497,7 @@ public class RangeMarkerTest extends LightPlatformTestCase {
     buffer.insert(7, "d");
 
     final PsiToDocumentSynchronizer.DocumentChangeTransaction transaction = synchronizer.getTransaction(document);
-    final Set<Pair<PsiToDocumentSynchronizer.MutableTextRange, StringBuffer>> affectedFragments = transaction.getAffectedFragments();
+    final Map<TextRange, CharSequence> affectedFragments = transaction.getAffectedFragments();
     assertEquals(3, affectedFragments.size());
 
     synchronizer.commitTransaction(document);

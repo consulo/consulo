@@ -20,7 +20,6 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.intellij.lang.annotations.JdkConstants;
@@ -34,14 +33,14 @@ import java.util.ArrayList;
 
 /**
  * Represents an entity that has a state, a presentation and can be performed.
- *
+ * <p/>
  * For an action to be useful, you need to implement {@link AnAction#actionPerformed}
  * and optionally to override {@link com.intellij.openapi.actionSystem.AnAction#update}. By overriding the
  * {@link com.intellij.openapi.actionSystem.AnAction#update} method you can dynamically change action's presentation
  * depending on the place (for more information on places see {@link ActionPlaces}.
- *
+ * <p/>
  * The same action can have various presentations.
- *
+ * <p/>
  * <pre>
  *  public class MyAction extends AnAction {
  *    public MyAction() {
@@ -84,7 +83,7 @@ public abstract class AnAction implements PossiblyDumbAware {
   /**
    * Creates a new action with its text, description and icon set to <code>null</code>.
    */
-  public AnAction(){
+  public AnAction() {
     this(null, null, null);
   }
 
@@ -93,7 +92,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param icon Default icon to appear in toolbars and menus (Note some platform don't have icons in menu).
    */
-  public AnAction(Icon icon){
+  public AnAction(Icon icon) {
     this(null, null, icon);
   }
 
@@ -102,24 +101,22 @@ public abstract class AnAction implements PossiblyDumbAware {
    * set to <code>null</code>.
    *
    * @param text Serves as a tooltip when the presentation is a button and the name of the
-   *  menu item when the presentation is a menu item.
+   *             menu item when the presentation is a menu item.
    */
-  public AnAction(@Nullable String text){
+  public AnAction(@Nullable String text) {
     this(text, null, null);
   }
 
   /**
    * Constructs a new action with the specified text, description and icon.
    *
-   * @param text Serves as a tooltip when the presentation is a button and the name of the
-   *  menu item when the presentation is a menu item
-   *
+   * @param text        Serves as a tooltip when the presentation is a button and the name of the
+   *                    menu item when the presentation is a menu item
    * @param description Describes current action, this description will appear on
-   *  the status bar when presentation has focus
-   *
-   * @param icon Action's icon
+   *                    the status bar when presentation has focus
+   * @param icon        Action's icon
    */
-  public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon){
+  public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
     myShortcutSet = ourEmptyShortcutSet;
     myEnabledInModalContext = false;
     Presentation presentation = getTemplatePresentation();
@@ -133,7 +130,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @return shortcut set associated with this action
    */
-  public final ShortcutSet getShortcutSet(){
+  public final ShortcutSet getShortcutSet() {
     return myShortcutSet;
   }
 
@@ -145,15 +142,15 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param shortcutSet the shortcuts for the action.
    * @param component   the component for which the shortcuts will be active.
    */
-  public final void registerCustomShortcutSet(@NotNull ShortcutSet shortcutSet, @Nullable JComponent component){
+  public final void registerCustomShortcutSet(@NotNull ShortcutSet shortcutSet, @Nullable JComponent component) {
     myShortcutSet = shortcutSet;
-    if (component != null){
+    if (component != null) {
       @SuppressWarnings("unchecked") ArrayList<AnAction> actionList = (ArrayList<AnAction>)component.getClientProperty(ourClientProperty);
-      if (actionList == null){
+      if (actionList == null) {
         actionList = new ArrayList<AnAction>(1);
         component.putClientProperty(ourClientProperty, actionList);
       }
-      if (!actionList.contains(this)){
+      if (!actionList.contains(this)) {
         actionList.add(this);
       }
     }
@@ -161,7 +158,7 @@ public abstract class AnAction implements PossiblyDumbAware {
 
   public final void registerCustomShortcutSet(int keyCode, @JdkConstants.InputEventMask int modifiers, @Nullable JComponent component) {
     registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
-  } 
+  }
 
   public final void registerCustomShortcutSet(@NotNull ShortcutSet shortcutSet, @NotNull final JComponent component, @NotNull Disposable parentDisposable) {
     registerCustomShortcutSet(shortcutSet, component);
@@ -173,10 +170,10 @@ public abstract class AnAction implements PossiblyDumbAware {
     });
   }
 
-  public final void unregisterCustomShortcutSet(JComponent component){
-    if (component != null){
+  public final void unregisterCustomShortcutSet(JComponent component) {
+    if (component != null) {
       @SuppressWarnings("unchecked") ArrayList<AnAction> actionList = (ArrayList<AnAction>)component.getClientProperty(ourClientProperty);
-      if (actionList != null){
+      if (actionList != null) {
         actionList.remove(this);
       }
     }
@@ -187,7 +184,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param sourceAction cannot be <code>null</code>
    */
-  public final void copyFrom(@NotNull AnAction sourceAction){
+  public final void copyFrom(@NotNull AnAction sourceAction) {
     Presentation sourcePresentation = sourceAction.getTemplatePresentation();
     Presentation presentation = getTemplatePresentation();
     presentation.setIcon(sourcePresentation.getIcon());
@@ -261,7 +258,7 @@ public abstract class AnAction implements PossiblyDumbAware {
   @NotNull
   public final Presentation getTemplatePresentation() {
     Presentation presentation = myTemplatePresentation;
-    if (presentation == null){
+    if (presentation == null) {
       myTemplatePresentation = presentation = new Presentation();
     }
     return presentation;
@@ -281,6 +278,7 @@ public abstract class AnAction implements PossiblyDumbAware {
 
   /**
    * Sets the flag indicating whether the action has an internal or a user-customized icon.
+   *
    * @param isDefaultIconSet true if the icon is internal, false if the icon is customized by the user.
    */
   public void setDefaultIcon(boolean isDefaultIconSet) {
@@ -289,6 +287,7 @@ public abstract class AnAction implements PossiblyDumbAware {
 
   /**
    * Returns true if the action has an internal, not user-customized icon.
+   *
    * @return true if the icon is internal, false if the icon is customized by the user.
    */
   public boolean isDefaultIcon() {
@@ -310,6 +309,10 @@ public abstract class AnAction implements PossiblyDumbAware {
   @Override
   public boolean isDumbAware() {
     return this instanceof DumbAware;
+  }
+
+  public boolean startInTransaction() {
+    return true;
   }
 
   public boolean isCanUseProjectAsDefault() {

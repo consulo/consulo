@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.caches.FileContent;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -38,7 +39,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.util.Consumer;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,11 +46,16 @@ import java.util.Collection;
 
 public class FileBasedIndexProjectHandler extends AbstractProjectComponent implements IndexableFileSet {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.FileBasedIndexProjectHandler");
+
   private final FileBasedIndex myIndex;
   private final ProjectRootManagerEx myRootManager;
   private final FileTypeManager myFileTypeManager;
 
-  public FileBasedIndexProjectHandler(final FileBasedIndex index, final Project project, final ProjectRootManagerComponent rootManager, FileTypeManager ftManager, final ProjectManager projectManager) {
+  public FileBasedIndexProjectHandler(FileBasedIndex index,
+                                      final Project project,
+                                      ProjectRootManagerComponent rootManager,
+                                      FileTypeManager ftManager,
+                                      final ProjectManager projectManager) {
     super(project);
     myIndex = index;
     myRootManager = rootManager;
@@ -58,7 +63,6 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
 
     if (ApplicationManager.getApplication().isInternal()) {
       project.getMessageBus().connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
-
         @Override
         public void enteredDumbMode() {
         }
@@ -77,13 +81,11 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
         public void run() {
           PushedFilePropertiesUpdater.getInstance(project).initializeProperties();
 
-          // dumb mode should start before post-startup activities
-          // only when queueTask is called from UI thread, we can guarantee that
-          // when the method returns, the application has entered dumb mode
-          UIUtil.invokeLaterIfNeeded(new Runnable() {
+          // schedule dumb mode start after the read action we're currently in
+          TransactionGuard.submitTransaction(project, new Runnable() {
             @Override
             public void run() {
-              if (!project.isDisposed() && FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
+              if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
                 DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project, true));
               }
             }
@@ -92,8 +94,9 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
           myIndex.registerIndexableSet(FileBasedIndexProjectHandler.this, project);
           projectManager.addProjectManagerListener(project, new ProjectManagerAdapter() {
             private boolean removed;
+
             @Override
-            public void projectClosing(Project project) {
+            public void projectClosing(Project project1) {
               if (!removed) {
                 removed = true;
                 myIndex.removeIndexableSet(FileBasedIndexProjectHandler.this);
@@ -130,7 +133,7 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
 
   @Override
   public void disposeComponent() {
-    // done mostly for tests. In real life this is noop, because the set was removed on project closing
+    // done mostly for tests. In real life this is no-op, because the set was removed on project closing
     myIndex.removeIndexableSet(this);
   }
 
@@ -140,9 +143,9 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
     if (!(i instanceof FileBasedIndexImpl)) {
       return null;
     }
-    final FileBasedIndexImpl index = (FileBasedIndexImpl)i;
 
-    if (index.getChangedFileCount() + index.getNumberOfPendingInvalidations() < 20) {
+    final FileBasedIndexImpl index = (FileBasedIndexImpl)i;
+    if (index.getChangedFileCount() < 20) {
       return null;
     }
 
@@ -157,11 +160,8 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
     };
   }
 
-  private static void reindexRefreshedFiles(ProgressIndicator indicator,
-                                            Collection<VirtualFile> files,
-                                            final Project project,
-                                            final FileBasedIndexImpl index) {
-    CacheUpdateRunner.processFiles(indicator, true, files, project, new Consumer<FileContent>() {
+  private static void reindexRefreshedFiles(ProgressIndicator indicator, Collection<VirtualFile> files, final Project project, final FileBasedIndexImpl index) {
+    CacheUpdateRunner.processFiles(indicator, true, files, project, new Consumer<com.intellij.ide.caches.FileContent>() {
       @Override
       public void consume(FileContent content) {
         index.processRefreshedFile(project, content);

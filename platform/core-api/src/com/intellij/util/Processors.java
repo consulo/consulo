@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.util;
 
-package com.intellij.psi.impl;
+import com.intellij.openapi.progress.ProgressManager;
+import org.jetbrains.annotations.NotNull;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.DocumentRunnable;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.IgnorePsiEventsMarker;
+import java.util.Collection;
 
-
-public abstract class CommitToPsiFileAction extends DocumentRunnable implements IgnorePsiEventsMarker {
-  protected CommitToPsiFileAction(Document document, Project project) {
-    super(document,project);
+public class Processors {
+  @NotNull
+  public static <T> Processor<T> cancelableCollectProcessor(@NotNull Collection<T> collection) {
+    return new CommonProcessors.CollectProcessor<T>(collection){
+      @Override
+      public boolean process(T t) {
+        ProgressManager.checkCanceled();
+        return super.process(t);
+      }
+    };
   }
 }
-
-
-
-

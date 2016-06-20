@@ -17,6 +17,7 @@ package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -243,12 +244,28 @@ public class ActionUtil {
     return true;
   }
 
-  public static void performActionDumbAware(AnAction action, AnActionEvent e) {
-    try {
-      action.actionPerformed(e);
-    }
-    catch (IndexNotReadyException e1) {
-      showDumbModeWarning(e);
+  public static void performActionDumbAware(final AnAction action, final AnActionEvent e) {
+    Runnable runnable = new Runnable() {
+      @Override
+      public void run() {
+        try {
+          action.actionPerformed(e);
+        }
+        catch (IndexNotReadyException e1) {
+          showDumbModeWarning(e);
+        }
+      }
+
+      @Override
+      public String toString() {
+        return action + " of " + action.getClass();
+      }
+    };
+
+    if (action.startInTransaction()) {
+      TransactionGuard.getInstance().submitTransactionAndWait(runnable);
+    } else {
+      runnable.run();
     }
   }
 

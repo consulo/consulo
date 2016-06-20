@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,10 +41,20 @@ import java.awt.*;
 import java.util.Set;
 
 public class ShowParameterInfoHandler implements CodeInsightActionHandler {
+  private final boolean myRequestFocus;
+
+  public ShowParameterInfoHandler() {
+    this(false);
+  }
+
+  public ShowParameterInfoHandler(boolean requestFocus) {
+    myRequestFocus = requestFocus;
+  }
+
   @RequiredDispatchThread
   @Override
   public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
-    invoke(project, editor, file, -1, null);
+    invoke(project, editor, file, -1, null, myRequestFocus);
   }
 
   @Override
@@ -52,24 +62,42 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
     return false;
   }
 
+  @Nullable
+  @RequiredDispatchThread
+  private static PsiElement findAnyElementAt(@NotNull PsiFile file, int offset) {
+    PsiElement element = file.findElementAt(offset);
+    if (element == null && offset > 0) element = file.findElementAt(offset - 1);
+    return element;
+  }
+
+  /**
+   * @deprecated use {@link #invoke(Project, Editor, PsiFile, int, Object, boolean)} instead
+   */
   @RequiredDispatchThread
   public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, Object highlightedElement) {
+    invoke(project, editor, file, lbraceOffset, highlightedElement, false);
+  }
+
+  @RequiredDispatchThread
+  public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, Object highlightedElement, boolean requestFocus) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     final int offset = editor.getCaretModel().getOffset();
-    final PsiElement psiElement = file.findElementAt(offset);
+    final PsiElement psiElement = findAnyElementAt(file, offset);
     if (psiElement == null) return;
 
     final ShowParameterInfoContext context = new ShowParameterInfoContext(
-      editor,
-      project,
-      file,
-      offset,
-      lbraceOffset
+            editor,
+            project,
+            file,
+            offset,
+            lbraceOffset,
+            requestFocus
     );
 
     context.setHighlightedElement(highlightedElement);
+    context.setRequestFocus(requestFocus);
 
     final Language language = psiElement.getLanguage();
     ParameterInfoHandler[] handlers = getHandlers(project, language, file.getViewProvider().getBaseLanguage());
@@ -85,7 +113,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
           if (handler.couldShowInLookup()) {
             final Object[] items = handler.getParametersForLookup(item, context);
             if (items != null && items.length > 0) {
-              showLookupEditorHint(items, editor, project, handler);
+              showLookupEditorHint(items, editor, project, handler, requestFocus);
             }
             return;
           }
@@ -94,16 +122,26 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
       return;
     }
 
-    for (ParameterInfoHandler<Object, ?> handler : handlers) {
-      Object element = handler.findElementForParameterInfo(context);
-      if (element != null) {
-        handler.showParameterInfo(element, context);
+    DumbService.getInstance(project).setAlternativeResolveEnabled(true);
+    try {
+      for (ParameterInfoHandler<Object, ?> handler : handlers) {
+        Object element = handler.findElementForParameterInfo(context);
+        if (element != null) {
+          handler.showParameterInfo(element, context);
+        }
       }
+    }
+    finally {
+      DumbService.getInstance(project).setAlternativeResolveEnabled(false);
     }
   }
 
-  private static void showLookupEditorHint(Object[] descriptors, final Editor editor, final Project project, ParameterInfoHandler handler) {
-    ParameterInfoComponent component = new ParameterInfoComponent(descriptors, editor, handler);
+  private static void showLookupEditorHint(Object[] descriptors,
+                                           final Editor editor,
+                                           final Project project,
+                                           ParameterInfoHandler handler,
+                                           boolean requestFocus) {
+    ParameterInfoComponent component = new ParameterInfoComponent(descriptors, editor, handler, requestFocus);
     component.update();
 
     final LightweightHint hint = new LightweightHint(component);
@@ -115,8 +153,8 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
       public void run() {
         if (!editor.getComponent().isShowing()) return;
         hintManager.showEditorHint(hint, editor, pos.getFirst(),
-                                   HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE | HintManager.UPDATE_BY_SCROLLING,
-                                   0, false, pos.getSecond());
+                                   HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE | HintManager.UPDATE_BY_SCROLLING, 0, false,
+                                   pos.getSecond());
       }
     });
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ import java.util.List;
 public interface DocumentEx extends Document {
   void setStripTrailingSpacesEnabled(boolean isEnabled);
 
-  @NotNull LineIterator createLineIterator();
+  @NotNull
+  LineIterator createLineIterator();
 
   void setModificationStamp(long modificationStamp);
 
@@ -37,7 +38,7 @@ public interface DocumentEx extends Document {
   void replaceText(@NotNull CharSequence chars, long newModificationStamp);
 
   /**
-   * Moves text from the <code>[src start; src end)</code> range to the <code>dstOffset</code> offset.
+   * Moves text from the <code>[srcStart; srcEnd)</code> range to the <code>dstOffset</code> offset.
    * <p/>
    * The benefit to use this method over usual {@link #deleteString(int, int)} and {@link #replaceString(int, int, CharSequence)}
    * is that {@link #createRangeMarker(int, int, boolean) range markers} from the <code>[srcStart; srcEnd)</code> range have
@@ -95,6 +96,11 @@ public interface DocumentEx extends Document {
    * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
    */
   boolean processRangeMarkersOverlappingWith(int start, int end, @NotNull Processor<RangeMarker> processor);
+
+  /**
+   * @return modification stamp. Guaranteed to be strictly increasing on each change unlike the {@link #getModificationStamp()} which can change arbitrarily.
+   */
+  int getModificationSequence();
 }
 
 

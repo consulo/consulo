@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.intellij.ui.mac.foundation.Foundation.invoke;
-import static com.intellij.ui.mac.foundation.Foundation.toStringViaUTF8;
+import static com.intellij.ui.mac.foundation.Foundation.*;
 
 /**
  * @author pegov
@@ -47,7 +46,7 @@ public class MacUtil {
   }
 
   @Nullable
-  public static ID findWindowForTitle(final String title) {
+  public static ID findWindowForTitle(@Nullable String title) {
     if (title == null || title.isEmpty()) return null;
     final ID pool = invoke("NSAutoreleasePool", "new");
 
@@ -173,24 +172,62 @@ public class MacUtil {
       catch (IllegalAccessException e) {
         LOG.debug(e);
       }
-
-    } else {
+    }
+    else {
       String foremostWindowTitle = getWindowTitle(w);
       windowId = findWindowForTitle(foremostWindowTitle);
     }
     return windowId;
   }
 
-
+  @Nullable
   public static String getWindowTitle(Window documentRoot) {
-    String windowTitle;
+    String windowTitle = null;
     if (documentRoot instanceof Frame) {
       windowTitle = ((Frame)documentRoot).getTitle();
-    } else if (documentRoot instanceof Dialog) {
+    }
+    else if (documentRoot instanceof Dialog) {
       windowTitle = ((Dialog)documentRoot).getTitle();
-    } else {
-      throw new RuntimeException("The window is not a frame and not a dialog!");
     }
     return windowTitle;
+  }
+
+  public static Object wakeUpNeo(String reason) {
+    // http://lists.apple.com/archives/java-dev/2014/Feb/msg00053.html
+    // https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSProcessInfo_Class/index.html#//apple_ref/c/tdef/NSActivityOptions
+    if (SystemInfo.isMacOSMavericks && Registry.is("idea.mac.prevent.app.nap")) {
+      ID processInfo = invoke("NSProcessInfo", "processInfo");
+      ID activity = invoke(processInfo, "beginActivityWithOptions:reason:",
+                           (0x00FFFFFFL & ~(1L << 20))  /* NSActivityUserInitiatedAllowingIdleSystemSleep */ |
+                           0xFF00000000L /* NSActivityLatencyCritical */,
+                           nsString(reason));
+      cfRetain(activity);
+      return activity;
+    }
+    return null;
+  }
+
+  public static void matrixHasYou(Object activity) {
+    if (activity != null) {
+      ID processInfo = invoke("NSProcessInfo", "processInfo");
+      invoke(processInfo, "endActivity:", activity);
+      cfRelease((ID)activity);
+    }
+  }
+
+  @NotNull
+  public static Color colorFromNative(ID color) {
+    final ID colorSpace = invoke("NSColorSpace", "genericRGBColorSpace");
+    final ID colorInSpace = invoke(color, "colorUsingColorSpace:", colorSpace);
+    final long red = invoke(colorInSpace, "redComponent").longValue();
+    final long green = invoke(colorInSpace, "greenComponent").longValue();
+    final long blue = invoke(colorInSpace, "blueComponent").longValue();
+    final long alpha = invoke(colorInSpace, "alphaComponent").longValue();
+    final double realAlpha = alpha != 0 && (int)((alpha >> 52) & 0x7ffL) == 0 ? 1.0 : Double.longBitsToDouble(alpha);
+    //noinspection UseJBColor
+    return new Color((float)Double.longBitsToDouble(red),
+                     (float)Double.longBitsToDouble(green),
+                     (float)Double.longBitsToDouble(blue),
+                     (float)realAlpha);
   }
 }

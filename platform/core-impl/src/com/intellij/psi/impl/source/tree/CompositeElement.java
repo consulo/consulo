@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.diagnostic.ThreadDumper;
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.tree.events.ChangeInfo;
 import com.intellij.pom.tree.events.TreeChangeEvent;
@@ -32,34 +34,33 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLock;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
-import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.impl.source.DummyHolderElement;
-import com.intellij.psi.impl.source.DummyHolderFactory;
-import com.intellij.psi.impl.source.SourceTreeToPsiMap;
+import com.intellij.psi.impl.source.*;
 import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.ArrayFactory;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-
-import java.util.List;
 
 public class CompositeElement extends TreeElement {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.CompositeElement");
 
-  private TreeElement firstChild = null;
-  private TreeElement lastChild = null;
+  private TreeElement firstChild;
+  private TreeElement lastChild;
 
   private volatile int myModificationsCount;
   private volatile int myCachedLength = -1;
   private volatile int myHC = -1;
   private volatile PsiElement myWrapper;
   private static final boolean ASSERT_THREADING = true;//DebugUtil.CHECK || ApplicationManagerEx.getApplicationEx().isInternal() || ApplicationManagerEx.getApplicationEx().isUnitTestMode();
+
+  private static final AtomicFieldUpdater<CompositeElement, PsiElement> ourPsiUpdater =
+          AtomicFieldUpdater.forFieldOfType(CompositeElement.class, PsiElement.class);
 
   public CompositeElement(@NotNull IElementType type) {
     super(type);
@@ -69,6 +70,7 @@ public class CompositeElement extends TreeElement {
     return myModificationsCount;
   }
 
+  @NotNull
   @Override
   public CompositeElement clone() {
     CompositeElement clone = (CompositeElement)super.clone();
@@ -114,7 +116,7 @@ public class CompositeElement extends TreeElement {
     clearRelativeOffsets(rawFirstChild());
   }
 
-  public void assertThreading() {
+  private void assertThreading() {
     if (ASSERT_THREADING) {
       boolean ok = ApplicationManager.getApplication().isWriteAccessAllowed() || isNonPhysicalOrInjected();
       if (!ok) {
@@ -158,6 +160,7 @@ public class CompositeElement extends TreeElement {
   @Override
   public LeafElement findLeafElementAt(int offset) {
     TreeElement element = this;
+    if (element.getTreeParent() == null && offset >= element.getTextLength()) return null;
     startFind:
     while (true) {
       TreeElement child = element.getFirstChildNode();
@@ -255,14 +258,12 @@ public class CompositeElement extends TreeElement {
 
   @Override
   @NotNull
-  @RequiredReadAction
   public String getText() {
     return StringFactory.createShared(textToCharArray());
   }
 
-  @Override
-  @RequiredReadAction
   @NotNull
+  @Override
   public CharSequence getChars() {
     return getText();
     //return new CharArrayCharSequence(textToCharArray());
@@ -287,7 +288,6 @@ public class CompositeElement extends TreeElement {
 
   @Override
   @NotNull
-  @RequiredReadAction
   public char[] textToCharArray() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     int startStamp = myModificationsCount;
@@ -382,18 +382,7 @@ public class CompositeElement extends TreeElement {
     return false;
   }
 
-  @Override
-  protected int textMatches(@NotNull CharSequence buffer, int start) {
-    int curOffset = start;
-    for (TreeElement child = getFirstChildNode(); child != null; child = child.getTreeNext()) {
-      curOffset = child.textMatches(buffer, curOffset);
-      if (curOffset < 0) return curOffset;
-    }
-    return curOffset;
-  }
-
-  /*
-  protected int textMatches(final CharSequence buffer, final int start) {
+  protected int textMatches(@NotNull final CharSequence buffer, final int start) {
     final int[] curOffset = {start};
     acceptTree(new RecursiveTreeElementWalkingVisitor() {
       @Override
@@ -403,7 +392,7 @@ public class CompositeElement extends TreeElement {
 
       private void matchText(TreeElement leaf) {
         curOffset[0] = leaf.textMatches(buffer, curOffset[0]);
-        if (curOffset[0] == -1) {
+        if (curOffset[0] < 0) {
           stopWalking();
         }
       }
@@ -420,7 +409,6 @@ public class CompositeElement extends TreeElement {
     });
     return curOffset[0];
   }
-  */
 
   @Nullable
   public final PsiElement findChildByRoleAsPsiElement(int role) {
@@ -450,6 +438,7 @@ public class CompositeElement extends TreeElement {
     return 0; //ChildRole.NONE;
   }
 
+  @NotNull
   @Override
   public ASTNode[] getChildren(@Nullable TokenSet filter) {
     int count = countChildren(filter);
@@ -516,7 +505,7 @@ public class CompositeElement extends TreeElement {
     return count;
   }
 
-  public int countChildren(IElementType type) {
+  private int countChildren(@NotNull IElementType type) {
     // no lock is needed because all chameleons are expanded already
     int count = 0;
     for (ASTNode child = getFirstChildNode(); child != null; child = child.getTreeNext()) {
@@ -557,14 +546,13 @@ public class CompositeElement extends TreeElement {
 
     ApplicationManager.getApplication().assertReadAccessAllowed(); //otherwise a write action can modify the tree while we're walking it
     try {
-      walkCachingLength();
+      return walkCachingLength();
     }
     catch (AssertionError e) {
       myCachedLength = -1;
       String assertion = StringUtil.getThrowableText(e);
       throw new AssertionError("Walking failure: ===\n"+assertion+"\n=== Thread dump:\n"+ ThreadDumper.dumpThreadsToString()+"\n===\n");
     }
-    return myCachedLength;
   }
 
   @Override
@@ -600,11 +588,14 @@ public class CompositeElement extends TreeElement {
     return cur;
   }
 
-  private void walkCachingLength() {
+  // returns computed length
+  private int walkCachingLength() {
     TreeElement cur = drillDown(this);
     while (true) {
-      if (cur.getCachedLength() < 0) {
-        int length = 0;
+      int length = cur.getCachedLength();
+      if (length < 0) {
+        // can happen only in CompositeElement
+        length = 0;
         for (TreeElement child = cur.getFirstChildNode(); child != null; child = child.getTreeNext()) {
           length += child.getTextLength();
         }
@@ -612,7 +603,7 @@ public class CompositeElement extends TreeElement {
       }
 
       if (cur == this) {
-        return;
+        return length;
       }
 
       TreeElement next = cur.getTreeNext();
@@ -702,7 +693,7 @@ public class CompositeElement extends TreeElement {
 
     removeChildrenInner(newChild1, newChildNext);
 
-    ChangeUtil.prepareAndRunChangeAction(new ChangeUtil.ChangeAction() {
+    ChangeUtil.prepareAndRunChangeAction(new ChangeUtil.ChangeAction(){
       @Override
       public void makeChange(TreeChangeEvent destinationTreeChange) {
         replace(destinationTreeChange, oldChild1, newChild1);
@@ -765,6 +756,14 @@ public class CompositeElement extends TreeElement {
     }
   }
 
+  /**
+   * Don't call this method, it's public for implementation reasons.
+   */
+  @Nullable
+  public final PsiElement getCachedPsi() {
+    return myWrapper;
+  }
+
   @Override
   public final PsiElement getPsi() {
     ProgressIndicatorProvider.checkCanceled(); // We hope this method is being called often enough to cancel daemon processes smoothly
@@ -772,12 +771,24 @@ public class CompositeElement extends TreeElement {
     PsiElement wrapper = myWrapper;
     if (wrapper != null) return wrapper;
 
-    synchronized (PsiLock.LOCK) {
-      wrapper = myWrapper;
-      if (wrapper != null) return wrapper;
+    wrapper = obtainStubBasedPsi();
+    if (wrapper == null) wrapper = createPsiNoLock();
+    return ourPsiUpdater.compareAndSet(this, null, wrapper) ? wrapper : ObjectUtils.assertNotNull(myWrapper);
+  }
 
-      return createAndStorePsi();
-    }
+  /**
+   * If AST has been gced and recreated, but someone still holds a reference to a PSI, then {@link #getPsi()} should return the very same PSI object.
+   * So we try to find that PSI in file's {@link AstPathPsiMap}.
+   */
+  @Nullable
+  private PsiElement obtainStubBasedPsi() {
+    AstPath path = getElementType() instanceof IStubElementType ? AstPath.getNodePath(this) : null;
+    return path == null ? null : path.getContainingFile().obtainPsi(path, new Factory<StubBasedPsiElementBase<?>>() {
+      @Override
+      public StubBasedPsiElementBase<?> create() {
+        return (StubBasedPsiElementBase<?>)createPsiNoLock();
+      }
+    });
   }
 
   @Override
@@ -785,14 +796,15 @@ public class CompositeElement extends TreeElement {
     return LeafElement.getPsi(clazz, getPsi(), LOG);
   }
 
-  private PsiElement createAndStorePsi() {
-    PsiElement psi = createPsiNoLock();
-    myWrapper = psi;
-    return psi;
-  }
-
   protected PsiElement createPsiNoLock() {
-    return PsiElementFactory.EP.getValue(getElementType()).createElement(this);
+    final Language lang = getElementType().getLanguage();
+    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+    if (parserDefinition != null) {
+      return parserDefinition.createElement(this);
+    }
+
+    //noinspection ConstantConditions
+    return null;
   }
 
   public void setPsi(@NotNull PsiElement psi) {
@@ -809,7 +821,14 @@ public class CompositeElement extends TreeElement {
     subtreeChanged();
   }
 
-  public void rawAddChildrenWithoutNotifications(TreeElement first) {
+  public void rawAddChildrenWithoutNotifications(@NotNull TreeElement first) {
+    if (DebugUtil.DO_EXPENSIVE_CHECKS && !(this instanceof LazyParseableElement)) {
+      PsiFileImpl file = getCachedFile(this);
+      if (file != null && !file.useStrongRefs()) {
+        throw new AssertionError("Attempt to modify PSI in a file with weakly-referenced AST. Possible cause: missing PomTransaction.");
+      }
+    }
+
     final TreeElement last = getLastChildNode();
     if (last == null){
       first.rawRemoveUpToWithoutNotifications(null, false);
@@ -834,40 +853,6 @@ public class CompositeElement extends TreeElement {
     TreeElement first = getFirstChildNode();
     if (first != null) {
       first.rawRemoveUpToLast();
-    }
-  }
-
-  // creates PSI and stores to the 'myWrapper', if not created already
-  void createAllChildrenPsiIfNecessary() {
-    final List<CompositeElement> nodes = ContainerUtil.newArrayList();
-    final List<PsiElement> psiElements = ContainerUtil.newArrayList();
-    RecursiveTreeElementWalkingVisitor visitor = new RecursiveTreeElementWalkingVisitor(false) {
-      @Override
-      public void visitLeaf(LeafElement leaf) {
-      }
-
-      @Override
-      public void visitComposite(CompositeElement composite) {
-        ProgressIndicatorProvider.checkCanceled(); // we can safely interrupt creating children PSI any moment
-        if (composite.myWrapper == null) {
-          nodes.add(composite);
-          psiElements.add(composite.createPsiNoLock());
-        }
-
-        super.visitComposite(composite);
-      }
-    };
-
-    for(TreeElement child = getFirstChildNode(); child != null; child = child.getTreeNext()) {
-      child.acceptTree(visitor);
-    }
-    synchronized (PsiLock.LOCK) { // guard for race condition with getPsi()
-      for (int i = 0; i < psiElements.size(); i++) {
-        CompositeElement node = nodes.get(i);
-        if (node.myWrapper == null) {
-          node.myWrapper = psiElements.get(i);
-        }
-      }
     }
   }
 

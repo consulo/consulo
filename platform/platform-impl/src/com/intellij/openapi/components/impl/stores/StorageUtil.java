@@ -134,7 +134,7 @@ public class StorageUtil {
 
   @NotNull
   public static VirtualFile writeFile(@Nullable File file, @NotNull Object requestor, @Nullable VirtualFile virtualFile, @NotNull BufferExposingByteArrayOutputStream content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
+    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
     try {
       if (file != null && (virtualFile == null || !virtualFile.isValid())) {
         virtualFile = getOrCreateVirtualFile(requestor, file);
@@ -182,7 +182,7 @@ public class StorageUtil {
   }
 
   public static void deleteFile(@NotNull Object requestor, @NotNull VirtualFile virtualFile) throws IOException {
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
+    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
     try {
       virtualFile.delete(requestor);
     }

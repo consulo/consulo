@@ -21,6 +21,8 @@ import com.intellij.ide.IdeRepaintManager;
 import com.intellij.idea.starter.ApplicationStarter;
 import com.intellij.idea.starter.DefaultApplicationStarter;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.TransactionGuard;
+import com.intellij.openapi.application.TransactionGuardImpl;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
@@ -114,7 +116,13 @@ public class IdeaApplication {
       ApplicationEx app = ApplicationManagerEx.getApplicationEx();
       app.load(PathManager.getOptionsPath());
 
-      myStarter.main(myArgs);
+      ((TransactionGuardImpl) TransactionGuard.getInstance()).performUserActivity(new Runnable() {
+        @Override
+        public void run() {
+          myStarter.main(myArgs);
+        }
+      });
+
       myStarter = null; //GC it
 
       ourLoaded = true;

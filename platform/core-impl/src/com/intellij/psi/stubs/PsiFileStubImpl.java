@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
  */
 package com.intellij.psi.stubs;
 
+import com.google.common.base.Objects;
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
@@ -31,6 +32,7 @@ import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements PsiFileStub<T> {
@@ -70,6 +72,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
     return null;
   }
 
+  @NotNull
   @Override
   public IStubFileElementType getType() {
     return TYPE;
@@ -133,5 +136,19 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
 
   public boolean rootsAreSet() {
     return myStubRoots != null;
+  }
+
+  public String getDiagnostics() {
+    ObjectStubTree stubTree = ObjectStubTree.getStubTree(this);
+    T file = myFile;
+    Integer lastStubTreeHash = file == null ? null : file.getUserData(ObjectStubTree.LAST_STUB_TREE_HASH);
+    return toString() +
+           Objects.toStringHelper("")
+                   .add("myFile", file)
+                   .add("myInvalidationReason", myInvalidationReason)
+                   .add("myStubRoots", Arrays.toString(myStubRoots))
+                   .add("stubTree", stubTree)
+                   .add("lastStubTreeHash", lastStubTreeHash)
+                   .toString();
   }
 }

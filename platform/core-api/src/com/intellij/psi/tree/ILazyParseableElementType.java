@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.intellij.psi.tree;
 
 import com.intellij.lang.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,9 @@ import org.jetbrains.annotations.Nullable;
  */
 
 public class ILazyParseableElementType extends IElementType {
+
+  public static final Key<Language> LANGUAGE_KEY = Key.create("LANGUAGE_KEY");
+
   public ILazyParseableElementType(@NotNull @NonNls final String debugName) {
     this(debugName, null);
   }
@@ -39,9 +43,7 @@ public class ILazyParseableElementType extends IElementType {
     super(debugName, language);
   }
 
-  public ILazyParseableElementType(@NotNull @NonNls String debugName,
-                                   @Nullable Language language,
-                                   boolean register) {
+  public ILazyParseableElementType(@NotNull @NonNls final String debugName, @Nullable final Language language, final boolean register) {
     super(debugName, language, register);
   }
 
@@ -52,9 +54,9 @@ public class ILazyParseableElementType extends IElementType {
    * @param chameleon the node to parse.
    * @return the parsed contents of the node.
    */
-  public ASTNode parseContents(final ASTNode chameleon) {
-    final PsiElement parentElement = chameleon.getTreeParent().getPsi();
-    assert parentElement != null : "Bad chameleon: " + chameleon;
+  public ASTNode parseContents(ASTNode chameleon) {
+    PsiElement parentElement = chameleon.getTreeParent().getPsi();
+    assert parentElement != null : "parent psi is null: " + chameleon;
     return doParseContents(chameleon, parentElement);
   }
 
@@ -75,5 +77,9 @@ public class ILazyParseableElementType extends IElementType {
   @Nullable
   public ASTNode createNode(CharSequence text) {
     return null;
+  }
+
+  public boolean reuseCollapsedTokens() {
+    return false;
   }
 }

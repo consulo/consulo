@@ -1163,6 +1163,8 @@
     <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
                         serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"
                         serviceImplementationForCompilerServer="com.intellij.core.CoreProgressManager"/>
+    <applicationService serviceInterface="com.intellij.openapi.application.TransactionGuard"
+                        serviceImplementation="com.intellij.openapi.application.TransactionGuardImpl"/>
 
     <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>
     <exportable serviceInterface="com.intellij.ide.ui.customization.CustomActionsSchema"/>
@@ -1742,7 +1744,7 @@
     <applicationService serviceInterface="com.intellij.ide.PowerSaveMode"
                         serviceImplementation="com.intellij.ide.PowerSaveMode"/>
 
-    <applicationService serviceInterface="com.intellij.psi.impl.DocumentCommitThread"
+    <applicationService serviceInterface="com.intellij.psi.impl.DocumentCommitProcessor"
                         serviceImplementation="com.intellij.psi.impl.DocumentCommitThread"/>
 
     <applicationService serviceInterface="com.intellij.psi.stubs.StubTreeLoader"

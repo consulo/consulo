@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package com.intellij.psi.impl.source.tree;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
@@ -25,26 +27,32 @@ import com.intellij.psi.PsiLock;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiManagerEx;
+import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.CharTable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 
 public abstract class TreeElement extends UserDataHolderBase implements ASTNode, Cloneable {
   public static final TreeElement[] EMPTY_ARRAY = new TreeElement[0];
-  private TreeElement myNextSibling = null;
-  private TreeElement myPrevSibling = null;
-  private CompositeElement myParent = null;
+  private TreeElement myNextSibling;
+  private TreeElement myPrevSibling;
+  private CompositeElement myParent;
 
   private final IElementType myType;
   private volatile int myStartOffsetInParent = -1;
 
-  public TreeElement(IElementType type) {
+  public TreeElement(@NotNull IElementType type) {
     myType = type;
   }
 
+  static PsiFileImpl getCachedFile(TreeElement each) {
+    FileElement node = (FileElement)SharedImplUtil.findFileElement(each);
+    return node == null ? null : (PsiFileImpl)node.getCachedPsi();
+  }
+
+  @NotNull
   @Override
   public Object clone() {
     TreeElement clone = (TreeElement)super.clone();
@@ -65,6 +73,10 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   }
 
   public PsiManagerEx getManager() {
+    Project project = ProjectCoreUtil.theOnlyOpenProject();
+    if (project != null) {
+      return PsiManagerEx.getInstanceEx(project);
+    }
     TreeElement element;
     for (element = this; element.getTreeParent() != null; element = element.getTreeParent()) {
     }
@@ -84,7 +96,6 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   public abstract LeafElement findLeafElementAt(int offset);
 
   @NotNull
-  @RequiredReadAction
   public abstract char[] textToCharArray();
 
   @Override
@@ -98,15 +109,12 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   public abstract int getCachedLength();
 
   @Override
-  @NotNull
-  @RequiredReadAction
   public TextRange getTextRange() {
     int start = getStartOffset();
     return new TextRange(start, start + getTextLength());
   }
 
   @Override
-  @RequiredReadAction
   public int getStartOffset() {
     int result = 0;
     TreeElement current = this;
@@ -118,7 +126,6 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     return result;
   }
 
-  @RequiredReadAction
   public final int getStartOffsetInParent() {
     if (myParent == null) return -1;
     int offsetInParent = myStartOffsetInParent;
@@ -148,7 +155,6 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     return offsetInParent;
   }
 
-  @RequiredReadAction
   public int getTextOffset() {
     return getStartOffset();
   }
@@ -167,10 +173,9 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     return getTextLength() == element.getTextLength() && textMatches(element.getText());
   }
 
-  @Override
   @NonNls
   public String toString() {
-    return "Element" + "(" + getElementType().toString() + ")";
+    return "Element" + "(" + getElementType() + ")";
   }
 
   @Override
@@ -184,6 +189,13 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   }
 
   final void setTreeParent(CompositeElement parent) {
+    if (parent == myParent) return;
+
+    PsiFileImpl file = getCachedFile(this);
+    if (file != null) {
+      file.beforeAstChange();
+    }
+
     myParent = parent;
     if (parent != null && parent.getElementType() != TokenType.DUMMY_HOLDER) {
       DebugUtil.revalidateNode(this);
@@ -205,7 +217,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     clearRelativeOffsets(next);
   }
 
-  protected static void clearRelativeOffsets(TreeElement element) {
+  static void clearRelativeOffsets(TreeElement element) {
     TreeElement cur = element;
     while (cur != null && cur.myStartOffsetInParent != -1) {
       cur.myStartOffsetInParent = -1;
@@ -216,8 +228,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   public void clearCaches() {
   }
 
-  @Override
-  @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass"})
+  @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
   public final boolean equals(Object obj) {
     return obj == this;
   }
@@ -263,7 +274,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     }
   }
 
-  protected final void rawInsertAfterMeWithoutNotifications(TreeElement firstNew) {
+  final void rawInsertAfterMeWithoutNotifications(@NotNull TreeElement firstNew) {
     firstNew.rawRemoveUpToWithoutNotifications(null, false);
     final CompositeElement p = getTreeParent();
     final TreeElement treeNext = getTreeNext();
@@ -351,7 +362,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   }
 
   // remove nodes from this[including] to end[excluding] from the parent
-  protected final void rawRemoveUpToWithoutNotifications(TreeElement end, boolean invalidate) {
+  final void rawRemoveUpToWithoutNotifications(@Nullable TreeElement end, boolean invalidate) {
     if(this == end) return;
 
     final CompositeElement parent = getTreeParent();
@@ -366,7 +377,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
       assert element == end : end + " is not successor of " + this +" in the .getTreeNext() chain";
     }
     if (parent != null){
-      if (this == parent.getFirstChildNode()) {
+      if (getTreePrev() == null) {
         parent.setFirstChildNode(end);
       }
       if (end == null) {
@@ -399,6 +410,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   }
 
   @Override
+  @NotNull
   public IElementType getElementType() {
     return myType;
   }

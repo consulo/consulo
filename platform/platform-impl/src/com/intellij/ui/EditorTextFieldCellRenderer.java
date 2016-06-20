@@ -404,6 +404,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
 
     @NotNull @Override public RangeMarker createRangeMarker(@NotNull TextRange textRange) { return null; }
     @Override public int getLineSeparatorLength(int line) { return 0; }
+    @Override public int getModificationSequence() { return 0; }
   }
 
 }
