@@ -26,6 +26,9 @@ public class RGBColor implements Serializable {
   private int myGreed;
   private int myBlue;
 
+  private RGBColor() {
+  }
+
   public RGBColor(int red, int greed, int blue) {
     myRed = red;
     myGreed = greed;
