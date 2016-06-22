@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartList;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.shared.Size;
 import consulo.web.gwtUI.shared.UIComponent;
@@ -51,7 +51,7 @@ public class WGwtBaseComponent implements Component {
     return myId;
   }
 
-  @RequiredUIThread
+  @RequiredUIAccess
   protected void markAsChanged() {
     UIAccess.assertIsUIThread();
 
@@ -84,7 +84,7 @@ public class WGwtBaseComponent implements Component {
   }
 
   @Override
-  @RequiredUIThread
+  @RequiredUIAccess
   public void setSize(@NotNull Size size) {
     mySize = size;
 
@@ -111,7 +111,7 @@ public class WGwtBaseComponent implements Component {
   }
 
   @Override
-  @RequiredUIThread
+  @RequiredUIAccess
   public void setVisible(final boolean value) {
     if (myVisible == value) {
       return;
@@ -128,7 +128,7 @@ public class WGwtBaseComponent implements Component {
   }
 
   @Override
-  @RequiredUIThread
+  @RequiredUIAccess
   public void setEnabled(final boolean value) {
     if (myEnabled == value) {
       return;

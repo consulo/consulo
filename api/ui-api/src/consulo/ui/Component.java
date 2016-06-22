@@ -26,18 +26,18 @@ import org.jetbrains.annotations.Nullable;
 public interface Component {
   boolean isVisible();
 
-  @RequiredUIThread
+  @RequiredUIAccess
   void setVisible(boolean value);
 
   boolean isEnabled();
 
-  @RequiredUIThread
+  @RequiredUIAccess
   void setEnabled(boolean value);
 
   @Nullable
   Component getParentComponent();
 
-  @RequiredUIThread
+  @RequiredUIAccess
   void setSize(@NotNull Size size);
 
   void dispose();

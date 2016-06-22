@@ -23,9 +23,9 @@ import org.jetbrains.annotations.Nullable;
  * @since 14-Jun-16
  */
 public interface Window extends Component {
-  @RequiredUIThread
+  @RequiredUIAccess
   void setContent(@NotNull Component content);
 
-  @RequiredUIThread
+  @RequiredUIAccess
   void setMenuBar(@Nullable MenuBar menuBar);
 }

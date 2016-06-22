@@ -27,9 +27,9 @@ public interface SplitLayout extends Layout {
    */
   void setProportion(int percent);
 
-  @RequiredUIThread
+  @RequiredUIAccess
   SplitLayout setFirstComponent(@NotNull Component component);
 
-  @RequiredUIThread
+  @RequiredUIAccess
   SplitLayout setSecondComponent(@NotNull Component component);
 }

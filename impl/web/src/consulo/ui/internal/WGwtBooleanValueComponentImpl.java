@@ -16,7 +16,7 @@
 package consulo.ui.internal;
 
 import com.intellij.util.SmartList;
-import consulo.ui.RequiredUIThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,7 +67,7 @@ public class WGwtBooleanValueComponentImpl extends WGwtBaseComponent implements 
   }
 
   @Override
-  @RequiredUIThread
+  @RequiredUIAccess
   public void setValue(@Nullable final Boolean value) {
     if (value == null) {
       throw new IllegalArgumentException();

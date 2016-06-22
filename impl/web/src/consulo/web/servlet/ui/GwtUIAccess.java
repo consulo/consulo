@@ -17,7 +17,7 @@ package consulo.web.servlet.ui;
 
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamWriter;
-import consulo.ui.RequiredUIThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.internal.WGwtBaseComponent;
@@ -78,7 +78,7 @@ public class GwtUIAccess extends UIAccess {
   }
 
   @Override
-  public void give(@RequiredUIThread @NotNull Runnable runnable) {
+  public void give(@RequiredUIAccess @NotNull Runnable runnable) {
     UIAccessHelper.ourInstance.run(this, runnable);
   }
 

@@ -16,7 +16,7 @@
 package consulo.module.extension;
 
 import consulo.ui.Component;
-import consulo.ui.RequiredUIThread;
+import consulo.ui.RequiredUIAccess;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +27,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends org.consulo.module.extension.MutableModuleExtension<T> {
   @Nullable
-  @RequiredUIThread
+  @RequiredUIAccess
   Component createConfigurablePanel2(@NotNull Runnable updateOnCheck);
 }

@@ -23,6 +23,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface VerticalLayout extends Layout {
   @NotNull
-  @RequiredUIThread
+  @RequiredUIAccess
   VerticalLayout add(@NotNull Component component);
 }

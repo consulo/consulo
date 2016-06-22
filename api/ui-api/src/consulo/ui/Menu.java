@@ -22,11 +22,11 @@ import org.jetbrains.annotations.NotNull;
  * @since 14-Jun-16
  */
 public interface Menu extends MenuItem {
-  @RequiredUIThread
+  @RequiredUIAccess
   @NotNull
   Menu add(@NotNull MenuItem menuItem);
 
-  @RequiredUIThread
+  @RequiredUIAccess
   @NotNull
   Menu separate();
 }

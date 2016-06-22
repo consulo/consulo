@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.ListItemRender;
 import consulo.ui.ListItemRenders;
-import consulo.ui.RequiredUIThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
 import consulo.web.gwtUI.shared.UIComponent;
@@ -120,13 +120,13 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
   }
 
   //@Override
-  @RequiredUIThread
+  @RequiredUIAccess
   public void setValue(int index) {
     setValue(myModel.get(index));
   }
 
   @Override
-  @RequiredUIThread
+  @RequiredUIAccess
   public void setValue(@Nullable E value) {
     setValueImpl(value);
     markAsChanged();

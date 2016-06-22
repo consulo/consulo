@@ -41,7 +41,7 @@ public interface ValueComponent<V> extends Component {
   }
 
   interface ValueListener<V> {
-    @RequiredUIThread
+    @RequiredUIAccess
     void valueChanged(@NotNull ValueEvent<V> event);
   }
 
@@ -51,6 +51,6 @@ public interface ValueComponent<V> extends Component {
 
   V getValue();
 
-  @RequiredUIThread
+  @RequiredUIAccess
   void setValue(V value);
 }

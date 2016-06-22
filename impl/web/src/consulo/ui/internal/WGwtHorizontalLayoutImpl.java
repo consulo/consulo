@@ -16,7 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.Component;
-import consulo.ui.RequiredUIThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.HorizontalLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class WGwtHorizontalLayoutImpl extends WGwtLayoutImpl<Object> implements HorizontalLayout {
   @NotNull
   @Override
-  @RequiredUIThread
+  @RequiredUIAccess
   public HorizontalLayout add(@NotNull Component component) {
     addChild((WGwtBaseComponent)component, new Object());
     return this;

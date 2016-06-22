@@ -27,12 +27,12 @@ public interface CheckBox extends ValueComponent<Boolean> {
   Boolean getValue();
 
   @Override
-  @RequiredUIThread
+  @RequiredUIAccess
   void setValue(@NotNull Boolean value);
 
   @NotNull
   String getText();
 
-  @RequiredUIThread
+  @RequiredUIAccess
   void setText(@NotNull String text);
 }

@@ -37,7 +37,7 @@ public class BooleanValueGroup implements ValueComponent.ValueListener<Boolean> 
   }
 
   @Override
-  @RequiredUIThread
+  @RequiredUIAccess
   @SuppressWarnings("unchecked")
   public void valueChanged(@NotNull ValueComponent.ValueEvent<Boolean> event) {
     final Boolean value = event.getValue();

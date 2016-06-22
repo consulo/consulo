@@ -15,7 +15,7 @@
  */
 package consulo.web.servlet.ui;
 
-import consulo.ui.RequiredUIThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -31,7 +31,7 @@ public class UIAccessHelper {
 
   private static ThreadLocal<GwtUIAccess> ourLocal = new ThreadLocal<GwtUIAccess>();
 
-  public void run(final GwtUIAccess context, @RequiredUIThread final Runnable runnable) {
+  public void run(final GwtUIAccess context, @RequiredUIAccess final Runnable runnable) {
     if (!context.getSession().isOpen()) {
       return;
     }

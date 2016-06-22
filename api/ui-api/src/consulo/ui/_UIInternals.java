@@ -82,7 +82,7 @@ abstract class _UIInternals {
 
   abstract MenuBar _MenuItems_menuBar();
 
-  @RequiredUIThread
+  @RequiredUIAccess
   @NotNull
   abstract UIAccess _UIAccess_get();
 

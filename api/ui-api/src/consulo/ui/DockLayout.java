@@ -23,22 +23,22 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DockLayout extends Layout {
   @NotNull
-  @RequiredUIThread
+  @RequiredUIAccess
   DockLayout top(@NotNull Component component);
 
   @NotNull
-  @RequiredUIThread
+  @RequiredUIAccess
   DockLayout bottom(@NotNull Component component);
 
   @NotNull
-  @RequiredUIThread
+  @RequiredUIAccess
   DockLayout center(@NotNull Component component);
 
   @NotNull
-  @RequiredUIThread
+  @RequiredUIAccess
   DockLayout left(@NotNull Component component);
 
   @NotNull
-  @RequiredUIThread
+  @RequiredUIAccess
   DockLayout right(@NotNull Component component);
 }

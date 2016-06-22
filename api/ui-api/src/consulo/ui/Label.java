@@ -25,6 +25,6 @@ public interface Label extends Component {
   @NotNull
   String getText();
 
-  @RequiredUIThread
+  @RequiredUIAccess
   void setText(@NotNull String text);
 }

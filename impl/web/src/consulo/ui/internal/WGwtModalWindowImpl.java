@@ -16,7 +16,7 @@
 package consulo.ui.internal;
 
 import com.intellij.openapi.util.EmptyRunnable;
-import consulo.ui.RequiredUIThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.web.servlet.ui.GwtUIAccess;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,14 +31,14 @@ public class WGwtModalWindowImpl extends WGwtWindowImpl {
     myVisible = false;
   }
 
-  @RequiredUIThread
+  @RequiredUIAccess
   public void show(@NotNull Runnable callback) {
     myCallback = callback;
 
     setVisibleImpl(true);
   }
 
-  @RequiredUIThread
+  @RequiredUIAccess
   public void hide(boolean callCallback) {
     setVisibleImpl(false);
 
@@ -48,7 +48,7 @@ public class WGwtModalWindowImpl extends WGwtWindowImpl {
   }
 
   @Override
-  @RequiredUIThread
+  @RequiredUIAccess
   @Deprecated
   public void setVisible(boolean value) {
     throw new IllegalArgumentException("Use show() or hide()");

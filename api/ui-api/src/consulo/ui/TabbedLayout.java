@@ -23,10 +23,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface TabbedLayout extends Layout {
   @NotNull
-  @RequiredUIThread
+  @RequiredUIAccess
   TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component);
 
   @NotNull
-  @RequiredUIThread
+  @RequiredUIAccess
   TabbedLayout addTab(@NotNull String tabName, @NotNull Component component);
 }

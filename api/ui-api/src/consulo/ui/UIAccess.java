@@ -34,7 +34,7 @@ public abstract class UIAccess {
    *
    * @return ui access - or throw exception
    */
-  @RequiredUIThread
+  @RequiredUIAccess
   @NotNull
   public static UIAccess get() {
     assertIsUIThread();
@@ -42,12 +42,12 @@ public abstract class UIAccess {
     return _UIInternals.impl()._UIAccess_get();
   }
 
-  @RequiredUIThread
+  @RequiredUIAccess
   public static void assertIsUIThread() {
     if (!isUIThread()) {
       throw new IllegalArgumentException("Call must be wrapped inside UI thread");
     }
   }
 
-  public abstract void give(@RequiredUIThread @NotNull Runnable runnable);
+  public abstract void give(@RequiredUIAccess @NotNull Runnable runnable);
 }

@@ -23,6 +23,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface HorizontalLayout extends Layout {
   @NotNull
-  @RequiredUIThread
+  @RequiredUIAccess
   HorizontalLayout add(@NotNull Component component);
 }

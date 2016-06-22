@@ -15,7 +15,7 @@
  */
 package consulo.web.servlet.ui;
 
-import consulo.ui.RequiredUIThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +24,6 @@ import org.jetbrains.annotations.NotNull;
  * @since 14-Jun-16
  */
 public abstract class UIBuilder {
-  @RequiredUIThread
+  @RequiredUIAccess
   protected abstract void build(@NotNull Window window);
 }

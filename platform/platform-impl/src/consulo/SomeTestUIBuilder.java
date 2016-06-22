@@ -25,7 +25,7 @@ import javax.swing.*;
  * @since 11-Jun-16
  */
 public class SomeTestUIBuilder {
-  @RequiredUIThread
+  @RequiredUIAccess
   public static void build(Window window) {
     /*VerticalLayout layout = Layouts.vertical();
 
