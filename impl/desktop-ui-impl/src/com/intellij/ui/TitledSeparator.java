@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBLabel2;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -41,7 +41,7 @@ public class TitledSeparator extends JPanel {
     return JBUI.Borders.empty(TOP_INSET, 0, BOTTOM_INSET, 0);
   }
 
-  protected final JBLabel myLabel = new JBLabel() {
+  protected final JBLabel2 myLabel = new JBLabel2() {
     @Override
     public Font getFont() {
       return UIUtil.getTitledBorderFont();

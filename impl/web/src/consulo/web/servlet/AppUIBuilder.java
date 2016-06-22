@@ -9,10 +9,12 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.TimeoutUtil;
+import com.intellij.util.ui.UIUtil;
 import consulo.ui.*;
 import consulo.ui.internal.WGwtTreeImpl;
 import consulo.web.AppInit;
@@ -90,8 +92,13 @@ public class AppUIBuilder extends UIBuilder {
       }
     }
 
-    final Project project = getOrLoadProject("R:/_github.com/consulo/mssdw");
-    if(project == null) {
+    final Project project = UIUtil.invokeAndWaitIfNeeded(new Computable<Project>() {
+      @Override
+      public Project compute() {
+        return getOrLoadProject("R:/_github.com/consulo/mssdw");
+      }
+    });
+    if (project == null) {
       return;
     }
 
@@ -163,7 +170,7 @@ public class AppUIBuilder extends UIBuilder {
       return project;
     }
     catch (Exception e) {
-      e.getMessage();
+      e.printStackTrace();
     }
     return null;
   }
