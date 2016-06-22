@@ -315,7 +315,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     }
 
     private void deleteFiles(@NotNull VirtualFile dir) {
-      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
+      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DirectoryBasedStorage.class);
       try {
         for (VirtualFile file : dir.getChildren()) {
           if (removedFileNames.contains(file.getName())) {

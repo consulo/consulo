@@ -529,7 +529,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
       if (renamed) {
         file = myDir.findChild(currentFileNameWithoutExtension + mySchemeExtension);
         if (file != null) {
-          AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
+          AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(SchemesManagerImpl.class);
           try {
             file.rename(this, fileName);
           }
@@ -546,7 +546,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
         file = DirectoryBasedStorage.getFile(fileName, myDir, this);
       }
 
-      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
+      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(SchemesManagerImpl.class);
       try {
         OutputStream out = file.getOutputStream(this);
         try {
@@ -596,7 +596,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
 
     VirtualFile dir = getVirtualDir();
     if (dir != null) {
-      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
+      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(SchemesManagerImpl.class);
       try {
         for (VirtualFile file : dir.getChildren()) {
           if (myFilesToDelete.contains(file.getNameWithoutExtension())) {
