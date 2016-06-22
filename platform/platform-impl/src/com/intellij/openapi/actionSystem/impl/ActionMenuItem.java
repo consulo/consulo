@@ -22,6 +22,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.actionholder.ActionRef;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.*;
@@ -102,8 +104,13 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
    * We have to make this method public to allow BegMenuItemUI to invoke it.
    */
   @Override
-  public void fireActionPerformed(ActionEvent event) {
-    super.fireActionPerformed(event);
+  public void fireActionPerformed(final ActionEvent event) {
+    TransactionGuard.submitTransaction(ApplicationManager.getApplication(), new Runnable() {
+      @Override
+      public void run() {
+        ActionMenuItem.super.fireActionPerformed(event);
+      }
+    });
   }
 
   @Override

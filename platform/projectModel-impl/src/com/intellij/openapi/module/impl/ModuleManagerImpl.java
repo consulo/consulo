@@ -19,6 +19,7 @@ package com.intellij.openapi.module.impl;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
@@ -483,7 +484,12 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   protected void fireModulesAdded() {
     for (final Module module : myModuleModel.myModules) {
-      fireModuleAddedInWriteAction(module);
+      TransactionGuard.getInstance().submitTransactionAndWait(new Runnable() {
+        @Override
+        public void run() {
+          ModuleManagerImpl.this.fireModuleAddedInWriteAction(module);
+        }
+      });
     }
   }
 

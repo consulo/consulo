@@ -36,10 +36,11 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
 
 import static com.intellij.util.BitUtil.isSet;
-import static com.intellij.util.BitUtil.notSet;
 
 /**
  * @version 11.1
@@ -538,7 +539,7 @@ public class FileSystemUtil {
         final int flags = (Integer)myGetBooleanAttributes.invoke(myFileSystem, file);
         if (flags != 0) {
           final boolean isDirectory = isSet(flags, BA_DIRECTORY);
-          final boolean isSpecial = notSet(flags, BA_REGULAR | BA_DIRECTORY);
+          final boolean isSpecial = !isSet(flags, BA_REGULAR | BA_DIRECTORY);
           final boolean isHidden = isSet(flags, BA_HIDDEN);
           return new FileAttributes(isDirectory, isSpecial, false, isHidden, file.length(), file.lastModified(), file.canWrite());
         }

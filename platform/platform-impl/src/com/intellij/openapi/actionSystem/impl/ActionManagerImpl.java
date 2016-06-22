@@ -30,10 +30,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationActivationListener;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -192,9 +189,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     myTimer.removeTimerListener(listener, transparent);
   }
 
-  public ActionPopupMenu createActionPopupMenu(String place,
-                                               @NotNull ActionGroup group,
-                                               @Nullable PresentationFactory presentationFactory) {
+  public ActionPopupMenu createActionPopupMenu(String place, @NotNull ActionGroup group, @Nullable PresentationFactory presentationFactory) {
     return new ActionPopupMenuImpl(place, group, this, presentationFactory);
   }
 
@@ -209,10 +204,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public ActionToolbar createActionToolbar(final String place,
-                                           final ActionGroup group,
-                                           final boolean horizontal,
-                                           final boolean decorateButtons) {
+  public ActionToolbar createActionToolbar(final String place, final ActionGroup group, final boolean horizontal, final boolean decorateButtons) {
     return new ActionToolbarImpl(place, group, horizontal, decorateButtons, myDataManager, this, (KeymapManagerEx)myKeymapManager);
   }
 
@@ -304,8 +296,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
     String iconPath = stub.getIconPath();
     if (iconPath != null) {
-      setIconFromClass(anAction.getClass(), anAction.getClass().getClassLoader(), iconPath, stub.getClassName(),
-                       anAction.getTemplatePresentation(), stub.getPluginId());
+      setIconFromClass(anAction.getClass(), anAction.getClass().getClassLoader(), iconPath, stub.getClassName(), anAction.getTemplatePresentation(),
+                       stub.getPluginId());
     }
 
     myId2Action.put(stub.getId(), obj);
@@ -352,7 +344,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
 
   /**
    * @return instance of ActionGroup or ActionStub. The method never returns real subclasses
-   *         of <code>AnAction</code>.
+   * of <code>AnAction</code>.
    */
   @Nullable
   private AnAction processActionElement(Element element, final ClassLoader loader, PluginId pluginId) {
@@ -373,8 +365,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     if (id == null || id.length() == 0) {
       id = StringUtil.getShortName(className);
     }
-    if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME)).booleanValue() &&
-        !ApplicationManagerEx.getApplicationEx().isInternal()) {
+    if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME)).booleanValue() && !ApplicationManagerEx.getApplicationEx().isInternal()) {
       myNotRegisteredInternalActionIds.add(id);
       return null;
     }
@@ -508,11 +499,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     presentation.setIcon(lazyIcon);
   }
 
-  private static String loadTextValueForElement(final Element element,
-                                                final ResourceBundle bundle,
-                                                final String id,
-                                                String elementType,
-                                                String type) {
+  private static String loadTextValueForElement(final Element element, final ResourceBundle bundle, final String id, String elementType, String type) {
     final String value = element.getAttributeValue(type);
     String key = elementType + "." + id + "." + type;
     String text = CommonBundle.messageOrDefault(bundle, key, value == null ? "" : value);
@@ -556,8 +543,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
     try {
       Class aClass = Class.forName(className, true, loader);
-      Object obj = new ConstructorInjectionComponentAdapter(className, aClass)
-        .getComponentInstance(ApplicationManager.getApplication().getPicoContainer());
+      Object obj = new ConstructorInjectionComponentAdapter(className, aClass).getComponentInstance(ApplicationManager.getApplication().getPicoContainer());
 
       if (!(obj instanceof ActionGroup)) {
         reportActionError(pluginId, "class with name \"" + className + "\" should be instance of " + ActionGroup.class.getName());
@@ -577,8 +563,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
         reportActionError(pluginId, "ID of the group cannot be an empty string");
         return null;
       }
-      if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME)).booleanValue() &&
-          !ApplicationManagerEx.getApplicationEx().isInternal()) {
+      if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME)).booleanValue() && !ApplicationManagerEx.getApplicationEx().isInternal()) {
         myNotRegisteredInternalActionIds.add(id);
         return null;
       }
@@ -751,8 +736,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       return Anchor.AFTER;
     }
     else {
-      reportActionError(pluginId,
-                        actionName + ": anchor should be one of the following constants: \"first\", \"last\", \"before\" or \"after\"");
+      reportActionError(pluginId, actionName + ": anchor should be one of the following constants: \"first\", \"last\", \"before\" or \"after\"");
       return null;
     }
   }
@@ -770,9 +754,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
 
     if (!(parentGroup instanceof DefaultActionGroup)) {
-      reportActionError(pluginId,
-                        actionName + ": group with id \"" + groupId + "\" should be instance of " + DefaultActionGroup.class.getName() +
-                        " but was " + parentGroup.getClass());
+      reportActionError(pluginId, actionName + ": group with id \"" + groupId + "\" should be instance of " + DefaultActionGroup.class.getName() +
+                                  " but was " + parentGroup.getClass());
       return null;
     }
     return parentGroup;
@@ -1346,47 +1329,51 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown(new Runnable() {
       @Override
       public void run() {
-        final DataContext context = getContextBy(contextComponent);
-
-        AnActionEvent event =
-          new AnActionEvent(inputEvent, context, place != null ? place : ActionPlaces.UNKNOWN, presentation, ActionManagerImpl.this,
-                            inputEvent.getModifiersEx());
-
-        ActionUtil.performDumbAwareUpdate(action, event, false);
-        if (!event.getPresentation().isEnabled()) {
-          result.setRejected();
-          return;
-        }
-
-        ActionUtil.lastUpdateAndCheckDumb(action, event, false);
-        if (!event.getPresentation().isEnabled()) {
-          result.setRejected();
-          return;
-        }
-
-        Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(context);
-        if (component != null && !component.isShowing()) {
-          result.setRejected();
-          return;
-        }
-
-        fireBeforeActionPerformed(action, context, event);
-
-        UIUtil.addAwtListener(new AWTEventListener() {
+        ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(new Runnable() {
           @Override
-          public void eventDispatched(AWTEvent event) {
-            if (event.getID() == WindowEvent.WINDOW_OPENED || event.getID() == WindowEvent.WINDOW_ACTIVATED) {
-              if (!result.isProcessed()) {
-                final WindowEvent we = (WindowEvent)event;
-                IdeFocusManager.findInstanceByComponent(we.getWindow()).doWhenFocusSettlesDown(result.createSetDoneRunnable());
-              }
-            }
-          }
-        }, AWTEvent.WINDOW_EVENT_MASK, result);
+          public void run() {
+            final DataContext context = getContextBy(contextComponent);
 
-        ActionUtil.performActionDumbAware(action, event);
-        result.setDone();
-        queueActionPerformedEvent(action, context, event);
+            AnActionEvent event = new AnActionEvent(inputEvent, context, place != null ? place : ActionPlaces.UNKNOWN, presentation, ActionManagerImpl.this,
+                                                    inputEvent.getModifiersEx());
+
+            ActionUtil.performDumbAwareUpdate(action, event, false);
+            if (!event.getPresentation().isEnabled()) {
+              result.setRejected();
+              return;
+            }
+
+            ActionUtil.lastUpdateAndCheckDumb(action, event, false);
+            if (!event.getPresentation().isEnabled()) {
+              result.setRejected();
+              return;
+            }
+
+            Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(context);
+            if (component != null && !component.isShowing()) {
+              result.setRejected();
+              return;
+            }
+
+            ActionManagerImpl.this.fireBeforeActionPerformed(action, context, event);
+
+            UIUtil.addAwtListener(new AWTEventListener() {
+              @Override
+              public void eventDispatched(AWTEvent event) {
+                if (event.getID() == WindowEvent.WINDOW_OPENED || event.getID() == WindowEvent.WINDOW_ACTIVATED) {
+                  if (!result.isProcessed()) {
+                    final WindowEvent we = (WindowEvent)event;
+                    IdeFocusManager.findInstanceByComponent(we.getWindow()).doWhenFocusSettlesDown(result.createSetDoneRunnable());
+                  }
+                }
+              }
+            }, AWTEvent.WINDOW_EVENT_MASK, result);
+
+            ActionUtil.performActionDumbAware(action, event);
+            result.setDone();
+            ActionManagerImpl.this.queueActionPerformedEvent(action, context, event);
+          }
+        });
       }
     });
   }

@@ -400,7 +400,7 @@ public interface Application extends ComponentManager {
    */
   @NotNull
   @RequiredDispatchThread
-  AccessToken acquireWriteActionLock(@Nullable Class marker);
+  AccessToken acquireWriteActionLock(@NotNull Class marker);
 
   boolean isInternal();
 

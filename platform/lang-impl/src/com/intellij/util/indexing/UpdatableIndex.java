@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.locks.Lock;
@@ -32,12 +34,21 @@ public interface UpdatableIndex<Key, Value, Input> extends AbstractIndex<Key,Val
   void flush() throws StorageException;
 
   /**
+   * @param inputId *positive* id of content.
    */
+  @NotNull
   Computable<Boolean> update(int inputId, @Nullable Input content);
 
+  @NotNull
   Lock getReadLock();
 
+  @NotNull
   Lock getWriteLock();
 
   void dispose();
+
+  void setIndexedStateForFile(int fileId, @NotNull VirtualFile file);
+  void resetIndexedStateForFile(int fileId);
+
+  boolean isIndexedStateForFile(int fileId, @NotNull VirtualFile file);
 }

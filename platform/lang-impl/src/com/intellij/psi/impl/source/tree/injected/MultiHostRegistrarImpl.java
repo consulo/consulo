@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import com.intellij.injected.editor.VirtualFileWindowImpl;
 import com.intellij.lang.*;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
@@ -37,9 +36,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.DocumentCommitProcessor;
+import com.intellij.psi.impl.DocumentCommitThread;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
-import com.intellij.psi.impl.PsiDocumentManagerImpl;
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
@@ -53,6 +51,7 @@ import com.intellij.psi.injection.ReferenceInjector;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.LanguageVersionUtil;
 import com.intellij.util.SmartList;
@@ -154,7 +153,6 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
                                      @NonNls @Nullable String suffix,
                                      @NotNull PsiLanguageInjectionHost host,
                                      @NotNull TextRange rangeInsideHost) {
-    ProperTextRange.assertProperRange(rangeInsideHost);
 
     PsiFile containingFile = PsiUtilCore.getTemplateLanguageFile(host);
     assert containingFile == myHostPsiFile : exceptionContext("Trying to inject into foreign file: " + containingFile);
@@ -195,12 +193,9 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     outChars.append(suffix);
     int endOffset = outChars.length();
     TextRange relevantRangeInHost = relevantRange.shiftRight(hostTextRange.getStartOffset());
-    RangeMarker relevantMarker = myHostDocument.createRangeMarker(relevantRangeInHost);
-    relevantMarker.setGreedyToLeft(true);
-    relevantMarker.setGreedyToRight(true);
     SmartPointerManagerImpl manager = (SmartPointerManagerImpl)SmartPointerManager.getInstance(myProject);
     shreds.add(new ShredImpl(manager.createSmartPsiFileRangePointer(myHostPsiFile, relevantRangeInHost, true),
-                             manager.createSmartPsiElementPointer(host, myHostPsiFile), prefix, suffix, new ProperTextRange(startOffset, endOffset), true));
+                             manager.createSmartPsiElementPointer(host, myHostPsiFile), prefix, suffix, new ProperTextRange(startOffset, endOffset), false));
     return this;
   }
 
@@ -218,22 +213,13 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
 
       Place place = new Place(shreds);
       DocumentWindowImpl documentWindow = new DocumentWindowImpl(myHostDocument, isOneLineEditor, place);
-      VirtualFileWindowImpl virtualFile = new VirtualFileWindowImpl(myHostVirtualFile, documentWindow, myLanguage, outChars);
+      VirtualFileWindowImpl virtualFile = new VirtualFileWindowImpl(myHostVirtualFile.getName(), myHostVirtualFile, documentWindow, myLanguage, outChars);
       virtualFile.putUserData(LanguageVersion.KEY, myLanguageVersion);
 
       Language forcedLanguage = myContextElement.getUserData(InjectedFileViewProvider.LANGUAGE_FOR_INJECTED_COPY_KEY);
       myLanguage = forcedLanguage == null ? LanguageSubstitutors.INSTANCE.substituteLanguage(myLanguage, virtualFile, myProject) : forcedLanguage;
 
-      DocumentImpl decodedDocument;
-      if (StringUtil.indexOf(outChars, '\r') == -1) {
-        decodedDocument = new DocumentImpl(outChars);
-      }
-      else {
-        decodedDocument = new DocumentImpl("", true);
-        decodedDocument.setAcceptSlashR(true);
-        decodedDocument.replaceString(0, 0, outChars);
-      }
-      FileDocumentManagerImpl.registerDocument(decodedDocument, virtualFile);
+      createDocument(virtualFile);
 
       InjectedFileViewProvider viewProvider = new InjectedFileViewProvider(myPsiManager, virtualFile, documentWindow, myLanguage);
       ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(myLanguage);
@@ -249,12 +235,12 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
         assert parsedNode instanceof FileElement : "Parsed to " + parsedNode + " instead of FileElement";
 
         String documentText = documentManager.getLastCommittedDocument(documentWindow).getText();
-        assert outChars.toString().equals(parsedNode.getText()) : exceptionContext(
+        assert ((FileElement)parsedNode).textMatches(outChars) : exceptionContext(
                 "Before patch: doc:\n'" + documentText + "'\n---PSI:\n'" + parsedNode.getText() + "'\n---chars:\n'" + outChars + "'");
 
         viewProvider.setPatchingLeaves(true);
         try {
-          patchLeafs(parsedNode, escapers, place);
+          patchLeaves(parsedNode, escapers, place);
         }
         catch (ProcessCanceledException e) {
           throw e;
@@ -265,7 +251,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
         finally {
           viewProvider.setPatchingLeaves(false);
         }
-        if (!parsedNode.getText().equals(documentText)) {
+        if (!((FileElement)parsedNode).textMatches(documentText)) {
           throw new AssertionError(
                   exceptionContext("After patch: doc:\n'" + documentText + "'\n---PSI:\n'" + parsedNode.getText() + "'\n---chars:\n'" + outChars + "'"));
         }
@@ -320,6 +306,14 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     }
   }
 
+  @NotNull
+  private static DocumentEx createDocument(@NotNull LightVirtualFile virtualFile) {
+    CharSequence content = virtualFile.getContent();
+    DocumentImpl document = new DocumentImpl(content, StringUtil.indexOf(content, '\r') >= 0, false);
+    FileDocumentManagerImpl.registerDocument(document, virtualFile);
+    return document;
+  }
+
   // returns true if shreds were set, false if old ones were reused
   private static boolean cacheEverything(@NotNull Place place,
                                          @NotNull DocumentWindowImpl documentWindow,
@@ -328,10 +322,16 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
                                          @NotNull SmartPsiElementPointer<PsiLanguageInjectionHost> pointer) {
     FileDocumentManagerImpl.registerDocument(documentWindow, viewProvider.getVirtualFile());
 
-    viewProvider.forceCachedPsi(psiFile);
+    DebugUtil.startPsiModification("MultiHostRegistrar cacheEverything");
+    try {
+      viewProvider.forceCachedPsi(psiFile);
+    }
+    finally {
+      DebugUtil.finishPsiModification();
+    }
 
     psiFile.putUserData(FileContextUtil.INJECTED_IN_ELEMENT, pointer);
-    PsiDocumentManagerImpl.cachePsi(documentWindow, psiFile);
+    ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(psiFile.getProject())).associatePsi(documentWindow, psiFile);
 
     keepTreeFromChameleoningBack(psiFile);
 
@@ -343,7 +343,8 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   private String exceptionContext(@NonNls String msg) {
     return msg + ".\n" +
            myLanguage + ";\n " +
-           "Host file: " + myHostPsiFile + " in '" + myHostVirtualFile.getPresentableUrl() + "'\n" +
+           "Host file: " + myHostPsiFile + " in '" + myHostVirtualFile.getPresentableUrl() + "'" +
+           (PsiDocumentManager.getInstance(myProject).isUncommited(myHostDocument) ? " (uncommitted)" : "") + "\n" +
            "Context element " + myContextElement.getTextRange() + ": '" + myContextElement + "'; " +
            "Ranges: " + shreds;
   }
@@ -351,6 +352,8 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   private static final Key<ASTNode> TREE_HARD_REF = Key.create("TREE_HARD_REF");
 
   private static ASTNode keepTreeFromChameleoningBack(PsiFile psiFile) {
+    // expand chameleons
+    //noinspection ResultOfMethodCallIgnored
     psiFile.getFirstChild();
     // need to keep tree reacheable to avoid being garbage-collected (via WeakReference in PsiFileImpl)
     // and then being reparsed from wrong (escaped) document content
@@ -394,18 +397,19 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   }
 
 
-  private static void patchLeafs(ASTNode parsedNode, List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers, Place shreds) {
+  private static void patchLeaves(@NotNull ASTNode parsedNode,
+                                  @NotNull List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers,
+                                  @NotNull Place shreds) {
     LeafPatcher patcher = new LeafPatcher(shreds, escapers);
     ((TreeElement)parsedNode).acceptTree(patcher);
 
-    String nodeText = parsedNode.getText();
-    assert nodeText.equals(patcher.catLeafs.toString()) : "Malformed PSI structure: leaf texts do not add up to the whole file text." +
-                                                          "\nFile text (from tree)  :'" + nodeText + "'" +
-                                                          "\nFile text (from PSI)   :'" + parsedNode.getPsi().getText() + "'" +
-                                                          "\nLeaf texts concatenated:'" + patcher.catLeafs + "';" +
-                                                          "\nFile root: " + parsedNode +
-                                                          "\nLanguage: " + parsedNode.getPsi().getLanguage() +
-                                                          "\nHost file: " + shreds.get(0).getHost().getContainingFile().getVirtualFile()
+    assert ((TreeElement)parsedNode).textMatches(patcher.catLeafs) : "Malformed PSI structure: leaf texts do not add up to the whole file text." +
+                                                                     "\nFile text (from tree)  :'" + parsedNode.getText() + "'" +
+                                                                     "\nFile text (from PSI)   :'" + parsedNode.getPsi().getText() + "'" +
+                                                                     "\nLeaf texts concatenated:'" + patcher.catLeafs + "';" +
+                                                                     "\nFile root: " + parsedNode +
+                                                                     "\nLanguage: " + parsedNode.getPsi().getLanguage() +
+                                                                     "\nHost file: " + shreds.getHostPointer().getVirtualFile()
             ;
     DebugUtil.startPsiModification("injection leaf patching");
     try {
@@ -456,13 +460,21 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
         oldFile.putUserData(FileContextUtil.INJECTED_IN_ELEMENT, injectedPsi.getUserData(FileContextUtil.INJECTED_IN_ELEMENT));
 
         assert shreds.isValid();
-        oldViewProvider.performNonPhysically(new Runnable() {
-          @Override
-          public void run() {
-            final DiffLog diffLog = BlockSupportImpl.mergeTrees(oldFile, oldFileNode, injectedNode, new DaemonProgressIndicator(), oldFileNode.getText());
-            DocumentCommitProcessor.doActualPsiChange(oldFile, diffLog);
-          }
-        });
+        if (!oldFile.textMatches(injectedPsi)) {
+          oldViewProvider.performNonPhysically(new Runnable() {
+            @Override
+            public void run() {
+              DebugUtil.startPsiModification("injected tree diff");
+              try {
+                final DiffLog diffLog = BlockSupportImpl.mergeTrees(oldFile, oldFileNode, injectedNode, new DaemonProgressIndicator(), oldFileNode.getText());
+                DocumentCommitThread.doActualPsiChange(oldFile, diffLog);
+              }
+              finally {
+                DebugUtil.finishPsiModification();
+              }
+            }
+          });
+        }
         assert shreds.isValid();
 
         return oldFile;
@@ -548,7 +560,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
 
   @Override
   public String toString() {
-    return result.toString();
+    return String.valueOf(result);
   }
 
   @NotNull
@@ -567,7 +579,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     DocumentEx delegate = ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(project)).getLastCommittedDocument(window.getDelegate());
     Place place = new Place(ContainerUtil.map(shreds, new Function<PsiLanguageInjectionHost.Shred, PsiLanguageInjectionHost.Shred>() {
       @Override
-      public PsiLanguageInjectionHost.Shred fun(final PsiLanguageInjectionHost.Shred shred) {
+      public PsiLanguageInjectionHost.Shred fun(PsiLanguageInjectionHost.Shred shred) {
         return ((ShredImpl)shred).withPsiRange();
       }
     }));

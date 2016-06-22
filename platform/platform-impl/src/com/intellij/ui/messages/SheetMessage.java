@@ -20,10 +20,13 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.mac.MacMainFrameDecorator;
+import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.Animator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,26 +34,36 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 
 /**
  * Created by Denis Fokin
  */
 public class SheetMessage {
-
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.messages.SheetMessage");
 
-  private JDialog myWindow;
-  private Window myParent;
-  private SheetController myController;
+  private final JDialog myWindow;
+  private final Window myParent;
+  private final SheetController myController;
 
   private final static int TIME_TO_SHOW_SHEET = 250;
 
   private Image staticImage;
   private int imageHeight;
-  private boolean restoreFullscreenButton;
+  private final boolean restoreFullScreenButton;
+  private final ComponentAdapter myPositionListener = new ComponentAdapter() {
+    @Override
+    public void componentResized(ComponentEvent event) {
+      setPositionRelativeToParent();
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent event) {
+      setPositionRelativeToParent();
+    }
+  };
 
   public SheetMessage(final Window owner,
                       final String title,
@@ -61,12 +74,18 @@ public class SheetMessage {
                       final String defaultButton,
                       final String focusedButton)
   {
+    final Window activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+    final Component recentFocusOwner = activeWindow == null ? null : activeWindow.getMostRecentFocusOwner();
+    WeakReference<Component> beforeShowFocusOwner = new WeakReference<Component>(recentFocusOwner);
+
+    maximizeIfNeeded(owner);
+
     myWindow = new JDialog(owner, "This should not be shown", Dialog.ModalityType.APPLICATION_MODAL);
     myWindow.getRootPane().putClientProperty("apple.awt.draggableWindowBackground", Boolean.FALSE);
 
     myWindow.addWindowListener(new WindowAdapter() {
       @Override
-      public void windowActivated(WindowEvent e) {
+      public void windowActivated(@NotNull WindowEvent e) {
         super.windowActivated(e);
       }
     });
@@ -78,7 +97,7 @@ public class SheetMessage {
     myController = new SheetController(this, title, message, icon, buttons, defaultButton, doNotAskOption, focusedButton);
 
     imageHeight = 0;
-    registerMoveResizeHandler();
+    myParent.addComponentListener(myPositionListener);
     myWindow.setFocusable(true);
     myWindow.setFocusableWindowState(true);
     if (SystemInfo.isJavaVersionAtLeast("1.7")) {
@@ -88,7 +107,7 @@ public class SheetMessage {
 
       myWindow.addComponentListener(new ComponentAdapter() {
         @Override
-        public void componentShown(ComponentEvent e) {
+        public void componentShown(@NotNull ComponentEvent e) {
           super.componentShown(e);
           setWindowOpacity(1.0f);
           myWindow.setSize(myController.SHEET_NC_WIDTH, myController.SHEET_NC_HEIGHT);
@@ -100,14 +119,36 @@ public class SheetMessage {
       setPositionRelativeToParent();
     }
     startAnimation(true);
-    restoreFullscreenButton = couldBeInFullScreen();
-    if (restoreFullscreenButton) {
+    restoreFullScreenButton = couldBeInFullScreen();
+    if (restoreFullScreenButton) {
       FullScreenUtilities.setWindowCanFullScreen(myParent, false);
     }
 
     LaterInvocator.enterModal(myWindow);
     myWindow.setVisible(true);
     LaterInvocator.leaveModal(myWindow);
+
+    Component focusCandidate = beforeShowFocusOwner.get();
+
+    if (focusCandidate == null) {
+      focusCandidate = IdeFocusManager.getGlobalInstance().getLastFocusedFor(IdeFocusManager.getGlobalInstance().getLastFocusedFrame());
+    }
+
+    // focusCandidate is null if a welcome screen is closed and ide frame is not opened.
+    // this is ok. We set focus correctly on our frame activation.
+    if (focusCandidate != null) {
+      focusCandidate.requestFocus();
+    }
+  }
+
+  private static void maximizeIfNeeded(final Window owner) {
+    if (owner == null) return;
+    if (owner instanceof Frame) {
+      Frame f = (Frame)owner;
+      if (f.getState() == Frame.ICONIFIED) {
+        f.setState(Frame.NORMAL);
+      }
+    }
   }
 
   private void setWindowOpacity(float opacity) {
@@ -146,7 +187,7 @@ public class SheetMessage {
     staticImage = myController.getStaticImage();
     JPanel staticPanel = new JPanel() {
       @Override
-      public void paint(Graphics g) {
+      public void paint(@NotNull Graphics g) {
         super.paint(g);
         if (staticImage != null) {
           Graphics2D g2d = (Graphics2D) g.create();
@@ -191,11 +232,14 @@ public class SheetMessage {
           staticImage = null;
           myWindow.setContentPane(myController.getPanel(myWindow));
 
+          IJSwingUtilities.moveMousePointerOn(myWindow.getRootPane().getDefaultButton());
           myController.requestFocus();
         } else {
-          if (restoreFullscreenButton) {
+          if (restoreFullScreenButton) {
             FullScreenUtilities.setWindowCanFullScreen(myParent, true);
           }
+          myParent.removeComponentListener(myPositionListener);
+          myController.dispose();
           myWindow.dispose();
         }
       }
@@ -213,28 +257,4 @@ public class SheetMessage {
                        myController.SHEET_NC_HEIGHT);
 
   }
-
-  private void registerMoveResizeHandler () {
-    myParent.addComponentListener(new ComponentAdapter() {
-      @Override
-      public void componentResized(ComponentEvent e) {
-        super.componentResized(e);
-        setPositionRelativeToParent();
-      }
-
-      @Override
-      public void componentMoved(ComponentEvent e) {
-        super.componentMoved(e);
-        setPositionRelativeToParent();
-      }
-    });
-  }
-
-  FontMetrics getFontMetrics(Font f) {
-    return myParent.getGraphics().getFontMetrics(f);
-  }
-
 }
-
-
-

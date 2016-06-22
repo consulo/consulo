@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,13 @@ public abstract class FileTypeManagerEx extends FileTypeManager{
     return (FileTypeManagerEx) getInstance();
   }
 
-  public abstract void registerFileType(FileType fileType);
-  public abstract void unregisterFileType(FileType fileType);
+  public abstract void registerFileType(@NotNull FileType fileType);
+  public abstract void unregisterFileType(@NotNull FileType fileType);
 
-  //  public abstract String getIgnoredFilesList();
-//  public abstract void setIgnoredFilesList(String list);
-  public abstract boolean isIgnoredFilesListEqualToCurrent(String list);
+  public abstract boolean isIgnoredFilesListEqualToCurrent(@NotNull String list);
 
-  @NotNull public abstract String getExtension(String fileName);
+  @NotNull
+  public abstract String getExtension(@NotNull String fileName);
 
   public abstract void fireFileTypesChanged();
 

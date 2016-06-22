@@ -175,7 +175,7 @@ public class MockApplication extends MockComponentManager implements Application
   @RequiredDispatchThread
   @NotNull
   @Override
-  public AccessToken acquireWriteActionLock(@Nullable Class marker) {
+  public AccessToken acquireWriteActionLock(@NotNull Class marker) {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 

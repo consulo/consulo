@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,13 @@ import java.util.EventListener;
  * Manages the relationship between documents and PSI trees.
  */
 public abstract class PsiDocumentManager {
+  /**
+   * Checks if the PSI tree for the specified document is up to date (its state reflects the latest changes made
+   * to the document content).
+   *
+   * @param document the document to check.
+   * @return true if the PSI tree for the document is up to date, false otherwise.
+   */
   public abstract boolean isCommitted(@NotNull Document document);
 
   /**
@@ -91,8 +98,6 @@ public abstract class PsiDocumentManager {
 
   /**
    * If the document is committed, runs action synchronously, otherwise schedules to execute it right after it has been committed.
-   * @param document
-   * @param action
    */
   public abstract void performForCommittedDocument(@NotNull Document document, @NotNull Runnable action);
 
@@ -106,7 +111,6 @@ public abstract class PsiDocumentManager {
   public abstract void commitDocument(@NotNull Document document);
 
   /**
-   * @param document
    * @return the document text that PSI should be based upon. For changed documents, it's their old text until the document is committed.
    * This sequence is immutable.
    * @see com.intellij.util.text.ImmutableCharSequence
@@ -138,7 +142,7 @@ public abstract class PsiDocumentManager {
    * Returns the list of documents which have been modified but not committed.
    *
    * @return the list of uncommitted documents.
-   * @see #commitDocument(com.intellij.openapi.editor.Document)
+   * @see #commitDocument(Document)
    */
   @NotNull
   @RequiredDispatchThread
@@ -149,7 +153,7 @@ public abstract class PsiDocumentManager {
    *
    * @param document the document to check.
    * @return true if the document was modified but not committed, false otherwise
-   * @see #commitDocument(com.intellij.openapi.editor.Document)
+   * @see #commitDocument(Document)
    */
   public abstract boolean isUncommited(@NotNull Document document);
 
@@ -223,16 +227,38 @@ public abstract class PsiDocumentManager {
    */
   public abstract void removeListener(@NotNull Listener listener);
 
+  /**
+   * Checks if the PSI tree corresponding to the specified document has been modified and the changes have not
+   * yet been applied to the document. Documents in that state cannot be modified directly, because such changes
+   * would conflict with the pending PSI changes. Changes made through PSI are always applied in the end of a write action,
+   * and can be applied in the middle of a write action by calling {@link #doPostponedOperationsAndUnblockDocument}.
+   *
+   * @param doc the document to check.
+   * @return true if the corresponding PSI has changes that haven't been applied to the document.
+   */
   public abstract boolean isDocumentBlockedByPsi(@NotNull Document doc);
 
+  /**
+   * Applies pending changes made through the PSI to the specified document.
+   *
+   * @param doc the document to apply the changes to.
+   */
   public abstract void doPostponedOperationsAndUnblockDocument(@NotNull Document doc);
 
   /**
    * Defer action until all documents are committed.
+   * Must be called from the EDT only.
    *
    * @param action to run when all documents committed
    * @return true if action was run immediately (i.e. all documents are already committed)
    */
   @RequiredDispatchThread
   public abstract boolean performWhenAllCommitted(@NotNull Runnable action);
+
+  /**
+   * Schedule the runnable to be executed on Swing thread when all the documents are committed at some later moment.
+   * The runnable is guaranteed to be invoked when no write action is running, and not immediately.
+   * If the project is disposed before such moment, the runnable is not run.
+   */
+  public abstract void performLaterWhenAllCommitted(@NotNull Runnable runnable);
 }

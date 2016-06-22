@@ -57,6 +57,7 @@ public class SystemInfo extends SystemInfoRt {
 
   // version numbers from http://msdn.microsoft.com/en-us/library/windows/desktop/ms724832.aspx
   public static final boolean isWin2kOrNewer = isWindows && isOsVersionAtLeast("5.0");
+  public static final boolean isWinXpOrNewer = isWindows && isOsVersionAtLeast("5.1");
   public static final boolean isWinVistaOrNewer = isWindows && isOsVersionAtLeast("6.0");
   public static final boolean isWin7OrNewer = isWindows && isOsVersionAtLeast("6.1");
   public static final boolean isWin8OrNewer = isWindows && isOsVersionAtLeast("6.2");

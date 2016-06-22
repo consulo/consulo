@@ -32,6 +32,7 @@ import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
@@ -654,7 +655,7 @@ public class CodeCompletionHandlerBase {
 
   private static void afterItemInsertion(final CompletionProgressIndicator indicator, final Runnable laterRunnable) {
     if (laterRunnable != null) {
-      final Runnable runnable1 = new Runnable() {
+      final Runnable temp = new Runnable() {
         @Override
         public void run() {
           if (!indicator.getProject().isDisposed()) {
@@ -664,10 +665,10 @@ public class CodeCompletionHandlerBase {
         }
       };
       if (ApplicationManager.getApplication().isUnitTestMode()) {
-        runnable1.run();
+        temp.run();
       }
       else {
-        ApplicationManager.getApplication().invokeLater(runnable1);
+        TransactionGuard.getInstance().submitTransactionLater(indicator.getProject(), temp);
       }
     }
     else {

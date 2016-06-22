@@ -17,6 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -24,6 +25,7 @@ import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.EditorMarkupModelImpl;
 import com.intellij.openapi.editor.markup.MarkupModel;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
@@ -53,20 +55,21 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     final TextRange priorityIntersection = priorityRange.intersection(restrictRange);
 
     final Editor editor = session.getEditor();
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
+    TransactionGuard.submitTransaction(project, new Runnable() {
       @Override
       public void run() {
-        if (project.isDisposed() || modificationStamp != document.getModificationStamp()) return;
+        if (modificationStamp != document.getModificationStamp()) return;
         if (priorityIntersection != null) {
           MarkupModel markupModel = DocumentMarkupModel.forDocument(document, project, true);
 
           EditorColorsScheme scheme = session.getColorsScheme();
-          UpdateHighlightersUtil.setHighlightersInRange(project, document, priorityIntersection, scheme, infos,
-                                                        (MarkupModelEx)markupModel, groupId);
+          UpdateHighlightersUtil.setHighlightersInRange(project, document, priorityIntersection, scheme, infos, (MarkupModelEx)markupModel, groupId);
         }
         if (editor != null && !editor.isDisposed()) {
           // usability: show auto import popup as soon as possible
-          new ShowAutoImportPass(project, psiFile, editor).applyInformationToEditor();
+          if (!DumbService.isDumb(project)) {
+            new ShowAutoImportPass(project, psiFile, editor).addImports();
+          }
 
           DaemonListeners.repaintErrorStripeRenderer(editor, project);
         }
@@ -91,10 +94,9 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
 
         EditorColorsScheme scheme = session.getColorsScheme();
 
-        UpdateHighlightersUtil.setHighlightersOutsideRange(project, document, psiFile, infos, scheme,
-                                                           restrictedRange.getStartOffset(), restrictedRange.getEndOffset(),
-                                                           ProperTextRange.create(priorityRange),
-                                                           groupId);
+        UpdateHighlightersUtil
+                .setHighlightersOutsideRange(project, document, psiFile, infos, scheme, restrictedRange.getStartOffset(), restrictedRange.getEndOffset(),
+                                             ProperTextRange.create(priorityRange), groupId);
         Editor editor = session.getEditor();
         if (editor != null) {
           DaemonListeners.repaintErrorStripeRenderer(editor, project);
@@ -122,7 +124,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     DaemonCodeAnalyzerEx
             .processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), new Processor<HighlightInfo>() {
               @Override
-              public boolean process(final HighlightInfo existing) {
+              public boolean process(HighlightInfo existing) {
                 if (existing.isBijective() &&
                     existing.getGroup() == Pass.UPDATE_ALL &&
                     range.equalsToRange(existing.getActualStartOffset(), existing.getActualEndOffset())) {

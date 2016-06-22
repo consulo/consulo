@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -69,10 +70,10 @@ public class GuiUtils {
 
   private static JPanel constructFieldWithBrowseButton(final JComponent aComponent, final ActionListener aActionListener, int delta) {
     JPanel result = new JPanel(new GridBagLayout());
-    result.add(aComponent, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,0));
+    result.add(aComponent, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
     FixedSizeButton browseButton = new FixedSizeButton(aComponent.getPreferredSize().height - delta);//ignore border in case of browse button
     TextFieldWithBrowseButton.MyDoClickAction.addTo(browseButton, aComponent);
-    result.add(browseButton, new GridBagConstraints(1, 0, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0,0,0,0), 0,0));
+    result.add(browseButton, new GridBagConstraints(1, 0, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     browseButton.addActionListener(aActionListener);
 
     return result;
@@ -92,8 +93,7 @@ public class GuiUtils {
     });
   }
 
-  public static JPanel constructFileURLBrowserField(final TextFieldWithHistory aFieldWithHistory,
-                                                    final String aSearchedObjectName) {
+  public static JPanel constructFileURLBrowserField(final TextFieldWithHistory aFieldWithHistory, final String aSearchedObjectName) {
     return constructFieldWithBrowseButton(aFieldWithHistory, new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -158,24 +158,13 @@ public class GuiUtils {
   }
 
   private static JPanel makePaddedPanel(JComponent aComponent, Insets aInsets) {
-    return wrapWithBorder(aComponent, BorderFactory.createEmptyBorder(
-            aInsets.top,
-            aInsets.left,
-            aInsets.bottom,
-            aInsets.right
-    ));
+    return wrapWithBorder(aComponent, BorderFactory.createEmptyBorder(aInsets.top, aInsets.left, aInsets.bottom, aInsets.right));
   }
 
-  private static JPanel makePaddedPanel(JComponent aComponent,
-                                        boolean aTop,
-                                        boolean aLeft,
-                                        boolean aBottom,
-                                        boolean aRight) {
-    return wrapWithBorder(aComponent, BorderFactory.createEmptyBorder(
-            aTop ? paddingInsideDialog.top : 0,
-            aLeft ? paddingInsideDialog.left : 0,
-            aBottom ? paddingInsideDialog.bottom : 0,
-            aRight ? paddingInsideDialog.right : 0));
+  private static JPanel makePaddedPanel(JComponent aComponent, boolean aTop, boolean aLeft, boolean aBottom, boolean aRight) {
+    return wrapWithBorder(aComponent, BorderFactory
+            .createEmptyBorder(aTop ? paddingInsideDialog.top : 0, aLeft ? paddingInsideDialog.left : 0, aBottom ? paddingInsideDialog.bottom : 0,
+                               aRight ? paddingInsideDialog.right : 0));
   }
 
   public static void setAdditionalIcon(JRadioButton button, Icon icon) {
@@ -231,8 +220,8 @@ public class GuiUtils {
       final Component component2 = pane.getBottomComponent();
       final int orientation = pane.getOrientation();
       final Splitter splitter = new JBSplitter(orientation == JSplitPane.VERTICAL_SPLIT);
-      splitter.setFirstComponent((JComponent) component1);
-      splitter.setSecondComponent((JComponent) component2);
+      splitter.setFirstComponent((JComponent)component1);
+      splitter.setSecondComponent((JComponent)component2);
       splitter.setShowDividerControls(pane.isOneTouchExpandable());
       splitter.setHonorComponentsMinimumSize(true);
 
@@ -256,19 +245,21 @@ public class GuiUtils {
       }
 
       if (parent instanceof Splitter) {
-        final Splitter psplitter = (Splitter) parent;
-        if (psplitter.getFirstComponent() == root)
+        final Splitter psplitter = (Splitter)parent;
+        if (psplitter.getFirstComponent() == root) {
           psplitter.setFirstComponent(splitter);
-        else
+        }
+        else {
           psplitter.setSecondComponent(splitter);
+        }
       }
       else {
         parent.remove(0);
         parent.setLayout(new BorderLayout());
         parent.add(splitter, BorderLayout.CENTER);
       }
-      replaceJSplitPaneWithIDEASplitter((JComponent) component1);
-      replaceJSplitPaneWithIDEASplitter((JComponent) component2);
+      replaceJSplitPaneWithIDEASplitter((JComponent)component1);
+      replaceJSplitPaneWithIDEASplitter((JComponent)component2);
     }
     else {
       final Component[] components = root.getComponents();
@@ -331,22 +322,22 @@ public class GuiUtils {
     else if (component instanceof JLabel) {
       Color color = UIUtil.getInactiveTextColor();
       if (color == null) color = component.getForeground();
-      @NonNls String changeColorString = "<font color=#" + colorToHex(color) +">";
+      @NonNls String changeColorString = "<font color=#" + colorToHex(color) + ">";
       final JLabel label = (JLabel)component;
       @NonNls String text = label.getText();
       if (text != null && text.startsWith("<html>")) {
         if (StringUtil.startsWithConcatenation(text, "<html>", changeColorString) && enabled) {
-          text = "<html>"+text.substring(("<html>"+changeColorString).length());
+          text = "<html>" + text.substring(("<html>" + changeColorString).length());
         }
         else if (!StringUtil.startsWithConcatenation(text, "<html>", changeColorString) && !enabled) {
-          text = "<html>"+changeColorString+text.substring("<html>".length());
+          text = "<html>" + changeColorString + text.substring("<html>".length());
         }
         label.setText(text);
       }
     }
     else if (component instanceof JTable) {
       TableColumnModel columnModel = ((JTable)component).getColumnModel();
-      for (int i=0; i<columnModel.getColumnCount();i++) {
+      for (int i = 0; i < columnModel.getColumnCount(); i++) {
         TableCellRenderer cellRenderer = columnModel.getColumn(0).getCellRenderer();
         if (cellRenderer instanceof Component) {
           enableComponent((Component)cellRenderer, enabled);
@@ -356,9 +347,7 @@ public class GuiUtils {
   }
 
   public static String colorToHex(final Color color) {
-    return to2DigitsHex(color.getRed())
-           +to2DigitsHex(color.getGreen())
-           +to2DigitsHex(color.getBlue());
+    return to2DigitsHex(color.getRed()) + to2DigitsHex(color.getGreen()) + to2DigitsHex(color.getBlue());
   }
 
   private static String to2DigitsHex(int i) {
@@ -385,6 +374,15 @@ public class GuiUtils {
     }
     else {
       invokeAndWait(runnable);
+    }
+  }
+
+  public static void invokeLaterIfNeeded(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
+    if (ApplicationManager.getApplication().isDispatchThread()) {
+      runnable.run();
+    }
+    else {
+      ApplicationManager.getApplication().invokeLater(runnable, modalityState);
     }
   }
 

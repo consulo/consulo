@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.ide;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -55,16 +56,12 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
   private final SingleAlarm myRefreshDelayAlarm = new SingleAlarm(new Runnable() {
     @Override
     public void run() {
-      if (canSyncOrSave()) {
-        refreshOpenFiles();
-      }
-      maybeRefresh(ModalityState.NON_MODAL);
+      doScheduledRefresh();
     }
   }, 300, this);
-
   private final AtomicInteger myBlockSaveOnFrameDeactivationCount = new AtomicInteger();
   private final AtomicInteger myBlockSyncOnFrameActivationCount = new AtomicInteger();
-  private volatile long myRefreshSessionId = 0;
+  private volatile long myRefreshSessionId;
 
   public SaveAndSyncHandlerImpl(@NotNull GeneralSettings generalSettings,
                                 @NotNull ProgressManager progressManager,
@@ -76,8 +73,13 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
     myIdleListener = new Runnable() {
       @Override
       public void run() {
-        if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
-          ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false);
+        if (mySettings.isAutoSaveIfInactive() && SaveAndSyncHandlerImpl.this.canSyncOrSave()) {
+          TransactionGuard.submitTransaction(ApplicationManager.getApplication(), new Runnable() {
+            @Override
+            public void run() {
+              ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false);
+            }
+          });
         }
       }
     };
@@ -100,10 +102,15 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
       @Override
       public void onFrameDeactivated() {
         LOG.debug("save(): enter");
-        if (canSyncOrSave()) {
-          saveProjectsAndDocuments();
-        }
-        LOG.debug("save(): exit");
+        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), new Runnable() {
+          @Override
+          public void run() {
+            if (canSyncOrSave()) {
+              saveProjectsAndDocuments();
+            }
+            LOG.debug("save(): exit");
+          }
+        });
       }
 
       @Override
@@ -155,6 +162,13 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
     myRefreshDelayAlarm.cancelAndRequest();
   }
 
+  private void doScheduledRefresh() {
+    if (canSyncOrSave()) {
+      refreshOpenFiles();
+    }
+    maybeRefresh(ModalityState.NON_MODAL);
+  }
+
   public void maybeRefresh(@NotNull ModalityState modalityState) {
     if (myBlockSyncOnFrameActivationCount.get() == 0 && mySettings.isSyncOnFrameActivation()) {
       RefreshQueue queue = RefreshQueue.getInstance();
@@ -164,6 +178,11 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
       session.addAllFiles(ManagingFS.getInstance().getLocalRoots());
       myRefreshSessionId = session.getId();
       session.launch();
+      LOG.debug("vfs refreshed");
+    }
+    else if (LOG.isDebugEnabled()) {
+      LOG.debug("vfs refresh rejected, blocked: " + (myBlockSyncOnFrameActivationCount.get() != 0)
+                + ", isSyncOnFrameActivation: " + mySettings.isSyncOnFrameActivation());
     }
   }
 

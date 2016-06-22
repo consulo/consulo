@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,108 +22,175 @@ import com.intellij.ide.actions.AboutAction;
 import com.intellij.ide.actions.OpenFileAction;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.idea.ApplicationStarter;
+import com.intellij.idea.IdeaApplication;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.sun.jna.Callback;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.color.ColorSpace;
+import java.awt.color.ICC_ColorSpace;
+import java.awt.color.ICC_Profile;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * @author max
  */
 public class MacOSApplicationProvider implements ApplicationComponent {
-
+  private static final Logger LOG = Logger.getInstance(MacOSApplicationProvider.class);
   private static final Callback IMPL = new Callback() {
+    @SuppressWarnings("unused")
     public void callback(ID self, String selector) {
+      //noinspection SSBasedInspection
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
           ActionManagerEx am = ActionManagerEx.getInstanceEx();
-          MouseEvent me =
-            new MouseEvent(JOptionPane.getRootFrame(), MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false);
+          MouseEvent me = new MouseEvent(JOptionPane.getRootFrame(), MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false);
           am.tryToExecute(am.getAction("CheckForUpdate"), me, null, null, false);
         }
       });
     }
   };
+  private static final String GENERIC_RGB_PROFILE_PATH = "/System/Library/ColorSync/Profiles/Generic RGB Profile.icc";
 
-  @NotNull
-  public String getComponentName() {
-    return "MACOSApplicationProvider";
+  private final ColorSpace genericRgbColorSpace;
+
+  public static MacOSApplicationProvider getInstance() {
+    return ApplicationManager.getApplication().getComponent(MacOSApplicationProvider.class);
   }
 
   public MacOSApplicationProvider() {
-    if(ApplicationManager.getApplication().isUnitTestMode()) {
-      return;
-    }
-
     if (SystemInfo.isMac) {
       try {
         Worker.initMacApplication();
       }
-      catch (NoClassDefFoundError e) {
+      catch (Throwable t) {
+        LOG.warn(t);
       }
+      genericRgbColorSpace = initializeNativeColorSpace();
+    }
+    else {
+      genericRgbColorSpace = null;
     }
   }
 
-  public void initComponent() { }
+  private static ColorSpace initializeNativeColorSpace() {
+    InputStream is = null;
+    try {
+      is = new FileInputStream(GENERIC_RGB_PROFILE_PATH);
+      ICC_Profile profile = ICC_Profile.getInstance(is);
+      return new ICC_ColorSpace(profile);
+    }
+    catch (Throwable e) {
+      LOG.warn("Couldn't load generic RGB color profile", e);
+      return null;
+    }
+    finally {
+      StreamUtil.closeStream(is);
+    }
+  }
 
+  @NotNull
+  @Override
+  public String getComponentName() {
+    return "MACOSApplicationProvider";
+  }
+
+  @Override
+  public void initComponent() {
+  }
+
+  @Override
   public void disposeComponent() {
   }
 
+  @Nullable
+  public ColorSpace getGenericRgbColorSpace() {
+    return genericRgbColorSpace;
+  }
+
   private static class Worker {
+    @SuppressWarnings("deprecation")
     public static void initMacApplication() {
       Application application = new Application();
       application.addApplicationListener(new ApplicationAdapter() {
+        @Override
         public void handleAbout(ApplicationEvent applicationEvent) {
           AboutAction.showAbout();
           applicationEvent.setHandled(true);
         }
 
+        @Override
         public void handlePreferences(ApplicationEvent applicationEvent) {
-          Project project = getProject();
-
-          if (project == null) {
-            project = ProjectManager.getInstance().getDefaultProject();
-          }
-
-          if (!((ShowSettingsUtilImpl)ShowSettingsUtil.getInstance()).isAlreadyShown()) {
-            ShowSettingsUtil.getInstance().showSettingsDialog(project);
+          final Project project = getNotNullProject();
+          final ShowSettingsUtilImpl showSettingsUtil = (ShowSettingsUtilImpl)ShowSettingsUtil.getInstance();
+          if (!showSettingsUtil.isAlreadyShown()) {
+            TransactionGuard.submitTransaction(project, new Runnable() {
+              @Override
+              public void run() {
+                showSettingsUtil.showSettingsDialog(project);
+              }
+            });
           }
           applicationEvent.setHandled(true);
         }
 
-        public void handleQuit(ApplicationEvent applicationEvent) {
-          ApplicationManagerEx.getApplicationEx().exit();
+        @NotNull
+        private Project getNotNullProject() {
+          Project project = getProject();
+          return project == null ? ProjectManager.getInstance().getDefaultProject() : project;
         }
 
-        public void handleOpenFile(ApplicationEvent applicationEvent) {
-          Project project = getProject();
-          String filename = applicationEvent.getFilename();
+        @Override
+        public void handleQuit(ApplicationEvent applicationEvent) {
+          final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
+          TransactionGuard.submitTransaction(app, new Runnable() {
+            @Override
+            public void run() {
+              app.exit();
+            }
+          });
+        }
+
+        @Override
+        public void handleOpenFile(final ApplicationEvent applicationEvent) {
+          final Project project = getProject();
+          final String filename = applicationEvent.getFilename();
           if (filename == null) return;
 
-          File file = new File(filename);
-          if (ProjectUtil.openOrImport(file.getAbsolutePath(), project, true) != null) {
-            ApplicationStarter.getInstance().setPerformProjectLoad(false);
-            return;
-          }
-          if (project != null && file.exists()) {
-            OpenFileAction.openFile(filename, project);
-            applicationEvent.setHandled(true);
-          }
+          TransactionGuard.submitTransaction(ApplicationManager.getApplication(), new Runnable() {
+            @Override
+            public void run() {
+              File file = new File(filename);
+              if (ProjectUtil.openOrImport(file.getAbsolutePath(), project, true) != null) {
+                IdeaApplication.getInstance().setPerformProjectLoad(false);
+                return;
+              }
+              if (project != null && file.exists()) {
+                OpenFileAction.openFile(filename, project);
+                applicationEvent.setHandled(true);
+              }
+            }
+          });
         }
       });
 
@@ -131,7 +198,6 @@ public class MacOSApplicationProvider implements ApplicationComponent {
       application.addPreferencesMenuItem();
       application.setEnabledAboutMenu(true);
       application.setEnabledPreferencesMenu(true);
-
 
       installAutoUpdateMenu();
     }
@@ -144,15 +210,13 @@ public class MacOSApplicationProvider implements ApplicationComponent {
       ID item = Foundation.invoke(menu, Foundation.createSelector("itemAtIndex:"), 0);
       ID appMenu = Foundation.invoke(item, Foundation.createSelector("submenu"));
 
-
-      final ID checkForUpdatesClass = Foundation.allocateObjcClassPair(Foundation.getObjcClass("NSMenuItem"), "NSCheckForUpdates");
+      ID checkForUpdatesClass = Foundation.allocateObjcClassPair(Foundation.getObjcClass("NSMenuItem"), "NSCheckForUpdates");
       Foundation.addMethod(checkForUpdatesClass, Foundation.createSelector("checkForUpdates"), IMPL, "v");
 
       Foundation.registerObjcClassPair(checkForUpdatesClass);
 
       ID checkForUpdates = Foundation.invoke("NSCheckForUpdates", "alloc");
-      Foundation.invoke(checkForUpdates, Foundation.createSelector("initWithTitle:action:keyEquivalent:"),
-                        Foundation.nsString("Check for Updates..."),
+      Foundation.invoke(checkForUpdates, Foundation.createSelector("initWithTitle:action:keyEquivalent:"), Foundation.nsString("Check for Updates..."),
                         Foundation.createSelector("checkForUpdates"), Foundation.nsString(""));
       Foundation.invoke(checkForUpdates, Foundation.createSelector("setTarget:"), checkForUpdates);
 
@@ -162,6 +226,7 @@ public class MacOSApplicationProvider implements ApplicationComponent {
       Foundation.invoke(pool, Foundation.createSelector("release"));
     }
 
+    @SuppressWarnings("deprecation")
     private static Project getProject() {
       return CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
     }

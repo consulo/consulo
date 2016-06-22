@@ -28,6 +28,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
 import com.intellij.openapi.util.*;
@@ -662,7 +663,7 @@ public abstract class DialogWrapper {
           final CustomShortcutSet sc =
             new CustomShortcutSet(KeyStroke.getKeyStroke("alt pressed " + Character.valueOf((char)eachInfo.getMnemonic())));
 
-          new AnAction() {
+          new NoTransactionAction() {
             @RequiredDispatchThread
             @Override
             public void actionPerformed(AnActionEvent e) {
@@ -1164,7 +1165,7 @@ public abstract class DialogWrapper {
     myPeer.setContentPane(root);
 
     final CustomShortcutSet sc = new CustomShortcutSet(SHOW_OPTION_KEYSTROKE);
-    final AnAction toggleShowOptions = new AnAction() {
+    final AnAction toggleShowOptions = new NoTransactionAction() {
       @RequiredDispatchThread
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -1228,7 +1229,7 @@ public abstract class DialogWrapper {
   }
 
   protected static void installEnterHook(JComponent root) {
-    new AnAction() {
+    new NoTransactionAction() {
       @RequiredDispatchThread
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -2069,4 +2070,11 @@ public abstract class DialogWrapper {
   }
 
   private static enum ErrorPaintingType {DOT, SIGN, LINE}
+
+  private static abstract class NoTransactionAction extends DumbAwareAction {
+    @Override
+    public boolean startInTransaction() {
+      return false;
+    }
+  }
 }

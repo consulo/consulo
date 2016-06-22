@@ -25,6 +25,7 @@ import com.intellij.execution.configurations.RunProfileWithCompileBeforeLaunchOp
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompileStatusNotification;
@@ -141,7 +142,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
         }
       };
 
-      SwingUtilities.invokeAndWait(new Runnable() {
+      TransactionGuard.submitTransaction(myProject, new Runnable() {
         @Override
         public void run() {
           CompileScope scope;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.diff.util;
+package com.intellij.openapi.progress.util;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -151,8 +151,8 @@ public class BackgroundTaskUtil {
     final Ref<T> resultRef = new Ref<T>();
     ProgressIndicator indicator = executeAndTryWait(new Function<ProgressIndicator, Runnable>() {
       @Override
-      public Runnable fun(final ProgressIndicator indicator) {
-        final T result = backgroundTask.fun(indicator);
+      public Runnable fun(ProgressIndicator indicator1) {
+        final T result = backgroundTask.fun(indicator1);
         return new Runnable() {
           @Override
           public void run() {
@@ -168,8 +168,25 @@ public class BackgroundTaskUtil {
 
   @RequiredDispatchThread
   @NotNull
-  public static ProgressIndicator executeOnPooledThread(@NotNull final Consumer<ProgressIndicator> task, @NotNull Disposable parent) {
+  public static ProgressIndicator executeOnPooledThread(@NotNull Consumer<ProgressIndicator> task, @NotNull Disposable parent) {
     final ModalityState modalityState = ModalityState.current();
+    return executeOnPooledThread(task, parent, modalityState);
+  }
+
+  @NotNull
+  public static ProgressIndicator executeOnPooledThread(@NotNull final Runnable runnable, @NotNull Disposable parent) {
+    return executeOnPooledThread(new Consumer<ProgressIndicator>() {
+      @Override
+      public void consume(ProgressIndicator indicator) {
+        runnable.run();
+      }
+    }, parent, ModalityState.NON_MODAL);
+  }
+
+  @NotNull
+  public static ProgressIndicator executeOnPooledThread(@NotNull final Consumer<ProgressIndicator> task,
+                                                        @NotNull Disposable parent,
+                                                        final ModalityState modalityState) {
     final ProgressIndicator indicator = new EmptyProgressIndicator() {
       @NotNull
       @Override
@@ -177,7 +194,6 @@ public class BackgroundTaskUtil {
         return modalityState;
       }
     };
-    indicator.start();
 
     final Disposable disposable = new Disposable() {
       @Override
@@ -186,6 +202,7 @@ public class BackgroundTaskUtil {
       }
     };
     Disposer.register(parent, disposable);
+    indicator.start();
 
     ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
       @Override

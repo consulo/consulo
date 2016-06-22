@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,12 +51,12 @@ public class CacheUpdateRunner {
                                   Collection<VirtualFile> files,
                                   Project project, Consumer<FileContent> processor) {
     indicator.checkCanceled();
-    final FileContentQueue queue = new FileContentQueue();
+    final FileContentQueue queue = new FileContentQueue(files, indicator);
     final double total = files.size();
-    queue.queue(files, indicator);
+    queue.startLoading();
 
     Consumer<VirtualFile> progressUpdater = new Consumer<VirtualFile>() {
-      // need set here to handle queue.pushbacks after checkCancelled() in order
+      // need set here to handle queue push-backs after checkCancelled() in order
       // not to count the same file several times
       final Set<VirtualFile> processed = new THashSet<VirtualFile>();
       private boolean fileNameWasShown;
@@ -105,7 +105,7 @@ public class CacheUpdateRunner {
     };
     final ApplicationAdapter canceller = new ApplicationAdapter() {
       @Override
-      public void beforeWriteActionStart(Object action) {
+      public void beforeWriteActionStart(@NotNull Object action) {
         innerIndicator.cancel();
       }
     };
@@ -131,7 +131,7 @@ public class CacheUpdateRunner {
           AtomicBoolean ref = new AtomicBoolean();
           finishedRefs[i] = ref;
           Runnable process = new MyRunnable(innerIndicator, queue, ref, progressUpdater, processInReadAction, project, fileProcessor);
-          futures[i] = ApplicationManager.getApplication().executeOnPooledThread(process);
+          futures[i] = application.executeOnPooledThread(process);
         }
         isFinished.set(waitForAll(finishedRefs, futures));
       }
@@ -146,7 +146,8 @@ public class CacheUpdateRunner {
   public static int indexingThreadCount() {
     int threadsCount = Registry.intValue("caches.indexerThreadsCount");
     if (threadsCount <= 0) {
-      threadsCount = Math.max(1, Math.min(PROC_COUNT - 1, 4));
+      int coresToLeaveForOtherActivity = ApplicationManager.getApplication().isUnitTestMode() ? 0 : 1;
+      threadsCount = Math.max(1, Math.min(PROC_COUNT - coresToLeaveForOtherActivity, 4));
     }
     return threadsCount;
   }
@@ -221,7 +222,7 @@ public class CacheUpdateRunner {
                 final VirtualFile file = fileContent.getVirtualFile();
                 try {
                   myProgressUpdater.consume(file);
-                  if (file.isValid() && !file.isDirectory() && !Boolean.TRUE.equals(file.getUserData(FAILED_TO_INDEX))) {
+                  if (!file.isDirectory() && !Boolean.TRUE.equals(file.getUserData(FAILED_TO_INDEX))) {
                     myProcessor.consume(fileContent);
                   }
                 }
@@ -236,26 +237,25 @@ public class CacheUpdateRunner {
             }
           };
           try {
-            ProgressManager.getInstance().runProcess(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        if (myProcessInReadAction) {
-                          // in wait methods we don't want to deadlock by grabbing write lock (or having it in queue) and trying to run read action in separate thread
-                          if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(action)) {
-                            throw new ProcessCanceledException();
-                          }
-                        }
-                        else {
-                          action.run();
-                        }
-                      }
-                    },
+            ProgressManager.getInstance().runProcess(new Runnable() {
+              @Override
+              public void run() {
+                if (myProcessInReadAction) {
+                  // in wait methods we don't want to deadlock by grabbing write lock (or having it in queue) and trying to run read action in separate thread
+                  if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(action)) {
+                    throw new ProcessCanceledException();
+                  }
+                }
+                else {
+                  action.run();
+                }
+              }
+            },
                     ProgressWrapper.wrap(myInnerIndicator)
             );
           }
           catch (ProcessCanceledException e) {
-            myQueue.pushback(fileContent);
+            myQueue.pushBack(fileContent);
             return;
           }
           finally {

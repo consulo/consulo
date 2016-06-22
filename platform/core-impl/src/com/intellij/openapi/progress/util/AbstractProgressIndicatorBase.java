@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,23 @@ package com.intellij.openapi.progress.util;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.TransactionGuard;
+import com.intellij.openapi.application.TransactionGuardImpl;
 import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.containers.ConcurrentHashSet;
+import com.intellij.ui.mac.foundation.MacUtil;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.DoubleArrayList;
 import com.intellij.util.containers.Stack;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 public class AbstractProgressIndicatorBase extends UserDataHolderBase implements ProgressIndicatorStacked {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.progress.util.ProgressIndicatorBase");
@@ -41,6 +47,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   private volatile boolean myFinished;
 
   private volatile boolean myIndeterminate;
+  private volatile Object myMacActivity;
+  private volatile boolean myShouldStartActivity = true;
 
   private Stack<String> myTextStack;
   private DoubleArrayList myFractionStack;
@@ -49,8 +57,6 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
 
   protected ProgressIndicator myModalityProgress;
   private volatile ModalityState myModalityState = ModalityState.NON_MODAL;
-
-  public String CREATE_TRACE = ExceptionUtil.getThrowableText(new Exception());
 
   @Override
   public synchronized void start() {
@@ -68,10 +74,11 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     myText = "";
     myFraction = 0;
     myText2 = "";
+    startSystemActivity();
     myRunning = true;
   }
 
-  private static final ConcurrentHashSet<Class> ourReportedReuseExceptions = new ConcurrentHashSet<Class>(2);
+  private static final Set<Class> ourReportedReuseExceptions = ContainerUtil.newConcurrentSet();
 
   protected boolean isReuseable() {
     return false;
@@ -82,6 +89,20 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     LOG.assertTrue(myRunning, "stop() should be called only if start() called before");
     myRunning = false;
     myFinished = true;
+    stopSystemActivity();
+  }
+
+  protected void startSystemActivity() {
+    myMacActivity = myShouldStartActivity ? MacUtil.wakeUpNeo(toString()) : null;
+  }
+
+  protected void stopSystemActivity() {
+    if (myMacActivity != null) {
+      synchronized (myMacActivity) {
+        MacUtil.matrixHasYou(myMacActivity);
+        myMacActivity = null;
+      }
+    }
   }
 
   @Override
@@ -92,6 +113,10 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   @Override
   public void cancel() {
     myCanceled = true;
+    stopSystemActivity();
+    if (ApplicationManager.getApplication() != null) {
+      ProgressManager.canceled(this);
+    }
   }
 
   @Override
@@ -103,6 +128,11 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   public void checkCanceled() {
     if (isCanceled() && isCancelable()) {
       throw new ProcessCanceledException();
+    }
+    if (CoreProgressManager.sleepIfNeeded()) {
+      if (isCanceled() && isCancelable()) {
+        throw new ProcessCanceledException();
+      }
     }
   }
 
@@ -188,6 +218,9 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     myModalityProgress = modalityProgress;
     ModalityState currentModality = ApplicationManager.getApplication().getCurrentModalityState();
     myModalityState = myModalityProgress != null ? ((ModalityStateEx)currentModality).appendProgress(myModalityProgress) : currentModality;
+    if (modalityProgress != null) {
+      ((TransactionGuardImpl)TransactionGuard.getInstance()).enteredModality(myModalityState);
+    }
   }
 
   @Override
@@ -240,6 +273,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
 
       myFractionStack = new DoubleArrayList(stacked.getFractionStack());
     }
+    myShouldStartActivity = false;
   }
 
   @Override

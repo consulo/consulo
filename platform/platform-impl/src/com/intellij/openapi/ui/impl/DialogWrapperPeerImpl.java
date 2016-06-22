@@ -496,6 +496,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
   private class AnCancelAction extends AnAction implements DumbAware {
     @Override
+    public boolean isTransparentUpdate() {
+      return false;
+    }
+
+    @Override
     public void update(AnActionEvent e) {
       Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
       e.getPresentation().setEnabled(false);

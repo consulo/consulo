@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,52 +15,82 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.ui.GuiUtils;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.util.ObjectUtil;
+import com.intellij.util.ReflectionUtil;
+import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class WriteAction<T> extends BaseActionRunnable<T> {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.WriteAction");
+
   @NotNull
   @Override
+  @SuppressWarnings("InstanceofCatchParameter")
   public RunResult<T> execute() {
     final RunResult<T> result = new RunResult<T>(this);
 
-    if (canWriteNow()) {
-      result.run();
+    final Application application = ApplicationManager.getApplication();
+    boolean dispatchThread = application.isDispatchThread();
+    if (dispatchThread) {
+      AccessToken token = start(getClass());
+      try {
+        result.run();
+      } finally {
+        token.finish();
+      }
       return result;
     }
 
-    try {
-      GuiUtils.runOrInvokeAndWait(new Runnable() {
-        @Override
-        public void run() {
-          final AccessToken accessToken = start();
-          try {
-            result.run();
-          }
-          finally {
-            accessToken.finish();
-          }
+    if (application.isReadAccessAllowed()) {
+      LOG.error("Must not start write action from within read action in the other thread - deadlock is coming");
+    }
+
+    TransactionGuard.getInstance().submitTransactionAndWait(new Runnable() {
+      @Override
+      public void run() {
+        AccessToken token = start(WriteAction.this.getClass());
+        try {
+          result.run();
         }
-      });
-    }
-    catch (Exception e) {
-      if (isSilentExecution()) {
-        result.setThrowable(e);
+        finally {
+          token.finish();
+        }
       }
-      else {
-        if (e instanceof RuntimeException) throw (RuntimeException)e;
-        throw new Error(e);
-      }
-    }
+    });
+
+    result.throwException();
     return result;
   }
 
+  @NotNull
   public static AccessToken start() {
-    return start(null);
+    // get useful information about the write action
+    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
+    return start(aClass);
   }
 
-  public static AccessToken start(@Nullable Class clazz) {
+  @NotNull
+  public static AccessToken start(@NotNull Class clazz) {
     return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
+  }
+
+  public static <E extends Throwable> void run(@NotNull ThrowableRunnable<E> action) throws E {
+    AccessToken token = start();
+    try {
+      action.run();
+    } finally {
+      token.finish();
+    }
+  }
+
+  public static <T, E extends Throwable> T compute(@NotNull ThrowableComputable<T, E> action) throws E {
+    AccessToken token = start();
+    try {
+      return action.compute();
+    } finally {
+      token.finish();
+    }
   }
 }

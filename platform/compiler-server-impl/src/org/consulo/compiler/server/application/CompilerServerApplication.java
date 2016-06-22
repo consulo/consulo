@@ -485,7 +485,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   @RequiredDispatchThread
   @NotNull
   @Override
-  public AccessToken acquireWriteActionLock(@Nullable Class marker) {
+  public AccessToken acquireWriteActionLock(@NotNull Class marker) {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,16 @@ import com.intellij.openapi.progress.StandardProgressIndicator;
 import org.jetbrains.annotations.NotNull;
 
 class NonCancelableIndicator implements NonCancelableSection, StandardProgressIndicator {
+  static final NonCancelableIndicator INSTANCE = new NonCancelableIndicator() {
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+  };
+
+  protected NonCancelableIndicator() {
+  }
+
   @Override
   public void done() {
     ProgressIndicator currentIndicator = ProgressManager.getInstance().getProgressIndicator();

@@ -43,6 +43,8 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.HashSet;
+import com.intellij.util.indexing.FileBasedIndex;
+import com.intellij.util.indexing.FileBasedIndexImpl;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
 import com.intellij.util.indexing.UnindexedFilesUpdater;
 import com.intellij.util.messages.MessageBusConnection;
@@ -218,7 +220,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
       return;
     }
 
-    if (myDoLogCachesUpdate) LOG.info(new Throwable("refresh"));
+    if (myDoLogCachesUpdate) LOG.debug("refresh");
     DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
     DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(myProject);
     if (task != null) {
@@ -310,10 +312,13 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
   protected void doSynchronizeRoots() {
     if (!myStartupActivityPerformed) return;
 
-    if (myDoLogCachesUpdate) LOG.info(new Throwable("sync roots"));
+    if (myDoLogCachesUpdate) LOG.debug(new Throwable("sync roots"));
+    else if (!ApplicationManager.getApplication().isUnitTestMode()) LOG.info("project roots have changed");
 
     DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
-    dumbService.queueTask(new UnindexedFilesUpdater(myProject, false));
+    if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
+      dumbService.queueTask(new UnindexedFilesUpdater(myProject, false));
+    }
   }
 
   private static void addRootsToTrack(final String[] urls, final Collection<String> recursive, final Collection<String> flat) {
@@ -376,7 +381,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
         if (myInsideRefresh == 0) {
           if (affectsRoots(pointers)) {
             beforeRootsChange(false);
-            if (myDoLogCachesUpdate) LOG.info(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl() : ""));
+            if (myDoLogCachesUpdate) LOG.debug(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl():""));
           }
         }
         else if (!myPointerChangesDetected) {
@@ -384,7 +389,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
           if (affectsRoots(pointers)) {
             myPointerChangesDetected = true;
             myProject.getMessageBus().syncPublisher(ProjectTopics.PROJECT_ROOTS).beforeRootsChange(new ModuleRootEventImpl(myProject, false));
-            if (myDoLogCachesUpdate) LOG.info(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl() : ""));
+            if (myDoLogCachesUpdate) LOG.debug(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl():""));
           }
         }
       }

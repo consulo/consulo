@@ -22,10 +22,7 @@ import com.intellij.internal.focus.FocusTracesAction;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationActivationListener;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.diagnostic.Logger;
@@ -37,6 +34,7 @@ import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.FocusTrackback;
+import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.WeakValueHashMap;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntIntHashMap;
@@ -56,6 +54,7 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class FocusManagerImpl extends IdeFocusManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(FocusManagerImpl.class);
@@ -84,8 +83,6 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
 
   private final EdtAlarm myFocusedComponentAlarm;
   private final EdtAlarm myForcedFocusRequestsAlarm;
-
-  private final SimpleTimer myTimer = SimpleTimer.newInstance("FocusManager timer");
 
   private final EdtAlarm myIdleAlarm;
   private final Set<Runnable> myIdleRequests = new LinkedHashSet<Runnable>();
@@ -223,8 +220,8 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
-          resetUnforcedCommand(command);
-          _requestFocus(command, forced, result);
+          FocusManagerImpl.this.resetUnforcedCommand(command);
+          FocusManagerImpl.this._requestFocus(command, forced, result);
         }
       });
     }
@@ -235,7 +232,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
     result.doWhenProcessed(new Runnable() {
       @Override
       public void run() {
-        restartIdleAlarm();
+        FocusManagerImpl.this.restartIdleAlarm();
       }
     });
 
@@ -264,7 +261,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
     result.doWhenProcessed(new Runnable() {
       @Override
       public void run() {
-        maybeRemoveFocusActivity();
+        FocusManagerImpl.this.maybeRemoveFocusActivity();
       }
     });
 
@@ -281,12 +278,12 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
-        if (checkForRejectOrByPass(command, forced, result)) return;
+        if (FocusManagerImpl.this.checkForRejectOrByPass(command, forced, result)) return;
 
         if (myRequestFocusCmd == command) {
           final TimedOutCallback focusTimeout =
-                  new TimedOutCallback(Registry.intValue("actionSystem.commandProcessingTimeout"),
-                                       "Focus command timed out, cmd=" + command, command.getAllocation(), true) {
+                  new TimedOutCallback(Registry.intValue("actionSystem.commandProcessingTimeout"), "Focus command timed out, cmd=" + command,
+                                       command.getAllocation(), true) {
                     @Override
                     protected void onTimeout() {
                       forceFinishFocusSettleDown(command, result);
@@ -296,12 +293,12 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
           if (command.invalidatesRequestors()) {
             myCmdTimestamp++;
           }
-          revalidateFurtherRequestors();
+          FocusManagerImpl.this.revalidateFurtherRequestors();
           if (forced) {
             if (command.invalidatesRequestors()) {
               myForcedCmdTimestamp++;
             }
-            revalidateFurtherRequestors();
+            FocusManagerImpl.this.revalidateFurtherRequestors();
           }
 
           command.setForced(forced);
@@ -311,7 +308,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
               UIUtil.invokeLaterIfNeeded(new Runnable() {
                 @Override
                 public void run() {
-                  resetCommand(command, false);
+                  FocusManagerImpl.this.resetCommand(command, false);
                   result.setDone();
                 }
               });
@@ -320,7 +317,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
             @Override
             public void run() {
               result.setRejected();
-              resetCommand(command, true);
+              FocusManagerImpl.this.resetCommand(command, true);
             }
           }).doWhenProcessed(new Runnable() {
             @Override
@@ -332,7 +329,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
           }).notify(focusTimeout);
         }
         else {
-          rejectCommand(command, result);
+          FocusManagerImpl.this.rejectCommand(command, result);
         }
       }
     });
@@ -500,7 +497,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
       public void run() {
-        if (isFlushingIdleRequests()) {
+        if (FocusManagerImpl.this.isFlushingIdleRequests()) {
           myIdleRequests.add(runnable);
           return;
         }
@@ -510,20 +507,21 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
           return;
         }
 
-        final boolean needsRestart = isIdleQueueEmpty();
+        final boolean needsRestart = FocusManagerImpl.this.isIdleQueueEmpty();
         if (myIdleRequests.contains(runnable)) {
           myIdleRequests.remove(runnable);
           myIdleRequests.add(runnable);
-        } else {
+        }
+        else {
           myIdleRequests.add(runnable);
         }
 
-        if (canFlushIdleRequests()) {
-          flushIdleRequests();
+        if (FocusManagerImpl.this.canFlushIdleRequests()) {
+          FocusManagerImpl.this.flushIdleRequests();
         }
         else {
           if (needsRestart) {
-            restartIdleAlarm();
+            FocusManagerImpl.this.restartIdleAlarm();
           }
         }
       }
@@ -594,15 +592,20 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
           }
 
 
-          KeyEvent keyEvent = new KeyEvent(owner, each.getID(), each.getWhen(), each.getModifiersEx(), each.getKeyCode(), each.getKeyChar(),
-                                           each.getKeyLocation());
+          final KeyEvent keyEvent = new KeyEvent(owner, each.getID(), each.getWhen(), each.getModifiersEx(), each.getKeyCode(), each.getKeyChar(),
+                                                 each.getKeyLocation());
 
 
-          if (owner != null && SwingUtilities.getWindowAncestor(owner) != null) {
+          if (SwingUtilities.getWindowAncestor(owner) != null) {
             IdeEventQueue.getInstance().dispatchEvent(keyEvent);
           }
           else {
-            myQueue._dispatchEvent(keyEvent, true);
+            ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(new Runnable() {
+              @Override
+              public void run() {
+                myQueue._dispatchEvent(keyEvent, true);
+              }
+            });
           }
         }
 
@@ -779,8 +782,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
       callback.doWhenDone(new Runnable() {
         @Override
         public void run() {
-          done.setDone();
-          LOG.info(dateFormat.format(System.currentTimeMillis()) + "\tDone:     " + id);
+
         }
       });
       callback.doWhenRejected(new Runnable() {
@@ -806,7 +808,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
       @Override
       public void run() {
         if (myTypeAheadRequestors.remove(done)) {
-          restartIdleAlarm();
+          FocusManagerImpl.this.restartIdleAlarm();
         }
       }
     }));
@@ -913,7 +915,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
       @Override
       public void run() {
         myFocusRevalidator = runnable;
-        restartIdleAlarm();
+        FocusManagerImpl.this.restartIdleAlarm();
       }
     });
   }
@@ -987,7 +989,8 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
           if (ApplicationManager.getApplication().isActive()) {
             if (window instanceof JFrame && ((JFrame)window).getState() == Frame.ICONIFIED) {
               ((JFrame)window).setState(Frame.NORMAL);
-            } else {
+            }
+            else {
               window.toFront();
             }
           }
@@ -1040,7 +1043,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
   }
 
 
-  class EdtAlarm {
+  static class EdtAlarm {
     private final Set<EdtRunnable> myRequests = new HashSet<EdtRunnable>();
 
     public void cancelAllRequests() {
@@ -1052,7 +1055,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
 
     public void addRequest(@NotNull EdtRunnable runnable, int delay) {
       myRequests.add(runnable);
-      myTimer.setUp(runnable, delay);
+      EdtExecutorService.getScheduledExecutorInstance().schedule(runnable, delay, TimeUnit.MILLISECONDS);
     }
   }
 
@@ -1069,6 +1072,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
   }
 
   private class AppListener extends ApplicationActivationListener.Adapter {
+
     @Override
     public void applicationActivated(final IdeFrame ideFrame) {
       final FocusCommand cmd = myFocusCommandOnAppActivation;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.PsiFileImpl;
@@ -116,6 +118,14 @@ public class TreeUtil {
   public static ASTNode findParent(ASTNode element, IElementType type) {
     for (ASTNode parent = element.getTreeParent(); parent != null; parent = parent.getTreeParent()) {
       if (parent.getElementType() == type) return parent;
+    }
+    return null;
+  }
+
+  @Nullable
+  public static ASTNode findParent(ASTNode element, TokenSet types) {
+    for (ASTNode parent = element.getTreeParent(); parent != null; parent = parent.getTreeParent()) {
+      if (types.contains(parent.getElementType())) return parent;
     }
     return null;
   }
@@ -273,7 +283,7 @@ public class TreeUtil {
     return nextLeaf((TreeElement)node, null);
   }
 
-  public static Key<FileElement> CONTAINING_FILE_KEY_AFTER_REPARSE = Key.create("CONTAINING_FILE_KEY_AFTER_REPARSE");
+  public static final Key<FileElement> CONTAINING_FILE_KEY_AFTER_REPARSE = Key.create("CONTAINING_FILE_KEY_AFTER_REPARSE");
   public static FileElement getFileElement(TreeElement element) {
     TreeElement parent = element;
     while (parent != null && !(parent instanceof FileElement)) {
@@ -442,12 +452,9 @@ public class TreeUtil {
     }
   }
 
-  public static void bindStubsToTree(@NotNull PsiFileImpl file, @NotNull StubTree stubTree) throws StubBindingException {
+  public static void bindStubsToTree(@NotNull PsiFileImpl file, @NotNull StubTree stubTree, @NotNull FileElement tree) throws StubBindingException {
     final Iterator<StubElement<?>> stubs = stubTree.getPlainList().iterator();
     stubs.next();  // skip file root stub
-
-    FileElement tree = file.getTreeElement();
-    assert tree != null : file;
 
     final IStubFileElementType type = file.getElementTypeForStubBuilder();
     assert type != null;
@@ -474,5 +481,25 @@ public class TreeUtil {
         super.visitNode(node);
       }
     });
+  }
+
+  @Nullable
+  public static ASTNode skipWhitespaceAndComments(final ASTNode node, boolean forward) {
+    return skipWhitespaceCommentsAndTokens(node, TokenSet.EMPTY, forward);
+  }
+
+  @Nullable
+  public static ASTNode skipWhitespaceCommentsAndTokens(final ASTNode node, TokenSet alsoSkip, boolean forward) {
+    ASTNode element = node;
+    while (true) {
+      if (element == null) return null;
+      if (!isWhitespaceOrComment(element) && !alsoSkip.contains(element.getElementType())) break;
+      element = forward ? element.getTreeNext(): element.getTreePrev();
+    }
+    return element;
+  }
+
+  public static boolean isWhitespaceOrComment(ASTNode element) {
+    return element.getPsi() instanceof PsiWhiteSpace || element.getPsi() instanceof PsiComment;
   }
 }

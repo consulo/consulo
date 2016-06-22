@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class IOUtil {
   public static final boolean ourByteBuffersUseNativeByteOrder = SystemProperties.getBooleanProperty("idea.bytebuffers.use.native.byte.order", true);
@@ -34,16 +37,17 @@ public class IOUtil {
 
   @NonNls private static final String LONGER_THAN_64K_MARKER = "LONGER_THAN_64K";
 
-  private IOUtil() {}
+  private IOUtil() {
+  }
 
   public static String readString(@NotNull DataInput stream) throws IOException {
     int length = stream.readInt();
     if (length == -1) return null;
     if (length == 0) return "";
 
-    byte[] bytes = new byte[length*2];
+    byte[] bytes = new byte[length * 2];
     stream.readFully(bytes);
-    return new String(bytes, 0, length*2, CharsetToolkit.UTF_16BE_CHARSET);
+    return new String(bytes, 0, length * 2, CharsetToolkit.UTF_16BE_CHARSET);
   }
 
   public static void writeString(String s, @NotNull DataOutput stream) throws IOException {
@@ -151,12 +155,16 @@ public class IOUtil {
     storage.readFully(buffer, 0, len);
 
     char[] chars = spareBufferLocal.getValue();
-    for(int i = 0; i < len; ++i) chars[i] = (char)(buffer[i] &0xFF);
+    for (int i = 0; i < len; ++i) chars[i] = (char)(buffer[i] & 0xFF);
     return new String(chars, 0, len);
   }
 
   public static boolean isAscii(@NotNull String str) {
-    for (int i = 0, length = str.length(); i < length; ++ i) {
+    return isAscii((CharSequence)str);
+  }
+
+  public static boolean isAscii(@NotNull CharSequence str) {
+    for (int i = 0, length = str.length(); i < length; ++i) {
       if (str.charAt(i) >= 128) return false;
     }
     return true;
@@ -174,7 +182,7 @@ public class IOUtil {
       public boolean accept(final File pathname) {
         return pathname.getName().startsWith(baseName);
       }
-    }): null;
+    }) : null;
 
     boolean ok = true;
     if (files != null) {
@@ -196,7 +204,8 @@ public class IOUtil {
         Object o = outField.get(stream);
         if (o instanceof OutputStream) {
           stream = (OutputStream)o;
-        } else {
+        }
+        else {
           break;
         }
       }
@@ -222,15 +231,32 @@ public class IOUtil {
   }
 
   public static <T> T openCleanOrResetBroken(@NotNull ThrowableComputable<T, IOException> factoryComputable, Runnable cleanupCallback) throws IOException {
-    for(int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 2; ++i) {
       try {
         return factoryComputable.compute();
-      } catch (IOException ex) {
+      }
+      catch (IOException ex) {
         if (i == 1) throw ex;
         cleanupCallback.run();
       }
     }
 
     return null;
+  }
+
+  public static void writeStringList(final DataOutput out, final Collection<String> list) throws IOException {
+    DataInputOutputUtil.writeINT(out, list.size());
+    for (final String s : list) {
+      writeUTF(out, s);
+    }
+  }
+
+  public static List<String> readStringList(final DataInput in) throws IOException {
+    final int size = DataInputOutputUtil.readINT(in);
+    final ArrayList<String> strings = new ArrayList<String>(size);
+    for (int i = 0; i < size; i++) {
+      strings.add(readUTF(in));
+    }
+    return strings;
   }
 }

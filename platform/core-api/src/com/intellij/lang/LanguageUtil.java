@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,22 @@ package com.intellij.lang;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.LanguageSubstitutors;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.templateLanguages.TemplateLanguage;
+import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -41,13 +46,23 @@ public final class LanguageUtil {
   public static final Comparator<Language> LANGUAGE_COMPARATOR = new Comparator<Language>() {
     @Override
     public int compare(Language o1, Language o2) {
-      return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
+      return StringUtil.naturalCompare(o1.getDisplayName(), o2.getDisplayName());
     }
   };
 
+
+  @Nullable
+  public static Language getLanguageForPsi(@NotNull Project project, @Nullable VirtualFile file) {
+    Language language = getFileLanguage(file);
+    if (language == null) return null;
+    return LanguageSubstitutors.INSTANCE.substituteLanguage(language, file, project);
+  }
+
   @Nullable
   public static Language getFileLanguage(@Nullable VirtualFile file) {
-    return file == null ? null : getFileTypeLanguage(file.getFileType());
+    if (file == null) return null;
+    Language l = file instanceof LightVirtualFile? ((LightVirtualFile)file).getLanguage() : null;
+    return l != null ? l : getFileTypeLanguage(file.getFileType());
   }
 
   @Nullable
@@ -66,16 +81,16 @@ public final class LanguageUtil {
     String textStr = left.getText() + right.getText();
 
     lexer.start(textStr, 0, textStr.length());
-    if (lexer.getTokenType() != left.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
-    if (lexer.getTokenEnd() != left.getTextLength()) return ParserDefinition.SpaceRequirements.MUST;
+    if(lexer.getTokenType() != left.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
+    if(lexer.getTokenEnd() != left.getTextLength()) return ParserDefinition.SpaceRequirements.MUST;
     lexer.advance();
-    if (lexer.getTokenEnd() != textStr.length()) return ParserDefinition.SpaceRequirements.MUST;
-    if (lexer.getTokenType() != right.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
+    if(lexer.getTokenEnd() != textStr.length()) return ParserDefinition.SpaceRequirements.MUST;
+    if(lexer.getTokenType() != right.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
     return ParserDefinition.SpaceRequirements.MAY;
   }
 
   @NotNull
-  public static Language[] getLanguageDialects(final Language base) {
+  public static Language[] getLanguageDialects(@NotNull final Language base) {
     final List<Language> list = ContainerUtil.findAll(Language.getRegisteredLanguages(), new Condition<Language>() {
       @Override
       public boolean value(final Language language) {
@@ -89,13 +104,13 @@ public final class LanguageUtil {
     if (element == null) return false;
 
     final PsiFile psiFile = element.getContainingFile();
-    if (psiFile == null) return false;
+    if(psiFile == null) return false;
 
     final Language language = psiFile.getViewProvider().getBaseLanguage();
     return language instanceof TemplateLanguage;
   }
 
-  public static boolean isInjectableLanguage(Language language) {
+  public static boolean isInjectableLanguage(@NotNull Language language) {
     if (language == Language.ANY) {
       return false;
     }
@@ -112,6 +127,27 @@ public final class LanguageUtil {
       return false;
     }
     return true;
+  }
+
+  public static boolean isFileLanguage(@NotNull Language language) {
+    if ( language instanceof InjectableLanguage) return false;
+    if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) return false;
+    LanguageFileType type = language.getAssociatedFileType();
+    if (type == null || StringUtil.isEmpty(type.getDefaultExtension())) return false;
+    String name = language.getDisplayName();
+    if (StringUtil.isEmpty(name) || name.startsWith("<") || name.startsWith("[")) return false;
+    return StringUtil.isNotEmpty(type.getDefaultExtension());
+  }
+
+  @NotNull
+  public static List<Language> getFileLanguages() {
+    List<Language> result = ContainerUtil.newArrayList();
+    for (Language language : Language.getRegisteredLanguages()) {
+      if (!isFileLanguage(language)) continue;
+      result.add(language);
+    }
+    Collections.sort(result, LANGUAGE_COMPARATOR);
+    return result;
   }
 
   @NotNull

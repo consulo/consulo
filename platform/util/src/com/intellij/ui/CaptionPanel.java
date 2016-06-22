@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package com.intellij.ui;
 
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -47,13 +48,19 @@ public class CaptionPanel extends JPanel {
 
   public CaptionPanel() {
     setLayout(new BorderLayout());
-    setBorder(JBUI.Borders.empty(0, 4, 0, 4));
   }
 
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     final Graphics2D g2d = (Graphics2D) g;
+
+    /*
+    if (UIUtil.isUnderDarcula() && UIUtil.findComponentsOfType(this, JCheckBox.class).isEmpty()) {
+      paintUnderDarcula(g2d);
+      return;
+    }
+    */
 
     if (myActive) {
       g.setColor(TOP_FLICK_ACTIVE);
@@ -73,6 +80,25 @@ public class CaptionPanel extends JPanel {
     g2d.fillRect(0, 1, getWidth(), getHeight() - 2);
   }
 
+  private void paintUnderDarcula(Graphics2D g) {
+    if (myActive) {
+      g.setColor(Gray._100);
+      g.drawLine(0, 0, getWidth(), 0);
+      g.setColor(Gray._50);
+      g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+      g.setPaint(UIUtil.getGradientPaint(0, 0, Gray._100, 0, getHeight(), Gray._85));
+    }
+    else {
+      g.setColor(Gray._100);
+      g.drawLine(0, 0, getWidth(), 0);
+      g.setColor(Gray._50);
+      g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+      g.setPaint(UIUtil.getGradientPaint(0, 0, Gray._120, 0, getHeight(), Gray._105));
+    }
+
+    g.fillRect(0, 1, getWidth(), getHeight() - 2);
+  }
+
   public void setActive(final boolean active) {
     myActive = active;
     if (myButtonComponent != null) {
@@ -81,11 +107,12 @@ public class CaptionPanel extends JPanel {
     repaint();
   }
 
-  public void setButtonComponent(@NotNull ActiveComponent component) {
+  public void setButtonComponent(@NotNull ActiveComponent component, @Nullable Border border) {
     if (myButtonComponent != null) {
       remove(myButtonComponent.getComponent());
     }
     JPanel panel = new JPanel(new BorderLayout());
+    panel.setBorder(border);
     panel.add(new JLabel(" "), BorderLayout.WEST);
     panel.add(component.getComponent(), BorderLayout.CENTER);
     panel.setOpaque(false);
@@ -95,10 +122,10 @@ public class CaptionPanel extends JPanel {
 
   public void addSettingsComponent(Component component) {
     if (mySettingComponent == null) {
-      mySettingComponent = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-      mySettingComponent.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-      add(mySettingComponent, BorderLayout.WEST);
+      mySettingComponent = new JPanel();
       mySettingComponent.setOpaque(false);
+      mySettingComponent.setLayout(new BoxLayout(mySettingComponent, BoxLayout.X_AXIS));
+      add(mySettingComponent, BorderLayout.WEST);
     }
     mySettingComponent.add(component);
   }

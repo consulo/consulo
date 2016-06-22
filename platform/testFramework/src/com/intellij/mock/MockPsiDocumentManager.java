@@ -12,6 +12,7 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 
 import java.util.Collection;
 
@@ -19,12 +20,14 @@ import java.util.Collection;
  * @author peter
  */
 public class MockPsiDocumentManager extends PsiDocumentManager {
+  @RequiredReadAction
   @Override
   @Nullable
   public PsiFile getPsiFile(@NotNull Document document) {
     throw new UnsupportedOperationException("Method getPsiFile is not yet implemented in " + getClass().getName());
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public PsiFile getCachedPsiFile(@NotNull Document document) {
@@ -44,6 +47,7 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
     return FileDocumentManager.getInstance().getCachedDocument(vFile);
   }
 
+  @RequiredDispatchThread
   @Override
   public void commitAllDocuments() {
   }
@@ -127,6 +131,7 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
             "Method doPostponedOperationsAndUnblockDocument is not yet implemented in " + getClass().getName());
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean performWhenAllCommitted(@NotNull Runnable action) {
     throw new UnsupportedOperationException();
@@ -134,6 +139,11 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
 
   @Override
   public void reparseFiles(@NotNull Collection<VirtualFile> files, boolean includeOpenFiles) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void performLaterWhenAllCommitted(@NotNull final Runnable runnable) {
     throw new UnsupportedOperationException();
   }
 }

@@ -156,6 +156,12 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
     return false;
   }
 
+  @Nullable
+  @Override
+  public String getTooltipText() {
+    return null;
+  }
+
   public void doAction(final Editor editor, final MouseEvent e) {
     e.consume();
     final JComponent comp = (JComponent)e.getComponent();

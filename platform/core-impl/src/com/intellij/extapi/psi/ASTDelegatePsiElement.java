@@ -22,6 +22,8 @@ package com.intellij.extapi.psi;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -55,6 +57,10 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
   @Override
   public PsiManagerEx getManager() {
+    Project project = ProjectCoreUtil.theOnlyOpenProject();
+    if (project != null) {
+      return PsiManagerEx.getInstanceEx(project);
+    }
     PsiElement parent = this;
 
     while (parent instanceof ASTDelegatePsiElement) {

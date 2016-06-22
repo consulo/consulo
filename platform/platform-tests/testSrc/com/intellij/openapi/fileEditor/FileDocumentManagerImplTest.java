@@ -612,7 +612,7 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
   }
 
   private static void renameFile(VirtualFile file, String newName) throws IOException {
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
+    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(FileDocumentManagerImplTest.class);
     try {
       file.rename(null, newName);
     }
