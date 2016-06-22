@@ -13,21 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.client;
+package consulo.ui.shared;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import consulo.ui.shared.RGBColor;
-import consulo.ui.shared.Size;
-import consulo.web.gwtUI.shared.UIClientEvent;
-import consulo.web.gwtUI.shared.UIServerEvent;
+import java.io.Serializable;
 
-public interface HackServiceAsync {
+/**
+ * @author VISTALL
+ * @since 21-Jun-16
+ */
+public class RGBColor implements Serializable {
+  private int myRed;
+  private int myGreed;
+  private int myBlue;
 
-  void clientEvent(UIClientEvent event, AsyncCallback<UIClientEvent> async);
+  public RGBColor(int red, int greed, int blue) {
+    myRed = red;
+    myGreed = greed;
+    myBlue = blue;
+  }
 
-  void serverEvent(UIServerEvent event, AsyncCallback<UIServerEvent> async);
+  public int getRed() {
+    return myRed;
+  }
 
-  void size(Size size, AsyncCallback<Size> async);
+  public int getGreed() {
+    return myGreed;
+  }
 
-  void rgbColor(RGBColor size, AsyncCallback<RGBColor> async);
+  public int getBlue() {
+    return myBlue;
+  }
 }

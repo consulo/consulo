@@ -13,21 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.client;
+package consulo.ui.style;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import consulo.ui.shared.RGBColor;
-import consulo.ui.shared.Size;
-import consulo.web.gwtUI.shared.UIClientEvent;
-import consulo.web.gwtUI.shared.UIServerEvent;
-
-public interface HackServiceAsync {
-
-  void clientEvent(UIClientEvent event, AsyncCallback<UIClientEvent> async);
-
-  void serverEvent(UIServerEvent event, AsyncCallback<UIServerEvent> async);
-
-  void size(Size size, AsyncCallback<Size> async);
-
-  void rgbColor(RGBColor size, AsyncCallback<RGBColor> async);
+/**
+ * @author VISTALL
+ * @since 22-Jun-16
+ */
+public interface ColorKey {
 }

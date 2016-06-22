@@ -13,28 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.client;
+package consulo.ui.style;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import consulo.ui.shared.RGBColor;
-import consulo.ui.shared.Size;
-import consulo.web.gwtUI.shared.UIClientEvent;
-import consulo.web.gwtUI.shared.UIServerEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 15-Jun-16
- * <p/>
- * this is hack service - gwt will generate serialize reader/writer for types
+ * @since 22-Jun-16
  */
-@RemoteServiceRelativePath("HackService")
-public interface HackService extends RemoteService {
-  UIClientEvent clientEvent(UIClientEvent event);
+public interface StyleManager {
 
-  UIServerEvent serverEvent(UIServerEvent event);
-
-  Size size(Size size);
-
-  RGBColor rgbColor(RGBColor size);
 }
