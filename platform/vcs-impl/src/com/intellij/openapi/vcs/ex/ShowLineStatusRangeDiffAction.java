@@ -22,8 +22,8 @@ import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -36,7 +36,8 @@ import org.mustbe.consulo.RequiredDispatchThread;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
   public ShowLineStatusRangeDiffAction(@NotNull LineStatusTracker lineStatusTracker, @NotNull Range range, @Nullable Editor editor) {
-    super(VcsBundle.message("action.name.show.difference"), AllIcons.Actions.Diff, lineStatusTracker, range);
+    super(lineStatusTracker, range);
+    ActionUtil.copyFrom(this, "ChangesView.Diff");
   }
 
   @Override

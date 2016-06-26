@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.vcs.ex;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.vcs.VcsBundle;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -27,7 +27,8 @@ import java.awt.datatransfer.StringSelection;
  */
 public class CopyLineStatusRangeAction extends BaseLineStatusRangeAction {
   CopyLineStatusRangeAction(final LineStatusTracker lineStatusTracker, final Range range) {
-    super(VcsBundle.message("action.name.copy.old.text"), AllIcons.Actions.Copy, lineStatusTracker, range);
+    super(lineStatusTracker, range);
+    ActionUtil.copyFrom(this, IdeActions.ACTION_COPY);
   }
 
   @Override

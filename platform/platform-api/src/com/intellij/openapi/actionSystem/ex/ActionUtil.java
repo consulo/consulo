@@ -275,4 +275,14 @@ public class ActionUtil {
     //noinspection unchecked
     return property == null ? Collections.<AnAction>emptyList() : (List<AnAction>)property;
   }
+
+  /**
+   * Convenience method for copying properties from a registered action
+   *
+   * @param actionId action id
+   */
+  public static AnAction copyFrom(@NotNull AnAction action, @NotNull String actionId) {
+    action.copyFrom(ActionManager.getInstance().getAction(actionId));
+    return action;
+  }
 }
