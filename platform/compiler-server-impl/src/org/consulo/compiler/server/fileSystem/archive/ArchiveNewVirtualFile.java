@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.consulo.vfs.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

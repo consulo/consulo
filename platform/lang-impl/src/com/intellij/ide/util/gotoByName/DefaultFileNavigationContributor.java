@@ -28,7 +28,7 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import gnu.trove.THashSet;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 @Logger

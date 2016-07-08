@@ -17,7 +17,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;

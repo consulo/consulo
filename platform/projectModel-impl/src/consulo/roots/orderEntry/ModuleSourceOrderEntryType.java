@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.ModuleSourceOrderEntryImpl;
 import com.intellij.openapi.util.InvalidDataException;
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ModuleSourceOrderEntryType implements OrderEntryType<ModuleSourceOrderEntryImpl> {
   @NotNull
-  @LazyInstance
+  @Lazy
   public static ModuleSourceOrderEntryType getInstance() {
     return EP_NAME.findExtension(ModuleSourceOrderEntryType.class);
   }

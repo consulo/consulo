@@ -17,7 +17,7 @@ package com.intellij.openapi.components;
 
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.util.io.FileUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jdom.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

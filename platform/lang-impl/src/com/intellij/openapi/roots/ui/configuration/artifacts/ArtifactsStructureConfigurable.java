@@ -42,7 +42,7 @@ import com.intellij.packaging.impl.artifacts.PackagingElementPath;
 import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.LibraryElementType;
 import com.intellij.packaging.impl.elements.LibraryPackagingElement;
-import org.consulo.lombok.annotations.ProjectService;
+import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -20,7 +20,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.util.messages.Topic;
-import org.consulo.lombok.annotations.ProjectService;
+import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

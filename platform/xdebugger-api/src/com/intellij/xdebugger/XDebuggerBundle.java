@@ -16,7 +16,7 @@
 
 package com.intellij.xdebugger;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 /**
  * @author nik

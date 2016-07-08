@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

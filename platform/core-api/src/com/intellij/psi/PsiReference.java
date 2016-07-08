@@ -18,7 +18,7 @@ package com.intellij.psi;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.IncorrectOperationException;
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

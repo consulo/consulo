@@ -17,7 +17,7 @@ package org.mustbe.consulo.vfs.backgroundTask;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
-import org.consulo.lombok.annotations.ProjectService;
+import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

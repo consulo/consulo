@@ -36,7 +36,7 @@ import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

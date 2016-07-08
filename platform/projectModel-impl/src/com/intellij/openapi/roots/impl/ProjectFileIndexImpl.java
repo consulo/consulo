@@ -38,7 +38,7 @@ import org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider;
 import java.util.Arrays;
 import java.util.List;
 
-@org.consulo.lombok.annotations.Logger
+@consulo.lombok.annotations.Logger
 public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIndex {
   private final Project myProject;
   private final ContentFilter myContentFilter;

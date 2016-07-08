@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.ui;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 /**
  * @author VISTALL

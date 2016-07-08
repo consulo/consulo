@@ -16,7 +16,7 @@
 package com.intellij.openapi.options;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

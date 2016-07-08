@@ -37,7 +37,7 @@ import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

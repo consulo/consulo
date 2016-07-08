@@ -24,7 +24,7 @@ import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import org.consulo.compiler.server.rmi.CompilerClientConnector;
 import org.consulo.compiler.server.rmi.CompilerClientInterface;
 import org.consulo.compiler.server.rmi.CompilerServerInterface;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

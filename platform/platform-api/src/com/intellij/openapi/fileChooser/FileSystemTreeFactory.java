@@ -17,7 +17,7 @@ package com.intellij.openapi.fileChooser;
 
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
 @ApplicationService

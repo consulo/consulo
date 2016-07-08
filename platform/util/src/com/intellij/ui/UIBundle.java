@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 @Bundle("messages.UIBundle")
 public class UIBundle {

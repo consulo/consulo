@@ -16,7 +16,7 @@
 package org.consulo.compiler.server.rmi;
 
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import org.consulo.lombok.annotations.ProjectService;
+import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

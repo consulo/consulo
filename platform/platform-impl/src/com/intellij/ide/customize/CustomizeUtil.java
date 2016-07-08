@@ -28,7 +28,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.NameUtil;
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

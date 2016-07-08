@@ -15,7 +15,7 @@
  */
 package com.intellij.execution;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 /**
  * @author lesya

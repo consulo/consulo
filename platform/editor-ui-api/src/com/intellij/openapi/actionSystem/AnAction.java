@@ -21,7 +21,7 @@ import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ArrayUtil;
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

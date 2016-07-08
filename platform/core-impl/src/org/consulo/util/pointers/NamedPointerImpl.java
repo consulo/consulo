@@ -15,7 +15,7 @@
  */
 package org.consulo.util.pointers;
 
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**

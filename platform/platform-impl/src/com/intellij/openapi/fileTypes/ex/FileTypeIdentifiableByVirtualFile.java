@@ -24,7 +24,7 @@ package com.intellij.openapi.fileTypes.ex;
 
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 
 @ArrayFactoryFields
 public interface FileTypeIdentifiableByVirtualFile extends FileType {

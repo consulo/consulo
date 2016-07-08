@@ -16,7 +16,7 @@
 package com.intellij.remoteServer.runtime.ui;
 
 import com.intellij.remoteServer.runtime.ServerConnection;
-import org.consulo.lombok.annotations.ProjectService;
+import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
 /**

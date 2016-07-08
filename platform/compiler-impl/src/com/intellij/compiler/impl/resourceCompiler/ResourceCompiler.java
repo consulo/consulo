@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.Chunk;
 import com.intellij.util.ExceptionUtil;
 import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

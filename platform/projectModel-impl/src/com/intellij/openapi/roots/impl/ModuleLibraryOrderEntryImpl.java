@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.PathUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.orderEntry.ModuleLibraryOrderEntryType;
 

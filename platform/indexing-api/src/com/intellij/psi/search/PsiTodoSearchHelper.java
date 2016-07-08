@@ -16,7 +16,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.psi.PsiFile;
-import org.consulo.lombok.annotations.ProjectService;
+import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
 /**

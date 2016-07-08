@@ -46,7 +46,7 @@ import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;
 
-@org.consulo.lombok.annotations.Logger
+@consulo.lombok.annotations.Logger
 public class RootIndex {
   public static final Comparator<OrderEntry> BY_OWNER_MODULE = new Comparator<OrderEntry>() {
     @Override

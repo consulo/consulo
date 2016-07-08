@@ -42,7 +42,7 @@ import com.intellij.util.io.UrlConnectionUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

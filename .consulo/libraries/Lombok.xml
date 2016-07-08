@@ -1,8 +1,7 @@
 <component name="libraryTable">
   <library name="Lombok">
     <binaries>
-      <root url="jar://$PROJECT_DIR$/lib/lombok-consulo-0.11.9.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lombok-core-0.11.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lombok.jar!/" />
     </binaries>
   </library>
 </component>

@@ -56,7 +56,7 @@ import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.messages.MessageBus;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

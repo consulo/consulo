@@ -29,7 +29,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jdom.Element;

@@ -41,7 +41,7 @@ import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

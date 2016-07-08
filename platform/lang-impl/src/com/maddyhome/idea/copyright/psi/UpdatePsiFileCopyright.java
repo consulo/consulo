@@ -37,7 +37,7 @@ import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
 import com.maddyhome.idea.copyright.util.FileTypeUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.copyright.config.CopyrightFileConfig;

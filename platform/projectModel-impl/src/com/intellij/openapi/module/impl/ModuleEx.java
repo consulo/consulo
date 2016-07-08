@@ -16,7 +16,7 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.openapi.module.Module;
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 
 /**
  * @author yole

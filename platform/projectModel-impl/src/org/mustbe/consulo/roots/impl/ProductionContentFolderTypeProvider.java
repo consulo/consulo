@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
@@ -34,7 +34,7 @@ public class ProductionContentFolderTypeProvider extends ContentFolderTypeProvid
   private static final Color SOURCES_COLOR = new JBColor(new Color(0x0A50A1), DarculaColors.BLUE);
 
   @NotNull
-  @LazyInstance
+  @Lazy
   public static ProductionContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(ProductionContentFolderTypeProvider.class);
   }

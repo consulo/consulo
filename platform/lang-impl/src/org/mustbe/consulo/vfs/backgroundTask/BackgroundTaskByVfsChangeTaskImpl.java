@@ -40,7 +40,7 @@ import com.intellij.tools.ToolProcessAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;

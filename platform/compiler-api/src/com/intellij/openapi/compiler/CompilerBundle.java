@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 /**
  * @author Eugene Zhuravlev

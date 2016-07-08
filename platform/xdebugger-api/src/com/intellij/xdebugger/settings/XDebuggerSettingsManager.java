@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.settings;
 
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
 @ApplicationService

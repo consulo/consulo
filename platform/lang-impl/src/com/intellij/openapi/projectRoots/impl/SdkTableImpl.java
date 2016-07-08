@@ -28,7 +28,7 @@ import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.messages.MessageBus;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

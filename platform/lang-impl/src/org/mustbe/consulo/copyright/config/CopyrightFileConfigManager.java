@@ -32,7 +32,7 @@ import java.util.TreeMap;
 
 /**
  */
-@org.consulo.lombok.annotations.Logger
+@consulo.lombok.annotations.Logger
 public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable {
   public abstract class LoadedOption {
     public abstract CopyrightFileConfig getConfig();

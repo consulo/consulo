@@ -17,7 +17,7 @@ package com.intellij.execution.filters;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

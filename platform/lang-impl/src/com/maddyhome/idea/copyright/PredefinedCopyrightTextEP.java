@@ -19,8 +19,8 @@ import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.consulo.lombok.annotations.LazyInstance;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Lazy;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class PredefinedCopyrightTextEP extends AbstractExtensionPointBean {
   public String file;
 
   @NotNull
-  @LazyInstance
+  @Lazy
   public String getText() {
     try {
       InputStream resourceAsStream = getLoaderForClass().getResourceAsStream(file);

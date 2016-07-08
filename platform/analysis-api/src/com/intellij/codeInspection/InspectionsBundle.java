@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 /**
  * @author max

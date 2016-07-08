@@ -18,7 +18,7 @@ package consulo.application.options;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.CompositePathMacroFilter;
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

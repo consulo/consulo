@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleExtensionWithSdkOrderEntryImpl;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.util.InvalidDataException;
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ModuleExtensionWithSdkOrderEntryType implements OrderEntryType<ModuleExtensionWithSdkOrderEntryImpl> {
   @NotNull
-  @LazyInstance
+  @Lazy
   public static ModuleExtensionWithSdkOrderEntryType getInstance() {
     return EP_NAME.findExtension(ModuleExtensionWithSdkOrderEntryType.class);
   }

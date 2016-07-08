@@ -18,7 +18,7 @@ package org.mustbe.consulo.roots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.ui.JBColor;
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
@@ -33,7 +33,7 @@ public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
   private static final Color TESTS_COLOR = new JBColor(new Color(0x008C2E), new Color(73, 140, 101));
 
   @NotNull
-  @LazyInstance
+  @Lazy
   public static TestContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(TestContentFolderTypeProvider.class);
   }

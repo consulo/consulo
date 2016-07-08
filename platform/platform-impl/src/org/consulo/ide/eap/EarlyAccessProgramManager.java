@@ -18,7 +18,7 @@ package org.consulo.ide.eap;
 import com.intellij.openapi.components.*;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

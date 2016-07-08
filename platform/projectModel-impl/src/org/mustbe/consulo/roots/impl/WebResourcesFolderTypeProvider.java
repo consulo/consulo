@@ -18,7 +18,7 @@ package org.mustbe.consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
@@ -31,7 +31,7 @@ import java.awt.*;
  */
 public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
   @NotNull
-  @LazyInstance
+  @Lazy
   public static ContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(WebResourcesFolderTypeProvider.class);
   }

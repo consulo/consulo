@@ -23,7 +23,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

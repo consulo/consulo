@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 
 /**
  * @author Dmitry Avdeev

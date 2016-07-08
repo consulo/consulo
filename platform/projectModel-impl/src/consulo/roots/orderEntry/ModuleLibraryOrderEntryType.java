@@ -23,8 +23,8 @@ import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
-import org.consulo.lombok.annotations.LazyInstance;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Lazy;
+import consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 @Logger
 public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibraryOrderEntryImpl> {
   @NotNull
-  @LazyInstance
+  @Lazy
   public static ModuleLibraryOrderEntryType getInstance() {
     return EP_NAME.findExtension(ModuleLibraryOrderEntryType.class);
   }

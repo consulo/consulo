@@ -23,7 +23,7 @@ import com.intellij.Patches;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ReflectionUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 

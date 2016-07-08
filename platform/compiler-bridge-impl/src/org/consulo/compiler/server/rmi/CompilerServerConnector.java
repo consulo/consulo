@@ -15,7 +15,7 @@
  */
 package org.consulo.compiler.server.rmi;
 
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 
 /**
  * @author VISTALL

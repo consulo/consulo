@@ -17,7 +17,7 @@ package org.consulo.compiler;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.consulo.lombok.annotations.ModuleService;
+import consulo.lombok.annotations.ModuleService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;

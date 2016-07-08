@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.types;
 
 import com.intellij.openapi.roots.OrderRootTypeWithConvert;
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DocumentationOrderRootType extends OrderRootTypeWithConvert {
   @NotNull
-  @LazyInstance
+  @Lazy
   public static DocumentationOrderRootType getInstance() {
     return getOrderRootType(DocumentationOrderRootType.class);
   }

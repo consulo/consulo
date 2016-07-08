@@ -15,7 +15,7 @@
  */
 package com.intellij.internal.statistic;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 /**
  * @author Denis Zhdanov

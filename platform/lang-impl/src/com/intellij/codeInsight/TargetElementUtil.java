@@ -42,8 +42,8 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.lombok.annotations.Lazy;
 import org.consulo.annotations.Immutable;
-import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -57,7 +57,7 @@ import java.util.*;
  */
 public class TargetElementUtil {
   @NotNull
-  @LazyInstance
+  @Lazy
   @Immutable
   public static Set<String> getAllAccepted() {
     Set<String> flags = new LinkedHashSet<String>();
@@ -66,7 +66,7 @@ public class TargetElementUtil {
   }
 
   @NotNull
-  @LazyInstance
+  @Lazy
   @Immutable
   public static Set<String> getDefinitionSearchFlags() {
     Set<String> flags = new LinkedHashSet<String>();
@@ -75,7 +75,7 @@ public class TargetElementUtil {
   }
 
   @NotNull
-  @LazyInstance
+  @Lazy
   @Immutable
   public static Set<String> getReferenceSearchFlags() {
     Set<String> flags = new LinkedHashSet<String>();

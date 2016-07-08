@@ -87,7 +87,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntArrayList;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

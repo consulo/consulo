@@ -46,7 +46,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PathUtil;
 import gnu.trove.THashSet;
 import lombok.val;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;

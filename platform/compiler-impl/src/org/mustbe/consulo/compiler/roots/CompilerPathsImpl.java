@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.OrderedSet;
 import org.consulo.compiler.ModuleCompilerPathsManager;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;

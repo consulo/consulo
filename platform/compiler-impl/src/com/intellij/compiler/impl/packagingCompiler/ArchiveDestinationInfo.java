@@ -18,7 +18,7 @@ package com.intellij.compiler.impl.packagingCompiler;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 
 /**
  * @author nik

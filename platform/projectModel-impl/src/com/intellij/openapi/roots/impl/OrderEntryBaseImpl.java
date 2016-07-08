@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.OrderEntry;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.orderEntry.OrderEntryType;
 
-@org.consulo.lombok.annotations.Logger
+@consulo.lombok.annotations.Logger
 public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
   private static int _hc = 0;
 

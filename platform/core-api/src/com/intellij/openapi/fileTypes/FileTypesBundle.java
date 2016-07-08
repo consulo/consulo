@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 /**
  * @author yole

@@ -20,7 +20,7 @@
 package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 
 @ArrayFactoryFields
 public interface LighterASTNode {

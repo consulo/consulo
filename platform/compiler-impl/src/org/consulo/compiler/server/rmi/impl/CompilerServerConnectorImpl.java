@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import org.consulo.compiler.server.rmi.CompilerServerConnector;
 import org.consulo.compiler.server.rmi.CompilerServerInterface;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.registry.LocateRegistry;

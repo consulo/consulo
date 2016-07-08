@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.project;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 @Bundle("messages.ProjectBundle")
 public class ProjectBundle {

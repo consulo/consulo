@@ -23,7 +23,7 @@ import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
 import com.intellij.openapi.components.impl.stores.StreamProvider;
 import com.intellij.util.containers.ContainerUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.consulo.util.pointers.Named;
 
 import java.io.File;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.project;
 
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 
 /**
  * @author yole

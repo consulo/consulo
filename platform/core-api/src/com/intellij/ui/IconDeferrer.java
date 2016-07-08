@@ -21,7 +21,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Function;
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

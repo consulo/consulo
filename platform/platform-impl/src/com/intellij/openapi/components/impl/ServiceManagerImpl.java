@@ -32,7 +32,7 @@ import com.intellij.util.PairProcessor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.pico.AssignableToComponentAdapter;
 import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.picocontainer.*;

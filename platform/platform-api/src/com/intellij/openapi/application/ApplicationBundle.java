@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 /**
  * Provides access to localized properties for the application component of IDEA.

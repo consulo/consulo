@@ -33,7 +33,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.orderEntry.OrderEntrySerializationUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.consulo.module.extension.ModuleExtensionWithSdk;

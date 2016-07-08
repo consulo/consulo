@@ -27,7 +27,7 @@ import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Restarter;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

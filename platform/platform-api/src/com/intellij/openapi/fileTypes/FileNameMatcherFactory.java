@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
 /**

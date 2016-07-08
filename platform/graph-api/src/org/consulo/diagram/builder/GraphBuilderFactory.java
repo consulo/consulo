@@ -15,7 +15,7 @@
  */
 package org.consulo.diagram.builder;
 
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 
 /**
  * @author VISTALL

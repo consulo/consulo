@@ -23,7 +23,7 @@ import com.intellij.openapi.roots.impl.RootIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ConcurrentHashMap;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;

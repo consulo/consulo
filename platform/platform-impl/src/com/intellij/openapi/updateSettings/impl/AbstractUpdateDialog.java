@@ -37,7 +37,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TableUtil;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

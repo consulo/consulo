@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.util.TextRange;
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

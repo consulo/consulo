@@ -85,7 +85,7 @@ import java.util.Set;
 /**
  * @author yole
  */
-@org.consulo.lombok.annotations.Logger
+@consulo.lombok.annotations.Logger
 public abstract class PlatformTestCase extends UsefulTestCase implements DataProvider {
   public static final String TEST_DIR_PREFIX = "idea_test_";
 

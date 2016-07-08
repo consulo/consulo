@@ -34,7 +34,7 @@ import java.io.File;
  * @author VISTALL
  * @since 0:53/11.09.13
  */
-@org.consulo.lombok.annotations.Logger
+@consulo.lombok.annotations.Logger
 public class MainTest {
   public static void main(String[] args) throws Exception{
     File t = FileUtil.createTempDirectory("consulo", "data");

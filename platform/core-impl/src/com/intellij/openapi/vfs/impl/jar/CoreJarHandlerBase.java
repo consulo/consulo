@@ -19,7 +19,7 @@ import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.archive.CoreArchiveHandler;
 import com.intellij.openapi.vfs.impl.zip.ZipArchiveFile;
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

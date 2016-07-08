@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 import org.jetbrains.annotations.NotNull;
 
 /**

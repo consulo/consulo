@@ -16,7 +16,7 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.util.NotNullFunction;
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Future;
