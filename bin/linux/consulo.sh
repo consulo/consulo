@@ -41,11 +41,26 @@ fi
 OS_TYPE=`"$UNAME" -s`
 
 # ---------------------------------------------------------------------
+# Ensure IDE_HOME points to the directory where the IDE is installed.
+# ---------------------------------------------------------------------
+SCRIPT_LOCATION=$0
+if [ -x "$READLINK" ]; then
+  while [ -L "$SCRIPT_LOCATION" ]; do
+    SCRIPT_LOCATION=`"$READLINK" -e "$SCRIPT_LOCATION"`
+  done
+fi
+
+IDE_HOME=`dirname "$SCRIPT_LOCATION"`/..
+IDE_BIN_HOME=`dirname "$SCRIPT_LOCATION"`
+
+# ---------------------------------------------------------------------
 # Locate a JDK installation directory which will be used to run the IDE.
-# Try (in order): CONSULO_JDK, JDK_HOME, JAVA_HOME, "java" in PATH.
+# Try (in order): CONSULO_JDK, bundled jdk, JDK_HOME, JAVA_HOME, "java" in PATH.
 # ---------------------------------------------------------------------
 if [ -n "$CONSULO_JDK" -a -x "$CONSULO_JDK/bin/java" ]; then
   JDK="$CONSULO_JDK"
+elif [ -x "$IDE_HOME/jre/jre/bin/java" ] && "$IDE_HOME/jre/jre/bin/java" -version > /dev/null 2>&1 ; then
+  JDK="$IDE_HOME/jre"
 elif [ -n "$JDK_HOME" -a -x "$JDK_HOME/bin/java" ]; then
   JDK="$JDK_HOME"
 elif [ -n "$JAVA_HOME" -a -x "$JAVA_HOME/bin/java" ]; then
@@ -100,19 +115,6 @@ if [ $BITS -eq 0 ]; then
 else
   BITS=""
 fi
-
-# ---------------------------------------------------------------------
-# Ensure IDE_HOME points to the directory where the IDE is installed.
-# ---------------------------------------------------------------------
-SCRIPT_LOCATION=$0
-if [ -x "$READLINK" ]; then
-  while [ -L "$SCRIPT_LOCATION" ]; do
-    SCRIPT_LOCATION=`"$READLINK" -e "$SCRIPT_LOCATION"`
-  done
-fi
-
-IDE_HOME=`dirname "$SCRIPT_LOCATION"`/..
-IDE_BIN_HOME=`dirname "$SCRIPT_LOCATION"`
 
 # ---------------------------------------------------------------------
 # Collect JVM options and properties.
