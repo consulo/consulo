@@ -2672,5 +2672,9 @@ public class ContainerUtil extends ContainerUtilRt {
     sb.append('}');
     return sb.toString();
   }
+
+  public static <K,V> Map<K,V> createWeakKeySoftValueMap() {
+    return new WeakKeySoftValueHashMap<K, V>();
+  }
 }
 

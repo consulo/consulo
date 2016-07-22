@@ -84,7 +84,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
   private Project myProject;
 
   private IdeRootPane myRootPane;
-  private final BalloonLayout myBalloonLayout;
+  private BalloonLayout myBalloonLayout;
   private IdeFrameDecorator myFrameDecorator;
   private boolean myRestoreFullScreen;
 
@@ -461,6 +461,11 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
       return;
     }
     MouseGestureManager.getInstance().remove(this);
+
+    if (myBalloonLayout != null) {
+      ((BalloonLayoutImpl)myBalloonLayout).dispose();
+      myBalloonLayout = null;
+    }
 
     // clear both our and swing hard refs
     if (myRootPane != null) {

@@ -163,10 +163,6 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     updateUI();
 
     if (master == null) {
-      Disposer.register(Disposer.get("ui"), this);
-    }
-
-    if (master == null) {
       addWidget(new ToolWindowsWidget(this), Position.LEFT);
     }
 
