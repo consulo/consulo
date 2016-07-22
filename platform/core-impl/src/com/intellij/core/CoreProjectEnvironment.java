@@ -26,6 +26,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.*;
@@ -54,7 +55,7 @@ public class CoreProjectEnvironment {
     preregisterServices();
 
     myFileIndexFacade = createFileIndexFacade();
-    myMessageBus = new MessageBusImpl("CoreProjectEnvironment", null);
+    myMessageBus = (MessageBusImpl)myProject.getMessageBus();
 
     PsiModificationTrackerImpl modificationTracker = new PsiModificationTrackerImpl(myProject);
     myProject.registerService(PsiModificationTracker.class, modificationTracker);
@@ -63,8 +64,10 @@ public class CoreProjectEnvironment {
 
     registerProjectExtensionPoint(PsiTreeChangePreprocessor.EP_NAME, PsiTreeChangePreprocessor.class);
     myPsiManager = new PsiManagerImpl(myProject, null, null, myFileIndexFacade, myMessageBus, modificationTracker);
-    ((FileManagerImpl) myPsiManager.getFileManager()).markInitialized();
+    ((FileManagerImpl)myPsiManager.getFileManager()).markInitialized();
     registerProjectComponent(PsiManager.class, myPsiManager);
+
+    registerProjectComponent(PsiDocumentManager.class, new CorePsiDocumentManager(myProject, myPsiManager, myMessageBus, new MockDocumentCommitProcessor()));
 
     myProject.registerService(ResolveScopeManager.class, createResolveScopeManager(myPsiManager));
 
@@ -90,8 +93,7 @@ public class CoreProjectEnvironment {
     return new MockResolveScopeManager(myProject);
   }
 
-  public <T> void registerProjectExtensionPoint(final ExtensionPointName<T> extensionPointName,
-                                                final Class<? extends T> aClass) {
+  public <T> void registerProjectExtensionPoint(final ExtensionPointName<T> extensionPointName, final Class<? extends T> aClass) {
     CoreApplicationEnvironment.registerExtensionPoint(Extensions.getArea(myProject), extensionPointName, aClass);
   }
 
