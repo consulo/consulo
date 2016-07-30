@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="jna">
     <binaries>
-      <root url="jar://$PROJECT_DIR$/lib/jna-utils.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jna.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jna-platform.jar!/" />
     </binaries>
     <sources>
-      <root url="jar://$PROJECT_DIR$/libSrc/jna-src.zip!/src" />
-      <root url="jar://$PROJECT_DIR$/libSrc/jna-src.zip!/contrib/platform/src" />
+      <root url="zip://$PROJECT_DIR$/libSrc/jna.zip!/" />
+      <root url="zip://$PROJECT_DIR$/libSrc/jna-platform.zip!/" />
     </sources>
   </library>
 </component>

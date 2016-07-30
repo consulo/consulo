@@ -55,7 +55,8 @@ public class FileWatcher {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.local.FileWatcher");
 
   public static final NotNullLazyValue<NotificationGroup> NOTIFICATION_GROUP = new NotNullLazyValue<NotificationGroup>() {
-    @NotNull @Override
+    @NotNull
+    @Override
     protected NotificationGroup compute() {
       return new NotificationGroup("File Watcher Messages", NotificationDisplayType.STICKY_BALLOON, true);
     }
@@ -206,9 +207,16 @@ public class FileWatcher {
 
   @Nullable
   private static String getExecutableName(final boolean withSubDir) {
-    if (SystemInfo.isWindows) return (withSubDir ? "win" + File.separator : "") + (SystemInfo.isAMD64 ? "fsnotifier64.exe" : "fsnotifier.exe");
-    else if (SystemInfo.isMac) return (withSubDir ? "mac" + File.separator : "") + "fsnotifier";
-    else if (SystemInfo.isLinux) return (withSubDir ? "linux" + File.separator : "") + (SystemInfo.isAMD64 ? "fsnotifier64" : "fsnotifier");
+    if (SystemInfo.isWindows) {
+      return (withSubDir ? "win" + File.separator : "") + (SystemInfo.isAMD64 ? "fsnotifier64.exe" : "fsnotifier.exe");
+    }
+    else if (SystemInfo.isMac) {
+      return (withSubDir ? "mac" + File.separator : "") + "fsnotifier";
+    }
+    else if (SystemInfo.isLinux) {
+      return (withSubDir ? "linux" + File.separator : "") +
+             ("arm".equals(SystemInfo.OS_ARCH) ? "fsnotifier-arm" : (SystemInfo.isAMD64 ? "fsnotifier64" : "fsnotifier"));
+    }
     return null;
   }
 
@@ -271,7 +279,8 @@ public class FileWatcher {
             LOG.warn("File watcher is still alive. Doing a force quit.");
           }
         }
-        catch (IOException ignore) { }
+        catch (IOException ignore) {
+        }
         if (forceQuite) {
           processHandler.destroyProcess();
         }
@@ -353,7 +362,7 @@ public class FileWatcher {
     if (flatWatchRoots.isEmpty() && recursiveWatchRoots.isEmpty()) return Collections.emptyList();
 
     List<Pair<String, String>> mapping = myMapping;
-    Collection <String> affectedPaths = new SmartList<String>(reportedPath);
+    Collection<String> affectedPaths = new SmartList<String>(reportedPath);
     for (Pair<String, String> map : mapping) {
       if (FileUtil.startsWith(reportedPath, map.first)) {
         affectedPaths.add(map.second + reportedPath.substring(map.first.length()));
@@ -445,7 +454,12 @@ public class FileWatcher {
         }
         catch (IllegalArgumentException e) {
           final String message = "Illegal watcher command: " + line;
-          if (ApplicationManager.getApplication().isUnitTestMode()) LOG.debug(message); else LOG.error(message);
+          if (ApplicationManager.getApplication().isUnitTestMode()) {
+            LOG.debug(message);
+          }
+          else {
+            LOG.error(message);
+          }
           return;
         }
 
@@ -543,7 +557,7 @@ public class FileWatcher {
             LOG.info("Change requests:" + myChangeRequests + ", filtered:" + myFilteredRequests);
           }
 
-          for(int i = 0; i < myLastChangedPaths.length; ++i) {
+          for (int i = 0; i < myLastChangedPaths.length; ++i) {
             int last = myLastChangedPathIndex - i - 1;
             if (last < 0) last += myLastChangedPaths.length;
             String lastChangedPath = myLastChangedPaths[last];
@@ -552,7 +566,7 @@ public class FileWatcher {
               return;
             }
           }
-          myLastChangedPaths[myLastChangedPathIndex ++] = path;
+          myLastChangedPaths[myLastChangedPathIndex++] = path;
           if (myLastChangedPathIndex == myLastChangedPaths.length) myLastChangedPathIndex = 0;
         }
       }
@@ -613,7 +627,9 @@ public class FileWatcher {
   }
 
   @TestOnly
-  public static Logger getLog() { return LOG; }
+  public static Logger getLog() {
+    return LOG;
+  }
 
   @TestOnly
   public void startup(@Nullable final Runnable notifier) throws IOException {
