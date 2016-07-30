@@ -17,10 +17,13 @@ package com.intellij.idea;
 
 import com.intellij.ide.Bootstrap;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Restarter;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import org.mustbe.consulo.SharedConstants;
 import org.mustbe.consulo.application.ApplicationProperties;
 
@@ -37,11 +40,13 @@ public class Main {
   public static final int STARTUP_EXCEPTION = 2;
   public static final int STARTUP_IMPOSSIBLE = 3;
   public static final int PLUGIN_ERROR = 4;
+  public static final int UNSUPPORTED_JAVA_VERSION = 10;
 
   private static final String AWT_HEADLESS = "java.awt.headless";
 
   private static boolean isHeadless;
   private static boolean isCommandLine;
+  private static boolean hasGraphics = true;
 
   private Main() {
   }
@@ -66,6 +71,11 @@ public class Main {
           System.exit(UPDATE_FAILED);
         }
       }
+    }
+
+    if (!SystemInfo.isJavaVersionAtLeast("1.8")) {
+      showMessage("Unsupported Java Version", "Cannot start under Java " + SystemInfo.JAVA_RUNTIME_VERSION + ": Java 1.8 or later is required.", true);
+      System.exit(UNSUPPORTED_JAVA_VERSION);
     }
 
     try {
@@ -134,41 +144,70 @@ public class Main {
 
   public static void showMessage(String title, Throwable t) {
     StringWriter message = new StringWriter();
-    message.append("Internal error. Please report to https://github.com/consulo/consulo/issues\n\n");
+
+    AWTError awtError = findGraphicsError(t);
+    if (awtError != null) {
+      message.append("Failed to initialize graphics environment\n\n");
+      hasGraphics = false;
+      t = awtError;
+    }
+    else {
+      message.append("Internal error. Please report to ");
+      message.append("https://github.com/consulo/consulo/issues");
+      message.append("\n\n");
+    }
+
     t.printStackTrace(new PrintWriter(message));
     showMessage(title, message.toString(), true);
   }
 
-  @SuppressWarnings({"UseJBColor", "UndesirableClassUsage"})
-  public static void showMessage(String title, String message, boolean error) {
-    if (isCommandLine()) {
-      PrintStream stream = error ? System.err : System.out;
-      stream.println("\n" + title + ": " + message);
+  private static AWTError findGraphicsError(Throwable t) {
+    while (t != null) {
+      if (t instanceof AWTError) {
+        return (AWTError)t;
+      }
+      t = t.getCause();
     }
-    else {
+    return null;
+  }
+
+  @SuppressWarnings({"UseJBColor", "UndesirableClassUsage", "UseOfSystemOutOrSystemErr"})
+  public static void showMessage(String title, String message, boolean error) {
+    PrintStream stream = error ? System.err : System.out;
+    stream.println("\n" + title + ": " + message);
+
+    boolean headless = !hasGraphics || isCommandLine() || GraphicsEnvironment.isHeadless();
+    if (!headless) {
       try {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
       }
       catch (Throwable ignore) {
       }
 
-      JTextPane textPane = new JTextPane();
-      textPane.setEditable(false);
-      textPane.setText(message.replaceAll("\t", "    "));
-      textPane.setBackground(Color.white);
-      textPane.setCaretPosition(0);
-      JScrollPane scrollPane = new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+      try {
+        JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setText(message.replaceAll("\t", "    "));
+        textPane.setBackground(UIUtil.getPanelBackground());
+        textPane.setCaretPosition(0);
+        JScrollPane scrollPane =
+                new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBorder(null);
 
-      int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height - 150;
-      Dimension component = scrollPane.getPreferredSize();
-      if (component.height >= maxHeight) {
-        Object setting = UIManager.get("ScrollBar.width");
-        int width = setting instanceof Integer ? ((Integer)setting).intValue() : 20;
-        scrollPane.setPreferredSize(new Dimension(component.width + width, maxHeight));
+        int maxHeight = Math.min(JBUI.scale(600), Toolkit.getDefaultToolkit().getScreenSize().height - 150);
+        int maxWidth = Math.min(JBUI.scale(600), Toolkit.getDefaultToolkit().getScreenSize().width - 150);
+        Dimension component = scrollPane.getPreferredSize();
+        if (component.height > maxHeight || component.width > maxWidth) {
+          scrollPane.setPreferredSize(new Dimension(Math.min(maxWidth, component.width), Math.min(maxHeight, component.height)));
+        }
+
+        int type = error ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), scrollPane, title, type);
       }
-
-      int type = error ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
-      JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), scrollPane, title, type);
+      catch (Throwable t) {
+        stream.println("\nAlso, an UI exception occurred on attempt to show above message:");
+        t.printStackTrace(stream);
+      }
     }
   }
 }
