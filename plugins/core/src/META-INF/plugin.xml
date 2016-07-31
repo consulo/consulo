@@ -1162,7 +1162,7 @@
                         serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
                         serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"
-                        serviceImplementationForCompilerServer="com.intellij.core.CoreProgressManager"/>
+                        serviceImplementationForCompilerServer="com.intellij.openapi.progress.impl.CoreProgressManager"/>
     <applicationService serviceInterface="com.intellij.openapi.application.TransactionGuard"
                         serviceImplementation="com.intellij.openapi.application.TransactionGuardImpl"/>
 
