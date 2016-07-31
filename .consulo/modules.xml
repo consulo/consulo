@@ -268,7 +268,6 @@
           <orderEntry type="module" module-name="util" />
           <orderEntry type="library" name="JUnit4" level="project" />
           <orderEntry type="library" name="JMock1" level="project" />
-          <orderEntry type="library" name="asm" level="project" />
           <orderEntry type="library" name="CGLIB" level="project" />
           <orderEntry type="library" name="Mocks" level="project" />
         </module-layer>
