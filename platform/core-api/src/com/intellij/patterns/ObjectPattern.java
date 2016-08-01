@@ -58,11 +58,11 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
   }
 
   public Self andNot(final ElementPattern pattern) {
-    return and(StandardPatterns.not(pattern));
+    return and(StandardPatterns.<Self>not(pattern));
   }
 
   public Self andOr(final ElementPattern... patterns) {
-    return and(StandardPatterns.or(patterns));
+    return and(StandardPatterns.<Self>or(patterns));
   }
 
   public Self and(final ElementPattern pattern) {

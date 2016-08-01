@@ -7,9 +7,7 @@
         <processorPath useClasspath="true" />
       </profile>
     </annotation-processing>
-    <bytecode-target-level target="1.6">
-      <module name="bootstrap" target="1.6" />
-    </bytecode-target-level>
+    <bytecode-target-level target="1.8" />
   </component>
   <component name="JavacCompilerConfiguration">
     <option name="MAXIMUM_HEAP_SIZE" value="2048" />

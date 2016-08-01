@@ -36,6 +36,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -112,6 +113,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
   public void documentChanged(DocumentEvent event) {
     if (myDocument.isInBulkUpdate()) return;
     doInvalidateRange(myDocumentChangeStartOffset, myDocumentChangeEndOffset);
+    assertValidState();
   }
 
   @Override
@@ -136,6 +138,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
       onTextLayoutPerformed(range.getStartOffset(), range.getEndOffset());
     }
     myDeferredRanges.clear();
+    assertValidState();
   }
 
   private void onSoftWrapRecalculationEnd(IncrementalCacheUpdateEvent event) {
@@ -235,11 +238,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
 
   private int calculatePreferredWidth() {
     if (checkDirty()) return 1;
-    if (myLineWidths.size() != myEditor.getVisibleLineCount()) {
-      LOG.error("Inconsistent state", new Attachment("editor.txt", myEditor.dumpState()));
-      reset();
-    }
-    assert myLineWidths.size() == myEditor.getVisibleLineCount();
+    assertValidState();
     VisualLinesIterator iterator = new VisualLinesIterator(myView, 0);
     int maxWidth = 0;
     while (!iterator.atEnd()) {
@@ -299,6 +298,11 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
     if (myDocument.isInEventsHandling()) {
       myDocumentChangeStartOffset = Math.min(myDocumentChangeStartOffset, startOffset);
       myDocumentChangeEndOffset = Math.max(myDocumentChangeEndOffset, endOffset);
+    }
+    else if (myFoldingChangeEndOffset != Integer.MIN_VALUE) {
+      // during batch folding processing we delay invalidation requests, as we cannot perform coordinate conversions immediately
+      myFoldingChangeStartOffset = Math.min(myFoldingChangeStartOffset, startOffset);
+      myFoldingChangeEndOffset = Math.max(myFoldingChangeEndOffset, endOffset);
     }
     else {
       doInvalidateRange(startOffset, endOffset);
@@ -393,5 +397,19 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
     return "[cached width: " + myWidthInPixels +
            ", max line with extension width: " + myMaxLineWithExtensionWidth +
            ", line widths: " + myLineWidths + "]";
+  }
+
+  private void assertValidState() {
+    if (myDocument.isInBulkUpdate() || myDirty) return;
+    if (myLineWidths.size() != myEditor.getVisibleLineCount()) {
+      LOG.error("Inconsistent state", new Attachment("editor.txt", myEditor.dumpState()));
+      reset();
+    }
+    assert myLineWidths.size() == myEditor.getVisibleLineCount();
+  }
+
+  @TestOnly
+  public void validateState() {
+    assertValidState();
   }
 }
