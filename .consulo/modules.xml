@@ -203,6 +203,7 @@
           <orderEntry type="library" exploded="" name="Lombok" level="project" />
           <orderEntry type="library" name="JUnit4" level="project" />
           <orderEntry type="library" name="automaton" level="project" />
+          <orderEntry type="library" name="CGLIB" level="project" />
         </module-layer>
       </module>
       <module name="platform/core-impl" dirurl="file://$PROJECT_DIR$/platform/core-impl" current-layer="Default">
@@ -509,7 +510,6 @@
           <orderEntry type="library" name="OroMatcher" level="project" />
           <orderEntry type="library" name="XmlRPC" level="project" />
           <orderEntry type="library" name="commons-net" level="project" />
-          <orderEntry type="library" name="asm" level="project" />
           <orderEntry type="library" name="CGLIB" level="project" />
           <orderEntry type="module" module-name="lvcs-api" exported="" />
           <orderEntry type="library" name="JavaHelp" level="project" />
