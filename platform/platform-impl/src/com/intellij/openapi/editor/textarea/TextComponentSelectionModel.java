@@ -17,8 +17,8 @@ package com.intellij.openapi.editor.textarea;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.editor.EditorCopyPasteHelper;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
@@ -155,26 +155,17 @@ public class TextComponentSelectionModel implements SelectionModel {
 
     EditorActionHandler handler = EditorActionManager.getInstance().getActionHandler(
             IdeActions.ACTION_EDITOR_SELECT_WORD_AT_CARET);
-    handler.execute(myEditor, DataManager.getInstance().getDataContext(myEditor.getComponent()));
+    handler.execute(myEditor, null, DataManager.getInstance().getDataContext(myEditor.getComponent()));
   }
 
   @Override
   public void copySelectionToClipboard() {
-    throw new UnsupportedOperationException("Not implemented");
+    EditorCopyPasteHelper.getInstance().copySelectionToClipboard(myEditor);
   }
 
   @Override
   public void setBlockSelection(@NotNull final LogicalPosition blockStart, @NotNull final LogicalPosition blockEnd) {
     throw new UnsupportedOperationException("Not implemented");
-  }
-
-  @Override
-  public void removeBlockSelection() {
-  }
-
-  @Override
-  public boolean hasBlockSelection() {
-    return false;
   }
 
   @Override
@@ -186,29 +177,6 @@ public class TextComponentSelectionModel implements SelectionModel {
   @Override
   @NotNull
   public int[] getBlockSelectionEnds() {
-    throw new UnsupportedOperationException("Not implemented");
-  }
-
-  @Override
-  @Nullable
-  public LogicalPosition getBlockStart() {
-    throw new UnsupportedOperationException("Not implemented");
-  }
-
-  @Override
-  @Nullable
-  public LogicalPosition getBlockEnd() {
-    throw new UnsupportedOperationException("Not implemented");
-  }
-
-  @Override
-  public boolean isBlockSelectionGuarded() {
-    throw new UnsupportedOperationException("Not implemented");
-  }
-
-  @Override
-  @Nullable
-  public RangeMarker getBlockSelectionGuard() {
     throw new UnsupportedOperationException("Not implemented");
   }
 

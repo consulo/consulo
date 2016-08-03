@@ -30,7 +30,6 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +43,6 @@ public class CutHandler extends EditorWriteActionHandler {
     myOriginalHandler = originalHandler;
   }
 
-  @RequiredWriteAction
   @Override
   public void executeWriteAction(final Editor editor, Caret caret, DataContext dataContext) {
     assert caret == null : "Invocation of 'cut' operation for specific caret is not supported";
@@ -66,7 +64,7 @@ public class CutHandler extends EditorWriteActionHandler {
     }
 
     final SelectionModel selectionModel = editor.getSelectionModel();
-    if (!selectionModel.hasSelection(true) && !selectionModel.hasBlockSelection()) {
+    if (!selectionModel.hasSelection(true)) {
       if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
         return;
       }

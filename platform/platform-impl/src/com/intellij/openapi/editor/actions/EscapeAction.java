@@ -17,12 +17,11 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
+import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author max
@@ -35,22 +34,32 @@ public class EscapeAction extends EditorAction {
 
   private static class Handler extends EditorActionHandler {
     @Override
-    public void execute(Editor editor, DataContext dataContext) {
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       if (editor instanceof EditorEx) {
         EditorEx editorEx = (EditorEx)editor;
         if (editorEx.isStickySelection()) {
           editorEx.setStickySelection(false);
         }
       }
-      editor.getCaretModel().removeSecondaryCarets();
+      boolean scrollNeeded = editor.getCaretModel().getCaretCount() > 1;
+      retainOldestCaret(editor.getCaretModel());
       editor.getSelectionModel().removeSelection();
+      if (scrollNeeded) {
+        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+      }
+    }
+
+    private static void retainOldestCaret(CaretModel caretModel) {
+      while(caretModel.getCaretCount() > 1) {
+        caretModel.removeCaret(caretModel.getPrimaryCaret());
+      }
     }
 
     @Override
     public boolean isEnabled(Editor editor, DataContext dataContext) {
       SelectionModel selectionModel = editor.getSelectionModel();
       CaretModel caretModel = editor.getCaretModel();
-      return selectionModel.hasSelection() || selectionModel.hasBlockSelection() || caretModel.getCaretCount() > 1;
+      return selectionModel.hasSelection() || caretModel.getCaretCount() > 1;
     }
   }
 }

@@ -363,8 +363,8 @@ public class EditorTestUtil {
       LogicalPosition actualCaretPosition = new LogicalPosition(actualCaretLine, actualCaretColumn);
       int[] selectionStarts = editor.getSelectionModel().getBlockSelectionStarts();
       int[] selectionEnds = editor.getSelectionModel().getBlockSelectionEnds();
-      int selectionStart = editor.getSelectionModel().hasBlockSelection() ? selectionStarts[selectionStarts.length - 1] : currentCaret.getSelectionStart();
-      int selectionEnd = editor.getSelectionModel().hasBlockSelection() ? selectionEnds[selectionEnds.length - 1] : currentCaret.getSelectionEnd();
+      int selectionStart = currentCaret.getSelectionStart();
+      int selectionEnd = currentCaret.getSelectionEnd();
       LogicalPosition actualSelectionStart = editor.offsetToLogicalPosition(selectionStart);
       LogicalPosition actualSelectionEnd = editor.offsetToLogicalPosition(selectionEnd);
       CaretInfo expected = caretState.carets.get(i);

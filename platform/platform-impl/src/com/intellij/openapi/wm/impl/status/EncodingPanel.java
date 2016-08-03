@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,22 +74,23 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
   public EncodingPanel(@NotNull final Project project) {
     super(project);
     update = new Alarm(this);
-    myComponent = new TextPanel() {
+    myComponent = new TextPanel.ExtraSize() {
       @Override
       protected void paintComponent(@NotNull final Graphics g) {
         super.paintComponent(g);
         if (actionEnabled && getText() != null) {
           final Rectangle r = getBounds();
           final Insets insets = getInsets();
-          AllIcons.Ide.Statusbar_arrows.paintIcon(this, g, r.width - insets.right - AllIcons.Ide.Statusbar_arrows.getIconWidth() - 2,
-                                                  r.height / 2 - AllIcons.Ide.Statusbar_arrows.getIconHeight() / 2);
+          Icon arrows = AllIcons.Ide.Statusbar_arrows;
+          arrows.paintIcon(this, g, r.width - insets.right - arrows.getIconWidth() - 2,
+                           r.height / 2 - arrows.getIconHeight() / 2);
         }
       }
     };
 
     new ClickListener() {
       @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
+      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
         update();
         showPopup(e);
         return true;
@@ -188,7 +189,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
     }
   }
 
-  private void showPopup(MouseEvent e) {
+  private void showPopup(@NotNull MouseEvent e) {
     if (!actionEnabled) {
       return;
     }
@@ -207,77 +208,74 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
   private DataContext getContext() {
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
-    return SimpleDataContext.getSimpleContext(PlatformDataKeys.VIRTUAL_FILE.getName(), getSelectedFile(),
-           SimpleDataContext.getSimpleContext(CommonDataKeys.PROJECT.getName(), getProject(),
-           SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT.getName(), editor == null ? null : editor.getComponent(), parent)
-           ));
+    return SimpleDataContext.getSimpleContext(CommonDataKeys.VIRTUAL_FILE.getName(), getSelectedFile(),
+                                              SimpleDataContext.getSimpleContext(CommonDataKeys.PROJECT.getName(), getProject(),
+                                                                                 SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT.getName(), editor == null ? null : editor.getComponent(), parent)
+                                              ));
   }
 
   private void update() {
     if (update.isDisposed()) return;
 
     update.cancelAllRequests();
-    update.addRequest(new Runnable() {
-      @Override
-      public void run() {
-        if (isDisposed()) return;
+    update.addRequest(() -> {
+      if (isDisposed()) return;
 
-        VirtualFile file = getSelectedFile();
-        actionEnabled = false;
-        String charsetName = null;
-        Pair<Charset, String> check = null;
+      VirtualFile file = getSelectedFile();
+      actionEnabled = false;
+      String charsetName = null;
+      Pair<Charset, String> check = null;
 
-        if (file != null) {
-          check = EncodingUtil.checkSomeActionEnabled(file);
-          Charset charset = null;
+      if (file != null) {
+        check = EncodingUtil.checkSomeActionEnabled(file);
+        Charset charset = null;
 
-          if (LoadTextUtil.wasCharsetDetectedFromBytes(file) != null) {
-            charset = cachedCharsetFromContent(file);
-          }
-
-          if (charset == null) {
-            charset = file.getCharset();
-          }
-
-          actionEnabled = check == null || check.second == null;
-
-          if (!actionEnabled) {
-            charset = check.first;
-          }
-
-          if (charset != null) {
-            charsetName = charset.displayName();
-          }
+        if (LoadTextUtil.wasCharsetDetectedFromBytes(file) != null) {
+          charset = cachedCharsetFromContent(file);
         }
 
-        if (charsetName == null) {
-          charsetName = "n/a";
+        if (charset == null) {
+          charset = file.getCharset();
         }
 
-        String toolTipText;
+        actionEnabled = check == null || check.second == null;
 
-        if (actionEnabled) {
-          toolTipText = String.format(
-            "File Encoding%n%s", charsetName);
-
-          myComponent.setForeground(UIUtil.getActiveTextColor());
-          myComponent.setTextAlignment(Component.LEFT_ALIGNMENT);
-        }
-        else {
-          String failReason = check == null ? "" : check.second;
-          toolTipText = String.format("File encoding is disabled%n%s",
-                                      failReason);
-
-          myComponent.setForeground(UIUtil.getInactiveTextColor());
-          myComponent.setTextAlignment(Component.CENTER_ALIGNMENT);
+        if (!actionEnabled) {
+          charset = check.first;
         }
 
-        myComponent.setToolTipText(toolTipText);
-        myComponent.setText(charsetName);
-
-        if (myStatusBar != null) {
-          myStatusBar.updateWidget(ID());
+        if (charset != null) {
+          charsetName = charset.displayName();
         }
+      }
+
+      if (charsetName == null) {
+        charsetName = file != null ? "n/a" : "";
+      }
+
+      String toolTipText;
+
+      if (actionEnabled) {
+        toolTipText = String.format(
+                "File Encoding%n%s", charsetName);
+
+        myComponent.setForeground(UIUtil.getActiveTextColor());
+        myComponent.setTextAlignment(Component.LEFT_ALIGNMENT);
+      }
+      else {
+        String failReason = check == null ? "" : check.second;
+        toolTipText = String.format("File encoding is disabled%n%s",
+                                    failReason);
+
+        myComponent.setForeground(UIUtil.getInactiveTextColor());
+        myComponent.setTextAlignment(Component.CENTER_ALIGNMENT);
+      }
+
+      myComponent.setToolTipText(toolTipText);
+      myComponent.setText(charsetName);
+
+      if (myStatusBar != null) {
+        myStatusBar.updateWidget(ID());
       }
     }, 200, ModalityState.any());
   }

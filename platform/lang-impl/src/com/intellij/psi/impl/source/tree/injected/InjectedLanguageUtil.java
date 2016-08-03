@@ -68,8 +68,7 @@ public class InjectedLanguageUtil {
         topFile.getNode();  //load tree
         TextRange textRange = host.getTextRange().shiftRight(context.getTextRange().getStartOffset());
 
-        PsiElement inLoadedTree =
-                PsiTreeUtil.findElementOfClassAtRange(topFile, textRange.getStartOffset(), textRange.getEndOffset(), host.getClass());
+        PsiElement inLoadedTree = PsiTreeUtil.findElementOfClassAtRange(topFile, textRange.getStartOffset(), textRange.getEndOffset(), host.getClass());
         if (inLoadedTree != null) {
           host = inLoadedTree;
         }
@@ -170,6 +169,25 @@ public class InjectedLanguageUtil {
     if (editor == null || file == null || editor instanceof EditorWindow) return editor;
     PsiFile injectedFile = findInjectedPsiNoCommit(file, offset);
     return getInjectedEditorForInjectedFile(editor, injectedFile);
+  }
+
+  /**
+   * Invocation of this method on uncommitted <code>file</code> can lead to unexpected results, including throwing an exception!
+   */
+  public static Caret getCaretForInjectedLanguageNoCommit(@Nullable Caret caret, @Nullable PsiFile file) {
+    if (caret == null || file == null || caret instanceof InjectedCaret) return caret;
+
+    PsiFile injectedFile = findInjectedPsiNoCommit(file, caret.getOffset());
+    Editor injectedEditor = getInjectedEditorForInjectedFile(caret.getEditor(), injectedFile);
+    if (!(injectedEditor instanceof EditorWindow)) {
+      return caret;
+    }
+    for (Caret injectedCaret : injectedEditor.getCaretModel().getAllCarets()) {
+      if (((InjectedCaret)injectedCaret).getDelegate() == caret) {
+        return injectedCaret;
+      }
+    }
+    return null;
   }
 
   @NotNull
@@ -281,7 +299,8 @@ public class InjectedLanguageUtil {
           ParameterizedCachedValue<MultiHostRegistrarImpl, PsiElement> cachedValue =
                   CachedValuesManager.getManager(project).createParameterizedCachedValue(INJECTED_PSI_PROVIDER, false);
 
-          CachedValueProvider.Result<MultiHostRegistrarImpl> result = CachedValueProvider.Result.create(registrar, PsiModificationTracker.MODIFICATION_COUNT, registrar);
+          CachedValueProvider.Result<MultiHostRegistrarImpl> result =
+                  CachedValueProvider.Result.create(registrar, PsiModificationTracker.MODIFICATION_COUNT, registrar);
           ((PsiParameterizedCachedValue<MultiHostRegistrarImpl, PsiElement>)cachedValue).setValue(result);
 
           e.putUserData(INJECTED_PSI, cachedValue);
@@ -304,7 +323,7 @@ public class InjectedLanguageUtil {
   // returns (injected psi, leaf element at the offset, language of the leaf element)
   // since findElementAt() is expensive, we trying to reuse its result
   @NotNull
-  private static Trinity<PsiElement,PsiElement,Language> tryOffset(@NotNull PsiFile hostFile, final int offset, @NotNull PsiDocumentManager documentManager) {
+  private static Trinity<PsiElement, PsiElement, Language> tryOffset(@NotNull PsiFile hostFile, final int offset, @NotNull PsiDocumentManager documentManager) {
     FileViewProvider provider = hostFile.getViewProvider();
     Language leafLanguage = null;
     PsiElement leafElement = null;
@@ -316,11 +335,11 @@ public class InjectedLanguageUtil {
           leafElement = element;
         }
         PsiElement injected = findInside(element, hostFile, offset, documentManager);
-        if (injected != null) return Trinity.create(injected,element, language);
+        if (injected != null) return Trinity.create(injected, element, language);
       }
       // maybe we are at the border between two psi elements, then try to find injection at the end of the left element
       if (offset != 0 && (element == null || element.getTextRange().getStartOffset() == offset)) {
-        PsiElement leftElement = provider.findElementAt(offset-1, language);
+        PsiElement leftElement = provider.findElementAt(offset - 1, language);
         if (leftElement != null && leftElement.getTextRange().getEndOffset() == offset) {
           PsiElement injected = findInside(leftElement, hostFile, offset, documentManager);
           if (injected != null) return Trinity.create(injected, element, language);
@@ -331,7 +350,10 @@ public class InjectedLanguageUtil {
     return Trinity.create(null, leafElement, leafLanguage);
   }
 
-  private static PsiElement findInside(@NotNull PsiElement element, @NotNull PsiFile hostFile, final int hostOffset, @NotNull final PsiDocumentManager documentManager) {
+  private static PsiElement findInside(@NotNull PsiElement element,
+                                       @NotNull PsiFile hostFile,
+                                       final int hostOffset,
+                                       @NotNull final PsiDocumentManager documentManager) {
     final Ref<PsiElement> out = new Ref<PsiElement>();
     enumerate(element, hostFile, true, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
       @Override
@@ -362,6 +384,7 @@ public class InjectedLanguageUtil {
     }
     return injected;
   }
+
   public static void clearCachedInjectedFragmentsForFile(@NotNull PsiFile file) {
     file.putUserData(INJECTED_DOCS_KEY, null);
   }
@@ -423,10 +446,12 @@ public class InjectedLanguageUtil {
     }
     return containingFile;
   }
+
   @NotNull
   public static Editor getTopLevelEditor(@NotNull Editor editor) {
     return editor instanceof EditorWindow ? ((EditorWindow)editor).getDelegate() : editor;
   }
+
   public static boolean isInInjectedLanguagePrefixSuffix(@NotNull final PsiElement element) {
     PsiFile injectedFile = element.getContainingFile();
     if (injectedFile == null) return false;
@@ -458,13 +483,13 @@ public class InjectedLanguageUtil {
   public static String getUnescapedText(PsiFile file, @Nullable final PsiElement startElement, @Nullable final PsiElement endElement) {
     final InjectedLanguageManager manager = InjectedLanguageManager.getInstance(file.getProject());
     if (manager.getInjectionHost(file) == null) {
-      return file.getText().substring(startElement == null? 0 : startElement.getTextRange().getStartOffset(),
-                                      endElement == null? file.getTextLength() : endElement.getTextRange().getStartOffset());
+      return file.getText().substring(startElement == null ? 0 : startElement.getTextRange().getStartOffset(),
+                                      endElement == null ? file.getTextLength() : endElement.getTextRange().getStartOffset());
     }
     final StringBuilder sb = new StringBuilder();
     file.accept(new PsiRecursiveElementWalkingVisitor() {
 
-      Boolean myState = startElement == null? Boolean.TRUE : null;
+      Boolean myState = startElement == null ? Boolean.TRUE : null;
 
       @Override
       public void visitElement(PsiElement element) {
@@ -551,7 +576,6 @@ public class InjectedLanguageUtil {
 
   @Nullable
   public static PsiLanguageInjectionHost findInjectionHost(@Nullable VirtualFile virtualFile) {
-    return virtualFile instanceof VirtualFileWindow ?
-           getShreds(((VirtualFileWindow)virtualFile).getDocumentWindow()).getHostPointer().getElement() : null;
+    return virtualFile instanceof VirtualFileWindow ? getShreds(((VirtualFileWindow)virtualFile).getDocumentWindow()).getHostPointer().getElement() : null;
   }
 }

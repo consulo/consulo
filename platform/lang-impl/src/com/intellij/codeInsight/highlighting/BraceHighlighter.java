@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.highlighting;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -31,7 +32,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Alarm;
-import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 
 public class BraceHighlighter implements StartupActivity {
@@ -39,7 +39,8 @@ public class BraceHighlighter implements StartupActivity {
   private final Alarm myAlarm = new Alarm();
 
   @Override
-  public void runActivity(final Project project) {
+  public void runActivity(@NotNull final Project project) {
+    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return; // sorry, upsource
     final EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
 
     CaretListener myCaretListener = new CaretAdapter() {
@@ -49,7 +50,7 @@ public class BraceHighlighter implements StartupActivity {
         Editor editor = e.getEditor();
         final SelectionModel selectionModel = editor.getSelectionModel();
         // Don't update braces in case of the active selection.
-        if (editor.getProject() != project || selectionModel.hasSelection() || selectionModel.hasBlockSelection()) {
+        if (editor.getProject() != project || selectionModel.hasSelection()) {
           return;
         }
 
@@ -122,22 +123,16 @@ public class BraceHighlighter implements StartupActivity {
     final Document document = editor.getDocument();
     if (document instanceof DocumentEx && ((DocumentEx)document).isInBulkUpdate()) return;
 
-    BraceHighlightingHandler.lookForInjectedAndMatchBracesInOtherThread(editor, alarm, new Processor<BraceHighlightingHandler>() {
-      @Override
-      public boolean process(final BraceHighlightingHandler handler) {
-        handler.updateBraces();
-        return false;
-      }
+    BraceHighlightingHandler.lookForInjectedAndMatchBracesInOtherThread(editor, alarm, handler -> {
+      handler.updateBraces();
+      return false;
     });
   }
 
   private void clearBraces(@NotNull final Editor editor) {
-    BraceHighlightingHandler.lookForInjectedAndMatchBracesInOtherThread(editor, myAlarm, new Processor<BraceHighlightingHandler>() {
-      @Override
-      public boolean process(final BraceHighlightingHandler handler) {
-        handler.clearBraceHighlighters();
-        return false;
-      }
+    BraceHighlightingHandler.lookForInjectedAndMatchBracesInOtherThread(editor, myAlarm, handler -> {
+      handler.clearBraceHighlighters();
+      return false;
     });
   }
 }

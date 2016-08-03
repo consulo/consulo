@@ -490,6 +490,10 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     return null;
   }
 
+  public boolean isBottomSideToolWindowsVisible() {
+    return getComponentAt(ToolWindowAnchor.BOTTOM) != null;
+  }
+
   void startDrag() {
     for (Stripe each : myStripes) {
       each.startDrag();

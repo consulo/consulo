@@ -1717,16 +1717,8 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
 
       int selectionStart;
       int selectionEnd;
-      if (editor.getSelectionModel().hasBlockSelection()) {
-        int[] starts = editor.getSelectionModel().getBlockSelectionStarts();
-        int[] ends = editor.getSelectionModel().getBlockSelectionEnds();
-        selectionStart = starts[starts.length - 1];
-        selectionEnd = ends[ends.length - 1];
-      }
-      else {
-        selectionStart = editor.getSelectionModel().getSelectionStart();
-        selectionEnd = editor.getSelectionModel().getSelectionEnd();
-      }
+      selectionStart = editor.getSelectionModel().getSelectionStart();
+      selectionEnd = editor.getSelectionModel().getSelectionEnd();
 
       final int selStartLineActual = StringUtil.offsetToLineNumber(loader.newFileText, selectionStart);
       final int selStartColActual = selectionStart - StringUtil.lineColToOffset(loader.newFileText, selStartLineActual, 0);

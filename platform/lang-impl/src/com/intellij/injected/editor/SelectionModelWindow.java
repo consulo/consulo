@@ -17,7 +17,6 @@
 package com.intellij.injected.editor;
 
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.event.SelectionListener;
@@ -50,7 +49,7 @@ public class SelectionModelWindow implements SelectionModel {
   @Nullable
   @Override
   public VisualPosition getSelectionStartPosition() {
-    return myHostModel.getSelectionStartPosition();
+    return myInjectedEditor.offsetToVisualPosition(getSelectionStart());
   }
 
   @Override
@@ -61,7 +60,7 @@ public class SelectionModelWindow implements SelectionModel {
   @Nullable
   @Override
   public VisualPosition getSelectionEndPosition() {
-    return myHostModel.getSelectionEndPosition();
+    return myInjectedEditor.offsetToVisualPosition(getSelectionEnd());
   }
 
   @Override
@@ -155,16 +154,6 @@ public class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  public void removeBlockSelection() {
-    myHostModel.removeBlockSelection();
-  }
-
-  @Override
-  public boolean hasBlockSelection() {
-    return myHostModel.hasBlockSelection();
-  }
-
-  @Override
   @NotNull
   public int[] getBlockSelectionStarts() {
     int[] result = myHostModel.getBlockSelectionStarts();
@@ -182,28 +171,6 @@ public class SelectionModelWindow implements SelectionModel {
       result[i] = myDocument.hostToInjected(result[i]);
     }
     return result;
-  }
-
-  @Override
-  public LogicalPosition getBlockStart() {
-    LogicalPosition hostBlock = myHostModel.getBlockStart();
-    return hostBlock == null ? null : myInjectedEditor.hostToInjected(hostBlock);
-  }
-
-  @Override
-  public LogicalPosition getBlockEnd() {
-    LogicalPosition hostBlock = myHostModel.getBlockEnd();
-    return hostBlock == null ? null : myInjectedEditor.hostToInjected(hostBlock);
-  }
-
-  @Override
-  public boolean isBlockSelectionGuarded() {
-    return myHostModel.isBlockSelectionGuarded();
-  }
-
-  @Override
-  public RangeMarker getBlockSelectionGuard() {
-    return myHostModel.getBlockSelectionGuard();
   }
 
   @Override

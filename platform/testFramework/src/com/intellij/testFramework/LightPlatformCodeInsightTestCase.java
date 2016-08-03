@@ -601,7 +601,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
   }
   
   protected static void lineComment() {
-    new CommentByLineCommentHandler().invoke(getProject(), getEditor(), getFile());
+    new CommentByLineCommentHandler().invoke(getProject(), getEditor(), getEditor().getCaretModel().getPrimaryCaret(), getFile());
   }
 
   protected static void executeAction(@NonNls @NotNull final String actionId) {

@@ -26,6 +26,11 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface SurroundWithRangeAdjuster {
   ExtensionPointName<SurroundWithRangeAdjuster> EP_NAME = ExtensionPointName.create("com.intellij.codeInsight.surroundWithRangeAdjuster");
-  
+
   @Nullable TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange);
+
+  @Nullable
+  default TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange, boolean hasSelection) {
+    return adjustSurroundWithRange(file, selectedRange);
+  }
 }

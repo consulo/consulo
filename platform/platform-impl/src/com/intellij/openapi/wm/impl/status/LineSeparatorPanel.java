@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,22 +61,23 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
   public LineSeparatorPanel(@NotNull final Project project) {
     super(project);
 
-    myComponent = new TextPanel() {
+    myComponent = new TextPanel.ExtraSize() {
       @Override
       protected void paintComponent(@NotNull final Graphics g) {
         super.paintComponent(g);
         if (myActionEnabled && getText() != null) {
           final Rectangle r = getBounds();
           final Insets insets = getInsets();
-          AllIcons.Ide.Statusbar_arrows.paintIcon(this, g, r.width - insets.right - AllIcons.Ide.Statusbar_arrows.getIconWidth() - 2,
-                                                  r.height / 2 - AllIcons.Ide.Statusbar_arrows.getIconHeight() / 2);
+          Icon arrows = AllIcons.Ide.Statusbar_arrows;
+          arrows.paintIcon(this, g, r.width - insets.right - arrows.getIconWidth() - 2,
+                           r.height / 2 - arrows.getIconHeight() / 2);
         }
       }
     };
 
     new ClickListener() {
       @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
+      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
         update();
         showPopup(e);
         return true;
@@ -86,58 +87,55 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
   }
 
   private void update() {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        VirtualFile file = getSelectedFile();
+    UIUtil.invokeLaterIfNeeded(() -> {
+      VirtualFile file = getSelectedFile();
+      myActionEnabled = false;
+      String lineSeparator = null;
+      String toolTipText = null;
+      String panelText = null;
+
+      if (file != null) {
+        myActionEnabled = file.isWritable();
+
+        lineSeparator =
+                LoadTextUtil.detectLineSeparator(file, true);
+
+        if (lineSeparator != null) {
+          toolTipText = String.format("Line separator: %s",
+                                      StringUtil.escapeLineBreak(lineSeparator));
+          panelText = LineSeparator.fromString(lineSeparator).toString();
+        }
+      }
+
+      if (lineSeparator == null) {
+        toolTipText = "No line separator";
+        panelText = file != null ? "n/a" : "";
         myActionEnabled = false;
-        String lineSeparator = null;
-        String toolTipText = null;
-        String panelText = null;
+      }
 
-        if (file != null) {
-          myActionEnabled = file.isWritable();
+      myComponent.resetColor();
 
-          lineSeparator =
-            LoadTextUtil.detectLineSeparator(file, true);
+      String toDoComment;
 
-          if (lineSeparator != null) {
-             toolTipText = String.format("Line separator: %s",
-                                         StringUtil.escapeLineBreak(lineSeparator));
-             panelText = LineSeparator.fromString(lineSeparator).toString();
-          }
-        }
+      if (myActionEnabled) {
+        toDoComment = "Click to change";
+        myComponent.setForeground(UIUtil.getActiveTextColor());
+        myComponent.setTextAlignment(Component.LEFT_ALIGNMENT);
+      } else {
+        toDoComment = "";
+        myComponent.setForeground(UIUtil.getInactiveTextColor());
+        myComponent.setTextAlignment(Component.CENTER_ALIGNMENT);
+      }
 
-        if (lineSeparator == null) {
-          toolTipText = "No line separator";
-          panelText = "n/a";
-          myActionEnabled = false;
-        }
-
-        myComponent.resetColor();
-
-        String toDoComment;
-
-        if (myActionEnabled) {
-          toDoComment = "Click to change";
-          myComponent.setForeground(UIUtil.getActiveTextColor());
-          myComponent.setTextAlignment(Component.LEFT_ALIGNMENT);
-        } else {
-          toDoComment = "";
-          myComponent.setForeground(UIUtil.getInactiveTextColor());
-          myComponent.setTextAlignment(Component.CENTER_ALIGNMENT);
-        }
-
-        myComponent.setToolTipText(String.format("%s%n%s",
-                                                 toolTipText,
-                                                 toDoComment));
-        myComponent.setText(panelText);
+      myComponent.setToolTipText(String.format("%s%n%s",
+                                               toolTipText,
+                                               toDoComment));
+      myComponent.setText(panelText);
 
 
 
-        if (myStatusBar != null) {
-          myStatusBar.updateWidget(ID());
-        }
+      if (myStatusBar != null) {
+        myStatusBar.updateWidget(ID());
       }
     });
   }
@@ -153,11 +151,11 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
     }
 
     ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-      "Line separator",
-      (ActionGroup)group,
-      dataContext,
-      JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-      false
+            "Line separator",
+            (ActionGroup)group,
+            dataContext,
+            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+            false
     );
     Dimension dimension = popup.getContent().getPreferredSize();
     Point at = new Point(0, -dimension.height);
@@ -171,7 +169,7 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(this);
     connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
-      public void fileContentReloaded(VirtualFile file, @NotNull Document document) {
+      public void fileContentReloaded(@NotNull VirtualFile file, @NotNull Document document) {
         update();
       }
     });
@@ -182,13 +180,13 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
     return SimpleDataContext.getSimpleContext(
-      PlatformDataKeys.VIRTUAL_FILE_ARRAY.getName(),
-      new VirtualFile[] {getSelectedFile()},
-      SimpleDataContext.getSimpleContext(CommonDataKeys.PROJECT.getName(),
-                                         getProject(),
-                                         SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT.getName(),
-                                                                            editor == null ? null : editor.getComponent(), parent)
-      ));
+            CommonDataKeys.VIRTUAL_FILE_ARRAY.getName(),
+            new VirtualFile[] {getSelectedFile()},
+            SimpleDataContext.getSimpleContext(CommonDataKeys.PROJECT.getName(),
+                                               getProject(),
+                                               SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT.getName(),
+                                                                                  editor == null ? null : editor.getComponent(), parent)
+            ));
   }
 
   @Override

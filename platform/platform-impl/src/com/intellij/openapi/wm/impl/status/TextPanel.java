@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,30 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.Gray;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.accessibility.Accessible;
+import javax.accessibility.AccessibleContext;
+import javax.accessibility.AccessibleRole;
 import javax.swing.*;
 import java.awt.*;
 
-public class TextPanel extends JComponent {
+public class TextPanel extends JComponent implements Accessible {
   @Nullable private String  myText;
   @Nullable private Color myCustomColor;
 
   private Integer   myPrefHeight;
   private Dimension myExplicitSize;
 
-  private boolean myDecorate = true;
   private float myAlignment;
-  private int myRightPadding = 20;
+  private int myRightPadding = JBUI.scale(14);
 
   protected TextPanel() {
     setOpaque(false);
@@ -41,22 +46,13 @@ public class TextPanel extends JComponent {
 
   @Override
   public Font getFont() {
-    return SystemInfo.isMac ? UIUtil.getLabelFont().deriveFont(11.0f) : UIUtil.getLabelFont();
-  }
-
-  protected TextPanel(final boolean decorate) {
-    this();
-    myDecorate = decorate;
+    return SystemInfo.isMac ? JBUI.Fonts.label(11) : JBUI.Fonts.label();
   }
 
   public void recomputeSize() {
     final JLabel label = new JLabel("XXX");
     label.setFont(getFont());
     myPrefHeight = label.getPreferredSize().height;
-  }
-
-  public void setDecorate(boolean decorate) {
-    myDecorate = decorate;
   }
 
   public void resetColor() {
@@ -81,7 +77,7 @@ public class TextPanel extends JComponent {
     final Graphics2D g2 = (Graphics2D)g;
     g2.setFont(getFont());
 
-    UIUtil.applyRenderingHints(g2);
+    UISettings.setupAntialiasing(g);
 
     final FontMetrics fm = g2.getFontMetrics();
     final int sWidth = fm.stringWidth(s);
@@ -105,10 +101,6 @@ public class TextPanel extends JComponent {
     }
 
     final int y = UIUtil.getStringY(s, bounds, g2);
-    if (SystemInfo.isMac && !UIUtil.isUnderDarcula() && myDecorate) {
-      g2.setColor(myCustomColor == null ? Gray._215 : myCustomColor);
-      g2.drawString(s, x, y + 1);
-    }
 
     g2.setColor(myCustomColor == null ? getForeground() : myCustomColor);
     g2.drawString(s, x, y);
@@ -116,7 +108,8 @@ public class TextPanel extends JComponent {
 
   protected String truncateText(String text, Rectangle bounds, FontMetrics fm, Rectangle textR, Rectangle iconR, int maxWidth) {
     return SwingUtilities.layoutCompoundLabel(fm, text, null, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
-                                              SwingConstants.TRAILING, bounds, iconR, textR, 0);
+                                              SwingConstants.TRAILING,
+                                              bounds, iconR, textR, 0);
   }
 
   public void setTextAlignment(final float alignment) {
@@ -139,8 +132,26 @@ public class TextPanel extends JComponent {
     return result.toString();
   }
 
-  public final void setText(@Nullable final String text) {
-    myText = text == null ? "" : text;
+  public final void setText(@Nullable String text) {
+    text = StringUtil.notNullize(text);
+    if (text.equals(myText)) {
+      return;
+    }
+
+    String oldAccessibleName = null;
+    if (accessibleContext != null) {
+      oldAccessibleName = accessibleContext.getAccessibleName();
+    }
+
+    myText = text;
+
+    if ((accessibleContext != null) && !StringUtil.equals(accessibleContext.getAccessibleName(), oldAccessibleName)) {
+      accessibleContext.firePropertyChange(
+              AccessibleContext.ACCESSIBLE_VISIBLE_DATA_PROPERTY,
+              oldAccessibleName,
+              accessibleContext.getAccessibleName());
+    }
+
     setPreferredSize(getPanelDimensionFromFontMetrics(myText));
     revalidate();
     repaint();
@@ -164,7 +175,7 @@ public class TextPanel extends JComponent {
   }
 
   private Dimension getPanelDimensionFromFontMetrics (String text) {
-    int width = (text == null) ? 0 : JBUI.scale(myRightPadding) + getFontMetrics(getFont()).stringWidth(text);
+    int width = (text == null) ? 0 : myRightPadding + getFontMetrics(getFont()).stringWidth(text);
     int height = (myPrefHeight == null) ? getMinimumSize().height : myPrefHeight;
 
     return new Dimension(width, height);
@@ -180,5 +191,76 @@ public class TextPanel extends JComponent {
 
   public void setExplicitSize(@Nullable Dimension explicitSize) {
     myExplicitSize = explicitSize;
+  }
+
+  public static class WithIconAndArrows extends TextPanel {
+    private final static int GAP = 2;
+    @Nullable private Icon myIcon;
+
+    @Override
+    protected void paintComponent(@NotNull final Graphics g) {
+      super.paintComponent(g);
+      if (getText() != null) {
+        Rectangle r = getBounds();
+        Insets insets = getInsets();
+        Icon arrows = AllIcons.Ide.Statusbar_arrows;
+        arrows.paintIcon(this, g, r.width - insets.right - arrows.getIconWidth() - 1,
+                         r.height / 2 - arrows.getIconHeight() / 2);
+        if (myIcon != null) {
+          myIcon.paintIcon(this, g, insets.left - GAP - myIcon.getIconWidth(), r.height / 2 - myIcon.getIconHeight() / 2);
+        }
+      }
+    }
+
+    @NotNull
+    @Override
+    public Insets getInsets() {
+      Insets insets = super.getInsets();
+      if (myIcon != null) {
+        insets.left += myIcon.getIconWidth() + GAP * 2;
+      }
+      return insets;
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+      final Dimension preferredSize = super.getPreferredSize();
+      int deltaWidth = AllIcons.Ide.Statusbar_arrows.getIconWidth();
+      if (myIcon != null) {
+        deltaWidth += myIcon.getIconWidth();
+      }
+      return new Dimension(preferredSize.width + deltaWidth, preferredSize.height);
+    }
+
+    public void setIcon(@Nullable Icon icon) {
+      myIcon = icon;
+    }
+  }
+
+  public static class ExtraSize extends TextPanel {
+    public Dimension getPreferredSize() {
+      Dimension size = super.getPreferredSize();
+      return new Dimension(size.width + 3, size.height);
+    }
+  }
+
+  @Override
+  public AccessibleContext getAccessibleContext() {
+    if (accessibleContext == null) {
+      accessibleContext = new AccessibleTextPanel();
+    }
+    return accessibleContext;
+  }
+
+  protected class AccessibleTextPanel extends AccessibleJComponent {
+    @Override
+    public AccessibleRole getAccessibleRole() {
+      return AccessibleRole.LABEL;
+    }
+
+    @Override
+    public String getAccessibleName() {
+      return myText;
+    }
   }
 }

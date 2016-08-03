@@ -37,6 +37,9 @@ import com.intellij.openapi.project.DumbAware;
 import java.util.List;
 
 public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
+  public ToggleColumnModeAction() {
+    setEnabledInModalContext(true);
+  }
 
   @Override
   public void setSelected(AnActionEvent e, boolean state) {
@@ -58,11 +61,11 @@ public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
       }
       else {
         blockStart = selStart == caretModel.getOffset()
-                                     ? caretModel.getLogicalPosition()
-                                     : editor.offsetToLogicalPosition(selStart);
+                     ? caretModel.getLogicalPosition()
+                     : editor.offsetToLogicalPosition(selStart);
         blockEnd = selEnd == caretModel.getOffset()
-                                   ? caretModel.getLogicalPosition()
-                                   : editor.offsetToLogicalPosition(selEnd);
+                   ? caretModel.getLogicalPosition()
+                   : editor.offsetToLogicalPosition(selEnd);
       }
       editor.setColumnMode(true);
       if (hasSelection) {
@@ -73,12 +76,9 @@ public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
       }
     }
     else {
-      boolean hasSelection = selectionModel.hasBlockSelection();
-      final LogicalPosition blockStart = selectionModel.getBlockStart();
-      final LogicalPosition blockEnd = selectionModel.getBlockEnd();
-
-      int selStart = hasSelection && blockStart != null ? editor.logicalPositionToOffset(blockStart) : 0;
-      int selEnd = hasSelection && blockEnd != null ? editor.logicalPositionToOffset(blockEnd) : 0;
+      boolean hasSelection = false;
+      int selStart = 0;
+      int selEnd = 0;
 
       if (caretModel.supportsMultipleCarets()) {
         hasSelection = true;
