@@ -23,7 +23,6 @@ import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.command.undo.UndoConstants;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.DocumentImpl;
@@ -40,16 +39,15 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.RequiredWriteAction;
 
 import java.util.ArrayList;
@@ -132,7 +130,7 @@ public class LineStatusTracker {
     return new LineStatusTracker(document, project, virtualFile, mode);
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   public void setBaseRevision(@NotNull final String vcsContent) {
     myApplication.assertIsDispatchThread();
     if (myReleased) return;
@@ -151,7 +149,7 @@ public class LineStatusTracker {
     }
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   private void reinstallRanges() {
     if (!myInitialized || myReleased || myBulkUpdate) return;
 
@@ -171,7 +169,7 @@ public class LineStatusTracker {
     }
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   private void destroyRanges() {
     removeAnathema();
     for (Range range : myRanges) {
@@ -181,7 +179,7 @@ public class LineStatusTracker {
     myDirtyRange = null;
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   private void installAnathema() {
     myAnathemaThrown = true;
     final FileEditor[] editors = myFileEditorManager.getAllEditors(myVirtualFile);
@@ -195,7 +193,7 @@ public class LineStatusTracker {
     }
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   private void removeAnathema() {
     if (!myAnathemaThrown) return;
     myAnathemaThrown = false;
@@ -209,7 +207,7 @@ public class LineStatusTracker {
     }
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   public void setMode(@NotNull Mode mode) {
     if (myMode == mode) return;
     synchronized (LOCK) {
@@ -218,7 +216,7 @@ public class LineStatusTracker {
     }
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   private void disposeHighlighter(@NotNull Range range) {
     try {
       range.invalidate();
@@ -233,8 +231,8 @@ public class LineStatusTracker {
     }
   }
 
-  @RequiredDispatchThread
-  private void createHighlighter(@NotNull final Range range) {
+  @CalledInAwt
+  private void createHighlighter(@NotNull Range range) {
     myApplication.assertIsDispatchThread();
 
     LOG.assertTrue(!myReleased, "Already released");
@@ -253,11 +251,8 @@ public class LineStatusTracker {
     MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, true);
 
     RangeHighlighter highlighter = LineStatusMarkerRenderer.createRangeHighlighter(range, new TextRange(first, second), markupModel);
-    highlighter.setLineMarkerRenderer(LineStatusMarkerRenderer.createRenderer(range, new Function<Editor, LineStatusMarkerPopup>() {
-      @Override
-      public LineStatusMarkerPopup fun(Editor editor) {
-        return new LineStatusTrackerDrawing.MyLineStatusMarkerPopup(LineStatusTracker.this, editor, range);
-      }
+    highlighter.setLineMarkerRenderer(LineStatusMarkerRenderer.createRenderer(range, (editor) -> {
+      return new LineStatusTrackerDrawing.MyLineStatusMarkerPopup(this, editor, range);
     }));
 
     highlighter.setEditorFilter(MarkupEditorFilterFactory.createIsNotDiffFilter());
@@ -287,21 +282,25 @@ public class LineStatusTracker {
   }
 
   public void release() {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        if (myReleased) return;
-        LOG.assertTrue(!myDuringRollback);
+    Runnable runnable = () -> {
+      if (myReleased) return;
+      LOG.assertTrue(!myDuringRollback);
 
-        synchronized (LOCK) {
-          myReleased = true;
-          myDocument.removeDocumentListener(myDocumentListener);
-          ApplicationManager.getApplication().removeApplicationListener(myApplicationListener);
+      synchronized (LOCK) {
+        myReleased = true;
+        myDocument.removeDocumentListener(myDocumentListener);
+        ApplicationManager.getApplication().removeApplicationListener(myApplicationListener);
 
-          LineStatusTracker.this.destroyRanges();
-        }
+        destroyRanges();
       }
-    });
+    };
+
+    if (myApplication.isDispatchThread() && !myDuringRollback) {
+      runnable.run();
+    }
+    else {
+      myApplication.invokeLater(runnable);
+    }
   }
 
   @NotNull
@@ -325,12 +324,12 @@ public class LineStatusTracker {
   }
 
   @NotNull
-  @RequiredDispatchThread
+  @CalledInAwt
   public Mode getMode() {
     return myMode;
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   public boolean isSilentMode() {
     return myMode == Mode.SILENT;
   }
@@ -344,7 +343,7 @@ public class LineStatusTracker {
       if (!tryValidate()) return null;
       myApplication.assertReadAccessAllowed();
 
-      List<Range> result = new ArrayList<Range>(myRanges.size());
+      List<Range> result = new ArrayList<>(myRanges.size());
       for (Range range : myRanges) {
         result.add(new Range(range));
       }
@@ -352,7 +351,13 @@ public class LineStatusTracker {
     }
   }
 
-  @RequiredDispatchThread
+  @NotNull
+  @TestOnly
+  public List<Range> getRangesInner() {
+    return myRanges;
+  }
+
+  @CalledInAwt
   public void startBulkUpdate() {
     if (myReleased) return;
     synchronized (LOCK) {
@@ -361,7 +366,7 @@ public class LineStatusTracker {
     }
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   public void finishBulkUpdate() {
     if (myReleased) return;
     synchronized (LOCK) {
@@ -372,20 +377,17 @@ public class LineStatusTracker {
 
   private void markFileUnchanged() {
     // later to avoid saving inside document change event processing.
-    TransactionGuard.getInstance().submitTransactionLater(myProject, new Runnable() {
-      @Override
-      public void run() {
-        FileDocumentManager.getInstance().saveDocument(myDocument);
-        boolean stillEmpty = !LineStatusTracker.this.isValid() || myRanges.isEmpty();
-        if (stillEmpty) {
-          // file was modified, and now it's not -> dirty local change
-          myVcsDirtyScopeManager.fileDirty(myVirtualFile);
-        }
+    TransactionGuard.getInstance().submitTransactionLater(myProject, () -> {
+      FileDocumentManager.getInstance().saveDocument(myDocument);
+      boolean stillEmpty = !isValid() || myRanges.isEmpty();
+      if (stillEmpty) {
+        // file was modified, and now it's not -> dirty local change
+        myVcsDirtyScopeManager.fileDirty(myVirtualFile);
       }
     });
   }
 
-  @RequiredDispatchThread
+  @CalledInAwt
   private void updateRanges() {
     if (isSuppressed()) return;
     if (myDirtyRange != null) {
@@ -404,7 +406,7 @@ public class LineStatusTracker {
 
   private class MyApplicationListener extends ApplicationAdapter {
     @Override
-    public void writeActionFinished(@NotNull Object action) {
+    public void afterWriteActionFinished(@NotNull Object action) {
       updateRanges();
     }
   }
@@ -795,55 +797,49 @@ public class LineStatusTracker {
    */
   @RequiredWriteAction
   private void rollbackChanges(@NotNull final List<Range> ranges) {
-    runBulkRollback(new Runnable() {
-      @Override
-      public void run() {
-        Range first = null;
-        Range last = null;
+    runBulkRollback(() -> {
+      Range first = null;
+      Range last = null;
 
-        int shift = 0;
-        for (Range range : ranges) {
-          if (!range.isValid()) {
-            LOG.warn("Rollback of invalid range");
-            break;
-          }
-
-          if (first == null) {
-            first = range;
-          }
-          last = range;
-
-          Range shiftedRange = new Range(range);
-          shiftedRange.shift(shift);
-
-          LineStatusTracker.this.doRollbackRange(shiftedRange);
-
-          shift += (range.getVcsLine2() - range.getVcsLine1()) - (range.getLine2() - range.getLine1());
+      int shift = 0;
+      for (Range range : ranges) {
+        if (!range.isValid()) {
+          LOG.warn("Rollback of invalid range");
+          break;
         }
 
-        if (first != null) {
-          int beforeChangedLine1 = first.getLine1();
-          int beforeChangedLine2 = last.getLine2();
-
-          int beforeTotalLines = getLineCount(myDocument) - shift;
-
-          LineStatusTracker.this.doUpdateRanges(beforeChangedLine1, beforeChangedLine2, shift, beforeTotalLines);
+        if (first == null) {
+          first = range;
         }
+        last = range;
+
+        Range shiftedRange = new Range(range);
+        shiftedRange.shift(shift);
+
+        doRollbackRange(shiftedRange);
+
+        shift += (range.getVcsLine2() - range.getVcsLine1()) - (range.getLine2() - range.getLine1());
+      }
+
+      if (first != null) {
+        int beforeChangedLine1 = first.getLine1();
+        int beforeChangedLine2 = last.getLine2();
+
+        int beforeTotalLines = getLineCount(myDocument) - shift;
+
+        doUpdateRanges(beforeChangedLine1, beforeChangedLine2, shift, beforeTotalLines);
       }
     });
   }
 
   @RequiredWriteAction
   public void rollbackAllChanges() {
-    runBulkRollback(new Runnable() {
-      @Override
-      public void run() {
-        myDocument.setText(myVcsDocument.getText());
+    runBulkRollback(() -> {
+      myDocument.setText(myVcsDocument.getText());
 
-        LineStatusTracker.this.destroyRanges();
+      destroyRanges();
 
-        LineStatusTracker.this.markFileUnchanged();
-      }
+      markFileUnchanged();
     });
   }
 
@@ -858,11 +854,7 @@ public class LineStatusTracker {
 
         task.run();
       }
-      catch (Error e) {
-        reinstallRanges();
-        throw e;
-      }
-      catch (RuntimeException e) {
+      catch (Error | RuntimeException e) {
         reinstallRanges();
         throw e;
       }

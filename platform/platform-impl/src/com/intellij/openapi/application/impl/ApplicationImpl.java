@@ -125,15 +125,16 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   private boolean myLoaded = false;
   @NonNls private static final String WAS_EVER_SHOWN = "was.ever.shown";
 
-  private static final int IS_EDT_FLAG = 1<<30; // we don't mess with sign bit since we want to do arithmetic
-  private static final int IS_READ_LOCK_ACQUIRED_FLAG = 1<<29;
+  private static final int IS_EDT_FLAG = 1 << 30; // we don't mess with sign bit since we want to do arithmetic
+  private static final int IS_READ_LOCK_ACQUIRED_FLAG = 1 << 29;
+
   private static class Status {
     // higher three bits are for IS_* flags
     // lower bits are for edtSafe counter
     private int flags;
   }
 
-  private static final ThreadLocal<Status> status = new ThreadLocal<Status>(){
+  private static final ThreadLocal<Status> status = new ThreadLocal<Status>() {
     @Override
     protected Status initialValue() {
       Status status = new Status();
@@ -141,9 +142,11 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       return status;
     }
   };
+
   private static Status getStatus() {
     return status.get();
   }
+
   private static void setReadLockAcquired(Status status, boolean acquired) {
     status.flags = BitUtil.set(status.flags, IS_READ_LOCK_ACQUIRED_FLAG, acquired);
   }
@@ -398,7 +401,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return ourThreadExecutorsService.submit(new Runnable() {
       @Override
       public void run() {
-        assert !isReadAccessAllowed(): describe(Thread.currentThread());
+        assert !isReadAccessAllowed() : describe(Thread.currentThread());
         try {
           action.run();
         }
@@ -411,7 +414,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
         finally {
           //ReflectionUtil.resetThreadLocals();
           Thread.interrupted(); // reset interrupted status
-          assert !isReadAccessAllowed(): describe(Thread.currentThread());
+          assert !isReadAccessAllowed() : describe(Thread.currentThread());
         }
       }
     });
@@ -431,11 +434,11 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
           return null;
         }
       }
-    }  ;
+    };
     return ourThreadExecutorsService.submit(new Callable<T>() {
       @Override
       public T call() {
-        assert !isReadAccessAllowed(): describe(Thread.currentThread());
+        assert !isReadAccessAllowed() : describe(Thread.currentThread());
         try {
           return action.call();
         }
@@ -448,7 +451,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
         finally {
           //ReflectionUtil.resetThreadLocals();
           Thread.interrupted(); // reset interrupted status
-          assert !isReadAccessAllowed(): describe(Thread.currentThread());
+          assert !isReadAccessAllowed() : describe(Thread.currentThread());
         }
         return null;
       }
@@ -576,10 +579,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process,
-                                                     @NotNull String progressTitle,
-                                                     boolean canBeCanceled,
-                                                     Project project) {
+  public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process, @NotNull String progressTitle, boolean canBeCanceled, Project project) {
     return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, null);
   }
 
@@ -605,8 +605,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     boolean writeAccessAllowed = isInsideWriteActionEDTOnly();
     if (writeAccessAllowed // Disallow running process in separate thread from under write action.
         // The thread will deadlock trying to get read action otherwise.
-        || isHeadlessEnvironment() && !isUnitTestMode()
-            ) {
+        || isHeadlessEnvironment() && !isUnitTestMode()) {
       LOG.debug("Starting process with progress from within write action makes no sense");
       try {
         ProgressManager.getInstance().runProcess(process, new EmptyProgressIndicator());
@@ -854,11 +853,10 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
     if (hasUnsafeBgTasks || option.isToBeShown()) {
       String message = ApplicationBundle
-              .message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt",
-                       ApplicationNamesInfo.getInstance().getFullProductName());
+              .message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt", ApplicationNamesInfo.getInstance().getFullProductName());
 
-      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message).yesText(ApplicationBundle.message("command.exit")).noText(CommonBundle.message("button.cancel"))
-                  .doNotAsk(option).show() != Messages.YES) {
+      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message).yesText(ApplicationBundle.message("command.exit"))
+                  .noText(CommonBundle.message("button.cancel")).doNotAsk(option).show() != Messages.YES) {
         return false;
       }
     }
@@ -1001,11 +999,10 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   @Override
   public void assertReadAccessAllowed() {
     if (!isReadAccessAllowed()) {
-      LOG.error(
-              "Read access is allowed from event dispatch thread or inside read-action only" +
-              " (see com.intellij.openapi.application.Application.runReadAction())",
-              "Current thread: " + describe(Thread.currentThread()), "; dispatch thread: " + EventQueue.isDispatchThread() +"; isDispatchThread(): "+isDispatchThread(),
-              "SystemEventQueueThread: " + describe(getEventQueueThread()));
+      LOG.error("Read access is allowed from event dispatch thread or inside read-action only" +
+                " (see com.intellij.openapi.application.Application.runReadAction())", "Current thread: " + describe(Thread.currentThread()),
+                "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
+                "SystemEventQueueThread: " + describe(getEventQueueThread()));
     }
   }
 
@@ -1066,7 +1063,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   @Override
   public void runEdtSafeAction(@NotNull Runnable runnable) {
     Status status = getStatus();
-    LOG.assertTrue(getSafeCounter(status) < 1<<26);
+    LOG.assertTrue(getSafeCounter(status) < 1 << 26);
     status.flags++;
 
     try {
@@ -1140,8 +1137,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
     Window activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
 
-    if (ApplicationActivationStateManager.getState().isInactive()
-        && activeWindow != null) {
+    if (ApplicationActivationStateManager.getState().isInactive() && activeWindow != null) {
       ApplicationActivationStateManager.updateState(activeWindow);
     }
 
@@ -1202,6 +1198,8 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
     finally {
       myLock.writeLock().unlock();
+
+      fireAfterWriteActionFinished(clazz);
     }
   }
 
@@ -1265,7 +1263,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       name = name.substring(name.lastIndexOf('.') + 1);
       name = name.substring(name.lastIndexOf('$') + 1);
       if (!name.equals("AccessToken")) {
-        return " [" + name+"]";
+        return " [" + name + "]";
       }
       return null;
     }
@@ -1355,6 +1353,10 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   private void fireWriteActionFinished(@NotNull Class action) {
     myDispatcher.getMulticaster().writeActionFinished(action);
+  }
+
+  private void fireAfterWriteActionFinished(@NotNull Class action) {
+    myDispatcher.getMulticaster().afterWriteActionFinished(action);
   }
 
   // public for testing purposes

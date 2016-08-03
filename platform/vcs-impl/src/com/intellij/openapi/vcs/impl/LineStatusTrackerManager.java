@@ -49,7 +49,6 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.*;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.Consumer;
-import com.intellij.util.Function;
 import com.intellij.util.concurrency.QueueProcessorRemovePartner;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
@@ -98,7 +97,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     myApplication = application;
     myFileEditorManager = fileEditorManager;
 
-    myLineStatusTrackers = new HashMap<Document, TrackerData>();
+    myLineStatusTrackers = new HashMap<>();
     myPartner = new QueueProcessorRemovePartner<Document, BaseRevisionLoader>(myProject, new Consumer<BaseRevisionLoader>() {
       @Override
       public void consume(BaseRevisionLoader baseRevisionLoader) {
@@ -207,12 +206,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
       if (isDisabled()) return;
       log("resetTrackers", null);
 
-      List<LineStatusTracker> trackers = ContainerUtil.map(myLineStatusTrackers.values(), new Function<TrackerData, LineStatusTracker>() {
-        @Override
-        public LineStatusTracker fun(TrackerData data) {
-          return data.tracker;
-        }
-      });
+      List<LineStatusTracker> trackers = ContainerUtil.map(myLineStatusTrackers.values(), (data) -> data.tracker);
       for (LineStatusTracker tracker : trackers) {
         resetTracker(tracker.getDocument(), tracker.getVirtualFile(), tracker);
       }

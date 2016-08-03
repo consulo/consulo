@@ -15,7 +15,6 @@
  */
 package com.intellij.psi.impl;
 
-import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.Disposable;
@@ -40,10 +39,7 @@ import com.intellij.pom.event.PomModelEvent;
 import com.intellij.pom.impl.PomTransactionBase;
 import com.intellij.pom.tree.TreeAspect;
 import com.intellij.pom.tree.TreeAspectEvent;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLock;
+import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.text.DiffLog;
@@ -89,7 +85,6 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   private volatile boolean isDisposed;
   private CommitTask currentTask; // guarded by lock
   private boolean myEnabled; // true if we can do commits. set to false temporarily during the write action.  guarded by lock
-  private int runningWriteActions; // accessed in EDT only
 
   public static DocumentCommitThread getInstance() {
     return (DocumentCommitThread)ServiceManager.getService(DocumentCommitProcessor.class);
@@ -100,33 +95,18 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     application.invokeLater(new Runnable() {
       @Override
       public void run() {
-        assert runningWriteActions == 0;
         if (application.isDisposed()) return;
         assert !application.isWriteAccessAllowed() || application.isUnitTestMode(); // crazy stuff happens in tests, e.g. UIUtil.dispatchInvocationEvents() inside write action
         application.addApplicationListener(new ApplicationAdapter() {
           @Override
           public void beforeWriteActionStart(@NotNull Object action) {
-            int writeActionsBefore = runningWriteActions++;
-            if (writeActionsBefore == 0) {
-              disable("Write action started: " + action);
-            }
+            disable("Write action started: " + action);
           }
 
           @Override
-          public void writeActionFinished(@NotNull Object action) {
+          public void afterWriteActionFinished(@NotNull Object action) {
             // crazy things happen when running tests, like starting write action in one thread but firing its end in the other
-            int writeActionsAfter = runningWriteActions = Math.max(0,runningWriteActions-1);
-            if (writeActionsAfter == 0) {
-              enable("Write action finished: " + action);
-            }
-            else {
-              if (writeActionsAfter < 0) {
-                System.err.println("mismatched listeners: " + writeActionsAfter + ";\n==== log==="+log+"\n====end log==="+
-                                   ";\n=======threaddump====\n" +
-                                   ThreadDumper.dumpThreadsToString()+"\n=====END threaddump=======");
-                assert false;
-              }
-            }
+            enable("Write action finished: " + action);
           }
         }, DocumentCommitThread.this);
 
@@ -161,8 +141,9 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     log(null, "enabled", null, reason);
   }
 
+  // under lock
   private void wakeUpQueue() {
-    if (!isDisposed) {
+    if (!isDisposed && !documentsToCommit.isEmpty()) {
       executor.execute(this);
     }
   }
@@ -181,6 +162,9 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     if (!project.isInitialized()) return;
     PsiFile psiFile = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
     if (psiFile == null) return;
+    if (psiFile instanceof PsiCompiledFile) {
+      throw new IllegalArgumentException("Can't commit ClsFile: "+psiFile);
+    }
 
     doQueue(project, document, getAllFileNodes(psiFile), reason, currentModalityState);
   }
@@ -287,41 +271,40 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
 
 
   // cancels all pending commits
-  @TestOnly
+  @TestOnly // under lock
   private void cancelAll() {
-    synchronized (lock) {
-      String reason = "Cancel all in tests";
-      cancel(reason);
-      for (CommitTask commitTask : documentsToCommit) {
-        commitTask.cancel(reason, this);
-        log(commitTask.project, "Removed from background queue", commitTask);
-      }
-      documentsToCommit.clear();
-      for (CommitTask commitTask : documentsToApplyInEDT) {
-        commitTask.cancel(reason, this);
-        log(commitTask.project, "Removed from EDT apply queue (sync commit called)", commitTask);
-      }
-      documentsToApplyInEDT.clear();
-      CommitTask task = currentTask;
-      if (task != null) {
-        cancelAndRemoveFromDocsToCommit(task, reason);
-      }
-      cancel("Sync commit intervened");
-      ((BoundedTaskExecutor)executor).clearAndCancelAll();
+    String reason = "Cancel all in tests";
+    cancel(reason);
+    for (CommitTask commitTask : documentsToCommit) {
+      commitTask.cancel(reason, this);
+      log(commitTask.project, "Removed from background queue", commitTask);
     }
+    documentsToCommit.clear();
+    for (CommitTask commitTask : documentsToApplyInEDT) {
+      commitTask.cancel(reason, this);
+      log(commitTask.project, "Removed from EDT apply queue (sync commit called)", commitTask);
+    }
+    documentsToApplyInEDT.clear();
+    CommitTask task = currentTask;
+    if (task != null) {
+      cancelAndRemoveFromDocsToCommit(task, reason);
+    }
+    cancel("Sync commit intervened");
+    ((BoundedTaskExecutor)executor).clearAndCancelAll();
   }
 
   @TestOnly
   public void clearQueue() {
-    cancelAll();
-    clearLog();
-    wakeUpQueue();
+    synchronized (lock) {
+      cancelAll();
+      clearLog();
+      wakeUpQueue();
+    }
   }
 
+  @TestOnly // under lock
   private void clearLog() {
-    synchronized (log) {
-      log.setLength(0);
-    }
+    log.setLength(0);
   }
 
   private void cancelAndRemoveCurrentTask(@NotNull CommitTask newTask, @NotNull Object reason) {
@@ -685,7 +668,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
 
   @Override
   public String toString() {
-    return "Document commit thread; application: "+myApplication+"; isDisposed: "+isDisposed+"; myEnabled: "+isEnabled()+"; runningWriteActions: "+runningWriteActions;
+    return "Document commit thread; application: "+myApplication+"; isDisposed: "+isDisposed+"; myEnabled: "+isEnabled();
   }
 
   @TestOnly
@@ -776,6 +759,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       }
     }
 
+    @NotNull
     Document getDocument() {
       return document;
     }
@@ -814,9 +798,11 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
         if (file.isPhysical() && !ApplicationManager.getApplication().isWriteAccessAllowed()) {
           VirtualFile vFile = viewProvider.getVirtualFile();
           LOG.error("Write action expected" +
+                    "; document=" + document +
                     "; file=" + file + " of " + file.getClass() +
                     "; file.valid=" + file.isValid() +
                     "; file.eventSystemEnabled=" + viewProvider.isEventSystemEnabled() +
+                    "; viewProvider=" + viewProvider + " of " + viewProvider.getClass() +
                     "; language=" + file.getLanguage() +
                     "; vFile=" + vFile + " of " + vFile.getClass() +
                     "; free-threaded=" + PsiDocumentManagerBase.isFreeThreaded(vFile));
