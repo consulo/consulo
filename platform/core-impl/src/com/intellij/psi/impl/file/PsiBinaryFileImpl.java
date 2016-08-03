@@ -148,7 +148,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   @RequiredReadAction
   @Override
   public TextRange getTextRange() {
-    return null;
+    return TextRange.EMPTY_RANGE;
   }
 
   @RequiredReadAction
