@@ -53,7 +53,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
   protected final Object myLock = new Object() {
   };
 
-  protected final Map<String, ArchiveHandler> myHandlers = new THashMap<String, ArchiveHandler>(FileUtil.PATH_HASHING_STRATEGY);
+  protected final Map<String, ArchiveHandler> myHandlers = new THashMap<>(FileUtil.PATH_HASHING_STRATEGY);
   protected String[] jarPathsCache;
 
   private final Set<String> myNoCopyPaths;
@@ -62,7 +62,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
     bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
       @Override
       public void after(@NotNull final List<? extends VFileEvent> events) {
-        final List<VirtualFile> rootsToRefresh = new ArrayList<VirtualFile>();
+        final List<VirtualFile> rootsToRefresh = new ArrayList<>();
 
         for (VFileEvent event : events) {
           if (event.getFileSystem() instanceof LocalFileSystem) {
@@ -79,9 +79,9 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
             for (String jarPath : jarPaths) {
               final String jarFile = jarPath.substring(0, jarPath.length() - ARCHIVE_SEPARATOR.length());
               if (FileUtil.startsWith(jarFile, path)) {
-                VirtualFile jarRootToRefresh = markDirty(jarPath);
-                if (jarRootToRefresh != null) {
-                  rootsToRefresh.add(jarRootToRefresh);
+                VirtualFile archiveRootToRefresh = findRootToRefresh(jarPath);
+                if (archiveRootToRefresh != null) {
+                  rootsToRefresh.add(archiveRootToRefresh);
                 }
               }
             }
@@ -90,17 +90,12 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
 
         if (!rootsToRefresh.isEmpty()) {
           final Application app = ApplicationManager.getApplication();
-          Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-              if (app.isDisposed()) return;
-              for (VirtualFile root : rootsToRefresh) {
-                if (root.isValid()) {
-                  ((NewVirtualFile)root).markDirtyRecursively();
-                }
-              }
-              RefreshQueue.getInstance().refresh(false, true, null, rootsToRefresh);
+          Runnable runnable = () -> {
+            if (app.isDisposed()) return;
+            for (VirtualFile root : rootsToRefresh) {
+              ((NewVirtualFile)root).markDirty();
             }
+            RefreshQueue.getInstance().refresh(false, true, null, rootsToRefresh);
           };
           if (app.isUnitTestMode()) {
             runnable.run();
@@ -111,7 +106,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
         }
       }
     });
-    myNoCopyPaths = isCopyAvailable() ? new ConcurrentHashSet<String>(FileUtil.PATH_HASHING_STRATEGY) : null;
+    myNoCopyPaths = isCopyAvailable() ? new ConcurrentHashSet<>(FileUtil.PATH_HASHING_STRATEGY) : null;
   }
 
   protected boolean isCopyAvailable() {
@@ -149,7 +144,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
   }
 
   @Nullable
-  private VirtualFile markDirty(@NotNull String path) {
+  private VirtualFile findRootToRefresh(@NotNull String path) {
     final ArchiveHandler handler;
     synchronized (myLock) {
       handler = myHandlers.remove(path);
@@ -157,7 +152,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
     }
 
     if (handler != null) {
-      return handler.markDirty();
+      return handler.clearAndGet();
     }
 
     return null;
@@ -319,16 +314,16 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
   }
 
   protected ArchiveHandler getHandler(@NotNull VirtualFile entryVFile) {
-    final String jarRootPath = extractRootPath(entryVFile.getPath());
+    final String archiveRootPath = extractRootPath(entryVFile.getPath());
 
     ArchiveHandler handler;
     final ArchiveHandler freshHandler;
 
     synchronized (myLock) {
-      handler = myHandlers.get(jarRootPath);
+      handler = myHandlers.get(archiveRootPath);
       if (handler == null) {
-        freshHandler = handler = createHandler(this, jarRootPath.substring(0, jarRootPath.length() - ARCHIVE_SEPARATOR.length()));
-        myHandlers.put(jarRootPath, handler);
+        freshHandler = handler = createHandler(this, archiveRootPath.substring(0, archiveRootPath.length() - ARCHIVE_SEPARATOR.length()));
+        myHandlers.put(archiveRootPath, handler);
         jarPathsCache = null;
       }
       else {
@@ -338,12 +333,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
 
     if (freshHandler != null) {
       // Refresh must be outside of the lock, since it potentially requires write action.
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          freshHandler.refreshLocalFileForJar();
-        }
-      }, ModalityState.defaultModalityState());
+      ApplicationManager.getApplication().invokeLater(freshHandler::refreshLocalFileForJar, ModalityState.defaultModalityState());
     }
 
     return handler;

@@ -48,7 +48,7 @@ public class ZipHandler extends ArchiveHandlerBase {
       return new ZipArchiveFile(zipFile);
     }
     catch (IOException e) {
-      ZipHandler.LOGGER.warn(e.getMessage() + ": " + originalFile.getPath(), e);
+      LOGGER.warn(e.getMessage() + ": " + originalFile.getPath(), e);
       return null;
     }
   }

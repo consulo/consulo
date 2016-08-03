@@ -43,8 +43,8 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
   private static final long DEFAULT_LENGTH = 0L;
   private static final long DEFAULT_TIMESTAMP = -1L;
 
-  private final TimedReference<ArchiveFile> myArchiveFile = new TimedReference<ArchiveFile>(null);
-  private Reference<Map<String, ArchiveHandlerEntry>> myRelPathsToEntries = new SoftReference<Map<String, ArchiveHandlerEntry>>(null);
+  private final TimedReference<ArchiveFile> myArchiveFile = new TimedReference<>(null);
+  private Reference<Map<String, ArchiveHandlerEntry>> myRelPathsToEntries = new SoftReference<>(null);
   private final Object lock = new Object();
 
   protected final String myBasePath;
@@ -53,9 +53,19 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
     myBasePath = path;
   }
 
+  @Override
+  public VirtualFile clearAndGet() {
+    return null;
+  }
+
   protected void clear() {
     synchronized (lock) {
       myRelPathsToEntries = null;
+      ArchiveFile archiveFile = myArchiveFile.get();
+      if(archiveFile != null) {
+        archiveFile.close();
+      }
+
       myArchiveFile.set(null);
     }
   }
@@ -63,11 +73,11 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
   @NotNull
   protected Map<String, ArchiveHandlerEntry> initEntries() {
     synchronized (lock) {
-      Map<String, ArchiveHandlerEntry> map = myRelPathsToEntries != null ? myRelPathsToEntries.get() : null;
+      Map<String, ArchiveHandlerEntry> map = SoftReference.dereference(myRelPathsToEntries);
       if (map == null) {
         final ArchiveFile zip = getArchiveFile();
 
-        map = new THashMap<String, ArchiveHandlerEntry>();
+        map = new THashMap<>();
         if (zip != null) {
           map.put("", new ArchiveHandlerEntry("", null, true));
           final Iterator<? extends ArchiveEntry> entries = zip.entries();
@@ -78,7 +88,7 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
             getOrCreate(isDirectory ? name.substring(0, name.length() - 1) : name, isDirectory, map);
           }
 
-          myRelPathsToEntries = new SoftReference<Map<String, ArchiveHandlerEntry>>(map);
+          myRelPathsToEntries = new SoftReference<>(map);
         }
       }
       return map;
@@ -97,19 +107,19 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
   @Override
   @Nullable
   public ArchiveFile getArchiveFile() {
-    ArchiveFile jar = myArchiveFile.get();
-    if (jar == null) {
+    ArchiveFile archiveFile = myArchiveFile.get();
+    if (archiveFile == null) {
       synchronized (lock) {
-        jar = myArchiveFile.get();
-        if (jar == null) {
-          jar = createArchiveFile();
-          if (jar != null) {
-            myArchiveFile.set(jar);
+        archiveFile = myArchiveFile.get();
+        if (archiveFile == null) {
+          archiveFile = createArchiveFile();
+          if (archiveFile != null) {
+            myArchiveFile.set(archiveFile);
           }
         }
       }
     }
-    return jar;
+    return archiveFile;
   }
 
   @Nullable
@@ -143,7 +153,7 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
     synchronized (lock) {
       ArchiveHandlerEntry parentEntry = getEntryInfo(file);
 
-      Set<String> names = new HashSet<String>();
+      Set<String> names = new HashSet<>();
       for (ArchiveHandlerEntry info : getEntriesMap().values()) {
         if (info.getParent() == parentEntry) {
           names.add(info.getShortName());

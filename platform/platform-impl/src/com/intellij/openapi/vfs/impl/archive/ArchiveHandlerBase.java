@@ -24,7 +24,10 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsBundle;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
@@ -70,14 +73,9 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
 
   @Override
   @Nullable
-  public VirtualFile markDirty() {
+  public VirtualFile clearAndGet() {
     clear();
-
-    final VirtualFile root = VfsImplUtil.findFileByPath((NewVirtualFileSystem)myFileSystem, myBasePath + ArchiveFileSystem.ARCHIVE_SEPARATOR);
-    if (root instanceof NewVirtualFile) {
-      ((NewVirtualFile)root).markDirty();
-    }
-    return root;
+    return VfsImplUtil.findFileByPath((NewVirtualFileSystem)myFileSystem, myBasePath + ArchiveFileSystem.ARCHIVE_SEPARATOR);
   }
 
   @Override
@@ -320,7 +318,7 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
   };
 
   private void reportIOErrorWithJars(File original, File mirror, IOException e) {
-    ArchiveHandlerBase.LOGGER.warn(e);
+    LOGGER.warn(e);
     final String path = original.getPath();
     final String message = VfsBundle.message("jar.copy.error.message", path, mirror.getPath(), e.getMessage());
 

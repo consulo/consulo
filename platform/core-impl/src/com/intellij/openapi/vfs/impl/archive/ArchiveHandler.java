@@ -51,7 +51,7 @@ public interface ArchiveHandler {
 
   boolean exists(VirtualFile fileOrDirectory);
 
-  VirtualFile markDirty();
+  VirtualFile clearAndGet();
 
   void refreshLocalFileForJar();
 

@@ -65,15 +65,20 @@ public class ZipArchiveFile implements ArchiveFile {
         if (entry == null) return null;
         return new ZipArchiveEntry(entry);
       }
-
-      @Override
-      public void remove() {
-      }
     };
   }
 
   @Override
   public int getSize() {
     return myZipFile.size();
+  }
+
+  @Override
+  public void close() {
+    try {
+      myZipFile.close();
+    }
+    catch (IOException ignored) {
+    }
   }
 }

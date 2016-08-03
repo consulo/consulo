@@ -62,4 +62,7 @@ public interface ArchiveFile {
   Iterator<? extends ArchiveEntry> entries();
 
   int getSize();
+
+  default void close() {
+  }
 }

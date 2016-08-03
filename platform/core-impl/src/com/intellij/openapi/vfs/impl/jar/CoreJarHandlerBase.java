@@ -16,7 +16,6 @@
 package com.intellij.openapi.vfs.impl.jar;
 
 import com.intellij.openapi.vfs.ArchiveFile;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.archive.CoreArchiveHandler;
 import com.intellij.openapi.vfs.impl.zip.ZipArchiveFile;
 import consulo.lombok.annotations.Logger;
@@ -48,14 +47,9 @@ public class CoreJarHandlerBase extends CoreArchiveHandler {
       return new ZipArchiveFile(zipFile);
     }
     catch (IOException e) {
-      CoreJarHandlerBase.LOGGER.warn(e.getMessage() + ": " + originalFile.getPath(), e);
+      LOGGER.warn(e.getMessage() + ": " + originalFile.getPath(), e);
       return null;
     }
-  }
-
-  @Override
-  public VirtualFile markDirty() {
-    return null;
   }
 
   @Override
