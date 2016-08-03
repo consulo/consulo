@@ -7,7 +7,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.ContainerUtil;
@@ -70,7 +69,6 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
     myLog = new VcsLogImpl(logDataHolder, this);
     myVisiblePack = VisiblePack.EMPTY;
     myMainFrame = new MainFrame(logDataHolder, this, project, settings, uiProperties, myLog, myVisiblePack);
-    Disposer.register(logDataHolder, this);
   }
 
   public void setVisiblePack(@NotNull VisiblePack pack) {

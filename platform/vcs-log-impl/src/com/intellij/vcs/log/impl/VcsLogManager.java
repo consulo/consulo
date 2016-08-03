@@ -73,6 +73,11 @@ public class VcsLogManager implements Disposable {
 
   @NotNull
   public JComponent initContent(@NotNull Collection<VcsRoot> roots, @Nullable String contentTabName) {
+    if(myUi != null) {
+      Disposer.dispose(myUi);
+      myUi = null;
+    }
+
     Disposer.register(myProject, this);
 
     final Map<VirtualFile, VcsLogProvider> logProviders = findLogProviders(roots, myProject);
@@ -164,6 +169,9 @@ public class VcsLogManager implements Disposable {
 
   @Override
   public void dispose() {
+    if(myUi != null) {
+      Disposer.dispose(myUi);
+    }
   }
 
   private static class PostponeableLogRefresher implements VcsLogRefresher, Disposable {

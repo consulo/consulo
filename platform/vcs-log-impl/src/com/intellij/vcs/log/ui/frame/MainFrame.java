@@ -108,7 +108,8 @@ public class MainFrame extends JPanel implements TypeSafeDataProvider {
     setLayout(new BorderLayout());
     add(changesBrowserSplitter);
 
-    Disposer.register(logDataHolder, new Disposable() {
+    Disposer.register(vcsLogUI, new Disposable() {
+      @Override
       public void dispose() {
         myDetailsSplitter.dispose();
         changesBrowserSplitter.dispose();
