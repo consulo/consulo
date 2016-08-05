@@ -471,6 +471,11 @@
       <with attribute="implementationClass" implements="com.intellij.lang.PairedBraceMatcher"/>
     </extensionPoint>
 
+    <extensionPoint name="lang.quoteHandler"
+                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.QuoteHandler"/>
+    </extensionPoint>
+
     <extensionPoint name="lang.foldingBuilder"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.folding.FoldingBuilder"/>
