@@ -29,6 +29,7 @@ import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.impl.IterationState;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
@@ -236,74 +237,6 @@ public final class EditorUtil {
         }
       }.execute();
     }
-  }
-
-  /**
-   * Allows to calculate offset of the given column assuming that it belongs to the given text line identified by the
-   * given <code>[start; end)</code> intervals.
-   *
-   * @param editor       editor that is used for representing given text
-   * @param text         target text
-   * @param start        start offset of the logical line that holds target column (inclusive)
-   * @param end          end offset of the logical line that holds target column (exclusive)
-   * @param columnNumber target column number
-   * @param tabSize      number of desired visual columns to use for tabulation representation
-   * @param debugBuffer  buffer to hold debug info during the processing (if any)
-   * @return given text offset that identifies the same position that is pointed by the given visual column
-   * @deprecated This function can give incorrect results when soft wraps are enabled in editor. It is also slow in case of
-   * long document lines - {@link Editor#logicalPositionToOffset(LogicalPosition)}
-   * should be faster when soft wraps are enabled. To be removed in IDEA 16.
-   */
-  public static int calcOffset(@NotNull EditorEx editor,
-                               @NotNull CharSequence text,
-                               int start,
-                               int end,
-                               int columnNumber,
-                               int tabSize,
-                               @Nullable StringBuilder debugBuffer) {
-    assert start >= 0 : "start (" + start + ") must not be negative. end (" + end + ")";
-    assert end >= start : "start (" + start + ") must not be greater than end (" + end + ")";
-    if (debugBuffer != null) {
-      debugBuffer.append(String.format("Starting calcOffset(). Start=%d, end=%d, column number=%d, tab size=%d%n", start, end, columnNumber, tabSize));
-    }
-    final int maxScanIndex = Math.min(start + columnNumber + 1, end);
-    SoftWrapModel softWrapModel = editor.getSoftWrapModel();
-    List<? extends SoftWrap> softWraps = softWrapModel.getSoftWrapsForRange(start, maxScanIndex);
-    int startToUse = start;
-    int x = editor.getDocument().getLineNumber(start) == 0 ? editor.getPrefixTextWidthInPixels() : 0;
-    int[] currentColumn = {0};
-    for (SoftWrap softWrap : softWraps) {
-      // There is a possible case that target column points inside soft wrap-introduced virtual space.
-      if (currentColumn[0] >= columnNumber) {
-        return startToUse;
-      }
-      int result = calcSoftWrapUnawareOffset(editor, text, startToUse, softWrap.getEnd(), columnNumber, tabSize, x, currentColumn, debugBuffer);
-      if (result >= 0) {
-        return result;
-      }
-
-      startToUse = softWrap.getStart();
-      x = softWrap.getIndentInPixels();
-    }
-
-    // There is a possible case that target column points inside soft wrap-introduced virtual space.
-    if (currentColumn[0] >= columnNumber) {
-      return startToUse;
-    }
-
-    int result = calcSoftWrapUnawareOffset(editor, text, startToUse, end, columnNumber, tabSize, x, currentColumn, debugBuffer);
-    if (result >= 0) {
-      return result;
-    }
-
-    // We assume that given column points to the virtual space after the line end if control flow reaches this place,
-    // hence, just return end of line offset then.
-    if (debugBuffer != null) {
-      debugBuffer
-              .append(String.format("Returning %d as no match has been found for the target column (%d) at the target range [%d;%d)", end, columnNumber, start,
-                                    end));
-    }
-    return end;
   }
 
   /**
@@ -515,9 +448,9 @@ public final class EditorUtil {
       }
     }
 
-    if (editor == null || useOptimization) {
-      Document document = editor == null ? null : editor.getDocument();
-      if (document != null && start < offset - 1 && document.getLineNumber(start) != document.getLineNumber(offset - 1)) {
+    if (editor != null && useOptimization) {
+      Document document = editor.getDocument();
+      if (start < offset - 1 && document.getLineNumber(start) != document.getLineNumber(offset - 1)) {
         String editorInfo = editor instanceof EditorImpl ? ". Editor info: " + ((EditorImpl)editor).dumpState() : "";
         String documentInfo;
         if (text instanceof Dumpable) {
@@ -529,20 +462,18 @@ public final class EditorUtil {
         LogMessageEx.error(LOG, "detected incorrect offset -> column number calculation",
                            "start: " + start + ", given offset: " + offset + ", given tab size: " + tabSize + ". " + documentInfo + editorInfo);
       }
-      int shift = 0;
-      if (hasTabs) {
-        for (int i = start; i < offset; i++) {
-          char c = text.charAt(i);
-          if (c == '\t') {
-            shift += getTabLength(i + shift - start, tabSize) - 1;
-          }
-        }
-      }
-      return offset - start + shift;
     }
 
-    EditorEx editorImpl = (EditorEx)editor;
-    return editorImpl.calcColumnNumber(text, start, offset, tabSize);
+    int shift = 0;
+    if (hasTabs) {
+      for (int i = start; i < offset; i++) {
+        char c = text.charAt(i);
+        if (c == '\t') {
+          shift += getTabLength(i + shift - start, tabSize) - 1;
+        }
+      }
+    }
+    return offset - start + shift;
   }
 
   public static void setHandCursor(@NotNull Editor view) {
@@ -923,12 +854,9 @@ public final class EditorUtil {
     if (startFoldRegion != null || endFoldRegion != null) {
       final FoldRegion finalStartFoldRegion = startFoldRegion;
       final FoldRegion finalEndFoldRegion = endFoldRegion;
-      foldingModel.runBatchFoldingOperation(new Runnable() {
-        @Override
-        public void run() {
-          if (finalStartFoldRegion != null) finalStartFoldRegion.setExpanded(true);
-          if (finalEndFoldRegion != null) finalEndFoldRegion.setExpanded(true);
-        }
+      foldingModel.runBatchFoldingOperation(() -> {
+        if (finalStartFoldRegion != null) finalStartFoldRegion.setExpanded(true);
+        if (finalEndFoldRegion != null) finalEndFoldRegion.setExpanded(true);
       });
     }
     editor.getSelectionModel().setSelection(startOffset, endOffset);
@@ -953,6 +881,11 @@ public final class EditorUtil {
     int startOffset = editor.getDocument().getLineStartOffset(position.line);
     int endOffset = editor.logicalPositionToOffset(position);
     return editor.getSoftWrapModel().getSoftWrapsForRange(startOffset, endOffset).size();
+  }
+
+  public static boolean attributesImpactFontStyleOrColor(@Nullable TextAttributes attributes) {
+    return attributes == TextAttributes.ERASE_MARKER ||
+           (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
   }
 }
 

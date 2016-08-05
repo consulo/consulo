@@ -2481,6 +2481,9 @@
     <bidiRegionsSeparator language="" implementationClass="com.intellij.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
 
     <smartPointerElementInfoFactory implementation="com.intellij.psi.impl.smartPointers.AnchorElementInfoFactory"/>
+
+    <additionalTextAttributes scheme="Default" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
+    <additionalTextAttributes scheme="Darcula" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
   </extensions>
 
   <extensions defaultExtensionNs="consulo">

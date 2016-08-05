@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -50,16 +49,13 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
-    return model.processRangeHighlightersOverlappingWith(startOffset, endOffset, new Processor<RangeHighlighterEx>() {
-      @Override
-      public boolean process(@NotNull RangeHighlighterEx marker) {
-        Object tt = marker.getErrorStripeTooltip();
-        if (!(tt instanceof HighlightInfo)) return true;
-        HighlightInfo info = (HighlightInfo)tt;
-        return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
-               || info.highlighter == null
-               || processor.process(info);
-      }
+    return model.processRangeHighlightersOverlappingWith(startOffset, endOffset, marker -> {
+      Object tt = marker.getErrorStripeTooltip();
+      if (!(tt instanceof HighlightInfo)) return true;
+      HighlightInfo info = (HighlightInfo)tt;
+      return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
+             || info.highlighter == null
+             || processor.process(info);
     });
   }
 
@@ -73,16 +69,13 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
-    return model.processRangeHighlightersOutside(startOffset, endOffset, new Processor<RangeHighlighterEx>() {
-      @Override
-      public boolean process(@NotNull RangeHighlighterEx marker) {
-        Object tt = marker.getErrorStripeTooltip();
-        if (!(tt instanceof HighlightInfo)) return true;
-        HighlightInfo info = (HighlightInfo)tt;
-        return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
-               || info.highlighter == null
-               || processor.process(info);
-      }
+    return model.processRangeHighlightersOutside(startOffset, endOffset, marker -> {
+      Object tt = marker.getErrorStripeTooltip();
+      if (!(tt instanceof HighlightInfo)) return true;
+      HighlightInfo info = (HighlightInfo)tt;
+      return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
+             || info.highlighter == null
+             || processor.process(info);
     });
   }
 
