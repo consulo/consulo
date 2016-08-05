@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.openapi.keymap.impl.ui.MouseShortcutPanel;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -33,6 +34,7 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
+import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -44,6 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static com.intellij.ui.components.JBScrollPane.isScrollEvent;
 import static java.awt.event.MouseEvent.*;
 
 /**
@@ -55,12 +58,24 @@ import static java.awt.event.MouseEvent.*;
  */
 public final class IdeMouseEventDispatcher {
   private final PresentationFactory myPresentationFactory = new PresentationFactory();
-  private final ArrayList<AnAction> myActions = new ArrayList<AnAction>(1);
-  private final Map<Container, BlockState> myRootPane2BlockedId = new HashMap<Container, BlockState>();
-  private int myLastHorScrolledComponentHash = 0;
+  private final ArrayList<AnAction> myActions = new ArrayList<>(1);
+  private final Map<Container, BlockState> myRootPane2BlockedId = new HashMap<>();
+  private int myLastHorScrolledComponentHash;
   private boolean myPressedModifiersStored;
+  @JdkConstants.InputEventMask
   private int myModifiers;
+  @JdkConstants.InputEventMask
   private int myModifiersEx;
+
+  private static boolean myForceTouchIsAllowed = true;
+
+  public static void forbidForceTouch () {
+    myForceTouchIsAllowed = false;
+  }
+
+  public static boolean isForceTouchAllowed () {
+    return myForceTouchIsAllowed;
+  }
 
   // Don't compare MouseEvent ids. Swing has wrong sequence of events: first is mouse_clicked(500)
   // then mouse_pressed(501), mouse_released(502) etc. Here, mouse events sorted so we can compare
@@ -81,17 +96,19 @@ public final class IdeMouseEventDispatcher {
     myActions.clear();
 
     // here we try to find "local" shortcuts
-    if (component instanceof JComponent) {
-      for (AnAction action : ActionUtil.getActions((JComponent)component)) {
-        for (Shortcut shortcut : action.getShortcutSet().getShortcuts()) {
-          if (mouseShortcut.equals(shortcut) && !myActions.contains(action)) {
-            myActions.add(action);
+    for (; component != null; component = component.getParent()) {
+      if (component instanceof JComponent) {
+        for (AnAction action : ActionUtil.getActions((JComponent)component)) {
+          for (Shortcut shortcut : action.getShortcutSet().getShortcuts()) {
+            if (mouseShortcut.equals(shortcut) && !myActions.contains(action)) {
+              myActions.add(action);
+            }
           }
         }
-      }
-      // once we've found a proper local shortcut(s), we exit
-      if (!myActions.isEmpty()) {
-        return;
+        // once we've found a proper local shortcut(s), we exit
+        if (!myActions.isEmpty()) {
+          return;
+        }
       }
     }
 
@@ -146,21 +163,30 @@ public final class IdeMouseEventDispatcher {
     boolean ignore = false;
     if (!(e.getID() == MouseEvent.MOUSE_PRESSED ||
           e.getID() == MouseEvent.MOUSE_RELEASED ||
+          e.getID() == MOUSE_WHEEL && 0 < e.getModifiersEx() ||
           e.getID() == MOUSE_CLICKED)) {
       ignore = true;
     }
 
     patchClickCount(e);
 
+    int clickCount = e.getClickCount();
+    int button = MouseShortcut.getButton(e);
+    if (button == MouseShortcut.BUTTON_WHEEL_UP || button == MouseShortcut.BUTTON_WHEEL_DOWN) {
+      clickCount = 1;
+    }
+
     if (e.isConsumed()
         || e.isPopupTrigger()
-        || (e.getButton() > 3 ? e.getID() != MOUSE_PRESSED : e.getID() != MOUSE_RELEASED)
-        || e.getClickCount() < 1
-        || e.getButton() == MouseEvent.NOBUTTON) { // See #16995. It did happen
+        || (button > 3 ? e.getID() != MOUSE_PRESSED && e.getID() != MOUSE_WHEEL : e.getID() != MOUSE_RELEASED)
+        || clickCount < 1
+        || button == NOBUTTON) { // See #16995. It did happen
       ignore = true;
     }
 
+    @JdkConstants.InputEventMask
     int modifiers = e.getModifiers();
+    @JdkConstants.InputEventMask
     int modifiersEx = e.getModifiersEx();
     if (e.getID() == MOUSE_PRESSED) {
       myPressedModifiersStored = true;
@@ -168,6 +194,7 @@ public final class IdeMouseEventDispatcher {
       myModifiersEx = modifiersEx;
     }
     else if (e.getID() == MOUSE_RELEASED) {
+      myForceTouchIsAllowed = true;
       if (myPressedModifiersStored) {
         myPressedModifiersStored = false;
         modifiers = myModifiers;
@@ -206,6 +233,10 @@ public final class IdeMouseEventDispatcher {
       return false;
     }
 
+    if (c instanceof MouseShortcutPanel || c.getParent() instanceof MouseShortcutPanel) {
+      return false; // forward mouse processing to the special shortcut panel
+    }
+
     if (isHorizontalScrolling(c, e)) {
       boolean done = doHorizontalScrolling(c, (MouseWheelEvent)e);
       if (done) return true;
@@ -218,7 +249,7 @@ public final class IdeMouseEventDispatcher {
       return false;
     }
 
-    final MouseShortcut shortcut = new MouseShortcut(e.getButton(), modifiersEx, e.getClickCount());
+    final MouseShortcut shortcut = new MouseShortcut(button, modifiersEx, clickCount);
     fillActionsList(c, shortcut, IdeKeyEventDispatcher.isModalContext(c));
     ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
     if (actionManager != null) {
@@ -241,8 +272,6 @@ public final class IdeMouseEventDispatcher {
           e.consume();
         }
       }
-      if (actions.length > 0 && e.isConsumed())
-        return true;
     }
     return e.getButton() > 3;
   }
@@ -261,6 +290,7 @@ public final class IdeMouseEventDispatcher {
   public static boolean patchClickCount(final MouseEvent e) {
     if (e.getClickCount() != 1 && e.getButton() > 3) {
       ReflectionUtil.setField(MouseEvent.class, e, int.class, "clickCount", 1);
+      return true;
     }
     return false;
   }
@@ -296,6 +326,7 @@ public final class IdeMouseEventDispatcher {
       final MouseWheelEvent mwe = (MouseWheelEvent)e;
       return mwe.isShiftDown()
              && mwe.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL
+             && isScrollEvent(mwe)
              && findHorizontalScrollBar(c) != null;
     }
     return false;
@@ -305,7 +336,8 @@ public final class IdeMouseEventDispatcher {
   private static JScrollBar findHorizontalScrollBar(Component c) {
     if (c == null) return null;
     if (c instanceof JScrollPane) {
-      return ((JScrollPane)c).getHorizontalScrollBar();
+      JScrollBar scrollBar = ((JScrollPane)c).getHorizontalScrollBar();
+      return scrollBar != null && scrollBar.isVisible() ? scrollBar : null;
     }
 
     if (isDiagramViewComponent(c)) {
@@ -314,7 +346,7 @@ public final class IdeMouseEventDispatcher {
         if (view.getComponent(i) instanceof JScrollBar) {
           final JScrollBar scrollBar = (JScrollBar)view.getComponent(i);
           if (scrollBar.getOrientation() == Adjustable.HORIZONTAL) {
-            return scrollBar;
+            return scrollBar.isVisible() ? scrollBar : null;
           }
         }
       }

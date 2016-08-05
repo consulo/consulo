@@ -40,15 +40,12 @@ abstract class FoldRegionsTree {
   @NotNull
   private List<FoldRegion> myRegions = ContainerUtil.newArrayList();
 
-  private static final Comparator<FoldRegion> BY_END_OFFSET = new Comparator<FoldRegion>() {
-    @Override
-    public int compare(FoldRegion r1, FoldRegion r2) {
-      int end1 = r1.getEndOffset();
-      int end2 = r2.getEndOffset();
-      if (end1 < end2) return -1;
-      if (end1 > end2) return 1;
-      return 0;
-    }
+  private static final Comparator<FoldRegion> BY_END_OFFSET = (r1, r2) -> {
+    int end1 = r1.getEndOffset();
+    int end2 = r2.getEndOffset();
+    if (end1 < end2) return -1;
+    if (end1 > end2) return 1;
+    return 0;
   };
   private static final Comparator<? super FoldRegion> BY_END_OFFSET_REVERSE = Collections.reverseOrder(BY_END_OFFSET);
 
@@ -323,6 +320,13 @@ abstract class FoldRegionsTree {
     int idx = getLastTopLevelIndexBefore(snapshot, offset);
     if (idx == -1) return 0;
     return snapshot.foldedLines[idx];
+  }
+
+  int getTotalNumberOfFoldedLines() {
+    CachedData snapshot = myCachedData;
+    int[] foldedLines = snapshot.foldedLines;
+    if (snapshot.isUnavailable() || foldedLines == null || foldedLines.length == 0) return 0;
+    return foldedLines[foldedLines.length - 1];
   }
 
   public int getLastTopLevelIndexBefore(int offset) {

@@ -1758,6 +1758,15 @@ public class UIUtil {
   }
 
 
+  @NotNull
+  public static BufferedImage createImageForGraphics(Graphics2D g, int width, int height, int type) {
+    if (isRetina(g)) {
+      return RetinaImage.create(width, height, type);
+    }
+    //noinspection UndesirableClassUsage
+    return new BufferedImage(width, height, type);
+  }
+
   public static BufferedImage createImage(int width, int height, int type) {
     if (isRetina()) {
       return RetinaImage.create(width, height, type);

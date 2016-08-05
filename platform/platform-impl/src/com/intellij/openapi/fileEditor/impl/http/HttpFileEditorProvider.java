@@ -22,7 +22,6 @@ import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import org.jdom.Element;
@@ -39,10 +38,6 @@ public class HttpFileEditorProvider implements FileEditorProvider, DumbAware {
   @NotNull
   public FileEditor createEditor(@NotNull final Project project, @NotNull final VirtualFile file) {
     return new HttpFileEditor(project, (HttpVirtualFile)file); 
-  }
-
-  public void disposeEditor(@NotNull final FileEditor editor) {
-    Disposer.dispose(editor);
   }
 
   @NotNull

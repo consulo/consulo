@@ -614,16 +614,6 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
     return end;
   }
 
-  @Override
-  public void setLastColumnNumber(final int val) {
-    myDelegate.setLastColumnNumber(val);
-  }
-
-  @Override
-  public int getLastColumnNumber() {
-    return myDelegate.getLastColumnNumber();
-  }
-
   @NotNull
   @Override
   public VisualPosition logicalToVisualPosition(@NotNull LogicalPosition logicalPos, boolean softWrapAware) {

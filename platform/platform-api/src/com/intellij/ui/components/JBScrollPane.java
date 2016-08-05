@@ -30,9 +30,27 @@ import javax.swing.plaf.ScrollBarUI;
 import javax.swing.plaf.ScrollPaneUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 public class JBScrollPane extends JScrollPane {
+  /**
+   * Indicates whether the specified event is not consumed and does not have unexpected modifiers.
+   *
+   * @param event a mouse wheel event to check for validity
+   * @return {@code true} if the specified event is valid, {@code false} otherwise
+   */
+  public static boolean isScrollEvent(@NotNull MouseWheelEvent event) {
+    if (event.isConsumed()) return false; // event should not be consumed already
+    if (event.getWheelRotation() == 0) return false; // any rotation expected (forward or backward)
+    return 0 == (SCROLL_MODIFIERS & event.getModifiers());
+  }
+
+  private static final int SCROLL_MODIFIERS = // event modifiers allowed during scrolling
+          ~InputEvent.SHIFT_MASK & ~InputEvent.SHIFT_DOWN_MASK & // for horizontal scrolling
+          ~InputEvent.BUTTON1_MASK & ~InputEvent.BUTTON1_DOWN_MASK; // for selection
+
   private int myViewportBorderWidth = -1;
   private boolean myHasOverlayScrollbars;
 
@@ -142,9 +160,7 @@ public class JBScrollPane extends JScrollPane {
     if (scrollLayout != null) {
       // Now it's time to jump in and expand the viewport so it fits the whole area 
       // (taking into consideration corners, headers and other stuff).
-      myHasOverlayScrollbars = relayoutScrollbars(
-              this, scrollLayout,
-              myHasOverlayScrollbars // If last time we did relayouting, we should restore it back.
+      myHasOverlayScrollbars = relayoutScrollbars(this, scrollLayout, myHasOverlayScrollbars // If last time we did relayouting, we should restore it back.
       );
     }
     else {
