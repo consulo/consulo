@@ -765,7 +765,7 @@
       </module>
       <module name="platform/util" dirurl="file://$PROJECT_DIR$/platform/util" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" sdk-name="1.6" language-level-module-name="consulo" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" bytecode-version="1.6" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
