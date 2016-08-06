@@ -16,8 +16,8 @@
 package com.intellij.openapi.roots.ui.util;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 
 import javax.swing.*;
 

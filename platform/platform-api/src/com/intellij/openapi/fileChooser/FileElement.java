@@ -18,9 +18,9 @@ package com.intellij.openapi.fileChooser;
 import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -19,7 +19,6 @@ package com.intellij.psi.impl.include;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Consumer;
@@ -29,6 +28,7 @@ import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.KeyDescriptor;
+import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;

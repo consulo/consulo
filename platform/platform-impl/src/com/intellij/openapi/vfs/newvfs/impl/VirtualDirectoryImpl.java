@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.win32.Win32LocalFileSystem;
@@ -40,7 +41,6 @@ import com.intellij.util.UriUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.keyFMap.KeyFMap;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +49,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -58,7 +57,7 @@ import java.util.List;
 public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl");
 
-  public static boolean CHECK = ApplicationManager.getApplication().isUnitTestMode();
+  private static final boolean CHECK = ApplicationManager.getApplication().isUnitTestMode();
 
   private static final VirtualDirectoryImpl NULL_VIRTUAL_FILE =
           new VirtualDirectoryImpl(-42, null, null, null, LocalFileSystem.getInstance()) {
@@ -67,6 +66,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
               return "NULL";
             }
           };
+
   private final VfsData.DirectoryData myData;
   private final NewVirtualFileSystem myFs;
 
@@ -139,6 +139,9 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     if (name.isEmpty()) {
       return null;
     }
+    if (!isValid()) {
+      throw new InvalidVirtualFileAccessException(this);
+    }
 
     VirtualFileSystemEntry found = doFindChildInArray(name, ignoreCase);
     if (found != null) return found;
@@ -193,7 +196,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     if (!child.isDirectory()) {
       // access check should only be called when child is actually added to the parent, otherwise it may break VirtualFilePointers validity
       //noinspection TestOnlyProblems
-      //VfsRootAccess.assertAccessInTests(child, getFileSystem());
+      VfsRootAccess.assertAccessInTests(child, getFileSystem());
     }
 
     return child;
@@ -216,8 +219,13 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   private VirtualFileSystemEntry createChild(int nameId, int id, @NotNull NewVirtualFileSystem delegate) {
     final int attributes = ourPersistence.getFileAttributes(id);
     VfsData.Segment segment = VfsData.getSegment(id, true);
-    VfsData.initFile(id, segment, nameId,
-                     PersistentFS.isDirectory(attributes) ? new VfsData.DirectoryData() : KeyFMap.EMPTY_MAP);
+    try {
+      VfsData.initFile(id, segment, nameId,
+                       PersistentFS.isDirectory(attributes) ? new VfsData.DirectoryData() : KeyFMap.EMPTY_MAP);
+    }
+    catch (VfsData.FileAlreadyCreatedException e) {
+      throw new RuntimeException("dir=" + myId + "; dir.children=" + Arrays.toString(FSRecords.listAll(myId)), e);
+    }
     LOG.assertTrue(!(getFileSystem() instanceof Win32LocalFileSystem));
 
     VirtualFileSystemEntry child = VfsData.getFileById(id, this);
@@ -281,6 +289,9 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   @Override
   @NotNull
   public VirtualFile[] getChildren() {
+    if (!isValid()) {
+      throw new InvalidVirtualFileAccessException(this);
+    }
     NewVirtualFileSystem delegate = getFileSystem();
     final boolean ignoreCase = !delegate.isCaseSensitive();
     synchronized (myData) {
@@ -296,23 +307,20 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
         result = ArrayUtil.EMPTY_INT_ARRAY;
       }
       else {
-        Arrays.sort(childrenIds, new Comparator<FSRecords.NameId>() {
-          @Override
-          public int compare(FSRecords.NameId o1, FSRecords.NameId o2) {
-            CharSequence name1 = o1.name;
-            CharSequence name2 = o2.name;
-            int cmp = compareNames(name1, name2, ignoreCase);
-            if (cmp == 0 && name1 != name2) {
-              LOG.error(ourPersistence + " returned duplicate file names("+name1+","+name2+")" +
-                        " ignoreCase: "+ignoreCase+
-                        " SystemInfo.isFileSystemCaseSensitive: "+ SystemInfo.isFileSystemCaseSensitive+
-                        " SystemInfo.OS: "+ SystemInfo.OS_NAME+" "+SystemInfo.OS_VERSION+
-                        " wasChildrenLoaded: "+wasChildrenLoaded+
-                        " in the dir: "+VirtualDirectoryImpl.this+";" +
-                        " children: "+Arrays.toString(childrenIds));
-            }
-            return cmp;
+        Arrays.sort(childrenIds, (o1, o2) -> {
+          CharSequence name1 = o1.name;
+          CharSequence name2 = o2.name;
+          int cmp = compareNames(name1, name2, ignoreCase);
+          if (cmp == 0 && name1 != name2) {
+            LOG.error(ourPersistence + " returned duplicate file names(" + name1 + "," + name2 + ")" +
+                      " ignoreCase: " + ignoreCase +
+                      " SystemInfo.isFileSystemCaseSensitive: " + SystemInfo.isFileSystemCaseSensitive +
+                      " SystemInfo.OS: " + SystemInfo.OS_NAME + " " + SystemInfo.OS_VERSION +
+                      " wasChildrenLoaded: " + wasChildrenLoaded +
+                      " in the dir: " + this + ";" +
+                      " children: " + Arrays.toString(childrenIds));
           }
+          return cmp;
         });
         TIntHashSet prevChildren = new TIntHashSet(myData.myChildrenIds);
         result = new int[childrenIds.length];
@@ -354,37 +362,31 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
       CharSequence prevName = VfsData.getNameByFileId(prev);
       int cmp = compareNames(name, prevName, ignoreCase);
       if (cmp <= 0) {
-        error(verboseToString.fun(VfsData.getFileById(prev, this)) + " is wrongly placed before " + verboseToString.fun(VfsData.getFileById(id, this)), getArraySafely(), details);
+        error(verboseToString.fun(VfsData.getFileById(prev, this)) +
+              " is wrongly placed before " +
+              verboseToString.fun(VfsData.getFileById(id, this)), getArraySafely(), details);
       }
     }
   }
 
-  private static final Function<VirtualFileSystemEntry, String> verboseToString = new Function<VirtualFileSystemEntry, String>() {
-    @Override
-    public String fun(VirtualFileSystemEntry file) {
-      if (file == null) return "null";
-      //noinspection HardCodedStringLiteral
-      return file + " (name: '" + file.getName()
-             + "', " + file.getClass()
-             + ", parent: "+file.getParent()
-             + "; id: "+file.getId()
-             + "; FS: " +file.getFileSystem()
-             + "; delegate.attrs: " +file.getFileSystem().getAttributes(file)
-             + "; caseSensitive: " +file.getFileSystem().isCaseSensitive()
-             + "; canonical: " +file.getFileSystem().getCanonicallyCasedName(file)
-             + ") ";
-    }
+  private static final Function<VirtualFileSystemEntry, String> verboseToString = file -> {
+    if (file == null) return "null";
+    return file + " (name: '" + file.getName()
+           + "', " + file.getClass()
+           + ", parent: "+file.getParent()
+           + "; id: "+file.getId()
+           + "; FS: " +file.getFileSystem()
+           + "; delegate.attrs: " +file.getFileSystem().getAttributes(file)
+           + "; caseSensitive: " +file.getFileSystem().isCaseSensitive()
+           + "; canonical: " +file.getFileSystem().getCanonicallyCasedName(file)
+           + ") ";
   };
-  private static void error(@NonNls String message, VirtualFileSystemEntry[] array, Object... details) {
+
+  private static void error(String message, VirtualFileSystemEntry[] array, Object... details) {
     String children = StringUtil.join(array, verboseToString, ",");
     throw new AssertionError(
             message + "; children: " + children + "\nDetails: " + ContainerUtil.map(
-                    details, new Function<Object, Object>() {
-              @Override
-              public Object fun(Object o) {
-                return o instanceof Object[] ? Arrays.toString((Object[])o) : o;
-              }
-            }));
+                    details, o -> o instanceof Object[] ? Arrays.toString((Object[])o) : o));
   }
 
   @Override
@@ -465,6 +467,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     }
   }
 
+  @SuppressWarnings("Duplicates")
   private static int findIndex(final int[] array, @NotNull CharSequence name, boolean ignoreCase) {
     int low = 0;
     int high = array.length - 1;
@@ -472,17 +475,12 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     while (low <= high) {
       int mid = low + high >>> 1;
       int cmp = -compareNames(VfsData.getNameByFileId(array[mid]), name, ignoreCase);
-      if (cmp > 0) {
-        low = mid + 1;
-      }
-      else if (cmp < 0) {
-        high = mid - 1;
-      }
-      else {
-        return mid; // key found
-      }
+      if (cmp > 0) low = mid + 1;
+      else if (cmp < 0) high = mid - 1;
+      else return mid;
     }
-    return -(low + 1);  // key not found.
+
+    return -(low + 1);
   }
 
   private static int compareNames(@NotNull CharSequence name1, @NotNull CharSequence name2, boolean ignoreCase) {
@@ -504,7 +502,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   @Override
   @NotNull
   public List<VirtualFile> getCachedChildren() {
-    return Arrays.<VirtualFile>asList(getArraySafely());
+    return Arrays.asList(getArraySafely());
   }
 
   @Override

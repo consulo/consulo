@@ -162,7 +162,7 @@ public class BasicsTest extends IntegrationTestCase {
     f.setLastModified(f.lastModified() + 10000);
 
     LocalFileSystem.getInstance().refreshWithoutFileWatcher(false);
-    StandardFileSystems.jar().refreshWithoutFileWatcher(false);
+    StandardFileSystems.jar().refresh(false);
     jarRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(vfile);
     assertEquals(2, jarRoot.findChild("file.txt").contentsToByteArray()[0]);
 

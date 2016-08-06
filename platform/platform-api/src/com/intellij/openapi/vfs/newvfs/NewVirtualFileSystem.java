@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * @author max
  */
-public abstract class NewVirtualFileSystem extends VirtualFileSystem implements FileSystemInterface, CachingVirtualFileSystem {
+public abstract class NewVirtualFileSystem implements FileSystemInterface, CachingVirtualFileSystem, VirtualFileSystem {
   private final Map<VirtualFileListener, VirtualFileListener> myListenerWrappers = new HashMap<VirtualFileListener, VirtualFileListener>();
 
   @Nullable

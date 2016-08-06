@@ -27,13 +27,13 @@ import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredWriteAction;
 import org.mustbe.consulo.roots.ContentFolderScopes;
@@ -47,8 +47,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectRootManagerImpl");
 
   protected final Project myProject;
-
-  private long myModificationCount = 0;
 
   private final OrderRootsCache myRootsCache;
 
@@ -230,8 +228,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   @Override
   public void mergeRootsChangesDuring(@NotNull Runnable runnable) {
     if (getBatchSession(false).myBatchLevel == 0 && !myMergedCallStarted) {
-      LOG.assertTrue(myRootsChangesDepth == 0,
-                     "Merged rootsChanged not allowed inside rootsChanged, rootsChanged level == " + myRootsChangesDepth);
+      LOG.assertTrue(myRootsChangesDepth == 0, "Merged rootsChanged not allowed inside rootsChanged, rootsChanged level == " + myRootsChangesDepth);
       myMergedCallStarted = true;
       myMergedCallHasRootChange = false;
       try {
@@ -325,7 +322,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
     clearScopesCaches();
 
-    myModificationCount++;
+    incModificationCount();
 
     PsiManager psiManager = PsiManager.getInstance(myProject);
     psiManager.dropResolveCaches();
@@ -387,8 +384,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     }
   }
 
-  void addListenerForTable(LibraryTable.Listener libraryListener,
-                           final LibraryTable libraryTable) {
+  void addListenerForTable(LibraryTable.Listener libraryListener, final LibraryTable libraryTable) {
     LibraryTableMultilistener multilistener = myLibraryTableMultilisteners.get(libraryTable);
     if (multilistener == null) {
       multilistener = new LibraryTableMultilistener(libraryTable);
@@ -404,8 +400,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     myModuleExtensionWithSdkOrderEntries.remove(orderEntry);
   }
 
-  void removeListenerForTable(LibraryTable.Listener libraryListener,
-                              final LibraryTable libraryTable) {
+  void removeListenerForTable(LibraryTable.Listener libraryListener, final LibraryTable libraryTable) {
     LibraryTableMultilistener multilistener = myLibraryTableMultilisteners.get(libraryTable);
     if (multilistener == null) {
       multilistener = new LibraryTableMultilistener(libraryTable);
@@ -413,8 +408,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     multilistener.removeListener(libraryListener);
   }
 
-  private final Map<LibraryTable, LibraryTableMultilistener> myLibraryTableMultilisteners
-    = new HashMap<LibraryTable, LibraryTableMultilistener>();
+  private final Map<LibraryTable, LibraryTableMultilistener> myLibraryTableMultilisteners = new HashMap<LibraryTable, LibraryTableMultilistener>();
 
   private class LibraryTableMultilistener implements LibraryTable.Listener {
     final List<LibraryTable.Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -440,7 +434,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
     @Override
     public void afterLibraryAdded(final Library newLibrary) {
-      myModificationCount++;
+      incModificationCount();
       mergeRootsChangesDuring(new Runnable() {
         @Override
         public void run() {
@@ -453,7 +447,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
     @Override
     public void afterLibraryRenamed(final Library library) {
-      myModificationCount++;
+      incModificationCount();
       mergeRootsChangesDuring(new Runnable() {
         @Override
         public void run() {
@@ -466,7 +460,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
     @Override
     public void beforeLibraryRemoved(final Library library) {
-      myModificationCount++;
+      incModificationCount();
       mergeRootsChangesDuring(new Runnable() {
         @Override
         public void run() {
@@ -479,7 +473,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
     @Override
     public void afterLibraryRemoved(final Library library) {
-      myModificationCount++;
+      incModificationCount();
       mergeRootsChangesDuring(new Runnable() {
         @Override
         public void run() {
@@ -489,10 +483,5 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
         }
       });
     }
-  }
-
-  @Override
-  public long getModificationCount() {
-    return myModificationCount;
   }
 }

@@ -15,10 +15,10 @@
  */
 package org.consulo.compiler.server.fileSystem.archive;
 
-import com.intellij.openapi.vfs.ArchiveEntry;
-import com.intellij.openapi.vfs.ArchiveFile;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.vfs.ArchiveFileSystem;
+import consulo.vfs.impl.archive.ArchiveEntry;
+import consulo.vfs.impl.archive.ArchiveFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

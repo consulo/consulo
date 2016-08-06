@@ -13,30 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.impl.archive;
+package consulo.vfs.impl.zip;
 
+import com.intellij.ide.highlighter.ZipArchiveFileType;
+import consulo.vfs.impl.archive.ArchiveFile;
+import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NotNull;
 
-public class ArchiveHandlerEntry {
-  private final boolean isDirectory;
-  private final String shortName;
-  private final ArchiveHandlerEntry parent;
+import java.io.IOException;
 
-  public ArchiveHandlerEntry(@NotNull String shortName, final ArchiveHandlerEntry parent, final boolean directory) {
-    this.shortName = shortName;
-    this.parent = parent;
-    isDirectory = directory;
+/**
+ * @author VISTALL
+ * @since 16:43/14.07.13
+ */
+public class ZipFileSystemImpl extends ArchiveFileSystemBase {
+  public ZipFileSystemImpl() {
+    super(ZipArchiveFileType.PROTOCOL);
   }
 
- public ArchiveHandlerEntry getParent() {
-   return parent;
- }
-
-  public boolean isDirectory() {
-    return isDirectory;
-  }
-
-  public String getShortName() {
-    return shortName;
+  @NotNull
+  @Override
+  public ArchiveFile createArchiveFile(@NotNull String filePath) throws IOException {
+    return new ZipArchiveFile(filePath);
   }
 }

@@ -15,22 +15,39 @@
  */
 package com.intellij.util.indexing;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileWithId;
-import consulo.lombok.annotations.Logger;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.BitSet;
 
 /**
  * Created by Maxim.Mossienko on 8/14/13.
  */
-@Logger
 public abstract class IdFilter {
-  public static IdFilter getProjectIdFilter(Project project, boolean includeNonProjectItems) {
+  public static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.gotoByName.DefaultFileNavigationContributor");
+  private static final Key<CachedValue<IdFilter>> INSIDE_PROJECT = Key.create("INSIDE_PROJECT");
+  private static final Key<CachedValue<IdFilter>> OUTSIDE_PROJECT = Key.create("OUTSIDE_PROJECT");
+
+  public static IdFilter getProjectIdFilter(final Project project, final boolean includeNonProjectItems) {
+    Key<CachedValue<IdFilter>> key = includeNonProjectItems ? OUTSIDE_PROJECT : INSIDE_PROJECT;
+    return CachedValuesManager.getManager(project).getCachedValue(project, key, () -> CachedValueProvider.Result
+            .create(buildProjectIdFilter(project, includeNonProjectItems), ProjectRootManager.getInstance(project),
+                    VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS), false);
+  }
+
+  @NotNull
+  private static IdFilter buildProjectIdFilter(Project project, boolean includeNonProjectItems) {
     long started = System.currentTimeMillis();
     final BitSet idSet = new BitSet();
 
@@ -47,12 +64,13 @@ public abstract class IdFilter {
 
     if (!includeNonProjectItems) {
       ProjectRootManager.getInstance(project).getFileIndex().iterateContent(iterator);
-    } else {
+    }
+    else {
       FileBasedIndex.getInstance().iterateIndexableFiles(iterator, project, null);
     }
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Done filter " + (System.currentTimeMillis()  -started) + ":" + idSet.size());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Done filter " + (System.currentTimeMillis() - started) + ":" + idSet.size());
     }
     return new IdFilter() {
       @Override

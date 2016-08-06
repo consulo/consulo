@@ -24,10 +24,14 @@ import com.intellij.openapi.projectRoots.ex.SdkRootContainer;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.OrderRootTypeWithConvert;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ArchiveCopyingFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import consulo.lombok.annotations.Logger;
+import consulo.vfs.ArchiveFileSystem;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
@@ -208,7 +212,7 @@ public class SdkRootContainerImpl implements PersistentStateComponent<Element>, 
     if (root instanceof SimpleSdkRoot) {
       String url = ((SimpleSdkRoot)root).getUrl();
       String protocolId = VirtualFileManager.extractProtocol(url);
-      IVirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocolId);
+      VirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocolId);
       if (fileSystem instanceof ArchiveFileSystem) {
         String path = VirtualFileManager.extractPath(url);
 

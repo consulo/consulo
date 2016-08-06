@@ -19,12 +19,12 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.roots.ui.util.*;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
-import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
+import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -55,7 +55,7 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
       return forInvalidUrl(file.getPresentableUrl());
     }
 
-    final IVirtualFileSystem fileSystem = file.getFileSystem();
+    final VirtualFileSystem fileSystem = file.getFileSystem();
     if (fileSystem instanceof ArchiveFileSystem) {
       return new JarSubfileCellAppearance(file);
     }

@@ -18,13 +18,13 @@ package com.intellij.openapi.vfs.impl;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
+import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
@@ -37,6 +37,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.UIUtil;
+import consulo.testFramework.util.TestPathUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -255,7 +256,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     };
     final VirtualFilePointer jarParentPointer = createPointerByFile(jarParent, listener);
     final String pathInJar = jar.getPath().replace(File.separatorChar, '/') + ArchiveFileSystem.ARCHIVE_SEPARATOR;
-    final String jarUrl = VirtualFileManager.constructUrl(JarFileSystem.PROTOCOL, pathInJar);
+    final String jarUrl = VirtualFileManager.constructUrl(StandardFileSystems.JAR_PROTOCOL, pathInJar);
     final VirtualFilePointer jarPointer = myVirtualFilePointerManager.create(jarUrl, disposable, listener);
     pointersToWatch[0] = jarParentPointer;
     pointersToWatch[1] = jarPointer;
@@ -318,7 +319,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
       }
     };
     final String pathInJar = jar.getPath().replace(File.separatorChar, '/') + ArchiveFileSystem.ARCHIVE_SEPARATOR;
-    final String jarUrl = VirtualFileManager.constructUrl(JarFileSystem.PROTOCOL, pathInJar);
+    final String jarUrl = VirtualFileManager.constructUrl(StandardFileSystems.JAR_PROTOCOL, pathInJar);
     final VirtualFilePointer jarPointer = myVirtualFilePointerManager.create(jarUrl, disposable, listener);
     pointersToWatch[0] = jarPointer;
     assertTrue(jarPointer.isValid());

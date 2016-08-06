@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.intellij.util.indexing;
 
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -23,9 +24,12 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectAndLibrariesScope;
 import com.intellij.psi.search.ProjectScopeImpl;
-import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
+import com.intellij.util.Processors;
 import com.intellij.util.SystemProperties;
+import com.intellij.util.ThrowableRunnable;
+import com.intellij.util.containers.ConcurrentIntObjectMap;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
@@ -50,16 +54,17 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
   private static final boolean ENABLE_CACHED_HASH_IDS = SystemProperties.getBooleanProperty("idea.index.no.cashed.hashids", true);
   private final boolean myBuildKeyHashToVirtualFileMapping;
   private PersistentMap<Key, ValueContainer<Value>> myMap;
-  private PersistentBTreeEnumerator<int[]> myKeyHashToVirtualFileMapping;
+  private AppendableStorageBackedByResizableMappedFile myKeyHashToVirtualFileMapping;
   private SLRUCache<Key, ChangeTrackingValueContainer<Value>> myCache;
   private volatile int myLastScannedId;
-  private final File myStorageFile;
+  private final File myBaseStorageFile;
   private final KeyDescriptor<Key> myKeyDescriptor;
   private final int myCacheSize;
 
   private final Lock l = new ReentrantLock();
   private final DataExternalizer<Value> myDataExternalizer;
   private final boolean myKeyIsUniqueForIndexedFile;
+  private static final ConcurrentIntObjectMap<Boolean> ourInvalidatedSessionIds = ContainerUtil.createConcurrentIntObjectMap();
 
   public MapIndexStorage(@NotNull File storageFile,
                          @NotNull KeyDescriptor<Key> keyDescriptor,
@@ -75,7 +80,7 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
                          final int cacheSize,
                          boolean keyIsUniqueForIndexedFile,
                          boolean buildKeyHashToVirtualFileMapping) throws IOException {
-    myStorageFile = storageFile;
+    myBaseStorageFile = storageFile;
     myKeyDescriptor = keyDescriptor;
     myCacheSize = cacheSize;
     myDataExternalizer = valueExternalizer;
@@ -94,10 +99,12 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
   private void initMapAndCache() throws IOException {
     final ValueContainerMap<Key, Value> map;
     PersistentHashMapValueStorage.CreationTimeOptions.EXCEPTIONAL_IO_CANCELLATION.set(ourProgressManagerCheckCancelledIOCanceller);
+    PersistentHashMapValueStorage.CreationTimeOptions.COMPACT_CHUNKS_WITH_VALUE_DESERIALIZATION.set(Boolean.TRUE);
     try {
-      map = new ValueContainerMap<Key, Value>(myStorageFile, myKeyDescriptor, myDataExternalizer, myKeyIsUniqueForIndexedFile);
+      map = new ValueContainerMap<Key, Value>(getStorageFile(), myKeyDescriptor, myDataExternalizer, myKeyIsUniqueForIndexedFile);
     } finally {
       PersistentHashMapValueStorage.CreationTimeOptions.EXCEPTIONAL_IO_CANCELLATION.set(null);
+      PersistentHashMapValueStorage.CreationTimeOptions.COMPACT_CHUNKS_WITH_VALUE_DESERIALIZATION.set(null);
     }
     myCache = new SLRUCache<Key, ChangeTrackingValueContainer<Value>>(myCacheSize, (int)(Math.ceil(myCacheSize * 0.25)) /* 25% from the main cache size*/) {
       @Override
@@ -143,14 +150,28 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
 
     myMap = map;
 
-    myKeyHashToVirtualFileMapping = myBuildKeyHashToVirtualFileMapping ? new KeyHash2VirtualFileEnumerator(getProjectFile()) : null;
+    myKeyHashToVirtualFileMapping = myBuildKeyHashToVirtualFileMapping ?
+                                    new AppendableStorageBackedByResizableMappedFile(getProjectFile(), 4096, null, PagedFileStorage.MB, true) : null;
+  }
+
+  @NotNull
+  private File getStorageFile() {
+    return new File(myBaseStorageFile.getPath() + ".storage");
   }
 
   @NotNull
   private File getProjectFile() {
-    return new File(myStorageFile.getPath() + ".project");
+    return new File(myBaseStorageFile.getPath() + ".project");
   }
 
+  private <T extends Throwable> void withLock(ThrowableRunnable<T> r) throws T {
+    myKeyHashToVirtualFileMapping.getPagedFileStorage().lock();
+    try {
+      r.run();
+    } finally {
+      myKeyHashToVirtualFileMapping.getPagedFileStorage().unlock();
+    }
+  }
   @Override
   public void flush() {
     l.lock();
@@ -159,7 +180,9 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
         myCache.clear();
         if (myMap.isDirty()) myMap.force();
       }
-      if (myKeyHashToVirtualFileMapping != null && myKeyHashToVirtualFileMapping.isDirty()) myKeyHashToVirtualFileMapping.force();
+      if (myKeyHashToVirtualFileMapping != null && myKeyHashToVirtualFileMapping.isDirty()) {
+        withLock(() -> myKeyHashToVirtualFileMapping.force());
+      }
     }
     finally {
       l.unlock();
@@ -170,7 +193,9 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
   public void close() throws StorageException {
     try {
       flush();
-      if (myKeyHashToVirtualFileMapping != null) myKeyHashToVirtualFileMapping.close();
+      if (myKeyHashToVirtualFileMapping != null) {
+        withLock(() -> myKeyHashToVirtualFileMapping.close());
+      }
       myMap.close();
     }
     catch (IOException e) {
@@ -192,13 +217,15 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
   public void clear() throws StorageException{
     try {
       myMap.close();
-      if (myKeyHashToVirtualFileMapping != null) myKeyHashToVirtualFileMapping.close();
+      if (myKeyHashToVirtualFileMapping != null) {
+        withLock(() -> myKeyHashToVirtualFileMapping.close());
+      }
     }
-    catch (IOException e) {
+    catch (IOException|RuntimeException e) {
       LOG.error(e);
     }
     try {
-      FileUtil.delete(myStorageFile);
+      IOUtil.deleteAllFilesStartingWith(getStorageFile());
       if (myKeyHashToVirtualFileMapping != null) IOUtil.deleteAllFilesStartingWith(getProjectFile());
       initMapAndCache();
     }
@@ -230,12 +257,15 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
         final boolean useCachedHashIds = ENABLE_CACHED_HASH_IDS &&
                                          (scope instanceof ProjectScopeImpl || scope instanceof ProjectAndLibrariesScope) &&
                                          fileWithCaches != null;
-        int id = myKeyHashToVirtualFileMapping.getLargestId();
+        int id = myKeyHashToVirtualFileMapping.getCurrentLength();
 
         if (useCachedHashIds && id == myLastScannedId) {
-          try {
-            hashMaskSet = loadHashedIds(fileWithCaches);
-          } catch (IOException ignored) {
+          if (ourInvalidatedSessionIds.remove(id) == null) {
+            try {
+              hashMaskSet = loadHashedIds(fileWithCaches);
+            }
+            catch (IOException ignored) {
+            }
           }
         }
 
@@ -246,14 +276,16 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
 
           hashMaskSet = new TIntHashSet(1000);
           final TIntHashSet finalHashMaskSet = hashMaskSet;
-          myKeyHashToVirtualFileMapping.iterateData(new Processor<int[]>() {
-            @Override
-            public boolean process(int[] key) {
+          withLock(() -> {
+            myKeyHashToVirtualFileMapping.force();
+            ProgressManager.checkCanceled();
+
+            myKeyHashToVirtualFileMapping.processAll(key -> {
               if (!idFilter.containsFileId(key[1])) return true;
               finalHashMaskSet.add(key[0]);
               ProgressManager.checkCanceled();
               return true;
-            }
+            }, IntPairInArrayKeyDescriptor.INSTANCE);
           });
 
           if (useCachedHashIds) {
@@ -262,15 +294,12 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
         }
 
         if (LOG.isDebugEnabled()) {
-          LOG.debug("Scanned keyHashToVirtualFileMapping of " + myStorageFile + " for " + (System.currentTimeMillis() - l));
+          LOG.debug("Scanned keyHashToVirtualFileMapping of " + myBaseStorageFile + " for " + (System.currentTimeMillis() - l));
         }
         final TIntHashSet finalHashMaskSet = hashMaskSet;
-        return myMap.processKeys(new Processor<Key>() {
-          @Override
-          public boolean process(Key key) {
-            if (!finalHashMaskSet.contains(myKeyDescriptor.getHashCode(key))) return true;
-            return processor.process(key);
-          }
+        return myMap.processKeys(key -> {
+          if (!finalHashMaskSet.contains(myKeyDescriptor.getHashCode(key))) return true;
+          return processor.process(key);
         });
       }
       return myMap.processKeys(processor);
@@ -352,18 +381,36 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
     }
   }
 
+  private static volatile File mySessionDirectory;
+  private static File getSessionDir() {
+    File sessionDirectory = mySessionDirectory;
+    if (sessionDirectory == null) {
+      synchronized (MapIndexStorage.class) {
+        sessionDirectory = mySessionDirectory;
+        if (sessionDirectory == null) {
+          try {
+            mySessionDirectory = sessionDirectory = FileUtil.createTempDirectory(new File(PathManager.getTempPath()), Long.toString(System.currentTimeMillis()), "", true);
+          } catch (IOException ex) {
+            throw new RuntimeException("Can not create temp directory", ex);
+          }
+        }
+      }
+    }
+    return sessionDirectory;
+  }
+
   @Nullable
   private File getSavedProjectFileValueIds(int id, @NotNull GlobalSearchScope scope) {
     Project project = scope.getProject();
     if (project == null) return null;
-    return new File(myStorageFile.getPath() + ".project."+project.hashCode() + "."+id + "." + scope.isSearchInLibraries());
+    return new File(getSessionDir(), getProjectFile().getName() + "." + project.hashCode() + "." + id + "." + scope.isSearchInLibraries());
   }
 
   @NotNull
   @Override
   public Collection<Key> getKeys() throws StorageException {
     List<Key> keys = new ArrayList<Key>();
-    processKeys(new CommonProcessors.CollectProcessor<Key>(keys), null, null);
+    processKeys(Processors.cancelableCollectProcessor(keys), null, null);
     return keys;
   }
 
@@ -393,7 +440,12 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
   public void addValue(final Key key, final int inputId, final Value value) throws StorageException {
     try {
       if (myKeyHashToVirtualFileMapping != null) {
-        myKeyHashToVirtualFileMapping.enumerate(new int[] { myKeyDescriptor.getHashCode(key), inputId });
+        withLock(() -> myKeyHashToVirtualFileMapping.append(new int[] { myKeyDescriptor.getHashCode(key), inputId }, IntPairInArrayKeyDescriptor.INSTANCE));
+        int lastScannedId = myLastScannedId;
+        if (lastScannedId != 0) { // we have write lock
+          ourInvalidatedSessionIds.cacheOrGet(lastScannedId, Boolean.TRUE);
+          myLastScannedId = 0;
+        }
       }
 
       myMap.markDirty();
@@ -437,6 +489,7 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
   }
 
   private static class IntPairInArrayKeyDescriptor implements KeyDescriptor<int[]>, DifferentSerializableBytesImplyNonEqualityPolicy {
+    private static final IntPairInArrayKeyDescriptor INSTANCE = new IntPairInArrayKeyDescriptor();
     @Override
     public void save(@NotNull DataOutput out, int[] value) throws IOException {
       DataInputOutputUtil.writeINT(out, value[0]);
@@ -456,12 +509,6 @@ public final class MapIndexStorage<Key, Value> implements IndexStorage<Key, Valu
     @Override
     public boolean isEqual(int[] val1, int[] val2) {
       return val1[0] == val2[0] && val1[1] == val2[1];
-    }
-  }
-
-  private static class KeyHash2VirtualFileEnumerator extends PersistentBTreeEnumerator<int[]> {
-    public KeyHash2VirtualFileEnumerator(File projectFile) throws IOException {
-      super(projectFile, new IntPairInArrayKeyDescriptor(), 4096);
     }
   }
 }

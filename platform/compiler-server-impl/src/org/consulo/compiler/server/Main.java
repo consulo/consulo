@@ -25,7 +25,6 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TestDialog;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.impl.local.FileWatcher;
 import org.consulo.compiler.server.application.CompilerServerApplication;
 import org.consulo.compiler.server.rmi.CompilerClientInterface;
 import org.consulo.compiler.server.rmi.CompilerServerInterface;
@@ -56,7 +55,7 @@ public class Main {
 
     System.setProperty(PathManager.PROPERTY_PLUGINS_PATH, "G:\\target_for_build\\distMain\\plugins");
     System.setProperty(PathManager.PROPERTY_HOME_PATH, "G:\\target_for_build\\distMain");
-    System.setProperty(FileWatcher.PROPERTY_WATCHER_DISABLED, "true");
+    System.setProperty("idea.filewatcher.disabled", "true");
 
     LOGGER.info("Data dir: " + t.getAbsolutePath());
 

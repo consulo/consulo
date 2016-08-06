@@ -17,6 +17,7 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.io.URLUtil;
+import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,10 +26,10 @@ import org.jetbrains.annotations.NotNull;
 public class StandardFileSystems {
   public static final String FILE_PROTOCOL = URLUtil.FILE_PROTOCOL;
   public static final String FILE_PROTOCOL_PREFIX = FILE_PROTOCOL + URLUtil.SCHEME_SEPARATOR;
-  @Deprecated
+
   public static String JAR_PROTOCOL = "jar";
-  @Deprecated
   public static String JAR_PROTOCOL_PREFIX = "jar://";
+
   @Deprecated
   public static String JAR_SEPARATOR = "!/";
   @Deprecated
@@ -38,10 +39,10 @@ public class StandardFileSystems {
    */
   public static final String HTTP_PROTOCOL = URLUtil.HTTP_PROTOCOL;
 
-  private static final NotNullLazyValue<IVirtualFileSystem> ourLocal = new NotNullLazyValue<IVirtualFileSystem>() {
+  private static final NotNullLazyValue<VirtualFileSystem> ourLocal = new NotNullLazyValue<VirtualFileSystem>() {
     @NotNull
     @Override
-    protected IVirtualFileSystem compute() {
+    protected VirtualFileSystem compute() {
       return VirtualFileManager.getInstance().getFileSystem(FILE_PROTOCOL);
     }
   };
@@ -54,7 +55,7 @@ public class StandardFileSystems {
     }
   };
 
-  public static IVirtualFileSystem local() {
+  public static VirtualFileSystem local() {
     return ourLocal.getValue();
   }
 

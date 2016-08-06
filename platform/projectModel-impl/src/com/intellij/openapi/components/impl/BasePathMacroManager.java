@@ -25,10 +25,10 @@ import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.containers.FactoryMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
@@ -72,7 +72,7 @@ public class BasePathMacroManager extends PathMacroManager {
     }
   }
 
-  private static IVirtualFileSystem getLocalFileSystem() {
+  private static VirtualFileSystem getLocalFileSystem() {
     // Use VFM directly because of mocks in tests.
     return VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL);
   }

@@ -20,7 +20,6 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.openapi.vfs.impl.local.FileWatcher;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +32,7 @@ public class CommandLineApplication {
   protected static CommandLineApplication ourInstance = null;
 
   static {
-    System.setProperty(FileWatcher.PROPERTY_WATCHER_DISABLED, Boolean.TRUE.toString());
+    System.setProperty("idea.filewatcher.disabled", Boolean.TRUE.toString());
   }
 
   protected CommandLineApplication() {}

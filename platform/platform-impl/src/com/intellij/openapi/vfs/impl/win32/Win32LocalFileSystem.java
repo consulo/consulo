@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class Win32LocalFileSystem extends LocalFileSystemBase {
   @NotNull
   @Override
   public String[] list(@NotNull VirtualFile file) {
-    return myFsCache.list(file.getPath());
+    return myFsCache.list(file);
   }
 
   @Override
@@ -63,16 +63,6 @@ public class Win32LocalFileSystem extends LocalFileSystemBase {
   }
 
   @NotNull
-  @Override
-  public Set<WatchRequest> addRootsToWatch(@NotNull Collection<String> rootPaths, boolean watchRecursively) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void removeWatchedRoots(@NotNull Collection<WatchRequest> watchRequests) {
-    throw new UnsupportedOperationException();
-  }
-
   @Override
   public Set<WatchRequest> replaceWatchedRoots(@NotNull Collection<WatchRequest> watchRequests,
                                                @Nullable Collection<String> recursiveRoots,

@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.impl.zip;
+package consulo.vfs.impl.zip;
 
-import com.intellij.openapi.vfs.ArchiveEntry;
+import consulo.vfs.impl.archive.ArchiveEntry;
 
 import java.util.zip.ZipEntry;
 
 /**
  * @author VISTALL
  * @since 18:41/13.07.13
- *
- * Class extracted from JarHandler base - due common api ill used in PHP and others plugins
  */
 public class ZipArchiveEntry implements ArchiveEntry {
   private final ZipEntry myEntry;

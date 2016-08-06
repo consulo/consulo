@@ -33,7 +33,6 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -48,6 +47,7 @@ import com.intellij.packaging.impl.util.DeploymentUtilImpl;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 

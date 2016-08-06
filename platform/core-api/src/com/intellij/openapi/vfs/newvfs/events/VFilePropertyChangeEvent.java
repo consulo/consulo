@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package com.intellij.openapi.vfs.newvfs.events;
 
 import com.intellij.openapi.util.Comparing;
@@ -27,6 +23,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @author max
+ */
 public class VFilePropertyChangeEvent extends VFileEvent {
   private final VirtualFile myFile;
   private final String myPropertyName;
@@ -91,6 +90,7 @@ public class VFilePropertyChangeEvent extends VFileEvent {
     return myPropertyName;
   }
 
+  @NotNull
   @Override
   public String getPath() {
     return myFile.getPath();
@@ -131,10 +131,22 @@ public class VFilePropertyChangeEvent extends VFileEvent {
     return result;
   }
 
+  @Override
   @NotNull
   @NonNls
   public String toString() {
     return "VfsEvent[property(" + myPropertyName + ") changed for '" + myFile + "':" +
            " oldValue = " + myOldValue + ", newValue = " + myNewValue + "]";
+  }
+
+  @NotNull
+  public String getOldPath() {
+    String path = getPath();
+    if (VirtualFile.PROP_NAME.equals(myPropertyName) && myNewValue instanceof String && myOldValue instanceof String) {
+      String newName = (String)myNewValue;
+      int i = path.lastIndexOf(newName);
+      if (i != -1) path = new StringBuilder(path).replace(i, i + newName.length(), (String)myOldValue).toString();
+    }
+    return path;
   }
 }

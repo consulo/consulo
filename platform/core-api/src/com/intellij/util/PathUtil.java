@@ -19,10 +19,10 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.LocalFileProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -99,7 +99,11 @@ public class PathUtil {
   }
 
   public static boolean isValidFileName(@NotNull String fileName) {
-    return PathUtilRt.isValidFileName(fileName);
+    return PathUtilRt.isValidFileName(fileName, true);
+  }
+
+  public static boolean isValidFileName(@NotNull String fileName, boolean strict) {
+    return PathUtilRt.isValidFileName(fileName, strict);
   }
 
   @Contract("null -> null; !null -> !null")

@@ -33,6 +33,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
@@ -321,7 +322,9 @@ public class PsiTestUtil {
       final String path = libPath + jar;
       VirtualFile root;
       if (path.endsWith(".jar")) {
-        root = StandardFileSystems.jar().refreshAndFindFileByPath(path + "!/");
+        VirtualFile local = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+        assert local != null;
+        root = ArchiveVfsUtil.getArchiveRootForLocalFile(local);
       }
       else {
         root = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
@@ -338,7 +341,7 @@ public class PsiTestUtil {
                                 final String[] classRoots,
                                 final String[] sourceRoots) {
     final String parentUrl =
-      VirtualFileManager.constructUrl(classRoots[0].endsWith(".jar!/") ? JarFileSystem.PROTOCOL : LocalFileSystem.PROTOCOL, libDir);
+      VirtualFileManager.constructUrl(classRoots[0].endsWith(".jar!/") ? StandardFileSystems.JAR_PROTOCOL : LocalFileSystem.PROTOCOL, libDir);
     List<String> classesUrls = new ArrayList<String>();
     List<String> sourceUrls = new ArrayList<String>();
     for (String classRoot : classRoots) {

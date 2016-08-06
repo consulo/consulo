@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,53 +15,22 @@
  */
 package com.intellij.openapi.vfs.impl.jar;
 
-import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.impl.archive.ArchiveHandler;
-import com.intellij.openapi.vfs.impl.zip.ZipHandler;
-import com.intellij.util.messages.MessageBus;
-import org.consulo.vfs.ArchiveFileSystemBase;
+import com.intellij.openapi.vfs.StandardFileSystems;
+import consulo.vfs.impl.archive.ArchiveFile;
+import consulo.vfs.impl.archive.ArchiveFileSystemBase;
+import consulo.vfs.impl.zip.ZipArchiveFile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
+import java.io.IOException;
 
-public class JarFileSystemImpl extends ArchiveFileSystemBase implements JarFileSystem, ApplicationComponent {
-  public JarFileSystemImpl(MessageBus bus) {
-    super(bus);
+public class JarFileSystemImpl extends ArchiveFileSystemBase {
+  public JarFileSystemImpl() {
+    super(StandardFileSystems.JAR_PROTOCOL);
   }
 
-  @Override
-  public ArchiveHandler createHandler(ArchiveFileSystem fileSystem, String path) {
-    return new ZipHandler(fileSystem, path);
-  }
-
-  @Override
   @NotNull
-  public String getComponentName() {
-    return "JarFileSystem";
-  }
-
   @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Nullable
-  public File getMirroredFile(@NotNull VirtualFile vFile) {
-    VirtualFile jar = findByPathWithSeparator(vFile);
-    final ArchiveHandler handler = jar != null ? getHandler(jar) : null;
-    return handler != null ? handler.getMirrorFile(new File(vFile.getPath())) : null;
-  }
-
-  @Override
-  @NotNull
-  public String getProtocol() {
-    return PROTOCOL;
+  public ArchiveFile createArchiveFile(@NotNull String filePath) throws IOException{
+    return new ZipArchiveFile(filePath);
   }
 }

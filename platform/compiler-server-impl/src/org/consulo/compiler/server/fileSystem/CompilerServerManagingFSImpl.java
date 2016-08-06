@@ -15,7 +15,6 @@
  */
 package org.consulo.compiler.server.fileSystem;
 
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
@@ -25,8 +24,9 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.PathUtil;
+import consulo.vfs.ArchiveFileSystem;
+import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import org.consulo.compiler.server.fileSystem.archive.ArchiveNewVirtualFile;
-import org.consulo.vfs.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredWriteAction;
@@ -64,6 +64,11 @@ public class CompilerServerManagingFSImpl extends PersistentFS {
   @Override
   public String getName(int id) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public long getLastRecordedLength(@NotNull VirtualFile file) {
+    return 0;
   }
 
   @Override

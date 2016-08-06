@@ -19,7 +19,11 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.IoTestUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.StandardFileSystems;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileWithId;
+import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
@@ -81,7 +85,7 @@ public class PersistentFSTest extends PlatformTestCase {
     LocalFileSystem lfs = LocalFileSystem.getInstance();
     VirtualFile vx = lfs.refreshAndFindFileByIoFile(x);
     assertNotNull(vx);
-    ArchiveFileSystem jfs = StandardFileSystems.jar();
+    ArchiveFileSystem jfs = (ArchiveFileSystem)StandardFileSystems.jar();
     VirtualFile root = ArchiveVfsUtil.getArchiveRootForLocalFile(vx);
 
     PersistentFS fs = PersistentFS.getInstance();

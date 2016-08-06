@@ -16,14 +16,14 @@
 package org.consulo.compiler.server.fileSystem.archive;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.ArchiveEntry;
-import com.intellij.openapi.vfs.ArchiveFile;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import consulo.lombok.annotations.Logger;
-import org.consulo.vfs.ArchiveFileSystemBase;
+import consulo.vfs.ArchiveFileSystem;
+import consulo.vfs.impl.archive.ArchiveEntry;
+import consulo.vfs.impl.archive.ArchiveFile;
+import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +53,7 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
     myFileSystem = fileSystem;
 
     try {
-      ArchiveFile jarFile = fileSystem.getArchiveWrapperFile(this);
+      ArchiveFile jarFile = fileSystem.createArchiveFile(myParent.getPath());
 
       Iterator<? extends ArchiveEntry> entries = jarFile.entries();
       while (entries.hasNext()) {

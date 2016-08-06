@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.intellij.openapi.vfs.newvfs.impl;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileTooBigException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -98,7 +97,11 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   @NotNull
   @Override
   public CharSequence getNameSequence() {
-    return FileNameCache.getVFileName(mySegment.getNameId(myId));
+    return FileNameCache.getVFileName(getNameId());
+  }
+
+  public final int getNameId() {
+    return mySegment.getNameId(myId);
   }
 
   @Override
@@ -204,10 +207,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   @Override
   public void rename(final Object requestor, @NotNull @NonNls final String newName) throws IOException {
     if (getName().equals(newName)) return;
-    if (!isValidName(newName)) {
-      throw new IOException(VfsBundle.message("file.invalid.name.error", newName));
-    }
-
+    validateName(newName);
     ourPersistence.renameFile(requestor, this, newName);
   }
 
@@ -253,12 +253,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
       throw new IOException(VfsBundle.message("file.copy.target.must.be.directory"));
     }
 
-    return EncodingRegistry.doActionAndRestoreEncoding(this, new ThrowableComputable<VirtualFile, IOException>() {
-      @Override
-      public VirtualFile compute() throws IOException {
-        return ourPersistence.copyFile(requestor, VirtualFileSystemEntry.this, newParent, copyName);
-      }
-    });
+    return EncodingRegistry.doActionAndRestoreEncoding(this, () -> ourPersistence.copyFile(requestor, this, newParent, copyName));
   }
 
   @Override
@@ -267,12 +262,9 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
       throw new IOException(VfsBundle.message("file.move.error", newParent.getPresentableUrl()));
     }
 
-    EncodingRegistry.doActionAndRestoreEncoding(this, new ThrowableComputable<VirtualFile, IOException>() {
-      @Override
-      public VirtualFile compute() throws IOException {
-        ourPersistence.moveFile(requestor, VirtualFileSystemEntry.this, newParent);
-        return VirtualFileSystemEntry.this;
-      }
+    EncodingRegistry.doActionAndRestoreEncoding(this, () -> {
+      ourPersistence.moveFile(requestor, this, newParent);
+      return this;
     });
   }
 
@@ -298,8 +290,8 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     return ourPersistence.createChildDirectory(requestor, this, name);
   }
 
-  private static void validateName(@NotNull String name) throws IOException {
-    if (!isValidName(name)) {
+  private void validateName(@NotNull String name) throws IOException {
+    if (!getFileSystem().isValidName(name)) {
       throw new IOException(VfsBundle.message("file.invalid.name.error", name));
     }
   }
@@ -319,7 +311,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   }
 
   public void setNewName(@NotNull String newName) {
-    if (!isValidName(newName)) {
+    if (!getFileSystem().isValidName(newName)) {
       throw new IllegalArgumentException(VfsBundle.message("file.invalid.name.error", newName));
     }
 

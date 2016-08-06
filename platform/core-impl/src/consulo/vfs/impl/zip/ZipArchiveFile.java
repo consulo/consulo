@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.impl.zip;
+package consulo.vfs.impl.zip;
 
-import com.intellij.openapi.vfs.ArchiveEntry;
-import com.intellij.openapi.vfs.ArchiveFile;
+import consulo.vfs.impl.archive.ArchiveEntry;
+import consulo.vfs.impl.archive.ArchiveFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -33,8 +33,14 @@ import java.util.zip.ZipFile;
 public class ZipArchiveFile implements ArchiveFile {
   private final ZipFile myZipFile;
 
-  public ZipArchiveFile(ZipFile zipFile) {
-    myZipFile = zipFile;
+  public ZipArchiveFile(@NotNull String path) throws IOException{
+    myZipFile = new ZipFile(path);
+  }
+
+  @NotNull
+  @Override
+  public String getName() {
+    return myZipFile.getName();
   }
 
   @Override
@@ -45,7 +51,7 @@ public class ZipArchiveFile implements ArchiveFile {
   }
 
   @Override
-  public InputStream getInputStream(ArchiveEntry entry) throws IOException {
+  public InputStream getInputStream(@NotNull ArchiveEntry entry) throws IOException {
     return myZipFile.getInputStream(((ZipArchiveEntry)entry).getEntry());
   }
 

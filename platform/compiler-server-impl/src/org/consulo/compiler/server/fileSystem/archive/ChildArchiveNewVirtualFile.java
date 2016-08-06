@@ -15,12 +15,12 @@
  */
 package org.consulo.compiler.server.fileSystem.archive;
 
-import com.intellij.openapi.vfs.ArchiveEntry;
-import com.intellij.openapi.vfs.ArchiveFile;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
+import consulo.vfs.ArchiveFileSystem;
+import consulo.vfs.impl.archive.ArchiveEntry;
+import consulo.vfs.impl.archive.ArchiveFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,7 +80,7 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
   @Override
   public String getPath() {
     StringBuilder builder = new StringBuilder();
-    if(myParentDir != null) {
+    if (myParentDir != null) {
       builder.append(myParentDir.getPath());
       builder.append("/");
     }
@@ -206,7 +206,7 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
 
   @Override
   public boolean equals(Object obj) {
-    if(obj instanceof VirtualFile) {
+    if (obj instanceof VirtualFile) {
       return getUrl().equals(((VirtualFile)obj).getUrl());
     }
     return false;

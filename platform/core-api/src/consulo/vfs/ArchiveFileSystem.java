@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs;
+package consulo.vfs;
 
-import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.vfs.ArchiveCopyingFileSystem;
+import com.intellij.openapi.vfs.LocalFileProvider;
+import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.util.io.URLUtil;
 import org.mustbe.consulo.DeprecationInfo;
 
-@Deprecated
-public interface JarFileSystem extends ArchiveFileSystem {
-  @NonNls
-  String PROTOCOL = "jar";
-  @NonNls
-  String PROTOCOL_PREFIX = "jar://";
-  @NonNls
-  @Deprecated
-  @DeprecationInfo(value = "Use #ARCHIVE_SEPARATOR", until = "3.0")
-  String JAR_SEPARATOR = ARCHIVE_SEPARATOR;
+/**
+ * @author VISTALL
+ * @since 06-Aug-16
+ */
+public interface ArchiveFileSystem extends VirtualFileSystem, ArchiveCopyingFileSystem, LocalFileProvider {
+  @Deprecated @DeprecationInfo("Use URLUtil#ARCHIVE_SEPARATOR") String ARCHIVE_SEPARATOR = URLUtil.ARCHIVE_SEPARATOR;
 }

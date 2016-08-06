@@ -18,7 +18,6 @@ package com.intellij.util.indexing;
 import com.intellij.ProjectTopics;
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.caches.FileContent;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -34,7 +33,6 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -71,6 +69,8 @@ public class UnindexedFilesUpdater extends DumbModeTask {
     indicator.setIndeterminate(true);
     indicator.setText(IdeBundle.message("progress.indexing.scanning"));
 
+    myIndex.clearIndicesIfNecessary();
+
     CollectingContentIterator finder = myIndex.createContentIterator(indicator);
     snapshot = PerformanceWatcher.takeSnapshot();
 
@@ -104,12 +104,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
   }
 
   private void indexFiles(ProgressIndicator indicator, List<VirtualFile> files) {
-    CacheUpdateRunner.processFiles(indicator, true, files, myProject, new Consumer<FileContent>() {
-      @Override
-      public void consume(FileContent content) {
-        myIndex.indexFileContent(myProject, content);
-      }
-    });
+    CacheUpdateRunner.processFiles(indicator, true, files, myProject, content -> myIndex.indexFileContent(myProject, content));
   }
 
   @Override

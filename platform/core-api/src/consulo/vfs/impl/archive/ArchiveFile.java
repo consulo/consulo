@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs;
+package consulo.vfs.impl.archive;
 
 import com.intellij.util.containers.EmptyIterator;
 import org.jetbrains.annotations.NotNull;
@@ -23,11 +23,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
-/**
- * Encapsulates operations with archive file
- */
 public interface ArchiveFile {
   ArchiveFile EMPTY = new ArchiveFile() {
+    @NotNull
+    @Override
+    public String getName() {
+      throw new UnsupportedOperationException();
+    }
+
     @Nullable
     @Override
     public ArchiveEntry getEntry(String name) {
@@ -36,7 +39,7 @@ public interface ArchiveFile {
 
     @Nullable
     @Override
-    public InputStream getInputStream(ArchiveEntry entry) throws IOException {
+    public InputStream getInputStream(@NotNull ArchiveEntry entry) throws IOException {
       return null;
     }
 
@@ -52,11 +55,14 @@ public interface ArchiveFile {
     }
   };
 
+  @NotNull
+  String getName();
+
   @Nullable
   ArchiveEntry getEntry(String name);
 
   @Nullable
-  InputStream getInputStream(ArchiveEntry entry) throws IOException;
+  InputStream getInputStream(@NotNull ArchiveEntry entry) throws IOException;
 
   @NotNull
   Iterator<? extends ArchiveEntry> entries();

@@ -60,12 +60,11 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.vfs.JarFileSystem</interface-class>
       <implementation-class>com.intellij.openapi.vfs.impl.jar.JarFileSystemImpl</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.vfs.impl.zip.ZipFileSystemImpl</implementation-class>
+      <implementation-class>consulo.vfs.impl.zip.ZipFileSystemImpl</implementation-class>
     </component>
 
     <component>

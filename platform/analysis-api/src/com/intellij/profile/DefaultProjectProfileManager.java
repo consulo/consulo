@@ -240,7 +240,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     return profile;
   }
 
-  public void addProfilesListener(@NotNull final ProfileChangeAdapter profilesListener, @NotNull Disposable parent) {
+  public void addProfileChangeListener(@NotNull final ProfileChangeAdapter profilesListener, @NotNull Disposable parent) {
     myProfilesListener.add(profilesListener);
     Disposer.register(parent, new Disposable() {
       @Override
@@ -250,7 +250,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     });
   }
 
-  public void removeProfilesListener(@NotNull ProfileChangeAdapter profilesListener) {
+  public void removeProfileChangeListener(@NotNull ProfileChangeAdapter profilesListener) {
     myProfilesListener.remove(profilesListener);
   }
 

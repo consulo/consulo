@@ -41,7 +41,6 @@ import com.intellij.openapi.ui.ex.MultiLineLabel;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -56,6 +55,7 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.containers.HashSet;
+import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -268,7 +268,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
       if (existingRoots.length > 0) {
         VirtualFile existingRoot = existingRoots[0];
         if (existingRoot.getFileSystem() instanceof ArchiveFileSystem) {
-          existingRoot = ((ArchiveFileSystem)existingRoot.getFileSystem()).getVirtualFileForArchive(existingRoot);
+          existingRoot = ((ArchiveFileSystem)existingRoot.getFileSystem()).getLocalVirtualFileFor(existingRoot);
         }
         if (existingRoot != null) {
           if (existingRoot.isDirectory()) {

@@ -18,10 +18,10 @@ package com.intellij.openapi.vfs.util;
 import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.ArchiveEntry;
-import com.intellij.openapi.vfs.ArchiveFile;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.vfs.ArchiveFileSystem;
+import consulo.vfs.impl.archive.ArchiveEntry;
+import consulo.vfs.impl.archive.ArchiveFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.DeprecationInfo;
@@ -60,7 +60,7 @@ public class ArchiveVfsUtil {
     }
 
     if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
-      return ((ArchiveFileSystem)virtualFile.getFileSystem()).getVirtualFileForArchive(virtualFile);
+      return ((ArchiveFileSystem)virtualFile.getFileSystem()).getLocalVirtualFileFor(virtualFile);
     }
     return null;
   }

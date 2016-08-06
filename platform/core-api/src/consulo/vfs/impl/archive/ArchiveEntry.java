@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs;
+package consulo.vfs.impl.archive;
 
+/**
+ * @author VISTALL
+ * @since 06-Aug-16
+ */
 public interface ArchiveEntry {
   String getName();
 

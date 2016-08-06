@@ -28,11 +28,15 @@ public interface ArchiveCopyingFileSystem {
   @DeprecationInfo(value = "Use #addNoCopyArchiveForPath(String)", until = "2.0")
   void setNoCopyJarForPath(String pathInJar);
 
-  void addNoCopyArchiveForPath(@NotNull String path);
+  default void addNoCopyArchiveForPath(@NotNull String path) {
+    setNoCopyJarForPath(path);
+  }
 
   @Deprecated
   @DeprecationInfo(value = "Use #isMakeCopyForArchive(File)", until = "2.0")
   boolean isMakeCopyOfJar(File originalFile);
 
-  boolean isMakeCopyForArchive(@NotNull File originalFile);
+  default boolean isMakeCopyForArchive(@NotNull File originalFile) {
+    return isMakeCopyOfJar(originalFile);
+  }
 }

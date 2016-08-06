@@ -24,7 +24,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.impl.local.FileWatcher;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import org.consulo.compiler.server.application.CompilerServerApplication;
 
@@ -43,7 +42,7 @@ public class MainTest {
     //System.setProperty(PathManager.PROPERTY_CONFIG_PATH, "C:\\Users\\VISTALL\\.ConsuloData\\config");
    // System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, "C:\\Users\\VISTALL\\.ConsuloData\\system");
     System.setProperty(PathManager.PROPERTY_HOME_PATH, "F:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
-    System.setProperty(FileWatcher.PROPERTY_WATCHER_DISABLED, "true");
+    System.setProperty("idea.filewatcher.disabled", "true");
 
     initLogger();
 

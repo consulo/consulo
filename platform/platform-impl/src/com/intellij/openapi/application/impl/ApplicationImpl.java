@@ -1212,13 +1212,12 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   private class WriteAccessToken extends AccessToken {
-    private final Class clazz;
+    @NotNull private final Class clazz;
 
     public WriteAccessToken(@NotNull Class clazz) {
       this.clazz = clazz;
       startWrite(clazz);
       markThreadNameInStackTrace();
-      acquired();
     }
 
     @Override
@@ -1228,7 +1227,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       }
       finally {
         unmarkThreadNameInStackTrace();
-        released();
       }
     }
 
@@ -1263,7 +1261,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       name = name.substring(name.lastIndexOf('.') + 1);
       name = name.substring(name.lastIndexOf('$') + 1);
       if (!name.equals("AccessToken")) {
-        return " [" + name + "]";
+        return " [" + name+"]";
       }
       return null;
     }
@@ -1275,13 +1273,11 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     private ReadAccessToken(Status status) {
       myStatus = status;
       startRead(status);
-      acquired();
     }
 
     @Override
     public void finish() {
       endRead(myStatus);
-      released();
     }
   }
 

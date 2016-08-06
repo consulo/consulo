@@ -23,6 +23,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NonNls;
@@ -60,7 +61,7 @@ public class PathsList  {
       if (localFile == null) return null;
 
       if (fileType instanceof ArchiveFileType && !localFile.isDirectory()) {
-        return ((ArchiveFileType)fileType).getFileSystem().findByPathWithSeparator(localFile);
+        return ArchiveVfsUtil.getArchiveRootForLocalFile(localFile);
       }
       return localFile;
     }

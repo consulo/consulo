@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.OutputStream;
@@ -53,6 +54,8 @@ public abstract class ProcessHandler extends UserDataHolderBase {
   private final Semaphore myWaitSemaphore;
   private final ProcessListener myEventMulticaster;
   private final TasksRunner myAfterStartNotifiedRunner;
+
+  private volatile int myExitCode = -1;
 
   protected ProcessHandler() {
     myEventMulticaster = createEventMulticaster();
@@ -133,6 +136,13 @@ public abstract class ProcessHandler extends UserDataHolderBase {
     return myState.get() == STATE_TERMINATING;
   }
 
+  /**
+   * @return exit code if the process has already finished, -1 otherwise
+   */
+  public int getExitCode() {
+    return myExitCode;
+  }
+
   public void addProcessListener(final ProcessListener listener) {
     myListeners.add(listener);
   }
@@ -168,6 +178,7 @@ public abstract class ProcessHandler extends UserDataHolderBase {
 
         if (myState.compareAndSet(STATE_TERMINATING, STATE_TERMINATED)) {
           try {
+            myExitCode = exitCode;
             myEventMulticaster.processTerminated(new ProcessEvent(ProcessHandler.this, exitCode));
           }
           catch (Throwable e) {
@@ -224,7 +235,7 @@ public abstract class ProcessHandler extends UserDataHolderBase {
     });
   }
 
-  private boolean isCanceledException(Throwable e) {
+  private static boolean isCanceledException(Throwable e) {
     final boolean value = e instanceof InvocationTargetException && e.getCause() instanceof ProcessCanceledException;
     if (value) {
       LOG.info(e);
@@ -242,7 +253,7 @@ public abstract class ProcessHandler extends UserDataHolderBase {
       runPendingTasks();
     }
 
-    public void execute(Runnable task) {
+    public void execute(@NotNull Runnable task) {
       if (isStartNotified()) {
         task.run();
       }
