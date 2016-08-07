@@ -16,7 +16,10 @@
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
 import com.intellij.openapi.roots.ModuleRootLayer;
-import org.consulo.module.extension.MutableModuleExtension;
+import consulo.ui.Components;
+import consulo.ui.Layouts;
+import consulo.ui.VerticalLayout;
+import consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -36,7 +39,7 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
   @Nullable
   @Override
   public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
-    return null;
+    throw new UnsupportedOperationException("This should never called. See #createConfigurablePanel2()");
   }
 
   @Override
@@ -47,5 +50,13 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
   @Override
   public boolean isModified(@NotNull Sand2ModuleExtension originalExtension) {
     return myIsEnabled != originalExtension.isEnabled();
+  }
+
+  @Nullable
+  @Override
+  public consulo.ui.Component createConfigurablePanel2(@NotNull Runnable updateOnCheck) {
+    final VerticalLayout vertical = Layouts.vertical();
+    vertical.add(Components.checkBox("Omg new UI?"));
+    return vertical;
   }
 }

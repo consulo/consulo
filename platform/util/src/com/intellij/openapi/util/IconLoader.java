@@ -27,6 +27,7 @@ import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.hack.IconWithURL;
 import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -273,7 +274,7 @@ public final class IconLoader {
 
   /**
    * Gets a snapshot of the icon, immune to changes made by these calls:
-   * {@link IconLoader#setScale(float)}, {@link IconLoader#setFilter(ImageFilter)}, {@link IconLoader#setUseDarkIcons(boolean)}
+   * {@link IconLoader#setScale(float)},  {@link IconLoader#setUseDarkIcons(boolean)}
    *
    * @param icon the source icon
    * @return the icon snapshot
@@ -309,7 +310,7 @@ public final class IconLoader {
     };
   }
 
-  private static final class CachedImageIcon implements ScalableIcon {
+  private static final class CachedImageIcon implements ScalableIcon, IconWithURL {
     private Object myRealIcon;
     @NotNull
     private final URL myUrl;
@@ -402,6 +403,12 @@ public final class IconLoader {
       }
 
       return this;
+    }
+
+    @NotNull
+    @Override
+    public URL getURL() {
+      return myUrl;
     }
   }
 

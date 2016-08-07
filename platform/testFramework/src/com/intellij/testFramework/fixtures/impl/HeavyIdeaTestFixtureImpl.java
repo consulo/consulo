@@ -19,7 +19,7 @@ package com.intellij.testFramework.fixtures.impl;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -79,7 +79,7 @@ class HeavyIdeaTestFixtureImpl extends BaseFixture implements HeavyIdeaTestFixtu
 
   private Project myProject;
   private final Set<File> myFilesToDelete = new HashSet<File>();
-  private IdeaApplication myApplication;
+  private ApplicationStarter myApplication;
   private final Set<ModuleFixtureBuilder> myModuleFixtureBuilders = new THashSet<ModuleFixtureBuilder>();
   private EditorListenerTracker myEditorListenerTracker;
   private ThreadTracker myThreadTracker;
@@ -170,7 +170,7 @@ class HeavyIdeaTestFixtureImpl extends BaseFixture implements HeavyIdeaTestFixtu
   }
 
   private void initApplication() throws Exception {
-    myApplication = IdeaApplication.getInstance();
+    myApplication = ApplicationStarter.getInstance();
     //myApplication.setDataProvider(new MyDataProvider());
   }
 
