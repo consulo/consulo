@@ -17,7 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
-import com.intellij.ide.highlighter.ArchiveFileType;
+import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;

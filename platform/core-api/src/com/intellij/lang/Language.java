@@ -175,7 +175,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
   }
 
   /**
-   * Returns a user-readable name of the language.
+   * Returns a id of the language.
    *
    * @return the name of the language.
    */

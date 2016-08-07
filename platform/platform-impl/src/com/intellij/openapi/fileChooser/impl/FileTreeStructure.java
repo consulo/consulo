@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.fileChooser.impl;
 
-import com.intellij.ide.highlighter.ArchiveFileType;
+import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.diagnostic.Logger;

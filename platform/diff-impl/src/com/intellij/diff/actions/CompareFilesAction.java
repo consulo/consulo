@@ -17,7 +17,7 @@ package com.intellij.diff.actions;
 
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.requests.DiffRequest;
-import com.intellij.ide.highlighter.ArchiveFileType;
+import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

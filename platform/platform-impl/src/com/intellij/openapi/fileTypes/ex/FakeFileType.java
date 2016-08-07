@@ -22,31 +22,30 @@
  */
 package com.intellij.openapi.fileTypes.ex;
 
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 public abstract class FakeFileType implements FileTypeIdentifiableByVirtualFile {
 
+  @Override
   @NotNull
   public String getDefaultExtension() {
     return "fakeExtension";
   }
 
+  @Override
   public Icon getIcon() {
     return null;
   }
 
+  @Override
   public boolean isBinary() {
     return true;
   }
 
+  @Override
   public boolean isReadOnly() {
     return true;
-  }
-
-  public String getCharset(@NotNull VirtualFile file, final byte[] content) {
-    return null;
   }
 }

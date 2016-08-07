@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser;
 
-import com.intellij.ide.highlighter.ArchiveFileType;
+import consulo.fileTypes.ArchiveFileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VFileProperty;

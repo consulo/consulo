@@ -18,11 +18,12 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public abstract class UserFileType <T extends UserFileType> implements FileType, Cloneable {
+public abstract class UserFileType <T extends UserFileType> implements FileType, Named, Cloneable {
   @NotNull private String myName = "";
   private String myDescription = "";
   private Icon myIcon = AllIcons.FileTypes.Custom;
@@ -37,6 +38,12 @@ public abstract class UserFileType <T extends UserFileType> implements FileType,
     catch (CloneNotSupportedException e) {
       return null; //Can't be
     }
+  }
+
+  @NotNull
+  @Override
+  public String getId() {
+    return myName;
   }
 
   @Override

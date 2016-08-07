@@ -17,7 +17,7 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.IconDescriptorUpdaters;
-import com.intellij.ide.highlighter.ArchiveFileType;
+import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;

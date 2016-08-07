@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.highlighter;
+package consulo.fileTypes;
 
 import com.intellij.ide.IdeBundle;
 import org.jetbrains.annotations.NotNull;
@@ -22,10 +22,11 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 16:39/14.07.13
  */
-public class ZipArchiveFileType extends ArchiveFileType {
+public final class ZipArchiveFileType extends ArchiveFileType {
   public static final String PROTOCOL = "zip";
   public static final ArchiveFileType INSTANCE = new ZipArchiveFileType();
 
+  @NotNull
   @Override
   public String getProtocol() {
     return PROTOCOL;
@@ -39,7 +40,7 @@ public class ZipArchiveFileType extends ArchiveFileType {
 
   @NotNull
   @Override
-  public String getName() {
+  public String getId() {
     return "ZIP_ARCHIVE";
   }
 }

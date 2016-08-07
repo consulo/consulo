@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.highlighter.ArchiveFileType;
+import consulo.fileTypes.ArchiveFileType;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Iconable;

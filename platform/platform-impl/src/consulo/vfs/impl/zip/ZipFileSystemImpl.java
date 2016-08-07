@@ -15,7 +15,7 @@
  */
 package consulo.vfs.impl.zip;
 
-import com.intellij.ide.highlighter.ZipArchiveFileType;
+import consulo.fileTypes.ZipArchiveFileType;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NotNull;
