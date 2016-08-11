@@ -30,7 +30,7 @@ public class MainImpl {
     StartupUtil.prepareAndStart(args, new StartupUtil.AppStarter() {
       @Override
       public void start(boolean newConfigFolder) {
-        final IdeaApplication app = new IdeaApplication(args);
+        final ApplicationStarter app = new ApplicationStarter(args);
         //noinspection SSBasedInspection
         SwingUtilities.invokeLater(new Runnable() {
           @Override

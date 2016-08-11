@@ -20,7 +20,7 @@ import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
@@ -72,6 +72,7 @@ import org.jetbrains.ide.PooledThreadExecutor;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.RequiredWriteAction;
+import org.mustbe.consulo.application.ApplicationProperties;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.*;
@@ -204,7 +205,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     myName = appName;
 
     myIsInternal = isInternal;
-    myTestModeFlag = isUnitTestMode;
+    myTestModeFlag = isUnitTestMode || Boolean.getBoolean(ApplicationProperties.CONSULO_AS_WEB_APP);
     myHeadlessMode = isHeadless;
     myCommandLineMode = isCommandLine;
 
@@ -258,7 +259,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       };
     }
     if (isUnitTestMode) {
-      IdeaApplication.ourLoaded = true;
+      ApplicationStarter.ourLoaded = true;
     }
   }
 

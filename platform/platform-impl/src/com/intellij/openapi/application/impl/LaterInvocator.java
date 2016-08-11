@@ -16,7 +16,7 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
@@ -190,7 +190,7 @@ public class LaterInvocator {
     ourModalEntities.add(modalEntity);
     ourModalityStack.push(new ModalityStateEx(ArrayUtil.toObjectArray(ourModalEntities)));
 
-    TransactionGuardImpl guard = IdeaApplication.isLoaded() ? (TransactionGuardImpl)TransactionGuard.getInstance() : null;
+    TransactionGuardImpl guard = ApplicationStarter.isLoaded() ? (TransactionGuardImpl)TransactionGuard.getInstance() : null;
     if (guard != null) {
       guard.enteredModality(ourModalityStack.peek());
     }

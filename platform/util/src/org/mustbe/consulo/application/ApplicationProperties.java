@@ -34,4 +34,8 @@ public interface ApplicationProperties {
   @NotNull
   @NonNls
   String CONSULO_IN_UNIT_TEST = "consulo.is.unit.test";
+
+  @NotNull
+  @NonNls
+  String CONSULO_AS_WEB_APP = "consulo.as.web.app";
 }
