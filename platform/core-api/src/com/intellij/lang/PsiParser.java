@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * The plugin side of a custom language parser. Receives tokens returned from
  * lexer and builds an AST tree out of them.
  *
- * @see ParserDefinition#createParser(com.intellij.openapi.project.Project, consulo.lang.LanguageVersion)
+ * @see ParserDefinition#createParser(consulo.lang.LanguageVersion)
  */
 
 public interface PsiParser {

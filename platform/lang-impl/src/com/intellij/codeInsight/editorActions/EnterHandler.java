@@ -198,7 +198,7 @@ public class EnterHandler extends BaseEnterHandler {
     if (parserDefinition == null) {
       return true;
     }
-    Lexer lexer = parserDefinition.createLexer(containingFile.getProject(), containingFile.getLanguageVersion());
+    Lexer lexer = parserDefinition.createLexer(containingFile.getLanguageVersion());
     final String commentPrefix = docComment? commenter.getDocumentationCommentPrefix() : commenter.getBlockCommentPrefix();
     lexer.start(commentText, commentPrefix == null? 0 : commentPrefix.length(), commentText.length());
     QuoteHandler fileTypeHandler = TypedHandler.getQuoteHandler(containingFile, editor);
