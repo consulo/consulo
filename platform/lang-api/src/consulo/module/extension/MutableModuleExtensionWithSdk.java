@@ -13,30 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.vfs.backgroundTask;
+package consulo.module.extension;
 
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
+import com.intellij.openapi.projectRoots.Sdk;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 3:44/07.10.13
+ * @since 12:27/19.05.13
  */
-public interface BackgroundTaskByVfsParameters extends CommonProgramRunConfigurationParameters {
-  void setExePath(@NotNull String path);
-
+public interface MutableModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionWithSdk<T>, MutableModuleExtension<T> {
+  @Override
   @NotNull
-  String getExePath();
-
-  void setOutPath(@Nullable String path);
-
-  @Nullable
-  String getOutPath();
-
-  void set(@NotNull BackgroundTaskByVfsParameters parameters);
-
-  boolean isShowConsole();
-
-  void setShowConsole(boolean console);
+  MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 }

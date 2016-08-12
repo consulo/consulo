@@ -1,4 +1,4 @@
-package org.mustbe.consulo.module.extension;
+package consulo.module.extension;
 
 import org.consulo.annotations.Immutable;
 import consulo.lombok.annotations.ProjectService;

@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.psi;
+package consulo.psi;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiManager;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
 import consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 

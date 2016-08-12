@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.module.extension.ModuleExtension;
-import org.consulo.psi.PsiPackageSupportProvider;
+import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderScopes;
 

@@ -23,7 +23,7 @@ import com.intellij.util.ArrayFactory;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.consulo.psi.PsiPackageSupportProvider;
+import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.sandLanguage.ide.module.extension.Sand2ModuleExtension;

@@ -15,13 +15,13 @@
   -->
 <idea-plugin>
   <extensionPoints>
-    <extensionPoint name="taskByVfsChange" interface="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider" />
+    <extensionPoint name="taskByVfsChange" interface="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
     <treeStructureProvider implementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsProjectViewProvider" order="last" />
     <generatedSourcesFilter implementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsGeneratedSourcesFilter" />
-    <projectService serviceInterface="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager"
+    <projectService serviceInterface="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager"
                     serviceImplementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManagerImpl"/>
     <editorNotificationProvider implementation="org.mustbe.consulo.vfs.backgroundTask.ui.BackgroundTaskEditorNotificationProvider" />
   </extensions>

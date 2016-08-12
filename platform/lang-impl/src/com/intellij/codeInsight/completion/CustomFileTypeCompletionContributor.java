@@ -28,7 +28,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.codeInsight.completion.CompletionProvider;
+import consulo.codeInsight.completion.CompletionProvider;
 
 import java.util.Collections;
 import java.util.Set;

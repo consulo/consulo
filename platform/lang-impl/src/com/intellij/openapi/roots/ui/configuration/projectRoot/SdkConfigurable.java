@@ -32,7 +32,7 @@ import com.intellij.ui.navigation.Place;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.sdk.SdkUtil;
+import consulo.bundle.SdkUtil;
 
 import javax.swing.*;
 

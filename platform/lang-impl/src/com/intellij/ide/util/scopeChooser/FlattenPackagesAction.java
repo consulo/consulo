@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.packageDependencies.DependencyUISettings;
-import org.consulo.psi.PsiPackageSupportProviders;
+import consulo.psi.PsiPackageSupportProviders;
 import org.mustbe.consulo.RequiredDispatchThread;
 
 public final class FlattenPackagesAction extends ToggleAction {

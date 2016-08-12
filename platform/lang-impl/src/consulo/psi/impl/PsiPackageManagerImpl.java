@@ -36,7 +36,7 @@ import com.intellij.util.messages.MessageBus;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.consulo.psi.PsiPackageSupportProvider;
+import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;

@@ -23,7 +23,7 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.sdk.SdkUtil;
+import consulo.bundle.SdkUtil;
 
 /**
  * @author VISTALL

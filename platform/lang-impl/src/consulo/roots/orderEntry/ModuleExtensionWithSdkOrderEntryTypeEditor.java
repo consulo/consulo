@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.sdk.SdkUtil;
+import consulo.bundle.SdkUtil;
 
 /**
  * @author VISTALL

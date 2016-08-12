@@ -30,7 +30,7 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.PairConsumer;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;

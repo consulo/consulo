@@ -24,8 +24,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import lombok.val;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import consulo.backgroundTaskByVfsChange.tree.BackgroundTaskPsiFileTreeNode;
 import org.jetbrains.annotations.Nullable;
 

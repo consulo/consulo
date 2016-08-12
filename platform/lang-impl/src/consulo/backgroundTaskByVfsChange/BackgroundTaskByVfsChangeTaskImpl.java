@@ -44,9 +44,6 @@ import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsParameters;
 
 import java.io.File;
 import java.util.ArrayList;

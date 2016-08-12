@@ -51,7 +51,7 @@ import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.sdk.SdkUtil;
+import consulo.bundle.SdkUtil;
 
 import javax.swing.*;
 import java.awt.*;

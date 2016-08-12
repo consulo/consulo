@@ -30,7 +30,7 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.codeInsight.completion.CompletionProvider;
+import consulo.codeInsight.completion.CompletionProvider;
 
 public class PostfixTemplateCompletionContributor extends CompletionContributor {
   private static class MyPrefixMatcher extends PrefixMatcher {

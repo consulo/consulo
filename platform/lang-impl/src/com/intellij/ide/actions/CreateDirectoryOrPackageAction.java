@@ -32,7 +32,7 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
 import consulo.module.extension.ModuleExtension;
-import org.consulo.psi.PsiPackageSupportProvider;
+import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;
 import consulo.roots.ContentFolderTypeProvider;

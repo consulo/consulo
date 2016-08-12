@@ -30,12 +30,9 @@ import com.intellij.ui.*;
 import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManagerImpl;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTaskImpl;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsParametersImpl;
+import consulo.backgroundTaskByVfsChange.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.vfs.backgroundTask.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

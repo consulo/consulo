@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 must-be.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.codeInsight.completion;
+package consulo.lang;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.lang.LanguageExtension;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 12.12.2015
+ * @since 12:27/08.10.13
  */
-public abstract class CompletionProvider extends com.intellij.codeInsight.completion.CompletionProvider<CompletionParameters> {
+public class LanguageElementIcons extends LanguageExtension<Icon> {
+  public static final LanguageElementIcons INSTANCE = new LanguageElementIcons();
+
+  public LanguageElementIcons() {
+    super("com.intellij.lang.elementIcon");
+  }
 }

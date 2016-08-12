@@ -34,7 +34,7 @@ import consulo.psi.PsiPackageManager;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import org.consulo.psi.PsiPackageSupportProvider;
+import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

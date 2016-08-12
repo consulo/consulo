@@ -86,15 +86,15 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.consulo.psi.PsiPackageSupportProviders;
+import consulo.psi.PsiPackageSupportProviders;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
+import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager;
+import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

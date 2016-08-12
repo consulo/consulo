@@ -35,7 +35,7 @@ import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.lang.LanguageElementIcons;
+import consulo.lang.LanguageElementIcons;
 import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;

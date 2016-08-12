@@ -154,7 +154,7 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighterFactory"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.elementIcon" beanClass="org.mustbe.consulo.lang.LanguageElementIcon"/>
+    <extensionPoint name="lang.elementIcon" beanClass="consulo.lang.LanguageElementIcon"/>
 
     <extensionPoint name="projectOpenProcessor"
                     interface="com.intellij.projectImport.ProjectOpenProcessor"/>
@@ -773,7 +773,7 @@
     </extensionPoint>
 
     <extensionPoint name="psi.referenceProvider" beanClass="com.intellij.psi.PsiReferenceProviderBean"/>
-    <extensionPoint name="psi.packageSupportProvider" interface="org.consulo.psi.PsiPackageSupportProvider"/>
+    <extensionPoint name="psi.packageSupportProvider" interface="consulo.psi.PsiPackageSupportProvider"/>
     <extensionPoint name="psi.directoryMethodProxy" interface="consulo.psi.PsiDirectoryMethodProxy"/>
     <extensionPoint name="patterns.patternClass" beanClass="com.intellij.patterns.compiler.PatternClassBean"/>
 
@@ -2432,7 +2432,7 @@
 
     <pathMacroExpendableProtocol protocol="zip"/>
 
-    <projectService serviceInterface="org.mustbe.consulo.module.extension.ModuleExtensionHelper"
+    <projectService serviceInterface="consulo.module.extension.ModuleExtensionHelper"
                     serviceImplementation="consulo.module.extension.ModuleExtensionHelperImpl"/>
 
     <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionContentFolderTypeProvider"/>

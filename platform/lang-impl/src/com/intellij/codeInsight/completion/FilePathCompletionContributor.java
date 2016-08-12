@@ -47,6 +47,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
+import consulo.codeInsight.completion.CompletionProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
@@ -63,7 +64,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.FilePathCompletionContributor");
 
   public FilePathCompletionContributor() {
-    extend(CompletionType.BASIC, psiElement(), new org.mustbe.consulo.codeInsight.completion.CompletionProvider() {
+    extend(CompletionType.BASIC, psiElement(), new consulo.codeInsight.completion.CompletionProvider() {
       @RequiredReadAction
       @Override
       protected void addCompletions(@NotNull CompletionParameters parameters,
@@ -79,7 +80,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
       }
     });
 
-    extend(CompletionType.BASIC, psiElement(), new org.mustbe.consulo.codeInsight.completion.CompletionProvider() {
+    extend(CompletionType.BASIC, psiElement(), new CompletionProvider() {
       @RequiredReadAction
       @Override
       protected void addCompletions(@NotNull final CompletionParameters parameters,

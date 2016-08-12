@@ -28,10 +28,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProviders;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
+import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager;
+import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
+import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProviders;
+import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;
 
 import java.awt.*;
 import java.util.List;

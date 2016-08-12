@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.sdk;
+package consulo.bundle;
 
 import com.intellij.icons.AllIcons;
 import consulo.ide.IconDescriptor;

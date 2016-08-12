@@ -20,7 +20,6 @@ import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsParameters;
 
 import java.util.Collections;
 import java.util.Map;
