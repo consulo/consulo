@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.Exported;
+import consulo.annotations.Exported;
 
 import java.util.ArrayList;
 import java.util.List;

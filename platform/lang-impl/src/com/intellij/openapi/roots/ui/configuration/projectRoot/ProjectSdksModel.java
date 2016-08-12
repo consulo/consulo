@@ -38,8 +38,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.*;

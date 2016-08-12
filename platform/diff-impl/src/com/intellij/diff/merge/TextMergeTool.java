@@ -17,7 +17,7 @@ package com.intellij.diff.merge;
 
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.*;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public class TextMergeTool implements MergeTool {
   public static final TextMergeTool INSTANCE = new TextMergeTool();

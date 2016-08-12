@@ -35,7 +35,7 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;

@@ -18,7 +18,7 @@ package com.intellij.openapi.components;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * We have a framework for persisting component states (see {@link State} {@link Storage}). It allows to specify which file

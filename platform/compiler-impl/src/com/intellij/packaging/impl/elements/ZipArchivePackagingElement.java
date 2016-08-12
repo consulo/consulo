@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.packaging.elements.ArchivePackageWriter;
+import consulo.packaging.elements.ArchivePackageWriter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;

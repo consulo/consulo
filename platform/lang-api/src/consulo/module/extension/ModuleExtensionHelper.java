@@ -1,8 +1,7 @@
 package consulo.module.extension;
 
-import org.consulo.annotations.Immutable;
+import consulo.annotations.Immutable;
 import consulo.lombok.annotations.ProjectService;
-import consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

@@ -18,7 +18,7 @@ package consulo.ide.impl.ui;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import lombok.val;
-import org.consulo.annotations.Immutable;
+import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

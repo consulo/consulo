@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo;
+package consulo.annotations;
 
 import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 30.10.2015
+ * @since 24.01.15
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD})
-public @interface Exported {
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+public @interface RequiredReadAction {
 }

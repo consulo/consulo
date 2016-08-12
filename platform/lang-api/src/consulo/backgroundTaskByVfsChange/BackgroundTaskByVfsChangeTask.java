@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL

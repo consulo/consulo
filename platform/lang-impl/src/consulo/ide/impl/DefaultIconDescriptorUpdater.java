@@ -34,7 +34,7 @@ import consulo.vfs.ArchiveFileSystem;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageElementIcons;
 import consulo.roots.ContentFolderTypeProvider;
 

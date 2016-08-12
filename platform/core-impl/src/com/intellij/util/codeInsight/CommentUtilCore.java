@@ -23,7 +23,7 @@ import com.intellij.psi.tree.TokenSet;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 public class CommentUtilCore {
   @RequiredReadAction

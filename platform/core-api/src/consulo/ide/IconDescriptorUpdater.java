@@ -17,7 +17,7 @@ package consulo.ide;
 
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import consulo.extensions.CompositeExtensionPointName;
 
 /**

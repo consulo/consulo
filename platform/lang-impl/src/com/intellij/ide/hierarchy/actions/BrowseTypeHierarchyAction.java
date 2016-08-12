@@ -21,7 +21,7 @@ import com.intellij.ide.hierarchy.LanguageTypeHierarchy;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public final class BrowseTypeHierarchyAction extends BrowseHierarchyActionBase {
   public BrowseTypeHierarchyAction() {

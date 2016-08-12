@@ -20,7 +20,7 @@
     </extensionPoint>
 
     <extensionPoint name="compiler.moduleScopeFactory" interface="org.consulo.compiler.impl.CompileModuleScopeFactory"/>
-    <extensionPoint name="compiler.sorter" interface="com.intellij.openapi.compiler.CompilerSorter"/>
+    <extensionPoint name="compiler.sorter" interface="consulo.compiler.CompilerSorter"/>
   </extensionPoints>
   <extensions defaultExtensionNs="com.intellij">
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.DirectoryElementType"/>
@@ -50,7 +50,7 @@
     <projectService serviceInterface="com.intellij.openapi.compiler.CompilerManager"
                     serviceImplementation="org.consulo.compiler.impl.CompilerManagerImpl"/>
 
-    <projectService serviceInterface="com.intellij.compiler.CompilerConfiguration"
+    <projectService serviceInterface="consulo.compiler.CompilerConfiguration"
                     serviceImplementation="com.intellij.compiler.CompilerConfigurationImpl"/>
 
     <projectService serviceInterface="com.intellij.compiler.CompilerEncodingService"

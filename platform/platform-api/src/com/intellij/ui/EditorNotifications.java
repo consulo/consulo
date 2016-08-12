@@ -22,9 +22,9 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
-import org.mustbe.consulo.Exported;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.Exported;
+import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 
 import javax.swing.*;

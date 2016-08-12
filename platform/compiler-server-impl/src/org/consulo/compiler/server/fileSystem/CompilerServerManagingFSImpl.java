@@ -29,7 +29,7 @@ import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import org.consulo.compiler.server.fileSystem.archive.ArchiveNewVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 import java.io.*;
 import java.util.List;

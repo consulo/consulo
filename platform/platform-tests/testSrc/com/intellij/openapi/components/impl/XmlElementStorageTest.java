@@ -27,7 +27,7 @@ import com.intellij.testFramework.LightPlatformLangTestCase;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import java.util.Collection;
 import java.util.Collections;

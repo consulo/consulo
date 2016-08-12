@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 /**
  * The validator for input dialogs.

@@ -39,7 +39,7 @@ import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
 import java.util.Map;

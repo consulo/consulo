@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.annotations;
+package consulo.annotations;
 
 import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 12:01/31.05.13
+ * @since 05.03.14
  */
 @Documented
-@Retention(RetentionPolicy.CLASS)
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
-public @interface InheritImmutable {
+@Retention(RetentionPolicy.RUNTIME)
+public @interface DeprecationInfo {
+  String value();
+
+  String until() default "0.0";
 }

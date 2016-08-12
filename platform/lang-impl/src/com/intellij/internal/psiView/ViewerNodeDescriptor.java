@@ -23,7 +23,7 @@ package com.intellij.internal.psiView;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public class ViewerNodeDescriptor extends NodeDescriptor {
   private final Object myElement;

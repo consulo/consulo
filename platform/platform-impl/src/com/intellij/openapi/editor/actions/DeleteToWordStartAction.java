@@ -33,7 +33,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIntHashMap;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 public class DeleteToWordStartAction extends TextComponentEditorAction {
 

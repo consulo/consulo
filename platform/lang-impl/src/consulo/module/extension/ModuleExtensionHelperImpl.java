@@ -20,7 +20,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.containers.MultiMap;
-import org.consulo.annotations.Immutable;
+import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

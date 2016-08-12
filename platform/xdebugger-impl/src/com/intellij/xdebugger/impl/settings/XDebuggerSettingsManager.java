@@ -2,7 +2,7 @@ package com.intellij.xdebugger.impl.settings;
 
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * @author VISTALL

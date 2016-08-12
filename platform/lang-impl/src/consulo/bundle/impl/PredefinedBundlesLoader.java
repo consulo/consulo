@@ -21,7 +21,7 @@ import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.bundle.PredefinedBundlesProvider;
 
 /**

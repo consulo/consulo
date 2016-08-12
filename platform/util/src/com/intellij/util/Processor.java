@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * @param <T> Input value type.

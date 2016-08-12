@@ -27,7 +27,7 @@ import consulo.lang.BaseLanguageVersion;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionDefines;
 import gnu.trove.THashMap;
-import org.consulo.annotations.Immutable;
+import consulo.annotations.Immutable;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

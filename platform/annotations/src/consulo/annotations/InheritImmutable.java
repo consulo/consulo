@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.artifacts;
+package consulo.annotations;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 16:57/05.07.13
+ * @since 12:01/31.05.13
  */
-public class ArtifactPointerUtil {
-  public static ArtifactPointerManager getPointerManager(Project project) {
-    return  ServiceManager.getService(project, ArtifactPointerManager.class);
-  }
+@Documented
+@Retention(RetentionPolicy.CLASS)
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
+public @interface InheritImmutable {
 }

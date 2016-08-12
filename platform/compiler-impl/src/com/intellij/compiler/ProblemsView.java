@@ -26,7 +26,7 @@ import com.intellij.util.ArrayUtil;
 import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import java.util.ArrayList;
 import java.util.List;

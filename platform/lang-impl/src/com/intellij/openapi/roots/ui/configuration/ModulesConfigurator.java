@@ -56,7 +56,7 @@ import com.intellij.util.graph.GraphGenerator;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.impl.NewProjectOrModuleDialog;
 import consulo.roots.ContentFolderScopes;
 

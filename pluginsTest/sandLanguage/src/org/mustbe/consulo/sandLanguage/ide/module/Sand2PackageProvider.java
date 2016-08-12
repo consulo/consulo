@@ -25,7 +25,7 @@ import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.sandLanguage.ide.module.extension.Sand2ModuleExtension;
 import org.mustbe.consulo.sandLanguage.lang.SandLanguage;
 

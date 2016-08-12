@@ -36,7 +36,7 @@ import com.intellij.util.containers.HashMap;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.roots.ContentFolderScopes;
 
 import java.util.*;

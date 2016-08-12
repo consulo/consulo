@@ -17,7 +17,7 @@ package org.mustbe.consulo.testFramework;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 @Deprecated
 @DeprecationInfo(value = "Use 'consulo.testFramework.ParsingTestCase'", until = "1.0")

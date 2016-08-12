@@ -35,7 +35,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.consulo.compiler.ModuleCompilerPathsManager;
+import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.util.pointers.NamedPointer;
 import consulo.util.pointers.NamedPointerUtil;
 import org.jetbrains.annotations.NonNls;

@@ -18,7 +18,7 @@ package com.intellij.navigation;
 import com.intellij.pom.Navigatable;
 import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 @ArrayFactoryFields
 public interface NavigationItem extends Navigatable {

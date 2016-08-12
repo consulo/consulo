@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo;
+package consulo.annotations;
 
 import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 05.03.14
+ * @since 24.01.15
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DeprecationInfo {
-  String value();
-
-  String until() default "0.0";
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+public @interface RequiredWriteAction {
 }

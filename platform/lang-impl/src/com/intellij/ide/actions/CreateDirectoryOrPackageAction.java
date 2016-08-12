@@ -34,7 +34,7 @@ import com.intellij.psi.PsiFileSystemItem;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;

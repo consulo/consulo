@@ -32,7 +32,7 @@ import com.intellij.util.containers.ConcurrentHashSet;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;

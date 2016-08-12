@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.compiler;
+package consulo.annotations;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.Module;
-import com.intellij.util.Chunk;
-import org.jetbrains.annotations.NotNull;
+import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 08.05.14
+ * @since 03.03.2015
  */
-public interface CompilerSorter {
-  public static final ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create("com.intellij.compiler.sorter");
-
-  void sort(Chunk<Module> moduleChunk, @NotNull Compiler[] compilers, Class<? extends Compiler> clazz);
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+public @interface RequiredDispatchThread {
 }

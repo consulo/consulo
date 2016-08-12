@@ -18,10 +18,8 @@ package consulo.ide;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
-import consulo.ide.IconDescriptor;
-import consulo.ide.IconDescriptorUpdater;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL

@@ -21,7 +21,7 @@ import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public class ReplaceInPathAction extends AnAction {
   { // enabled in modal content for find in path <-> replace in path modal dialog transition

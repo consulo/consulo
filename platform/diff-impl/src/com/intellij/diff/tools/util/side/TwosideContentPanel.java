@@ -20,7 +20,7 @@ import com.intellij.diff.tools.util.DiffSplitter;
 import com.intellij.diff.util.Side;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;

@@ -18,7 +18,7 @@ package com.intellij.openapi.module;
 import consulo.util.pointers.NamedPointer;
 import consulo.util.pointers.NamedPointerManager;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 public interface ModulePointerManager extends NamedPointerManager<Module> {
   @NotNull

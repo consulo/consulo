@@ -16,6 +16,7 @@
 package com.intellij.packaging.elements;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.packaging.elements.ArchivePackageWriter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

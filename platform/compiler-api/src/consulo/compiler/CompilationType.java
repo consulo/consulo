@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.annotations;
+package consulo.compiler;
 
-import java.lang.annotation.*;
+import consulo.annotations.Immutable;
 
 /**
- * @author VISTALL
- * @since 17:57/30.05.13
- */
-@Documented
-@Retention(RetentionPolicy.CLASS)
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
-public @interface ImmutableTarget {
+* @author VISTALL
+* @since 12:58/10.06.13
+*/
+public enum CompilationType {
+  DISABLE,
+  IN_PROGRESS,
+  EXTERNAL;
+
+  @Immutable
+  public static CompilationType[] VALUES = values();
 }

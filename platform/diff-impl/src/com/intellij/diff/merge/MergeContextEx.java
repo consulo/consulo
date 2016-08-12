@@ -16,7 +16,7 @@
 package com.intellij.diff.merge;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public abstract class MergeContextEx extends MergeContext {
   /*

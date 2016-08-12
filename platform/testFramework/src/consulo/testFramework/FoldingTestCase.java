@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile;
 import junit.framework.Assert;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.Exported;
+import consulo.annotations.Exported;
 
 import java.io.File;
 import java.io.IOException;

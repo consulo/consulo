@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.annotations;
+package consulo.compiler;
 
-import java.lang.annotation.*;
+import com.intellij.openapi.compiler.Compiler;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.module.Module;
+import com.intellij.util.Chunk;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 17:57/30.05.13
+ * @since 08.05.14
  */
-@Documented
-@Retention(RetentionPolicy.CLASS)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface Immutable {
+public interface CompilerSorter {
+  public static final ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create("com.intellij.compiler.sorter");
+
+  void sort(Chunk<Module> moduleChunk, @NotNull Compiler[] compilers, Class<? extends Compiler> clazz);
 }

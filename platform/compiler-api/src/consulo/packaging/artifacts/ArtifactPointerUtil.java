@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.compiler;
+package consulo.packaging.artifacts;
 
-import org.consulo.annotations.Immutable;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.packaging.artifacts.ArtifactPointerManager;
 
 /**
-* @author VISTALL
-* @since 12:58/10.06.13
-*/
-public enum CompilationType {
-  DISABLE,
-  IN_PROGRESS,
-  EXTERNAL;
-
-  @Immutable
-  public static CompilationType[] VALUES = values();
+ * @author VISTALL
+ * @since 16:57/05.07.13
+ */
+public class ArtifactPointerUtil {
+  public static ArtifactPointerManager getPointerManager(Project project) {
+    return  ServiceManager.getService(project, ArtifactPointerManager.class);
+  }
 }
