@@ -13,34 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model;
+package consulo.projectImport.model.module;
 
-import org.consulo.projectImport.model.module.ModuleModel;
+import consulo.projectImport.model.NamedModelContainer;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * @author VISTALL
- * @since 17:15/19.06.13
+ * @since 17:17/19.06.13
  */
-public class ProjectModel extends NamedModelContainer{
-  public ProjectModel(String name) {
+public class ModuleModel extends NamedModelContainer {
+  private final String myDir;
+
+  public ModuleModel(@NotNull String name, @NotNull String dir) {
     super(name);
+    myDir = dir;
   }
 
   @NotNull
-  public ProjectLibraryTableModel getLibraryTable() {
-    return findChildOrCreate(ProjectLibraryTableModel.class);
-  }
-
-  @NotNull
-  public ModuleTableModel getModuleTable() {
-    return findChildOrCreate(ModuleTableModel.class);
-  }
-
-  @NotNull
-  public List<ModuleModel> getModules() {
-    return getModuleTable().getModules();
+  public String getDir() {
+    return myDir;
   }
 }

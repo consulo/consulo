@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model.module.orderEntryModel;
+package consulo.projectImport.model;
+
+import consulo.projectImport.model.module.ModuleModel;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 17:34/19.06.13
+ * @since 17:16/19.06.13
  */
-public class ModuleSourceOrderEntryModel extends OrderEntryModel {
+public class ModuleTableModel extends ModelContainer {
+  @NotNull
+  public List<ModuleModel> getModules() {
+    return findChildren(ModuleModel.class);
+  }
 }

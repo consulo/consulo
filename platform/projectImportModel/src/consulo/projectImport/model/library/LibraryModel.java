@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model.library;
+package consulo.projectImport.model.library;
 
-import org.consulo.projectImport.model.NamedModelContainer;
+import consulo.projectImport.model.NamedModelContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

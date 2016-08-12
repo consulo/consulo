@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model;
+package consulo.projectImport.model;
 
 import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;

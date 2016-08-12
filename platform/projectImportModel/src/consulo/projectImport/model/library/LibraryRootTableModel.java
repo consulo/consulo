@@ -13,23 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model;
+package consulo.projectImport.model.library;
 
-import org.jetbrains.annotations.Nullable;
+import consulo.projectImport.model.ModelContainer;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 17:17/19.06.13
+ * @since 17:36/19.06.13
  */
-public abstract class NamedModelContainer extends ModelContainer {
-  protected final String myName;
+public class LibraryRootTableModel extends ModelContainer {
+  private final OrderRootTypeModel myRootType;
 
-  protected NamedModelContainer(@Nullable String name) {
-    myName = name;
+  public LibraryRootTableModel(OrderRootTypeModel rootType) {
+    myRootType = rootType;
   }
 
-  @Nullable
-  public String getName() {
-    return myName;
+  @NotNull
+  public List<String> getRoots() {
+    return findChildren(String.class);
+  }
+
+  public void addUrl(@NotNull String url) {
+    addChild(url);
+  }
+
+  public OrderRootTypeModel getRootType() {
+    return myRootType;
   }
 }

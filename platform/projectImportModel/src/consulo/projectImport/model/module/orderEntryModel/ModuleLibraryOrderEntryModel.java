@@ -13,35 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model.module.contentModel;
+package consulo.projectImport.model.module.orderEntryModel;
 
-import org.consulo.projectImport.model.ModelContainer;
+import consulo.projectImport.model.library.LibraryModel;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * @author VISTALL
- * @since 17:27/19.06.13
+ * @since 17:34/19.06.13
  */
-public class ContentEntryModel extends ModelContainer {
-  private final String myUrl;
+public class ModuleLibraryOrderEntryModel extends OrderEntryModel {
+  private final LibraryModel myLibraryModel;
 
-  public ContentEntryModel(String url) {
-    myUrl = url;
-  }
-
-  public void addContentFolder(@NotNull String url, @NotNull ContentFolderTypeModel contentFolderTypeModel) {
-    addChild(new ContentFolderModel(url, contentFolderTypeModel));
+  public ModuleLibraryOrderEntryModel(@NotNull LibraryModel libraryModel) {
+    myLibraryModel = libraryModel;
   }
 
   @NotNull
-  public List<ContentFolderModel> getContentFolders() {
-    return findChildren(ContentFolderModel.class);
-  }
-
-  @NotNull
-  public String getUrl() {
-    return myUrl;
+  public LibraryModel getLibraryModel() {
+    return myLibraryModel;
   }
 }

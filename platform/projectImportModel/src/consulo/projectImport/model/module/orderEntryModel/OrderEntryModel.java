@@ -13,23 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model.module.orderEntryModel;
-
-import org.jetbrains.annotations.NotNull;
+package consulo.projectImport.model.module.orderEntryModel;
 
 /**
  * @author VISTALL
- * @since 17:41/19.06.13
+ * @since 17:32/19.06.13
  */
-public class ProjectLibraryOrderEntryModel extends OrderEntryModel {
-  private final String myLibraryName;
-
-  public ProjectLibraryOrderEntryModel(String libraryName) {
-    myLibraryName = libraryName;
-  }
-
-  @NotNull
-  public String getLibraryName() {
-    return myLibraryName;
-  }
+public class OrderEntryModel {
 }

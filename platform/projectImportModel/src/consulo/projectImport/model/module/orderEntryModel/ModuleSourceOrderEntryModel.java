@@ -13,24 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model.module.orderEntryModel;
-
-import org.consulo.projectImport.model.library.LibraryModel;
-import org.jetbrains.annotations.NotNull;
+package consulo.projectImport.model.module.orderEntryModel;
 
 /**
  * @author VISTALL
  * @since 17:34/19.06.13
  */
-public class ModuleLibraryOrderEntryModel extends OrderEntryModel {
-  private final LibraryModel myLibraryModel;
-
-  public ModuleLibraryOrderEntryModel(@NotNull LibraryModel libraryModel) {
-    myLibraryModel = libraryModel;
-  }
-
-  @NotNull
-  public LibraryModel getLibraryModel() {
-    return myLibraryModel;
-  }
+public class ModuleSourceOrderEntryModel extends OrderEntryModel {
 }

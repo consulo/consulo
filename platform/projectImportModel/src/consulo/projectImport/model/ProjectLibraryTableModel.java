@@ -13,15 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model.module.contentModel;
+package consulo.projectImport.model;
+
+import consulo.projectImport.model.library.LibraryModel;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 17:29/19.06.13
+ * @since 17:43/19.06.13
  */
-public enum ContentFolderTypeModel {
-  SOURCE,
-  TEST,
-  RESOURCE,
-  EXCLUDED
+public class ProjectLibraryTableModel extends ModelContainer {
+  public void addLibrary(@NotNull LibraryModel libraryModel) {
+    addChild(libraryModel);
+  }
+
+  @NotNull
+  public List<LibraryModel> getLibraries() {
+    return findChildren(LibraryModel.class);
+  }
 }

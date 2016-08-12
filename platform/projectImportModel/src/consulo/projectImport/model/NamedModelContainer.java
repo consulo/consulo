@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model.module.orderEntryModel;
+package consulo.projectImport.model;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 17:32/19.06.13
+ * @since 17:17/19.06.13
  */
-public class ModuleExtensionSdkOrderEntryModel extends OrderEntryModel {
-  private final String myExtensionId;
+public abstract class NamedModelContainer extends ModelContainer {
+  protected final String myName;
 
-  public ModuleExtensionSdkOrderEntryModel(String extensionId) {
-    myExtensionId = extensionId;
+  protected NamedModelContainer(@Nullable String name) {
+    myName = name;
   }
 
-  public String getExtensionId() {
-    return myExtensionId;
+  @Nullable
+  public String getName() {
+    return myName;
   }
 }

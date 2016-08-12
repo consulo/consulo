@@ -13,28 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model.module.contentModel;
-
-import org.jetbrains.annotations.NotNull;
+package consulo.projectImport.model.module.contentModel;
 
 /**
  * @author VISTALL
- * @since 17:28/19.06.13
+ * @since 17:29/19.06.13
  */
-public class ContentFolderModel {
-  private final String myUrl;
-  private final ContentFolderTypeModel myType;
-
-  public ContentFolderModel(@NotNull String url, @NotNull ContentFolderTypeModel type) {
-    myUrl = url;
-    myType = type;
-  }
-
-  public String getUrl() {
-    return myUrl;
-  }
-
-  public ContentFolderTypeModel getType() {
-    return myType;
-  }
+public enum ContentFolderTypeModel {
+  SOURCE,
+  TEST,
+  RESOURCE,
+  EXCLUDED
 }

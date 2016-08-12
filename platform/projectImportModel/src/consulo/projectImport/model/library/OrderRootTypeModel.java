@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model.library;
+package consulo.projectImport.model.library;
 
 /**
  * @author VISTALL

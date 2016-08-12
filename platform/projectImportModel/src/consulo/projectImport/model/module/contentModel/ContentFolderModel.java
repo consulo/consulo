@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.projectImport.model;
+package consulo.projectImport.model.module.contentModel;
 
-import org.consulo.projectImport.model.ModelContainer;
-import org.consulo.projectImport.model.module.ModuleModel;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * @author VISTALL
- * @since 17:16/19.06.13
+ * @since 17:28/19.06.13
  */
-public class ModuleTableModel extends ModelContainer {
-  @NotNull
-  public List<ModuleModel> getModules() {
-    return findChildren(ModuleModel.class);
+public class ContentFolderModel {
+  private final String myUrl;
+  private final ContentFolderTypeModel myType;
+
+  public ContentFolderModel(@NotNull String url, @NotNull ContentFolderTypeModel type) {
+    myUrl = url;
+    myType = type;
+  }
+
+  public String getUrl() {
+    return myUrl;
+  }
+
+  public ContentFolderTypeModel getType() {
+    return myType;
   }
 }
