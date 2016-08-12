@@ -15,7 +15,7 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.eap;
 
-import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
+import consulo.ide.eap.EarlyAccessProgramDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 /**

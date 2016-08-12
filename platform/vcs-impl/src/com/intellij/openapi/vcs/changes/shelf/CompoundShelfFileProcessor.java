@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.ex.ApplicationEx2;
+import consulo.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.impl.stores.StorageUtil;

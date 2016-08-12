@@ -22,6 +22,7 @@ import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
 import gnu.trove.THashSet;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;

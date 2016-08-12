@@ -18,7 +18,7 @@ package com.intellij.idea.starter;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.CommandLineProcessor;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.customize.CustomizeUtil;
+import consulo.ide.customize.CustomizeUtil;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.ApplicationStarter;

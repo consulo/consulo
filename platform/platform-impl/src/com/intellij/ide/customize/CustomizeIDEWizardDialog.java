@@ -24,6 +24,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.JBCardLayout;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.MultiMap;
+import consulo.ide.customize.CustomizeDownloadAndStartStepPanel;
+import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
 import lombok.val;
 
 import javax.swing.*;

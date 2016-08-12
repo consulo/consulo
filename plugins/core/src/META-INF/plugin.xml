@@ -1408,7 +1408,7 @@
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.CharsetEP"/>
 
-    <iconDescriptorUpdater implementation="com.intellij.ide.LockedIconDescriptorUpdater"/>
+    <iconDescriptorUpdater implementation="consulo.ide.LockedIconDescriptorUpdater"/>
 
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.LargeFileEditorProvider"/>
     <frameEditorComponentProvider implementation="com.intellij.openapi.wm.ex.DefaultFrameEditorComponentProvider"/>
@@ -1418,7 +1418,7 @@
     <applicationService serviceInterface="com.intellij.ide.XmlRpcServer" serviceImplementation="com.intellij.ide.XmlRpcServerImpl"/>
 
     <httpRequestHandler implementation="com.intellij.ide.XmlRpcServerImpl$XmlRpcRequestHandler"/>
-    <httpRequestHandler implementation="org.mustbe.buildInWebServer.api.RequestFocusHttpRequestHandler"/>
+    <httpRequestHandler implementation="consulo.buildInWebServer.api.RequestFocusHttpRequestHandler"/>
 
     <editorNotificationProvider implementation="com.intellij.openapi.editor.impl.ForcedSoftWrapsNotificationProvider"/>
     <editorNotificationProvider implementation="com.intellij.ide.FileChangedNotificationProvider"/>

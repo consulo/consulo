@@ -23,6 +23,6 @@
     <generatedSourcesFilter implementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsGeneratedSourcesFilter" />
     <projectService serviceInterface="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager"
                     serviceImplementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManagerImpl"/>
-    <editorNotificationProvider implementation="org.mustbe.consulo.vfs.backgroundTask.ui.BackgroundTaskEditorNotificationProvider" />
+    <editorNotificationProvider implementation="consulo.backgroundTaskByVfsChange.ui.BackgroundTaskEditorNotificationProvider" />
   </extensions>
 </idea-plugin>
