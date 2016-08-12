@@ -19,7 +19,7 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <eapDescriptor implementation="org.consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
+    <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
 
     <applicationConfigurable parentId="general"
                              bundle="messages.IdeBundle"

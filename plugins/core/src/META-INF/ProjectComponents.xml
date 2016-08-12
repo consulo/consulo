@@ -115,7 +115,7 @@
     <component>
       <interface-class>com.intellij.openapi.roots.impl.DirectoryIndex</interface-class>
       <implementation-class>com.intellij.openapi.roots.impl.DirectoryIndexImpl</implementation-class>
-      <compiler-server-implementation-class>org.consulo.compiler.server.roots.impl.CompilerServerDirectoryIndex</compiler-server-implementation-class>
+      <compiler-server-implementation-class>consulo.compiler.server.roots.impl.CompilerServerDirectoryIndex</compiler-server-implementation-class>
       <loadForDefaultProject/>
     </component>
 
@@ -430,7 +430,7 @@
 
     <component>
       <interface-class>consulo.compiler.server.rmi.CompilerClientConnector</interface-class>
-      <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerClientConnectorImpl</implementation-class>
+      <implementation-class>consulo.compiler.server.rmi.impl.CompilerClientConnectorImpl</implementation-class>
     </component>
 
     <component>

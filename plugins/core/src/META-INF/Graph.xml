@@ -15,7 +15,7 @@
   -->
 <idea-plugin>
   <actions>
-    <action id="ShowDiagram" class="org.consulo.diagram.actions.ShowDiagramAction" icon="AllIcons.FileTypes.Diagram">
+    <action id="ShowDiagram" class="consulo.diagram.actions.ShowDiagramAction" icon="AllIcons.FileTypes.Diagram">
       <keyboard-shortcut first-keystroke="control shift alt U" keymap="$default"/>
       <add-to-group group-id="EditorPopupMenu" anchor="last" />
       <add-to-group group-id="ProjectViewPopupMenu" anchor="last" />
@@ -25,10 +25,10 @@
   </actions>
 
   <extensionPoints>
-    <extensionPoint name="graphProvider" interface="org.consulo.diagram.provider.GraphProvider" />
+    <extensionPoint name="graphProvider" interface="consulo.diagram.provider.GraphProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationService serviceImplementation="org.consulo.diagram.builder.impl.GraphBuilderFactoryImpl" />
+    <applicationService serviceImplementation="consulo.diagram.builder.impl.GraphBuilderFactoryImpl" />
   </extensions>
 </idea-plugin>

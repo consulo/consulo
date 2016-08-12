@@ -71,7 +71,7 @@
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.roots.ContentFolderSupportPatcher"/>
     <extensionPoint name="possibleModuleForFileResolver" interface="consulo.roots.ContentEntryFileListener$PossibleModuleForFileResolver"/>
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
-    <extensionPoint name="projectModelProcessor" interface="org.consulo.projectImport.ProjectModelProcessor"/>
+    <extensionPoint name="projectModelProcessor" interface="consulo.projectImport.ProjectModelProcessor"/>
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
@@ -1210,7 +1210,7 @@
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
                         serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"
-                        serviceImplementationForCompilerServer="org.consulo.compiler.server.fileSystem.CompilerServerRefreshQueueImpl"/>
+                        serviceImplementationForCompilerServer="consulo.compiler.server.fileSystem.CompilerServerRefreshQueueImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.ui.DialogWrapperPeerFactory"
                         serviceImplementation="com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl"/>
@@ -2400,8 +2400,8 @@
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
     <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler" order="last"/>
     <compiler implementation="com.intellij.compiler.impl.resourceCompiler.ResourceCompiler" id="resourceCompiler"/>
-    <projectService serviceInterface="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"
-                    serviceImplementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"/>
+    <projectService serviceInterface="consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"
+                    serviceImplementation="consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"/>
 
     <projectConfigurable parentId="project.propCompiler"
                          instance="consulo.compiler.impl.resourceCompiler.ResourceCompilerConfigurable"
