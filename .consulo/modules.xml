@@ -1040,7 +1040,7 @@
       </module>
       <module name="web" dirurl="file://$PROJECT_DIR$/impl/web" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
           <extension id="java-web" />
           <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/gwt-out" compiler-max-heap-size="256" compiler-parameters="-draftCompile" compiler-vm-parameters="" />
           <content url="file://$MODULE_DIR$">
@@ -1110,9 +1110,9 @@
       </module>
       <module name="ui-api" dirurl="file://$PROJECT_DIR$/api/ui-api" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
           <extension id="java-web" />
-          <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="" compiler-max-heap-size="256" compiler-parameters="" compiler-vm-parameters="-draftCompile" />
+          <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/../../impl/web/gwt-out" compiler-max-heap-size="256" compiler-parameters="" compiler-vm-parameters="-draftCompile" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -1125,7 +1125,7 @@
       </module>
       <module name="desktop-ui-impl" dirurl="file://$PROJECT_DIR$/impl/desktop-ui-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
