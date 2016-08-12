@@ -19,7 +19,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 
 public abstract class SchemesManagerFactory {
   public static ExtensionPointName<ServiceBean> SCHEME_OWNER = ExtensionPointName.create("com.intellij.schemeOwner");  

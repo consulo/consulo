@@ -17,7 +17,7 @@
 package consulo.testFramework;
 
 import com.intellij.ide.startup.impl.StartupManagerImpl;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.fileTypes.FileType;
@@ -37,7 +37,7 @@ import com.intellij.testFramework.TestDataFile;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.FileComparisonFailure;
-import com.intellij.util.LanguageVersionUtil;
+import consulo.lang.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;

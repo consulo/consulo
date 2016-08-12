@@ -17,7 +17,7 @@ package com.intellij.lang.impl;
 
 import com.intellij.lang.ASTLeafFactory;
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.LeafElement;

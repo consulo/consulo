@@ -22,7 +22,7 @@ import com.intellij.psi.PsiReference;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.extensions.CompositeExtensionPointName;
+import consulo.extensions.CompositeExtensionPointName;
 
 import java.util.Collection;
 import java.util.Set;

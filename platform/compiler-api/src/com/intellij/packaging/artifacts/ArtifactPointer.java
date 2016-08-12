@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.artifacts;
 
-import org.consulo.util.pointers.NamedPointer;
+import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.LightStubBuilder;
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
 
 

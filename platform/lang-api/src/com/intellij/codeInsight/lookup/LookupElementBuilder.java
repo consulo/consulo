@@ -18,7 +18,7 @@ package com.intellij.codeInsight.lookup;
 
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.ide.IconDescriptorUpdaters;
+import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.ObjectUtil;
 import gnu.trove.THashSet;

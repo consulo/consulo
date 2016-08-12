@@ -17,7 +17,7 @@
 package com.intellij.extapi.psi;
 
 import com.intellij.ide.util.PsiNavigationSupport;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;

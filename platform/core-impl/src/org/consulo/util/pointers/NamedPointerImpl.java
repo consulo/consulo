@@ -16,6 +16,8 @@
 package org.consulo.util.pointers;
 
 import consulo.lombok.annotations.Logger;
+import consulo.util.pointers.Named;
+import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 
 /**

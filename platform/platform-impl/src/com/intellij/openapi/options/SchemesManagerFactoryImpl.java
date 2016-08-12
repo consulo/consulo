@@ -24,7 +24,7 @@ import com.intellij.openapi.components.SettingsSavingComponent;
 import com.intellij.openapi.components.impl.stores.StreamProvider;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.lombok.annotations.Logger;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 
 import java.io.File;
 import java.util.List;

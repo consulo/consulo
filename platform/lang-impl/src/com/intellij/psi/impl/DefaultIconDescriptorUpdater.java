@@ -16,8 +16,8 @@
 package com.intellij.psi.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptor;
-import com.intellij.ide.IconDescriptorUpdater;
+import consulo.ide.IconDescriptor;
+import consulo.ide.IconDescriptorUpdater;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
@@ -31,7 +31,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.vfs.ArchiveFileSystem;
-import org.consulo.psi.PsiPackage;
+import consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;

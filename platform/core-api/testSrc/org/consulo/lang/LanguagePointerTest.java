@@ -16,9 +16,9 @@
 package org.consulo.lang;
 
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguagePointerUtil;
+import consulo.lang.LanguagePointerUtil;
 import junit.framework.TestCase;
-import org.consulo.util.pointers.NamedPointer;
+import consulo.util.pointers.NamedPointer;
 
 /**
  * @author VISTALL

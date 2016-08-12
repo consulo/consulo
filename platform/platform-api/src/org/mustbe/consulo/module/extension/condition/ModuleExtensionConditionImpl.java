@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.ArrayUtil;
 import org.consulo.module.extension.ModuleExtension;
-import org.mustbe.consulo.util.ListOfElementsEP;
+import consulo.extensions.ListOfElementsEP;
 
 /**
  * @author VISTALL

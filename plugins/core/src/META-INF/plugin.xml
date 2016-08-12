@@ -61,8 +61,8 @@
   </xi:include>
 
   <extensionPoints>
-    <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP"/>
-    <extensionPoint name="addTo.listOfElements" beanClass="org.mustbe.consulo.util.AddToElementEP"/>
+    <extensionPoint name="listOfElements" beanClass="consulo.extensions.ListOfElementsEP"/>
+    <extensionPoint name="addTo.listOfElements" beanClass="consulo.extensions.AddToElementEP"/>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
@@ -198,7 +198,7 @@
 
     <extensionPoint name="productivityFeaturesProvider" interface="com.intellij.featureStatistics.ProductivityFeaturesProvider"/>
 
-    <extensionPoint name="iconDescriptorUpdater" interface="com.intellij.ide.IconDescriptorUpdater"/>
+    <extensionPoint name="iconDescriptorUpdater" interface="consulo.ide.IconDescriptorUpdater"/>
 
     <extensionPoint name="customizableActionGroupProvider" interface="com.intellij.ide.ui.customization.CustomizableActionGroupProvider"/>
 
@@ -417,7 +417,7 @@
                     interface="com.intellij.lang.injection.ConcatenationAwareInjector"
                     area="CONSULO_PROJECT"/>
     <extensionPoint name="multiHostInjector"
-                    beanClass="com.intellij.lang.injection.MultiHostInjectorExtensionPoint"
+                    beanClass="consulo.lang.injection.MultiHostInjectorExtensionPoint"
                     area="CONSULO_PROJECT">
       <with attribute="forClass" implements="com.intellij.psi.PsiElement"/>
       <with attribute="implementationClass" implements="com.intellij.lang.injection.MultiHostInjector"/>
@@ -493,7 +493,7 @@
     <extensionPoint name="lang.structureViewExtension"
                     interface="com.intellij.ide.structureView.StructureViewExtension"/>
 
-    <extensionPoint name="lang.psi.elementFactory" interface="com.intellij.lang.PsiElementFactory"/>
+    <extensionPoint name="lang.psi.elementFactory" interface="consulo.psi.tree.PsiElementFactory"/>
 
     <extensionPoint name="lang.ast.lazyFactory" interface="com.intellij.lang.ASTLazyFactory"/>
 
@@ -528,11 +528,11 @@
     </extensionPoint>
 
     <extensionPoint name="lang.versionResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.LanguageVersionResolver"/>
+      <with attribute="implementationClass" implements="consulo.lang.LanguageVersionResolver"/>
     </extensionPoint>
 
     <extensionPoint name="lang.defineVersion" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.LanguageVersion"/>
+      <with attribute="implementationClass" implements="consulo.lang.LanguageVersion"/>
     </extensionPoint>
 
     <extensionPoint name="lang.treePatcher" beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -756,7 +756,7 @@
     <extensionPoint name="ui.suitableFontProvider" interface="com.intellij.ui.SuitableFontProvider"/>
 
     <extensionPoint name="schemeImporter" beanClass="com.intellij.openapi.options.SchemeImporterEP">
-      <with attribute="schemeClass" implements="org.consulo.util.pointers.Named"/>
+      <with attribute="schemeClass" implements="consulo.util.pointers.Named"/>
       <with attribute="implementationClass" implements="com.intellij.openapi.options.SchemeImporter"/>
     </extensionPoint>
 
@@ -774,7 +774,7 @@
 
     <extensionPoint name="psi.referenceProvider" beanClass="com.intellij.psi.PsiReferenceProviderBean"/>
     <extensionPoint name="psi.packageSupportProvider" interface="org.consulo.psi.PsiPackageSupportProvider"/>
-    <extensionPoint name="psi.directoryMethodProxy" interface="com.intellij.psi.PsiDirectoryMethodProxy"/>
+    <extensionPoint name="psi.directoryMethodProxy" interface="consulo.psi.PsiDirectoryMethodProxy"/>
     <extensionPoint name="patterns.patternClass" beanClass="com.intellij.patterns.compiler.PatternClassBean"/>
 
     <extensionPoint name="pom.declarationSearcher" interface="com.intellij.pom.PomDeclarationSearcher"/>

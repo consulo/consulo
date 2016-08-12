@@ -16,7 +16,7 @@
 package org.consulo.sdk;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import org.consulo.util.pointers.NamedPointerManager;
+import consulo.util.pointers.NamedPointerManager;
 
 /**
  * @author VISTALL

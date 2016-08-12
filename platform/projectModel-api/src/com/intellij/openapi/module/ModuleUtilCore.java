@@ -32,7 +32,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.graph.Graph;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.consulo.util.pointers.NamedPointer;
+import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;

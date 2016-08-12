@@ -17,7 +17,7 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.lombok.annotations.ArrayFactoryFields;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

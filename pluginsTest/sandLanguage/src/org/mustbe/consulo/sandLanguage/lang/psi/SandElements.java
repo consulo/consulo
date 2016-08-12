@@ -15,7 +15,7 @@
  */
 package org.mustbe.consulo.sandLanguage.lang.psi;
 
-import com.intellij.psi.tree.ElementTypeAsPsiFactory;
+import consulo.psi.tree.ElementTypeAsPsiFactory;
 import com.intellij.psi.tree.IElementType;
 import org.mustbe.consulo.sandLanguage.lang.SandLanguage;
 

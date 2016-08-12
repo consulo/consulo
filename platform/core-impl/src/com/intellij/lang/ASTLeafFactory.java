@@ -18,6 +18,8 @@ package com.intellij.lang;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.Predicate;
+import consulo.lang.LanguageVersion;
+import consulo.psi.tree.ElementTypeEntryExtensionCollector;
 import org.jetbrains.annotations.NotNull;
 
 /**

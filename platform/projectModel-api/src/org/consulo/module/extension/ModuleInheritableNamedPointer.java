@@ -16,8 +16,8 @@
 package org.consulo.module.extension;
 
 import com.intellij.openapi.module.Module;
-import org.consulo.util.pointers.Named;
-import org.consulo.util.pointers.NamedPointer;
+import consulo.util.pointers.Named;
+import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.Nullable;
 
 /**

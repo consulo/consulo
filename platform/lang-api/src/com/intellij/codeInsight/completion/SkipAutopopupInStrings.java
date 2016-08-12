@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;

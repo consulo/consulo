@@ -18,6 +18,7 @@ package org.mustbe.consulo.sandLanguage.lang.parser;
 import com.intellij.lang.*;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.tree.IElementType;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.sandLanguage.lang.psi.SandTokens;
 

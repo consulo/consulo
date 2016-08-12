@@ -26,7 +26,7 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.injection.MultiHostInjector;
-import com.intellij.lang.injection.MultiHostInjectorExtensionPoint;
+import consulo.lang.injection.MultiHostInjectorExtensionPoint;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;

@@ -24,7 +24,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
+import consulo.vfs.util.ArchiveVfsUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;

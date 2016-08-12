@@ -16,13 +16,13 @@
 package org.mustbe.consulo.sdk;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptor;
+import consulo.ide.IconDescriptor;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.util.ObjectUtil;
 import org.consulo.sdk.SdkPointerManager;
-import org.consulo.util.pointers.NamedPointer;
+import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

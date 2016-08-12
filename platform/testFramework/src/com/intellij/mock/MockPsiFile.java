@@ -1,9 +1,9 @@
 package com.intellij.mock;
 
-import com.intellij.lang.BaseLanguageVersion;
+import consulo.lang.BaseLanguageVersion;
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;

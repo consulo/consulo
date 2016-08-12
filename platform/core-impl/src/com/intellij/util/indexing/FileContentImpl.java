@@ -16,8 +16,8 @@
 package com.intellij.util.indexing;
 
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
-import com.intellij.lang.LanguageVersionResolvers;
+import consulo.lang.LanguageVersion;
+import consulo.lang.LanguageVersionResolvers;
 import com.intellij.lang.LighterAST;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;

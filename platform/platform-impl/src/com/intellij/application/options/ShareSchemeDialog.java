@@ -16,7 +16,7 @@
 package com.intellij.application.options;
 
 import com.intellij.openapi.ui.DialogWrapper;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 
 import javax.swing.*;
 

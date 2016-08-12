@@ -18,7 +18,7 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

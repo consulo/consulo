@@ -15,9 +15,9 @@
  */
 package org.mustbe.consulo.sandLanguage.lang.version;
 
-import com.intellij.lang.BaseLanguageVersion;
-import com.intellij.lang.LanguageVersionWithDefinition;
-import com.intellij.lang.LanguageVersionWithParsing;
+import consulo.lang.BaseLanguageVersion;
+import consulo.lang.LanguageVersionWithDefinition;
+import consulo.lang.LanguageVersionWithParsing;
 import com.intellij.lang.PsiParser;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;

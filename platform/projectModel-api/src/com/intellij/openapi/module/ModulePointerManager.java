@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.module;
 
-import org.consulo.util.pointers.NamedPointer;
-import org.consulo.util.pointers.NamedPointerManager;
+import consulo.util.pointers.NamedPointer;
+import consulo.util.pointers.NamedPointerManager;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 

@@ -16,7 +16,7 @@
 package org.mustbe.consulo.sandLanguage.lang.psi;
 
 import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import org.jetbrains.annotations.NotNull;

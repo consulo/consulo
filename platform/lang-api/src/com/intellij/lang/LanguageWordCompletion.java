@@ -21,7 +21,7 @@ package com.intellij.lang;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.LanguageVersionUtil;
+import consulo.lang.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class LanguageWordCompletion extends LanguageExtension<WordCompletionElementFilter> {

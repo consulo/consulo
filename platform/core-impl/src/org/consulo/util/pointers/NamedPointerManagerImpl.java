@@ -15,6 +15,9 @@
  */
 package org.consulo.util.pointers;
 
+import consulo.util.pointers.Named;
+import consulo.util.pointers.NamedPointer;
+import consulo.util.pointers.NamedPointerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +31,7 @@ import java.util.Map;
  *
  * Main idea was get from ModulePointerManagerImpl by <b>nik</b>
  */
-public abstract class NamedPointerManagerImpl<T extends Named> implements NamedPointerManager<T>  {
+public abstract class NamedPointerManagerImpl<T extends Named> implements NamedPointerManager<T> {
   private final Map<String, NamedPointerImpl<T>> myUnresolved = new HashMap<String, NamedPointerImpl<T>>();
   private final Map<T, NamedPointerImpl<T>> myPointers = new HashMap<T, NamedPointerImpl<T>>();
 

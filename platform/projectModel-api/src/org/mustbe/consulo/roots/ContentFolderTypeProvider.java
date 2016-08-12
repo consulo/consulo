@@ -17,12 +17,12 @@ package org.mustbe.consulo.roots;
 
 import com.google.common.base.Predicate;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptor;
+import consulo.ide.IconDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDirectory;
-import org.consulo.psi.PsiPackage;
+import consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

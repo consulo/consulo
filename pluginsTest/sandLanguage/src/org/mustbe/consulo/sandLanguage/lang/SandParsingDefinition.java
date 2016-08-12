@@ -17,7 +17,7 @@ package org.mustbe.consulo.sandLanguage.lang;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageVersionableParserDefinition;
+import consulo.lang.LanguageVersionableParserDefinition;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

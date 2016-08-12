@@ -19,6 +19,7 @@ import com.intellij.psi.impl.source.tree.LazyParseableElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.util.containers.Predicate;
+import consulo.psi.tree.ElementTypeEntryExtensionCollector;
 import org.jetbrains.annotations.NotNull;
 
 /**

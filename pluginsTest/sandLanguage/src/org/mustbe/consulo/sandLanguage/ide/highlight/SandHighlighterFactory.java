@@ -15,7 +15,7 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.highlight;
 
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import org.consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
 import org.jetbrains.annotations.NotNull;
