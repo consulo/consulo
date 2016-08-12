@@ -593,7 +593,6 @@
                     area="CONSULO_PROJECT"/>
     <extensionPoint name="librarySettingsProvider" interface="com.intellij.openapi.roots.ui.configuration.LibrarySettingsProvider"/>
 
-    <extensionPoint name="smartPointerElementInfoFactory" interface="com.intellij.psi.impl.smartPointers.SmartPointerElementInfoFactory"/>
     <extensionPoint name="smartPointerAnchorProvider" interface="com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider"/>
     <extensionPoint name="elementSignatureProvider" interface="com.intellij.codeInsight.folding.impl.ElementSignatureProvider"/>
     <extensionPoint name="preFormatProcessor" interface="com.intellij.psi.impl.source.codeStyle.PreFormatProcessor"/>
@@ -2476,8 +2475,6 @@
     <targetElementUtilEx implementation="consulo.codeInsight.TargetElementUtilExImpl"/>
 
     <bidiRegionsSeparator language="" implementationClass="com.intellij.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
-
-    <smartPointerElementInfoFactory implementation="com.intellij.psi.impl.smartPointers.AnchorElementInfoFactory"/>
 
     <additionalTextAttributes scheme="Default" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
     <additionalTextAttributes scheme="Darcula" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
