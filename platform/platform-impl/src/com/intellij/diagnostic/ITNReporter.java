@@ -65,6 +65,8 @@ import static com.intellij.openapi.util.text.StringUtil.isEmpty;
  */
 @Logger
 public class ITNReporter extends ErrorReportSubmitter {
+  public static final ITNReporter ourInstance = new ITNReporter();
+
   public static final String PROJECT = "CEP";
   @NonNls
   private static final String SERVER_URL = "http://napile.myjetbrains.com/youtrack/";
@@ -110,8 +112,7 @@ public class ITNReporter extends ErrorReportSubmitter {
     String description = throwableText.substring(0, Math.min(Math.max(80, throwableText.length()), 80));
 
 
-    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-    Integer signature = ideaLoggingEvent.getThrowable().getStackTrace()[0].hashCode();
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored") Integer signature = ideaLoggingEvent.getThrowable().getStackTrace()[0].hashCode();
 
     String existing = findExisting(signature);
     if (existing != null) {

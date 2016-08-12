@@ -79,9 +79,6 @@
     <extensionPoint name="postStartupActivity"
                     interface="com.intellij.openapi.startup.StartupActivity"/>
 
-    <extensionPoint name="errorHandler"
-                    interface="com.intellij.openapi.diagnostic.ErrorReportSubmitter"/>
-
     <extensionPoint name="projectConfigurable"
                     beanClass="com.intellij.openapi.options.ConfigurableEP"
                     area="CONSULO_PROJECT">
@@ -1132,8 +1129,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
-
     <applicationService serviceInterface="com.intellij.openapi.application.ApplicationInfo"
                         serviceImplementation="com.intellij.openapi.application.impl.ApplicationInfoImpl"/>
 

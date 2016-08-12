@@ -27,14 +27,13 @@ import java.awt.*;
  * reporting errors that happened in plugin code to vendor is desirable.
  */
 public abstract class ErrorReportSubmitter implements PluginAware {
-  public static final ExtensionPointName<ErrorReportSubmitter> EP_NAME = ExtensionPointName.create("com.intellij.errorHandler");
-
   private PluginDescriptor myPlugin;
 
   /**
    * Called by the framework. Allows to identify the plugin that provided this extension.
    * @param plugin
    */
+  @Override
   public void setPluginDescriptor(PluginDescriptor plugin) {
     myPlugin = plugin;
   }
