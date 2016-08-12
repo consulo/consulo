@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots.impl;
+package consulo.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.Disposable;
@@ -21,6 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.impl.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.Comparing;
@@ -44,7 +45,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.module.extension.ModuleExtensionProviderEP;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;
@@ -727,7 +728,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Override
   public void removeContentEntry(@NotNull ContentEntry entry) {
-    LOGGER.assertTrue(myContent.contains(entry));
+    ModuleRootLayerImpl.LOGGER.assertTrue(myContent.contains(entry));
     if (entry instanceof Disposable) {
       Disposer.dispose((Disposable)entry);
     }
@@ -736,7 +737,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Override
   public void addOrderEntry(@NotNull OrderEntry entry) {
-    LOGGER.assertTrue(!myOrderEntries.contains(entry));
+    ModuleRootLayerImpl.LOGGER.assertTrue(!myOrderEntries.contains(entry));
     myOrderEntries.add(entry);
   }
 
@@ -790,8 +791,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public ModuleOrderEntry addModuleOrderEntry(@NotNull Module module) {
-    LOGGER.assertTrue(!module.equals(getModule()));
-    LOGGER.assertTrue(Comparing.equal(myRootModel.getModule().getProject(), module.getProject()));
+    ModuleRootLayerImpl.LOGGER.assertTrue(!module.equals(getModule()));
+    ModuleRootLayerImpl.LOGGER.assertTrue(Comparing.equal(myRootModel.getModule().getProject(), module.getProject()));
     final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(module, this);
     myOrderEntries.add(moduleOrderEntry);
     return moduleOrderEntry;
@@ -800,7 +801,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public ModuleOrderEntry addInvalidModuleEntry(@NotNull String name) {
-    LOGGER.assertTrue(!name.equals(getModule().getName()));
+    ModuleRootLayerImpl.LOGGER.assertTrue(!name.equals(getModule().getName()));
     final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(name, this);
     myOrderEntries.add(moduleOrderEntry);
     return moduleOrderEntry;
@@ -835,7 +836,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   private void removeOrderEntryInternal(OrderEntry entry) {
-    LOGGER.assertTrue(myOrderEntries.contains(entry));
+    ModuleRootLayerImpl.LOGGER.assertTrue(myOrderEntries.contains(entry));
     Disposer.dispose((OrderEntryBaseImpl)entry);
     myOrderEntries.remove(entry);
   }
@@ -849,7 +850,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   private void assertValidRearrangement(@NotNull OrderEntry[] newEntries) {
     String error = checkValidRearrangement(newEntries);
-    LOGGER.assertTrue(error == null, error);
+    ModuleRootLayerImpl.LOGGER.assertTrue(error == null, error);
   }
 
   @Nullable

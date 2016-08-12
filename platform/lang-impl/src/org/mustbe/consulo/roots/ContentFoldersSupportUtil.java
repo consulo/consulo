@@ -3,7 +3,7 @@ package org.mustbe.consulo.roots;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import consulo.roots.ContentFolderTypeProvider;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

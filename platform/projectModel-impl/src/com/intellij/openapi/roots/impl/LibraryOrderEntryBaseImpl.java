@@ -25,6 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.lombok.annotations.Logger;
 import consulo.roots.OrderEntryWithTracking;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.roots.orderEntry.OrderEntryType;

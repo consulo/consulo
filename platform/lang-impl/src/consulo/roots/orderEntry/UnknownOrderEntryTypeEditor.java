@@ -16,7 +16,7 @@
 package consulo.roots.orderEntry;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.roots.impl.UnknownOrderEntryImpl;
+import consulo.roots.impl.UnknownOrderEntryImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import org.jetbrains.annotations.NotNull;

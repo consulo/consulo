@@ -50,7 +50,7 @@ import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredWriteAction;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderScopes;
 
 import java.io.File;
 import java.util.Collection;

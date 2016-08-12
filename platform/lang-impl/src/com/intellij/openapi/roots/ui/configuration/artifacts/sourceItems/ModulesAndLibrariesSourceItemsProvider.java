@@ -37,7 +37,7 @@ import com.intellij.packaging.ui.PackagingSourceItemsProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderScopes;
 
 import java.util.*;
 

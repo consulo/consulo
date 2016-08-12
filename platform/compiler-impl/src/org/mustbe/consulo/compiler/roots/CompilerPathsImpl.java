@@ -28,10 +28,10 @@ import com.intellij.util.containers.OrderedSet;
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.io.File;
 import java.util.Set;

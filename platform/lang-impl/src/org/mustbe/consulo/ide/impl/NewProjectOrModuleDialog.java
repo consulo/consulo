@@ -47,7 +47,7 @@ import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.RequiredWriteAction;
 import org.mustbe.consulo.ide.impl.ui.DListItem;
 import org.mustbe.consulo.ide.impl.ui.DListWithChildren;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;

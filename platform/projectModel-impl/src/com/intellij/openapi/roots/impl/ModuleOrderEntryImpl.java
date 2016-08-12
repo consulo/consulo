@@ -22,6 +22,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,12 +38,12 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   private DependencyScope myScope = DependencyScope.COMPILE;
   private boolean myProductionOnTestDependency;
 
-  ModuleOrderEntryImpl(@NotNull Module module, @NotNull ModuleRootLayerImpl rootLayer) {
+  public ModuleOrderEntryImpl(@NotNull Module module, @NotNull ModuleRootLayerImpl rootLayer) {
     super(ModuleOrderEntryType.getInstance(), rootLayer);
     myModulePointer = ModuleUtilCore.createPointer(module);
   }
 
-  ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull ModuleRootLayerImpl rootLayer) {
+  public ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull ModuleRootLayerImpl rootLayer) {
     this(moduleName, rootLayer, DependencyScope.COMPILE, false, false);
   }
 

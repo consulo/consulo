@@ -17,7 +17,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.containers.HashSet;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderScopes;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -27,7 +27,7 @@ import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 public class DummyCompileContext implements CompileContext {
   protected DummyCompileContext() {

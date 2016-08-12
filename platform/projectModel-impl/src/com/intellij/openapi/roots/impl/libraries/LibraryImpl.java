@@ -23,7 +23,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderRootType;
 import consulo.roots.OrderRootTypeWithConvert;
 import com.intellij.openapi.roots.RootProvider;
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.util.*;

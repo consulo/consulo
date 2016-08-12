@@ -16,6 +16,7 @@
 package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.projectRoots.Sdk;
+import consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
 import consulo.roots.ModuleRootLayer;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.ModuleInheritableNamedPointer;

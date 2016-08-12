@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots.impl;
+package consulo.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
+import consulo.roots.ContentFolderTypeProvider;
 import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.NotNull;
-import consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL

@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.roots.ContentFolderPropertyProvider;
 import consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.UnknownContentFolderTypeProvider;
+import consulo.roots.impl.UnknownContentFolderTypeProvider;
 
 import java.util.Collections;
 import java.util.List;

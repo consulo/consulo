@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.mustbe.consulo.roots.impl;
+package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
@@ -27,44 +26,39 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 07.11.13.
+ * @since 22:37/31.10.13
  */
-public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
+public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
   @NotNull
   @Lazy
-  public static ContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtension(WebResourcesFolderTypeProvider.class);
+  public static ProductionResourceContentFolderTypeProvider getInstance() {
+    return EP_NAME.findExtension(ProductionResourceContentFolderTypeProvider.class);
   }
 
-  public WebResourcesFolderTypeProvider() {
-    super("WEB_RESOURCES");
+  public ProductionResourceContentFolderTypeProvider() {
+    super("PRODUCTION_RESOURCE");
   }
 
   @Override
   public int getWeight() {
-    return 250;
+    return 100;
   }
 
   @NotNull
   @Override
   public Icon getIcon() {
-    return AllIcons.Modules.WebRoot;
-  }
-
-  @Override
-  public Icon getChildDirectoryIcon() {
-    return AllIcons.Nodes.WebFolder;
+    return AllIcons.Modules.ResourcesRoot;
   }
 
   @NotNull
   @Override
   public String getName() {
-    return ProjectBundle.message("module.toggle.web.resources.action");
+    return ProjectBundle.message("module.toggle.resources.action");
   }
 
   @NotNull
   @Override
   public Color getGroupColor() {
-    return ProductionResourceContentFolderTypeProvider.getInstance().getGroupColor();
+    return new Color(0x812DF3);
   }
 }

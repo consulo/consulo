@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.roots.impl;
+package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
+import com.intellij.ui.DarculaColors;
+import com.intellij.ui.JBColor;
 import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderTypeProvider;
@@ -26,39 +28,41 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 22:37/31.10.13
+ * @since 22:46/31.10.13
  */
-public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
+public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
+  private static final Color EXCLUDED_COLOR = new JBColor(new Color(0x992E00), DarculaColors.RED);
+
   @NotNull
   @Lazy
-  public static ProductionResourceContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtension(ProductionResourceContentFolderTypeProvider.class);
+  public static ExcludedContentFolderTypeProvider getInstance() {
+    return EP_NAME.findExtension(ExcludedContentFolderTypeProvider.class);
   }
 
-  public ProductionResourceContentFolderTypeProvider() {
-    super("PRODUCTION_RESOURCE");
-  }
-
-  @Override
-  public int getWeight() {
-    return 100;
+  public ExcludedContentFolderTypeProvider() {
+    super("EXCLUDED");
   }
 
   @NotNull
   @Override
   public Icon getIcon() {
-    return AllIcons.Modules.ResourcesRoot;
+    return AllIcons.Modules.ExcludeRoot;
+  }
+
+  @Override
+  public Icon getChildDirectoryIcon() {
+    return AllIcons.Modules.ExcludeRoot;
   }
 
   @NotNull
   @Override
   public String getName() {
-    return ProjectBundle.message("module.toggle.resources.action");
+    return ProjectBundle.message("module.toggle.excluded.action");
   }
 
   @NotNull
   @Override
   public Color getGroupColor() {
-    return new Color(0x812DF3);
+    return EXCLUDED_COLOR;
   }
 }

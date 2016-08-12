@@ -35,6 +35,7 @@ import consulo.roots.ModuleRootLayer;
 import consulo.roots.ModuleRootLayerListener;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

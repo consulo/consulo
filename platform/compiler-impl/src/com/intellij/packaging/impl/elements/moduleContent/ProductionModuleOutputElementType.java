@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 /**
 * @author nik

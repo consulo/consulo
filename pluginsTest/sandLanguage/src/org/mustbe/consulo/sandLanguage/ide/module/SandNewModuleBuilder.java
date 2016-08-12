@@ -24,7 +24,7 @@ import org.mustbe.consulo.ide.impl.NewModuleBuilder;
 import org.mustbe.consulo.ide.impl.NewModuleBuilderProcessor;
 import org.mustbe.consulo.ide.impl.NewModuleContext;
 import org.mustbe.consulo.ide.impl.UnzipNewModuleBuilderProcessor;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.sandLanguage.ide.module.extension.SandMutableModuleExtension;
 
 import javax.swing.*;

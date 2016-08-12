@@ -37,7 +37,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PsiTestUtil;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.io.File;
 import java.io.IOException;

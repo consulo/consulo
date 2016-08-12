@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.roots.impl;
+package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.project.ProjectBundle;
+import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderTypeProvider;
 
@@ -25,28 +28,46 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 22:59/31.10.13
+ * @since 22:37/31.10.13
  */
-public class UnknownContentFolderTypeProvider extends ContentFolderTypeProvider {
-  public UnknownContentFolderTypeProvider(String id) {
-    super(id);
+public class ProductionContentFolderTypeProvider extends ContentFolderTypeProvider {
+  private static final Color SOURCES_COLOR = new JBColor(new Color(0x0A50A1), DarculaColors.BLUE);
+
+  @NotNull
+  @Lazy
+  public static ProductionContentFolderTypeProvider getInstance() {
+    return EP_NAME.findExtension(ProductionContentFolderTypeProvider.class);
+  }
+
+  public ProductionContentFolderTypeProvider() {
+    super("PRODUCTION");
+  }
+
+  @Override
+  public int getWeight() {
+    return 50;
   }
 
   @NotNull
   @Override
   public Icon getIcon() {
-    return AllIcons.Toolbar.Unknown;
+    return AllIcons.Modules.SourceRoot;
+  }
+
+  @Override
+  public Icon getChildPackageIcon() {
+    return AllIcons.Nodes.Package;
   }
 
   @NotNull
   @Override
   public String getName() {
-    return "Unknown";
+    return ProjectBundle.message("module.toggle.sources.action");
   }
 
   @NotNull
   @Override
   public Color getGroupColor() {
-    return JBColor.DARK_GRAY;
+    return SOURCES_COLOR;
   }
 }

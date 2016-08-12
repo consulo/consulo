@@ -20,6 +20,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.sdk.SdkUtil;

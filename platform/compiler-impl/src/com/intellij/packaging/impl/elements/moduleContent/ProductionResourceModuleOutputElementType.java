@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
+import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 
 /**
  * @author VISTALL

@@ -19,6 +19,7 @@ import com.google.common.base.Predicate;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
+import consulo.roots.impl.ModuleRootsProcessor;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -27,7 +28,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;

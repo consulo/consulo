@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.roots;
+package consulo.roots;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.intellij.openapi.util.NotNullFactory;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.*;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.impl.*;
 
 /**
  * @author VISTALL

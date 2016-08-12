@@ -37,7 +37,7 @@ import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredWriteAction;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderScopes;
 
 import java.util.*;
 

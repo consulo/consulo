@@ -36,9 +36,9 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;

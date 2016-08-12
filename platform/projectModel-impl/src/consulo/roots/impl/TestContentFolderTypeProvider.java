@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.roots.impl;
+package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
 import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
@@ -28,46 +27,46 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 22:37/31.10.13
+ * @since 22:44/31.10.13
  */
-public class ProductionContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Color SOURCES_COLOR = new JBColor(new Color(0x0A50A1), DarculaColors.BLUE);
+public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
+  private static final Color TESTS_COLOR = new JBColor(new Color(0x008C2E), new Color(73, 140, 101));
 
   @NotNull
   @Lazy
-  public static ProductionContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtension(ProductionContentFolderTypeProvider.class);
+  public static TestContentFolderTypeProvider getInstance() {
+    return EP_NAME.findExtension(TestContentFolderTypeProvider.class);
   }
 
-  public ProductionContentFolderTypeProvider() {
-    super("PRODUCTION");
+  public TestContentFolderTypeProvider() {
+    super("TEST");
   }
 
   @Override
   public int getWeight() {
-    return 50;
+    return 150;
   }
 
   @NotNull
   @Override
   public Icon getIcon() {
-    return AllIcons.Modules.SourceRoot;
+    return AllIcons.Modules.TestRoot;
   }
 
   @Override
   public Icon getChildPackageIcon() {
-    return AllIcons.Nodes.Package;
+    return AllIcons.Nodes.TestPackage;
   }
 
   @NotNull
   @Override
   public String getName() {
-    return ProjectBundle.message("module.toggle.sources.action");
+    return ProjectBundle.message("module.toggle.test.sources.action");
   }
 
   @NotNull
   @Override
   public Color getGroupColor() {
-    return SOURCES_COLOR;
+    return TESTS_COLOR;
   }
 }

@@ -40,7 +40,7 @@ import com.intellij.util.containers.FList;
 import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 import java.util.*;
 

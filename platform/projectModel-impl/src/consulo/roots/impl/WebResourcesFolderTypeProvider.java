@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.roots.impl;
+
+package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.ui.DarculaColors;
-import com.intellij.ui.JBColor;
 import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderTypeProvider;
@@ -28,41 +27,44 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 22:46/31.10.13
+ * @since 07.11.13.
  */
-public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Color EXCLUDED_COLOR = new JBColor(new Color(0x992E00), DarculaColors.RED);
-
+public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
   @NotNull
   @Lazy
-  public static ExcludedContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtension(ExcludedContentFolderTypeProvider.class);
+  public static ContentFolderTypeProvider getInstance() {
+    return EP_NAME.findExtension(WebResourcesFolderTypeProvider.class);
   }
 
-  public ExcludedContentFolderTypeProvider() {
-    super("EXCLUDED");
+  public WebResourcesFolderTypeProvider() {
+    super("WEB_RESOURCES");
+  }
+
+  @Override
+  public int getWeight() {
+    return 250;
   }
 
   @NotNull
   @Override
   public Icon getIcon() {
-    return AllIcons.Modules.ExcludeRoot;
+    return AllIcons.Modules.WebRoot;
   }
 
   @Override
   public Icon getChildDirectoryIcon() {
-    return AllIcons.Modules.ExcludeRoot;
+    return AllIcons.Nodes.WebFolder;
   }
 
   @NotNull
   @Override
   public String getName() {
-    return ProjectBundle.message("module.toggle.excluded.action");
+    return ProjectBundle.message("module.toggle.web.resources.action");
   }
 
   @NotNull
   @Override
   public Color getGroupColor() {
-    return EXCLUDED_COLOR;
+    return ProductionResourceContentFolderTypeProvider.getInstance().getGroupColor();
   }
 }

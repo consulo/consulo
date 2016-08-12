@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderScopes;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

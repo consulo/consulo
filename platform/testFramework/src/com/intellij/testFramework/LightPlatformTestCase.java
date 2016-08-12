@@ -102,7 +102,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredWriteAction;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

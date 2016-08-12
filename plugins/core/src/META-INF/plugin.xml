@@ -585,7 +585,7 @@
       <with attribute="mutableClass" implements="consulo.module.extension.MutableModuleExtension"/>
     </extensionPoint>
 
-    <extensionPoint name="moduleRootsProcessor" interface="com.intellij.openapi.roots.impl.ModuleRootsProcessor"/>
+    <extensionPoint name="moduleRootsProcessor" interface="consulo.roots.impl.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
     <extensionPoint qualifiedName="consulo.orderEntryType" interface="consulo.roots.orderEntry.OrderEntryType"/>
     <extensionPoint qualifiedName="consulo.orderEntryTypeEditor" beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
@@ -1779,7 +1779,7 @@
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.MemberOrderService"/>
 
     <applicationService serviceInterface="consulo.bundle.SdkPointerManager"
-                        serviceImplementation="org.consulo.sdk.impl.SdkPointerManagerImpl"/>
+                        serviceImplementation="consulo.module.bundle.SdkPointerManagerImpl"/>
     <rearranger.ui implementation="com.intellij.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
 
     <projectService serviceInterface="com.intellij.ui.EditorTextFieldProvider"
@@ -2435,12 +2435,12 @@
     <projectService serviceInterface="org.mustbe.consulo.module.extension.ModuleExtensionHelper"
                     serviceImplementation="org.mustbe.consulo.module.extension.ModuleExtensionHelperImpl"/>
 
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.WebResourcesFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionResourceContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.TestContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.TestResourceContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.WebResourcesFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.ExcludedContentFolderTypeProvider"/>
 
     <contentFolderPropertyProvider implementation="org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
 
@@ -2476,7 +2476,7 @@
 
     <ui.suitableFontProvider implementation="com.intellij.ui.SuitableFontProviderImpl"/>
 
-    <moduleRootsProcessor implementation="com.intellij.openapi.roots.impl.NullModuleDirModuleRootsProcessor" order="last"/>
+    <moduleRootsProcessor implementation="consulo.roots.impl.NullModuleDirModuleRootsProcessor" order="last"/>
 
     <targetElementUtilEx implementation="com.intellij.codeInsight.TargetElementUtilExImpl"/>
 
