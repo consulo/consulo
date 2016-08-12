@@ -43,7 +43,9 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.ui.InsertPathAction;
+import consulo.roots.ui.configuration.WholeWestConfigurable;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 
@@ -269,6 +271,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     return VfsUtil.pathToUrl(myProjectCompilerOutput.getText().trim());
   }
 
+  @NotNull
   @Override
   public Couple<JComponent> createSplitterComponents() {
     return Couple.of(new JPanel(), createComponent());

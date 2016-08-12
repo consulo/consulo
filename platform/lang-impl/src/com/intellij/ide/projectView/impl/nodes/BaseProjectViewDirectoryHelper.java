@@ -21,7 +21,7 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.ProjectViewNode;
-import com.intellij.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
+import consulo.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -37,6 +37,7 @@ import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.search.PsiElementProcessor;

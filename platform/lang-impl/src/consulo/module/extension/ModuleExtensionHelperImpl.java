@@ -21,9 +21,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.containers.MultiMap;
 import org.consulo.annotations.Immutable;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.module.extension.ModuleExtensionHelper;
 
 import java.util.Collection;
 import java.util.Map;

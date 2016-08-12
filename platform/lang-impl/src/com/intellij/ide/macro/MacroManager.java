@@ -30,6 +30,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ConvertingIterator;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
+import consulo.ide.macro.ModuleProductionOutputDirPathMacro;
+import consulo.ide.macro.ModuleProfileNameMacro;
+import consulo.ide.macro.ModuleTestOutputDirPathMacro;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.Nullable;
 

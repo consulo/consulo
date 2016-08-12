@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.ui.configuration.WholeWestConfigurable;
+import consulo.roots.ui.configuration.WholeWestConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureDaemonAnalyzerListener;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
@@ -93,6 +93,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     });
   }
 
+  @NotNull
   @Override
   public Couple<JComponent> createSplitterComponents() {
     reInitWholePanelIfNeeded();

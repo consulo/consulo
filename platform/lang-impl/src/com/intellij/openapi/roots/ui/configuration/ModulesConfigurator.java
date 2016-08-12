@@ -53,6 +53,7 @@ import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
+import consulo.roots.ui.configuration.ProjectStructureDialog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;

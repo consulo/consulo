@@ -638,7 +638,7 @@
 
         <action id="UiInspector" internal="true" class="com.intellij.internal.inspector.UiInspectorAction" text="UI Inspector"/>
         <action id="ShowSplash" internal="true" class="com.intellij.ui.ShowSplashAction" text="Show Splash"/>
-        <action id="ShowGotItMessage" internal="true" class="com.intellij.ui.ShowGotItMessageAction" text="Show GotItMessage"/>
+        <action id="ShowGotItMessage" internal="true" class="consulo.internal.actions.ShowGotItMessageAction" text="Show GotItMessage"/>
         <action id="ValidationTest" internal="true" class="com.intellij.internal.validation.TestDialogWithValidationAction"
                 text="Validation Dialog Test"/>
         <action id="MacMessagesTest" internal="true" class="com.intellij.internal.validation.TestMacMessagesAction"

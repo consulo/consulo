@@ -16,7 +16,7 @@
 
 package com.intellij.ide.todo.nodes;
 
-import com.intellij.ide.projectView.impl.nodes.PackageElement;
+import consulo.ide.projectView.impl.nodes.PackageElement;
 import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
 import com.intellij.ide.todo.TodoFileDirAndModuleComparator;
 import com.intellij.ide.todo.TodoTreeBuilder;

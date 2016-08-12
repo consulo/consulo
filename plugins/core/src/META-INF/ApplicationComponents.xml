@@ -307,7 +307,7 @@
       <implementation-class>com.intellij.openapi.actionSystem.impl.AbbreviationManagerImpl</implementation-class>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.projectRoots.impl.PredefinedBundlesLoader</implementation-class>
+      <implementation-class>consulo.bundle.impl.PredefinedBundlesLoader</implementation-class>
     </component>
 
     <component>

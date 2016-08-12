@@ -17,7 +17,7 @@
 package com.intellij.refactoring.rename;
 
 import com.intellij.codeInsight.CodeInsightUtilBase;
-import com.intellij.ide.actions.QualifiedNameProviders;
+import consulo.ide.actions.QualifiedNameProviders;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.openapi.application.ApplicationManager;

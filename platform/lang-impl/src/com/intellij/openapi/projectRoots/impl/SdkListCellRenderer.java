@@ -31,7 +31,7 @@ import javax.swing.*;
  * @author yole
 */
 @Deprecated
-@DeprecationInfo(value = "Use com.intellij.openapi.roots.ui.configuration.SdkComboBox instead of JComboBox", until = "1.0")
+@DeprecationInfo(value = "Use consulo.roots.ui.configuration.SdkComboBox instead of JComboBox", until = "1.0")
 public class SdkListCellRenderer extends ColoredListCellRendererWrapper<Sdk> {
   private final String myNullText;
   private final boolean myShowHomePath;

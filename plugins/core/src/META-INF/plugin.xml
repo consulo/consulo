@@ -1014,7 +1014,7 @@
     <extensionPoint name="templateCompletionProcessor"
                     interface="com.intellij.codeInsight.template.macro.TemplateCompletionProcessor"/>
 
-    <extensionPoint name="targetElementUtilEx" interface="com.intellij.codeInsight.TargetElementUtilEx"/>
+    <extensionPoint name="targetElementUtilEx" interface="consulo.codeInsight.TargetElementUtilEx"/>
 
     <extensionPoint name="statementUpDownMover" interface="com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover"/>
 
@@ -1044,7 +1044,7 @@
     <extensionPoint name="uiDebuggerExtension" interface="com.intellij.ui.debugger.UiDebuggerExtension"/>
 
     <extensionPoint name="projectViewPane" interface="com.intellij.ide.projectView.impl.AbstractProjectViewPane" area="CONSULO_PROJECT"/>
-    <extensionPoint name="projectViewOptionProvider" interface="com.intellij.ide.projectView.impl.ProjectViewPaneOptionProvider"/>
+    <extensionPoint name="projectViewOptionProvider" interface="consulo.ide.projectView.impl.ProjectViewPaneOptionProvider"/>
 
     <extensionPoint name="inlineActionHandler" interface="com.intellij.lang.refactoring.InlineActionHandler"/>
 
@@ -1121,7 +1121,7 @@
     <extensionPoint name="editor.linePainter" interface="com.intellij.openapi.editor.EditorLinePainter"/>
 
     <extensionPoint name="addModuleDependencyTabFactory"
-                    interface="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory"/>
+                    interface="consulo.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory"/>
 
     <extensionPoint name="actionFromOptionDescriptorProvider" interface="com.intellij.ide.ui.search.ActionFromOptionDescriptorProvider"/>
 
@@ -1280,7 +1280,7 @@
     <applicationService serviceInterface="com.intellij.openapi.editor.colors.EditorColorsManager"
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl"/>
     <applicationService serviceInterface="consulo.application.options.PathMacrosService"
-                        serviceImplementation="com.intellij.application.options.PathMacrosServiceImpl"/>
+                        serviceImplementation="consulo.application.options.PathMacrosServiceImpl"/>
     <schemeOwner serviceInterface="com.intellij.openapi.editor.colors.EditorColorsManager"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.FileAppearanceService"
@@ -1474,7 +1474,7 @@
 
     <!--Rich-->
     <projectViewPane implementation="com.intellij.ide.projectView.impl.ProjectViewPane"/>
-    <projectViewOptionProvider implementation="com.intellij.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider"/>
+    <projectViewOptionProvider implementation="consulo.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider"/>
     <projectViewPane implementation="com.intellij.ide.projectView.impl.PackageViewPane"/>
 
     <renameHandler implementation="com.intellij.ide.projectView.impl.RenameModuleHandler"/>
@@ -1569,7 +1569,7 @@
     <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRun" id="compileBeforeRun"/>
     <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRunNoErrorCheck"
                             id="compileBeforeRunNoErrorCheck" order="after compileBeforeRun"/>
-    <stepsBeforeRunProvider implementation="com.intellij.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider"
+    <stepsBeforeRunProvider implementation="consulo.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider"
                             order="after compileBeforeRunNoErrorCheck"/>
     <stepsBeforeRunProvider implementation="com.intellij.execution.impl.RunConfigurationBeforeRunProvider"/>
 
@@ -1959,9 +1959,9 @@
     <patternDialectProvider implementation="com.intellij.packageDependencies.ui.ProjectPatternProvider" id="file"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.DefaultScopesProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.TestScopeProvider"/>
-    <customScopesProvider implementation="com.intellij.packageDependencies.ResourceScopeProvider"/>
-    <customScopesProvider implementation="com.intellij.packageDependencies.TestResourceScopeProvider"/>
-    <customScopesProvider implementation="com.intellij.packageDependencies.SourceScopeProvider"/>
+    <customScopesProvider implementation="consulo.packageDependencies.ResourceScopeProvider"/>
+    <customScopesProvider implementation="consulo.packageDependencies.TestResourceScopeProvider"/>
+    <customScopesProvider implementation="consulo.packageDependencies.SourceScopeProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.ChangeListsScopesProvider" order="last"/>
     <refactoring.elementListenerProvider implementation="com.intellij.packageDependencies.ui.RefactoringScopeElementListenerProvider"/>
 
@@ -2389,7 +2389,7 @@
              order="after openedInEditor"/>
 
 
-    <iconDescriptorUpdater implementation="com.intellij.psi.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
+    <iconDescriptorUpdater implementation="consulo.ide.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
 
     <lang.ast.lazyFactory implementation="consulo.psi.tree.impl.DefaultASTLazyFactory" order="last"/>
     <lang.ast.leafFactory implementation="consulo.psi.tree.impl.DefaultASTLeafFactory" order="last"/>
@@ -2428,7 +2428,7 @@
     <moduleService serviceInterface="org.consulo.compiler.ModuleCompilerPathsManager"
                    serviceImplementation="org.consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
 
-    <qualifiedNameProvider implementation="com.intellij.ide.actions.PsiPackageQualifiedNameProvider"/>
+    <qualifiedNameProvider implementation="consulo.ide.actions.PsiPackageQualifiedNameProvider"/>
 
     <pathMacroExpendableProtocol protocol="zip"/>
 
@@ -2464,9 +2464,9 @@
 
     <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.IndentingBackspaceHandler"/>
 
-    <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.FileOrDirectoryDependencyTabFactory"/>
-    <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.ModuleDependencyTabFactory"/>
-    <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.ProjectLibraryTabFactory"/>
+    <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.FileOrDirectoryDependencyTabFactory"/>
+    <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.ModuleDependencyTabFactory"/>
+    <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.ProjectLibraryTabFactory"/>
 
     <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectableIndentOptionsProvider" order="last"/>
 
@@ -2478,7 +2478,7 @@
 
     <moduleRootsProcessor implementation="consulo.roots.impl.NullModuleDirModuleRootsProcessor" order="last"/>
 
-    <targetElementUtilEx implementation="com.intellij.codeInsight.TargetElementUtilExImpl"/>
+    <targetElementUtilEx implementation="consulo.codeInsight.TargetElementUtilExImpl"/>
 
     <bidiRegionsSeparator language="" implementationClass="com.intellij.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
 

@@ -19,7 +19,7 @@
     <extensionPoint name="bundledColorScheme" beanClass="com.intellij.openapi.editor.colors.impl.BundledColorSchemeEP"/>
     <extensionPoint name="bundledQuickListsProvider" interface="com.intellij.openapi.actionSystem.impl.BundledQuickListsProvider"/>
     <extensionPoint name="bundledKeymap" beanClass="com.intellij.openapi.keymap.impl.BundledKeymapEP"/>
-    <extensionPoint name="bundleLiveTemplateSet" beanClass="com.intellij.codeInsight.template.impl.BundleLiveTemplateSetEP"/>
+    <extensionPoint name="bundleLiveTemplateSet" beanClass="consulo.codeInsight.template.impl.BundleLiveTemplateSetEP"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
