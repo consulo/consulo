@@ -17,8 +17,8 @@ package org.consulo.compiler.server.rmi.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import org.consulo.compiler.server.rmi.CompilerClientConnector;
-import org.consulo.compiler.server.rmi.CompilerClientInterface;
+import consulo.compiler.server.rmi.CompilerClientConnector;
+import consulo.compiler.server.rmi.CompilerClientInterface;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

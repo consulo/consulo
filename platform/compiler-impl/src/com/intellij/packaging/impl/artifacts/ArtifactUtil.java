@@ -37,7 +37,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
-import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
+import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;

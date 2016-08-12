@@ -26,8 +26,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TestDialog;
 import com.intellij.openapi.util.io.FileUtil;
 import org.consulo.compiler.server.application.CompilerServerApplication;
-import org.consulo.compiler.server.rmi.CompilerClientInterface;
-import org.consulo.compiler.server.rmi.CompilerServerInterface;
+import consulo.compiler.server.rmi.CompilerClientInterface;
+import consulo.compiler.server.rmi.CompilerServerInterface;
 import org.consulo.compiler.server.rmi.impl.CompilerServerInterfaceImpl;
 import org.jetbrains.annotations.NotNull;
 

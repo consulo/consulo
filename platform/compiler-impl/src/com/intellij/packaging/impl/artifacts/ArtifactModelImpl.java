@@ -19,6 +19,7 @@ import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.util.EventDispatcher;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
+import consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

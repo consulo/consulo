@@ -21,9 +21,9 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
-import org.consulo.compiler.server.rmi.CompilerClientConnector;
-import org.consulo.compiler.server.rmi.CompilerClientInterface;
-import org.consulo.compiler.server.rmi.CompilerServerInterface;
+import consulo.compiler.server.rmi.CompilerClientConnector;
+import consulo.compiler.server.rmi.CompilerClientInterface;
+import consulo.compiler.server.rmi.CompilerServerInterface;
 import consulo.lombok.annotations.Logger;
 
 import java.rmi.RemoteException;

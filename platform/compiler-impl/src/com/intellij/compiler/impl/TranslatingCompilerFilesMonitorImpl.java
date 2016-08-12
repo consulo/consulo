@@ -17,8 +17,10 @@ package com.intellij.compiler.impl;
 
 import com.intellij.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;
-import com.intellij.compiler.make.DependencyCache;
-import com.intellij.compiler.server.BuildManager;
+import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
+import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
+import consulo.compiler.make.DependencyCache;
+import consulo.compiler.server.BuildManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -82,7 +84,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *        2. corresponding source file has been deleted
  */
 public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements ApplicationComponent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.TranslatingCompilerFilesMonitor");
+  private static final Logger LOG = Logger.getInstance("#consulo.compiler.impl.TranslatingCompilerFilesMonitor");
   private static final boolean ourDebugMode = false;
 
   private static final FileAttribute ourSourceFileAttribute = new FileAttribute("_make_source_file_info_", 3);

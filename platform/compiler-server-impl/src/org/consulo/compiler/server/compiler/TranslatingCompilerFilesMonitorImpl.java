@@ -15,7 +15,7 @@
  */
 package org.consulo.compiler.server.compiler;
 
-import com.intellij.compiler.impl.TranslatingCompilerFilesMonitor;
+import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.TranslatingCompiler;
@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.TranslatingCompilerFilesMonitor");
+  private static final Logger LOG = Logger.getInstance("#consulo.compiler.impl.TranslatingCompilerFilesMonitor");
 
   private final Object myDataLock = new Object();
 

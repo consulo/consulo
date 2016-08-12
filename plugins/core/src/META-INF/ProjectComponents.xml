@@ -429,12 +429,12 @@
     </component>
 
     <component>
-      <interface-class>org.consulo.compiler.server.rmi.CompilerClientConnector</interface-class>
+      <interface-class>consulo.compiler.server.rmi.CompilerClientConnector</interface-class>
       <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerClientConnectorImpl</implementation-class>
     </component>
 
     <component>
-      <implementation-class>org.consulo.compiler.CompilerPathsManager</implementation-class>
+      <implementation-class>consulo.compiler.CompilerPathsManager</implementation-class>
     </component>
 
     <component>

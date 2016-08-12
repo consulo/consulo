@@ -292,13 +292,13 @@
                     interface="com.intellij.compiler.impl.AdditionalCompileScopeProvider"/>
 
     <extensionPoint name="compiler.translatingHelper"
-                    interface="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorHelper"/>
+                    interface="consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper"/>
 
     <extensionPoint name="compiler.resourceCompilerExtension"
                     interface="com.intellij.compiler.impl.resourceCompiler.ResourceCompilerExtension"/>
 
     <extensionPoint name="compiler.additionalOutputDirectoriesProvider"
-                    interface="com.intellij.compiler.impl.AdditionalOutputDirectoriesProvider"/>
+                    interface="consulo.compiler.impl.AdditionalOutputDirectoriesProvider"/>
     <extensionPoint name="orderRootTypeEditor"
                     beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="com.intellij.openapi.roots.ui.OrderRootTypeUIFactory"/>
@@ -1484,7 +1484,7 @@
         implementation="com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.ModulesAndLibrariesSourceItemsProvider"/>
     <packaging.sourceItemProvider
         implementation="com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.ArtifactsSourceItemsProvider"/>
-    <packaging.artifactType implementation="com.intellij.packaging.impl.artifacts.ZipArtifactType" order="first" id="zip-artifact"/>
+    <packaging.artifactType implementation="consulo.packaging.impl.artifacts.ZipArtifactType" order="first" id="zip-artifact"/>
     <packaging.artifactType implementation="com.intellij.packaging.impl.artifacts.PlainArtifactType" order="last"/>
     <compiler.additionalCompileScopeProvider implementation="com.intellij.packaging.impl.compiler.ArtifactAdditionalCompileScopeProvider"/>
     <gotoRelatedProvider implementation="com.intellij.testIntegration.GotoTestRelatedProvider"/>
@@ -1541,7 +1541,7 @@
 
     <projectConfigurable id="project.propCompiler.excluded" bundle="messages.CompilerBundle" key="actions.exclude.from.compile.text"
                          parentId="project.propCompiler"
-                         instance="com.intellij.compiler.options.CompilerExcludedConfigurable"/>
+                         instance="consulo.compiler.options.CompilerExcludedConfigurable"/>
 
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectDirCheckoutListener"/>
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
@@ -1589,7 +1589,7 @@
     <projectService serviceInterface="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"
                     serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
 
-    <roots.watchedRootsProvider implementation="com.intellij.compiler.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
+    <roots.watchedRootsProvider implementation="consulo.compiler.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
@@ -2395,7 +2395,7 @@
     <lang.ast.leafFactory implementation="consulo.psi.tree.impl.DefaultASTLeafFactory" order="last"/>
     <lang.ast.compositeFactory implementation="consulo.psi.tree.impl.DefaultASTCompositeFactory" order="last"/>
     <lang.psi.elementFactory implementation="consulo.psi.tree.impl.DefaultPsiElementFactory" order="last"/>
-    <iconDescriptorUpdater implementation="org.consulo.compiler.CompilerIconDescriptorUpdater"/>
+    <iconDescriptorUpdater implementation="consulo.compiler.CompilerIconDescriptorUpdater"/>
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
     <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler" order="last"/>
@@ -2404,7 +2404,7 @@
                     serviceImplementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"/>
 
     <projectConfigurable parentId="project.propCompiler"
-                         instance="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfigurable"
+                         instance="consulo.compiler.impl.resourceCompiler.ResourceCompilerConfigurable"
                          key="resource.compiler.description" bundle="messages.CompilerBundle"/>
 
 
@@ -2425,8 +2425,8 @@
     <projectService serviceImplementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector"/>
     <postStartupActivity implementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.PluginsAdvertiser"/>
 
-    <moduleService serviceInterface="org.consulo.compiler.ModuleCompilerPathsManager"
-                   serviceImplementation="org.consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
+    <moduleService serviceInterface="consulo.compiler.ModuleCompilerPathsManager"
+                   serviceImplementation="consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
 
     <qualifiedNameProvider implementation="consulo.ide.actions.PsiPackageQualifiedNameProvider"/>
 

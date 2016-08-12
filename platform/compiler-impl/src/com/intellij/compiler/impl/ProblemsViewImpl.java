@@ -31,7 +31,7 @@ import com.intellij.ui.content.MessageView;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.compiler.server.rmi.CompilerClientConnector;
+import consulo.compiler.server.rmi.CompilerClientConnector;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

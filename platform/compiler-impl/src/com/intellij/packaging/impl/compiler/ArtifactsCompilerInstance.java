@@ -43,7 +43,7 @@ import com.intellij.packaging.artifacts.ArtifactPropertiesProvider;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.artifacts.ArtifactSortingUtil;
-import com.intellij.packaging.impl.util.DeploymentUtilImpl;
+import consulo.packaging.impl.util.DeploymentUtilImpl;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;

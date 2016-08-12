@@ -292,14 +292,14 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
+      <interface-class>consulo.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
       <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl</implementation-class>
       <compiler-server-implementation-class>org.consulo.compiler.server.compiler.TranslatingCompilerFilesMonitorImpl</compiler-server-implementation-class>
     </component>
 
     <component>
-      <interface-class>org.consulo.compiler.server.rmi.CompilerServerConnector</interface-class>
-      <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
+      <interface-class>consulo.compiler.server.rmi.CompilerServerConnector</interface-class>
+      <implementation-class>consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
       <compiler-server-implementation-class></compiler-server-implementation-class>
     </component>
     <component>
