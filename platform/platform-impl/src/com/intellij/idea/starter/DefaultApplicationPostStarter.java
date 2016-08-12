@@ -40,7 +40,7 @@ import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.WindowManagerImpl;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.Splash;
-import com.intellij.util.SandboxUtil;
+import consulo.util.SandboxUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.Nullable;
 

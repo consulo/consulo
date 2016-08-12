@@ -16,9 +16,10 @@
 package com.intellij.vcs.log.data;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.progress.impl.ProgressManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -64,7 +65,8 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
         UIUtil.invokeLaterIfNeeded(new Runnable() {
           @Override
           public void run() {
-            ProgressManagerImpl.runProcessWithProgressAsynchronously(new MyTask(project, "Applying filters..."));
+            MyTask task = new MyTask(project, "Applying filters...");
+            ProgressManager.getInstance().runProcessWithProgressAsynchronously(task, new EmptyProgressIndicator());
           }
         });
       }

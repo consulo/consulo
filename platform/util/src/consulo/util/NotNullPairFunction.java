@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 must-be.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.containers;
+package consulo.util;
 
-import java.util.List;
+import com.intellij.util.PairFunction;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 12.03.2015
+ * @since 0:42/09.10.13
  */
-public interface ListWithForEach<E> extends CollectionWithForEach<E>, List<E> {
+public interface NotNullPairFunction<Arg1, Arg2, ResultType> extends PairFunction<Arg1, Arg2, ResultType> {
+  @NotNull
+  @Override
+  ResultType fun(Arg1 t, Arg2 v);
 }

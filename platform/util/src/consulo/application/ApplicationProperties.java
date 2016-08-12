@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.containers;
+package consulo.application;
 
-import com.intellij.util.Processor;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 12.03.2015
+ * @since 04.04.2016
  */
-public interface CollectionWithForEach<E> extends Collection<E> {
-  void forEach(@NotNull Processor<E> processor);
+public interface ApplicationProperties {
+  @NotNull
+  @NonNls
+  String IDEA_IS_INTERNAL = "idea.is.internal";
+
+  @NotNull
+  @NonNls
+  String CONSULO_IN_SANDBOX = "consulo.in.sandbox";
+
+  @NotNull
+  @NonNls
+  String CONSULO_IN_UNIT_TEST = "consulo.is.unit.test";
+
+  @NotNull
+  @NonNls
+  String CONSULO_AS_WEB_APP = "consulo.as.web.app";
 }

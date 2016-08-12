@@ -23,7 +23,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
-import com.intellij.util.ui.BuildInLookAndFeel;
+import consulo.util.ui.BuildInLookAndFeel;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
 

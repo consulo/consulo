@@ -15,7 +15,7 @@
  */
 package consulo.ide.ui.laf.modernWhite;
 
-import org.mustbe.consulo.jna.DwmApi;
+import consulo.jna.DwmApi;
 
 import javax.swing.*;
 import java.awt.*;

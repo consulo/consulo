@@ -27,6 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.util.NotNullPairFunction;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;

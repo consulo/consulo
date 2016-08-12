@@ -72,7 +72,7 @@ import org.jetbrains.ide.PooledThreadExecutor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import org.mustbe.consulo.application.ApplicationProperties;
+import consulo.application.ApplicationProperties;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.*;

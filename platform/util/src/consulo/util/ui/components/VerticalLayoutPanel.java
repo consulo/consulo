@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui.components;
+package consulo.util.ui.components;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.components.JBPanel;

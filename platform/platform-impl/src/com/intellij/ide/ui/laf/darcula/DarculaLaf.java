@@ -24,7 +24,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.containers.hash.HashMap;
-import com.intellij.util.ui.BuildInLookAndFeel;
+import consulo.util.ui.BuildInLookAndFeel;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;

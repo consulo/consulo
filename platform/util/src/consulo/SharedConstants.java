@@ -13,26 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
-
-import com.intellij.openapi.util.NotNullLazyValue;
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.application.ApplicationProperties;
+package consulo;
 
 /**
  * @author VISTALL
- * @since 15.09.14
+ * @since 16.02.14
  */
-public class SandboxUtil {
-  private static final NotNullLazyValue<Boolean> ourSandboxLazyValue = new NotNullLazyValue<Boolean>() {
-    @NotNull
-    @Override
-    protected Boolean compute() {
-      return SystemProperties.getBooleanProperty(ApplicationProperties.CONSULO_IN_SANDBOX, false);
-    }
-  };
-
-  public static boolean isInsideSandbox() {
-    return ourSandboxLazyValue.getValue();
-  }
+public interface SharedConstants {
+  String PATCH_FILE_NAME = "mustbe.patch.jar.consulo";
 }

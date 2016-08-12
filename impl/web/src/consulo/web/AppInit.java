@@ -19,7 +19,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.Main;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.util.ArrayUtil;
-import org.mustbe.consulo.application.ApplicationProperties;
+import consulo.application.ApplicationProperties;
 
 import java.io.File;
 import java.lang.reflect.Method;

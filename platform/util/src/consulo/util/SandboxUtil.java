@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.util;
 
+import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.util.SystemProperties;
 import org.jetbrains.annotations.NotNull;
+import consulo.application.ApplicationProperties;
 
 /**
  * @author VISTALL
- * @since 0:42/09.10.13
+ * @since 15.09.14
  */
-public interface NotNullPairFunction<Arg1, Arg2, ResultType> extends PairFunction<Arg1, Arg2, ResultType> {
-  @NotNull
-  @Override
-  ResultType fun(Arg1 t, Arg2 v);
+public class SandboxUtil {
+  private static final NotNullLazyValue<Boolean> ourSandboxLazyValue = new NotNullLazyValue<Boolean>() {
+    @NotNull
+    @Override
+    protected Boolean compute() {
+      return SystemProperties.getBooleanProperty(ApplicationProperties.CONSULO_IN_SANDBOX, false);
+    }
+  };
+
+  public static boolean isInsideSandbox() {
+    return ourSandboxLazyValue.getValue();
+  }
 }

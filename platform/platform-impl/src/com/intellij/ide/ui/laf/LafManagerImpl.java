@@ -55,7 +55,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.mac.MacPopupMenuUI;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.BuildInLookAndFeel;
+import consulo.util.ui.BuildInLookAndFeel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;

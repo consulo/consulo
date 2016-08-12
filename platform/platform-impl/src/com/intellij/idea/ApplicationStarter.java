@@ -31,7 +31,7 @@ import com.intellij.openapi.wm.impl.X11UiUtil;
 import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.application.ApplicationProperties;
+import consulo.application.ApplicationProperties;
 
 import javax.swing.*;
 import java.lang.reflect.Constructor;

@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.PluginId;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.application.ApplicationProperties;
+import consulo.application.ApplicationProperties;
 
 import java.util.*;
 
