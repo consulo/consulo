@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.diagram.builder;
+package consulo.diagram.builder.impl;
+
+import consulo.diagram.builder.GraphBuilder;
+import consulo.diagram.builder.GraphBuilderFactory;
 
 /**
  * @author VISTALL
- * @since 23:08/15.10.13
+ * @since 22:37/15.10.13
  */
-public enum GraphPositionStrategy {
-  TOP,
-  CENTER,
-  BOTTOM,
-  LEFT,
-  RIGHT
+public class GraphBuilderFactoryImpl extends GraphBuilderFactory {
+  @Override
+  public GraphBuilder createBuilder() {
+    return new GraphBuilderImpl();
+  }
 }

@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.diagram.builder.impl;
+package consulo.diagram.provider;
 
-import org.consulo.diagram.builder.GraphBuilder;
-import org.consulo.diagram.builder.GraphBuilderFactory;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.psi.PsiElement;
+import consulo.diagram.builder.GraphBuilder;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 22:37/15.10.13
+ * @since 23:48/15.10.13
  */
-public class GraphBuilderFactoryImpl extends GraphBuilderFactory {
-  @Override
-  public GraphBuilder createBuilder() {
-    return new GraphBuilderImpl();
-  }
+public interface GraphProvider {
+  ExtensionPointName<GraphProvider> EP_NAME = ExtensionPointName.create("com.intellij.graphProvider");
+
+  @NotNull
+  GraphBuilder createBuilder(@NotNull PsiElement element);
+
+  boolean isSupported(@NotNull PsiElement element);
 }

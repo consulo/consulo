@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.diagram.builder;
+package consulo.diagram.builder;
 
-import consulo.lombok.annotations.ApplicationService;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 22:36/15.10.13
  */
-@ApplicationService
-public abstract class GraphBuilderFactory {
-  public abstract GraphBuilder createBuilder();
+public interface GraphBuilder {
+  @NotNull
+  JComponent getComponent();
+
+  @NotNull
+  <E> GraphNode<E> createNode(E value, GraphPositionStrategy strategy);
 }

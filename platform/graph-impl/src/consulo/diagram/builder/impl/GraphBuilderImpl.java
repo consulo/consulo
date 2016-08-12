@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.diagram.builder.impl;
+package consulo.diagram.builder.impl;
 
 import com.intellij.util.containers.HashMap;
 import com.mxgraph.model.mxCell;
@@ -21,9 +21,9 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
-import org.consulo.diagram.builder.GraphBuilder;
-import org.consulo.diagram.builder.GraphNode;
-import org.consulo.diagram.builder.GraphPositionStrategy;
+import consulo.diagram.builder.GraphBuilder;
+import consulo.diagram.builder.GraphNode;
+import consulo.diagram.builder.GraphPositionStrategy;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

@@ -13,28 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.diagram.builder;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
+package consulo.diagram.builder;
 
 /**
  * @author VISTALL
- * @since 22:43/15.10.13
+ * @since 23:08/15.10.13
  */
-public interface GraphNode<T> {
-  /**
-   * Create arrow to target
-   *  [THIS NODE] -> [TARGET NODE]
-   * @param target
-   */
-  void makeArrow(@NotNull GraphNode<?> target);
-
-  @NotNull
-  List<GraphNode<?>> getArrowNodes();
-
-  T getValue();
-
-  GraphPositionStrategy getStrategy();
+public enum GraphPositionStrategy {
+  TOP,
+  CENTER,
+  BOTTOM,
+  LEFT,
+  RIGHT
 }
