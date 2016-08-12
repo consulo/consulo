@@ -17,7 +17,6 @@ package consulo.sandboxPlugin.lang.version;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -27,7 +26,6 @@ import consulo.sandboxPlugin.lang.psi.Sand2Tokens;
 import consulo.sandboxPlugin.lang.psi.SandElements;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public class Sand2LanguageVersion extends BaseSandLanguageVersion {
 
   @NotNull
   @Override
-  public Lexer createLexer(@Nullable Project project) {
+  public Lexer createLexer() {
     return new Sand2Lexer();
   }
 

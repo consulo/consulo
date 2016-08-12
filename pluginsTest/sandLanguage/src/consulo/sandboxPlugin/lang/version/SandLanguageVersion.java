@@ -56,7 +56,7 @@ public class SandLanguageVersion extends BaseSandLanguageVersion {
 
   @NotNull
   @Override
-  public Lexer createLexer(@Nullable Project project) {
+  public Lexer createLexer() {
     return new SandLexer();
   }
 

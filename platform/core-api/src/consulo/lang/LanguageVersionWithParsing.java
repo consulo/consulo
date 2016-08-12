@@ -18,10 +18,8 @@ package consulo.lang;
 import com.intellij.lang.Language;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,10 +27,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface LanguageVersionWithParsing<T extends Language> extends LanguageVersion<T> {
   @NotNull
-  Lexer createLexer(@Nullable Project project);
+  Lexer createLexer();
 
   @NotNull
-  PsiParser createParser(@Nullable Project project);
+  PsiParser createParser();
 
   @NotNull
   TokenSet getWhitespaceTokens();

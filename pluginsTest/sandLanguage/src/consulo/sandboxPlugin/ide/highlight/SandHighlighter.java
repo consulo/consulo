@@ -35,7 +35,7 @@ public class SandHighlighter extends LanguageVersionableSyntaxHighlighter {
   @Override
   public Lexer getHighlightingLexer(LanguageVersion languageVersion) {
     BaseSandLanguageVersion sandLanguageVersion = (BaseSandLanguageVersion) languageVersion;
-    return sandLanguageVersion.createLexer(null);
+    return sandLanguageVersion.createLexer();
   }
 
   @NotNull

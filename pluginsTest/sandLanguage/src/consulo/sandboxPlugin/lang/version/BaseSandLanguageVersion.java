@@ -78,7 +78,7 @@ public abstract class BaseSandLanguageVersion extends BaseLanguageVersion<SandLa
 
   @NotNull
   @Override
-  public PsiParser createParser(@Nullable Project project) {
+  public PsiParser createParser() {
     return new SandParser(myValue.getValue());
   }
 

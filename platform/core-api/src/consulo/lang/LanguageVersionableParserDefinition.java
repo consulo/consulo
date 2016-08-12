@@ -30,7 +30,7 @@ public abstract class LanguageVersionableParserDefinition implements ParserDefin
   @Override
   public Lexer createLexer(@NotNull LanguageVersion languageVersion) {
     if(languageVersion instanceof LanguageVersionWithParsing) {
-      return ((LanguageVersionWithParsing)languageVersion).createLexer(project);
+      return ((LanguageVersionWithParsing)languageVersion).createLexer();
     }
     throw new IllegalArgumentException("'createLexer' need override for language version '" + languageVersion + "'");
   }
@@ -39,7 +39,7 @@ public abstract class LanguageVersionableParserDefinition implements ParserDefin
   @Override
   public PsiParser createParser(@NotNull LanguageVersion languageVersion) {
     if(languageVersion instanceof LanguageVersionWithParsing) {
-      return ((LanguageVersionWithParsing)languageVersion).createParser(project);
+      return ((LanguageVersionWithParsing)languageVersion).createParser();
     }
     throw new IllegalArgumentException("'createParser' need override for language version '" + languageVersion + "'");
   }
