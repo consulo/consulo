@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.DeprecationInfo;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL

@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL

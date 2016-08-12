@@ -49,7 +49,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.ContentFoldersSupportUtil;
 
 import javax.swing.*;

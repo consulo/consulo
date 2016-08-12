@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.CheckedTreeNode;
 import org.consulo.module.extension.ModuleExtension;
-import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

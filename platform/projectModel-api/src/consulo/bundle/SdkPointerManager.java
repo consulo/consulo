@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.sdk;
+package consulo.bundle;
 
 import com.intellij.openapi.projectRoots.Sdk;
 import consulo.util.pointers.NamedPointerManager;

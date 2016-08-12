@@ -35,7 +35,7 @@ import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 

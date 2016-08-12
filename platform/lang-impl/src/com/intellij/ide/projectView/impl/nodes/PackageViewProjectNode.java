@@ -28,7 +28,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
+import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 

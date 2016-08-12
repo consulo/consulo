@@ -21,13 +21,13 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootLayer;
-import com.intellij.openapi.roots.ModuleRootLayerListener;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.ModuleRootLayerListener;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.messages.MessageBus;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
-import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 

@@ -21,7 +21,7 @@ import com.intellij.openapi.components.ComponentSerializationUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.OrderRootTypeWithConvert;
+import consulo.roots.OrderRootTypeWithConvert;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;

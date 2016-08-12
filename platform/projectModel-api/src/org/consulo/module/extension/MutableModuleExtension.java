@@ -15,7 +15,9 @@
  */
 package org.consulo.module.extension;
 
-import com.intellij.openapi.roots.ModifiableModuleRootLayer;
+import consulo.roots.ModifiableModuleRootLayer;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -30,6 +32,12 @@ public interface MutableModuleExtension<T extends ModuleExtension<T>> extends Mo
   @Nullable
   @RequiredDispatchThread
   JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck);
+
+  @Nullable
+  @RequiredUIAccess
+  default Component createConfigurationComponent(@NotNull Runnable updateOnCheck) {
+    return null;
+  }
 
   @Override
   @NotNull

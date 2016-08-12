@@ -18,7 +18,7 @@ package org.consulo.module.extension;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 import com.intellij.util.messages.Topic;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;

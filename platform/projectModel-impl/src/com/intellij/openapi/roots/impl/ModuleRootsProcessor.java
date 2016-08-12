@@ -26,7 +26,7 @@ import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.DeprecationInfo;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL

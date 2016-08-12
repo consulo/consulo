@@ -48,7 +48,7 @@ import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
 import lombok.val;
 import consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
+import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

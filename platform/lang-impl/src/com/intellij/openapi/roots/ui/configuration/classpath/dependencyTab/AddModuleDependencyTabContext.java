@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab;
 
-import com.intellij.openapi.roots.ModifiableModuleRootLayer;
+import consulo.roots.ModifiableModuleRootLayer;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;

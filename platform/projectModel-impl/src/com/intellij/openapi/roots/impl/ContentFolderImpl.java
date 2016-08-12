@@ -29,8 +29,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderPropertyProvider;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderPropertyProvider;
+import consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.UnknownContentFolderTypeProvider;
 
 import java.util.Collections;

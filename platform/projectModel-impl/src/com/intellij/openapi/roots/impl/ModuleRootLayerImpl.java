@@ -32,6 +32,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.orderEntry.OrderEntrySerializationUtil;
 import consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtension;
@@ -42,9 +43,9 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.ModuleExtensionProviderEP;
 import org.mustbe.consulo.roots.ContentFolderScopes;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;
 

@@ -29,7 +29,7 @@ import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.util.ArrayList;

@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import consulo.lombok.annotations.ModuleService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL

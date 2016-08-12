@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.module.extension;
+package consulo.module.extension;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.roots.ModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.NullableLazyValue;

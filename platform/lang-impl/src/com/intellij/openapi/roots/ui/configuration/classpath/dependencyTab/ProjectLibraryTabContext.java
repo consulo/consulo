@@ -32,6 +32,7 @@ import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.roots.ModifiableModuleRootLayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

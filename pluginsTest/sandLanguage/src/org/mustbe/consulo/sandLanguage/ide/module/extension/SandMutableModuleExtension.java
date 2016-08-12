@@ -16,7 +16,7 @@
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;

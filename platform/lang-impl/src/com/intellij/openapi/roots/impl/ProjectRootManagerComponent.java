@@ -44,6 +44,7 @@ import com.intellij.util.indexing.FileBasedIndexImpl;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
 import com.intellij.util.indexing.UnindexedFilesUpdater;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;

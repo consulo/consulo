@@ -17,7 +17,7 @@ package com.intellij.ide.macro;
 
 import com.intellij.ide.IdeBundle;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 /**

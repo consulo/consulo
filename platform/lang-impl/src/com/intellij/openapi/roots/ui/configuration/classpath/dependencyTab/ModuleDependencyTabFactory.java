@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.roots.ModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import org.jetbrains.annotations.NotNull;

@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
+import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.Nullable;
 
 /**

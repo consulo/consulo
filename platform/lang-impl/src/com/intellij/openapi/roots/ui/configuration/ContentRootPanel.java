@@ -37,7 +37,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderScopes;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import javax.swing.*;

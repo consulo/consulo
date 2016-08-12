@@ -22,7 +22,7 @@ import com.intellij.openapi.projectRoots.ProjectRootListener;
 import com.intellij.openapi.projectRoots.ex.SdkRoot;
 import com.intellij.openapi.projectRoots.ex.SdkRootContainer;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.OrderRootTypeWithConvert;
+import consulo.roots.OrderRootTypeWithConvert;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.ArchiveCopyingFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;

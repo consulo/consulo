@@ -34,7 +34,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
+import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;
 

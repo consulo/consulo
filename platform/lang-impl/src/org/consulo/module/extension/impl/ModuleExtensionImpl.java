@@ -17,8 +17,8 @@ package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModifiableModuleRootLayer;
-import com.intellij.openapi.roots.ModuleRootLayer;
+import consulo.roots.ModifiableModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;

@@ -21,7 +21,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.util.ObjectUtil;
-import org.consulo.sdk.SdkPointerManager;
+import consulo.bundle.SdkPointerManager;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

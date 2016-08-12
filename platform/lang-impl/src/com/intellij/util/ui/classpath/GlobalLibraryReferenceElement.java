@@ -1,6 +1,6 @@
 package com.intellij.util.ui.classpath;
 
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import consulo.roots.types.BinariesOrderRootType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NonNls;
 import org.jdom.Element;

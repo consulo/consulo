@@ -17,6 +17,7 @@ package org.mustbe.consulo.roots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.roots.ContentFolderTypeProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;

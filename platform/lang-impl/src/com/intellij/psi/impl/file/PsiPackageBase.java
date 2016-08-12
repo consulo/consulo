@@ -37,7 +37,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import org.consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
+import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;

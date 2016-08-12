@@ -88,7 +88,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.compiler.roots.CompilerPathsImpl;
 import org.mustbe.consulo.roots.ContentFolderScopes;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.io.*;

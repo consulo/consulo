@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots.types;
+package consulo.roots.types;
 
-import com.intellij.openapi.roots.OrderRootTypeWithConvert;
+import consulo.roots.OrderRootTypeWithConvert;
 import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 

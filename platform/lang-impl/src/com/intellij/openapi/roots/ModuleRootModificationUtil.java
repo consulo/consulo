@@ -19,8 +19,8 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
-import com.intellij.openapi.roots.types.SourcesOrderRootType;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 
 import java.util.Collections;
 import java.util.List;

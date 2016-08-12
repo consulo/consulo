@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.module.extension;
+package consulo.roots.types;
 
-import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
-import org.consulo.module.extension.ModuleExtension;
+import consulo.roots.OrderRootTypeWithConvert;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 17.08.14
  */
-public interface MutableModuleExtension<T extends ModuleExtension<T>> extends org.consulo.module.extension.MutableModuleExtension<T> {
-  @Nullable
-  @RequiredUIAccess
-  Component createConfigurablePanel2(@NotNull Runnable updateOnCheck);
+public class BinariesOrderRootType extends OrderRootTypeWithConvert {
+  @NotNull
+  @Lazy
+  public static BinariesOrderRootType getInstance() {
+    return getOrderRootType(BinariesOrderRootType.class);
+  }
+
+  public BinariesOrderRootType() {
+    super("binaries", "CLASSES", "classPath");
+  }
 }

@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.roots.libraries.Library;
+import consulo.roots.OrderEntryWithTracking;
 import org.jetbrains.annotations.Nullable;
 
 /**

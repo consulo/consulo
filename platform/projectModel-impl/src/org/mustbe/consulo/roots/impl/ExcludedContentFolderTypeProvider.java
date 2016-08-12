@@ -21,7 +21,7 @@ import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
 import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;

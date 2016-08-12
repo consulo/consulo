@@ -21,7 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VfsUtil;
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL

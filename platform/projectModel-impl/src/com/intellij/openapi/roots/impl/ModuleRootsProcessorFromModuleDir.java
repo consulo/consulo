@@ -23,7 +23,7 @@ import com.intellij.util.ArrayUtil;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectProcedure;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 /**

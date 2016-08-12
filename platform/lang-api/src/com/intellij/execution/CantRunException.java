@@ -18,7 +18,7 @@ package com.intellij.execution;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import org.consulo.module.extension.ModuleExtension;
-import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.ModuleExtensionProviderEP;
 import org.jetbrains.annotations.NotNull;
 
 public class CantRunException extends ExecutionException {

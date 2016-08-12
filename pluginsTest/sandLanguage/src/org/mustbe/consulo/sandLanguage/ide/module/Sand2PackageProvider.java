@@ -22,7 +22,7 @@ import com.intellij.psi.impl.file.PsiPackageBase;
 import com.intellij.util.ArrayFactory;
 import org.consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
+import consulo.psi.PsiPackageManager;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;

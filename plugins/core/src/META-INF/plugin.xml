@@ -66,8 +66,8 @@
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
-    <extensionPoint name="contentFolderTypeProvider" interface="org.mustbe.consulo.roots.ContentFolderTypeProvider"/>
-    <extensionPoint name="contentFolderPropertyProvider" interface="org.mustbe.consulo.roots.ContentFolderPropertyProvider"/>
+    <extensionPoint name="contentFolderTypeProvider" interface="consulo.roots.ContentFolderTypeProvider"/>
+    <extensionPoint name="contentFolderPropertyProvider" interface="consulo.roots.ContentFolderPropertyProvider"/>
     <extensionPoint name="contentFolderSupportPatcher" interface="org.mustbe.consulo.roots.ContentFolderSupportPatcher"/>
     <extensionPoint name="possibleModuleForFileResolver" interface="org.mustbe.consulo.roots.ContentEntryFileListener$PossibleModuleForFileResolver"/>
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
@@ -580,7 +580,7 @@
 
     <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="CONSULO_PROJECT"/>
 
-    <extensionPoint name="moduleExtensionProvider" beanClass="org.mustbe.consulo.module.extension.ModuleExtensionProviderEP">
+    <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.extension.ModuleExtensionProviderEP">
       <with attribute="immutableClass" implements="org.consulo.module.extension.ModuleExtension"/>
       <with attribute="mutableClass" implements="org.consulo.module.extension.MutableModuleExtension"/>
     </extensionPoint>
@@ -1368,7 +1368,7 @@
 
     <applicationService serviceImplementation="com.intellij.ide.RemoteDesktopDetector"/>
 
-    <projectService serviceInterface="org.consulo.psi.PsiPackageManager"
+    <projectService serviceInterface="consulo.psi.PsiPackageManager"
                     serviceImplementation="org.mustbe.consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
     <componentConfigurationMerger implementation="com.intellij.openapi.vcs.changes.shelf.ShelfManagerConfigurationMerger"/>
@@ -1549,15 +1549,15 @@
 
     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 
-    <orderRootType implementation="com.intellij.openapi.roots.types.BinariesOrderRootType"/>
+    <orderRootType implementation="consulo.roots.types.BinariesOrderRootType"/>
     <orderRootTypeEditor key="binaries"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.BinariesOrderRootTypeUIFactory"/>
 
-    <orderRootType implementation="com.intellij.openapi.roots.types.SourcesOrderRootType"/>
+    <orderRootType implementation="consulo.roots.types.SourcesOrderRootType"/>
     <orderRootTypeEditor key="sources"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
-    <orderRootType implementation="com.intellij.openapi.roots.types.DocumentationOrderRootType"/>
+    <orderRootType implementation="consulo.roots.types.DocumentationOrderRootType"/>
     <orderRootTypeEditor key="documentation"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
 
@@ -1778,7 +1778,7 @@
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.MemberOrderService"/>
 
-    <applicationService serviceInterface="org.consulo.sdk.SdkPointerManager"
+    <applicationService serviceInterface="consulo.bundle.SdkPointerManager"
                         serviceImplementation="org.consulo.sdk.impl.SdkPointerManagerImpl"/>
     <rearranger.ui implementation="com.intellij.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
 

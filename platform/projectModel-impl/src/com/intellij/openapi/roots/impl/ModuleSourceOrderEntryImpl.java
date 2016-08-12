@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.types.SourcesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;

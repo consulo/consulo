@@ -1,4 +1,4 @@
-package com.intellij.openapi.roots;
+package consulo.roots;
 
 import org.jetbrains.annotations.Nullable;
 

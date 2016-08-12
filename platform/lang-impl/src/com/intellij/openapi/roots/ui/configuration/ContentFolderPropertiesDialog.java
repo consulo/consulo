@@ -31,7 +31,7 @@ import com.intellij.util.ui.ComboBoxCellEditor;
 import com.intellij.util.ui.ListTableModel;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderPropertyProvider;
+import consulo.roots.ContentFolderPropertyProvider;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;

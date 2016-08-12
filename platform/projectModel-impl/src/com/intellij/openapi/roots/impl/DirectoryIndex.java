@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Query;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 public abstract class DirectoryIndex {
   public static DirectoryIndex getInstance(Project project) {

@@ -33,6 +33,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredWriteAction;

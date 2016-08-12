@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.module;
+package consulo.roots.types;
+
+import consulo.roots.OrderRootTypeWithConvert;
+import consulo.lombok.annotations.Lazy;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 02.04.2015
+ * @since 17.08.14
  */
-public class ModuleDirIsNotExistsException extends Exception {
-  public ModuleDirIsNotExistsException(final String message) {
-    super(message);
+public class DocumentationOrderRootType extends OrderRootTypeWithConvert {
+  @NotNull
+  @Lazy
+  public static DocumentationOrderRootType getInstance() {
+    return getOrderRootType(DocumentationOrderRootType.class);
+  }
+
+  public DocumentationOrderRootType() {
+    super("documentation", "DOCUMENTATION", "documentationPath");
   }
 }

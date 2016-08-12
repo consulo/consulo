@@ -20,7 +20,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;

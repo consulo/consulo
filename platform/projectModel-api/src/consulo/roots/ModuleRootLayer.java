@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots;
+package consulo.roots;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.DeprecationInfo;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL
@@ -47,7 +47,7 @@ public interface ModuleRootLayer {
    * lexicographical order of their paths.
    *
    * @return list of content entries for this module
-   * @see ContentEntry
+   * @see com.intellij.openapi.roots.ContentEntry
    */
   ContentEntry[] getContentEntries();
 
@@ -173,15 +173,15 @@ public interface ModuleRootLayer {
    * @param policy       the visitor to accept.
    * @param initialValue the default value to be returned by the visit process.
    * @return the value returned by the visitor.
-   * @see OrderEntry#accept(RootPolicy, Object)
+   * @see OrderEntry#accept(com.intellij.openapi.roots.RootPolicy, Object)
    */
   <R> R processOrder(RootPolicy<R> policy, R initialValue);
 
   /**
-   * Returns {@link OrderEnumerator} instance which can be used to process order entries of the module (with or without dependencies) and
+   * Returns {@link com.intellij.openapi.roots.OrderEnumerator} instance which can be used to process order entries of the module (with or without dependencies) and
    * collect classes or source roots
    *
-   * @return {@link OrderEnumerator} instance
+   * @return {@link com.intellij.openapi.roots.OrderEnumerator} instance
    * @since 10.0
    */
   @NotNull

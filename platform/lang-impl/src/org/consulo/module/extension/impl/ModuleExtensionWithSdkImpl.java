@@ -16,7 +16,7 @@
 package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jdom.Element;

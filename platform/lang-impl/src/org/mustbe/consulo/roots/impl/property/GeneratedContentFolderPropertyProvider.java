@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderPropertyProvider;
+import consulo.roots.ContentFolderPropertyProvider;
 
 import javax.swing.*;
 

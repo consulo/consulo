@@ -18,7 +18,7 @@ package org.mustbe.consulo.roots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;

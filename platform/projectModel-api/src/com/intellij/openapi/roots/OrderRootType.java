@@ -16,9 +16,9 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
-import com.intellij.openapi.roots.types.DocumentationOrderRootType;
-import com.intellij.openapi.roots.types.SourcesOrderRootType;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.DocumentationOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

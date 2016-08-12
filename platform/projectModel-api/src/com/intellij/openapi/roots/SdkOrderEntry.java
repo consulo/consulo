@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.projectRoots.Sdk;
+import consulo.roots.OrderEntryWithTracking;
 import org.mustbe.consulo.DeprecationInfo;
 
 @Deprecated

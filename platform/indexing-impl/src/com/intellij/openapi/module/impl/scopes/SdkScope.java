@@ -18,8 +18,8 @@ package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
-import com.intellij.openapi.roots.types.SourcesOrderRootType;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 
 /**
  * @author max

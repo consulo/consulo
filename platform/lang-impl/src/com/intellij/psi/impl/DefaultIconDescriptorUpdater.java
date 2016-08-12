@@ -32,11 +32,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
+import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.lang.LanguageElementIcons;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 

@@ -29,6 +29,8 @@ import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.lombok.annotations.Logger;
+import consulo.roots.ModifiableModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
