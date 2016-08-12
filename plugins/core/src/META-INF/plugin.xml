@@ -495,11 +495,11 @@
 
     <extensionPoint name="lang.psi.elementFactory" interface="consulo.psi.tree.PsiElementFactory"/>
 
-    <extensionPoint name="lang.ast.lazyFactory" interface="com.intellij.lang.ASTLazyFactory"/>
+    <extensionPoint name="lang.ast.lazyFactory" interface="consulo.psi.tree.ASTLazyFactory"/>
 
-    <extensionPoint name="lang.ast.leafFactory" interface="com.intellij.lang.ASTLeafFactory"/>
+    <extensionPoint name="lang.ast.leafFactory" interface="consulo.psi.tree.ASTLeafFactory"/>
 
-    <extensionPoint name="lang.ast.compositeFactory" interface="com.intellij.lang.ASTCompositeFactory"/>
+    <extensionPoint name="lang.ast.compositeFactory" interface="consulo.psi.tree.ASTCompositeFactory"/>
 
     <extensionPoint name="lang.formatter" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.formatting.FormattingModelBuilder"/>
@@ -2391,10 +2391,10 @@
 
     <iconDescriptorUpdater implementation="com.intellij.psi.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
 
-    <lang.ast.lazyFactory implementation="com.intellij.lang.impl.DefaultASTLazyFactory" order="last"/>
-    <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last"/>
-    <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last"/>
-    <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultPsiElementFactory" order="last"/>
+    <lang.ast.lazyFactory implementation="consulo.psi.tree.impl.DefaultASTLazyFactory" order="last"/>
+    <lang.ast.leafFactory implementation="consulo.psi.tree.impl.DefaultASTLeafFactory" order="last"/>
+    <lang.ast.compositeFactory implementation="consulo.psi.tree.impl.DefaultASTCompositeFactory" order="last"/>
+    <lang.psi.elementFactory implementation="consulo.psi.tree.impl.DefaultPsiElementFactory" order="last"/>
     <iconDescriptorUpdater implementation="org.consulo.compiler.CompilerIconDescriptorUpdater"/>
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>

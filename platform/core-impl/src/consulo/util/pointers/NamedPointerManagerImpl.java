@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.util.pointers;
+package consulo.util.pointers;
 
-import consulo.util.pointers.Named;
-import consulo.util.pointers.NamedPointer;
-import consulo.util.pointers.NamedPointerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

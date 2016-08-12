@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.impl;
+package consulo.psi.tree.impl;
 
-import com.intellij.lang.ASTLeafFactory;
+import consulo.psi.tree.ASTLeafFactory;
 import com.intellij.lang.LanguageParserDefinitions;
 import consulo.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;

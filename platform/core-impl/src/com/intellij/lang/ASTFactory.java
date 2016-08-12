@@ -26,6 +26,9 @@ import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.util.CharTable;
 import consulo.lang.LanguageVersion;
 import consulo.lang.util.LanguageVersionUtil;
+import consulo.psi.tree.ASTCompositeFactory;
+import consulo.psi.tree.ASTLazyFactory;
+import consulo.psi.tree.ASTLeafFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**

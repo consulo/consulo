@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang;
+package consulo.psi.tree;
 
-import com.intellij.psi.impl.source.tree.CompositeElement;
+import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.Predicate;
-import consulo.psi.tree.ElementTypeEntryExtensionCollector;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 2:13/02.04.13
  */
-public interface ASTCompositeFactory extends Predicate<IElementType> {
-  ElementTypeEntryExtensionCollector<ASTCompositeFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.compositeFactory");
+public interface ASTLeafFactory extends Predicate<IElementType> {
+  ElementTypeEntryExtensionCollector<ASTLeafFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.leafFactory");
 
   @NotNull
-  CompositeElement createComposite(final IElementType type);
+  LeafElement createLeaf(@NotNull final IElementType type, @NotNull final LanguageVersion<?> languageVersion, @NotNull final CharSequence text);
 }

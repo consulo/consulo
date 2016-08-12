@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.impl;
+package consulo.psi.tree.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageParserDefinitions;

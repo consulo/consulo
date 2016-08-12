@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang;
+package consulo.psi.tree;
 
 import com.intellij.psi.impl.source.tree.LazyParseableElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.util.containers.Predicate;
-import consulo.psi.tree.ElementTypeEntryExtensionCollector;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -20,7 +20,7 @@ import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTableListener;
 import org.consulo.sdk.SdkPointerManager;
-import org.consulo.util.pointers.NamedPointerManagerImpl;
+import consulo.util.pointers.NamedPointerManagerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
