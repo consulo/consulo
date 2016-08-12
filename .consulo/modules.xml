@@ -1111,14 +1111,11 @@
       <module name="ui-api" dirurl="file://$PROJECT_DIR$/api/ui-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
-          <extension id="java-web" />
-          <extension id="javaee-google-gwt" sdk-module-name="" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/../../impl/web/gwt-out" compiler-max-heap-size="256" compiler-parameters="" compiler-vm-parameters="-draftCompile" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="module-extension-sdk" extension-id="javaee-google-gwt" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="annotations" exported="" />
         </module-layer>
