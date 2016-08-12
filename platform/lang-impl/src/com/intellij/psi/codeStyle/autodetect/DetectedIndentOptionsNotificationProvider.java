@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
+import consulo.editor.notifications.EditorNotificationProvider;
 
 import static com.intellij.psi.codeStyle.EditorNotificationInfo.ActionLabelData;
 

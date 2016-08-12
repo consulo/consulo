@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options;
+package consulo.options;
 
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;

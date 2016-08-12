@@ -20,7 +20,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.OwnScrollBarUI;
+import consulo.util.ui.OwnScrollBarUI;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;

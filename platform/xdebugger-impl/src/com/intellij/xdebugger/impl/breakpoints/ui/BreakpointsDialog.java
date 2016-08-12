@@ -21,7 +21,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.WholeWestDialogWrapper;
+import consulo.ui.WholeWestDialogWrapper;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Couple;

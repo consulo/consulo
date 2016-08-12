@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.module.extension.condition;
+package consulo.module.extension.condition;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;

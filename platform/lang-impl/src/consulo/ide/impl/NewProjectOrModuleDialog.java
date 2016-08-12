@@ -29,7 +29,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.ui.WholeWestDialogWrapper;
+import consulo.ui.WholeWestDialogWrapper;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;

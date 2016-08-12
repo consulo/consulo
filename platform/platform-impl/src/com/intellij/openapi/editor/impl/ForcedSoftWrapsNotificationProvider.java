@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
+import consulo.editor.notifications.EditorNotificationProvider;
 
 public class ForcedSoftWrapsNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Key<EditorNotificationPanel> KEY = Key.create("forced.soft.wraps.notification.panel");

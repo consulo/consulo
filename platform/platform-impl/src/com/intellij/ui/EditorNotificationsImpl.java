@@ -39,8 +39,8 @@ import com.intellij.util.ui.update.Update;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProviders;
+import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.editor.notifications.EditorNotificationProviders;
 
 import javax.swing.*;
 import java.lang.ref.WeakReference;

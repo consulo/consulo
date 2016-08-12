@@ -27,7 +27,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.DumbModePermission;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.WholeWestDialogWrapper;
+import consulo.ui.WholeWestDialogWrapper;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;

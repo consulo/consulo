@@ -207,7 +207,7 @@
     <extensionPoint name="checkinHandlerFactory" interface="com.intellij.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
     <extensionPoint name="writingAccessProvider" area="CONSULO_PROJECT" interface="com.intellij.openapi.vfs.WritingAccessProvider"/>
-    <extensionPoint name="editorNotificationProvider" area="CONSULO_PROJECT" interface="org.mustbe.consulo.editor.notifications.EditorNotificationProvider"/>
+    <extensionPoint name="editorNotificationProvider" area="CONSULO_PROJECT" interface="consulo.editor.notifications.EditorNotificationProvider"/>
     <extensionPoint name="featureStatBundle" interface="com.intellij.featureStatistics.FeatureStatisticsBundleProvider"/>
     <extensionPoint name="featureStatisticsBundle" beanClass="com.intellij.featureStatistics.FeatureStatisticsBundleEP"/>
 

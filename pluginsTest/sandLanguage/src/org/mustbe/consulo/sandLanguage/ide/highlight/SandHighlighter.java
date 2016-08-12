@@ -19,7 +19,7 @@ import consulo.lang.LanguageVersion;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.tree.IElementType;
-import org.consulo.fileTypes.LanguageVersionableSyntaxHighlighter;
+import consulo.fileTypes.LanguageVersionableSyntaxHighlighter;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.sandLanguage.lang.version.BaseSandLanguageVersion;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.fileTypes;
+package consulo.fileTypes;
 
 import com.intellij.lang.Language;
 import consulo.lang.LanguageVersion;

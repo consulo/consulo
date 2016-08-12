@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui;
+package consulo.util.ui;
 
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Key;
+import com.intellij.util.ui.RegionPainter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ public interface OwnScrollBarUI {
    * This key defines a region painter, which is used by the custom ScrollBarUI
    * to draw additional paintings (i.e. error stripes) on the scrollbar's track.
    *
-   * @see UIUtil#putClientProperty
+   * @see com.intellij.util.ui.UIUtil#putClientProperty
    */
   Key<RegionPainter<Object>> TRACK = Key.create("JB_SCROLL_BAR_TRACK");
 

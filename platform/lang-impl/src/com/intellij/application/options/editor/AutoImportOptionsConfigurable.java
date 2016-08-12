@@ -16,7 +16,7 @@
 
 package com.intellij.application.options.editor;
 
-import com.intellij.openapi.options.ConfigurableAdapter;
+import consulo.options.ConfigurableAdapter;
 
 /**
  * @author Dmitry Avdeev

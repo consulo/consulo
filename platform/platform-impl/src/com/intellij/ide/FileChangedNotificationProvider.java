@@ -30,7 +30,7 @@ import com.intellij.ui.EditorNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
+import consulo.editor.notifications.EditorNotificationProvider;
 
 public class FileChangedNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Key<EditorNotificationPanel> KEY = Key.create("file.changed.notification.panel");

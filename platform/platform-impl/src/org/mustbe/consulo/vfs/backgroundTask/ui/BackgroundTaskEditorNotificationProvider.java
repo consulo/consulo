@@ -27,7 +27,7 @@ import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
+import consulo.editor.notifications.EditorNotificationProvider;
 import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
 import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
 import org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProviders;

@@ -1,4 +1,4 @@
-package org.mustbe.consulo.editor.notifications;
+package consulo.editor.notifications;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditor;

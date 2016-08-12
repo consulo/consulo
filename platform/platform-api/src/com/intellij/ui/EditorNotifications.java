@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
+import consulo.editor.notifications.EditorNotificationProvider;
 
 import javax.swing.*;
 
