@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package org.mustbe.consulo.execution.testframework.thrift.runner;
+package consulo.execution.testframework.thrift.runner;
 
 import org.apache.thrift.EncodingUtils;
 import org.apache.thrift.TException;
