@@ -16,10 +16,16 @@
 package consulo.codeInsight.completion;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.util.ProcessingContext;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
  * @since 12.12.2015
  */
-public abstract class CompletionProvider extends com.intellij.codeInsight.completion.CompletionProvider<CompletionParameters> {
+public interface CompletionProvider {
+  @RequiredReadAction
+  void addCompletions(@NotNull CompletionParameters parameters, final ProcessingContext context, @NotNull CompletionResultSet result);
 }

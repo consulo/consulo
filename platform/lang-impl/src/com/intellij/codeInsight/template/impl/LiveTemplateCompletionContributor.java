@@ -60,7 +60,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor {
     extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      protected void addCompletions(@NotNull final CompletionParameters parameters,
+      public void addCompletions(@NotNull final CompletionParameters parameters,
                                     ProcessingContext context,
                                     @NotNull CompletionResultSet result) {
         final PsiFile file = parameters.getPosition().getContainingFile();

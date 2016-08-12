@@ -67,7 +67,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
     extend(CompletionType.BASIC, psiElement(), new consulo.codeInsight.completion.CompletionProvider() {
       @RequiredReadAction
       @Override
-      protected void addCompletions(@NotNull CompletionParameters parameters,
+      public void addCompletions(@NotNull CompletionParameters parameters,
                                     ProcessingContext context,
                                     @NotNull CompletionResultSet result) {
         final PsiReference psiReference = parameters.getPosition().getContainingFile().findReferenceAt(parameters.getOffset());
@@ -83,7 +83,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
     extend(CompletionType.BASIC, psiElement(), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      protected void addCompletions(@NotNull final CompletionParameters parameters,
+      public void addCompletions(@NotNull final CompletionParameters parameters,
                                     ProcessingContext context,
                                     @NotNull final CompletionResultSet _result) {
         if (!parameters.isExtendedCompletion()) {

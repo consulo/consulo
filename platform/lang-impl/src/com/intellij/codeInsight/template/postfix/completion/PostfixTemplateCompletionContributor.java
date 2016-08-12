@@ -54,7 +54,7 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
     extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+      public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
         Editor editor = parameters.getEditor();
         if (!isCompletionEnabled(parameters) || LiveTemplateCompletionContributor.shouldShowAllTemplates() ||
             editor.getCaretModel().getCaretCount() != 1) {

@@ -45,7 +45,7 @@ public class CustomFileTypeCompletionContributor extends CompletionContributor i
     extend(CompletionType.BASIC, psiElement().inFile(psiFile().withFileType(instanceOf(CustomSyntaxTableFileType.class))), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+      public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
         if (inCommentOrLiteral(parameters)) {
           return;
         }
