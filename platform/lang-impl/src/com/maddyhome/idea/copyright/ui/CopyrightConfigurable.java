@@ -30,10 +30,9 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextField;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
-import consulo.copyright.PredefinedCopyrightTextEP;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
-import lombok.val;
+import consulo.copyright.PredefinedCopyrightTextEP;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -110,13 +109,13 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
         }
       }
     });
-    val extensions = PredefinedCopyrightTextEP.EP_NAME.getExtensions();
+    PredefinedCopyrightTextEP[] extensions = PredefinedCopyrightTextEP.EP_NAME.getExtensions();
     if (extensions.length > 0) {
       group.add(new AnAction("Reset To", null, AllIcons.Actions.Reset) {
         @Override
         public void actionPerformed(AnActionEvent e) {
-          val actionGroup = new DefaultActionGroup();
-          for (val extension : extensions) {
+          DefaultActionGroup actionGroup = new DefaultActionGroup();
+          for (PredefinedCopyrightTextEP extension : extensions) {
             actionGroup.add(new AnAction(extension.name) {
               @Override
               public void actionPerformed(AnActionEvent e) {

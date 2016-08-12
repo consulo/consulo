@@ -28,7 +28,7 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
 import com.intellij.util.IconUtil;
-import lombok.val;
+import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 
 public class PostfixTemplateLookupActionProvider implements LookupActionProvider {
   @Override
@@ -47,8 +47,8 @@ public class PostfixTemplateLookupActionProvider implements LookupActionProvider
             public void run() {
               if (project.isDisposed()) return;
 
-              val configurable = new PostfixTemplatesConfigurable();
-              val childConfigurable = configurable.findConfigurable(templateLookupElement.getProvider());
+              PostfixTemplatesConfigurable configurable = new PostfixTemplatesConfigurable();
+              PostfixTemplatesChildConfigurable childConfigurable = configurable.findConfigurable(templateLookupElement.getProvider());
               if(childConfigurable == null) {
                 return;
               }

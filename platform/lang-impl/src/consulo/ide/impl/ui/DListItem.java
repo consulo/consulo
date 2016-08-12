@@ -17,7 +17,6 @@ package consulo.ide.impl.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import lombok.val;
 import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -82,7 +81,7 @@ public class DListItem {
     public DListItem create() {
       List<DListItem> child = new ArrayList<DListItem>();
 
-      val item = new DListItem(myParent, myName, myIcon, myAttach, child);
+      DListItem item = new DListItem(myParent, myName, myIcon, myAttach, child);
       for (Builder builder : myItems) {
         builder.withParent(item);
         child.add(builder.create());
@@ -92,10 +91,10 @@ public class DListItem {
         public int compare(DListItem o1, DListItem o2) {
           boolean empty1 = o1.getItems().isEmpty();
           boolean empty2 = o2.getItems().isEmpty();
-          if(empty1 && empty2 || !empty1 && !empty2) {
+          if (empty1 && empty2 || !empty1 && !empty2) {
             return StringUtil.compare(o1.getName(), o2.getName(), true);
           }
-          if(empty1) {
+          if (empty1) {
             return 1;
           }
           else {

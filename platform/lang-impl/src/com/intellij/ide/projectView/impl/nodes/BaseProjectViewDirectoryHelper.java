@@ -21,7 +21,6 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.ProjectViewNode;
-import consulo.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -37,19 +36,19 @@ import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ide.projectView.impl.nodes.PackageElement;
-import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PathUtil;
+import consulo.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
+import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.lombok.annotations.Logger;
-import consulo.vfs.ArchiveFileSystem;
-import gnu.trove.THashSet;
-import lombok.val;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
+import consulo.vfs.ArchiveFileSystem;
+import consulo.vfs.util.ArchiveVfsUtil;
+import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -183,7 +182,7 @@ public class BaseProjectViewDirectoryHelper {
   }
 
   private static PsiElement[] directoryChildrenInProject(PsiDirectory psiDirectory, final ViewSettings settings) {
-    val directoryIndex = DirectoryIndex.getInstance(psiDirectory.getProject());
+    DirectoryIndex directoryIndex = DirectoryIndex.getInstance(psiDirectory.getProject());
     VirtualFile dir = psiDirectory.getVirtualFile();
     if (shouldBeShown(directoryIndex, dir, settings)) {
       final List<PsiElement> children = new ArrayList<PsiElement>();

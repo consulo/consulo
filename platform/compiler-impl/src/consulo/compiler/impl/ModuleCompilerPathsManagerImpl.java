@@ -15,7 +15,6 @@
  */
 package consulo.compiler.impl;
 
-import consulo.compiler.CompilerConfiguration;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
@@ -23,14 +22,14 @@ import com.intellij.openapi.roots.ui.LightFilePointer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import lombok.val;
+import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.lombok.annotations.Logger;
+import consulo.roots.ContentFolderTypeProvider;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -60,7 +59,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
   private boolean myExcludeOutput = true;
 
   @NotNull
-  private final Map<String, VirtualFilePointer> myVirtualFilePointers = new LinkedHashMap<String, VirtualFilePointer>();
+  private final Map<String, VirtualFilePointer> myVirtualFilePointers = new LinkedHashMap<>();
   private final CompilerConfiguration myCompilerConfiguration;
 
   public ModuleCompilerPathsManagerImpl(Module module) {
@@ -104,19 +103,19 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
   @Nullable
   public String getCompilerOutputUrl(@NotNull ContentFolderTypeProvider contentFolderType) {
     if (!myInheritOutput) {
-      val virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
+      VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
       if (virtualFilePointer != null) {
         return virtualFilePointer.getUrl();
       }
     }
 
-    val backUrl = myCompilerConfiguration.getCompilerOutputUrl() + "/" + contentFolderType.getId().toLowerCase() + "/" + myModule.getName();
+    String backUrl = myCompilerConfiguration.getCompilerOutputUrl() + "/" + contentFolderType.getId().toLowerCase() + "/" + myModule.getName();
 
-    val compilerOutput = myCompilerConfiguration.getCompilerOutput();
+    VirtualFile compilerOutput = myCompilerConfiguration.getCompilerOutput();
     if (compilerOutput == null) {
       return backUrl;
     }
-    val outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
+    VirtualFile outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
     return outDir != null ? outDir.getUrl() : backUrl;
   }
 

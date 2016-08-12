@@ -17,7 +17,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.containers.HashSet;
 import consulo.roots.ContentFolderScopes;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -146,8 +145,8 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
     }
 
     if (candidateModule != null && myScopeModules.contains(candidateModule)) {
-      val moduleRootManager = ModuleRootManager.getInstance(candidateModule);
-      val excludeRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderScopes.excluded());
+      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(candidateModule);
+      String[] excludeRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderScopes.excluded());
       for (String excludeRootUrl : excludeRootUrls) {
         if (isUrlUnderRoot(url, excludeRootUrl)) {
           return false;

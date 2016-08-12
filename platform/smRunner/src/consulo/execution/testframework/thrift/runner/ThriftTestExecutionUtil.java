@@ -24,14 +24,16 @@ import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.CompositeTestLocationProvider;
 import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil;
 import com.intellij.execution.testframework.sm.runner.*;
-import com.intellij.execution.testframework.sm.runner.ui.*;
+import com.intellij.execution.testframework.sm.runner.ui.AttachToProcessListener;
+import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
+import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerUIActionsHandler;
+import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm;
 import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.testIntegration.TestLocationProvider;
-import lombok.val;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
@@ -160,9 +162,9 @@ public class ThriftTestExecutionUtil {
       throw new IllegalArgumentException(e);
     }
 
-    val processor = new TestInterface.Processor<TestInterface.Iface>(iface);
+    TestInterface.Processor<TestInterface.Iface> processor = new TestInterface.Processor<TestInterface.Iface>(iface);
 
-    val server = new TSimpleServer(new TServer.Args(localhost).processor(processor));
+    TSimpleServer server = new TSimpleServer(new TServer.Args(localhost).processor(processor));
     ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
       @Override
       public void run() {

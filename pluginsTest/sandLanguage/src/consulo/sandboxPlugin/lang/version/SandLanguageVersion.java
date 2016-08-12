@@ -27,7 +27,6 @@ import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.sandboxPlugin.lang.lexer.SandLexer;
 import consulo.sandboxPlugin.lang.psi.SandElements;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +44,7 @@ public class SandLanguageVersion extends BaseSandLanguageVersion {
 
   @Override
   protected List<Pair<IElementType, IElementType>> createList() {
-    val list = new ArrayList<Pair<IElementType, IElementType>>(1);
+    List<Pair<IElementType, IElementType>> list = new ArrayList<Pair<IElementType, IElementType>>(1);
     list.add(new Pair<IElementType, IElementType>(SandTokens.CLASS_KEYWORD, SandElements.CLASS));
     return list;
   }

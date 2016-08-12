@@ -24,9 +24,8 @@ import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.IconUtil;
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -47,7 +46,7 @@ public class NewLayerAction extends AnAction {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    val modifiableRootModel = myModuleEditor.getModifiableRootModelProxy();
+    ModifiableRootModel modifiableRootModel = myModuleEditor.getModifiableRootModelProxy();
     String copyName = myCopy ? modifiableRootModel.getCurrentLayerName() : null;
     String newName = Messages.showInputDialog(modifiableRootModel.getProject(), "Name", "Enter Name", Messages.getQuestionIcon(),
                                               createUniqueSdkName(copyName, modifiableRootModel), new InputValidator() {
@@ -68,7 +67,7 @@ public class NewLayerAction extends AnAction {
     if (newName != null) {
       modifiableRootModel.addLayer(newName.trim(), copyName, true);
       String moduleDirUrl = modifiableRootModel.getModule().getModuleDirUrl();
-      if(moduleDirUrl != null) {
+      if (moduleDirUrl != null) {
         modifiableRootModel.addContentEntry(moduleDirUrl);
       }
     }

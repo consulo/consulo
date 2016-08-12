@@ -18,7 +18,6 @@ package com.intellij.psi.util;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -39,14 +38,14 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.TimeoutUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
+import consulo.lang.LanguageVersion;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
-import lombok.val;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -666,10 +665,10 @@ public class PsiUtilCore {
 
   @NotNull
   public static PsiFile[] virtualToPsiFiles(@NotNull final VirtualFile[] files, @NotNull Project project) {
-    val manager = PsiManager.getInstance(project);
-    val result = new ArrayList<PsiFile>();
+    PsiManager manager = PsiManager.getInstance(project);
+    List<PsiFile> result = new ArrayList<PsiFile>();
     for (VirtualFile virtualFile : files) {
-      val psiFile = manager.findFile(virtualFile);
+      PsiFile psiFile = manager.findFile(virtualFile);
       if (psiFile != null) result.add(psiFile);
     }
     return PsiUtilCore.toPsiFileArray(result);
@@ -677,10 +676,10 @@ public class PsiUtilCore {
 
   @NotNull
   public static PsiFile[] virtualToPsiFiles(@NotNull final List<VirtualFile> files, @NotNull Project project) {
-    val manager = PsiManager.getInstance(project);
-    val result = new ArrayList<PsiFile>();
+    PsiManager manager = PsiManager.getInstance(project);
+    List<PsiFile> result = new ArrayList<PsiFile>();
     for (VirtualFile virtualFile : files) {
-      val psiFile = manager.findFile(virtualFile);
+      PsiFile psiFile = manager.findFile(virtualFile);
       if (psiFile != null) result.add(psiFile);
     }
     return PsiUtilCore.toPsiFileArray(result);

@@ -27,14 +27,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.containers.HashSet;
-import lombok.val;
 import consulo.compiler.impl.ModuleCompilerPathsManagerImpl;
+import consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderTypeProvider;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Set;
 
@@ -43,12 +42,10 @@ import java.util.Set;
  * @since 13:05/10.06.13
  */
 @State(
-  name = "CompilerConfiguration",
-  storages = {
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
-  }
+        name = "CompilerConfiguration",
+        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)}
 )
-public class CompilerConfigurationImpl extends CompilerConfiguration implements PersistentStateComponent<Element>{
+public class CompilerConfigurationImpl extends CompilerConfiguration implements PersistentStateComponent<Element> {
   public static class MyWatchedRootsProvider implements WatchedRootsProvider {
     private final Project myProject;
 
@@ -81,9 +78,9 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
   @Nullable
   @Override
   public VirtualFile getCompilerOutput() {
-    if(myOutputDirPointer == null) {
+    if (myOutputDirPointer == null) {
       VirtualFile baseDir = myProject.getBaseDir();
-      if(baseDir == null) {
+      if (baseDir == null) {
         return null;
       }
       VirtualFile outDir = baseDir.findFileByRelativePath(DEFAULT_OUTPUT_URL);
@@ -114,7 +111,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
   @Nullable
   @Override
   public String getCompilerOutputUrl() {
-    if(myOutputDirPointer == null) {
+    if (myOutputDirPointer == null) {
       VirtualFile baseDir = myProject.getBaseDir();
       assert baseDir != null;
       VirtualFile outDir = baseDir.findFileByRelativePath(DEFAULT_OUTPUT_URL);
@@ -126,7 +123,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
 
   @Override
   public VirtualFilePointer getCompilerOutputPointer() {
-    if(myOutputDirPointer == null) {
+    if (myOutputDirPointer == null) {
       return new LightFilePointer(getCompilerOutputUrl());
     }
     return myOutputDirPointer;
@@ -142,15 +139,15 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
   @Nullable
   @Override
   public Element getState() {
-    if(myOutputDirPointer == null) {
+    if (myOutputDirPointer == null) {
       return null;
     }
     Element element = new Element("state");
     element.setAttribute(URL, myOutputDirPointer.getUrl());
     for (Module module : myModuleManager.getModules()) {
-      val moduleCompilerPathsManager = (ModuleCompilerPathsManagerImpl)ModuleCompilerPathsManager.getInstance(module);
+      ModuleCompilerPathsManagerImpl moduleCompilerPathsManager = (ModuleCompilerPathsManagerImpl)ModuleCompilerPathsManager.getInstance(module);
       Element state = moduleCompilerPathsManager.getState();
-      if(state != null) {
+      if (state != null) {
         element.addContent(state);
       }
     }
@@ -160,18 +157,18 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
   @Override
   public void loadState(Element element) {
     String url = element.getAttributeValue(URL);
-    if(url == null) {
+    if (url == null) {
       return;
     }
     setCompilerOutputUrl(url);
     for (Element moduleElement : element.getChildren("module")) {
       String name = moduleElement.getAttributeValue("name");
-      if(name == null) {
+      if (name == null) {
         continue;
       }
       Module module = myModuleManager.findModuleByName(name);
-      if(module != null) {
-        val moduleCompilerPathsManager = (ModuleCompilerPathsManagerImpl)ModuleCompilerPathsManager.getInstance(module);
+      if (module != null) {
+        ModuleCompilerPathsManagerImpl moduleCompilerPathsManager = (ModuleCompilerPathsManagerImpl)ModuleCompilerPathsManager.getInstance(module);
         moduleCompilerPathsManager.loadState(moduleElement);
       }
     }

@@ -23,7 +23,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import lombok.val;
 import consulo.backgroundTaskByVfsChange.tree.BackgroundTaskPsiFileTreeNode;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,12 +47,12 @@ public class BackgroundTaskByVfsProjectViewProvider implements SelectableTreeStr
 
   @Override
   public Collection<AbstractTreeNode> modify(AbstractTreeNode parent, Collection<AbstractTreeNode> children, ViewSettings settings) {
-    if(parent instanceof BackgroundTaskPsiFileTreeNode) {
+    if (parent instanceof BackgroundTaskPsiFileTreeNode) {
       return children;
     }
 
     List<VirtualFile> allGeneratedFiles = new ArrayList<VirtualFile>();
-    val vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(myProject);
+    BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(myProject);
     for (BackgroundTaskByVfsChangeTask o : vfsChangeManager.getTasks()) {
       Collections.addAll(allGeneratedFiles, o.getGeneratedFiles());
     }

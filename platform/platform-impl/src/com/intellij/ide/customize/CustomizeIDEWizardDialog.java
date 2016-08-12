@@ -26,7 +26,6 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.MultiMap;
 import consulo.ide.customize.CustomizeDownloadAndStartStepPanel;
 import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
-import lombok.val;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +85,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
       mySteps.add(new CustomizeKeyboardSchemeStepPanel());
     }
 
-    val templateStepPanel = myPredefinedTemplateSets.isEmpty() ? null : new CustomizeSelectTemplateStepPanel(myPredefinedTemplateSets);
+    CustomizeSelectTemplateStepPanel templateStepPanel = myPredefinedTemplateSets.isEmpty() ? null : new CustomizeSelectTemplateStepPanel(myPredefinedTemplateSets);
     CustomizePluginsStepPanel pluginsStepPanel = null;
     if (!myPluginDescriptors.isEmpty()) {
 

@@ -29,10 +29,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
-import com.intellij.openapi.wm.impl.status.TextPanel;
-import consulo.roots.ModuleRootLayer;
-import consulo.roots.ModuleRootLayerListener;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -41,11 +38,14 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
 import com.intellij.openapi.wm.StatusBar;
+import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
+import com.intellij.openapi.wm.impl.status.TextPanel;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ListWithSelection;
 import com.intellij.util.ui.UIUtil;
-import lombok.val;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.ModuleRootLayerListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -126,7 +126,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
 
     ListWithSelection<String> profiles = getLayers();
     assert profiles != null;
-    for (val profile : profiles) {
+    for (String profile : profiles) {
       if (Comparing.equal(profile, profiles.getSelection())) {
         continue;
       }
@@ -139,12 +139,12 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
           if (selectedFile == null || project == null) {
             return;
           }
-          val moduleForFile = ModuleUtilCore.findModuleForFile(selectedFile, project);
+          Module moduleForFile = ModuleUtilCore.findModuleForFile(selectedFile, project);
           if (moduleForFile == null) {
             return;
           }
 
-          val modifiableModel = ModuleRootManager.getInstance(moduleForFile).getModifiableModel();
+          ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(moduleForFile).getModifiableModel();
           modifiableModel.setCurrentLayer(profile);
           new WriteAction<Object>() {
 
@@ -157,8 +157,8 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
       });
     }
 
-    ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup("Module layer", actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+    ListPopup popup =
+            JBPopupFactory.getInstance().createActionGroupPopup("Module layer", actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     Dimension dimension = popup.getContent().getPreferredSize();
     Point at = new Point(0, -dimension.height);
     popup.show(new RelativePoint(e.getComponent(), at));

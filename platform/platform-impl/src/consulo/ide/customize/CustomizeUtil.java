@@ -28,8 +28,6 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.ide.customize.CustomizeDownloadDialog;
-import lombok.val;
 import consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -56,13 +54,13 @@ public class CustomizeUtil {
       initLaf();
     }
 
-    val downloadDialog = new CustomizeDownloadDialog();
+    CustomizeDownloadDialog downloadDialog = new CustomizeDownloadDialog();
 
     ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
       @Override
       public void run() {
-        val pluginDescriptors = new MultiMap<String, IdeaPluginDescriptor>();
-        val predefinedTemplateSets = new MultiMap<String, String>();
+        MultiMap<String, IdeaPluginDescriptor> pluginDescriptors = new MultiMap<String, IdeaPluginDescriptor>();
+        MultiMap<String, String> predefinedTemplateSets = new MultiMap<String, String>();
         try {
           List<IdeaPluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadPluginsFromRepository(null);
           for (IdeaPluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {

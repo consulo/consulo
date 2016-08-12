@@ -29,9 +29,8 @@ import com.intellij.ui.table.TableView;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ComboBoxCellEditor;
 import com.intellij.util.ui.ListTableModel;
-import lombok.val;
-import org.jetbrains.annotations.Nullable;
 import consulo.roots.ContentFolderPropertyProvider;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -59,10 +58,7 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
 
   private static class ChooseProvidersDialog extends ChooseElementsDialog<ContentFolderPropertyProvider<?>> {
 
-    public ChooseProvidersDialog(Project project,
-                                 List<? extends ContentFolderPropertyProvider<?>> items,
-                                 String title,
-                                 String description) {
+    public ChooseProvidersDialog(Project project, List<? extends ContentFolderPropertyProvider<?>> items, String title, String description) {
       super(project, items, title, description);
     }
 
@@ -155,7 +151,7 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
   @Nullable
   @Override
   protected JComponent createCenterPanel() {
-    val model = new ListTableModel<Item>(ourColumns, myItems, 0);
+    ListTableModel<Item> model = new ListTableModel<Item>(ourColumns, myItems, 0);
     TableView<Item> table = new TableView<Item>(model);
 
     ToolbarDecorator decorator = ToolbarDecorator.createDecorator(table);
@@ -177,9 +173,8 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
         ChooseProvidersDialog d = new ChooseProvidersDialog(myProject, list, ProjectBundle.message("module.paths.add.properties.title"),
                                                             ProjectBundle.message("module.paths.add.properties.desc"));
 
-        List<ContentFolderPropertyProvider<?>> list1 = d.showAndGetResult();
-        for (val propertyProvider : list1) {
-
+        List<ContentFolderPropertyProvider<?>> temp = d.showAndGetResult();
+        for (ContentFolderPropertyProvider<?> propertyProvider : temp) {
           model.addRow(new Item(propertyProvider, propertyProvider.getKey(), propertyProvider.getValues()[0]));
         }
       }

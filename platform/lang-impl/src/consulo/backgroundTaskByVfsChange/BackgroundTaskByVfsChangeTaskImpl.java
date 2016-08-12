@@ -39,11 +39,10 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.tools.ToolProcessAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import lombok.val;
+import consulo.annotations.RequiredReadAction;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -105,7 +104,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   @Nullable
   private static BackgroundTaskByVfsChangeProvider findProviderByName(String name) {
     BackgroundTaskByVfsChangeProvider temp = null;
-    for (val backgroundTaskByVfsChangeProvider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensions()) {
+    for (BackgroundTaskByVfsChangeProvider backgroundTaskByVfsChangeProvider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensions()) {
       if (Comparing.equal(name, backgroundTaskByVfsChangeProvider.getTemplateName())) {
         temp = backgroundTaskByVfsChangeProvider;
         break;
@@ -307,7 +306,8 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   @NotNull
   @Override
   public BackgroundTaskByVfsChangeTask clone() {
-    val task = new BackgroundTaskByVfsChangeTaskImpl(myProject, myVirtualFilePointer, myParameters, myProviderName, myName, myProvider, myManager);
+    BackgroundTaskByVfsChangeTaskImpl task =
+            new BackgroundTaskByVfsChangeTaskImpl(myProject, myVirtualFilePointer, myParameters, myProviderName, myName, myProvider, myManager);
     task.setEnabled(isEnabled());
     return task;
   }
