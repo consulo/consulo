@@ -21,12 +21,11 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.impl.ClonableOrderEntry;
 import com.intellij.openapi.roots.impl.OrderEntryBaseImpl;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import consulo.roots.orderEntry.OrderEntryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.roots.orderEntry.OrderEntryType;
 
 /**
  * @author VISTALL
@@ -52,7 +51,7 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
   @NotNull
   @Override
   public String getPresentableName() {
-    return "Unknown Order Entry. Type: " + StringUtil.capitalize(getType().getId());
+    return "Unknown Order Entry. Type: " + getType().getId();
   }
 
   @Override
