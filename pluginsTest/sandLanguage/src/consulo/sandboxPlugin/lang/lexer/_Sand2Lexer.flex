@@ -1,9 +1,9 @@
-package org.mustbe.consulo.sandLanguage.lang.lexer;
+package consulo.sandboxPlugin.lang.lexer;
 
 import java.util.*;
 import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
-import consulo.sandLanguage.lang.psi.Sand2Tokens;
+import consulo.sandboxPlugin.lang.psi.Sand2Tokens;
 
 %%
 
