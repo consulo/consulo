@@ -19,7 +19,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.copyright.ui.TemplateCommentPanel;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.copyright.config.CopyrightFileConfig;
+import consulo.copyright.config.CopyrightFileConfig;
 
 /**
  * @author VISTALL

@@ -17,7 +17,7 @@ package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
 import com.intellij.openapi.projectRoots.SdkType;
 import consulo.roots.ModuleRootLayer;
-import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import consulo.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.sandLanguage.ide.bundle.SandBundleType;
 

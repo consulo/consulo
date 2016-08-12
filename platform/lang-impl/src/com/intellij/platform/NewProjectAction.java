@@ -31,7 +31,7 @@ import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialog;
+import consulo.ide.impl.NewProjectOrModuleDialog;
 
 import java.io.File;
 

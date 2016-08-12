@@ -68,8 +68,8 @@
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="contentFolderTypeProvider" interface="consulo.roots.ContentFolderTypeProvider"/>
     <extensionPoint name="contentFolderPropertyProvider" interface="consulo.roots.ContentFolderPropertyProvider"/>
-    <extensionPoint name="contentFolderSupportPatcher" interface="org.mustbe.consulo.roots.ContentFolderSupportPatcher"/>
-    <extensionPoint name="possibleModuleForFileResolver" interface="org.mustbe.consulo.roots.ContentEntryFileListener$PossibleModuleForFileResolver"/>
+    <extensionPoint name="contentFolderSupportPatcher" interface="consulo.roots.ContentFolderSupportPatcher"/>
+    <extensionPoint name="possibleModuleForFileResolver" interface="consulo.roots.ContentEntryFileListener$PossibleModuleForFileResolver"/>
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="projectModelProcessor" interface="org.consulo.projectImport.ProjectModelProcessor"/>
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
@@ -807,7 +807,7 @@
     <extensionPoint name="elementsToHighlightFilter" interface="com.intellij.openapi.util.Condition"/>
 
     <extensionPoint name="sdkType" interface="com.intellij.openapi.projectRoots.SdkType"/>
-    <extensionPoint name="predefinedBundlesProvider" interface="org.mustbe.consulo.bundle.PredefinedBundlesProvider"/>
+    <extensionPoint name="predefinedBundlesProvider" interface="consulo.bundle.PredefinedBundlesProvider"/>
 
     <extensionPoint name="library.presentationProvider" interface="com.intellij.openapi.roots.libraries.LibraryPresentationProvider"/>
     <extensionPoint name="library.type" interface="com.intellij.openapi.roots.libraries.LibraryType"/>
@@ -962,7 +962,7 @@
       <with attribute="builderClass" implements="com.intellij.ide.util.projectWizard.ModuleBuilder"/>
     </extensionPoint>
 
-    <extensionPoint name="newModuleBuilder" interface="org.mustbe.consulo.ide.impl.NewModuleBuilder"/>
+    <extensionPoint name="newModuleBuilder" interface="consulo.ide.impl.NewModuleBuilder"/>
 
     <extensionPoint name="methodNavigationOffsetProvider"
                     interface="com.intellij.codeInsight.navigation.MethodNavigationOffsetProvider"/>
@@ -1369,7 +1369,7 @@
     <applicationService serviceImplementation="com.intellij.ide.RemoteDesktopDetector"/>
 
     <projectService serviceInterface="consulo.psi.PsiPackageManager"
-                    serviceImplementation="org.mustbe.consulo.psi.impl.PsiPackageManagerImpl"/>
+                    serviceImplementation="consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
     <componentConfigurationMerger implementation="com.intellij.openapi.vcs.changes.shelf.ShelfManagerConfigurationMerger"/>
     <editorActionHandler action="EditorEscape" implementationClass="com.intellij.codeInsight.hint.EscapeHandler" id="hide-hints"/>
@@ -2433,7 +2433,7 @@
     <pathMacroExpendableProtocol protocol="zip"/>
 
     <projectService serviceInterface="org.mustbe.consulo.module.extension.ModuleExtensionHelper"
-                    serviceImplementation="org.mustbe.consulo.module.extension.ModuleExtensionHelperImpl"/>
+                    serviceImplementation="consulo.module.extension.ModuleExtensionHelperImpl"/>
 
     <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionContentFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionResourceContentFolderTypeProvider"/>
@@ -2442,9 +2442,9 @@
     <contentFolderTypeProvider implementation="consulo.roots.impl.WebResourcesFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="consulo.roots.impl.ExcludedContentFolderTypeProvider"/>
 
-    <contentFolderPropertyProvider implementation="org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
+    <contentFolderPropertyProvider implementation="consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
 
-    <generatedSourcesFilter implementation="org.mustbe.consulo.roots.impl.property.GeneratedOnRootSourcesFilter"/>
+    <generatedSourcesFilter implementation="consulo.roots.impl.property.GeneratedOnRootSourcesFilter"/>
     <defaultHighlightingSettingProvider implementation="com.intellij.codeInsight.daemon.impl.analysis.GeneratedSourcesHighlightingSettingProvider"/>
     <editorNotificationProvider implementation="com.intellij.ide.GeneratedFileEditingNotificationProvider"/>
 
@@ -2460,7 +2460,7 @@
     <!--the following binding uses 'first' order to make sure it captures raw text before any other processor modifies it -->
     <copyPastePreProcessor implementation="com.intellij.openapi.editor.richcopy.TextWithMarkupProcessor$RawTextSetter" order="first" id="richcopy"/>
 
-    <newModuleBuilder implementation="org.mustbe.consulo.ide.impl.EmptyNewModuleBuilder"/>
+    <newModuleBuilder implementation="consulo.ide.impl.EmptyNewModuleBuilder"/>
 
     <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.IndentingBackspaceHandler"/>
 
@@ -2472,7 +2472,7 @@
 
     <editorNotificationProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectedIndentOptionsNotificationProvider"/>
 
-    <predefinedBundlesProvider implementation="org.mustbe.consulo.bundle.DefaultPredefinedBundlesProvider" order="first"/>
+    <predefinedBundlesProvider implementation="consulo.bundle.DefaultPredefinedBundlesProvider" order="first"/>
 
     <ui.suitableFontProvider implementation="com.intellij.ui.SuitableFontProviderImpl"/>
 

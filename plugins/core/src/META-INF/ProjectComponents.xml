@@ -26,7 +26,7 @@
     </component>
 
     <component>
-      <implementation-class>org.mustbe.consulo.roots.ContentEntryFileListener</implementation-class>
+      <implementation-class>consulo.roots.ContentEntryFileListener</implementation-class>
       <skipForDefaultProject/>
     </component>
 
@@ -438,7 +438,7 @@
     </component>
 
     <component>
-      <implementation-class>org.mustbe.consulo.roots.ExtensionListenerByLayerListenerInvoker</implementation-class>
+      <implementation-class>consulo.roots.ExtensionListenerByLayerListenerInvoker</implementation-class>
     </component>
   </project-components>
 </idea-plugin>

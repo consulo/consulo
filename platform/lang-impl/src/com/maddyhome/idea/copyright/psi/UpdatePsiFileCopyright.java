@@ -40,7 +40,7 @@ import com.maddyhome.idea.copyright.util.FileTypeUtil;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.copyright.config.CopyrightFileConfig;
+import consulo.copyright.config.CopyrightFileConfig;
 
 import java.util.*;
 import java.util.regex.Matcher;

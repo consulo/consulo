@@ -20,10 +20,10 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.ui.components.JBLabel;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.ide.impl.NewModuleBuilder;
-import org.mustbe.consulo.ide.impl.NewModuleBuilderProcessor;
-import org.mustbe.consulo.ide.impl.NewModuleContext;
-import org.mustbe.consulo.ide.impl.UnzipNewModuleBuilderProcessor;
+import consulo.ide.impl.NewModuleBuilder;
+import consulo.ide.impl.NewModuleBuilderProcessor;
+import consulo.ide.impl.NewModuleContext;
+import consulo.ide.impl.UnzipNewModuleBuilderProcessor;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.sandLanguage.ide.module.extension.SandMutableModuleExtension;
 

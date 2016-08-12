@@ -50,7 +50,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.ContentFoldersSupportUtil;
+import consulo.roots.ContentFoldersSupportUtil;
 
 import javax.swing.*;
 import javax.swing.tree.*;

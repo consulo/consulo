@@ -30,7 +30,7 @@ import consulo.roots.impl.*;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
+import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
 
 import java.io.IOException;
 import java.util.Collection;

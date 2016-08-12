@@ -16,7 +16,7 @@
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
 import consulo.roots.ModuleRootLayer;
-import org.consulo.module.extension.impl.ModuleExtensionImpl;
+import consulo.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**

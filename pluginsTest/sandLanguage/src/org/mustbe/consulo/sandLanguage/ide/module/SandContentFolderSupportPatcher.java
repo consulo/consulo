@@ -18,7 +18,7 @@ package org.mustbe.consulo.sandLanguage.ide.module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import consulo.roots.impl.*;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderSupportPatcher;
+import consulo.roots.ContentFolderSupportPatcher;
 import consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.sandLanguage.ide.module.extension.SandModuleExtension;
 

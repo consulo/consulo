@@ -19,10 +19,10 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <treeStructureProvider implementation="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsProjectViewProvider" order="last" />
-    <generatedSourcesFilter implementation="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsGeneratedSourcesFilter" />
+    <treeStructureProvider implementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsProjectViewProvider" order="last" />
+    <generatedSourcesFilter implementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsGeneratedSourcesFilter" />
     <projectService serviceInterface="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager"
-                    serviceImplementation="org.mustbe.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManagerImpl"/>
+                    serviceImplementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManagerImpl"/>
     <editorNotificationProvider implementation="org.mustbe.consulo.vfs.backgroundTask.ui.BackgroundTaskEditorNotificationProvider" />
   </extensions>
 </idea-plugin>

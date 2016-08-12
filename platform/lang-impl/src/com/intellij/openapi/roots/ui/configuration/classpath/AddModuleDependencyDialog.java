@@ -28,7 +28,7 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.ui.StripeTabPanel;
+import consulo.roots.ui.StripeTabPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;

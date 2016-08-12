@@ -25,7 +25,7 @@ import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.copyright.config.CopyrightFileConfig;
+import consulo.copyright.config.CopyrightFileConfig;
 
 public class FileTypeUtil {
 
