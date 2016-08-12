@@ -21,7 +21,7 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import lombok.val;
-import org.consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 public class ModuleUtil extends ModuleUtilCore {

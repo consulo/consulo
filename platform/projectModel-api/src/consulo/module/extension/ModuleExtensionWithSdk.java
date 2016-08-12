@@ -13,23 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.module.extension;
+package consulo.module.extension;
 
-import com.intellij.openapi.module.Module;
-import consulo.util.pointers.Named;
-import consulo.util.pointers.NamedPointer;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTypeId;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 19:58/15.06.13
+ * @since 23:26/18.05.13
  */
-public interface ModuleInheritableNamedPointer<T extends Named> extends NamedPointer<T> {
-  @Nullable
-  Module getModule();
+public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtension<T> {
+  @NotNull
+  ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 
   @Nullable
-  String getModuleName();
+  Sdk getSdk();
 
-  boolean isNull();
+  @Nullable
+  String getSdkName();
+
+  @NotNull
+  Class<? extends SdkTypeId> getSdkTypeClass();
 }

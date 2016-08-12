@@ -27,8 +27,6 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.lombok.annotations.Logger;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

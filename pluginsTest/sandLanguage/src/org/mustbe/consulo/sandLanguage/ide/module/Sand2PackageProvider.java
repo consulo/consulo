@@ -20,7 +20,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageBase;
 import com.intellij.util.ArrayFactory;
-import org.consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import org.consulo.psi.PsiPackageSupportProvider;

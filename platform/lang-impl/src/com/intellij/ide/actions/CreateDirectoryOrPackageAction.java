@@ -31,7 +31,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
-import org.consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;

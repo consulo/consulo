@@ -20,7 +20,7 @@ import consulo.ui.Components;
 import consulo.ui.Layouts;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.VerticalLayout;
-import org.consulo.module.extension.MutableModuleExtension;
+import consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;

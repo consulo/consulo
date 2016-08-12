@@ -16,7 +16,7 @@
 package org.mustbe.consulo.module.extension.condition;
 
 import com.intellij.openapi.project.Project;
-import org.consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtension;
 
 /**
  * @author VISTALL

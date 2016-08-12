@@ -16,6 +16,9 @@
 package org.consulo.module.extension;
 
 import com.intellij.openapi.projectRoots.Sdk;
+import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.module.extension.MutableModuleExtension;
+import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -19,7 +19,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
-import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
+import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.consulo.module.extension.ui.ModuleExtensionSdkBoxBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

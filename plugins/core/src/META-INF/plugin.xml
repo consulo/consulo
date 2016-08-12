@@ -581,8 +581,8 @@
     <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="CONSULO_PROJECT"/>
 
     <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.extension.ModuleExtensionProviderEP">
-      <with attribute="immutableClass" implements="org.consulo.module.extension.ModuleExtension"/>
-      <with attribute="mutableClass" implements="org.consulo.module.extension.MutableModuleExtension"/>
+      <with attribute="immutableClass" implements="consulo.module.extension.ModuleExtension"/>
+      <with attribute="mutableClass" implements="consulo.module.extension.MutableModuleExtension"/>
     </extensionPoint>
 
     <extensionPoint name="moduleRootsProcessor" interface="com.intellij.openapi.roots.impl.ModuleRootsProcessor"/>

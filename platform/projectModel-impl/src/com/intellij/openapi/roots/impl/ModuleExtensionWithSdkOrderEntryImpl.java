@@ -23,8 +23,8 @@ import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.Comparing;
 import consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryType;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

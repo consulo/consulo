@@ -25,10 +25,10 @@ import consulo.roots.ModuleRootLayer;
 import consulo.roots.ModuleRootLayerListener;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.messages.MessageBus;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionChangeListener;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionChangeListener;
 import consulo.module.extension.ModuleExtensionProviderEP;
-import org.consulo.module.extension.MutableModuleExtension;
+import consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

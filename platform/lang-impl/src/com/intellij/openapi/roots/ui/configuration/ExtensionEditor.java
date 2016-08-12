@@ -28,10 +28,11 @@ import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.module.extension.MutableModuleExtension;
 import consulo.psi.PsiPackageManager;
 import consulo.roots.ModifiableModuleRootLayer;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -126,8 +127,8 @@ public class ExtensionEditor extends ModuleElementsEditor {
       @Override
       @RequiredDispatchThread
       public void valueChanged(final TreeSelectionEvent e) {
-        final List<org.consulo.module.extension.MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, org.consulo.module.extension.MutableModuleExtension.class);
-        updateSecondComponent(ContainerUtil.<org.consulo.module.extension.MutableModuleExtension>getFirstItem(selected));
+        final List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
+        updateSecondComponent(ContainerUtil.<MutableModuleExtension>getFirstItem(selected));
       }
     });
     TreeUtil.expandAll(myTree);
@@ -141,7 +142,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   @Nullable
   @RequiredDispatchThread
-  private JComponent createConfigurationPanel(final @NotNull org.consulo.module.extension.MutableModuleExtension extension) {
+  private JComponent createConfigurationPanel(final @NotNull MutableModuleExtension extension) {
     myConfigurablePanelExtension = extension;
     final Runnable updateOnCheck = new Runnable() {
       @Override
@@ -171,7 +172,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   }
 
   @RequiredDispatchThread
-  private void updateSecondComponent(@Nullable org.consulo.module.extension.MutableModuleExtension extension) {
+  private void updateSecondComponent(@Nullable MutableModuleExtension extension) {
     if (extension == null || !extension.isEnabled()) {
       mySplitter.setSecondComponent(null);
     }
@@ -181,7 +182,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   }
 
   @RequiredDispatchThread
-  public void extensionChanged(org.consulo.module.extension.MutableModuleExtension extension) {
+  public void extensionChanged(MutableModuleExtension extension) {
     final JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
     if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
       updateSecondComponent(!extension.isEnabled() ? null : extension);

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.module.extension;
+package consulo.module.extension;
 
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.ui.Component;
@@ -31,7 +31,9 @@ import javax.swing.*;
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
   @Nullable
   @RequiredDispatchThread
-  JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck);
+  default JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
+    return null;
+  }
 
   @Nullable
   @RequiredUIAccess

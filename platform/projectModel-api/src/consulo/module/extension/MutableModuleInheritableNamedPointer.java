@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.module.extension;
+package consulo.module.extension;
 
 import com.intellij.openapi.module.Module;
 import consulo.util.pointers.Named;
