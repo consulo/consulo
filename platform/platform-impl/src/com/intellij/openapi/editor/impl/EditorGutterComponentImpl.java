@@ -678,7 +678,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   }
 
   public void updateSize() {
-    updateSize(false, false);
+    updateSize(false, true);
   }
 
   void updateSize(boolean onLayout, boolean canShrink) {

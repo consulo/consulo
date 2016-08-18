@@ -40,8 +40,8 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Iterator over editor's text contents. Each iteration step corresponds to a text fragment having common graphical attributes
- * (font style, foreground and background color, effect type and color).
+ * Iterator over editor's text contents. Each iteration step corresponds to a text fragment having common graphical attributes 
+ * (font style, foreground and background color, effect type and color).  
  */
 // This class should replace com.intellij.openapi.editor.impl.IterationState when new editor rendering engine will become default
 public class IterationState {
@@ -82,7 +82,7 @@ public class IterationState {
   };
 
   private static final Comparator<RangeHighlighterEx> BY_AFFECTED_END_OFFSET_REVERSED =
-          (r1, r2) -> r2.getAffectedAreaEndOffset() - r1.getAffectedAreaEndOffset();
+    (r1, r2) -> r2.getAffectedAreaEndOffset() - r1.getAffectedAreaEndOffset();
 
   private final TextAttributes myMergedAttributes = new TextAttributes();
 
@@ -102,7 +102,7 @@ public class IterationState {
   private Color myCurrentBackgroundColor;
   private Color myLastBackgroundColor;
 
-  private final List<RangeHighlighterEx> myCurrentHighlighters = new ArrayList<RangeHighlighterEx>();
+  private final List<RangeHighlighterEx> myCurrentHighlighters = new ArrayList<>();
 
   private final FoldingModelEx myFoldingModel;
   private final TextAttributes myFoldTextAttributes;
@@ -117,7 +117,7 @@ public class IterationState {
   private final int myCaretRowEnd;
   private final boolean myCaretRowStartsWithSoftWrap;
   private final boolean myCaretRowEndsWithSoftWrap;
-  private final List<TextAttributes> myCachedAttributesList = new ArrayList<TextAttributes>(5);
+  private final List<TextAttributes> myCachedAttributesList = new ArrayList<>(5);
   private final DocumentEx myDocument;
   private final EditorEx myEditor;
   private final Color myReadOnlyColor;
@@ -169,7 +169,7 @@ public class IterationState {
 
     myCaretRowStart = useCaretAndSelection ? caretModel.getVisualLineStart() : -1;
     int visualLineEnd = caretModel.getVisualLineEnd();
-    if (visualLineEnd == myDocument.getTextLength() && myDocument.getLineCount() > 0 &&
+    if (visualLineEnd == myDocument.getTextLength() && myDocument.getLineCount() > 0 && 
         visualLineEnd > myDocument.getLineStartOffset(myDocument.getLineCount() - 1)) {
       visualLineEnd++;
     }
@@ -193,17 +193,17 @@ public class IterationState {
     int i;
     private final RangeHighlighterEx[] highlighters;
 
-    private HighlighterSweep(@NotNull MarkupModelEx markupModel, int start, int end,
+    private HighlighterSweep(@NotNull MarkupModelEx markupModel, int start, int end, 
                              final boolean onlyFullLine, final boolean onlyFontOrForegroundAffecting) {
       // we have to get all highlighters in advance and sort them by affected offsets
       // since these can be different from the real offsets the highlighters are sorted by in the tree.  (See LINES_IN_RANGE perverts)
-      final List<RangeHighlighterEx> list = new ArrayList<RangeHighlighterEx>();
+      final List<RangeHighlighterEx> list = new ArrayList<>();
       markupModel.processRangeHighlightersOverlappingWith(myReverseIteration ? end : start, myReverseIteration ? start : end,
                                                           new CommonProcessors.CollectProcessor<RangeHighlighterEx>(list) {
                                                             @Override
                                                             protected boolean accept(RangeHighlighterEx ex) {
-                                                              return (!onlyFullLine ||
-                                                                      ex.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) &&
+                                                              return (!onlyFullLine || 
+                                                                      ex.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) && 
                                                                      (!onlyFontOrForegroundAffecting ||
                                                                       EditorUtil.attributesImpactFontStyleOrColor(ex.getTextAttributes()));
                                                             }
@@ -384,8 +384,8 @@ public class IterationState {
       RangeHighlighterEx highlighter = myCurrentHighlighters.get(i);
       if (myReverseIteration ?
           highlighter.getAffectedAreaStartOffset() >= myStartOffset :
-          fileEnd && highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE ?
-          highlighter.getAffectedAreaEndOffset() < myStartOffset :
+          fileEnd && highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE ? 
+          highlighter.getAffectedAreaEndOffset() < myStartOffset : 
           highlighter.getAffectedAreaEndOffset() <= myStartOffset) {
         myCurrentHighlighters.remove(i);
       }
@@ -470,7 +470,7 @@ public class IterationState {
     boolean isInGuardedBlock = !myUseOnlyFullLineHighlighters &&
                                myDocument.getOffsetGuard(myReverseIteration ? myStartOffset - 1 : myStartOffset) != null;
 
-    TextAttributes syntax = myHighlighterIterator == null || myHighlighterIterator.atEnd() ?
+    TextAttributes syntax = myHighlighterIterator == null || myHighlighterIterator.atEnd() ? 
                             null : myHighlighterIterator.getTextAttributes();
 
     TextAttributes selection = isInSelection ? mySelectionAttributes : null;
@@ -602,19 +602,19 @@ public class IterationState {
 
   @NotNull
   public TextAttributes getPastLineEndBackgroundAttributes() {
-    myMergedAttributes.setBackgroundColor(myEditor.getSoftWrapModel().getSoftWrap(myStartOffset) != null ? getBreakBackgroundColor(true) :
+    myMergedAttributes.setBackgroundColor(myEditor.getSoftWrapModel().getSoftWrap(myStartOffset) != null ? getBreakBackgroundColor(true) : 
                                           myCurrentBackgroundColor);
     return myMergedAttributes;
   }
-
+  
   @NotNull
   public TextAttributes getBeforeLineStartBackgroundAttributes() {
     return new TextAttributes(null, getBreakBackgroundColor(false), null, null, Font.PLAIN);
   }
 
   private Color getBreakBackgroundColor(boolean lineEnd) {
-    return Comparing.equal(myCurrentBackgroundColor, myLastBackgroundColor) ? myCurrentBackgroundColor :
-           isInCaretRow(!myCaretRowStartsWithSoftWrap || !lineEnd, myCaretRowEndsWithSoftWrap && lineEnd) ?
+    return Comparing.equal(myCurrentBackgroundColor, myLastBackgroundColor) ? myCurrentBackgroundColor : 
+           isInCaretRow(!myCaretRowStartsWithSoftWrap || !lineEnd, myCaretRowEndsWithSoftWrap && lineEnd) ? 
            myCaretRowAttributes.getBackgroundColor() : myDefaultBackground;
   }
 

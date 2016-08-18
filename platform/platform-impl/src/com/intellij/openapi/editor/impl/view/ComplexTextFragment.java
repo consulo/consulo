@@ -30,10 +30,10 @@ import java.awt.geom.Rectangle2D;
 class ComplexTextFragment extends TextFragment {
   private static final Logger LOG = Logger.getInstance(ComplexTextFragment.class);
   private static final double CLIP_MARGIN = 1e4;
-
+  
   @NotNull
   private final GlyphVector myGlyphVector;
-
+  
   ComplexTextFragment(@NotNull char[] lineChars, int start, int end, boolean isRtl,
                       @NotNull Font font, @NotNull FontRenderContext fontRenderContext) {
     super(end - start);
@@ -54,7 +54,7 @@ class ComplexTextFragment extends TextFragment {
     // We expect these positions to be ordered, so that when caret moves through text characters in some direction, corresponding text
     // offsets change monotonously (within the same-directionality fragment).
     //
-    // Special case that we must account for is a ligature, when several adjacent characters are represented as a single glyph.
+    // Special case that we must account for is a ligature, when several adjacent characters are represented as a single glyph. 
     // In a glyph vector this glyph is associated with the first character,
     // other characters either don't have an associated glyph, or they are associated with empty glyphs.
     // (in RTL case real glyph will be associated with first logical character, i.e. last visual character)
@@ -84,7 +84,7 @@ class ComplexTextFragment extends TextFragment {
       }
     }
   }
-
+  
   private void setCharPosition(int logicalCharIndex, float x, boolean isRtl, int numChars) {
     int charPosition = isRtl ? numChars - logicalCharIndex - 2 : logicalCharIndex;
     if (charPosition >= 0 && charPosition < numChars - 1) {
