@@ -16,6 +16,7 @@
 package com.intellij.diff.util;
 
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NotNull;
 
 public class LineCol {
@@ -64,7 +65,24 @@ public class LineCol {
     return new LineCol(line, column);
   }
 
+  @NotNull
+  public static LineCol fromCaret(@NotNull Editor editor) {
+    return fromOffset(editor.getDocument(), editor.getCaretModel().getOffset());
+  }
+
   public static int toOffset(@NotNull Document document, @NotNull LineCol linecol) {
-    return document.getLineStartOffset(linecol.line) + linecol.column;
+    return linecol.toOffset(document);
+  }
+
+  public static int toOffset(@NotNull Document document, int line, int col) {
+    return new LineCol(line, col).toOffset(document);
+  }
+
+  public int toOffset(@NotNull Document document) {
+    return document.getLineStartOffset(line) + column;
+  }
+
+  public int toOffset(@NotNull Editor editor) {
+    return toOffset(editor.getDocument());
   }
 }

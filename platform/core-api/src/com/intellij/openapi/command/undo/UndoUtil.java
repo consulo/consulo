@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,5 +48,13 @@ public class UndoUtil {
    */
   public static void markVirtualFileForUndo(@NotNull Project project, @NotNull VirtualFile file) {
     CommandProcessor.getInstance().addAffectedFiles(project, file);
+  }
+
+  public static void disableUndoFor(@NotNull Document document) {
+    document.putUserData(UndoConstants.DONT_RECORD_UNDO, Boolean.TRUE);
+  }
+
+  public static boolean isUndoDisabledFor(@NotNull Document document) {
+    return Boolean.TRUE.equals(document.getUserData(UndoConstants.DONT_RECORD_UNDO));
   }
 }

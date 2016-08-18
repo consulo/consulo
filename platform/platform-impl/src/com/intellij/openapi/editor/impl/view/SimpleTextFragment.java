@@ -50,5 +50,5 @@ class SimpleTextFragment extends TextFragment {
   public void draw(Graphics2D g, float x, float y, int startColumn, int endColumn) {
     g.setFont(myFont);
     g.drawChars(myText, startColumn, endColumn - startColumn, (int)x, (int)y);
-  }
+  }  
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,16 @@ package com.intellij.openapi.diff.impl.patch;
 
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.CommitContext;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.MessageFormat;
@@ -43,25 +47,38 @@ public class UnifiedDiffWriter {
   @NonNls public static final String ADD_INFO_HEADER = "Subsystem: ";
   @NonNls public static final String ADD_INFO_LINE_START = "<+>";
   private static final String HEADER_SEPARATOR = "===================================================================";
+  @NonNls public static final String NO_NEWLINE_SIGNATURE = "\\ No newline at end of file";
 
   private UnifiedDiffWriter() {
   }
 
-  public static void write(Project project, Collection<FilePatch> patches, Writer writer, final String lineSeparator,
+  public static void write(@Nullable Project project, Collection<FilePatch> patches, Writer writer, final String lineSeparator,
                            @Nullable final CommitContext commitContext) throws IOException {
     final PatchEP[] extensions = project == null ? new PatchEP[0] : Extensions.getExtensions(PatchEP.EP_NAME, project);
     write(project, patches, writer, lineSeparator, extensions, commitContext);
   }
 
-  public static void write(Project project, Collection<FilePatch> patches, Writer writer, final String lineSeparator,
+  public static void write(@Nullable Project project, Collection<FilePatch> patches, Writer writer, final String lineSeparator,
                            final PatchEP[] extensions, final CommitContext commitContext) throws IOException {
+    write(project, project == null ? null : project.getBasePath(), patches, writer, lineSeparator, extensions, commitContext);
+  }
+
+  public static void write(@Nullable Project project,
+                           @Nullable String basePath,
+                           Collection<FilePatch> patches,
+                           Writer writer,
+                           final String lineSeparator,
+                           @NotNull final PatchEP[] extensions,
+                           final CommitContext commitContext) throws IOException {
     for(FilePatch filePatch: patches) {
       if (!(filePatch instanceof TextFilePatch)) continue;
-      TextFilePatch patch = (TextFilePatch) filePatch;
-      final String path = patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName();
-      final Map<String , CharSequence> additionalMap = new HashMap<String, CharSequence>();
+      TextFilePatch patch = (TextFilePatch)filePatch;
+      String path = ObjectUtils.assertNotNull(patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName());
+      String pathRelatedToProjectDir =
+              project == null ? path : getPathRelatedToDir(ObjectUtils.assertNotNull(project.getBasePath()), basePath, path);
+      final Map<String, CharSequence> additionalMap = new HashMap<>();
       for (PatchEP extension : extensions) {
-        final CharSequence charSequence = extension.provideContent(path, commitContext);
+        final CharSequence charSequence = extension.provideContent(pathRelatedToProjectDir, commitContext);
         if (! StringUtil.isEmpty(charSequence)) {
           additionalMap.put(extension.getName(), charSequence);
         }
@@ -72,18 +89,22 @@ public class UnifiedDiffWriter {
                        lineSeparator);
         for(PatchLine line: hunk.getLines()) {
           char prefixChar = ' ';
-          switch(line.getType()) {
-            case ADD: prefixChar = '+'; break;
-            case REMOVE: prefixChar = '-'; break;
-            case CONTEXT: prefixChar = ' '; break;
+          switch (line.getType()) {
+            case ADD:
+              prefixChar = '+';
+              break;
+            case REMOVE:
+              prefixChar = '-';
+              break;
+            case CONTEXT:
+              prefixChar = ' ';
+              break;
           }
           String text = line.getText();
-          if (text.endsWith("\n")) {
-            text = text.substring(0, text.length()-1);
-          }
+          text = StringUtil.trimEnd(text, "\n");
           writeLine(writer, text, prefixChar);
           if (line.isSuppressNewLine()) {
-            writer.write(lineSeparator + PatchReader.NO_NEWLINE_SIGNATURE + lineSeparator);
+            writer.write(lineSeparator + NO_NEWLINE_SIGNATURE + lineSeparator);
           }
           else {
             writer.write(lineSeparator);
@@ -91,6 +112,13 @@ public class UnifiedDiffWriter {
         }
       }
     }
+  }
+
+  @NotNull
+  private static String getPathRelatedToDir(@NotNull String newBaseDir, @Nullable String basePath, @NotNull String path) {
+    if (basePath == null) return path;
+    String result = FileUtil.getRelativePath(new File(newBaseDir), new File(basePath, path));
+    return result == null ? path : result;
   }
 
   private static void writeFileHeading(final FilePatch patch,
@@ -121,17 +149,19 @@ public class UnifiedDiffWriter {
   private static void writeRevisionHeading(final Writer writer, final String prefix,
                                            final String revisionPath, final String revisionName,
                                            final String lineSeparator)
-    throws IOException {
+          throws IOException {
     writer.write(prefix + " ");
     writer.write(revisionPath);
     writer.write("\t");
-    writer.write(revisionName);
+    if (!StringUtil.isEmptyOrSpaces(revisionName)) {
+      writer.write(revisionName);
+    }
     writer.write(lineSeparator);
   }
 
   private static void writeHunkStart(Writer writer, int startLine1, int endLine1, int startLine2, int endLine2,
                                      final String lineSeparator)
-    throws IOException {
+          throws IOException {
     StringBuilder builder = new StringBuilder("@@ -");
     builder.append(startLine1+1).append(",").append(endLine1-startLine1);
     builder.append(" +").append(startLine2+1).append(",").append(endLine2-startLine2).append(" @@").append(lineSeparator);

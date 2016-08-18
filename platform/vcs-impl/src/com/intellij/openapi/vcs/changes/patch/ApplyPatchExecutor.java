@@ -15,12 +15,17 @@
  */
 package com.intellij.openapi.vcs.changes.patch;
 
+import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.changes.TransparentlyFailedValueI;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.MultiMap;
+import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,10 +33,12 @@ import java.util.Map;
  *         Date: 2/25/11
  *         Time: 5:18 PM
  */
-public interface ApplyPatchExecutor {
+public interface ApplyPatchExecutor<T extends AbstractFilePatchInProgress> {
+  @Nls(capitalization = Nls.Capitalization.Title)
   String getName();
-  void apply(final MultiMap<VirtualFile, FilePatchInProgress> patchGroups,
-             final LocalChangeList localList,
-             String fileName,
-             TransparentlyFailedValueI<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo);
+
+  void apply(@NotNull List<FilePatch> remaining, @NotNull final MultiMap<VirtualFile, T> patchGroupsToApply,
+             @Nullable final LocalChangeList localList,
+             @Nullable String fileName,
+             @Nullable TransparentlyFailedValueI<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo);
 }

@@ -100,14 +100,14 @@ class TabFragment implements LineFragment {
   @Override
   public float visualColumnToX(float startX, int column) {
     if (column <= 0) return startX;
-    if (column >= getVisualColumnCount(startX)) return getNextTabStop(startX);
+    if (column >= getVisualColumnCount(startX)) return getNextTabStop(startX); 
     return startX + myView.getPlainSpaceWidth() * column;
   }
 
   private static int trimOffset(int offset) {
     return offset <= 0 ? 0 : 1;
   }
-
+  
   private float getNextTabStop(float x) {
     return EditorUtil.nextTabStop((int)x, myView.getPlainSpaceWidth(), myView.getTabSize());
   }

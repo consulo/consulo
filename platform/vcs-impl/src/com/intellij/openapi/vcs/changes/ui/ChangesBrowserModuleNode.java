@@ -18,10 +18,6 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FilePathImpl;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 
 /**
@@ -58,15 +54,5 @@ public class ChangesBrowserModuleNode extends ChangesBrowserNode<Module> {
     }
 
     return 0;
-  }
-
-  @Override
-  public FilePath[] getFilePathsUnder() {
-    final VirtualFile[] files = ModuleRootManager.getInstance(getUserObject()).getContentRoots();
-    final FilePath[] result = new FilePath[files.length];
-    for(int i=0; i<files.length; i++) {
-      result [i] = new FilePathImpl(files [i]);
-    }
-    return result;
   }
 }

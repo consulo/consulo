@@ -16,7 +16,9 @@
 
 package com.intellij.openapi.vcs.changes;
 
+import com.intellij.openapi.ui.ValidationInfo;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -68,4 +70,9 @@ public interface CommitSession {
    * @since 10.5
    */
   String getHelpId();
+
+  @RequiredDispatchThread
+  default ValidationInfo validateFields() {
+    return null;
+  }
 }

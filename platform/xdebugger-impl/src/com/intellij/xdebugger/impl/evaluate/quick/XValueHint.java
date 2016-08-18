@@ -16,7 +16,6 @@
 package com.intellij.xdebugger.impl.evaluate.quick;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.execution.console.LanguageConsoleImpl;
 import com.intellij.execution.console.LanguageConsoleView;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.ui.ConsoleView;
@@ -98,7 +97,7 @@ public class XValueHint extends AbstractValueHint {
     VirtualFile file;
     ConsoleView consoleView = ConsoleViewImpl.CONSOLE_VIEW_IN_EDITOR_VIEW.get(editor);
     if (consoleView instanceof LanguageConsoleView) {
-      LanguageConsoleImpl console = ((LanguageConsoleView)consoleView).getConsole();
+      LanguageConsoleView console = ((LanguageConsoleView)consoleView);
       file = console.getHistoryViewer() == editor ? console.getVirtualFile() : null;
     }
     else {
@@ -206,12 +205,7 @@ public class XValueHint extends AbstractValueHint {
                             SimpleTextAttributes.GRAYED_ATTRIBUTES);
               }
 
-              JComponent component = createExpandableHintComponent(text, new Runnable() {
-                @Override
-                public void run() {
-                  showTree(result);
-                }
-              });
+              JComponent component = createExpandableHintComponent(text, () -> showTree(result));
               showHint(component);
             }
             myShown = true;
@@ -232,12 +226,7 @@ public class XValueHint extends AbstractValueHint {
       @Override
       public void errorOccurred(@NotNull final String errorMessage) {
         if (getType() == ValueHintType.MOUSE_CLICK_HINT) {
-          ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              showHint(HintUtil.createErrorLabel(errorMessage));
-            }
-          });
+          ApplicationManager.getApplication().invokeLater(() -> showHint(HintUtil.createErrorLabel(errorMessage)));
         }
         LOG.debug("Cannot evaluate '" + myExpression + "':" + errorMessage);
       }

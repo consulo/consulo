@@ -60,6 +60,10 @@
     <xi:fallback/>
   </xi:include>
 
+  <xi:include href="/META-INF/Scratch.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP"/>
     <extensionPoint name="addTo.listOfElements" beanClass="org.mustbe.consulo.util.AddToElementEP"/>
@@ -177,7 +181,6 @@
     <extensionPoint name="http.fileEditorActionProvider"
                     interface="com.intellij.openapi.fileEditor.impl.http.RemoteFileEditorActionProvider"/>
 
-    <extensionPoint name="componentConfigurationMerger" interface="com.intellij.openapi.components.XmlConfigurationMerger"/>
     <extensionPoint name="filetype.decompiler" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.BinaryFileDecompiler"/>
     </extensionPoint>
@@ -207,6 +210,7 @@
     <extensionPoint name="checkinHandlerFactory" interface="com.intellij.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
     <extensionPoint name="writingAccessProvider" area="CONSULO_PROJECT" interface="com.intellij.openapi.vfs.WritingAccessProvider"/>
+    <extensionPoint name="nonProjectFileWritingAccessExtension" area="IDEA_PROJECT" interface="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
     <extensionPoint name="editorNotificationProvider" area="CONSULO_PROJECT" interface="org.mustbe.consulo.editor.notifications.EditorNotificationProvider"/>
     <extensionPoint name="featureStatBundle" interface="com.intellij.featureStatistics.FeatureStatisticsBundleProvider"/>
     <extensionPoint name="featureStatisticsBundle" beanClass="com.intellij.featureStatistics.FeatureStatisticsBundleEP"/>
@@ -1129,6 +1133,9 @@
 
     <extensionPoint name="notification.parentGroup" beanClass="com.intellij.notification.impl.NotificationParentGroupBean"/>
     <extensionPoint name="notification.group" beanClass="com.intellij.notification.impl.NotificationGroupBean"/>
+
+    <extensionPoint qualifiedName="com.intellij.openapi.vcs.actions.AnnotateToggleAction.Provider"
+                    interface="com.intellij.openapi.vcs.actions.AnnotateToggleAction$Provider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -1291,6 +1298,9 @@
     <applicationService serviceInterface="com.intellij.codeInsight.actions.FormatChangedTextUtil"
                         serviceImplementation="com.intellij.codeInsight.actions.VcsAwareFormatChangedTextUtil"/>
 
+    <applicationService serviceInterface="com.intellij.openapi.vcs.actions.AnnotationsSettings"
+                        serviceImplementation="com.intellij.openapi.vcs.actions.AnnotationsSettings"/>
+
     <applicationService serviceImplementation="com.intellij.util.net.ssl.CertificateManager"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.daemon.LineMarkerSettings"
@@ -1351,6 +1361,8 @@
     <projectService serviceInterface="com.intellij.execution.testframework.sm.TestHistoryConfiguration"
                     serviceImplementation="com.intellij.execution.testframework.sm.TestHistoryConfiguration"/>
 
+    <projectService serviceImplementation="com.intellij.openapi.vcs.changes.VcsDirtyScopeVfsListener" />
+
     <fileTypeFactory implementation="com.intellij.openapi.fileTypes.impl.PlatformFileTypeFactory"/>
     <postStartupActivity implementation="com.intellij.openapi.fileTypes.impl.ApproveRemovedMappingsActivity"/>
     <applicationService serviceInterface="com.intellij.openapi.options.colors.ColorSettingsPages"
@@ -1371,7 +1383,6 @@
     <projectService serviceInterface="org.consulo.psi.PsiPackageManager"
                     serviceImplementation="org.mustbe.consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
-    <componentConfigurationMerger implementation="com.intellij.openapi.vcs.changes.shelf.ShelfManagerConfigurationMerger"/>
     <editorActionHandler action="EditorEscape" implementationClass="com.intellij.codeInsight.hint.EscapeHandler" id="hide-hints"/>
 
 

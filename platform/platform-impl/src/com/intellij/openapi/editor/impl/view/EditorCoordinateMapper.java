@@ -29,9 +29,9 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Performs transformations between various location representations in editor
+ * Performs transformations between various location representations in editor 
  * (offset, logical position, visual position, pixel coordinates).
- *
+ * 
  * @see LogicalPosition
  * @see VisualPosition
  */
@@ -41,7 +41,7 @@ class EditorCoordinateMapper {
   private final EditorView myView;
   private final Document myDocument;
   private final FoldingModelImpl myFoldingModel;
-
+  
   EditorCoordinateMapper(EditorView view) {
     myView = view;
     myDocument = myView.getEditor().getDocument();
@@ -147,12 +147,12 @@ class EditorCoordinateMapper {
       if (column > minColumn && column < maxColumn ||
           column == minColumn ||
           column == maxColumn && !pos.leansRight) {
-        return new LogicalPosition(column == maxColumn ? fragment.getEndLogicalLine() : fragment.getStartLogicalLine(),
-                                   fragment.visualToLogicalColumn(column), fragment.isCollapsedFoldRegion() ?
-                                                                           column < maxColumn :
+        return new LogicalPosition(column == maxColumn ? fragment.getEndLogicalLine() : fragment.getStartLogicalLine(), 
+                                   fragment.visualToLogicalColumn(column), fragment.isCollapsedFoldRegion() ? 
+                                                                           column < maxColumn : 
                                                                            fragment.isRtl() ^ pos.leansRight);
       }
-      maxLogicalColumn = logicalLine == fragment.getEndLogicalLine() ? Math.max(maxLogicalColumn, fragment.getMaxLogicalColumn()) :
+      maxLogicalColumn = logicalLine == fragment.getEndLogicalLine() ? Math.max(maxLogicalColumn, fragment.getMaxLogicalColumn()) : 
                          fragment.getMaxLogicalColumn();
       maxVisualColumn = maxColumn;
       logicalLine = fragment.getEndLogicalLine();
@@ -291,7 +291,7 @@ class EditorCoordinateMapper {
     int plainSpaceWidth = myView.getPlainSpaceWidth();
     int remainingShift = (int)(px - x);
     int additionalColumns = remainingShift <= 0 ? 0 : (remainingShift + plainSpaceWidth / 2) / plainSpaceWidth;
-    return new VisualPosition(visualLine, lastColumn + additionalColumns,
+    return new VisualPosition(visualLine, lastColumn + additionalColumns, 
                               remainingShift > 0 && additionalColumns == (remainingShift - 1) / plainSpaceWidth);
   }
 

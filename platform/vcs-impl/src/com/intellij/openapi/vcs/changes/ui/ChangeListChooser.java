@@ -17,7 +17,10 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.vcs.changes.*;
+import com.intellij.openapi.vcs.changes.ChangeList;
+import com.intellij.openapi.vcs.changes.ChangeListEditHandler;
+import com.intellij.openapi.vcs.changes.LocalChangeList;
+import com.intellij.openapi.vcs.changes.LocalChangeListImpl;
 import com.intellij.util.NullableConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +40,7 @@ public class ChangeListChooser extends DialogWrapper {
                            @NotNull Collection<? extends ChangeList> changelists,
                            @Nullable ChangeList defaultSelection,
                            final String title,
-                           @Nullable final String defaultName) {
+                           @Nullable final String suggestedName) {
     super(project, false);
     myProject = project;
 
@@ -58,18 +61,14 @@ public class ChangeListChooser extends DialogWrapper {
 
     myPanel.init();
     myPanel.setChangeLists(changelists);
-    myPanel.setDefaultSelection(changelists.size() <= 1 && onlyOneListInProject() ? null : defaultSelection);
+    myPanel.setDefaultSelection(defaultSelection);
 
     setTitle(title);
-    if (defaultName != null) {
-      myPanel.setDefaultName(defaultName);
+    if (suggestedName != null) {
+      myPanel.setSuggestedName(suggestedName);
     }
 
     init();
-  }
-
-  private boolean onlyOneListInProject() {
-    return ChangeListManager.getInstance(myProject).getChangeListsNumber() <= 1;
   }
 
   public JComponent getPreferredFocusedComponent() {
@@ -87,6 +86,7 @@ public class ChangeListChooser extends DialogWrapper {
     }
   }
 
+  @Nullable
   public LocalChangeList getSelectedList() {
     return mySelectedList;
   }

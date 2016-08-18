@@ -19,8 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
 /**
-* @author irengrig
-*/
+ * @author irengrig
+ */
 class DummyChangesView implements ChangesViewI {
   public DummyChangesView(Project project) {
   }
@@ -43,5 +43,9 @@ class DummyChangesView implements ChangesViewI {
 
   @Override
   public void setBusy(boolean b) {
+  }
+
+  @Override
+  public void setShowFlattenMode(boolean state) {
   }
 }

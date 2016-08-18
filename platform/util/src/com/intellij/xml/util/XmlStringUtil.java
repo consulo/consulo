@@ -17,20 +17,30 @@
 package com.intellij.xml.util;
 
 import com.intellij.openapi.util.text.StringUtil;
+import org.jdom.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.intellij.xml.CommonXmlStrings.*;
 /**
  * @author yole
  */
 public class XmlStringUtil {
-  @NonNls private static final String HTML_HEADER = "<html>";
-  @NonNls private static final String BODY_HEADER = "<body>";
-  @NonNls private static final String HTML_FOOTER = "</html>";
-  @NonNls private static final String BODY_FOOTER = "</body>";
 
   private XmlStringUtil() {
+  }
+
+  @NotNull
+  public static String wrapInCDATA(@NotNull String str) {
+    StringBuilder sb = new StringBuilder();
+    int cur = 0, len = str.length();
+    while (cur < len) {
+      int next = StringUtil.indexOf(str, CDATA_END, cur);
+      sb.append(CDATA_START).append(str.subSequence(cur, next = next < 0 ? len : next + 1)).append(CDATA_END);
+      cur = next;
+    }
+    return sb.toString();
   }
 
   public static String escapeString(@Nullable String str) {
@@ -38,6 +48,10 @@ public class XmlStringUtil {
   }
 
   public static String escapeString(@Nullable String str, final boolean escapeWhiteSpace) {
+    return escapeString(str, escapeWhiteSpace, true);
+  }
+
+  public static String escapeString(@Nullable String str, final boolean escapeWhiteSpace, final boolean convertNoBreakSpace) {
     if (str == null) return null;
     StringBuilder buffer = null;
     for (int i = 0; i < str.length(); i++) {
@@ -53,20 +67,20 @@ public class XmlStringUtil {
         case '\t':
           entity = escapeWhiteSpace ? "&#9;" : null;
           break;
-        case'\"':
-          entity = "&quot;";
+        case '\"':
+          entity = QUOT;
           break;
-        case'<':
-          entity = "&lt;";
+        case '<':
+          entity = LT;
           break;
-        case'>':
-          entity = "&gt;";
+        case '>':
+          entity = GT;
           break;
-        case'&':
-          entity = "&amp;";
+        case '&':
+          entity = AMP;
           break;
         case 160: // unicode char for &nbsp;
-          entity = "&nbsp;";
+          entity = convertNoBreakSpace ? NBSP : null;
           break;
         default:
           entity = null;
@@ -101,15 +115,89 @@ public class XmlStringUtil {
 
   @NotNull
   public static String wrapInHtml(@NotNull CharSequence result) {
-    return HTML_HEADER + result + HTML_FOOTER;
+    return HTML_START + result + HTML_END;
+  }
+
+  public static boolean isWrappedInHtml(@NotNull String tooltip) {
+    return StringUtil.startsWithIgnoreCase(tooltip, HTML_START) &&
+           StringUtil.endsWithIgnoreCase(tooltip, HTML_END);
   }
 
   @NotNull
   public static String stripHtml(@NotNull String toolTip) {
-    toolTip = StringUtil.trimStart(toolTip, HTML_HEADER);
-    toolTip = StringUtil.trimStart(toolTip, BODY_HEADER);
-    toolTip = StringUtil.trimEnd(toolTip, HTML_FOOTER);
-    toolTip = StringUtil.trimEnd(toolTip, BODY_FOOTER);
+    toolTip = StringUtil.trimStart(toolTip, HTML_START);
+    toolTip = StringUtil.trimStart(toolTip, BODY_START);
+    toolTip = StringUtil.trimEnd(toolTip, HTML_END);
+    toolTip = StringUtil.trimEnd(toolTip, BODY_END);
     return toolTip;
+  }
+
+  /**
+   * Converts {@code text} to a string which can be used inside an HTML document: if it's already an HTML text the root html/body tags will
+   * be stripped, if it's a plain text special characters will be escaped
+   */
+  @NotNull
+  public static String convertToHtmlContent(@NotNull String text) {
+    return isWrappedInHtml(text) ? stripHtml(text) : escapeString(text);
+  }
+
+  /**
+   * Some characters are illegal in XML even as numerical character references. This method performs escaping of them
+   * in a custom format, which is supposed to be unescaped on retrieving from XML using {@link #unescapeIllegalXmlChars(String)}.
+   * Resulting text can be part of XML version 1.0 document.
+   *
+   * @see <a href="https://www.w3.org/International/questions/qa-controls">https://www.w3.org/International/questions/qa-controls</a>
+   * @see Verifier#isXMLCharacter(int)
+   */
+  @NotNull
+  public static String escapeIllegalXmlChars(@NotNull String text) {
+    StringBuilder b = null;
+    int lastPos = 0;
+    for (int i = 0; i < text.length(); i++) {
+      int c = text.codePointAt(i);
+      if (Character.isSupplementaryCodePoint(c)) {
+        //noinspection AssignmentToForLoopParameter
+        i++;
+      }
+      if (c == '#' || !Verifier.isXMLCharacter(c)) {
+        if (b == null) b = new StringBuilder(text.length() + 5); // assuming there's one 'large' char (e.g. 0xFFFF) to escape numerically
+        b.append(text, lastPos, i).append('#');
+        if (c != '#') b.append(Integer.toHexString(c));
+        b.append('#');
+        lastPos = i + 1;
+      }
+    }
+    return b == null ? text : b.append(text, lastPos, text.length()).toString();
+  }
+
+  /**
+   * @see XmlStringUtil#escapeIllegalXmlChars(String)
+   */
+  @NotNull
+  public static String unescapeIllegalXmlChars(@NotNull String text) {
+    StringBuilder b = null;
+    int lastPos = 0;
+    for (int i = 0; i < text.length(); i++) {
+      int c = text.charAt(i);
+      if (c == '#') {
+        int numberEnd = text.indexOf('#', i + 1);
+        if (numberEnd > 0) {
+          int charCode;
+          try {
+            charCode = numberEnd == (i + 1) ? '#' : Integer.parseInt(text.substring(i + 1, numberEnd), 16);
+          }
+          catch (NumberFormatException e) {
+            continue;
+          }
+          if (b == null) b = new StringBuilder(text.length());
+          b.append(text, lastPos, i);
+          b.append((char) charCode);
+          //noinspection AssignmentToForLoopParameter
+          i = numberEnd;
+          lastPos = i + 1;
+        }
+      }
+    }
+    return b == null ? text : b.append(text, lastPos, text.length()).toString();
   }
 }

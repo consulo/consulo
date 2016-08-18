@@ -72,11 +72,11 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   @Property(filter = FontFilter.class) public int FONT_SIZE;
   public int RECENT_FILES_LIMIT = 50;
   public int CONSOLE_COMMAND_HISTORY_LIMIT = 300;
+  public boolean OVERRIDE_CONSOLE_CYCLE_BUFFER_SIZE = false;
+  public int CONSOLE_CYCLE_BUFFER_SIZE_KB = 1024;
   public int EDITOR_TAB_LIMIT = 10;
   public boolean REUSE_NOT_MODIFIED_TABS = false;
   public boolean ANIMATE_WINDOWS = true;
-  @Deprecated //todo remove in IDEA 16
-  public int ANIMATION_SPEED = 4000; // Pixels per second
   public int ANIMATION_DURATION = 300; // Milliseconds
   public boolean SHOW_TOOL_WINDOW_NUMBERS = true;
   public boolean HIDE_TOOL_STRIPES = true;

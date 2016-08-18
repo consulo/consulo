@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import com.intellij.ui.SimpleTextAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.intellij.util.FontUtil.spaceAndThinSpace;
+
 /**
  * @author yole
  */
@@ -45,19 +47,21 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
     if (userObject instanceof LocalChangeList) {
       final LocalChangeList list = ((LocalChangeList)userObject);
       renderer.appendTextWithIssueLinks(list.getName(),
-             list.isDefault() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                                        list.isDefault() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
       appendCount(renderer);
-      for(ChangeListDecorator decorator: myDecorators) {
+      for (ChangeListDecorator decorator: myDecorators) {
         decorator.decorateChangeList(list, renderer, selected, expanded, hasFocus);
       }
       final String freezed = myClManager.isFreezed();
       if (freezed != null) {
-        renderer.append(" " + freezed, SimpleTextAttributes.GRAYED_ATTRIBUTES);
-      } else if (myClManager.isInUpdate()) {
-        renderer.append(" " + VcsBundle.message("changes.nodetitle.updating"), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+        renderer.append(spaceAndThinSpace() + freezed, SimpleTextAttributes.GRAYED_ATTRIBUTES);
+      }
+      else if (myClManager.isInUpdate()) {
+        renderer.append((getCountText().isEmpty() ? spaceAndThinSpace() : ", ") + VcsBundle.message("changes.nodetitle.updating"),
+                        SimpleTextAttributes.GRAYED_ATTRIBUTES);
       }
       if (! myChangeListRemoteState.getState()) {
-        renderer.append(" ");
+        renderer.append(spaceAndThinSpace());
         renderer.append(VcsBundle.message("changes.nodetitle.have.outdated.files"), SimpleTextAttributes.ERROR_ATTRIBUTES);
       }
     }
@@ -65,6 +69,10 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
       renderer.append(getUserObject().getName(), SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES);
       appendCount(renderer);
     }
+  }
+
+  public ChangeListRemoteState getChangeListRemoteState() {
+    return myChangeListRemoteState;
   }
 
   @Override
@@ -92,7 +100,7 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
     final LocalChangeList dropList = (LocalChangeList)getUserObject();
     dragOwner.moveChangesTo(dropList, dragBean.getChanges());
 
-    final List<VirtualFile> toUpdate = new ArrayList<VirtualFile>();
+    final List<VirtualFile> toUpdate = new ArrayList<>();
 
     addIfNotNull(toUpdate, dragBean.getUnversionedFiles());
     addIfNotNull(toUpdate, dragBean.getIgnoredFiles());
@@ -107,11 +115,13 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
     }
   }
 
+  @Override
   public int getSortWeight() {
     if (userObject instanceof LocalChangeList && ((LocalChangeList)userObject).isDefault()) return 1;
     return 2;
   }
 
+  @Override
   public int compareUserObjects(final Object o2) {
     if (o2 instanceof ChangeList) {
       return getUserObject().getName().compareToIgnoreCase(((ChangeList)o2).getName());

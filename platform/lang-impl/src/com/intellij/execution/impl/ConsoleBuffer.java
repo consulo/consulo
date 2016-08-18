@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@ package com.intellij.execution.impl;
 
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.SystemProperties;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,8 +55,8 @@ public class ConsoleBuffer {
    * <p/>
    * Feel free to check rationale for using this approach at {@link #myCyclicBufferSize} contract.
    */
-  private final Deque<StringBuilder> myDeferredOutput = new ArrayDeque<StringBuilder>();
-  private final Set<ConsoleViewContentType> myContentTypesToNotStripOnCycling = new HashSet<ConsoleViewContentType>();
+  private final Deque<StringBuilder> myDeferredOutput = new ArrayDeque<>();
+  private final Set<ConsoleViewContentType> myContentTypesToNotStripOnCycling = new HashSet<>();
 
   /**
    * Main console usage scenario assumes the following:
@@ -105,8 +107,10 @@ public class ConsoleBuffer {
    * <p/>
    * Target offsets are anchored to the {@link #myDeferredOutput deferred buffer}.
    */
-  private final List<TokenInfo> myDeferredTokens = new ArrayList<TokenInfo>();
-  private final Set<ConsoleViewContentType> myDeferredTypes = new HashSet<ConsoleViewContentType>();
+  private final List<TokenInfo> myDeferredTokens = new ArrayList<>();
+  private final Set<ConsoleViewContentType> myDeferredTypes = new HashSet<>();
+
+  private boolean myKeepSlashR = true;
 
   public ConsoleBuffer() {
     this(useCycleBuffer(), getCycleBufferSize(), DEFAULT_CYCLIC_BUFFER_UNIT_SIZE);
@@ -114,25 +118,24 @@ public class ConsoleBuffer {
 
   public ConsoleBuffer(boolean useCyclicBuffer, int cyclicBufferSize, int cyclicBufferUnitSize) {
     myUseCyclicBuffer = useCyclicBuffer;
-    myCyclicBufferSize = cyclicBufferSize;
+    myCyclicBufferSize = Math.max(cyclicBufferSize, 0);
     myCyclicBufferUnitSize = cyclicBufferUnitSize;
     myContentTypesToNotStripOnCycling.add(ConsoleViewContentType.USER_INPUT);
   }
 
   public static boolean useCycleBuffer() {
-    final String useCycleBufferProperty = System.getProperty("idea.cycle.buffer.size");
-    return useCycleBufferProperty == null || !"disabled".equalsIgnoreCase(useCycleBufferProperty);
+    return !"disabled".equalsIgnoreCase(System.getProperty("idea.cycle.buffer.size"));
   }
 
   public static int getCycleBufferSize() {
-    final String cycleBufferSizeProperty = System.getProperty("idea.cycle.buffer.size");
-    if (cycleBufferSizeProperty == null) return 1024 * 1024;
-    try {
-      return Integer.parseInt(cycleBufferSizeProperty) * 1024;
+    if (UISettings.getInstance().OVERRIDE_CONSOLE_CYCLE_BUFFER_SIZE) {
+      return UISettings.getInstance().CONSOLE_CYCLE_BUFFER_SIZE_KB * 1024;
     }
-    catch (NumberFormatException e) {
-      return 1024 * 1024;
-    }
+    return getLegacyCycleBufferSize();
+  }
+
+  public static int getLegacyCycleBufferSize() {
+    return SystemProperties.getIntProperty("idea.cycle.buffer.size", 1024) * 1024;
   }
 
   public boolean isUseCyclicBuffer() {
@@ -141,6 +144,10 @@ public class ConsoleBuffer {
 
   public int getCyclicBufferSize() {
     return myCyclicBufferSize;
+  }
+
+  void setKeepSlashR(boolean keep) {
+    myKeepSlashR = keep;
   }
 
   public boolean isEmpty() {
@@ -204,7 +211,7 @@ public class ConsoleBuffer {
   public void clear() {
     clear(true);
   }
-  
+
   public void clear(boolean clearUserInputAsWell) {
     if (myUseCyclicBuffer) {
       myDeferredOutput.clear();
@@ -276,7 +283,7 @@ public class ConsoleBuffer {
     }
 
     if (numberOfSymbolsToProceed <= 0) {
-      return new Pair<String, Integer>("", 0);
+      return new Pair<>("", 0);
     }
 
     if (numberOfSymbolsToProceed < s.length()) {
@@ -285,7 +292,7 @@ public class ConsoleBuffer {
 
     myDeferredTypes.add(contentType);
 
-    s = StringUtil.convertLineSeparators(s, true);
+    s = StringUtil.convertLineSeparators(s, myKeepSlashR);
 
     myDeferredOutputLength += s.length();
     StringBuilder bufferToUse;
@@ -313,7 +320,7 @@ public class ConsoleBuffer {
     }
 
     ConsoleUtil.addToken(s.length(), info, contentType, myDeferredTokens);
-    return new Pair<String, Integer>(s, trimmedSymbolsNumber);
+    return new Pair<>(s, trimmedSymbolsNumber);
   }
 
   //private void checkState() {
@@ -450,8 +457,8 @@ public class ConsoleBuffer {
       if (tokenInfo.startOffset > 0) {
         final HyperlinkInfo hyperlinkInfo = tokenInfo.getHyperlinkInfo();
         myDeferredTokens
-          .add(0, hyperlinkInfo != null ? new HyperlinkTokenInfo(ConsoleViewContentType.USER_INPUT, 0, tokenInfo.startOffset, hyperlinkInfo)
-                                        : new TokenInfo(ConsoleViewContentType.USER_INPUT, 0, tokenInfo.startOffset));
+                .add(0, hyperlinkInfo != null ? new HyperlinkTokenInfo(ConsoleViewContentType.USER_INPUT, 0, tokenInfo.startOffset, hyperlinkInfo)
+                                              : new TokenInfo(ConsoleViewContentType.USER_INPUT, 0, tokenInfo.startOffset));
         myDeferredTypes.add(ConsoleViewContentType.USER_INPUT);
       }
     }

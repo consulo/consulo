@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.intellij.execution.filters;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -31,9 +32,9 @@ import java.util.List;
 public class CompositeFilter implements Filter, FilterMixin {
   private static final Logger LOG = Logger.getInstance(CompositeFilter.class);
 
-  private final List<Filter> myFilters = new ArrayList<Filter>();
+  private final List<Filter> myFilters = new ArrayList<>();
   private boolean myIsAnyHeavy;
-  private boolean forceUseAllFilters = false;
+  private boolean forceUseAllFilters;
   private final DumbService myDumbService;
 
   public CompositeFilter(@NotNull Project project) {
@@ -61,6 +62,9 @@ public class CompositeFilter implements Filter, FilterMixin {
         try {
           result = filter.applyFilter(line, entireLength);
         }
+        catch (ProcessCanceledException ignore) {
+          result = null;
+        }
         catch (Throwable t) {
           throw new RuntimeException("Error while applying " + filter + " to '" + line + "'", t);
         }
@@ -86,7 +90,7 @@ public class CompositeFilter implements Filter, FilterMixin {
     if (resultItems.size() == 1) {
       ResultItem resultItem = resultItems.get(0);
       return new Result(resultItem.getHighlightStartOffset(), resultItem.getHighlightEndOffset(), resultItem.getHyperlinkInfo(),
-                        resultItem.getHighlightAttributes());
+                        resultItem.getHighlightAttributes(), resultItem.getFollowedHyperlinkAttributes());
     }
     return new Result(resultItems);
   }
@@ -99,7 +103,7 @@ public class CompositeFilter implements Filter, FilterMixin {
   protected List<ResultItem> merge(@Nullable List<ResultItem> resultItems, @Nullable Result newResult) {
     if (newResult != null) {
       if (resultItems == null) {
-        resultItems = new ArrayList<ResultItem>();
+        resultItems = new ArrayList<>();
       }
       List<ResultItem> newItems = newResult.getResultItems();
       for (int i = 0; i < newItems.size(); i++) {
@@ -138,7 +142,7 @@ public class CompositeFilter implements Filter, FilterMixin {
   }
 
   @Override
-  public void applyHeavyFilter(Document copiedFragment, int startOffset, int startLineNumber, Consumer<AdditionalHighlight> consumer) {
+  public void applyHeavyFilter(@NotNull Document copiedFragment, int startOffset, int startLineNumber, @NotNull Consumer<AdditionalHighlight> consumer) {
     final boolean dumb = myDumbService.isDumb();
     List<Filter> filters = myFilters;
     int count = filters.size();
@@ -152,11 +156,12 @@ public class CompositeFilter implements Filter, FilterMixin {
     }
   }
 
+  @NotNull
   @Override
   public String getUpdateMessage() {
     final boolean dumb = myDumbService.isDumb();
     List<Filter> filters = myFilters;
-    final List<String> updateMessage = new ArrayList<String>();
+    final List<String> updateMessage = new ArrayList<>();
     int count = filters.size();
 
     for (int i = 0; i < count; i++) {
@@ -187,4 +192,8 @@ public class CompositeFilter implements Filter, FilterMixin {
     this.forceUseAllFilters = forceUseAllFilters;
   }
 
+  @Override
+  public String toString() {
+    return "CompositeFilter: " + myFilters;
+  }
 }

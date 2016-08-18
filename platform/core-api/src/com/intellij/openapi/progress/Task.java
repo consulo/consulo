@@ -26,6 +26,7 @@ import com.intellij.util.ExceptionUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 
 /**
  * Intended to run tasks, both modal and non-modal (backgroundable)
@@ -64,12 +65,14 @@ public abstract class Task implements TaskInfo, Progressive {
    *
    * Callback executed when run() throws {@link ProcessCanceledException} or if its {@link ProgressIndicator} was canceled.
    */
+  @RequiredDispatchThread
   public void onCancel() {
   }
 
   /**
    * This callback will be invoked on AWT dispatch thread.
    */
+  @RequiredDispatchThread
   public void onSuccess() {
   }
 
@@ -78,6 +81,7 @@ public abstract class Task implements TaskInfo, Progressive {
    *
    * Callback executed when run() throws an exception (except PCE).
    */
+  @RequiredDispatchThread
   public void onError(@NotNull Exception error) {
     LOG.error(error);
   }
@@ -85,6 +89,7 @@ public abstract class Task implements TaskInfo, Progressive {
   /**
    * This callback will be invoked on AWT dispatch thread, after other specific handlers
    */
+  @RequiredDispatchThread
   public void onFinished() {
   }
 
