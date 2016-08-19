@@ -210,8 +210,6 @@
     <extensionPoint name="nonProjectFileWritingAccessExtension" area="CONSULO_PROJECT"
                     interface="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
     <extensionPoint name="editorNotificationProvider" area="CONSULO_PROJECT" interface="consulo.editor.notifications.EditorNotificationProvider"/>
-    <extensionPoint name="featureStatBundle" interface="com.intellij.featureStatistics.FeatureStatisticsBundleProvider"/>
-    <extensionPoint name="featureStatisticsBundle" beanClass="com.intellij.featureStatistics.FeatureStatisticsBundleEP"/>
 
     <extensionPoint name="editorCustomization" area="CONSULO_PROJECT" interface="com.intellij.ui.EditorCustomization"/>
     <extensionPoint name="editorNavigation" interface="com.intellij.openapi.editor.EditorNavigationDelegate"/>
