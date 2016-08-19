@@ -48,45 +48,45 @@ import java.util.List;
  */
 class EditorSizeManager implements PrioritizedDocumentListener, Disposable, FoldingListener, Dumpable {
   private static final Logger LOG = Logger.getInstance(EditorSizeManager.class);
-
+  
   private static final int UNKNOWN_WIDTH = Integer.MAX_VALUE;
-
+  
   private final EditorView myView;
   private final EditorImpl myEditor;
   private final DocumentEx myDocument;
-
+  
   private final TIntArrayList myLineWidths = new TIntArrayList(); // cached widths of visual lines (in pixels)
-  // negative value means an estimated (not precise) width
-  // UNKNOWN_WIDTH(Integer.MAX_VALUE) means no value
+                                                                  // negative value means an estimated (not precise) width 
+                                                                  // UNKNOWN_WIDTH(Integer.MAX_VALUE) means no value
   private int myWidthInPixels;
 
   private int myMaxLineWithExtensionWidth;
   private int myWidestLineWithExtension;
-
+  
   private int myDocumentChangeStartOffset;
   private int myDocumentChangeEndOffset;
   private int myFoldingChangeStartOffset = Integer.MAX_VALUE;
   private int myFoldingChangeEndOffset = Integer.MIN_VALUE;
-
+  
   private int myVirtualPageHeight;
-
-  private boolean myDirty; // true if we cannot calculate preferred size now because soft wrap model was invalidated after editor
-  // became hidden. myLineWidths contents is irrelevant in such a state. Previously calculated preferred size
-  // is kept until soft wraps will be recalculated and size calculations will become possible
-
-  private final List<TextRange> myDeferredRanges = new ArrayList<TextRange>();
-
+  
+  private boolean myDirty; // true if we cannot calculate preferred size now because soft wrap model was invalidated after editor 
+                           // became hidden. myLineWidths contents is irrelevant in such a state. Previously calculated preferred size
+                           // is kept until soft wraps will be recalculated and size calculations will become possible
+  
+  private final List<TextRange> myDeferredRanges = new ArrayList<>();
+  
   private final SoftWrapAwareDocumentParsingListenerAdapter mySoftWrapChangeListener = new SoftWrapAwareDocumentParsingListenerAdapter() {
     @Override
     public void onRecalculationEnd(@NotNull IncrementalCacheUpdateEvent event) {
       onSoftWrapRecalculationEnd(event);
     }
   };
-
+  
   EditorSizeManager(EditorView view) {
     myView = view;
     myEditor = view.getEditor();
-    myDocument = myEditor.getDocument();
+    myDocument = myEditor.getDocument(); 
     myDocument.addDocumentListener(this, this);
     myEditor.getFoldingModel().addListener(this, this);
     myEditor.getSoftWrapModel().getApplianceManager().addListener(mySoftWrapChangeListener);
@@ -115,7 +115,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
     doInvalidateRange(myDocumentChangeStartOffset, myDocumentChangeEndOffset);
     assertValidState();
   }
-
+  
   @Override
   public void onFoldRegionStateChange(@NotNull FoldRegion region) {
     if (myDocument.isInBulkUpdate()) return;
@@ -176,7 +176,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
     Insets insets = myView.getInsets();
     return new Dimension(width + insets.left + insets.right, getPreferredHeight());
   }
-
+  
   int getPreferredHeight() {
     int lineHeight = myView.getLineHeight();
     if (myEditor.isOneLineMode()) return lineHeight;
@@ -194,13 +194,13 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
       if (visibleAreaHeight > 0 || myVirtualPageHeight <= 0) {
         myVirtualPageHeight = Math.max(visibleAreaHeight - 2 * lineHeight, lineHeight);
       }
-
+      
       size += Math.max(myVirtualPageHeight, 0);
     }
     else {
       size += settings.getAdditionalLinesCount() * lineHeight;
     }
-
+      
     Insets insets = myView.getInsets();
     return size + insets.top + insets.bottom;
   }
@@ -245,13 +245,8 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
       int visualLine = iterator.getVisualLine();
       int width = myLineWidths.get(visualLine);
       if (width == UNKNOWN_WIDTH) {
-        final Ref<Boolean> approximateValue = new Ref<Boolean>(Boolean.FALSE);
-        width = getVisualLineWidth(iterator, new Runnable() {
-          @Override
-          public void run() {
-            approximateValue.set(Boolean.TRUE);
-          }
-        });
+        final Ref<Boolean> approximateValue = new Ref<>(Boolean.FALSE);
+        width = getVisualLineWidth(iterator, () -> approximateValue.set(Boolean.TRUE));
         if (approximateValue.get()) width = -width;
         myLineWidths.set(visualLine, width);
       }
@@ -260,7 +255,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
     }
     return maxWidth;
   }
-
+  
   int getVisualLineWidth(VisualLinesIterator visualLinesIterator, @Nullable Runnable quickEvaluationListener) {
     assert !visualLinesIterator.atEnd();
     int visualLine = visualLinesIterator.getVisualLine();
@@ -270,9 +265,9 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
         !myView.getTextLayoutCache().hasCachedLayoutFor(visualLine)) {
       // fast path - speeds up editor opening
       quickEvaluationListener.run();
-      return myView.getLogicalPositionCache().offsetToLogicalColumn(visualLine,
-                                                                    myDocument.getLineEndOffset(visualLine) -
-                                                                    myDocument.getLineStartOffset(visualLine)) *
+      return myView.getLogicalPositionCache().offsetToLogicalColumn(visualLine, 
+                                                                    myDocument.getLineEndOffset(visualLine) - 
+                                                                    myDocument.getLineStartOffset(visualLine)) * 
              myView.getMaxCharWidth();
     }
     float x = 0;
@@ -287,7 +282,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
     }
     return (int)x;
   }
-
+  
   void reset() {
     assert !myDocument.isInBulkUpdate();
     doInvalidateRange(0, myDocument.getTextLength());
@@ -308,7 +303,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
       doInvalidateRange(startOffset, endOffset);
     }
   }
-
+  
   private void doInvalidateRange(int startOffset, int endOffset) {
     if (checkDirty()) return;
     myWidthInPixels = -1;
@@ -347,7 +342,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
   }
 
   private void onTextLayoutPerformed(int startOffset, int endOffset) {
-    if (checkDirty()) return;
+    if (checkDirty()) return;    
     boolean purePaintingMode = myEditor.isPurePaintingMode();
     boolean foldingEnabled = myEditor.getFoldingModel().isFoldingEnabled();
     myEditor.setPurePaintingMode(false);
@@ -372,7 +367,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
       myEditor.getFoldingModel().setFoldingEnabled(foldingEnabled);
     }
   }
-
+  
   private boolean checkDirty() {
     if (myEditor.getSoftWrapModel().isDirty()) {
       myDirty = true;
@@ -394,8 +389,8 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
   @NotNull
   @Override
   public String dumpState() {
-    return "[cached width: " + myWidthInPixels +
-           ", max line with extension width: " + myMaxLineWithExtensionWidth +
+    return "[cached width: " + myWidthInPixels + 
+           ", max line with extension width: " + myMaxLineWithExtensionWidth + 
            ", line widths: " + myLineWidths + "]";
   }
 

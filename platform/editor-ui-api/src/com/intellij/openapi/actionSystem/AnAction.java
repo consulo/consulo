@@ -20,7 +20,10 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.SmartList;
+import com.intellij.util.ui.UIUtil;
 import consulo.lombok.annotations.ArrayFactoryFields;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
@@ -30,6 +33,7 @@ import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents an entity that has a state, a presentation and can be performed.
@@ -66,14 +70,14 @@ import java.util.ArrayList;
  */
 @ArrayFactoryFields
 public abstract class AnAction implements PossiblyDumbAware {
-  @NonNls public static final String ourClientProperty = "AnAction.shortcutSet";
+  public static final Key<List<AnAction>> ACTIONS_KEY = Key.create("AnAction.shortcutSet");
+
+  @NonNls
+  public static final String ourClientProperty = "AnAction.shortcutSet";
 
   private Presentation myTemplatePresentation;
   private ShortcutSet myShortcutSet;
   private boolean myEnabledInModalContext;
-
-
-  private static final ShortcutSet ourEmptyShortcutSet = new CustomShortcutSet();
   private boolean myIsDefaultIcon = true;
   private boolean myWorksInInjected;
 
@@ -117,7 +121,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param icon        Action's icon
    */
   public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
-    myShortcutSet = ourEmptyShortcutSet;
+    myShortcutSet = CustomShortcutSet.EMPTY;
     myEnabledInModalContext = false;
     Presentation presentation = getTemplatePresentation();
     presentation.setText(text);
@@ -168,6 +172,26 @@ public abstract class AnAction implements PossiblyDumbAware {
         unregisterCustomShortcutSet(component);
       }
     });
+  }
+
+  public final void registerCustomShortcutSet(@Nullable JComponent component, @Nullable Disposable parentDisposable) {
+    if (component == null) return;
+    List<AnAction> actionList = UIUtil.getClientProperty(component, ACTIONS_KEY);
+    if (actionList == null) {
+      UIUtil.putClientProperty(component, ACTIONS_KEY, actionList = new SmartList<>());
+    }
+    if (!actionList.contains(this)) {
+      actionList.add(this);
+    }
+
+    if (parentDisposable != null) {
+      Disposer.register(parentDisposable, new Disposable() {
+        @Override
+        public void dispose() {
+          unregisterCustomShortcutSet(component);
+        }
+      });
+    }
   }
 
   public final void unregisterCustomShortcutSet(JComponent component) {

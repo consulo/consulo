@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package com.intellij.history.integration.ui;
 import com.intellij.history.integration.PatchingTestCase;
 import com.intellij.history.integration.ui.models.DirectoryHistoryDialogModel;
 
+import java.nio.charset.Charset;
+
 public class DirectoryHistoryDialogPatchCreationTest extends PatchingTestCase {
   public void testPatchCreation() throws Exception {
     myRoot.createChildData(null, "f1.txt");
@@ -26,10 +28,10 @@ public class DirectoryHistoryDialogPatchCreationTest extends PatchingTestCase {
     myRoot.createChildData(null, "f3.txt");
 
     DirectoryHistoryDialogModel m = new DirectoryHistoryDialogModel(myProject, myGateway, getVcs(), myRoot);
-    assertSize(3, m.getRevisions());
+    assertSize(6, m.getRevisions());
 
-    m.selectRevisions(0, 2);
-    m.createPatch(patchFilePath, false);
+    m.selectRevisions(0, 5);
+    m.createPatch(patchFilePath, myProject.getBasePath(), false, Charset.defaultCharset());
     clearRoot();
 
     applyPatch();

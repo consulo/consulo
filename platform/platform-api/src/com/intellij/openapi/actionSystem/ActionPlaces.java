@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings({"HardCodedStringLiteral"})
 public abstract class ActionPlaces {
   public static final String UNKNOWN = "unknown";
+  public static final String TOOLBAR = "toolbar";
 
   /**
    * consider to use {@link #isMainMenuOrActionSearch(String)} instead
@@ -122,7 +123,7 @@ public abstract class ActionPlaces {
   public static final String DIFF_TOOLBAR = "DiffPopup";
   public static final String CHANGES_LOCAL_DIFF_SETTINGS = "CHANGES_LOCAL_DIFF_SETTINGS";
 
-  private static final String[] ourToolbarPlaces = {EDITOR_TOOLBAR, PROJECT_VIEW_TOOLBAR, TESTTREE_VIEW_TOOLBAR, MAIN_TOOLBAR,
+  private static final String[] ourToolbarPlaces = {EDITOR_TOOLBAR, PROJECT_VIEW_TOOLBAR, TOOLBAR, TESTTREE_VIEW_TOOLBAR, MAIN_TOOLBAR,
           ANT_EXPLORER_TOOLBAR, ANT_MESSAGES_TOOLBAR, COMPILER_MESSAGES_TOOLBAR, TODO_VIEW_TOOLBAR, STRUCTURE_VIEW_TOOLBAR, USAGE_VIEW_TOOLBAR,
           DEBUGGER_TOOLBAR, CALL_HIERARCHY_VIEW_TOOLBAR, METHOD_HIERARCHY_VIEW_TOOLBAR, TYPE_HIERARCHY_VIEW_TOOLBAR, JAVADOC_TOOLBAR,
           FILE_HISTORY_TOOLBAR, FILEHISTORY_VIEW_TOOLBAR, LVCS_DIRECTORY_HISTORY_TOOLBAR, CHANGES_VIEW_TOOLBAR, PHING_EXPLORER_TOOLBAR,

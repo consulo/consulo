@@ -18,21 +18,24 @@ package com.intellij.codeInsight.completion;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.StringComboboxEditor;
-import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 /**
  * @author peter
  */
-public class ComboEditorCompletionContributor extends CompletionContributor {
+public class ComboEditorCompletionContributor extends CompletionContributor implements DumbAware {
 
-  @RequiredReadAction
+  public static final Key<Boolean> CONTINUE_RUN_COMPLETION = Key.create("CONTINUE_RUN_COMPLETION");
+
   @Override
-  public void fillCompletionVariants(final CompletionParameters parameters, final CompletionResultSet result) {
+  public void fillCompletionVariants(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result) {
     if (parameters.getInvocationCount() == 0) {
       return;
     }
@@ -40,24 +43,30 @@ public class ComboEditorCompletionContributor extends CompletionContributor {
     final PsiFile file = parameters.getOriginalFile();
     final Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
     if (document != null) {
-      final JComboBox comboBox = document.getUserData(StringComboboxEditor.COMBO_BOX_KEY);
+      JComboBox comboBox = document.getUserData(StringComboboxEditor.COMBO_BOX_KEY);
       if (comboBox != null) {
-        final CompletionResultSet resultSet = result.withPrefixMatcher(document.getText().substring(0, parameters.getOffset()));
+        String substring = document.getText().substring(0, parameters.getOffset());
+        boolean plainPrefixMatcher = Boolean.TRUE.equals(document.getUserData(StringComboboxEditor.USE_PLAIN_PREFIX_MATCHER));
+        final CompletionResultSet resultSet = plainPrefixMatcher ?
+                                              result.withPrefixMatcher(new PlainPrefixMatcher(substring)) :
+                                              result.withPrefixMatcher(substring);
         final int count = comboBox.getItemCount();
         for (int i = 0; i < count; i++) {
           final Object o = comboBox.getItemAt(i);
           if (o instanceof String) {
-            resultSet.addElement(PrioritizedLookupElement.withPriority(
-                    LookupElementBuilder.create((String)o).withInsertHandler(new InsertHandler<LookupElement>() {
+            resultSet.addElement(PrioritizedLookupElement.withPriority(LookupElementBuilder.create((String)o).withInsertHandler(
+                    new InsertHandler<LookupElement>() {
                       @Override
                       public void handleInsert(final InsertionContext context, final LookupElement item) {
                         final Document document = context.getEditor().getDocument();
                         document.deleteString(context.getEditor().getCaretModel().getOffset(), document.getTextLength());
                       }
-                    }), count - i));
+                    }), count-i));
           }
         }
-        result.stopHere();
+        if (!Boolean.TRUE.equals(document.getUserData(CONTINUE_RUN_COMPLETION))) {
+          result.stopHere();
+        }
       }
     }
   }

@@ -1,9 +1,11 @@
 package com.intellij.diff.contents;
 
 import com.intellij.diff.tools.util.DiffNotifications;
-import com.intellij.diff.util.DiffUserDataKeys;
+import com.intellij.diff.util.DiffUtil;
+import com.intellij.diff.util.LineCol;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
@@ -13,16 +15,17 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.pom.Navigatable;
 import com.intellij.ui.LightColors;
 import com.intellij.util.LineSeparator;
+import com.intellij.util.diff.Diff;
+import com.intellij.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.List;
 
 public class FileAwareDocumentContent extends DocumentContentImpl {
   @Nullable private final Project myProject;
@@ -38,9 +41,9 @@ public class FileAwareDocumentContent extends DocumentContentImpl {
   }
 
   @Override
-  public OpenFileDescriptor getOpenFileDescriptor(int offset) {
+  public Navigatable getNavigatable(@NotNull LineCol position) {
     if (myProject == null || getHighlightFile() == null || !getHighlightFile().isValid()) return null;
-    return new OpenFileDescriptor(myProject, getHighlightFile(), offset);
+    return new MyNavigatable(myProject, getHighlightFile(), getDocument(), position);
   }
 
   @NotNull
@@ -122,13 +125,12 @@ public class FileAwareDocumentContent extends DocumentContentImpl {
     }
 
     @Nullable
-    private List<JComponent> createNotifications() {
+    private JComponent createNotification() {
       if (!myMalformedContent) return null;
       assert mySuggestedCharset != null;
 
       String text = "Content was decoded with errors (using " + "'" + mySuggestedCharset.name() + "' charset)";
-      JComponent notification = DiffNotifications.createNotification(text, LightColors.RED);
-      return Collections.singletonList(notification);
+      return DiffNotifications.createNotification(text, LightColors.RED);
     }
 
     @NotNull
@@ -136,8 +138,52 @@ public class FileAwareDocumentContent extends DocumentContentImpl {
       if (myFileType == UnknownFileType.INSTANCE) myFileType = PlainTextFileType.INSTANCE;
       FileAwareDocumentContent content
               = new FileAwareDocumentContent(myProject, myDocument, myFileType, myHighlightFile, mySeparator, myCharset);
-      content.putUserData(DiffUserDataKeys.NOTIFICATIONS, createNotifications());
+      DiffUtil.addNotification(createNotification(), content);
       return content;
+    }
+  }
+
+  private static class MyNavigatable implements Navigatable {
+    @NotNull private final Project myProject;
+    @NotNull private final VirtualFile myTargetFile;
+    @NotNull private final Document myDocument;
+    @NotNull private final LineCol myPosition;
+
+    public MyNavigatable(@NotNull Project project, @NotNull VirtualFile targetFile, @NotNull Document document, @NotNull LineCol position) {
+      myProject = project;
+      myTargetFile = targetFile;
+      myDocument = document;
+      myPosition = position;
+    }
+
+    @Override
+    public void navigate(boolean requestFocus) {
+      Document targetDocument = FileDocumentManager.getInstance().getDocument(myTargetFile);
+      LineCol targetPosition = translatePosition(myDocument, targetDocument, myPosition);
+      OpenFileDescriptor descriptor = new OpenFileDescriptor(myProject, myTargetFile, targetPosition.line, targetPosition.column);
+      if (descriptor.canNavigate()) descriptor.navigate(true);
+    }
+
+    @Override
+    public boolean canNavigate() {
+      return myTargetFile.isValid();
+    }
+
+    @Override
+    public boolean canNavigateToSource() {
+      return false;
+    }
+
+    @NotNull
+    private static LineCol translatePosition(@NotNull Document fromDocument, @Nullable Document toDocument, @NotNull LineCol position) {
+      try {
+        if (toDocument == null) return position;
+        int targetLine = Diff.translateLine(fromDocument.getCharsSequence(), toDocument.getCharsSequence(), position.line, true);
+        return new LineCol(targetLine, position.column);
+      }
+      catch (FilesTooBigForDiffException ignore) {
+        return position;
+      }
     }
   }
 }

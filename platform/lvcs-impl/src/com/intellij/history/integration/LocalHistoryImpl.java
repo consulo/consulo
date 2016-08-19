@@ -19,6 +19,9 @@ package com.intellij.history.integration;
 import com.intellij.history.*;
 import com.intellij.history.core.*;
 import com.intellij.history.core.tree.RootEntry;
+import com.intellij.history.integration.ui.models.DirectoryHistoryDialogModel;
+import com.intellij.history.integration.ui.models.EntireFileHistoryDialogModel;
+import com.intellij.history.integration.ui.models.HistoryDialogModel;
 import com.intellij.history.utils.LocalHistoryLog;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
@@ -38,7 +41,10 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.intellij.history.integration.LocalHistoryUtil.findRevisionIndexToRevert;
 
 public class LocalHistoryImpl extends LocalHistory implements ApplicationComponent {
   private ChangeList myChangeList;
@@ -58,12 +64,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
   public void initComponent() {
     if (!ApplicationManager.getApplication().isUnitTestMode() && ApplicationManager.getApplication().isHeadlessEnvironment()) return;
 
-    myShutdownTask = new Runnable() {
-      @Override
-      public void run() {
-        disposeComponent();
-      }
-    };
+    myShutdownTask = () -> disposeComponent();
     ShutDownTracker.getInstance().registerShutdownTask(myShutdownTask);
 
     initHistory();
@@ -93,12 +94,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
     fm.addVirtualFileManagerListener(myEventDispatcher);
 
     if (ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode()) {
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-        @Override
-        public void run() {
-          validateStorage();
-        }
-      });
+      ApplicationManager.getApplication().executeOnPooledThread(() -> validateStorage());
     }
   }
 
@@ -128,7 +124,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
   public void disposeComponent() {
     if (!isInitialized.getAndSet(false)) return;
 
-    int period = Registry.intValue("localHistory.daysToKeep") * 1000 * 60 * 60 * 24;
+    long period = Registry.intValue("localHistory.daysToKeep") * 1000L * 60L * 60L * 24L;
 
     VirtualFileManager fm = VirtualFileManager.getInstance();
     fm.removeVirtualFileListener(myEventDispatcher);
@@ -137,12 +133,12 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
 
 
     validateStorage();
-    LocalHistoryLog.LOG.info("Purging local history...");
+    LocalHistoryLog.LOG.debug("Purging local history...");
     myChangeList.purgeObsolete(period);
     validateStorage();
 
     myChangeList.close();
-    LocalHistoryLog.LOG.info("Local history storage successfully closed.");
+    LocalHistoryLog.LOG.debug("Local history storage successfully closed.");
 
     ShutDownTracker.getInstance().unregisterShutdownTask(myShutdownTask);
   }
@@ -183,6 +179,11 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
 
   private Label label(final LabelImpl impl) {
     return new Label() {
+      @Override
+      public void revert(@NotNull Project project, @NotNull VirtualFile file) throws LocalHistoryException {
+        revertToLabel(project, file, impl);
+      }
+
       @Override
       public ByteContent getByteContent(final String path) {
         return ApplicationManager.getApplication().runReadAction(new Computable<ByteContent>() {
@@ -233,5 +234,23 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
   @Nullable
   public IdeaGateway getGateway() {
     return myGateway;
+  }
+
+  private void revertToLabel(@NotNull Project project, @NotNull VirtualFile f, @NotNull LabelImpl impl) throws LocalHistoryException{
+    HistoryDialogModel dirHistoryModel = f.isDirectory()
+                                         ? new DirectoryHistoryDialogModel(project, myGateway, myVcs, f)
+                                         : new EntireFileHistoryDialogModel(project, myGateway, myVcs, f);
+    int leftRev = findRevisionIndexToRevert(dirHistoryModel, impl);
+    if (leftRev < 0) {
+      throw new LocalHistoryException("Couldn't find label revision");
+    }
+    if (leftRev == 0) return; // we shouldn't revert because no changes found to revert;
+    try {
+      dirHistoryModel.selectRevisions(-1, leftRev - 1); //-1 because we should revert all changes up to previous one, but not label-related.
+      dirHistoryModel.createReverter().revert();
+    }
+    catch (IOException e) {
+      throw new LocalHistoryException(String.format("Couldn't revert %s to local history label.", f.getName()), e);
+    }
   }
 }

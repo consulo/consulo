@@ -25,7 +25,7 @@ import java.awt.*;
 abstract class TextFragment implements LineFragment {
   @NotNull
   final float[] myCharPositions; // i-th value is the x coordinate of right edge of i-th character (counted in visual order)
-
+  
   TextFragment(int charCount) {
     assert charCount > 0;
     myCharPositions = new float[charCount]; // populated by subclasses' constructors
@@ -45,7 +45,7 @@ abstract class TextFragment implements LineFragment {
   public int getVisualColumnCount(float startX) {
     return myCharPositions.length;
   }
-
+  
   abstract boolean isRtl();
 
   @NotNull
@@ -62,7 +62,7 @@ abstract class TextFragment implements LineFragment {
   public float offsetToX(float startX, int startOffset, int offset) {
     return startX + getX(offset) - getX(startOffset);
   }
-
+  
   float getX(int offset) {
     return offset <= 0 ? 0 : myCharPositions[Math.min(myCharPositions.length, offset) - 1];
   }

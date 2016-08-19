@@ -37,7 +37,7 @@ import java.util.Collections;
 class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, Dumpable {
   private final Document myDocument;
   private final EditorView myView;
-  private ArrayList<LineData> myLines = new ArrayList<LineData>();
+  private ArrayList<LineData> myLines = new ArrayList<>();
   private int myTabSize = -1;
   private int myDocumentChangeOldEndLine;
 
@@ -84,7 +84,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     LineData lineData = getLineInfo(line);
     return new LogicalPosition(line, lineData.offsetToLogicalColumn(myDocument, line, myTabSize, offset));
   }
-
+  
   synchronized int offsetToLogicalColumn(int line, int intraLineOffset) {
     if (line < 0 || line >= myDocument.getLineCount()) return 0;
     LineData lineData = getLineInfo(line);
@@ -145,7 +145,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
   private void checkDisposed() {
     if (myLines == null) myView.getEditor().throwDisposalError("Editor is already disposed");
   }
-
+  
   synchronized void validateState() {
     int lineCount = myDocument.getLineCount();
     int cacheSize = myLines.size();
@@ -172,16 +172,16 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     }
   }
 
-  private static class LineData {
+  private static class LineData {    
     private static final LineData TRIVIAL = new LineData(null);
     private static final int CACHE_FREQUENCY = 1024; // logical column will be cached for each CACHE_FREQUENCY-th character on the line
-
+    
     private final int[] columnCache;
-
+    
     private LineData(int[] columnData) {
       columnCache = columnData;
     }
-
+    
     private static LineData create(@NotNull Document document, int line, int tabSize) {
       int start = document.getLineStartOffset(line);
       int end = document.getLineEndOffset(line);
@@ -224,7 +224,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
       }
       return column;
     }
-
+    
     private int logicalColumnToOffset(@NotNull Document document, int line, int tabSize, int logicalColumn) {
       int lineStartOffset = document.getLineStartOffset(line);
       int lineEndOffset = document.getLineEndOffset(line);

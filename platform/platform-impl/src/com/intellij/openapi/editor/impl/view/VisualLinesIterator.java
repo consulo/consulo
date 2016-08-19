@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
+import com.intellij.openapi.diagnostic.Attachment;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.SoftWrap;
@@ -30,11 +32,11 @@ class VisualLinesIterator {
   private final Document myDocument;
   private final FoldRegion[] myFoldRegions;
   private final List<? extends SoftWrap> mySoftWraps;
-
+  
   @NotNull
   private Location myLocation;
   private Location myNextLocation;
-
+  
   VisualLinesIterator(@NotNull EditorView view, int startVisualLine) {
     myView = view;
     myEditor = view.getEditor();
@@ -49,7 +51,7 @@ class VisualLinesIterator {
   boolean atEnd() {
     return myLocation.atEnd();
   }
-
+  
   void advance() {
     checkEnd();
     if (myNextLocation == null) {
@@ -70,28 +72,28 @@ class VisualLinesIterator {
     checkEnd();
     return myLocation.offset;
   }
-
+  
   int getVisualLineEndOffset() {
     checkEnd();
     if (myNextLocation == null) {
       myNextLocation = myLocation.clone();
       myNextLocation.advance();
     }
-    return myNextLocation.atEnd() ? myDocument.getTextLength() :
-           myNextLocation.softWrap == myLocation.softWrap ? myDocument.getLineEndOffset(myNextLocation.logicalLine - 2) :
+    return myNextLocation.atEnd() ? myDocument.getTextLength() : 
+           myNextLocation.softWrap == myLocation.softWrap ? myDocument.getLineEndOffset(myNextLocation.logicalLine - 2) : 
            myNextLocation.offset;
   }
-
+  
   int getStartLogicalLine() {
     checkEnd();
     return myLocation.logicalLine - 1;
-  }
-
+  }  
+  
   int getStartOrPrevWrapIndex() {
     checkEnd();
     return myLocation.softWrap - 1;
   }
-
+  
   int getStartFoldingIndex() {
     checkEnd();
     return myLocation.foldRegion;
@@ -100,14 +102,14 @@ class VisualLinesIterator {
   private void checkEnd() {
     if (atEnd()) throw new IllegalStateException("Iteration finished");
   }
-
+  
   private final class Location implements Cloneable {
     private int visualLine;       // current visual line
     private int offset;           // start offset of the current visual line
     private int logicalLine = 1;  // 1 + start logical line of the current visual line
     private int foldRegion;       // index of the first folding region on current or following visual lines
     private int softWrap;         // index of the first soft wrap after the start of current visual line
-
+    
     private Location(int startVisualLine) {
       if (startVisualLine < 0 || startVisualLine >= myEditor.getVisibleLineCount()) {
         offset = -1;
@@ -123,7 +125,7 @@ class VisualLinesIterator {
         foldRegion = myEditor.getFoldingModel().getLastCollapsedRegionBefore(offset) + 1;
       }
     }
-
+    
     private void advance() {
       int nextWrapOffset = getNextSoftWrapOffset();
       offset = getNextVisualLineStartOffset(nextWrapOffset);
@@ -160,7 +162,7 @@ class VisualLinesIterator {
       }
       return false;
     }
-
+    
     private boolean atEnd() {
       return offset == -1;
     }

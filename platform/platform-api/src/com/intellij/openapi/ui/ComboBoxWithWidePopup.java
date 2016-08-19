@@ -23,24 +23,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Vector;
 
-public class ComboBoxWithWidePopup extends JComboBox {
+public class ComboBoxWithWidePopup<E> extends JComboBox<E> {
 
   private boolean myLayingOut = false;
   private int myMinLength = 20;
 
-  public ComboBoxWithWidePopup(final ComboBoxModel aModel) {
+  public ComboBoxWithWidePopup(final ComboBoxModel<E> aModel) {
     super(aModel);
 
     if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
   }
 
-  public ComboBoxWithWidePopup(final Object[] items) {
+  public ComboBoxWithWidePopup(final E[] items) {
     super(items);
 
     if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
   }
 
-  public ComboBoxWithWidePopup(final Vector<?> items) {
+  public ComboBoxWithWidePopup(final Vector<E> items) {
     super(items);
 
     if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);

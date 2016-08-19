@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ public final class OpenFileHyperlinkInfo implements FileHyperlinkInfo {
 
   private final Project myProject;
   private final VirtualFile myFile;
+  private final boolean myIncludeInOccurenceNavigation;
   private final int myDocumentLine;
   private final int myDocumentColumn;
 
@@ -38,16 +39,21 @@ public final class OpenFileHyperlinkInfo implements FileHyperlinkInfo {
     this(descriptor.getProject(), descriptor.getFile(), descriptor.getLine(), descriptor.getColumn());
   }
 
-  public OpenFileHyperlinkInfo(@NotNull Project project, @NotNull VirtualFile file,
+  public OpenFileHyperlinkInfo(@NotNull Project project, @NotNull VirtualFile file, boolean includeInOccurenceNavigation,
                                int documentLine, int documentColumn) {
     myProject = project;
     myFile = file;
+    myIncludeInOccurenceNavigation = includeInOccurenceNavigation;
     myDocumentLine = documentLine;
     myDocumentColumn = documentColumn;
   }
 
   public OpenFileHyperlinkInfo(@NotNull Project project, @NotNull final VirtualFile file, final int line) {
     this(project, file, line, 0);
+  }
+
+  public OpenFileHyperlinkInfo(@NotNull Project project, @NotNull VirtualFile file, int line, int column) {
+    this(project, file, true, line, column);
   }
 
   @Override
@@ -76,15 +82,17 @@ public final class OpenFileHyperlinkInfo implements FileHyperlinkInfo {
 
   @Override
   public void navigate(final Project project) {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        final VirtualFile file = myFile;
-        if (file.isValid()) {
-          FileEditorManager.getInstance(project).openTextEditor(getDescriptor(), true);
-        }
+    ApplicationManager.getApplication().runReadAction(() -> {
+      OpenFileDescriptor descriptor = getDescriptor();
+      if (descriptor != null) {
+        FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
       }
     });
+  }
+
+  @Override
+  public boolean includeInOccurenceNavigation() {
+    return myIncludeInOccurenceNavigation;
   }
 
   /**

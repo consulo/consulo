@@ -28,7 +28,10 @@ import gnu.trove.THashSet;
 import org.apache.log4j.Appender;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.jdom.Document;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.picocontainer.PicoContainer;
 
 import java.io.*;
@@ -38,30 +41,32 @@ import java.util.*;
 import static com.intellij.util.SystemProperties.getUserHome;
 
 public class PathManager {
-  @NonNls public static final String PROPERTIES_FILE = "idea.properties.file";
-  @NonNls public static final String PROPERTY_SYSTEM_PATH = "idea.system.path";
-  @NonNls public static final String PROPERTY_CONFIG_PATH = "idea.config.path";
-  @NonNls public static final String PROPERTY_PLUGINS_PATH = "idea.plugins.path";
-  @NonNls public static final String PROPERTY_HOME_PATH = "idea.home.path";
-  @NonNls public static final String PROPERTY_LOG_PATH = "idea.log.path";
-  @NonNls public static final String PROPERTY_PATHS_SELECTOR = "idea.paths.selector";
-  @NonNls public static final String PROPERTY_ORIGINAL_WORKING_DIR = "original.working.dir";
-  @NonNls public static final String DEFAULT_OPTIONS_FILE_NAME = "other";
+  public static final String PROPERTIES_FILE = "idea.properties.file";
+  public static final String PROPERTY_SYSTEM_PATH = "idea.system.path";
+  public static final String PROPERTY_SCRATCH_PATH = "idea.scratch.path";
+  public static final String PROPERTY_CONFIG_PATH = "idea.config.path";
+  public static final String PROPERTY_PLUGINS_PATH = "idea.plugins.path";
+  public static final String PROPERTY_HOME_PATH = "idea.home.path";
+  public static final String PROPERTY_LOG_PATH = "idea.log.path";
+  public static final String PROPERTY_PATHS_SELECTOR = "idea.paths.selector";
+  public static final String PROPERTY_ORIGINAL_WORKING_DIR = "original.working.dir";
+  public static final String DEFAULT_OPTIONS_FILE_NAME = "other";
 
-  @NonNls private static final String LIB_FOLDER = "lib";
-  @NonNls private static final String PLUGINS_FOLDER = "plugins";
-  @NonNls private static final String BIN_FOLDER = "bin";
-  @NonNls private static final String LOG_DIRECTORY = "log";
-  @NonNls private static final String CONFIG_FOLDER = "config";
-  @NonNls private static final String OPTIONS_FOLDER = "options";
-  @NonNls private static final String SYSTEM_FOLDER = "system";
-  @NonNls private static final String PATHS_SELECTOR = System.getProperty(PROPERTY_PATHS_SELECTOR);
+  private static final String LIB_FOLDER = "lib";
+  private static final String PLUGINS_FOLDER = "plugins";
+  private static final String BIN_FOLDER = "bin";
+  private static final String LOG_DIRECTORY = "log";
+  private static final String CONFIG_FOLDER = "config";
+  private static final String OPTIONS_FOLDER = "options";
+  private static final String SYSTEM_FOLDER = "system";
+  private static final String PATHS_SELECTOR = System.getProperty(PROPERTY_PATHS_SELECTOR);
 
-  @NonNls private static String ourHomePath;
-  @NonNls private static String ourSystemPath;
-  @NonNls private static String ourConfigPath;
-  @NonNls private static String ourPluginsPath;
-  @NonNls private static String ourLogPath;
+  private static String ourHomePath;
+  private static String ourSystemPath;
+  private static String ourConfigPath;
+  private static String ourScratchPath;
+  private static String ourPluginsPath;
+  private static String ourLogPath;
 
   // IDE installation paths
 
@@ -88,7 +93,8 @@ public class PathManager {
       try {
         ourHomePath = new File(ourHomePath).getCanonicalPath();
       }
-      catch (IOException ignored) { }
+      catch (IOException ignored) {
+      }
     }
 
     return ourHomePath;
@@ -152,6 +158,20 @@ public class PathManager {
     }
 
     return ourConfigPath;
+  }
+
+  @NotNull
+  public static String getScratchPath() {
+    if (ourScratchPath != null) return ourScratchPath;
+
+    if (System.getProperty(PROPERTY_SCRATCH_PATH) != null) {
+      ourScratchPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_SCRATCH_PATH)));
+    }
+    else {
+      ourScratchPath = getConfigPath();
+    }
+
+    return ourScratchPath;
   }
 
   @NotNull
@@ -245,7 +265,7 @@ public class PathManager {
   }
 
   @NotNull
-  public static String getPluginTempPath () {
+  public static String getPluginTempPath() {
     return getSystemPath() + File.separator + PLUGINS_FOLDER;
   }
 
@@ -260,7 +280,7 @@ public class PathManager {
    * Attempts to detect classpath entry which contains given resource.
    */
   @Nullable
-  public static String getResourceRoot(@NotNull Class context, @NonNls String path) {
+  public static String getResourceRoot(@NotNull Class context, String path) {
     URL url = context.getResource(path);
     if (url == null) {
       url = ClassLoader.getSystemResource(path.substring(1));
@@ -310,10 +330,8 @@ public class PathManager {
   }
 
   public static void loadProperties() {
-    File propFile = FileUtil.findFirstThatExist(
-      System.getProperty(PROPERTIES_FILE),
-      getUserHome() + "/idea.properties",
-      getHomePath() + "/bin/idea.properties");
+    File propFile =
+            FileUtil.findFirstThatExist(System.getProperty(PROPERTIES_FILE), getUserHome() + "/idea.properties", getHomePath() + "/bin/idea.properties");
 
     if (propFile != null) {
       try {
@@ -334,7 +352,7 @@ public class PathManager {
             }
           }
         }
-        finally{
+        finally {
           fis.close();
         }
       }
@@ -382,17 +400,16 @@ public class PathManager {
 
   @NotNull
   public static Collection<String> getUtilClassPath() {
-    final Class<?>[] classes = {
-      PathManager.class,            // module 'util'
-      NotNull.class,                // module 'annotations'
-      SystemInfoRt.class,           // module 'util-rt'
-      Document.class,               // jDOM
-      Appender.class,               // log4j
-      THashSet.class,               // trove4j
-      PicoContainer.class,          // PicoContainer
-      TypeMapper.class,             // JNA
-      FileUtils.class,              // JNA (jna-utils)
-      PatternMatcher.class          // OROMatcher
+    final Class<?>[] classes = {PathManager.class,            // module 'util'
+            NotNull.class,                // module 'annotations'
+            SystemInfoRt.class,           // module 'util-rt'
+            Document.class,               // jDOM
+            Appender.class,               // log4j
+            THashSet.class,               // trove4j
+            PicoContainer.class,          // PicoContainer
+            TypeMapper.class,             // JNA
+            FileUtils.class,              // JNA (jna-utils)
+            PatternMatcher.class          // OROMatcher
     };
 
     final Set<String> classPath = new HashSet<String>();
@@ -420,11 +437,11 @@ public class PathManager {
     return new File(path).getAbsolutePath();
   }
 
-  private static String trimPathQuotes(String path){
-    if (!(path != null && !(path.length() < 3))){
+  private static String trimPathQuotes(String path) {
+    if (!(path != null && !(path.length() < 3))) {
       return path;
     }
-    if (StringUtil.startsWithChar(path, '\"') && StringUtil.endsWithChar(path, '\"')){
+    if (StringUtil.startsWithChar(path, '\"') && StringUtil.endsWithChar(path, '\"')) {
       return path.substring(1, path.length() - 1);
     }
     return path;
