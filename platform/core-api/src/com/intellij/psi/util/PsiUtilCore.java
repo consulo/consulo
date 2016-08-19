@@ -713,6 +713,18 @@ public class PsiUtilCore {
   }
 
   @NotNull
+  public static LanguageVersion<?> findLanguageVersionFromElement(final PsiElement elt) {
+    if (elt.getFirstChild() == null) { //is leaf
+      final PsiElement parent = elt.getParent();
+      if (parent != null) {
+        return parent.getLanguageVersion();
+      }
+    }
+
+    return elt.getLanguageVersion();
+  }
+
+  @NotNull
   public static PsiFile[] virtualToPsiFiles(@NotNull final VirtualFile[] files, @NotNull Project project) {
     PsiManager manager = PsiManager.getInstance(project);
     List<PsiFile> result = new ArrayList<PsiFile>();
