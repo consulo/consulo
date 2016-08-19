@@ -15,8 +15,6 @@
  */
 package com.intellij.ide.scratch;
 
-import com.intellij.ide.IconDescriptor;
-import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.ide.navigationToolbar.AbstractNavBarModelExtension;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
@@ -61,10 +59,12 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.indexing.LightDirectoryIndex;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.RequiredReadAction;
+import consulo.ide.IconDescriptor;
+import consulo.ide.IconDescriptorUpdater;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 
 import java.io.IOException;
 import java.util.*;

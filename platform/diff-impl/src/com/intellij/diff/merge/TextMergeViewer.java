@@ -63,8 +63,8 @@ import com.intellij.util.ui.JBUI;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.swing.*;
 import java.awt.*;

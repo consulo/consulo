@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 06-Jun-16
  */
-public class ModuleLibraryOrderEntryTypeEditor extends OrderEntryTypeEditor<ModuleLibraryOrderEntryImpl> {
+public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleLibraryOrderEntryImpl> {
   @Override
   public void navigate(@NotNull final ModuleLibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();

@@ -17,7 +17,6 @@ package com.intellij.diff;
 
 import com.intellij.diff.actions.DocumentFragmentContent;
 import com.intellij.diff.contents.*;
-import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -36,6 +35,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.BinaryLightVirtualFile;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.PathUtil;
+import consulo.fileTypes.ArchiveFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

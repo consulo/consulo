@@ -32,8 +32,8 @@ import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

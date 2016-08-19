@@ -31,7 +31,7 @@ import consulo.bundle.SdkUtil;
  * @author VISTALL
  * @since 06-Jun-16
  */
-public class ModuleExtensionWithSdkOrderEntryTypeEditor extends OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
+public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
   @Override
   public void navigate(@NotNull final ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     final Sdk sdk = orderEntry.getSdk();

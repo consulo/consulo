@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package com.intellij.ide.structureView;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileTypes.FileTypeExtensionFactory;
 import com.intellij.openapi.project.Project;
@@ -32,8 +34,9 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public interface StructureViewBuilder {
-  StructureViewBuilderProvider PROVIDER =
-    new FileTypeExtensionFactory<StructureViewBuilderProvider>(StructureViewBuilderProvider.class, "com.intellij.structureViewBuilder").get();
+  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.structureViewBuilder");
+
+  StructureViewBuilderProvider PROVIDER = new FileTypeExtensionFactory<>(StructureViewBuilderProvider.class, EP_NAME).get();
 
   /**
    * Returns the structure view implementation for the file displayed in the specified
@@ -45,5 +48,5 @@ public interface StructureViewBuilder {
    * @see TreeBasedStructureViewBuilder
    */
   @NotNull
-  StructureView createStructureView(FileEditor fileEditor, Project project);
+  StructureView createStructureView(FileEditor fileEditor, @NotNull Project project);
 }

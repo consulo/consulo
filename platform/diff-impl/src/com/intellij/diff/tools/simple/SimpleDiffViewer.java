@@ -46,8 +46,8 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.*;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.swing.*;
 import java.awt.*;

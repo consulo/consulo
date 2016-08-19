@@ -490,6 +490,7 @@
           <orderEntry type="library" name="pty4" level="project" />
           <orderEntry type="library" name="httpmime" level="project" />
           <orderEntry type="module" module-name="desktop-ui-impl" exported="" />
+          <orderEntry type="module" module-name="diff-api" />
         </module-layer>
       </module>
       <module name="platform/platform-impl" dirurl="file://$PROJECT_DIR$/platform/platform-impl" current-layer="Default">
@@ -1030,6 +1031,7 @@
       <module name="platform/vcs-api-core" dirurl="file://$PROJECT_DIR$/platform/vcs-api-core" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>

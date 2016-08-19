@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,15 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.picocontainer.PicoContainer;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -32,15 +33,20 @@ import java.lang.reflect.Proxy;
 public abstract class KeyedExtensionFactory<T, KeyT> {
   private final Class<T> myInterfaceClass;
   private final ExtensionPointName<KeyedFactoryEPBean> myEpName;
+  private final PicoContainer myPicoContainer;
 
-  public KeyedExtensionFactory(@NotNull final Class<T> interfaceClass, @NonNls @NotNull final String epName) {
+  public KeyedExtensionFactory(@NotNull final Class<T> interfaceClass, @NonNls @NotNull final ExtensionPointName<KeyedFactoryEPBean> epName,
+                               @NotNull PicoContainer picoContainer) {
     myInterfaceClass = interfaceClass;
-    myEpName = new ExtensionPointName<KeyedFactoryEPBean>(epName);
+    myEpName = epName;
+    myPicoContainer = picoContainer;
   }
 
+  @NotNull
   public T get() {
     final KeyedFactoryEPBean[] epBeans = Extensions.getExtensions(myEpName);
     InvocationHandler handler = new InvocationHandler() {
+      @Override
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         //noinspection unchecked
         KeyT keyArg = (KeyT) args [0];
@@ -56,13 +62,13 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
     return (T)Proxy.newProxyInstance(myInterfaceClass.getClassLoader(), new Class<?>[] { myInterfaceClass }, handler );
   }
 
-  public T getByKey(KeyT key) {
+  public T getByKey(@NotNull KeyT key) {
     final KeyedFactoryEPBean[] epBeans = Extensions.getExtensions(myEpName);
     for (KeyedFactoryEPBean epBean : epBeans) {
       if (Comparing.strEqual(getKey(key), epBean.key)) {
         try {
           if (epBean.implementationClass != null) {
-            return (T)epBean.instantiate(epBean.implementationClass, ApplicationManager.getApplication().getPicoContainer());
+            return (T)epBean.instantiate(epBean.implementationClass, myPicoContainer);
           }
         }
         catch (Exception e) {
@@ -79,15 +85,21 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
       if (Comparing.strEqual(epBean.key, key, true)) {
         try {
           if (epBean.implementationClass != null) {
-            result = epBean.instantiate(epBean.implementationClass, ApplicationManager.getApplication().getPicoContainer());
+            result = epBean.instantiate(epBean.implementationClass, myPicoContainer);
           }
           else {
-            Object factory = epBean.instantiate(epBean.factoryClass, ApplicationManager.getApplication().getPicoContainer());
+            Object factory = epBean.instantiate(epBean.factoryClass, myPicoContainer);
             result = method.invoke(factory, args);
           }
           if (result != null) {
             break;
           }
+        }
+        catch (InvocationTargetException e) {
+          if (e.getCause() instanceof RuntimeException) {
+            throw (RuntimeException)e.getCause();
+          }
+          throw new RuntimeException(e);
         }
         catch (RuntimeException e) {
           throw e;
@@ -101,6 +113,5 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
     return (T)result;
   }
 
-  public abstract String getKey(KeyT key);
+  public abstract String getKey(@NotNull KeyT key);
 }
-

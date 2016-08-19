@@ -33,8 +33,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.swing.*;
 import java.util.ArrayList;

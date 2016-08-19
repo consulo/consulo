@@ -160,7 +160,7 @@
     <extensionPoint name="projectOpenProcessor"
                     interface="com.intellij.projectImport.ProjectOpenProcessor"/>
 
-    <extensionPoint name="gutterMarkPreprocessor" interface="com.intellij.openapi.editor.GutterMarkPreprocessor" />
+    <extensionPoint name="gutterMarkPreprocessor" interface="com.intellij.openapi.editor.GutterMarkPreprocessor"/>
 
     <extensionPoint name="codeInsight.linkHandler"
                     beanClass="com.intellij.codeInsight.hint.TooltipLinkHandlerEP">
@@ -207,8 +207,9 @@
     <extensionPoint name="checkinHandlerFactory" interface="com.intellij.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
     <extensionPoint name="writingAccessProvider" area="CONSULO_PROJECT" interface="com.intellij.openapi.vfs.WritingAccessProvider"/>
-    <extensionPoint name="nonProjectFileWritingAccessExtension" area="IDEA_PROJECT" interface="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
-    <extensionPoint name="editorNotificationProvider" area="CONSULO_PROJECT" interface="org.mustbe.consulo.editor.notifications.EditorNotificationProvider"/>
+    <extensionPoint name="nonProjectFileWritingAccessExtension" area="CONSULO_PROJECT"
+                    interface="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
+    <extensionPoint name="editorNotificationProvider" area="CONSULO_PROJECT" interface="consulo.editor.notifications.EditorNotificationProvider"/>
     <extensionPoint name="featureStatBundle" interface="com.intellij.featureStatistics.FeatureStatisticsBundleProvider"/>
     <extensionPoint name="featureStatisticsBundle" beanClass="com.intellij.featureStatistics.FeatureStatisticsBundleEP"/>
 
@@ -1281,7 +1282,7 @@
     <applicationService serviceInterface="com.intellij.openapi.editor.colors.EditorColorsManager"
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl"/>
     <applicationService serviceInterface="consulo.application.options.PathMacrosService"
-                        serviceImplementation="com.intellij.application.options.PathMacrosServiceImpl"/>
+                        serviceImplementation="consulo.application.options.PathMacrosServiceImpl"/>
     <schemeOwner serviceInterface="com.intellij.openapi.editor.colors.EditorColorsManager"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.FileAppearanceService"
@@ -1355,7 +1356,7 @@
     <projectService serviceInterface="com.intellij.execution.testframework.sm.TestHistoryConfiguration"
                     serviceImplementation="com.intellij.execution.testframework.sm.TestHistoryConfiguration"/>
 
-    <projectService serviceImplementation="com.intellij.openapi.vcs.changes.VcsDirtyScopeVfsListener" />
+    <projectService serviceImplementation="com.intellij.openapi.vcs.changes.VcsDirtyScopeVfsListener"/>
 
     <fileTypeFactory implementation="com.intellij.openapi.fileTypes.impl.PlatformFileTypeFactory"/>
     <postStartupActivity implementation="com.intellij.openapi.fileTypes.impl.ApproveRemovedMappingsActivity"/>

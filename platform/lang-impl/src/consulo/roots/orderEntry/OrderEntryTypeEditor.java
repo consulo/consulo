@@ -15,52 +15,58 @@
  */
 package consulo.roots.orderEntry;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.KeyedExtensionFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
+import consulo.roots.ui.configuration.ProjectStructureDialog;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 06-Jun-16
  */
-public abstract class OrderEntryTypeEditor<T extends OrderEntry> {
-  public static final KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY =
-          new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, "consulo.orderEntryTypeEditor") {
+public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
+  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.orderEntryTypeEditor");
+
+  KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY =
+          new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME,
+                                                                          ApplicationManager.getApplication().getPicoContainer()) {
             @Override
-            public OrderEntryTypeEditor getByKey(OrderEntryType key) {
+            public OrderEntryTypeEditor getByKey(@NotNull OrderEntryType key) {
               // special hack for unknown order entry type
-              if(key instanceof UnknownOrderEntryType) {
+              if (key instanceof UnknownOrderEntryType) {
                 return new UnknownOrderEntryTypeEditor();
               }
               return super.getByKey(key);
             }
 
             @Override
-            public String getKey(final OrderEntryType key) {
+            public String getKey(@NotNull final OrderEntryType key) {
               return key.getId();
             }
           };
 
   @NotNull
-  public CellAppearanceEx getCellAppearance(@NotNull T orderEntry) {
+  default CellAppearanceEx getCellAppearance(@NotNull T orderEntry) {
     return new SimpleTextCellAppearance(orderEntry.getPresentableName(), null, SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
   @NotNull
-  public ClasspathTableItem<T> createTableItem(@NotNull T orderEntry, @NotNull StructureConfigurableContext context) {
+  default ClasspathTableItem<T> createTableItem(@NotNull T orderEntry, @NotNull StructureConfigurableContext context) {
     return new ClasspathTableItem<T>(orderEntry);
   }
 
-  public void navigate(@NotNull final T orderEntry) {
+  default void navigate(@NotNull final T orderEntry) {
     Project project = orderEntry.getOwnerModule().getProject();
     final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
     ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {

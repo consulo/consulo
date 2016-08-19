@@ -26,7 +26,7 @@ import com.intellij.util.ExceptionUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 /**
  * Intended to run tasks, both modal and non-modal (backgroundable)
