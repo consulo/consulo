@@ -21,10 +21,13 @@ package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import org.jetbrains.annotations.NotNull;
+import consulo.annotations.RequiredDispatchThread;
 
 public class CheckSanityAction extends AnAction {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@NotNull final AnActionEvent e) {
     FSRecords.checkSanity();
   }
 }

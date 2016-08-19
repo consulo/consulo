@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 /**
  * @author yole

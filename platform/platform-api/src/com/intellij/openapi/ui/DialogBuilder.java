@@ -148,13 +148,13 @@ public class DialogBuilder implements Disposable {
     return myActions;
   }
 
-  public void setActionDescriptors(ActionDescriptor[] descriptors) {
+  public void setActionDescriptors(ActionDescriptor... descriptors) {
     removeAllActions();
     ContainerUtil.addAll(myActions, descriptors);
   }
 
   public void removeAllActions() {
-    myActions = new ArrayList<ActionDescriptor>();
+    myActions = new ArrayList<>();
   }
 
   public Window getWindow() {
@@ -456,12 +456,16 @@ public class DialogBuilder implements Disposable {
     @NotNull
     protected Action[] createActions() {
       if (myActions == null) return super.createActions();
-      ArrayList<Action> actions = new ArrayList<Action>(myActions.size());
+      ArrayList<Action> actions = new ArrayList<>(myActions.size());
       for (ActionDescriptor actionDescriptor : myActions) {
         actions.add(actionDescriptor.getAction(this));
       }
       if (myHelpId != null) actions.add(getHelpAction());
       return actions.toArray(new Action[actions.size()]);
     }
+  }
+
+  public void setErrorText(@Nullable final String text) {
+    myDialogWrapper.setErrorText(text);
   }
 }

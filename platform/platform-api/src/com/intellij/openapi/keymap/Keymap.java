@@ -18,7 +18,7 @@ package com.intellij.openapi.keymap;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.MouseShortcut;
 import com.intellij.openapi.actionSystem.Shortcut;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

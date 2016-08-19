@@ -18,10 +18,11 @@ package com.intellij.openapi.projectRoots;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.messages.Topic;
+import consulo.bundle.SdkTableListener;
 import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 import java.util.List;
 

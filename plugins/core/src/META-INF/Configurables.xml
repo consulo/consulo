@@ -17,7 +17,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <applicationConfigurable id="execution"
                              displayName="Execution"
-                             instance="com.intellij.openapi.options.ConfigurableAdapter"/>
+                             instance="consulo.options.ConfigurableAdapter"/>
 
     <applicationConfigurable instance="com.intellij.tools.ToolConfigurable"
                              id="preferences.externalTools"
@@ -42,7 +42,7 @@
 
     <applicationConfigurable id="editor"
                              displayName="Editor"
-                             instance="com.intellij.openapi.options.ConfigurableAdapter"/>
+                             instance="consulo.options.ConfigurableAdapter"/>
 
     <applicationConfigurable displayName="Code Intentions" parentId="editor"
                              instance="com.intellij.codeInsight.intention.impl.config.IntentionSettingsConfigurable" id="editor.code.intentions"/>
@@ -152,7 +152,7 @@
 
     <applicationConfigurable id="general"
                              displayName="General"
-                             instance="com.intellij.openapi.options.ConfigurableAdapter"/>
+                             instance="consulo.options.ConfigurableAdapter"/>
 
 
     <applicationConfigurable displayName="Notifications" parentId="general" instance="com.intellij.notification.impl.NotificationsConfigurable"/>

@@ -2,7 +2,7 @@ package com.intellij.coverage.view;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.coverage.CoverageSuitesBundle;
-import com.intellij.ide.IconDescriptorUpdaters;
+import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.navigation.NavigationItem;

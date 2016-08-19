@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import org.consulo.diagram.builder.GraphBuilder;
-import org.consulo.diagram.builder.GraphBuilderFactory;
-import org.consulo.diagram.builder.GraphNode;
-import org.consulo.diagram.builder.GraphPositionStrategy;
-import org.consulo.diagram.builder.impl.GraphBuilderFactoryImpl;
+import consulo.diagram.builder.GraphBuilder;
+import consulo.diagram.builder.GraphBuilderFactory;
+import consulo.diagram.builder.GraphNode;
+import consulo.diagram.builder.GraphPositionStrategy;
+import consulo.diagram.builder.impl.GraphBuilderFactoryImpl;
 
 import javax.swing.*;
 

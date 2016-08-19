@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.util.InvalidDataException;

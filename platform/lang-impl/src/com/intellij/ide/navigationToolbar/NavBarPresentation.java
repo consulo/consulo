@@ -16,7 +16,7 @@
 package com.intellij.ide.navigationToolbar;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptorUpdaters;
+import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.application.ApplicationManager;
@@ -45,7 +45,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.sdk.SdkUtil;
+import consulo.bundle.SdkUtil;
 
 import javax.swing.*;
 

@@ -16,8 +16,8 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.CommonBundle;
-import com.intellij.ide.IconDescriptorUpdaters;
-import com.intellij.ide.highlighter.ArchiveFileType;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
@@ -32,7 +32,7 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
+import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;

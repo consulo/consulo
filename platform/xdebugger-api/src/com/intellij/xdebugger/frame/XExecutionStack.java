@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.xdebugger.Obsolescent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 import javax.swing.*;
 import java.util.List;

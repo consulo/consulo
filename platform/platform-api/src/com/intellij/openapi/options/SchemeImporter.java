@@ -1,6 +1,6 @@
 package com.intellij.openapi.options;
 
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

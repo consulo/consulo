@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.compiler.ex;
 
-import com.intellij.compiler.make.impl.CompositeDependencyCache;
+import consulo.compiler.make.impl.CompositeDependencyCache;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerMessage;

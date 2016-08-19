@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package com.intellij.openapi.vfs.newvfs.events;
 
-import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.LocalTimeCounter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author max
+ */
 public class VFileContentChangeEvent extends VFileEvent {
   private final VirtualFile myFile;
   private final long myOldModificationStamp;
@@ -60,6 +59,7 @@ public class VFileContentChangeEvent extends VFileEvent {
     return "VfsEvent[update: " + myFile.getUrl() + "]";
   }
 
+  @NotNull
   @Override
   public String getPath() {
     return myFile.getPath();
@@ -67,7 +67,7 @@ public class VFileContentChangeEvent extends VFileEvent {
 
   @NotNull
   @Override
-  public IVirtualFileSystem getFileSystem() {
+  public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();
   }
 
@@ -90,8 +90,7 @@ public class VFileContentChangeEvent extends VFileEvent {
   }
 
   public int hashCode() {
-    int result;
-    result = myFile.hashCode();
+    int result = myFile.hashCode();
     result = 31 * result + (int)(myOldModificationStamp ^ (myOldModificationStamp >>> 32));
     result = 31 * result + (int)(myNewModificationStamp ^ (myNewModificationStamp >>> 32));
     return result;

@@ -16,6 +16,7 @@
 package com.intellij.dvcs;
 
 import com.intellij.dvcs.push.PushSupport;
+import com.intellij.dvcs.repo.AbstractRepositoryManager;
 import com.intellij.dvcs.repo.RepoStateException;
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.RepositoryManager;
@@ -41,6 +42,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.update.RefreshVFsSynchronously;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
@@ -54,6 +57,7 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.vcs.log.TimedVcsCommit;
 import com.intellij.vcs.log.VcsFullCommitDetails;
+import com.intellij.vcsUtil.VcsImplUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -73,19 +77,47 @@ public class DvcsUtil {
   private static final int SHORT_HASH_LENGTH = 8;
   private static final int LONG_HASH_LENGTH = 40;
 
-  @NotNull
-  public static String getShortRepositoryName(@NotNull Project project, @NotNull VirtualFile root) {
-    VirtualFile projectDir = project.getBaseDir();
-
-    String repositoryPath = root.getPresentableUrl();
-    if (projectDir != null) {
-      String relativePath = VfsUtilCore.getRelativePath(root, projectDir, File.separatorChar);
-      if (relativePath != null) {
-        repositoryPath = relativePath;
+  /**
+   * Comparator for virtual files by name
+   */
+  public static final Comparator<VirtualFile> VIRTUAL_FILE_PRESENTATION_COMPARATOR = new Comparator<VirtualFile>() {
+    public int compare(final VirtualFile o1, final VirtualFile o2) {
+      if (o1 == null && o2 == null) {
+        return 0;
       }
+      if (o1 == null) {
+        return -1;
+      }
+      if (o2 == null) {
+        return 1;
+      }
+      return o1.getPresentableUrl().compareTo(o2.getPresentableUrl());
     }
+  };
 
-    return repositoryPath.isEmpty() ? root.getName() : repositoryPath;
+  @NotNull
+  public static List<VirtualFile> sortVirtualFilesByPresentation(@NotNull Collection<VirtualFile> virtualFiles) {
+    return ContainerUtil.sorted(virtualFiles, VIRTUAL_FILE_PRESENTATION_COMPARATOR);
+  }
+
+  @NotNull
+  public static List<VirtualFile> findVirtualFilesWithRefresh(@NotNull List<File> files) {
+    RefreshVFsSynchronously.refreshFiles(files);
+    return ContainerUtil.mapNotNull(files, new Function<File, VirtualFile>() {
+      @Override
+      public VirtualFile fun(File file) {
+        return VfsUtil.findFileByIoFile(file, false);
+      }
+    });
+  }
+
+  /**
+   * @deprecated use {@link VcsImplUtil#getShortVcsRootName}
+   */
+  @NotNull
+  @Deprecated
+  public static String getShortRepositoryName(@NotNull Project project, @NotNull VirtualFile root) {
+    return VcsImplUtil.getShortVcsRootName(project, root);
   }
 
   @NotNull
@@ -101,6 +133,16 @@ public class DvcsUtil {
         return getShortRepositoryName(repository);
       }
     }, ", ");
+  }
+
+  @NotNull
+  public static String fileOrFolder(@NotNull VirtualFile file) {
+    if (file.isDirectory()) {
+      return "folder";
+    }
+    else {
+      return "file";
+    }
   }
 
   public static boolean anyRepositoryIsFresh(Collection<? extends Repository> repositories) {
@@ -198,10 +240,15 @@ public class DvcsUtil {
    */
   @NotNull
   public static String tryLoadFile(@NotNull final File file) throws RepoStateException {
+    return tryLoadFile(file, null);
+  }
+
+  @NotNull
+  public static String tryLoadFile(@NotNull final File file, @Nullable String encoding) throws RepoStateException {
     return tryOrThrow(new Callable<String>() {
       @Override
       public String call() throws Exception {
-        return StringUtil.convertLineSeparators(FileUtil.loadFile(file)).trim();
+        return StringUtil.convertLineSeparators(FileUtil.loadFile(file, encoding)).trim();
       }
     }, file);
   }
@@ -209,8 +256,14 @@ public class DvcsUtil {
   @Nullable
   @Contract("_ , !null -> !null")
   public static String tryLoadFileOrReturn(@NotNull final File file, @Nullable String defaultValue) {
+    return tryLoadFileOrReturn(file, defaultValue, null);
+  }
+
+  @Nullable
+  @Contract("_ , !null, _ -> !null")
+  public static String tryLoadFileOrReturn(@NotNull final File file, @Nullable String defaultValue, @Nullable String encoding) {
     try {
-      return tryLoadFile(file);
+      return tryLoadFile(file, encoding);
     }
     catch (RepoStateException e) {
       LOG.error(e);
@@ -267,11 +320,18 @@ public class DvcsUtil {
   @Nullable
   public static <T extends Repository> T guessRepositoryForFile(@NotNull Project project,
                                                                 @NotNull RepositoryManager<T> manager,
-                                                                @Nullable AbstractVcs vcs,
                                                                 @Nullable VirtualFile file,
                                                                 @Nullable String defaultRootPathValue) {
-    T repository = manager.getRepositoryForRoot(getVcsRoot(project, file));
-    return repository != null ? repository : manager.getRepositoryForRoot(guessRootForVcs(project, vcs, defaultRootPathValue));
+    T repository = manager.getRepositoryForRoot(guessVcsRoot(project, file));
+    return repository != null ? repository : manager.getRepositoryForRoot(guessRootForVcs(project, manager.getVcs(), defaultRootPathValue));
+  }
+
+  @Nullable
+  public static <T extends Repository> T guessCurrentRepositoryQuick(@NotNull Project project,
+                                                                     @NotNull AbstractRepositoryManager<T> manager,
+                                                                     @Nullable String defaultRootPathValue) {
+    T repository = manager.getRepositoryForRootQuick(guessVcsRoot(project, getSelectedFile(project)));
+    return repository != null ? repository : manager.getRepositoryForRootQuick(guessRootForVcs(project, manager.getVcs(), defaultRootPathValue));
   }
 
   @Nullable
@@ -392,7 +452,7 @@ public class DvcsUtil {
   }
 
   @Nullable
-  public static VirtualFile getVcsRoot(@NotNull Project project, @Nullable VirtualFile file) {
+  public static VirtualFile guessVcsRoot(@NotNull Project project, @Nullable VirtualFile file) {
     VirtualFile root = null;
     if (file != null) {
       root = ProjectLevelVcsManager.getInstance(project).getVcsRootFor(file);
@@ -432,5 +492,45 @@ public class DvcsUtil {
         return support.getVcs().equals(vcs);
       }
     });
+  }
+
+  @NotNull
+  public static String joinShortNames(@NotNull Collection<? extends Repository> repositories) {
+    return joinShortNames(repositories, -1);
+  }
+
+  @NotNull
+  public static String joinShortNames(@NotNull Collection<? extends Repository> repositories, int limit) {
+    return joinWithAnd(ContainerUtil.map(repositories, new Function<Repository, String>() {
+      @Override
+      public String fun(@NotNull Repository repository) {
+        return getShortRepositoryName(repository);
+      }
+    }), limit);
+  }
+
+  @NotNull
+  public static String joinWithAnd(@NotNull List<String> strings, int limit) {
+    int size = strings.size();
+    if (size == 0) return "";
+    if (size == 1) return strings.get(0);
+    if (size == 2) return strings.get(0) + " and " + strings.get(1);
+
+    boolean isLimited = limit >= 2 && limit < size;
+    int listCount = isLimited ? limit - 1 : size - 1;
+
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < listCount; i++) {
+      if (i != 0) sb.append(", ");
+      sb.append(strings.get(i));
+    }
+
+    if (isLimited) {
+      sb.append(" and ").append(size - limit + 1).append(" others");
+    }
+    else {
+      sb.append(" and ").append(strings.get(size - 1));
+    }
+    return sb.toString();
   }
 }

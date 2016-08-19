@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.packaging.artifacts.ArtifactPointerManager;
-import com.intellij.packaging.artifacts.ArtifactPointerUtil;
+import consulo.packaging.artifacts.ArtifactPointerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

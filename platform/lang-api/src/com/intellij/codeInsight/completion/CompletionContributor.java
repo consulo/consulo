@@ -32,11 +32,12 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Consumer;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.MultiMap;
+import consulo.codeInsight.completion.CompletionProvider;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
 
@@ -126,16 +127,16 @@ import java.util.List;
  */
 public abstract class CompletionContributor {
 
-  private final MultiMap<CompletionType, Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>>> myMap =
-    new MultiMap<CompletionType, Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>>>();
+  private final MultiMap<CompletionType, Pair<ElementPattern<? extends PsiElement>, CompletionProvider>> myMap =
+    new MultiMap<>();
 
-  public final void extend(@Nullable CompletionType type, final ElementPattern<? extends PsiElement> place, CompletionProvider<CompletionParameters> provider) {
-    myMap.putValue(type, new Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>>(place, provider));
+  public final void extend(@Nullable CompletionType type, final ElementPattern<? extends PsiElement> place, CompletionProvider provider) {
+    myMap.putValue(type, Pair.create(place, provider));
   }
 
   /**
    * The main contributor method that is supposed to provide completion variants to result, basing on completion parameters.
-   * The default implementation looks for {@link com.intellij.codeInsight.completion.CompletionProvider}s you could register by
+   * The default implementation looks for {@link CompletionProvider}s you could register by
    * invoking {@link #extend(CompletionType, ElementPattern, CompletionProvider)} from you contributor constructor,
    * matches the desired completion type and {@link ElementPattern} with actual ones, and, depending on it, invokes those
    * completion providers.<p>
@@ -150,7 +151,7 @@ public abstract class CompletionContributor {
    */
   @RequiredReadAction
   public void fillCompletionVariants(final CompletionParameters parameters, CompletionResultSet result) {
-    for (final Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>> pair : myMap.get(parameters.getCompletionType())) {
+    for (final Pair<ElementPattern<? extends PsiElement>, CompletionProvider> pair : myMap.get(parameters.getCompletionType())) {
       final ProcessingContext context = new ProcessingContext();
       if (pair.first.accepts(parameters.getPosition(), context)) {
         pair.second.addCompletions(parameters, context, result);
@@ -159,7 +160,7 @@ public abstract class CompletionContributor {
         }
       }
     }
-    for (final Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>> pair : myMap.get(null)) {
+    for (final Pair<ElementPattern<? extends PsiElement>, CompletionProvider> pair : myMap.get(null)) {
       final ProcessingContext context = new ProcessingContext();
       if (pair.first.accepts(parameters.getPosition(), context)) {
         pair.second.addCompletions(parameters, context, result);

@@ -17,7 +17,7 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.ex.ApplicationEx2;
+import consulo.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StateStorageOperation;
 import com.intellij.openapi.components.StoragePathMacros;

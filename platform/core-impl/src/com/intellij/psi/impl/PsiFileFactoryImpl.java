@@ -35,7 +35,8 @@ import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.LanguageVersionUtil;
+import consulo.lang.LanguageVersion;
+import consulo.lang.util.LanguageVersionUtil;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.text.CharSequenceSubSequence;
 import org.jetbrains.annotations.NotNull;
@@ -253,9 +254,9 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
       throw new AssertionError("No parser definition for " + language);
     }
     final Project project = myManager.getProject();
-    final Lexer lexer = parserDefinition.createLexer(project, languageVersion);
+    final Lexer lexer = parserDefinition.createLexer(languageVersion);
     final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, holder, lexer, language, languageVersion, text);
-    final ASTNode node = parserDefinition.createParser(project, languageVersion).parse(type, builder, languageVersion);
+    final ASTNode node = parserDefinition.createParser(languageVersion).parse(type, builder, languageVersion);
     holder.rawAddChildren((TreeElement)node);
     markGenerated(result);
     return node.getPsi();

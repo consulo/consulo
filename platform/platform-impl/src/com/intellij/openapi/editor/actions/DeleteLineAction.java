@@ -29,7 +29,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.ide.CopyPasteManager;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 public class DeleteLineAction extends TextComponentEditorAction {
   public DeleteLineAction() {

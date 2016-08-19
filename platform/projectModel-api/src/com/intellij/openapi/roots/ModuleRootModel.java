@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
+import consulo.roots.ModuleRootLayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

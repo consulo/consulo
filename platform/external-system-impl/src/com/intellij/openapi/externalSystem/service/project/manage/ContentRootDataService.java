@@ -26,11 +26,11 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.roots.impl.*;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderScopes;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.*;
-import org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
+import consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
 
 import java.io.IOException;
 import java.util.Collection;

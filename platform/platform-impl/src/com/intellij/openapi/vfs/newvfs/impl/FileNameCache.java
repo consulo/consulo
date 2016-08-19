@@ -30,10 +30,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FileNameCache {
   private static final PersistentStringEnumerator ourNames = FSRecords.getNames();
   @SuppressWarnings("unchecked") private static final IntSLRUCache<IntObjectLinkedMap.MapEntry<CharSequence>>[] ourNameCache = new IntSLRUCache[16];
+
   static {
     final int protectedSize = 40000 / ourNameCache.length;
     final int probationalSize = 20000 / ourNameCache.length;
-    for(int i = 0; i < ourNameCache.length; ++i) {
+    for (int i = 0; i < ourNameCache.length; ++i) {
       ourNameCache[i] = new IntSLRUCache<IntObjectLinkedMap.MapEntry<CharSequence>>(protectedSize, probationalSize);
     }
   }
@@ -62,13 +63,13 @@ public class FileNameCache {
 
   private static int calcStripeIdFromNameId(int id) {
     int h = id;
-    h -= h<<6;
-    h ^= h>>17;
-    h -= h<<9;
-    h ^= h<<4;
-    h -= h<<3;
-    h ^= h<<10;
-    h ^= h>>15;
+    h -= h << 6;
+    h ^= h >> 17;
+    h -= h << 9;
+    h ^= h << 4;
+    h -= h << 3;
+    h ^= h << 10;
+    h ^= h >> 15;
     return h % ourNameCache.length;
   }
 

@@ -21,8 +21,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
+import consulo.annotations.RequiredReadAction;
+import consulo.editor.notifications.EditorNotificationProvider;
 
 /**
  * @author Dmitry Avdeev

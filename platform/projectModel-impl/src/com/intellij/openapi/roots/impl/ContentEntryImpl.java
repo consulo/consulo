@@ -31,11 +31,13 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.lombok.annotations.Logger;
+import consulo.roots.impl.LightContentFolderImpl;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.*;
 
@@ -54,16 +56,16 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
 
   private final Set<ContentFolder> myContentFolders = new TreeSet<ContentFolder>(ContentFolderComparator.INSTANCE);
 
-  ContentEntryImpl(@NotNull VirtualFile file, @NotNull ModuleRootLayerImpl m) {
+  public ContentEntryImpl(@NotNull VirtualFile file, @NotNull ModuleRootLayerImpl m) {
     this(file.getUrl(), m);
   }
 
-  ContentEntryImpl(@NotNull String url, @NotNull ModuleRootLayerImpl m) {
+  public ContentEntryImpl(@NotNull String url, @NotNull ModuleRootLayerImpl m) {
     super(m);
     myRoot = VirtualFilePointerManager.getInstance().create(url, this, null);
   }
 
-  ContentEntryImpl(@NotNull Element e, @NotNull ModuleRootLayerImpl m) throws InvalidDataException {
+  public ContentEntryImpl(@NotNull Element e, @NotNull ModuleRootLayerImpl m) throws InvalidDataException {
     this(getUrlFrom(e), m);
 
     for (Element child : e.getChildren(ContentFolderImpl.ELEMENT_NAME)) {

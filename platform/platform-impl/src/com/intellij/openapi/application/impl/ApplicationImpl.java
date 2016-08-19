@@ -20,12 +20,12 @@ import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationEx2;
+import consulo.application.ex.ApplicationEx2;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
@@ -69,9 +69,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
+import consulo.application.ApplicationProperties;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.*;
@@ -204,7 +205,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     myName = appName;
 
     myIsInternal = isInternal;
-    myTestModeFlag = isUnitTestMode;
+    myTestModeFlag = isUnitTestMode || Boolean.getBoolean(ApplicationProperties.CONSULO_AS_WEB_APP);
     myHeadlessMode = isHeadless;
     myCommandLineMode = isCommandLine;
 
@@ -258,7 +259,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       };
     }
     if (isUnitTestMode) {
-      IdeaApplication.ourLoaded = true;
+      ApplicationStarter.ourLoaded = true;
     }
   }
 
@@ -1212,13 +1213,12 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   private class WriteAccessToken extends AccessToken {
-    private final Class clazz;
+    @NotNull private final Class clazz;
 
     public WriteAccessToken(@NotNull Class clazz) {
       this.clazz = clazz;
       startWrite(clazz);
       markThreadNameInStackTrace();
-      acquired();
     }
 
     @Override
@@ -1228,7 +1228,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       }
       finally {
         unmarkThreadNameInStackTrace();
-        released();
       }
     }
 
@@ -1263,7 +1262,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       name = name.substring(name.lastIndexOf('.') + 1);
       name = name.substring(name.lastIndexOf('$') + 1);
       if (!name.equals("AccessToken")) {
-        return " [" + name + "]";
+        return " [" + name+"]";
       }
       return null;
     }
@@ -1275,13 +1274,11 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     private ReadAccessToken(Status status) {
       myStatus = status;
       startRead(status);
-      acquired();
     }
 
     @Override
     public void finish() {
       endRead(myStatus);
-      released();
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,27 +24,34 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
-import com.intellij.openapi.diff.impl.patch.TextFilePatch;
+import com.intellij.openapi.options.ExternalInfo;
+import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class ShelvedChangeList implements JDOMExternalizable {
+public class ShelvedChangeList implements JDOMExternalizable, ExternalizableScheme {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.shelf.ShelvedChangeList");
 
+  @NonNls private static final String NAME_ATTRIBUTE = "name";
   @NonNls private static final String ATTRIBUTE_DATE = "date";
+  @NonNls private static final String ATTRIBUTE_RECYCLED_CHANGELIST = "recycled";
+  @NonNls private static final String ATTRIBUTE_TOBE_DELETED_CHANGELIST = "toDelete";
   @NonNls private static final String ELEMENT_BINARY = "binary";
+
+  private final ExternalInfo myExternalInfo = new ExternalInfo();
 
   public String PATH;
   public String DESCRIPTION;
@@ -52,6 +59,8 @@ public class ShelvedChangeList implements JDOMExternalizable {
   private List<ShelvedChange> myChanges;
   private List<ShelvedBinaryFile> myBinaryFiles;
   private boolean myRecycled;
+  private boolean myToDelete;
+  private String mySchemeName;
 
   public ShelvedChangeList() {
   }
@@ -61,10 +70,11 @@ public class ShelvedChangeList implements JDOMExternalizable {
   }
 
   public ShelvedChangeList(final String path, final String description, final List<ShelvedBinaryFile> binaryFiles, final long time) {
-    PATH = path;
+    PATH = FileUtil.toSystemIndependentName(path);
     DESCRIPTION = description;
     DATE = new Date(time);
     myBinaryFiles = binaryFiles;
+    mySchemeName = DESCRIPTION;
   }
 
   public boolean isRecycled() {
@@ -78,11 +88,14 @@ public class ShelvedChangeList implements JDOMExternalizable {
   @Override
   public void readExternal(Element element) throws InvalidDataException {
     DefaultJDOMExternalizer.readExternal(this, element);
+    PATH = FileUtil.toSystemIndependentName(PATH);
+    mySchemeName = element.getAttributeValue(NAME_ATTRIBUTE);
     DATE = new Date(Long.parseLong(element.getAttributeValue(ATTRIBUTE_DATE)));
-
+    myRecycled = Boolean.parseBoolean(element.getAttributeValue(ATTRIBUTE_RECYCLED_CHANGELIST));
+    myToDelete = Boolean.parseBoolean(element.getAttributeValue(ATTRIBUTE_TOBE_DELETED_CHANGELIST));
     //noinspection unchecked
-    final List<Element> children = (List<Element>)element.getChildren(ELEMENT_BINARY);
-    myBinaryFiles = new ArrayList<ShelvedBinaryFile>(children.size());
+    final List<Element> children = element.getChildren(ELEMENT_BINARY);
+    myBinaryFiles = new ArrayList<>(children.size());
     for (Element child : children) {
       ShelvedBinaryFile binaryFile = new ShelvedBinaryFile();
       binaryFile.readExternal(child);
@@ -91,10 +104,19 @@ public class ShelvedChangeList implements JDOMExternalizable {
   }
 
   @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    DefaultJDOMExternalizer.writeExternal(this, element);
-    element.setAttribute(ATTRIBUTE_DATE, Long.toString(DATE.getTime()));
-    for (ShelvedBinaryFile file : myBinaryFiles) {
+  public void writeExternal(@NotNull Element element) throws WriteExternalException {
+    writeExternal(element, this);
+  }
+
+  private static void writeExternal(@NotNull Element element, @NotNull ShelvedChangeList shelvedChangeList) throws WriteExternalException {
+    DefaultJDOMExternalizer.writeExternal(shelvedChangeList, element);
+    element.setAttribute(NAME_ATTRIBUTE, shelvedChangeList.getName());
+    element.setAttribute(ATTRIBUTE_DATE, Long.toString(shelvedChangeList.DATE.getTime()));
+    element.setAttribute(ATTRIBUTE_RECYCLED_CHANGELIST, Boolean.toString(shelvedChangeList.isRecycled()));
+    if (shelvedChangeList.isMarkedToDelete()) {
+      element.setAttribute(ATTRIBUTE_TOBE_DELETED_CHANGELIST, Boolean.toString(shelvedChangeList.isMarkedToDelete()));
+    }
+    for (ShelvedBinaryFile file : shelvedChangeList.getBinaryFiles()) {
       Element child = new Element(ELEMENT_BINARY);
       file.writeExternal(child);
       element.addContent(child);
@@ -109,8 +131,8 @@ public class ShelvedChangeList implements JDOMExternalizable {
   public List<ShelvedChange> getChanges(Project project) {
     if (myChanges == null) {
       try {
-        final List<TextFilePatch> list = ShelveChangesManager.loadPatches(project, PATH, null);
-        myChanges = new ArrayList<ShelvedChange>();
+        myChanges = new ArrayList<>();
+        final List<? extends FilePatch> list = ShelveChangesManager.loadPatchesWithoutContent(project, PATH, null);
         for (FilePatch patch : list) {
           FileStatus status;
           if (patch.isNewFile()) {
@@ -126,7 +148,7 @@ public class ShelvedChangeList implements JDOMExternalizable {
         }
       }
       catch (Exception e) {
-        LOG.error(e);
+        LOG.error("Failed to parse the file patch: [" + PATH + "]", e);
       }
     }
     return myChanges;
@@ -140,48 +162,39 @@ public class ShelvedChangeList implements JDOMExternalizable {
     return myBinaryFiles;
   }
 
-  @NonNls private static final String ELEMENT_CHANGELIST = "changelist";
-  @NonNls private static final String ELEMENT_RECYCLED_CHANGELIST = "recycled_changelist";
-
-  public static Collection<ShelvedChangeList> readChanges(final Element element, final boolean recycled, final boolean checkForFileExistance) throws InvalidDataException {
-    final List<Element> children = (List<Element>)element.getChildren(recycled ? ELEMENT_RECYCLED_CHANGELIST : ELEMENT_CHANGELIST);
-
-    final List<ShelvedChangeList> result = new ArrayList<ShelvedChangeList>();
-
-    readList(children, result, checkForFileExistance);
-
-    if (recycled) {
-      for (ShelvedChangeList list : result) {
-        list.setRecycled(true);
-      }
-    }
-    return result;
+  @NotNull
+  @Override
+  public String getName() {
+    return mySchemeName;
   }
 
-
-
-  private static void readList(final List<Element> children, final List<ShelvedChangeList> sink, boolean checkForFileExistance) throws InvalidDataException {
-    for (Element child : children) {
-      ShelvedChangeList data = new ShelvedChangeList();
-      data.readExternal(child);
-      if (!checkForFileExistance || new File(data.PATH).exists()) {
-        sink.add(data);
-      }
-    }
+  @NotNull
+  @Override
+  public ExternalInfo getExternalInfo() {
+    return myExternalInfo;
   }
 
-  public static void writeChanges(final Collection<ShelvedChangeList> shelvedChangeLists, final Collection<ShelvedChangeList> recycledShelvedChangeLists,
-                                  Element element) throws WriteExternalException {
-    for(ShelvedChangeList data: shelvedChangeLists) {
-      Element child = new Element(ELEMENT_CHANGELIST);
-      data.writeExternal(child);
-      element.addContent(child);
-    }
-    for(ShelvedChangeList data: recycledShelvedChangeLists) {
-      Element child = new Element(ELEMENT_RECYCLED_CHANGELIST);
-      data.writeExternal(child);
-      element.addContent(child);
-    }
+  @Override
+  public void setName(@NotNull String newName) {
+    mySchemeName = newName;
   }
 
+  public boolean isValid() {
+    return new File(PATH).exists();
+  }
+
+  public void markToDelete(boolean toDeleted) {
+    myToDelete = toDeleted;
+  }
+
+  public boolean isMarkedToDelete() {
+    return myToDelete;
+  }
+
+  /**
+   * Update Date while recycle or restore shelvedChangelist
+   */
+  public void updateDate() {
+    DATE = new Date(System.currentTimeMillis());
+  }
 }

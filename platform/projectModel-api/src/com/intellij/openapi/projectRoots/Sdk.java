@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.lombok.annotations.ArrayFactoryFields;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

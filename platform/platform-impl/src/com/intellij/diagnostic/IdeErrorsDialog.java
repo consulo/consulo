@@ -22,7 +22,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
@@ -32,7 +31,6 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.extensions.ExtensionException;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -40,7 +38,6 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
@@ -56,10 +53,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -997,23 +994,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     if (throwable instanceof MessagePool.TooManyErrorsException || throwable instanceof AbstractMethodError) {
       return null;
     }
-    final PluginId pluginId = findPluginId(throwable);
-    final ErrorReportSubmitter[] reporters;
-    try {
-      reporters = ErrorReportSubmitter.EP_NAME.getExtensions();
-    }
-    catch (Throwable t) {
-      return null;
-    }
-    ErrorReportSubmitter submitter = null;
-    for (ErrorReportSubmitter reporter : reporters) {
-      final PluginDescriptor descriptor = reporter.getPluginDescriptor();
-      if (pluginId == null && (descriptor == null || PluginId.getId(PluginManagerCore.CORE_PLUGIN_ID) == descriptor.getPluginId()) ||
-          descriptor != null && Comparing.equal(pluginId, descriptor.getPluginId())) {
-        submitter = reporter;
-      }
-    }
-    return submitter;
+    return ITNReporter.ourInstance;
   }
 
   @Override

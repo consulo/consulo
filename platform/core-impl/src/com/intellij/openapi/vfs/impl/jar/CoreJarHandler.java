@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,22 @@
  */
 package com.intellij.openapi.vfs.impl.jar;
 
+import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.impl.archive.ArchiveHandlerEntry;
+import com.intellij.openapi.vfs.impl.ZipHandler;
+import consulo.vfs.impl.archive.ArchiveFile;
+import consulo.vfs.impl.zip.ZipArchiveFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author yole
  */
-public class CoreJarHandler extends CoreJarHandlerBase {
-
+public class CoreJarHandler extends ZipHandler {
   private final CoreJarFileSystem myFileSystem;
   private final VirtualFile myRoot;
 
@@ -35,27 +38,27 @@ public class CoreJarHandler extends CoreJarHandlerBase {
     super(path);
     myFileSystem = fileSystem;
 
-    Map<ArchiveHandlerEntry, CoreJarVirtualFile> entries = new HashMap<ArchiveHandlerEntry, CoreJarVirtualFile>();
+    Map<EntryInfo, CoreJarVirtualFile> entries = new HashMap<EntryInfo, CoreJarVirtualFile>();
 
-    final Map<String, ArchiveHandlerEntry> entriesMap = getEntriesMap();
-    for (ArchiveHandlerEntry info : entriesMap.values()) {
+    final Map<String, EntryInfo> entriesMap = getEntriesMap();
+    for (EntryInfo info : entriesMap.values()) {
       getOrCreateFile(info, entries);
     }
 
-    ArchiveHandlerEntry rootInfo = getEntryInfo("");
+    EntryInfo rootInfo = getEntryInfo("");
     myRoot = rootInfo != null ? getOrCreateFile(rootInfo, entries) : null;
   }
 
   @NotNull
-  private CoreJarVirtualFile getOrCreateFile(@NotNull ArchiveHandlerEntry info, @NotNull Map<ArchiveHandlerEntry, CoreJarVirtualFile> entries) {
-    CoreJarVirtualFile answer = entries.get(info);
-    if (answer == null) {
-      ArchiveHandlerEntry parentEntry = info.getParent();
-      answer = new CoreJarVirtualFile(this, info, parentEntry != null ? getOrCreateFile(parentEntry, entries) : null);
-      entries.put(info, answer);
+  private CoreJarVirtualFile getOrCreateFile(@NotNull EntryInfo info, @NotNull Map<EntryInfo, CoreJarVirtualFile> entries) {
+    CoreJarVirtualFile file = entries.get(info);
+    if (file == null) {
+      FileAttributes attributes = new FileAttributes(info.isDirectory, false, false, false, info.length, info.timestamp, false);
+      EntryInfo parent = info.parent;
+      file = new CoreJarVirtualFile(this, info.shortName.toString(), attributes, parent != null ? getOrCreateFile(parent, entries) : null);
+      entries.put(info, file);
     }
-
-    return answer;
+    return file;
   }
 
   @Nullable
@@ -66,5 +69,10 @@ public class CoreJarHandler extends CoreJarHandlerBase {
   @NotNull
   public CoreJarFileSystem getFileSystem() {
     return myFileSystem;
+  }
+
+  @Override
+  public ArchiveFile createArchiveFile(@NotNull String path) throws IOException {
+    return new ZipArchiveFile(path);
   }
 }

@@ -15,184 +15,242 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangeListRenderer;
-import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
-import com.intellij.ui.*;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.EditorTextField;
+import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.ui.StringComboboxEditor;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableConsumer;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * @author yole
- */
-public class ChangeListChooserPanel extends JPanel {
-  private static final Comparator<ChangeList> CHANGE_LIST_COMPARATOR = new Comparator<ChangeList>() {
-    @Override
-    public int compare(ChangeList o1, ChangeList o2) {
-      return o1.getName().compareToIgnoreCase(o2.getName());
-    }
-  };
+import static com.intellij.codeInsight.completion.ComboEditorCompletionContributor.CONTINUE_RUN_COMPLETION;
 
-  private JPanel myPanel;
-  private JRadioButton myRbExisting;
-  private JRadioButton myRbNew;
-  private JComboBox myExistingListsCombo;
-  private NewEditChangelistPanel myNewListPanel;
+public class ChangeListChooserPanel extends JPanel {
+
+  private final MyEditorComboBox myExistingListsCombo;
+  private final NewEditChangelistPanel myListPanel;
   private final NullableConsumer<String> myOkEnabledListener;
-  private Project myProject;
+  private final Project myProject;
+  private String myLastTypedDescription;
+  private boolean myNewNameSuggested = false;
 
   public ChangeListChooserPanel(final Project project, @NotNull final NullableConsumer<String> okEnabledListener) {
     super(new BorderLayout());
     myProject = project;
-    myOkEnabledListener = okEnabledListener;
-    add(myPanel, BorderLayout.CENTER);
-
-    myRbExisting.addItemListener(new ItemListener() {
-      public void itemStateChanged(ItemEvent e) {
-        updateEnabledItems();
-      }
-    });
-  }
-
-  public void init() {
-    myExistingListsCombo.setRenderer(new ColoredListCellRendererWrapper() {
-      private final IssueLinkRenderer myLinkRenderer = new IssueLinkRenderer(myProject, this);
-
+    myExistingListsCombo = new MyEditorComboBox(project);
+    myExistingListsCombo.setEditable(true);
+    myExistingListsCombo.setRenderer(new ColoredListCellRenderer<String>() {
       @Override
-      protected void doCustomize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        if (value instanceof LocalChangeList) {
-          String name = ((LocalChangeList) value).getName();
-
-          if (myExistingListsCombo.getWidth() == 0) {
-            name = name.length() > 10 ? name.substring(0, 7) + " .." : name;
+      protected void customizeCellRenderer(@NotNull JList<? extends String> list,
+                                           String value,
+                                           int index,
+                                           boolean selected,
+                                           boolean hasFocus) {
+        if (value != null) {
+          String name = value;
+          LocalChangeList changeList = ChangeListManager.getInstance(myProject).findChangeList(name);
+          int visibleWidth = getSize().width;
+          if (visibleWidth == 0) {
+            visibleWidth = MyEditorComboBox.PREF_WIDTH;
           }
-          else {
-            final FontMetrics fm = list.getFontMetrics(list.getFont());
-            final int width = fm.stringWidth(name);
-            final int listWidth = myExistingListsCombo.getWidth();
-            if ((listWidth > 0) && (width > listWidth)) {
-              final String truncated = CommittedChangeListRenderer.truncateDescription(name, fm, listWidth - fm.stringWidth(" ..") - 7);
-              if (truncated.length() > 5) {
-                name = truncated + " ..";
-              }
+          final FontMetrics fm = list.getFontMetrics(list.getFont());
+          final int width = fm.stringWidth(name);
+          if (width > visibleWidth) {
+            final String truncated = CommittedChangeListRenderer
+                    .truncateDescription(name, fm, visibleWidth - fm.stringWidth(" ..") - 7);
+            if (truncated.length() > 5) {
+              name = truncated + " ..";
             }
           }
-          myLinkRenderer.appendTextWithLinks(name, ((LocalChangeList)value).isDefault()
-                                                   ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
+          append(name, changeList != null && changeList.isDefault()
+                       ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
+                       : SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
       }
     });
-    myNewListPanel.init(null);
-    final ComboboxSpeedSearch search = new ComboboxSpeedSearch(myExistingListsCombo);
-    search.setComparator(new SpeedSearchComparator(true, false));
+    myListPanel = new NewEditChangelistPanel(myProject) {
+
+      @Override
+      protected NewEditChangelistPanel.ComponentWithTextFieldWrapper createComponentWithTextField(Project project) {
+        return new ComponentWithTextFieldWrapper(myExistingListsCombo) {
+          @NotNull
+          @Override
+          public EditorTextField getEditorTextField() {
+            return myExistingListsCombo.getEditorTextField();
+          }
+        };
+      }
+
+      @Override
+      @RequiredDispatchThread
+      protected void nameChanged(String errorMessage) {
+        //invoke later because of undo manager problem: when you try to undo changelist after description was already changed manually
+        ApplicationManager.getApplication().invokeLater(() -> updateDescription(), ModalityState.current());
+        myOkEnabledListener.consume(errorMessage);
+      }
+
+      @Override
+      public void init(LocalChangeList initial) {
+        super.init(initial);
+        myDescriptionTextArea.addFocusListener(new FocusAdapter() {
+          @Override
+          public void focusLost(FocusEvent e) {
+            super.focusLost(e);
+            if (getExistingChangelistByName(myListPanel.getChangeListName()) == null) {
+              myLastTypedDescription = myListPanel.getDescription();
+            }
+          }
+        });
+      }
+
+      @Override
+      protected void nameChangedImpl(Project project, LocalChangeList initial) {
+        nameChanged(StringUtil.isEmptyOrSpaces(getChangeListName()) ? "Cannot create new changelist with empty name." : null);
+      }
+    };
+    myOkEnabledListener = okEnabledListener;
+    add(myListPanel, BorderLayout.CENTER);
+  }
+
+  public void init() {
+    myListPanel.init(null);
   }
 
   public void setChangeLists(Collection<? extends ChangeList> changeLists) {
-    List<ChangeList> list = new ArrayList<ChangeList>(changeLists);
-    Collections.sort(list, CHANGE_LIST_COMPARATOR);
-    myExistingListsCombo.setModel(new CollectionComboBoxModel(list, null));
+    List<String> changelistNames = ContainerUtil.map(changeLists, ChangeList::getName);
+    Collections.sort(changelistNames);
+    myExistingListsCombo.setModel(new DefaultComboBoxModel<>(ArrayUtil.toStringArray(changelistNames)));
   }
 
-  public void setDefaultName(String name) {
-    if (! StringUtil.isEmptyOrSpaces(name)) {
-      myNewListPanel.setChangeListName(name);
-    }
-  }
-
-  private void updateEnabledItems() {
-    if (myRbExisting.isSelected()) {
-      myExistingListsCombo.setEnabled(true);
-      UIUtil.setEnabled(myNewListPanel, false, true);
-      myExistingListsCombo.requestFocus();
+  public void setSuggestedName(@NotNull String name) {
+    if (StringUtil.isEmptyOrSpaces(name)) return;
+    if (getExistingChangelistByName(name) != null) {
+      myExistingListsCombo.setSelectedItem(name);
     }
     else {
-      myExistingListsCombo.setEnabled(false);
-      UIUtil.setEnabled(myNewListPanel, true, true);
-      myNewListPanel.requestFocus();
+      myNewNameSuggested = true;
+      if (VcsConfiguration.getInstance(myProject).PRESELECT_EXISTING_CHANGELIST) {
+        myExistingListsCombo.insertItemAt(name, 0);
+        selectActiveChangeListIfExist();
+      }
+      else {
+        myListPanel.setChangeListName(name);
+      }
     }
+    updateDescription();
+  }
+
+  private void selectActiveChangeListIfExist() {
+    myExistingListsCombo.setSelectedItem(ChangeListManager.getInstance(myProject).getDefaultChangeList().getName());
+  }
+
+  public void updateEnabled() {
     if (myProject != null) {
-      myNewListPanel.nameChangedImpl(myProject, null);
+      myListPanel.nameChangedImpl(myProject, null);
     }
   }
 
+  /**
+   * Method used as getResult, usually invoked inside doOkAction
+   */
   @Nullable
   public LocalChangeList getSelectedList(Project project) {
     ChangeListManager manager = ChangeListManager.getInstance(project);
-    if (myRbNew.isSelected()) {
-      String newText = myNewListPanel.getChangeListName();
-      if (manager.findChangeList(newText) != null) {
-        Messages.showErrorDialog(project,
-                                 VcsBundle.message("changes.newchangelist.warning.already.exists.text", newText),
-                                 VcsBundle.message("changes.newchangelist.warning.already.exists.title"));
-        return null;
-      }
-    }
+    String changeListName = myListPanel.getChangeListName();
+    LocalChangeList localChangeList = manager.findChangeList(changeListName);
 
-    if (myRbExisting.isSelected()) {
-      return (LocalChangeList)myExistingListsCombo.getSelectedItem();
+    if (localChangeList == null) {
+      localChangeList = manager.addChangeList(changeListName, myListPanel.getDescription());
+      myListPanel.changelistCreatedOrChanged(localChangeList);
     }
     else {
-      LocalChangeList changeList = manager.addChangeList(myNewListPanel.getChangeListName(), myNewListPanel.getDescription());
-      myNewListPanel.changelistCreatedOrChanged(changeList);
-      if (myNewListPanel.getMakeActiveCheckBox().isSelected()) {
-        manager.setDefaultChangeList(changeList);
-      }
-      VcsConfiguration.getInstance(project).MAKE_NEW_CHANGELIST_ACTIVE = myNewListPanel.getMakeActiveCheckBox().isSelected();
-
-      return changeList;
+      //update description if changed
+      localChangeList.setComment(myListPanel.getDescription());
     }
+    rememberSettings(project, localChangeList.isDefault(), myListPanel.getMakeActiveCheckBox().isSelected());
+    if (myListPanel.getMakeActiveCheckBox().isSelected()) {
+      manager.setDefaultChangeList(localChangeList);
+    }
+    return localChangeList;
+  }
+
+  private void rememberSettings(@NotNull Project project, boolean activeListSelected, boolean setActive) {
+    if (myNewNameSuggested) {
+      VcsConfiguration.getInstance(project).PRESELECT_EXISTING_CHANGELIST = activeListSelected;
+    }
+    VcsConfiguration.getInstance(project).MAKE_NEW_CHANGELIST_ACTIVE = setActive;
   }
 
   public void setDefaultSelection(final ChangeList defaultSelection) {
     if (defaultSelection == null) {
-      myExistingListsCombo.setSelectedIndex(0);
+      selectActiveChangeListIfExist();
     }
     else {
-      myExistingListsCombo.setSelectedItem(defaultSelection);
+      myExistingListsCombo.setSelectedItem(defaultSelection.getName());
     }
+    updateDescription();
+    updateEnabled();
+  }
 
-
-    if (defaultSelection != null) {
-      myRbExisting.setSelected(true);
+  private void updateDescription() {
+    LocalChangeList list = getExistingChangelistByName(myListPanel.getChangeListName());
+    String newText = list != null ? list.getComment() : myLastTypedDescription;
+    if (!StringUtil.equals(myListPanel.getDescription(), newText)) {
+      myListPanel.setDescription(newText);
     }
-    else {
-      myRbNew.setSelected(true);
-    }
+  }
 
-    updateEnabledItems();
+  private LocalChangeList getExistingChangelistByName(@NotNull String changeListName) {
+    ChangeListManager manager = ChangeListManager.getInstance(myProject);
+    return manager.findChangeList(changeListName);
   }
 
   public JComponent getPreferredFocusedComponent() {
-    return myRbExisting.isSelected() ? myExistingListsCombo : myNewListPanel.getPreferredFocusedComponent();
+    return myExistingListsCombo;
   }
 
-  private void createUIComponents() {
-    myNewListPanel = new NewEditChangelistPanel(myProject) {
+  private static class MyEditorComboBox extends ComboBox<String> {
 
-      @Override
-      protected void nameChanged(String errorMessage) {
-        if (myRbExisting.isSelected()) {
-          myOkEnabledListener.consume(null);
-        } else {
-          myOkEnabledListener.consume(errorMessage);
+    private static final int PREF_WIDTH = 200;
+
+    public MyEditorComboBox(Project project) {
+      super(PREF_WIDTH);
+      setEditor(new StringComboboxEditor(project, PlainTextFileType.INSTANCE, this) {
+        @Override
+        protected void onEditorCreate(EditorEx editor) {
+          super.onEditorCreate(editor);
+          getDocument().putUserData(CONTINUE_RUN_COMPLETION, true);
         }
-      }
-    };
+      });
+    }
+
+    @NotNull
+    private EditorTextField getEditorTextField() {
+      return ObjectUtils.assertNotNull((EditorTextField)getEditor().getEditorComponent());
+    }
   }
 }

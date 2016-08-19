@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace * org.mustbe.consulo.execution.testframework.thrift.runner
+namespace * consulo.execution.testframework.thrift.runner
 
 service TestInterface {
   void runStarted();

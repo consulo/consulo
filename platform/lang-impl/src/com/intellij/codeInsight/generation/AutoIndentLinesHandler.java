@@ -28,7 +28,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 public class AutoIndentLinesHandler extends CodeInsightActionHandler.WriteActionAdapter {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.generation.AutoIndentLinesHandler");

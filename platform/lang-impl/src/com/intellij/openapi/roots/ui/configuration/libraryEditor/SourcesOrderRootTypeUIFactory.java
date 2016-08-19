@@ -25,7 +25,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
-import com.intellij.openapi.roots.types.SourcesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 
 import javax.swing.*;

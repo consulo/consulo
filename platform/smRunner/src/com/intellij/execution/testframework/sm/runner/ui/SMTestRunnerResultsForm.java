@@ -519,8 +519,8 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   /**
    * Manual test proxy selection in tests tree. E.g. do select root node on
    * testing started or do select current node if TRACK_RUNNING_TEST is enabled
-   * <p/>
-   * <p/>
+   * <p>
+   * <p>
    * Will select proxy in Event Dispatch Thread. Invocation of this
    * method may be not in event dispatch thread
    *
@@ -861,18 +861,17 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
 
     private void writeState() {
       // read action to prevent project (and storage) from being disposed
-      ApplicationManager.getApplication().runReadAction(new Runnable() {
-        @Override
-        public void run() {
-          Project project = getProject();
-          if (project.isDisposed()) return;
-          TestStateStorage storage = TestStateStorage.getInstance(project);
-          List<SMTestProxy> tests = myRoot.getAllTests();
-          for (SMTestProxy proxy : tests) {
-            String url = proxy instanceof SMTestProxy.SMRootTestProxy ? ((SMTestProxy.SMRootTestProxy)proxy).getRootLocation() : proxy.getLocationUrl();
-            if (url != null) {
-              storage.writeState(url, new TestStateStorage.Record(proxy.getMagnitude(), new Date()));
-            }
+      ApplicationManager.getApplication().runReadAction(() -> {
+        Project project = getProject();
+        if (project.isDisposed()) return;
+        TestStateStorage storage = TestStateStorage.getInstance(project);
+        List<SMTestProxy> tests = myRoot.getAllTests();
+        for (SMTestProxy proxy : tests) {
+          String url = proxy instanceof SMTestProxy.SMRootTestProxy ? ((SMTestProxy.SMRootTestProxy)proxy).getRootLocation() : proxy.getLocationUrl();
+          if (url != null) {
+            String configurationName = myConfiguration != null ? myConfiguration.getName() : null;
+            storage.writeState(url,
+                               new TestStateStorage.Record(proxy.getMagnitude(), new Date(), configurationName == null ? 0 : configurationName.hashCode()));
           }
         }
       });

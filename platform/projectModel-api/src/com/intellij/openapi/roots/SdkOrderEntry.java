@@ -16,7 +16,8 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.roots.OrderEntryWithTracking;
+import consulo.annotations.DeprecationInfo;
 
 @Deprecated
 @DeprecationInfo(value = "Use ModuleExtensionWithSdkOrderEntry", until = "1.0")

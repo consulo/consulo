@@ -22,6 +22,7 @@ import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.update.ComparableObject;
+import consulo.fileTypes.impl.FileSystemViewDelegate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

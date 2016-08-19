@@ -15,10 +15,10 @@
  */
 package consulo.roots.orderEntry;
 
-import com.intellij.openapi.roots.ModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
-import com.intellij.openapi.roots.impl.UnknownOrderEntryImpl;
+import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.roots.impl.UnknownOrderEntryImpl;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;

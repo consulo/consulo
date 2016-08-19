@@ -17,6 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.roots.OrderEntry;
+import consulo.roots.impl.ModuleRootLayerImpl;
 
 /**
  *  @author dsl

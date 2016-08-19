@@ -16,7 +16,7 @@
 package com.intellij.openapi.options;
 
 import com.intellij.util.ThrowableConvertor;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

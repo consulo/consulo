@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,36 +16,38 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.CopyProvider;
+import com.intellij.ide.projectView.impl.ProjectViewTree;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FilePathImpl;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.Change;
-import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.openapi.vcs.changes.ContentRevision;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.ui.treeStructure.actions.CollapseAllAction;
 import com.intellij.ui.treeStructure.actions.ExpandAllAction;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import gnu.trove.TIntArrayList;
+import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -53,171 +55,148 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
 /**
  * @author max
  */
-public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataProvider {
-  private final Tree myTree;
-  private final JBList myList;
-  private final JScrollPane myTreeScrollPane;
-  private final JScrollPane myListScrollPane;
-  protected final Project myProject;
+public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataProvider {
+
+  @NotNull protected final Project myProject;
   private final boolean myShowCheckboxes;
+  private final int myCheckboxWidth;
   private final boolean myHighlightProblems;
   private boolean myShowFlatten;
+  private boolean myIsModelFlat;
 
-  private final Collection<T> myIncludedChanges;
-  private Runnable myDoubleClickHandler = EmptyRunnable.getInstance();
+  @NotNull private final Set<T> myIncludedChanges;
+  @NotNull private Runnable myDoubleClickHandler = EmptyRunnable.getInstance();
   private boolean myAlwaysExpandList;
 
-  @NonNls private static final String TREE_CARD = "Tree";
-  @NonNls private static final String LIST_CARD = "List";
+  @NotNull private final MyTreeCellRenderer myNodeRenderer;
+
   @NonNls private static final String ROOT = "root";
-  private final CardLayout myCards;
 
   @NonNls private final static String FLATTEN_OPTION_KEY = "ChangesBrowser.SHOW_FLATTEN";
 
-  private final Runnable myInclusionListener;
+  @Nullable private final Runnable myInclusionListener;
   @Nullable private ChangeNodeDecorator myChangeDecorator;
   private Runnable myGenericSelectionListener;
+  @NotNull private final CopyProvider myTreeCopyProvider;
+  private TreeState myNonFlatTreeState;
 
-  public ChangesTreeList(final Project project, Collection<T> initiallyIncluded, final boolean showCheckboxes,
-                         final boolean highlightProblems, @Nullable final Runnable inclusionListener, @Nullable final ChangeNodeDecorator decorator) {
+  public ChangesTreeList(@NotNull Project project,
+                         @NotNull Collection<T> initiallyIncluded,
+                         final boolean showCheckboxes,
+                         final boolean highlightProblems,
+                         @Nullable final Runnable inclusionListener,
+                         @Nullable final ChangeNodeDecorator decorator) {
+    super(ChangesBrowserNode.create(project, ROOT));
     myProject = project;
     myShowCheckboxes = showCheckboxes;
     myHighlightProblems = highlightProblems;
     myInclusionListener = inclusionListener;
     myChangeDecorator = decorator;
-    myIncludedChanges = new HashSet<T>(initiallyIncluded);
+    myIncludedChanges = new HashSet<>(initiallyIncluded);
     myAlwaysExpandList = true;
+    final ChangesBrowserNodeRenderer nodeRenderer = new ChangesBrowserNodeRenderer(myProject, () -> myShowFlatten, myHighlightProblems);
+    myNodeRenderer = new MyTreeCellRenderer(nodeRenderer);
+    myCheckboxWidth = new JCheckBox().getPreferredSize().width;
 
-    myCards = new CardLayout();
-
-    setLayout(myCards);
-
-    final int checkboxWidth = new JCheckBox().getPreferredSize().width;
-    myTree = new MyTree(project, checkboxWidth);
-    myTree.setHorizontalAutoScrollingEnabled(false);
-    myTree.setRootVisible(false);
-    myTree.setShowsRootHandles(true);
-    myTree.setOpaque(false);
-    myTree.setCellRenderer(new MyTreeCellRenderer());
-    new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
+    setHorizontalAutoScrollingEnabled(false);
+    setRootVisible(false);
+    setShowsRootHandles(true);
+    setOpaque(false);
+    new TreeSpeedSearch(this, new Convertor<TreePath, String>() {
+      @Override
       public String convert(TreePath o) {
         ChangesBrowserNode node = (ChangesBrowserNode) o.getLastPathComponent();
         return node.getTextPresentation();
       }
     });
-
-    myList = new JBList(new DefaultListModel());
-    myList.setVisibleRowCount(10);
-
-    add(myListScrollPane = ScrollPaneFactory.createScrollPane(myList), LIST_CARD);
-    add(myTreeScrollPane = ScrollPaneFactory.createScrollPane(myTree), TREE_CARD);
-
-    new ListSpeedSearch(myList) {
-      protected String getElementText(Object element) {
-        if (element instanceof Change) {
-          return ChangesUtil.getFilePath((Change)element).getName();
-        }
-        return super.getElementText(element);
-      }
-    };
-
-    myList.setCellRenderer(new MyListCellRenderer());
+    setCellRenderer(myNodeRenderer);
 
     new MyToggleSelectionAction().registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0)), this);
-    if (myShowCheckboxes) {
-      registerKeyboardAction(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          includeSelection();
-        }
-
-      }, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-      registerKeyboardAction(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          excludeSelection();
-        }
-      }, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    }
-
     registerKeyboardAction(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         myDoubleClickHandler.run();
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-    new ClickListener() {
+    addKeyListener(new KeyAdapter() {
       @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
-        final int idx = myList.locationToIndex(e.getPoint());
-        if (idx >= 0) {
-          final Rectangle baseRect = myList.getCellBounds(idx, idx);
-          baseRect.setSize(checkboxWidth, baseRect.height);
-          if (baseRect.contains(e.getPoint())) {
-            toggleSelection();
-            return true;
+      public void keyPressed(KeyEvent e) {
+        if (KeyEvent.VK_ENTER == e.getKeyCode() && e.getModifiers() == 0) {
+          if (getSelectionCount() <= 1) {
+            Object lastPathComponent = getLastSelectedPathComponent();
+            if (!(lastPathComponent instanceof DefaultMutableTreeNode)) {
+              return;
+            }
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)lastPathComponent;
+            if (!node.isLeaf()) {
+              return;
+            }
           }
-          else if (clickCount == 2) {
-            myDoubleClickHandler.run();
-            return true;
-          }
+          myDoubleClickHandler.run();
+          e.consume();
         }
-        return false;
       }
-    }.installOn(myList);
+    });
 
-    new ClickListener() {
+    new DoubleClickListener() {
       @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
-        final int row = myTree.getRowForLocation(e.getPoint().x, e.getPoint().y);
+      protected boolean onDoubleClick(MouseEvent e) {
+        TreePath clickPath =
+                getUI() instanceof WideSelectionTreeUI ? getClosestPathForLocation(e.getX(), e.getY()) : getPathForLocation(e.getX(), e.getY());
+        if (clickPath == null) return false;
+
+        final int row = getRowForLocation(e.getPoint().x, e.getPoint().y);
         if (row >= 0) {
-          final Rectangle baseRect = myTree.getRowBounds(row);
-          baseRect.setSize(checkboxWidth, baseRect.height);
-          if (!baseRect.contains(e.getPoint()) && clickCount == 2) {
-            myDoubleClickHandler.run();
-            return true;
+          if (myShowCheckboxes) {
+            final Rectangle baseRect = getRowBounds(row);
+            baseRect.setSize(myCheckboxWidth, baseRect.height);
+            if (baseRect.contains(e.getPoint())) return false;
           }
         }
-        return false;
+
+        myDoubleClickHandler.run();
+        return true;
       }
-    }.installOn(myTree);
+    }.installOn(this);
+
+    new TreeLinkMouseListener(myNodeRenderer.myTextRenderer) {
+      @Override
+      protected int getRendererRelativeX(@NotNull MouseEvent e, @NotNull JTree tree, @NotNull TreePath path) {
+        int x = super.getRendererRelativeX(e, tree, path);
+
+        return !myShowCheckboxes ? x : x - myCheckboxWidth;
+      }
+    }.installOn(this);
+    SmartExpander.installOn(this);
 
     setShowFlatten(PropertiesComponent.getInstance(myProject).isTrueValue(FLATTEN_OPTION_KEY));
 
     String emptyText = StringUtil.capitalize(DiffBundle.message("diff.count.differences.status.text", 0));
     setEmptyText(emptyText);
+
+    myTreeCopyProvider = new ChangesBrowserNodeCopyProvider(this);
   }
 
   public void setEmptyText(@NotNull String emptyText) {
-    myTree.getEmptyText().setText(emptyText);
-    myList.getEmptyText().setText(emptyText);
+    getEmptyText().setText(emptyText);
   }
 
-  // generic, both for tree and list
   public void addSelectionListener(final Runnable runnable) {
     myGenericSelectionListener = runnable;
-    myList.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        myGenericSelectionListener.run();
-      }
-    });
-    myTree.addTreeSelectionListener(new TreeSelectionListener() {
+    addTreeSelectionListener(new TreeSelectionListener() {
       @Override
       public void valueChanged(TreeSelectionEvent e) {
         myGenericSelectionListener.run();
@@ -229,175 +208,129 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
     myChangeDecorator = changeDecorator;
   }
 
-  public void setDoubleClickHandler(final Runnable doubleClickHandler) {
+  public void setDoubleClickHandler(@NotNull final Runnable doubleClickHandler) {
     myDoubleClickHandler = doubleClickHandler;
   }
 
   public void installPopupHandler(ActionGroup group) {
-    PopupHandler.installUnknownPopupHandler(myList, group, ActionManager.getInstance());
-    PopupHandler.installUnknownPopupHandler(myTree, group, ActionManager.getInstance());
-  }
-  
-  public JComponent getPreferredFocusedComponent() {
-    return myShowFlatten ? myList : myTree;
+    PopupHandler.installUnknownPopupHandler(this, group, ActionManager.getInstance());
   }
 
-  public Dimension getPreferredSize() {
-    return new Dimension(400, 400);
+  public JComponent getPreferredFocusedComponent() {
+    return this;
   }
 
   public boolean isShowFlatten() {
     return myShowFlatten;
   }
 
+  /**
+   * Does nothing as ChangesTreeList is currently not wrapped in JScrollPane by default.
+   * Left not to break API (used in several plugins).
+   *
+   * @deprecated to remove in 2017.
+   */
+  @SuppressWarnings("unused")
+  @Deprecated
   public void setScrollPaneBorder(Border border) {
-    myListScrollPane.setBorder(border);
-    myTreeScrollPane.setBorder(border);
   }
 
   public void setShowFlatten(final boolean showFlatten) {
     final List<T> wasSelected = getSelectedChanges();
-    myShowFlatten = showFlatten;
-    myCards.show(this, myShowFlatten ? LIST_CARD : TREE_CARD);
-    select(wasSelected);
-    if (myList.hasFocus() || myTree.hasFocus()) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          requestFocus();
-        }
-      });
+    if (!myAlwaysExpandList && !myShowFlatten) {
+      myNonFlatTreeState = TreeState.createOn(this, getRoot());
     }
+    myShowFlatten = showFlatten;
+    setChangesToDisplay(getChanges());
+    if (!myAlwaysExpandList && !myShowFlatten && myNonFlatTreeState != null) {
+      myNonFlatTreeState.applyTo(this, getRoot());
+    }
+    select(wasSelected);
   }
 
+  private void setChildIndent(boolean isFlat) {
+    BasicTreeUI treeUI = (BasicTreeUI)getUI();
 
-  public void requestFocus() {
-    if (myShowFlatten) {
-      myList.requestFocus();
+    treeUI.setLeftChildIndent(!isFlat ? UIUtil.getTreeLeftChildIndent() : 0);
+    treeUI.setRightChildIndent(!isFlat ? UIUtil.getTreeRightChildIndent() : 0);
+  }
+
+  protected boolean isCurrentModelFlat() {
+    boolean isFlat = true;
+    Enumeration enumeration = getRoot().depthFirstEnumeration();
+
+    while (isFlat && enumeration.hasMoreElements()) {
+      isFlat = ((ChangesBrowserNode)enumeration.nextElement()).getLevel() <= 1;
     }
-    else {
-      myTree.requestFocus();
-    }
+
+    return isFlat;
   }
 
   public void setChangesToDisplay(final List<T> changes) {
     setChangesToDisplay(changes, null);
   }
-  
+
   public void setChangesToDisplay(final List<T> changes, @Nullable final VirtualFile toSelect) {
-    final boolean wasEmpty = myList.isEmpty();
-    final List<T> sortedChanges = new ArrayList<T>(changes);
-    Collections.sort(sortedChanges, new Comparator<T>() {
-      public int compare(final T o1, final T o2) {
-        return TreeModelBuilder.getPathForObject(o1).getName().compareToIgnoreCase(TreeModelBuilder.getPathForObject(o2).getName());
-      }
-    });
-
-    final Set<Object> wasSelected = new HashSet<Object>(Arrays.asList(myList.getSelectedValues()));
-    myList.setModel(new AbstractListModel() {
-      @Override
-      public int getSize() {
-        return sortedChanges.size();
-      }
-
-      @Override
-      public Object getElementAt(int index) {
-        return sortedChanges.get(index);
-      }
-    });
-
     final DefaultTreeModel model = buildTreeModel(changes, myChangeDecorator);
     TreeState state = null;
-    if (! myAlwaysExpandList && ! wasEmpty) {
-      state = TreeState.createOn(myTree, (DefaultMutableTreeNode) myTree.getModel().getRoot());
+    if (!myAlwaysExpandList) {
+      state = TreeState.createOn(this, getRoot());
     }
-    myTree.setModel(model);
-    if (! myAlwaysExpandList && ! wasEmpty) {
-      state.applyTo(myTree, (DefaultMutableTreeNode) myTree.getModel().getRoot());
-
-      final TIntArrayList indices = new TIntArrayList();
-      for (int i = 0; i < sortedChanges.size(); i++) {
-        T t = sortedChanges.get(i);
-        if (wasSelected.contains(t)) {
-          indices.add(i);
-        }
-      }
-      myList.setSelectedIndices(indices.toNativeArray());
+    setModel(model);
+    myIsModelFlat = isCurrentModelFlat();
+    setChildIndent(myShowFlatten && myIsModelFlat);
+    if (!myAlwaysExpandList) {
+      //noinspection ConstantConditions
+      state.applyTo(this, getRoot());
       return;
     }
 
     final Runnable runnable = new Runnable() {
+      @Override
       public void run() {
         if (myProject.isDisposed()) return;
-        TreeUtil.expandAll(myTree);
+        TreeUtil.expandAll(ChangesTreeList.this);
 
-        int listSelection = 0;
-        int scrollRow = 0;
+        int selectedTreeRow = -1;
 
         if (myShowCheckboxes) {
           if (myIncludedChanges.size() > 0) {
-            for (int i = 0; i < sortedChanges.size(); i++) {
-              T t = sortedChanges.get(i);
-              if (myIncludedChanges.contains(t)) {
-                listSelection = i;
-                break;
-              }
-            }
-
             ChangesBrowserNode root = (ChangesBrowserNode)model.getRoot();
             Enumeration enumeration = root.depthFirstEnumeration();
 
             while (enumeration.hasMoreElements()) {
               ChangesBrowserNode node = (ChangesBrowserNode)enumeration.nextElement();
+              @SuppressWarnings("unchecked")
               final CheckboxTree.NodeState state = getNodeStatus(node);
               if (node != root && state == CheckboxTree.NodeState.CLEAR) {
-                myTree.collapsePath(new TreePath(node.getPath()));
+                collapsePath(new TreePath(node.getPath()));
               }
             }
 
             enumeration = root.depthFirstEnumeration();
             while (enumeration.hasMoreElements()) {
               ChangesBrowserNode node = (ChangesBrowserNode)enumeration.nextElement();
+              @SuppressWarnings("unchecked")
               final CheckboxTree.NodeState state = getNodeStatus(node);
               if (state == CheckboxTree.NodeState.FULL && node.isLeaf()) {
-                scrollRow = myTree.getRowForPath(new TreePath(node.getPath()));
+                selectedTreeRow = getRowForPath(new TreePath(node.getPath()));
                 break;
               }
             }
           }
         } else {
           if (toSelect != null) {
-            ChangesBrowserNode root = (ChangesBrowserNode)model.getRoot();
-            final int[] rowToSelect = new int[] {-1}; 
-            TreeUtil.traverse(root, new TreeUtil.Traverse() {
-              @Override
-              public boolean accept(Object node) {
-                if (node instanceof DefaultMutableTreeNode) {
-                  Object userObject = ((DefaultMutableTreeNode)node).getUserObject();
-                  if (userObject instanceof Change) {
-                    Change change = (Change)userObject;
-                    VirtualFile virtualFile = change.getVirtualFile();
-                    if ((virtualFile != null && virtualFile.equals(toSelect)) || seemsToBeMoved(change, toSelect)) {
-                      TreeNode[] path = ((DefaultMutableTreeNode)node).getPath();
-                      rowToSelect[0] = myTree.getRowForPath(new TreePath(path));
-                    }
-                  }
-                }
-
-                return rowToSelect[0] == -1;
-              }
-            });
-            
-            scrollRow = rowToSelect[0] == -1 ? scrollRow : rowToSelect[0];
+            int rowInTree = findRowContainingFile((TreeNode)model.getRoot(), toSelect);
+            if (rowInTree > -1) {
+              selectedTreeRow = rowInTree;
+            }
           }
         }
-        
-        if (changes.size() > 0) {
-          myList.setSelectedIndex(listSelection);
-          myList.ensureIndexIsVisible(listSelection);
 
-          myTree.setSelectionRow(scrollRow);
-          TreeUtil.showRowCentered(myTree, scrollRow, false);
+        if (selectedTreeRow >= 0) {
+          setSelectionRow(selectedTreeRow);
         }
+        TreeUtil.showRowCentered(ChangesTreeList.this, selectedTreeRow, false);
       }
     };
     if (ApplicationManager.getApplication().isDispatchThread()) {
@@ -407,117 +340,76 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
     }
   }
 
+  private int findRowContainingFile(@NotNull TreeNode root, @NotNull final VirtualFile toSelect) {
+    final Ref<Integer> row = Ref.create(-1);
+    TreeUtil.traverse(root, new TreeUtil.Traverse() {
+      @Override
+      public boolean accept(Object node) {
+        if (node instanceof DefaultMutableTreeNode) {
+          Object userObject = ((DefaultMutableTreeNode)node).getUserObject();
+          if (userObject instanceof Change) {
+            if (matches((Change)userObject, toSelect)) {
+              TreeNode[] path = ((DefaultMutableTreeNode)node).getPath();
+              row.set(getRowForPath(new TreePath(path)));
+            }
+          }
+        }
+
+        return row.get() == -1;
+      }
+    });
+    return row.get();
+  }
+
+  private static boolean matches(@NotNull Change change, @NotNull VirtualFile file) {
+    VirtualFile virtualFile = change.getVirtualFile();
+    return virtualFile != null && virtualFile.equals(file) || seemsToBeMoved(change, file);
+  }
+
   private static boolean seemsToBeMoved(Change change, VirtualFile toSelect) {
     ContentRevision afterRevision = change.getAfterRevision();
     if (afterRevision == null) return false;
     FilePath file = afterRevision.getFile();
-    return file.getName().equals(toSelect.getName());
+    return FileUtil.pathsEqual(file.getPath(), toSelect.getPath());
   }
 
   protected abstract DefaultTreeModel buildTreeModel(final List<T> changes, final ChangeNodeDecorator changeNodeDecorator);
 
-  @SuppressWarnings({"SuspiciousMethodCalls"})
   private void toggleSelection() {
-    boolean hasExcluded = false;
-    for (T value : getSelectedChanges()) {
-      if (!myIncludedChanges.contains(value)) {
-        hasExcluded = true;
-      }
-    }
-
-    if (hasExcluded) {
-      includeSelection();
-    }
-    else {
-      excludeSelection();
-    }
-
-    repaint();
+    toggleChanges(getSelectedChanges());
   }
 
-  private void includeSelection() {
-    for (T change : getSelectedChanges()) {
-      myIncludedChanges.add(change);
-    }
-    notifyInclusionListener();
-    repaint();
-  }
-
-  @SuppressWarnings({"SuspiciousMethodCalls"})
-  private void excludeSelection() {
-    for (T change : getSelectedChanges()) {
-      myIncludedChanges.remove(change);
-    }
-    notifyInclusionListener();
-    repaint();
-  }
-
+  /**
+   * TODO: This method does not respect T type parameter while filling the result - just "Change" class is used
+   * TODO: ("ChangesBrowserNode.getAllChangesUnder()").
+   */
+  @NotNull
   public List<T> getChanges() {
-    if (myShowFlatten) {
-      ListModel m = myList.getModel();
-      int size = m.getSize();
-      List result = new ArrayList(size);
-      for (int i = 0; i < size; i++) {
-        result.add(m.getElementAt(i));
-      }
-      return result;
-    }
-    else {
-      final LinkedHashSet result = new LinkedHashSet();
-      TreeUtil.traverseDepth((ChangesBrowserNode)myTree.getModel().getRoot(), new TreeUtil.Traverse() {
-        public boolean accept(Object node) {
-          ChangesBrowserNode changeNode = (ChangesBrowserNode)node;
-          if (changeNode.isLeaf()) result.addAll(changeNode.getAllChangesUnder());
-          return true;
-        }
-      });
-      return new ArrayList<T>(result);
-    }
-  }
-
-  public int getSelectionCount() {
-    if (myShowFlatten) {
-      return myList.getSelectedIndices().length;
-    } else {
-      return myTree.getSelectionCount();
-    }
+    //noinspection unchecked
+    return ((ChangesBrowserNode)getRoot()).getAllChangesUnder();
   }
 
   @NotNull
   public List<T> getSelectedChanges() {
-    if (myShowFlatten) {
-      final Object[] o = myList.getSelectedValues();
-      final List<T> changes = new ArrayList<T>();
-      for (Object anO : o) {
-        changes.add((T)anO);
-      }
-
-      return changes;
+    final TreePath[] paths = getSelectionPaths();
+    if (paths == null) {
+      return Collections.emptyList();
     }
     else {
-      final List<T> changes = new ArrayList<T>();
-      final Set<Integer> checkSet = new HashSet<Integer>();
-      final TreePath[] paths = myTree.getSelectionPaths();
-      if (paths != null) {
-        for (TreePath path : paths) {
-          final ChangesBrowserNode node = (ChangesBrowserNode)path.getLastPathComponent();
-          final List<T> objects = getSelectedObjects(node);
-          for (T object : objects) {
-            final int hash = object.hashCode();
-            if (! checkSet.contains(hash)) {
-              changes.add(object);
-              checkSet.add(hash);
-            } else {
-              if (! changes.contains(object)) {
-                changes.add(object);
-              }
-            }
-          }
-        }
+      LinkedHashSet<T> changes = ContainerUtil.newLinkedHashSet();
+      for (TreePath path : paths) {
+        //noinspection unchecked
+        changes.addAll(getSelectedObjects((ChangesBrowserNode)path.getLastPathComponent()));
       }
-
-      return changes;
+      return ContainerUtil.newArrayList(changes);
     }
+  }
+
+  @NotNull
+  private List<T> getSelectedChangesOrAllIfNone() {
+    List<T> changes = getSelectedChanges();
+    if (!changes.isEmpty()) return changes;
+    return getChanges();
   }
 
   protected abstract List<T> getSelectedObjects(final ChangesBrowserNode<T> node);
@@ -527,35 +419,24 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
 
   @Nullable
   public T getHighestLeadSelection() {
-    if (myShowFlatten) {
-      final int index = myList.getLeadSelectionIndex();
-      ListModel listModel = myList.getModel();
-      if (index < 0 || index >= listModel.getSize()) return null;
-      //noinspection unchecked
-      return (T)listModel.getElementAt(index);
+    final TreePath path = getSelectionPath();
+    if (path == null) {
+      return null;
     }
-    else {
-      final TreePath path = myTree.getSelectionPath();
-      if (path == null) return null;
-      return getLeadSelectedObject((ChangesBrowserNode<T>)path.getLastPathComponent());
-    }
+    //noinspection unchecked
+    return getLeadSelectedObject((ChangesBrowserNode<T>)path.getLastPathComponent());
   }
 
   @Nullable
   public T getLeadSelection() {
-    if (myShowFlatten) {
-      final int index = myList.getLeadSelectionIndex();
-      ListModel listModel = myList.getModel();
-      if (index < 0 || index >= listModel.getSize()) return null;
-      //noinspection unchecked
-      return (T)listModel.getElementAt(index);
-    }
-    else {
-      final TreePath path = myTree.getSelectionPath();
-      if (path == null) return null;
-      final List<T> changes = getSelectedObjects(((ChangesBrowserNode<T>)path.getLastPathComponent()));
-      return changes.size() > 0 ? changes.get(0) : null;
-    }
+    final TreePath path = getSelectionPath();
+    //noinspection unchecked
+    return path == null ? null : ContainerUtil.getFirstItem(getSelectedObjects(((ChangesBrowserNode<T>)path.getLastPathComponent())));
+  }
+
+  @NotNull
+  ChangesBrowserNode<?> getRoot() {
+    return (ChangesBrowserNode<?>)getModel().getRoot();
   }
 
   private void notifyInclusionListener() {
@@ -568,88 +449,88 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
   public void setIncludedChanges(final Collection<T> changes) {
     myIncludedChanges.clear();
     myIncludedChanges.addAll(changes);
-    myTree.repaint();
-    myList.repaint();
+    repaint();
   }
 
   public void includeChange(final T change) {
-    myIncludedChanges.add(change);
-    notifyInclusionListener();
-    myTree.repaint();
-    myList.repaint();
+    includeChanges(Collections.singleton(change));
   }
 
   public void includeChanges(final Collection<T> changes) {
     myIncludedChanges.addAll(changes);
     notifyInclusionListener();
-    myTree.repaint();
-    myList.repaint();
+    repaint();
   }
 
   public void excludeChange(final T change) {
-    myIncludedChanges.remove(change);
-    notifyInclusionListener();
-    myTree.repaint();
-    myList.repaint();
+    excludeChanges(Collections.singleton(change));
   }
 
   public void excludeChanges(final Collection<T> changes) {
     myIncludedChanges.removeAll(changes);
     notifyInclusionListener();
-    myTree.repaint();
-    myList.repaint();
+    repaint();
+  }
+
+  protected void toggleChanges(final Collection<T> changes) {
+    boolean hasExcluded = false;
+    for (T value : changes) {
+      if (!myIncludedChanges.contains(value)) {
+        hasExcluded = true;
+        break;
+      }
+    }
+
+    if (hasExcluded) {
+      includeChanges(changes);
+    }
+    else {
+      excludeChanges(changes);
+    }
   }
 
   public boolean isIncluded(final T change) {
     return myIncludedChanges.contains(change);
   }
 
+  @NotNull
   public Collection<T> getIncludedChanges() {
     return myIncludedChanges;
   }
 
   public void expandAll() {
-    TreeUtil.expandAll(myTree);
+    TreeUtil.expandAll(this);
   }
 
   public AnAction[] getTreeActions() {
     final ToggleShowDirectoriesAction directoriesAction = new ToggleShowDirectoriesAction();
-    final ExpandAllAction expandAllAction = new ExpandAllAction(myTree) {
+    final ExpandAllAction expandAllAction = new ExpandAllAction(this) {
+      @Override
       public void update(AnActionEvent e) {
-        e.getPresentation().setVisible(!myShowFlatten);
+        e.getPresentation().setEnabledAndVisible(!myShowFlatten || !myIsModelFlat);
       }
     };
-    final CollapseAllAction collapseAllAction = new CollapseAllAction(myTree) {
+    final CollapseAllAction collapseAllAction = new CollapseAllAction(this) {
+      @Override
       public void update(AnActionEvent e) {
-        e.getPresentation().setVisible(!myShowFlatten);
+        e.getPresentation().setEnabledAndVisible(!myShowFlatten || !myIsModelFlat);
       }
     };
     final AnAction[] actions = new AnAction[]{directoriesAction, expandAllAction, collapseAllAction};
     directoriesAction.registerCustomShortcutSet(
-      new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_P, SystemInfo.isMac ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK)),
-      this);
+            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_P, SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK)),
+            this);
     expandAllAction.registerCustomShortcutSet(
-      new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_EXPAND_ALL)),
-      myTree);
+            new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_EXPAND_ALL)),
+            this);
     collapseAllAction.registerCustomShortcutSet(
-      new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_COLLAPSE_ALL)),
-      myTree);
+            new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_COLLAPSE_ALL)),
+            this);
     return actions;
   }
 
-  public void setSelectionMode(@JdkConstants.ListSelectionMode int mode) {
-    myList.setSelectionMode(mode);
-    myTree.getSelectionModel().setSelectionMode(getTreeSelectionModeFromListSelectionMode(mode));
-  }
-
-  @JdkConstants.TreeSelectionMode
-  private static int getTreeSelectionModeFromListSelectionMode(@JdkConstants.ListSelectionMode int mode) {
-    switch (mode) {
-      case ListSelectionModel.SINGLE_SELECTION: return TreeSelectionModel.SINGLE_TREE_SELECTION;
-      case ListSelectionModel.SINGLE_INTERVAL_SELECTION: return TreeSelectionModel.CONTIGUOUS_TREE_SELECTION;
-      case ListSelectionModel.MULTIPLE_INTERVAL_SELECTION: return TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION;
-    }
-    throw new IllegalArgumentException("Illegal selection mode: " + mode);
+  public void setSelectionMode(@JdkConstants.TreeSelectionMode int mode) {
+    getSelectionModel().setSelectionMode(mode);
   }
 
   private class MyTreeCellRenderer extends JPanel implements TreeCellRenderer {
@@ -657,10 +538,10 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
     private final JCheckBox myCheckBox;
 
 
-    public MyTreeCellRenderer() {
+    public MyTreeCellRenderer(@NotNull ChangesBrowserNodeRenderer textRenderer) {
       super(new BorderLayout());
       myCheckBox = new JCheckBox();
-      myTextRenderer = new ChangesBrowserNodeRenderer(myProject, false, myHighlightProblems);
+      myTextRenderer = textRenderer;
 
       if (myShowCheckboxes) {
         add(myCheckBox, BorderLayout.WEST);
@@ -670,6 +551,7 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
       setOpaque(false);
     }
 
+    @Override
     public Component getTreeCellRendererComponent(JTree tree,
                                                   Object value,
                                                   boolean selected,
@@ -689,13 +571,14 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
 
       myTextRenderer.setOpaque(false);
       myTextRenderer.setTransparentIconBackground(true);
+      myTextRenderer.setToolTipText(null);
       myTextRenderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
       if (myShowCheckboxes) {
-        ChangesBrowserNode node = (ChangesBrowserNode)value;
-
-        CheckboxTree.NodeState state = getNodeStatus(node);
+        @SuppressWarnings("unchecked")
+        CheckboxTree.NodeState state = getNodeStatus((ChangesBrowserNode)value);
         myCheckBox.setSelected(state != CheckboxTree.NodeState.CLEAR);
-        myCheckBox.setEnabled(state != CheckboxTree.NodeState.PARTIAL);
+        //noinspection unchecked
+        myCheckBox.setEnabled(tree.isEnabled() && isNodeEnabled((ChangesBrowserNode)value));
         revalidate();
 
         return this;
@@ -703,6 +586,11 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
       else {
         return myTextRenderer;
       }
+    }
+
+    @Override
+    public String getToolTipText() {
+      return myTextRenderer.getToolTipText();
     }
   }
 
@@ -725,136 +613,42 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
     return CheckboxTree.NodeState.CLEAR;
   }
 
-  private class MyListCellRenderer extends JPanel implements ListCellRenderer {
-    private final ColoredListCellRenderer myTextRenderer;
-    public final JCheckBox myCheckbox;
-
-    public MyListCellRenderer() {
-      super(new BorderLayout());
-      myCheckbox = new JCheckBox();
-      myTextRenderer = new VirtualFileListCellRenderer(myProject) {
-        @Override
-        protected void putParentPath(Object value, FilePath path, FilePath self) {
-          super.putParentPath(value, path, self);
-          final boolean applyChangeDecorator = (value instanceof Change) && myChangeDecorator != null;
-          if (applyChangeDecorator) {
-            myChangeDecorator.decorate((Change) value, this, isShowFlatten());
-          }
-        }
-
-        @Override
-        protected void putParentPathImpl(Object value, String parentPath, FilePath self) {
-          final boolean applyChangeDecorator = (value instanceof Change) && myChangeDecorator != null;
-          List<Pair<String,ChangeNodeDecorator.Stress>> parts = null;
-          if (applyChangeDecorator) {
-            parts = myChangeDecorator.stressPartsOfFileName((Change)value, parentPath);
-          }
-          if (parts == null) {
-            super.putParentPathImpl(value, parentPath, self);
-            return;
-          }
-
-          for (Pair<String, ChangeNodeDecorator.Stress> part : parts) {
-            append(part.getFirst(), part.getSecond().derive(SimpleTextAttributes.GRAYED_ATTRIBUTES));
-          }
-        }
-
-        @Override
-        public Component getListCellRendererComponent(JList list,
-                                                      Object value,
-                                                      int index,
-                                                      boolean selected,
-                                                      boolean hasFocus) {
-          final Component component = super.getListCellRendererComponent(list, value, index, selected, hasFocus);
-          final FileColorManager colorManager = FileColorManager.getInstance(myProject);
-          if (!selected) {
-            if (Registry.is("file.colors.in.commit.dialog") && colorManager.isEnabled() && colorManager.isEnabledForProjectView()) {
-              if (value instanceof Change) {
-                final VirtualFile file = ((Change)value).getVirtualFile();
-                if (file != null) {
-                  final Color color = colorManager.getFileColor(file);
-                  if (color != null) {
-                      component.setBackground(color);
-                  }
-                }
-              }
-            }
-          }
-          return component;
-        }
-      };
-
-      myCheckbox.setBackground(null);
-      setBackground(null);
-
-      if (myShowCheckboxes) {
-        add(myCheckbox, BorderLayout.WEST);
-      }
-      add(myTextRenderer, BorderLayout.CENTER);
-    }
-
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      myTextRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-      if (myShowCheckboxes) {
-        myCheckbox.setSelected(myIncludedChanges.contains(value));
-        return this;
-      }
-      else {
-        return myTextRenderer;
-      }
-    }
+  protected boolean isNodeEnabled(ChangesBrowserNode<T> node) {
+    return getNodeStatus(node) != CheckboxTree.NodeState.PARTIAL;
   }
 
-  private class MyToggleSelectionAction extends AnAction {
+  private class MyToggleSelectionAction extends AnAction implements DumbAware {
+    @Override
     public void actionPerformed(AnActionEvent e) {
-      toggleSelection();
+      toggleChanges(getSelectedChangesOrAllIfNone());
     }
   }
 
-  public class ToggleShowDirectoriesAction extends ToggleAction {
+  public class ToggleShowDirectoriesAction extends ToggleAction implements DumbAware {
     public ToggleShowDirectoriesAction() {
       super(VcsBundle.message("changes.action.show.directories.text"),
             VcsBundle.message("changes.action.show.directories.description"),
             AllIcons.Actions.GroupByPackage);
     }
 
+    @Override
     public boolean isSelected(AnActionEvent e) {
       return (! myProject.isDisposed()) && !PropertiesComponent.getInstance(myProject).isTrueValue(FLATTEN_OPTION_KEY);
     }
 
+    @Override
     public void setSelected(AnActionEvent e, boolean state) {
       PropertiesComponent.getInstance(myProject).setValue(FLATTEN_OPTION_KEY, String.valueOf(!state));
       setShowFlatten(!state);
     }
   }
 
-  private class SelectAllAction extends AnAction {
-    private SelectAllAction() {
-      super("Select All", "Select all items", AllIcons.Actions.Selectall);
-    }
-
-    public void actionPerformed(final AnActionEvent e) {
-      if (myShowFlatten) {
-        final int count = myList.getModel().getSize();
-        if (count > 0) {
-          myList.setSelectionInterval(0, count-1);
-        }
-      }
-      else {
-        final int countTree = myTree.getRowCount();
-        if (countTree > 0) {
-          myTree.setSelectionInterval(0, countTree-1);
-        }
-      }
-    }
-  }
-
   public void select(final List<T> changes) {
-    final DefaultTreeModel treeModel = (DefaultTreeModel) myTree.getModel();
-    final TreeNode root = (TreeNode) treeModel.getRoot();
-    final List<TreePath> treeSelection = new ArrayList<TreePath>(changes.size());
-    TreeUtil.traverse(root, new TreeUtil.Traverse() {
+    final List<TreePath> treeSelection = new ArrayList<>(changes.size());
+    TreeUtil.traverse(getRoot(), new TreeUtil.Traverse() {
+      @Override
       public boolean accept(Object node) {
+        @SuppressWarnings("unchecked")
         final T change = (T) ((DefaultMutableTreeNode) node).getUserObject();
         if (changes.contains(change)) {
           treeSelection.add(new TreePath(((DefaultMutableTreeNode) node).getPath()));
@@ -862,118 +656,71 @@ public abstract class ChangesTreeList<T> extends JPanel implements TypeSafeDataP
         return true;
       }
     });
-    myTree.setSelectionPaths(treeSelection.toArray(new TreePath[treeSelection.size()]));
-
-    // list
-    final ListModel model = myList.getModel();
-    final int size = model.getSize();
-    final List<Integer> listSelection = new ArrayList<Integer>(changes.size());
-    for (int i = 0; i < size; i++) {
-      final T el = (T) model.getElementAt(i);
-      if (changes.contains(el)) {
-        listSelection.add(i);
-      }
-    }
-    myList.setSelectedIndices(int2int(listSelection));
-  }
-
-  private static int[] int2int(List<Integer> treeSelection) {
-    final int[] toPass = new int[treeSelection.size()];
-    int i = 0;
-    for (Integer integer : treeSelection) {
-      toPass[i] = integer;
-      ++ i;
-    }
-    return toPass;
-  }
-
-  public void enableSelection(final boolean value) {
-    myTree.setEnabled(value);
+    setSelectionPaths(treeSelection.toArray(new TreePath[treeSelection.size()]));
+    if (treeSelection.size() == 1) scrollPathToVisible(treeSelection.get(0));
   }
 
   public void setAlwaysExpandList(boolean alwaysExpandList) {
     myAlwaysExpandList = alwaysExpandList;
   }
 
-  public void setPaintBusy(final boolean value) {
-    myTree.setPaintBusy(value);
-    myList.setPaintBusy(value);
+  @Override
+  public void calcData(DataKey key, DataSink sink) {
+    if (PlatformDataKeys.COPY_PROVIDER == key) {
+      sink.put(PlatformDataKeys.COPY_PROVIDER, myTreeCopyProvider);
+    }
   }
 
   @Override
-  public void calcData(DataKey key, DataSink sink) {
+  public boolean isFileColorsEnabled() {
+    return ProjectViewTree.isFileColorsEnabledFor(this);
   }
 
-  private class MyTree extends Tree implements TypeSafeDataProvider {
-
-    private final Project myProject;
-    private final int myCheckboxWidth;
-
-    public MyTree(Project project, int checkboxWidth) {
-      super(ChangesBrowserNode.create(ChangesTreeList.this.myProject, ChangesTreeList.ROOT));
-      myProject = project;
-      myCheckboxWidth = checkboxWidth;
+  @Override
+  public Color getFileColorFor(Object object) {
+    VirtualFile file;
+    if (object instanceof FilePath) {
+      file = ((FilePath)object).getVirtualFile();
+    }
+    else if (object instanceof Change) {
+      file = ((Change)object).getVirtualFile();
+    }
+    else {
+      file = ObjectUtils.tryCast(object, VirtualFile.class);
     }
 
-    @Override
-    public boolean isFileColorsEnabled() {
-      final boolean enabled = Registry.is("file.colors.in.commit.dialog")
-                        && FileColorManager.getInstance(myProject).isEnabled()
-                        && FileColorManager.getInstance(myProject).isEnabledForProjectView();
-      final boolean opaque = isOpaque();
-      if (enabled && opaque) {
-        setOpaque(false);
-      } else if (!enabled && !opaque) {
-        setOpaque(true);
-      }
-      return enabled;
+    if (file != null) {
+      return FileColorManager.getInstance(myProject).getFileColor(file);
     }
+    return super.getFileColorFor(object);
+  }
 
-    @Override
-    public Color getFileColorFor(Object object) {
-      VirtualFile file = null;
-      if (object instanceof FilePathImpl) {
-        file = LocalFileSystem.getInstance().findFileByPath(((FilePathImpl)object).getPath());
-      } else if (object instanceof Change) {
-        file = ((Change)object).getVirtualFile();
-      }
+  @Override
+  public Dimension getPreferredScrollableViewportSize() {
+    Dimension size = super.getPreferredScrollableViewportSize();
+    size = new Dimension(size.width + 10, size.height);
+    return size;
+  }
 
-      if (file != null) {
-        return FileColorManager.getInstance(myProject).getFileColor(file);
-      }
-      return super.getFileColorFor(object);
-    }
-
-    public Dimension getPreferredScrollableViewportSize() {
-      Dimension size = super.getPreferredScrollableViewportSize();
-      size = new Dimension(size.width + 10, size.height);
-      return size;
-    }
-
-    protected void processMouseEvent(MouseEvent e) {
-      if (e.getID() == MouseEvent.MOUSE_PRESSED) {
-        if (! myTree.isEnabled()) return;
-        int row = myTree.getRowForLocation(e.getX(), e.getY());
-        if (row >= 0) {
-          final Rectangle baseRect = myTree.getRowBounds(row);
-          baseRect.setSize(myCheckboxWidth, baseRect.height);
-          if (baseRect.contains(e.getPoint())) {
-            myTree.setSelectionRow(row);
-            toggleSelection();
-          }
+  @Override
+  protected void processMouseEvent(MouseEvent e) {
+    if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+      if (!isEnabled()) return;
+      int row = getRowForLocation(e.getX(), e.getY());
+      if (row >= 0) {
+        final Rectangle baseRect = getRowBounds(row);
+        baseRect.setSize(myCheckboxWidth, baseRect.height);
+        if (baseRect.contains(e.getPoint())) {
+          setSelectionRow(row);
+          toggleSelection();
         }
       }
-      super.processMouseEvent(e);
     }
+    super.processMouseEvent(e);
+  }
 
-    public int getToggleClickCount() {
-      return -1;
-    }
-
-    @Override
-    public void calcData(DataKey key, DataSink sink) {
-      // just delegate to the change list
-      ChangesTreeList.this.calcData(key, sink);
-    }
+  @Override
+  public int getToggleClickCount() {
+    return -1;
   }
 }

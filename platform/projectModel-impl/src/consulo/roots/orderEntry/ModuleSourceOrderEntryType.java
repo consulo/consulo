@@ -15,8 +15,8 @@
  */
 package consulo.roots.orderEntry;
 
-import com.intellij.openapi.roots.ModuleRootLayer;
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.ModuleSourceOrderEntryImpl;
 import com.intellij.openapi.util.InvalidDataException;
 import consulo.lombok.annotations.Lazy;

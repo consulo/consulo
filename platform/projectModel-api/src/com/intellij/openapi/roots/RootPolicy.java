@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * @author dsl

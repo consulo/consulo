@@ -46,7 +46,7 @@ import java.util.List;
  *
  * @author Vladimir Kondratyev
  */
-public class ComboBox extends ComboBoxWithWidePopup implements AWTEventListener {
+public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventListener {
   private int myMinimumAndPreferredWidth;
   private boolean mySwingPopup = true;
   private JBPopup myJBPopup;
@@ -189,13 +189,13 @@ public class ComboBox extends ComboBoxWithWidePopup implements AWTEventListener 
     return UIUtil.getComboBoxPopup(this);
   }
 
-  public ComboBox(final Object[] items, final int preferredWidth) {
+  public ComboBox(final E[] items, final int preferredWidth) {
     super(items);
     myMinimumAndPreferredWidth = preferredWidth;
     registerCancelOnEscape();
   }
 
-  public ComboBox(@NotNull Object[] items) {
+  public ComboBox(@NotNull E[] items) {
     this(items, -1);
   }
 

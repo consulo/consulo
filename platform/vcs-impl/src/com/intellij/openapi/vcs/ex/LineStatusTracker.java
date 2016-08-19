@@ -48,7 +48,7 @@ import com.intellij.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -776,7 +776,7 @@ public class LineStatusTracker {
 
   @RequiredWriteAction
   public void rollbackChanges(@NotNull Range range) {
-    rollbackChanges(Collections.singletonList(range));
+    rollbackChanges(Collections.<Range>singletonList(range));
   }
 
   @RequiredWriteAction

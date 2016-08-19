@@ -19,8 +19,8 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 
 import java.awt.*;
 

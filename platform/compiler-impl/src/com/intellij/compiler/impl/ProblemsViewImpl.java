@@ -31,11 +31,11 @@ import com.intellij.ui.content.MessageView;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.compiler.server.rmi.CompilerClientConnector;
+import consulo.compiler.server.rmi.CompilerClientConnector;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

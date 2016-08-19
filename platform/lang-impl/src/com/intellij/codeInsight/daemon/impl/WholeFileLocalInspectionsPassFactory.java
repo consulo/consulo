@@ -80,7 +80,7 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
         myFileTools.clear();
       }
     };
-    myProfileManager.addProfilesListener(myProfilesListener, myProject);
+    myProfileManager.addProfileChangeListener(myProfilesListener, myProject);
     Disposer.register(myProject, new Disposable() {
       @Override
       public void dispose() {

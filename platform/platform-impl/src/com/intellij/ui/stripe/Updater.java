@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.OwnScrollBarUI;
+import consulo.util.ui.OwnScrollBarUI;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;

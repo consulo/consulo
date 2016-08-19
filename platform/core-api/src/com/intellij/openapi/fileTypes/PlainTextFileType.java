@@ -29,7 +29,7 @@ public class PlainTextFileType extends LanguageFileType {
 
   @Override
   @NotNull
-  public String getName() {
+  public String getId() {
     return "PLAIN_TEXT";
   }
 

@@ -52,8 +52,8 @@ public class RefreshSessionImpl extends RefreshSession {
   private final Throwable myStartTrace;
   private final Semaphore mySemaphore = new Semaphore();
 
-  private List<VirtualFile> myWorkQueue = new ArrayList<VirtualFile>();
-  private List<VFileEvent> myEvents = new ArrayList<VFileEvent>();
+  private List<VirtualFile> myWorkQueue = new ArrayList<>();
+  private List<VFileEvent> myEvents = new ArrayList<>();
   private volatile boolean iHaveEventsToFire;
   private volatile RefreshWorker myWorker;
   private volatile boolean myCancelled;
@@ -117,7 +117,7 @@ public class RefreshSessionImpl extends RefreshSession {
 
   public void scan() {
     List<VirtualFile> workQueue = myWorkQueue;
-    myWorkQueue = new ArrayList<VirtualFile>();
+    myWorkQueue = new ArrayList<>();
     boolean haveEventsToFire = myFinishRunnable != null || !myEvents.isEmpty();
 
     if (!workQueue.isEmpty()) {
@@ -133,8 +133,7 @@ public class RefreshSessionImpl extends RefreshSession {
       }
 
       int count = 0;
-      refresh:
-      do {
+      refresh: do {
         if (LOG.isTraceEnabled()) LOG.trace("try=" + count);
 
         for (VirtualFile file : workQueue) {
@@ -154,7 +153,7 @@ public class RefreshSessionImpl extends RefreshSession {
         count++;
         if (LOG.isTraceEnabled()) LOG.trace("events=" + myEvents.size());
       }
-      while (myIsRecursive && count < 3 && isAnyDirty(workQueue));
+      while (myIsRecursive && count < 3 && workQueue.stream().anyMatch(f -> ((NewVirtualFile)f).isDirty()));
 
       if (t != 0) {
         t = System.currentTimeMillis() - t;
@@ -164,15 +163,6 @@ public class RefreshSessionImpl extends RefreshSession {
 
     myWorker = null;
     iHaveEventsToFire = haveEventsToFire;
-  }
-
-  private static boolean isAnyDirty(List<VirtualFile> list) {
-    for (VirtualFile virtualFile : list) {
-      if (((NewVirtualFile)virtualFile).isDirty()) {
-        return true;
-      }
-    }
-    return false;
   }
 
   void cancel() {
@@ -191,32 +181,15 @@ public class RefreshSessionImpl extends RefreshSession {
     }
 
     //noinspection unused
-    AccessToken dumb = null;
-    AccessToken write = null;
-    try {
-      dumb = myStartTrace == null ? null : DumbServiceImpl.forceDumbModeStartTrace(myStartTrace);
-
-      write = WriteAction.start();
-
+    try (AccessToken dumb  = myStartTrace == null ? null : DumbServiceImpl.forceDumbModeStartTrace(myStartTrace);
+         AccessToken write = WriteAction.start()) {
       if (myDumbModePermission != null) {
-        DumbService.allowStartingDumbModeInside(myDumbModePermission, new Runnable() {
-          @Override
-          public void run() {
-            RefreshSessionImpl.this.fireEventsInWriteAction();
-          }
-        });
-      }
-      else {
+        DumbService.allowStartingDumbModeInside(myDumbModePermission, this::fireEventsInWriteAction);
+      } else {
         fireEventsInWriteAction();
       }
     }
     finally {
-      if (dumb != null) {
-        dumb.finish();
-      }
-      if (write != null) {
-        write.finish();
-      }
       mySemaphore.up();
     }
   }
@@ -248,9 +221,9 @@ public class RefreshSessionImpl extends RefreshSession {
   }
 
   private List<VFileEvent> mergeEventsAndReset() {
-    Set<VFileEvent> mergedEvents = new LinkedHashSet<VFileEvent>(myEvents);
-    List<VFileEvent> events = new ArrayList<VFileEvent>(mergedEvents);
-    myEvents = new ArrayList<VFileEvent>();
+    Set<VFileEvent> mergedEvents = new LinkedHashSet<>(myEvents);
+    List<VFileEvent> events = new ArrayList<>(mergedEvents);
+    myEvents = new ArrayList<>();
     return events;
   }
 

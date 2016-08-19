@@ -95,6 +95,8 @@ public final class VcsConfiguration implements PersistentStateComponent<Element>
   public boolean USE_COMMIT_MESSAGE_MARGIN = false;
   public int COMMIT_MESSAGE_MARGIN_SIZE = 72;
   public boolean WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN = false;
+  public boolean SHOW_UNVERSIONED_FILES_WHILE_COMMIT = true;
+  public boolean LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN = false;
 
   public enum StandardOption {
     ADD(VcsBundle.message("vcs.command.name.add")),
@@ -136,6 +138,7 @@ public final class VcsConfiguration implements PersistentStateComponent<Element>
   private final ArrayList<String> myLastCommitMessages = new ArrayList<String>();
   public String LAST_COMMIT_MESSAGE = null;
   public boolean MAKE_NEW_CHANGELIST_ACTIVE = false;
+  public boolean PRESELECT_EXISTING_CHANGELIST = false;
 
   public boolean OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT = false;
   public boolean CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT = false;

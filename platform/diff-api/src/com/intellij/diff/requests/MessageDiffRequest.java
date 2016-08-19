@@ -17,7 +17,7 @@ package com.intellij.diff.requests;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public class MessageDiffRequest extends DiffRequest {
   @Nullable private String myTitle;

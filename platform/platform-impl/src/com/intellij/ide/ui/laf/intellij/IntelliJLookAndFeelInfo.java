@@ -16,7 +16,7 @@
 package com.intellij.ide.ui.laf.intellij;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.ui.laf.LafWithColorScheme;
+import consulo.ide.ui.laf.LafWithColorScheme;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

@@ -38,8 +38,8 @@ import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialog;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.impl.NewProjectOrModuleDialog;
 
 import java.util.List;
 

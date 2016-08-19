@@ -19,8 +19,10 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.UserDataHolder;
+import com.intellij.pom.Navigatable;
+import com.intellij.util.ObjectUtils;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 /**
  * Represents some data that probably can be compared with some other.
@@ -35,11 +37,17 @@ public interface DiffContent extends UserDataHolder {
    * Provides a way to open related content in editor
    */
   @Nullable
-  OpenFileDescriptor getOpenFileDescriptor();
+  Navigatable getNavigatable();
 
   /**
    * @see DiffRequest#onAssigned(boolean)
    */
   @RequiredDispatchThread
   void onAssigned(boolean isAssigned);
+
+  @Nullable
+  @Deprecated
+  default OpenFileDescriptor getOpenFileDescriptor() {
+    return ObjectUtils.tryCast(getNavigatable(), OpenFileDescriptor.class);
+  }
 }

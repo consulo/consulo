@@ -15,7 +15,7 @@
  */
 package com.intellij.diagnostic;
 
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.Main;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -50,7 +50,7 @@ public class DialogAppender extends AppenderSkeleton {
   protected synchronized void append(@NotNull final LoggingEvent event) {
     if (!event.level.isGreaterOrEqual(Level.ERROR) ||
         Main.isCommandLine() ||
-        !IdeaApplication.isLoaded()) {
+        !ApplicationStarter.isLoaded()) {
       return;
     }
 

@@ -40,8 +40,8 @@ import java.util.List;
 public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.VirtualFileManagerImpl");
 
-  private final KeyedExtensionCollector<IVirtualFileSystem, String> myCollector =
-          new KeyedExtensionCollector<IVirtualFileSystem, String>("com.intellij.virtualFileSystem") {
+  private final KeyedExtensionCollector<VirtualFileSystem, String> myCollector =
+          new KeyedExtensionCollector<VirtualFileSystem, String>("com.intellij.virtualFileSystem") {
             @NotNull
             @Override
             protected String keyToString(@NotNull String key) {
@@ -49,13 +49,13 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
             }
           };
 
-  private final List<IVirtualFileSystem> myPhysicalFileSystems = new ArrayList<IVirtualFileSystem>();
+  private final List<VirtualFileSystem> myPhysicalFileSystems = new ArrayList<VirtualFileSystem>();
   private final EventDispatcher<VirtualFileListener> myVirtualFileListenerMulticaster = EventDispatcher.create(VirtualFileListener.class);
   private final List<VirtualFileManagerListener> myVirtualFileManagerListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private int myRefreshCount = 0;
 
-  public VirtualFileManagerImpl(@NotNull IVirtualFileSystem[] fileSystems, @NotNull MessageBus bus) {
-    for (IVirtualFileSystem fileSystem : fileSystems) {
+  public VirtualFileManagerImpl(@NotNull VirtualFileSystem[] fileSystems, @NotNull MessageBus bus) {
+    for (VirtualFileSystem fileSystem : fileSystems) {
       registerFileSystem(fileSystem);
     }
 
@@ -66,7 +66,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
     bus.connect().subscribe(VFS_CHANGES, new BulkVirtualFileListenerAdapter(myVirtualFileListenerMulticaster.getMulticaster()));
   }
 
-  private void registerFileSystem(@NotNull IVirtualFileSystem fileSystem) {
+  private void registerFileSystem(@NotNull VirtualFileSystem fileSystem) {
     myCollector.addExplicitExtension(fileSystem.getProtocol(), fileSystem);
     if (!(fileSystem instanceof CachingVirtualFileSystem)) {
       fileSystem.addVirtualFileListener(myVirtualFileListenerMulticaster.getMulticaster());
@@ -75,10 +75,15 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   }
 
   @Override
+  public long getStructureModificationCount() {
+    return 0;
+  }
+
+  @Override
   @Nullable
-  public IVirtualFileSystem getFileSystem(@Nullable String protocol) {
+  public VirtualFileSystem getFileSystem(@Nullable String protocol) {
     if (protocol == null) return null;
-    List<IVirtualFileSystem> systems = myCollector.forKey(protocol);
+    List<VirtualFileSystem> systems = myCollector.forKey(protocol);
     if (systems.isEmpty()) return null;
     LOG.assertTrue(systems.size() == 1);
     return systems.get(0);
@@ -99,7 +104,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
       ApplicationManager.getApplication().assertIsDispatchThread();
     }
 
-    for (IVirtualFileSystem fileSystem : getPhysicalFileSystems()) {
+    for (VirtualFileSystem fileSystem : getPhysicalFileSystems()) {
       if (!(fileSystem instanceof CachingVirtualFileSystem)) {
         fileSystem.refresh(asynchronous);
       }
@@ -114,7 +119,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
       ApplicationManager.getApplication().assertIsDispatchThread();
     }
 
-    for (IVirtualFileSystem fileSystem : getPhysicalFileSystems()) {
+    for (VirtualFileSystem fileSystem : getPhysicalFileSystems()) {
       if (fileSystem instanceof CachingVirtualFileSystem) {
         ((CachingVirtualFileSystem)fileSystem).refreshWithoutFileWatcher(asynchronous);
       }
@@ -124,26 +129,26 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
     }
   }
 
-  private List<IVirtualFileSystem> getPhysicalFileSystems() {
+  private List<VirtualFileSystem> getPhysicalFileSystems() {
     return myPhysicalFileSystems;
   }
 
   @Override
   public VirtualFile findFileByUrl(@NotNull String url) {
-    IVirtualFileSystem fileSystem = getFileSystemForUrl(url);
+    VirtualFileSystem fileSystem = getFileSystemForUrl(url);
     if (fileSystem == null) return null;
     return fileSystem.findFileByPath(extractPath(url));
   }
 
   @Override
   public VirtualFile refreshAndFindFileByUrl(@NotNull String url) {
-    IVirtualFileSystem fileSystem = getFileSystemForUrl(url);
+    VirtualFileSystem fileSystem = getFileSystemForUrl(url);
     if (fileSystem == null) return null;
     return fileSystem.refreshAndFindFileByPath(extractPath(url));
   }
 
   @Nullable
-  private IVirtualFileSystem getFileSystemForUrl(String url) {
+  private VirtualFileSystem getFileSystemForUrl(String url) {
     String protocol = extractProtocol(url);
     if (protocol == null) return null;
     return getFileSystem(protocol);
@@ -195,8 +200,8 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
           application.runWriteAction(new Runnable() {
             @Override
             public void run() {
-              List<VFilePropertyChangeEvent> events =
-                      Collections.singletonList(new VFilePropertyChangeEvent(this, virtualFile, property, oldValue, newValue, false));
+              List<VFilePropertyChangeEvent> events = Collections
+                      .singletonList(new VFilePropertyChangeEvent(this, virtualFile, property, oldValue, newValue, false));
               BulkFileListener listener = application.getMessageBus().syncPublisher(VirtualFileManager.VFS_CHANGES);
               listener.before(events);
               listener.after(events);
@@ -242,7 +247,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   }
 
   @Override
-  public List<LocalFileProvider> getLocalFileProviders() {
+  public List<LocalFileProvider> getLocalFileProviders(){
     return ContainerUtil.findAll(myPhysicalFileSystems, LocalFileProvider.class);
   }
 

@@ -23,7 +23,7 @@
 package com.intellij.lang.injection;
 
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import org.jetbrains.annotations.NonNls;

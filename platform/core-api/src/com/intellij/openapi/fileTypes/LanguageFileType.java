@@ -52,16 +52,6 @@ public abstract class LanguageFileType implements FileType{
     return false;
   }
 
-  @Override
-  public boolean isReadOnly() {
-    return false;
-  }
-
-  @Override
-  public String getCharset(@NotNull VirtualFile file, final byte[] content) {
-    return null;
-  }
-
   public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, @NotNull CharSequence content) {
     return null;
   }

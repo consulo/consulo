@@ -22,7 +22,6 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.lang.*;
 import com.intellij.lexer.EmptyLexer;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PlainTextTokenTypes;
 import com.intellij.psi.PsiElement;
@@ -31,8 +30,8 @@ import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class PlainTextParserDefinition implements ParserDefinition {
   private static final IFileElementType PLAIN_FILE_ELEMENT_TYPE = new IFileElementType(PlainTextLanguage.INSTANCE) {
@@ -45,13 +44,13 @@ public class PlainTextParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion) {
+  public Lexer createLexer(@NotNull LanguageVersion languageVersion) {
     return new EmptyLexer();
   }
 
   @Override
   @NotNull
-  public PsiParser createParser(@Nullable Project project, @NotNull LanguageVersion languageVersion) {
+  public PsiParser createParser(@NotNull LanguageVersion languageVersion) {
     throw new UnsupportedOperationException("Not supported");
   }
 

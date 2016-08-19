@@ -19,7 +19,7 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.compiler.CompilerConfiguration;
+import consulo.compiler.CompilerConfiguration;
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;

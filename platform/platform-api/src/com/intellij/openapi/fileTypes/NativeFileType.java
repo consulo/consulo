@@ -34,35 +34,32 @@ public class NativeFileType implements INativeFileType {
 
   private NativeFileType() { }
 
+  @Override
   @NotNull
-  public String getName() {
+  public String getId() {
     return "Native";
   }
 
+  @Override
   @NotNull
   public String getDescription() {
     return "Files opened in associated applications";
   }
 
+  @Override
   @NotNull
   public String getDefaultExtension() {
     return "";
   }
 
+  @Override
   public Icon getIcon() {
     return AllIcons.FileTypes.Custom;
   }
 
+  @Override
   public boolean isBinary() {
     return true;
-  }
-
-  public boolean isReadOnly() {
-    return false;
-  }
-
-  public String getCharset(@NotNull VirtualFile file, byte[] content) {
-    return null;
   }
 
   @Override

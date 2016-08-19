@@ -36,17 +36,16 @@ import com.intellij.ui.FieldPanel;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.InsertPathAction;
 import com.intellij.util.ui.UIUtil;
-import lombok.val;
-import org.consulo.compiler.ModuleCompilerPathsManager;
+import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
+import consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.roots.impl.TestResourceContentFolderTypeProvider;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderScopes;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,7 +75,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
   @NotNull
   @Override
   public JComponent createComponentImpl() {
-    val moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
     myInheritCompilerOutput = new JRadioButton(ProjectBundle.message("project.inherit.compile.output.path"));
     myPerModuleCompilerOutput = new JRadioButton(ProjectBundle.message("project.module.compile.output.path"));
     ButtonGroup group = new ButtonGroup();
@@ -199,7 +198,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
   }
 
   private void updateOutputPathPresentation() {
-    val moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
     if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
       final String baseUrl = ProjectStructureConfigurable.getInstance(myProject).getProjectConfigurable().getCompilerOutputUrl();
       moduleCompileOutputChanged(baseUrl, getModule().getName());
@@ -237,7 +236,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     UIUtil.setEnabled(myTestResourceOutputLabel, enabled, true);
     UIUtil.setEnabled(myTestResourcesOutputPathPanel, enabled, true);
     myCbExcludeOutput.setEnabled(enabled);
-    val moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
     moduleCompilerPathsManager.setInheritedCompilerOutput(!enabled);
     updateOutputPathPresentation();
   }
@@ -249,7 +248,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     InsertPathAction.addTo(textField, outputPathsChooserDescriptor);
     FileChooserFactory.getInstance().installFileCompletion(textField, outputPathsChooserDescriptor, true, null);
 
-    val commitableFieldPanel =
+    CommitableFieldPanel commitableFieldPanel =
             new CommitableFieldPanel(textField, null, null, new BrowseFilesListener(textField, title, "", outputPathsChooserDescriptor), null);
     commitableFieldPanel.myCommitRunnable = new Runnable() {
       @Override
@@ -320,14 +319,14 @@ public class BuildElementsEditor extends ModuleElementsEditor {
 
   @Override
   public void moduleStateChanged() {
-    val moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
     //if content enties tree was changed
     myCbExcludeOutput.setSelected(moduleCompilerPathsManager.isExcludeOutput());
   }
 
   @Override
   public void moduleCompileOutputChanged(final String baseUrl, final String moduleName) {
-    val moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
     if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
       if (baseUrl != null) {
         myOutputPathPanel.setText(FileUtil.toSystemDependentName(

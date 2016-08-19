@@ -31,7 +31,7 @@ import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.copyright.config.CopyrightFileConfigManager;
+import consulo.copyright.config.CopyrightFileConfigManager;
 
 import javax.swing.*;
 import java.util.ArrayList;

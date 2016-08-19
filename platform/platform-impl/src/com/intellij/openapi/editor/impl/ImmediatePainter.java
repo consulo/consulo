@@ -227,7 +227,7 @@ public class ImmediatePainter {
   private void paintImmediately(Graphics g, int offset, char c, boolean insert) {
     if (g == null) return; // editor component is currently not displayable
 
-    TextAttributes attributes = ((LexerEditorHighlighter)getHighlighter()).getAttributes((DocumentImpl)getDocument(), offset, c);
+    TextAttributes attributes = ((LexerEditorHighlighter)getHighlighter()).getAttributesForTypedChar(getDocument(), offset, c);
 
     int fontType = attributes.getFontType();
     FontInfo fontInfo = EditorUtil.fontForChar(c, attributes.getFontType(), myEditor);

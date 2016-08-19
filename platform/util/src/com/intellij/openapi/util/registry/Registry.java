@@ -20,7 +20,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 import java.awt.*;
 import java.lang.ref.Reference;

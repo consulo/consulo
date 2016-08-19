@@ -34,11 +34,11 @@ import com.intellij.packageDependencies.DependencyUISettings;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
-import org.consulo.psi.PsiPackageSupportProviders;
+import consulo.psi.PsiPackageSupportProviders;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.Set;

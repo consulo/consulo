@@ -36,7 +36,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;

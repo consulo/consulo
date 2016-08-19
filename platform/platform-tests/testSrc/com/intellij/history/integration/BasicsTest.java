@@ -24,7 +24,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
+import consulo.vfs.util.ArchiveVfsUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -162,7 +162,7 @@ public class BasicsTest extends IntegrationTestCase {
     f.setLastModified(f.lastModified() + 10000);
 
     LocalFileSystem.getInstance().refreshWithoutFileWatcher(false);
-    StandardFileSystems.jar().refreshWithoutFileWatcher(false);
+    StandardFileSystems.jar().refresh(false);
     jarRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(vfile);
     assertEquals(2, jarRoot.findChild("file.txt").contentsToByteArray()[0]);
 

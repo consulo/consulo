@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@
 
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.CommitSession;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import com.intellij.util.Alarm;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -30,10 +31,12 @@ import java.awt.*;
 import java.util.List;
 
 public class SessionDialog extends DialogWrapper {
+
+  @NonNls public static final String VCS_CONFIGURATION_UI_TITLE = "Vcs.SessionDialog.title";
+
   private final CommitSession mySession;
   private final List<Change> myChanges;
 
-  private final Alarm myOKButtonUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
   private final String myCommitMessage;
 
   private final JPanel myCenterPanel = new JPanel(new BorderLayout());
@@ -48,9 +51,12 @@ public class SessionDialog extends DialogWrapper {
     myCommitMessage = commitMessage;
     myConfigurationComponent =
             configurationComponent == null ? createConfigurationUI(mySession, myChanges, myCommitMessage) : configurationComponent;
-    setTitle(CommitChangeListDialog.trimEllipsis(title));
+    String configurationComponentName =
+            myConfigurationComponent != null ? (String)myConfigurationComponent.getClientProperty(VCS_CONFIGURATION_UI_TITLE) : null;
+    setTitle(StringUtil.isEmptyOrSpaces(configurationComponentName)
+             ? CommitChangeListDialog.trimEllipsis(title) : configurationComponentName);
     init();
-    updateButtons();
+    initValidation();
   }
 
   public SessionDialog(String title, Project project,
@@ -59,6 +65,7 @@ public class SessionDialog extends DialogWrapper {
     this(title, project, session, changes, commitMessage, null);
   }
 
+  @Nullable
   public static JComponent createConfigurationUI(final CommitSession session, final List<Change> changes, final String commitMessage) {
     try {
       return session.getAdditionalConfigurationUI(changes, commitMessage);
@@ -68,7 +75,6 @@ public class SessionDialog extends DialogWrapper {
     }
   }
 
-  @Override
   @Nullable
   protected JComponent createCenterPanel() {
     myCenterPanel.add(myConfigurationComponent, BorderLayout.CENTER);
@@ -80,21 +86,15 @@ public class SessionDialog extends DialogWrapper {
     return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myConfigurationComponent);
   }
 
-  private void updateButtons() {
-    setOKActionEnabled(mySession.canExecute(myChanges, myCommitMessage));
-    myOKButtonUpdateAlarm.cancelAllRequests();
-    myOKButtonUpdateAlarm.addRequest(new Runnable() {
-      @Override
-      public void run() {
-        updateButtons();
-      }
-    }, 300, ModalityState.stateForComponent(myCenterPanel));
+  @Nullable
+  @Override
+  protected ValidationInfo doValidate() {
+    updateButtons();
+    return mySession.validateFields();
   }
 
-  @Override
-  protected void dispose() {
-    super.dispose();
-    myOKButtonUpdateAlarm.cancelAllRequests();
+  private void updateButtons() {
+    setOKActionEnabled(mySession.canExecute(myChanges, myCommitMessage));
   }
 
   @Override

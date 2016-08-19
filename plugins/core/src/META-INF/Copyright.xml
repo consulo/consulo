@@ -25,7 +25,7 @@
     <extensionPoint name="copyright.updater" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider"/>
     </extensionPoint>
-    <extensionPoint name="predefinedCopyright" beanClass="com.maddyhome.idea.copyright.PredefinedCopyrightTextEP"/>
+    <extensionPoint name="predefinedCopyright" beanClass="consulo.copyright.PredefinedCopyrightTextEP"/>
   </extensionPoints>
 
   <actions>

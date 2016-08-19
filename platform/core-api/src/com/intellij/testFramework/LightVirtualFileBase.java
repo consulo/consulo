@@ -64,33 +64,33 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     }
 
     @Override
-    protected void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException {
+    public void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException {
 
     }
 
     @Override
-    protected void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException {
+    public void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException {
 
     }
 
     @Override
-    protected void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException {
+    public void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException {
 
     }
 
     @Override
-    protected VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException {
+    public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException {
       return null;
     }
 
     @NotNull
     @Override
-    protected VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException {
+    public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException {
       return null;
     }
 
     @Override
-    protected VirtualFile copyFile(Object requestor, @NotNull VirtualFile virtualFile, @NotNull VirtualFile newParent, @NotNull String copyName)
+    public VirtualFile copyFile(Object requestor, @NotNull VirtualFile virtualFile, @NotNull VirtualFile newParent, @NotNull String copyName)
             throws IOException {
       return null;
     }

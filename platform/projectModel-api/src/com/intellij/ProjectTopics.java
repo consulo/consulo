@@ -20,7 +20,7 @@
 package com.intellij;
 
 import com.intellij.openapi.project.ModuleListener;
-import com.intellij.openapi.roots.ModuleRootLayerListener;
+import consulo.roots.ModuleRootLayerListener;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.util.messages.Topic;
 

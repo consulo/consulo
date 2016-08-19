@@ -16,14 +16,13 @@
 package com.intellij.lang;
 
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Defines the implementation of a parser for a custom language.
@@ -35,20 +34,19 @@ public interface ParserDefinition {
    * Returns the lexer for lexing files in the specified project. This lexer does not need to support incremental relexing - it is always
    * called for the entire file.
    *
-   * @param project
-   * @param languageVersion
+   * @param languageVersion version of language
    * @return the lexer instance.
    */
   @NotNull
-  Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion);
+  Lexer createLexer(@NotNull LanguageVersion languageVersion);
 
   /**
    * Returns the parser for parsing files in the specified project.
-   * @param project
-   * @param languageVersion @return the parser instance.
+   * @param languageVersion version of language
+   * @return the parser instance.
    */
   @NotNull
-  PsiParser createParser(@Nullable Project project, @NotNull LanguageVersion languageVersion);
+  PsiParser createParser(@NotNull LanguageVersion languageVersion);
 
   /**
    * Returns the element type of the node describing a file in the specified language.
@@ -67,7 +65,7 @@ public interface ParserDefinition {
    * which is suitable for all the languages unless you really need to use special whitespace token</strong>
    *
    * @return the set of whitespace token types.
-   * @param languageVersion
+   * @param languageVersion version of language
    */
   @NotNull
   TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion);
@@ -78,7 +76,7 @@ public interface ParserDefinition {
    * are searched in the text of tokens of those types.
    *
    * @return the set of comment token types.
-   * @param languageVersion
+   * @param languageVersion version of language
    */
   @NotNull
   TokenSet getCommentTokens(@NotNull LanguageVersion languageVersion);
@@ -88,7 +86,7 @@ public interface ParserDefinition {
    * option in refactorings is applied to the contents of such tokens.
    *
    * @return the set of string literal element types.
-   * @param languageVersion
+   * @param languageVersion version of language
    */
   @NotNull
   TokenSet getStringLiteralElements(@NotNull LanguageVersion languageVersion);
@@ -102,7 +100,7 @@ public interface ParserDefinition {
    * @return the PSI element matching the element type of the AST node.
    */
   @NotNull
-  PsiElement createElement(ASTNode node);
+  PsiElement createElement(@NotNull ASTNode node);
 
   /**
    * Creates a PSI element for the specified virtual file.
@@ -110,7 +108,7 @@ public interface ParserDefinition {
    * @param viewProvider virtual file.
    * @return the PSI file element.
    */
-  PsiFile createFile(FileViewProvider viewProvider);
+  PsiFile createFile(@NotNull FileViewProvider viewProvider);
 
   /**
    * Checks if the specified two token types need to be separated by a space according to the language grammar.

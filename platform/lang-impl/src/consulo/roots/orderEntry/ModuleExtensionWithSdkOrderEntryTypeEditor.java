@@ -20,18 +20,18 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.impl.ModuleExtensionWithSdkOrderEntryImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureDialog;
+import consulo.roots.ui.configuration.ProjectStructureDialog;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.sdk.SdkUtil;
+import consulo.bundle.SdkUtil;
 
 /**
  * @author VISTALL
  * @since 06-Jun-16
  */
-public class ModuleExtensionWithSdkOrderEntryTypeEditor extends OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
+public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
   @Override
   public void navigate(@NotNull final ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     final Sdk sdk = orderEntry.getSdk();

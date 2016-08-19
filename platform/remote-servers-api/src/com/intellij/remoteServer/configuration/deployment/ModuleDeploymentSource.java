@@ -17,7 +17,7 @@ package com.intellij.remoteServer.configuration.deployment;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.util.pointers.NamedPointer;
+import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

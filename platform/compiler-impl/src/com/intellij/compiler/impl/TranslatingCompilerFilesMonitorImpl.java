@@ -17,8 +17,6 @@ package com.intellij.compiler.impl;
 
 import com.intellij.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;
-import com.intellij.compiler.make.DependencyCache;
-import com.intellij.compiler.server.BuildManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -46,7 +44,6 @@ import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
-import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
@@ -54,16 +51,19 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
+import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
+import consulo.compiler.make.DependencyCache;
+import consulo.compiler.server.BuildManager;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionChangeListener;
+import consulo.roots.ContentFolderScopes;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.TestContentFolderTypeProvider;
 import gnu.trove.*;
-import lombok.val;
-import org.consulo.compiler.ModuleCompilerPathsManager;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderScopes;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.io.*;
 import java.util.*;
@@ -72,18 +72,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author Eugene Zhuravlev
  * @since Jun 3, 2008
- *        <p/>
- *        A source file is scheduled for recompilation if
- *        1. its timestamp has changed
- *        2. one of its corresponding output files was deleted
- *        3. output root of containing module has changed
- *        <p/>
- *        An output file is scheduled for deletion if:
- *        1. corresponding source file has been scheduled for recompilation (see above)
- *        2. corresponding source file has been deleted
+ * <p>
+ * A source file is scheduled for recompilation if
+ * 1. its timestamp has changed
+ * 2. one of its corresponding output files was deleted
+ * 3. output root of containing module has changed
+ * <p>
+ * An output file is scheduled for deletion if:
+ * 1. corresponding source file has been scheduled for recompilation (see above)
+ * 2. corresponding source file has been deleted
  */
 public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements ApplicationComponent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.TranslatingCompilerFilesMonitor");
+  private static final Logger LOG = Logger.getInstance("#consulo.compiler.impl.TranslatingCompilerFilesMonitor");
   private static final boolean ourDebugMode = false;
 
   private static final FileAttribute ourSourceFileAttribute = new FileAttribute("_make_source_file_info_", 3);
@@ -95,9 +95,9 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private final TIntHashSet mySuspendedProjects = new TIntHashSet(); // projectId for all projects that should not be monitored
 
   private final TIntObjectHashMap<TIntHashSet> mySourcesToRecompile = new TIntObjectHashMap<TIntHashSet>();
-    // ProjectId->set of source file paths
+  // ProjectId->set of source file paths
   private PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myOutputRootsStorage;
-    // ProjectId->map[moduleId->Pair(outputDirId, testOutputDirId)]
+  // ProjectId->map[moduleId->Pair(outputDirId, testOutputDirId)]
 
   // Map: projectId -> Map{output path -> [sourceUrl; className]}
   private final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<Integer, Outputs>(3, 3) {
@@ -158,31 +158,31 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   };
   private final SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myProjectOutputRoots =
-    new SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(2, 2) {
-      @Override
-      protected void onDropFromCache(Integer key, TIntObjectHashMap<Pair<Integer, Integer>> value) {
-        try {
-          myOutputRootsStorage.put(key, value);
-        }
-        catch (IOException e) {
-          LOG.info(e);
-        }
-      }
+          new SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(2, 2) {
+            @Override
+            protected void onDropFromCache(Integer key, TIntObjectHashMap<Pair<Integer, Integer>> value) {
+              try {
+                myOutputRootsStorage.put(key, value);
+              }
+              catch (IOException e) {
+                LOG.info(e);
+              }
+            }
 
-      @Override
-      @NotNull
-      public TIntObjectHashMap<Pair<Integer, Integer>> createValue(Integer key) {
-        TIntObjectHashMap<Pair<Integer, Integer>> map = null;
-        try {
-          ensureOutputStorageInitialized();
-          map = myOutputRootsStorage.get(key);
-        }
-        catch (IOException e) {
-          LOG.info(e);
-        }
-        return map != null ? map : new TIntObjectHashMap<Pair<Integer, Integer>>();
-      }
-    };
+            @Override
+            @NotNull
+            public TIntObjectHashMap<Pair<Integer, Integer>> createValue(Integer key) {
+              TIntObjectHashMap<Pair<Integer, Integer>> map = null;
+              try {
+                ensureOutputStorageInitialized();
+                map = myOutputRootsStorage.get(key);
+              }
+              catch (IOException e) {
+                LOG.info(e);
+              }
+              return map != null ? map : new TIntObjectHashMap<Pair<Integer, Integer>>();
+            }
+          };
   private final ProjectManager myProjectManager;
   private final TIntIntHashMap myInitInProgress = new TIntIntHashMap(); // projectId for successfully initialized projects
   private final Object myAsyncScanLock = new Object();
@@ -459,8 +459,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
                 if (outputFile != null) {
                   if (!sourceFile.equals(outputFile)) {
-                    final String className =
-                      outputRoot == null ? null : dependencyCache.relativePathToQName(outputPath.substring(outputRoot.length()), '/');
+                    final String className = outputRoot == null ? null : dependencyCache.relativePathToQName(outputPath.substring(outputRoot.length()), '/');
                     if (isSourceValid) {
                       srcInfo.addOutputPath(projectId, outputPath);
                       saveOutputInfo(outputFile, new OutputFileInfo(sourceFile.getPath(), className));
@@ -624,40 +623,38 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   private void initOutputRootsFile(File rootsFile) throws IOException {
-    myOutputRootsStorage =
-      new PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(rootsFile, EnumeratorIntegerDescriptor.INSTANCE,
-                                                                                new DataExternalizer<TIntObjectHashMap<Pair<Integer, Integer>>>() {
-                                                                                  @Override
-                                                                                  public void save(DataOutput out,
-                                                                                                   TIntObjectHashMap<Pair<Integer, Integer>> value)
-                                                                                    throws IOException {
-                                                                                    for (
-                                                                                      final TIntObjectIterator<Pair<Integer, Integer>> it =
-                                                                                        value.iterator(); it.hasNext(); ) {
-                                                                                      it.advance();
-                                                                                      DataInputOutputUtil.writeINT(out, it.key());
-                                                                                      final Pair<Integer, Integer> pair = it.value();
-                                                                                      DataInputOutputUtil.writeINT(out, pair.first);
-                                                                                      DataInputOutputUtil.writeINT(out, pair.second);
-                                                                                    }
-                                                                                  }
+    myOutputRootsStorage = new PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(rootsFile, EnumeratorIntegerDescriptor.INSTANCE,
+                                                                                                     new DataExternalizer<TIntObjectHashMap<Pair<Integer, Integer>>>() {
+                                                                                                       @Override
+                                                                                                       public void save(DataOutput out,
+                                                                                                                        TIntObjectHashMap<Pair<Integer, Integer>> value)
+                                                                                                               throws IOException {
+                                                                                                         for (final TIntObjectIterator<Pair<Integer, Integer>>
+                                                                                                                      it = value.iterator(); it.hasNext(); ) {
+                                                                                                           it.advance();
+                                                                                                           DataInputOutputUtil.writeINT(out, it.key());
+                                                                                                           final Pair<Integer, Integer> pair = it.value();
+                                                                                                           DataInputOutputUtil.writeINT(out, pair.first);
+                                                                                                           DataInputOutputUtil.writeINT(out, pair.second);
+                                                                                                         }
+                                                                                                       }
 
-                                                                                  @Override
-                                                                                  public TIntObjectHashMap<Pair<Integer, Integer>> read(
-                                                                                    DataInput in) throws IOException {
-                                                                                    final DataInputStream _in = (DataInputStream)in;
-                                                                                    final TIntObjectHashMap<Pair<Integer, Integer>> map =
-                                                                                      new TIntObjectHashMap<Pair<Integer, Integer>>();
-                                                                                    while (_in.available() > 0) {
-                                                                                      final int key = DataInputOutputUtil.readINT(_in);
-                                                                                      final int first = DataInputOutputUtil.readINT(_in);
-                                                                                      final int second = DataInputOutputUtil.readINT(_in);
-                                                                                      map.put(key,
-                                                                                              new Pair<Integer, Integer>(first, second));
-                                                                                    }
-                                                                                    return map;
-                                                                                  }
-                                                                                });
+                                                                                                       @Override
+                                                                                                       public TIntObjectHashMap<Pair<Integer, Integer>> read(
+                                                                                                               DataInput in) throws IOException {
+                                                                                                         final DataInputStream _in = (DataInputStream)in;
+                                                                                                         final TIntObjectHashMap<Pair<Integer, Integer>> map =
+                                                                                                                 new TIntObjectHashMap<Pair<Integer, Integer>>();
+                                                                                                         while (_in.available() > 0) {
+                                                                                                           final int key = DataInputOutputUtil.readINT(_in);
+                                                                                                           final int first = DataInputOutputUtil.readINT(_in);
+                                                                                                           final int second = DataInputOutputUtil.readINT(_in);
+                                                                                                           map.put(key,
+                                                                                                                   new Pair<Integer, Integer>(first, second));
+                                                                                                         }
+                                                                                                         return map;
+                                                                                                       }
+                                                                                                     });
   }
 
   @Override
@@ -1105,11 +1102,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     });
   }
 
-   @Override
-  public void scanSourceContent(final ProjectRef projRef,
-                                final Collection<VirtualFile> roots,
-                                final int totalRootCount,
-                                final boolean isNewRoots) {
+  @Override
+  public void scanSourceContent(final ProjectRef projRef, final Collection<VirtualFile> roots, final int totalRootCount, final boolean isNewRoots) {
     if (roots.isEmpty()) {
       return;
     }
@@ -1263,8 +1257,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
               LOG.debug("Initial sources scan for project hash=" + projectId + "; url=" + projRef.get().getPresentableUrl());
             }
             try {
-              final IntermediateOutputCompiler[] compilers =
-                CompilerManager.getInstance(projRef.get()).getCompilers(IntermediateOutputCompiler.class);
+              final IntermediateOutputCompiler[] compilers = CompilerManager.getInstance(projRef.get()).getCompilers(IntermediateOutputCompiler.class);
 
               final Set<VirtualFile> intermediateRoots = new HashSet<VirtualFile>();
               if (compilers.length > 0) {
@@ -1274,13 +1267,13 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                     if (module.isDisposed() || module.getModuleDirUrl() == null) {
                       continue;
                     }
-                    final VirtualFile outputRoot = LocalFileSystem.getInstance()
-                      .refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
+                    final VirtualFile outputRoot =
+                            LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
                     if (outputRoot != null) {
                       intermediateRoots.add(outputRoot);
                     }
                     final VirtualFile testsOutputRoot =
-                      LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
+                            LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
                     if (testsOutputRoot != null) {
                       intermediateRoots.add(testsOutputRoot);
                     }
@@ -1368,9 +1361,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       conn.subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
         @Override
         public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
-          for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME
-                  .getExtensions()) {
-            if(helper.isModuleExtensionAffectToCompilation(newExtension)) {
+          for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensions()) {
+            if (helper.isModuleExtensionAffectToCompilation(newExtension)) {
               myForceCompiling = true;
               break;
             }
@@ -1843,11 +1835,11 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private VirtualFile[] getRootsForScan(Project project) {
     List<VirtualFile> list = new ArrayList<VirtualFile>();
     Module[] modules = ModuleManager.getInstance(project).getModules();
-    val extensions = TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensions();
+    TranslatingCompilerFilesMonitorHelper[] extensions = TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensions();
     for (Module module : modules) {
       for (TranslatingCompilerFilesMonitorHelper extension : extensions) {
         VirtualFile[] rootsForModule = extension.getRootsForModule(module);
-        if(rootsForModule != null) {
+        if (rootsForModule != null) {
           Collections.addAll(list, rootsForModule);
         }
       }

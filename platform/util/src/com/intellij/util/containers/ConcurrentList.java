@@ -18,8 +18,9 @@ package com.intellij.util.containers;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 
-public interface ConcurrentList<E> extends ListWithForEach<E> {
+public interface ConcurrentList<E> extends List<E> {
   /**
    * Append the element if not present.
    *

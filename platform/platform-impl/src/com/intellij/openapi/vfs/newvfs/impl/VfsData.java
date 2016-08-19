@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.ArrayUtil;
@@ -73,6 +74,7 @@ import static com.intellij.util.ObjectUtils.assertNotNull;
  * @author peter
  */
 public class VfsData {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.newvfs.impl.VfsData");
   private static final int SEGMENT_BITS = 9;
   private static final int SEGMENT_SIZE = 1 << SEGMENT_BITS;
   private static final int OFFSET_MASK = SEGMENT_SIZE - 1;
@@ -86,7 +88,7 @@ public class VfsData {
   static {
     ApplicationManager.getApplication().addApplicationListener(new ApplicationAdapter() {
       @Override
-      public void writeActionFinished(Object action) {
+      public void writeActionFinished(@NotNull Object action) {
         // after top-level write action is finished, all the deletion listeners should have processed the deleted files
         // and their data is considered safe to remove. From this point on accessing a removed file will result in an exception.
         if (!ApplicationManager.getApplication().isWriteAccessAllowed()) {
@@ -121,7 +123,10 @@ public class VfsData {
       throw reportDeadFileAccess(new VirtualFileImpl(id, segment, parent));
     }
     final int nameId = segment.getNameId(id);
-    assert nameId > 0 : "nameId=" + nameId + "; data=" + o + "; parent=" + parent;
+    if (nameId <= 0) {
+      FSRecords.invalidateCaches();
+      throw new AssertionError("nameId=" + nameId + "; data=" + o + "; parent=" + parent + "; parent.id=" + parent.getId() + "; db.parent=" + FSRecords.getParent(id));
+    }
 
     return o instanceof DirectoryData ? new VirtualDirectoryImpl(id, segment, (DirectoryData)o, parent, parent.getFileSystem())
                                       : new VirtualFileImpl(id, segment, parent);
@@ -143,7 +148,13 @@ public class VfsData {
     return ourSegments.cacheOrGet(key, new Segment());
   }
 
-  public static void initFile(int id, Segment segment, int nameId, @NotNull Object data) {
+  public static class FileAlreadyCreatedException extends Exception {
+    private FileAlreadyCreatedException(String message) {
+      super(message);
+    }
+  }
+
+  public static void initFile(int id, Segment segment, int nameId, @NotNull Object data) throws FileAlreadyCreatedException {
     assert id > 0;
     int offset = getOffset(id);
 
@@ -151,7 +162,14 @@ public class VfsData {
 
     Object existingData = segment.myObjectArray.get(offset);
     if (existingData != null) {
-      throw new AssertionError("File already created: " + existingData + "; parentId=" + FSRecords.getParent(id));
+      FSRecords.invalidateCaches();
+      int parent = FSRecords.getParent(id);
+      String msg = "File already created: " + nameId + ", data=" + existingData + "; parentId=" + parent;
+      if (parent > 0) {
+        msg += "; parent.name=" + FSRecords.getName(parent);
+        msg += "; parent.children=" + Arrays.toString(FSRecords.listAll(id));
+      }
+      throw new FileAlreadyCreatedException(msg);
     }
     segment.myObjectArray.set(offset, data);
   }
@@ -217,6 +235,9 @@ public class VfsData {
     }
 
     void setFlag(int id, int mask, boolean value) {
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Set flag " + Integer.toHexString(mask) + "=" + value + " for id=" + id);
+      }
       assert (mask & ~ALL_FLAGS_MASK) == 0 : "Unexpected flag";
       int offset = getOffset(id) * 2 + 1;
       while (true) {

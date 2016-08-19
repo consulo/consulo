@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private final ExecutorService myQueue = new BoundedTaskExecutor(PooledThreadExecutor.INSTANCE, 1, this);
   private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
   private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<RefreshSession>();
-  private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.ERROR);
+  private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
 
   public void execute(@NotNull RefreshSessionImpl session) {
     if (session.isAsynchronous()) {
@@ -66,35 +66,17 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  private void queueSession(@NotNull final RefreshSessionImpl session, @NotNull final ModalityState modality, @Nullable final TransactionId transaction) {
-    myQueue.submit(new Runnable() {
-      @Override
-      public void run() {
-        myRefreshIndicator.start();
-        AccessToken ignored = null;
-        try {
-          ignored = HeavyProcessLatch.INSTANCE.processStarted("Doing file refresh. " + session);
-          doScan(session);
-        }
-        finally {
-          if (ignored != null) {
-            ignored.finish();
-          }
-          myRefreshIndicator.stop();
-          final Application app = ApplicationManager.getApplication();
-          // invokeLater might be not necessary once transactions are enforced
-          app.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              TransactionGuard.getInstance().submitTransaction(app, transaction, new Runnable() {
-                @Override
-                public void run() {
-                  session.fireEvents();
-                }
-              });
-            }
-          }, modality);
-        }
+  private void queueSession(@NotNull final RefreshSessionImpl session, @NotNull final ModalityState modality, @Nullable TransactionId transaction) {
+    myQueue.submit(() -> {
+      myRefreshIndicator.start();
+      try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Doing file refresh. " + session)) {
+        doScan(session);
+      }
+      finally {
+        myRefreshIndicator.stop();
+        Application app = ApplicationManager.getApplication();
+        // invokeLater might be not necessary once transactions are enforced
+        app.invokeLater(() -> TransactionGuard.getInstance().submitTransaction(app, transaction, session::fireEvents), modality);
       }
     });
     myEventCounter.eventHappened(session);

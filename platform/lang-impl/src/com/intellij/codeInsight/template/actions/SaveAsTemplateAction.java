@@ -27,7 +27,7 @@ package com.intellij.codeInsight.template.actions;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.codeInsight.template.impl.*;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguagePointerUtil;
+import consulo.lang.LanguagePointerUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.WriteAction;
@@ -44,7 +44,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.HashMap;
-import org.consulo.util.pointers.NamedPointer;
+import consulo.util.pointers.NamedPointer;
 
 import java.util.Map;
 import java.util.Set;

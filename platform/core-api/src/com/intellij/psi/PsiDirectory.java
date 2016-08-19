@@ -20,8 +20,8 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 
 /**
  * Represents a file system directory and allows to access its contents.

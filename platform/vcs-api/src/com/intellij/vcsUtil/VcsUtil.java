@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import com.intellij.openapi.vcs.roots.VcsRootDetector;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.util.ConcurrencyUtil;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtilRt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +51,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.stream.Stream;
 
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
 public class VcsUtil {
@@ -232,7 +232,7 @@ public class VcsUtil {
   }
 
   private static List<VirtualFile> collectFilesToRefresh(final File[] roots) {
-    final ArrayList<VirtualFile> result = new ArrayList<VirtualFile>();
+    final ArrayList<VirtualFile> result = new ArrayList<>();
     for (File root : roots) {
       VirtualFile vFile = findFileFor(root);
       if (vFile != null) {
@@ -319,24 +319,34 @@ public class VcsUtil {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file);
   }
 
-  public static FilePath getFilePath(File file) {
+  public static FilePath getFilePath(@NotNull File file) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file);
   }
 
-  public static FilePath getFilePath(String path, boolean isDirectory) {
-    return getFilePath(new File(path), isDirectory);
+  public static FilePath getFilePath(@NotNull String path, boolean isDirectory) {
+    return VcsContextFactory.SERVICE.getInstance().createFilePath(path, isDirectory);
   }
 
   public static FilePath getFilePathOnNonLocal(String path, boolean isDirectory) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOnNonLocal(path, isDirectory);
   }
 
-  public static FilePath getFilePath(File file, boolean isDirectory) {
+  public static FilePath getFilePath(@NotNull File file, boolean isDirectory) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file, isDirectory);
   }
 
-  public static FilePath getFilePathForDeletedFile(String path, boolean isDirectory) {
+  public static FilePath getFilePathForDeletedFile(@NotNull String path, boolean isDirectory) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOnDeleted(new File(path), isDirectory);
+  }
+
+  @NotNull
+  public static FilePath getFilePath(@NotNull VirtualFile parent, @NotNull String name) {
+    return VcsContextFactory.SERVICE.getInstance().createFilePathOn(parent, name);
+  }
+
+  @NotNull
+  public static FilePath getFilePath(@NotNull VirtualFile parent, @NotNull String fileName, boolean isDirectory) {
+    return VcsContextFactory.SERVICE.getInstance().createFilePath(parent, fileName, isDirectory);
   }
 
   /**
@@ -486,7 +496,7 @@ public class VcsUtil {
 
   public static boolean runVcsProcessWithProgress(final VcsRunnable runnable, String progressTitle, boolean canBeCanceled, Project project)
           throws VcsException {
-    final Ref<VcsException> ex = new Ref<VcsException>();
+    final Ref<VcsException> ex = new Ref<>();
     boolean result = ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
       @Override
       public void run() {
@@ -519,12 +529,7 @@ public class VcsUtil {
       }
     };
 
-    if (app.isDispatchThread()) {
-      action.run();
-    }
-    else {
-      app.invokeAndWait(action, ModalityState.defaultModalityState());
-    }
+    app.invokeAndWait(action, ModalityState.defaultModalityState());
 
     return file[0];
   }
@@ -594,8 +599,12 @@ public class VcsUtil {
   //}
 
   public static boolean isAspectAvailableByDefault(String id) {
+    return isAspectAvailableByDefault(id, true);
+  }
+
+  public static boolean isAspectAvailableByDefault(@Nullable String id, boolean defaultValue) {
     if (id == null) return false;
-    return PropertiesComponent.getInstance().getBoolean(ANNO_ASPECT + id, true);
+    return PropertiesComponent.getInstance().getBoolean(ANNO_ASPECT + id, defaultValue);
   }
 
   public static void setAspectAvailability(String aspectID, boolean showByDefault) {
@@ -616,10 +625,6 @@ public class VcsUtil {
 
   public static String getPathForProgressPresentation(@NotNull final File file) {
     return file.getName() + " (" + file.getParent() + ")";
-  }
-
-  public static ScheduledThreadPoolExecutor createExecutor(final String name) {
-    return ConcurrencyUtil.newSingleScheduledThreadExecutor(name, Thread.MIN_PRIORITY + 1);
   }
 
   @NotNull
@@ -647,7 +652,7 @@ public class VcsUtil {
   public static List<VcsDirectoryMapping> addMapping(@NotNull List<VcsDirectoryMapping> existingMappings,
                                                      @NotNull String path,
                                                      @NotNull String vcs) {
-    List<VcsDirectoryMapping> mappings = new ArrayList<VcsDirectoryMapping>(existingMappings);
+    List<VcsDirectoryMapping> mappings = new ArrayList<>(existingMappings);
     for (Iterator<VcsDirectoryMapping> iterator = mappings.iterator(); iterator.hasNext(); ) {
       VcsDirectoryMapping mapping = iterator.next();
       if (mapping.isDefaultMapping() && StringUtil.isEmptyOrSpaces(mapping.getVcs())) {
@@ -668,4 +673,35 @@ public class VcsUtil {
     return mappings;
   }
 
+  @Nullable
+  public static <T> T getIfSingle(@Nullable Stream<T> items) {
+    return items == null ? null : items.limit(2).map(Optional::ofNullable)
+            .reduce(Optional.empty(), (a, b) -> a.isPresent() ^ b.isPresent() ? b : Optional.empty())
+            .orElse(null);
+  }
+
+  public static <T> boolean isEmpty(@Nullable Stream<T> items) {
+    return items == null || !items.findAny().isPresent();
+  }
+
+  @NotNull
+  public static <T> Stream<T> notNullize(@Nullable Stream<T> items) {
+    return ObjectUtils.notNull(items, Stream.empty());
+  }
+
+  @NotNull
+  public static <T> Stream<T> toStream(@Nullable T... items) {
+    return items == null ? Stream.empty() : Stream.of(items);
+  }
+
+  /**
+   * There probably could be some performance issues if there is lots of streams to concat. See
+   * http://mail.openjdk.java.net/pipermail/lambda-dev/2013-July/010659.html for some details.
+   * <p>
+   * Also see {@link Stream#concat(Stream, Stream)} documentation for other possible issues of concatenating large number of streams.
+   */
+  @NotNull
+  public static <T> Stream<T> concat(@NotNull Stream<T>... streams) {
+    return toStream(streams).reduce(Stream.empty(), Stream::concat);
+  }
 }

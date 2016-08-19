@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;

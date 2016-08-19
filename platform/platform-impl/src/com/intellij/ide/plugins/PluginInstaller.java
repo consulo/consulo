@@ -30,7 +30,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.ui.UIUtil;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,12 +54,12 @@ public class PluginInstaller {
       pluginIds.add(pluginNode.getPluginId());
     }
 
-    val result = new ArrayListSet<PluginNode>();
+    Set<PluginNode> result = new ArrayListSet<PluginNode>();
 
     for (final PluginNode pluginNode : pluginsToInstall) {
       try {
         Set<PluginNode> pluginNodes = prepareToInstall(pluginNode, pluginIds, allPlugins);
-        if(pluginNodes == null) {
+        if (pluginNodes == null) {
           return null;
         }
         else {
@@ -78,15 +77,15 @@ public class PluginInstaller {
   }
 
   @Nullable("Will return null is download failed")
-  private static Set<PluginNode> prepareToInstall(@NotNull PluginNode toInstall, @NotNull List<PluginId> toInstallAll,
-                                            @NotNull List<IdeaPluginDescriptor> allPlugins)
-          throws IOException {
-    val depends = new ArrayListSet<PluginNode>();
-    val unknownDepends = new ArrayListSet<String>();
+  private static Set<PluginNode> prepareToInstall(@NotNull PluginNode toInstall,
+                                                  @NotNull List<PluginId> toInstallAll,
+                                                  @NotNull List<IdeaPluginDescriptor> allPlugins) throws IOException {
+    Set<PluginNode> depends = new ArrayListSet<PluginNode>();
+    Set<String> unknownDepends = new ArrayListSet<String>();
     collectDepends(toInstall, toInstallAll, depends, allPlugins, unknownDepends);
 
-    if(!unknownDepends.isEmpty()) {
-      val ref = new boolean[1];
+    if (!unknownDepends.isEmpty()) {
+      boolean[] ref = new boolean[1];
       UIUtil.invokeAndWaitIfNeeded(new Runnable() {
         @Override
         public void run() {
@@ -98,12 +97,12 @@ public class PluginInstaller {
         }
       });
 
-      if(!ref[0]) {
+      if (!ref[0]) {
         return null;
       }
     }
-    val toDownloadList = new ArrayListSet<PluginNode>();
-    if(!depends.isEmpty()) {
+    Set<PluginNode> toDownloadList = new ArrayListSet<PluginNode>();
+    if (!depends.isEmpty()) {
 
       UIUtil.invokeAndWaitIfNeeded(new Runnable() {
         @Override
@@ -117,7 +116,7 @@ public class PluginInstaller {
 
           String title = IdeBundle.message("plugin.manager.dependencies.detected.title");
           String message = IdeBundle.message("plugin.manager.dependencies.detected.message", depends.size(), mergedIds);
-          if(Messages.showYesNoDialog(message, title, Messages.getWarningIcon()) == Messages.YES) {
+          if (Messages.showYesNoDialog(message, title, Messages.getWarningIcon()) == Messages.YES) {
             toDownloadList.addAll(depends);
           }
         }
@@ -176,7 +175,7 @@ public class PluginInstaller {
         continue;
       }
 
-      if(pluginManagerUISettings.getInstalledPlugins().contains(dependentPluginId.getIdString())) {
+      if (pluginManagerUISettings.getInstalledPlugins().contains(dependentPluginId.getIdString())) {
         // downloaded plugin
         continue;
       }

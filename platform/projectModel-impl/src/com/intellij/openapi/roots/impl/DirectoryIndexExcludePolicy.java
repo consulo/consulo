@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.roots.ModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.jetbrains.annotations.NotNull;

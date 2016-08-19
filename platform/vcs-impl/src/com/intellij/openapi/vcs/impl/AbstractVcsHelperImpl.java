@@ -33,11 +33,11 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.progress.impl.ProgressManagerImpl;
+import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
+import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -717,7 +717,9 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
       }
     };
 
-    ProgressManagerImpl.runProcessWithProgressAsynchronously(task, new EmptyProgressIndicator(), null, ModalityState.current());
+    // we can's use runProcessWithProgressAsynchronously(task) because then ModalityState.NON_MODAL would be used
+    CoreProgressManager progressManager = (CoreProgressManager)ProgressManager.getInstance();
+    progressManager.runProcessWithProgressAsynchronously(task, new BackgroundableProcessIndicator(task), null, ModalityState.current());
   }
 
   @Nullable

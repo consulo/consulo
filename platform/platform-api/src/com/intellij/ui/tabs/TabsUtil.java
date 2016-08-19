@@ -16,7 +16,7 @@
 package com.intellij.ui.tabs;
 
 import com.intellij.util.ui.JBUI;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 import javax.swing.*;
 

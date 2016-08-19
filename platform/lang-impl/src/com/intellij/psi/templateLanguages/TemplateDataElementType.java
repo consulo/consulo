@@ -34,6 +34,8 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.CharTable;
 import com.intellij.util.LocalTimeCounter;
+import consulo.lang.LanguageVersion;
+import consulo.lang.LanguageVersionResolvers;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +63,7 @@ public class TemplateDataElementType extends IStubFileElementType implements ITe
     final Language baseLanguage = viewProvider.getBaseLanguage();
     final LanguageVersion languageVersion =
       LanguageVersionResolvers.INSTANCE.forLanguage(baseLanguage).getLanguageVersion(baseLanguage, file);
-    return LanguageParserDefinitions.INSTANCE.forLanguage(baseLanguage).createLexer(file.getProject(), languageVersion);
+    return LanguageParserDefinitions.INSTANCE.forLanguage(baseLanguage).createLexer(languageVersion);
   }
 
   protected LanguageFileType createTemplateFakeFileType(final Language language) {
@@ -88,7 +90,7 @@ public class TemplateDataElementType extends IStubFileElementType implements ITe
     DebugUtil.startPsiModification("template language parsing");
     try {
       prepareParsedTemplateFile(parsed);
-      Lexer langLexer = LanguageParserDefinitions.INSTANCE.forLanguage(language).createLexer(file.getProject(), templateFile.getLanguageVersion());
+      Lexer langLexer = LanguageParserDefinitions.INSTANCE.forLanguage(language).createLexer(templateFile.getLanguageVersion());
       final Lexer lexer = new MergingLexerAdapter(
         new TemplateBlackAndWhiteLexer(createBaseLexer(templateFile, viewProvider), langLexer, myTemplateElementType, myOuterElementType),
         TokenSet.create(myTemplateElementType, myOuterElementType));

@@ -16,8 +16,8 @@
 package com.intellij.util.indexing;
 
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
-import com.intellij.lang.LanguageVersionResolvers;
+import consulo.lang.LanguageVersion;
+import consulo.lang.LanguageVersionResolvers;
 import com.intellij.lang.LighterAST;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -36,7 +36,7 @@ import com.intellij.psi.PsiFileFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

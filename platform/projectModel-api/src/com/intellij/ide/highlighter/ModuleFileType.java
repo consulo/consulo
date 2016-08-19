@@ -16,7 +16,7 @@
 package com.intellij.ide.highlighter;
 
 import org.jetbrains.annotations.NonNls;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 @Deprecated
 @DeprecationInfo(value = "Module file type is not supported anymore", until = "1.0")

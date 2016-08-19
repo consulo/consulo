@@ -19,8 +19,9 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
+import consulo.util.ui.OwnScrollBarUI;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

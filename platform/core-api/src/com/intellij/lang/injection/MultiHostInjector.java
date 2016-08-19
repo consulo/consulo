@@ -24,6 +24,7 @@ package com.intellij.lang.injection;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
+import consulo.lang.injection.MultiHostInjectorExtensionPoint;
 import org.jetbrains.annotations.NotNull;
 
 /**

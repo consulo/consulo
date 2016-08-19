@@ -50,7 +50,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 public class EnterHandler extends BaseEnterHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.editorActions.EnterHandler");
@@ -198,7 +198,7 @@ public class EnterHandler extends BaseEnterHandler {
     if (parserDefinition == null) {
       return true;
     }
-    Lexer lexer = parserDefinition.createLexer(containingFile.getProject(), containingFile.getLanguageVersion());
+    Lexer lexer = parserDefinition.createLexer(containingFile.getLanguageVersion());
     final String commentPrefix = docComment? commenter.getDocumentationCommentPrefix() : commenter.getBlockCommentPrefix();
     lexer.start(commentText, commentPrefix == null? 0 : commentPrefix.length(), commentText.length());
     QuoteHandler fileTypeHandler = TypedHandler.getQuoteHandler(containingFile, editor);

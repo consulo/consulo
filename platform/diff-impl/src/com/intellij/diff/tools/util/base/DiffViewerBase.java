@@ -19,25 +19,21 @@ import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool;
 import com.intellij.diff.FrameDiffTool.DiffViewer;
 import com.intellij.diff.requests.ContentDiffRequest;
-import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.util.DiffTaskQueue;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.pom.Navigatable;
 import com.intellij.util.Alarm;
-import com.intellij.util.Function;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.jetbrains.annotations.*;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -46,7 +42,7 @@ import java.util.List;
 public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   protected static final Logger LOG = Logger.getInstance(DiffViewerBase.class);
 
-  @NotNull private final List<DiffViewerListener> myListeners = new SmartList<DiffViewerListener>();
+  @NotNull private final List<DiffViewerListener> myListeners = new SmartList<>();
 
   @Nullable protected final Project myProject;
   @NotNull protected final DiffContext myContext;
@@ -63,6 +59,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   }
 
   @NotNull
+  @Override
   public final FrameDiffTool.ToolbarComponents init() {
     processContextHints();
     onInit();
@@ -82,24 +79,19 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   @RequiredDispatchThread
   public final void dispose() {
     if (myDisposed) return;
-
-    Runnable doDispose = new Runnable() {
-      @Override
-      public void run() {
-        if (myDisposed) return;
-        myDisposed = true;
-
-        abortRediff();
-        updateContextHints();
-
-        fireEvent(EventType.DISPOSE);
-
-        onDispose();
-      }
-    };
-
     if (!ApplicationManager.getApplication().isDispatchThread()) LOG.warn(new Throwable("dispose() not from EDT"));
-    UIUtil.invokeLaterIfNeeded(doDispose);
+
+    UIUtil.invokeLaterIfNeeded(() -> {
+      if (myDisposed) return;
+      myDisposed = true;
+
+      abortRediff();
+      updateContextHints();
+
+      fireEvent(EventType.DISPOSE);
+
+      onDispose();
+    });
   }
 
   @RequiredDispatchThread
@@ -115,12 +107,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     if (isDisposed()) return;
 
     abortRediff();
-    myTaskAlarm.addRequest(new Runnable() {
-      @Override
-      public void run() {
-        rediff();
-      }
-    }, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
+    myTaskAlarm.addRequest(this::rediff, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
   }
 
   @RequiredDispatchThread
@@ -143,34 +130,19 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     fireEvent(EventType.BEFORE_REDIFF);
     onBeforeRediff();
 
-    // most of performRediff implementations take ReadLock inside. If EDT is holding write lock - this will never happen,
-    // and diff will not be calculated. This could happen for diff from FileDocumentManager.
-    boolean forceEDT = ApplicationManager.getApplication().isWriteAccessAllowed();
-
+    boolean forceEDT = forceRediffSynchronously();
     int waitMillis = trySync || tryRediffSynchronously() ? ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS : 0;
 
     myTaskExecutor.executeAndTryWait(
-            new Function<ProgressIndicator, Runnable>() {
-              @Override
-              public Runnable fun(final ProgressIndicator indicator) {
-                final Runnable callback = performRediff(indicator);
-                return new Runnable() {
-                  @Override
-                  public void run() {
-                    callback.run();
-                    onAfterRediff();
-                    fireEvent(EventType.AFTER_REDIFF);
-                  }
-                };
-              }
+            indicator -> {
+              final Runnable callback = performRediff(indicator);
+              return () -> {
+                callback.run();
+                onAfterRediff();
+                fireEvent(EventType.AFTER_REDIFF);
+              };
             },
-            new Runnable() {
-              @Override
-              public void run() {
-                onSlowRediff();
-              }
-            },
-            waitMillis, forceEDT
+            this::onSlowRediff, waitMillis, forceEDT
     );
   }
 
@@ -206,14 +178,21 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     return myContext.isWindowFocused();
   }
 
+  @RequiredDispatchThread
+  protected boolean forceRediffSynchronously() {
+    // most of performRediff implementations take ReadLock inside. If EDT is holding write lock - this will never happen,
+    // and diff will not be calculated. This could happen for diff from FileDocumentManager.
+    return ApplicationManager.getApplication().isWriteAccessAllowed();
+  }
+
   protected List<AnAction> createToolbarActions() {
-    List<AnAction> group = new ArrayList<AnAction>();
+    List<AnAction> group = new ArrayList<>();
     ContainerUtil.addAll(group, ((ActionGroup)ActionManager.getInstance().getAction(IdeActions.DIFF_VIEWER_TOOLBAR)).getChildren(null));
     return group;
   }
 
   protected List<AnAction> createPopupActions() {
-    List<AnAction> group = new ArrayList<AnAction>();
+    List<AnAction> group = new ArrayList<>();
     ContainerUtil.addAll(group, ((ActionGroup)ActionManager.getInstance().getAction(IdeActions.DIFF_VIEWER_POPUP)).getChildren(null));
     return group;
   }
@@ -248,7 +227,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   }
 
   @Nullable
-  protected OpenFileDescriptor getOpenFileDescriptor() {
+  protected Navigatable getNavigatable() {
     return null;
   }
 
@@ -303,10 +282,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   @Override
   public Object getData(@NonNls String dataId) {
     if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
-      return getOpenFileDescriptor();
-    }
-    else if (DiffDataKeys.OPEN_FILE_DESCRIPTOR.is(dataId)) {
-      return getOpenFileDescriptor();
+      return getNavigatable();
     }
     else if (CommonDataKeys.PROJECT.is(dataId)) {
       return myProject;

@@ -15,23 +15,23 @@
   -->
 <idea-plugin>
   <extensionPoints>
-    <extensionPoint name="compiler.dependencyCache" beanClass="com.intellij.compiler.make.DependencyCacheEP">
-      <with attribute="implementationClass" implements="com.intellij.compiler.make.DependencyCache"/>
+    <extensionPoint name="compiler.dependencyCache" beanClass="consulo.compiler.make.DependencyCacheEP">
+      <with attribute="implementationClass" implements="consulo.compiler.make.DependencyCache"/>
     </extensionPoint>
 
-    <extensionPoint name="compiler.moduleScopeFactory" interface="org.consulo.compiler.impl.CompileModuleScopeFactory"/>
-    <extensionPoint name="compiler.sorter" interface="com.intellij.openapi.compiler.CompilerSorter"/>
+    <extensionPoint name="compiler.moduleScopeFactory" interface="consulo.compiler.impl.CompileModuleScopeFactory"/>
+    <extensionPoint name="compiler.sorter" interface="consulo.compiler.CompilerSorter"/>
   </extensionPoints>
   <extensions defaultExtensionNs="com.intellij">
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.DirectoryElementType"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.FileCopyElementType"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.DirectoryCopyElementType"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.ExtractedDirectoryElementType"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.ZipArchiveElementType" id="zip-archive-element"/>
+    <packaging.elementType implementation="consulo.packaging.impl.elements.ZipArchiveElementType" id="zip-archive-element"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.moduleContent.ProductionResourceModuleOutputElementType"/>
+    <packaging.elementType implementation="consulo.packaging.impl.elements.moduleContent.ProductionResourceModuleOutputElementType"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.moduleContent.TestModuleOutputElementType"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.moduleContent.TestResourceModuleOutputElementType"/>
+    <packaging.elementType implementation="consulo.packaging.impl.elements.moduleContent.TestResourceModuleOutputElementType"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.LibraryElementType"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.ArtifactElementType"/>
 
@@ -39,7 +39,7 @@
                     serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.packaging.artifacts.ArtifactPointerManager"
-                    serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactPointerManagerImpl"/>
+                    serviceImplementation="consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder"
                     serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinderImpl"/>
@@ -48,10 +48,10 @@
     <applicationService serviceImplementation="com.intellij.packaging.impl.artifacts.InvalidArtifactType"/>
 
     <projectService serviceInterface="com.intellij.openapi.compiler.CompilerManager"
-                    serviceImplementation="org.consulo.compiler.impl.CompilerManagerImpl"/>
+                    serviceImplementation="consulo.compiler.impl.CompilerManagerImpl"/>
 
-    <projectService serviceInterface="com.intellij.compiler.CompilerConfiguration"
-                    serviceImplementation="com.intellij.compiler.CompilerConfigurationImpl"/>
+    <projectService serviceInterface="consulo.compiler.CompilerConfiguration"
+                    serviceImplementation="consulo.compiler.CompilerConfigurationImpl"/>
 
     <projectService serviceInterface="com.intellij.compiler.CompilerEncodingService"
                     serviceImplementation="com.intellij.compiler.CompilerEncodingServiceImpl"/>

@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jetbrains.annotations.NotNull;
 
 

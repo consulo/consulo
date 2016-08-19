@@ -47,8 +47,8 @@ import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -63,8 +63,8 @@ public class FileManagerImpl implements FileManager {
   private final ConcurrentMap<VirtualFile, PsiDirectory> myVFileToPsiDirMap = ContainerUtil.createConcurrentSoftValueMap();
   private final ConcurrentMap<VirtualFile, FileViewProvider> myVFileToViewProviderMap = ContainerUtil.createConcurrentWeakValueMap();
 
-  private boolean myInitialized = false;
-  private boolean myDisposed = false;
+  private boolean myInitialized;
+  private boolean myDisposed;
 
   private final FileDocumentManager myFileDocumentManager;
   private final MessageBusConnection myConnection;
@@ -115,7 +115,7 @@ public class FileManagerImpl implements FileManager {
     });
   }
 
-  public static void clearPsiCaches(FileViewProvider provider) {
+  public static void clearPsiCaches(@NotNull FileViewProvider provider) {
     if (provider instanceof SingleRootFileViewProvider) {
       for (PsiFile root : ((SingleRootFileViewProvider)provider).getCachedPsiFiles()) {
         if (root instanceof PsiFileImpl) {
@@ -147,12 +147,14 @@ public class FileManagerImpl implements FileManager {
     markInvalidations(originalFileToPsiFileMap);
   }
 
-  @RequiredReadAction
   public void forceReload(@NotNull VirtualFile vFile) {
     LanguageSubstitutors.cancelReparsing(vFile);
-    if (findCachedViewProvider(vFile) == null) {
+    FileViewProvider viewProvider = findCachedViewProvider(vFile);
+    if (viewProvider == null) {
       return;
     }
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
+
     setViewProvider(vFile, null);
 
     VirtualFile dir = vFile.getParent();
@@ -177,18 +179,17 @@ public class FileManagerImpl implements FileManager {
   }
 
   @Override
-  @RequiredWriteAction
   public void dispose() {
     if (myInitialized) {
       myConnection.disconnect();
     }
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
     clearViewProviders();
 
     myDisposed = true;
   }
 
   private void clearViewProviders() {
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     DebugUtil.startPsiModification("clearViewProviders");
     try {
       for (final FileViewProvider provider : myVFileToViewProviderMap.values()) {
@@ -204,7 +205,13 @@ public class FileManagerImpl implements FileManager {
   @Override
   @TestOnly
   public void cleanupForNextTest() {
-    clearViewProviders();
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+      @Override
+      public void run() {
+        clearViewProviders();
+      }
+    });
+
     myVFileToPsiDirMap.clear();
     ((PsiModificationTrackerImpl)myManager.getModificationTracker()).incCounter();
   }
@@ -230,7 +237,6 @@ public class FileManagerImpl implements FileManager {
   }
 
   @Nullable
-  @RequiredReadAction
   private FileViewProvider getFromInjected(@NotNull VirtualFile file) {
     if (file instanceof VirtualFileWindow) {
       DocumentWindow document = ((VirtualFileWindow)file).getDocumentWindow();
@@ -330,7 +336,7 @@ public class FileManagerImpl implements FileManager {
     }
   }
 
-  private boolean myProcessingFileTypesChange = false;
+  private boolean myProcessingFileTypesChange;
   private void handleFileTypesChange(@NotNull FileTypesChanged runnable) {
     if (myProcessingFileTypesChange) return;
     myProcessingFileTypesChange = true;
@@ -354,9 +360,8 @@ public class FileManagerImpl implements FileManager {
   }
 
   @TestOnly
-  @RequiredReadAction
   public void checkConsistency() {
-    HashMap<VirtualFile, FileViewProvider> fileToViewProvider = new HashMap<VirtualFile, FileViewProvider>(myVFileToViewProviderMap);
+    Map<VirtualFile, FileViewProvider> fileToViewProvider = new HashMap<VirtualFile, FileViewProvider>(myVFileToViewProviderMap);
     myVFileToViewProviderMap.clear();
     for (VirtualFile vFile : fileToViewProvider.keySet()) {
       final FileViewProvider fileViewProvider = fileToViewProvider.get(vFile);
@@ -598,7 +603,7 @@ public class FileManagerImpl implements FileManager {
     return true;
   }
 
-  private void markInvalidations(Map<VirtualFile, FileViewProvider> originalFileToPsiFileMap) {
+  private void markInvalidations(@NotNull Map<VirtualFile, FileViewProvider> originalFileToPsiFileMap) {
     DebugUtil.startPsiModification(null);
     try {
       for (Map.Entry<VirtualFile, FileViewProvider> entry : originalFileToPsiFileMap.entrySet()) {

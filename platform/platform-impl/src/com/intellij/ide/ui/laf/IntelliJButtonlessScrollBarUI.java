@@ -21,8 +21,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
-import com.intellij.ui.components.JBScrollBar;
 import com.intellij.util.ui.*;
+import consulo.util.ui.OwnScrollBarUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

@@ -33,6 +33,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.xmlb.Converter;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.codeInsight.template.impl.BundleLiveTemplateSetEP;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

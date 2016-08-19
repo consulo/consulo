@@ -23,7 +23,7 @@ import com.intellij.vcs.log.graph.utils.IntList;
 import com.intellij.vcs.log.graph.utils.TimestampGetter;
 import com.intellij.vcs.log.graph.utils.impl.CompressedIntList;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.application.ApplicationProperties;
+import consulo.application.ApplicationProperties;
 
 import java.util.List;
 

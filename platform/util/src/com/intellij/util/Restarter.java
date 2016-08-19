@@ -25,6 +25,7 @@ import com.sun.jna.Pointer;
 import com.sun.jna.WString;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

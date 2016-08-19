@@ -3,7 +3,7 @@ package com.intellij.compiler;
 import com.intellij.ProjectTopics;
 import com.intellij.compiler.impl.CompileDriver;
 import com.intellij.compiler.impl.ExitStatus;
-import com.intellij.compiler.server.BuildManager;
+import consulo.compiler.server.BuildManager;
 import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;

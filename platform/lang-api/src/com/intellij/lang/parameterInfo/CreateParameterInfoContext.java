@@ -18,7 +18,7 @@ package com.intellij.lang.parameterInfo;
 
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.Exported;
+import consulo.annotations.Exported;
 
 public interface CreateParameterInfoContext extends ParameterInfoContext {
   @Exported

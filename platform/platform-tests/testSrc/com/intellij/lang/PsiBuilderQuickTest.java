@@ -19,7 +19,6 @@ import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.LexerBase;
 import com.intellij.mock.MockPsiFile;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -33,6 +32,7 @@ import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -511,13 +511,13 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
     ParserDefinition parserDefinition = new ParserDefinition() {
       @NotNull
       @Override
-      public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
+      public Lexer createLexer(@NotNull LanguageVersion languageVersion) {
         return new MyTestLexer();
       }
 
       @NotNull
       @Override
-      public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
+      public PsiParser createParser(@NotNull LanguageVersion languageVersion) {
         return null;
       }
 
@@ -562,7 +562,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
       }
     };
     return new PsiBuilderImpl(getProject(), null, parserDefinition,
-                              parserDefinition.createLexer(getProject(), MockPsiFile.DUMMY_LANG_VERSION), MockPsiFile.DUMMY_LANG_VERSION,
+                              parserDefinition.createLexer(MockPsiFile.DUMMY_LANG_VERSION), MockPsiFile.DUMMY_LANG_VERSION,
                               null, text, null, null);
   }
 
@@ -635,13 +635,13 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         ParserDefinition parserDefinition = new ParserDefinition() {
           @NotNull
           @Override
-          public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
+          public Lexer createLexer(@NotNull LanguageVersion languageVersion) {
             return null;
           }
 
           @NotNull
           @Override
-          public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
+          public PsiParser createParser(@NotNull LanguageVersion languageVersion) {
             return null;
           }
 

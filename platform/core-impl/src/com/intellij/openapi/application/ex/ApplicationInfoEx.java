@@ -26,7 +26,7 @@ package com.intellij.openapi.application.ex;
 
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.util.SandboxUtil;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

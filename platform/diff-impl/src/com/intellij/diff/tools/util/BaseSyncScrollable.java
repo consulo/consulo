@@ -17,7 +17,7 @@ package com.intellij.diff.tools.util;
 
 import com.intellij.diff.util.Side;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScrollable {
   /*

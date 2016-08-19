@@ -215,6 +215,21 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @NotNull
+  @Contract(pure = true)
+  public static <T> List<T> newUnmodifiableList(List<? extends T> originalList) {
+    int size = originalList.size();
+    if (size == 0) {
+      return emptyList();
+    }
+    else if (size == 1) {
+      return Collections.singletonList(originalList.get(0));
+    }
+    else {
+      return Collections.unmodifiableList(newArrayList(originalList));
+    }
+  }
+
+  @NotNull
   @Contract(pure=true)
   public static <T> List<T> newSmartList(T element) {
     return new SmartList<T>(element);
@@ -1455,7 +1470,7 @@ public class ContainerUtil extends ContainerUtilRt {
    */
   @NotNull
   @Contract(pure=true)
-  public static <T> Collection<T> intersection(@NotNull Collection<? extends T> collection1, @NotNull Collection<? extends T> collection2) {
+  public static <T> List<T> intersection(@NotNull Collection<? extends T> collection1, @NotNull Collection<? extends T> collection2) {
     List<T> result = new ArrayList<T>();
     for (T t : collection1) {
       if (collection2.contains(t)) {
@@ -1507,6 +1522,27 @@ public class ContainerUtil extends ContainerUtilRt {
     }
 
     return res;
+  }
+
+  @NotNull
+  @Contract(pure=true)
+  public static <T,U> Iterator<U> mapIterator(@NotNull final Iterator<T> iterator, @NotNull final Function<T,U> mapper) {
+    return new Iterator<U>() {
+      @Override
+      public boolean hasNext() {
+        return iterator.hasNext();
+      }
+
+      @Override
+      public U next() {
+        return mapper.fun(iterator.next());
+      }
+
+      @Override
+      public void remove() {
+        iterator.remove();
+      }
+    };
   }
 
   @Nullable
@@ -1581,7 +1617,7 @@ public class ContainerUtil extends ContainerUtilRt {
     }
   }
 
-  public static <T> void sort(@NotNull List<T> list, @NotNull Comparator<T> comparator) {
+  public static <T> void sort(@NotNull List<T> list, @NotNull Comparator<? super T> comparator) {
     int size = list.size();
 
     if (size < 2) return;
@@ -1645,13 +1681,13 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @NotNull
   @Contract(pure=true)
-  public static <T> List<T> sorted(@NotNull Collection<T> list, @NotNull Comparator<T> comparator) {
+  public static <T> List<T> sorted(@NotNull Collection<T> list, @NotNull Comparator<? super T> comparator) {
     return sorted((Iterable<T>)list, comparator);
   }
 
   @NotNull
   @Contract(pure=true)
-  public static <T> List<T> sorted(@NotNull Iterable<T> list, @NotNull Comparator<T> comparator) {
+  public static <T> List<T> sorted(@NotNull Iterable<T> list, @NotNull Comparator<? super T> comparator) {
     List<T> sorted = newArrayList(list);
     sort(sorted, comparator);
     return sorted;
@@ -1668,7 +1704,7 @@ public class ContainerUtil extends ContainerUtilRt {
     });
   }
 
-  public static <T> void sort(@NotNull T[] a, @NotNull Comparator<T> comparator) {
+  public static <T> void sort(@NotNull T[] a, @NotNull Comparator<? super T> comparator) {
     int size = a.length;
 
     if (size < 2) return;

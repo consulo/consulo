@@ -21,16 +21,16 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileAttributes;
-import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
+import consulo.annotations.RequiredReadAction;
+import consulo.editor.notifications.EditorNotificationProvider;
 
 public class FileChangedNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Key<EditorNotificationPanel> KEY = Key.create("file.changed.notification.panel");
@@ -64,7 +64,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
   @Override
   public EditorNotificationPanel createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor) {
     if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
-      IVirtualFileSystem fs = file.getFileSystem();
+      VirtualFileSystem fs = file.getFileSystem();
       if (fs instanceof LocalFileSystem) {
         FileAttributes attributes = ((LocalFileSystem)fs).getAttributes(file);
         if (attributes == null || file.getTimeStamp() != attributes.lastModified || file.getLength() != attributes.length) {

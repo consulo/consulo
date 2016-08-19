@@ -36,14 +36,14 @@ import java.util.Date;
 public class VirtualFileInfoAction extends AnAction implements DumbAware {
 
   public static final DateFormat DATE_FORMAT =
-    SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG);
+          SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG);
 
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     String pathToFile = Messages.showInputDialog("Path to file: ",
-                                 "Virtual File Info",
-                                 Messages.getQuestionIcon());
+                                                 "Virtual File Info",
+                                                 Messages.getQuestionIcon());
     if (pathToFile == null) return;
     VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(new File(pathToFile));
     if (virtualFile == null){

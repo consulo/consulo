@@ -17,7 +17,6 @@ package com.intellij.execution.console;
 
 import com.intellij.execution.process.BaseOSProcessHandler;
 import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.BaseConsoleExecuteActionHandler;
 import com.intellij.openapi.util.Condition;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +27,7 @@ import java.nio.charset.Charset;
 /**
  * @author traff
  */
-public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecuteActionHandler implements Condition<LanguageConsoleImpl> {
+public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecuteActionHandler implements Condition<LanguageConsoleView> {
   private volatile ProcessHandler myProcessHandler;
 
   public ProcessBackedConsoleExecuteActionHandler(ProcessHandler processHandler, boolean preserveMarkup) {
@@ -41,13 +40,8 @@ public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecute
     myProcessHandler = processHandler;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
-  @Deprecated
-  /**
-   * @deprecated to remove in IDEA 15
-   */
-  protected void execute(@NotNull String text) {
+  protected void execute(@NotNull String text, @NotNull LanguageConsoleView console) {
     processLine(text);
   }
 
@@ -61,7 +55,7 @@ public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecute
     final OutputStream outputStream = myProcessHandler.getProcessInput();
     assert outputStream != null : "output stream is null";
     try {
-      byte[] bytes = charset != null ? (line + "\n").getBytes(charset) : line.getBytes();
+      byte[] bytes = charset != null ? line.getBytes(charset) : line.getBytes();
       outputStream.write(bytes);
       outputStream.flush();
     }
@@ -75,7 +69,7 @@ public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecute
   }
 
   @Override
-  public boolean value(LanguageConsoleImpl console) {
+  public boolean value(LanguageConsoleView console) {
     return !isProcessTerminated();
   }
 }

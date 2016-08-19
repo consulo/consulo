@@ -20,11 +20,11 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.consulo.compiler.ModuleCompilerPathsManager;
+import consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredWriteAction;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.annotations.RequiredWriteAction;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.util.Collection;
 import java.util.Map;

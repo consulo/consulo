@@ -33,9 +33,9 @@ import com.intellij.util.indexing.IdFilter;
 import com.intellij.util.indexing.IdIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.Exported;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.Exported;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 
 import java.util.Collection;
 import java.util.List;

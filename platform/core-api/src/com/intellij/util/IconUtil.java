@@ -16,8 +16,8 @@
 package com.intellij.util;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptor;
-import com.intellij.ide.IconDescriptorUpdaters;
+import consulo.ide.IconDescriptor;
+import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
 import com.intellij.openapi.project.Project;
@@ -36,7 +36,7 @@ import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;

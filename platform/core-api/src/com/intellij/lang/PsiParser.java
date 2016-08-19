@@ -17,13 +17,14 @@
 package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * The plugin side of a custom language parser. Receives tokens returned from
  * lexer and builds an AST tree out of them.
  *
- * @see ParserDefinition#createParser(com.intellij.openapi.project.Project, LanguageVersion)
+ * @see ParserDefinition#createParser(consulo.lang.LanguageVersion)
  */
 
 public interface PsiParser {
