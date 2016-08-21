@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packaging.elements.ArchivePackageWriter;
+import consulo.packaging.elements.ArchivePackageWriter;
 import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
 import org.jetbrains.annotations.NotNull;
 

@@ -30,7 +30,7 @@ import com.intellij.codeInspection.ex.*;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
-import com.intellij.idea.IdeaApplication;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.IdeaLogger;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -100,9 +100,9 @@ import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredWriteAction;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -115,7 +115,7 @@ import java.util.*;
  */
 public abstract class LightPlatformTestCase extends UsefulTestCase implements DataProvider {
   public static final String PROFILE = "Configurable";
-  private static IdeaApplication ourApplication;
+  private static ApplicationStarter ourApplication;
   protected static Project ourProject;
   private static Module ourModule;
   private static PsiManager ourPsiManager;
@@ -154,8 +154,8 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     return ourPsiManager;
   }
 
-  public static IdeaApplication initApplication() {
-    ourApplication = IdeaApplication.getInstance();
+  public static ApplicationStarter initApplication() {
+    ourApplication = ApplicationStarter.getInstance();
     return ourApplication;
   }
 
@@ -173,7 +173,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     } */
   }
 
-  public static IdeaApplication getApplication() {
+  public static ApplicationStarter getApplication() {
     return ourApplication;
   }
 
@@ -529,7 +529,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     }
   }
 
-  public static void doTearDown(@NotNull final Project project, IdeaApplication application, boolean checkForEditors) throws Exception {
+  public static void doTearDown(@NotNull final Project project, ApplicationStarter application, boolean checkForEditors) throws Exception {
     DocumentCommitThread.getInstance().clearQueue();
     CodeStyleSettingsManager.getInstance(project).dropTemporarySettings();
     checkAllTimersAreDisposed();

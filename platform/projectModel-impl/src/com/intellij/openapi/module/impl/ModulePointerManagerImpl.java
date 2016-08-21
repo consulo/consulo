@@ -23,11 +23,11 @@ import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import org.consulo.util.pointers.NamedPointerImpl;
-import org.consulo.util.pointers.NamedPointerManagerImpl;
+import consulo.util.pointers.NamedPointerImpl;
+import consulo.util.pointers.NamedPointerManagerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
 

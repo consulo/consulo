@@ -15,15 +15,15 @@
  */
 package com.intellij.diff.contents;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public abstract class DiffContentBase extends UserDataHolderBase implements DiffContent {
   @Nullable
   @Override
-  public OpenFileDescriptor getOpenFileDescriptor() {
+  public Navigatable getNavigatable() {
     return null;
   }
 

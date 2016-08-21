@@ -57,7 +57,7 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
   private /*NOT STATIC!!!*/ final Key<Boolean> UPDATE_ON_COMMIT_ENGAGED = Key.create("UPDATE_ON_COMMIT_ENGAGED");
 
   private final Project myProject;
-  private final Map<Document, List<Pair<PsiElement, Boolean>>> changedElements = new WeakHashMap<Document, List<Pair<PsiElement, Boolean>>>();
+  private final Map<Document, List<Pair<PsiElement, Boolean>>> changedElements = new WeakHashMap<>();
   private final FileStatusMap myFileStatusMap;
 
   PsiChangeHandler(@NotNull Project project,
@@ -75,13 +75,10 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
         if (documentManager.getCachedPsiFile(document) == null) return;
         if (document.getUserData(UPDATE_ON_COMMIT_ENGAGED) == null) {
           document.putUserData(UPDATE_ON_COMMIT_ENGAGED, Boolean.TRUE);
-          PsiDocumentManagerBase.addRunOnCommit(document, new Runnable() {
-            @Override
-            public void run() {
-              if (document.getUserData(UPDATE_ON_COMMIT_ENGAGED) != null) {
-                updateChangesForDocument(document);
-                document.putUserData(UPDATE_ON_COMMIT_ENGAGED, null);
-              }
+          PsiDocumentManagerBase.addRunOnCommit(document, () -> {
+            if (document.getUserData(UPDATE_ON_COMMIT_ENGAGED) != null) {
+              updateChangesForDocument(document);
+              document.putUserData(UPDATE_ON_COMMIT_ENGAGED, null);
             }
           });
         }
@@ -123,14 +120,11 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
     Application application = ApplicationManager.getApplication();
     final Editor editor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
     if (editor != null && !application.isUnitTestMode()) {
-      application.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          if (!editor.isDisposed()) {
-            EditorMarkupModel markupModel = (EditorMarkupModel)editor.getMarkupModel();
-            PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
-            TrafficLightRenderer.setOrRefreshErrorStripeRenderer(markupModel, myProject, editor.getDocument(), file);
-          }
+      application.invokeLater(() -> {
+        if (!editor.isDisposed()) {
+          EditorMarkupModel markupModel = (EditorMarkupModel)editor.getMarkupModel();
+          PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
+          TrafficLightRenderer.setOrRefreshErrorStripeRenderer(markupModel, myProject, editor.getDocument(), file);
         }
       }, ModalityState.stateForComponent(editor.getComponent()), myProject.getDisposed());
     }
@@ -221,7 +215,7 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
 
       List<Pair<PsiElement, Boolean>> toUpdate = changedElements.get(document);
       if (toUpdate == null) {
-        toUpdate = new SmartList<Pair<PsiElement, Boolean>>();
+        toUpdate = new SmartList<>();
         changedElements.put(document, toUpdate);
       }
       toUpdate.add(Pair.create(child, whitespaceOptimizationAllowed));

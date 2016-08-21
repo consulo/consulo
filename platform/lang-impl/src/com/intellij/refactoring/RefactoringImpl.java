@@ -17,7 +17,7 @@ package com.intellij.refactoring;
 
 import com.intellij.openapi.util.Ref;
 import com.intellij.usageView.UsageInfo;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author dsl

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * @author yole

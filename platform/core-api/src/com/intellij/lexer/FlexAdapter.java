@@ -16,7 +16,7 @@
 package com.intellij.lexer;
 
 import com.intellij.psi.tree.IElementType;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 import java.io.IOException;
 

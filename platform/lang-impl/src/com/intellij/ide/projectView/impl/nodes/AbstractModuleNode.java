@@ -23,11 +23,11 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -73,7 +73,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
 
     final VirtualFile testee;
     if (file.getFileSystem() instanceof ArchiveFileSystem) {
-      testee = ((ArchiveFileSystem)file.getFileSystem()).getVirtualFileForArchive(file);
+      testee = ((ArchiveFileSystem)file.getFileSystem()).getLocalVirtualFileFor(file);
       if (testee == null) return false;
     }
     else {

@@ -20,6 +20,7 @@
 package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
+import consulo.lang.LanguageVersion;
 
 public class DefaultWordCompletionFilter implements WordCompletionElementFilter {
   @Override

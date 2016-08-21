@@ -39,11 +39,11 @@ public class AllVcses implements AllVcsesI, Disposable {
 
   private AllVcses(final Project project) {
     myProject = project;
-    myVcses = new HashMap<String, AbstractVcs>();
+    myVcses = new HashMap<>();
     myLock = new Object();
 
     final VcsEP[] vcsEPs = Extensions.getExtensions(VcsEP.EP_NAME, myProject);
-    final HashMap<String, VcsEP> map = new HashMap<String, VcsEP>();
+    final HashMap<String, VcsEP> map = new HashMap<>();
     for (VcsEP vcsEP : vcsEPs) {
       map.put(vcsEP.name, vcsEP);
     }
@@ -91,14 +91,23 @@ public class AllVcses implements AllVcsesI, Disposable {
       if (vcs != null) {
         return vcs;
       }
-      final VcsEP ep = myExtensions.get(name);
-      if (ep != null) {
-        final AbstractVcs vcs1 = ep.getVcs(myProject);
-        LOG.assertTrue(vcs1 != null, name);
-        addVcs(vcs1);
-        return vcs1;
-      }
+    }
+
+    // unmodifiable map => no sync needed
+    final VcsEP ep = myExtensions.get(name);
+    if (ep == null) {
       return null;
+    }
+
+    // VcsEP guarantees to always return the same vcs value
+    final AbstractVcs vcs1 = ep.getVcs(myProject);
+    LOG.assertTrue(vcs1 != null, name);
+
+    synchronized (myLock) {
+      if (!myVcses.containsKey(name)) {
+        addVcs(vcs1);
+      }
+      return vcs1;
     }
   }
 
@@ -131,7 +140,7 @@ public class AllVcses implements AllVcsesI, Disposable {
   }
 
   public VcsDescriptor[] getAll() {
-    final List<VcsDescriptor> result = new ArrayList<VcsDescriptor>(myExtensions.size());
+    final List<VcsDescriptor> result = new ArrayList<>(myExtensions.size());
     for (VcsEP vcsEP : myExtensions.values()) {
       result.add(vcsEP.createDescriptor());
     }

@@ -17,7 +17,7 @@
 package com.intellij.xdebugger.breakpoints;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptorUpdaters;
+import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -31,8 +31,8 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.Exported;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.Exported;
+import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
 import java.util.Collections;

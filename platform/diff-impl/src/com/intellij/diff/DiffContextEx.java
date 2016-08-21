@@ -15,7 +15,7 @@
  */
 package com.intellij.diff;
 
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public abstract class DiffContextEx extends DiffContext {
   /*

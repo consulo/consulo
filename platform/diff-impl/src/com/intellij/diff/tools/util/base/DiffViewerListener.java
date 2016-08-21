@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.util.base;
 
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 public class DiffViewerListener {
   @RequiredDispatchThread

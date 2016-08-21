@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes.impl;
 
-import com.intellij.ide.highlighter.ZipArchiveFileType;
+import consulo.fileTypes.ZipArchiveFileType;
 import com.intellij.openapi.fileTypes.*;
 import org.jetbrains.annotations.NotNull;
 

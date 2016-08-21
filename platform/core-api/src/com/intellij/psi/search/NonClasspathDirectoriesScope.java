@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.Exported;
+import consulo.annotations.Exported;
 
 import java.util.Collection;
 import java.util.List;

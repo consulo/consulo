@@ -41,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static com.intellij.openapi.util.io.IoTestUtil.*;
 
@@ -90,7 +91,21 @@ public class FileWatcherTest extends PlatformLangTestCase {
     myWatcher = ((LocalFileSystemImpl)myFileSystem).getFileWatcher();
     assertNotNull(myWatcher);
     assertFalse(myWatcher.isOperational());
-    myWatcher.startup(myNotifier);
+    myWatcher.startup(new Consumer<Boolean>() {
+      @Override
+      public void accept(Boolean reset) {
+        myAlarm.cancelAllRequests();
+        myAlarm.addRequest(() -> {
+          myAccept = false;
+          LOG.debug("** waiting finished");
+          synchronized (myWaiter) {
+            myWaiter.notifyAll();
+          }
+        }, INTER_RESPONSE_DELAY);
+
+        //if (reset) resetHappened.set(true);
+      }
+    });
     assertTrue(myWatcher.isOperational());
 
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, getProject());
@@ -111,7 +126,6 @@ public class FileWatcherTest extends PlatformLangTestCase {
     myAcceptedDirectories.clear();
     myAcceptedDirectories.add(FileUtil.getTempDirectory());
 
-    LOG = FileWatcher.getLog();
     LOG.debug("================== setting up " + getName() + " ==================");
   }
 

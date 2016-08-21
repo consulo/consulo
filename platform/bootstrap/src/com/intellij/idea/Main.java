@@ -24,8 +24,8 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Restarter;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.mustbe.consulo.SharedConstants;
-import org.mustbe.consulo.application.ApplicationProperties;
+import consulo.SharedConstants;
+import consulo.application.ApplicationProperties;
 
 import javax.swing.*;
 import java.awt.*;

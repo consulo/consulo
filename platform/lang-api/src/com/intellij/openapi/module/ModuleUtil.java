@@ -19,23 +19,24 @@
  */
 package com.intellij.openapi.module;
 
+import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import lombok.val;
-import org.consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 public class ModuleUtil extends ModuleUtilCore {
-  private ModuleUtil() {}
+  private ModuleUtil() {
+  }
 
   public static boolean hasModuleExtension(@NotNull ModulesProvider modulesProvider, @NotNull Class<? extends ModuleExtension> clazz) {
-    for (val module : modulesProvider.getModules()) {
-      val rootModel = modulesProvider.getRootModel(module);
-      if(rootModel == null) {
+    for (Module module : modulesProvider.getModules()) {
+      ModuleRootModel rootModel = modulesProvider.getRootModel(module);
+      if (rootModel == null) {
         continue;
       }
 
       ModuleExtension extension = rootModel.getExtension(clazz);
-      if(extension != null) {
+      if (extension != null) {
         return true;
       }
     }

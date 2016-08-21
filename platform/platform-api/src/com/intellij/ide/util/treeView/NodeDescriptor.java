@@ -17,7 +17,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;

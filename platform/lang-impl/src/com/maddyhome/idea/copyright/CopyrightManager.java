@@ -45,8 +45,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.copyright.config.CopyrightFileConfig;
-import org.mustbe.consulo.copyright.config.CopyrightFileConfigManager;
+import consulo.copyright.config.CopyrightFileConfig;
+import consulo.copyright.config.CopyrightFileConfigManager;
 
 import java.util.Collection;
 import java.util.Iterator;

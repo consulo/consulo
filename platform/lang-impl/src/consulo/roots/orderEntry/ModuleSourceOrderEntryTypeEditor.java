@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 06-Jun-16
  */
-public class ModuleSourceOrderEntryTypeEditor extends OrderEntryTypeEditor<ModuleSourceOrderEntryImpl> {
+public class ModuleSourceOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleSourceOrderEntryImpl> {
   @NotNull
   @Override
   public CellAppearanceEx getCellAppearance(@NotNull ModuleSourceOrderEntryImpl orderEntry) {

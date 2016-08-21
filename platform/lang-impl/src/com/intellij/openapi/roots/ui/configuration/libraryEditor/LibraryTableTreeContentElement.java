@@ -19,7 +19,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.*;
 

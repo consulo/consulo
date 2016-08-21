@@ -31,11 +31,11 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.psi.PsiPackageSupportProvider;
+import consulo.module.extension.ModuleExtension;
+import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 

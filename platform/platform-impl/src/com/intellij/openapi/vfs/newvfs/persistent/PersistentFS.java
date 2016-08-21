@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 import java.io.IOException;
 import java.util.List;
@@ -64,6 +64,8 @@ public abstract class PersistentFS extends ManagingFS {
   public abstract int getId(@NotNull VirtualFile parent, @NotNull String childName, @NotNull NewVirtualFileSystem delegate);
 
   public abstract String getName(int id);
+
+  public abstract long getLastRecordedLength(@NotNull VirtualFile file);
 
   public abstract boolean isHidden(@NotNull VirtualFile file);
 

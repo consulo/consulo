@@ -16,9 +16,9 @@
 package com.intellij.psi.util;
 
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
-import com.intellij.lang.LanguageVersionResolver;
-import com.intellij.lang.LanguageVersionResolvers;
+import consulo.lang.LanguageVersion;
+import consulo.lang.LanguageVersionResolver;
+import consulo.lang.LanguageVersionResolvers;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;

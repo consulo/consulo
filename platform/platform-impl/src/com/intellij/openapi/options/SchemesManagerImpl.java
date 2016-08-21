@@ -43,7 +43,7 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.UniqueNameGenerator;
 import gnu.trove.THashSet;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

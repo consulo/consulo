@@ -17,6 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.roots.OrderEntry;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.orderEntry.OrderEntryType;
 
@@ -35,7 +36,7 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
     myType = provider;
   }
 
-  void setIndex(int index) {
+  public void setIndex(int index) {
     myIndex = index;
   }
 

@@ -18,7 +18,7 @@ package com.intellij.compiler.impl.packagingCompiler;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packaging.elements.ArchivePackageWriter;
+import consulo.packaging.elements.ArchivePackageWriter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

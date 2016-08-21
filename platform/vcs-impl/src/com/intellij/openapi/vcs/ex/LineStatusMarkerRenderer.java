@@ -44,12 +44,6 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     myRange = range;
   }
 
-  @Nullable
-  @Override
-  public String getTooltipText() {
-    return null;
-  }
-
   @NotNull
   public static RangeHighlighter createRangeHighlighter(@NotNull Range range,
                                                         @NotNull TextRange textRange,
@@ -71,7 +65,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
 
   @NotNull
   public static LineMarkerRenderer createRenderer(@NotNull Range range,
-                                                  @Nullable final Function<Editor, LineStatusMarkerPopup> popupBuilder) {
+                                                  @Nullable Function<Editor, LineStatusMarkerPopup> popupBuilder) {
     return new LineStatusMarkerRenderer(range) {
       @Override
       public boolean canDoAction(MouseEvent e) {
@@ -87,8 +81,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
   }
 
   @NotNull
-  public static LineMarkerRenderer createRenderer(final int line1, final int line2, @NotNull final Color color, @Nullable final String tooltip,
-                                                  @Nullable final PairConsumer<Editor, MouseEvent> action) {
+  public static LineMarkerRenderer createRenderer(int line1, int line2, @NotNull Color color, @Nullable String tooltip,
+                                                  @Nullable PairConsumer<Editor, MouseEvent> action) {
     return new ActiveGutterRenderer() {
       @Override
       public void paint(Editor editor, Graphics g, Rectangle r) {
@@ -186,30 +180,15 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
           paintRect(g, getGutterColor(innerRange, editor), null, x, start, endX, end);
         }
 
-        for (int i = 0; i < innerRanges.size(); i++) {
-          Range.InnerRange innerRange = innerRanges.get(i);
+        paintRect(g, null, borderColor, x, y, endX, endY);
+
+        for (Range.InnerRange innerRange : innerRanges) {
           if (innerRange.getType() != Range.DELETED) continue;
 
-          int start;
-          int end;
+          int start = lineToY(editor, innerRange.getLine1());
 
-          if (i == 0) {
-            start = lineToY(editor, innerRange.getLine1());
-            end = lineToY(editor, innerRange.getLine2()) + 5;
-          }
-          else if (i == innerRanges.size() - 1) {
-            start = lineToY(editor, innerRange.getLine1()) - 5;
-            end = lineToY(editor, innerRange.getLine2());
-          }
-          else {
-            start = lineToY(editor, innerRange.getLine1()) - 3;
-            end = lineToY(editor, innerRange.getLine2()) + 3;
-          }
-
-          paintRect(g, getGutterColor(innerRange, editor), null, x, start, endX, end);
+          paintTriangle(g, getGutterColor(innerRange, editor), borderColor, x, endX, start);
         }
-
-        paintRect(g, null, borderColor, x, y, endX, endY);
       }
     }
   }

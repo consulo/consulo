@@ -29,6 +29,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ConvertingIterator;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.FilteringIterator;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,7 +60,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
     }
   };
 
-  ModuleLibraryTable(ModuleRootLayerImpl rootLayer) {
+  public ModuleLibraryTable(ModuleRootLayerImpl rootLayer) {
     myRootLayer = rootLayer;
   }
 

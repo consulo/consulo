@@ -27,16 +27,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 public interface VcsContext extends PlaceProvider<String> {
-  Project getProject();
+  @Nullable Project getProject();
 
   @Nullable
   VirtualFile getSelectedFile();
 
   @NotNull
   VirtualFile[] getSelectedFiles();
+
+  @NotNull
+  default Stream<VirtualFile> getSelectedFilesStream() {
+    return Arrays.stream(getSelectedFiles());
+  }
 
   Editor getEditor();
 
@@ -50,8 +57,14 @@ public interface VcsContext extends PlaceProvider<String> {
 
   File getSelectedIOFile();
 
+  @NotNull
   FilePath[] getSelectedFilePaths();
-  
+
+  @NotNull
+  default Stream<FilePath> getSelectedFilePathsStream() {
+    return Arrays.stream(getSelectedFilePaths());
+  }
+
   @Nullable
   FilePath getSelectedFilePath();
 

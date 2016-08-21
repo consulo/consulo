@@ -16,7 +16,8 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import org.consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.roots.OrderEntryWithTracking;
+import consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

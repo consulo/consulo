@@ -54,6 +54,7 @@ import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.messages.MessageBus;
+import consulo.module.ModuleDirIsNotExistsException;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
 import consulo.lombok.annotations.Logger;
@@ -61,7 +62,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredWriteAction;
 
 import java.util.*;
 

@@ -16,7 +16,7 @@
 package com.intellij.profile;
 
 import com.intellij.openapi.util.JDOMExternalizable;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 
 /**

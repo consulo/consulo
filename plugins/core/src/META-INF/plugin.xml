@@ -60,27 +60,28 @@
     <xi:fallback/>
   </xi:include>
 
+  <xi:include href="/META-INF/Scratch.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+
   <extensionPoints>
-    <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP"/>
-    <extensionPoint name="addTo.listOfElements" beanClass="org.mustbe.consulo.util.AddToElementEP"/>
+    <extensionPoint name="listOfElements" beanClass="consulo.extensions.ListOfElementsEP"/>
+    <extensionPoint name="addTo.listOfElements" beanClass="consulo.extensions.AddToElementEP"/>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
-    <extensionPoint name="contentFolderTypeProvider" interface="org.mustbe.consulo.roots.ContentFolderTypeProvider"/>
-    <extensionPoint name="contentFolderPropertyProvider" interface="org.mustbe.consulo.roots.ContentFolderPropertyProvider"/>
-    <extensionPoint name="contentFolderSupportPatcher" interface="org.mustbe.consulo.roots.ContentFolderSupportPatcher"/>
-    <extensionPoint name="possibleModuleForFileResolver" interface="org.mustbe.consulo.roots.ContentEntryFileListener$PossibleModuleForFileResolver"/>
+    <extensionPoint name="contentFolderTypeProvider" interface="consulo.roots.ContentFolderTypeProvider"/>
+    <extensionPoint name="contentFolderPropertyProvider" interface="consulo.roots.ContentFolderPropertyProvider"/>
+    <extensionPoint name="contentFolderSupportPatcher" interface="consulo.roots.ContentFolderSupportPatcher"/>
+    <extensionPoint name="possibleModuleForFileResolver" interface="consulo.roots.ContentEntryFileListener$PossibleModuleForFileResolver"/>
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
-    <extensionPoint name="projectModelProcessor" interface="org.consulo.projectImport.ProjectModelProcessor"/>
+    <extensionPoint name="projectModelProcessor" interface="consulo.projectImport.ProjectModelProcessor"/>
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
     <extensionPoint name="postStartupActivity"
                     interface="com.intellij.openapi.startup.StartupActivity"/>
-
-    <extensionPoint name="errorHandler"
-                    interface="com.intellij.openapi.diagnostic.ErrorReportSubmitter"/>
 
     <extensionPoint name="projectConfigurable"
                     beanClass="com.intellij.openapi.options.ConfigurableEP"
@@ -154,12 +155,12 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighterFactory"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.elementIcon" beanClass="org.mustbe.consulo.lang.LanguageElementIcon"/>
+    <extensionPoint name="lang.elementIcon" beanClass="consulo.lang.LanguageElementIcon"/>
 
     <extensionPoint name="projectOpenProcessor"
                     interface="com.intellij.projectImport.ProjectOpenProcessor"/>
 
-    <extensionPoint name="gutterMarkPreprocessor" interface="com.intellij.openapi.editor.GutterMarkPreprocessor" />
+    <extensionPoint name="gutterMarkPreprocessor" interface="com.intellij.openapi.editor.GutterMarkPreprocessor"/>
 
     <extensionPoint name="codeInsight.linkHandler"
                     beanClass="com.intellij.codeInsight.hint.TooltipLinkHandlerEP">
@@ -177,7 +178,6 @@
     <extensionPoint name="http.fileEditorActionProvider"
                     interface="com.intellij.openapi.fileEditor.impl.http.RemoteFileEditorActionProvider"/>
 
-    <extensionPoint name="componentConfigurationMerger" interface="com.intellij.openapi.components.XmlConfigurationMerger"/>
     <extensionPoint name="filetype.decompiler" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.BinaryFileDecompiler"/>
     </extensionPoint>
@@ -198,7 +198,7 @@
 
     <extensionPoint name="productivityFeaturesProvider" interface="com.intellij.featureStatistics.ProductivityFeaturesProvider"/>
 
-    <extensionPoint name="iconDescriptorUpdater" interface="com.intellij.ide.IconDescriptorUpdater"/>
+    <extensionPoint name="iconDescriptorUpdater" interface="consulo.ide.IconDescriptorUpdater"/>
 
     <extensionPoint name="customizableActionGroupProvider" interface="com.intellij.ide.ui.customization.CustomizableActionGroupProvider"/>
 
@@ -207,9 +207,9 @@
     <extensionPoint name="checkinHandlerFactory" interface="com.intellij.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
     <extensionPoint name="writingAccessProvider" area="CONSULO_PROJECT" interface="com.intellij.openapi.vfs.WritingAccessProvider"/>
-    <extensionPoint name="editorNotificationProvider" area="CONSULO_PROJECT" interface="org.mustbe.consulo.editor.notifications.EditorNotificationProvider"/>
-    <extensionPoint name="featureStatBundle" interface="com.intellij.featureStatistics.FeatureStatisticsBundleProvider"/>
-    <extensionPoint name="featureStatisticsBundle" beanClass="com.intellij.featureStatistics.FeatureStatisticsBundleEP"/>
+    <extensionPoint name="nonProjectFileWritingAccessExtension" area="CONSULO_PROJECT"
+                    interface="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
+    <extensionPoint name="editorNotificationProvider" area="CONSULO_PROJECT" interface="consulo.editor.notifications.EditorNotificationProvider"/>
 
     <extensionPoint name="editorCustomization" area="CONSULO_PROJECT" interface="com.intellij.ui.EditorCustomization"/>
     <extensionPoint name="editorNavigation" interface="com.intellij.openapi.editor.EditorNavigationDelegate"/>
@@ -292,13 +292,13 @@
                     interface="com.intellij.compiler.impl.AdditionalCompileScopeProvider"/>
 
     <extensionPoint name="compiler.translatingHelper"
-                    interface="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorHelper"/>
+                    interface="consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper"/>
 
     <extensionPoint name="compiler.resourceCompilerExtension"
                     interface="com.intellij.compiler.impl.resourceCompiler.ResourceCompilerExtension"/>
 
     <extensionPoint name="compiler.additionalOutputDirectoriesProvider"
-                    interface="com.intellij.compiler.impl.AdditionalOutputDirectoriesProvider"/>
+                    interface="consulo.compiler.impl.AdditionalOutputDirectoriesProvider"/>
     <extensionPoint name="orderRootTypeEditor"
                     beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="com.intellij.openapi.roots.ui.OrderRootTypeUIFactory"/>
@@ -417,7 +417,7 @@
                     interface="com.intellij.lang.injection.ConcatenationAwareInjector"
                     area="CONSULO_PROJECT"/>
     <extensionPoint name="multiHostInjector"
-                    beanClass="com.intellij.lang.injection.MultiHostInjectorExtensionPoint"
+                    beanClass="consulo.lang.injection.MultiHostInjectorExtensionPoint"
                     area="CONSULO_PROJECT">
       <with attribute="forClass" implements="com.intellij.psi.PsiElement"/>
       <with attribute="implementationClass" implements="com.intellij.lang.injection.MultiHostInjector"/>
@@ -493,13 +493,13 @@
     <extensionPoint name="lang.structureViewExtension"
                     interface="com.intellij.ide.structureView.StructureViewExtension"/>
 
-    <extensionPoint name="lang.psi.elementFactory" interface="com.intellij.lang.PsiElementFactory"/>
+    <extensionPoint name="lang.psi.elementFactory" interface="consulo.psi.tree.PsiElementFactory"/>
 
-    <extensionPoint name="lang.ast.lazyFactory" interface="com.intellij.lang.ASTLazyFactory"/>
+    <extensionPoint name="lang.ast.lazyFactory" interface="consulo.psi.tree.ASTLazyFactory"/>
 
-    <extensionPoint name="lang.ast.leafFactory" interface="com.intellij.lang.ASTLeafFactory"/>
+    <extensionPoint name="lang.ast.leafFactory" interface="consulo.psi.tree.ASTLeafFactory"/>
 
-    <extensionPoint name="lang.ast.compositeFactory" interface="com.intellij.lang.ASTCompositeFactory"/>
+    <extensionPoint name="lang.ast.compositeFactory" interface="consulo.psi.tree.ASTCompositeFactory"/>
 
     <extensionPoint name="lang.formatter" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.formatting.FormattingModelBuilder"/>
@@ -528,11 +528,11 @@
     </extensionPoint>
 
     <extensionPoint name="lang.versionResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.LanguageVersionResolver"/>
+      <with attribute="implementationClass" implements="consulo.lang.LanguageVersionResolver"/>
     </extensionPoint>
 
     <extensionPoint name="lang.defineVersion" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.LanguageVersion"/>
+      <with attribute="implementationClass" implements="consulo.lang.LanguageVersion"/>
     </extensionPoint>
 
     <extensionPoint name="lang.treePatcher" beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -580,12 +580,12 @@
 
     <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="CONSULO_PROJECT"/>
 
-    <extensionPoint name="moduleExtensionProvider" beanClass="org.mustbe.consulo.module.extension.ModuleExtensionProviderEP">
-      <with attribute="immutableClass" implements="org.consulo.module.extension.ModuleExtension"/>
-      <with attribute="mutableClass" implements="org.consulo.module.extension.MutableModuleExtension"/>
+    <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.extension.ModuleExtensionProviderEP">
+      <with attribute="immutableClass" implements="consulo.module.extension.ModuleExtension"/>
+      <with attribute="mutableClass" implements="consulo.module.extension.MutableModuleExtension"/>
     </extensionPoint>
 
-    <extensionPoint name="moduleRootsProcessor" interface="com.intellij.openapi.roots.impl.ModuleRootsProcessor"/>
+    <extensionPoint name="moduleRootsProcessor" interface="consulo.roots.impl.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
     <extensionPoint qualifiedName="consulo.orderEntryType" interface="consulo.roots.orderEntry.OrderEntryType"/>
     <extensionPoint qualifiedName="consulo.orderEntryTypeEditor" beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
@@ -596,7 +596,6 @@
                     area="CONSULO_PROJECT"/>
     <extensionPoint name="librarySettingsProvider" interface="com.intellij.openapi.roots.ui.configuration.LibrarySettingsProvider"/>
 
-    <extensionPoint name="smartPointerElementInfoFactory" interface="com.intellij.psi.impl.smartPointers.SmartPointerElementInfoFactory"/>
     <extensionPoint name="smartPointerAnchorProvider" interface="com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider"/>
     <extensionPoint name="elementSignatureProvider" interface="com.intellij.codeInsight.folding.impl.ElementSignatureProvider"/>
     <extensionPoint name="preFormatProcessor" interface="com.intellij.psi.impl.source.codeStyle.PreFormatProcessor"/>
@@ -756,7 +755,7 @@
     <extensionPoint name="ui.suitableFontProvider" interface="com.intellij.ui.SuitableFontProvider"/>
 
     <extensionPoint name="schemeImporter" beanClass="com.intellij.openapi.options.SchemeImporterEP">
-      <with attribute="schemeClass" implements="org.consulo.util.pointers.Named"/>
+      <with attribute="schemeClass" implements="consulo.util.pointers.Named"/>
       <with attribute="implementationClass" implements="com.intellij.openapi.options.SchemeImporter"/>
     </extensionPoint>
 
@@ -773,8 +772,8 @@
     </extensionPoint>
 
     <extensionPoint name="psi.referenceProvider" beanClass="com.intellij.psi.PsiReferenceProviderBean"/>
-    <extensionPoint name="psi.packageSupportProvider" interface="org.consulo.psi.PsiPackageSupportProvider"/>
-    <extensionPoint name="psi.directoryMethodProxy" interface="com.intellij.psi.PsiDirectoryMethodProxy"/>
+    <extensionPoint name="psi.packageSupportProvider" interface="consulo.psi.PsiPackageSupportProvider"/>
+    <extensionPoint name="psi.directoryMethodProxy" interface="consulo.psi.PsiDirectoryMethodProxy"/>
     <extensionPoint name="patterns.patternClass" beanClass="com.intellij.patterns.compiler.PatternClassBean"/>
 
     <extensionPoint name="pom.declarationSearcher" interface="com.intellij.pom.PomDeclarationSearcher"/>
@@ -807,7 +806,7 @@
     <extensionPoint name="elementsToHighlightFilter" interface="com.intellij.openapi.util.Condition"/>
 
     <extensionPoint name="sdkType" interface="com.intellij.openapi.projectRoots.SdkType"/>
-    <extensionPoint name="predefinedBundlesProvider" interface="org.mustbe.consulo.bundle.PredefinedBundlesProvider"/>
+    <extensionPoint name="predefinedBundlesProvider" interface="consulo.bundle.PredefinedBundlesProvider"/>
 
     <extensionPoint name="library.presentationProvider" interface="com.intellij.openapi.roots.libraries.LibraryPresentationProvider"/>
     <extensionPoint name="library.type" interface="com.intellij.openapi.roots.libraries.LibraryType"/>
@@ -962,7 +961,7 @@
       <with attribute="builderClass" implements="com.intellij.ide.util.projectWizard.ModuleBuilder"/>
     </extensionPoint>
 
-    <extensionPoint name="newModuleBuilder" interface="org.mustbe.consulo.ide.impl.NewModuleBuilder"/>
+    <extensionPoint name="newModuleBuilder" interface="consulo.ide.impl.NewModuleBuilder"/>
 
     <extensionPoint name="methodNavigationOffsetProvider"
                     interface="com.intellij.codeInsight.navigation.MethodNavigationOffsetProvider"/>
@@ -1014,7 +1013,7 @@
     <extensionPoint name="templateCompletionProcessor"
                     interface="com.intellij.codeInsight.template.macro.TemplateCompletionProcessor"/>
 
-    <extensionPoint name="targetElementUtilEx" interface="com.intellij.codeInsight.TargetElementUtilEx"/>
+    <extensionPoint name="targetElementUtilEx" interface="consulo.codeInsight.TargetElementUtilEx"/>
 
     <extensionPoint name="statementUpDownMover" interface="com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover"/>
 
@@ -1044,7 +1043,7 @@
     <extensionPoint name="uiDebuggerExtension" interface="com.intellij.ui.debugger.UiDebuggerExtension"/>
 
     <extensionPoint name="projectViewPane" interface="com.intellij.ide.projectView.impl.AbstractProjectViewPane" area="CONSULO_PROJECT"/>
-    <extensionPoint name="projectViewOptionProvider" interface="com.intellij.ide.projectView.impl.ProjectViewPaneOptionProvider"/>
+    <extensionPoint name="projectViewOptionProvider" interface="consulo.ide.projectView.impl.ProjectViewPaneOptionProvider"/>
 
     <extensionPoint name="inlineActionHandler" interface="com.intellij.lang.refactoring.InlineActionHandler"/>
 
@@ -1121,7 +1120,7 @@
     <extensionPoint name="editor.linePainter" interface="com.intellij.openapi.editor.EditorLinePainter"/>
 
     <extensionPoint name="addModuleDependencyTabFactory"
-                    interface="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory"/>
+                    interface="consulo.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory"/>
 
     <extensionPoint name="actionFromOptionDescriptorProvider" interface="com.intellij.ide.ui.search.ActionFromOptionDescriptorProvider"/>
 
@@ -1129,11 +1128,12 @@
 
     <extensionPoint name="notification.parentGroup" beanClass="com.intellij.notification.impl.NotificationParentGroupBean"/>
     <extensionPoint name="notification.group" beanClass="com.intellij.notification.impl.NotificationGroupBean"/>
+
+    <extensionPoint qualifiedName="com.intellij.openapi.vcs.actions.AnnotateToggleAction.Provider"
+                    interface="com.intellij.openapi.vcs.actions.AnnotateToggleAction$Provider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
-
     <applicationService serviceInterface="com.intellij.openapi.application.ApplicationInfo"
                         serviceImplementation="com.intellij.openapi.application.impl.ApplicationInfoImpl"/>
 
@@ -1210,7 +1210,7 @@
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
                         serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"
-                        serviceImplementationForCompilerServer="org.consulo.compiler.server.fileSystem.CompilerServerRefreshQueueImpl"/>
+                        serviceImplementationForCompilerServer="consulo.compiler.server.fileSystem.CompilerServerRefreshQueueImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.ui.DialogWrapperPeerFactory"
                         serviceImplementation="com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl"/>
@@ -1280,7 +1280,7 @@
     <applicationService serviceInterface="com.intellij.openapi.editor.colors.EditorColorsManager"
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl"/>
     <applicationService serviceInterface="consulo.application.options.PathMacrosService"
-                        serviceImplementation="com.intellij.application.options.PathMacrosServiceImpl"/>
+                        serviceImplementation="consulo.application.options.PathMacrosServiceImpl"/>
     <schemeOwner serviceInterface="com.intellij.openapi.editor.colors.EditorColorsManager"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.FileAppearanceService"
@@ -1290,6 +1290,9 @@
 
     <applicationService serviceInterface="com.intellij.codeInsight.actions.FormatChangedTextUtil"
                         serviceImplementation="com.intellij.codeInsight.actions.VcsAwareFormatChangedTextUtil"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.vcs.actions.AnnotationsSettings"
+                        serviceImplementation="com.intellij.openapi.vcs.actions.AnnotationsSettings"/>
 
     <applicationService serviceImplementation="com.intellij.util.net.ssl.CertificateManager"/>
 
@@ -1351,6 +1354,8 @@
     <projectService serviceInterface="com.intellij.execution.testframework.sm.TestHistoryConfiguration"
                     serviceImplementation="com.intellij.execution.testframework.sm.TestHistoryConfiguration"/>
 
+    <projectService serviceImplementation="com.intellij.openapi.vcs.changes.VcsDirtyScopeVfsListener"/>
+
     <fileTypeFactory implementation="com.intellij.openapi.fileTypes.impl.PlatformFileTypeFactory"/>
     <postStartupActivity implementation="com.intellij.openapi.fileTypes.impl.ApproveRemovedMappingsActivity"/>
     <applicationService serviceInterface="com.intellij.openapi.options.colors.ColorSettingsPages"
@@ -1368,10 +1373,9 @@
 
     <applicationService serviceImplementation="com.intellij.ide.RemoteDesktopDetector"/>
 
-    <projectService serviceInterface="org.consulo.psi.PsiPackageManager"
-                    serviceImplementation="org.mustbe.consulo.psi.impl.PsiPackageManagerImpl"/>
+    <projectService serviceInterface="consulo.psi.PsiPackageManager"
+                    serviceImplementation="consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
-    <componentConfigurationMerger implementation="com.intellij.openapi.vcs.changes.shelf.ShelfManagerConfigurationMerger"/>
     <editorActionHandler action="EditorEscape" implementationClass="com.intellij.codeInsight.hint.EscapeHandler" id="hide-hints"/>
 
 
@@ -1408,7 +1412,7 @@
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.CharsetEP"/>
 
-    <iconDescriptorUpdater implementation="com.intellij.ide.LockedIconDescriptorUpdater"/>
+    <iconDescriptorUpdater implementation="consulo.ide.LockedIconDescriptorUpdater"/>
 
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.LargeFileEditorProvider"/>
     <frameEditorComponentProvider implementation="com.intellij.openapi.wm.ex.DefaultFrameEditorComponentProvider"/>
@@ -1418,7 +1422,7 @@
     <applicationService serviceInterface="com.intellij.ide.XmlRpcServer" serviceImplementation="com.intellij.ide.XmlRpcServerImpl"/>
 
     <httpRequestHandler implementation="com.intellij.ide.XmlRpcServerImpl$XmlRpcRequestHandler"/>
-    <httpRequestHandler implementation="org.mustbe.buildInWebServer.api.RequestFocusHttpRequestHandler"/>
+    <httpRequestHandler implementation="consulo.buildInWebServer.api.RequestFocusHttpRequestHandler"/>
 
     <editorNotificationProvider implementation="com.intellij.openapi.editor.impl.ForcedSoftWrapsNotificationProvider"/>
     <editorNotificationProvider implementation="com.intellij.ide.FileChangedNotificationProvider"/>
@@ -1474,7 +1478,7 @@
 
     <!--Rich-->
     <projectViewPane implementation="com.intellij.ide.projectView.impl.ProjectViewPane"/>
-    <projectViewOptionProvider implementation="com.intellij.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider"/>
+    <projectViewOptionProvider implementation="consulo.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider"/>
     <projectViewPane implementation="com.intellij.ide.projectView.impl.PackageViewPane"/>
 
     <renameHandler implementation="com.intellij.ide.projectView.impl.RenameModuleHandler"/>
@@ -1484,7 +1488,7 @@
         implementation="com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.ModulesAndLibrariesSourceItemsProvider"/>
     <packaging.sourceItemProvider
         implementation="com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.ArtifactsSourceItemsProvider"/>
-    <packaging.artifactType implementation="com.intellij.packaging.impl.artifacts.ZipArtifactType" order="first" id="zip-artifact"/>
+    <packaging.artifactType implementation="consulo.packaging.impl.artifacts.ZipArtifactType" order="first" id="zip-artifact"/>
     <packaging.artifactType implementation="com.intellij.packaging.impl.artifacts.PlainArtifactType" order="last"/>
     <compiler.additionalCompileScopeProvider implementation="com.intellij.packaging.impl.compiler.ArtifactAdditionalCompileScopeProvider"/>
     <gotoRelatedProvider implementation="com.intellij.testIntegration.GotoTestRelatedProvider"/>
@@ -1541,7 +1545,7 @@
 
     <projectConfigurable id="project.propCompiler.excluded" bundle="messages.CompilerBundle" key="actions.exclude.from.compile.text"
                          parentId="project.propCompiler"
-                         instance="com.intellij.compiler.options.CompilerExcludedConfigurable"/>
+                         instance="consulo.compiler.options.CompilerExcludedConfigurable"/>
 
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectDirCheckoutListener"/>
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
@@ -1549,15 +1553,15 @@
 
     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 
-    <orderRootType implementation="com.intellij.openapi.roots.types.BinariesOrderRootType"/>
+    <orderRootType implementation="consulo.roots.types.BinariesOrderRootType"/>
     <orderRootTypeEditor key="binaries"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.BinariesOrderRootTypeUIFactory"/>
 
-    <orderRootType implementation="com.intellij.openapi.roots.types.SourcesOrderRootType"/>
+    <orderRootType implementation="consulo.roots.types.SourcesOrderRootType"/>
     <orderRootTypeEditor key="sources"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
-    <orderRootType implementation="com.intellij.openapi.roots.types.DocumentationOrderRootType"/>
+    <orderRootType implementation="consulo.roots.types.DocumentationOrderRootType"/>
     <orderRootTypeEditor key="documentation"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
 
@@ -1569,7 +1573,7 @@
     <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRun" id="compileBeforeRun"/>
     <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRunNoErrorCheck"
                             id="compileBeforeRunNoErrorCheck" order="after compileBeforeRun"/>
-    <stepsBeforeRunProvider implementation="com.intellij.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider"
+    <stepsBeforeRunProvider implementation="consulo.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider"
                             order="after compileBeforeRunNoErrorCheck"/>
     <stepsBeforeRunProvider implementation="com.intellij.execution.impl.RunConfigurationBeforeRunProvider"/>
 
@@ -1589,7 +1593,7 @@
     <projectService serviceInterface="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"
                     serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
 
-    <roots.watchedRootsProvider implementation="com.intellij.compiler.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
+    <roots.watchedRootsProvider implementation="consulo.compiler.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
@@ -1778,8 +1782,8 @@
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.MemberOrderService"/>
 
-    <applicationService serviceInterface="org.consulo.sdk.SdkPointerManager"
-                        serviceImplementation="org.consulo.sdk.impl.SdkPointerManagerImpl"/>
+    <applicationService serviceInterface="consulo.bundle.SdkPointerManager"
+                        serviceImplementation="consulo.module.bundle.SdkPointerManagerImpl"/>
     <rearranger.ui implementation="com.intellij.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
 
     <projectService serviceInterface="com.intellij.ui.EditorTextFieldProvider"
@@ -1959,9 +1963,9 @@
     <patternDialectProvider implementation="com.intellij.packageDependencies.ui.ProjectPatternProvider" id="file"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.DefaultScopesProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.TestScopeProvider"/>
-    <customScopesProvider implementation="com.intellij.packageDependencies.ResourceScopeProvider"/>
-    <customScopesProvider implementation="com.intellij.packageDependencies.TestResourceScopeProvider"/>
-    <customScopesProvider implementation="com.intellij.packageDependencies.SourceScopeProvider"/>
+    <customScopesProvider implementation="consulo.packageDependencies.ResourceScopeProvider"/>
+    <customScopesProvider implementation="consulo.packageDependencies.TestResourceScopeProvider"/>
+    <customScopesProvider implementation="consulo.packageDependencies.SourceScopeProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.ChangeListsScopesProvider" order="last"/>
     <refactoring.elementListenerProvider implementation="com.intellij.packageDependencies.ui.RefactoringScopeElementListenerProvider"/>
 
@@ -2389,22 +2393,22 @@
              order="after openedInEditor"/>
 
 
-    <iconDescriptorUpdater implementation="com.intellij.psi.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
+    <iconDescriptorUpdater implementation="consulo.ide.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
 
-    <lang.ast.lazyFactory implementation="com.intellij.lang.impl.DefaultASTLazyFactory" order="last"/>
-    <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last"/>
-    <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last"/>
-    <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultPsiElementFactory" order="last"/>
-    <iconDescriptorUpdater implementation="org.consulo.compiler.CompilerIconDescriptorUpdater"/>
+    <lang.ast.lazyFactory implementation="consulo.psi.tree.impl.DefaultASTLazyFactory" order="last"/>
+    <lang.ast.leafFactory implementation="consulo.psi.tree.impl.DefaultASTLeafFactory" order="last"/>
+    <lang.ast.compositeFactory implementation="consulo.psi.tree.impl.DefaultASTCompositeFactory" order="last"/>
+    <lang.psi.elementFactory implementation="consulo.psi.tree.impl.DefaultPsiElementFactory" order="last"/>
+    <iconDescriptorUpdater implementation="consulo.compiler.CompilerIconDescriptorUpdater"/>
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
     <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler" order="last"/>
     <compiler implementation="com.intellij.compiler.impl.resourceCompiler.ResourceCompiler" id="resourceCompiler"/>
-    <projectService serviceInterface="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"
-                    serviceImplementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"/>
+    <projectService serviceInterface="consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"
+                    serviceImplementation="consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"/>
 
     <projectConfigurable parentId="project.propCompiler"
-                         instance="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfigurable"
+                         instance="consulo.compiler.impl.resourceCompiler.ResourceCompilerConfigurable"
                          key="resource.compiler.description" bundle="messages.CompilerBundle"/>
 
 
@@ -2425,26 +2429,26 @@
     <projectService serviceImplementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector"/>
     <postStartupActivity implementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.PluginsAdvertiser"/>
 
-    <moduleService serviceInterface="org.consulo.compiler.ModuleCompilerPathsManager"
-                   serviceImplementation="org.consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
+    <moduleService serviceInterface="consulo.compiler.ModuleCompilerPathsManager"
+                   serviceImplementation="consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
 
-    <qualifiedNameProvider implementation="com.intellij.ide.actions.PsiPackageQualifiedNameProvider"/>
+    <qualifiedNameProvider implementation="consulo.ide.actions.PsiPackageQualifiedNameProvider"/>
 
     <pathMacroExpendableProtocol protocol="zip"/>
 
-    <projectService serviceInterface="org.mustbe.consulo.module.extension.ModuleExtensionHelper"
-                    serviceImplementation="org.mustbe.consulo.module.extension.ModuleExtensionHelperImpl"/>
+    <projectService serviceInterface="consulo.module.extension.ModuleExtensionHelper"
+                    serviceImplementation="consulo.module.extension.ModuleExtensionHelperImpl"/>
 
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.WebResourcesFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionResourceContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.TestContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.TestResourceContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.WebResourcesFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.roots.impl.ExcludedContentFolderTypeProvider"/>
 
-    <contentFolderPropertyProvider implementation="org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
+    <contentFolderPropertyProvider implementation="consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
 
-    <generatedSourcesFilter implementation="org.mustbe.consulo.roots.impl.property.GeneratedOnRootSourcesFilter"/>
+    <generatedSourcesFilter implementation="consulo.roots.impl.property.GeneratedOnRootSourcesFilter"/>
     <defaultHighlightingSettingProvider implementation="com.intellij.codeInsight.daemon.impl.analysis.GeneratedSourcesHighlightingSettingProvider"/>
     <editorNotificationProvider implementation="com.intellij.ide.GeneratedFileEditingNotificationProvider"/>
 
@@ -2460,29 +2464,27 @@
     <!--the following binding uses 'first' order to make sure it captures raw text before any other processor modifies it -->
     <copyPastePreProcessor implementation="com.intellij.openapi.editor.richcopy.TextWithMarkupProcessor$RawTextSetter" order="first" id="richcopy"/>
 
-    <newModuleBuilder implementation="org.mustbe.consulo.ide.impl.EmptyNewModuleBuilder"/>
+    <newModuleBuilder implementation="consulo.ide.impl.EmptyNewModuleBuilder"/>
 
     <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.IndentingBackspaceHandler"/>
 
-    <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.FileOrDirectoryDependencyTabFactory"/>
-    <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.ModuleDependencyTabFactory"/>
-    <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.ProjectLibraryTabFactory"/>
+    <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.FileOrDirectoryDependencyTabFactory"/>
+    <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.ModuleDependencyTabFactory"/>
+    <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.ProjectLibraryTabFactory"/>
 
     <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectableIndentOptionsProvider" order="last"/>
 
     <editorNotificationProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectedIndentOptionsNotificationProvider"/>
 
-    <predefinedBundlesProvider implementation="org.mustbe.consulo.bundle.DefaultPredefinedBundlesProvider" order="first"/>
+    <predefinedBundlesProvider implementation="consulo.bundle.DefaultPredefinedBundlesProvider" order="first"/>
 
     <ui.suitableFontProvider implementation="com.intellij.ui.SuitableFontProviderImpl"/>
 
-    <moduleRootsProcessor implementation="com.intellij.openapi.roots.impl.NullModuleDirModuleRootsProcessor" order="last"/>
+    <moduleRootsProcessor implementation="consulo.roots.impl.NullModuleDirModuleRootsProcessor" order="last"/>
 
-    <targetElementUtilEx implementation="com.intellij.codeInsight.TargetElementUtilExImpl"/>
+    <targetElementUtilEx implementation="consulo.codeInsight.TargetElementUtilExImpl"/>
 
     <bidiRegionsSeparator language="" implementationClass="com.intellij.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
-
-    <smartPointerElementInfoFactory implementation="com.intellij.psi.impl.smartPointers.AnchorElementInfoFactory"/>
 
     <additionalTextAttributes scheme="Default" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
     <additionalTextAttributes scheme="Darcula" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>

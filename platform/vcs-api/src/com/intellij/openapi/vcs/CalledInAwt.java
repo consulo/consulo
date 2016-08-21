@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs;
 
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

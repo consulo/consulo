@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,14 @@ package com.intellij.openapi.vcs.changes.patch;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vcs.VcsBundle;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.File;
 
 public class PatchFileType implements FileType {
   public static final PatchFileType INSTANCE = new PatchFileType();
@@ -68,7 +70,15 @@ public class PatchFileType implements FileType {
 
   @Nullable
   @NonNls
-  public String getCharset(@NotNull VirtualFile file, final byte[] content) {
+  public String getCharset(@NotNull VirtualFile file, @NotNull final byte[] content) {
     return null;
+  }
+
+  public static boolean isPatchFile(@Nullable VirtualFile vFile) {
+    return vFile != null && vFile.getFileType() == PatchFileType.INSTANCE;
+  }
+
+  public static boolean isPatchFile(@NotNull File file) {
+    return isPatchFile(VfsUtil.findFileByIoFile(file, true));
   }
 }

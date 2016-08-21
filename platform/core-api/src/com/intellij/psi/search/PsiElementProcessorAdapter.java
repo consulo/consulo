@@ -22,7 +22,7 @@ package com.intellij.psi.search;
 import com.intellij.openapi.application.ReadActionProcessor;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Processor;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 public class PsiElementProcessorAdapter<T extends PsiElement> extends ReadActionProcessor<T> implements Processor<T> {
   private final PsiElementProcessor<T> myProcessor;

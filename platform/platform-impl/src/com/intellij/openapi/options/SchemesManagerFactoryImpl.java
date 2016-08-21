@@ -17,14 +17,14 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx2;
+import consulo.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
 import com.intellij.openapi.components.impl.stores.StreamProvider;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.lombok.annotations.Logger;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 
 import java.io.File;
 import java.util.List;

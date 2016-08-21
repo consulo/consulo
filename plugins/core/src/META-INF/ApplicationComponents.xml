@@ -44,28 +44,27 @@
     <component>
       <interface-class>com.intellij.openapi.vfs.pointers.VirtualFilePointerManager</interface-class>
       <implementation-class>com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl</implementation-class>
-      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerVirtualFilePointerManager</compiler-server-implementation-class>
+      <compiler-server-implementation-class>consulo.compiler.server.fileSystem.CompilerServerVirtualFilePointerManager</compiler-server-implementation-class>
     </component>
 
     <component>
       <interface-class>com.intellij.openapi.vfs.newvfs.ManagingFS</interface-class>
       <implementation-class>com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl</implementation-class>
-      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerManagingFSImpl</compiler-server-implementation-class>
+      <compiler-server-implementation-class>consulo.compiler.server.fileSystem.CompilerServerManagingFSImpl</compiler-server-implementation-class>
     </component>
 
     <component>
       <interface-class>com.intellij.openapi.vfs.LocalFileSystem</interface-class>
       <implementation-class>com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl</implementation-class>
-      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerLocalFileSystemImpl</compiler-server-implementation-class>
+      <compiler-server-implementation-class>consulo.compiler.server.fileSystem.CompilerServerLocalFileSystemImpl</compiler-server-implementation-class>
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.vfs.JarFileSystem</interface-class>
       <implementation-class>com.intellij.openapi.vfs.impl.jar.JarFileSystemImpl</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.vfs.impl.zip.ZipFileSystemImpl</implementation-class>
+      <implementation-class>consulo.vfs.impl.zip.ZipFileSystemImpl</implementation-class>
     </component>
 
     <component>
@@ -246,12 +245,12 @@
     <component>
       <interface-class>com.intellij.util.indexing.FileBasedIndex</interface-class>
       <implementation-class>com.intellij.util.indexing.FileBasedIndexImpl</implementation-class>
-      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerFileBasedIndexImpl</compiler-server-implementation-class>
+      <compiler-server-implementation-class>consulo.compiler.server.fileSystem.CompilerServerFileBasedIndexImpl</compiler-server-implementation-class>
     </component>
     <component>
       <interface-class>com.intellij.psi.stubs.StubIndex</interface-class>
       <implementation-class>com.intellij.psi.stubs.StubIndexImpl</implementation-class>
-      <compiler-server-implementation-class>org.consulo.compiler.server.index.CompilerServerStubIndexImpl</compiler-server-implementation-class>
+      <compiler-server-implementation-class>consulo.compiler.server.index.CompilerServerStubIndexImpl</compiler-server-implementation-class>
     </component>
 
     <component>
@@ -272,9 +271,6 @@
       <implementation-class>com.intellij.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter</implementation-class>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.vcs.changes.VcsDirtyScopeVfsListener</implementation-class>
-    </component>
-    <component>
       <implementation-class>com.intellij.lifecycle.PeriodicalTasksCloser</implementation-class>
     </component>
     <component>
@@ -293,14 +289,14 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
+      <interface-class>consulo.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
       <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl</implementation-class>
-      <compiler-server-implementation-class>org.consulo.compiler.server.compiler.TranslatingCompilerFilesMonitorImpl</compiler-server-implementation-class>
+      <compiler-server-implementation-class>consulo.compiler.server.compiler.TranslatingCompilerFilesMonitorImpl</compiler-server-implementation-class>
     </component>
 
     <component>
-      <interface-class>org.consulo.compiler.server.rmi.CompilerServerConnector</interface-class>
-      <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
+      <interface-class>consulo.compiler.server.rmi.CompilerServerConnector</interface-class>
+      <implementation-class>consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
       <compiler-server-implementation-class></compiler-server-implementation-class>
     </component>
     <component>
@@ -308,7 +304,7 @@
       <implementation-class>com.intellij.openapi.actionSystem.impl.AbbreviationManagerImpl</implementation-class>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.projectRoots.impl.PredefinedBundlesLoader</implementation-class>
+      <implementation-class>consulo.bundle.impl.PredefinedBundlesLoader</implementation-class>
     </component>
 
     <component>

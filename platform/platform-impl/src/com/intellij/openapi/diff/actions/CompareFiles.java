@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.actions;
 
-import com.intellij.ide.highlighter.ArchiveFileType;
+import consulo.fileTypes.ArchiveFileType;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DiffManager;

@@ -33,7 +33,9 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer {
    * @return the tooltip text, or null if no tooltip is required.
    */
   @Nullable
-  String getTooltipText();
+  default String getTooltipText() {
+    return null;
+  }
 
   /**
    * Processes a mouse released event on the marker.

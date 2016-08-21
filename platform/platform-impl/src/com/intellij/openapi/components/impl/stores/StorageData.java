@@ -17,10 +17,7 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.PathMacroSubstitutor;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import com.intellij.openapi.components.XmlConfigurationMerger;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
@@ -80,11 +77,6 @@ public class StorageData extends StorageDataBase {
         JDOMUtil.internElement(element, interner);
       }
 
-      Object serverElement = myStates.get(name);
-      if (serverElement != null) {
-        element = mergeElements(name, element, (Element)serverElement);
-      }
-
       myStates.put(name, element);
 
       if (pathMacroSubstitutor instanceof TrackingPathMacroSubstitutor) {
@@ -104,17 +96,6 @@ public class StorageData extends StorageDataBase {
       return null;
     }
     return name;
-  }
-
-  @NotNull
-  private static Element mergeElements(@NotNull String name, @NotNull Element localElement, @NotNull Element serverElement) {
-    ExtensionPoint<XmlConfigurationMerger> point = Extensions.getRootArea().getExtensionPoint("com.intellij.componentConfigurationMerger");
-    for (XmlConfigurationMerger merger : point.getExtensions()) {
-      if (merger.getComponentName().equals(name)) {
-        return merger.merge(serverElement, localElement);
-      }
-    }
-    return serverElement;
   }
 
   @Nullable

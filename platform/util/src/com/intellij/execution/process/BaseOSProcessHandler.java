@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,35 +15,57 @@
  */
 package com.intellij.execution.process;
 
+import com.intellij.execution.CommandLineUtil;
 import com.intellij.execution.TaskExecutor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
-import com.intellij.util.ConcurrencyUtil;
+import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.BaseDataReader;
+import com.intellij.util.io.BaseInputStreamReader;
 import com.intellij.util.io.BaseOutputReader;
+import com.intellij.util.io.BaseOutputReader.Options;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.nio.charset.Charset;
-import java.util.concurrent.*;
-
-import static com.intellij.util.io.BaseDataReader.AdaptiveSleepingPolicy;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.process.OSProcessHandlerBase");
+  private static final Logger LOG = Logger.getInstance(BaseOSProcessHandler.class);
 
-  @NotNull protected final Process myProcess;
-  @Nullable protected final String myCommandLine;
+  private static final Options ADAPTIVE_NON_BLOCKING = new Options() {
+    @Override
+    public BaseDataReader.SleepingPolicy policy() {
+      return new BaseDataReader.AdaptiveSleepingPolicy();
+    }
+  };
+
+  protected final Process myProcess;
+  protected final String myCommandLine;
+  protected final Charset myCharset;
+  protected final String myPresentableName;
   protected final ProcessWaitFor myWaitFor;
-  @Nullable protected final Charset myCharset;
 
-  public BaseOSProcessHandler(@NotNull final Process process, @Nullable final String commandLine, @Nullable Charset charset) {
+  /**
+   * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
+   */
+  public BaseOSProcessHandler(@NotNull Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     myProcess = process;
     myCommandLine = commandLine;
     myCharset = charset;
-    myWaitFor = new ProcessWaitFor(process, this);
+    if (StringUtil.isEmpty(commandLine)) {
+      LOG.warn(new IllegalArgumentException("Must specify non-empty 'commandLine' parameter"));
+    }
+    myPresentableName = CommandLineUtil.extractPresentableName(StringUtil.notNullize(commandLine));
+    myWaitFor = new ProcessWaitFor(process, this, myPresentableName);
   }
 
   /**
@@ -51,12 +73,14 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
    *
    * @param task a task to run
    */
-  protected Future<?> executeOnPooledThread(Runnable task) {
-    return ExecutorServiceHolder.ourThreadExecutorsService.submit(task);
+  @NotNull
+  protected Future<?> executeOnPooledThread(@NotNull final Runnable task) {
+    return ProcessIOExecutorService.INSTANCE.submit(task);
   }
 
   @Override
-  public Future<?> executeTask(Runnable task) {
+  @NotNull
+  public Future<?> executeTask(@NotNull Runnable task) {
     return executeOnPooledThread(task);
   }
 
@@ -65,8 +89,31 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
     return myProcess;
   }
 
+  /** @deprecated use {@link #readerOptions()} (to be removed in IDEA 18) */
   protected boolean useAdaptiveSleepingPolicyWhenReadingOutput() {
     return false;
+  }
+
+  /** @deprecated use {@link #readerOptions()} (to be removed in IDEA 18) */
+  protected boolean useNonBlockingRead() {
+    return !Registry.is("output.reader.blocking.mode", false);
+  }
+
+  /**
+   * Override this method to fine-tune {@link BaseOutputReader} behavior.
+   */
+  @NotNull
+  @SuppressWarnings("deprecation")
+  protected Options readerOptions() {
+    if (!useNonBlockingRead()) {
+      return Options.BLOCKING;
+    }
+    else if (useAdaptiveSleepingPolicyWhenReadingOutput()) {
+      return ADAPTIVE_NON_BLOCKING;
+    }
+    else {
+      return Options.NON_BLOCKING;
+    }
   }
 
   protected boolean processHasSeparateErrorStream() {
@@ -83,25 +130,23 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
       @Override
       public void startNotified(final ProcessEvent event) {
         try {
-          BaseDataReader.SleepingPolicy sleepingPolicy =
-                  useAdaptiveSleepingPolicyWhenReadingOutput() ? new AdaptiveSleepingPolicy() : BaseDataReader.SleepingPolicy.SIMPLE;
-          final BaseDataReader stdoutReader = createOutputDataReader(sleepingPolicy);
-          final BaseDataReader stderrReader = processHasSeparateErrorStream() ? createErrorDataReader(sleepingPolicy) : null;
+          Options options = readerOptions();
+          @SuppressWarnings("deprecation") final BaseDataReader stdOutReader = createOutputDataReader(options.policy());
+          @SuppressWarnings("deprecation") final BaseDataReader stdErrReader = processHasSeparateErrorStream() ? createErrorDataReader(options.policy()) : null;
 
           myWaitFor.setTerminationCallback(new Consumer<Integer>() {
             @Override
             public void consume(Integer exitCode) {
               try {
                 // tell readers that no more attempts to read process' output should be made
-                if (stderrReader != null) stderrReader.stop();
-                stdoutReader.stop();
+                if (stdErrReader != null) stdErrReader.stop();
+                stdOutReader.stop();
 
                 try {
-                  if (stderrReader != null) stderrReader.waitFor();
-                  stdoutReader.waitFor();
+                  if (stdErrReader != null) stdErrReader.waitFor();
+                  stdOutReader.waitFor();
                 }
-                catch (InterruptedException ignore) {
-                }
+                catch (InterruptedException ignore) { }
               }
               finally {
                 onOSProcessTerminated(exitCode);
@@ -118,36 +163,45 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
     super.startNotify();
   }
 
-  @NotNull
-  protected BaseDataReader createErrorDataReader(BaseDataReader.SleepingPolicy sleepingPolicy) {
-    return new SimpleOutputReader(createProcessErrReader(), ProcessOutputTypes.STDERR,
-                                  sleepingPolicy);
+  /** @deprecated override {@link #createOutputDataReader()} (to be removed in IDEA 18) */
+  protected BaseDataReader createErrorDataReader(@SuppressWarnings("UnusedParameters") BaseDataReader.SleepingPolicy policy) {
+    return createErrorDataReader();
+  }
+
+  /** @deprecated override {@link #createOutputDataReader()} (to be removed in IDEA 18) */
+  protected BaseDataReader createOutputDataReader(@SuppressWarnings("UnusedParameters") BaseDataReader.SleepingPolicy policy) {
+    return createOutputDataReader();
   }
 
   @NotNull
-  protected BaseDataReader createOutputDataReader(BaseDataReader.SleepingPolicy sleepingPolicy) {
-    return new SimpleOutputReader(createProcessOutReader(), ProcessOutputTypes.STDOUT, sleepingPolicy);
+  protected BaseDataReader createErrorDataReader() {
+    return new SimpleOutputReader(createProcessErrReader(), ProcessOutputTypes.STDERR, readerOptions(), "error stream of " + myPresentableName);
+  }
+
+  @NotNull
+  protected BaseDataReader createOutputDataReader() {
+    return new SimpleOutputReader(createProcessOutReader(), ProcessOutputTypes.STDOUT, readerOptions(), "output stream of " + myPresentableName);
   }
 
   protected void onOSProcessTerminated(final int exitCode) {
     notifyProcessTerminated(exitCode);
   }
 
+  @NotNull
   protected Reader createProcessOutReader() {
     return createInputStreamReader(myProcess.getInputStream());
   }
 
+  @NotNull
   protected Reader createProcessErrReader() {
     return createInputStreamReader(myProcess.getErrorStream());
   }
 
-  private Reader createInputStreamReader(InputStream streamToRead) {
-    final Charset charset = getCharset();
-    if (charset == null) {
-      // use default charset
-      return new InputStreamReader(streamToRead);
-    }
-    return new InputStreamReader(streamToRead, charset);
+  @NotNull
+  private Reader createInputStreamReader(@NotNull InputStream streamToRead) {
+    Charset charset = getCharset();
+    if (charset == null) charset = Charset.defaultCharset();
+    return new BaseInputStreamReader(streamToRead, charset);
   }
 
   @Override
@@ -198,7 +252,7 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
     return myProcess.getOutputStream();
   }
 
-  @Nullable
+  /*@NotNull*/
   public String getCommandLine() {
     return myCommandLine;
   }
@@ -208,30 +262,27 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
     return myCharset;
   }
 
+  @SuppressWarnings("unused")
   public static class ExecutorServiceHolder {
-    private static final ExecutorService ourThreadExecutorsService = createServiceImpl();
-
-    private static ThreadPoolExecutor createServiceImpl() {
-      ThreadFactory factory = ConcurrencyUtil.newNamedThreadFactory("OSProcessHandler pooled thread");
-      return new ThreadPoolExecutor(10, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), factory);
-    }
-
-    public static Future<?> submit(Runnable task) {
-      return ourThreadExecutorsService.submit(task);
+    /** @deprecated use {@link BaseOSProcessHandler#executeTask(Runnable)} instead (to be removed in IDEA 17) */
+    public static Future<?> submit(@NotNull Runnable task) {
+      LOG.warn("Deprecated method. Please use com.intellij.execution.process.BaseOSProcessHandler.executeTask() instead", new Throwable());
+      return AppExecutorUtil.getAppExecutorService().submit(task);
     }
   }
 
   private class SimpleOutputReader extends BaseOutputReader {
     private final Key myProcessOutputType;
 
-    private SimpleOutputReader(@NotNull Reader reader, @NotNull Key processOutputType, SleepingPolicy sleepingPolicy) {
-      super(reader, sleepingPolicy);
-      myProcessOutputType = processOutputType;
-      start();
+    private SimpleOutputReader(Reader reader, Key outputType, Options options, @NotNull String presentableName) {
+      super(reader, options);
+      myProcessOutputType = outputType;
+      start(presentableName);
     }
 
+    @NotNull
     @Override
-    protected Future<?> executeOnPooledThread(Runnable runnable) {
+    protected Future<?> executeOnPooledThread(@NotNull Runnable runnable) {
       return BaseOSProcessHandler.this.executeOnPooledThread(runnable);
     }
 
@@ -239,5 +290,34 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
     protected void onTextAvailable(@NotNull String text) {
       notifyTextAvailable(text, myProcessOutputType);
     }
+  }
+
+  @Override
+  public String toString() {
+    return myCommandLine;
+  }
+
+  @Override
+  public boolean waitFor() {
+    boolean result = super.waitFor();
+    try {
+      myWaitFor.waitFor();
+    }
+    catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    return result;
+  }
+
+  @Override
+  public boolean waitFor(long timeoutInMilliseconds) {
+    boolean result = super.waitFor(timeoutInMilliseconds);
+    try {
+      result &= myWaitFor.waitFor(timeoutInMilliseconds, TimeUnit.MILLISECONDS);
+    }
+    catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    return result;
   }
 }

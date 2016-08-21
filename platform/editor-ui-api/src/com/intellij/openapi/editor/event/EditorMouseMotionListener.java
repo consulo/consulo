@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.event;
 
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import java.util.EventListener;
 

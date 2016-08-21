@@ -40,7 +40,7 @@ public final class PostfixTemplateMetaData extends BeforeAfterActionMetaData {
   private static final String DESCRIPTION_FOLDER = "postfixTemplates";
 
   @NotNull
-  static PostfixTemplateMetaData createMetaData(@Nullable PostfixTemplate template) {
+  public static PostfixTemplateMetaData createMetaData(@Nullable PostfixTemplate template) {
     if (template == null) return EMPTY_METADATA;
 
     return new PostfixTemplateMetaData(template);

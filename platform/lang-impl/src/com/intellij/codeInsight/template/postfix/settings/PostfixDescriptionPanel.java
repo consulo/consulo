@@ -31,7 +31,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-class PostfixDescriptionPanel implements Disposable {
+public class PostfixDescriptionPanel implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionDescriptionPanel");
   private JPanel myPanel;
 
@@ -93,7 +93,7 @@ class PostfixDescriptionPanel implements Disposable {
     Disposer.register(this, actionUsagePanel);
   }
 
-  JPanel getComponent() {
+  public JPanel getComponent() {
     return myPanel;
   }
 

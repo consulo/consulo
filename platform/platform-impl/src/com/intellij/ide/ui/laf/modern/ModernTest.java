@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.ui.laf.modern;
 
-import com.intellij.ide.ui.laf.modernDark.ModernDarkLaf;
+import consulo.ide.ui.laf.modernDark.ModernDarkLaf;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.ShowUIDefaultsAction;

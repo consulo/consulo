@@ -19,19 +19,14 @@ import com.intellij.diff.comparison.DiffTooBigException;
 import com.intellij.diff.util.TextDiffType;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.ui.EditorNotificationPanel;
+import com.intellij.ui.HyperlinkLabel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DiffNotifications {
-  @Deprecated @NotNull public static final JPanel INSERTED_CONTENT = createInsertedContent();
-  @Deprecated @NotNull public static final JPanel REMOVED_CONTENT = createRemovedContent();
-  @Deprecated @NotNull public static final JPanel EQUAL_CONTENTS = createEqualContents();
-  @Deprecated @NotNull public static final JPanel ERROR = createError();
-  @Deprecated @NotNull public static final JPanel OPERATION_CANCELED = createOperationCanceled();
-  @Deprecated @NotNull public static final JPanel DIFF_TOO_BIG = createDiffTooBig();
-
   @NotNull
   public static JPanel createInsertedContent() {
     return createNotification("Content added", TextDiffType.INSERTED.getColor(null));
@@ -44,6 +39,20 @@ public class DiffNotifications {
 
   @NotNull
   public static JPanel createEqualContents() {
+    return createEqualContents(true, true);
+  }
+
+  @NotNull
+  public static JPanel createEqualContents(boolean equalCharsets, boolean equalSeparators) {
+    if (!equalCharsets && !equalSeparators) {
+      return createNotification(DiffBundle.message("diff.contents.have.differences.only.in.charset.and.line.separators.message.text"));
+    }
+    if (!equalSeparators) {
+      return createNotification(DiffBundle.message("diff.contents.have.differences.only.in.line.separators.message.text"));
+    }
+    if (!equalCharsets) {
+      return createNotification(DiffBundle.message("diff.contents.have.differences.only.in.charset.message.text"));
+    }
     return createNotification(DiffBundle.message("diff.contents.are.identical.message.text"));
   }
 
@@ -68,16 +77,37 @@ public class DiffNotifications {
 
   @NotNull
   public static JPanel createNotification(@NotNull String text) {
-    return new EditorNotificationPanel().text(text);
+    return createNotification(text, null);
   }
 
   @NotNull
-  public static JPanel createNotification(@NotNull String text, @NotNull final Color background) {
-    return new EditorNotificationPanel() {
-      @Override
-      public Color getBackground() {
-        return background;
-      }
-    }.text(text);
+  public static JPanel createNotification(@NotNull String text, @Nullable final Color background) {
+    return createNotification(text, background, true);
+  }
+
+  @NotNull
+  public static JPanel createNotification(@NotNull String text, @Nullable final Color background, boolean showHideAction) {
+    final MyEditorNotificationPanel panel = new MyEditorNotificationPanel();
+    panel.text(text);
+    panel.setBackgroundColor(background);
+    if (showHideAction) {
+      HyperlinkLabel link = panel.createActionLabel("Hide", () -> panel.setVisible(false));
+      link.setToolTipText("Hide this notification");
+    }
+    return panel;
+  }
+
+  private static class MyEditorNotificationPanel extends EditorNotificationPanel {
+    @Nullable private Color myBackground;
+
+    public void setBackgroundColor(@Nullable Color value) {
+      myBackground = value;
+    }
+
+    @Override
+    @Nullable
+    public Color getBackground() {
+      return myBackground != null ? myBackground : super.getBackground();
+    }
   }
 }

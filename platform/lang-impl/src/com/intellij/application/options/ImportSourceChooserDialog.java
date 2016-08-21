@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.SchemeImporterEP;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.components.JBList;
-import org.consulo.util.pointers.Named;
+import consulo.util.pointers.Named;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

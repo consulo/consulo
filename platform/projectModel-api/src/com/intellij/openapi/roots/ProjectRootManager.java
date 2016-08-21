@@ -15,10 +15,9 @@
  */
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ModificationTracker;
+import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +27,7 @@ import java.util.List;
 /**
  * Allows to query and modify the list of root directories belonging to a project.
  */
-public abstract class ProjectRootManager implements ModificationTracker {
+public abstract class ProjectRootManager extends SimpleModificationTracker {
   /**
    * Returns the project root manager instance for the specified project.
    *
@@ -36,8 +35,6 @@ public abstract class ProjectRootManager implements ModificationTracker {
    * @return the instance.
    */
   public static ProjectRootManager getInstance(Project project) {
-    final ProjectRootManager service = ServiceManager.getService(project, ProjectRootManager.class);
-    if (service != null) return service;
     return project.getComponent(ProjectRootManager.class);
   }
 

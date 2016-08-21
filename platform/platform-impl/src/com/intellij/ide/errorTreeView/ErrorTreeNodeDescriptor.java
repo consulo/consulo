@@ -17,7 +17,7 @@ package com.intellij.ide.errorTreeView;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 /**
  * @author Eugene Zhuravlev

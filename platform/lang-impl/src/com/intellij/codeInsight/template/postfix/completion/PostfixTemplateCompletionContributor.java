@@ -29,8 +29,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.codeInsight.completion.CompletionProvider;
+import consulo.annotations.RequiredReadAction;
+import consulo.codeInsight.completion.CompletionProvider;
 
 public class PostfixTemplateCompletionContributor extends CompletionContributor {
   private static class MyPrefixMatcher extends PrefixMatcher {
@@ -54,7 +54,7 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
     extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+      public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
         Editor editor = parameters.getEditor();
         if (!isCompletionEnabled(parameters) || LiveTemplateCompletionContributor.shouldShowAllTemplates() ||
             editor.getCaretModel().getCaretCount() != 1) {

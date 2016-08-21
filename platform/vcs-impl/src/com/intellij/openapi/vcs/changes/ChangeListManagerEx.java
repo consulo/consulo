@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,8 +31,6 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
   public abstract boolean isInUpdate();
   public abstract Collection<LocalChangeList> getInvolvedListsFilterChanges(final Collection<Change> changes, final List<Change> validChanges);
 
-
-  public abstract void freezeImmediately(@Nullable String reason);
 
   public abstract LocalChangeList addChangeList(@NotNull String name, @Nullable final String comment, @Nullable Object data);
 

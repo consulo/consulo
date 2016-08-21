@@ -16,28 +16,45 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.util.pointers.Named;
+import consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.annotations.DeprecationInfo;
 
 import javax.swing.*;
 
+@ArrayFactoryFields
 public interface FileType extends Named {
-  FileType[] EMPTY_ARRAY = new FileType[0];
+  /**
+   * Returns the id of the file type. The name must be unique among all file types registered in the system.
+   *
+   * @return The file type id.
+   */
+  @NotNull
+  @NonNls
+  default String getId() {
+    return getName();
+  }
 
   /**
    * Returns the name of the file type. The name must be unique among all file types registered in the system.
+   *
    * @return The file type name.
    */
-
   @Override
   @NotNull
   @NonNls
-  String getName();
+  @Deprecated
+  @DeprecationInfo(value = "Use #getId(), and implement #getId()")
+  default String getName() {
+    return getId();
+  }
 
   /**
    * Returns the user-readable description of the file type.
+   *
    * @return The file type description.
    */
 
@@ -46,6 +63,7 @@ public interface FileType extends Named {
 
   /**
    * Returns the default extension for files of the type.
+   *
    * @return The extension, not including the leading '.'.
    */
 
@@ -55,6 +73,7 @@ public interface FileType extends Named {
 
   /**
    * Returns the icon used for showing files of the type.
+   *
    * @return The icon instance, or null if no icon should be shown.
    */
 
@@ -63,6 +82,7 @@ public interface FileType extends Named {
 
   /**
    * Returns true if files of the specified type contain binary data. Used for source control, to-do items scanning and other purposes.
+   *
    * @return true if the file is binary, false if the file is plain text.
    */
   boolean isBinary();
@@ -70,20 +90,23 @@ public interface FileType extends Named {
   /**
    * Returns true if the specified file type is read-only. Read-only file types are not shown in the "File Types" settings dialog,
    * and users cannot change the extensions associated with the file type.
+   *
    * @return true if the file type is read-only, false otherwise.
    */
-
-  boolean isReadOnly();
+  default boolean isReadOnly() {
+    return false;
+  }
 
   /**
    * Returns the character set for the specified file.
-   * @param file The file for which the character set is requested.
-   * @param content
+   *
+   * @param file    The file for which the character set is requested.
+   * @param content file content as byte array
    * @return The character set name, in the format supported by {@link java.nio.charset.Charset} class.
    */
-
   @Nullable
   @NonNls
-  String getCharset(@NotNull VirtualFile file, final byte[] content);
-
+  default String getCharset(@NotNull VirtualFile file, final byte[] content) {
+    return null;
+  }
 }

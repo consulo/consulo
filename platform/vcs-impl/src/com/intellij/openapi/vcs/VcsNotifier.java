@@ -25,14 +25,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class VcsNotifier {
 
-  public static final NotificationGroup NOTIFICATION_GROUP_ID = NotificationGroup.toolWindowGroup(
-          "Vcs Messages", ChangesViewContentManager.TOOLWINDOW_ID);
-  public static final NotificationGroup IMPORTANT_ERROR_NOTIFICATION = new NotificationGroup(
-          "Vcs Important Messages", NotificationDisplayType.STICKY_BALLOON, true);
-  public static final NotificationGroup MINOR_NOTIFICATION = new NotificationGroup(
-          "Vcs Minor Notifications", NotificationDisplayType.BALLOON, true);
-  public static final NotificationGroup SILENT_NOTIFICATION = new NotificationGroup(
-          "Vcs Silent Notifications", NotificationDisplayType.NONE, true);
+  public static final NotificationGroup NOTIFICATION_GROUP_ID = NotificationGroup.toolWindowGroup("Vcs Messages", ChangesViewContentManager.TOOLWINDOW_ID);
+  public static final NotificationGroup IMPORTANT_ERROR_NOTIFICATION =
+          new NotificationGroup("Vcs Important Messages", NotificationDisplayType.STICKY_BALLOON, true);
+  public static final NotificationGroup STANDARD_NOTIFICATION = new NotificationGroup("Vcs Notifications", NotificationDisplayType.BALLOON, true);
+  public static final NotificationGroup SILENT_NOTIFICATION = new NotificationGroup("Vcs Silent Notifications", NotificationDisplayType.NONE, true);
 
   private final @NotNull Project myProject;
 
@@ -46,9 +43,11 @@ public class VcsNotifier {
   }
 
   @NotNull
-  private static Notification createNotification(@NotNull NotificationGroup notificationGroup,
-                                                 @NotNull String title, @NotNull String message, @NotNull NotificationType type,
-                                                 @Nullable NotificationListener listener) {
+  public static Notification createNotification(@NotNull NotificationGroup notificationGroup,
+                                                @NotNull String title,
+                                                @NotNull String message,
+                                                @NotNull NotificationType type,
+                                                @Nullable NotificationListener listener) {
     // title can be empty; message can't be neither null, nor empty
     if (StringUtil.isEmptyOrSpaces(message)) {
       message = title;
@@ -59,9 +58,18 @@ public class VcsNotifier {
   }
 
   @NotNull
-  protected Notification notify(@NotNull NotificationGroup notificationGroup, @NotNull String title, @NotNull String message,
-                                @NotNull NotificationType type, @Nullable NotificationListener listener) {
+  public Notification notify(@NotNull NotificationGroup notificationGroup,
+                             @NotNull String title,
+                             @NotNull String message,
+                             @NotNull NotificationType type,
+                             @Nullable NotificationListener listener) {
     Notification notification = createNotification(notificationGroup, title, message, type, listener);
+    notification.notify(myProject);
+    return notification;
+  }
+
+  @NotNull
+  public Notification notify(@NotNull Notification notification) {
     notification.notify(myProject);
     return notification;
   }
@@ -128,7 +136,7 @@ public class VcsNotifier {
 
   @NotNull
   public Notification notifyMinorWarning(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
-    return notify(MINOR_NOTIFICATION, title, message, NotificationType.WARNING, listener);
+    return notify(STANDARD_NOTIFICATION, title, message, NotificationType.WARNING, listener);
   }
 
   @NotNull
@@ -158,7 +166,7 @@ public class VcsNotifier {
 
   @NotNull
   public Notification notifyMinorInfo(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
-    return notify(MINOR_NOTIFICATION, title, message, NotificationType.INFORMATION, listener);
+    return notify(STANDARD_NOTIFICATION, title, message, NotificationType.INFORMATION, listener);
   }
 
   public Notification logInfo(@NotNull String title, @NotNull String message) {

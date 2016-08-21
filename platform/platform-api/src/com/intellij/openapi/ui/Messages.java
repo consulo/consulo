@@ -1375,7 +1375,7 @@ public class Messages {
     }
 
     @Override
-    LayoutManager createRootLayout() {
+    protected LayoutManager createRootLayout() {
       return isMacSheetEmulation() ? myLayout = new MyBorderLayout() : super.createRootLayout();
     }
 

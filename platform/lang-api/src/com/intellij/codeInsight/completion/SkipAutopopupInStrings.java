@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
@@ -48,12 +48,13 @@ public class SkipAutopopupInStrings extends CompletionConfidence {
   }
 
   public static boolean isInStringLiteral(PsiElement element) {
-    ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(PsiUtilCore.findLanguageFromElement(element));
+    LanguageVersion<?> languageVersion = PsiUtilCore.findLanguageVersionFromElement(element);
+
+    ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(languageVersion.getLanguage());
     if (definition == null) {
       return false;
     }
 
-    final LanguageVersion languageVersion = element.getLanguageVersion();
     return isStringLiteral(element, definition, languageVersion) || isStringLiteral(element.getParent(), definition, languageVersion) ||
             isStringLiteralWithError(element, definition, languageVersion) || isStringLiteralWithError(element.getParent(), definition, languageVersion);
   }

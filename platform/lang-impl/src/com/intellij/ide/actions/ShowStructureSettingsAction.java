@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureDialog;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.roots.ui.configuration.ProjectStructureDialog;
+import consulo.annotations.RequiredDispatchThread;
 
 public class ShowStructureSettingsAction extends AnAction implements DumbAware {
   @RequiredDispatchThread

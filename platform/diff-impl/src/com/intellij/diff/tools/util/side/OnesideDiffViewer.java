@@ -28,12 +28,12 @@ import com.intellij.diff.tools.util.base.ListenerDiffViewerBase;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.List;
@@ -58,6 +58,12 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   }
 
   @Override
+  protected void onInit() {
+    super.onInit();
+    myPanel.setPersistentNotifications(DiffUtil.getCustomNotifications(myContext, myRequest));
+  }
+
+  @Override
   @RequiredDispatchThread
   protected void onDispose() {
     destroyEditorHolder();
@@ -78,7 +84,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     Disposer.dispose(myHolder);
   }
 
-  @NotNull
+  @Nullable
   protected JComponent createTitle() {
     List<JComponent> simpleTitles = DiffUtil.createSimpleTitles(myRequest);
     return mySide.select(simpleTitles);
@@ -134,8 +140,8 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
 
   @Nullable
   @Override
-  protected OpenFileDescriptor getOpenFileDescriptor() {
-    return getContent().getOpenFileDescriptor();
+  protected Navigatable getNavigatable() {
+    return getContent().getNavigatable();
   }
 
   public static <T extends EditorHolder> boolean canShowRequest(@NotNull DiffContext context,

@@ -47,9 +47,10 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
+import consulo.codeInsight.completion.CompletionProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
 import java.util.*;
@@ -63,10 +64,10 @@ public class FilePathCompletionContributor extends CompletionContributor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.FilePathCompletionContributor");
 
   public FilePathCompletionContributor() {
-    extend(CompletionType.BASIC, psiElement(), new org.mustbe.consulo.codeInsight.completion.CompletionProvider() {
+    extend(CompletionType.BASIC, psiElement(), new consulo.codeInsight.completion.CompletionProvider() {
       @RequiredReadAction
       @Override
-      protected void addCompletions(@NotNull CompletionParameters parameters,
+      public void addCompletions(@NotNull CompletionParameters parameters,
                                     ProcessingContext context,
                                     @NotNull CompletionResultSet result) {
         final PsiReference psiReference = parameters.getPosition().getContainingFile().findReferenceAt(parameters.getOffset());
@@ -79,10 +80,10 @@ public class FilePathCompletionContributor extends CompletionContributor {
       }
     });
 
-    extend(CompletionType.BASIC, psiElement(), new org.mustbe.consulo.codeInsight.completion.CompletionProvider() {
+    extend(CompletionType.BASIC, psiElement(), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      protected void addCompletions(@NotNull final CompletionParameters parameters,
+      public void addCompletions(@NotNull final CompletionParameters parameters,
                                     ProcessingContext context,
                                     @NotNull final CompletionResultSet _result) {
         if (!parameters.isExtendedCompletion()) {

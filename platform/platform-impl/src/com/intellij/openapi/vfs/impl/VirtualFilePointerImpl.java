@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.openapi.vfs.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TraceableDisposable;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -27,7 +28,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 
-class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFilePointer, Disposable {
+class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFilePointer {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.VirtualFilePointerImpl");
 
   private final VirtualFilePointerListener myListener;
@@ -43,7 +44,7 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
   @Override
   @NotNull
   public String getFileName() {
-    checkDisposed();
+    if (!checkDisposed()) return "";
     Pair<VirtualFile, String> result = myNode.update();
     VirtualFile file = result.first;
     if (file != null) {
@@ -56,7 +57,7 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
 
   @Override
   public VirtualFile getFile() {
-    checkDisposed();
+    if (!checkDisposed()) return null;
     Pair<VirtualFile, String> result = myNode.update();
     return result.first;
   }
@@ -77,15 +78,19 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
   @Override
   @NotNull
   public String getPresentableUrl() {
-    checkDisposed();
+    if (!checkDisposed()) return "";
     return PathUtil.toPresentableUrl(getUrl());
   }
 
-  private void checkDisposed() {
+  private boolean checkDisposed() {
     if (isDisposed()) {
-      throwDisposalError("Already disposed: URL='" + this+"'");
+      ProgressManager.checkCanceled();
+      LOG.error("Already disposed: URL='" + this + "'");
+      return false;
     }
+    return true;
   }
+
 
   @Override
   public boolean isValid() {
@@ -98,7 +103,6 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
     return getUrlNoUpdate();
   }
 
-  @Override
   public void dispose() {
     checkDisposed();
     if (myNode.incrementUsageCount(-1) == 0) {

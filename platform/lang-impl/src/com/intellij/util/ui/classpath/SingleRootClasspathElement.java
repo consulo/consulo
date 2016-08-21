@@ -1,7 +1,7 @@
 package com.intellij.util.ui.classpath;
 
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
+import consulo.vfs.ArchiveFileSystem;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

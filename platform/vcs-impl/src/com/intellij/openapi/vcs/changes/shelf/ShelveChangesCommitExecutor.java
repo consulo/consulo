@@ -86,7 +86,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
           public void run() {
             Messages
-              .showErrorDialog(myProject, VcsBundle.message("shelve.changes.only.directories"), VcsBundle.message("shelve.changes.action"));
+                    .showErrorDialog(myProject, VcsBundle.message("shelve.changes.only.directories"), VcsBundle.message("shelve.changes.action"));
           }
         }, null, myProject);
         return;

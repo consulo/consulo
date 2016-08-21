@@ -28,11 +28,12 @@ import com.intellij.openapi.roots.impl.ContentEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
+import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
@@ -40,14 +41,14 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import junit.framework.Assert;
-import org.consulo.compiler.ModuleCompilerPathsManager;
+import consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderScopes;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.roots.ContentFolderScopes;
+import consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -321,7 +322,9 @@ public class PsiTestUtil {
       final String path = libPath + jar;
       VirtualFile root;
       if (path.endsWith(".jar")) {
-        root = StandardFileSystems.jar().refreshAndFindFileByPath(path + "!/");
+        VirtualFile local = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+        assert local != null;
+        root = ArchiveVfsUtil.getArchiveRootForLocalFile(local);
       }
       else {
         root = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
@@ -338,7 +341,7 @@ public class PsiTestUtil {
                                 final String[] classRoots,
                                 final String[] sourceRoots) {
     final String parentUrl =
-      VirtualFileManager.constructUrl(classRoots[0].endsWith(".jar!/") ? JarFileSystem.PROTOCOL : LocalFileSystem.PROTOCOL, libDir);
+      VirtualFileManager.constructUrl(classRoots[0].endsWith(".jar!/") ? StandardFileSystems.JAR_PROTOCOL : LocalFileSystem.PROTOCOL, libDir);
     List<String> classesUrls = new ArrayList<String>();
     List<String> sourceUrls = new ArrayList<String>();
     for (String classRoot : classRoots) {

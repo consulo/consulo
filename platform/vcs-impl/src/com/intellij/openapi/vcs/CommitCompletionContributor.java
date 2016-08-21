@@ -29,7 +29,7 @@ import com.intellij.openapi.vcs.ui.CommitMessage;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.ui.TextFieldWithAutoCompletionListProvider;import org.mustbe.consulo.RequiredReadAction;
+import com.intellij.ui.TextFieldWithAutoCompletionListProvider;import consulo.annotations.RequiredReadAction;
 
 /**
  * @author Dmitry Avdeev

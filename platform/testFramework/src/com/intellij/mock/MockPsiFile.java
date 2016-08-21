@@ -1,9 +1,9 @@
 package com.intellij.mock;
 
-import com.intellij.lang.BaseLanguageVersion;
+import consulo.lang.BaseLanguageVersion;
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
@@ -22,8 +22,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.RequiredWriteAction;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 
 public class MockPsiFile extends MockPsiElement implements PsiFile {
   public static final LanguageVersion<Language> DUMMY_LANG_VERSION = new BaseLanguageVersion<Language>("DUMMY_LANG_VERSION", Language.ANY);

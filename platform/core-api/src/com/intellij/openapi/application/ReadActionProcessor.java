@@ -18,7 +18,7 @@ package com.intellij.openapi.application;
 
 import com.intellij.util.Processor;
 import com.intellij.openapi.util.Computable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author cdr

@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import com.intellij.icons.AllIcons;
 import org.jetbrains.annotations.NonNls;
-import org.mustbe.consulo.DeprecationInfo;
+import consulo.annotations.DeprecationInfo;
 
 import javax.swing.*;
 

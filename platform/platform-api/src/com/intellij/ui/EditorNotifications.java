@@ -22,10 +22,10 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
-import org.mustbe.consulo.Exported;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.Exported;
+import consulo.annotations.RequiredReadAction;
+import consulo.editor.notifications.EditorNotificationProvider;
 
 import javax.swing.*;
 
@@ -34,7 +34,7 @@ import javax.swing.*;
  */
 public abstract class EditorNotifications  {
   @Deprecated
-  @DeprecationInfo(value = "Use org.mustbe.consulo.editor.notifications.EditorNotificationProvider", until = "2.0")
+  @DeprecationInfo(value = "Use consulo.editor.notifications.EditorNotificationProvider", until = "2.0")
   public abstract static class Provider<T extends JComponent> implements EditorNotificationProvider<T> {
     @Override
     @NotNull

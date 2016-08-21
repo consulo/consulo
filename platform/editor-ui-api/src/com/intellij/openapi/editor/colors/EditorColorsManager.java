@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.colors;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
-import org.consulo.annotations.Immutable;
+import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 

@@ -35,9 +35,9 @@ import com.maddyhome.idea.copyright.util.FileTypeUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.copyright.config.CopyrightFileConfig;
-import org.mustbe.consulo.copyright.config.CopyrightFileConfigManager;
-import org.mustbe.consulo.copyright.generate.TemplateCopyrightCommenter;
+import consulo.copyright.config.CopyrightFileConfig;
+import consulo.copyright.config.CopyrightFileConfigManager;
+import consulo.copyright.generate.TemplateCopyrightCommenter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
