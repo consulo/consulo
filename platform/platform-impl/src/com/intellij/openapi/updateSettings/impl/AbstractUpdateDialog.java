@@ -46,7 +46,6 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Logger
 public abstract class AbstractUpdateDialog extends DialogWrapper {
@@ -138,16 +137,9 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
 
   protected boolean doDownloadAndPrepare() {
     if (myUploadedPlugins != null) {
-      UpdateChecker.saveDisabledToUpdatePlugins();
 
       final List<IdeaPluginDescriptor> pluginsForDownload = new ArrayList<IdeaPluginDescriptor>();
-      Set<String> disabledToUpdatePlugins = UpdateChecker.getDisabledToUpdatePlugins();
       for (Couple<IdeaPluginDescriptor> uploadedPlugin : myUploadedPlugins) {
-        IdeaPluginDescriptor second = uploadedPlugin.getSecond();
-        if (disabledToUpdatePlugins.contains(second.getPluginId().getIdString())) {
-          continue;
-        }
-
         pluginsForDownload.add(uploadedPlugin.getSecond());
       }
       if(pluginsForDownload.isEmpty()) {

@@ -23,7 +23,6 @@ import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -42,6 +41,7 @@ import com.intellij.util.io.UrlConnectionUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.SharedConstants;
 import consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -49,7 +49,6 @@ import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.SharedConstants;
 
 import javax.swing.event.HyperlinkEvent;
 import java.io.*;
@@ -94,21 +93,6 @@ public final class UpdateChecker {
 
   public enum DownloadPatchResult {
     SUCCESS, FAILED, CANCELED
-  }
-
-  private static boolean myVeryFirstOpening = true;
-
-  @NonNls
-  private static final String DISABLED_UPDATE = "disabled_update.txt";
-  private static TreeSet<String> ourDisabledToUpdatePlugins;
-
-
-  public static boolean isMyVeryFirstOpening() {
-    return myVeryFirstOpening;
-  }
-
-  public static void setMyVeryFirstOpening(final boolean myVeryFirstProjectOpening) {
-    myVeryFirstOpening = myVeryFirstProjectOpening;
   }
 
   public static boolean checkNeeded() {
@@ -679,7 +663,6 @@ public final class UpdateChecker {
   public static boolean install(List<PluginDownloader> downloaders) {
     boolean installed = false;
     for (PluginDownloader downloader : downloaders) {
-      if (getDisabledToUpdatePlugins().contains(downloader.getPluginId())) continue;
       final IdeaPluginDescriptor descriptor = downloader.getDescriptor();
       if (descriptor != null) {
         try {
@@ -780,38 +763,5 @@ public final class UpdateChecker {
     File patchFile = new File(FileUtil.getTempDirectory(), SharedConstants.PATCH_FILE_NAME);
     FileUtil.copy(tempFile, patchFile);
     FileUtil.delete(tempFile);
-  }
-
-  public static Set<String> getDisabledToUpdatePlugins() {
-    if (ourDisabledToUpdatePlugins == null) {
-      ourDisabledToUpdatePlugins = new TreeSet<String>();
-      if (!ApplicationManager.getApplication().isUnitTestMode()) {
-        try {
-          final File file = new File(PathManager.getConfigPath(), DISABLED_UPDATE);
-          if (file.isFile()) {
-            final String[] ids = FileUtil.loadFile(file).split("[\\s]");
-            for (String id : ids) {
-              if (id != null && id.trim().length() > 0) {
-                ourDisabledToUpdatePlugins.add(id.trim());
-              }
-            }
-          }
-        }
-        catch (IOException e) {
-          LOGGER.error(e);
-        }
-      }
-    }
-    return ourDisabledToUpdatePlugins;
-  }
-
-  public static void saveDisabledToUpdatePlugins() {
-    final File plugins = new File(PathManager.getConfigPath(), DISABLED_UPDATE);
-    try {
-      PluginManagerCore.savePluginsList(getDisabledToUpdatePlugins(), false, plugins);
-    }
-    catch (IOException e) {
-      LOGGER.error(e);
-    }
   }
 }

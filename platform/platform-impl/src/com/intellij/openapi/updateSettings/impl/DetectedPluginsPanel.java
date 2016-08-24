@@ -32,6 +32,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -131,22 +132,13 @@ public class DetectedPluginsPanel extends OrderPanel<Couple> {
   @Override
   @SuppressWarnings("unchecked")
   public void setChecked(final Couple temp, final boolean checked) {
-    Couple<IdeaPluginDescriptor> couple = temp;
-    String idString = couple.getFirst().getPluginId().getIdString();
-
-    if (checked) {
-      getSkippedPlugins().remove(idString);
-    }
-    else {
-      getSkippedPlugins().add(idString);
-    }
     for (Listener listener : myListeners) {
       listener.stateChanged();
     }
   }
 
   protected Set<String> getSkippedPlugins() {
-    return UpdateChecker.getDisabledToUpdatePlugins();
+    return Collections.emptySet();
   }
 
   public void addStateListener(Listener l) {
