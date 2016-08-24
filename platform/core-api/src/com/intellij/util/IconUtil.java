@@ -168,7 +168,7 @@ public class IconUtil {
   }
 
   public static int getDefaultNodeIconSize() {
-    return UIUtil.isRetina() ? 32 : JBUI.scale(16);
+    return JBUI.scale(16);
   }
 
   public static Image toImage(@NotNull Icon icon) {
