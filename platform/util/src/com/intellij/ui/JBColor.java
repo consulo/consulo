@@ -58,6 +58,10 @@ public class JBColor extends Color {
     DARK = dark;
   }
 
+  public static boolean isBright() {
+    return !DARK;
+  }
+
   Color getDarkVariant() {
     return darkColor;
   }
