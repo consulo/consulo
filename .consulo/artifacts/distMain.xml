@@ -95,6 +95,7 @@
           <element id="module-output" name="vcs-api-core" />
           <element id="module-output" name="desktop-ui-impl" />
           <element id="module-output" name="ui-api" />
+          <element id="module-output" name="desktop-impl" />
         </element>
         <element id="zip-archive" name="forms_rt.jar">
           <element id="module-output" name="forms_rt" />
@@ -114,6 +115,7 @@
       <element id="directory" name="license">
         <element id="dir-copy" path="$PROJECT_DIR$/license" />
       </element>
+      <element id="module-output" name="desktop-impl" />
     </root>
   </artifact>
 </component>

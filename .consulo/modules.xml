@@ -431,7 +431,6 @@
           <orderEntry type="module" module-name="analysis-impl" exported="" />
           <orderEntry type="module" module-name="compiler-impl" />
           <orderEntry type="library" name="jsr166" level="project" />
-          <orderEntry type="module" module-name="desktop-ui-impl" />
         </module-layer>
       </module>
       <module name="platform/lvcs-api" dirurl="file://$PROJECT_DIR$/platform/lvcs-api" current-layer="Default">
@@ -489,7 +488,6 @@
           <orderEntry type="module" module-name="analysis-api" exported="" />
           <orderEntry type="library" name="pty4" level="project" />
           <orderEntry type="library" name="httpmime" level="project" />
-          <orderEntry type="module" module-name="desktop-ui-impl" exported="" />
           <orderEntry type="module" module-name="diff-api" />
         </module-layer>
       </module>
@@ -1122,16 +1120,16 @@
           <orderEntry type="module" module-name="annotations" exported="" />
         </module-layer>
       </module>
-      <module name="desktop-ui-impl" dirurl="file://$PROJECT_DIR$/impl/desktop-ui-impl" current-layer="Default">
+      <module name="desktop-impl" dirurl="file://$PROJECT_DIR$/impl/desktop-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
+          <extension id="java" sdk-module-name="" sdk-name="1.8" language-level-module-name="" language-level-name="" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="ui-api" exported="" />
-          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="ui-api" />
         </module-layer>
       </module>
     </modules>

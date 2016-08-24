@@ -15,7 +15,7 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.ui.IdeBorderFactory2;
+import com.intellij.ui.IdeBorderFactory;
 import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
 import consulo.ui.shared.Size;
@@ -33,7 +33,7 @@ public class DesktopLabeledLayoutImpl extends JPanel implements LabeledLayout {
   public DesktopLabeledLayoutImpl(String text) {
     super(new BorderLayout());
 
-    setBorder(IdeBorderFactory2.createTitledBorder(text));
+    setBorder(IdeBorderFactory.createTitledBorder(text));
   }
 
   @Override
