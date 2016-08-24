@@ -1038,7 +1038,7 @@
           <orderEntry type="module" module-name="core-api" exported="" />
         </module-layer>
       </module>
-      <module name="web" dirurl="file://$PROJECT_DIR$/impl/web" current-layer="Default">
+      <module name="web-impl" dirurl="file://$PROJECT_DIR$/impl/web-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
           <extension id="java-web" />
@@ -1052,58 +1052,22 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="javaee-google-gwt" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/servlet-api.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
           <orderEntry type="module" module-name="bootstrap" />
           <orderEntry type="module" module-name="core-impl" />
           <orderEntry type="library" name="Log4J" level="project" />
           <orderEntry type="module" module-name="platform-impl" />
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/gwt-servlet-deps.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/gwt-servlet.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
           <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/gwt-websockets-1.0.4.jar!/" />
-              </binaries>
-              <sources>
-                <root url="jar://$MODULE_DIR$/lib/gwt-websockets-1.0.4.jar!/" />
-              </sources>
-            </library>
-          </orderEntry>
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/javax.websocket-api-1.1.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
           <orderEntry type="module" module-name="ui-api" />
           <orderEntry type="module-library">
             <library>
               <binaries>
-                <root url="jar://$MODULE_DIR$/lib/advanced-components-2.0.7.jar!/" />
+                <root url="file://$MODULE_DIR$/lib" />
               </binaries>
               <sources>
-                <root url="jar://$MODULE_DIR$/lib/advanced-components-2.0.7.jar!/" />
+                <root url="file://$MODULE_DIR$/lib" />
               </sources>
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" type="sources" />
             </library>
           </orderEntry>
         </module-layer>

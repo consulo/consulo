@@ -2,11 +2,11 @@
   <artifact type="exploded-war" name="webMain">
     <output-path>$PROJECT_DIR$/out/artifacts/webMain</output-path>
     <root id="root">
-      <element id="java-web-resource" name="web" />
+      <element id="java-web-resource" name="web-impl" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="lib">
           <element id="zip-archive" name="consulo-web.jar">
-            <element id="module-output" name="web" />
+            <element id="module-output" name="web-impl" />
           </element>
           <element id="dir-copy" path="$PROJECT_DIR$/lib" />
           <element id="zip-archive" name="annotations.jar">
@@ -107,10 +107,10 @@
                 </element>
               </element>
             </element>
-            <element id="dir-copy" path="$PROJECT_DIR$/impl/web/dep" />
+            <element id="dir-copy" path="$PROJECT_DIR$/impl/web-impl/dep" />
           </element>
-          <element id="file-copy" path="$PROJECT_DIR$/impl/web/lib/gwt-servlet-deps.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/impl/web/lib/gwt-servlet.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/impl/web-impl/lib/gwt-servlet-deps.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/impl/web-impl/lib/gwt-servlet.jar" />
           <element id="zip-archive" name="consulo-ui.jar">
             <element id="module-output" name="ui-api" />
           </element>
@@ -118,9 +118,9 @@
       </element>
       <element id="directory" name="icons">
         <element id="module-production-resource-output" name="icons" />
-        <element id="dir-copy" path="$PROJECT_DIR$/impl/web/gwt-out" />
+        <element id="dir-copy" path="$PROJECT_DIR$/impl/web-impl/gwt-out" />
       </element>
-      <element id="dir-copy" path="$PROJECT_DIR$/impl/web/gwt-out" />
+      <element id="dir-copy" path="$PROJECT_DIR$/impl/web-impl/gwt-out" />
     </root>
   </artifact>
 </component>
