@@ -25,14 +25,14 @@ import java.net.URL;
  * @since 09-Jun-16
  */
 abstract class _UIInternals {
-  static _UIInternals impl() {
+  static _UIInternals get() {
     return Holder.ourInstance;
   }
 
   private static class Holder {
-    public static _UIInternals ourInstance = impl();
+    public static _UIInternals ourInstance = get();
 
-    private static _UIInternals impl() {
+    private static _UIInternals get() {
       _UIInternals bindingInternal = null;
 
       try {

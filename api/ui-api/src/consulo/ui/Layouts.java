@@ -24,41 +24,41 @@ import org.jetbrains.annotations.NotNull;
 public class Layouts {
   @NotNull
   public static DockLayout dock() {
-    return _UIInternals.impl()._Layouts_dock();
+    return _UIInternals.get()._Layouts_dock();
   }
 
   @NotNull
   public static VerticalLayout vertical() {
-    return _UIInternals.impl()._Layouts_vertical();
+    return _UIInternals.get()._Layouts_vertical();
   }
 
   @NotNull
   public static HorizontalLayout horizontal() {
-    return _UIInternals.impl()._Layouts_horizontal();
+    return _UIInternals.get()._Layouts_horizontal();
   }
 
   @NotNull
   public static SplitLayout horizontalSplit() {
-    return _UIInternals.impl()._Layouts_horizontalSplit();
+    return _UIInternals.get()._Layouts_horizontalSplit();
   }
 
   @NotNull
   public static SplitLayout verticalSplit() {
-    return _UIInternals.impl()._Layouts_verticalSplit();
+    return _UIInternals.get()._Layouts_verticalSplit();
   }
 
   @NotNull
   public static TabbedLayout tabbed() {
-    return _UIInternals.impl()._Layouts_tabbed();
+    return _UIInternals.get()._Layouts_tabbed();
   }
 
   @NotNull
   public static TableLayout table(int rows, int columns) {
-    return _UIInternals.impl()._Layouts_table(rows, columns);
+    return _UIInternals.get()._Layouts_table(rows, columns);
   }
 
   @NotNull
   public static LabeledLayout labeled(@NotNull String label) {
-    return _UIInternals.impl()._Layouts_labeled(label);
+    return _UIInternals.get()._Layouts_labeled(label);
   }
 }

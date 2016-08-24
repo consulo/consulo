@@ -26,6 +26,6 @@ import java.net.URL;
 public class ImageRefs {
   @NotNull
   public static ImageRef fromURL(@NotNull URL url) {
-    return _UIInternals.impl()._Images_imageRef(url);
+    return _UIInternals.get()._Images_imageRef(url);
   }
 }

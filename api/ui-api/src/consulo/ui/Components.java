@@ -31,7 +31,7 @@ public class Components {
 
   @NotNull
   public static CheckBox checkBox(@NotNull String text, boolean selected) {
-    return _UIInternals.impl()._Components_checkBox(text, selected);
+    return _UIInternals.get()._Components_checkBox(text, selected);
   }
 
   @NotNull
@@ -41,31 +41,31 @@ public class Components {
 
   @NotNull
   public static RadioButton radioButton(@NotNull String text, boolean selected) {
-    return _UIInternals.impl()._Components_radioButton(text, selected);
+    return _UIInternals.get()._Components_radioButton(text, selected);
   }
 
   @NotNull
   public static Label label(@NotNull String text) {
-    return _UIInternals.impl()._Components_label(text);
+    return _UIInternals.get()._Components_label(text);
   }
 
   @NotNull
   public static HtmlLabel htmlLabel(@NotNull String html) {
-    return _UIInternals.impl()._Components_htmlLabel(html);
+    return _UIInternals.get()._Components_htmlLabel(html);
   }
 
   @NotNull
   public static <E> ComboBox<E> comboBox(@NotNull E... elements) {
-    return _UIInternals.impl()._Components_comboBox(new ImmutableListModel<E>(elements));
+    return _UIInternals.get()._Components_comboBox(new ImmutableListModel<E>(elements));
   }
 
   @NotNull
   public static <E> ComboBox<E> comboBox(@NotNull ListModel<E> model) {
-    return _UIInternals.impl()._Components_comboBox(model);
+    return _UIInternals.get()._Components_comboBox(model);
   }
 
   @NotNull
   public static Image image(@NotNull ImageRef imageRef) {
-    return _UIInternals.impl()._Components_image(imageRef);
+    return _UIInternals.get()._Components_image(imageRef);
   }
 }
