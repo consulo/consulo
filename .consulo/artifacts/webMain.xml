@@ -59,8 +59,6 @@
           </element>
           <element id="zip-archive" name="consulo-compiler.jar">
             <element id="module-output" name="compiler-api" />
-            <element id="module-output" name="compiler-artifact-api" />
-            <element id="module-output" name="compiler-artifact-impl" />
             <element id="module-output" name="compiler-impl" />
             <element id="module-output" name="compiler-bridge-impl" />
             <element id="module-output" name="compiler-server-impl" />
