@@ -4,7 +4,7 @@
 
 Current stable version is **1.0**. Sources of this version you can found at **1.0** branch
 
-**master** branch contains source of next iteration **2.0**
+**master** branch contains source of next iteration **2.0**. Be carefull - **master** branch is not compatible with **1.0**
 
 ## Goal
 
