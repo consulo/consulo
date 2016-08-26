@@ -16,9 +16,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +26,6 @@ import org.jetbrains.annotations.Nullable;
  * @author max
  */
 public abstract class InspectionManager {
-  public static final ExtensionPointName<Condition<PsiElement>> CANT_BE_STATIC_EXTENSION = ExtensionPointName.create("com.intellij.cantBeStatic");
-
   public static InspectionManager getInstance(Project project) {
     return ServiceManager.getService(project, InspectionManager.class);
   }
