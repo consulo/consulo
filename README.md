@@ -18,8 +18,6 @@ Use 'Build | Build Artifacts... | dist' to build the project
 
 To run the project, use the "Consulo" shared run configuration.
 
-![Build Status](http://must-be.org/vulcanBeta/statusImage?name=consulo)
-
 ## Links
 
 * [Contributing Guide] (https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md)
