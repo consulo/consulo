@@ -54,7 +54,7 @@ public class JBRunnerTabs extends JBEditorTabs {
 
   @Override
   public int getToolbarInset() {
-    return 1;
+    return 0;
   }
 
   public boolean shouldAddToGlobal(Point point) {
