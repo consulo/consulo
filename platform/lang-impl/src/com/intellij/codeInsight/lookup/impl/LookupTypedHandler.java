@@ -114,12 +114,8 @@ public class LookupTypedHandler extends TypedActionHandlerBase {
       Document document = editor.getDocument();
       long modificationStamp = document.getModificationStamp();
 
-      if (!lookup.performGuardedChange(new Runnable() {
-        @Override
-        public void run() {
-          EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(originalEditor, String.valueOf(charTyped), true);
-        }
-      })) {
+      if (!lookup.performGuardedChange(
+              () -> EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(originalEditor, String.valueOf(charTyped), true))) {
         return true;
       }
       lookup.appendPrefix(charTyped);
@@ -184,23 +180,11 @@ public class LookupTypedHandler extends TypedActionHandlerBase {
 
   static CharFilter.Result getLookupAction(final char charTyped, final LookupImpl lookup) {
     final CharFilter.Result filtersDecision = getFiltersDecision(charTyped, lookup);
-
-    final LookupElement currentItem = lookup.getCurrentItem();
-    if (currentItem != null && charTyped != ' ') {
-      String postfix = lookup.getAdditionalPrefix() + charTyped;
-      final PrefixMatcher matcher = lookup.itemMatcher(currentItem);
-      for (String lookupString : currentItem.getAllLookupStrings()) {
-        if (lookupString.startsWith(matcher.getPrefix() + postfix)) {
-          return CharFilter.Result.ADD_TO_PREFIX;
-        }
-      }
-    }
-
     if (filtersDecision != null) {
       return filtersDecision;
     }
     throw new AssertionError("Typed char not handler by char filter: c=" + charTyped +
-                             "; prefix=" + currentItem +
+                             "; prefix=" + lookup.getCurrentItem() +
                              "; filters=" + Arrays.toString(getFilters()));
   }
 

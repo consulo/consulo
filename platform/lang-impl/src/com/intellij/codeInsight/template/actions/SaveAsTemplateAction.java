@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,10 @@ package com.intellij.codeInsight.template.actions;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.codeInsight.template.impl.*;
 import com.intellij.lang.Language;
-import consulo.lang.LanguagePointerUtil;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -44,6 +46,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.lang.LanguagePointerUtil;
 import consulo.util.pointers.NamedPointer;
 
 import java.util.Map;
@@ -58,14 +61,13 @@ public class SaveAsTemplateAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
-    PsiFile file = LangDataKeys.PSI_FILE.getData(dataContext);
+    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
 
     final Project project = file.getProject();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    final TextRange selection = new TextRange(editor.getSelectionModel().getSelectionStart(),
-                                              editor.getSelectionModel().getSelectionEnd());
+    final TextRange selection = new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
     PsiElement current = file.findElementAt(selection.getStartOffset());
     int startOffset = selection.getStartOffset();
     while (current instanceof PsiWhiteSpace) {
@@ -84,14 +86,13 @@ public class SaveAsTemplateAction extends AnAction {
     });
 
     final Document document = EditorFactory.getInstance().createDocument(editor.getDocument().getText().
-                                                                         substring(startOffset,
-                                                                                   selection.getEndOffset()));
+            substring(startOffset, selection.getEndOffset()));
     final boolean isXml = file.getLanguage().is(ourXmlLanguagePointer.get());
     final int offsetDelta = startOffset;
     new WriteCommandAction.Simple(project, (String)null) {
       @Override
       protected void run() throws Throwable {
-        Map<RangeMarker, String> rangeToText = new HashMap<RangeMarker, String>();
+        Map<RangeMarker, String> rangeToText = new HashMap<>();
 
         for (PsiElement element : psiElements) {
           for (PsiReference reference : element.getReferences()) {
@@ -134,31 +135,26 @@ public class SaveAsTemplateAction extends AnAction {
     PsiFile copy;
     AccessToken token = WriteAction.start();
     try {
-      copy = SurroundWithTemplateHandler.insertDummyIdentifier(editor, file);
+      copy = TemplateManagerImpl.insertDummyIdentifier(editor, file);
     }
     finally {
       token.finish();
     }
     Set<TemplateContextType> applicable = TemplateManagerImpl.getApplicableContextTypes(copy, startOffset);
 
-    for(TemplateContextType contextType: TemplateContextType.EP_NAME.getExtensions()) {
+    for (TemplateContextType contextType : TemplateManagerImpl.getAllContextTypes()) {
       template.getTemplateContext().setEnabled(contextType, applicable.contains(contextType));
     }
 
     final LiveTemplatesConfigurable configurable = new LiveTemplatesConfigurable();
-    ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
-      @Override
-      public void run() {
-        configurable.getTemplateListPanel().addTemplate(template);
-      }
-    });
+    ShowSettingsUtil.getInstance().editConfigurable(project, configurable, () -> configurable.getTemplateListPanel().addTemplate(template));
   }
 
   @Override
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
-    PsiFile file = LangDataKeys.PSI_FILE.getData(dataContext);
+    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
 
     if (file == null || editor == null) {
       e.getPresentation().setEnabled(false);
