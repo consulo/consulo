@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration" url="file://$PROJECT_DIR$/out" />
-  <component name="JavaCompilerConfiguration" compiler="JavacCompiler">
+  <component name="JavaCompilerConfiguration" compiler="JavacCompiler" add-not-null-assertions="true">
     <annotation-processing>
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
