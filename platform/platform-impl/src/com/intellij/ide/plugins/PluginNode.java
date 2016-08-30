@@ -41,10 +41,10 @@ public class PluginNode implements IdeaPluginDescriptor {
   private PluginId id;
   private String name;
   private String version;
+  private String platformVersion;
   private String vendor;
   private String description;
-  private String sinceBuild;
-  private String untilBuild;
+
   private String changeNotes;
   private String downloads;
   private String category;
@@ -114,6 +114,15 @@ public class PluginNode implements IdeaPluginDescriptor {
   }
 
   @Override
+  public String getPlatformVersion() {
+    return platformVersion;
+  }
+
+  public void setPlatformVersion(String platformVersion) {
+    this.platformVersion = platformVersion;
+  }
+
+  @Override
   public String getVendor() {
     return vendor;
   }
@@ -138,15 +147,6 @@ public class PluginNode implements IdeaPluginDescriptor {
 
   public void setChangeNotes(String changeNotes) {
     this.changeNotes = changeNotes;
-  }
-
-  @Override
-  public String getSinceBuild() {
-    return sinceBuild;
-  }
-
-  public void setSinceBuild(String sinceBuild) {
-    this.sinceBuild = sinceBuild;
   }
 
   /**
@@ -318,15 +318,6 @@ public class PluginNode implements IdeaPluginDescriptor {
   @Override
   public HelpSetPath[] getHelpSets() {
     return HelpSetPath.EMPTY;
-  }
-
-  @Override
-  public String getUntilBuild() {
-    return untilBuild;
-  }
-
-  public void setUntilBuild(final String untilBuild) {
-    this.untilBuild = untilBuild;
   }
 
   @Override

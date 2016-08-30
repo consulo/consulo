@@ -32,17 +32,14 @@ public class PluginBean extends ComponentManagerConfig {
   @Tag("description")
   public String description;
 
-  @Attribute("version")
-  public String formatVersion;
-
   @Tag("version")
   public String pluginVersion;
 
-  @Property(surroundWithTag = false)
-  public PluginVendor vendor;
+  @Tag("platformVersion")
+  public String platformVersion;
 
   @Property(surroundWithTag = false)
-  public IdeaVersionBean ideaVersion;
+  public PluginVendor vendor;
 
   @Tag("extensions")
   public Element[] extensions;

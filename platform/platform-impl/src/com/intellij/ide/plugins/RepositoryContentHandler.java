@@ -16,6 +16,7 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.openapi.extensions.PluginId;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -31,6 +32,8 @@ import java.util.Stack;
  * Time: 12:57:45 AM
  * To change this template use Options | File Templates.
  */
+@Deprecated
+@DeprecationInfo(value = "We need rework it for new plugin repository", until = "2.0")
 class RepositoryContentHandler extends DefaultHandler {
   @NonNls public static final String CATEGORY = "category";
   @NonNls public static final String IDEA_PLUGIN = "idea-plugin";
@@ -79,10 +82,6 @@ class RepositoryContentHandler extends DefaultHandler {
       currentPlugin.setDate(atts.getValue(DATE));
 
       plugins.add(currentPlugin);
-    }
-    else if (qName.equals(IDEA_VERSION)) {
-      currentPlugin.setSinceBuild(atts.getValue(SINCE_BUILD));
-      currentPlugin.setUntilBuild(atts.getValue(UNTIL_BUILD));
     }
     else if (qName.equals(VENDOR)) {
       currentPlugin.setVendorEmail(atts.getValue(EMAIL));

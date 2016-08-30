@@ -17,7 +17,6 @@ package com.intellij.ide.plugins;
 
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
-import com.intellij.diagnostic.PluginException;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
@@ -68,6 +67,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private String myResourceBundleBaseName;
   private String myChangeNotes;
   private String myVersion;
+  private String myPlatformVersion;
   private String myVendor;
   private String myVendorEmail;
   private String myVendorUrl;
@@ -91,8 +91,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private String myDownloadCounter;
   private long myDate;
   private boolean myEnabled = true;
-  private String mySinceBuild;
-  private String myUntilBuild;
   private Boolean mySkipped;
   private List<String> myModules = null;
 
@@ -178,27 +176,12 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
       idString = myName;
     }
     myId = idString == null ? null : PluginId.getId(idString);
-
-    String internalVersionString = pluginBean.formatVersion;
-    if (internalVersionString != null) {
-      try {
-        //noinspection ResultOfMethodCallIgnored
-        Integer.parseInt(internalVersionString);
-      }
-      catch (NumberFormatException e) {
-        LOG.error(new PluginException("Invalid value in plugin.xml format version: '" + internalVersionString + "'", e, myId));
-      }
-    }
-    if (pluginBean.ideaVersion != null) {
-      mySinceBuild = pluginBean.ideaVersion.sinceBuild;
-      myUntilBuild = pluginBean.ideaVersion.untilBuild;
-    }
-
     myResourceBundleBaseName = pluginBean.resourceBundle;
 
     myDescriptionChildText = pluginBean.description;
     myChangeNotes = pluginBean.changeNotes;
     myVersion = pluginBean.pluginVersion;
+    myPlatformVersion = pluginBean.platformVersion;
     myCategory = pluginBean.category;
 
 
@@ -332,6 +315,11 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @Override
   public String getVersion() {
     return myVersion;
+  }
+
+  @Override
+  public String getPlatformVersion() {
+    return myPlatformVersion;
   }
 
   @Override
@@ -574,16 +562,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @Override
   public void setEnabled(final boolean enabled) {
     myEnabled = enabled;
-  }
-
-  @Override
-  public String getSinceBuild() {
-    return mySinceBuild;
-  }
-
-  @Override
-  public String getUntilBuild() {
-    return myUntilBuild;
   }
 
   @Nullable

@@ -18,6 +18,7 @@ package com.intellij.ide.plugins;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
+import consulo.annotations.DeprecationInfo;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +48,11 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
 
   String getVendor();
 
+  @Nullable
   String getVersion();
+
+  @Nullable
+  String getPlatformVersion();
 
   String getResourceBundleBaseName();
 
@@ -76,9 +81,17 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
 
   String getDownloads();
 
-  String getSinceBuild();
+  @Deprecated
+  @DeprecationInfo(value = "Always return null. Use #getPlatformVersion()", until = "2.0")
+  default String getSinceBuild() {
+    return null;
+  }
 
-  String getUntilBuild();
+  @Deprecated
+  @DeprecationInfo(value = "Always return null. Use #getPlatformVersion()", until = "2.0")
+  default String getUntilBuild() {
+    return null;
+  }
 
   boolean isBundled();
 
