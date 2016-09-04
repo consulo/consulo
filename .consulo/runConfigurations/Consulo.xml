@@ -24,6 +24,7 @@
     <ConfigurationWrapper RunnerId="Run" />
     <method>
       <option name="BuildArtifacts" enabled="true">
+        <artifact name="crossPlatformLibraries" />
         <artifact name="distForRuntime" />
         <artifact name="distMain" />
       </option>
