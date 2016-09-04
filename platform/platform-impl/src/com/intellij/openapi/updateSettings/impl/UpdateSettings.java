@@ -31,12 +31,11 @@ import java.util.List;
 
 @State(
         name = "UpdatesConfigurable",
-        storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/updates.xml", roamingType = RoamingType.DISABLED),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)
-        }
+        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/updates.xml", roamingType = RoamingType.DISABLED)}
 )
+@Deprecated
 public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State>, UserUpdateSettings {
+  private static final UpdateSettings ourInstance = new UpdateSettings();
   private State myState = new State();
 
   public UpdateSettings() {
@@ -44,7 +43,7 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
   }
 
   public static UpdateSettings getInstance() {
-    return ServiceManager.getService(UpdateSettings.class);
+    return ourInstance;
   }
 
   static class State {

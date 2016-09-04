@@ -41,7 +41,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.impl.ApplicationInfoImpl");
 
   @NonNls
-  private static final String DEFAULT_PLUGINS_HOST = "http://must-be.org/consulo/plugins/";
+  private static final String DEFAULT_PLUGINS_HOST = "http://must-be.org/api/v2/consulo/plugins/";
   @NonNls
   private static final String DEFAULT_STATISTICS_HOST = "http://must-be.org/consulo/statistics/";
   @NonNls
@@ -52,7 +52,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String myMinorVersion = null;
   private String myBuildNumber = null;
   private String myCompanyName = "Must-Be";
-  private String myCompanyUrl = "http://must-be.org/consulo";
+  private String myCompanyUrl = "http://consulo.site";
   private Color myProgressColor = null;
   private Color myAboutForeground = Color.black;
   private Color myAboutLinkColor = null;
@@ -461,22 +461,13 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
       myWhatsNewUrl = whatsnewElement.getAttributeValue(ATTRIBUTE_URL);
     }
 
-    myPluginManagerUrl = DEFAULT_PLUGINS_HOST;
-    myPluginsListUrl = DEFAULT_PLUGINS_HOST + "list";
-    myPluginsDownloadUrl = DEFAULT_PLUGINS_HOST + "download";
+    String pluginHost = StringUtil.notNullize(System.getProperty("idea.plugins.host"), DEFAULT_PLUGINS_HOST);
 
-    final String pluginsHost = System.getProperty("idea.plugins.host");
-    if (pluginsHost != null) {
-      myPluginManagerUrl = pluginsHost;
-      myPluginsListUrl = myPluginsListUrl.replace(DEFAULT_PLUGINS_HOST, pluginsHost);
-      myPluginsDownloadUrl = myPluginsDownloadUrl.replace(DEFAULT_PLUGINS_HOST, pluginsHost);
-    }
+    myPluginManagerUrl = pluginHost;
+    myPluginsListUrl = pluginHost + "list";
+    myPluginsDownloadUrl = pluginHost + "download";
 
-    myStatisticsUrl = DEFAULT_STATISTICS_HOST + "post";
-    final String statisticsHost = System.getProperty("consulo.statistics.host");
-    if (statisticsHost != null) {
-      myStatisticsUrl = myStatisticsUrl.replace(DEFAULT_STATISTICS_HOST, statisticsHost);
-    }
+    myStatisticsUrl = StringUtil.notNullize(System.getProperty("consulo.statistics.host"), DEFAULT_STATISTICS_HOST) + "post";
 
     myUpdatesInfoUrl = DEFAULT_UPDATES_HOST + "list";
     myUpdatesDownloadUrl = DEFAULT_UPDATES_HOST + "download";

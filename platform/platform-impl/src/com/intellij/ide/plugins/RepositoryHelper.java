@@ -15,23 +15,26 @@
  */
 package com.intellij.ide.plugins;
 
-import com.google.common.hash.Hashing;
-import com.google.common.io.Files;
+import com.google.gson.Gson;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.PathUtil;
 import com.intellij.util.net.HttpConfigurable;
-import org.jetbrains.annotations.NonNls;
+import consulo.ide.plugins.PluginJsonNode;
+import consulo.ide.updateSettings.UpdateChannel;
+import consulo.ide.updateSettings.UpdateSettings;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -40,26 +43,20 @@ import java.util.zip.GZIPInputStream;
  * @since Mar 28, 2003
  */
 public class RepositoryHelper {
-  @NonNls public static final String PLUGIN_LIST_FILE = "availables.xml";
-
+  @NotNull
+  @Deprecated
   public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator) throws Exception {
+    return loadPluginsFromRepository(indicator, UpdateSettings.getInstance().getChannel());
+  }
+
+  @NotNull
+  public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @NotNull UpdateChannel channel) throws Exception {
     ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
 
-    String url = appInfo.getPluginsListUrl() + "?build=" + appInfo.getBuild().asString();
+    String url = appInfo.getPluginsListUrl() + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel;
 
     if (indicator != null) {
       indicator.setText2(IdeBundle.message("progress.connecting.to.plugin.manager", appInfo.getPluginManagerUrl()));
-    }
-
-    File pluginListFile = new File(PathManager.getPluginsPath(), PLUGIN_LIST_FILE);
-    if (pluginListFile.length() > 0) {
-      try {
-        url = url + "&crc32=" + Files.hash(pluginListFile, Hashing.crc32()).toString();
-      }
-      catch (NoSuchMethodError e) {
-        String guavaPath = PathUtil.getJarPathForClass(Hashing.class);
-        throw new RuntimeException(guavaPath, e);
-      }
     }
 
     HttpURLConnection connection = HttpConfigurable.getInstance().openHttpConnection(url);
@@ -75,10 +72,6 @@ public class RepositoryHelper {
         indicator.checkCanceled();
       }
 
-      if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
-        return loadPluginList(pluginListFile);
-      }
-
       String encoding = connection.getContentEncoding();
       InputStream is = connection.getInputStream();
       try {
@@ -90,7 +83,7 @@ public class RepositoryHelper {
           indicator.setText2(IdeBundle.message("progress.downloading.list.of.plugins"));
         }
 
-        return readPluginsStream(is, indicator, PLUGIN_LIST_FILE);
+        return readPluginsStream(is, indicator);
       }
       finally {
         is.close();
@@ -101,12 +94,8 @@ public class RepositoryHelper {
     }
   }
 
-  private synchronized static List<IdeaPluginDescriptor> readPluginsStream(InputStream is,
-                                                                           ProgressIndicator indicator,
-                                                                           String file) throws Exception {
-    File temp = createLocalPluginsDescriptions(file);
-
-    OutputStream os = new FileOutputStream(temp, false);
+  private static List<IdeaPluginDescriptor> readPluginsStream(InputStream is, ProgressIndicator indicator) throws Exception {
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
     try {
       byte[] buffer = new byte[1024];
       int size;
@@ -121,37 +110,24 @@ public class RepositoryHelper {
       os.close();
     }
 
-    return loadPluginList(temp);
-  }
+    PluginJsonNode[] nodes =
+            new Gson().fromJson(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()), StandardCharsets.UTF_8), PluginJsonNode[].class);
 
-  private static List<IdeaPluginDescriptor> loadPluginList(File file) throws Exception {
-    SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-    RepositoryContentHandler handler = new RepositoryContentHandler();
-    parser.parse(file, handler);
-    return handler.getPluginsList();
-  }
+    List<IdeaPluginDescriptor> pluginDescriptors = new ArrayList<>(nodes.length);
+    for (PluginJsonNode node : nodes) {
+      PluginNode pluginNode = new PluginNode();
 
-  private static File createLocalPluginsDescriptions(String file) throws IOException {
-    File basePath = new File(PathManager.getPluginsPath());
-    if (!basePath.isDirectory() && !basePath.mkdirs()) {
-      throw new IOException("Cannot create directory: " + basePath);
+      pluginNode.setName(node.name);
+      pluginNode.setId(node.id);
+      pluginNode.setCategory(node.category);
+
+      pluginDescriptors.add(pluginNode);
     }
-
-    File temp = new File(basePath, file);
-    if (temp.exists()) {
-      FileUtil.delete(temp);
-    }
-    FileUtil.createIfDoesntExist(temp);
-    return temp;
+    return pluginDescriptors;
   }
 
   public static List<IdeaPluginDescriptor> loadPluginsFromDescription(InputStream is, ProgressIndicator indicator) throws Exception {
-    try {
-      return readPluginsStream(is, indicator, "host.xml");
-    }
-    finally {
-      is.close();
-    }
+    return Collections.emptyList();
   }
 
   public static String getDownloadUrl() {

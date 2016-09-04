@@ -158,16 +158,13 @@
     <applicationConfigurable displayName="Notifications" parentId="general" instance="com.intellij.notification.impl.NotificationsConfigurable"/>
 
     <applicationConfigurable parentId="general" instance="com.intellij.ide.plugins.PluginManagerConfigurable" id="preferences.pluginManager"
-                             displayName="Plugins"/>
+                             displayName="Platform &amp; Plugin Updates"/>
     <applicationConfigurable parentId="general" instance="com.intellij.util.net.HttpProxyConfigurable" id="http.proxy" displayName="HTTP Proxy"/>
 
     <applicationConfigurable parentId="general" instance="com.intellij.openapi.keymap.impl.ui.KeymapPanel" id="preferences.keymap" key="keymap.display.name"
                              bundle="messages.KeyMapBundle"/>
     <applicationConfigurable parentId="general" instance="com.intellij.openapi.keymap.impl.ui.QuickListsPanel" id="reference.idesettings.quicklists"
                              displayName="Quick Lists"/>
-
-    <applicationConfigurable parentId="general" instance="com.intellij.openapi.updateSettings.impl.UpdateSettingsConfigurable" id="preferences.updates"
-                             key="updates.settings.title" bundle="messages.IdeBundle"/>
 
     <applicationConfigurable instance="com.intellij.internal.statistic.configurable.StatisticsConfigurable"
                              parentId="general"

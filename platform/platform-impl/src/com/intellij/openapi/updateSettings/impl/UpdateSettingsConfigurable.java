@@ -34,6 +34,7 @@ import java.awt.event.ActionListener;
 /**
  * @author pti
  */
+@Deprecated
 public class UpdateSettingsConfigurable implements SearchableConfigurable {
   private UpdatesSettingsPanel myUpdatesSettingsPanel;
   private boolean myCheckNowEnabled = true;

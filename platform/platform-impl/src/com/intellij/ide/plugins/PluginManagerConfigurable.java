@@ -47,12 +47,12 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
   protected final PluginManagerUISettings myUISettings;
   protected boolean myAvailable;
 
-  public PluginManagerConfigurable(final PluginManagerUISettings UISettings) {
-    myUISettings = UISettings;
+  public PluginManagerConfigurable(final PluginManagerUISettings uiSettings) {
+    myUISettings = uiSettings;
   }
 
-  public PluginManagerConfigurable(final PluginManagerUISettings UISettings, boolean available) {
-    myUISettings = UISettings;
+  public PluginManagerConfigurable(final PluginManagerUISettings uiSettings, boolean available) {
+    myUISettings = uiSettings;
     myAvailable = available;
   }
 

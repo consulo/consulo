@@ -16,15 +16,12 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.CommonBundle;
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
-import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
@@ -38,8 +35,9 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.ui.StatusText;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.fileTypes.ArchiveFileType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,10 +59,10 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     init();
     myActionsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-    final JButton button = new JButton("Browse repositories...");
-    button.setMnemonic('b');
-    button.addActionListener(new BrowseRepoListener(null));
-    myActionsPanel.add(button);
+    final JButton viewAvailablePlugins = new JButton("View available plugins...");
+    viewAvailablePlugins.setMnemonic('v');
+    viewAvailablePlugins.addActionListener(new BrowseRepoListener());
+    myActionsPanel.add(viewAvailablePlugins);
 
     final JButton installPluginFromFileSystem = new JButton("Install plugin from disk...");
     installPluginFromFileSystem.setMnemonic('d');
@@ -118,11 +116,17 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       }
     });
     myActionsPanel.add(installPluginFromFileSystem);
+
+    final JButton button = new JButton("Update Settings");
+    button.setMnemonic('s');
+
+    myActionsPanel.add(button);
+
     final StatusText emptyText = pluginTable.getEmptyText();
     emptyText.setText("Nothing to show.");
     emptyText.appendText(" Click ");
-    emptyText.appendText("Browse", SimpleTextAttributes.LINK_ATTRIBUTES, new BrowseRepoListener(null));
-    emptyText.appendText(" to search for non-bundled plugins.");
+    emptyText.appendText("View available plugins...", SimpleTextAttributes.LINK_ATTRIBUTES, new BrowseRepoListener());
+    emptyText.appendText(" to view available plugins.");
   }
 
   private void checkInstalledPluginDependencies(IdeaPluginDescriptorImpl pluginDescriptor) {
@@ -182,19 +186,6 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   protected void propagateUpdates(List<IdeaPluginDescriptor> list) {
   }
 
-  private PluginManagerConfigurable createAvailableConfigurable(final String vendorFilter) {
-    return new PluginManagerConfigurable(PluginManagerUISettings.getInstance(), true) {
-      @Override
-      protected PluginManagerMain createPanel() {
-        return new AvailablePluginsManagerMain(InstalledPluginsManagerMain.this, myUISettings, vendorFilter);
-      }
-
-      @Override
-      public String getDisplayName() {
-        return vendorFilter != null ? "Browse " + vendorFilter + " Plugins " : "Browse Repositories";
-      }
-    };
-  }
 
   @Override
   protected JScrollPane createTable() {
@@ -381,36 +372,25 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   }
 
   private class BrowseRepoListener implements ActionListener {
-
-    private final String myVendor;
-
-    public BrowseRepoListener(String vendor) {
-      myVendor = vendor;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
-      final PluginManagerConfigurable configurable = createAvailableConfigurable(myVendor);
-      final SingleConfigurableEditor configurableEditor =
-              new SingleConfigurableEditor(myActionsPanel, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable), false) {
-                {
-                  setOKButtonText(CommonBundle.message("close.action.name"));
-                  setOKButtonMnemonic('C');
-                  final String filter = myFilter.getFilter();
-                  if (!StringUtil.isEmptyOrSpaces(filter)) {
-                    final Runnable searchRunnable = configurable.enableSearch(filter);
-                    LOG.assertTrue(searchRunnable != null);
-                    searchRunnable.run();
-                  }
-                }
+      final PluginManagerConfigurable configurable = createAvailableConfigurable();
 
-                @NotNull
-                @Override
-                protected Action[] createActions() {
-                  return new Action[]{getOKAction()};
-                }
-              };
-      configurableEditor.show();
+      new AvailablePluginsDialog(myActionsPanel, configurable, myFilter).show();
+    }
+
+    private PluginManagerConfigurable createAvailableConfigurable() {
+      return new PluginManagerConfigurable(PluginManagerUISettings.getInstance(), true) {
+        @Override
+        protected PluginManagerMain createPanel() {
+          return new AvailablePluginsManagerMain(InstalledPluginsManagerMain.this, myUISettings);
+        }
+
+        @Override
+        public String getDisplayName() {
+          return "Available Plugins";
+        }
+      };
     }
   }
 }

@@ -27,11 +27,9 @@ import com.intellij.notification.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -39,9 +37,6 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.updateSettings.impl.PluginDownloader;
-import com.intellij.openapi.updateSettings.impl.UpdateChecker;
-import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.border.CustomLineBorder;
@@ -53,10 +48,10 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -65,11 +60,8 @@ import javax.swing.plaf.BorderUIResource;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -306,31 +298,11 @@ public abstract class PluginManagerMain implements Disposable {
       @Override
       public Object construct() {
         try {
-          list = RepositoryHelper.loadPluginsFromRepository(null);
+          list = RepositoryHelper.loadPluginsFromRepository(null, consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel());
         }
         catch (Exception e) {
           LOG.info(e);
           errorMessages.add(e.getMessage());
-        }
-        for (String host : UpdateSettings.getInstance().getStoredPluginHosts()) {
-          if (!acceptHost(host)) continue;
-          final ArrayList<PluginDownloader> downloaded = new ArrayList<PluginDownloader>();
-          try {
-            UpdateChecker.checkPluginsHost(host, downloaded, false, null);
-            for (PluginDownloader downloader : downloaded) {
-              final PluginNode pluginNode = PluginDownloader.createPluginNode(host, downloader);
-              if (pluginNode != null) {
-                if (list == null) list = new ArrayList<IdeaPluginDescriptor>();
-                list.add(pluginNode);
-              }
-            }
-          }
-          catch (ProcessCanceledException ignore) {
-          }
-          catch (Exception e) {
-            LOG.info(e);
-            errorMessages.add(e.getMessage());
-          }
         }
         return list;
       }
@@ -367,25 +339,6 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
   protected void loadAvailablePlugins() {
-    ArrayList<IdeaPluginDescriptor> list;
-    try {
-      //  If we already have a file with downloaded plugins from the last time,
-      //  then read it, load into the list and start the updating process.
-      //  Otherwise just start the process of loading the list and save it
-      //  into the persistent config file for later reading.
-      File file = new File(PathManager.getPluginsPath(), RepositoryHelper.PLUGIN_LIST_FILE);
-      if (file.exists()) {
-        RepositoryContentHandler handler = new RepositoryContentHandler();
-        SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-        parser.parse(file, handler);
-        list = handler.getPluginsList();
-        modifyPluginsList(list);
-      }
-    }
-    catch (Exception ex) {
-      //  Nothing to do, just ignore - if nothing can be read from the local
-      //  file just start downloading of plugins' list from the site.
-    }
     loadPluginsFromHostInBackground();
   }
 

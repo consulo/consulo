@@ -15,28 +15,24 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.sorters.SortByDownloadsAction;
 import com.intellij.ide.plugins.sorters.SortByRatingAction;
 import com.intellij.ide.plugins.sorters.SortByUpdatedAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableUtil;
-import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -52,14 +48,13 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   public static final String N_A = "N/A";
 
   private PluginManagerMain installed;
-  private final String myVendorFilter;
 
-  public AvailablePluginsManagerMain(PluginManagerMain installed, PluginManagerUISettings uiSettings, String vendorFilter) {
+  public AvailablePluginsManagerMain(PluginManagerMain installed, PluginManagerUISettings uiSettings) {
     super(uiSettings);
     this.installed = installed;
-    myVendorFilter = vendorFilter;
     init();
-    final JButton manageRepositoriesBtn = new JButton(MANAGE_REPOSITORIES);
+    myActionsPanel.setVisible(false);
+    /*final JButton manageRepositoriesBtn = new JButton(MANAGE_REPOSITORIES);
     if (myVendorFilter == null) {
       manageRepositoriesBtn.setMnemonic('m');
       manageRepositoriesBtn.addActionListener(new ActionListener() {
@@ -75,9 +70,9 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
         }
       });
       myActionsPanel.add(manageRepositoriesBtn, BorderLayout.EAST);
-    }
+    } */
 
-    final JButton httpProxySettingsButton = new JButton(IdeBundle.message("button.http.proxy.settings"));
+   /* final JButton httpProxySettingsButton = new JButton(IdeBundle.message("button.http.proxy.settings"));
     httpProxySettingsButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -86,15 +81,13 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
         }
       }
     });
-    myActionsPanel.add(httpProxySettingsButton, BorderLayout.WEST);
+    myActionsPanel.add(httpProxySettingsButton, BorderLayout.WEST);    */
     myPanelDescription.setVisible(false);
   }
 
   @Override
   protected JScrollPane createTable() {
-    AvailablePluginsTableModel model = new AvailablePluginsTableModel();
-    model.setVendor(myVendorFilter);
-    pluginsModel = model;
+    pluginsModel = new AvailablePluginsTableModel();
     pluginTable = new PluginTable(pluginsModel);
     //pluginTable.setColumnWidth(PluginManagerColumnInfo.COLUMN_DOWNLOADS, 70);
     //pluginTable.setColumnWidth(PluginManagerColumnInfo.COLUMN_DATE, 80);
@@ -216,7 +209,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     installed.modifyPluginsList(list); //propagate updates
   }
 
-  private class MyFilterCategoryAction extends ComboBoxAction implements DumbAware{
+  private class MyFilterCategoryAction extends ComboBoxAction implements DumbAware {
     @RequiredDispatchThread
     @Override
     public void update(@NotNull AnActionEvent e) {
