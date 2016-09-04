@@ -47,7 +47,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls
   private static final String DEFAULT_UPDATES_HOST = "http://must-be.org/consulo/updates/";
 
-  private String myCodeName = null;
   private String myMajorVersion = null;
   private String myMinorVersion = null;
   private String myBuildNumber = null;
@@ -87,7 +86,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ELEMENT_VERSION = "version";
   @NonNls private static final String ATTRIBUTE_MAJOR = "major";
   @NonNls private static final String ATTRIBUTE_MINOR = "minor";
-  @NonNls private static final String ATTRIBUTE_CODENAME = "codename";
   @NonNls private static final String ATTRIBUTE_NAME = "name";
   @NonNls private static final String ELEMENT_BUILD = "build";
   @NonNls private static final String ELEMENT_COMPANY = "company";
@@ -148,11 +146,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
 
   @Override
   public String getVersionName() {
-    final String fullName = ApplicationNamesInfo.getInstance().getFullProductName();
-    if (myEAP && !StringUtil.isEmptyOrSpaces(myCodeName)) {
-      return fullName + " (" + myCodeName + ")";
-    }
-    return fullName;
+    return ApplicationNamesInfo.getInstance().getFullProductName();
   }
 
   @Override
@@ -347,7 +341,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
     if (versionElement != null) {
       myMajorVersion = versionElement.getAttributeValue(ATTRIBUTE_MAJOR);
       myMinorVersion = versionElement.getAttributeValue(ATTRIBUTE_MINOR);
-      myCodeName = versionElement.getAttributeValue(ATTRIBUTE_CODENAME);
       myEAP = Boolean.parseBoolean(versionElement.getAttributeValue(ATTRIBUTE_EAP));
     }
 

@@ -76,8 +76,6 @@ public class NewWelcomeScreen extends JPanel implements WelcomeScreen {
 
   private static JPanel createFooterPanel() {
     JLabel versionLabel = new JLabel(ApplicationNamesInfo.getInstance().getFullProductName() +
-                                     " " +
-                                     ApplicationInfo.getInstance().getFullVersion() +
                                      " Build " +
                                      ApplicationInfo.getInstance().getBuild());
     makeSmallFont(versionLabel);

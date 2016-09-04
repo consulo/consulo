@@ -17,7 +17,7 @@ package org.jetbrains.io;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import consulo.application.impl.FrameTitleUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFuture;
@@ -68,7 +68,7 @@ public final class Responses {
     if (SERVER_HEADER_VALUE == null) {
       Application app = ApplicationManager.getApplication();
       if (app != null && !app.isDisposed()) {
-        SERVER_HEADER_VALUE = ApplicationInfoEx.getInstanceEx().getFullApplicationName();
+        SERVER_HEADER_VALUE = FrameTitleUtil.buildTitle();
       }
     }
     if (SERVER_HEADER_VALUE != null) {
