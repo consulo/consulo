@@ -17,6 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.google.gson.Gson;
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -44,6 +45,22 @@ import java.util.zip.GZIPInputStream;
  */
 public class RepositoryHelper {
   @NotNull
+  public static String buildUrlForList(@NotNull UpdateChannel channel) {
+    ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
+
+    return appInfo.getPluginsListUrl() + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel;
+  }
+
+  @NotNull
+  public static String buildUrlForDownload(@NotNull UpdateChannel channel, @NotNull String pluginId) {
+    ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
+
+    String id = PermanentInstallationID.get();
+
+    return appInfo.getPluginsDownloadUrl() + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel + "&pluginId=" + pluginId + "&id=" + id;
+  }
+
+  @NotNull
   @Deprecated
   public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator) throws Exception {
     return loadPluginsFromRepository(indicator, UpdateSettings.getInstance().getChannel());
@@ -53,7 +70,7 @@ public class RepositoryHelper {
   public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @NotNull UpdateChannel channel) throws Exception {
     ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
 
-    String url = appInfo.getPluginsListUrl() + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel;
+    String url = buildUrlForList(channel);
 
     if (indicator != null) {
       indicator.setText2(IdeBundle.message("progress.connecting.to.plugin.manager", appInfo.getPluginManagerUrl()));
@@ -117,8 +134,14 @@ public class RepositoryHelper {
     for (PluginJsonNode node : nodes) {
       PluginNode pluginNode = new PluginNode();
 
-      pluginNode.setName(node.name);
       pluginNode.setId(node.id);
+      pluginNode.setName(node.name);
+      pluginNode.setDescription(node.description);
+      pluginNode.setDate(node.date);
+      pluginNode.setVendor(node.vendor);
+      pluginNode.setVersion(node.version);
+      pluginNode.setPlatformVersion(node.platformVersion);
+      pluginNode.setDownloads(String.valueOf(node.downloads));
       pluginNode.setCategory(node.category);
 
       pluginDescriptors.add(pluginNode);
@@ -126,11 +149,8 @@ public class RepositoryHelper {
     return pluginDescriptors;
   }
 
+  @Deprecated
   public static List<IdeaPluginDescriptor> loadPluginsFromDescription(InputStream is, ProgressIndicator indicator) throws Exception {
     return Collections.emptyList();
-  }
-
-  public static String getDownloadUrl() {
-    return ApplicationInfoImpl.getShadowInstance().getPluginsDownloadUrl() + "?action=download&id=";
   }
 }

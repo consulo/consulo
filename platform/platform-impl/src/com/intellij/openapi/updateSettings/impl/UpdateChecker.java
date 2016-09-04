@@ -23,6 +23,7 @@ import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -42,6 +43,7 @@ import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.SharedConstants;
+import consulo.annotations.DeprecationInfo;
 import consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -602,64 +604,11 @@ public final class UpdateChecker {
     return inputStreams[0];
   }
 
+  @Deprecated
+  @DeprecationInfo("Use PermanentInstallationID#get()")
   public static String getInstallationUID(final PropertiesComponent propertiesComponent) {
-    if (SystemInfo.isWindows) {
-      String uid = getInstallationUIDOnWindows(propertiesComponent);
-      if (uid != null) {
-        return uid;
-      }
-    }
-    String uid;
-    if (!propertiesComponent.isValueSet(INSTALLATION_UID)) {
-      uid = generateUUID();
-      propertiesComponent.setValue(INSTALLATION_UID, uid);
-    }
-    else {
-      uid = propertiesComponent.getValue(INSTALLATION_UID);
-    }
-    return uid;
+    return PermanentInstallationID.get();
   }
-
-  @Nullable
-  private static String getInstallationUIDOnWindows(PropertiesComponent propertiesComponent) {
-    String appdata = System.getenv("APPDATA");
-    if (appdata != null) {
-      File jetBrainsDir = new File(appdata, "JetBrains");
-      if (jetBrainsDir.exists() || jetBrainsDir.mkdirs()) {
-        File permanentIdFile = new File(jetBrainsDir, "PermanentUserId");
-        try {
-          if (permanentIdFile.exists()) {
-            return FileUtil.loadFile(permanentIdFile).trim();
-          }
-          String uuid;
-          if (propertiesComponent.isValueSet(INSTALLATION_UID)) {
-            uuid = propertiesComponent.getValue(INSTALLATION_UID);
-          }
-          else {
-            uuid = generateUUID();
-          }
-          FileUtil.writeToFile(permanentIdFile, uuid);
-          return uuid;
-        }
-        catch (IOException e) {
-          // ignore
-        }
-      }
-    }
-    return null;
-  }
-
-  private static String generateUUID() {
-    try {
-      return UUID.randomUUID().toString();
-    }
-    catch (Exception ignored) {
-    }
-    catch (InternalError ignored) {
-    }
-    return "";
-  }
-
   public static boolean install(List<PluginDownloader> downloaders) {
     boolean installed = false;
     for (PluginDownloader downloader : downloaders) {

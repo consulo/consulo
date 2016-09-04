@@ -237,7 +237,7 @@ public abstract class PluginManagerMain implements Disposable {
       }
     });
 
-    PopupHandler.installUnknownPopupHandler(pluginTable, getActionGroup(false), ActionManager.getInstance());
+    //PopupHandler.installUnknownPopupHandler(pluginTable, getActionGroup(false), ActionManager.getInstance());
 
     new MySpeedSearchBar(pluginTable);
   }

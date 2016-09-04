@@ -12,7 +12,7 @@ public class PluginJsonNode {
   public String description;
   public String category;
   public String vendor;
-  public Integer downloads;
+  public int downloads;
   public Long length;
   public Long date;
   public Integer rating;

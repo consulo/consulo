@@ -37,6 +37,7 @@ import com.intellij.util.Function;
 import com.intellij.util.ui.StatusText;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileTypes.ArchiveFileType;
+import consulo.ide.plugins.AvailablePluginsDialog;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

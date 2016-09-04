@@ -219,8 +219,8 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.url = url;
   }
 
-  public void setDate(String date) {
-    this.date = Long.valueOf(date);
+  public void setDate(Long date) {
+    this.date = date == null ? 0 : date;
   }
 
   public long getDate() {
