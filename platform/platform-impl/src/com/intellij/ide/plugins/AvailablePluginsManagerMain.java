@@ -20,23 +20,14 @@ import com.intellij.ide.plugins.sorters.SortByRatingAction;
 import com.intellij.ide.plugins.sorters.SortByUpdatedAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.TableUtil;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -106,67 +97,8 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   }
 
   @Override
-  protected void installTableActions() {
-    super.installTableActions();
-    new DoubleClickListener() {
-      @Override
-      protected boolean onDoubleClick(MouseEvent e) {
-        if (pluginTable.columnAtPoint(e.getPoint()) < 0) return false;
-        if (pluginTable.rowAtPoint(e.getPoint()) < 0) return false;
-        return installSelected(pluginTable);
-      }
-    }.installOn(pluginTable);
-
-    pluginTable.registerKeyboardAction(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        installSelected(pluginTable);
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), JComponent.WHEN_FOCUSED);
-  }
-
-  private boolean installSelected(PluginTable pluginTable) {
-    IdeaPluginDescriptor[] selection = pluginTable.getSelectedObjects();
-    if (selection != null) {
-      boolean enabled = true;
-      for (IdeaPluginDescriptor descr : selection) {
-        if (descr instanceof PluginNode) {
-          enabled &= !PluginManagerColumnInfo.isDownloaded((PluginNode)descr);
-          if (((PluginNode)descr).getStatus() == PluginNode.STATUS_INSTALLED) {
-            enabled &= InstalledPluginsTableModel.hasNewerVersion(descr.getPluginId());
-          }
-        }
-        else if (descr instanceof IdeaPluginDescriptorImpl) {
-          PluginId id = descr.getPluginId();
-          enabled &= InstalledPluginsTableModel.hasNewerVersion(id);
-        }
-      }
-      if (enabled) {
-        new InstallPluginAction(this, installed).install(new Runnable() {
-          @Override
-          public void run() {
-            UIUtil.invokeLaterIfNeeded(new Runnable() {
-              @Override
-              public void run() {
-                refresh();
-              }
-            });
-          }
-        });
-      }
-      return true;
-    }
-    return false;
-  }
-
-  @Override
   public void reset() {
-    UiNotifyConnector.doWhenFirstShown(getPluginTable(), new Runnable() {
-      @Override
-      public void run() {
-        loadAvailablePlugins();
-      }
-    });
+    UiNotifyConnector.doWhenFirstShown(getPluginTable(), this::loadAvailablePlugins);
     super.reset();
   }
 
@@ -186,7 +118,6 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     actionGroup.add(new RefreshAction());
 
     if (inToolbar) {
-      actionGroup.add(new MyFilterRepositoryAction());
       actionGroup.add(new MyFilterCategoryAction());
     }
     else {
@@ -206,7 +137,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
   @Override
   protected void propagateUpdates(List<IdeaPluginDescriptor> list) {
-    installed.modifyPluginsList(list); //propagate updates
+    installed.modifyPluginsList(list);
   }
 
   private class MyFilterCategoryAction extends ComboBoxAction implements DumbAware {
@@ -243,45 +174,6 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
         public void actionPerformed(AnActionEvent e) {
           final String filter = myFilter.getFilter().toLowerCase();
           ((AvailablePluginsTableModel)pluginsModel).setCategory(availableCategory, filter);
-        }
-      };
-    }
-  }
-
-  private class MyFilterRepositoryAction extends ComboBoxAction implements DumbAware {
-
-    private static final int LENGTH = 15;
-
-    @RequiredDispatchThread
-    @Override
-    public void update(@NotNull AnActionEvent e) {
-      super.update(e);
-      e.getPresentation().setVisible(!UpdateSettings.getInstance().getStoredPluginHosts().isEmpty());
-      String repository = ((AvailablePluginsTableModel)pluginsModel).getRepository();
-      if (repository.length() > LENGTH) {
-        repository = repository.substring(0, LENGTH) + "...";
-      }
-      e.getPresentation().setText("Repository: " + repository);
-    }
-
-    @NotNull
-    @Override
-    protected DefaultActionGroup createPopupActionGroup(JComponent button) {
-      final DefaultActionGroup gr = new DefaultActionGroup();
-      gr.add(createFilterByRepositoryAction(AvailablePluginsTableModel.ALL));
-      for (final String host : UpdateSettings.getInstance().getStoredPluginHosts()) {
-        gr.add(createFilterByRepositoryAction(host));
-      }
-      return gr;
-    }
-
-    private AnAction createFilterByRepositoryAction(final String host) {
-      return new AnAction(host) {
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-          final String filter = myFilter.getFilter().toLowerCase();
-          ((AvailablePluginsTableModel)pluginsModel).setRepository(host, filter);
-          TableUtil.ensureSelectionExists(getPluginTable());
         }
       };
     }

@@ -30,6 +30,7 @@ import com.intellij.util.Function;
 import com.intellij.util.net.IOExceptionDialog;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
@@ -89,7 +90,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     install(null);
   }
 
