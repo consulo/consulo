@@ -187,18 +187,18 @@ public class AboutDialog extends JDialog {
 
       myLines.add(new AboutBoxLine(""));
       myLines.add(new AboutBoxLine("Based on ").keepWithNext());
-      myLines.add(new AboutBoxLine("IntelliJ Platform", true, "http://jetbrains.org"));
+      myLines.add(new AboutBoxLine("IntelliJ IDEA Community Edition", true, "http://jetbrains.org"));
       myLines.add(new AboutBoxLine(""));
       myLines.add(new AboutBoxLine(""));
       myLines.add(new AboutBoxLine("Powered by ").keepWithNext());
-      myLines.add(new AboutBoxLine("Must-Be.org", true, "http://must-be.org/consulo/"));
+      myLines.add(new AboutBoxLine("consulo.io", true, "http://consulo.io"));
 
       addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent event) {
           if (myActiveLink != null) {
             event.consume();
-            BrowserUtil.launchBrowser(myActiveLink.url);
+            BrowserUtil.browse(myActiveLink.url);
           }
         }
       });
