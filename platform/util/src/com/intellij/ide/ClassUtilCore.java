@@ -50,9 +50,4 @@ public class ClassUtilCore {
       map.clear();
     }
   }
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  public static boolean isLoadingOfExternalPluginsDisabled() {
-    return !"true".equalsIgnoreCase(System.getProperty("idea.plugins.load", "true"));
-  }
 }

@@ -48,11 +48,6 @@
       <element id="zip-archive" name="consulo-xdebugger-impl.jar">
         <element id="module-output" name="xdebugger-impl" />
       </element>
-      <element id="zip-archive" name="util.jar">
-        <element id="module-output" name="util" />
-        <element id="module-output" name="util-rt" />
-        <element id="module-output" name="slf4j-bind" />
-      </element>
       <element id="zip-archive" name="consulo-compiler-impl.jar">
         <element id="module-output" name="compiler-bridge-impl" />
         <element id="module-output" name="compiler-server-impl" />
@@ -93,15 +88,6 @@
       <element id="jar-archive" name="consulo-xtest-impl.jar">
         <element id="module-output" name="testRunner" />
         <element id="module-output" name="smRunner" />
-      </element>
-      <element id="zip-archive" name="annotations.jar">
-        <element id="module-output" name="annotations" />
-      </element>
-      <element id="zip-archive" name="extensions.jar">
-        <element id="module-output" name="extensions" />
-      </element>
-      <element id="zip-archive" name="forms_rt.jar">
-        <element id="module-output" name="forms_rt" />
       </element>
       <element id="zip-archive" name="consulo-resources.jar">
         <element id="module-production-resource-output" name="icons" />

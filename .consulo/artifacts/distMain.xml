@@ -20,9 +20,25 @@
         <element id="zip-archive" name="bootstrap.jar">
           <element id="module-output" name="bootstrap" />
         </element>
-        <element id="artifact" artifact-name="crossPlatformLibraries" />
-        <element id="zip-archive" name="consulo-desktop-impl.jar">
-          <element id="module-output" name="desktop-impl" />
+        <element id="directory" name="modules">
+          <element id="artifact" artifact-name="crossPlatformLibraries" />
+          <element id="zip-archive" name="consulo-desktop-impl.jar">
+            <element id="module-output" name="desktop-impl" />
+          </element>
+        </element>
+        <element id="zip-archive" name="annotations.jar">
+          <element id="module-output" name="annotations" />
+        </element>
+        <element id="zip-archive" name="util.jar">
+          <element id="module-output" name="util-rt" />
+          <element id="module-output" name="util" />
+          <element id="module-output" name="slf4j-bind" />
+        </element>
+        <element id="zip-archive" name="extensions.jar">
+          <element id="module-output" name="extensions" />
+        </element>
+        <element id="zip-archive" name="forms_rt.jar">
+          <element id="module-output" name="forms_rt" />
         </element>
       </element>
       <element id="directory" name="bin">

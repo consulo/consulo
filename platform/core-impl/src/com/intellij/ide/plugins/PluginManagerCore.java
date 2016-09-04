@@ -752,10 +752,6 @@ public class PluginManagerCore {
   }
 
   public static IdeaPluginDescriptorImpl[] loadDescriptors(@Nullable StartupProgress progress) {
-    if (ClassUtilCore.isLoadingOfExternalPluginsDisabled()) {
-      return IdeaPluginDescriptorImpl.EMPTY_ARRAY;
-    }
-
     final List<IdeaPluginDescriptorImpl> result = new ArrayList<IdeaPluginDescriptorImpl>();
 
     int pluginsCount = countPlugins(PathManager.getPluginsPath()) + countPlugins(PathManager.getPreInstalledPluginsPath());
