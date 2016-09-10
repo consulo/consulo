@@ -21,18 +21,17 @@ import java.util.Collection;
 
 /**
  */
-public interface RowInfo<CommitId> {
+public interface RowInfo<Id> {
 
   @NotNull
-  CommitId getCommit();
+  Id getCommit();
 
   @NotNull
-  CommitId getOneOfHeads();
+  Id getOneOfHeads();
 
   @NotNull
-  Collection<PrintElement> getPrintElements();
+  Collection<? extends PrintElement> getPrintElements();
 
   @NotNull
   RowType getRowType();
-
 }

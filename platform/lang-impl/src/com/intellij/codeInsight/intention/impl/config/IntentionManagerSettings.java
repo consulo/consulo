@@ -34,7 +34,6 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Alarm;
 import com.intellij.util.containers.StringInterner;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -53,7 +52,6 @@ import java.util.regex.Pattern;
 )
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings");
-  private static final Alarm ourRegisterMetaDataAlarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
   private static final StringInterner ourStringInterner = new StringInterner();
 
   private static class MetaDataKey extends Pair<String, String> {
@@ -167,7 +165,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     if (app.isUnitTestMode() || app.isHeadlessEnvironment()) return;
 
     final TextDescriptor description = metaData.getDescription();
-    ourRegisterMetaDataAlarm.addRequest(new Runnable(){
+    app.executeOnPooledThread(new Runnable(){
       @Override
       public void run() {
         try {
@@ -186,7 +184,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
           LOG.error(e);
         }
       }
-    }, 0);
+    });
   }
 
   public synchronized void unregisterMetaData(@NotNull IntentionAction intentionAction) {

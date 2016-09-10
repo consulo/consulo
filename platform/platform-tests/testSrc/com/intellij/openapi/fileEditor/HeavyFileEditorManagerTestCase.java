@@ -43,7 +43,7 @@ public abstract class HeavyFileEditorManagerTestCase extends CodeInsightFixtureT
 
   public void setUp() throws Exception {
     super.setUp();
-    myManager = new FileEditorManagerImpl(getProject(), DockManager.getInstance(getProject()), EditorHistoryManager.getInstance(getProject()));
+    myManager = new FileEditorManagerImpl(getProject(), DockManager.getInstance(getProject()));
     ((ComponentManagerImpl)getProject()).registerComponentInstance(FileEditorManager.class, myManager);
     ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(getProject())).projectOpened();
     EditorHistoryManager.getInstance(getProject()).projectOpened();

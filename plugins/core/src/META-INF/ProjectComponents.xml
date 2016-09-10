@@ -95,7 +95,6 @@
     </component>
     <component>
       <implementation-class>com.intellij.openapi.fileEditor.impl.EditorHistoryManager</implementation-class>
-      <option name="workspace" value="true"/>
     </component>
     <component>
       <interface-class>com.intellij.openapi.fileEditor.ex.IdeDocumentHistory</interface-class>
@@ -149,7 +148,6 @@
       <interface-class>com.intellij.openapi.fileEditor.FileEditorManager</interface-class>
       <implementation-class>com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.fileEditor.impl.TestEditorManagerImpl</headless-implementation-class>
-      <option name="workspace" value="true"/>
     </component>
 
     <component>

@@ -204,7 +204,7 @@ public abstract class Task implements TaskInfo, Progressive {
         public void run(@NotNull ProgressIndicator indicator) {
           consumer.accept(indicator);
         }
-      };
+      }.queue();
     }
 
     protected final PerformInBackgroundOption myBackgroundOption;

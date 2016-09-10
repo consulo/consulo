@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class UpdateCheckerComponent implements ApplicationComponent {
   private static final long CHECK_INTERVAL = DateFormatUtil.DAY;
-  private final Alarm myCheckForUpdatesAlarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
+  private final Alarm myCheckForUpdatesAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
   private final Runnable myCheckRunnable = new Runnable() {
     @Override
     public void run() {

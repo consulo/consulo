@@ -20,8 +20,8 @@ import com.intellij.vcs.log.graph.RowInfo;
 import com.intellij.vcs.log.graph.RowType;
 import com.intellij.vcs.log.graph.VisibleGraph;
 import com.intellij.vcs.log.graph.actions.ActionController;
+import com.intellij.vcs.log.graph.actions.GraphAction;
 import com.intellij.vcs.log.graph.actions.GraphAnswer;
-import com.intellij.vcs.log.graph.actions.GraphMouseAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,8 +50,9 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
   }
 
   @Override
-  public int getVisibleRowIndex(@NotNull Integer integer) {
-    return -1;
+  @Nullable
+  public Integer getVisibleRowIndex(@NotNull Integer integer) {
+    return null;
   }
 
   @NotNull
@@ -60,13 +61,18 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
     return DumbActionController.INSTANCE;
   }
 
+  @Override
+  public int getRecommendedWidth() {
+    return 0;
+  }
+
   private static class DumbActionController implements ActionController<Integer> {
 
     private static ActionController<Integer> INSTANCE = new DumbActionController();
 
     @NotNull
     @Override
-    public GraphAnswer<Integer> performMouseAction(@NotNull GraphMouseAction graphMouseAction) {
+    public GraphAnswer<Integer> performAction(@NotNull GraphAction graphAction) {
       return EmptyGraphAnswer.INSTANCE;
     }
 
@@ -77,10 +83,6 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
 
     @Override
     public void setLongEdgesHidden(boolean longEdgesHidden) {
-    }
-
-    @Override
-    public void setLinearBranchesExpansion(boolean collapse) {
     }
 
     private static class EmptyGraphAnswer implements GraphAnswer<Integer> {
@@ -96,6 +98,17 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
       @Override
       public Integer getCommitToJump() {
         return null;
+      }
+
+      @Nullable
+      @Override
+      public Runnable getGraphUpdater() {
+        return null;
+      }
+
+      @Override
+      public boolean doJump() {
+        return false;
       }
     }
   }

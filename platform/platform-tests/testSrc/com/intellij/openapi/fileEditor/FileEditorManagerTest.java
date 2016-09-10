@@ -158,7 +158,7 @@ public class FileEditorManagerTest extends FileEditorManagerTestCase {
     map.addMacroExpand(PathMacroUtil.PROJECT_DIR_MACRO_NAME, getTestDataPath());
     map.substitute(rootElement, true, true);
 
-    myManager.readExternal(rootElement);
+    myManager.loadState(rootElement);
 
     Future<?> future = ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
       @Override

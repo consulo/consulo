@@ -40,11 +40,9 @@ public class DuplicateParentFixer {
   }
 
   private static class DelegateGraphCommit<CommitId> implements GraphCommit<CommitId> {
-    @NotNull
-    private final GraphCommit<CommitId> myDelegate;
+    @NotNull private final GraphCommit<CommitId> myDelegate;
 
-    @NotNull
-    private final List<CommitId> myParents;
+    @NotNull private final List<CommitId> myParents;
 
     private DelegateGraphCommit(@NotNull GraphCommit<CommitId> delegate, @NotNull List<CommitId> parents) {
       myDelegate = delegate;
@@ -72,21 +70,20 @@ public class DuplicateParentFixer {
   @NotNull
   private static <CommitId> GraphCommit<CommitId> fixParentsDuplicate(@NotNull GraphCommit<CommitId> commit) {
     List<CommitId> parents = commit.getParents();
-    if (parents.size() <= 1)
-      return commit;
+    if (parents.size() <= 1) return commit;
 
     if (parents.size() == 2) {
       CommitId commitId0 = parents.get(0);
       if (!commitId0.equals(parents.get(1))) {
         return commit;
-      } else {
-        return new DelegateGraphCommit<CommitId>(commit, Collections.singletonList(commitId0));
+      }
+      else {
+        return new DelegateGraphCommit<>(commit, Collections.singletonList(commitId0));
       }
     }
 
-    Set<CommitId> allParents = new HashSet<CommitId>(parents);
-    if (parents.size() == allParents.size())
-      return commit;
+    Set<CommitId> allParents = new HashSet<>(parents);
+    if (parents.size() == allParents.size()) return commit;
 
     List<CommitId> correctParents = ContainerUtil.newArrayList();
     for (CommitId commitId : parents) {
@@ -95,6 +92,6 @@ public class DuplicateParentFixer {
       }
     }
 
-    return new DelegateGraphCommit<CommitId>(commit, correctParents);
+    return new DelegateGraphCommit<>(commit, correctParents);
   }
 }

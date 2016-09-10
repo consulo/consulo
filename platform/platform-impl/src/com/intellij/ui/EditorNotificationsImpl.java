@@ -52,7 +52,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class EditorNotificationsImpl extends EditorNotifications {
   private static final Key<WeakReference<ProgressIndicator>> CURRENT_UPDATES = Key.create("CURRENT_UPDATES");
-  private static final ExecutorService ourExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor();
+  private static final ExecutorService ourExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("EditorNotificationsImpl pool");
   private final MergingUpdateQueue myUpdateMerger;
   private final Project myProject;
 
@@ -120,10 +120,10 @@ public class EditorNotificationsImpl extends EditorNotifications {
 
   @Nullable
   private ReadTask createTask(@NotNull final ProgressIndicator indicator, @NotNull final VirtualFile file) {
-    List<FileEditor> editors = ContainerUtil.filter(FileEditorManager.getInstance(myProject).getAllEditors(file), editor -> !(editor instanceof TextEditor) ||
-                                                                                                                            AsyncEditorLoader.isEditorLoaded(
-                                                                                                                                    ((TextEditor)editor)
-                                                                                                                                            .getEditor()));
+    List<FileEditor> editors = ContainerUtil.filter(
+            FileEditorManager.getInstance(myProject).getAllEditors(file),
+            editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor) editor).getEditor()));
+
     if (editors.isEmpty()) return null;
 
     return new ReadTask() {

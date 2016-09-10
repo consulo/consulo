@@ -21,20 +21,19 @@ import java.util.List;
 
 /**
  */
-public interface GraphCommit<CommitId> {
+public interface GraphCommit<Id> {
 
   @NotNull
-  CommitId getId();
+  Id getId();
 
   @NotNull
-  List<CommitId> getParents();
+  List<Id> getParents();
 
   /**
    * <p>Returns the timestamp indicating the date & time when this commit was made.</p>
    * <p>This time is displayed in the table by default;
-   *    it is used for joining commits from different repositories;
-   *    it is used for ordering commits in a single repository (keeping the preference of the topological ordering of course).</p>
+   * it is used for joining commits from different repositories;
+   * it is used for ordering commits in a single repository (keeping the preference of the topological ordering of course).</p>
    */
   long getTimestamp();
-
 }

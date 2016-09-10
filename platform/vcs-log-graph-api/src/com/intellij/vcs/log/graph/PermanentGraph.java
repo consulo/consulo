@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Condition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -29,24 +30,46 @@ import java.util.Set;
  *
  * @see VisibleGraph
  */
-public interface PermanentGraph<CommitId> {
+public interface PermanentGraph<Id> {
 
   @NotNull
-  VisibleGraph<CommitId> createVisibleGraph(@NotNull SortType sortType,
-                                            @Nullable Set<CommitId> headsOfVisibleBranches,
-                                            @Nullable Condition<CommitId> filter);
+  VisibleGraph<Id> createVisibleGraph(@NotNull SortType sortType,
+                                      @Nullable Set<Id> headsOfVisibleBranches,
+                                      @Nullable Set<Id> matchedCommits);
 
   @NotNull
-  List<GraphCommit<CommitId>> getAllCommits();
+  List<GraphCommit<Id>> getAllCommits();
 
   @NotNull
-  List<CommitId> getChildren(@NotNull CommitId commit);
+  List<Id> getChildren(@NotNull Id commit);
 
   @NotNull
-  Set<CommitId> getContainingBranches(@NotNull CommitId commit);
+  Set<Id> getContainingBranches(@NotNull Id commit);
 
-  enum SortType{
-    Normal,
-    Bek
+  @NotNull
+  Condition<Id> getContainedInBranchCondition(@NotNull Collection<Id> currentBranchHead);
+
+  enum SortType {
+    Normal("Off", "Sort commits topologically and by date"),
+    Bek("Standard", "In case of merge show incoming commits first (directly below merge commit)"),
+    LinearBek("Linear", "In case of merge show incoming commits on top of main branch commits as if they were rebased");
+
+    @NotNull private final String myPresentation;
+    @NotNull private final String myDescription;
+
+    SortType(@NotNull String presentation, @NotNull String description) {
+      myPresentation = presentation;
+      myDescription = description;
+    }
+
+    @NotNull
+    public String getName() {
+      return myPresentation;
+    }
+
+    @NotNull
+    public String getDescription() {
+      return myDescription;
+    }
   }
 }

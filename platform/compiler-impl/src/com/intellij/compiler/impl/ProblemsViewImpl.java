@@ -31,15 +31,15 @@ import com.intellij.ui.content.MessageView;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.compiler.server.rmi.CompilerClientConnector;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author Eugene Zhuravlev
@@ -82,12 +82,7 @@ public class ProblemsViewImpl extends ProblemsView {
   @Nullable
   private ProblemsViewPanel myPanel;
 
-  private final SequentialTaskExecutor myViewUpdater = new SequentialTaskExecutor(new Executor() {
-    @Override
-    public void execute(@NotNull Runnable command) {
-      ApplicationManager.getApplication().executeOnPooledThread(command);
-    }
-  });
+  private final ExecutorService myViewUpdater = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ProblemsView pool");
 
   public ProblemsViewImpl(final Project project) {
     super(project);

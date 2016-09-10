@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Getter;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NotNull;
@@ -117,28 +116,22 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
   }
 
-  private static class SoftValue<K, V> extends SoftReference<V> implements ValueReference<K,V> {
-    @NotNull private volatile KeyReference<K, V> myKeyReference; // can't make it final because of circular dependency of KeyReference to ValueReference
-    private final int myHash; // Hashcode of key, stored here since the key may be tossed by the GC
+  static class SoftValue<K, V> extends SoftReference<V> implements ValueReference<K,V> {
+    @NotNull volatile KeyReference<K, V> myKeyReference; // can't make it final because of circular dependency of KeyReference to ValueReference
     private SoftValue(@NotNull V value, @NotNull ReferenceQueue<V> queue) {
       super(value, queue);
-      myHash = value.hashCode();
     }
 
-    // MUST work with gced references too for the code in processQueue to work
+    // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)
+    // otherwise it's just canonical equals on referents for replace(K,V,V) to work
     @Override
     public final boolean equals(final Object o) {
       if (this == o) return true;
       if (o == null) return false;
 
-      ValueReference that = (ValueReference)o;
-
-      return myHash == that.hashCode() && Comparing.equal(get(), that.get());
-    }
-
-    @Override
-    public final int hashCode() {
-      return myHash;
+      V v = get();
+      Object thatV = ((ValueReference)o).get();
+      return v != null && thatV != null && v.equals(thatV);
     }
 
     @NotNull

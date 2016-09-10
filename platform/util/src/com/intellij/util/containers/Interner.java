@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,28 @@
  */
 package com.intellij.util.containers;
 
+import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class Interner<T> {
+/**
+ * Allow to reuse structurally equal objects to avoid memory being wasted on them. Note: objects are cached inside
+ * and on hard references, so even the ones that are not used anymore will be still present in the memory.
+ *
+ * @see WeakInterner
+ * @author peter
+ */
 
-  private final OpenTHashSet<T> mySet = new OpenTHashSet<T>();
+public class Interner<T> {
+  private final OpenTHashSet<T> mySet;
+
+  public Interner() {
+    mySet = new OpenTHashSet<T>();
+  }
+  public Interner(@NotNull TObjectHashingStrategy<T> strategy) {
+    mySet = new OpenTHashSet<T>(strategy);
+  }
 
   @NotNull
   public T intern(@NotNull T name) {

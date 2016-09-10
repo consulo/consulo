@@ -2,10 +2,10 @@
   <id>com.intellij</id>
   <name>IDEA CORE</name>
 
-  <xi:include href="/META-INF/Diff.xml" xpointer="xpointer(/idea-plugin/*)">
+  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)">
     <xi:fallback/>
   </xi:include>
-  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)">
+  <xi:include href="/META-INF/Diff.xml" xpointer="xpointer(/idea-plugin/*)">
     <xi:fallback/>
   </xi:include>
   <xi:include href="/META-INF/ProjectComponents.xml" xpointer="xpointer(/idea-plugin/*)">

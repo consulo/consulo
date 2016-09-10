@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vcs.AbstractVcs;
-import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vcs.VcsDirectoryMapping;
+import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,7 +33,6 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +64,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     myProject = project;
     myVcsManager = ProjectLevelVcsManager.getInstance(myProject);
     final VcsDescriptor[] vcsDescriptors = myVcsManager.getAllVcss();
-    myVcses = new HashMap<String, VcsDescriptor>();
+    myVcses = new HashMap<>();
     for (VcsDescriptor vcsDescriptor : vcsDescriptors) {
       myVcses.put(vcsDescriptor.getName(), vcsDescriptor);
     }
@@ -90,7 +86,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     return myPanel;
   }
 
-  public void setMapping(VcsDirectoryMapping mapping) {
+  public void setMapping(@NotNull VcsDirectoryMapping mapping) {
     myMappingCopy = new VcsDirectoryMapping(mapping.getDirectory(), mapping.getVcs(), mapping.getRootSettings());
     myProjectRadioButton.setSelected(myMappingCopy.isDefaultMapping());
     myDirectoryRadioButton.setSelected(! myProjectRadioButton.isSelected());
@@ -107,15 +103,12 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     initProjectMessage();
   }
 
-  public void saveToMapping(VcsDirectoryMapping mapping) {
+  @NotNull
+  public VcsDirectoryMapping getMapping() {
     VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
-    mapping.setVcs((wrapper == null) || wrapper.isNone() ? "" : wrapper.getName());
-    if (myProjectRadioButton.isSelected()) {
-      mapping.setDirectory("");
-    } else {
-      mapping.setDirectory(FileUtil.toSystemIndependentName(myDirectoryTextField.getText()));
-    }
-    mapping.setRootSettings(myMappingCopy.getRootSettings());
+    String vcs = wrapper == null || wrapper.isNone() ? "" : wrapper.getName();
+    String directory = myProjectRadioButton.isSelected() ? "" : FileUtil.toSystemIndependentName(myDirectoryTextField.getText());
+    return new VcsDirectoryMapping(directory, vcs, myMappingCopy.getRootSettings());
   }
 
   private void updateVcsConfigurable() {
@@ -199,47 +192,44 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     }
 
     @Override
-    protected void onFileChoosen(final VirtualFile chosenFile) {
+    protected void onFileChosen(@NotNull final VirtualFile chosenFile) {
       String oldText = myDirectoryTextField.getText();
-      super.onFileChoosen(chosenFile);
+      super.onFileChosen(chosenFile);
       final VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
       if (oldText.length() == 0 && (wrapper == null || wrapper.isNone())) {
         final ModalityIgnorantBackgroundableTask task =
-          new ModalityIgnorantBackgroundableTask(myProject, "Looking for VCS administrative area", false) {
-            VcsDescriptor probableVcs = null;
+                new ModalityIgnorantBackgroundableTask(myProject, "Looking for VCS administrative area", false) {
+                  VcsDescriptor probableVcs = null;
 
-            @Override
-            @RequiredDispatchThread
-            protected void doInAwtIfFail(Exception e) {
-            }
-
-            @Override
-            @RequiredDispatchThread
-            protected void doInAwtIfCancel() {
-            }
-
-            @Override
-            @RequiredDispatchThread
-            protected void doInAwtIfSuccess() {
-              if (probableVcs != null) {
-                // todo none
-                myVCSComboBox.setSelectedItem(probableVcs);
-              }
-            }
-
-            @Override
-            protected void runImpl(@NotNull ProgressIndicator indicator) {
-              for (VcsDescriptor vcs : myVcses.values()) {
-                if (vcs.probablyUnderVcs(chosenFile)) {
-                  if (probableVcs != null) {
-                    probableVcs = null;
-                    break;
+                  @Override
+                  protected void doInAwtIfFail(Exception e) {
                   }
-                  probableVcs = vcs;
-                }
-              }
-            }
-          };
+
+                  @Override
+                  protected void doInAwtIfCancel() {
+                  }
+
+                  @Override
+                  protected void doInAwtIfSuccess() {
+                    if (probableVcs != null) {
+                      // todo none
+                      myVCSComboBox.setSelectedItem(probableVcs);
+                    }
+                  }
+
+                  @Override
+                  protected void runImpl(@NotNull ProgressIndicator indicator) {
+                    for (VcsDescriptor vcs : myVcses.values()) {
+                      if (vcs.probablyUnderVcs(chosenFile)) {
+                        if (probableVcs != null) {
+                          probableVcs = null;
+                          break;
+                        }
+                        probableVcs = vcs;
+                      }
+                    }
+                  }
+                };
         ProgressManager.getInstance().run(task);
       }
     }

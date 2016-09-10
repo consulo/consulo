@@ -331,7 +331,9 @@ public class DvcsUtil {
                                                                      @NotNull AbstractRepositoryManager<T> manager,
                                                                      @Nullable String defaultRootPathValue) {
     T repository = manager.getRepositoryForRootQuick(guessVcsRoot(project, getSelectedFile(project)));
-    return repository != null ? repository : manager.getRepositoryForRootQuick(guessRootForVcs(project, manager.getVcs(), defaultRootPathValue));
+    return repository != null
+           ? repository
+           : manager.getRepositoryForRootQuick(guessRootForVcs(project, manager.getVcs(), defaultRootPathValue));
   }
 
   @Nullable
@@ -422,7 +424,7 @@ public class DvcsUtil {
 
     // for other libs which don't have jars inside the project dir (such as JDK) take the owner module of the lib
     List<OrderEntry> entries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
-    Set<VirtualFile> libraryRoots = new HashSet<VirtualFile>();
+    Set<VirtualFile> libraryRoots = new HashSet<>();
     for (OrderEntry entry : entries) {
       if (entry instanceof LibraryOrderEntry || entry instanceof ModuleExtensionWithSdkOrderEntry) {
         VirtualFile moduleRoot = vcsManager.getVcsRootFor(entry.getOwnerModule().getModuleDir());

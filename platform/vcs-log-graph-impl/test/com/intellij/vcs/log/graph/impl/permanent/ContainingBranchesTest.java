@@ -16,11 +16,12 @@
 
 package com.intellij.vcs.log.graph.impl.permanent;
 
+import com.intellij.vcs.log.graph.AbstractTestWithTwoTextFile;
 import com.intellij.vcs.log.graph.GraphCommit;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.impl.CommitIdManager;
-import com.intellij.vcs.log.graph.impl.facade.ContainingBranchesGetter;
-import com.intellij.vcs.log.graph.AbstractTestWithTextFile;
+import com.intellij.vcs.log.graph.impl.facade.ReachableNodes;
+import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ import java.util.Set;
 import static com.intellij.vcs.log.graph.GraphStrUtils.containingBranchesGetterToStr;
 import static org.junit.Assert.assertEquals;
 
-public abstract class ContainingBranchesTest<CommitId> extends AbstractTestWithTextFile {
+public abstract class ContainingBranchesTest<CommitId> extends AbstractTestWithTwoTextFile {
   private final static String SEPARATOR = "\nBRANCH NODES:\n";
 
   public ContainingBranchesTest() {
@@ -39,7 +40,7 @@ public abstract class ContainingBranchesTest<CommitId> extends AbstractTestWithT
   }
 
   private static Set<Integer> parseBranchNodeIndex(String str) {
-    Set<Integer> result = new HashSet<Integer>();
+    Set<Integer> result = new HashSet<>();
     for (String subStr : str.split("\\s")) {
       result.add(Integer.parseInt(subStr));
     }
@@ -52,10 +53,11 @@ public abstract class ContainingBranchesTest<CommitId> extends AbstractTestWithT
     List<GraphCommit<CommitId>> commits = getCommitIdManager().parseCommitList(in.substring(0, i));
 
     LinearGraph graph = PermanentLinearGraphBuilder.newInstance(commits).build();
-    ContainingBranchesGetter containingBranchesGetter = new ContainingBranchesGetter(graph,
-                                                                                     parseBranchNodeIndex(in.substring(i + SEPARATOR.length())));
+    Set<Integer> branches = parseBranchNodeIndex(in.substring(i + SEPARATOR.length()));
+    ReachableNodes reachableNodes =
+            new ReachableNodes(LinearGraphUtils.asLiteLinearGraph(graph));
 
-    assertEquals(out, containingBranchesGetterToStr(containingBranchesGetter, graph.nodesCount()));
+    assertEquals(out, containingBranchesGetterToStr(reachableNodes, branches, graph.nodesCount()));
   }
 
   protected abstract CommitIdManager<CommitId> getCommitIdManager();

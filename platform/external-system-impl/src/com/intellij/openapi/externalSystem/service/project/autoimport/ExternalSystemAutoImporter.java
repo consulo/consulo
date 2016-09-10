@@ -69,11 +69,11 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
   @NotNull private final ConcurrentMap<ProjectSystemId, Set<String /* external project path */>> myFilesToRefresh
     = ContainerUtil.newConcurrentMap();
 
-  @NotNull private final Alarm         myVfsAlarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
+  @NotNull private final Alarm         myVfsAlarm ;
   @NotNull private final ReadWriteLock myVfsLock  = new ReentrantReadWriteLock();
 
   @NotNull private final Set<Document> myDocumentsToSave = ContainerUtilRt.newHashSet();
-  @NotNull private final Alarm         myDocumentAlarm   = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
+  @NotNull private final Alarm         myDocumentAlarm;
   @NotNull private final ReadWriteLock myDocumentLock    = new ReentrantReadWriteLock();
 
   @NotNull private final Runnable                       myFilesRequest         = new Runnable() {
@@ -124,6 +124,8 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     myProject = project;
     myProjectDataManager = projectDataManager;
     myAutoImportAware = autoImportAware;
+    myDocumentAlarm   = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, myProject);
+    myVfsAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, myProject);
   }
 
   @SuppressWarnings("unchecked")

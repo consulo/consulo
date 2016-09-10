@@ -17,48 +17,43 @@ package com.intellij.vcs.log.ui.filter;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Function;
+import com.intellij.openapi.util.Couple;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.vcs.log.VcsCommitMetadata;
 import com.intellij.vcs.log.VcsLogUserFilter;
-import com.intellij.vcs.log.VcsUser;
-import com.intellij.vcs.log.data.VcsLogDataHolder;
+import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
+import com.intellij.vcs.log.util.VcsUserUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Show a popup to select a user or enter the user name.
  */
 class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogUserFilter> {
-
-  private static final String ME = "me";
-
-  @NotNull private final VcsLogDataHolder myDataHolder;
-  @NotNull private final VcsLogUiProperties myUiProperties;
+  @NotNull private final VcsLogData myLogData;
 
   UserFilterPopupComponent(@NotNull VcsLogUiProperties uiProperties,
-                           @NotNull VcsLogDataHolder dataHolder,
+                           @NotNull VcsLogData logData,
                            @NotNull FilterModel<VcsLogUserFilter> filterModel) {
     super("User", uiProperties, filterModel);
-    myDataHolder = dataHolder;
-    myUiProperties = uiProperties;
+    myLogData = logData;
   }
 
   @NotNull
   @Override
   protected String getText(@NotNull VcsLogUserFilter filter) {
-    return displayableText(getValues(filter));
+    return displayableText(getTextValues(filter));
   }
 
   @Nullable
   @Override
   protected String getToolTip(@NotNull VcsLogUserFilter filter) {
-    return tooltip(getValues(filter));
+    return tooltip(getTextValues(filter));
   }
 
   @Override
@@ -66,8 +61,8 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
     DefaultActionGroup group = new DefaultActionGroup();
     group.add(createAllAction());
     group.add(createSelectMultipleValuesAction());
-    if (!myDataHolder.getCurrentUser().isEmpty()) {
-      group.add(createPredefinedValueAction(Collections.singleton(ME)));
+    if (!myLogData.getCurrentUser().isEmpty()) {
+      group.add(createPredefinedValueAction(Collections.singleton(VcsLogUserFilterImpl.ME)));
     }
     group.addAll(createRecentItemsActionGroup());
     return group;
@@ -75,15 +70,11 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
 
   @NotNull
   @Override
-  protected Collection<String> getValues(@Nullable VcsLogUserFilter filter) {
+  protected Collection<String> getTextValues(@Nullable VcsLogUserFilter filter) {
     if (filter == null) {
       return Collections.emptySet();
     }
-    Set<String> result = ContainerUtil.newHashSet();
-    for (VirtualFile root : myFilterModel.getDataPack().getLogProviders().keySet()) {
-      result.addAll(filter.getUserNames(root));
-    }
-    return result;
+    return ContainerUtil.newHashSet(((VcsLogUserFilterImpl)filter).getUserNamesForPresentation());
   }
 
   @NotNull
@@ -94,62 +85,23 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
 
   @Override
   protected void rememberValuesInSettings(@NotNull Collection<String> values) {
-    myUiProperties.addRecentlyFilteredUserGroup(new ArrayList<String>(values));
+    myUiProperties.addRecentlyFilteredUserGroup(new ArrayList<>(values));
   }
 
   @NotNull
   @Override
   protected List<String> getAllValues() {
-    return ContainerUtil.map(myDataHolder.getAllUsers(), new Function<VcsUser, String>() {
-      @Override
-      public String fun(VcsUser user) {
-        return user.getName();
-      }
+    return ContainerUtil.map(myLogData.getAllUsers(), user -> {
+      String shortPresentation = VcsUserUtil.getShortPresentation(user);
+      Couple<String> firstAndLastName = VcsUserUtil.getFirstAndLastName(shortPresentation);
+      if (firstAndLastName == null) return shortPresentation;
+      return VcsUserUtil.capitalizeName(firstAndLastName.first) + " " + VcsUserUtil.capitalizeName(firstAndLastName.second);
     });
   }
 
   @NotNull
   @Override
   protected VcsLogUserFilter createFilter(@NotNull Collection<String> values) {
-    return new VcsLogUserFilterImpl(values, myDataHolder.getCurrentUser());
-  }
-
-  private static class VcsLogUserFilterImpl implements VcsLogUserFilter {
-
-    @NotNull private final Collection<String> myUsers;
-    @NotNull private final Map<VirtualFile, VcsUser> myData;
-
-    public VcsLogUserFilterImpl(@NotNull Collection<String> users, @NotNull Map<VirtualFile, VcsUser> meData) {
-      myUsers = users;
-      myData = meData;
-    }
-
-    @NotNull
-    @Override
-    public Collection<String> getUserNames(@NotNull final VirtualFile root) {
-      return ContainerUtil.mapNotNull(myUsers, new Function<String, String>() {
-        @Override
-        public String fun(String user) {
-          if (ME.equals(user)) {
-            VcsUser vcsUser = myData.get(root);
-            return vcsUser == null ? null : vcsUser.getName();
-          }
-          return user;
-        }
-      });
-    }
-
-    @Override
-    public boolean matches(@NotNull final VcsCommitMetadata commit) {
-      return ContainerUtil.exists(getUserNames(commit.getRoot()), new Condition<String>() {
-        @SuppressWarnings("StringToUpperCaseOrToLowerCaseWithoutLocale")
-        @Override
-        public boolean value(String user) {
-          String lowerUser = user.toLowerCase();
-          return commit.getAuthor().getName().toLowerCase().contains(lowerUser) ||
-                 commit.getAuthor().getEmail().toLowerCase().contains(lowerUser);
-        }
-      });
-    }
+    return new VcsLogUserFilterImpl(values, myLogData.getCurrentUser(), myLogData.getAllUsers());
   }
 }

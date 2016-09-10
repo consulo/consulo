@@ -16,28 +16,16 @@
 package com.intellij.vcs.log.graph.impl.facade.bek;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.impl.permanent.GraphLayoutImpl;
 import com.intellij.vcs.log.graph.utils.IntList;
 import com.intellij.vcs.log.graph.utils.TimestampGetter;
 import com.intellij.vcs.log.graph.utils.impl.CompressedIntList;
 import org.jetbrains.annotations.NotNull;
-import consulo.application.ApplicationProperties;
 
 import java.util.List;
 
 public class BekSorter {
-
-  public static boolean isBekEnabled() { // todo drop later
-    if (Registry.is("vcs.log.bek.sort.disabled")) {
-      return false;
-    }
-    boolean isInternal = Boolean.getBoolean(ApplicationProperties.IDEA_IS_INTERNAL);
-    boolean isBekEnabled = Registry.is("vcs.log.bek.sort");
-    return isBekEnabled || isInternal;
-  }
-
   @NotNull
   public static BekIntMap createBekMap(@NotNull LinearGraph permanentGraph,
                                        @NotNull GraphLayoutImpl graphLayout,
@@ -77,28 +65,21 @@ public class BekSorter {
 
       @Override
       public int getBekIndex(int usualIndex) {
-        if (usualIndex == LinearGraph.NOT_LOAD_COMMIT)
-          return LinearGraph.NOT_LOAD_COMMIT;
         return compressedReverseMap.get(usualIndex);
       }
 
       @Override
       public int getUsualIndex(int bekIndex) {
-        if (bekIndex == LinearGraph.NOT_LOAD_COMMIT)
-          return LinearGraph.NOT_LOAD_COMMIT;
         return compressedBekMap.get(bekIndex);
       }
     };
   }
 
-  @NotNull
-  private final LinearGraph myPermanentGraph;
+  @NotNull private final LinearGraph myPermanentGraph;
 
-  @NotNull
-  private final GraphLayoutImpl myGraphLayout;
+  @NotNull private final GraphLayoutImpl myGraphLayout;
 
-  @NotNull
-  private final TimestampGetter myTimestampGetter;
+  @NotNull private final TimestampGetter myTimestampGetter;
 
   private BekSorter(@NotNull LinearGraph permanentGraph, @NotNull GraphLayoutImpl graphLayout, @NotNull TimestampGetter timestampGetter) {
     myPermanentGraph = permanentGraph;
@@ -113,5 +94,4 @@ public class BekSorter {
     BekBranchMerger bekBranchMerger = new BekBranchMerger(branches.first, branches.second, myTimestampGetter);
     return bekBranchMerger.getResult();
   }
-
 }

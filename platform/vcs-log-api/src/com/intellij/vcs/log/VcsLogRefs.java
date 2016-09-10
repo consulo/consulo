@@ -18,6 +18,7 @@ package com.intellij.vcs.log;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * Collection of {@link VcsRef branches & tags references} which are in the log.
@@ -31,5 +32,5 @@ public interface VcsLogRefs {
   Collection<VcsRef> getBranches();
 
   @NotNull
-  Collection<VcsRef> refsToCommit(int commitId);
+  Stream<VcsRef> stream();
 }

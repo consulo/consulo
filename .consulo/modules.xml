@@ -988,6 +988,7 @@
           <orderEntry type="module" module-name="util" />
           <orderEntry type="module" module-name="vcs-log-api" />
           <orderEntry type="library" scope="TEST" name="JUnit4" level="project" />
+          <orderEntry type="library" name="Guava" level="project" />
         </module-layer>
       </module>
       <module name="platform/slf4j-bind" dirurl="file://$PROJECT_DIR$/platform/slf4j-bind" current-layer="Default">

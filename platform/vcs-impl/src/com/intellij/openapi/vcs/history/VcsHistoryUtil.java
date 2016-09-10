@@ -21,12 +21,16 @@ import com.intellij.diff.DiffRequestFactoryImpl;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
+import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
@@ -38,10 +42,12 @@ import com.intellij.util.WaitForProgressToShow;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class VcsHistoryUtil {
-  public static Key<VcsFileRevision[]> REVISIONS_KEY = Key.create("VcsHistoryUtil.Change");
+  @Deprecated
+  public static Key<Pair<FilePath, VcsRevisionNumber>> REVISION_INFO_KEY = DiffUserDataKeysEx.REVISION_INFO;
 
   private static final Logger LOG = Logger.getInstance(VcsHistoryUtil.class);
 
@@ -87,20 +93,46 @@ public class VcsHistoryUtil {
     final byte[] content1 = loadRevisionContent(revision1);
     final byte[] content2 = loadRevisionContent(revision2);
 
-    String title = DiffRequestFactoryImpl.getContentTitle(path);
+    FilePath path1 = getRevisionPath(revision1);
+    FilePath path2 = getRevisionPath(revision2);
+
+    String title;
+    if (path1 != null && path2 != null) {
+      title = DiffRequestFactoryImpl.getTitle(path1, path2, " -> ");
+    }
+    else {
+      title = DiffRequestFactoryImpl.getContentTitle(path);
+    }
 
     DiffContent diffContent1 = createContent(project, content1, revision1, path);
     DiffContent diffContent2 = createContent(project, content2, revision2, path);
 
     final DiffRequest request = new SimpleDiffRequest(title, diffContent1, diffContent2, title1, title2);
 
-    request.putUserData(REVISIONS_KEY, new VcsFileRevision[]{revision1, revision2});
+    diffContent1.putUserData(DiffUserDataKeysEx.REVISION_INFO, getRevisionInfo(revision1));
+    diffContent2.putUserData(DiffUserDataKeysEx.REVISION_INFO, getRevisionInfo(revision2));
 
     WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
       public void run() {
         DiffManager.getInstance().showDiff(project, request);
       }
     }, null, project);
+  }
+
+  @Nullable
+  private static Pair<FilePath, VcsRevisionNumber> getRevisionInfo(@NotNull VcsFileRevision revision) {
+    if (revision instanceof VcsFileRevisionEx) {
+      return Pair.create(((VcsFileRevisionEx)revision).getPath(), revision.getRevisionNumber());
+    }
+    return null;
+  }
+
+  @Nullable
+  private static FilePath getRevisionPath(@NotNull VcsFileRevision revision) {
+    if (revision instanceof VcsFileRevisionEx) {
+      return ((VcsFileRevisionEx)revision).getPath();
+    }
+    return null;
   }
 
   @NotNull
@@ -186,5 +218,10 @@ public class VcsHistoryUtil {
                (revision instanceof CurrentRevision ? " (" + VcsBundle.message("diff.title.local") + ")" : "");
       }
     }.queue();
+  }
+
+  @NotNull
+  public static Font getCommitDetailsFont() {
+    return EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN);
   }
 }

@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.util.PlusMinus;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Irina.Chernushina

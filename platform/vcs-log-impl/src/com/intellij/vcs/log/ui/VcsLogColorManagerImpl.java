@@ -1,6 +1,7 @@
 package com.intellij.vcs.log.ui;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
@@ -16,28 +17,18 @@ import java.util.List;
  * @author Kirill Likhodedov
  */
 public class VcsLogColorManagerImpl implements VcsLogColorManager {
-
-  private static final Color REF_BORDER = JBColor.GRAY;
-  private static final Color ROOT_INDICATOR_BORDER = JBColor.LIGHT_GRAY;
   private static final Logger LOG = Logger.getInstance(VcsLogColorManagerImpl.class);
 
-  private static Color[] ROOT_COLORS = {
-    JBColor.RED, JBColor.GREEN, JBColor.BLUE,
-    JBColor.ORANGE, JBColor.CYAN, JBColor.YELLOW,
-    JBColor.MAGENTA, JBColor.PINK};
+  private static Color[] ROOT_COLORS =
+    {JBColor.RED, JBColor.GREEN, JBColor.BLUE, JBColor.ORANGE, JBColor.CYAN, JBColor.YELLOW, JBColor.MAGENTA, JBColor.PINK};
 
   @NotNull private final List<VirtualFile> myRoots;
 
   @NotNull private final Map<VirtualFile, Color> myRoots2Colors;
 
   public VcsLogColorManagerImpl(@NotNull Collection<VirtualFile> roots) {
-    myRoots = new ArrayList<VirtualFile>(roots);
-    Collections.sort(myRoots, new Comparator<VirtualFile>() { // TODO add a common util method to sort roots
-      @Override
-      public int compare(VirtualFile o1, VirtualFile o2) {
-        return o1.getName().compareTo(o2.getName());
-      }
-    });
+    myRoots = new ArrayList<>(roots);
+    Collections.sort(myRoots, (o1, o2) -> o1.getName().compareTo(o2.getName()));
     myRoots2Colors = ContainerUtil.newHashMap();
     int i = 0;
     for (VirtualFile root : myRoots) {
@@ -54,6 +45,20 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
       i++;
       myRoots2Colors.put(root, color);
     }
+  }
+
+  @NotNull
+  public static JBColor getBackgroundColor(@NotNull final Color baseRootColor) {
+    return new JBColor(() -> ColorUtil.mix(baseRootColor, UIUtil.getTableBackground(), 0.75));
+  }
+
+  @NotNull
+  public static JBColor getIndicatorColor(@NotNull final Color baseRootColor) {
+    if (Registry.is("vcs.log.square.labels")) return getBackgroundColor(baseRootColor);
+    return new JBColor(() -> {
+      if (UIUtil.isUnderDarcula()) return baseRootColor;
+      return ColorUtil.darker(ColorUtil.softer(baseRootColor), 2);
+    });
   }
 
   @Override
@@ -75,17 +80,4 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
   private static Color getDefaultRootColor() {
     return UIUtil.getTableBackground();
   }
-
-  @NotNull
-  @Override
-  public Color getReferenceBorderColor() {
-    return REF_BORDER;
-  }
-
-  @NotNull
-  @Override
-  public Color getRootIndicatorBorder() {
-    return ROOT_INDICATOR_BORDER;
-  }
-
 }

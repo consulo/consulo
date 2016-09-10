@@ -37,17 +37,16 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.ThreeStateCheckBox;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import com.intellij.vcs.log.Hash;
-import com.intellij.vcs.log.ui.VcsLogUiImpl;
+import com.intellij.vcs.log.ui.VcsLogActionPlaces;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.awt.*;
@@ -81,12 +80,10 @@ public class PushLog extends JPanel implements DataProvider {
     myTreeCellRenderer = new MyTreeCellRenderer();
     myTree = new CheckboxTree(myTreeCellRenderer, root) {
 
-      @Override
       protected boolean shouldShowBusyIconIfNeeded() {
         return true;
       }
 
-      @Override
       public boolean isPathEditable(TreePath path) {
         return isEditable() && path.getLastPathComponent() instanceof DefaultMutableTreeNode;
       }
@@ -143,7 +140,7 @@ public class PushLog extends JPanel implements DataProvider {
       }
     };
     myTree.setUI(new MyTreeUi());
-    myTree.setBorder(JBUI.Borders.empty(2, 0, 0, 0));  //additional vertical indent
+    myTree.setBorder(new EmptyBorder(2, 0, 0, 0));  //additional vertical indent
     myTree.setEditable(true);
     myTree.setHorizontalAutoScrollingEnabled(false);
     myTree.setShowsRootHandles(root.getChildCount() > 1);
@@ -222,10 +219,10 @@ public class PushLog extends JPanel implements DataProvider {
     showCommitInfoAction.registerCustomShortcutSet(quickDocAction.getShortcutSet(), myTree);
 
     ToolTipManager.sharedInstance().registerComponent(myTree);
-    PopupHandler.installPopupHandler(myTree, VcsLogUiImpl.POPUP_ACTION_GROUP, CONTEXT_MENU);
+    PopupHandler.installPopupHandler(myTree, VcsLogActionPlaces.POPUP_ACTION_GROUP, CONTEXT_MENU);
 
     myChangesBrowser =
-            new ChangesBrowser(project, null, Collections.<Change>emptyList(), null, false, true, null, ChangesBrowser.MyUseCase.LOCAL_CHANGES,
+            new ChangesBrowser(project, null, Collections.<Change>emptyList(), null, false, false, null, ChangesBrowser.MyUseCase.LOCAL_CHANGES,
                                null);
     myChangesBrowser.getDiffAction().registerCustomShortcutSet(myChangesBrowser.getDiffAction().getShortcutSet(), myTree);
     final EditSourceForDialogAction editSourceAction = new EditSourceForDialogAction(myChangesBrowser);
@@ -262,18 +259,16 @@ public class PushLog extends JPanel implements DataProvider {
 
     setLayout(new BorderLayout());
     add(splitter);
-    myTree.setMinimumSize(JBUI.size(200, myTree.getPreferredSize().height));
+    myTree.setMinimumSize(new Dimension(200, myTree.getPreferredSize().height));
     myTree.setRowHeight(0);
   }
 
   private class MyShowCommitInfoAction extends DumbAwareAction {
-    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       myBalloon.showCommitDetails();
     }
 
-    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(getSelectedCommitNodes().size() == 1);
@@ -289,8 +284,8 @@ public class PushLog extends JPanel implements DataProvider {
   private JComponent createStrategyPanel() {
     final JPanel labelPanel = new JPanel(new BorderLayout());
     labelPanel.setBackground(myTree.getBackground());
-    final LinkLabel<String> linkLabel = new LinkLabel<String>("Edit all targets", null);
-    linkLabel.setBorder(JBUI.Borders.empty(2, 2, 2, 2));
+    final LinkLabel<String> linkLabel = new LinkLabel<>("Edit all targets", null);
+    linkLabel.setBorder(new EmptyBorder(2, 2, 2, 2));
     linkLabel.setListener(new LinkListener<String>() {
       @Override
       public void linkSelected(LinkLabel aSource, String aLinkData) {
@@ -637,7 +632,6 @@ public class PushLog extends JPanel implements DataProvider {
       return treeNode instanceof EditableTreeNode && ((EditableTreeNode)treeNode).isEditableNow();
     }
 
-    @Override
     public Object getCellEditorValue() {
       return myValue;
     }

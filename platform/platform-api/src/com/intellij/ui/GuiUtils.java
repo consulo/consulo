@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileChooser.FileChooser;
@@ -24,11 +23,13 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
@@ -48,11 +49,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 
 public class GuiUtils {
-
   private static final Insets paddingFromDialogBoundaries = new Insets(7, 5, 7, 5);
   private static final Insets paddingInsideDialog = new Insets(5, 5, 5, 5);
 
-  public static final int lengthForFileField = 25;
   private static final CharFilter NOT_MNEMONIC_CHAR_FILTER = new CharFilter() {
     @Override
     public boolean accept(char ch) {
@@ -70,41 +69,42 @@ public class GuiUtils {
 
   private static JPanel constructFieldWithBrowseButton(final JComponent aComponent, final ActionListener aActionListener, int delta) {
     JPanel result = new JPanel(new GridBagLayout());
-    result.add(aComponent, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+    result.add(aComponent, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,0));
     FixedSizeButton browseButton = new FixedSizeButton(aComponent.getPreferredSize().height - delta);//ignore border in case of browse button
     TextFieldWithBrowseButton.MyDoClickAction.addTo(browseButton, aComponent);
-    result.add(browseButton, new GridBagConstraints(1, 0, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+    result.add(browseButton, new GridBagConstraints(1, 0, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0,0,0,0), 0,0));
     browseButton.addActionListener(aActionListener);
 
     return result;
   }
 
-  public static JPanel constructDirectoryBrowserField(final JTextField aTextField, final String aSearchedObjectName) {
-    return constructFieldWithBrowseButton(aTextField, new ActionListener() {
+  public static JPanel constructDirectoryBrowserField(final JTextField field, final String objectName) {
+    return constructFieldWithBrowseButton(field, new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.getDirectoryChooserDescriptor(aSearchedObjectName);
-        VirtualFile file = FileChooser.chooseFile(descriptor, aTextField, null, null);
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor().withTitle("Select " + objectName);
+        VirtualFile file = FileChooser.chooseFile(descriptor, field, null, null);
         if (file != null) {
-          aTextField.setText(FileUtil.toSystemDependentName(file.getPath()));
-          aTextField.postActionEvent();
+          field.setText(FileUtil.toSystemDependentName(file.getPath()));
+          field.postActionEvent();
         }
       }
     });
   }
 
-  public static JPanel constructFileURLBrowserField(final TextFieldWithHistory aFieldWithHistory, final String aSearchedObjectName) {
-    return constructFieldWithBrowseButton(aFieldWithHistory, new ActionListener() {
+  public static JPanel constructFileURLBrowserField(final TextFieldWithHistory field, final String objectName) {
+    return constructFieldWithBrowseButton(field, new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.getFileChooserDescriptor(aSearchedObjectName);
-        VirtualFile file = FileChooser.chooseFile(descriptor, aFieldWithHistory, null, null);
+        FileChooserDescriptor descriptor =
+                FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withTitle("Select " + objectName);
+        VirtualFile file = FileChooser.chooseFile(descriptor, field, null, null);
         if (file != null) {
           try {
-            aFieldWithHistory.setText(VfsUtil.virtualToIoFile(file).toURL().toString());
+            field.setText(VfsUtilCore.virtualToIoFile(file).toURI().toURL().toString());
           }
           catch (MalformedURLException e1) {
-            aFieldWithHistory.setText("");
+            field.setText("");
           }
         }
       }
@@ -158,13 +158,24 @@ public class GuiUtils {
   }
 
   private static JPanel makePaddedPanel(JComponent aComponent, Insets aInsets) {
-    return wrapWithBorder(aComponent, BorderFactory.createEmptyBorder(aInsets.top, aInsets.left, aInsets.bottom, aInsets.right));
+    return wrapWithBorder(aComponent, BorderFactory.createEmptyBorder(
+            aInsets.top,
+            aInsets.left,
+            aInsets.bottom,
+            aInsets.right
+    ));
   }
 
-  private static JPanel makePaddedPanel(JComponent aComponent, boolean aTop, boolean aLeft, boolean aBottom, boolean aRight) {
-    return wrapWithBorder(aComponent, BorderFactory
-            .createEmptyBorder(aTop ? paddingInsideDialog.top : 0, aLeft ? paddingInsideDialog.left : 0, aBottom ? paddingInsideDialog.bottom : 0,
-                               aRight ? paddingInsideDialog.right : 0));
+  private static JPanel makePaddedPanel(JComponent aComponent,
+                                        boolean aTop,
+                                        boolean aLeft,
+                                        boolean aBottom,
+                                        boolean aRight) {
+    return wrapWithBorder(aComponent, BorderFactory.createEmptyBorder(
+            aTop ? paddingInsideDialog.top : 0,
+            aLeft ? paddingInsideDialog.left : 0,
+            aBottom ? paddingInsideDialog.bottom : 0,
+            aRight ? paddingInsideDialog.right : 0));
   }
 
   public static void setAdditionalIcon(JRadioButton button, Icon icon) {
@@ -220,46 +231,41 @@ public class GuiUtils {
       final Component component2 = pane.getBottomComponent();
       final int orientation = pane.getOrientation();
       final Splitter splitter = new JBSplitter(orientation == JSplitPane.VERTICAL_SPLIT);
-      splitter.setFirstComponent((JComponent)component1);
-      splitter.setSecondComponent((JComponent)component2);
+      splitter.setFirstComponent((JComponent) component1);
+      splitter.setSecondComponent((JComponent) component2);
       splitter.setShowDividerControls(pane.isOneTouchExpandable());
       splitter.setHonorComponentsMinimumSize(true);
 
       if (pane.getDividerLocation() > 0) {
 // let the component chance to resize itself
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            double proportion;
-            if (pane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {
-              proportion = pane.getDividerLocation() / (double)(parent.getHeight() - pane.getDividerSize());
-            }
-            else {
-              proportion = pane.getDividerLocation() / (double)(parent.getWidth() - pane.getDividerSize());
-            }
-            if (proportion > 0 && proportion < 1) {
-              splitter.setProportion((float)proportion);
-            }
+        SwingUtilities.invokeLater(() -> {
+          double proportion;
+          if (pane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {
+            proportion = pane.getDividerLocation() / (double)(parent.getHeight() - pane.getDividerSize());
+          }
+          else {
+            proportion = pane.getDividerLocation() / (double)(parent.getWidth() - pane.getDividerSize());
+          }
+          if (proportion > 0 && proportion < 1) {
+            splitter.setProportion((float)proportion);
           }
         });
       }
 
       if (parent instanceof Splitter) {
-        final Splitter psplitter = (Splitter)parent;
-        if (psplitter.getFirstComponent() == root) {
+        final Splitter psplitter = (Splitter) parent;
+        if (psplitter.getFirstComponent() == root)
           psplitter.setFirstComponent(splitter);
-        }
-        else {
+        else
           psplitter.setSecondComponent(splitter);
-        }
       }
       else {
         parent.remove(0);
         parent.setLayout(new BorderLayout());
         parent.add(splitter, BorderLayout.CENTER);
       }
-      replaceJSplitPaneWithIDEASplitter((JComponent)component1);
-      replaceJSplitPaneWithIDEASplitter((JComponent)component2);
+      replaceJSplitPaneWithIDEASplitter((JComponent) component1);
+      replaceJSplitPaneWithIDEASplitter((JComponent) component2);
     }
     else {
       final Component[] components = root.getComponents();
@@ -301,12 +307,7 @@ public class GuiUtils {
   }
 
   public static void enableChildren(Component container, final boolean enabled, JComponent... excludeComponents) {
-    iterateChildren(container, new Consumer<Component>() {
-      @Override
-      public void consume(final Component t) {
-        enableComponent(t, enabled);
-      }
-    }, excludeComponents);
+    iterateChildren(container, t -> enableComponent(t, enabled), excludeComponents);
   }
 
   private static void enableComponent(Component component, boolean enabled) {
@@ -322,22 +323,22 @@ public class GuiUtils {
     else if (component instanceof JLabel) {
       Color color = UIUtil.getInactiveTextColor();
       if (color == null) color = component.getForeground();
-      @NonNls String changeColorString = "<font color=#" + colorToHex(color) + ">";
+      @NonNls String changeColorString = "<font color=#" + colorToHex(color) +">";
       final JLabel label = (JLabel)component;
       @NonNls String text = label.getText();
       if (text != null && text.startsWith("<html>")) {
         if (StringUtil.startsWithConcatenation(text, "<html>", changeColorString) && enabled) {
-          text = "<html>" + text.substring(("<html>" + changeColorString).length());
+          text = "<html>"+text.substring(("<html>"+changeColorString).length());
         }
         else if (!StringUtil.startsWithConcatenation(text, "<html>", changeColorString) && !enabled) {
-          text = "<html>" + changeColorString + text.substring("<html>".length());
+          text = "<html>"+changeColorString+text.substring("<html>".length());
         }
         label.setText(text);
       }
     }
     else if (component instanceof JTable) {
       TableColumnModel columnModel = ((JTable)component).getColumnModel();
-      for (int i = 0; i < columnModel.getColumnCount(); i++) {
+      for (int i=0; i<columnModel.getColumnCount();i++) {
         TableCellRenderer cellRenderer = columnModel.getColumn(0).getCellRenderer();
         if (cellRenderer instanceof Component) {
           enableComponent((Component)cellRenderer, enabled);
@@ -347,7 +348,9 @@ public class GuiUtils {
   }
 
   public static String colorToHex(final Color color) {
-    return to2DigitsHex(color.getRed()) + to2DigitsHex(color.getGreen()) + to2DigitsHex(color.getBlue());
+    return to2DigitsHex(color.getRed())
+           +to2DigitsHex(color.getGreen())
+           +to2DigitsHex(color.getBlue());
   }
 
   private static String to2DigitsHex(int i) {
@@ -356,41 +359,41 @@ public class GuiUtils {
     return s;
   }
 
-  public static void invokeAndWait(@NotNull Runnable runnable) throws InvocationTargetException, InterruptedException {
-    Application application = ApplicationManager.getApplication();
-    assert !application.isDispatchThread() : "Must not be invoked from AWT dispatch thread";
-    if (application.isReadAccessAllowed()) {
-      // make ApplicationImpl catch deadlock situation with readLock held
-      application.invokeAndWait(runnable, application.getDefaultModalityState());
-      return;
-    }
-    SwingUtilities.invokeAndWait(runnable);
-  }
-
   public static void runOrInvokeAndWait(@NotNull Runnable runnable) throws InvocationTargetException, InterruptedException {
-    Application application = ApplicationManager.getApplication();
-    if (application.isDispatchThread()) {
-      runnable.run();
-    }
-    else {
-      invokeAndWait(runnable);
-    }
+    ApplicationManager.getApplication().invokeAndWait(runnable);
   }
 
   public static void invokeLaterIfNeeded(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
     if (ApplicationManager.getApplication().isDispatchThread()) {
       runnable.run();
-    }
-    else {
+    } else {
       ApplicationManager.getApplication().invokeLater(runnable, modalityState);
     }
   }
 
-  public static JTextField createUndoableTextField() {
-    JTextField field = new JTextField();
-    if (ApplicationManager.getApplication() != null) {
-      new TextComponentUndoProvider(field);
+  public static void invokeLaterIfNeeded(@NotNull Runnable runnable, @NotNull ModalityState modalityState, @NotNull Condition expired) {
+    if (ApplicationManager.getApplication().isDispatchThread()) {
+      runnable.run();
+    } else {
+      ApplicationManager.getApplication().invokeLater(runnable, modalityState, expired);
     }
-    return field;
+  }
+
+  public static JTextField createUndoableTextField() {
+    return new JBTextField();
+  }
+
+  /**
+   * Returns dimension with width required to type certain number of chars in provided component
+   * @param charCount number of chars
+   * @param comp component
+   * @return dimension with width enough to insert provided number of chars into component
+   */
+  @NotNull
+  public static Dimension getSizeByChars(int charCount, @NotNull JComponent comp) {
+    Dimension size = comp.getPreferredSize();
+    FontMetrics fontMetrics = comp.getFontMetrics(comp.getFont());
+    size.width = fontMetrics.charWidth('a') * charCount;
+    return size;
   }
 }

@@ -2015,6 +2015,17 @@ public class UIUtil {
     return null;
   }
 
+  @Nullable
+  public static Component findParentByCondition(@NotNull Component c, Condition<Component> condition) {
+    Component eachParent = c;
+    while (eachParent != null) {
+      if (condition.value(eachParent)) return eachParent;
+      eachParent = eachParent.getParent();
+    }
+    return null;
+  }
+
+
   @NonNls
   public static String getCssFontDeclaration(final Font font) {
     return getCssFontDeclaration(font, null, null, null);

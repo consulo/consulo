@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ public class SmartDeltaCompressor implements IntList {
 
   @NotNull
   public static SmartDeltaCompressor newInstance(@NotNull IntList deltaList) {
-    if (deltaList.size() < 0)
-      throw new NegativeArraySizeException("size < 0: " + deltaList.size());
+    if (deltaList.size() < 0) throw new NegativeArraySizeException("size < 0: " + deltaList.size());
 
     int bytesAfterCompression = countBytesAfterCompression(deltaList);
     byte[] deltas = new byte[bytesAfterCompression];
@@ -43,22 +42,19 @@ public class SmartDeltaCompressor implements IntList {
 
       for (int rem = 0; rem < 64; rem++) {
         int index = main * 64 + rem;
-        if (index >= size)
-          break;
+        if (index >= size) break;
         int sizeOf = sizeOf(deltaList.get(index));
         writeDelta(offset, deltaList.get(index), sizeOf, deltas);
 
-        long mask = 1l << rem;
-        /**
-         * 4 -> 11
-         * 3 -> 10
-         * 2 -> 01
-         * 1 -> 00
+        long mask = 1L << rem;
+        /*
+          4 -> 11
+          3 -> 10
+          2 -> 01
+          1 -> 00
          */
-        if (sizeOf == 3 || sizeOf == 4)
-          majorBits[main] |= mask;
-        if (sizeOf == 2 || sizeOf == 4)
-          minorBits[main] |= mask;
+        if (sizeOf == 3 || sizeOf == 4) majorBits[main] |= mask;
+        if (sizeOf == 2 || sizeOf == 4) minorBits[main] |= mask;
 
         offset += sizeOf;
       }
@@ -97,7 +93,7 @@ public class SmartDeltaCompressor implements IntList {
     long major = myMajorBits[main] << shift;
     long minor = myMinorBits[main] << shift;
 
-    int sizeOf = (int) (2 * (major >>> 63) + (minor >>> 63) + 1);
+    int sizeOf = (int)(2 * (major >>> 63) + (minor >>> 63) + 1);
 
     int endIndex = myStrongIndexes[main] + 2 * Long.bitCount(major) + Long.bitCount(minor) + rem + 1;
 

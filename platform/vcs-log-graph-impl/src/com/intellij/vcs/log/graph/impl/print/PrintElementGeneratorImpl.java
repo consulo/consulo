@@ -16,68 +16,173 @@
 
 package com.intellij.vcs.log.graph.impl.print;
 
-import com.intellij.util.Function;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.NullableFunction;
 import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUMap;
-import com.intellij.vcs.log.graph.SimplePrintElement;
+import com.intellij.vcs.log.graph.api.EdgeFilter;
 import com.intellij.vcs.log.graph.api.LinearGraph;
-import com.intellij.vcs.log.graph.api.PrintedLinearGraph;
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;
+import com.intellij.vcs.log.graph.api.elements.GraphEdgeType;
 import com.intellij.vcs.log.graph.api.elements.GraphElement;
 import com.intellij.vcs.log.graph.api.elements.GraphNode;
-import com.intellij.vcs.log.graph.api.printer.PrintElementsManager;
+import com.intellij.vcs.log.graph.api.printer.PrintElementManager;
+import com.intellij.vcs.log.graph.utils.NormalEdge;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
 
+import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.*;
+
 public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
-  private static final int LONG_EDGE_SIZE = 30;
+  @NotNull private static final Logger LOG = Logger.getInstance(PrintElementGeneratorImpl.class);
+
+  public static final int LONG_EDGE_SIZE = 30;
   private static final int LONG_EDGE_PART_SIZE = 1;
 
   private static final int VERY_LONG_EDGE_SIZE = 1000;
   private static final int VERY_LONG_EDGE_PART_SIZE = 250;
   private static final int CACHE_SIZE = 100;
   private static final boolean SHOW_ARROW_WHEN_SHOW_LONG_EDGES = true;
+  private static final int SAMPLE_SIZE = 20000;
 
 
-  @NotNull
-  private final SLRUMap<Integer, List<GraphElement>> cache = new SLRUMap<Integer, List<GraphElement>>(CACHE_SIZE, CACHE_SIZE * 2);
-  @NotNull
-  private final EdgesInRowGenerator myEdgesInRowGenerator;
-  @NotNull
-  private final GraphElementComparator myGraphElementComparator;
+  @NotNull private final SLRUMap<Integer, List<GraphElement>> myCache = new SLRUMap<>(CACHE_SIZE, CACHE_SIZE * 2);
+  @NotNull private final EdgesInRowGenerator myEdgesInRowGenerator;
+  @NotNull private final Comparator<GraphElement> myGraphElementComparator;
 
-  private boolean showLongEdges = false;
+  private final int myLongEdgeSize;
+  private final int myVisiblePartSize;
+  private final int myEdgeWithArrowSize;
+  private int myRecommendedWidth = 0;
 
-  public PrintElementGeneratorImpl(@NotNull PrintedLinearGraph graph, @NotNull PrintElementsManager printElementsManager) {
-    super(graph, printElementsManager);
+  public PrintElementGeneratorImpl(@NotNull LinearGraph graph, @NotNull PrintElementManager printElementManager, boolean showLongEdges) {
+    super(graph, printElementManager);
     myEdgesInRowGenerator = new EdgesInRowGenerator(graph);
-    myGraphElementComparator = new GraphElementComparator();
+    myGraphElementComparator = printElementManager.getGraphElementComparator();
+    if (showLongEdges) {
+      myLongEdgeSize = VERY_LONG_EDGE_SIZE;
+      myVisiblePartSize = VERY_LONG_EDGE_PART_SIZE;
+      if (SHOW_ARROW_WHEN_SHOW_LONG_EDGES) {
+        myEdgeWithArrowSize = LONG_EDGE_SIZE;
+      }
+      else {
+        myEdgeWithArrowSize = Integer.MAX_VALUE;
+      }
+    }
+    else {
+      myLongEdgeSize = LONG_EDGE_SIZE;
+      myVisiblePartSize = LONG_EDGE_PART_SIZE;
+      myEdgeWithArrowSize = Integer.MAX_VALUE;
+    }
+  }
+
+  @TestOnly
+  public PrintElementGeneratorImpl(@NotNull LinearGraph graph,
+                                   @NotNull PrintElementManager printElementManager,
+                                   int longEdgeSize,
+                                   int visiblePartSize,
+                                   int edgeWithArrowSize) {
+    super(graph, printElementManager);
+    myEdgesInRowGenerator = new EdgesInRowGenerator(graph);
+    myGraphElementComparator = printElementManager.getGraphElementComparator();
+    myLongEdgeSize = longEdgeSize;
+    myVisiblePartSize = visiblePartSize;
+    myEdgeWithArrowSize = edgeWithArrowSize;
+  }
+
+  public int getRecommendedWidth() {
+    if (myRecommendedWidth <= 0) {
+      int n = Math.min(SAMPLE_SIZE, myLinearGraph.nodesCount());
+
+      double sum = 0;
+      double sumSquares = 0;
+      int edgesCount = 0;
+      Set<NormalEdge> currentNormalEdges = ContainerUtil.newHashSet();
+
+      for (int i = 0; i < n; i++) {
+        List<GraphEdge> adjacentEdges = myLinearGraph.getAdjacentEdges(i, EdgeFilter.ALL);
+        int upArrows = 0;
+        int downArrows = 0;
+        for (GraphEdge e : adjacentEdges) {
+          NormalEdge normalEdge = asNormalEdge(e);
+          if (normalEdge != null) {
+            if (isEdgeUp(e, i)) {
+              currentNormalEdges.remove(normalEdge);
+            }
+            else {
+              currentNormalEdges.add(normalEdge);
+            }
+          }
+          else {
+            if (e.getType() == GraphEdgeType.DOTTED_ARROW_UP) {
+              upArrows++;
+            }
+            else {
+              downArrows++;
+            }
+          }
+        }
+
+        int newEdgesCount = 0;
+        for (NormalEdge e : currentNormalEdges) {
+          if (isEdgeVisibleInRow(e, i)) {
+            newEdgesCount++;
+          }
+          else {
+            RowElementType arrow = getArrowType(e, i);
+            if (arrow == RowElementType.DOWN_ARROW) {
+              downArrows++;
+            }
+            else if (arrow == RowElementType.UP_ARROW) {
+              upArrows++;
+            }
+          }
+        }
+
+        int width = Math.max(edgesCount + upArrows, newEdgesCount + downArrows);
+
+        sum += width;
+        sumSquares += width * width;
+
+        edgesCount = newEdgesCount;
+      }
+
+      double average = sum / n;
+      double deviation = Math.sqrt(sumSquares / n - average * average);
+      myRecommendedWidth = (int)Math.round(average + deviation);
+    }
+
+    return myRecommendedWidth;
   }
 
   @NotNull
   @Override
   protected List<ShortEdge> getDownShortEdges(int rowIndex) {
-    Function<GraphEdge, Integer> endPosition = createEndPositionFunction(rowIndex);
+    NullableFunction<GraphEdge, Integer> endPosition = createEndPositionFunction(rowIndex);
 
-    List<ShortEdge> result = new ArrayList<ShortEdge>();
+    List<ShortEdge> result = new ArrayList<>();
     List<GraphElement> visibleElements = getSortedVisibleElementsInRow(rowIndex);
 
     for (int startPosition = 0; startPosition < visibleElements.size(); startPosition++) {
       GraphElement element = visibleElements.get(startPosition);
       if (element instanceof GraphNode) {
-        for (GraphEdge edge : myEdgesInRowGenerator.createDownEdges(((GraphNode)element).getNodeIndex())) {
-          int endPos = endPosition.fun(edge);
-          if (endPos != -1)
-            result.add(new ShortEdge(edge, startPosition, endPos));
+        int nodeIndex = ((GraphNode)element).getNodeIndex();
+        for (GraphEdge edge : myLinearGraph.getAdjacentEdges(nodeIndex, EdgeFilter.ALL)) {
+          if (isEdgeDown(edge, nodeIndex)) {
+            Integer endPos = endPosition.fun(edge);
+            if (endPos != null) result.add(new ShortEdge(edge, startPosition, endPos));
+          }
         }
       }
 
       if (element instanceof GraphEdge) {
-        GraphEdge edge = (GraphEdge) element;
-        int endPos = endPosition.fun(edge);
-        if (endPos != -1)
-          result.add(new ShortEdge(edge, startPosition, endPos));
+        GraphEdge edge = (GraphEdge)element;
+        Integer endPos = endPosition.fun(edge);
+        if (endPos != null) result.add(new ShortEdge(edge, startPosition, endPos));
       }
     }
 
@@ -85,192 +190,148 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
   }
 
   @NotNull
-  private Function<GraphEdge, Integer> createEndPositionFunction(int visibleRowIndex) {
+  private NullableFunction<GraphEdge, Integer> createEndPositionFunction(int visibleRowIndex) {
     List<GraphElement> visibleElementsInNextRow = getSortedVisibleElementsInRow(visibleRowIndex + 1);
 
-    final Map<GraphElement, Integer> toPosition = new HashMap<GraphElement, Integer>();
-    for (int position = 0; position < visibleElementsInNextRow.size(); position++)
+    final Map<GraphElement, Integer> toPosition = new HashMap<>();
+    for (int position = 0; position < visibleElementsInNextRow.size(); position++) {
       toPosition.put(visibleElementsInNextRow.get(position), position);
+    }
 
-    return new Function<GraphEdge, Integer>() {
-      @Override
-      public Integer fun(GraphEdge edge) {
-        Integer position = toPosition.get(edge);
-        if (position == null) {
-          int downNodeVisibleIndex = edge.getDownNodeIndex();
-          if (downNodeVisibleIndex != LinearGraph.NOT_LOAD_COMMIT)
-            position = toPosition.get(new GraphNode(downNodeVisibleIndex));
-        }
-
-        if (position == null) {
-          // i.e. is long edge with arrow
-          return -1;
-        } else {
-          return position;
-        }
+    return edge -> {
+      Integer position = toPosition.get(edge);
+      if (position == null) {
+        Integer downNodeIndex = edge.getDownNodeIndex();
+        if (downNodeIndex != null) position = toPosition.get(myLinearGraph.getGraphNode(downNodeIndex));
       }
+      return position;
     };
   }
 
   @NotNull
   @Override
   protected List<SimpleRowElement> getSimpleRowElements(int visibleRowIndex) {
-    List<SimpleRowElement> result = new SmartList<SimpleRowElement>();
-    int position = 0;
-    for (GraphElement element : getSortedVisibleElementsInRow(visibleRowIndex)) {
+    List<SimpleRowElement> result = new SmartList<>();
+    List<GraphElement> sortedVisibleElementsInRow = getSortedVisibleElementsInRow(visibleRowIndex);
+
+    for (int position = 0; position < sortedVisibleElementsInRow.size(); position++) {
+      GraphElement element = sortedVisibleElementsInRow.get(position);
       if (element instanceof GraphNode) {
-        result.add(new SimpleRowElement(element, SimplePrintElement.Type.NODE, position));
+        result.add(new SimpleRowElement(element, RowElementType.NODE, position));
       }
+
       if (element instanceof GraphEdge) {
         GraphEdge edge = (GraphEdge)element;
-        int edgeSize = edge.getDownNodeIndex() - edge.getUpNodeIndex();
-        int upOffset = visibleRowIndex - edge.getUpNodeIndex();
-        int downOffset = edge.getDownNodeIndex() - visibleRowIndex;
-
-        if (edgeSize >= LONG_EDGE_SIZE) {
-          if (!showLongEdges) {
-            addArrowIfNeeded(result, position, edge, upOffset, downOffset, LONG_EDGE_PART_SIZE);
-          } else {
-            if (SHOW_ARROW_WHEN_SHOW_LONG_EDGES)
-              addArrowIfNeeded(result, position, edge, upOffset, downOffset, LONG_EDGE_PART_SIZE);
-
-            if (edgeSize >= VERY_LONG_EDGE_SIZE)
-              addArrowIfNeeded(result, position, edge, upOffset, downOffset, VERY_LONG_EDGE_PART_SIZE);
-          }
+        RowElementType arrowType = getArrowType(edge, visibleRowIndex);
+        if (arrowType != null) {
+          result.add(new SimpleRowElement(edge, arrowType, position));
         }
-
       }
-      position++;
     }
     return result;
   }
 
-  private static void addArrowIfNeeded(List<SimpleRowElement> result,
-                                       int position,
-                                       GraphEdge edge,
-                                       int upOffset,
-                                       int downOffset,
-                                       int edgePartSize) {
-    if (upOffset == edgePartSize)
-      result.add(new SimpleRowElement(edge, SimplePrintElement.Type.DOWN_ARROW, position));
-
-    if (downOffset == edgePartSize)
-      result.add(new SimpleRowElement(edge, SimplePrintElement.Type.UP_ARROW, position));
+  @Nullable
+  private RowElementType getArrowType(@NotNull GraphEdge edge, int rowIndex) {
+    NormalEdge normalEdge = asNormalEdge(edge);
+    if (normalEdge != null) {
+      return getArrowType(normalEdge, rowIndex);
+    }
+    else { // special edges
+      switch (edge.getType()) {
+        case DOTTED_ARROW_DOWN:
+        case NOT_LOAD_COMMIT:
+          if (intEqual(edge.getUpNodeIndex(), rowIndex - 1)) {
+            return RowElementType.DOWN_ARROW;
+          }
+          break;
+        case DOTTED_ARROW_UP:
+          // todo case 0-row arrow
+          if (intEqual(edge.getDownNodeIndex(), rowIndex + 1)) {
+            return RowElementType.UP_ARROW;
+          }
+          break;
+        default:
+          LOG.error("Unknown special edge type " + edge.getType() + " at row " + rowIndex);
+      }
+    }
+    return null;
   }
 
-  @Override
-  public boolean areLongEdgesHidden() {
-    return !showLongEdges;
+  @Nullable
+  private RowElementType getArrowType(@NotNull NormalEdge normalEdge, int rowIndex) {
+    int edgeSize = normalEdge.down - normalEdge.up;
+    int upOffset = rowIndex - normalEdge.up;
+    int downOffset = normalEdge.down - rowIndex;
+
+    if (edgeSize >= myLongEdgeSize) {
+      if (upOffset == myVisiblePartSize) {
+        LOG.assertTrue(downOffset != myVisiblePartSize, "Both up and down arrow at row " +
+                                                        rowIndex); // this can not happen due to how constants are picked out, but just in case
+        return RowElementType.DOWN_ARROW;
+      }
+      if (downOffset == myVisiblePartSize) return RowElementType.UP_ARROW;
+    }
+    if (edgeSize >= myEdgeWithArrowSize) {
+      if (upOffset == 1) {
+        LOG.assertTrue(downOffset != 1, "Both up and down arrow at row " + rowIndex);
+        return RowElementType.DOWN_ARROW;
+      }
+      if (downOffset == 1) return RowElementType.UP_ARROW;
+    }
+    return null;
   }
 
-  @Override
-  public void setLongEdgesHidden(boolean longEdgesHidden) {
-    showLongEdges = !longEdgesHidden;
-    invalidate();
+  private boolean isEdgeVisibleInRow(@NotNull GraphEdge edge, int visibleRowIndex) {
+    NormalEdge normalEdge = asNormalEdge(edge);
+    if (normalEdge == null) {
+      // e.d. edge is special. See addSpecialEdges
+      return false;
+    }
+    return isEdgeVisibleInRow(normalEdge, visibleRowIndex);
   }
 
-  @Override
-  public void invalidate() {
-    myEdgesInRowGenerator.invalidate();
-    cache.clear();
+  private boolean isEdgeVisibleInRow(@NotNull NormalEdge normalEdge, int visibleRowIndex) {
+    return normalEdge.down - normalEdge.up < myLongEdgeSize || getAttachmentDistance(normalEdge, visibleRowIndex) <= myVisiblePartSize;
   }
 
-  private int getLongEdgeSize() {
-    if (showLongEdges)
-      return VERY_LONG_EDGE_SIZE;
-    else
-      return LONG_EDGE_SIZE;
-  }
-
-  private int getEdgeShowPartSize() {
-    if (showLongEdges)
-      return VERY_LONG_EDGE_PART_SIZE;
-    else
-      return LONG_EDGE_PART_SIZE;
-  }
-
-  private boolean edgeIsVisibleInRow(@NotNull GraphEdge edge, int visibleRowIndex) {
-    int edgeSize = edge.getDownNodeIndex() - edge.getUpNodeIndex();
-    if (edgeSize < getLongEdgeSize()) {
-      return true;
-    } else {
-      return visibleRowIndex - edge.getUpNodeIndex() <= getEdgeShowPartSize()
-             || edge.getDownNodeIndex() - visibleRowIndex <= getEdgeShowPartSize();
+  private void addSpecialEdges(@NotNull List<GraphElement> result, int rowIndex) {
+    if (rowIndex > 0) {
+      for (GraphEdge edge : myLinearGraph.getAdjacentEdges(rowIndex - 1, EdgeFilter.SPECIAL)) {
+        assert !edge.getType().isNormalEdge();
+        if (isEdgeDown(edge, rowIndex - 1)) result.add(edge);
+      }
+    }
+    if (rowIndex < myLinearGraph.nodesCount() - 1) {
+      for (GraphEdge edge : myLinearGraph.getAdjacentEdges(rowIndex + 1, EdgeFilter.SPECIAL)) {
+        assert !edge.getType().isNormalEdge();
+        if (isEdgeUp(edge, rowIndex + 1)) result.add(edge);
+      }
     }
   }
 
   @NotNull
   private List<GraphElement> getSortedVisibleElementsInRow(int rowIndex) {
-    List<GraphElement> graphElements = cache.get(rowIndex);
+    List<GraphElement> graphElements = myCache.get(rowIndex);
     if (graphElements != null) {
       return graphElements;
     }
 
-    List<GraphElement> result = new ArrayList<GraphElement>();
-    result.add(new GraphNode(rowIndex));
+    List<GraphElement> result = new ArrayList<>();
+    result.add(myLinearGraph.getGraphNode(rowIndex));
 
     for (GraphEdge edge : myEdgesInRowGenerator.getEdgesInRow(rowIndex)) {
-      if (edgeIsVisibleInRow(edge, rowIndex))
-        result.add(edge);
+      if (isEdgeVisibleInRow(edge, rowIndex)) result.add(edge);
     }
 
+    addSpecialEdges(result, rowIndex);
+
     Collections.sort(result, myGraphElementComparator);
-    cache.put(rowIndex, result);
+    myCache.put(rowIndex, result);
     return result;
   }
 
-  private class GraphElementComparator implements Comparator<GraphElement> {
-    @Override
-    public int compare(@NotNull GraphElement o1, @NotNull GraphElement o2) {
-      if (o1 instanceof GraphEdge && o2 instanceof GraphEdge) {
-        int upNodeIndex1 = ((GraphEdge)o1).getUpNodeIndex();
-        int upNodeIndex2 = ((GraphEdge)o2).getUpNodeIndex();
-
-        if (upNodeIndex1 == upNodeIndex2) {
-          int downNodeIndex1 = ((GraphEdge)o1).getDownNodeIndex();
-          int downNodeIndex2 = ((GraphEdge)o2).getDownNodeIndex();
-          if (downNodeIndex1 == LinearGraph.NOT_LOAD_COMMIT)
-            return 1;
-          if (downNodeIndex2 == LinearGraph.NOT_LOAD_COMMIT)
-            return -1;
-
-          if (getLayoutIndex(downNodeIndex1) != getLayoutIndex(downNodeIndex2))
-            return getLayoutIndex(downNodeIndex1) - getLayoutIndex(downNodeIndex2);
-          else
-            return downNodeIndex1 - downNodeIndex2;
-        }
-
-        if (upNodeIndex1 < upNodeIndex2)
-          return compare(o1, new GraphNode(upNodeIndex2));
-        else
-          return compare(new GraphNode(upNodeIndex1), o2);
-      }
-
-      if (o1 instanceof GraphEdge && o2 instanceof GraphNode)
-        return compare2((GraphEdge) o1, (GraphNode) o2);
-
-      if (o1 instanceof GraphNode && o2 instanceof GraphEdge)
-        return - compare2((GraphEdge) o2, (GraphNode) o1);
-
-      assert false;
-      return 0;
-    }
-
-    private int compare2(@NotNull GraphEdge edge, @NotNull GraphNode node) {
-      int upEdgeLI = getLayoutIndex(edge.getUpNodeIndex());
-      int downEdgeLI = upEdgeLI;
-      if (edge.getDownNodeIndex() != LinearGraph.NOT_LOAD_COMMIT)
-        downEdgeLI = getLayoutIndex(edge.getDownNodeIndex());
-
-      int nodeLI = getLayoutIndex(node.getNodeIndex());
-      if (Math.max(upEdgeLI, downEdgeLI) != nodeLI)
-        return Math.max(upEdgeLI, downEdgeLI) - nodeLI;
-      else
-        return edge.getUpNodeIndex() - node.getNodeIndex();
-    }
-
-    private int getLayoutIndex(int nodeIndex) {
-      return myPrintedLinearGraph.getLayoutIndex(nodeIndex);
-    }
+  private static int getAttachmentDistance(@NotNull NormalEdge e1, int rowIndex) {
+    return Math.min(rowIndex - e1.up, e1.down - rowIndex);
   }
 }

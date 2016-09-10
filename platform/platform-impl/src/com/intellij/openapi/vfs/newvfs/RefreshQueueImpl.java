@@ -39,9 +39,9 @@ import java.util.concurrent.ExecutorService;
 public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.newvfs.RefreshQueueImpl");
 
-  private final ExecutorService myQueue = new BoundedTaskExecutor(PooledThreadExecutor.INSTANCE, 1, this);
+  private final ExecutorService myQueue = new BoundedTaskExecutor("RefreshQueue pool", PooledThreadExecutor.INSTANCE, 1, this);
   private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
-  private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<RefreshSession>();
+  private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<>();
   private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
 
   public void execute(@NotNull RefreshSessionImpl session) {
@@ -57,7 +57,8 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       }
       else {
         if (((ApplicationEx)app).holdsReadLock()) {
-          LOG.error("Do not call synchronous refresh under read lock (except from EDT) - " + "this will cause a deadlock if there are any events to fire.");
+          LOG.error("Do not call synchronous refresh under read lock (except from EDT) - " +
+                    "this will cause a deadlock if there are any events to fire.");
           return;
         }
         queueSession(session, ModalityState.defaultModalityState(), TransactionGuard.getInstance().getContextTransaction());
@@ -76,7 +77,9 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
         myRefreshIndicator.stop();
         Application app = ApplicationManager.getApplication();
         // invokeLater might be not necessary once transactions are enforced
-        app.invokeLater(() -> TransactionGuard.getInstance().submitTransaction(app, transaction, session::fireEvents), modality);
+        app.invokeLater(
+                () -> TransactionGuard.getInstance().submitTransaction(app, transaction, session::fireEvents),
+                modality);
       }
     });
     myEventCounter.eventHappened(session);
@@ -136,6 +139,5 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   }
 
   @Override
-  public void dispose() {
-  }
+  public void dispose() { }
 }

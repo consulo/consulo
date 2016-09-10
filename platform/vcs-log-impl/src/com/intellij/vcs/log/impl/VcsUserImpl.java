@@ -16,10 +16,13 @@
 package com.intellij.vcs.log.impl;
 
 import com.intellij.vcs.log.VcsUser;
+import com.intellij.vcs.log.util.VcsUserUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
- * Note: users are considered equal if they have the same name, even if the e-mail is different.
+ * Note: users are considered equal if they have the same name and email. Emails are converted to lower case in constructor.
  */
 public class VcsUserImpl implements VcsUser {
 
@@ -28,7 +31,7 @@ public class VcsUserImpl implements VcsUser {
 
   public VcsUserImpl(@NotNull String name, @NotNull String email) {
     myName = name;
-    myEmail = email;
+    myEmail = VcsUserUtil.emailToLowerCase(email);
   }
 
   @NotNull
@@ -51,18 +54,18 @@ public class VcsUserImpl implements VcsUser {
     VcsUserImpl user = (VcsUserImpl)o;
 
     if (!myName.equals(user.myName)) return false;
+    if (!myEmail.equals(user.myEmail)) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return myName.hashCode();
+    return Objects.hash(myName, myEmail);
   }
 
   @Override
   public String toString() {
-    return myName + "<" + myEmail + ">";
+    return VcsUserUtil.toExactString(this);
   }
-
 }

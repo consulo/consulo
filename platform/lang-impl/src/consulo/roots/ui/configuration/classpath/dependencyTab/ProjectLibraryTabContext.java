@@ -59,7 +59,7 @@ public class ProjectLibraryTabContext extends AddModuleDependencyTabContext {
     Library[] libraries = projectLibrariesProvider.getModifiableModel().getLibraries();
     final Condition<Library> condition = LibraryEditingUtil.getNotAddedLibrariesCondition(myClasspathPanel.getRootModel());
 
-    myItems = ContainerUtil.filter(condition, libraries);
+    myItems = ContainerUtil.filter(libraries, condition);
     ContainerUtil.sort(myItems, new Comparator<Library>() {
       @Override
       public int compare(Library o1, Library o2) {

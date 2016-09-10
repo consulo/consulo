@@ -6,17 +6,18 @@ import com.intellij.remoteServer.runtime.ServerTaskExecutor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.ide.PooledThreadExecutor;
+
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author nik
  */
 public class ServerTaskExecutorImpl implements ServerTaskExecutor {
   private static final Logger LOG = Logger.getInstance(ServerTaskExecutorImpl.class);
-  private final SequentialTaskExecutor myTaskExecutor;
+  private final ExecutorService myTaskExecutor;
 
   public ServerTaskExecutorImpl() {
-    myTaskExecutor = new SequentialTaskExecutor(PooledThreadExecutor.INSTANCE);
+    myTaskExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ServerTaskExecutorImpl pool");
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -35,12 +38,14 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.ui.docking.DockManager;
-import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusConnection;
+import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author yole
  */
+@State(name = "PsiAwareFileEditorManagerImpl", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.PsiAwareFileEditorManagerImpl");
 
@@ -56,10 +61,9 @@ public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
   public PsiAwareFileEditorManagerImpl(final Project project,
                                        final PsiManager psiManager,
                                        final WolfTheProblemSolver problemSolver,
-                                       DockManager dockManager,
-                                       MessageBus messageBus,
-                                       EditorHistoryManager editorHistoryManager) {
-    super(project, dockManager, editorHistoryManager);
+                                       DockManager dockManager) {
+    super(project, dockManager);
+
     myPsiManager = psiManager;
     myProblemSolver = problemSolver;
     myPsiTreeChangeListener = new MyPsiTreeChangeListener();
@@ -68,19 +72,22 @@ public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
 
     // reinit syntax highlighter for Groovy. In power save mode keywords are highlighted by GroovySyntaxHighlighter insteadof
     // GrKeywordAndDeclarationHighlighter. So we need to drop caches for token types attributes in LayeredLexerEditorHighlighter
-    messageBus.connect().subscribe(PowerSaveMode.TOPIC, new PowerSaveMode.Listener() {
+    project.getMessageBus().connect().subscribe(PowerSaveMode.TOPIC, new PowerSaveMode.Listener() {
       @Override
       public void powerSaveStateChanged() {
-        for (Editor editor : EditorFactory.getInstance().getAllEditors()) {
-          ((EditorEx)editor).reinitSettings();
-        }
+        UIUtil.invokeLaterIfNeeded(() -> {
+          for (Editor editor : EditorFactory.getInstance().getAllEditors()) {
+            ((EditorEx)editor).reinitSettings();
+          }
+        });
       }
     });
   }
 
   @Override
-  public void projectOpened() {
-    super.projectOpened();    //To change body of overridden methods use File | Settings | File Templates.
+  protected void projectOpened(@NotNull MessageBusConnection connection) {
+    super.projectOpened(connection);
+
     myPsiManager.addPsiTreeChangeListener(myPsiTreeChangeListener);
     myProblemSolver.addProblemListener(myProblemListener);
   }

@@ -1,170 +1,186 @@
 package com.intellij.vcs.log.ui.frame;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.actions.RefreshAction;
+import com.google.common.primitives.Ints;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.DumbAwareAction;
+import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.TextRevisionNumber;
+import com.intellij.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
 import com.intellij.openapi.vcs.changes.committed.RepositoryChangesBrowser;
-import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.*;
 import com.intellij.ui.components.JBLoadingPanel;
+import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.table.ComponentsListFocusTraversalPolicy;
+import com.intellij.vcs.CommittedChangeListForRevision;
 import com.intellij.vcs.log.*;
-import com.intellij.vcs.log.data.VcsLogDataHolder;
+import com.intellij.vcs.log.data.VcsLogData;
+import com.intellij.vcs.log.data.VcsLogProgress;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
 import com.intellij.vcs.log.data.VisiblePack;
-import com.intellij.vcs.log.graph.impl.facade.bek.BekSorter;
+import com.intellij.vcs.log.impl.VcsLogUtil;
+import com.intellij.vcs.log.ui.VcsLogActionPlaces;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
+import com.intellij.vcs.log.ui.actions.IntelliSortChooserPopupAction;
 import com.intellij.vcs.log.ui.filter.VcsLogClassicFilterUi;
-import com.intellij.vcs.log.ui.tables.GraphTableModel;
-import icons.VcsLogIcons;
+import com.intellij.vcs.log.util.BekUtil;
+import com.intellij.vcs.log.util.VcsUserUtil;
+import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
-public class MainFrame extends JPanel implements TypeSafeDataProvider {
+import static com.intellij.util.ObjectUtils.assertNotNull;
+import static com.intellij.util.containers.ContainerUtil.getFirstItem;
 
-  @NotNull private final VcsLogDataHolder myLogDataHolder;
-  @NotNull private final VcsLogUiImpl myUI;
-  @NotNull private final Project myProject;
-  @NotNull private final VcsLogUiProperties myUiProperties;
+public class MainFrame extends JPanel implements DataProvider, Disposable {
+
+  @NotNull private final VcsLogData myLogData;
+  @NotNull private final VcsLogUiImpl myUi;
   @NotNull private final VcsLog myLog;
   @NotNull private final VcsLogClassicFilterUi myFilterUi;
 
   @NotNull private final JBLoadingPanel myChangesLoadingPane;
   @NotNull private final VcsLogGraphTable myGraphTable;
-  @NotNull private final BranchesPanel myBranchesPanel;
   @NotNull private final DetailsPanel myDetailsPanel;
   @NotNull private final Splitter myDetailsSplitter;
   @NotNull private final JComponent myToolbar;
   @NotNull private final RepositoryChangesBrowser myChangesBrowser;
+  @NotNull private final Splitter myChangesBrowserSplitter;
+  @NotNull private final SearchTextField myTextFilter;
 
-  public MainFrame(@NotNull VcsLogDataHolder logDataHolder, @NotNull VcsLogUiImpl vcsLogUI, @NotNull Project project,
-                   @NotNull VcsLogSettings settings, @NotNull VcsLogUiProperties uiProperties, @NotNull VcsLog log,
+  @NotNull private Runnable myContainingBranchesListener;
+  @NotNull private Runnable myMiniDetailsLoadedListener;
+
+  public MainFrame(@NotNull VcsLogData logData,
+                   @NotNull VcsLogUiImpl ui,
+                   @NotNull Project project,
+                   @NotNull VcsLogUiProperties uiProperties,
+                   @NotNull VcsLog log,
                    @NotNull VisiblePack initialDataPack) {
     // collect info
-    myLogDataHolder = logDataHolder;
-    myUI = vcsLogUI;
-    myProject = project;
-    myUiProperties = uiProperties;
+    myLogData = logData;
+    myUi = ui;
     myLog = log;
-    myFilterUi = new VcsLogClassicFilterUi(myUI, logDataHolder, uiProperties, initialDataPack);
+    myFilterUi = new VcsLogClassicFilterUi(myUi, logData, uiProperties, initialDataPack);
 
     // initialize components
-    myGraphTable = new VcsLogGraphTable(vcsLogUI, logDataHolder, initialDataPack);
-    myBranchesPanel = new BranchesPanel(logDataHolder, vcsLogUI, initialDataPack.getRefsModel());
-    myBranchesPanel.setVisible(settings.isShowBranchesPanel());
-    myDetailsPanel = new DetailsPanel(logDataHolder, myGraphTable, vcsLogUI.getColorManager(), initialDataPack);
+    myGraphTable = new VcsLogGraphTable(ui, logData, initialDataPack);
+    myDetailsPanel = new DetailsPanel(logData, ui.getColorManager(), this);
 
-    myChangesBrowser = new RepositoryChangesBrowser(project, null, Collections.<Change>emptyList(), null);
-    myChangesBrowser.getDiffAction().registerCustomShortcutSet(CommonShortcuts.getDiff(), getGraphTable());
+    myChangesBrowser = new RepositoryChangesBrowser(project, null, Collections.emptyList(), null) {
+      @Override
+      protected void buildToolBar(DefaultActionGroup toolBarGroup) {
+        super.buildToolBar(toolBarGroup);
+        toolBarGroup.add(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_SHOW_DETAILS_ACTION));
+      }
+    };
+    myChangesBrowser.getViewerScrollPane().setBorder(IdeBorderFactory.createBorder(SideBorder.TOP));
+    myChangesBrowser.getDiffAction().registerCustomShortcutSet(myChangesBrowser.getDiffAction().getShortcutSet(), getGraphTable());
     myChangesBrowser.getEditSourceAction().registerCustomShortcutSet(CommonShortcuts.getEditSource(), getGraphTable());
-    setDefaultEmptyText(myChangesBrowser);
-    myChangesLoadingPane = new JBLoadingPanel(new BorderLayout(), project);
+    myChangesBrowser.getViewer().setEmptyText("");
+    myChangesLoadingPane = new JBLoadingPanel(new BorderLayout(), this, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
     myChangesLoadingPane.add(myChangesBrowser);
 
-    final CommitSelectionListener selectionChangeListener = new CommitSelectionListener(myChangesBrowser);
-    myGraphTable.getSelectionModel().addListSelectionListener(selectionChangeListener);
-    myGraphTable.getSelectionModel().addListSelectionListener(myDetailsPanel);
-    updateWhenDetailsAreLoaded(selectionChangeListener);
+    myDetailsSplitter = new OnePixelSplitter(true, "vcs.log.details.splitter.proportion", 0.7f);
+    myDetailsSplitter.setFirstComponent(myChangesLoadingPane);
+    setupDetailsSplitter(uiProperties.isShowDetails());
 
-    // layout
+    myGraphTable.getSelectionModel().addListSelectionListener(new CommitSelectionListenerForDiff());
+    myDetailsPanel.installCommitSelectionListener(myGraphTable);
+    updateWhenDetailsAreLoaded();
+
+    myTextFilter = myFilterUi.createTextFilter();
     myToolbar = createActionsToolbar();
 
-    myDetailsSplitter = new Splitter(true, 0.7f);
-    myDetailsSplitter.setFirstComponent(setupScrolledGraph());
-    setupDetailsSplitter(myUiProperties.isShowDetails());
+    ProgressStripe progressStripe =
+      new ProgressStripe(setupScrolledGraph(), this, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS) {
+        @Override
+        public void updateUI() {
+          super.updateUI();
+          if (myDecorator != null && myLogData.getProgress().isRunning()) startLoadingImmediately();
+        }
+      };
+    myLogData.getProgress().addProgressIndicatorListener(new VcsLogProgress.ProgressListener() {
+      @Override
+      public void progressStarted() {
+        progressStripe.startLoading();
+      }
+
+      @Override
+      public void progressStopped() {
+        progressStripe.stopLoading();
+      }
+    }, this);
+
 
     JComponent toolbars = new JPanel(new BorderLayout());
     toolbars.add(myToolbar, BorderLayout.NORTH);
-    toolbars.add(myBranchesPanel, BorderLayout.CENTER);
     JComponent toolbarsAndTable = new JPanel(new BorderLayout());
     toolbarsAndTable.add(toolbars, BorderLayout.NORTH);
-    toolbarsAndTable.add(myDetailsSplitter, BorderLayout.CENTER);
+    toolbarsAndTable.add(progressStripe, BorderLayout.CENTER);
 
-    final Splitter changesBrowserSplitter = new Splitter(false, 0.7f);
-    changesBrowserSplitter.setFirstComponent(toolbarsAndTable);
-    changesBrowserSplitter.setSecondComponent(myChangesLoadingPane);
+    myChangesBrowserSplitter = new OnePixelSplitter(false, "vcs.log.changes.splitter.proportion", 0.7f);
+    myChangesBrowserSplitter.setFirstComponent(toolbarsAndTable);
+    myChangesBrowserSplitter.setSecondComponent(myDetailsSplitter);
 
     setLayout(new BorderLayout());
-    add(changesBrowserSplitter);
+    add(myChangesBrowserSplitter);
 
-    Disposer.register(vcsLogUI, new Disposable() {
-      @Override
-      public void dispose() {
-        myDetailsSplitter.dispose();
-        changesBrowserSplitter.dispose();
-      }
-    });
+    Disposer.register(ui, this);
     myGraphTable.resetDefaultFocusTraversalKeys();
-    setFocusTraversalPolicyProvider(true);
+    setFocusCycleRoot(true);
     setFocusTraversalPolicy(new MyFocusPolicy());
   }
 
   /**
    * Informs components that the actual DataPack has been updated (e.g. due to a log refresh). <br/>
    * Components may want to update their fields and/or rebuild.
-   * @param dataPack new data pack.
+   *
+   * @param dataPack         new data pack.
+   * @param permGraphChanged true if permanent graph itself was changed.
    */
-  public void updateDataPack(@NotNull VisiblePack dataPack) {
+  public void updateDataPack(@NotNull VisiblePack dataPack, boolean permGraphChanged) {
     myFilterUi.updateDataPack(dataPack);
-    myDetailsPanel.updateDataPack(dataPack);
-    myGraphTable.updateDataPack(dataPack);
+    myGraphTable.updateDataPack(dataPack, permGraphChanged);
   }
 
-  private void updateWhenDetailsAreLoaded(final CommitSelectionListener selectionChangeListener) {
-    myLogDataHolder.getMiniDetailsGetter().addDetailsLoadedListener(new Runnable() {
-      @Override
-      public void run() {
-        myGraphTable.repaint();
-      }
-    });
-    myLogDataHolder.getCommitDetailsGetter().addDetailsLoadedListener(new Runnable() {
-      @Override
-      public void run() {
-        selectionChangeListener.valueChanged(null);
-        myDetailsPanel.valueChanged(null);
-      }
-    });
-    myLogDataHolder.getContainingBranchesGetter().setTaskCompletedListener(new Runnable() {
-      @Override
-      public void run() {
-        myDetailsPanel.valueChanged(null);
-      }
-    });
+  private void updateWhenDetailsAreLoaded() {
+    myMiniDetailsLoadedListener = () -> {
+      myGraphTable.initColumnSize();
+      myGraphTable.repaint();
+    };
+    myContainingBranchesListener = () -> {
+      myDetailsPanel.branchesChanged();
+      myGraphTable.repaint(); // we may need to repaint highlighters
+    };
+    myLogData.getMiniDetailsGetter().addDetailsLoadedListener(myMiniDetailsLoadedListener);
+    myLogData.getContainingBranchesGetter().addTaskCompletedListener(myContainingBranchesListener);
   }
 
   public void setupDetailsSplitter(boolean state) {
     myDetailsSplitter.setSecondComponent(state ? myDetailsPanel : null);
   }
 
+  @NotNull
   private JScrollPane setupScrolledGraph() {
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myGraphTable);
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myGraphTable, SideBorder.TOP);
     myGraphTable.viewportSet(scrollPane.getViewport());
     return scrollPane;
-  }
-
-  private static void setDefaultEmptyText(ChangesBrowser changesBrowser) {
-    changesBrowser.getViewer().setEmptyText("");
   }
 
   @NotNull
@@ -178,91 +194,98 @@ public class MainFrame extends JPanel implements TypeSafeDataProvider {
   }
 
   private JComponent createActionsToolbar() {
-    AnAction bekAction = new BekAction();
-
-    AnAction hideBranchesAction = new GraphAction("Collapse linear branches", "Collapse linear branches", VcsLogIcons.CollapseBranches) {
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        myUI.hideAll();
-      }
-    };
-
-    AnAction showBranchesAction = new GraphAction("Expand all branches", "Expand all branches", VcsLogIcons.ExpandBranches) {
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        myUI.showAll();
-      }
-    };
-
-    RefreshAction refreshAction = new RefreshAction("Refresh", "Refresh", AllIcons.Actions.Refresh) {
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        myLogDataHolder.refreshCompletely();
-      }
-
-      @Override
-      public void update(AnActionEvent e) {
-        e.getPresentation().setEnabled(true);
-      }
-    };
-
-    AnAction showFullPatchAction = new ShowLongEdgesAction();
-    AnAction showDetailsAction = new ShowDetailsAction();
-
-    refreshAction.registerShortcutOn(this);
-
-    DefaultActionGroup toolbarGroup = new DefaultActionGroup(bekAction, hideBranchesAction, showBranchesAction, showFullPatchAction, refreshAction,
-                                                             showDetailsAction);
-    toolbarGroup.add(ActionManager.getInstance().getAction(VcsLogUiImpl.TOOLBAR_ACTION_GROUP));
+    DefaultActionGroup toolbarGroup = new DefaultActionGroup();
+    toolbarGroup.add(ActionManager.getInstance().getAction(VcsLogActionPlaces.TOOLBAR_ACTION_GROUP));
 
     DefaultActionGroup mainGroup = new DefaultActionGroup();
     mainGroup.add(myFilterUi.createActionGroup());
     mainGroup.addSeparator();
+    if (BekUtil.isBekEnabled()) {
+      if (BekUtil.isLinearBekEnabled()) {
+        mainGroup.add(new IntelliSortChooserPopupAction());
+        // can not register both of the actions in xml file, choosing to register an action for the "outer world"
+        // I can of course if linear bek is enabled replace the action on start but why bother
+      }
+      else {
+        mainGroup.add(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_INTELLI_SORT_ACTION));
+      }
+    }
     mainGroup.add(toolbarGroup);
-    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, mainGroup, true);
-    toolbar.setTargetComponent(this);
-    return toolbar.getComponent();
+    ActionToolbar toolbar = createActionsToolbar(mainGroup);
+
+    Wrapper textFilter = new Wrapper(myTextFilter);
+    textFilter.setVerticalSizeReferent(toolbar.getComponent());
+    textFilter.setBorder(JBUI.Borders.emptyLeft(5));
+
+    ActionToolbar settings =
+      createActionsToolbar(new DefaultActionGroup(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_QUICK_SETTINGS_ACTION)));
+    settings.setReservePlaceAutoPopupIcon(false);
+    settings.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
+
+    JPanel panel = new JPanel(new MigLayout("ins 0, fill", "[left]0[left, fill]push[right]", "center"));
+    panel.add(textFilter);
+    panel.add(toolbar.getComponent());
+    panel.add(settings.getComponent());
+    return panel;
   }
 
+  @NotNull
+  private ActionToolbar createActionsToolbar(@NotNull DefaultActionGroup mainGroup) {
+    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, mainGroup, true);
+    toolbar.setTargetComponent(this);
+    return toolbar;
+  }
+
+  @NotNull
   public JComponent getMainComponent() {
     return this;
   }
 
-  public void setBranchesPanelVisible(boolean visible) {
-    myBranchesPanel.setVisible(visible);
-  }
-
   @Nullable
-  public List<Change> getSelectedChanges() {
-    return myGraphTable.getSelectedChanges();
-  }
-
   @Override
-  public void calcData(DataKey key, DataSink sink) {
-    if (VcsLogDataKeys.VCS_LOG == key) {
-      sink.put(key, myLog);
+  public Object getData(@NonNls String dataId) {
+    if (VcsLogDataKeys.VCS_LOG.is(dataId)) {
+      return myLog;
     }
-    else if (VcsLogDataKeys.VCS_LOG_UI == key) {
-      sink.put(key, myUI);
+    else if (VcsLogDataKeys.VCS_LOG_UI.is(dataId)) {
+      return myUi;
     }
-    else if (VcsLogDataKeys.VCS_LOG_DATA_PROVIDER == key) {
-      sink.put(key, myLogDataHolder);
+    else if (VcsLogDataKeys.VCS_LOG_DATA_PROVIDER.is(dataId)) {
+      return myLogData;
     }
-    else if (VcsDataKeys.CHANGES == key || VcsDataKeys.SELECTED_CHANGES == key) {
-      List<Change> selectedChanges = getSelectedChanges();
-      if (selectedChanges != null) {
-        sink.put(key, ArrayUtil.toObjectArray(selectedChanges, Change.class));
+    else if (VcsDataKeys.CHANGES.is(dataId) || VcsDataKeys.SELECTED_CHANGES.is(dataId)) {
+      return ArrayUtil.toObjectArray(myChangesBrowser.getCurrentDisplayedChanges(), Change.class);
+    }
+    else if (VcsDataKeys.CHANGE_LISTS.is(dataId)) {
+      List<VcsFullCommitDetails> details = myLog.getSelectedDetails();
+      if (details.size() > VcsLogUtil.MAX_SELECTED_COMMITS) return null;
+      return ContainerUtil
+        .map2Array(details, CommittedChangeListForRevision.class,
+                   details1 -> new CommittedChangeListForRevision(details1.getSubject(), details1.getFullMessage(),
+                                                                  VcsUserUtil.getShortPresentation(details1.getCommitter()),
+                                                                  new Date(details1.getCommitTime()), details1.getChanges(),
+                                                                  convertToRevisionNumber(details1.getId())));
+    }
+    else if (VcsDataKeys.VCS_REVISION_NUMBERS.is(dataId)) {
+      List<CommitId> hashes = myLog.getSelectedCommits();
+      if (hashes.size() > VcsLogUtil.MAX_SELECTED_COMMITS) return null;
+      return ArrayUtil
+        .toObjectArray(ContainerUtil.map(hashes, commitId -> convertToRevisionNumber(commitId.getHash())), VcsRevisionNumber.class);
+    }
+    else if (VcsDataKeys.VCS.is(dataId)) {
+      int[] selectedRows = myGraphTable.getSelectedRows();
+      if (selectedRows.length == 0 || selectedRows.length > VcsLogUtil.MAX_SELECTED_COMMITS) return null;
+      Set<VirtualFile> roots = ContainerUtil.map2Set(Ints.asList(selectedRows), row -> myGraphTable.getModel().getRoot(row));
+      if (roots.size() == 1) {
+        return myLogData.getLogProvider(assertNotNull(getFirstItem(roots))).getSupportedVcs();
       }
     }
-    else if (VcsDataKeys.VCS_REVISION_NUMBERS == key) {
-      List<Hash> hashes = myUI.getVcsLog().getSelectedCommits();
-      sink.put(key, ArrayUtil.toObjectArray(ContainerUtil.map(hashes, new Function<Hash, VcsRevisionNumber>() {
-        @Override
-        public VcsRevisionNumber fun(Hash hash) {
-          return new TextRevisionNumber(hash.asString(), hash.toShortString());
-        }
-      }), VcsRevisionNumber.class));
+    else if (VcsLogDataKeys.VCS_LOG_BRANCHES.is(dataId)) {
+      int[] selectedRows = myGraphTable.getSelectedRows();
+      if (selectedRows.length != 1) return null;
+      return myGraphTable.getModel().getBranchesAtRow(selectedRows[0]);
     }
+    return null;
   }
 
   @NotNull
@@ -270,117 +293,60 @@ public class MainFrame extends JPanel implements TypeSafeDataProvider {
     return myToolbar;
   }
 
+  @NotNull
+  public SearchTextField getTextFilter() {
+    return myTextFilter;
+  }
+
   public boolean areGraphActionsEnabled() {
-    return myGraphTable.getModel() instanceof GraphTableModel && myGraphTable.getRowCount() > 0;
+    return myGraphTable.getRowCount() > 0;
   }
 
-  public void onFiltersChange(@NotNull VcsLogFilterCollection filters) {
-    myBranchesPanel.onFiltersChange(filters);
+  @NotNull
+  private static TextRevisionNumber convertToRevisionNumber(@NotNull Hash hash) {
+    return new TextRevisionNumber(hash.asString(), hash.toShortString());
   }
 
-  private class CommitSelectionListener implements ListSelectionListener {
-    private final ChangesBrowser myChangesBrowser;
+  public void showDetails(boolean state) {
+    myDetailsSplitter.setSecondComponent(state ? myDetailsPanel : null);
+  }
 
-    public CommitSelectionListener(ChangesBrowser changesBrowser) {
-      myChangesBrowser = changesBrowser;
+  @Override
+  public void dispose() {
+    myLogData.getMiniDetailsGetter().removeDetailsLoadedListener(myMiniDetailsLoadedListener);
+    myLogData.getContainingBranchesGetter().removeTaskCompletedListener(myContainingBranchesListener);
+
+    myDetailsSplitter.dispose();
+    myChangesBrowserSplitter.dispose();
+  }
+
+  private class CommitSelectionListenerForDiff extends CommitSelectionListener {
+    protected CommitSelectionListenerForDiff() {
+      super(myLogData, MainFrame.this.myGraphTable, myChangesLoadingPane);
     }
 
     @Override
-    public void valueChanged(@Nullable ListSelectionEvent notUsed) {
-      int rows = getGraphTable().getSelectedRowCount();
-      if (rows < 1) {
-        myChangesLoadingPane.stopLoading();
-        setDefaultEmptyText(myChangesBrowser);
-        myChangesBrowser.setChangesToDisplay(Collections.<Change>emptyList());
+    protected void onDetailsLoaded(@NotNull List<VcsFullCommitDetails> detailsList) {
+      List<Change> changes = ContainerUtil.newArrayList();
+      List<VcsFullCommitDetails> detailsListReversed = ContainerUtil.reverse(detailsList);
+      for (VcsFullCommitDetails details : detailsListReversed) {
+        changes.addAll(details.getChanges());
       }
-      else {
-        List<Change> selectedChanges = getSelectedChanges();
-        if (selectedChanges != null) {
-          myChangesLoadingPane.stopLoading();
-          myChangesBrowser.setChangesToDisplay(selectedChanges);
-        }
-        else {
-          myChangesBrowser.setChangesToDisplay(Collections.<Change>emptyList());
-          myChangesLoadingPane.startLoading();
-        }
-      }
-    }
-  }
-
-  private class BekAction extends ToggleAction implements DumbAware {
-    public BekAction() {
-      super("BEK", "BEK", AllIcons.Actions.Lightning);
+      changes = CommittedChangesTreeBrowser.zipChanges(changes);
+      myChangesBrowser.setChangesToDisplay(changes);
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
-      return myUI.isBek();
+    protected void onSelection(@NotNull int[] selection) {
+      // just reset and wait for details to be loaded
+      myChangesBrowser.setChangesToDisplay(Collections.<Change>emptyList());
+      myChangesBrowser.getViewer().setEmptyText("");
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-      myUI.setBek(state);
-    }
-
-    @Override
-    public void update(AnActionEvent e) {
-      super.update(e);
-      e.getPresentation().setVisible(BekSorter.isBekEnabled());
-      e.getPresentation().setEnabled(areGraphActionsEnabled());
-    }
-  }
-
-  private class ShowDetailsAction extends ToggleAction implements DumbAware {
-
-    public ShowDetailsAction() {
-      super("Show Details", "Display details panel", AllIcons.Actions.Preview);
-    }
-
-    @Override
-    public boolean isSelected(AnActionEvent e) {
-      return !myProject.isDisposed() && myUiProperties.isShowDetails();
-    }
-
-    @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-      setupDetailsSplitter(state);
-      if (!myProject.isDisposed()) {
-        myUiProperties.setShowDetails(state);
-      }
-    }
-  }
-
-  private class ShowLongEdgesAction extends ToggleAction implements DumbAware {
-    public ShowLongEdgesAction() {
-      super("Show long edges", "Show long branch edges even if commits are invisible in the current view.", VcsLogIcons.ShowHideLongEdges);
-    }
-
-    @Override
-    public boolean isSelected(AnActionEvent e) {
-      return !myUI.getDataPack().getVisibleGraph().getActionController().areLongEdgesHidden();
-    }
-
-    @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-      myUI.setLongEdgeVisibility(state);
-    }
-
-    @Override
-    public void update(AnActionEvent e) {
-      super.update(e);
-      e.getPresentation().setEnabled(areGraphActionsEnabled());
-    }
-  }
-
-  private abstract class GraphAction extends DumbAwareAction {
-
-    public GraphAction(String text, String description, Icon icon) {
-      super(text, description, icon);
-    }
-
-    @Override
-    public void update(AnActionEvent e) {
-      e.getPresentation().setEnabled(areGraphActionsEnabled());
+    protected void onEmptySelection() {
+      myChangesBrowser.getViewer().setEmptyText("No commits selected");
+      myChangesBrowser.setChangesToDisplay(Collections.<Change>emptyList());
     }
   }
 
@@ -388,8 +354,7 @@ public class MainFrame extends JPanel implements TypeSafeDataProvider {
     @NotNull
     @Override
     protected List<Component> getOrderedComponents() {
-      return Arrays.<Component>asList(myGraphTable, myChangesBrowser.getPreferredFocusedComponent());
+      return Arrays.<Component>asList(myGraphTable, myChangesBrowser.getPreferredFocusedComponent(), myTextFilter.getTextEditor());
     }
   }
-
 }

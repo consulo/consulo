@@ -20,10 +20,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 /**
- * Tells to filter by some branch name.
+ * Tells to filter by branches with given names.
  */
 public interface VcsLogBranchFilter extends VcsLogFilter {
+  /**
+   * Tells if a branch matches the filter.
+   *
+   * @param name branch name.
+   * @return true if a branch matches the filter, false otherwise.
+   */
+  boolean matches(@NotNull String name);
 
+  /**
+   * Text presentation for the filter (to display in filter popup).
+   *
+   * @return text presentation for the filter.
+   */
   @NotNull
-  Collection<String> getBranchNames();
+  Collection<String> getTextPresentation();
 }

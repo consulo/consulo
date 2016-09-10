@@ -16,25 +16,39 @@
 package com.intellij.vcs.log.graph.impl.facade.bek;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Pair;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.getDownNodes;
+import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.getUpNodes;
 
 public class BekChecker {
   private final static Logger LOG = Logger.getInstance("#com.intellij.vcs.log.graph.impl.facade.bek.BekChecker");
 
-  public static boolean checkLinearGraph(@NotNull LinearGraph linearGraph) {
-    for (int i = 0;  i < linearGraph.nodesCount(); i++) {
-      for (int downNode : linearGraph.getDownNodes(i)) {
-        if (downNode <= i)
-          LOG.error("Illegal node: " + i + ", with downNode: " + downNode);
-      }
-
-      for (int upNode : linearGraph.getUpNodes(i)) {
-        if (upNode >= i)
-          LOG.error("Illegal node: " + i + ", with upNode: " + upNode);
-      }
+  public static void checkLinearGraph(@NotNull LinearGraph linearGraph) {
+    Pair<Integer, Integer> reversedEdge = findReversedEdge(linearGraph);
+    if (reversedEdge != null) {
+      LOG.error("Illegal edge: up node " + reversedEdge.first + ", downNode " + reversedEdge.second);
     }
-    return true;
   }
 
+  @Nullable
+  public static Pair<Integer, Integer> findReversedEdge(@NotNull LinearGraph linearGraph) {
+    for (int i = 0; i < linearGraph.nodesCount(); i++) {
+      for (int downNode : getDownNodes(linearGraph, i)) {
+        if (downNode <= i) {
+          return Pair.create(i, downNode);
+        }
+      }
+
+      for (int upNode : getUpNodes(linearGraph, i)) {
+        if (upNode >= i) {
+          return Pair.create(upNode, i);
+        }
+      }
+    }
+    return null;
+  }
 }
