@@ -78,21 +78,22 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
   @Override
   protected JScrollPane createTable() {
-    pluginsModel = new AvailablePluginsTableModel();
-    pluginTable = new PluginTable(pluginsModel);
+    myPluginsModel = new AvailablePluginsTableModel();
+    myPluginTable = new PluginTable(myPluginsModel);
+    myPluginTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     //pluginTable.setColumnWidth(PluginManagerColumnInfo.COLUMN_DOWNLOADS, 70);
     //pluginTable.setColumnWidth(PluginManagerColumnInfo.COLUMN_DATE, 80);
     //pluginTable.setColumnWidth(PluginManagerColumnInfo.COLUMN_RATE, 80);
 
-    return ScrollPaneFactory.createScrollPane(pluginTable);
+    return ScrollPaneFactory.createScrollPane(myPluginTable);
   }
 
   @Override
   protected DefaultActionGroup createSortersGroup() {
     final DefaultActionGroup group = super.createSortersGroup();
-    group.addAction(new SortByDownloadsAction(pluginTable, pluginsModel));
-    group.addAction(new SortByRatingAction(pluginTable, pluginsModel));
-    group.addAction(new SortByUpdatedAction(pluginTable, pluginsModel));
+    group.addAction(new SortByDownloadsAction(myPluginTable, myPluginsModel));
+    group.addAction(new SortByRatingAction(myPluginTable, myPluginsModel));
+    group.addAction(new SortByUpdatedAction(myPluginTable, myPluginsModel));
     return group;
   }
 
@@ -130,7 +131,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
   @Override
   protected boolean acceptHost(String host) {
-    final String repository = ((AvailablePluginsTableModel)pluginsModel).getRepository();
+    final String repository = ((AvailablePluginsTableModel)myPluginsModel).getRepository();
     if (AvailablePluginsTableModel.ALL.equals(repository)) return true;
     return Comparing.equal(host, repository);
   }
@@ -145,7 +146,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     @Override
     public void update(@NotNull AnActionEvent e) {
       super.update(e);
-      String category = ((AvailablePluginsTableModel)pluginsModel).getCategory();
+      String category = ((AvailablePluginsTableModel)myPluginsModel).getCategory();
       if (category == null) {
         category = N_A;
       }
@@ -155,7 +156,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     @NotNull
     @Override
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
-      final TreeSet<String> availableCategories = ((AvailablePluginsTableModel)pluginsModel).getAvailableCategories();
+      final TreeSet<String> availableCategories = ((AvailablePluginsTableModel)myPluginsModel).getAvailableCategories();
       final DefaultActionGroup gr = new DefaultActionGroup();
       gr.add(createFilterByCategoryAction(AvailablePluginsTableModel.ALL));
       final boolean noCategory = availableCategories.remove(N_A);
@@ -173,7 +174,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
         @Override
         public void actionPerformed(AnActionEvent e) {
           final String filter = myFilter.getFilter().toLowerCase();
-          ((AvailablePluginsTableModel)pluginsModel).setCategory(availableCategory, filter);
+          ((AvailablePluginsTableModel)myPluginsModel).setCategory(availableCategory, filter);
         }
       };
     }

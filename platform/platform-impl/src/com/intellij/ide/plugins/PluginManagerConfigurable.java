@@ -83,7 +83,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
     //} else {
     //  myPluginManagerMain.pluginsModel.setSortByStatus(myUISettings.INSTALLED_SORT_BY_STATUS);
     //}
-    myPluginManagerMain.pluginsModel.sort();
+    myPluginManagerMain.myPluginsModel.sort();
     getSplitterProportions().restoreSplitterProportions(myPluginManagerMain.getMainPanel());
   }
 
@@ -98,7 +98,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
       getSplitterProportions().saveSplitterProportions(myPluginManagerMain.getMainPanel());
 
       if (myAvailable) {
-        final RowSorter<? extends TableModel> rowSorter = myPluginManagerMain.pluginTable.getRowSorter();
+        final RowSorter<? extends TableModel> rowSorter = myPluginManagerMain.myPluginTable.getRowSorter();
         if (rowSorter != null) {
           final List<? extends RowSorter.SortKey> sortKeys = rowSorter.getSortKeys();
           if (sortKeys.size() > 0) {
@@ -107,9 +107,9 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
             myUISettings.AVAILABLE_SORT_COLUMN_ORDER = sortKey.getSortOrder().ordinal();
           }
         }
-        myUISettings.AVAILABLE_SORT_BY_STATUS = myPluginManagerMain.pluginsModel.isSortByStatus();
+        myUISettings.AVAILABLE_SORT_BY_STATUS = myPluginManagerMain.myPluginsModel.isSortByStatus();
       } else {
-        myUISettings.INSTALLED_SORT_BY_STATUS = myPluginManagerMain.pluginsModel.isSortByStatus();
+        myUISettings.INSTALLED_SORT_BY_STATUS = myPluginManagerMain.myPluginsModel.isSortByStatus();
       }
 
       Disposer.dispose(myPluginManagerMain);

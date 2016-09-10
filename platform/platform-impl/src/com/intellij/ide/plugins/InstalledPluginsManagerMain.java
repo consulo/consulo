@@ -99,7 +99,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
                   StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldFile));
                 }
               }
-              if (((InstalledPluginsTableModel)pluginsModel).appendOrUpdateDescriptor(pluginDescriptor)) {
+              if (((InstalledPluginsTableModel)myPluginsModel).appendOrUpdateDescriptor(pluginDescriptor)) {
                 PluginDownloader.install(file, file.getName(), false);
                 select(pluginDescriptor);
                 checkInstalledPluginDependencies(pluginDescriptor);
@@ -123,7 +123,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
     myActionsPanel.add(button);
 
-    final StatusText emptyText = pluginTable.getEmptyText();
+    final StatusText emptyText = myPluginTable.getEmptyText();
     emptyText.setText("Nothing to show.");
     emptyText.appendText(" Click ");
     emptyText.appendText("View available plugins...", SimpleTextAttributes.LINK_ATTRIBUTES, new BrowseRepoListener());
@@ -137,8 +137,8 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     final PluginId[] optionalDependentPluginIds = pluginDescriptor.getOptionalDependentPluginIds();
     for (PluginId id : dependentPluginIds) {
       if (ArrayUtilRt.find(optionalDependentPluginIds, id) > -1) continue;
-      final boolean disabled = ((InstalledPluginsTableModel)pluginsModel).isDisabled(id);
-      final boolean enabled = ((InstalledPluginsTableModel)pluginsModel).isEnabled(id);
+      final boolean disabled = ((InstalledPluginsTableModel)myPluginsModel).isDisabled(id);
+      final boolean enabled = ((InstalledPluginsTableModel)myPluginsModel).isEnabled(id);
       if (!enabled && !disabled) {
         notInstalled.add(id);
       }
@@ -160,7 +160,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     }
     if (!disabledIds.isEmpty()) {
       final Set<IdeaPluginDescriptor> dependencies = new HashSet<IdeaPluginDescriptor>();
-      for (IdeaPluginDescriptor ideaPluginDescriptor : pluginsModel.getAllPlugins()) {
+      for (IdeaPluginDescriptor ideaPluginDescriptor : myPluginsModel.getAllPlugins()) {
         if (disabledIds.contains(ideaPluginDescriptor.getPluginId())) {
           dependencies.add(ideaPluginDescriptor);
         }
@@ -178,7 +178,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
                        }, ", ") +
                        ". Enable " + disabledPluginsMessage.trim() + "?";
       if (Messages.showOkCancelDialog(myActionsPanel, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) == Messages.OK) {
-        ((InstalledPluginsTableModel)pluginsModel).enableRows(dependencies.toArray(new IdeaPluginDescriptor[dependencies.size()]), Boolean.TRUE);
+        ((InstalledPluginsTableModel)myPluginsModel).enableRows(dependencies.toArray(new IdeaPluginDescriptor[dependencies.size()]), Boolean.TRUE);
       }
     }
   }
@@ -190,33 +190,34 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
   @Override
   protected JScrollPane createTable() {
-    pluginsModel = new InstalledPluginsTableModel();
-    pluginTable = new PluginTable(pluginsModel);
+    myPluginsModel = new InstalledPluginsTableModel();
+    myPluginTable = new PluginTable(myPluginsModel);
+    myPluginTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     JScrollPane installedScrollPane = ScrollPaneFactory
-            .createScrollPane(pluginTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    pluginTable.registerKeyboardAction(new ActionListener() {
+            .createScrollPane(myPluginTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    myPluginTable.registerKeyboardAction(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         final int column = InstalledPluginsTableModel.getCheckboxColumn();
-        final int[] selectedRows = pluginTable.getSelectedRows();
+        final int[] selectedRows = myPluginTable.getSelectedRows();
         boolean currentlyMarked = true;
         for (final int selectedRow : selectedRows) {
-          if (selectedRow < 0 || !pluginTable.isCellEditable(selectedRow, column)) {
+          if (selectedRow < 0 || !myPluginTable.isCellEditable(selectedRow, column)) {
             return;
           }
-          final Boolean enabled = (Boolean)pluginTable.getValueAt(selectedRow, column);
+          final Boolean enabled = (Boolean)myPluginTable.getValueAt(selectedRow, column);
           currentlyMarked &= enabled == null || enabled.booleanValue();
         }
         final IdeaPluginDescriptor[] selected = new IdeaPluginDescriptor[selectedRows.length];
         for (int i = 0, selectedLength = selected.length; i < selectedLength; i++) {
-          selected[i] = pluginsModel.getObjectAt(pluginTable.convertRowIndexToModel(selectedRows[i]));
+          selected[i] = myPluginsModel.getObjectAt(myPluginTable.convertRowIndexToModel(selectedRows[i]));
         }
-        ((InstalledPluginsTableModel)pluginsModel).enableRows(selected, currentlyMarked ? Boolean.FALSE : Boolean.TRUE);
-        pluginTable.repaint();
+        ((InstalledPluginsTableModel)myPluginsModel).enableRows(selected, currentlyMarked ? Boolean.FALSE : Boolean.TRUE);
+        myPluginTable.repaint();
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), JComponent.WHEN_FOCUSED);
-    pluginTable.setExpandableItemsEnabled(false);
+    myPluginTable.setExpandableItemsEnabled(false);
     return installedScrollPane;
   }
 
@@ -243,7 +244,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       actionGroup.addAction(createSortersGroup());
       actionGroup.add(AnSeparator.getInstance());
       actionGroup.add(new InstallPluginAction(getAvailable(), getInstalled()));
-      actionGroup.add(new UninstallPluginAction(this, pluginTable));
+      actionGroup.add(new UninstallPluginAction(this, myPluginTable));
     }
     return actionGroup;
   }
@@ -252,19 +253,19 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   public boolean isModified() {
     final boolean modified = super.isModified();
     if (modified) return true;
-    for (int i = 0; i < pluginsModel.getRowCount(); i++) {
-      final IdeaPluginDescriptor pluginDescriptor = pluginsModel.getObjectAt(i);
-      if (pluginDescriptor.isEnabled() != ((InstalledPluginsTableModel)pluginsModel).isEnabled(pluginDescriptor.getPluginId())) {
+    for (int i = 0; i < myPluginsModel.getRowCount(); i++) {
+      final IdeaPluginDescriptor pluginDescriptor = myPluginsModel.getObjectAt(i);
+      if (pluginDescriptor.isEnabled() != ((InstalledPluginsTableModel)myPluginsModel).isEnabled(pluginDescriptor.getPluginId())) {
         return true;
       }
     }
-    for (IdeaPluginDescriptor descriptor : pluginsModel.filtered) {
-      if (descriptor.isEnabled() != ((InstalledPluginsTableModel)pluginsModel).isEnabled(descriptor.getPluginId())) {
+    for (IdeaPluginDescriptor descriptor : myPluginsModel.filtered) {
+      if (descriptor.isEnabled() != ((InstalledPluginsTableModel)myPluginsModel).isEnabled(descriptor.getPluginId())) {
         return true;
       }
     }
     final List<String> disabledPlugins = PluginManagerCore.getDisabledPlugins();
-    for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)pluginsModel).getEnabledMap().entrySet()) {
+    for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)myPluginsModel).getEnabledMap().entrySet()) {
       final Boolean enabled = entry.getValue();
       if (enabled != null && !enabled.booleanValue() && !disabledPlugins.contains(entry.getKey().toString())) {
         return true;
@@ -278,17 +279,17 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   public String apply() {
     final String apply = super.apply();
     if (apply != null) return apply;
-    for (int i = 0; i < pluginTable.getRowCount(); i++) {
-      final IdeaPluginDescriptor pluginDescriptor = pluginsModel.getObjectAt(i);
-      final Boolean enabled = (Boolean)pluginsModel.getValueAt(i, InstalledPluginsTableModel.getCheckboxColumn());
+    for (int i = 0; i < myPluginTable.getRowCount(); i++) {
+      final IdeaPluginDescriptor pluginDescriptor = myPluginsModel.getObjectAt(i);
+      final Boolean enabled = (Boolean)myPluginsModel.getValueAt(i, InstalledPluginsTableModel.getCheckboxColumn());
       pluginDescriptor.setEnabled(enabled != null && enabled.booleanValue());
     }
-    for (IdeaPluginDescriptor descriptor : pluginsModel.filtered) {
-      descriptor.setEnabled(((InstalledPluginsTableModel)pluginsModel).isEnabled(descriptor.getPluginId()));
+    for (IdeaPluginDescriptor descriptor : myPluginsModel.filtered) {
+      descriptor.setEnabled(((InstalledPluginsTableModel)myPluginsModel).isEnabled(descriptor.getPluginId()));
     }
     try {
       final ArrayList<String> ids = new ArrayList<String>();
-      for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)pluginsModel).getEnabledMap().entrySet()) {
+      for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)myPluginsModel).getEnabledMap().entrySet()) {
         final Boolean value = entry.getValue();
         if (value != null && !value.booleanValue()) {
           ids.add(entry.getKey().getIdString());
@@ -306,7 +307,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   @Override
   protected String canApply() {
     final Map<PluginId, Set<PluginId>> dependentToRequiredListMap =
-            new HashMap<PluginId, Set<PluginId>>(((InstalledPluginsTableModel)pluginsModel).getDependentToRequiredListMap());
+            new HashMap<PluginId, Set<PluginId>>(((InstalledPluginsTableModel)myPluginsModel).getDependentToRequiredListMap());
     for (Iterator<PluginId> iterator = dependentToRequiredListMap.keySet().iterator(); iterator.hasNext(); ) {
       final PluginId id = iterator.next();
       iterator.remove();
@@ -332,7 +333,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     @Override
     public void update(@NotNull AnActionEvent e) {
       super.update(e);
-      e.getPresentation().setText(((InstalledPluginsTableModel)pluginsModel).getEnabledFilter());
+      e.getPresentation().setText(((InstalledPluginsTableModel)myPluginsModel).getEnabledFilter());
     }
 
     @NotNull
@@ -343,9 +344,9 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         gr.add(new AnAction(enabledValue) {
           @Override
           public void actionPerformed(AnActionEvent e) {
-            final IdeaPluginDescriptor[] selection = pluginTable.getSelectedObjects();
+            final IdeaPluginDescriptor[] selection = myPluginTable.getSelectedObjects();
             final String filter = myFilter.getFilter().toLowerCase();
-            ((InstalledPluginsTableModel)pluginsModel).setEnabledFilter(enabledValue, filter);
+            ((InstalledPluginsTableModel)myPluginsModel).setEnabledFilter(enabledValue, filter);
             if (selection != null) {
               select(selection);
             }

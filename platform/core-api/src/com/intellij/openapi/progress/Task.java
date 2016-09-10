@@ -23,10 +23,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+
+import java.util.function.Consumer;
 
 /**
  * Intended to run tasks, both modal and non-modal (backgroundable)
@@ -62,7 +64,7 @@ public abstract class Task implements TaskInfo, Progressive {
 
   /**
    * This callback will be invoked on AWT dispatch thread.
-   *
+   * <p>
    * Callback executed when run() throws {@link ProcessCanceledException} or if its {@link ProgressIndicator} was canceled.
    */
   @RequiredDispatchThread
@@ -78,7 +80,7 @@ public abstract class Task implements TaskInfo, Progressive {
 
   /**
    * This callback will be invoked on AWT dispatch thread.
-   *
+   * <p>
    * Callback executed when run() throws an exception (except PCE).
    */
   @RequiredDispatchThread
@@ -178,6 +180,33 @@ public abstract class Task implements TaskInfo, Progressive {
   }
 
   public abstract static class Backgroundable extends Task implements PerformInBackgroundOption {
+
+    public static void queue(@Nullable Project project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
+                             @NotNull Consumer<ProgressIndicator> consumer) {
+      queue(project, title, true, consumer);
+    }
+
+    public static void queue(@Nullable Project project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
+                             boolean canBeCancelled,
+                             @NotNull Consumer<ProgressIndicator> consumer) {
+      queue(project, title, canBeCancelled, null, consumer);
+    }
+
+    public static void queue(@Nullable Project project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
+                             boolean canBeCancelled,
+                             @Nullable PerformInBackgroundOption backgroundOption,
+                             @NotNull Consumer<ProgressIndicator> consumer) {
+      new Backgroundable(project, title, canBeCancelled, backgroundOption) {
+        @Override
+        public void run(@NotNull ProgressIndicator indicator) {
+          consumer.accept(indicator);
+        }
+      };
+    }
+
     protected final PerformInBackgroundOption myBackgroundOption;
 
     public Backgroundable(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title) {
@@ -262,9 +291,7 @@ public abstract class Task implements TaskInfo, Progressive {
     private final String myNotificationText;
     private final boolean myShowWhenFocused;
 
-    public NotificationInfo(@NotNull final String notificationName,
-                            @NotNull final String notificationTitle,
-                            @NotNull final String notificationText) {
+    public NotificationInfo(@NotNull final String notificationName, @NotNull final String notificationTitle, @NotNull final String notificationText) {
       this(notificationName, notificationTitle, notificationText, false);
     }
 
