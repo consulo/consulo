@@ -18,11 +18,7 @@ package com.intellij.openapi.vcs.history;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vcs.AbstractVcs;
-import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vcs.VcsException;
+import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.wm.ToolWindow;
@@ -38,40 +34,37 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.List;
 
-/**
- * @author irengrig
- */
-public class FileHistorySessionPartner implements VcsAppendableHistorySessionPartner {
-  private final LimitHistoryCheck myLimitHistoryCheck;
-  private FileHistoryPanelImpl myFileHistoryPanel;
-  private final VcsHistoryProvider myVcsHistoryProvider;
-  @NotNull private final FilePath myPath;
-  private final AbstractVcs myVcs;
-  private final FileHistoryRefresherI myRefresherI;
-  private volatile VcsAbstractHistorySession mySession;
-  private final BufferedListConsumer<VcsFileRevision> myBuffer;
+import static com.intellij.openapi.vcs.history.FileHistoryPanelImpl.sameHistories;
 
-  public FileHistorySessionPartner(final VcsHistoryProvider vcsHistoryProvider,
-                                   @NotNull final FilePath path,
-                                   final AbstractVcs vcs,
-                                   final FileHistoryRefresherI refresherI) {
+public class FileHistorySessionPartner implements VcsAppendableHistorySessionPartner {
+
+  @NotNull private final AbstractVcs myVcs;
+  @NotNull private final VcsHistoryProvider myVcsHistoryProvider;
+  @NotNull private final FilePath myPath;
+  @Nullable private final VcsRevisionNumber myStartingRevisionNumber;
+  @NotNull private final LimitHistoryCheck myLimitHistoryCheck;
+  @NotNull private final FileHistoryRefresherI myRefresherI;
+  @NotNull private final BufferedListConsumer<VcsFileRevision> myBuffer;
+
+  private FileHistoryPanelImpl myFileHistoryPanel;
+  private volatile VcsAbstractHistorySession mySession;
+
+  public FileHistorySessionPartner(@NotNull VcsHistoryProvider vcsHistoryProvider,
+                                   @NotNull FilePath path,
+                                   @Nullable VcsRevisionNumber startingRevisionNumber,
+                                   @NotNull AbstractVcs vcs,
+                                   @NotNull FileHistoryRefresherI refresherI) {
     myVcsHistoryProvider = vcsHistoryProvider;
     myPath = path;
+    myStartingRevisionNumber = startingRevisionNumber;
     myLimitHistoryCheck = new LimitHistoryCheck(vcs.getProject(), path.getPath());
     myVcs = vcs;
     myRefresherI = refresherI;
-    Consumer<List<VcsFileRevision>> sessionRefresher = new Consumer<List<VcsFileRevision>>() {
-      public void consume(List<VcsFileRevision> vcsFileRevisions) {
-        // TODO: Logic should be revised to we could just append some revisions to history panel instead of creating and showing new history
-        // TODO: session
-        mySession.getRevisionList().addAll(vcsFileRevisions);
-        final VcsHistorySession copy = mySession.copyWithCachedRevision();
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          public void run() {
-            ensureHistoryPanelCreated().getHistoryPanelRefresh().consume(copy);
-          }
-        });
-      }
+    Consumer<List<VcsFileRevision>> sessionRefresher = vcsFileRevisions -> {
+      // TODO: Logic should be revised to just append some revisions to history panel instead of creating and showing new history session
+      mySession.getRevisionList().addAll(vcsFileRevisions);
+      VcsHistorySession copy = mySession.copyWithCachedRevision();
+      ApplicationManager.getApplication().invokeAndWait(() -> ensureHistoryPanelCreated().getHistoryPanelRefresh().consume(copy));
     };
     myBuffer = new BufferedListConsumer<VcsFileRevision>(5, sessionRefresher, 1000) {
       @Override
@@ -85,13 +78,12 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
   }
 
   @Nullable
-  static FileHistoryRefresherI findExistingHistoryRefresher(@NotNull Project project, @NotNull final FilePath path) {
-    JComponent component = ContentUtilEx.findContentComponent(getToolWindow(project).getContentManager(), new Condition<JComponent>() {
-      @Override
-      public boolean value(JComponent component) {
-        return component instanceof FileHistoryPanelImpl && ((FileHistoryPanelImpl)component).getFilePath().equals(path);
-      }
-    });
+  static FileHistoryRefresherI findExistingHistoryRefresher(@NotNull Project project,
+                                                            @NotNull FilePath path,
+                                                            @Nullable VcsRevisionNumber startingRevisionNumber) {
+    JComponent component = ContentUtilEx.findContentComponent(getToolWindow(project).getContentManager(), comp ->
+            comp instanceof FileHistoryPanelImpl &&
+            sameHistories((FileHistoryPanelImpl)comp, path, startingRevisionNumber));
     return component == null ? null : ((FileHistoryPanelImpl)component).getRefresher();
   }
 
@@ -100,6 +92,8 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
     myBuffer.consumeOne(revision);
   }
 
+  @CalledInAwt
+  @NotNull
   private FileHistoryPanelImpl ensureHistoryPanelCreated() {
     if (myFileHistoryPanel == null) {
       myFileHistoryPanel = createFileHistoryPanel(mySession.copyWithCachedRevision());
@@ -110,27 +104,24 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
   @NotNull
   private FileHistoryPanelImpl createFileHistoryPanel(@NotNull VcsHistorySession copy) {
     ContentManager contentManager = ProjectLevelVcsManagerEx.getInstanceEx(myVcs.getProject()).getContentManager();
-    return new FileHistoryPanelImpl(myVcs, myPath, copy, myVcsHistoryProvider, contentManager, myRefresherI);
+    return new FileHistoryPanelImpl(myVcs, myPath, myStartingRevisionNumber, copy, myVcsHistoryProvider, contentManager, myRefresherI, false);
   }
 
-  public void reportCreatedEmptySession(final VcsAbstractHistorySession session) {
+  public void reportCreatedEmptySession(VcsAbstractHistorySession session) {
     if (mySession != null && session != null && mySession.getRevisionList().equals(session.getRevisionList())) return;
     mySession = session;
     if (mySession != null) {
       mySession.shouldBeRefreshed();  // to init current revision!
     }
 
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final VcsHistorySession copy = mySession.copyWithCachedRevision();
-        if (myFileHistoryPanel == null) {
-          myFileHistoryPanel = createFileHistoryPanel(copy);
-          createOrSelectContentIfNeeded();
-        }
-        else {
-          myFileHistoryPanel.getHistoryPanelRefresh().consume(copy);
-        }
+    ApplicationManager.getApplication().invokeAndWait(() -> {
+      final VcsHistorySession copy = mySession.copyWithCachedRevision();
+      if (myFileHistoryPanel == null) {
+        myFileHistoryPanel = createFileHistoryPanel(copy);
+        createOrSelectContentIfNeeded();
+      }
+      else if (session != null && !session.getRevisionList().isEmpty()){
+        myFileHistoryPanel.getHistoryPanelRefresh().consume(copy);
       }
     });
   }
@@ -162,7 +153,18 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
       ContentManager manager = toolWindow.getContentManager();
       boolean selectedExistingContent = ContentUtilEx.selectContent(manager, myFileHistoryPanel, true);
       if (!selectedExistingContent) {
-        ContentUtilEx.addTabbedContent(manager, myFileHistoryPanel, "History", myPath.getName(), true);
+        String tabName = myPath.getName();
+        if (myStartingRevisionNumber != null) {
+          tabName += " (";
+          if (myStartingRevisionNumber instanceof ShortVcsRevisionNumber) {
+            tabName += ((ShortVcsRevisionNumber)myStartingRevisionNumber).toShortString();
+          }
+          else {
+            tabName += myStartingRevisionNumber.asString();
+          }
+          tabName += ")";
+        }
+        ContentUtilEx.addTabbedContent(manager, myFileHistoryPanel, "History", tabName, true);
       }
       toolWindow.activate(null);
     }
@@ -170,27 +172,23 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
 
   public void finished() {
     myBuffer.flush();
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      public void run() {
-        if (mySession == null) {
-          // nothing to be done, exit
-          return;
-        }
-        ensureHistoryPanelCreated().getHistoryPanelRefresh().finished();
+    ApplicationManager.getApplication().invokeAndWait(() -> {
+      if (mySession == null) {
+        // nothing to be done, exit
+        return;
       }
+      ensureHistoryPanelCreated().getHistoryPanelRefresh().finished();
     });
   }
 
   @Override
   public void forceRefresh() {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      public void run() {
-        if (mySession == null) {
-          // nothing to be done, exit
-          return;
-        }
-        ensureHistoryPanelCreated().scheduleRefresh(false);
+    ApplicationManager.getApplication().invokeAndWait(() -> {
+      if (mySession == null) {
+        // nothing to be done, exit
+        return;
       }
+      ensureHistoryPanelCreated().scheduleRefresh(false);
     });
   }
 }

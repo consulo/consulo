@@ -1030,6 +1030,10 @@ public class UIUtil {
     return UIManager.getColor("Panel.background");
   }
 
+  public static Color getEditorPaneBackground() {
+    return UIManager.getColor("EditorPane.background");
+  }
+
   public static Color getTreeBackground() {
     return UIManager.getColor("Tree.background");
   }

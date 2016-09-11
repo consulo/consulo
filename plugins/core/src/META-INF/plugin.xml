@@ -2489,6 +2489,10 @@
 
     <additionalTextAttributes scheme="Default" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
     <additionalTextAttributes scheme="Darcula" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
+
+    <getDataRule key="virtualFileStream" implementationClass="com.intellij.openapi.vcs.VirtualFileStreamRule"/>
+    <getDataRule key="VCS_REVISION_NUMBERS" implementationClass="com.intellij.openapi.vcs.history.VcsRevisionNumberArrayRule"/>
+    <getDataRule key="vcs.ChangesSelection" implementationClass="com.intellij.openapi.vcs.changes.VcsChangesSelectionRule"/>
   </extensions>
 
   <extensions defaultExtensionNs="consulo">

@@ -35,7 +35,6 @@ import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
-import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.NonNls;
@@ -54,8 +53,8 @@ import java.util.stream.Stream;
 
 import static com.intellij.openapi.vcs.changes.ChangesUtil.getAfterRevisionsFiles;
 import static com.intellij.openapi.vcs.changes.ui.ChangesBrowserNode.*;
-import static com.intellij.vcsUtil.VcsUtil.getIfSingle;
-import static com.intellij.vcsUtil.VcsUtil.toStream;
+import static com.intellij.util.containers.UtilKt.getIfSingle;
+import static com.intellij.util.containers.UtilKt.stream;
 import static java.util.stream.Collectors.toList;
 
 // TODO: Check if we could extend DnDAwareTree here instead of directly implementing DnDAware
@@ -82,7 +81,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     setRootVisible(false);
     setDragEnabled(true);
 
-    new TreeSpeedSearch(this, new NodeToTextConvertor());
+    new TreeSpeedSearch(this, TO_TEXT_CONVERTER);
     SmartExpander.installOn(this);
     myCopyProvider = new ChangesBrowserNodeCopyProvider(this);
     new TreeLinkMouseListener(new ChangesBrowserNodeRenderer(myProject, BooleanGetter.FALSE, false)).installOn(this);
@@ -223,7 +222,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
 
   @NotNull
   private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@Nullable Object tag) {
-    return toStream(getSelectionPaths())
+    return stream(getSelectionPaths())
             .filter(path -> isUnderTag(path, tag))
             .map(TreePath::getLastPathComponent)
             .map(node -> ((ChangesBrowserNode<?>)node));
@@ -236,7 +235,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
 
   @NotNull
   static Stream<VirtualFile> getVirtualFiles(@Nullable TreePath[] paths, @Nullable Object tag) {
-    return toStream(paths)
+    return stream(paths)
             .filter(path -> isUnderTag(path, tag))
             .map(TreePath::getLastPathComponent)
             .map(node -> ((ChangesBrowserNode<?>)node))
@@ -256,7 +255,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
 
   @NotNull
   static Stream<Change> getChanges(@NotNull Project project, @Nullable TreePath[] paths) {
-    Stream<Change> changes = toStream(paths)
+    Stream<Change> changes = stream(paths)
             .map(TreePath::getLastPathComponent)
             .map(node -> ((ChangesBrowserNode<?>)node))
             .flatMap(node -> node.getObjectsUnderStream(Change.class))
@@ -352,14 +351,6 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
 
   private void updateMenu() {
     PopupHandler.installPopupHandler(this, myMenuGroup, ActionPlaces.CHANGES_VIEW_POPUP, ActionManager.getInstance());
-  }
-
-  private static class NodeToTextConvertor implements Convertor<TreePath, String> {
-    @Override
-    public String convert(final TreePath path) {
-      ChangesBrowserNode node = (ChangesBrowserNode)path.getLastPathComponent();
-      return node.getTextPresentation();
-    }
   }
 
   @Override

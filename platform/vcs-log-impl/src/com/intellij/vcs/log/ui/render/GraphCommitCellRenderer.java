@@ -156,7 +156,7 @@ public class GraphCommitCellRenderer extends ColoredTableCellRenderer {
   }
 
   public static boolean isRedesignedLabels() {
-    return Registry.is("vcs.log.labels.redesign");
+    return Registry.is("vcs.log.labels.redesign", false);
   }
 
   private static class PaintInfo {

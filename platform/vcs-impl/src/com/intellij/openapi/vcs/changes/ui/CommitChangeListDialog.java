@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.BundleBase;
 import com.intellij.diff.util.DiffPlaces;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.ide.util.PropertiesComponent;
@@ -120,7 +121,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
   private static final float SPLITTER_PROPORTION_OPTION_DEFAULT = 0.5f;
   private static final float DETAILS_SPLITTER_PROPORTION_OPTION_DEFAULT = 0.6f;
-  private static final boolean DETAILS_SHOW_OPTION_DEFAULT = false;
+  private static final boolean DETAILS_SHOW_OPTION_DEFAULT = true;
 
   private static class MyUpdateButtonsRunnable implements Runnable {
     private CommitChangeListDialog myDialog;
@@ -441,7 +442,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
       myAdditionalOptionsPanel = null;
     }
 
-    myOkActionText = actionName;
+    myOkActionText = actionName.replace(BundleBase.MNEMONIC, '&');
 
     if (myShowVcsCommit) {
       setTitle(myActionName);
@@ -740,17 +741,14 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
   private String getInitialMessageFromVcs() {
     final List<Change> list = getIncludedChanges();
     final Ref<String> result = new Ref<>();
-    ChangesUtil.processChangesByVcs(myProject, list, new ChangesUtil.PerVcsProcessor<Change>() {
-      @Override
-      public void process(final AbstractVcs vcs, final List<Change> items) {
-        if (result.isNull()) {
-          CheckinEnvironment checkinEnvironment = vcs.getCheckinEnvironment();
-          if (checkinEnvironment != null) {
-            final Collection<FilePath> paths = ChangesUtil.getPaths(items);
-            String defaultMessage = checkinEnvironment.getDefaultMessageFor(paths.toArray(new FilePath[paths.size()]));
-            if (defaultMessage != null) {
-              result.set(defaultMessage);
-            }
+    ChangesUtil.processChangesByVcs(myProject, list, (vcs, items) -> {
+      if (result.isNull()) {
+        CheckinEnvironment checkinEnvironment = vcs.getCheckinEnvironment();
+        if (checkinEnvironment != null) {
+          final Collection<FilePath> paths = ChangesUtil.getPaths(items);
+          String defaultMessage = checkinEnvironment.getDefaultMessageFor(paths.toArray(new FilePath[paths.size()]));
+          if (defaultMessage != null) {
+            result.set(defaultMessage);
           }
         }
       }
@@ -768,10 +766,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
   }
 
-  private static boolean isDefaultList(final LocalChangeList list) {
-    return VcsBundle.message("changes.default.changelist.name").equals(list.getName());
-  }
-
   private void updateComment() {
     if (myVcsConfiguration.CLEAR_INITIAL_COMMIT_MESSAGE) return;
     final LocalChangeList list = (LocalChangeList) myBrowser.getSelectedChangeList();
@@ -785,7 +779,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     String listComment = list.getComment();
     if (StringUtil.isEmptyOrSpaces(listComment)) {
       final String listTitle = list.getName();
-      if (! isDefaultList(list)) {
+      if (!list.hasDefaultName()) {
         listComment = listTitle;
       }
       else {
@@ -942,13 +936,13 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
       final int selectedSize = getIncludedChanges().size();
       final ChangeList selectedList = myBrowser.getSelectedChangeList();
       final int totalSize = selectedList.getChanges().size();
-      myToClean = (totalSize == selectedSize) && (isDefaultList((LocalChangeList) selectedList));
+      myToClean = (totalSize == selectedSize) && (((LocalChangeList)selectedList).hasDefaultName());
     }
 
     void clean() {
       if (myToClean) {
         final ChangeListManager clManager = ChangeListManager.getInstance(myProject);
-        clManager.editComment(VcsBundle.message("changes.default.changelist.name"), "");
+        clManager.editComment(LocalChangeList.DEFAULT_NAME, "");
       }
     }
   }
@@ -1032,7 +1026,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     JPanel rootPane = JBUI.Panels.simplePanel(mainPanel).addToBottom(panel);
 
     // TODO: there are no reason to use such heavy interface for a simple task.
-    myDetailsSplitter = new SplitterWithSecondHideable(true, "Details", rootPane,
+    myDetailsSplitter = new SplitterWithSecondHideable(true, "Diff", rootPane,
                                                        new SplitterWithSecondHideable.OnOffListener<Integer>() {
                                                          @Override
                                                          public void on(Integer integer) {

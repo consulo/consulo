@@ -34,14 +34,14 @@ public class OpenAnotherLogTabAction extends DumbAwareAction {
   @Override
   public void update(AnActionEvent e) {
     Project project = e.getProject();
-    if (project == null || !Registry.is("vcs.log.open.another.log.visible")) {
+    if (project == null || !Registry.is("vcs.log.open.another.log.visible", false)) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }
     VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
     VcsLogManager logManager = e.getData(VcsLogDataKeys.LOG_MANAGER);
     e.getPresentation()
-      .setEnabledAndVisible(logManager != null && projectLog.getLogManager() == logManager); // only for main log (it is a question, how and where we want to open tabs for external logs)
+            .setEnabledAndVisible(logManager != null && projectLog.getLogManager() == logManager); // only for main log (it is a question, how and where we want to open tabs for external logs)
   }
 
   @Override

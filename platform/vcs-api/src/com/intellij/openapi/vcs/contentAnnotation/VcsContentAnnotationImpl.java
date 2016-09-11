@@ -82,12 +82,12 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
       assert currentRevisionNumber != null;
     }
     final ThreeState isRecent = myContentAnnotationCache.isRecent(file, vcs.getKeyInstanceMethod(), currentRevisionNumber, lineInterval,
-                                                          System.currentTimeMillis() - mySettings.getLimit());
+                                                                  System.currentTimeMillis() - mySettings.getLimit());
     if (! ThreeState.UNSURE.equals(isRecent)) return ThreeState.YES.equals(isRecent);
 
     final FileAnnotation fileAnnotation;
     try {
-      fileAnnotation = vcs.getCachingAnnotationProvider().annotate(file);
+      fileAnnotation = vcs.getAnnotationProvider().annotate(file);
     }
     catch (VcsException e) {
       LOG.info(e);

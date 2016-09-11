@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.editor.colors.ColorKey;
-import com.intellij.openapi.vcs.impl.FileStatusImpl;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -25,19 +27,17 @@ import java.util.List;
 
 public class FileStatusFactory {
   private static final FileStatusFactory ourInstance = new FileStatusFactory();
-  private final List<FileStatus> myStatuses = new ArrayList<FileStatus>();
+  private final List<FileStatus> myStatuses = new ArrayList<>();
 
   private FileStatusFactory() {
   }
 
-  public synchronized FileStatus createFileStatus(@NonNls String id, String description, Color color) {
-    FileStatusImpl result = new FileStatusImpl(id, ColorKey.createColorKey("FILESTATUS_" + id, color), description);
-    myStatuses.add(result);
-    return result;
+  public synchronized FileStatus createFileStatus(@NonNls @NotNull String id, @NotNull String description) {
+    return createFileStatus(id, description, null);
   }
 
-  public synchronized FileStatus createOnlyColorForFileStatus(@NonNls String id, final Color color) {
-    FileStatus result = new FileStatusImpl.OnlyColorFileStatus(id, ColorKey.createColorKey("FILESTATUS_" + id, color), null);
+  public synchronized FileStatus createFileStatus(@NonNls @NotNull String id, @NotNull String description, @Nullable Color color) {
+    FileStatusImpl result = new FileStatusImpl(id, ColorKey.createColorKey("FILESTATUS_" + id, color), description);
     myStatuses.add(result);
     return result;
   }
@@ -50,4 +50,44 @@ public class FileStatusFactory {
     return ourInstance;
   }
 
+  /**
+   * author: lesya
+   */
+  private static class FileStatusImpl implements FileStatus {
+    private final String myStatus;
+    private final ColorKey myColorKey;
+    private final String myText;
+
+    public FileStatusImpl(@NotNull String status, @NotNull ColorKey key, String text) {
+      myStatus = status;
+      myColorKey = key;
+      myText = text;
+    }
+
+    public String toString() {
+      return myStatus;
+    }
+
+    @Override
+    public String getText() {
+      return myText;
+    }
+
+    @Override
+    public Color getColor() {
+      return EditorColorsManager.getInstance().getGlobalScheme().getColor(getColorKey());
+    }
+
+    @NotNull
+    @Override
+    public ColorKey getColorKey() {
+      return myColorKey;
+    }
+
+    @NotNull
+    @Override
+    public String getId() {
+      return myStatus;
+    }
+  }
 }

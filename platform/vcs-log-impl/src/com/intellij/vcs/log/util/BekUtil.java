@@ -23,6 +23,6 @@ public class BekUtil {
   }
 
   public static boolean isLinearBekEnabled() {
-    return isBekEnabled() && Registry.is("vcs.log.linear.bek.sort");
+    return isBekEnabled() && Registry.is("vcs.log.linear.bek.sort", false);
   }
 }

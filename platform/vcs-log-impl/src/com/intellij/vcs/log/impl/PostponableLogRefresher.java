@@ -58,7 +58,7 @@ public class PostponableLogRefresher implements VcsLogRefresher {
   }
 
   public static boolean keepUpToDate() {
-    return Registry.is("vcs.log.keep.up.to.date") && !PowerSaveMode.isEnabled();
+    return Registry.is("vcs.log.keep.up.to.date",  true) && !PowerSaveMode.isEnabled();
   }
 
   protected boolean canRefreshNow() {

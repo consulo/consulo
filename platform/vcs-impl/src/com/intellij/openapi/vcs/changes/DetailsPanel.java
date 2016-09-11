@@ -21,11 +21,11 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Irina.Chernushina
-* Date: 9/7/11
-* Time: 2:43 PM
-*/
+ * Created by IntelliJ IDEA.
+ * User: Irina.Chernushina
+ * Date: 9/7/11
+ * Time: 2:43 PM
+ */
 public class DetailsPanel {
   private CardLayout myLayout;
   private JPanel myPanel;
