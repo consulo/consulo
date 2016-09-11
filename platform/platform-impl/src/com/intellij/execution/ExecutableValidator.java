@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +33,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 
 import static com.intellij.notification.NotificationDisplayType.STICKY_BALLOON;
 
@@ -43,10 +46,10 @@ import static com.intellij.notification.NotificationDisplayType.STICKY_BALLOON;
  */
 public abstract class ExecutableValidator {
 
-  private static final Logger LOG = Logger.getInstance(ExecutableValidator.class);
+  public static final int TIMEOUT_MS = Registry.intValue("vcs.executable.validator.timeout.sec", 60) * 1000;
 
-  private static final NotificationGroup ourNotificationGroup = new NotificationGroup("External Executable Critical Failures",
-                                                                                      STICKY_BALLOON, true);
+  private static final Logger LOG = Logger.getInstance(ExecutableValidator.class);
+  private static final NotificationGroup ourNotificationGroup = new NotificationGroup("External Executable Critical Failures", STICKY_BALLOON, true);
   @NotNull protected final Project myProject;
   @NotNull protected final NotificationsManager myNotificationManager;
 
@@ -55,12 +58,12 @@ public abstract class ExecutableValidator {
 
   /**
    * Configures notification and dialog by setting text messages and titles specific to the whoever uses the validator.
+   *
    * @param notificationErrorTitle       title of the notification about not valid executable.
    * @param notificationErrorDescription description of this notification with a link to fix it (link action is defined by
    *                                     {@link #showSettingsAndExpireIfFixed(com.intellij.notification.Notification)}
    */
-  public ExecutableValidator(@NotNull Project project, @NotNull String notificationErrorTitle,
-                             @NotNull String notificationErrorDescription) {
+  public ExecutableValidator(@NotNull Project project, @NotNull String notificationErrorTitle, @NotNull String notificationErrorDescription) {
     myProject = project;
     myNotificationErrorTitle = notificationErrorTitle;
     myNotificationErrorDescription = notificationErrorDescription;
@@ -71,7 +74,7 @@ public abstract class ExecutableValidator {
 
   /**
    * @return the settings configurable display name, where the executable is shown and can be fixed.
-   *         This configurable will be opened if user presses "Fix" on the notification about invalid executable.
+   * This configurable will be opened if user presses "Fix" on the notification about invalid executable.
    */
   @NotNull
   protected abstract String getConfigurableDisplayName();
@@ -90,15 +93,22 @@ public abstract class ExecutableValidator {
    * Returns true if the supplied executable is valid.
    * Default implementation: try to execute the given executable and test if output returned errors.
    * This can take a long time since it spawns external process.
+   *
    * @param executable Path to executable.
    * @return true if process with the supplied executable completed without errors and with exit code 0.
    */
   protected boolean isExecutableValid(@NotNull String executable) {
+    return doCheckExecutable(executable, Collections.<String>emptyList());
+  }
+
+  protected static boolean doCheckExecutable(@NotNull String executable, @NotNull List<String> processParameters) {
     try {
       GeneralCommandLine commandLine = new GeneralCommandLine();
       commandLine.setExePath(executable);
-      CapturingProcessHandler handler = new CapturingProcessHandler(commandLine.createProcess(), CharsetToolkit.getDefaultSystemCharset());
-      ProcessOutput result = handler.runProcess(60 * 1000);
+      commandLine.addParameters(processParameters);
+      commandLine.setCharset(CharsetToolkit.getDefaultSystemCharset());
+      CapturingProcessHandler handler = new CapturingProcessHandler(commandLine);
+      ProcessOutput result = handler.runProcess(TIMEOUT_MS);
       boolean timeout = result.isTimeout();
       int exitCode = result.getExitCode();
       String stderr = result.getStderr();
@@ -106,7 +116,7 @@ public abstract class ExecutableValidator {
         LOG.warn("Validation of " + executable + " failed with a timeout");
       }
       if (exitCode != 0) {
-        LOG.warn("Validation of " + executable + " failed with non-zero exit code: " + exitCode);
+        LOG.warn("Validation of " + executable + " failed with a non-zero exit code: " + exitCode);
       }
       if (!stderr.isEmpty()) {
         LOG.warn("Validation of " + executable + " failed with a non-empty error output: " + stderr);
@@ -144,8 +154,7 @@ public abstract class ExecutableValidator {
       result.append(String.format("<b>%s</b>%s", myNotificationErrorTitle, description));
     }
     else {
-      result.append(
-              String.format("<b>%s:</b> <code>%s</code><br/>%s", myNotificationErrorTitle, executable, description));
+      result.append(String.format("<b>%s:</b> <b>%s</b><br/>%s", myNotificationErrorTitle, executable, description));
     }
     if (appendFixIt) {
       result.append(" <a href=''>Fix it.</a>");
@@ -167,6 +176,7 @@ public abstract class ExecutableValidator {
 
   /**
    * Checks if executable is valid and displays the notification if not.
+   *
    * @return true if executable was valid, false - if not valid (and notification was shown in that case).
    * @see #checkExecutableAndShowMessageIfNeeded(java.awt.Component)
    */
@@ -191,6 +201,7 @@ public abstract class ExecutableValidator {
    * Checks if executable is valid and shows the message if not.
    * This method is to be used instead of {@link #checkExecutableAndNotifyIfNeeded()} when Git fails to start from a modal dialog:
    * in that case user won't be able to click "Fix it".
+   *
    * @return true if executable was valid, false - if not valid (and a message is shown in that case).
    * @see #checkExecutableAndNotifyIfNeeded()
    */
@@ -201,12 +212,7 @@ public abstract class ExecutableValidator {
 
     if (!isExecutableValid(getCurrentExecutable())) {
       if (Messages.OK == showMessage(parentComponent)) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            showSettings();
-          }
-        });
+        ApplicationManager.getApplication().invokeLater(() -> showSettings());
       }
       return false;
     }
