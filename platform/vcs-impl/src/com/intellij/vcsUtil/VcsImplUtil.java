@@ -38,9 +38,12 @@ public class VcsImplUtil {
    * @param message information message
    * @param title   Dialog title
    */
-  public static void showErrorMessage(final Project project, final String message, final String title)
-  {
-    Runnable task = new Runnable() {  public void run() {  Messages.showErrorDialog(project, message, title);  } };
+  public static void showErrorMessage(final Project project, final String message, final String title) {
+    Runnable task = new Runnable() {
+      public void run() {
+        Messages.showErrorDialog(project, message, title);
+      }
+    };
     WaitForProgressToShow.runOrInvokeLaterAboveProgress(task, null, project);
   }
 

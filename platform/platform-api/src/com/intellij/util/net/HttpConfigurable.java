@@ -200,6 +200,12 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
 
   @Transient
   @Nullable
+  public String getProxyLogin() {
+    return PROXY_LOGIN;
+  }
+
+  @Transient
+  @Nullable
   public String getPlainProxyPassword() {
     return PROXY_PASSWORD_CRYPT == null ? null : decode(PROXY_PASSWORD_CRYPT);
   }

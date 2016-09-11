@@ -30,6 +30,7 @@
   </actions>
   <extensions defaultExtensionNs="com.intellij">
     <projectService serviceImplementation="com.intellij.dvcs.push.PushSettings"/>
+    <projectService serviceImplementation="com.intellij.dvcs.cherrypick.VcsCherryPickManager"/>
   </extensions>
 </idea-plugin>
 
