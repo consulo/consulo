@@ -202,6 +202,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
   @NotNull private final ScrollingModelImpl myScrollingModel;
   @NotNull private final CaretModelImpl myCaretModel;
   @NotNull private final SoftWrapModelImpl mySoftWrapModel;
+  @NotNull private final InlayModelImpl myInlayModel;
 
   @NotNull private static final RepaintCursorCommand ourCaretBlinkingCommand = new RepaintCursorCommand();
   private DocumentBulkUpdateListener myBulkUpdateListener;
@@ -360,6 +361,8 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     myFoldingModel = new FoldingModelImpl(this);
     myCaretModel = new CaretModelImpl(this);
     myScrollingModel = new ScrollingModelImpl(this);
+    myInlayModel = new InlayModelImpl(this);
+    Disposer.register(myCaretModel, myInlayModel);
     mySoftWrapModel = new SoftWrapModelImpl(this);
     if (!myUseNewRendering) mySizeContainer.reset();
 
@@ -446,12 +449,12 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
     myDocument.addDocumentListener(myFoldingModel, myCaretModel);
     myDocument.addDocumentListener(myCaretModel, myCaretModel);
-    myDocument.addDocumentListener(mySelectionModel, myCaretModel);
 
     myDocument.addDocumentListener(new EditorDocumentAdapter(), myCaretModel);
     myDocument.addDocumentListener(mySoftWrapModel, myCaretModel);
 
     myFoldingModel.addListener(mySoftWrapModel, myCaretModel);
+    myInlayModel.addListener(myCaretModel, myCaretModel);
 
     myIndentsModel = new IndentsModelImpl(this);
     myCaretModel.addCaretListener(new CaretListener() {
@@ -573,6 +576,15 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     else {
       myView = null;
     }
+
+    myInlayModel.addListener(new InlayModel.SimpleAdapter() {
+      @Override
+      public void onUpdated(@NotNull Inlay inlay) {
+        if (myDocument.isInEventsHandling() || myDocument.isInBulkUpdate()) return;
+        validateSize();
+        repaint(inlay.getOffset(), inlay.getOffset(), false);
+      }
+    }, myCaretModel);
 
     if (UISettings.getInstance().PRESENTATION_MODE) {
       setFontSize(UISettings.getInstance().PRESENTATION_MODE_FONT_SIZE);
@@ -768,6 +780,12 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     return mySoftWrapModel;
   }
 
+  @NotNull
+  @Override
+  public InlayModelImpl getInlayModel() {
+    return myInlayModel;
+  }
+
   @Override
   @NotNull
   public EditorSettings getSettings() {
@@ -811,6 +829,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       mySizeContainer.reset();
     }
     myFoldingModel.rebuild();
+    myInlayModel.reinitSettings();
 
     if (softWrapsUsedBefore ^ mySoftWrapModel.isSoftWrappingEnabled()) {
       if (!myUseNewRendering) {
@@ -4703,13 +4722,17 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
   }
 
   private void setCursorPosition() {
-    final List<CaretRectangle> caretPoints = new ArrayList<CaretRectangle>();
+    final List<CaretRectangle> caretPoints = new ArrayList<>();
     for (Caret caret : getCaretModel().getAllCarets()) {
       boolean isRtl = caret.isAtRtlLocation();
       VisualPosition caretPosition = caret.getVisualPosition();
-      Point pos1 = visualPositionToXY(caretPosition);
-      Point pos2 = visualPositionToXY(new VisualPosition(caretPosition.line, Math.max(0, caretPosition.column + (isRtl ? -1 : 1))));
-      caretPoints.add(new CaretRectangle(pos1, Math.abs(pos2.x - pos1.x), caret, isRtl));
+      Point pos1 = visualPositionToXY(caretPosition.leanRight(!isRtl));
+      Point pos2 = visualPositionToXY(new VisualPosition(caretPosition.line, Math.max(0, caretPosition.column + (isRtl ? -1 : 1)), isRtl));
+      int width = Math.abs(pos2.x - pos1.x);
+      if (!isRtl && myInlayModel.hasInlineElementAt(caretPosition)) {
+        width = Math.min(width, myView.getPlainSpaceWidth());
+      }
+      caretPoints.add(new CaretRectangle(pos1, width, caret, isRtl));
     }
     myCaretCursor.setPositions(caretPoints.toArray(new CaretRectangle[caretPoints.size()]));
   }

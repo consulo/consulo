@@ -32,10 +32,10 @@ import java.util.List;
  */
 public class TextComponentCaretModel implements CaretModel {
   private final JTextComponent myTextComponent;
-  private final TextComponentEditor myEditor;
+  private final TextComponentEditorImpl myEditor;
   private final Caret myCaret;
 
-  public TextComponentCaretModel(@NotNull JTextComponent textComponent, @NotNull TextComponentEditor editor) {
+  public TextComponentCaretModel(@NotNull JTextComponent textComponent, @NotNull TextComponentEditorImpl editor) {
     myTextComponent = textComponent;
     myEditor = editor;
     myCaret = new TextComponentCaret(editor);

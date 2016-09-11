@@ -25,6 +25,7 @@ import com.intellij.openapi.editor.impl.SettingsImpl;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +38,7 @@ import java.awt.event.MouseEvent;
 /**
  * @author yole
  */
-public class TextComponentEditor extends UserDataHolderBase implements Editor {
+public class TextComponentEditorImpl extends UserDataHolderBase implements TextComponentEditor {
   private final Project myProject;
   private final JTextComponent myTextComponent;
   private final TextComponentDocument myDocument;
@@ -48,7 +49,7 @@ public class TextComponentEditor extends UserDataHolderBase implements Editor {
   private final TextComponentFoldingModel myFoldingModel;
   private EditorSettings mySettings;
 
-  public TextComponentEditor(final Project project, @NotNull JTextComponent textComponent) {
+  public TextComponentEditorImpl(final Project project, @NotNull JTextComponent textComponent) {
     myProject = project;
     myTextComponent = textComponent;
     if (textComponent instanceof JTextArea) {
@@ -93,7 +94,7 @@ public class TextComponentEditor extends UserDataHolderBase implements Editor {
 
   @Override
   public Insets getInsets() {
-    return new Insets(0,0,0,0);
+    return JBUI.emptyInsets();
   }
 
   @Override
@@ -130,6 +131,12 @@ public class TextComponentEditor extends UserDataHolderBase implements Editor {
   @NotNull
   public SoftWrapModel getSoftWrapModel() {
     return mySoftWrapModel;
+  }
+
+  @NotNull
+  @Override
+  public InlayModel getInlayModel() {
+    return new TextComponentInlayModel();
   }
 
   @Override
@@ -251,7 +258,7 @@ public class TextComponentEditor extends UserDataHolderBase implements Editor {
 
   @Override
   public boolean isInsertMode() {
-    throw new UnsupportedOperationException("Not implemented");
+    return true;
   }
 
   @Override

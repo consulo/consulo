@@ -63,7 +63,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   private boolean myFoldRegionsProcessed;
 
   private int mySavedCaretShift;
-  private final MultiMap<FoldingGroup, FoldRegion> myGroups = new MultiMap<FoldingGroup, FoldRegion>();
+  private final MultiMap<FoldingGroup, FoldRegion> myGroups = new MultiMap<>();
   private boolean myDocumentChangeProcessed = true;
   private final AtomicLong myExpansionCounter = new AtomicLong();
 
@@ -523,10 +523,8 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
     return myFoldTextAttributes;
   }
 
-  public void flushCaretPosition() {
-    for (Caret caret : myEditor.getCaretModel().getAllCarets()) {
-      caret.putUserData(SAVED_CARET_POSITION, null);
-    }
+  void flushCaretPosition(@NotNull Caret caret) {
+    caret.putUserData(SAVED_CARET_POSITION, null);
   }
 
   void onBulkDocumentUpdateStarted() {

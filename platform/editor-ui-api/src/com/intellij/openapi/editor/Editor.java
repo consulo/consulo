@@ -23,7 +23,6 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,8 +37,9 @@ import java.awt.event.MouseEvent;
  * @see EditorFactory#createEditor(Document)
  * @see EditorFactory#createViewer(Document)
  */
-@ArrayFactoryFields
 public interface Editor extends UserDataHolder {
+  Editor[] EMPTY_ARRAY = new Editor[0];
+
   /**
    * Returns the document edited or viewed in the editor.
    *
@@ -98,7 +98,8 @@ public interface Editor extends UserDataHolder {
    * (for example, highlighters added by "Highlight usages in file"), which are painted in addition
    * to the highlighters contained in the markup model for the document.
    * <p>
-   * See also com.intellij.openapi.editor.impl.DocumentMarkupModel.forDocument(Document, Project, boolean).
+   * See also {@link com.intellij.openapi.editor.impl.DocumentMarkupModel.forDocument(Document, Project, boolean)}
+   *          {@link com.intellij.openapi.editor.ex.EditorEx#getFilteredDocumentMarkupModel()}.
    *
    * @return the markup model instance.
    */
@@ -124,7 +125,7 @@ public interface Editor extends UserDataHolder {
   ScrollingModel getScrollingModel();
 
   /**
-   * Returns the caret model for the document, which can be used to add and remove carets to the editor, as well as to query and update 
+   * Returns the caret model for the document, which can be used to add and remove carets to the editor, as well as to query and update
    * carets' and corresponding selections' positions.
    *
    * @return the caret model instance.
@@ -215,7 +216,7 @@ public interface Editor extends UserDataHolder {
   /**
    * Maps an offset in the document to a logical position.
    * <p>
-   * It's assumed that original position is associated with character immediately preceding given offset, so target logical position will 
+   * It's assumed that original position is associated with character immediately preceding given offset, so target logical position will
    * have {@link LogicalPosition#leansForward leansForward} value set to <code>false</code>.
    *
    * @param offset the offset in the document.
@@ -227,7 +228,7 @@ public interface Editor extends UserDataHolder {
   /**
    * Maps an offset in the document to a visual position.
    * <p>
-   * It's assumed that original position is associated with character immediately preceding given offset, 
+   * It's assumed that original position is associated with character immediately preceding given offset,
    * {@link VisualPosition#leansRight leansRight} value for visual position will be determined correspondingly.
    * <p>
    * If there's a soft wrap at given offset, visual position on a line following the wrap will be returned.
@@ -242,7 +243,7 @@ public interface Editor extends UserDataHolder {
    * Maps an offset in the document to a visual position.
    *
    * @param offset the offset in the document.
-   * @param leanForward if <code>true</code>, original position is associated with character after given offset, if <code>false</code> - 
+   * @param leanForward if <code>true</code>, original position is associated with character after given offset, if <code>false</code> -
    *                    with character before given offset. This can make a difference in bidirectional text (see {@link LogicalPosition},
    *                    {@link VisualPosition})
    * @param beforeSoftWrap if <code>true</code>, visual position at line preceeding the wrap will be returned, otherwise - visual position
@@ -376,4 +377,7 @@ public interface Editor extends UserDataHolder {
 
   @NotNull
   IndentsModel getIndentsModel();
+
+  @NotNull
+  InlayModel getInlayModel();
 }

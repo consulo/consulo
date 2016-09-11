@@ -42,7 +42,7 @@ import java.text.Bidi;
 /**
  * A facade for components responsible for drawing editor contents, managing editor size 
  * and coordinate conversions (offset <-> logical position <-> visual position <-> x,y).
- * 
+ *
  * Also contains a cache of several font-related quantities (line height, space width, etc).
  */
 public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
@@ -62,7 +62,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
   private LineLayout myPrefixLayout; // guarded by myLock
   private TextAttributes myPrefixAttributes; // accessed only in EDT
   private int myBidiFlags; // accessed only in EDT
-  
+
   private int myPlainSpaceWidth; // guarded by myLock
   private int myLineHeight; // guarded by myLock
   private int myAscent; // guarded by myLock
@@ -73,19 +73,19 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
   private int myBottomOverhang; //guarded by myLock
 
   private final Object myLock = new Object();
-  
+
   public EditorView(EditorImpl editor) {
     setFontRenderContext();
     myEditor = editor;
     myDocument = editor.getDocument();
-    
+
     myPainter = new EditorPainter(this);
     myMapper = new EditorCoordinateMapper(this);
     mySizeManager = new EditorSizeManager(this);
     myTextLayoutCache = new TextLayoutCache(this);
     myLogicalPositionCache = new LogicalPositionCache(this);
     myTabFragment = new TabFragment(this);
-    
+
     Disposer.register(this, myLogicalPositionCache);
     Disposer.register(this, myTextLayoutCache);
     Disposer.register(this, mySizeManager);
@@ -102,19 +102,19 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
   EditorSizeManager getSizeManager() {
     return mySizeManager;
   }
-  
+
   TextLayoutCache getTextLayoutCache() {
     return myTextLayoutCache;
   }
-  
+
   EditorPainter getPainter() {
     return myPainter;
   }
-  
+
   TabFragment getTabFragment() {
     return myTabFragment;
   }
-  
+
   LogicalPositionCache getLogicalPositionCache() {
     return myLogicalPositionCache;
   }
@@ -179,14 +179,14 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
     myEditor.getSoftWrapModel().prepareToMapping();
     return myMapper.offsetToVisualLine(offset, beforeSoftWrap);
   }
-  
+
   public int visualLineToOffset(int visualLine) {
     assertIsDispatchThread();
     assertNotInBulkMode();
     myEditor.getSoftWrapModel().prepareToMapping();
     return myMapper.visualLineToOffset(visualLine);
   }
-  
+
   @NotNull
   public VisualPosition xyToVisualPosition(@NotNull Point p) {
     assertIsDispatchThread();
@@ -275,7 +275,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
   int getMaxWidthInLineRange(int startVisualLine, int endVisualLine) {
     myEditor.getSoftWrapModel().prepareToMapping();
     int maxWidth = 0;
-    VisualLinesIterator iterator = new VisualLinesIterator(this, startVisualLine);
+    VisualLinesIterator iterator = new VisualLinesIterator(myEditor, startVisualLine);
     while (!iterator.atEnd() && iterator.getVisualLine() <= endVisualLine) {
       int width = mySizeManager.getVisualLineWidth(iterator, null);
       maxWidth = Math.max(maxWidth, width);
@@ -307,7 +307,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
     setPrefix(myPrefixText, myPrefixAttributes); // recreate prefix layout
     mySizeManager.reset();
   }
-  
+
   public void invalidateRange(int startOffset, int endOffset) {
     assertIsDispatchThread();
     int textLength = myDocument.getTextLength();
@@ -329,7 +329,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
     myTextLayoutCache.resetToDocumentSize(true);
     mySizeManager.reset();
   }
-  
+
   public boolean isRtlLocation(@NotNull VisualPosition visualPosition) {
     assertIsDispatchThread();
     if (myDocument.getTextLength() == 0) return false;
@@ -337,8 +337,8 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
     int offset = logicalPositionToOffset(logicalPosition);
     if (myEditor.getSoftWrapModel().getSoftWrap(offset) != null) {
       VisualPosition beforeWrapPosition = offsetToVisualPosition(offset, true, true);
-      if (visualPosition.line == beforeWrapPosition.line && 
-          (visualPosition.column > beforeWrapPosition.column || 
+      if (visualPosition.line == beforeWrapPosition.line &&
+          (visualPosition.column > beforeWrapPosition.column ||
            visualPosition.column == beforeWrapPosition.column && visualPosition.leansRight)) {
         return false;
       }
@@ -348,7 +348,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
            visualPosition.column == afterWrapPosition.column && !visualPosition.leansRight)) {
         return false;
       }
-    } 
+    }
     int line = myDocument.getLineNumber(offset);
     LineLayout layout = myTextLayoutCache.getLineLayout(line);
     return layout.isRtlLocation(offset - myDocument.getLineStartOffset(line), logicalPosition.leansForward);
@@ -376,7 +376,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
     return relativeOffset < 0 ? -1 : lineStartOffset + relativeOffset;
   }
 
-  int getPlainSpaceWidth() {
+  public int getPlainSpaceWidth() {
     synchronized (myLock) {
       initMetricsIfNeeded();
       return myPlainSpaceWidth;
@@ -462,7 +462,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
     FontMetrics fmBI = myEditor.getContentComponent().getFontMetrics(myEditor.getColorsScheme().getFont(EditorFontType.BOLD_ITALIC));
     myMaxCharWidth = FontLayoutService.getInstance().charWidth(fmBI, 'W');
   }
-  
+
   public int getTabSize() {
     synchronized (myLock) {
       if (myTabSize < 0) {
@@ -487,7 +487,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
     if (layout == null) {
       TextAttributes placeholderAttributes = myEditor.getFoldingModel().getPlaceholderAttributes();
       layout = LineLayout.create(this, StringUtil.replace(foldRegion.getPlaceholderText(), "\n", " "),
-                              placeholderAttributes == null ? Font.PLAIN : placeholderAttributes.getFontType());
+                                 placeholderAttributes == null ? Font.PLAIN : placeholderAttributes.getFontType());
       foldRegion.putUserData(FOLD_REGION_TEXT_LAYOUT, layout);
     }
     return layout;
@@ -498,7 +498,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
       region.putUserData(FOLD_REGION_TEXT_LAYOUT, null);
     }
   }
-  
+
   Insets getInsets() {
     return myEditor.getContentComponent().getInsets();
   }
@@ -506,11 +506,11 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable {
   int getBidiFlags() {
     return myBidiFlags;
   }
-  
+
   private static void assertIsDispatchThread() {
     ApplicationManager.getApplication().assertIsDispatchThread();
   }
-  
+
   private static void assertIsReadAccess() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
   }
