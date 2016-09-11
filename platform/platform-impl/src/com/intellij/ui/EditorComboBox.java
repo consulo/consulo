@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package com.intellij.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -31,10 +30,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -46,15 +48,16 @@ import java.util.List;
 // TODO[pegov]: should extend ComboBox not JComboBox!
 public class EditorComboBox extends JComboBox implements DocumentListener {
   public static TextComponentAccessor<EditorComboBox> COMPONENT_ACCESSOR = new TextComponentAccessor<EditorComboBox>() {
+    @Override
     public String getText(EditorComboBox component) {
       return component.getText();
     }
 
-    public void setText(EditorComboBox component, String text) {
+    @Override
+    public void setText(EditorComboBox component, @NotNull String text) {
       component.setText(text);
     }
   };
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.EditorTextField");
 
   private Document myDocument;
   private final Project myProject;
@@ -85,6 +88,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     enableEvents(AWTEvent.KEY_EVENT_MASK);
 
     addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         final Editor editor = myEditorField != null ? myEditorField.getEditor() : null;
         if (editor != null) {
@@ -115,12 +119,14 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     uninstallDocumentListener(false);
   }
 
+  @Override
   public void beforeDocumentChange(DocumentEvent event) {
     for (DocumentListener documentListener : myDocumentListeners) {
       documentListener.beforeDocumentChange(event);
     }
   }
 
+  @Override
   public void documentChanged(DocumentEvent event) {
     for (DocumentListener documentListener : myDocumentListeners) {
       documentListener.documentChanged(event);
@@ -169,18 +175,12 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
   }
 
   public void setText(final String text) {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      public void run() {
-        CommandProcessor.getInstance().executeCommand(getProject(), new Runnable() {
-          public void run() {
-            myDocument.replaceString(0, myDocument.getTextLength(), text);
-            if (myEditorField != null && myEditorField.getEditor() != null) {
-              myEditorField.getCaretModel().moveToOffset(myDocument.getTextLength());
-            }
-          }
-        }, null, myDocument);
+    ApplicationManager.getApplication().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> {
+      myDocument.replaceString(0, myDocument.getTextLength(), text);
+      if (myEditorField != null && myEditorField.getEditor() != null) {
+        myEditorField.getCaretModel().moveToOffset(myDocument.getTextLength());
       }
-    });
+    }, null, myDocument));
   }
 
   public void removeSelection() {
@@ -189,8 +189,6 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
       if (editor != null) {
         editor.getSelectionModel().removeSelection();
       }
-    }
-    else {
     }
   }
 
@@ -203,7 +201,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
   }
 
   public void prependItem(String item) {
-    ArrayList<Object> objects = new ArrayList<Object>();
+    ArrayList<Object> objects = new ArrayList<>();
     objects.add(item);
     int count = getItemCount();
     for (int i = 0; i < count; i++) {
@@ -216,7 +214,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
   }
 
   public void appendItem(String item) {
-    ArrayList<Object> objects = new ArrayList<Object>();
+    ArrayList<Object> objects = new ArrayList<>();
 
     int count = getItemCount();
     for (int i = 0; i < count; i++) {
@@ -230,20 +228,25 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
   }
 
   private class MyEditor implements ComboBoxEditor {
+    @Override
     public void addActionListener(ActionListener l) {
     }
 
+    @Override
     public Component getEditorComponent() {
       return myEditorField;
     }
 
+    @Override
     public Object getItem() {
       return myDocument.getText();
     }
 
+    @Override
     public void removeActionListener(ActionListener l) {
     }
 
+    @Override
     public void selectAll() {
       if (myEditorField != null) {
         final Editor editor = myEditorField.getEditor();
@@ -253,20 +256,28 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
       }
     }
 
+    @Override
     public void setItem(Object anObject) {
       if (anObject != null) {
-        EditorComboBox.this.setText((String)anObject);
+        EditorComboBox.this.setText(anObject.toString());
       } else {
         EditorComboBox.this.setText("");
       }
     }
   }
 
+  @Override
   public void addNotify() {
     releaseEditor();
     setEditor();
 
     super.addNotify();
+    if (UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF()) {
+      final JScrollPane scrollPane = UIUtil.findComponentOfType(myEditorField, JScrollPane.class);
+      if (scrollPane != null) {
+        scrollPane.setBorder(new EmptyBorder(1,0,1,0));
+      }
+    }
     myEditorField.getFocusTarget().addFocusListener(new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) {
@@ -291,23 +302,20 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     return new ComboboxEditorTextField(document, project, fileType, isViewer);
   }
 
+  @Override
   public void removeNotify() {
     super.removeNotify();
-    if (myEditorField != null) {
-      releaseEditor();
-      myEditorField = null;
-    }
+    releaseEditor();
+    myEditorField = null;
   }
 
   private void releaseEditor() {
     if (myEditorField != null) {
-      final Editor editor = myEditorField.getEditor();
-      if (editor != null) {
-        myEditorField.releaseEditor(editor);
-      }
+      myEditorField.releaseEditorLater();
     }
   }
 
+  @Override
   public void setFont(Font font) {
     super.setFont(font);
     if (myEditorField != null && myEditorField.getEditor() != null) {
@@ -326,6 +334,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     return true;
   }
 
+  @Override
   public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
     if (myEditorField == null) {
@@ -334,16 +343,14 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     myEditorField.setEnabled(enabled);
   }
 
+  @Override
   public Dimension getPreferredSize() {
+    if (UIUtil.isUnderIntelliJLaF() || UIUtil.isUnderDarcula()) {
+      return super.getPreferredSize();
+    }
     if (myEditorField != null) {
       final Dimension preferredSize = new Dimension(myEditorField.getComponent().getPreferredSize());
-      final Insets insets = getInsets();
-      if (insets != null) {
-        preferredSize.width += insets.left;
-        preferredSize.width += insets.right;
-        preferredSize.height += insets.top;
-        preferredSize.height += insets.bottom;
-      }
+      JBInsets.addTo(preferredSize, getInsets());
       return preferredSize;
     }
 
@@ -351,6 +358,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     return new Dimension(100, UIUtil.fixComboBoxHeight(20));
   }
 
+  @Override
   protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
     if (!((EditorEx)myEditorField.getEditor()).processKeyTyped(e)) {
       return super.processKeyBinding(ks, e, condition, pressed);
