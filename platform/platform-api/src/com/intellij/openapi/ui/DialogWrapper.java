@@ -544,7 +544,7 @@ public abstract class DialogWrapper {
       panel = withCB;
     }
 
-    panel.setBorder(IdeBorderFactory.createEmptyBorder(new Insets(8, 0, 0, 0)));
+    panel.setBorder(IdeBorderFactory.createEmptyBorder(JBUI.insetsTop(8)));
 
     return panel;
   }

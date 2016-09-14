@@ -33,6 +33,7 @@ import com.intellij.ui.*;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,7 +84,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
     }, this);
 
     if (NotificationsManagerImpl.newEnabled()) {
-      myBalloonLayout = new WelcomeBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.myEventListener, myScreen.myEventLocation);
+      myBalloonLayout = new WelcomeBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.getMainWelcomePanel().myEventListener, myScreen.getMainWelcomePanel().myEventLocation);
     }
     else {
       myBalloonLayout = new BalloonLayoutImpl(rootPane, JBUI.insets(8));

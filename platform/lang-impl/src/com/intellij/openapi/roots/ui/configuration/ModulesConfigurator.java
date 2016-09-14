@@ -49,16 +49,17 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import consulo.ide.newProject.actions.NewProjectAction;
 import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.impl.NewProjectDialog;
+import consulo.roots.ContentFolderScopes;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.ide.impl.NewProjectOrModuleDialog;
-import consulo.roots.ContentFolderScopes;
 
 import java.awt.*;
 import java.util.*;
@@ -381,14 +382,14 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         return null;
       }
 
-      final NewProjectOrModuleDialog dialogWithSetup = new NewProjectOrModuleDialog(myProject, moduleDir);
+      final NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
       final com.intellij.openapi.util.Ref<Module> moduleRef = com.intellij.openapi.util.Ref.create();
 
-      if(dialogWithSetup.showAndGet()) {
+      if(dialog.showAndGet()) {
         DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
           @Override
           public void run() {
-            moduleRef.set(dialogWithSetup.doCreate(myModuleModel, moduleDir, false));
+            moduleRef.set(NewProjectAction.doCreate(dialog.getProjectPanel(), myModuleModel, moduleDir, false));
           }
         });
       }

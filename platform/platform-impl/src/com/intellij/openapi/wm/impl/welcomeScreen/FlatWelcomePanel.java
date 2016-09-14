@@ -22,6 +22,7 @@ import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.IdeNotificationArea;
 import com.intellij.notification.impl.NotificationsManagerImpl;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
@@ -29,11 +30,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.wm.WelcomeScreen;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.popup.PopupFactoryImpl;
@@ -60,12 +59,13 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-class FlatWelcomeScreen extends BaseWelcomeScreenPanel implements WelcomeScreen {
+public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   private FlatWelcomeFrame myFlatWelcomeFrame;
   public ParameterizedRunnable<List<NotificationType>> myEventListener;
   public Computable<Point> myEventLocation;
 
-  public FlatWelcomeScreen(FlatWelcomeFrame flatWelcomeFrame) {
+  public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame) {
+    super(flatWelcomeFrame);
     myFlatWelcomeFrame = flatWelcomeFrame;
 
     final JList projectsList = UIUtil.findComponentOfType(myLeftComponent, JList.class);
@@ -84,19 +84,12 @@ class FlatWelcomeScreen extends BaseWelcomeScreenPanel implements WelcomeScreen 
     }
   }
 
-  @Override
-  public JComponent getWelcomePanel() {
-    return this;
-  }
+  public abstract JComponent createActionPanel();
 
   @NotNull
   @Override
-  protected JComponent createLeftComponent() {
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(new NewRecentProjectPanel(this), BorderLayout.CENTER);
-    panel.setBackground(FlatWelcomeFrame.getProjectsBackground());
-    panel.setBorder(new CustomLineBorder(FlatWelcomeFrame.getSeparatorColor(), JBUI.insetsRight(1)));
-    return panel;
+  protected JComponent createLeftComponent(Disposable parentDisposable) {
+    return new NewRecentProjectPanel(parentDisposable);
   }
 
   @Override
@@ -200,53 +193,11 @@ class FlatWelcomeScreen extends BaseWelcomeScreenPanel implements WelcomeScreen 
     return panel;
   }
 
-  private JComponent createActionPanel() {
-    JPanel actions = new NonOpaquePanel();
-    actions.setBorder(JBUI.Borders.emptyLeft(10));
-    actions.setLayout(new BoxLayout(actions, BoxLayout.Y_AXIS));
-    ActionManager actionManager = ActionManager.getInstance();
-    ActionGroup quickStart = (ActionGroup)actionManager.getAction(IdeActions.GROUP_WELCOME_SCREEN_QUICKSTART);
-    DefaultActionGroup group = new DefaultActionGroup();
-    collectAllActions(group, quickStart);
-
-    for (AnAction action : group.getChildren(null)) {
-      AnActionEvent e = AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, DataManager.getInstance().getDataContext(this));
-      action.update(e);
-      Presentation presentation = e.getPresentation();
-      if (presentation.isVisible()) {
-        String text = presentation.getText();
-        if (text != null && text.endsWith("...")) {
-          text = text.substring(0, text.length() - 3);
-        }
-        Icon icon = presentation.getIcon();
-        if (icon.getIconHeight() != JBUI.scale(16) || icon.getIconWidth() != JBUI.scale(16)) {
-          icon = JBUI.emptyIcon(16);
-        }
-        ActionLink link = new ActionLink(text, icon, action, createUsageTracker(action));
-        // Don't allow focus, as the containing panel is going to focusable.
-        link.setFocusable(false);
-        link.setPaintUnderline(false);
-        link.setNormalColor(FlatWelcomeFrame.getLinkNormalColor());
-        JActionLinkPanel button = new JActionLinkPanel(link);
-        button.setBorder(JBUI.Borders.empty(8, 20));
-        if (action instanceof WelcomePopupAction) {
-          button.add(createArrow(link), BorderLayout.EAST);
-        }
-        installFocusable(button, action, KeyEvent.VK_UP, KeyEvent.VK_DOWN, true);
-        actions.add(button);
-      }
-    }
-
-    JPanel panel = new JPanel();
-    //panel.setBackground(FlatWelcomeFrame.getMainBackground());
-    panel.add(actions);
-    return panel;
-  }
 
   /**
    * Wraps an {@link com.intellij.ui.components.labels.ActionLink} component and delegates accessibility support to it.
    */
-  protected class JActionLinkPanel extends JPanel {
+  public static class JActionLinkPanel extends JPanel {
     @NotNull private ActionLink myActionLink;
 
     public JActionLinkPanel(@NotNull ActionLink actionLink) {
@@ -284,27 +235,7 @@ class FlatWelcomeScreen extends BaseWelcomeScreenPanel implements WelcomeScreen 
     }
   }
 
-  private void collectAllActions(DefaultActionGroup group, ActionGroup actionGroup) {
-    for (AnAction action : actionGroup.getChildren(null)) {
-      if (action instanceof ActionGroup && !((ActionGroup)action).isPopup()) {
-        collectAllActions(group, (ActionGroup)action);
-      }
-      else {
-        group.add(action);
-      }
-    }
-  }
-
-  private static Runnable createUsageTracker(final AnAction action) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        UsageTrigger.trigger("welcome.screen." + ActionManager.getInstance().getId(action));
-      }
-    };
-  }
-
-  static JLabel createArrow(final ActionLink link) {
+  public static JLabel createArrow(final ActionLink link) {
     JLabel arrow = new JLabel(AllIcons.General.Combo3);
     arrow.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     arrow.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -360,7 +291,7 @@ class FlatWelcomeScreen extends BaseWelcomeScreenPanel implements WelcomeScreen 
     return UIUtil.getLabelFont();
   }
 
-  private void installFocusable(final JComponent comp, final AnAction action, final int prevKeyCode, final int nextKeyCode, final boolean focusListOnLeft) {
+  public void installFocusable(final JComponent comp, final AnAction action, final int prevKeyCode, final int nextKeyCode, final boolean focusListOnLeft) {
     comp.setFocusable(true);
     comp.setFocusTraversalKeysEnabled(true);
     comp.addKeyListener(new KeyAdapter() {
@@ -408,7 +339,7 @@ class FlatWelcomeScreen extends BaseWelcomeScreenPanel implements WelcomeScreen 
       @Override
       public void focusLost(FocusEvent e) {
         comp.setOpaque(false);
-       // comp.setBackground(FlatWelcomeFrame.getMainBackground());
+        // comp.setBackground(FlatWelcomeFrame.getMainBackground());
       }
     });
 
@@ -432,16 +363,6 @@ class FlatWelcomeScreen extends BaseWelcomeScreenPanel implements WelcomeScreen 
         next.requestFocus();
       }
     }
-  }
-
-  @Override
-  public void setupFrame(JFrame frame) {
-
-  }
-
-  @Override
-  public void dispose() {
-
   }
 
   private class IconsFreeActionGroup extends ActionGroup {

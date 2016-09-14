@@ -1030,7 +1030,7 @@
     </group>
 
     <group id="WelcomeScreen.QuickStart.IDEA">
-      <action id="WelcomeScreen.CreateNewProject" class="com.intellij.platform.NewProjectAction" icon="AllIcons.General.CreateNewProject"/>
+      <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.newProject.actions.NewProjectAction" icon="AllIcons.General.CreateNewProject"/>
       <action id="WelcomeScreen.ImportProject" class="com.intellij.ide.actions.ImportProjectAction" icon="AllIcons.General.ImportProject"/>
       <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenFileAction" icon="AllIcons.General.OpenProject"/>
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
@@ -1945,7 +1945,7 @@
 
     <!-- File -->
     <group id="OpenProjectGroup">
-      <action id="NewProject" class="com.intellij.platform.NewProjectAction"/>
+      <action id="NewProject" class="consulo.ide.newProject.actions.NewProjectAction"/>
       <action id="NewModule" class="com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction"/>
       <action id="ImportProject" class="com.intellij.ide.actions.ImportProjectAction" text="Import Project..."/>
       <action id="ImportModule" class="com.intellij.ide.actions.ImportModuleAction" text="Import Module..."/>
