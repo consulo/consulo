@@ -47,7 +47,6 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
   public FlatWelcomeScreen(FlatWelcomeFrame welcomeFrame) {
     super(new JBCardLayout());
     myWelcomeFrame = welcomeFrame;
-
     myMainWelcomePanel = new FlatWelcomePanel(welcomeFrame) {
       @Override
       public JComponent createActionPanel() {
@@ -55,6 +54,15 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
       }
     };
     add(myMainWelcomePanel, MAIN);
+
+    registerKeyboardAction(e -> {
+      for (Component component : getComponents()) {
+        if (component.isVisible() && component != myMainWelcomePanel) {
+          replacePanel((JComponent)component);
+          break;
+        }
+      }
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
   }
 
   public FlatWelcomePanel getMainWelcomePanel() {
