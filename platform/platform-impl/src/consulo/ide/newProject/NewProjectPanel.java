@@ -22,6 +22,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.LocationNameFieldsBinding;
 import com.intellij.ui.CollectionListModel;
@@ -105,7 +106,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
         setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));
 
         if (value instanceof NewModuleContext.Group) {
-          setText(((NewModuleContext.Group)value).getName());
+          setText(StringUtil.nullize(((NewModuleContext.Group)value).getName()));
           setSeparator();
         }
         else if (value instanceof NewModuleContext.Item) {

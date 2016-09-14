@@ -30,7 +30,7 @@ import java.awt.*;
 public class EmptyNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@NotNull NewModuleContext context) {
-    NewModuleContext.Group group = context.createGroup(NewModuleContext.UGROUPED, "Ungrouped");
+    NewModuleContext.Group group = context.createGroup(NewModuleContext.UGROUPED, "");
 
     group.add("Empty", AllIcons.FileTypes.Any_type, () -> new JPanel(new BorderLayout()));
   }
