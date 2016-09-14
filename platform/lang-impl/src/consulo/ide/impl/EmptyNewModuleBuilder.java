@@ -32,6 +32,6 @@ public class EmptyNewModuleBuilder implements NewModuleBuilder {
   public void setupContext(@NotNull NewModuleContext context) {
     NewModuleContext.Group group = context.createGroup(NewModuleContext.UGROUPED, "Ungrouped");
 
-    group.add("Empty", AllIcons.FileTypes.Text, () -> new JPanel(new BorderLayout()));
+    group.add("Empty", AllIcons.FileTypes.Any_type, () -> new JPanel(new BorderLayout()));
   }
 }
