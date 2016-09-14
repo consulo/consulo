@@ -34,7 +34,6 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.ui.components.JBSlidingPanel;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.popup.PopupFactoryImpl;
@@ -44,6 +43,7 @@ import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,19 +60,15 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
+class FlatWelcomeScreen extends BaseWelcomeScreenPanel implements WelcomeScreen {
   private FlatWelcomeFrame myFlatWelcomeFrame;
-  private JBSlidingPanel mySlidingPanel = new JBSlidingPanel();
   public ParameterizedRunnable<List<NotificationType>> myEventListener;
   public Computable<Point> myEventLocation;
 
   public FlatWelcomeScreen(FlatWelcomeFrame flatWelcomeFrame) {
-    super(new BorderLayout());
     myFlatWelcomeFrame = flatWelcomeFrame;
-    mySlidingPanel.add("root", this);
-    final JComponent recentProjects = createRecentProjects();
-    add(recentProjects, BorderLayout.WEST);
-    final JList projectsList = UIUtil.findComponentOfType(recentProjects, JList.class);
+
+    final JList projectsList = UIUtil.findComponentOfType(myLeftComponent, JList.class);
     if (projectsList != null) {
       projectsList.addFocusListener(new FocusListener() {
         @Override
@@ -86,16 +82,27 @@ class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
         }
       });
     }
-    add(createBody(), BorderLayout.CENTER);
   }
 
   @Override
   public JComponent getWelcomePanel() {
-    return mySlidingPanel;
+    return this;
   }
 
-  private JComponent createBody() {
-    NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
+  @NotNull
+  @Override
+  protected JComponent createLeftComponent() {
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(new NewRecentProjectPanel(this), BorderLayout.CENTER);
+    panel.setBackground(FlatWelcomeFrame.getProjectsBackground());
+    panel.setBorder(new CustomLineBorder(FlatWelcomeFrame.getSeparatorColor(), JBUI.insetsRight(1)));
+    return panel;
+  }
+
+  @Override
+  @NotNull
+  protected JComponent createRightComponent() {
+    JPanel panel = new JPanel(new BorderLayout());
     panel.add(createLogo(), BorderLayout.NORTH);
     panel.add(createActionPanel(), BorderLayout.CENTER);
     panel.add(createSettingsAndDocs(), BorderLayout.SOUTH);
@@ -351,15 +358,6 @@ class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
       }
     }
     return UIUtil.getLabelFont();
-  }
-
-  private JComponent createRecentProjects() {
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.setPreferredSize(JBUI.size(300, 460));
-    panel.add(new NewRecentProjectPanel(this), BorderLayout.CENTER);
-    panel.setBackground(FlatWelcomeFrame.getProjectsBackground());
-    panel.setBorder(new CustomLineBorder(FlatWelcomeFrame.getSeparatorColor(), JBUI.insetsRight(1)));
-    return panel;
   }
 
   private void installFocusable(final JComponent comp, final AnAction action, final int prevKeyCode, final int nextKeyCode, final boolean focusListOnLeft) {
