@@ -16,8 +16,8 @@
 package consulo.ide.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.ide.newProject.NewModuleBuilder;
+import consulo.ide.newProject.NewModuleContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -30,19 +30,8 @@ import java.awt.*;
 public class EmptyNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@NotNull NewModuleContext context) {
-    context.addItem("#Empty", "Empty", AllIcons.FileTypes.Text);
+    NewModuleContext.Group group = context.createGroup(NewModuleContext.UGROUPED, "Ungrouped");
 
-    context.setupItem(new String[] {"#Empty"}, new NewModuleBuilderProcessor() {
-      @NotNull
-      @Override
-      public JComponent createConfigurationPanel() {
-        return new JPanel(new BorderLayout());
-      }
-
-      @Override
-      public void setupModule(@NotNull JComponent panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
-
-      }
-    });
+    group.add("Empty", AllIcons.FileTypes.Text, () -> new JPanel(new BorderLayout()));
   }
 }

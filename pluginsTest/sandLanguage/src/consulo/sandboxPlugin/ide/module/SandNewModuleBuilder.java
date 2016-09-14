@@ -19,9 +19,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.ui.components.JBLabel;
-import consulo.ide.impl.NewModuleBuilder;
-import consulo.ide.impl.NewModuleBuilderProcessor;
-import consulo.ide.impl.NewModuleContext;
+import consulo.ide.newProject.NewModuleBuilder;
+import consulo.ide.newProject.NewModuleBuilderProcessor;
+import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.impl.UnzipNewModuleBuilderProcessor;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension;
@@ -36,13 +36,9 @@ import javax.swing.*;
 public class SandNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@NotNull NewModuleContext context) {
-    context.addItem("#SandGroup", "Sand", AllIcons.Nodes.Advice);
-    // context.addItem("#JavaGroup", "Java", AllIcons.FileTypes.Java);
-    // context.addItem("#JavaExample", "Hello World", AllIcons.RunConfigurations.Application);
-    context.addItem("#SandExample", "Sand Example", AllIcons.Nodes.Static);
-    context.addItem("#SandHello", "Sand Hello", AllIcons.Nodes.ProjectTab);
+    NewModuleContext.Group group = context.createGroup("sand", "Sand");
 
-    context.setupItem(new String[]{"#SandGroup", "#SandHello"}, new UnzipNewModuleBuilderProcessor("/moduleTemplates/Hello.zip") {
+    group.add("Sand Example", AllIcons.Nodes.Static, new UnzipNewModuleBuilderProcessor("/moduleTemplates/Hello.zip") {
       @NotNull
       @Override
       public JComponent createConfigurationPanel() {
@@ -61,7 +57,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
       }
     });
 
-    context.setupItem(new String[]{"#SandGroup", "#SandExample"}, new NewModuleBuilderProcessor() {
+    group.add("Sand Hello", AllIcons.Nodes.ProjectTab, new NewModuleBuilderProcessor() {
       @NotNull
       @Override
       public JComponent createConfigurationPanel() {
@@ -75,17 +71,5 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
         extension.setEnabled(true);
       }
     });
-
-    /*context.setupItem(new String[]{"#JavaGroup", "#JavaExample"}, new NewModuleBuilderProcessor() {
-      @NotNull
-      @Override
-      public JComponent createConfigurationPanel() {
-        return new JBLabel("Java Example!");
-      }
-
-      @Override
-      public void setupModule(@NotNull JComponent panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
-      }
-    }); */
   }
 }

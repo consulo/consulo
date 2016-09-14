@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl;
+package consulo.ide.newProject;
 
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.extensions.CompositeExtensionPointName;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 05.06.14
  */
-public interface NewModuleBuilderProcessor<T extends JComponent> {
-  @NotNull
-  T createConfigurationPanel();
+public interface NewModuleBuilder {
+  CompositeExtensionPointName<NewModuleBuilder> EP_NAME = CompositeExtensionPointName.applicationPoint("com.intellij.newModuleBuilder", NewModuleBuilder.class);
 
-  void setupModule(@NotNull T panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel);
+  void setupContext(@NotNull NewModuleContext context);
 }

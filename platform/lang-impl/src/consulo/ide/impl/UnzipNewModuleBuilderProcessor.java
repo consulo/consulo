@@ -20,6 +20,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.ZipUtil;
+import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 

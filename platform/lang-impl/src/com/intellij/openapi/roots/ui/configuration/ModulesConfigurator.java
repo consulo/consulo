@@ -55,7 +55,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.ide.impl.NewProjectDialog;
+import consulo.ide.newProject.NewProjectDialog;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
 import org.jetbrains.annotations.NotNull;

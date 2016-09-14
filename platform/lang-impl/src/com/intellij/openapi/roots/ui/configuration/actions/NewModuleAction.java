@@ -40,7 +40,7 @@ import consulo.ide.newProject.actions.NewProjectAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.ide.impl.NewProjectDialog;
+import consulo.ide.newProject.NewProjectDialog;
 
 import java.util.List;
 

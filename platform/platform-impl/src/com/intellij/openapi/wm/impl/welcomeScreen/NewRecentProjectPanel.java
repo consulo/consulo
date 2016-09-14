@@ -291,13 +291,9 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
     };
   }
 
-
-
   @Nullable
   @Override
   protected JPanel createTitle() {
     return null;
   }
-
-
 }

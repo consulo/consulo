@@ -48,7 +48,7 @@ public class TitledSeparator extends JPanel {
     }
   };
   protected final JSeparator mySeparator = new JSeparator(SwingConstants.HORIZONTAL);
-  private String originalText;
+  private String myOriginalText;
 
   public TitledSeparator() {
     this("");
@@ -72,12 +72,12 @@ public class TitledSeparator extends JPanel {
   }
 
   public String getText() {
-    return originalText;
+    return myOriginalText;
   }
 
   public void setText(String text) {
-    originalText = text;
-    myLabel.setText(UIUtil.replaceMnemonicAmpersand(originalText));
+    myOriginalText = text;
+    myLabel.setText(UIUtil.replaceMnemonicAmpersand(myOriginalText));
   }
   public void setTitleFont(Font font) {
     myLabel.setFont(font);
