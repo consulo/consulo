@@ -64,12 +64,7 @@ import java.util.function.Consumer;
  */
 public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAware {
   static class SlideNewProjectPanel extends NewProjectPanel {
-    private JButton myOkButton = new JButton(CommonBundle.getOkButtonText()) {
-      @Override
-      public boolean isDefaultButton() {
-        return true;
-      }
-    };
+    private JButton myOkButton;
 
     public SlideNewProjectPanel(@NotNull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
       super(parentDisposable, project, virtualFile);
@@ -92,13 +87,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       myOkButton.setMargin(JBUI.insets(2, 16));
       myOkButton.setEnabled(false);
 
-      myOkButton.addActionListener(e -> {
-        FlatWelcomeScreen flatWelcomeScreen = (FlatWelcomeScreen)UIUtil.findParentByCondition(buttonsPanel, x -> x instanceof FlatWelcomeScreen);
-
-        if (flatWelcomeScreen != null) {
-          flatWelcomeScreen.replacePanel(this);
-        }
-      });
+      myOkButton.addActionListener(e -> generateProject(null, this));
       buttonsPanel.add(myOkButton);
 
       JButton cancelButton = new JButton(CommonBundle.getCancelButtonText());
@@ -144,7 +133,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   @Nullable
   @RequiredDispatchThread
-  protected Project generateProject(Project project, @NotNull final NewProjectPanel projectPanel) {
+  protected static Project generateProject(Project project, @NotNull final NewProjectPanel projectPanel) {
     final File location = new File(projectPanel.getLocationText());
     final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {
