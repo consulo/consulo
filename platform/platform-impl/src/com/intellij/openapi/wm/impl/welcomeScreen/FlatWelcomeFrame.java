@@ -65,7 +65,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
     glassPane.setVisible(false);
     //setUndecorated(true);
     setContentPane(myScreen.getWelcomePanel());
-    setTitle(getWelcomeFrameTitle());
+    setDefaultTitle();
     AppUIUtil.updateWindowIcon(this);
     setSize(getDefaultWindowSize());
     setResizable(false);
@@ -93,6 +93,10 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
     WelcomeFrame.setupCloseAction(this);
     MnemonicHelper.init(this);
     Disposer.register(ApplicationManager.getApplication(), this);
+  }
+
+  public void setDefaultTitle() {
+    setTitle(getWelcomeFrameTitle());
   }
 
   @Override

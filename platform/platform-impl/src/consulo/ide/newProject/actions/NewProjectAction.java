@@ -15,8 +15,10 @@
  */
 package consulo.ide.newProject.actions;
 
+import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.GeneralSettings;
+import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
@@ -32,11 +34,13 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.welcomeScreen.NewWelcomeScreen;
 import com.intellij.platform.PlatformProjectOpenProcessor;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
@@ -52,39 +56,66 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  */
 public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAware {
   static class SlideNewProjectPanel extends NewProjectPanel {
+    private JButton myOkButton = new JButton(CommonBundle.getOkButtonText()) {
+      @Override
+      public boolean isDefaultButton() {
+        return true;
+      }
+    };
 
     public SlideNewProjectPanel(@NotNull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
       super(parentDisposable, project, virtualFile);
     }
 
     @Override
-    protected JPanel createSouthPanel() {
-      JPanel buttonsPanel = new JPanel(new BorderLayout());
-      JButton comp = new JButton("Cancel");
-      comp.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JComponent parent = (JComponent)UIUtil.findParentByCondition(buttonsPanel, x -> x instanceof FlatWelcomeScreen);
+    public void setOKActionEnabled(boolean enabled) {
+      myOkButton.setEnabled(enabled);
+    }
 
-          if(parent != null) {
-            parent.remove(SlideNewProjectPanel.this);
-          }
+    @Override
+    protected JPanel createSouthPanel() {
+      JPanel buttonsPanel = new JPanel(new GridLayout(1, 2, SystemInfo.isMacOSLeopard ? 0 : 5, 0));
+      myOkButton = new JButton(CommonBundle.getOkButtonText()) {
+        @Override
+        public boolean isDefaultButton() {
+          return true;
+        }
+      };
+      myOkButton.setMargin(JBUI.insets(2, 16));
+      myOkButton.setEnabled(false);
+
+      myOkButton.addActionListener(e -> {
+        FlatWelcomeScreen flatWelcomeScreen = (FlatWelcomeScreen)UIUtil.findParentByCondition(buttonsPanel, x -> x instanceof FlatWelcomeScreen);
+
+        if (flatWelcomeScreen != null) {
+          flatWelcomeScreen.replacePanel(this);
         }
       });
-      buttonsPanel.add(comp, BorderLayout.EAST);
+      buttonsPanel.add(myOkButton);
 
-      return buttonsPanel;
+      JButton cancelButton = new JButton(CommonBundle.getCancelButtonText());
+      cancelButton.setMargin(JBUI.insets(2, 16));
+      cancelButton.addActionListener(e -> {
+        FlatWelcomeScreen flatWelcomeScreen = (FlatWelcomeScreen)UIUtil.findParentByCondition(buttonsPanel, x -> x instanceof FlatWelcomeScreen);
+
+        if (flatWelcomeScreen != null) {
+          flatWelcomeScreen.replacePanel(this);
+        }
+      });
+      buttonsPanel.add(cancelButton);
+
+      return JBUI.Panels.simplePanel().addToRight(buttonsPanel);
     }
   }
+
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull final AnActionEvent e) {
@@ -105,7 +136,9 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   @NotNull
   @Override
-  public JComponent createSlide(@NotNull Disposable parentDisposable) {
+  public JComponent createSlide(@NotNull Disposable parentDisposable, Consumer<String> titleChanger) {
+    titleChanger.accept(IdeBundle.message("title.new.project"));
+
     return new SlideNewProjectPanel(parentDisposable, null, null);
   }
 

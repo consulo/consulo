@@ -39,6 +39,8 @@ import java.util.List;
  * @since 14-Sep-16
  */
 public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
+  public static final String MAIN = "main";
+
   private final FlatWelcomePanel myMainWelcomePanel;
   private final FlatWelcomeFrame myWelcomeFrame;
 
@@ -52,7 +54,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
         return FlatWelcomeScreen.this.createActionPanel(this);
       }
     };
-    add(myMainWelcomePanel, "main");
+    add(myMainWelcomePanel, MAIN);
   }
 
   public FlatWelcomePanel getMainWelcomePanel() {
@@ -77,12 +79,13 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
         action = new AnAction() {
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {
-            JComponent panel = oldAction.createSlide(myWelcomeFrame);
+            JComponent panel = oldAction.createSlide(myWelcomeFrame, myWelcomeFrame::setTitle);
             JBCardLayout layout = (JBCardLayout)FlatWelcomeScreen.this.getLayout();
             String id = oldAction.getClass().getName();
 
             FlatWelcomeScreen.this.add(panel, id);
-            layout.show(FlatWelcomeScreen.this, id);
+
+            layout.swipe(FlatWelcomeScreen.this, id, JBCardLayout.SwipeDirection.FORWARD);
           }
         };
         action.copyFrom(oldAction);
@@ -131,12 +134,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
   }
 
   private static Runnable createUsageTracker(final AnAction action) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        UsageTrigger.trigger("welcome.screen." + ActionManager.getInstance().getId(action));
-      }
-    };
+    return () -> UsageTrigger.trigger("welcome.screen." + ActionManager.getInstance().getId(action));
   }
 
   @Override
@@ -152,5 +150,13 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
   @Override
   public void dispose() {
 
+  }
+
+  public void replacePanel(JComponent oldCard) {
+    JBCardLayout layout = (JBCardLayout)getLayout();
+
+    layout.swipe(this, MAIN, JBCardLayout.SwipeDirection.BACKWARD, () -> remove(oldCard));
+
+    myWelcomeFrame.setDefaultTitle();
   }
 }

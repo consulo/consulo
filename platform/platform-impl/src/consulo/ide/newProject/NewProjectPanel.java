@@ -91,8 +91,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
 
   protected abstract JComponent createSouthPanel();
 
-  public void setOKActionEnabled(boolean enabled) {
-  }
+  public abstract void setOKActionEnabled(boolean enabled);
 
   @NotNull
   @Override

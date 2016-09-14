@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -27,5 +28,5 @@ import javax.swing.*;
  */
 public abstract class WelcomeScreenSlideAction extends AnAction {
   @NotNull
-  public abstract JComponent createSlide(@NotNull Disposable parentDisposable);
+  public abstract JComponent createSlide(@NotNull Disposable parentDisposable, @NotNull Consumer<String> titleChanger);
 }
