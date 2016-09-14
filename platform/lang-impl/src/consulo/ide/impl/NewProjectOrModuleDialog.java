@@ -29,6 +29,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import consulo.ui.WholeWestDialogWrapper;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
@@ -257,7 +258,7 @@ public class NewProjectOrModuleDialog extends WholeWestDialogWrapper {
 
   @Override
   public Dimension getDefaultSize() {
-    return new Dimension(600, 300);
+    return FlatWelcomeFrame.getDefaultWindowSize();
   }
 
   @NotNull
