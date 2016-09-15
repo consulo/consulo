@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.intellij.codeInsight.highlighting;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import consulo.codeInsight.TargetElementUtil;
 import com.intellij.codeInsight.daemon.impl.IdentifierUtil;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.find.EditorSearchSession;
@@ -51,13 +50,16 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageTargetUtil;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.codeInsight.TargetElementUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class HighlightUsagesHandler extends HighlightHandlerBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.highlighting.HighlightUsagesHandler");
@@ -86,19 +88,16 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
       return;
     }
 
-    DumbService.getInstance(project).withAlternativeResolveEnabled(new Runnable() {
-      @Override
-      public void run() {
-        UsageTarget[] usageTargets = getUsageTargets(editor, file);
-        if (usageTargets == null) {
-          handleNoUsageTargets(file, editor, selectionModel, project);
-          return;
-        }
+    DumbService.getInstance(project).withAlternativeResolveEnabled(() -> {
+      UsageTarget[] usageTargets = getUsageTargets(editor, file);
+      if (usageTargets == null) {
+        handleNoUsageTargets(file, editor, selectionModel, project);
+        return;
+      }
 
-        boolean clearHighlights = isClearHighlights(editor);
-        for (UsageTarget target : usageTargets) {
-          target.highlightUsages(file, editor, clearHighlights);
-        }
+      boolean clearHighlights = isClearHighlights(editor);
+      for (UsageTarget target : usageTargets) {
+        target.highlightUsages(file, editor, clearHighlights);
       }
     });
   }
@@ -126,12 +125,9 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         ResolveResult[] results = ((PsiPolyVariantReference)ref).multiResolve(false);
 
         if (results.length > 0) {
-          usageTargets = ContainerUtil.mapNotNull(results, new Function<ResolveResult, UsageTarget>() {
-            @Override
-            public UsageTarget fun(ResolveResult result) {
-              PsiElement element = result.getElement();
-              return element == null ? null : new PsiElement2UsageTargetAdapter(element);
-            }
+          usageTargets = ContainerUtil.mapNotNull(results, result -> {
+            PsiElement element = result.getElement();
+            return element == null ? null : new PsiElement2UsageTargetAdapter(element);
           }, UsageTarget.EMPTY_ARRAY);
         }
       }
@@ -158,7 +154,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
   }
 
   @Nullable
-  public static HighlightUsagesHandlerBase createCustomHandler(final Editor editor, final PsiFile file) {
+  public static HighlightUsagesHandlerBase createCustomHandler(@NotNull Editor editor, @NotNull PsiFile file) {
     for (HighlightUsagesHandlerFactory factory : Extensions.getExtensions(HighlightUsagesHandlerFactory.EP_NAME)) {
       final HighlightUsagesHandlerBase handler = factory.createHighlightUsagesHandler(editor, file);
       if (handler != null) {
@@ -261,8 +257,8 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     ReadWriteAccessDetector detector = ReadWriteAccessDetector.findDetector(element);
 
     if (detector != null) {
-      List<PsiReference> readRefs = new ArrayList<PsiReference>();
-      List<PsiReference> writeRefs = new ArrayList<PsiReference>();
+      List<PsiReference> readRefs = new ArrayList<>();
+      List<PsiReference> writeRefs = new ArrayList<>();
 
       for (PsiReference ref : refs) {
         if (detector.getReferenceAccess(element, ref) == ReadWriteAccessDetector.Access.Read) {
@@ -322,7 +318,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
 
   public static void doHighlightElements(Editor editor, PsiElement[] elements, TextAttributes attributes, boolean clearHighlights) {
     HighlightManager highlightManager = HighlightManager.getInstance(editor.getProject());
-    List<TextRange> textRanges = new ArrayList<TextRange>(elements.length);
+    List<TextRange> textRanges = new ArrayList<>(elements.length);
     for (PsiElement element : elements) {
       TextRange range = element.getTextRange();
       // injection occurs
@@ -339,7 +335,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
       clearHighlights(editor, highlightManager, textRanges, attributes);
       return;
     }
-    ArrayList<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
+    ArrayList<RangeHighlighter> highlighters = new ArrayList<>();
     for (TextRange range : textRanges) {
       highlightManager.addRangeHighlight(editor, range.getStartOffset(), range.getEndOffset(), attributes, false, highlighters);
     }
@@ -349,7 +345,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     }
   }
 
-  public static boolean isClearHighlights(Editor editor) {
+  public static boolean isClearHighlights(@NotNull Editor editor) {
     if (editor instanceof EditorWindow) editor = ((EditorWindow)editor).getDelegate();
 
     RangeHighlighter[] highlighters = ((HighlightManagerImpl)HighlightManager.getInstance(editor.getProject())).getHighlighters(editor);
@@ -368,18 +364,8 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
                                       TextAttributes attributes) {
     if (editor instanceof EditorWindow) editor = ((EditorWindow)editor).getDelegate();
     RangeHighlighter[] highlighters = ((HighlightManagerImpl)highlightManager).getHighlighters(editor);
-    Arrays.sort(highlighters, new Comparator<RangeHighlighter>() {
-      @Override
-      public int compare(RangeHighlighter o1, RangeHighlighter o2) {
-        return o1.getStartOffset() - o2.getStartOffset();
-      }
-    });
-    Collections.sort(rangesToHighlight, new Comparator<TextRange>() {
-      @Override
-      public int compare(TextRange o1, TextRange o2) {
-        return o1.getStartOffset() - o2.getStartOffset();
-      }
-    });
+    Arrays.sort(highlighters, (o1, o2) -> o1.getStartOffset() - o2.getStartOffset());
+    Collections.sort(rangesToHighlight, (o1, o2) -> o1.getStartOffset() - o2.getStartOffset());
     int i = 0;
     int j = 0;
     while (i < highlighters.length && j < rangesToHighlight.size()) {
@@ -406,23 +392,31 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
 
   private static void doHighlightRefs(HighlightManager highlightManager, @NotNull Editor editor, @NotNull List<PsiReference> refs,
                                       TextAttributes attributes, boolean clearHighlights) {
-    List<TextRange> textRanges = new ArrayList<TextRange>(refs.size());
+    List<TextRange> textRanges = new ArrayList<>(refs.size());
     for (PsiReference ref : refs) {
-      textRanges.addAll(getRangesToHighlight(ref));
+      collectRangesToHighlight(ref, textRanges);
     }
     highlightRanges(highlightManager, editor, attributes, clearHighlights, textRanges);
   }
 
-  public static List<TextRange> getRangesToHighlight(final PsiReference ref) {
-    final List<TextRange> relativeRanges = ReferenceRange.getRanges(ref);
-    List<TextRange> answer = new ArrayList<TextRange>(relativeRanges.size());
-    for (TextRange relativeRange : relativeRanges) {
+  /**
+   * @deprecated Use {@link #collectRangesToHighlight}
+   */
+  @NotNull
+  @Deprecated
+  public static List<TextRange> getRangesToHighlight(@NotNull PsiReference ref) {
+    return collectRangesToHighlight(ref, new ArrayList<>());
+  }
+
+  @NotNull
+  public static List<TextRange> collectRangesToHighlight(@NotNull PsiReference ref, @NotNull List<TextRange> result) {
+    for (TextRange relativeRange : ReferenceRange.getRanges(ref)) {
       PsiElement element = ref.getElement();
       TextRange range = safeCut(element.getTextRange(), relativeRange);
       // injection occurs
-      answer.add(InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range));
+      result.add(InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range));
     }
-    return answer;
+    return result;
   }
 
   private static TextRange safeCut(TextRange range, TextRange relative) {
