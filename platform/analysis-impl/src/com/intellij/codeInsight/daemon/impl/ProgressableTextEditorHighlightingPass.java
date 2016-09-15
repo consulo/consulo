@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -98,7 +98,9 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     applyInformationWithProgress();
     DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
     daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
-    myHighlightInfoProcessor.progressIsAdvanced(myHighlightingSession, 1);  //causes traffic light repaint
+    if (myHighlightingSession != null) {
+      myHighlightInfoProcessor.progressIsAdvanced(myHighlightingSession, 1);  //causes traffic light repaint
+    }
   }
 
   protected abstract void applyInformationWithProgress();
@@ -156,7 +158,6 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
       super(project, document, false);
     }
 
-    @RequiredReadAction
     @Override
     public void doCollectInformation(@NotNull final ProgressIndicator progress) {
     }

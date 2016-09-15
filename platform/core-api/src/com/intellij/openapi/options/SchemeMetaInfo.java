@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.openapi.options;
 
-package com.intellij.codeInsight.highlighting;
-
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.psi.PsiErrorElement;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author spleaner
- */
-public abstract class HighlightErrorFilter {
-  public static final ExtensionPointName<HighlightErrorFilter> EP_NAME = ExtensionPointName.create("com.intellij.highlightErrorFilter");
+import java.util.Properties;
 
-  public abstract boolean shouldHighlightErrorElement(@NotNull final PsiErrorElement element);
+public interface SchemeMetaInfo {
+  @NotNull
+  Properties getMetaProperties();
 }

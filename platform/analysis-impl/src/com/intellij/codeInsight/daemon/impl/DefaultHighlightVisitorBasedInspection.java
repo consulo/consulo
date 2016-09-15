@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInspection;
+package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
-import com.intellij.codeInsight.daemon.impl.*;
+import com.intellij.codeInspection.*;
 import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -29,7 +30,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.NotNullProducer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import org.jetbrains.annotations.Nls;
@@ -48,7 +48,7 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
   }
 
   public static class AnnotatorBasedInspection extends DefaultHighlightVisitorBasedInspection {
-    public static final String ANNOTATOR_SHORT_NAME = "Annotator";
+    private static final String ANNOTATOR_SHORT_NAME = "Annotator";
 
     public AnnotatorBasedInspection() {
       super(false, true);
@@ -130,7 +130,7 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
                                                                          final boolean runAnnotators, boolean isOnTheFly) {
     MyPsiElementVisitor visitor = new MyPsiElementVisitor(highlightErrorElements, runAnnotators, isOnTheFly);
     file.accept(visitor);
-    return new ArrayList<Pair<PsiFile, HighlightInfo>>(visitor.result);
+    return new ArrayList<>(visitor.result);
   }
 
   @Nls
@@ -143,13 +143,11 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
   private static class MyPsiElementVisitor extends PsiElementVisitor {
     private final boolean highlightErrorElements;
     private final boolean runAnnotators;
-    private final boolean myOnTheFly;
-    private List<Pair<PsiFile, HighlightInfo>> result = new ArrayList<Pair<PsiFile, HighlightInfo>>();
+    private final List<Pair<PsiFile, HighlightInfo>> result = new ArrayList<>();
 
     public MyPsiElementVisitor(boolean highlightErrorElements, boolean runAnnotators, boolean isOnTheFly) {
       this.highlightErrorElements = highlightErrorElements;
       this.runAnnotators = runAnnotators;
-      myOnTheFly = isOnTheFly;
     }
 
     @Override
@@ -169,13 +167,12 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
         List<TextEditorHighlightingPass> passes = passRegistrarEx.instantiateMainPasses(file, document, HighlightInfoProcessor.getEmpty());
         List<GeneralHighlightingPass> gpasses = ContainerUtil.collect(passes.iterator(), FilteringIterator.instanceOf(GeneralHighlightingPass.class));
         for (final GeneralHighlightingPass gpass : gpasses) {
-          gpass.setHighlightVisitorProducer(new NotNullProducer<HighlightVisitor[]>() {
-            @NotNull
-            @Override
-            public HighlightVisitor[] produce() {
-              gpass.incVisitorUsageCount(1);
-              return new HighlightVisitor[]{new DefaultHighlightVisitor(project, highlightErrorElements, runAnnotators, true)};
-            }
+          gpass.setHighlightVisitorProducer(() -> {
+            gpass.incVisitorUsageCount(1);
+
+            HighlightVisitor visitor = new DefaultHighlightVisitor(project, highlightErrorElements, runAnnotators, true,
+                                                                   ServiceManager.getService(project, CachedAnnotators.class));
+            return new HighlightVisitor[]{visitor};
           });
         }
 

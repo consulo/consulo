@@ -204,7 +204,7 @@ public class NavigationGutterIconBuilder<T> {
         return Collections.emptyList();
       }
     };
-    return new RelatedItemLineMarkerInfo<PsiElement>(element, element.getTextRange(), renderer.getIcon(), Pass.UPDATE_OVERRIDEN_MARKERS,
+    return new RelatedItemLineMarkerInfo<PsiElement>(element, element.getTextRange(), renderer.getIcon(), Pass.LINE_MARKERS,
                                                      tooltip == null ? null : new ConstantFunction<PsiElement, String>(tooltip),
                                                      renderer.isNavigateAction() ? renderer : null, renderer.getAlignment(),
                                                      gotoTargets);

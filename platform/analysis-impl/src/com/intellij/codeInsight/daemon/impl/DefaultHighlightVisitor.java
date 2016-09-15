@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageAnnotators;
+import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.Annotator;
-import com.intellij.openapi.extensions.ExtensionPointListener;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
@@ -38,18 +33,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  * @author yole
  */
-public class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
+class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   private AnnotationHolderImpl myAnnotationHolder;
 
-  public static final ExtensionPointName<HighlightErrorFilter> FILTER_EP_NAME = ExtensionPointName.create("com.intellij.highlightErrorFilter");
   private final HighlightErrorFilter[] myErrorFilters;
   private final Project myProject;
   private final boolean myHighlightErrorElements;
@@ -57,20 +49,27 @@ public class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   private final DumbService myDumbService;
   private HighlightInfoHolder myHolder;
   private final boolean myBatchMode;
+  private final CachedAnnotators myCachedAnnotators;
 
   @SuppressWarnings("UnusedDeclaration")
-  public DefaultHighlightVisitor(@NotNull Project project) {
-    this(project, true, true, false);
+  DefaultHighlightVisitor(@NotNull Project project, @NotNull CachedAnnotators cachedAnnotators) {
+    this(project, true, true, false, cachedAnnotators);
   }
-  public DefaultHighlightVisitor(@NotNull Project project, boolean highlightErrorElements, boolean runAnnotators, boolean batchMode) {
+
+  DefaultHighlightVisitor(@NotNull Project project,
+                          boolean highlightErrorElements,
+                          boolean runAnnotators,
+                          boolean batchMode,
+                          @NotNull CachedAnnotators cachedAnnotators) {
     myProject = project;
     myHighlightErrorElements = highlightErrorElements;
     myRunAnnotators = runAnnotators;
-    myErrorFilters = Extensions.getExtensions(FILTER_EP_NAME, project);
+    myCachedAnnotators = cachedAnnotators;
+    myErrorFilters = Extensions.getExtensions(HighlightErrorFilter.EP_NAME, project);
     myDumbService = DumbService.getInstance(project);
     myBatchMode = batchMode;
   }
-                                                     
+
   @Override
   public boolean suitableForFile(@NotNull final PsiFile file) {
     return true;
@@ -102,6 +101,7 @@ public class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     else {
       if (myRunAnnotators) runAnnotators(element);
     }
+
     if (myAnnotationHolder.hasAnnotations()) {
       for (Annotation annotation : myAnnotationHolder) {
         myHolder.add(HighlightInfo.fromAnnotation(annotation, null, myBatchMode));
@@ -110,10 +110,11 @@ public class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     }
   }
 
+  @SuppressWarnings("CloneDoesntCallSuperClone")
   @Override
   @NotNull
   public HighlightVisitor clone() {
-    return new DefaultHighlightVisitor(myProject, myHighlightErrorElements, myRunAnnotators, myBatchMode);
+    return new DefaultHighlightVisitor(myProject, myHighlightErrorElements, myRunAnnotators, myBatchMode, myCachedAnnotators);
   }
 
   @Override
@@ -121,30 +122,8 @@ public class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     return 2;
   }
 
-  private static final PerThreadMap<Annotator,Language> cachedAnnotators = new PerThreadMap<Annotator, Language>() {
-    @NotNull
-    @Override
-    public Collection<Annotator> initialValue(@NotNull Language key) {
-      return LanguageAnnotators.INSTANCE.allForLanguage(key);
-    }
-  };
-
-  static {
-    LanguageAnnotators.INSTANCE.addListener(new ExtensionPointListener<Annotator>() {
-      @Override
-      public void extensionAdded(@NotNull Annotator extension, @Nullable PluginDescriptor pluginDescriptor) {
-        cachedAnnotators.clear();
-      }
-
-      @Override
-      public void extensionRemoved(@NotNull Annotator extension, @Nullable PluginDescriptor pluginDescriptor) {
-        cachedAnnotators.clear();
-      }
-    });
-  }
-
   private void runAnnotators(PsiElement element) {
-    List<Annotator> annotators = cachedAnnotators.get(element.getLanguage());
+    List<Annotator> annotators = myCachedAnnotators.get(element.getLanguage().getID());
     if (annotators.isEmpty()) return;
     final boolean dumb = myDumbService.isDumb();
 
@@ -163,7 +142,9 @@ public class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
 
   private void visitErrorElement(final PsiErrorElement element) {
     for(HighlightErrorFilter errorFilter: myErrorFilters) {
-      if (!errorFilter.shouldHighlightErrorElement(element)) return;
+      if (!errorFilter.shouldHighlightErrorElement(element)) {
+        return;
+      }
     }
     HighlightInfo info = createErrorElementInfo(element);
     myHolder.add(info);
@@ -178,8 +159,10 @@ public class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
         builder.descriptionAndTooltip(errorDescription);
       }
       final HighlightInfo info = builder.create();
-      for(ErrorQuickFixProvider provider: Extensions.getExtensions(ErrorQuickFixProvider.EP_NAME)) {
-        provider.registerErrorQuickFix(element, info);
+      if (info != null) {
+        for(ErrorQuickFixProvider provider: Extensions.getExtensions(ErrorQuickFixProvider.EP_NAME)) {
+          provider.registerErrorQuickFix(element, info);
+        }
       }
       return info;
     }
@@ -187,7 +170,7 @@ public class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     PsiFile containingFile = element.getContainingFile();
     int fileLength = containingFile.getTextLength();
     FileViewProvider viewProvider = containingFile.getViewProvider();
-    PsiElement elementAtOffset = viewProvider.findElementAt(offset, viewProvider.getBaseLanguage());
+    PsiElement elementAtOffset = viewProvider.findElementAt(offset, LanguageUtil.getRootLanguage(element));
     String text = elementAtOffset == null ? null : elementAtOffset.getText();
     HighlightInfo info;
     if (offset < fileLength && text != null && !StringUtil.startsWithChar(text, '\n') && !StringUtil.startsWithChar(text, '\r')) {
