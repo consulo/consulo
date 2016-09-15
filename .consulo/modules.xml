@@ -51,7 +51,7 @@
       </module>
       <module name="platform/boot" dirurl="file://$PROJECT_DIR$/platform/boot" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" bytecode-version="1.6" />
+          <extension id="java" sdk-module-name="" sdk-name="1.8" language-level-module-name="" language-level-name="JDK_1_8" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -430,7 +430,6 @@
           <orderEntry type="library" name="gson" level="project" />
           <orderEntry type="module" module-name="analysis-impl" exported="" />
           <orderEntry type="module" module-name="compiler-impl" />
-          <orderEntry type="library" name="jsr166" level="project" />
         </module-layer>
       </module>
       <module name="platform/lvcs-api" dirurl="file://$PROJECT_DIR$/platform/lvcs-api" current-layer="Default">
@@ -530,7 +529,6 @@
           <orderEntry type="library" name="Guava" level="project" />
           <orderEntry type="module" module-name="analysis-impl" />
           <orderEntry type="module" module-name="editor-ui-ex" exported="" />
-          <orderEntry type="library" name="jsr166" level="project" />
           <orderEntry type="library" name="gson" level="project" />
           <orderEntry type="module" module-name="editor-ui-api" />
           <orderEntry type="library" name="httpmime" level="project" />
@@ -788,7 +786,6 @@
           <orderEntry type="library" name="JUnit4" level="project" />
           <orderEntry type="library" name="Guava" level="project" />
           <orderEntry type="module" module-name="icons" />
-          <orderEntry type="library" name="jsr166" level="project" />
           <orderEntry type="library" name="Lombok" level="project" />
           <orderEntry type="library" name="Snappy-Java" level="project" />
           <orderEntry type="library" exploded="" name="imgscalr" level="project" />

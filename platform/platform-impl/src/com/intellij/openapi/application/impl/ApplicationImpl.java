@@ -16,6 +16,7 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.CommonBundle;
+import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
@@ -25,7 +26,6 @@ import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import consulo.application.ex.ApplicationEx2;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
@@ -64,15 +64,16 @@ import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
+import consulo.application.ApplicationProperties;
+import consulo.application.ex.ApplicationEx2;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
-import consulo.application.ApplicationProperties;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.*;
@@ -181,6 +182,10 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   @Override
   public void initializeComponent(@NotNull Object component, boolean service) {
     getStateStore().initComponent(component, service);
+  }
+
+  static {
+    IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
   }
 
   public ApplicationImpl(boolean isInternal,

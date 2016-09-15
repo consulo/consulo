@@ -1,16 +1,31 @@
+/*
+ * Copyright 2000-2013 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.LowMemoryWatcher;
-import jsr166e.extra.SequenceLock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
-* User: Maxim.Mossienko
-* Date: 2/4/13
-* Time: 4:50 PM
-*/
+ * User: Maxim.Mossienko
+ * Date: 2/4/13
+ * Time: 4:50 PM
+ */
 public class RecentStringInterner {
   private final int myStripeMask;
   private final SLRUCache<String, String>[] myInterns;
@@ -41,7 +56,7 @@ public class RecentStringInterner {
           super.putToProtectedQueue(value, value);
         }
       };
-      myStripeLocks[i] = new SequenceLock();
+      myStripeLocks[i] = new ReentrantLock();
     }
 
     assert Integer.highestOneBit(stripes) == stripes;
@@ -67,9 +82,13 @@ public class RecentStringInterner {
 
   public void clear() {
     for(int i = 0; i < myInterns.length; ++i) {
-      myStripeLocks[i].lock();
-      myInterns[i].clear();
-      myStripeLocks[i].unlock();
+      try {
+        myStripeLocks[i].lock();
+        myInterns[i].clear();
+      }
+      finally {
+        myStripeLocks[i].unlock();
+      }
     }
   }
 }
