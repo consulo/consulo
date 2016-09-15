@@ -32,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -108,11 +107,6 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
         };
       }
     };
-  }
-
-  @RequiredReadAction
-  @Override
-  public void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
   }
 
   @NotNull

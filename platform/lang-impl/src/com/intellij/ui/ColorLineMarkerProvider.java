@@ -30,14 +30,13 @@ import com.intellij.util.FunctionUtil;
 import com.intellij.util.ui.ColorIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TwoColorsIcon;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -112,10 +111,5 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
       }
     }
     return null;
-  }
-
-  @RequiredReadAction
-  @Override
-  public void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
   }
 }
