@@ -3103,6 +3103,18 @@ public class StringUtil extends StringUtilRt {
     throw new IllegalStateException();
   }
 
+  @Nullable
+  public static LineSeparator getLineSeparatorAt(@NotNull CharSequence text, int index) {
+    if (index < 0 || index >= text.length()) {
+      return null;
+    }
+    char ch = text.charAt(index);
+    if (ch == '\r') {
+      return index + 1 < text.length() && text.charAt(index + 1) == '\n' ? LineSeparator.CRLF : LineSeparator.CR;
+    }
+    return ch == '\n' ? LineSeparator.LF : null;
+  }
+
   @NotNull
   @Contract(pure = true)
   public static String convertLineSeparators(@NotNull String text) {

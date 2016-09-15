@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.remotesdk;
+package com.intellij.remote;
 
 import com.intellij.util.xmlb.annotations.Transient;
 
@@ -24,6 +24,8 @@ public interface RemoteCredentials {
   String getHost();
 
   int getPort();
+
+  String getLiteralPort();
 
   @Transient
   String getUserName();

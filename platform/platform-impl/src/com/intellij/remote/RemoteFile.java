@@ -1,8 +1,7 @@
-package com.intellij.remotesdk;
+package com.intellij.remote;
 
 import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author traff
@@ -25,14 +24,14 @@ public class RemoteFile {
     this(resolveChild(parent, child, isWin), isWin);
   }
 
-  @Nullable
+  @NotNull
   public String getName() {
     int ind = myPath.lastIndexOf(getSeparator(myWin));
     if (ind != -1 && ind < myPath.length() - 1) { //not last char
       return myPath.substring(ind + 1);
     }
     else {
-      return null;
+      return myPath;
     }
   }
 
@@ -70,7 +69,9 @@ public class RemoteFile {
   }
 
   public static boolean isWindowsPath(@NotNull String path) {
-    return path.contains("\\") || (path.length() > 1 && path.charAt(1) == ':');
+    path = RemoteSdkCredentialsHolder.getInterpreterPathFromFullPath(path);
+
+    return (path.length() > 1 && path.charAt(1) == ':');
   }
 
   private static String toSystemDependent(@NotNull String path, boolean isWin) {
@@ -84,6 +85,10 @@ public class RemoteFile {
 
   public static RemoteFile createRemoteFile(String path, String script) {
     return detectSystemByPath(path).createRemoteFile(path, script);
+  }
+
+  public static RemoteFile createRemoteFile(String path) {
+    return detectSystemByPath(path).createRemoteFile(path);
   }
 
   public static RemoteFile createRemoteFile(final String path, final String script, final boolean isWindows) {

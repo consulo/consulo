@@ -1131,6 +1131,10 @@
 
     <extensionPoint qualifiedName="com.intellij.openapi.vcs.actions.AnnotateToggleAction.Provider"
                     interface="com.intellij.openapi.vcs.actions.AnnotateToggleAction$Provider"/>
+
+    <extensionPoint name="remote.credentialsType" interface="com.intellij.remote.ext.CredentialsTypeEx"/>
+    <extensionPoint name="remote.credentialsLanguageContribution"
+                    interface="com.intellij.remote.ext.CredentialsLanguageContribution"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
