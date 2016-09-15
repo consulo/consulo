@@ -26,9 +26,9 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
     List<RunLineMarkerContributor> contributors = RunLineMarkerContributor.EXTENSION.allForLanguage(element.getLanguage());
     DefaultActionGroup actionGroup = null;
     Icon icon = null;
-    final List<RunLineMarkerContributor.Info> infos = new ArrayList<RunLineMarkerContributor.Info>();
+    final List<RunLineMarkerContributor.Info> infos = new ArrayList<>();
     for (RunLineMarkerContributor contributor : contributors) {
       RunLineMarkerContributor.Info info = contributor.getInfo(element);
       if (info == null) {
@@ -83,7 +83,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
 
       return tooltip.length() == 0 ? null : tooltip.toString();
     };
-    return new LineMarkerInfo<PsiElement>(element, element.getTextRange(), icon, Pass.UPDATE_ALL,
+    return new LineMarkerInfo<PsiElement>(element, element.getTextRange(), icon, Pass.LINE_MARKERS,
                                           tooltipProvider, null,
                                           GutterIconRenderer.Alignment.CENTER) {
       @Nullable
