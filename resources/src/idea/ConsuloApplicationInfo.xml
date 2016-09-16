@@ -8,11 +8,11 @@
   <names product="Consulo" fullname="Consulo" script="consulo"/>
 
   <help file="ideahelp.jar" root="idea"/>
-  <documentation url="http://must-be.org/consulo/wiki/"/>
-  <support url="http://must-be.org/consulo/support/"/>
-  <feedback eap-url="http://napile.myjetbrains.com/" release-url="http://napile.myjetbrains.com/"/>
-  <plugins url="http://must-be.org/consulo/"/>
-  <whatsnew url="http://must-be.org/consulo/"/>
-  <keymap win="http://must-be.org/consulo/IntelliJIDEA_ReferenceCard.pdf"
-          mac="http://must-be.org/consulo/IntelliJIDEA_ReferenceCard_Mac.pdf"/>
+  <documentation url="https://github.com/consulo/consulo/wiki"/>
+  <support url="https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md"/>
+  <feedback eap-url="https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md" release-url="https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md"/>
+  <plugins url="http://consulo.io/"/>
+  <whatsnew url="http://consulo.io/"/>
+  <keymap win="https://github.com/consulo/consulo/wiki/Keymap-(Windows-&amp;-Linux)"
+          mac="https://github.com/consulo/consulo/wiki/Keymap-(Mac-OS)"/>
 </component>

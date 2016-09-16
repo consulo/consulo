@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.remoteServer.configuration.deployment;
+package consulo.remoteServer.configuration.deployment;
 
+import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
+import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

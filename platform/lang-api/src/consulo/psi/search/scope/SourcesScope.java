@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi.search.scope;
+package consulo.psi.search.scope;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -26,18 +26,18 @@ import com.intellij.ui.Colored;
 
 /**
  * @author VISTALL
- * @since 18:03/17.06.13
+ * @since 18:19/17.06.13
  */
 @Colored(color = "dcf0ff", darkVariant = "2B3557")
-public class ResourcesScope extends NamedScope {
-  public static final String NAME = IdeBundle.message("predefined.scope.resources.name");
+public class SourcesScope extends NamedScope {
+  public static final String NAME = IdeBundle.message("predefined.scope.sources.name");
 
-  public ResourcesScope() {
-    super(NAME, new AbstractPackageSet("rsc:*..*") {
+  public SourcesScope() {
+    super(NAME, new AbstractPackageSet("src:*..*") {
       @Override
       public boolean contains(VirtualFile file, NamedScopesHolder holder) {
         final ProjectFileIndex index = ProjectRootManager.getInstance(holder.getProject()).getFileIndex();
-        return file != null && index.isInResource(file);
+        return file != null && index.isInSource(file);
       }
     });
   }

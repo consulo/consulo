@@ -79,7 +79,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private boolean myHasContextHelp = true;
   @NonNls private String myHelpFileName = "ideahelp.jar";
   @NonNls private String myHelpRootName = "idea";
-  @NonNls private String myWebHelpUrl = "http://must-be.org/wiki/en/Consulo_";
+  @NonNls private String myWebHelpUrl = "https://github.com/consulo/consulo/wiki";
 
   private Rectangle myAboutLogoRect;
 

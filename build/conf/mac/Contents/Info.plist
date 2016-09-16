@@ -38,7 +38,7 @@
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleGetInfoString</key>
-    <string>Consulo 1. Copyright Must-Be.org, (c) 2013-2016</string>
+    <string>Consulo 1. Copyright consulo.io, (c) 2013-2016</string>
     <key>CFBundleShortVersionString</key>
     <string>1.0</string>
     <key>CFBundleVersion</key>

@@ -24,6 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.*;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.ui.ColorUtil;
+import consulo.psi.search.scope.TestResourcesScope;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

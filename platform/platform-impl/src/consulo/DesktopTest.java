@@ -1,5 +1,5 @@
-package consulo;/*
- * Copyright 2013-2016 must-be.org
+/*
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,12 @@ package consulo;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo;
 
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.shared.Size;
 import consulo.ui.Window;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +29,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 09-Jun-16
  */
+
 public class DesktopTest {
   public static class JFrameWrapper extends JFrame implements Window {
 

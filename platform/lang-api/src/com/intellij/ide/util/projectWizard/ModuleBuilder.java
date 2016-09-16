@@ -17,7 +17,7 @@ package com.intellij.ide.util.projectWizard;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.util.DefaultModuleBuilder;
+import consulo.ide.util.DefaultModuleBuilder;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
