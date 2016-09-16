@@ -47,12 +47,6 @@ public class OSProcessHandler extends BaseOSProcessHandler {
     myFilesToDelete = commandLine.getUserData(DELETE_FILES_ON_TERMINATION);
   }
 
-  /** @deprecated use {@link #OSProcessHandler(Process, String)} or any other ctor (to be removed in IDEA 17) */
-  @Deprecated
-  public OSProcessHandler(@NotNull Process process) {
-    this(process, null);
-  }
-
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */

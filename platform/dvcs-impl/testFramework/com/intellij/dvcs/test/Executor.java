@@ -134,7 +134,7 @@ public class Executor {
       throw new RuntimeException(e);
     }
 
-    CapturingProcessHandler handler = new CapturingProcessHandler(clientProcess, CharsetToolkit.getDefaultSystemCharset());
+    CapturingProcessHandler handler = new CapturingProcessHandler(clientProcess, CharsetToolkit.getDefaultSystemCharset(), StringUtil.join(params, " ");
     ProcessOutput result = handler.runProcess(30*1000);
     if (result.isTimeout()) {
       throw new RuntimeException("Timeout waiting for the command execution. Command: " + StringUtil.join(params, " "));

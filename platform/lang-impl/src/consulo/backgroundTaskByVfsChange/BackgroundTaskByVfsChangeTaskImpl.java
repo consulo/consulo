@@ -128,7 +128,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
       commandLine.setPassParentEnvironment(myParameters.isPassParentEnvs());
       commandLine.getEnvironment().putAll(myParameters.getEnvs());
 
-      CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine.createProcess());
+      CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine);
       processHandler.addProcessListener(new ProcessAdapter() {
         @Override
         public void processTerminated(ProcessEvent event) {

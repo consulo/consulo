@@ -49,10 +49,7 @@ public class TestClientRunner {
     myClientEnvironment = clientEnvironment;
   }
 
-  public ProcessOutput runClient(@NotNull String exeName,
-                                 @Nullable String stdin,
-                                 @Nullable final File workingDir,
-                                 String... commandLine) throws IOException {
+  public ProcessOutput runClient(@NotNull String exeName, @Nullable String stdin, @Nullable final File workingDir, String... commandLine) throws IOException {
     final List<String> arguments = new ArrayList<String>();
 
     final File client = new File(myClientBinaryPath, SystemInfo.isWindows ? exeName + ".exe" : exeName);
@@ -92,8 +89,9 @@ public class TestClientRunner {
       }
     }
 
-    final CapturingProcessHandler handler = new CapturingProcessHandler(clientProcess, CharsetToolkit.getDefaultSystemCharset());
-    final ProcessOutput result = handler.runProcess(100*1000, false);
+    final CapturingProcessHandler handler =
+            new CapturingProcessHandler(clientProcess, CharsetToolkit.getDefaultSystemCharset(), StringUtil.join(arguments, " "));
+    final ProcessOutput result = handler.runProcess(100 * 1000, false);
     if (myTraceClient || result.isTimeout()) {
       LOG.debug("*** result: " + result.getExitCode());
       final String out = result.getStdout().trim();
