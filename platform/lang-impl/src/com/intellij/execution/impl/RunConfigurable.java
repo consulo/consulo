@@ -25,8 +25,10 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.ListPopupStep;
@@ -46,17 +48,13 @@ import com.intellij.util.config.StorageAccessors;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.ui.EditableModel;
-import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.ui.GridBag;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.THashSet;
-import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -350,7 +348,7 @@ class RunConfigurable extends BaseConfigurable {
 
   private void showFolderField(final ConfigurationType type, final DefaultMutableTreeNode node, final String folderName) {
     myRightPanel.removeAll();
-    JPanel p = new JPanel(new MigLayout("ins " + myToolbarDecorator.getActionsPanel().getHeight() + " 5 0 0, flowx"));
+    JPanel panel = new JPanel(new VerticalFlowLayout(0, 0));
     final JTextField textField = new JTextField(folderName);
     textField.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
@@ -359,11 +357,10 @@ class RunConfigurable extends BaseConfigurable {
         myTreeModel.reload(node);
       }
     });
-    p.add(new JLabel("Folder name:"), "gapright 5");
-    p.add(textField, "pushx, growx, wrap");
-    p.add(new JLabel(ExecutionBundle.message("run.configuration.rename.folder.disclaimer")), "gaptop 5, spanx 2");
+    panel.add(LabeledComponent.left(textField, "Folder name"));
+    panel.add(new JLabel(ExecutionBundle.message("run.configuration.rename.folder.disclaimer")));
 
-    myRightPanel.add(p);
+    myRightPanel.add(panel);
     myRightPanel.revalidate();
     myRightPanel.repaint();
     if (isFolderCreating) {

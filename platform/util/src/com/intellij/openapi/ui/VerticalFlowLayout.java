@@ -66,16 +66,16 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
     Insets insets = container.getInsets();
     int i = container.getSize().height - (insets.top + insets.bottom + vGap * 2);
     int j = container.getSize().width - (insets.left + insets.right + hGap * 2);
-    int k = container.getComponentCount();
+    int componentCount = container.getComponentCount();
     int l = insets.left + hGap;
     int i1 = 0;
     int j1 = 0;
     int k1 = 0;
-    for(int l1 = 0; l1 < k; l1++){
+    for(int l1 = 0; l1 < componentCount; l1++){
       Component component = container.getComponent(l1);
       if (!component.isVisible()) continue;
       Dimension dimension = component.getPreferredSize();
-      if (myVerticalFill && l1 == k - 1){
+      if (myVerticalFill && l1 == componentCount - 1){
         dimension.height = Math.max(i - i1, component.getPreferredSize().height);
       }
       if (myHorizontalFill){
@@ -100,7 +100,7 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
       j1 = Math.max(j1, dimension.width);
     }
 
-    a(container, l, insets.top + vGap, j1, i - i1, k1, k);
+    a(container, l, insets.top + vGap, j1, i - i1, k1, componentCount);
   }
 
   private void a(Container container, int i, int j, int k, int l, int i1, int j1) {

@@ -24,8 +24,10 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.FontPreferences;
+import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FontComboBox;
 import com.intellij.ui.FontInfoRenderer;
@@ -33,9 +35,9 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
+import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.JBUI;
-import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,39 +82,41 @@ public class FontOptions extends JPanel implements OptionsPanel{
   }
 
   protected FontOptions(@NotNull ColorAndFontOptions options, final String title) {
-    setLayout(new MigLayout("ins 0, gap 5, flowx"));
-    Insets borderInsets = new Insets(IdeBorderFactory.TITLED_BORDER_TOP_INSET,
-                                     IdeBorderFactory.TITLED_BORDER_LEFT_INSET,
-                                     0,
-                                     IdeBorderFactory.TITLED_BORDER_RIGHT_INSET);
+    super(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
+    Insets borderInsets =
+            JBUI.insets(IdeBorderFactory.TITLED_BORDER_TOP_INSET, IdeBorderFactory.TITLED_BORDER_LEFT_INSET, 0, IdeBorderFactory.TITLED_BORDER_RIGHT_INSET);
     setBorder(IdeBorderFactory.createTitledBorder(title, false, borderInsets));
     myOptions = options;
-    add(myOnlyMonospacedCheckBox, "sgx b, sx 2");
+    add(myOnlyMonospacedCheckBox);
 
-    add(new JLabel(ApplicationBundle.message("primary.font")), "newline, ax right");
-    add(myPrimaryCombo, "sgx b");
-    add(new JLabel(ApplicationBundle.message("editbox.font.size")), "gapleft 20");
-    add(myEditorFontSizeField);
-    add(new JLabel(ApplicationBundle.message("editbox.line.spacing")), "gapleft 20");
-    add(myLineSpacingField);
+    JPanel primaryFontPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+    primaryFontPanel.setBorder(JBUI.Borders.emptyLeft(20));
+    add(primaryFontPanel);
 
-    add(new JLabel(ApplicationBundle.message("label.fallback.fonts.list.description"),
-                   MessageType.INFO.getDefaultIcon(),
-                   SwingConstants.LEFT), "newline, sx 5");
-    add(myUseSecondaryFontCheckbox, "newline, ax right");
-    add(mySecondaryCombo, "sgx b");
-    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    primaryFontPanel.add(LabeledComponent.left(myPrimaryCombo, ApplicationBundle.message("primary.font")));
+    primaryFontPanel.add(LabeledComponent.left(myEditorFontSizeField, ApplicationBundle.message("editbox.font.size")));
+    primaryFontPanel.add(LabeledComponent.left(myLineSpacingField, ApplicationBundle.message("editbox.line.spacing")));
+
+    add(new JLabel(ApplicationBundle.message("label.fallback.fonts.list.description"), MessageType.INFO.getDefaultIcon(), SwingConstants.LEFT));
+
+    JPanel secondFontPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+    add(secondFontPanel);
+
+    secondFontPanel.add(myUseSecondaryFontCheckbox);
+    secondFontPanel.add(mySecondaryCombo);
+
+    JPanel ligaturesPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
     myEnableLigaturesCheckbox.setBorder(null);
-    panel.add(myEnableLigaturesCheckbox);
-    myLigaturesInfoLinkLabel = new LinkLabel<String>(ApplicationBundle.message("ligatures.more.info"), null, new LinkListener<String>() {
+    ligaturesPanel.add(myEnableLigaturesCheckbox);
+    myLigaturesInfoLinkLabel = new LinkLabel<>(ApplicationBundle.message("ligatures.more.info"), null, new LinkListener<String>() {
       @Override
       public void linkSelected(LinkLabel aSource, String aLinkData) {
         BrowserUtil.browse(HELP_URL);
       }
     });
     myLigaturesInfoLinkLabel.setBorder(JBUI.Borders.emptyLeft(5));
-    panel.add(myLigaturesInfoLinkLabel);
-    add(panel, "newline, sx 2");
+    ligaturesPanel.add(myLigaturesInfoLinkLabel);
+    add(ligaturesPanel);
 
     myOnlyMonospacedCheckBox.setBorder(null);
     myUseSecondaryFontCheckbox.setBorder(null);
