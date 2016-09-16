@@ -2513,9 +2513,7 @@
     <getDataRule key="virtualFileStream" implementationClass="com.intellij.openapi.vcs.VirtualFileStreamRule"/>
     <getDataRule key="VCS_REVISION_NUMBERS" implementationClass="com.intellij.openapi.vcs.history.VcsRevisionNumberArrayRule"/>
     <getDataRule key="vcs.ChangesSelection" implementationClass="com.intellij.openapi.vcs.changes.VcsChangesSelectionRule"/>
-  </extensions>
 
-  <extensions defaultExtensionNs="consulo">
     <orderEntryType implementation="consulo.roots.orderEntry.LibraryOrderEntryType"/>
     <orderEntryType implementation="consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryType"/>
     <orderEntryType implementation="consulo.roots.orderEntry.ModuleLibraryOrderEntryType"/>
