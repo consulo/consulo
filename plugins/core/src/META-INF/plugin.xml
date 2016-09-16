@@ -602,8 +602,8 @@
 
     <extensionPoint name="moduleRootsProcessor" interface="consulo.roots.impl.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
-    <extensionPoint qualifiedName="consulo.orderEntryType" interface="consulo.roots.orderEntry.OrderEntryType"/>
-    <extensionPoint qualifiedName="consulo.orderEntryTypeEditor" beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
+    <extensionPoint name="orderEntryType" interface="consulo.roots.orderEntry.OrderEntryType"/>
+    <extensionPoint name="orderEntryTypeEditor" beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="consulo.roots.orderEntry.OrderEntryTypeEditor"/>
     </extensionPoint>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>

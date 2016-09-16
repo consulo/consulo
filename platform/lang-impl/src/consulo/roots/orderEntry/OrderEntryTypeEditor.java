@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 06-Jun-16
  */
 public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
-  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.orderEntryTypeEditor");
+  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.orderEntryTypeEditor");
 
   KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY =
           new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME,

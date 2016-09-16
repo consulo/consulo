@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 21.08.14
  */
 public interface OrderEntryType<T extends OrderEntry> {
-  ExtensionPointName<OrderEntryType> EP_NAME = ExtensionPointName.create("consulo.orderEntryType");
+  ExtensionPointName<OrderEntryType> EP_NAME = ExtensionPointName.create("com.intellij.orderEntryType");
 
   @NotNull
   String getId();
