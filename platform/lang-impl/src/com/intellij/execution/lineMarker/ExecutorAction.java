@@ -22,38 +22,39 @@ import com.intellij.execution.configurations.LocatableConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.impl.RunManagerImpl;
 import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl;
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.util.Key;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
 public class ExecutorAction extends AnAction {
+  private static final Key<List<ConfigurationFromContext>> CONFIGURATION_CACHE = Key.create("ConfigurationFromContext");
 
+  @NotNull
   public static AnAction[] getActions(final int order) {
-    return ContainerUtil.map2Array(ExecutorRegistry.getInstance().getRegisteredExecutors(), AnAction.class, new Function<Executor, AnAction>() {
-      @Override
-      public AnAction fun(Executor executor) {
-        return new ExecutorAction(ActionManager.getInstance().getAction(executor.getContextActionId()), executor, order);
-      }
-    });
+    return ContainerUtil.map2Array(ExecutorRegistry.getInstance().getRegisteredExecutors(), AnAction.class,
+                                   (Function<Executor, AnAction>)executor -> new ExecutorAction(ActionManager.getInstance().getAction(executor.getContextActionId()), executor, order));
   }
 
   private final AnAction myOrigin;
   private final Executor myExecutor;
   private final int myOrder;
 
-  private ExecutorAction(AnAction origin,
-                         Executor executor,
+  private ExecutorAction(@NotNull AnAction origin,
+                         @NotNull Executor executor,
                          int order) {
     myOrigin = origin;
     myExecutor = executor;
@@ -75,17 +76,25 @@ public class ExecutorAction extends AnAction {
     myOrigin.actionPerformed(e);
   }
 
-  private String getActionName(DataContext dataContext, @NotNull Executor executor) {
+  @NotNull
+  private static List<ConfigurationFromContext> getConfigurations(DataContext dataContext) {
+    List<ConfigurationFromContext> result = DataManager.getInstance().loadFromDataContext(dataContext, CONFIGURATION_CACHE);
+    if (result == null) {
+      DataManager.getInstance().saveInDataContext(dataContext, CONFIGURATION_CACHE, result = calcConfigurations(dataContext));
+    }
+    return result;
+  }
+
+  @NotNull
+  private static List<ConfigurationFromContext> calcConfigurations(DataContext dataContext) {
     final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
-    RunConfigurationProducer<?>[] producers = RunConfigurationProducer.EP_NAME.getExtensions();
-    List<ConfigurationFromContext> list = ContainerUtil.mapNotNull(producers,
-                                                                   new Function<RunConfigurationProducer<?>, ConfigurationFromContext>() {
-                                                                     @Override
-                                                                     public ConfigurationFromContext fun(RunConfigurationProducer<?> producer) {
-                                                                       return createConfiguration(producer, context);
-                                                                     }
-                                                                   }
-    );
+    if (context.getLocation() == null) return Collections.emptyList();
+    List<RunConfigurationProducer<?>> producers = RunConfigurationProducer.getProducers(context.getProject());
+    return ContainerUtil.mapNotNull(producers, producer -> createConfiguration(producer, context));
+  }
+
+  private String getActionName(DataContext dataContext, @NotNull Executor executor) {
+    List<ConfigurationFromContext> list = getConfigurations(dataContext);
     if (list.isEmpty()) return null;
     ConfigurationFromContext configuration = list.get(myOrder < list.size() ? myOrder : 0);
     String actionName = BaseRunConfigurationAction.suggestRunActionName((LocatableConfiguration)configuration.getConfiguration());

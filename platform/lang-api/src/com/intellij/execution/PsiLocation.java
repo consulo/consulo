@@ -21,8 +21,8 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -82,7 +82,7 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
       @Override
       public Location<T> next() {
         if (myCurrent == null) throw new NoSuchElementException();
-        final PsiLocation<T> psiLocation = new PsiLocation<T>(myProject, myCurrent);
+        final PsiLocation<T> psiLocation = new PsiLocation<>(myProject, myCurrent);
         myCurrent = findNext(myCurrent, ancestorClass);
         return psiLocation;
       }
@@ -111,7 +111,7 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
 
   public static <T extends PsiElement> Location<T> fromPsiElement(@NotNull Project project, final T element) {
     if (element == null) return null;
-    return new PsiLocation<T>(project, element);
+    return new PsiLocation<>(project, element);
   }
 
   public static <T extends PsiElement> Location<T> fromPsiElement(final T element) {
@@ -120,6 +120,6 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
 
   public static <T extends PsiElement> Location<T> fromPsiElement(T element, Module module) {
     if (element == null || !element.isValid()) return null;
-    return module != null ? new PsiLocation<T>(element.getProject(), module, element) : new PsiLocation<T>(element.getProject(), element);
+    return module != null ? new PsiLocation<>(element.getProject(), module, element) : new PsiLocation<>(element.getProject(), element);
   }
 }

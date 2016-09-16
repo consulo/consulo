@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -44,6 +45,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.ui.docking.*;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jdom.Element;
@@ -61,20 +63,16 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 
-@State(
-  name = "DockManager",
-  storages = {@Storage(
-    file = StoragePathMacros.WORKSPACE_FILE)})
-
+@State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class DockManagerImpl extends DockManager implements PersistentStateComponent<Element> {
 
   private final Project myProject;
 
-  private final Map<String, DockContainerFactory> myFactories = new HashMap<String, DockContainerFactory>();
+  private final Map<String, DockContainerFactory> myFactories = new HashMap<>();
 
-  private final Set<DockContainer> myContainers = new HashSet<DockContainer>();
+  private final Set<DockContainer> myContainers = new HashSet<>();
 
-  private final MutualMap<DockContainer, DockWindow> myWindows = new MutualMap<DockContainer, DockWindow>();
+  private final MutualMap<DockContainer, DockWindow> myWindows = new MutualMap<>();
 
   private MyDragSession myCurrentDragSession;
 
@@ -93,6 +91,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     myProject = project;
   }
 
+  @Override
   public void register(final DockContainer container) {
     myContainers.add(container);
     Disposer.register(container, new Disposable() {
@@ -116,9 +115,15 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     readStateFor(id);
   }
 
+  public void readState() {
+    for (String id : myFactories.keySet()) {
+      readStateFor(id);
+    }
+  }
+
   @Override
   public Set<DockContainer> getContainers() {
-    return Collections.unmodifiableSet(myContainers);
+    return Collections.unmodifiableSet(ContainerUtil.newHashSet(myContainers));
   }
 
   @Override
@@ -140,6 +145,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     return wnd != null ? key + "#" + wnd.myId : key;
   }
 
+  @Override
   public DockContainer getContainerFor(Component c) {
     if (c == null) return null;
 
@@ -386,15 +392,11 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
 
     container.add(content, new RelativePoint(target.getLocation()));
 
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        window.myUiContainer.setPreferredSize(null);
-      }
-    });
+    SwingUtilities.invokeLater(() -> window.myUiContainer.setPreferredSize(null));
   }
 
-  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(VirtualFile file, FileEditorManagerImpl fileEditorManager) {
+  @NotNull
+  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@NotNull VirtualFile file, @NotNull FileEditorManagerImpl fileEditorManager) {
     DockContainer container = getFactory(DockableEditorContainerFactory.TYPE).createContainer(null);
     register(container);
 
@@ -405,12 +407,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     final Pair<FileEditor[], FileEditorProvider[]> result = fileEditorManager.openFileImpl2(editorWindow, file, true);
     container.add(EditorTabbedContainer.createDockableEditor(myProject, null, file, new Presentation(file.getName()), editorWindow), null);
 
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        window.myUiContainer.setPreferredSize(null);
-      }
-    });
+    SwingUtilities.invokeLater(() -> window.myUiContainer.setPreferredSize(null));
     return result;
   }
 
@@ -428,7 +425,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     private final DockContainer myContainer;
 
     private final VerticalBox myNorthPanel = new VerticalBox();
-    private final Map<String, IdeRootPaneNorthExtension> myNorthExtensions = new LinkedHashMap<String, IdeRootPaneNorthExtension>();
+    private final Map<String, IdeRootPaneNorthExtension> myNorthExtensions = new LinkedHashMap<>();
 
     private final NonOpaquePanel myUiContainer;
     private final NonOpaquePanel myDockContentUiContainer;
@@ -458,7 +455,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
       center.add(myDockContentUiContainer, BorderLayout.CENTER);
 
       myUiContainer.add(center, BorderLayout.CENTER);
-      if (!(container instanceof DockContainer.Dialog)) {
+      if (myStatusBar != null) {
         myUiContainer.add(myStatusBar.getComponent(), BorderLayout.SOUTH);
       }
 
@@ -470,12 +467,9 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
       myContainer.addListener(new DockContainer.Listener.Adapter() {
         @Override
         public void contentRemoved(Object key) {
-          getReady().doWhenDone(new Runnable() {
-            @Override
-            public void run() {
-              if (myContainer.isEmpty()) {
-                close();
-              }
+          getReady().doWhenDone(() -> {
+            if (myContainer.isEmpty()) {
+              close();
             }
           });
         }
@@ -498,13 +492,12 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     }
 
     private void updateNorthPanel() {
-      myNorthPanel.setVisible(UISettings.getInstance().SHOW_NAVIGATION_BAR
-                              && !(myContainer instanceof DockContainer.Dialog)
-                              && !UISettings.getInstance().PRESENTATION_MODE);
+      if (ApplicationManager.getApplication().isUnitTestMode()) return;
+      myNorthPanel.setVisible(
+              UISettings.getInstance().SHOW_NAVIGATION_BAR && !(myContainer instanceof DockContainer.Dialog) && !UISettings.getInstance().PRESENTATION_MODE);
 
-      IdeRootPaneNorthExtension[] extensions =
-        Extensions.getArea(myProject).getExtensionPoint(IdeRootPaneNorthExtension.EP_NAME).getExtensions();
-      HashSet<String> processedKeys = new HashSet<String>();
+      IdeRootPaneNorthExtension[] extensions = Extensions.getArea(myProject).getExtensionPoint(IdeRootPaneNorthExtension.EP_NAME).getExtensions();
+      HashSet<String> processedKeys = new HashSet<>();
       for (IdeRootPaneNorthExtension each : extensions) {
         processedKeys.add(each.getKey());
         if (myNorthExtensions.containsKey(each.getKey())) continue;
@@ -584,7 +577,8 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
         }
       });
 
-      new UiNotifyConnector(((RootPaneContainer)frame).getContentPane(), myContainer);
+      UiNotifyConnector connector = new UiNotifyConnector(((RootPaneContainer)frame).getContentPane(), myContainer);
+      Disposer.register(myContainer, connector);
     }
   }
 
@@ -640,12 +634,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
       register(container);
 
       final DockWindow window = createWindowFor(eachId, container);
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          window.show();
-        }
-      });
+      UIUtil.invokeLaterIfNeeded(window::show);
     }
   }
 }

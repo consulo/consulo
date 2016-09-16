@@ -2406,7 +2406,8 @@
                              id="moveFileOrDir"/>
     <programRunner implementation="com.intellij.execution.runners.BasicProgramRunner" order="last"/>
 
-    <projectConfigurable instance="com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable" id="project.scopes"
+    <projectConfigurable instance="com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable"
+                         id="project.scopes" parentId="general"
                          key="scopes.display.name" bundle="messages.IdeBundle"/>
 
 

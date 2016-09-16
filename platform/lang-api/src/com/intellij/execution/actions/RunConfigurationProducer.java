@@ -15,22 +15,20 @@
  */
 package com.intellij.execution.actions;
 
-import com.intellij.execution.Location;
-import com.intellij.execution.PsiLocation;
-import com.intellij.execution.RunManager;
-import com.intellij.execution.RunnerAndConfigurationSettings;
+import com.intellij.execution.*;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +40,14 @@ import java.util.List;
  */
 public abstract class RunConfigurationProducer<T extends RunConfiguration> {
   public static final ExtensionPointName<RunConfigurationProducer> EP_NAME = ExtensionPointName.create("com.intellij.runConfigurationProducer");
-  private static final Logger LOG = Logger.getInstance(RunConfigurationProducer.class);
+  private static final Logger LOG = Logger.getInstance(RunConfigurationProducer.class.getName());
+
+  @NotNull
+  public static List<RunConfigurationProducer<?>> getProducers(@NotNull Project project) {
+    RunConfigurationProducer[] producers = Extensions.getExtensions(EP_NAME);
+    // no filter. IDEA have filter for it.
+    return ContainerUtil.newArrayList(producers);
+  }
 
   private final ConfigurationFactory myConfigurationFactory;
 
@@ -72,7 +77,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
   @Nullable
   public ConfigurationFromContext createConfigurationFromContext(ConfigurationContext context) {
     final RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(context);
-    Ref<PsiElement> ref = new Ref<PsiElement>(context.getPsiLocation());
+    Ref<PsiElement> ref = new Ref<>(context.getPsiLocation());
     try {
       if (!setupConfigurationFromContext((T)settings.getConfiguration(), context, ref)) {
         return null;
@@ -169,23 +174,11 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
       if (_location != null) {
         // replace with existing configuration if any
         final RunManager runManager = RunManager.getInstance(context.getProject());
-        final ConfigurationType type = fromContext.getConfigurationType();
-        final List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(type);
         final RunnerAndConfigurationSettings settings = findExistingConfiguration(context);
         if (settings != null) {
           fromContext.setConfigurationSettings(settings);
         } else {
-          final ArrayList<String> currentNames = new ArrayList<String>();
-          for (RunnerAndConfigurationSettings configurationSettings : configurations) {
-            currentNames.add(configurationSettings.getName());
-          }
-          RunConfiguration configuration = fromContext.getConfiguration();
-          String name = configuration.getName();
-          if (name == null) {
-            LOG.error(configuration);
-            name = "Unnamed";
-          }
-          configuration.setName(RunManager.suggestUniqueName(name, currentNames));
+          runManager.setUniqueNameIfNeed(fromContext.getConfiguration());
         }
       }
     }
@@ -233,7 +226,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
   @Nullable
   public RunConfiguration createLightConfiguration(@NotNull final ConfigurationContext context) {
     RunConfiguration configuration = myConfigurationFactory.createTemplateConfiguration(context.getProject());
-    final Ref<PsiElement> ref = new Ref<PsiElement>(context.getPsiLocation());
+    final Ref<PsiElement> ref = new Ref<>(context.getPsiLocation());
     try {
       if (!setupConfigurationFromContext((T)configuration, context, ref)) {
         return null;

@@ -780,7 +780,7 @@
   <action id="ActivateHierarchyToolWindow">
     <keyboard-shortcut first-keystroke="alt 8"/>
   </action>
-  <action id="ActivateVersionControlToolWindow">
+  <action id="ActivateVCSToolWindow">
     <keyboard-shortcut first-keystroke="alt 9"/>
   </action>
   <action id="NewElement">
