@@ -15,31 +15,28 @@
  */
 package consulo.ide.plugins;
 
-import com.intellij.util.ArrayUtilRt;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 30-Aug-16
+ * @since 21-Sep-16
  */
-public class PluginJsonNode {
-  public static class Extension {
-    public String key;
+public class SimpleExtension {
+  private String myKey;
+  private String[] myValues;
 
-    public String[] values = ArrayUtilRt.EMPTY_STRING_ARRAY;
+  public SimpleExtension(String key, String[] values) {
+    myKey = key;
+    myValues = values;
   }
 
-  public String id;
-  public String name;
-  public String description;
-  public String category;
-  public String vendor;
-  public int downloads;
-  public Long length;
-  public Long date;
-  public Integer rating;
-  public String version;
-  public String platformVersion;
-  public String[] dependencies;
-  public String[] optionalDependencies;
-  public Extension[] extensions;
+  @NotNull
+  public String getKey() {
+    return myKey;
+  }
+
+  @NotNull
+  public String[] getValues() {
+    return myValues;
+  }
 }

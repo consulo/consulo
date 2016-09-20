@@ -20,7 +20,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.ide.plugins.PluginJsonNode;
@@ -36,7 +35,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -134,27 +132,7 @@ public class RepositoryHelper {
 
     List<IdeaPluginDescriptor> pluginDescriptors = new ArrayList<>(nodes.length);
     for (PluginJsonNode jsonPlugin : nodes) {
-      PluginNode pluginNode = new PluginNode();
-
-      pluginNode.setId(jsonPlugin.id);
-      pluginNode.setName(jsonPlugin.name);
-      pluginNode.setDescription(jsonPlugin.description);
-      pluginNode.setDate(jsonPlugin.date);
-      pluginNode.setVendor(jsonPlugin.vendor);
-      pluginNode.setVersion(jsonPlugin.version);
-      pluginNode.setPlatformVersion(jsonPlugin.platformVersion);
-      pluginNode.setDownloads(String.valueOf(jsonPlugin.downloads));
-      pluginNode.setCategory(jsonPlugin.category);
-
-      if(jsonPlugin.dependencies != null) {
-        pluginNode.addDependency(Arrays.stream(jsonPlugin.dependencies).map(PluginId::getId).toArray(PluginId[]::new));
-      }
-
-      if(jsonPlugin.optionalDependencies != null) {
-        pluginNode.addOptionalDependency(Arrays.stream(jsonPlugin.optionalDependencies).map(PluginId::getId).toArray(PluginId[]::new));
-      }
-
-      pluginDescriptors.add(pluginNode);
+      pluginDescriptors.add(new PluginNode(jsonPlugin));
     }
     return pluginDescriptors;
   }

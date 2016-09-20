@@ -19,11 +19,13 @@ import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import consulo.annotations.DeprecationInfo;
+import consulo.ide.plugins.SimpleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -91,6 +93,11 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
   @DeprecationInfo(value = "Always return null. Use #getPlatformVersion()", until = "2.0")
   default String getUntilBuild() {
     return null;
+  }
+
+  @NotNull
+  default List<SimpleExtension> getSimpleExtensions() {
+    return Collections.emptyList();
   }
 
   boolean isBundled();

@@ -38,46 +38,42 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
   @NonNls private static final String FEATURE_ID = "featureType";
   @NonNls private static final String IMPLEMENTATION_NAME = "implementationName";
 
-  private final Set<UnknownFeature> myUnknownFeatures = new HashSet<UnknownFeature>();
-  private final Set<UnknownFeature> myIgnoredUnknownFeatures = new HashSet<UnknownFeature>();
+  private final Set<UnknownExtension> myUnknownExtensions = new HashSet<UnknownExtension>();
+  private final Set<UnknownExtension> myIgnoredUnknownExtensions = new HashSet<UnknownExtension>();
 
   public static UnknownFeaturesCollector getInstance(Project project) {
     return ServiceManager.getService(project, UnknownFeaturesCollector.class);
   }
 
-  public void registerUnknownRunConfiguration(String configurationName) {
-    registerUnknownFeature("com.intellij.configurationType", configurationName);
-  }
-
   public void registerUnknownFeature(String featureType, String implementationName) {
-    final UnknownFeature feature = new UnknownFeature(featureType, implementationName);
+    final UnknownExtension feature = new UnknownExtension(featureType, implementationName);
     if (!isIgnored(feature)) {
-      myUnknownFeatures.add(feature);
+      myUnknownExtensions.add(feature);
     }
   }
 
-  public boolean isIgnored(UnknownFeature feature) {
-    return myIgnoredUnknownFeatures.contains(feature);
+  public boolean isIgnored(UnknownExtension feature) {
+    return myIgnoredUnknownExtensions.contains(feature);
   }
 
-  public void ignoreFeature(UnknownFeature feature) {
-    myIgnoredUnknownFeatures.add(feature);
+  public void ignoreFeature(UnknownExtension feature) {
+    myIgnoredUnknownExtensions.add(feature);
   }
 
-  public Set<UnknownFeature> getUnknownFeatures() {
-    return myUnknownFeatures;
+  public Set<UnknownExtension> getUnknownExtensions() {
+    return myUnknownExtensions;
   }
 
   @Nullable
   @Override
   public Element getState() {
-    if (myIgnoredUnknownFeatures.isEmpty()) return null;
+    if (myIgnoredUnknownExtensions.isEmpty()) return null;
 
     final Element ignored = new Element("ignored");
-    for (UnknownFeature feature : myIgnoredUnknownFeatures) {
+    for (UnknownExtension feature : myIgnoredUnknownExtensions) {
       final Element option = new Element("option");
-      option.setAttribute(FEATURE_ID, feature.getFeatureType());
-      option.setAttribute(IMPLEMENTATION_NAME, feature.getImplementationName());
+      option.setAttribute(FEATURE_ID, feature.getExtensionKey());
+      option.setAttribute(IMPLEMENTATION_NAME, feature.getValue());
       ignored.addContent(option);
     }
     return ignored;
@@ -85,10 +81,10 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
 
   @Override
   public void loadState(Element state) {
-    myIgnoredUnknownFeatures.clear();
+    myIgnoredUnknownExtensions.clear();
     for (Element element : state.getChildren()) {
-      myIgnoredUnknownFeatures.add(
-        new UnknownFeature(element.getAttributeValue(FEATURE_ID), element.getAttributeValue(IMPLEMENTATION_NAME)));
+      myIgnoredUnknownExtensions.add(
+        new UnknownExtension(element.getAttributeValue(FEATURE_ID), element.getAttributeValue(IMPLEMENTATION_NAME)));
     }
   }
 }

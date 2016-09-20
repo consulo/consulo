@@ -24,6 +24,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
@@ -226,6 +227,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
           moduleExtension.loadState(child);
         }
         else {
+          UnknownFeaturesCollector.getInstance(getProject()).registerUnknownFeature(ModuleExtensionProviderEP.EP_NAME.getName(), id);
+
           myUnknownModuleExtensions.add(child.clone());
         }
       }

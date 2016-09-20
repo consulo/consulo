@@ -18,21 +18,21 @@ package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
 /**
  * User: anna
  */
-public class UnknownFeature {
-  private final String myFeatureType;
-  private final String myImplementationName;
+public class UnknownExtension {
+  private final String myExtensionKey;
+  private final String myValue;
 
-  public UnknownFeature(String featureType, String implementationName) {
-    myFeatureType = featureType;
-    myImplementationName = implementationName;
+  public UnknownExtension(String extensionKey, String value) {
+    myExtensionKey = extensionKey;
+    myValue = value;
   }
 
-  public String getFeatureType() {
-    return myFeatureType;
+  public String getExtensionKey() {
+    return myExtensionKey;
   }
 
-  public String getImplementationName() {
-    return myImplementationName;
+  public String getValue() {
+    return myValue;
   }
 
   @Override
@@ -40,18 +40,18 @@ public class UnknownFeature {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    UnknownFeature feature = (UnknownFeature)o;
+    UnknownExtension feature = (UnknownExtension)o;
 
-    if (!myFeatureType.equals(feature.myFeatureType)) return false;
-    if (!myImplementationName.equals(feature.myImplementationName)) return false;
+    if (!myExtensionKey.equals(feature.myExtensionKey)) return false;
+    if (!myValue.equals(feature.myValue)) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = myFeatureType.hashCode();
-    result = 31 * result + myImplementationName.hashCode();
+    int result = myExtensionKey.hashCode();
+    result = 31 * result + myValue.hashCode();
     return result;
   }
 }

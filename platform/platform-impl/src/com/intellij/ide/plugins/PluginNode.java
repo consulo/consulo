@@ -17,12 +17,15 @@ package com.intellij.ide.plugins;
 
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginId;
+import consulo.ide.plugins.PluginJsonNode;
+import consulo.ide.plugins.SimpleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,11 +69,46 @@ public class PluginNode implements IdeaPluginDescriptor {
   private boolean myEnabled = true;
   private String myRating;
 
+  private List<SimpleExtension> mySimpleExtensions = Collections.emptyList();
+
   public PluginNode() {
   }
 
   public PluginNode(PluginId id) {
     this.id = id;
+  }
+
+  public PluginNode(PluginJsonNode jsonPlugin) {
+    setId(jsonPlugin.id);
+    setName(jsonPlugin.name);
+    setDescription(jsonPlugin.description);
+    setDate(jsonPlugin.date);
+    setVendor(jsonPlugin.vendor);
+    setVersion(jsonPlugin.version);
+    setPlatformVersion(jsonPlugin.platformVersion);
+    setDownloads(String.valueOf(jsonPlugin.downloads));
+    setCategory(jsonPlugin.category);
+
+    if(jsonPlugin.dependencies != null) {
+      addDependency(Arrays.stream(jsonPlugin.dependencies).map(PluginId::getId).toArray(PluginId[]::new));
+    }
+
+    if(jsonPlugin.optionalDependencies != null) {
+      addOptionalDependency(Arrays.stream(jsonPlugin.optionalDependencies).map(PluginId::getId).toArray(PluginId[]::new));
+    }
+
+    PluginJsonNode.Extension[] extensions = jsonPlugin.extensions;
+    if(extensions != null) {
+      mySimpleExtensions = new ArrayList<>();
+      for (PluginJsonNode.Extension extension : extensions) {
+        mySimpleExtensions.add(new SimpleExtension(extension.key, extension.values));
+      }
+    }
+  }
+
+  @NotNull
+  public List<SimpleExtension> getSimpleExtensions() {
+    return mySimpleExtensions;
   }
 
   public void setCategory(String category) {

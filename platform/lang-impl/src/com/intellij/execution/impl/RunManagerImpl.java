@@ -911,7 +911,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   public ConfigurationFactory getFactory(final String typeName, String factoryName, boolean checkUnknown) {
     final ConfigurationType type = myTypesByName.get(typeName);
     if (type == null && checkUnknown && typeName != null) {
-      UnknownFeaturesCollector.getInstance(myProject).registerUnknownRunConfiguration(typeName);
+      UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ConfigurationType.CONFIGURATION_TYPE_EP.getName(), typeName);
     }
     if (factoryName == null) {
       factoryName = type != null ? type.getConfigurationFactories()[0].getName() : null;

@@ -40,7 +40,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -335,7 +334,7 @@ public class PluginDownloader {
     return myOptionalDepends == null ? PluginId.EMPTY_ARRAY : myOptionalDepends;
   }
 
-  public static PluginDownloader createDownloader(IdeaPluginDescriptor descriptor) throws UnsupportedEncodingException {
+  public static PluginDownloader createDownloader(IdeaPluginDescriptor descriptor) {
     String url = null;
     if (descriptor instanceof PluginNode) {
       url = ((PluginNode)descriptor).getDownloadUrl();
