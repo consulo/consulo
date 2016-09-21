@@ -157,7 +157,8 @@
 
     <applicationConfigurable displayName="Notifications" parentId="general" instance="com.intellij.notification.impl.NotificationsConfigurable"/>
 
-    <applicationConfigurable parentId="general" instance="com.intellij.ide.plugins.PluginManagerConfigurable" id="preferences.pluginManager"
+    <applicationConfigurable parentId="general" instance="com.intellij.ide.plugins.PluginManagerConfigurable"
+                             id="preferences.pluginManager"
                              displayName="Platform &amp; Plugin Updates"/>
     <applicationConfigurable parentId="general" instance="com.intellij.util.net.HttpProxyConfigurable" id="http.proxy" displayName="HTTP Proxy"/>
 

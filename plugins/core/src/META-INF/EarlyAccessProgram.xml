@@ -21,7 +21,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
 
-    <applicationConfigurable parentId="general"
+    <applicationConfigurable parentId="preferences.pluginManager"
                              bundle="messages.IdeBundle"
                              key="eap.configurable.name"
                              instance="consulo.ide.eap.EarlyAccessProgramConfigurable" />
