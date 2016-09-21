@@ -230,7 +230,7 @@ public class RunConfigurationBeforeRunProvider
     }
   }
 
-  class RunConfigurableBeforeRunTask extends BeforeRunTask<RunConfigurableBeforeRunTask> {
+  public class RunConfigurableBeforeRunTask extends BeforeRunTask<RunConfigurableBeforeRunTask> {
     private String myConfigurationName;
     private String myConfigurationType;
     private boolean myInitialized = false;
@@ -286,7 +286,7 @@ public class RunConfigurationBeforeRunProvider
       myInitialized = true;
     }
 
-    RunnerAndConfigurationSettings getSettings() {
+    public RunnerAndConfigurationSettings getSettings() {
       init();
       return mySettings;
     }

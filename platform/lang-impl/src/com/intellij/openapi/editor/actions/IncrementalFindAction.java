@@ -35,7 +35,6 @@ public class IncrementalFindAction extends EditorAction {
     private final boolean myReplace;
 
     public Handler(boolean isReplace) {
-
       myReplace = isReplace;
     }
 
@@ -45,7 +44,7 @@ public class IncrementalFindAction extends EditorAction {
       if (!editor.isOneLineMode()) {
         EditorSearchSession search = EditorSearchSession.get(editor);
         if (search != null) {
-          search.getComponent().requestFocus();
+          search.getComponent().requestFocusInTheSearchFieldAndSelectContent(project);
           FindUtil.configureFindModel(myReplace, editor, search.getFindModel(), false);
         } else {
           FindManager findManager = FindManager.getInstance(project);
@@ -56,15 +55,22 @@ public class IncrementalFindAction extends EditorAction {
             model = new FindModel();
             model.copyFrom(findManager.getFindInFileModel());
           }
-          FindUtil.configureFindModel(myReplace, editor, model, true);
-          EditorSearchSession.start(editor, model, project).getComponent().requestFocus();
+          boolean consoleViewEditor = ConsoleViewUtil.isConsoleViewEditor(editor);
+          FindUtil.configureFindModel(myReplace, editor, model, consoleViewEditor);
+          EditorSearchSession.start(editor, model, project).getComponent()
+                  .requestFocusInTheSearchFieldAndSelectContent(project);
+          if (!consoleViewEditor && editor.getSelectionModel().hasSelection()) {
+            // selection is used as string to find without search model modification so save the pattern explicitly
+            FindUtil.updateFindInFileModel(project, model, true);
+          }
         }
       }
     }
 
     @Override
     public boolean isEnabled(Editor editor, DataContext dataContext) {
-      if (myReplace && ConsoleViewUtil.isConsoleViewEditor(editor)) {
+      if (myReplace && ConsoleViewUtil.isConsoleViewEditor(editor) &&
+          !ConsoleViewUtil.isReplaceActionEnabledForConsoleViewEditor(editor)) {
         return false;
       }
       Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(editor.getComponent()));

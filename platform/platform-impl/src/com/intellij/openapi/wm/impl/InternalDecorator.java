@@ -99,6 +99,9 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
     myToggleContentUiTypeAction = new ToggleContentUiTypeAction();
     myToggleToolbarGroup = ToggleToolbarAction.createToggleToolbarGroup(myProject, myToolWindow);
 
+    setFocusable(false);
+    setFocusTraversalPolicy(new LayoutFocusTraversalPolicy());
+
     myHeader = new ToolWindowHeader(toolWindow, info, new NotNullProducer<ActionGroup>() {
       @NotNull
       @Override

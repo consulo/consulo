@@ -70,9 +70,9 @@ public class ModernButtonBorderPainter implements Border, UIResource {
   @Override
   public Insets getBorderInsets(Component c) {
     if (DarculaButtonUI.isSquare(c)) {
-      return JBUI.insets(2, 0, 2, 0).asUIResource();
+      return JBUI.insets(2, 0).asUIResource();
     }
-    return JBUI.insets(8, 16, 8, 14).asUIResource();
+    return JBUI.insets(8, 16).asUIResource();
   }
 
 

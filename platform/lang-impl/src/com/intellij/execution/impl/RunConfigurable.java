@@ -20,6 +20,7 @@ import com.intellij.execution.*;
 import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.*;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
@@ -48,7 +49,10 @@ import com.intellij.util.config.StorageAccessors;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.ui.*;
+import com.intellij.util.ui.EditableModel;
+import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.GridBag;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.THashSet;
@@ -336,6 +340,27 @@ class RunConfigurable extends BaseConfigurable {
     ((DefaultTreeModel)myTree.getModel()).reload();
   }
 
+  private boolean selectConfiguration(@NotNull RunConfiguration configuration) {
+    final Enumeration enumeration = myRoot.breadthFirstEnumeration();
+    while (enumeration.hasMoreElements()) {
+      final DefaultMutableTreeNode node = (DefaultMutableTreeNode)enumeration.nextElement();
+      Object userObject = node.getUserObject();
+      if (userObject instanceof SettingsEditorConfigurable) {
+        userObject = ((SettingsEditorConfigurable)userObject).getSettings();
+      }
+      if (userObject instanceof RunnerAndConfigurationSettingsImpl) {
+        final RunnerAndConfigurationSettings runnerAndConfigurationSettings = (RunnerAndConfigurationSettings)userObject;
+        final ConfigurationType configurationType = configuration.getType();
+        if (Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getType().getId(), configurationType.getId()) &&
+            Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), configuration.getName())) {
+          TreeUtil.selectInTree(node, true, myTree);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   private void showTemplateConfigurable(ConfigurationFactory factory) {
     Configurable configurable = myStoredComponents.get(factory);
     if (configurable == null){
@@ -572,6 +597,19 @@ class RunConfigurable extends BaseConfigurable {
     }
 
     myWholePanel = new JPanel(new BorderLayout());
+    DataManager.registerDataProvider(myWholePanel, new DataProvider() {
+      @Nullable
+      @Override
+      public Object getData(@NonNls String dataId) {
+        return RunConfigurationSelector.KEY.getName().equals(dataId) ? new RunConfigurationSelector() {
+          @Override
+          public void select(@NotNull RunConfiguration configuration) {
+            selectConfiguration(configuration);
+          }
+        } : null;
+      }
+    });
+
     mySplitter.setFirstComponent(createLeftPanel());
     mySplitter.setSecondComponent(myRightPanel);
     myWholePanel.add(mySplitter, BorderLayout.CENTER);

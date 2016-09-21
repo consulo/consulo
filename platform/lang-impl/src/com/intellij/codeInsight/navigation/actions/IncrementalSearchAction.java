@@ -19,10 +19,10 @@ package com.intellij.codeInsight.navigation.actions;
 import com.intellij.codeInsight.navigation.IncrementalSearchHandler;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 public class IncrementalSearchAction extends AnAction implements DumbAware {
   public IncrementalSearchAction() {

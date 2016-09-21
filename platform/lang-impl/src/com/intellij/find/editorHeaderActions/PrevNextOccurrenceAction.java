@@ -21,20 +21,22 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.util.List;
 
 public abstract class PrevNextOccurrenceAction extends DumbAwareAction implements ContextAwareShortcutProvider {
-  PrevNextOccurrenceAction(@NotNull String templateActionId) {
+  protected final boolean mySearch;
+
+  PrevNextOccurrenceAction(@NotNull String templateActionId, boolean search) {
+    mySearch = search;
     copyFrom(ActionManager.getInstance().getAction(templateActionId));
   }
 
-  @RequiredDispatchThread
   @Override
-  public final void update(@NotNull AnActionEvent e) {
+  public final void update(AnActionEvent e) {
     SearchSession search = e.getData(SearchSession.KEY);
-    e.getPresentation().setEnabled(search != null && search.hasMatches());
+    boolean invokedByShortcut = !ActionPlaces.isToolbarPlace(e.getPlace());
+    e.getPresentation().setEnabled(search != null && (invokedByShortcut || search.hasMatches()));
   }
 
   @Nullable

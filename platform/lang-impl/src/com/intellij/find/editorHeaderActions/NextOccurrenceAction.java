@@ -27,12 +27,17 @@ import java.util.List;
 
 public final class NextOccurrenceAction extends PrevNextOccurrenceAction {
   public NextOccurrenceAction() {
-    super(IdeActions.ACTION_NEXT_OCCURENCE);
+    this(true);
+  }
+
+  public NextOccurrenceAction(boolean search) {
+    super(IdeActions.ACTION_NEXT_OCCURENCE, search);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    e.getRequiredData(SearchSession.KEY).searchForward();
+    SearchSession session = e.getRequiredData(SearchSession.KEY);
+    if (session.hasMatches()) session.searchForward();
   }
 
   @NotNull
@@ -44,6 +49,11 @@ public final class NextOccurrenceAction extends PrevNextOccurrenceAction {
   @NotNull
   @Override
   protected List<Shortcut> getSingleLineShortcuts() {
-    return ContainerUtil.append(Utils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN), CommonShortcuts.ENTER.getShortcuts());
+    if (mySearch) {
+      return ContainerUtil.append(Utils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN), CommonShortcuts.ENTER.getShortcuts());
+    }
+    else {
+      return Utils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN);
+    }
   }
 }

@@ -31,10 +31,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
-import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
@@ -89,7 +87,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
 
   @NotNull private final ActionManager myActionManager;
   private final String mySessionName;
-  private final MyComponent myComponent = new MyComponent();
+  private JComponent myComponent;
 
   private final Wrapper myToolbar = new Wrapper();
   final MyDragOutDelegate myDragOutDelegate = new MyDragOutDelegate();
@@ -232,7 +230,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
     wrappper.add(myToolbar, BorderLayout.WEST);
     wrappper.add(myTabs.getComponent(), BorderLayout.CENTER);
 
-    myComponent.setContent(wrappper);
+    myComponent = wrappper;
 
     myTabs.addListener(new TabsListener.Adapter() {
 
@@ -1380,91 +1378,6 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
         break;
       }
       myBoundingBox = new RoundRectangle2D.Double(r.x, r.y, r.width, r.height, 16, 16);
-    }
-  }
-
-  private class MyComponent extends Wrapper.FocusHolder implements DataProvider, QuickActionProvider {
-    private boolean myWasEverAdded;
-
-    public MyComponent() {
-      setOpaque(true);
-      setFocusCycleRoot(true);
-      setBorder(new ToolWindow.Border(false, false, false, false));
-    }
-
-    @Override
-    @Nullable
-    public Object getData(@NonNls final String dataId) {
-      if (KEY.is(dataId)) {
-        return RunnerContentUi.this;
-      }
-
-      ContentManager originalContentManager = myOriginal == null ? null : myOriginal.getContentManager();
-      JComponent originalContentComponent = originalContentManager == null ? null : originalContentManager.getComponent();
-      if (originalContentComponent instanceof DataProvider) {
-        return ((DataProvider)originalContentComponent).getData(dataId);
-      }
-      return null;
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public String getName() {
-      return RunnerContentUi.this.getName();
-    }
-
-    @Override
-    public List<AnAction> getActions(boolean originalProvider) {
-      return RunnerContentUi.this.getActions(originalProvider);
-    }
-
-    @Override
-    public JComponent getComponent() {
-      return RunnerContentUi.this.getComponent();
-    }
-
-    @Override
-    public boolean isCycleRoot() {
-      return RunnerContentUi.this.isCycleRoot();
-    }
-
-    @Override
-    public void addNotify() {
-      super.addNotify();
-
-      if (!myUiLastStateWasRestored && myOriginal == null) {
-        myUiLastStateWasRestored = true;
-
-        // [kirillk] this is done later since restoreUiState doesn't work properly in the addNotify call chain
-        //todo to investigate and to fix (may cause extra flickering)
-        //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            restoreLastUiState().doWhenDone(new Runnable() {
-              @Override
-              public void run() {
-                if (!myWasEverAdded) {
-                  myWasEverAdded = true;
-                  attractOnStartup();
-                  myInitialized.setDone();
-                }
-              }
-            });
-          }
-        });
-      }
-    }
-
-    @Override
-    public void removeNotify() {
-      super.removeNotify();
-      if (!ScreenUtil.isStandardAddRemoveNotify(this))
-        return;
-
-      if (Disposer.isDisposed(RunnerContentUi.this)) return;
-
-      saveUiState();
     }
   }
 
