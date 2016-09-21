@@ -48,12 +48,11 @@ public class PluginsAdvertiser implements StartupActivity {
 
   @Override
   public void runActivity(@NotNull final Project project) {
-    if (!UpdateSettings.getInstance().isCheckNeeded()) return;
-    final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(project);
-    final Set<UnknownExtension> unknownExtensions = collectorSuggester.getUnknownExtensions();
-    if (unknownExtensions.isEmpty()) return;
+    if (!UpdateSettings.getInstance().isCheckNeeded()) {
+      return;
+    }
 
-    Task.Backgroundable.queue(project, "Loading plugins advertisement", false, indicator -> {
+    Task.Backgroundable.queue(project, "Loading plugin list", false, indicator -> {
       List<IdeaPluginDescriptor> pluginDescriptors = Collections.emptyList();
       try {
         pluginDescriptors = RepositoryHelper.loadPluginsFromRepository(indicator, consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel());
@@ -64,6 +63,12 @@ public class PluginsAdvertiser implements StartupActivity {
       ourLoadedPluginDescriptors = pluginDescriptors;
 
       if (pluginDescriptors.isEmpty()) {
+        return;
+      }
+
+      final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(project);
+      final Set<UnknownExtension> unknownExtensions = collectorSuggester.getUnknownExtensions();
+      if (unknownExtensions.isEmpty()) {
         return;
       }
 
