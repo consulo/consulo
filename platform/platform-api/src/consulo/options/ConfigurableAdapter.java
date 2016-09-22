@@ -62,9 +62,4 @@ public class ConfigurableAdapter implements Configurable {
   @Override
   public void reset() {
   }
-
-  @RequiredDispatchThread
-  @Override
-  public void disposeUIResources() {
-  }
 }

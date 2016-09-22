@@ -30,7 +30,10 @@ public interface SearchableConfigurable extends Configurable {
   @NotNull
   @NonNls String getId();
 
-  @Nullable Runnable enableSearch(String option);
+  @Nullable
+  default Runnable enableSearch(String option) {
+    return null;
+  }
 
   interface Parent extends SearchableConfigurable, Composite {
     boolean hasOwnContent();
