@@ -61,7 +61,6 @@
         <element id="module-output" name="platform-main" />
         <element id="module-production-resource-output" name="platform-resources" />
         <element id="module-production-resource-output" name="platform-resources-en" />
-        <element id="module-output" name="projectImportModel" />
         <element id="module-output" name="projectModel-impl" />
         <element id="module-output" name="remote-servers-impl" />
         <element id="module-production-resource-output" name="remote-servers-impl" />

@@ -93,9 +93,6 @@ public class BootstrapClassLoaderUtil extends ClassUtilCore {
 
       File libFolder = new File(folderPath + File.separator + "lib");
       addLibraries(classPath, libFolder, selfRootUrl);
-
-      File modulesFolder = new File(folderPath + File.separator + "lib" + File.separator + "modules");
-      addLibraries(classPath, modulesFolder, selfRootUrl);
     }
     catch (MalformedURLException e) {
       getLogger().error(e);

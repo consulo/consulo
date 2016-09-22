@@ -20,12 +20,6 @@
         <element id="zip-archive" name="bootstrap.jar">
           <element id="module-output" name="bootstrap" />
         </element>
-        <element id="directory" name="modules">
-          <element id="artifact" artifact-name="crossPlatformLibraries" />
-          <element id="zip-archive" name="consulo-desktop-impl.jar">
-            <element id="module-output" name="desktop-impl" />
-          </element>
-        </element>
         <element id="zip-archive" name="annotations.jar">
           <element id="module-output" name="annotations" />
         </element>
@@ -39,6 +33,10 @@
         </element>
         <element id="zip-archive" name="forms_rt.jar">
           <element id="module-output" name="forms_rt" />
+        </element>
+        <element id="artifact" artifact-name="crossPlatformLibraries" />
+        <element id="zip-archive" name="consulo-desktop-impl.jar">
+          <element id="module-output" name="desktop-impl" />
         </element>
       </element>
       <element id="directory" name="bin">
