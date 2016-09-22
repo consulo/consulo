@@ -60,5 +60,6 @@ public interface UnnamedConfigurable {
    * Disposes the Swing components used for displaying the configuration.
    */
   @RequiredDispatchThread
-  void disposeUIResources();
+  default void disposeUIResources() {
+  }
 }
