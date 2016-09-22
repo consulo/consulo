@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.openapi.vfs.impl.http.RemoteFileInfo;
 import com.intellij.openapi.vfs.impl.http.RemoteFileState;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.net.HTTPProxySettingsDialog;
+import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
@@ -98,7 +98,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
     });
     myChangeProxySettingsButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-        new HTTPProxySettingsDialog().show();
+        HttpConfigurable.editConfigurable(myMainPanel);
       }
     });
     showCard(DOWNLOADING_CARD);
