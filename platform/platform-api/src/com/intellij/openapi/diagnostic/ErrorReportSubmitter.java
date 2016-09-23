@@ -46,11 +46,6 @@ public abstract class ErrorReportSubmitter implements PluginAware {
   }
 
   /**
-   * @return "Report to vendor" action text to be used in Error Reporter user interface. For example: "Report to JetBrains".
-   */
-  public abstract String getReportActionText();
-
-  /**
    * This method is called whenever fatal error (aka exception) in plugin code had happened and user decided to report this problem to
    * plugin vendor.
    * @param events sequence of the fatal error descriptors. Fatal errors that happened immediately one after another most probably caused

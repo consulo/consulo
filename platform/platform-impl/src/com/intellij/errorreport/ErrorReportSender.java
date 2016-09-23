@@ -27,7 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.net.HttpConfigurable;
-import org.jetbrains.annotations.NonNls;
+import consulo.ide.webService.WebServiceApi;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,8 +38,6 @@ import org.jetbrains.annotations.NotNull;
  * To change this template use Options | File Templates.
  */
 public class ErrorReportSender {
-  @NonNls public static final String PREPARE_URL = "http://www.intellij.net/";
-
   private ErrorReportSender() {
   }
 
@@ -64,7 +62,7 @@ public class ErrorReportSender {
         @Override
         public void run(@NotNull ProgressIndicator indicator) {
           try {
-            HttpConfigurable.getInstance().prepareURL(PREPARE_URL);
+            HttpConfigurable.getInstance().prepareURL(WebServiceApi.MAIN.buildUrl());
 
             if (!StringUtil.isEmpty(myLogin)) {
               int threadId = ITNProxy.postNewThread(

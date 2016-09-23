@@ -19,9 +19,7 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.ErrorLogger;
-import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.io.MappingFailedException;
@@ -38,36 +36,14 @@ public class DefaultIdeaErrorLogger implements ErrorLogger {
   private static boolean ourLoggerBroken = false;
   private static boolean ourMappingFailedNotificationPosted = false;
 
-  @NonNls private static final String FATAL_ERROR_NOTIFICATION_PROPERTY = "idea.fatal.error.notification";
-  @NonNls private static final String DISABLED_VALUE = "disabled";
-  @NonNls private static final String ENABLED_VALUE = "enabled";
   @NonNls private static final String PARAM_PERM_GEN = "PermGen";
 
+  @Override
   public boolean canHandle(IdeaLoggingEvent event) {
-    if (ourLoggerBroken) return false;
-
-    try {
-      boolean notificationEnabled = !DISABLED_VALUE.equals(System.getProperty(FATAL_ERROR_NOTIFICATION_PROPERTY, ENABLED_VALUE));
-
-      ErrorReportSubmitter submitter = IdeErrorsDialog.getSubmitter(event.getThrowable());
-      boolean showPluginError = !(submitter instanceof ITNReporter2) /*|| ((ITNReporter)submitter).showErrorInRelease(event)*/;
-
-      //noinspection ThrowableResultOfMethodCallIgnored
-      return notificationEnabled ||
-             showPluginError ||
-             ApplicationManagerEx.getApplicationEx().isInternal() ||
-             isOOMError(event.getThrowable()) ||
-             event.getThrowable() instanceof MappingFailedException;
-    }
-    catch (LinkageError e) {
-      if (e.getMessage().contains("Could not initialize class com.intellij.diagnostic.IdeErrorsDialog")) {
-        //noinspection AssignmentToStaticFieldFromInstanceMethod
-        ourLoggerBroken = true;
-      }
-      throw e;
-    }
+    return !ourLoggerBroken;
   }
 
+  @Override
   public void handle(IdeaLoggingEvent event) {
     if (ourLoggerBroken) return;
 
@@ -99,16 +75,16 @@ public class DefaultIdeaErrorLogger implements ErrorLogger {
   }
 
   private static boolean isOOMError(Throwable throwable) {
-    return throwable instanceof OutOfMemoryError ||
-           (throwable instanceof VirtualMachineError &&
-            throwable.getMessage() != null &&
-            throwable.getMessage().contains("CodeCache"));
+    return throwable instanceof OutOfMemoryError || (throwable instanceof VirtualMachineError &&
+                                                     throwable.getMessage() != null &&
+                                                     throwable.getMessage().contains("CodeCache"));
   }
 
   private static void processOOMError(final Throwable throwable) throws InterruptedException, InvocationTargetException {
     ourOomOccurred = true;
 
     SwingUtilities.invokeAndWait(new Runnable() {
+      @Override
       public void run() {
         String message = throwable.getMessage();
         OutOfMemoryDialog.MemoryKind k = message != null && message.contains(PARAM_PERM_GEN)

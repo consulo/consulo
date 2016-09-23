@@ -41,8 +41,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.impl.ApplicationInfoImpl");
 
   @NonNls
-  private static final String DEFAULT_PLUGINS_HOST = "http://must-be.org/api/v2/consulo/plugins/";
-  @NonNls
   private static final String DEFAULT_STATISTICS_HOST = "http://must-be.org/consulo/statistics/";
   @NonNls
   private static final String DEFAULT_UPDATES_HOST = "http://must-be.org/consulo/updates/";
@@ -65,12 +63,9 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String mySupportUrl;
   private String myEAPFeedbackUrl;
   private String myReleaseFeedbackUrl;
-  private String myPluginManagerUrl;
-  private String myPluginsListUrl;
   private String myUpdatesInfoUrl;
   private String myUpdatesDownloadUrl;
   private String myStatisticsUrl;
-  private String myPluginsDownloadUrl;
   private String myWhatsNewUrl;
   private String myWinKeymapUrl;
   private String myMacKeymapUrl;
@@ -210,23 +205,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   }
 
   @Override
-  public String getPluginManagerUrl() {
-    return myPluginManagerUrl;
-  }
-
-  @Override
-  public String getPluginsListUrl() {
-    return myPluginsListUrl;
-  }
-
-  @Override
   public String getStatisticsUrl() {
     return myStatisticsUrl;
-  }
-
-  @Override
-  public String getPluginsDownloadUrl() {
-    return myPluginsDownloadUrl;
   }
 
   @Override
@@ -453,12 +433,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
     if (whatsnewElement != null) {
       myWhatsNewUrl = whatsnewElement.getAttributeValue(ATTRIBUTE_URL);
     }
-
-    String pluginHost = StringUtil.notNullize(System.getProperty("idea.plugins.host"), DEFAULT_PLUGINS_HOST);
-
-    myPluginManagerUrl = pluginHost;
-    myPluginsListUrl = pluginHost + "list";
-    myPluginsDownloadUrl = pluginHost + "download";
 
     myStatisticsUrl = StringUtil.notNullize(System.getProperty("consulo.statistics.host"), DEFAULT_STATISTICS_HOST) + "post";
 

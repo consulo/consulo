@@ -883,20 +883,11 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
   private class BlameAction extends AbstractAction {
     protected BlameAction() {
-      super(DiagnosticBundle.message("error.report.to.must-be.actionn"));
+      super(DiagnosticBundle.message("error.report.to.consulo.action"));
     }
 
     public void update() {
-      AbstractMessage logMessage = getSelectedMessage();
-      if (logMessage != null && !logMessage.isSubmitted()) {
-        ErrorReportSubmitter submitter = getSubmitter(logMessage.getThrowable());
-        if (submitter != null) {
-          putValue(NAME, submitter.getReportActionText());
-          setEnabled(true);
-          return;
-        }
-      }
-      putValue(NAME, DiagnosticBundle.message("error.report.to.must-be.action"));
+      putValue(NAME, DiagnosticBundle.message("error.report.to.consulo.action"));
       setEnabled(false);
     }
 

@@ -31,6 +31,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.net.HttpConfigurable;
+import consulo.ide.webService.WebServiceApi;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.*;
@@ -52,9 +53,6 @@ import java.util.List;
 public class ITNProxy {
   @NonNls public static final String ENCODING = "UTF8";
   public static final String POST_DELIMITER = "&";
-
-  @NonNls public static final String NEW_THREAD_URL = "http://www.intellij.net/trackerRpc/idea/createScr";
-
   @NonNls private static final String HTTP_CONTENT_LENGTH = "Content-Length";
   @NonNls private static final String HTTP_CONTENT_TYPE = "Content-Type";
   @NonNls private static final String HTTP_WWW_FORM = "application/x-www-form-urlencoded";
@@ -72,7 +70,7 @@ public class ITNProxy {
                                                                     ApplicationNamesInfo.getInstance(),
                                                                     UpdateSettings.getInstance());
 
-    HttpURLConnection connection = post(new URL(NEW_THREAD_URL), join(params));
+    HttpURLConnection connection = post(new URL(WebServiceApi.ERROR_REPORTER_API.buildUrl("createReport")), join(params));
     int responseCode = connection.getResponseCode();
 
     if (responseCode != HttpURLConnection.HTTP_OK) {
