@@ -15,7 +15,6 @@
  */
 package consulo.ide.webService;
 
-import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
@@ -48,6 +47,6 @@ public enum WebServiceApi {
 
   @NotNull
   public String buildUrl() {
-    return StringUtil.notNullize(System.getProperty(myOverrideProperty), myDefaultUrl);
+    return System.getProperty(myOverrideProperty, myDefaultUrl);
   }
 }
