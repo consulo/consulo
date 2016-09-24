@@ -53,11 +53,6 @@ import java.util.List;
 public class ITNProxy {
   @NonNls public static final String ENCODING = "UTF8";
   public static final String POST_DELIMITER = "&";
-  @NonNls private static final String HTTP_CONTENT_LENGTH = "Content-Length";
-  @NonNls private static final String HTTP_CONTENT_TYPE = "Content-Type";
-  @NonNls private static final String HTTP_WWW_FORM = "application/x-www-form-urlencoded";
-  @NonNls private static final String HTTP_POST = "POST";
-
   public static int postNewThread (String login, String password, ErrorBean error, String compilationTimestamp)
     throws IOException, NoSuchEAPUserException, InternalEAPException, UpdateAvailableException {
 
@@ -70,7 +65,7 @@ public class ITNProxy {
                                                                     ApplicationNamesInfo.getInstance(),
                                                                     UpdateSettings.getInstance());
 
-    HttpURLConnection connection = post(new URL(WebServiceApi.ERROR_REPORTER_API.buildUrl("createReport")), join(params));
+    HttpURLConnection connection = doPut(new URL(WebServiceApi.ERROR_REPORTER_API.buildUrl("create")), join(params));
     int responseCode = connection.getResponseCode();
 
     if (responseCode != HttpURLConnection.HTTP_OK) {
@@ -176,16 +171,16 @@ public class ITNProxy {
     return calendar == null ?  null : Long.toString(calendar.getTime().getTime());
   }
 
-  private static HttpURLConnection post(URL url, byte[] bytes) throws IOException {
+  private static HttpURLConnection doPut(URL url, byte[] bytes) throws IOException {
     HttpURLConnection connection = (HttpURLConnection)HttpConfigurable.getInstance().openConnection(url.toString());
 
     connection.setReadTimeout(10 * 1000);
     connection.setConnectTimeout(10 * 1000);
-    connection.setRequestMethod(HTTP_POST);
+    connection.setRequestMethod("PUT");
     connection.setDoInput(true);
     connection.setDoOutput(true);
-    connection.setRequestProperty(HTTP_CONTENT_TYPE, String.format("%s; charset=%s", HTTP_WWW_FORM, ENCODING));
-    connection.setRequestProperty(HTTP_CONTENT_LENGTH, Integer.toString(bytes.length));
+    connection.setRequestProperty("Content-Type", String.format("%s; charset=%s", "application/x-www-form-urlencoded", ENCODING));
+    connection.setRequestProperty("Content-Length", Integer.toString(bytes.length));
 
     OutputStream out = new BufferedOutputStream(connection.getOutputStream());
     try {
