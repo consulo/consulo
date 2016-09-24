@@ -459,7 +459,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     updateTabs();
 
     myClearAction.update();
-    myBlameAction.update();
     if (myAnalyzeAction != null) {
       myAnalyzeAction.update();
     }
@@ -884,11 +883,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   private class BlameAction extends AbstractAction {
     protected BlameAction() {
       super(DiagnosticBundle.message("error.report.to.consulo.action"));
-    }
-
-    public void update() {
-      putValue(NAME, DiagnosticBundle.message("error.report.to.consulo.action"));
-      setEnabled(false);
     }
 
     public void actionPerformed(ActionEvent e) {
