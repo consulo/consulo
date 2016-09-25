@@ -16,7 +16,6 @@
 package com.intellij.errorreport.itn;
 
 import com.intellij.diagnostic.DiagnosticBundle;
-import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.errorreport.bean.ErrorBean;
 import com.intellij.errorreport.error.InternalEAPException;
 import com.intellij.errorreport.error.NoSuchEAPUserException;
@@ -26,7 +25,7 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.updateSettings.impl.UpdateSettings;
+import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
@@ -62,8 +61,7 @@ public class ITNProxy {
                                                                     compilationTimestamp,
                                                                     ApplicationManager.getApplication(),
                                                                     (ApplicationInfoEx) ApplicationInfo.getInstance(),
-                                                                    ApplicationNamesInfo.getInstance(),
-                                                                    UpdateSettings.getInstance());
+                                                                    ApplicationNamesInfo.getInstance());
 
     HttpURLConnection connection = doPut(new URL(WebServiceApi.ERROR_REPORTER_API.buildUrl("create")), join(params));
     int responseCode = connection.getResponseCode();
@@ -74,11 +72,8 @@ public class ITNProxy {
 
     String reply;
 
-    InputStream is = new BufferedInputStream(connection.getInputStream());
-    try {
+    try (InputStream is = new BufferedInputStream(connection.getInputStream())) {
       reply = readFrom(is);
-    } finally {
-      is.close();
     }
 
     if ("unauthorized".equals(reply)) {
@@ -94,9 +89,8 @@ public class ITNProxy {
     }
 
     try {
-      return Integer.valueOf(reply.trim()).intValue();
+      return Integer.valueOf(reply.trim());
     } catch (NumberFormatException ex) {
-      // Tibor!!!! :-E
       throw new InternalEAPException(DiagnosticBundle.message("error.itn.returns.wrong.data"));
     }
   }
@@ -105,9 +99,8 @@ public class ITNProxy {
                                                                 String password,
                                                                 ErrorBean error,
                                                                 String compilationTimestamp, Application application, ApplicationInfoEx appInfo,
-                                                                ApplicationNamesInfo namesInfo,
-                                                                UpdateSettings updateSettings) {
-    @NonNls List<Pair<String,String>> params = new ArrayList<Pair<String, String>>();
+                                                                ApplicationNamesInfo namesInfo) {
+    @NonNls List<Pair<String,String>> params = new ArrayList<>();
 
     params.add(Pair.create("protocol.version", "1"));
 
@@ -131,8 +124,7 @@ public class ITNProxy {
     params.add(Pair.create("app.build.date.release", format(appInfo.getMajorReleaseBuildDate())));
     params.add(Pair.create("app.compilation.timestamp", compilationTimestamp));
 
-    params.add(Pair.create("update.channel.status", updateSettings.getSelectedChannelStatus().getCode()));
-    params.add(Pair.create("update.ignored.builds", StringUtil.join(updateSettings.getIgnoredBuildNumbers(), ",")));
+    params.add(Pair.create("update.channel.status", consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel().name()));
 
     params.add(Pair.create("plugin.name", error.getPluginName()));
     params.add(Pair.create("plugin.version", error.getPluginVersion()));
@@ -182,12 +174,9 @@ public class ITNProxy {
     connection.setRequestProperty("Content-Type", String.format("%s; charset=%s", "application/x-www-form-urlencoded", ENCODING));
     connection.setRequestProperty("Content-Length", Integer.toString(bytes.length));
 
-    OutputStream out = new BufferedOutputStream(connection.getOutputStream());
-    try {
+    try (OutputStream out = new BufferedOutputStream(connection.getOutputStream())) {
       out.write(bytes);
       out.flush();
-    } finally {
-      out.close();
     }
 
     return connection;

@@ -17,9 +17,12 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.ReflectionUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated
+@DeprecationInfo("Use consulo.options.SimpleConfigurable")
 public final class SimpleConfigurable<UI extends ConfigurableUi<S>, S> extends ConfigurableBase<UI, S> {
   private final Class<UI> uiClass;
   private final Getter<S> settingsGetter;

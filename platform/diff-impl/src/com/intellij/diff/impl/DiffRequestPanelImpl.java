@@ -18,11 +18,13 @@ package com.intellij.diff.impl;
 import com.intellij.diff.DiffRequestPanel;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.requests.NoDiffRequest;
+import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,10 +33,11 @@ import java.awt.*;
 
 public class DiffRequestPanelImpl implements DiffRequestPanel {
   @NotNull private final JPanel myPanel;
-  @NotNull private final MyCacheDiffRequestChainProcessor myProcessor;
+  @NotNull private final MyDiffRequestProcessor myProcessor;
 
   public DiffRequestPanelImpl(@Nullable Project project, @Nullable Window window) {
-    myProcessor = new MyCacheDiffRequestChainProcessor(project, window);
+    myProcessor = new MyDiffRequestProcessor(project, window);
+    myProcessor.putContextUserData(DiffUserDataKeys.DO_NOT_CHANGE_WINDOW_TITLE, true);
 
     myPanel = new JPanel(new BorderLayout()) {
       @Override
@@ -48,13 +51,12 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
 
   @Override
   public void setRequest(@Nullable DiffRequest request) {
-    myProcessor.setRequest(request);
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        myProcessor.updateRequest();
-      }
-    });
+    setRequest(request, null);
+  }
+
+  @Override
+  public void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
+    myProcessor.setRequest(request, identity);
   }
 
   @Override
@@ -79,22 +81,29 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
     Disposer.dispose(myProcessor);
   }
 
-  private static class MyCacheDiffRequestChainProcessor extends DiffRequestProcessor {
+  private static class MyDiffRequestProcessor extends DiffRequestProcessor {
     @Nullable private final Window myWindow;
 
     @NotNull private DiffRequest myRequest = NoDiffRequest.INSTANCE;
+    @Nullable private Object myRequestIdentity = null;
 
-    public MyCacheDiffRequestChainProcessor(@Nullable Project project, @Nullable Window window) {
+    public MyDiffRequestProcessor(@Nullable Project project, @Nullable Window window) {
       super(project);
       myWindow = window;
     }
 
-    public void setRequest(@Nullable DiffRequest request) {
+    public synchronized void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
+      if (myRequestIdentity != null && identity != null && myRequestIdentity.equals(identity)) return;
+
       myRequest = request != null ? request : NoDiffRequest.INSTANCE;
+      myRequestIdentity = identity;
+
+      UIUtil.invokeLaterIfNeeded(() -> updateRequest());
     }
 
     @Override
-    public void updateRequest(boolean force, @Nullable DiffUserDataKeysEx.ScrollToPolicy scrollToChangePolicy) {
+    @RequiredDispatchThread
+    public synchronized void updateRequest(boolean force, @Nullable DiffUserDataKeysEx.ScrollToPolicy scrollToChangePolicy) {
       applyRequest(myRequest, force, scrollToChangePolicy);
     }
 

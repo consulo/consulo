@@ -17,7 +17,6 @@
 package com.intellij.history.integration.ui.models;
 
 import com.intellij.diff.Block;
-import com.intellij.diff.FindBlock;
 import com.intellij.history.core.Content;
 import com.intellij.history.core.revisions.Revision;
 import com.intellij.history.core.tree.Entry;
@@ -31,12 +30,12 @@ import java.util.Map;
 
 public class SelectionCalculator {
   private static final Block EMPTY_BLOCK = new Block("", 0, 0);
-  
+
   private final IdeaGateway myGateway;
   private final List<Revision> myRevisions;
   private final int myFromLine;
   private final int myToLine;
-  private final Map<Integer, Block> myCache = new HashMap<Integer, Block>();
+  private final Map<Integer, Block> myCache = new HashMap<>();
 
   public SelectionCalculator(IdeaGateway gw, List<Revision> rr, int fromLine, int toLine) {
     myGateway = gw;
@@ -73,9 +72,9 @@ public class SelectionCalculator {
 
     Block result;
     if (content == null) {
-      result = EMPTY_BLOCK; 
+      result = EMPTY_BLOCK;
     } else  if (revisionIndex == 0) {
-      result = new Block(content, myFromLine, myToLine);
+      result = new Block(content, myFromLine, myToLine + 1);
     }
     else {
       Block prev = EMPTY_BLOCK;
@@ -84,7 +83,7 @@ public class SelectionCalculator {
         i--;
         prev = getSelectionFor(i, totalRevisions, p);
       }
-      result = new FindBlock(content, prev).getBlockInThePrevVersion();
+      result = prev.createPreviousBlock(content);
     }
 
     myCache.put(revisionIndex, result);
