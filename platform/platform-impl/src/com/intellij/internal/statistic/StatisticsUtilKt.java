@@ -18,6 +18,7 @@ package com.intellij.internal.statistic;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.util.containers.ContainerUtil;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -64,7 +65,7 @@ public class StatisticsUtilKt {
       return new UsageDescriptor(key + ".<" + steps.get(0), 1);
     }
 
-    int index = steps.indexOf(value);
+    int index = Arrays.binarySearch(steps.toArray(), value);
     int stepIndex;
 
     if (index == steps.size()) {
