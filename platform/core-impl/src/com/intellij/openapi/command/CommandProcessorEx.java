@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.command;
 
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Nls;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author max
@@ -27,7 +28,7 @@ public abstract class CommandProcessorEx extends CommandProcessor {
   public abstract void leaveModal();
 
   @Nullable
-  public abstract Object startCommand(Project project, @Nls String name, Object groupId, UndoConfirmationPolicy undoConfirmationPolicy);
+  public abstract Object startCommand(@NotNull Project project, @Nls String name, Object groupId, @NotNull UndoConfirmationPolicy undoConfirmationPolicy);
 
   public abstract void finishCommand(Project project, final Object command, Throwable throwable);
 }

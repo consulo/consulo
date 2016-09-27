@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,17 +31,19 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -55,14 +57,12 @@ import java.util.*;
 
 @State(
         name = "Encoding",
-        storages = {
-                @Storage(file = StoragePathMacros.PROJECT_FILE),
-                @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/encodings.xml", scheme = StorageScheme.DIRECTORY_BASED)
-        }
-)
-public class EncodingProjectManagerImpl extends EncodingProjectManager implements NamedComponent, PersistentStateComponent<Element> {
+        storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
+                @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/encodings.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+public class EncodingProjectManagerImpl extends EncodingProjectManager implements PersistentStateComponent<Element> {
   @NonNls private static final String PROJECT_URL = "PROJECT";
   private final Project myProject;
+  private final EncodingManagerImpl myIdeEncodingManager;
   private boolean myNative2AsciiForPropertiesFiles;
   private Charset myDefaultCharsetForPropertiesFiles;
   private final SimpleModificationTracker myModificationTracker = new SimpleModificationTracker();
@@ -71,42 +71,39 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   private String myOldUTFGuessing;
   private boolean myNative2AsciiForPropertiesFilesWasSpecified;
 
-  public EncodingProjectManagerImpl(Project project, PsiDocumentManager documentManager) {
+  public EncodingProjectManagerImpl(Project project, EncodingManager ideEncodingManager, ProjectManager projectManager) {
     myProject = project;
-    documentManager.addListener(new PsiDocumentManager.Listener() {
+    myIdeEncodingManager = (EncodingManagerImpl)ideEncodingManager;
+    projectManager.addProjectManagerListener(project, new ProjectManagerAdapter() {
       @Override
-      public void documentCreated(@NotNull Document document, PsiFile psiFile) {
-        ((EncodingManagerImpl)EncodingManager.getInstance()).queueUpdateEncodingFromContent(document);
-      }
-
-      @Override
-      public void fileCreated(@NotNull PsiFile file, @NotNull Document document) {
+      public void projectOpened(Project project) {
+        StartupManager.getInstance(project).runWhenProjectIsInitialized(EncodingProjectManagerImpl.this::reloadAlreadyLoadedDocuments);
       }
     });
   }
 
-  //null key means project
-  private final Map<VirtualFile, Charset> myMapping = new HashMap<VirtualFile, Charset>();
+  private final Map<VirtualFile, Charset> myMapping = ContainerUtil.newConcurrentMap();
+  private volatile Charset myProjectCharset;
 
   @Override
   public Element getState() {
     Element element = new Element("x");
     if (!myMapping.isEmpty()) {
-      List<VirtualFile> files = new ArrayList<VirtualFile>(myMapping.keySet());
-      ContainerUtil.quickSort(files, new Comparator<VirtualFile>() {
-        @Override
-        public int compare(final VirtualFile o1, final VirtualFile o2) {
-          if (o1 == null || o2 == null) return o1 == null ? o2 == null ? 0 : 1 : -1;
-          return o1.getPath().compareTo(o2.getPath());
-        }
-      });
+      List<VirtualFile> files = new ArrayList<>(myMapping.keySet());
+      ContainerUtil.quickSort(files, (o1, o2) -> o1.getPath().compareTo(o2.getPath()));
       for (VirtualFile file : files) {
         Charset charset = myMapping.get(file);
         Element child = new Element("file");
         element.addContent(child);
-        child.setAttribute("url", file == null ? PROJECT_URL : file.getUrl());
+        child.setAttribute("url", file.getUrl());
         child.setAttribute("charset", charset.name());
       }
+    }
+    if (myProjectCharset != null) {
+      Element child = new Element("file");
+      element.addContent(child);
+      child.setAttribute("url", PROJECT_URL);
+      child.setAttribute("charset", myProjectCharset.name());
     }
 
     if (myOldUTFGuessing != null) {
@@ -128,15 +125,20 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     myMapping.clear();
     List<Element> files = element.getChildren("file");
     if (!files.isEmpty()) {
-      Map<VirtualFile, Charset> mapping = new HashMap<VirtualFile, Charset>();
+      Map<VirtualFile, Charset> mapping = new HashMap<>();
       for (Element fileElement : files) {
         String url = fileElement.getAttributeValue("url");
         String charsetName = fileElement.getAttributeValue("charset");
         Charset charset = CharsetToolkit.forName(charsetName);
         if (charset == null) continue;
-        VirtualFile file = url.equals(PROJECT_URL) ? null : VirtualFileManager.getInstance().findFileByUrl(url);
-        if (file != null || url.equals(PROJECT_URL)) {
-          mapping.put(file, charset);
+        if (url.equals(PROJECT_URL)) {
+          myProjectCharset = charset;
+        }
+        else {
+          VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(url);
+          if (file != null) {
+            mapping.put(file, charset);
+          }
         }
       }
       myMapping.putAll(mapping);
@@ -154,21 +156,22 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     }
   }
 
-  @Override
-  @NonNls
-  @NotNull
-  public String getComponentName() {
-    return "EncodingProjectManager";
+  private void reloadAlreadyLoadedDocuments() {
+    for (VirtualFile file : myMapping.keySet()) {
+      Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
+      if (cachedDocument != null) {
+        reload(file); // reload document in the right encoding if someone sneaky (you, BreakpointManager) managed to load the document before project opened
+      }
+    }
   }
 
   @Override
   @Nullable
   public Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
     VirtualFile parent = virtualFile;
-    while (true) {
+    while (parent != null) {
       Charset charset = myMapping.get(parent);
       if (charset != null || !useParentDefaults) return charset;
-      if (parent == null) break;
       parent = parent.getParent();
     }
 
@@ -184,11 +187,17 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   public void setEncoding(@Nullable final VirtualFile virtualFileOrDir, @Nullable final Charset charset) {
     Charset oldCharset;
 
-    if (charset == null) {
-      oldCharset = myMapping.remove(virtualFileOrDir);
+    if (virtualFileOrDir == null) {
+      oldCharset = myProjectCharset;
+      myProjectCharset = charset;
     }
     else {
-      oldCharset = myMapping.put(virtualFileOrDir, charset);
+      if (charset == null) {
+        oldCharset = myMapping.remove(virtualFileOrDir);
+      }
+      else {
+        oldCharset = myMapping.put(virtualFileOrDir, charset);
+      }
     }
 
     if (!Comparing.equal(oldCharset, charset)) {
@@ -205,17 +214,25 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     reload(virtualFileOrDir);
   }
 
-  private static void reload(@NotNull VirtualFile virtualFile) {
-    FileDocumentManager documentManager = FileDocumentManager.getInstance();
-    ((VirtualFileListener)documentManager)
-            .contentsChanged(new VirtualFileEvent(null, virtualFile, virtualFile.getName(), virtualFile.getParent()));
+  private static void reload(@NotNull final VirtualFile virtualFile) {
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      FileDocumentManager documentManager = FileDocumentManager.getInstance();
+      ((VirtualFileListener)documentManager).contentsChanged(new VirtualFileEvent(null, virtualFile, virtualFile.getName(), virtualFile.getParent()));
+    });
   }
 
   @Override
   @NotNull
   public Collection<Charset> getFavorites() {
-    Set<Charset> result = new HashSet<Charset>();
+    Set<Charset> result = widelyKnownCharsets();
     result.addAll(myMapping.values());
+    result.add(getDefaultCharset());
+    return result;
+  }
+
+  @NotNull
+  static Set<Charset> widelyKnownCharsets() {
+    Set<Charset> result = new HashSet<>();
     result.add(CharsetToolkit.UTF8_CHARSET);
     result.add(CharsetToolkit.getDefaultSystemCharset());
     result.add(CharsetToolkit.UTF_16_CHARSET);
@@ -223,51 +240,48 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     result.add(CharsetToolkit.forName("US-ASCII"));
     result.add(EncodingManager.getInstance().getDefaultCharset());
     result.add(EncodingManager.getInstance().getDefaultCharsetForPropertiesFiles(null));
-
     result.remove(null);
     return result;
   }
 
   @NotNull
-  @Override
   public Map<VirtualFile, Charset> getAllMappings() {
     return myMapping;
   }
 
-  @Override
   public void setMapping(@NotNull final Map<VirtualFile, Charset> mapping) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
-    final Map<VirtualFile, Charset> newMap = new HashMap<VirtualFile, Charset>(mapping.size());
-    final Map<VirtualFile, Charset> oldMap = new HashMap<VirtualFile, Charset>(myMapping);
+    final Map<VirtualFile, Charset> newMap = new THashMap<>(mapping.size());
+    final Map<VirtualFile, Charset> oldMap = new THashMap<>(myMapping);
 
     // ChangeFileEncodingAction should not start progress "reload files..."
-    suppressReloadDuring(new Runnable() {
-      @Override
-      public void run() {
-        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-        for (Map.Entry<VirtualFile, Charset> entry : mapping.entrySet()) {
-          VirtualFile virtualFile = entry.getKey();
-          Charset charset = entry.getValue();
-          if (charset == null) throw new IllegalArgumentException("Null charset for " + virtualFile + "; mapping: " + mapping);
-          if (virtualFile != null) {
-            if (!fileIndex.isInContent(virtualFile)) continue;
-            if (!virtualFile.isDirectory() && !Comparing.equal(charset, oldMap.get(virtualFile))) {
-              Document document;
-              byte[] bytes;
-              try {
-                document = FileDocumentManager.getInstance().getDocument(virtualFile);
-                if (document == null) throw new IOException();
-                bytes = virtualFile.contentsToByteArray();
-              }
-              catch (IOException e) {
-                continue;
-              }
-              // ask whether to reload/convert when in doubt
-              boolean changed = new ChangeFileEncodingAction().chosen(document, null, virtualFile, bytes, charset);
-
-              if (!changed) continue;
+    suppressReloadDuring(() -> {
+      ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+      for (Map.Entry<VirtualFile, Charset> entry : mapping.entrySet()) {
+        VirtualFile virtualFile = entry.getKey();
+        Charset charset = entry.getValue();
+        if (charset == null) throw new IllegalArgumentException("Null charset for " + virtualFile + "; mapping: " + mapping);
+        if (virtualFile == null) {
+          myProjectCharset = charset;
+        }
+        else {
+          if (!fileIndex.isInContent(virtualFile)) continue;
+          if (!virtualFile.isDirectory() && !Comparing.equal(charset, oldMap.get(virtualFile))) {
+            Document document;
+            byte[] bytes;
+            try {
+              document = FileDocumentManager.getInstance().getDocument(virtualFile);
+              if (document == null) throw new IOException();
+              bytes = virtualFile.contentsToByteArray();
             }
+            catch (IOException e) {
+              continue;
+            }
+            // ask whether to reload/convert when in doubt
+            boolean changed = new ChangeFileEncodingAction().chosen(document, null, virtualFile, bytes, charset);
+
+            if (!changed) continue;
           }
           newMap.put(virtualFile, charset);
         }
@@ -277,15 +291,20 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     myMapping.clear();
     myMapping.putAll(newMap);
 
-    final Set<VirtualFile> changed = new HashSet<VirtualFile>(oldMap.keySet());
-    for (VirtualFile newFile : newMap.keySet()) {
-      if (Comparing.equal(oldMap.get(newFile), newMap.get(newFile))) changed.remove(newFile);
+    final Set<VirtualFile> changed = new HashSet<>(oldMap.keySet());
+    for (Map.Entry<VirtualFile, Charset> entry : newMap.entrySet()) {
+      VirtualFile file = entry.getKey();
+      Charset charset = entry.getValue();
+      Charset oldCharset = oldMap.get(file);
+      if (Comparing.equal(oldCharset, charset)) {
+        changed.remove(file);
+      }
     }
 
-    Set<VirtualFile> added = new HashSet<VirtualFile>(newMap.keySet());
+    Set<VirtualFile> added = new HashSet<>(newMap.keySet());
     added.removeAll(oldMap.keySet());
 
-    Set<VirtualFile> removed = new HashSet<VirtualFile>(oldMap.keySet());
+    Set<VirtualFile> removed = new HashSet<>(oldMap.keySet());
     removed.removeAll(newMap.keySet());
 
     changed.addAll(added);
@@ -294,18 +313,15 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
 
     if (!changed.isEmpty()) {
       final Processor<VirtualFile> reloadProcessor = createChangeCharsetProcessor();
-      tryStartReloadWithProgress(new Runnable() {
-        @Override
-        public void run() {
-          Set<VirtualFile> processed = new THashSet<VirtualFile>();
-          next:
-          for (VirtualFile changedFile : changed) {
-            for (VirtualFile processedFile : processed) {
-              if (VfsUtilCore.isAncestor(processedFile, changedFile, false)) continue next;
-            }
-            processSubFiles(changedFile, reloadProcessor);
-            processed.add(changedFile);
+      tryStartReloadWithProgress(() -> {
+        Set<VirtualFile> processed = new THashSet<>();
+        next:
+        for (VirtualFile changedFile : changed) {
+          for (VirtualFile processedFile : processed) {
+            if (VfsUtilCore.isAncestor(processedFile, changedFile, false)) continue next;
           }
+          processSubFiles(changedFile, reloadProcessor);
+          processed.add(changedFile);
         }
       });
     }
@@ -314,21 +330,13 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   }
 
   private static Processor<VirtualFile> createChangeCharsetProcessor() {
-    return new Processor<VirtualFile>() {
-      @Override
-      public boolean process(final VirtualFile file) {
-        if (!(file instanceof VirtualFileSystemEntry)) return false;
-        Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
-        if (cachedDocument == null) return true;
-        ProgressManager.progress("Reloading files...", file.getPresentableUrl());
-        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), new Runnable() {
-          @Override
-          public void run() {
-            clearAndReload(file);
-          }
-        });
-        return true;
-      }
+    return file -> {
+      if (!(file instanceof VirtualFileSystemEntry)) return false;
+      Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
+      if (cachedDocument == null) return true;
+      ProgressManager.progress("Reloading files...", file.getPresentableUrl());
+      TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> clearAndReload(file));
+      return true;
     };
   }
 
@@ -352,8 +360,9 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   @Override
   @NotNull
   public Charset getDefaultCharset() {
-    Charset charset = getEncoding(null, false);
-    return charset == null ? Charset.defaultCharset() : charset;
+    Charset charset = myProjectCharset;
+    // if the project charset was not specified, use the IDE encoding, save this back
+    return charset == null ? myIdeEncodingManager.getDefaultCharset() : charset;
   }
 
   @Override
@@ -361,11 +370,12 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     return true;
   }
 
-  private static final ThreadLocal<Boolean> SUPPRESS_RELOAD = new ThreadLocal<Boolean>();
+  private static final ThreadLocal<Boolean> SUPPRESS_RELOAD = new ThreadLocal<>();
+
   static void suppressReloadDuring(@NotNull Runnable action) {
     Boolean old = SUPPRESS_RELOAD.get();
     try {
-      SUPPRESS_RELOAD.set(true);
+      SUPPRESS_RELOAD.set(Boolean.TRUE);
       action.run();
     }
     finally {
@@ -377,41 +387,23 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     Boolean suppress = SUPPRESS_RELOAD.get();
     if (suppress == Boolean.TRUE) return false;
     FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
-    return ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-      @Override
-      public void run() {
-        suppressReloadDuring(reloadAction);
-      }
-    }, "Reload Files", false, myProject);
+    return ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> suppressReloadDuring(reloadAction), "Reload Files", false, myProject);
   }
 
   private void reloadAllFilesUnder(@Nullable final VirtualFile root) {
-    tryStartReloadWithProgress(new Runnable() {
-      @Override
-      public void run() {
-        processSubFiles(root, new Processor<VirtualFile>() {
-          @Override
-          public boolean process(final VirtualFile file) {
-            if (!(file instanceof VirtualFileSystemEntry)) return true;
-            Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
-            if (cachedDocument != null) {
-              ProgressManager.progress("Reloading file...", file.getPresentableUrl());
-              TransactionGuard.submitTransaction(myProject, new Runnable() {
-                @Override
-                public void run() {
-                  reload(file);
-                }
-              });
-            }
-            // for not loaded files deep under project, reset encoding to give them chance re-detect the right one later
-            else if (file.isCharsetSet() && !file.equals(root)) {
-              file.setCharset(null);
-            }
-            return true;
-          }
-        });
+    tryStartReloadWithProgress(() -> processSubFiles(root, file -> {
+      if (!(file instanceof VirtualFileSystemEntry)) return true;
+      Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
+      if (cachedDocument != null) {
+        ProgressManager.progress("Reloading file...", file.getPresentableUrl());
+        TransactionGuard.submitTransaction(myProject, () -> reload(file));
       }
-    });
+      // for not loaded files deep under project, reset encoding to give them chance re-detect the right one later
+      else if (file.isCharsetSet() && !file.equals(root)) {
+        file.setCharset(null);
+      }
+      return true;
+    }));
   }
 
   @Override
@@ -428,7 +420,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   public void setNative2AsciiForPropertiesFiles(final VirtualFile virtualFile, final boolean native2Ascii) {
     if (myNative2AsciiForPropertiesFiles != native2Ascii) {
       myNative2AsciiForPropertiesFiles = native2Ascii;
-      ((EncodingManagerImpl)EncodingManager.getInstance()).firePropertyChange(null, PROP_NATIVE2ASCII_SWITCH, !native2Ascii, native2Ascii);
+      myIdeEncodingManager.firePropertyChange(null, PROP_NATIVE2ASCII_SWITCH, !native2Ascii, native2Ascii);
     }
   }
 
@@ -455,18 +447,18 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     Charset old = myDefaultCharsetForPropertiesFiles;
     if (!Comparing.equal(old, charset)) {
       myDefaultCharsetForPropertiesFiles = charset;
-      ((EncodingManagerImpl)EncodingManager.getInstance()).firePropertyChange(null, PROP_PROPERTIES_FILES_ENCODING, old, charset);
+      myIdeEncodingManager.firePropertyChange(null, PROP_PROPERTIES_FILES_ENCODING, old, charset);
     }
   }
 
   @Override
   public void addPropertyChangeListener(@NotNull PropertyChangeListener listener, @NotNull Disposable parentDisposable) {
-    EncodingManager.getInstance().addPropertyChangeListener(listener,parentDisposable);
+    myIdeEncodingManager.addPropertyChangeListener(listener, parentDisposable);
   }
 
   @Override
   @Nullable
   public Charset getCachedCharsetFromContent(@NotNull Document document) {
-    return EncodingManager.getInstance().getCachedCharsetFromContent(document);
+    return myIdeEncodingManager.getCachedCharsetFromContent(document);
   }
 }

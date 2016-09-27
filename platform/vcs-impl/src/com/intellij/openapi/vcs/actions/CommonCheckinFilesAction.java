@@ -15,147 +15,113 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.lifecycle.PeriodicalTasksCloser;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.checkin.CheckinEnvironment;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileFilter;
+import com.intellij.util.ObjectUtils;
+import com.intellij.vcsUtil.VcsUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.intellij.util.containers.UtilKt.getIfSingle;
 
 public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
   @Override
-  protected String getActionName(final VcsContext dataContext) {
-    final String checkinActionName = getCheckinActionName(dataContext);
-    return modifyCheckinActionName(dataContext, checkinActionName);
+  protected String getActionName(@NotNull VcsContext dataContext) {
+    String actionName = Optional.ofNullable(dataContext.getProject())
+            .map(project -> getCommonVcs(getRootsStream(dataContext), project))
+            .map(AbstractVcs::getCheckinEnvironment)
+            .map(CheckinEnvironment::getCheckinOperationName)
+            .orElse(VcsBundle.message("vcs.command.name.checkin"));
+
+    return modifyCheckinActionName(dataContext, actionName);
   }
 
-  private String modifyCheckinActionName(final VcsContext dataContext, String checkinActionName) {
-    final FilePath[] roots = getRoots(dataContext);
-    if (roots == null || roots.length == 0) return checkinActionName;
-    final FilePath first = roots[0];
-    if (roots.length == 1) {
-      if (first.isDirectory()) {
-        return VcsBundle.message("action.name.checkin.directory", checkinActionName);
-      }
-      else {
-        return VcsBundle.message("action.name.checkin.file", checkinActionName);
-      }
+  private String modifyCheckinActionName(@NotNull VcsContext dataContext, String checkinActionName) {
+    String result = checkinActionName;
+    List<FilePath> roots = getRootsStream(dataContext).limit(2).collect(Collectors.toList());
+
+    if (!roots.isEmpty()) {
+      String messageKey = roots.get(0).isDirectory() ? "action.name.checkin.directory" : "action.name.checkin.file";
+      result = VcsBundle.message(StringUtil.pluralize(messageKey, roots.size()), checkinActionName);
     }
-    else {
-      if (first.isDirectory()) {
-        return VcsBundle.message("action.name.checkin.directories", checkinActionName);
-      }
-      else {
-        return VcsBundle.message("action.name.checkin.files", checkinActionName);
-      }
-    }
+
+    return result;
   }
 
   @Override
-  protected String getMnemonicsFreeActionName(VcsContext context) {
+  protected String getMnemonicsFreeActionName(@NotNull VcsContext context) {
     return modifyCheckinActionName(context, VcsBundle.message("vcs.command.name.checkin.no.mnemonics"));
   }
 
+  @Nullable
   @Override
-  protected LocalChangeList getInitiallySelectedChangeList(final VcsContext context, final Project project) {
-    final ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+  protected LocalChangeList getInitiallySelectedChangeList(@NotNull VcsContext context, @NotNull Project project) {
+    ChangeListManager manager = ChangeListManager.getInstance(project);
+    LocalChangeList defaultChangeList = manager.getDefaultChangeList();
+    LocalChangeList result = null;
 
-    final FilePath[] roots = getRoots(context);
-    for(final FilePath root: roots) {
-      final VirtualFile file = root.getVirtualFile();
-      if (file == null) continue;
-      final Ref<Change> change = new Ref<Change>();
-      if (!file.isDirectory()) {
-        change.set(changeListManager.getChange(file));
+    for (FilePath root : getRoots(context)) {
+      if (root.getVirtualFile() == null) continue;
+
+      Collection<Change> changes = manager.getChangesIn(root);
+      if (defaultChangeList != null && containsAnyChange(defaultChangeList, changes)) {
+        return defaultChangeList;
       }
-      else {
-        final FileIndexFacade index = PeriodicalTasksCloser.getInstance().safeGetService(project, FileIndexFacade.class);
-        final VirtualFileFilter filter = new VirtualFileFilter() {
-          @Override
-          public boolean accept(final VirtualFile file) {
-            return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-              @Override
-              public Boolean compute() {
-                return (! index.isExcludedFile(file));
-              }
-            });
-          }
-        };
-        VfsUtilCore.iterateChildrenRecursively(file, filter, new ContentIterator() {
-          @Override
-          public boolean processFile(final VirtualFile fileOrDir) {
-            final Change c = changeListManager.getChange(fileOrDir);
-            if (c != null) {
-              change.set(c);
-              return false;
-            }
-            return true;
-          }
-        });
-      }
-      if (!change.isNull()) {
-        return changeListManager.getChangeList(change.get());
-      }
+      result = changes.stream().findFirst().map(manager::getChangeList).orElse(null);
     }
 
-    return changeListManager.getDefaultChangeList();
-  }
-
-  private String getCheckinActionName(final VcsContext dataContext) {
-    final Project project = dataContext.getProject();
-    if (project == null) return VcsBundle.message("vcs.command.name.checkin");
-
-    final AbstractVcs vcs = getCommonVcsFor(getRoots(dataContext), project);
-    if (vcs == null) {
-      return VcsBundle.message("vcs.command.name.checkin");
-    }
-    else {
-      final CheckinEnvironment checkinEnvironment = vcs.getCheckinEnvironment();
-      if (checkinEnvironment == null) {
-        return VcsBundle.message("vcs.command.name.checkin");
-      }
-      return checkinEnvironment.getCheckinOperationName();
-    }
+    return ObjectUtils.chooseNotNull(result, defaultChangeList);
   }
 
   @Override
-  protected boolean approximatelyHasRoots(final VcsContext dataContext) {
-    final FilePath[] paths = dataContext.getSelectedFilePaths();
-    if (paths.length == 0) return false;
-    final FileStatusManager fsm = FileStatusManager.getInstance(dataContext.getProject());
-    for (final FilePath path : paths) {
-      VirtualFile file = path.getVirtualFile();
-      if (file == null) {
-        continue;
-      }
-      FileStatus status = fsm.getStatus(file);
-      if (isApplicableRoot(file, status, dataContext)) {
-        return true;
-      }
-    }
-    return false;
+  protected boolean approximatelyHasRoots(@NotNull VcsContext dataContext) {
+    FileStatusManager manager = FileStatusManager.getInstance(dataContext.getProject());
+
+    return getRootsStream(dataContext)
+            .map(FilePath::getVirtualFile)
+            .filter(Objects::nonNull)
+            .anyMatch(file -> isApplicableRoot(file, manager.getStatus(file), dataContext));
   }
 
-  protected boolean isApplicableRoot(VirtualFile file, FileStatus status, VcsContext dataContext) {
+  protected boolean isApplicableRoot(@NotNull VirtualFile file, @NotNull FileStatus status, @NotNull VcsContext dataContext) {
     return status != FileStatus.UNKNOWN && status != FileStatus.IGNORED;
   }
 
+  @NotNull
   @Override
-  protected FilePath[] getRoots(final VcsContext context) {
+  protected FilePath[] getRoots(@NotNull VcsContext context) {
     return context.getSelectedFilePaths();
   }
 
-  @Override
-  protected boolean filterRootsBeforeAction() {
-    return true;
+  @NotNull
+  protected Stream<FilePath> getRootsStream(@NotNull VcsContext context) {
+    return context.getSelectedFilePathsStream();
+  }
+
+  private static boolean containsAnyChange(@NotNull LocalChangeList changeList, @NotNull Collection<Change> changes) {
+    return changes.stream().anyMatch(changeList.getChanges()::contains);
+  }
+
+  @Nullable
+  private static AbstractVcs getCommonVcs(@NotNull Stream<FilePath> roots, @NotNull Project project) {
+    return getIfSingle(
+            roots.map(root -> VcsUtil.getVcsFor(project, root))
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .limit(Math.min(2, ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length))
+    );
   }
 }

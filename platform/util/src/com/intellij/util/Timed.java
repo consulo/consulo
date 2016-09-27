@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,26 +19,27 @@ package com.intellij.util;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author mike
  */
-@SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
+@SuppressWarnings("NonPrivateFieldAccessedInSynchronizedContext")
 abstract class Timed<T> implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.Timed");
   private static final Map<Timed, Boolean> ourReferences = Collections.synchronizedMap(new WeakHashMap<Timed, Boolean>());
+  protected static final int SERVICE_DELAY = 60;
 
-  int myLastCheckedAccessCount;
+  private int myLastCheckedAccessCount;
   int myAccessCount;
   protected T myT;
-  boolean myPolled;
+  private boolean myPolled;
 
   protected Timed(@Nullable final Disposable parentDisposable) {
     if (parentDisposable != null) {
@@ -51,8 +52,7 @@ abstract class Timed<T> implements Disposable {
     final Object t = myT;
     myT = null;
     if (t instanceof Disposable) {
-      Disposable disposable = (Disposable)t;
-      Disposer.dispose(disposable);
+      Disposer.dispose((Disposable)t);
     }
 
     remove();
@@ -74,10 +74,12 @@ abstract class Timed<T> implements Disposable {
     return false;
   }
 
+  protected synchronized boolean checkLocked() {
+    return isLocked();
+  }
 
   static {
-    ScheduledExecutorService service = ConcurrencyUtil.newSingleScheduledThreadExecutor("timed reference disposer", Thread.MIN_PRIORITY + 1);
-    service.scheduleWithFixedDelay(new Runnable() {
+    AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(new Runnable() {
       @Override
       public void run() {
         try {
@@ -87,7 +89,7 @@ abstract class Timed<T> implements Disposable {
           LOG.error(e);
         }
       }
-    }, 60, 60, TimeUnit.SECONDS);
+    }, SERVICE_DELAY, SERVICE_DELAY, TimeUnit.SECONDS);
   }
 
   static void disposeTimed() {
@@ -95,8 +97,8 @@ abstract class Timed<T> implements Disposable {
     for (Timed timed : references) {
       if (timed == null) continue;
       synchronized (timed) {
-        if (timed.myLastCheckedAccessCount == timed.myAccessCount && !timed.isLocked()) {
-          timed.dispose();
+        if (timed.myLastCheckedAccessCount == timed.myAccessCount && !timed.checkLocked()) {
+          Disposer.dispose(timed);
         }
         else {
           timed.myLastCheckedAccessCount = timed.myAccessCount;

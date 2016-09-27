@@ -16,19 +16,15 @@
 package com.intellij.openapi.command;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@ApplicationService
 public abstract class CommandProcessor {
-  @NotNull
-  public static CommandProcessor getInstance() {
-    return ServiceManager.getService(CommandProcessor.class);
-  }
-
   /**
    * @deprecated use {@link #executeCommand(com.intellij.openapi.project.Project, java.lang.Runnable, java.lang.String, java.lang.Object)}
    */
@@ -59,6 +55,18 @@ public abstract class CommandProcessor {
                                       @Nullable Object groupId,
                                       @NotNull UndoConfirmationPolicy confirmationPolicy,
                                       @Nullable Document document);
+
+  /**
+   * @param shouldRecordCommandForActiveDocument false if the action is not supposed to be recorded into the currently open document's history.
+   *                                             Examples of such actions: Create New File, Change Project Settings etc.
+   *                                             Default is true.
+   */
+  public abstract void executeCommand(@Nullable Project project,
+                                      @NotNull Runnable command,
+                                      @Nullable String name,
+                                      @Nullable Object groupId,
+                                      @NotNull UndoConfirmationPolicy confirmationPolicy,
+                                      boolean shouldRecordCommandForActiveDocument);
 
   public abstract void setCurrentCommandName(@Nullable String name);
 
