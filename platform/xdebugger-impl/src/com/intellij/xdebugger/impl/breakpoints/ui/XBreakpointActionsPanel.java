@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import java.awt.event.ActionListener;
  * Time: 9:45
  * To change this template use File | Settings | File Templates.
  */
-public class XBreakpointActionsPanel<B extends XBreakpointBase<?,?,?>> extends XBreakpointPropertiesSubPanel<B> {
+public class XBreakpointActionsPanel extends XBreakpointPropertiesSubPanel {
   public static final String LOG_EXPRESSION_HISTORY_ID = "breakpointLogExpression";
 
   private JCheckBox myLogMessageCheckBox;
@@ -48,9 +48,10 @@ public class XBreakpointActionsPanel<B extends XBreakpointBase<?,?,?>> extends X
   private JPanel myContentPane;
   private JPanel myMainPanel;
   private JCheckBox myTemporaryCheckBox;
+  private JPanel myExpressionPanel;
   private XDebuggerExpressionComboBox myLogExpressionComboBox;
 
-  public void init(Project project, XBreakpointManager breakpointManager, @NotNull B breakpoint, @Nullable XDebuggerEditorsProvider debuggerEditorsProvider) {
+  public void init(Project project, XBreakpointManager breakpointManager, @NotNull XBreakpointBase breakpoint, @Nullable XDebuggerEditorsProvider debuggerEditorsProvider) {
     init(project, breakpointManager, breakpoint);
     if (debuggerEditorsProvider != null) {
       ActionListener listener = new ActionListener() {
@@ -58,7 +59,7 @@ public class XBreakpointActionsPanel<B extends XBreakpointBase<?,?,?>> extends X
           onCheckboxChanged();
         }
       };
-      myLogExpressionComboBox = new XDebuggerExpressionComboBox(project, debuggerEditorsProvider, LOG_EXPRESSION_HISTORY_ID, myBreakpoint.getSourcePosition());
+      myLogExpressionComboBox = new XDebuggerExpressionComboBox(project, debuggerEditorsProvider, LOG_EXPRESSION_HISTORY_ID, myBreakpoint.getSourcePosition(), true);
       JComponent logExpressionComponent = myLogExpressionComboBox.getComponent();
       myLogExpressionPanel.add(logExpressionComponent, BorderLayout.CENTER);
       myLogExpressionComboBox.setEnabled(false);
@@ -67,7 +68,7 @@ public class XBreakpointActionsPanel<B extends XBreakpointBase<?,?,?>> extends X
       DebuggerUIUtil.focusEditorOnCheck(myLogExpressionCheckBox, myLogExpressionComboBox.getEditorComponent());
     }
     else {
-      myLogExpressionCheckBox.setVisible(false);
+      myExpressionPanel.getParent().remove(myExpressionPanel);
     }
   }
 
@@ -122,6 +123,17 @@ public class XBreakpointActionsPanel<B extends XBreakpointBase<?,?,?>> extends X
     }
   }
 
+  JComponent getDefaultFocusComponent() {
+    if (myLogExpressionComboBox != null && myLogExpressionComboBox.getComboBox().isEnabled()) {
+      return myLogExpressionComboBox.getEditorComponent();
+    }
+    return null;
+  }
+
   public void dispose() {
+  }
+
+  public void hide() {
+    myContentPane.setVisible(false);
   }
 }

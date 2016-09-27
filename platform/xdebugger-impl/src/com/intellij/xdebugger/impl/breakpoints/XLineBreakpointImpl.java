@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,9 @@ import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.ui.DebuggerColors;
+import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,21 +57,21 @@ import java.util.List;
  */
 public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreakpointBase<XLineBreakpoint<P>, P, LineBreakpointState<P>>
         implements XLineBreakpoint<P> {
-  @Nullable
-  private RangeHighlighter myHighlighter;
+  @Nullable private RangeHighlighter myHighlighter;
   private final XLineBreakpointType<P> myType;
   private XSourcePosition mySourcePosition;
   private boolean myDisposed;
 
   public XLineBreakpointImpl(final XLineBreakpointType<P> type,
                              XBreakpointManagerImpl breakpointManager,
-                             @Nullable final P properties,
-                             LineBreakpointState<P> state) {
+                             @Nullable final P properties, LineBreakpointState<P> state) {
     super(type, breakpointManager, properties, state);
     myType = type;
   }
 
-  XLineBreakpointImpl(final XLineBreakpointType<P> type, XBreakpointManagerImpl breakpointManager, final LineBreakpointState<P> breakpointState) {
+  XLineBreakpointImpl(final XLineBreakpointType<P> type,
+                      XBreakpointManagerImpl breakpointManager,
+                      final LineBreakpointState<P> breakpointState) {
     super(type, breakpointManager, breakpointState);
     myType = type;
   }
@@ -227,7 +227,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
       public boolean copy(int line, VirtualFile file) {
         if (canMoveTo(line, file)) {
           setFileUrl(file.getUrl());
-          setLine(line);
+          setLine(line, true);
           return true;
         }
         return false;
@@ -248,7 +248,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
 
   public void updatePosition() {
     if (myHighlighter != null && myHighlighter.isValid()) {
-      setLine(myHighlighter.getDocument().getLineNumber(myHighlighter.getStartOffset()));
+      setLine(myHighlighter.getDocument().getLineNumber(myHighlighter.getStartOffset()), false);
     }
   }
 
@@ -256,14 +256,18 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     if (!Comparing.equal(getFileUrl(), newUrl)) {
       myState.setFileUrl(newUrl);
       mySourcePosition = null;
+      removeHighlighter();
       fireBreakpointChanged();
     }
   }
 
-  private void setLine(final int line) {
+  private void setLine(final int line, boolean removeHighlighter) {
     if (getLine() != line) {
       myState.setLine(line);
       mySourcePosition = null;
+      if (removeHighlighter) {
+        removeHighlighter();
+      }
       fireBreakpointChanged();
     }
   }
@@ -288,12 +292,11 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
 
   @Override
   protected void updateIcon() {
-    final Icon icon = calculateSpecialIcon();
-    if (icon != null) {
-      setIcon(icon);
-      return;
+    Icon icon = calculateSpecialIcon();
+    if (icon == null) {
+      icon = isTemporary() ? myType.getTemporaryIcon() : myType.getEnabledIcon();
     }
-    setIcon(isTemporary() ? myType.getTemporaryIcon() : myType.getEnabledIcon());
+    setIcon(icon);
   }
 
   @Override

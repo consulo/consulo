@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsListener;
 import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
-import com.intellij.ui.tabs.impl.singleRow.CompressibleSingleRowLayout;
+import com.intellij.ui.tabs.impl.TabLabel;
+import com.intellij.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
@@ -55,8 +56,8 @@ import java.util.Set;
 public class GridCellImpl implements GridCell {
   private final GridImpl myContainer;
 
-  private final MutualMap<Content, TabInfo> myContents = new MutualMap<Content, TabInfo>(true);
-  private final Set<Content> myMinimizedContents = new HashSet<Content>();
+  private final MutualMap<Content, TabInfo> myContents = new MutualMap<>(true);
+  private final Set<Content> myMinimizedContents = new HashSet<>();
 
   private final JBTabs myTabs;
   private final GridImpl.Placeholder myPlaceholder;
@@ -79,7 +80,7 @@ public class GridCellImpl implements GridCell {
 
       @Override
       protected SingleRowLayout createSingleRowLayout() {
-          return new CompressibleSingleRowLayout(this);
+        return new ScrollableSingleRowLayout(this);
       }
 
       @Override
@@ -103,16 +104,6 @@ public class GridCellImpl implements GridCell {
       }
 
       @Override
-      protected Color getFocusedBottomFillColor() {
-        return UIUtil.isUnderDarcula() ? new Color(0x1E2533)  : new Color(0xc2cbdb);
-      }
-
-      @Override
-      public Color getBackground() {
-        return UIUtil.isUnderDarcula() ? new Color(0x27292A) : super.getBackground();
-      }
-
-      @Override
       public void processDropOver(TabInfo over, RelativePoint point) {
         ((RunnerContentUi)myContext).myTabs.processDropOver(over, point);
       }
@@ -125,6 +116,16 @@ public class GridCellImpl implements GridCell {
       @Override
       public void resetDropOver(TabInfo tabInfo) {
         ((RunnerContentUi)myContext).myTabs.resetDropOver(tabInfo);
+      }
+
+      @Override
+      protected TabLabel createTabLabel(TabInfo info) {
+        return new TabLabel(this, info) {
+          @Override
+          public void setAlignmentToCenter(boolean toCenter) {
+            super.setAlignmentToCenter(false);
+          }
+        };
       }
     }.setDataProvider(new DataProvider() {
       @Override
@@ -150,8 +151,8 @@ public class GridCellImpl implements GridCell {
         return new UiDecoration(null, new Insets(1, -1, 1, -1));
       }
     }).setSideComponentVertical(!context.getLayoutSettings().isToolbarHorizontal())
-      .setStealthTabMode(true).setFocusCycle(false).setPaintFocus(true)
-      .setProvideSwitchTargets(false).setTabDraggingEnabled(true).setSideComponentOnTabs(false);
+            .setStealthTabMode(true).setFocusCycle(false).setPaintFocus(true)
+            .setProvideSwitchTargets(false).setTabDraggingEnabled(true).setSideComponentOnTabs(false);
 
     myTabs.addTabMouseListener(new MouseAdapter() {
       @Override
@@ -198,12 +199,7 @@ public class GridCellImpl implements GridCell {
     if (myContents.containsKey(content)) return;
     myContents.put(content, null);
 
-    revalidateCell(new Runnable() {
-      @Override
-      public void run() {
-        myTabs.addTab(createTabInfoFor(content));
-      }
-    });
+    revalidateCell(() -> myTabs.addTab(createTabInfoFor(content)));
 
     updateSelection(myTabs.getComponent().getRootPane() != null);
   }
@@ -214,12 +210,7 @@ public class GridCellImpl implements GridCell {
     final TabInfo info = getTabFor(content);
     myContents.remove(content);
 
-    revalidateCell(new Runnable() {
-      @Override
-      public void run() {
-        myTabs.removeTab(info);
-      }
-    });
+    revalidateCell(() -> myTabs.removeTab(info));
 
     updateSelection(myTabs.getComponent().getRootPane() != null);
   }
@@ -254,9 +245,9 @@ public class GridCellImpl implements GridCell {
 
   private TabInfo createTabInfoFor(Content content) {
     final TabInfo tabInfo = updatePresentation(new TabInfo(new ProviderWrapper(content, myContext)), content)
-      .setObject(content)
-      .setPreferredFocusableComponent(content.getPreferredFocusableComponent())
-      .setActionsContextComponent(content.getActionsContextComponent());
+            .setObject(content)
+            .setPreferredFocusableComponent(content.getPreferredFocusableComponent())
+            .setActionsContextComponent(content.getActionsContextComponent());
 
     myContents.remove(content);
     myContents.put(content, tabInfo);
@@ -269,18 +260,21 @@ public class GridCellImpl implements GridCell {
 
   @Nullable
   private static TabInfo updatePresentation(TabInfo info, Content content) {
-    if (info == null) return info;
+    if (info == null) {
+      return null;
+    }
+
     return info.
-      setIcon(content.getIcon()).
-      setText(content.getDisplayName()).
-      setTooltipText(content.getDescription()).
-      setActionsContextComponent(content.getActionsContextComponent()).
-      setActions(content.getActions(), content.getPlace());
+            setIcon(content.getIcon()).
+            setText(content.getDisplayName()).
+            setTooltipText(content.getDescription()).
+            setActionsContextComponent(content.getActionsContextComponent()).
+            setActions(content.getActions(), content.getPlace());
   }
 
   public ActionCallback select(final Content content, final boolean requestFocus) {
     final TabInfo tabInfo = myContents.getValue(content);
-    return tabInfo != null ? myTabs.select(tabInfo, requestFocus) : new ActionCallback.Done();
+    return tabInfo != null ? myTabs.select(tabInfo, requestFocus) : ActionCallback.DONE;
   }
 
   public void processAlert(final Content content, final boolean activate) {
@@ -307,7 +301,7 @@ public class GridCellImpl implements GridCell {
   }
 
   public List<SwitchTarget> getTargets(boolean onlyVisible) {
-    if (myTabs.getPresentation().isHideTabs()) return new ArrayList<SwitchTarget>();
+    if (myTabs.getPresentation().isHideTabs()) return new ArrayList<>();
 
     return myTabs.getTargets(onlyVisible, false);
   }
@@ -321,7 +315,6 @@ public class GridCellImpl implements GridCell {
   }
 
   private static class ProviderWrapper extends NonOpaquePanel implements DataProvider {
-
     Content myContent;
     ViewContext myContext;
 
@@ -510,6 +503,6 @@ public class GridCellImpl implements GridCell {
 
   ActionCallback restore(Content content) {
     myMinimizedContents.remove(content);
-    return new ActionCallback.Done();
+    return ActionCallback.DONE;
   }
 }

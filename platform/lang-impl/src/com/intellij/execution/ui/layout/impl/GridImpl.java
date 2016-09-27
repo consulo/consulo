@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,19 +40,15 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
   private final ThreeComponentsSplitter myTopSplit = new ThreeComponentsSplitter(false, true);
   private final Splitter mySplitter = new Splitter(true);
 
-  private final Map<PlaceInGrid, GridCellImpl> myPlaceInGrid2Cell = new EnumMap<PlaceInGrid, GridCellImpl>(PlaceInGrid.class);
+  private final Map<PlaceInGrid, GridCellImpl> myPlaceInGrid2Cell = new EnumMap<>(PlaceInGrid.class);
 
   private final String mySessionName;
 
-  private final List<Content> myContents = new ArrayList<Content>();
-  private final Map<Content, GridCellImpl> myContent2Cell = new HashMap<Content, GridCellImpl>();
+  private final List<Content> myContents = new ArrayList<>();
+  private final Map<Content, GridCellImpl> myContent2Cell = new HashMap<>();
 
-  private final Comparator<Content> myContentComparator = new Comparator<Content>() {
-    @Override
-    public int compare(final Content o1, final Content o2) {
-      return getCellFor(o1).getPlaceInGrid().compareTo(getCellFor(o2).getPlaceInGrid());
-    }
-  };
+  private final Comparator<Content> myContentComparator =
+          (o1, o2) -> getCellFor(o1).getPlaceInGrid().compareTo(getCellFor(o2).getPlaceInGrid());
 
   private final ViewContextEx myViewContext;
 
@@ -80,6 +76,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
     myTopSplit.setFirstComponent(left);
     myTopSplit.setInnerComponent(center);
     myTopSplit.setLastComponent(right);
+    myTopSplit.setMinSize(48);
     mySplitter.setFirstComponent(myTopSplit);
     mySplitter.setSecondComponent(bottom);
   }
@@ -144,8 +141,14 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
   @Override
   public GridCellImpl getCellFor(final Content content) {
-    final GridCellImpl cell = myPlaceInGrid2Cell.get(getStateFor(content).getPlaceInGrid());
-    assert cell != null : "Unknown place in grid: " + getStateFor(content).getPlaceInGrid().name();
+    // check if the content is already in some cell
+    GridCellImpl current = myContent2Cell.get(content);
+    if (current != null) return current;
+    // view may be shared between several contents with the same ID in different cells
+    // (temporary contents like "Dump Stack" or "Console Result")
+    View view = getStateFor(content);
+    final GridCellImpl cell = myPlaceInGrid2Cell.get(view.getPlaceInGrid());
+    assert cell != null : "Unknown place in grid: " + view.getPlaceInGrid().name();
     return cell;
   }
 
@@ -220,20 +223,6 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
     private JComponent myContent;
 
-    @Override
-    public void doLayout() {
-      super.doLayout();
-      Component child = getComponentCount() == 1 ? getComponent(0) : null;
-      if (child instanceof JBTabsPresentation) {
-        if (!((JBTabsPresentation)child).isHideTabs()) {
-          Rectangle bounds = child.getBounds();
-          bounds.y--;
-          bounds.height++;
-          child.setBounds(bounds);
-        }
-      }
-    }
-
     public CellTransform.Restore detach() {
       if (getComponentCount() == 1) {
         myContent = (JComponent)getComponent(0);
@@ -252,9 +241,23 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
             setContent(myContent);
             myContent = null;
           }
-          return new ActionCallback.Done();
+          return ActionCallback.DONE;
         }
       };
+    }
+
+    @Override
+    public void doLayout() {
+      super.doLayout();
+      Component child = getComponentCount() == 1 ? getComponent(0) : null;
+      if (child instanceof JBTabsPresentation) {
+        if (!((JBTabsPresentation)child).isHideTabs()) {
+          Rectangle bounds = child.getBounds();
+          bounds.y --;
+          bounds.height ++;
+          child.setBounds(bounds);
+        }
+      }
     }
   }
 
@@ -339,7 +342,8 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
   float getBottomPropertion() {
     final float totalSize = mySplitter.getOrientation() ? mySplitter.getHeight() : mySplitter.getWidth();
-    final float componentSize = mySplitter.getOrientation() ? mySplitter.getFirstComponent().getHeight() : mySplitter.getFirstComponent().getWidth();
+    final float componentSize =
+            mySplitter.getOrientation() ? mySplitter.getFirstComponent().getHeight() : mySplitter.getFirstComponent().getWidth();
 
     return componentSize / (totalSize - mySplitter.getDividerWidth());
   }
@@ -350,7 +354,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
   }
 
   public List<Content> getAttachedContents() {
-    ArrayList<Content> result = new ArrayList<Content>();
+    ArrayList<Content> result = new ArrayList<>();
 
     for (Content each : getContents()) {
       result.add(each);
@@ -405,7 +409,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
   public List<SwitchTarget> getTargets(boolean onlyVisible) {
     Collection<GridCellImpl> cells = myPlaceInGrid2Cell.values();
-    ArrayList<SwitchTarget> result = new ArrayList<SwitchTarget>();
+    ArrayList<SwitchTarget> result = new ArrayList<>();
     for (GridCellImpl each : cells) {
       result.addAll(each.getTargets(onlyVisible));
     }

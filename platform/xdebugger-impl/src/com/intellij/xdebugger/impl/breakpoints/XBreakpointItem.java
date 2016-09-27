@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,14 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPanel;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 class XBreakpointItem extends BreakpointItem {
   private final XBreakpoint<?> myBreakpoint;
-  private XLightBreakpointPropertiesPanel<XBreakpointBase<?,?,?>> myPropertiesPanel;
+  private XLightBreakpointPropertiesPanel myPropertiesPanel;
 
   public XBreakpointItem(XBreakpoint<?> breakpoint) {
     myBreakpoint = breakpoint;
@@ -87,7 +88,7 @@ class XBreakpointItem extends BreakpointItem {
 
   @Override
   public String footerText() {
-    return ((XBreakpointBase)myBreakpoint).getType().getDisplayText(myBreakpoint);
+    return XBreakpointUtil.getDisplayText(myBreakpoint);
   }
 
   @Override
@@ -107,13 +108,13 @@ class XBreakpointItem extends BreakpointItem {
       myPropertiesPanel = null;
     }
     if (!editorOnly) {
-      myPropertiesPanel = new XLightBreakpointPropertiesPanel<XBreakpointBase<?,?,?>>(project, getManager(), breakpoint, true);
+      myPropertiesPanel = new XLightBreakpointPropertiesPanel(project, getManager(), breakpoint, true);
 
       panel.setPropertiesPanel(myPropertiesPanel.getMainPanel());
     }
 
     XSourcePosition sourcePosition = myBreakpoint.getSourcePosition();
-    if (sourcePosition != null) {
+    if (sourcePosition != null && sourcePosition.getFile().isValid()) {
       showInEditor(panel, sourcePosition.getFile(), sourcePosition.getLine());
     }
     else {
@@ -132,7 +133,7 @@ class XBreakpointItem extends BreakpointItem {
   @Override
   public void navigate(boolean requestFocus) {
     Navigatable navigatable = myBreakpoint.getNavigatable();
-    if (navigatable != null) {
+    if (navigatable != null && navigatable.canNavigate()) {
       navigatable.navigate(requestFocus);
     }
   }
@@ -163,7 +164,7 @@ class XBreakpointItem extends BreakpointItem {
     final XBreakpointManagerImpl breakpointManager = getManager();
     new WriteAction() {
       @Override
-      protected void run(final Result result) {
+      protected void run(@NotNull final Result result) {
         breakpointManager.removeBreakpoint(myBreakpoint);
       }
     }.execute();

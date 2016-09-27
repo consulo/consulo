@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -40,9 +41,9 @@ import java.util.List;
  * &nbsp;&nbsp;&lt;xdebugger.breakpointType implementation="qualified-class-name"/&gt;<br>
  * &lt;/extensions&gt;
  * <p><p>
- *
+ * <p>
  * Use this class only for breakpoints like exception breakpoints in Java. If a breakpoint will be put on some line in a file use
- * {@link XLineBreakpointType} instead 
+ * {@link XLineBreakpointType} instead
  *
  * @author nik
  */
@@ -53,7 +54,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   private final boolean mySuspendThreadSupported;
 
   /**
-   * @param id an unique id of breakpoint type
+   * @param id    an unique id of breakpoint type
    * @param title title of tab in the breakpoints dialog
    */
   protected XBreakpointType(@NonNls @NotNull final String id, @Nls @NotNull final String title) {
@@ -81,6 +82,16 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
    */
   public boolean isSuspendThreadSupported() {
     return mySuspendThreadSupported;
+  }
+
+  public SuspendPolicy getDefaultSuspendPolicy() {
+    return SuspendPolicy.ALL;
+  }
+
+  public enum StandardPanels {SUSPEND_POLICY, ACTIONS, DEPENDENCY}
+
+  public EnumSet<StandardPanels> getVisibleStandardPanels() {
+    return EnumSet.allOf(StandardPanels.class);
   }
 
   @NotNull
@@ -137,6 +148,14 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   }
 
   @Nullable
+  public XBreakpointCustomPropertiesPanel<B> createCustomPropertiesPanel(@NotNull Project project) {
+    return createCustomPropertiesPanel();
+  }
+
+  /**
+   * @deprecated override {@link #createCustomPropertiesPanel(Project)} instead
+   */
+  @Nullable
   public XBreakpointCustomPropertiesPanel<B> createCustomPropertiesPanel() {
     return null;
   }
@@ -152,7 +171,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   }
 
   /**
-   * @deprecated override {@link #getEditorsProvider(B, com.intellij.openapi.project.Project)} instead
+   * @deprecated override {@link #getEditorsProvider(B, Project)} instead
    */
   @Nullable
   public XDebuggerEditorsProvider getEditorsProvider() {
@@ -170,18 +189,14 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
 
   @NotNull
   public Comparator<B> getBreakpointComparator() {
-    return new Comparator<B>() {
-      @Override
-      public int compare(B b, B b1) {
-        return (int)(b1.getTimeStamp() - b.getTimeStamp());
-      }
-    };
+    return (b, b1) -> (int)(b1.getTimeStamp() - b.getTimeStamp());
     //return XDebuggerUtil.getInstance().getDefaultBreakpointComparator(this);
   }
 
   /**
    * Return <code>true</code> from this method in order to allow adding breakpoints from the "Breakpoints" dialog. Also override
-   * {@link XBreakpointType#addBreakpoint(com.intellij.openapi.project.Project,javax.swing.JComponent)} method.
+   * {@link XBreakpointType#addBreakpoint(Project, JComponent)} method.
+   *
    * @return <code>true</code> if "Add" button should be visible in "Breakpoints" dialog
    */
   public boolean isAddBreakpointButtonVisible() {
@@ -189,7 +204,8 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   }
 
   /**
-   * This method is called then "Add" button is pressed in the "Breakpoints" dialog 
+   * This method is called then "Add" button is pressed in the "Breakpoints" dialog
+   *
    * @param project
    * @param parentComponent
    * @return the created breakpoint or <code>null</code> if breakpoint wasn't created
@@ -214,7 +230,8 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     return true;
   }
 
-  @Nullable @NonNls
+  @Nullable
+  @NonNls
   public String getBreakpointsDialogHelpTopic() {
     return null;
   }

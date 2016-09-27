@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.debugger.ui.DebuggerContentInfo;
+import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.Executor;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -29,12 +30,15 @@ import com.intellij.execution.ui.layout.impl.ViewImpl;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.actions.ContextHelpAction;
+import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.ui.AppIcon;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManagerAdapter;
@@ -48,7 +52,6 @@ import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import com.intellij.xdebugger.impl.frame.*;
-import com.intellij.xdebugger.impl.ui.tree.actions.SortValuesToggleAction;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +65,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
   private XWatchesViewImpl myWatchesView;
   private boolean myWatchesInVariables = Registry.is("debugger.watches.in.variables");
-  private final LinkedHashMap<String, XDebugView> myViews = new LinkedHashMap<String, XDebugView>();
+  private final LinkedHashMap<String, XDebugView> myViews = new LinkedHashMap<>();
 
   @Nullable
   private XDebugSessionImpl mySession;
@@ -93,7 +96,9 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
       }
     }
-    return new XDebugSessionTab(session, icon, environment);
+    XDebugSessionTab tab = new XDebugSessionTab(session, icon, environment);
+    tab.myRunContentDescriptor.setActivateToolWindowWhenAdded(contentToReuse == null || contentToReuse.isActivateToolWindowWhenAdded());
+    return tab;
   }
 
   @NotNull
@@ -222,11 +227,10 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
   }
 
   public void rebuildViews() {
-    AppUIUtil.invokeLaterIfProjectAlive(myProject, new Runnable() {
-      @Override
-      public void run() {
+    AppUIUtil.invokeLaterIfProjectAlive(myProject, () -> {
+      if (mySession != null) {
         for (XDebugView view : myViews.values()) {
-          view.processSessionEvent(XDebugView.SessionEvent.SETTINGS_CHANGED);
+          view.processSessionEvent(XDebugView.SessionEvent.SETTINGS_CHANGED, mySession);
         }
       }
     });
@@ -300,7 +304,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
   private static void attachViewToSession(@NotNull XDebugSessionImpl session, @Nullable XDebugView view) {
     if (view != null) {
-      session.addSessionListener(new XDebugViewSessionListener(view), view);
+      session.addSessionListener(new XDebugViewSessionListener(view, session), view);
     }
   }
 
@@ -328,6 +332,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         addVariablesAndWatches(mySession);
         attachViewToSession(mySession, myViews.get(DebuggerContentInfo.VARIABLES_CONTENT));
         attachViewToSession(mySession, myViews.get(DebuggerContentInfo.WATCHES_CONTENT));
+        myUi.selectAndFocus(myUi.findContent(DebuggerContentInfo.VARIABLES_CONTENT), true, false);
         rebuildViews();
       }
     }
@@ -336,15 +341,67 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
   public static void showWatchesView(@NotNull XDebugSessionImpl session) {
     XDebugSessionTab tab = session.getSessionTab();
     if (tab != null) {
+      showView(session, tab.getWatchesContentId());
+    }
+  }
+
+  public static void showFramesView(@NotNull XDebugSessionImpl session) {
+    showView(session, DebuggerContentInfo.FRAME_CONTENT);
+  }
+
+  private static void showView(@NotNull XDebugSessionImpl session, String viewId) {
+    XDebugSessionTab tab = session.getSessionTab();
+    if (tab != null) {
       tab.toFront(false, null);
       // restore watches tab if minimized
+      tab.restoreContent(viewId);
+
       JComponent component = tab.getUi().getComponent();
       if (component instanceof DataProvider) {
         RunnerContentUi ui = RunnerContentUi.KEY.getData(((DataProvider)component));
         if (ui != null) {
-          ui.restoreContent(tab.getWatchesContentId());
+          Content content = ui.findContent(viewId);
+
+          // if the view is not visible (e.g. Console tab is selected, while Debugger tab is not)
+          // make sure we make it visible to the user
+          if (content != null) {
+            ui.select(content, false);
+          }
         }
       }
+    }
+  }
+
+  public void toFront(boolean focus, @Nullable final Runnable onShowCallback) {
+    if (ApplicationManager.getApplication().isUnitTestMode()) return;
+
+    ApplicationManager.getApplication().invokeLater(() -> {
+      if (myRunContentDescriptor != null) {
+        ToolWindow toolWindow = ExecutionManager.getInstance(myProject).getContentManager()
+                .getToolWindowByDescriptor(myRunContentDescriptor);
+        if (toolWindow != null) {
+          if (!toolWindow.isVisible()) {
+            toolWindow.show(() -> {
+              if (onShowCallback != null) {
+                onShowCallback.run();
+              }
+              myRebuildWatchesRunnable.run();
+            });
+          }
+          //noinspection ConstantConditions
+          toolWindow.getContentManager().setSelectedContent(myRunContentDescriptor.getAttachedContent());
+        }
+      }
+    });
+
+    if (focus) {
+      ApplicationManager.getApplication().invokeLater(() -> {
+        boolean focusWnd = Registry.is("debugger.mayBringFrameToFrontOnBreakpoint");
+        ProjectUtil.focusProjectWindow(myProject, focusWnd);
+        if (!focusWnd) {
+          AppIcon.getInstance().requestAttention(myProject, true);
+        }
+      });
     }
   }
 
@@ -359,6 +416,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
   }
 
   private void removeContent(String contentId) {
+    restoreContent(contentId); //findContent returns null if content is minimized
     myUi.removeContent(myUi.findContent(contentId), true);
     XDebugView view = myViews.remove(contentId);
     if (view != null) {
@@ -366,19 +424,12 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
   }
 
-  private static class ToggleSortValuesAction extends SortValuesToggleAction {
-    private final boolean myShowIcon;
-
-    private ToggleSortValuesAction(boolean showIcon) {
-      copyFrom(ActionManager.getInstance().getAction(XDebuggerActions.TOGGLE_SORT_VALUES));
-      myShowIcon = showIcon;
-    }
-
-    @Override
-    public void update(@NotNull AnActionEvent e) {
-      super.update(e);
-      if (!myShowIcon) {
-        e.getPresentation().setIcon(null);
+  private void restoreContent(String contentId) {
+    JComponent component = myUi.getComponent();
+    if (component instanceof DataProvider) {
+      RunnerContentUi ui = RunnerContentUi.KEY.getData(((DataProvider)component));
+      if (ui != null) {
+        ui.restoreContent(contentId);
       }
     }
   }

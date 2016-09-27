@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
  */
 package com.intellij.xdebugger.impl.evaluate;
 
+import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
@@ -43,7 +45,6 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.EvaluatingExpressionRootNode;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
@@ -57,6 +58,10 @@ import java.awt.event.KeyEvent;
  */
 public class XDebuggerEvaluationDialog extends DialogWrapper {
   public static final DataKey<XDebuggerEvaluationDialog> KEY = DataKey.create("DEBUGGER_EVALUATION_DIALOG");
+
+  //can not use new SHIFT_DOWN_MASK etc because in this case ActionEvent modifiers do not match
+  private static final int ADD_WATCH_MODIFIERS = (SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
+  static KeyStroke ADD_WATCH_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ADD_WATCH_MODIFIERS);
 
   private final JPanel myMainPanel;
   private final JPanel myResultPanel;
@@ -82,15 +87,10 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     setOKButtonText(XDebuggerBundle.message("xdebugger.button.evaluate"));
     setCancelButtonText(XDebuggerBundle.message("xdebugger.evaluate.dialog.close"));
 
-    mySession.addSessionListener(new XDebugSessionAdapter() {
+    mySession.addSessionListener(new XDebugSessionListener() {
       @Override
       public void sessionStopped() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            close(CANCEL_EXIT_CODE);
-          }
-        });
+        ApplicationManager.getApplication().invokeLater(() -> close(CANCEL_EXIT_CODE));
       }
 
       @Override
@@ -114,16 +114,20 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     mySwitchModeAction = new SwitchModeAction();
 
     new AnAction(){
-      @RequiredDispatchThread
+      @Override
+      public void update(AnActionEvent e) {
+        Project project = e.getProject();
+        e.getPresentation().setEnabled(project != null && LookupManager.getInstance(project).getActiveLookup() == null);
+      }
+
       @Override
       public void actionPerformed(AnActionEvent e) {
-        doOKAction();
+        //doOKAction(); // do not evaluate on add to watches
         addToWatches();
       }
-    }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)), getRootPane(), myDisposable);
+    }.registerCustomShortcutSet(new CustomShortcutSet(ADD_WATCH_KEYSTROKE), getRootPane(), myDisposable);
 
     new AnAction() {
-      @RequiredDispatchThread
       @Override
       public void actionPerformed(AnActionEvent e) {
         IdeFocusManager.getInstance(mySession.getProject()).requestFocus(myTreePanel.getTree(), true);
@@ -131,12 +135,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK)), getRootPane(),
                                 myDisposable);
 
-    Condition<TreeNode> rootFilter = new Condition<TreeNode>() {
-      @Override
-      public boolean value(TreeNode node) {
-        return node.getParent() instanceof EvaluatingExpressionRootNode;
-      }
-    };
+    Condition<TreeNode> rootFilter = node -> node.getParent() instanceof EvaluatingExpressionRootNode;
     myTreePanel.getTree().expandNodesOnLoad(rootFilter);
     myTreePanel.getTree().selectNodeOnLoad(rootFilter);
 
@@ -159,12 +158,9 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
   }
 
   private void updateSourcePosition() {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        mySourcePosition = mySession.getCurrentPosition();
-        getInputEditor().setSourcePosition(mySourcePosition);
-      }
+    ApplicationManager.getApplication().invokeLater(() -> {
+      mySourcePosition = mySession.getCurrentPosition();
+      getInputEditor().setSourcePosition(mySourcePosition);
     });
   }
 
@@ -180,7 +176,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
       @Override
       public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        if ((e.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK)) == (InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK)) {
+        if ((e.getModifiers() & ADD_WATCH_MODIFIERS) == ADD_WATCH_MODIFIERS) {
           addToWatches();
         }
       }
@@ -298,6 +294,12 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
       editor.getCaretModel().moveToOffset(offset);
       editor.getSelectionModel().setSelection(offset, offset);
     }
+  }
+
+  @Override
+  public void doCancelAction() {
+    getInputEditor().saveTextInHistory();
+    super.doCancelAction();
   }
 
   @Override

@@ -28,7 +28,6 @@ import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.XDebuggerExpressionEditor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +48,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
                                     Disposable parentDisposable) {
     super(XDebuggerBundle.message("dialog.title.evaluate.code.fragment"));
     myMultilineEditor = new XDebuggerExpressionEditor(project, editorsProvider, "evaluateCodeFragment", sourcePosition,
-                                                      statements != null ? statements : XExpressionImpl.EMPTY_CODE_FRAGMENT, true, true);
+                                                      statements != null ? statements : XExpressionImpl.EMPTY_CODE_FRAGMENT, true, true, false);
     myMainPanel = new JPanel(new BorderLayout());
     JPanel editorPanel = new JPanel(new BorderLayout());
     editorPanel.add(myMultilineEditor.getComponent(), BorderLayout.CENTER);
@@ -67,8 +66,12 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
 
   @Override
   @NotNull
-  protected XDebuggerEditorBase getInputEditor() {
+  public XDebuggerEditorBase getInputEditor() {
     return myMultilineEditor;
+  }
+
+  public JPanel getMainComponent() {
+    return myMainPanel;
   }
 
   @Override
@@ -90,13 +93,11 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
       registerCustomShortcutSet(action.getShortcutSet(), myMainPanel, parentDisposable);
     }
 
-    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(myForward ? myMultilineEditor.canGoForward() : myMultilineEditor.canGoBackward());
     }
 
-    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       if (myForward) {

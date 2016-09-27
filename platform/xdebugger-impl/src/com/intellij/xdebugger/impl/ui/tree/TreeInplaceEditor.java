@@ -46,7 +46,8 @@ import java.util.List;
 public abstract class TreeInplaceEditor implements AWTEventListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.debugger.ui.impl.watch.DebuggerTreeInplaceEditor");
   private JComponent myInplaceEditorComponent;
-  private final List<Runnable> myRemoveActions = new ArrayList<Runnable>();
+  private final List<Runnable> myRemoveActions = new ArrayList<>();
+  protected final Disposable myDisposable = Disposer.newDisposable();
 
   protected abstract JComponent createInplaceEditorComponent();
 
@@ -83,6 +84,8 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
     }
     myRemoveActions.clear();
 
+    Disposer.dispose(myDisposable);
+
     final JTree tree = getTree();
     tree.repaint();
     tree.requestFocus();
@@ -94,10 +97,8 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
   protected abstract Project getProject();
 
   private static void setInplaceEditorBounds(JComponent component, int x, int y, int width, int height) {
-    int preferredHeight = component.getPreferredSize().height;
-    int h = Math.max(height, preferredHeight);
-    int delta = Math.max(0, h - height) / 2;
-    component.setBounds(x, y - delta, width, Math.max(height, preferredHeight));
+    int h = Math.max(height, component.getPreferredSize().height);
+    component.setBounds(x, y - (h - height) / 2, width, h);
   }
 
   public final void show() {
@@ -123,12 +124,7 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
 
     layeredPane.add(inplaceEditorComponent, new Integer(250));
 
-    myRemoveActions.add(new Runnable() {
-      @Override
-      public void run() {
-        layeredPane.remove(inplaceEditorComponent);
-      }
-    });
+    myRemoveActions.add(() -> layeredPane.remove(inplaceEditorComponent));
 
     inplaceEditorComponent.validate();
     inplaceEditorComponent.paintImmediately(0,0,inplaceEditorComponent.getWidth(),inplaceEditorComponent.getHeight());
@@ -138,22 +134,19 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
       @Override
       public void componentResized(ComponentEvent e) {
         final Project project = getProject();
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (!isShown() || project == null || project.isDisposed()) {
-              return;
-            }
-            JTree tree1 = getTree();
-            JLayeredPane layeredPane1 = tree1.getRootPane().getLayeredPane();
-            Rectangle bounds1 = getEditorBounds();
-            if (bounds1 == null) {
-              return;
-            }
-            Point layeredPanePoint1 = SwingUtilities.convertPoint(tree1, bounds1.x, bounds1.y, layeredPane1);
-            setInplaceEditorBounds(inplaceEditorComponent, layeredPanePoint1.x, layeredPanePoint1.y, bounds1.width, bounds1.height);
-            inplaceEditorComponent.revalidate();
+        ApplicationManager.getApplication().invokeLater(() -> {
+          if (!isShown() || project == null || project.isDisposed()) {
+            return;
           }
+          JTree tree1 = getTree();
+          JLayeredPane layeredPane1 = tree1.getRootPane().getLayeredPane();
+          Rectangle bounds1 = getEditorBounds();
+          if (bounds1 == null) {
+            return;
+          }
+          Point layeredPanePoint1 = SwingUtilities.convertPoint(tree1, bounds1.x, bounds1.y, layeredPane1);
+          setInplaceEditorBounds(inplaceEditorComponent, layeredPanePoint1.x, layeredPanePoint1.y, bounds1.width, bounds1.height);
+          inplaceEditorComponent.revalidate();
         });
       }
 
@@ -163,12 +156,9 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
       }
     };
 
-    final HierarchyListener hierarchyListener = new HierarchyListener() {
-      @Override
-      public void hierarchyChanged(HierarchyEvent e) {
-        if (!tree.isShowing()) {
-          TreeInplaceEditor.this.cancelEditing();
-        }
+    final HierarchyListener hierarchyListener = e -> {
+      if (!tree.isShowing()) {
+        cancelEditing();
       }
     };
 
@@ -176,17 +166,13 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
     tree.addComponentListener(componentListener);
     rootPane.addComponentListener(componentListener);
 
-    myRemoveActions.add(new Runnable() {
-      @Override
-      public void run() {
-        tree.removeHierarchyListener(hierarchyListener);
-        tree.removeComponentListener(componentListener);
-        rootPane.removeComponentListener(componentListener);
-      }
+    myRemoveActions.add(() -> {
+      tree.removeHierarchyListener(hierarchyListener);
+      tree.removeComponentListener(componentListener);
+      rootPane.removeComponentListener(componentListener);
     });
 
-    final Disposable disposable = Disposer.newDisposable();
-    getProject().getMessageBus().connect(disposable).subscribe(RunContentManager.TOPIC, new RunContentWithExecutorListener() {
+    getProject().getMessageBus().connect(myDisposable).subscribe(RunContentManager.TOPIC, new RunContentWithExecutorListener() {
       @Override
       public void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull Executor executor) {
         cancelEditing();
@@ -195,12 +181,6 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
       @Override
       public void contentRemoved(@Nullable RunContentDescriptor descriptor, @NotNull Executor executor) {
         cancelEditing();
-      }
-    });
-    myRemoveActions.add(new Runnable() {
-      @Override
-      public void run() {
-        Disposer.dispose(disposable);
       }
     });
 
@@ -220,20 +200,12 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
       }
     });
     final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (!TreeInplaceEditor.this.isShown()) return;
-        defaultToolkit.addAWTEventListener(TreeInplaceEditor.this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
-      }
+    SwingUtilities.invokeLater(() -> {
+      if (!isShown()) return;
+      defaultToolkit.addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
     });
 
-    myRemoveActions.add(new Runnable() {
-      @Override
-      public void run() {
-        defaultToolkit.removeAWTEventListener(TreeInplaceEditor.this);
-      }
-    });
+    myRemoveActions.add(() -> defaultToolkit.removeAWTEventListener(this));
     onShown();
   }
 
@@ -297,7 +269,7 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
   }
 
   @Nullable
-  private Rectangle getEditorBounds() {
+  protected Rectangle getEditorBounds() {
     final JTree tree = getTree();
     Rectangle bounds = tree.getVisibleRect();
     Rectangle nodeBounds = tree.getPathBounds(getNodePath());
