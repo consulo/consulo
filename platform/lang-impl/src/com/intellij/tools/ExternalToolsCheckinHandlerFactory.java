@@ -17,8 +17,6 @@ package com.intellij.tools;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
@@ -146,17 +144,14 @@ public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
         if (id == null) {
           return;
         }
-        DataManager.getInstance().getDataContextFromFocus().doWhenDone(new AsyncResult.Handler<DataContext>() {
-          @Override
-          public void run(final DataContext context) {
-            UIUtil.invokeAndWaitIfNeeded(new Runnable() {
+        DataManager.getInstance().getDataContextFromFocus().doWhenDone(context -> {
+          UIUtil.invokeAndWaitIfNeeded(new Runnable() {
 
-              @Override
-              public void run() {
-                ToolAction.runTool(id, context);
-              }
-            });
-          }
+            @Override
+            public void run() {
+              ToolAction.runTool(id, context);
+            }
+          });
         });
       }
     };

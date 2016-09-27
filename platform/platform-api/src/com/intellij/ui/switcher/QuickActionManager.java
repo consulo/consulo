@@ -18,13 +18,11 @@ package com.intellij.ui.switcher;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.AsyncResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -62,44 +60,42 @@ public class QuickActionManager implements ProjectComponent {
   }
 
   private void showActionsPopup() {
-    DataManager.getInstance().getDataContextFromFocus().doWhenDone(new AsyncResult.Handler<DataContext>() {
-      public void run(DataContext context) {
-        QuickActionProvider provider = QuickActionProvider.KEY.getData(context);
-        if (provider == null) return;
+    DataManager.getInstance().getDataContextFromFocus().doWhenDone(context -> {
+      QuickActionProvider provider = QuickActionProvider.KEY.getData(context);
+      if (provider == null) return;
 
-        List<AnAction> actions = provider.getActions(true);
-        if (actions != null && actions.size() > 0) {
-          DefaultActionGroup group = new DefaultActionGroup();
-          for (AnAction each : actions) {
-            group.add(each);
-          }
-
-          boolean firstParent = true;
-          Component eachParent = provider.getComponent().getParent();
-          while (eachParent != null) {
-            if (eachParent instanceof QuickActionProvider) {
-              QuickActionProvider eachProvider = (QuickActionProvider)eachParent;
-              if (firstParent) {
-                group.addSeparator();
-                firstParent = false;
-              }
-              List<AnAction> eachActionList = eachProvider.getActions(false);
-              if (eachActionList.size() > 0) {
-                group.add(new Group(eachActionList, eachProvider.getName()));
-              }
-              if (eachProvider.isCycleRoot()) break;
-
-            }
-            eachParent = eachParent.getParent();
-          }
-
-          JBPopupFactory.getInstance()
-            .createActionGroupPopup(null, group, context, JBPopupFactory.ActionSelectionAid.ALPHA_NUMBERING, true, new Runnable() {
-              public void run() {
-                myActiveProvider = null;
-              }
-            }, -1).showInFocusCenter();
+      List<AnAction> actions = provider.getActions(true);
+      if (actions != null && actions.size() > 0) {
+        DefaultActionGroup group = new DefaultActionGroup();
+        for (AnAction each : actions) {
+          group.add(each);
         }
+
+        boolean firstParent = true;
+        Component eachParent = provider.getComponent().getParent();
+        while (eachParent != null) {
+          if (eachParent instanceof QuickActionProvider) {
+            QuickActionProvider eachProvider = (QuickActionProvider)eachParent;
+            if (firstParent) {
+              group.addSeparator();
+              firstParent = false;
+            }
+            List<AnAction> eachActionList = eachProvider.getActions(false);
+            if (eachActionList.size() > 0) {
+              group.add(new Group(eachActionList, eachProvider.getName()));
+            }
+            if (eachProvider.isCycleRoot()) break;
+
+          }
+          eachParent = eachParent.getParent();
+        }
+
+        JBPopupFactory.getInstance()
+          .createActionGroupPopup(null, group, context, JBPopupFactory.ActionSelectionAid.ALPHA_NUMBERING, true, new Runnable() {
+            public void run() {
+              myActiveProvider = null;
+            }
+          }, -1).showInFocusCenter();
       }
     });
 

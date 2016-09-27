@@ -76,41 +76,11 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @NotNull
-  @Deprecated
-  /**
-   * @deprecated Use {@link #doWhenDone(com.intellij.util.Consumer)} (to remove in IDEA 16)
-   */
-  public AsyncResult<T> doWhenDone(@SuppressWarnings("deprecation") @NotNull final Handler<T> handler) {
-    doWhenDone(new Runnable() {
-      @Override
-      public void run() {
-        handler.run(myResult);
-      }
-    });
-    return this;
-  }
-
-  @NotNull
   public AsyncResult<T> doWhenDone(@NotNull final Consumer<T> consumer) {
     doWhenDone(new Runnable() {
       @Override
       public void run() {
         consumer.consume(myResult);
-      }
-    });
-    return this;
-  }
-
-  @NotNull
-  @Deprecated
-  /**
-   * @deprecated Use {@link #doWhenRejected(com.intellij.util.Consumer)} (to remove in IDEA 16)
-   */
-  public AsyncResult<T> doWhenRejected(@SuppressWarnings("deprecation") @NotNull final Handler<T> handler) {
-    doWhenRejected(new Runnable() {
-      @Override
-      public void run() {
-        handler.run(myResult);
       }
     });
     return this;
@@ -158,14 +128,6 @@ public class AsyncResult<T> extends ActionCallback {
       }
     });
     return this;
-  }
-
-  @Deprecated
-  /**
-   * @deprecated Use {@link com.intellij.util.Consumer} (to remove in IDEA 16)
-   */
-  public interface Handler<T> {
-    void run(T t);
   }
 
   public static class Done<T> extends AsyncResult<T> {

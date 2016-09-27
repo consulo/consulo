@@ -66,12 +66,12 @@ import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import com.intellij.xdebugger.ui.DebuggerColors;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

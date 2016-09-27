@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,13 @@ package com.intellij.xdebugger.impl.breakpoints;
 
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.ide.startup.StartupManagerEx;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.colors.EditorColorsAdapter;
+import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.*;
@@ -47,7 +46,6 @@ import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileUrlChangeAdapter;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.BidirectionalMap;
 import com.intellij.util.ui.update.MergingUpdateQueue;
@@ -63,19 +61,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.MouseEvent;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author nik
  */
 public class XLineBreakpointManager {
-  private final BidirectionalMap<XLineBreakpointImpl, Document> myBreakpoints = new BidirectionalMap<XLineBreakpointImpl, Document>();
+  private final BidirectionalMap<XLineBreakpointImpl, Document> myBreakpoints = new BidirectionalMap<>();
   private final MergingUpdateQueue myBreakpointsUpdateQueue;
   private final Project myProject;
   private final XDependentBreakpointManager myDependentBreakpointManager;
   private final StartupManagerEx myStartupManager;
 
-  public XLineBreakpointManager(Project project, final XDependentBreakpointManager dependentBreakpointManager, final StartupManager startupManager) {
+  public XLineBreakpointManager(@NotNull Project project, final XDependentBreakpointManager dependentBreakpointManager, final StartupManager startupManager) {
     myProject = project;
     myDependentBreakpointManager = dependentBreakpointManager;
     myStartupManager = (StartupManagerEx)startupManager;
@@ -88,12 +87,7 @@ public class XLineBreakpointManager {
 
       final MyDependentBreakpointListener myDependentBreakpointListener = new MyDependentBreakpointListener();
       myDependentBreakpointManager.addListener(myDependentBreakpointListener);
-      Disposer.register(project, new Disposable() {
-        @Override
-        public void dispose() {
-          myDependentBreakpointManager.removeListener(myDependentBreakpointListener);
-        }
-      });
+      Disposer.register(project, () -> myDependentBreakpointManager.removeListener(myDependentBreakpointListener));
       VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileUrlChangeAdapter() {
         @Override
         protected void fileUrlChanged(String oldUrl, String newUrl) {
@@ -107,7 +101,7 @@ public class XLineBreakpointManager {
 
         @Override
         public void fileDeleted(@NotNull VirtualFileEvent event) {
-          List<XBreakpoint<?>> toRemove = new SmartList<XBreakpoint<?>>();
+          List<XBreakpoint<?>> toRemove = new SmartList<>();
           for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
             if (breakpoint.getFileUrl().equals(event.getFile().getUrl())) {
               toRemove.add(breakpoint);
@@ -120,28 +114,15 @@ public class XLineBreakpointManager {
     myBreakpointsUpdateQueue = new MergingUpdateQueue("XLine breakpoints", 300, true, null, project);
 
     // Update breakpoints colors if global color schema was changed
-    final EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-    if (colorsManager != null) { // in some debugger tests EditorColorsManager component isn't loaded
-      final MyEditorColorsListener myColorsSchemeListener = new MyEditorColorsListener();
-      Disposer.register(project, new Disposable() {
-        @Override
-        public void dispose() {
-          colorsManager.removeEditorColorsListener(myColorsSchemeListener);
-        }
-      });
-      colorsManager.addEditorColorsListener(myColorsSchemeListener);
-    }
+    project.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, new MyEditorColorsListener());
   }
 
   public void updateBreakpointsUI() {
     if (myProject.isDefault()) return;
 
-    DumbAwareRunnable runnable = new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
-          breakpoint.updateUI();
-        }
+    DumbAwareRunnable runnable = () -> {
+      for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
+        breakpoint.updateUI();
       }
     };
 
@@ -170,6 +151,15 @@ public class XLineBreakpointManager {
     }
   }
 
+  @NotNull
+  public Collection<XLineBreakpointImpl> getDocumentBreakpoints(Document document) {
+    Collection<XLineBreakpointImpl> breakpoints = myBreakpoints.getKeysByValue(document);
+    if (breakpoints == null) {
+      breakpoints = Collections.emptyList();
+    }
+    return breakpoints;
+  }
+
   private void updateBreakpoints(@NotNull Document document) {
     Collection<XLineBreakpointImpl> breakpoints = myBreakpoints.getKeysByValue(document);
     if (breakpoints == null) {
@@ -177,7 +167,7 @@ public class XLineBreakpointManager {
     }
 
     TIntHashSet lines = new TIntHashSet();
-    List<XBreakpoint<?>> toRemove = new SmartList<XBreakpoint<?>>();
+    List<XBreakpoint<?>> toRemove = new SmartList<>();
     for (XLineBreakpointImpl breakpoint : breakpoints) {
       breakpoint.updatePosition();
       if (!breakpoint.isValid() || !lines.add(breakpoint.getLine())) {
@@ -193,12 +183,9 @@ public class XLineBreakpointManager {
       return;
     }
 
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        for (XBreakpoint<?> breakpoint : toRemove) {
-          XDebuggerManager.getInstance(myProject).getBreakpointManager().removeBreakpoint(breakpoint);
-        }
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      for (XBreakpoint<?> breakpoint : toRemove) {
+        XDebuggerManager.getInstance(myProject).getBreakpointManager().removeBreakpoint(breakpoint);
       }
     });
   }
@@ -273,56 +260,42 @@ public class XLineBreakpointManager {
     public void mouseClicked(final EditorMouseEvent e) {
       final Editor editor = e.getEditor();
       final MouseEvent mouseEvent = e.getMouseEvent();
-      if (mouseEvent.isPopupTrigger()
-          || mouseEvent.isMetaDown() || mouseEvent.isControlDown()
-          || mouseEvent.getButton() != MouseEvent.BUTTON1
-          || MarkupEditorFilterFactory.createIsDiffFilter().avaliableIn(editor)
-          || !isInsideGutter(e, editor)
-          || ConsoleViewUtil.isConsoleViewEditor(editor)
-          || !isFromMyProject(editor)
-          || (editor.getSelectionModel().hasSelection() && myDragDetected)
-              ) {
+      if (mouseEvent.isPopupTrigger() ||
+          mouseEvent.isMetaDown() ||
+          mouseEvent.isControlDown() ||
+          mouseEvent.getButton() != MouseEvent.BUTTON1 ||
+          MarkupEditorFilterFactory.createIsDiffFilter().avaliableIn(editor) ||
+          !isInsideGutter(e, editor) ||
+          ConsoleViewUtil.isConsoleViewEditor(editor) ||
+          !isFromMyProject(editor) ||
+          (editor.getSelectionModel().hasSelection() && myDragDetected)) {
         return;
       }
 
-      PsiDocumentManager.getInstance(myProject).commitAndRunReadAction(new Runnable() {
-        @Override
-        public void run() {
-          final int line = EditorUtil.yPositionToLogicalLine(editor, mouseEvent);
-          final Document document = editor.getDocument();
-          final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-          if (line >= 0 && line < document.getLineCount() && file != null) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                if (!myProject.isDisposed() && myProject.isInitialized() && file.isValid()) {
-                  ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT, e.getMouseEvent());
+      PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+      final int line = EditorUtil.yPositionToLogicalLine(editor, mouseEvent);
+      final Document document = editor.getDocument();
+      final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+      if (line >= 0 && line < document.getLineCount() && file != null) {
+        ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT, e.getMouseEvent());
 
-                  AsyncResult<XLineBreakpoint> result = XBreakpointUtil.toggleLineBreakpoint(
-                          myProject, XSourcePositionImpl.create(file, line), editor, mouseEvent.isAltDown(), false);
-                  result.doWhenDone(new Consumer<XLineBreakpoint>() {
-                    @Override
-                    public void consume(XLineBreakpoint breakpoint) {
-                      if (!mouseEvent.isAltDown() && mouseEvent.isShiftDown() && breakpoint != null) {
-                        breakpoint.setSuspendPolicy(SuspendPolicy.NONE);
-                        String selection = editor.getSelectionModel().getSelectedText();
-                        if (selection != null) {
-                          breakpoint.setLogExpression(selection);
-                        }
-                        else {
-                          breakpoint.setLogMessage(true);
-                        }
-                        // edit breakpoint
-                        DebuggerUIUtil.showXBreakpointEditorBalloon(myProject, mouseEvent.getPoint(), ((EditorEx)editor).getGutterComponentEx(), false, breakpoint);
-                      }
-                    }
-                  });
-                }
-              }
-            });
+        final AsyncResult<XLineBreakpoint> lineBreakpoint =
+                XBreakpointUtil.toggleLineBreakpoint(myProject, XSourcePositionImpl.create(file, line), editor, mouseEvent.isAltDown(), false);
+        lineBreakpoint.doWhenDone(breakpoint -> {
+          if (!mouseEvent.isAltDown() && mouseEvent.isShiftDown() && breakpoint != null) {
+            breakpoint.setSuspendPolicy(SuspendPolicy.NONE);
+            String selection = editor.getSelectionModel().getSelectedText();
+            if (selection != null) {
+              breakpoint.setLogExpression(selection);
+            }
+            else {
+              breakpoint.setLogMessage(true);
+            }
+            // edit breakpoint
+            DebuggerUIUtil.showXBreakpointEditorBalloon(myProject, mouseEvent.getPoint(), ((EditorEx)editor).getGutterComponentEx(), false, breakpoint);
           }
-        }
-      });
+        });
+      }
     }
 
     private boolean isInsideGutter(EditorMouseEvent e, Editor editor) {
@@ -358,7 +331,7 @@ public class XLineBreakpointManager {
     }
   }
 
-  private class MyEditorColorsListener extends EditorColorsAdapter {
+  private class MyEditorColorsListener implements EditorColorsListener {
     @Override
     public void globalSchemeChange(EditorColorsScheme scheme) {
       updateBreakpointsUI();

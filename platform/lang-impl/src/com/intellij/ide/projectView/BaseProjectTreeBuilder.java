@@ -231,15 +231,12 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
 
     if (alreadySelected == null) {
       expandPathTo(file, (AbstractTreeNode)getTreeStructure().getRootElement(), element, condition, indicator, virtualSelectTarget)
-        .doWhenDone(new AsyncResult.Handler<AbstractTreeNode>() {
-          @Override
-          public void run(AbstractTreeNode node) {
-            if (virtualSelectTarget == null) {
-              select(node, onDone);
-            }
-            else {
-              onDone.run();
-            }
+        .doWhenDone(node -> {
+          if (virtualSelectTarget == null) {
+            select(node, onDone);
+          }
+          else {
+            onDone.run();
           }
         }).doWhenRejected(new Runnable() {
         @Override
@@ -384,13 +381,10 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
     }
 
     if (nonStopCondition.value(eachKid)) {
-      expandPathTo(file, eachKid, element, nonStopCondition, indicator, virtualSelectTarget).doWhenDone(new AsyncResult.Handler<AbstractTreeNode>() {
-        @Override
-        public void run(AbstractTreeNode abstractTreeNode) {
-          indicator.checkCanceled();
+      expandPathTo(file, eachKid, element, nonStopCondition, indicator, virtualSelectTarget).doWhenDone(abstractTreeNode -> {
+        indicator.checkCanceled();
 
-          async.setDone(abstractTreeNode);
-        }
+        async.setDone(abstractTreeNode);
       }).doWhenRejected(new Runnable() {
         @Override
         public void run() {

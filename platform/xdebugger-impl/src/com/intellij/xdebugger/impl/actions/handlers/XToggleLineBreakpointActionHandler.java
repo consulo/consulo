@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
-import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.actions.DebuggerActionHandler;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
+import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -66,7 +66,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
   public void perform(@NotNull final Project project, final AnActionEvent event) {
     Editor editor = event.getData(CommonDataKeys.EDITOR);
     // do not toggle more than once on the same line
-    Set<Integer> processedLines = new HashSet<Integer>();
+    Set<Integer> processedLines = new HashSet<>();
     for (XSourcePosition position : XDebuggerUtilImpl.getAllCaretsPositions(project, event.getDataContext())) {
       if (processedLines.add(position.getLine())) {
         XBreakpointUtil.toggleLineBreakpoint(project, position, editor, myTemporary, true);

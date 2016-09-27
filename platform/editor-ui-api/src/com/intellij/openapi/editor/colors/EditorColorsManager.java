@@ -16,7 +16,9 @@
 package com.intellij.openapi.editor.colors;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.util.messages.Topic;
 import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +26,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public abstract class EditorColorsManager {
-  @NonNls public static final String DEFAULT_SCHEME_NAME = "Default";
+  public static final Topic<EditorColorsListener> TOPIC = Topic.create("EditorColorsListener", EditorColorsListener.class);
+
+  @NonNls
+  public static final String DEFAULT_SCHEME_NAME = "Default";
 
   public static EditorColorsManager getInstance() {
     return ServiceManager.getService(EditorColorsManager.class);
@@ -50,9 +55,23 @@ public abstract class EditorColorsManager {
 
   public abstract boolean isDefaultScheme(EditorColorsScheme scheme);
 
-  public abstract void addEditorColorsListener(@NotNull EditorColorsListener listener);
-  public abstract void removeEditorColorsListener(@NotNull EditorColorsListener listener);
-  public abstract void addEditorColorsListener(@NotNull EditorColorsListener listener, @NotNull Disposable disposable);
+  /**
+   * @deprecated use {@link #TOPIC} instead
+   */
+  @SuppressWarnings("MethodMayBeStatic")
+  @Deprecated
+  public final void addEditorColorsListener(@NotNull EditorColorsListener listener) {
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(TOPIC, listener);
+  }
+
+  /**
+   * @deprecated use {@link #TOPIC} instead
+   */
+  @SuppressWarnings("MethodMayBeStatic")
+  @Deprecated
+  public final void addEditorColorsListener(@NotNull EditorColorsListener listener, @NotNull Disposable disposable) {
+    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(TOPIC, listener);
+  }
 
   public abstract boolean isUseOnlyMonospacedFonts();
   public abstract void setUseOnlyMonospacedFonts(boolean b);

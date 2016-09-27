@@ -20,10 +20,8 @@ import com.intellij.ide.SelectInManager;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.impl.SelectInTargetPsiWrapper;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
@@ -67,17 +65,14 @@ public class SelectInNavBarTarget extends SelectInTargetPsiWrapper implements Du
 
   private static void selectInNavBar() {
     DataManager.getInstance().getDataContextFromFocus()
-      .doWhenDone(new AsyncResult.Handler<DataContext>() {
-        @Override
-        public void run(DataContext context) {
-          final IdeFrame frame = IdeFrame.KEY.getData(context);
-          if (frame != null) {
-            final IdeRootPaneNorthExtension navBarExt = frame.getNorthExtension(NavBarRootPaneExtension.NAV_BAR);
-            if (navBarExt != null) {
-              final JComponent c = navBarExt.getComponent();
-              final NavBarPanel panel = (NavBarPanel)c.getClientProperty("NavBarPanel");
-              panel.rebuildAndSelectTail(true);
-            }
+      .doWhenDone(context -> {
+        final IdeFrame frame = IdeFrame.KEY.getData(context);
+        if (frame != null) {
+          final IdeRootPaneNorthExtension navBarExt = frame.getNorthExtension(NavBarRootPaneExtension.NAV_BAR);
+          if (navBarExt != null) {
+            final JComponent c = navBarExt.getComponent();
+            final NavBarPanel panel = (NavBarPanel)c.getClientProperty("NavBarPanel");
+            panel.rebuildAndSelectTail(true);
           }
         }
       });

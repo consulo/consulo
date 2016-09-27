@@ -16,7 +16,6 @@
 package com.intellij.openapi.editor.colors.impl;
 
 import com.intellij.ide.ui.LafManager;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -32,7 +31,7 @@ import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.EventDispatcher;
+import com.intellij.util.ComponentTreeEventDispatcher;
 import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.ui.UIUtil;
@@ -60,7 +59,8 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   private static final String DEFAULT_NAME = "Default";
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/colors";
 
-  private final EventDispatcher<EditorColorsListener> myListeners = EventDispatcher.create(EditorColorsListener.class);
+  private final ComponentTreeEventDispatcher<EditorColorsListener> myTreeDispatcher = ComponentTreeEventDispatcher.create(EditorColorsListener.class);
+
   private final SchemesManager<EditorColorsScheme, EditorColorsSchemeImpl> mySchemesManager;
   private State myState = new State();
   private final Map<String, EditorColorsScheme> myDefaultColorsSchemes = new LinkedHashMap<String, EditorColorsScheme>();
@@ -250,22 +250,10 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   }
 
   private void fireChanges(EditorColorsScheme scheme) {
-    myListeners.getMulticaster().globalSchemeChange(scheme);
-  }
+    // we need to push events to components that use editor font, e.g. HTML editor panes
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(TOPIC).globalSchemeChange(scheme);
 
-  @Override
-  public void addEditorColorsListener(@NotNull EditorColorsListener listener) {
-    myListeners.addListener(listener);
-  }
-
-  @Override
-  public void addEditorColorsListener(@NotNull EditorColorsListener listener, @NotNull Disposable disposable) {
-    myListeners.addListener(listener, disposable);
-  }
-
-  @Override
-  public void removeEditorColorsListener(@NotNull EditorColorsListener listener) {
-    myListeners.removeListener(listener);
+    myTreeDispatcher.getMulticaster().globalSchemeChange(scheme);
   }
 
   @Override

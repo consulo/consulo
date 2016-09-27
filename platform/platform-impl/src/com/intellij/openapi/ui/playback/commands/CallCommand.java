@@ -88,27 +88,21 @@ public class CallCommand extends AbstractCommand {
       }
 
 
-     AsyncResult result = (AsyncResult<String>)m.invoke(null, actualArgs);
+     AsyncResult<String> result = (AsyncResult<String>)m.invoke(null, actualArgs);
      if (result == null) {
        context.error("Method " + methodClass.getSecond() + ":" + methodName + " must return AsyncResult object, but was null", getLine());
        return new ActionCallback.Rejected();
      }
       
-     result.doWhenDone(new AsyncResult.Handler<String>() {
-       @Override
-       public void run(String s) {
-         if (s != null) {
-           context.message(s, getLine());
-         }
-         cmdResult.setDone();
+     result.doWhenDone(s -> {
+       if (s != null) {
+         context.message(s, getLine());
        }
-     }).doWhenRejected(new AsyncResult.Handler<String>() {
-       @Override
-       public void run(String s) {
-         context.error(s, getLine());
-         cmdResult.setRejected();
-       }
-     }); 
+       cmdResult.setDone();
+     }).doWhenRejected(s -> {
+       context.error(s, getLine());
+       cmdResult.setRejected();
+     });
       
     }
     catch (InvocationTargetException e) {

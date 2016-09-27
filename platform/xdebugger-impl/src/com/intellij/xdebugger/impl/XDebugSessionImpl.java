@@ -734,7 +734,7 @@ public class XDebugSessionImpl implements XDebugSession {
   }
 
   private void handleTemporaryBreakpointHit(final XBreakpoint<?> breakpoint) {
-    addSessionListener(new XDebugSessionAdapter() {
+    addSessionListener(new XDebugSessionListener() {
       private void removeBreakpoint() {
         XDebuggerUtil.getInstance().removeBreakpoint(myProject, breakpoint);
         removeSessionListener(this);

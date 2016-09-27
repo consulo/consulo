@@ -17,12 +17,12 @@ package com.intellij.ui.switcher;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.AbstractPainter;
+import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
-import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.Alarm;
