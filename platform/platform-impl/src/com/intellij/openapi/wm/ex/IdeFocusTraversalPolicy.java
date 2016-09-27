@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,15 @@ package com.intellij.openapi.wm.ex;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
-import com.intellij.openapi.util.Computable;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.lang.reflect.Field;
 
 public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy");
-  @NonNls private static final String FOCUS_TRAVERSAL_POLICY_FIELD = "focusTraversalPolicy";
 
   protected Component getDefaultComponentImpl(Container focusCycleRoot) {
     if (!(focusCycleRoot instanceof JComponent)) {
@@ -46,7 +43,6 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
    * @return preferred focused component inside the specified <code>component</code>.
    * Method can return component itself if the <code>component</code> is legal
    * (JTextFiel)focusable
-   *
    */
   public static JComponent getPreferredFocusedComponent(@NotNull final JComponent component, final FocusTraversalPolicy policyToIgnore) {
     if (!component.isVisible()) {
@@ -55,20 +51,16 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
 
     final FocusTraversalPolicy focusTraversalPolicy = getFocusTraversalPolicyAwtImpl(component);
     if (focusTraversalPolicy != null && focusTraversalPolicy != policyToIgnore) {
-      if (focusTraversalPolicy.getClass().getName().indexOf("LegacyGlueFocusTraversalPolicy") >=0) {
+      if (focusTraversalPolicy.getClass().getName().indexOf("LegacyGlueFocusTraversalPolicy") >= 0) {
         return component;
       }
 
       Component defaultComponent;
       if (focusTraversalPolicy instanceof LayoutFocusTraversalPolicyExt) {
         final LayoutFocusTraversalPolicyExt extPolicy = (LayoutFocusTraversalPolicyExt)focusTraversalPolicy;
-        defaultComponent = extPolicy.queryImpl(new Computable<Component>() {
-          @Override
-          public Component compute() {
-            return extPolicy.getDefaultComponent(component);
-          }
-        });
-      } else {
+        defaultComponent = extPolicy.queryImpl(() -> extPolicy.getDefaultComponent(component));
+      }
+      else {
         defaultComponent = focusTraversalPolicy.getDefaultComponent(component);
       }
 
@@ -86,7 +78,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
       return null;
     }
 
-    if(_accept(component)) {
+    if (_accept(component)) {
       return component;
     }
 
@@ -103,15 +95,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
   }
 
   private static FocusTraversalPolicy getFocusTraversalPolicyAwtImpl(final JComponent component) {
-    try {
-      final Field field = Container.class.getDeclaredField(FOCUS_TRAVERSAL_POLICY_FIELD);
-      field.setAccessible(true);
-      return (FocusTraversalPolicy)field.get(component);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-      return null;
-    }
+    return ReflectionUtil.getField(Container.class, component, FocusTraversalPolicy.class, "focusTraversalPolicy");
   }
 
   protected final boolean accept(final Component aComponent) {
@@ -126,20 +110,19 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
       return false;
     }
 
-    /** TODO[anton,vova] implement Policy in Editor component instead */
+    /* TODO[anton,vova] implement Policy in Editor component instead */
     if (component instanceof EditorComponentImpl || component instanceof EditorWindowHolder) {
       return true;
     }
 
-    if(component instanceof JTextComponent){
+    if (component instanceof JTextComponent) {
       return ((JTextComponent)component).isEditable();
     }
 
-    return
-      component instanceof AbstractButton ||
-      component instanceof JList ||
-      component instanceof JTree ||
-      component instanceof JTable ||
-      component instanceof JComboBox;
+    return component instanceof AbstractButton ||
+           component instanceof JList ||
+           component instanceof JTree ||
+           component instanceof JTable ||
+           component instanceof JComboBox;
   }
 }

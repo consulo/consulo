@@ -21,7 +21,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public abstract class StackingPopupDispatcher implements IdePopupEventDispatcher {
-  
+
   public abstract boolean isPopupFocused();
 
   public abstract void onPopupShown(JBPopup popup, boolean inStack);

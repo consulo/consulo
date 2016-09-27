@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
@@ -122,15 +121,12 @@ public final class NavigationUtil {
       list.setSelectedValue(selection, true);
     }
 
-    final Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        int[] ids = list.getSelectedIndices();
-        if (ids == null || ids.length == 0) return;
-        for (Object element : list.getSelectedValues()) {
-          if (element != null) {
-            processor.execute((T)element);
-          }
+    final Runnable runnable = () -> {
+      int[] ids = list.getSelectedIndices();
+      if (ids == null || ids.length == 0) return;
+      for (Object element : list.getSelectedValues()) {
+        if (element != null) {
+          processor.execute((T)element);
         }
       }
     };
@@ -225,21 +221,19 @@ public final class NavigationUtil {
    */
   @SuppressWarnings("UseJBColor")
   public static TextAttributes patchAttributesColor(TextAttributes attributes, @NotNull TextRange range, @NotNull Editor editor) {
+    if (attributes.getForegroundColor() == null && attributes.getEffectColor() == null) return attributes;
     MarkupModel model = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
     if (model != null) {
       if (!((MarkupModelEx)model).processRangeHighlightersOverlappingWith(range.getStartOffset(), range.getEndOffset(),
-                                                                          new Processor<RangeHighlighterEx>() {
-                                                                            @Override
-                                                                            public boolean process(RangeHighlighterEx highlighter) {
-                                                                              if (highlighter.isValid() && highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) {
-                                                                                TextAttributes textAttributes = highlighter.getTextAttributes();
-                                                                                if (textAttributes != null) {
-                                                                                  Color color = textAttributes.getBackgroundColor();
-                                                                                  return !(color != null && color.getBlue() > 128 && color.getRed() < 128 && color.getGreen() < 128);
-                                                                                }
+                                                                          highlighter -> {
+                                                                            if (highlighter.isValid() && highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) {
+                                                                              TextAttributes textAttributes = highlighter.getTextAttributes();
+                                                                              if (textAttributes != null) {
+                                                                                Color color = textAttributes.getBackgroundColor();
+                                                                                return !(color != null && color.getBlue() > 128 && color.getRed() < 128 && color.getGreen() < 128);
                                                                               }
-                                                                              return true;
                                                                             }
+                                                                            return true;
                                                                           })) {
         TextAttributes clone = attributes.clone();
         clone.setForegroundColor(Color.orange);
@@ -252,33 +246,44 @@ public final class NavigationUtil {
 
   @NotNull
   public static JBPopup getRelatedItemsPopup(final List<? extends GotoRelatedItem> items, String title) {
+    return getRelatedItemsPopup(items, title, false);
+  }
+
+  /**
+   * Returns navigation popup that shows list of related items from {@code items} list
+   * @param items
+   * @param title
+   * @param showContainingModules Whether the popup should show additional information that aligned at the right side of the dialog.<br>
+   *                              It's usually a module name or library name of corresponding navigation item.<br>
+   *                              {@code false} by default
+   * @return
+   */
+  @NotNull
+  public static JBPopup getRelatedItemsPopup(final List<? extends GotoRelatedItem> items, String title, boolean showContainingModules) {
     Object[] elements = new Object[items.size()];
     //todo[nik] move presentation logic to GotoRelatedItem class
-    final Map<PsiElement, GotoRelatedItem> itemsMap = new HashMap<PsiElement, GotoRelatedItem>();
+    final Map<PsiElement, GotoRelatedItem> itemsMap = new HashMap<>();
     for (int i = 0; i < items.size(); i++) {
       GotoRelatedItem item = items.get(i);
       elements[i] = item.getElement() != null ? item.getElement() : item;
       itemsMap.put(item.getElement(), item);
     }
 
-    return getPsiElementPopup(elements, itemsMap, title, new Processor<Object>() {
-      @Override
-      public boolean process(Object element) {
-        if (element instanceof PsiElement) {
-          //noinspection SuspiciousMethodCalls
-          itemsMap.get(element).navigate();
-        }
-        else {
-          ((GotoRelatedItem)element).navigate();
-        }
-        return true;
+    return getPsiElementPopup(elements, itemsMap, title, showContainingModules, element -> {
+      if (element instanceof PsiElement) {
+        //noinspection SuspiciousMethodCalls
+        itemsMap.get(element).navigate();
       }
+      else {
+        ((GotoRelatedItem)element).navigate();
+      }
+      return true;
     }
     );
   }
 
   private static JBPopup getPsiElementPopup(final Object[] elements, final Map<PsiElement, GotoRelatedItem> itemsMap,
-                                            final String title, final Processor<Object> processor) {
+                                            final String title, final boolean showContainingModules, final Processor<Object> processor) {
 
     final Ref<Boolean> hasMnemonic = Ref.create(false);
     final DefaultPsiElementCellRenderer renderer = new DefaultPsiElementCellRenderer() {
@@ -313,7 +318,7 @@ public final class NavigationUtil {
 
       @Override
       protected DefaultListCellRenderer getRightCellRenderer(Object value) {
-        return null;
+        return showContainingModules ? super.getRightCellRenderer(value) : null;
       }
 
       @Override
@@ -325,7 +330,7 @@ public final class NavigationUtil {
                                                            boolean hasFocus) {
         final GotoRelatedItem item = (GotoRelatedItem)value;
         Color color = list.getForeground();
-        final SimpleTextAttributes nameAttributes = new SimpleTextAttributes(Font.PLAIN, color);
+        final SimpleTextAttributes nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
         final String name = item.getCustomName();
         if (name == null) return false;
         renderer.append(name, nameAttributes);
@@ -370,7 +375,8 @@ public final class NavigationUtil {
           //noinspection ConstantConditions
           return ((GotoRelatedItem)value).getCustomName();
         }
-        final PsiElement element = (PsiElement)value;
+        PsiElement element = (PsiElement)value;
+        if (!element.isValid()) return "INVALID";
         return renderer.getElementText(element) + " " + renderer.getContainerText(element, null);
       }
 
@@ -382,7 +388,7 @@ public final class NavigationUtil {
     }) {
     };
     popup.getList().setCellRenderer(new PopupListElementRenderer(popup) {
-      Map<Object, String> separators = new HashMap<Object, String>();
+      Map<Object, String> separators = new HashMap<>();
       {
         final ListModel model = popup.getList().getModel();
         String current = null;
@@ -450,12 +456,7 @@ public final class NavigationUtil {
       public void actionPerformed(ActionEvent e) {
         for (final Object item : listPopup.getListStep().getValues()) {
           if (getMnemonic(item, itemsMap) == mnemonic) {
-            listPopup.setFinalRunnable(new Runnable() {
-              @Override
-              public void run() {
-                processor.process(item);
-              }
-            });
+            listPopup.setFinalRunnable(() -> processor.process(item));
             listPopup.closeOk(null);
           }
         }
@@ -477,13 +478,10 @@ public final class NavigationUtil {
       }
     }
     GotoRelatedItem[] result = items.toArray(new GotoRelatedItem[items.size()]);
-    Arrays.sort(result, new Comparator<GotoRelatedItem>() {
-      @Override
-      public int compare(GotoRelatedItem i1, GotoRelatedItem i2) {
-        String o1 = i1.getGroup();
-        String o2 = i2.getGroup();
-        return StringUtil.isEmpty(o1) ? 1 : StringUtil.isEmpty(o2) ? -1 : o1.compareTo(o2);
-      }
+    Arrays.sort(result, (i1, i2) -> {
+      String o1 = i1.getGroup();
+      String o2 = i2.getGroup();
+      return StringUtil.isEmpty(o1) ? 1 : StringUtil.isEmpty(o2) ? -1 : o1.compareTo(o2);
     });
     return Arrays.asList(result);
   }

@@ -15,9 +15,13 @@
  */
 package com.intellij.ide;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.popup.IdePopupEventDispatcher;
+import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,18 +49,37 @@ public final class IdePopupManager implements IdeEventQueue.EventDispatcher {
     LOG.assertTrue(isPopupActive());
 
     if (e.getID() == WindowEvent.WINDOW_LOST_FOCUS) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          if (!isPopupActive()) return;
+      ApplicationManager.getApplication().invokeLater(() -> {
+        if (!isPopupActive()) return;
 
-          Window focused = ((WindowEvent)e).getOppositeWindow();
-          if (focused == null) {
-            focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-          }
+        boolean shouldCloseAllPopup = false;
 
-          if (focused == null) {
-            closeAllPopups();
+        Window focused = ((WindowEvent)e).getOppositeWindow();
+        if (focused == null) {
+          focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        }
+
+        if (focused == null) {
+          shouldCloseAllPopup = true;
+        }
+
+        Component ultimateParentForFocusedComponent = UIUtil.findUltimateParent(focused);
+        Component ultimateParentForEventWindow = UIUtil.findUltimateParent(((WindowEvent)e).getWindow());
+
+        if (!shouldCloseAllPopup && ultimateParentForEventWindow == null || ultimateParentForFocusedComponent == null) {
+          shouldCloseAllPopup = true;
+        }
+
+        if (!shouldCloseAllPopup && ultimateParentForEventWindow instanceof IdeFrameEx) {
+          IdeFrameEx ultimateParentWindowForEvent = ((IdeFrameEx)ultimateParentForEventWindow);
+          if (ultimateParentWindowForEvent.isInFullScreen()
+              && !ultimateParentForFocusedComponent.equals(ultimateParentForEventWindow)) {
+            shouldCloseAllPopup = true;
           }
+        }
+
+        if (shouldCloseAllPopup) {
+          closeAllPopups();
         }
       });
     }
@@ -81,20 +104,34 @@ public final class IdePopupManager implements IdeEventQueue.EventDispatcher {
     myDispatchStack.remove(dispatcher);
   }
 
-  public boolean closeAllPopups() {
+  public boolean closeAllPopups(boolean forceRestoreFocus) {
     if (myDispatchStack.size() == 0) return false;
 
     boolean closed = true;
     for (IdePopupEventDispatcher each : myDispatchStack) {
+      if (forceRestoreFocus) {
+        each.setRestoreFocusSilentely();
+      }
       closed &= each.close();
     }
 
     return closed;
   }
 
+  public boolean closeAllPopups() {
+    return closeAllPopups(true);
+  }
+
   public boolean requestDefaultFocus(boolean forced) {
     if (!isPopupActive()) return false;
 
     return myDispatchStack.get(myDispatchStack.size() - 1).requestFocus();
+  }
+
+  public boolean isPopupWindow(Window w) {
+    return myDispatchStack.stream()
+            .flatMap(IdePopupEventDispatcher::getPopupStream)
+            .map(JBPopup::getContent)
+            .anyMatch(jbPopupContent -> SwingUtilities.getWindowAncestor(jbPopupContent) == w);
   }
 }

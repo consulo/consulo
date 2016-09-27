@@ -17,7 +17,6 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
@@ -36,10 +35,12 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.pom.StatePreservingNavigatable;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.IconDescriptorUpdaters;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +54,7 @@ import java.util.Collections;
  * method that extract PsiElement from Value.
  * @param <Value> Value of node descriptor
  */
-public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value> implements ValidateableNode {
+public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value> implements ValidateableNode, StatePreservingNavigatable {
   private static final Logger LOG = Logger.getInstance(AbstractPsiBasedNode.class.getName());
 
   protected AbstractPsiBasedNode(final Project project,
@@ -198,6 +199,18 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   public NavigationItem getNavigationItem() {
     final PsiElement psiElement = extractPsiFromValue();
     return (psiElement instanceof NavigationItem) ? (NavigationItem) psiElement : null;
+  }
+
+  @Override
+  public void navigate(boolean requestFocus, boolean preserveState) {
+    if (canNavigate()) {
+      if (requestFocus || preserveState) {
+        NavigationUtil.openFileWithPsiElement(extractPsiFromValue(), requestFocus, requestFocus);
+      }
+      else {
+        getNavigationItem().navigate(requestFocus);
+      }
+    }
   }
 
   @Override
