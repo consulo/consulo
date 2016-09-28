@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,21 @@
  */
 package com.intellij.vcsUtil;
 
+import com.intellij.util.ExceptionUtil;
+
 /**
  * @author irengrig
+ *
+ * @deprecated use {@link ExceptionUtil} instead
  */
 public class Rethrow {
   private Rethrow() {
   }
 
+  /**
+   * @deprecated use {@link ExceptionUtil#rethrowAllAsUnchecked(Throwable)} instead
+   */
   public static void reThrowRuntime(final Throwable t) {
-    if (t instanceof Error) {
-      throw (Error) t;
-    }
-    if (t instanceof RuntimeException) {
-      throw (RuntimeException) t;
-    }
-    throw new RuntimeException(t);
+    ExceptionUtil.rethrowAllAsUnchecked(t);
   }
 }

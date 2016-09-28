@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,19 @@ import com.intellij.openapi.diagnostic.FrequentEventDetector;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
+import com.intellij.util.ExceptionUtil;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
+import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -61,10 +65,10 @@ public class LaterInvocator {
     @NotNull private final Condition<?> expired;
     @NotNull private final ActionCallback callback;
 
-    public RunnableInfo(@NotNull Runnable runnable,
-                        @NotNull ModalityState modalityState,
-                        @NotNull Condition<?> expired,
-                        @NotNull ActionCallback callback) {
+    RunnableInfo(@NotNull Runnable runnable,
+                 @NotNull ModalityState modalityState,
+                 @NotNull Condition<?> expired,
+                 @NotNull ActionCallback callback) {
       this.runnable = runnable;
       this.modalityState = modalityState;
       this.expired = expired;
@@ -78,13 +82,19 @@ public class LaterInvocator {
     }
   }
 
+  // Application modal entities
   private static final List<Object> ourModalEntities = ContainerUtil.createLockFreeCopyOnWriteList();
-  private static final Stack<ModalityState> ourModalityStack = new Stack<ModalityState>(ModalityState.NON_MODAL);
-  private static final List<RunnableInfo> ourQueue = new ArrayList<RunnableInfo>(); //protected by LOCK
+
+  // Per-project modal entities
+  private static WeakHashMap<Project, List<Dialog>> projectToModalEntities = new WeakHashMap<>();
+  private static WeakHashMap<Project, Stack<ModalityState>> projectToModalEntitiesStack = new WeakHashMap<>();
+
+  private static final Stack<ModalityState> ourModalityStack = new Stack<>(ModalityState.NON_MODAL);
+  private static final List<RunnableInfo> ourQueue = new ArrayList<>(); //protected by LOCK
   private static volatile int ourQueueSkipCount; // optimization
   private static final FlushQueue ourFlushQueueRunnable = new FlushQueue();
 
-  private static final Stack<AWTEvent> ourEventStack = new Stack<AWTEvent>(); // guarded by RUN_LOCK
+  private static final Stack<AWTEvent> ourEventStack = new Stack<>(); // guarded by RUN_LOCK
 
   private static final EventDispatcher<ModalityStateListener> ourModalityStateMulticaster = EventDispatcher.create(ModalityStateListener.class);
 
@@ -109,7 +119,7 @@ public class LaterInvocator {
       return ownerState;
     }
 
-    List<Object> result = new ArrayList<Object>();
+    List<Object> result = new ArrayList<>();
     for (Object entity : ourModalEntities) {
       if (entity instanceof Window ||
           entity instanceof ProgressIndicator && ((ProgressIndicator)entity).isModal()) {
@@ -172,9 +182,15 @@ public class LaterInvocator {
     invokeLater(runnable1, modalityState);
     semaphore.waitFor();
     if (!exception.isNull()) {
-      // wrap everything to keep the current thread stacktrace
-      // also TC ComparisonFailure feature depends on this
-      throw new RuntimeException(exception.get());
+      Throwable cause = exception.get();
+      if (SystemProperties.getBooleanProperty("invoke.later.wrap.error", true)) {
+        // wrap everything to keep the current thread stacktrace
+        // also TC ComparisonFailure feature depends on this
+        throw new RuntimeException(cause);
+      }
+      else {
+        ExceptionUtil.rethrow(cause);
+      }
     }
   }
 
@@ -194,6 +210,61 @@ public class LaterInvocator {
     if (guard != null) {
       guard.enteredModality(ourModalityStack.peek());
     }
+  }
+
+  public static void enterModal(Project project, Dialog dialog) {
+    LOG.assertTrue(isDispatchThread(), "enterModal() should be invoked in event-dispatch thread");
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("enterModal:" + dialog.getName() + " ; for project: " + project.getName());
+    }
+
+    if (project == null) {
+      enterModal(dialog);
+      return;
+    }
+
+    List<Dialog> modalEntitiesList = projectToModalEntities.getOrDefault(project, ContainerUtil.createLockFreeCopyOnWriteList());
+    projectToModalEntities.put(project, modalEntitiesList);
+    modalEntitiesList.add(dialog);
+
+    Stack<ModalityState> modalEntitiesStack = projectToModalEntitiesStack.getOrDefault(project, new Stack<>(ModalityState.NON_MODAL));
+    projectToModalEntitiesStack.put(project, modalEntitiesStack);
+    modalEntitiesStack.push(new ModalityStateEx(ArrayUtil.toObjectArray(ourModalEntities)));
+  }
+
+
+  public static void leaveModal(Project project, Dialog dialog) {
+    LOG.assertTrue(isDispatchThread(), "leaveModal() should be invoked in event-dispatch thread");
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("leaveModal:" + dialog.getName() + " ; for project: " + project.getName());
+    }
+
+    ourModalityStateMulticaster.getMulticaster().beforeModalityStateChanged(false);
+
+    int index = ourModalEntities.indexOf(dialog);
+
+    if (index != -1) {
+      ourModalEntities.remove(index);
+      ourModalityStack.remove(index + 1);
+      for (int i = 1; i < ourModalityStack.size(); i++) {
+        ((ModalityStateEx)ourModalityStack.get(i)).removeModality(dialog);
+      }
+    } else if (project != null) {
+      List<Dialog> dialogs = projectToModalEntities.get(project);
+      int perProjectIndex = dialogs.indexOf(dialog);
+      LOG.assertTrue(perProjectIndex >= 0);
+      dialogs.remove(perProjectIndex);
+      Stack<ModalityState> states = projectToModalEntitiesStack.get(project);
+      states.remove(perProjectIndex + 1);
+      for (int i = 1; i < states.size(); i++) {
+        ((ModalityStateEx)states.get(i)).removeModality(dialog);
+      }
+    }
+
+    ourQueueSkipCount = 0;
+    requestFlush();
   }
 
   public static void leaveModal(@NotNull Object modalEntity) {
@@ -227,13 +298,17 @@ public class LaterInvocator {
     requestFlush();
   }
 
+  public static Object[] getCurrentModalEntitiesForProject(Project project) {
+    ApplicationManager.getApplication().assertIsDispatchThread();
+    if (project == null || !ourModalEntities.isEmpty()) {
+      return ArrayUtil.toObjectArray(ourModalEntities);
+    }
+    return ArrayUtil.toObjectArray(projectToModalEntities.get(project));
+  }
+
   @NotNull
   public static Object[] getCurrentModalEntities() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    //TODO!
-    //LOG.assertTrue(IdeEventQueue.getInstance().isInInputEvent() || isInMyRunnable());
-
-    return ArrayUtil.toObjectArray(ourModalEntities);
+    return getCurrentModalEntitiesForProject(null);
   }
 
   @NotNull
@@ -241,9 +316,22 @@ public class LaterInvocator {
     return ourModalityStack.peek();
   }
 
-  public static boolean isInModalContext() {
+  public static boolean isInModalContextForProject(final Project project) {
     LOG.assertTrue(isDispatchThread());
-    return !ourModalEntities.isEmpty();
+
+    if (ourModalEntities.isEmpty()) return false;
+
+    List<Dialog> modalEntitiesForProject = getModalEntitiesForProject(project);
+
+    return modalEntitiesForProject == null || modalEntitiesForProject.isEmpty();
+  }
+
+  private static List<Dialog> getModalEntitiesForProject(Project project) {
+    return projectToModalEntities.get(project);
+  }
+
+  public static boolean isInModalContext() {
+    return isInModalContextForProject(null);
   }
 
   private static boolean isDispatchThread() {

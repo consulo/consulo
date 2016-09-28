@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 public class ChangesModuleGroupingPolicy implements ChangesGroupingPolicy {
   private final Project myProject;
   private final DefaultTreeModel myModel;
-  private final HashMap<Module, ChangesBrowserNode> myModuleCache = new HashMap<Module, ChangesBrowserNode>();
+  private final HashMap<Module, ChangesBrowserNode> myModuleCache = new HashMap<>();
 
   public static final String PROJECT_ROOT_TAG = "<Project Root>";
 
@@ -55,8 +56,9 @@ public class ChangesModuleGroupingPolicy implements ChangesGroupingPolicy {
     if (vFile == null) {
       vFile = LocalFileSystem.getInstance().findFileByIoFile(new File(node.getPath()));
     }
-    if (vFile != null && Comparing.equal(vFile, index.getContentRootForFile(vFile, false))) {
-      Module module = index.getModuleForFile(vFile, false);
+    boolean hideExcludedFiles = Registry.is("ide.hide.excluded.files");
+    if (vFile != null && Comparing.equal(vFile, index.getContentRootForFile(vFile, hideExcludedFiles))) {
+      Module module = index.getModuleForFile(vFile, hideExcludedFiles);
       return getNodeForModule(module, rootNode);
     }
     return null;

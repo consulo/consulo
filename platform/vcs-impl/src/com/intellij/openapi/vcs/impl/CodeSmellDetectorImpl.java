@@ -43,8 +43,8 @@ import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ui.MessageCategory;
-import com.intellij.vcsUtil.Rethrow;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -109,7 +109,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
   @Override
   public List<CodeSmellInfo> findCodeSmells(@NotNull final List<VirtualFile> filesToCheck) throws ProcessCanceledException {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    final List<CodeSmellInfo> result = new ArrayList<CodeSmellInfo>();
+    final List<CodeSmellInfo> result = new ArrayList<>();
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
     if (ApplicationManager.getApplication().isWriteAccessAllowed()) throw new RuntimeException("Must not run under write action");
 
@@ -139,8 +139,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
       }
     });
     if (!exception.isNull()) {
-      Exception t = exception.get();
-      Rethrow.reThrowRuntime(t);
+      ExceptionUtil.rethrowAllAsUnchecked(exception.get());
     }
 
     return result;
