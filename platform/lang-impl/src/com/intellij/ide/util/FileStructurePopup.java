@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.IdeBundle;
@@ -27,6 +28,8 @@ import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.impl.StructureViewComposite;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
 import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
+import com.intellij.ide.structureView.newStructureView.TreeActionWrapper;
+import com.intellij.ide.structureView.newStructureView.TreeActionsOwner;
 import com.intellij.ide.structureView.newStructureView.TreeModelWrapper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeRenderer;
@@ -43,17 +46,20 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
+import com.intellij.openapi.ide.CopyPasteManager;
+import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.codeStyle.MinusculeMatcher;
+import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupUpdateProcessor;
@@ -62,35 +68,35 @@ import com.intellij.ui.treeStructure.AlwaysExpandedTree;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
-import com.intellij.util.Alarm;
-import com.intellij.util.ArrayUtil;
+import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.TextTransferable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class FileStructurePopup implements Disposable {
+public class FileStructurePopup implements Disposable, TreeActionsOwner {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.FileStructurePopup");
   private final Project myProject;
   private final StructureViewModel myTreeModel;
@@ -100,24 +106,24 @@ public class FileStructurePopup implements Disposable {
   private JBPopup myPopup;
 
   @NonNls private static final String narrowDownPropertyKey = "FileStructurePopup.narrowDown";
-  private boolean myShouldNarrowDown = true;
-  private FileStructureTree myTree;
+  private final FileStructureTree myTree;
   private final FilteringTreeBuilder myAbstractTreeBuilder;
   private String myTitle;
-  private TreeSpeedSearch mySpeedSearch;
-  private SmartTreeStructure myTreeStructure;
+  private final TreeSpeedSearch mySpeedSearch;
+  private final SmartTreeStructure myTreeStructure;
   private int myPreferredWidth;
   private final FilteringTreeStructure myFilteringStructure;
-  private PsiElement myInitialPsiElement;
-  private Map<Class, JCheckBox> myCheckBoxes = new HashMap<Class, JCheckBox>();
-  private List<JCheckBox> myAutoClicked = new ArrayList<JCheckBox>();
+  private final PsiElement myInitialPsiElement;
+  private final Map<Class, JCheckBox> myCheckBoxes = new HashMap<>();
+  private final List<JCheckBox> myAutoClicked = new ArrayList<>();
   private String myTestSearchFilter;
   private final ActionCallback myTreeHasBuilt = new ActionCallback();
   private boolean myInitialNodeIsLeaf;
-  private final List<Pair<String, JCheckBox>> myTriggeredCheckboxes = new ArrayList<Pair<String, JCheckBox>>();
+  private final List<Pair<String, JCheckBox>> myTriggeredCheckboxes = new ArrayList<>();
   private final TreeExpander myTreeExpander;
   @NotNull private final FileEditor myFileEditor;
   private final StructureView myStructureViewDelegate;
+  private boolean myCanClose = true;
 
 
   public FileStructurePopup(@NotNull Project project,
@@ -183,12 +189,64 @@ public class FileStructurePopup implements Disposable {
       }
     };
 
-    myTree = new FileStructureTree(myTreeStructure.getRootElement(), Registry.is("fast.tree.expand.in.structure.view"));
+    myTree = new FileStructureTree(myTreeStructure.getRootElement(), false);
 
     myTree.setCellRenderer(new NodeRenderer());
 
+    myTree.setTransferHandler(new TransferHandler() {
+      @Override
+      public boolean importData(@NotNull TransferSupport support) {
+        String s = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
+        if (s != null && !mySpeedSearch.isPopupActive()) {
+          mySpeedSearch.showPopup(s);
+          return true;
+        }
+        return false;
+      }
+
+      @Nullable
+      @Override
+      protected Transferable createTransferable(JComponent component) {
+        Set<Object> nodes = myAbstractTreeBuilder.getSelectedElements();
+        if (nodes.isEmpty()) return null;
+        List<Pair<FilteringTreeStructure.FilteringNode, PsiElement>> result = ContainerUtil.newArrayListWithCapacity(nodes.size());
+        for (Object o : nodes) {
+          if (!(o instanceof FilteringTreeStructure.FilteringNode)) continue;
+          FilteringTreeStructure.FilteringNode node = (FilteringTreeStructure.FilteringNode)o;
+          PsiElement psi = getPsi(node);
+          ContainerUtil.addIfNotNull(result, Pair.create(node, psi));
+        }
+
+        final Set<PsiElement> psiSelection = ContainerUtil.map2LinkedSet(result, Functions.<PsiElement>pairSecond());
+
+        String text = StringUtil.join(result, pair -> {
+          PsiElement psi = pair.second;
+          String defaultPresentation = pair.first.getPresentation().getPresentableText();
+          if (psi == null) return defaultPresentation;
+          for (PsiElement p = psi.getParent(); p != null; p = p.getParent()) {
+            if (psiSelection.contains(p)) return null;
+          }
+          return ObjectUtils.chooseNotNull(psi.getText(), defaultPresentation);
+        }, "\n");
+
+        String htmlText = "<body>\n" + text + "\n</body>";
+        return new TextTransferable(XmlStringUtil.wrapInHtml(htmlText), text);
+      }
+
+      @Override
+      public int getSourceActions(JComponent component) {
+        return COPY;
+      }
+    });
+
     mySpeedSearch = new MyTreeSpeedSearch();
-    mySpeedSearch.setComparator(new SpeedSearchComparator(false, true));
+    mySpeedSearch.setComparator(new SpeedSearchComparator(false, true) {
+      @NotNull
+      @Override
+      protected MinusculeMatcher createMatcher(@NotNull String pattern) {
+        return NameUtil.buildMatcher(pattern).withSeparators(" ()").build();
+      }
+    });
 
     final FileStructurePopupFilter filter = new FileStructurePopupFilter();
     myFilteringStructure = new FilteringTreeStructure(filter, myTreeStructure, ApplicationManager.getApplication().isUnitTestMode());
@@ -241,27 +299,24 @@ public class FileStructurePopup implements Disposable {
   public void show() {
     //final long time = System.currentTimeMillis();
     JComponent panel = createCenterPanel();
-    new MnemonicHelper().register(panel);
+    MnemonicHelper.init(panel);
     boolean shouldSetWidth = DimensionService.getInstance().getSize(getDimensionServiceKey(), myProject) == null;
     myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, null)
-      .setTitle(myTitle)
-      .setResizable(true)
-      .setModalContext(false)
-      .setFocusable(true)
-      .setRequestFocus(true)
-      .setMovable(true)
-      .setBelongsToGlobalPopupStack(true)
-        //.setCancelOnClickOutside(false) //for debug and snapshots
-      .setCancelKeyEnabled(false)
-      .setDimensionServiceKey(null, getDimensionServiceKey(), false)
-      .setCancelCallback(new Computable<Boolean>() {
-        @Override
-        public Boolean compute() {
-          DimensionService.getInstance().setLocation(getDimensionServiceKey(), myPopup.getLocationOnScreen(), myProject);
-          return true;
-        }
-      })
-      .createPopup();
+            .setTitle(myTitle)
+            .setResizable(true)
+            .setModalContext(false)
+            .setFocusable(true)
+            .setRequestFocus(true)
+            .setMovable(true)
+            .setBelongsToGlobalPopupStack(true)
+                    //.setCancelOnClickOutside(false) //for debug and snapshots
+            .setCancelKeyEnabled(false)
+            .setDimensionServiceKey(null, getDimensionServiceKey(), false)
+            .setCancelCallback(() -> {
+              DimensionService.getInstance().setLocation(getDimensionServiceKey(), myPopup.getLocationOnScreen(), myProject);
+              return myCanClose;
+            })
+            .createPopup();
 
     myTree.addTreeSelectionListener(new TreeSelectionListener() {
       @Override
@@ -295,7 +350,7 @@ public class FileStructurePopup implements Disposable {
 
     ((AbstractPopup)myPopup).setShowHints(true);
     if (shouldSetWidth) {
-      myPopup.setSize(new Dimension(myPreferredWidth + JBUI.scale(10), myPopup.getSize().height));
+      myPopup.setSize(new Dimension(myPreferredWidth + 10, myPopup.getSize().height));
     }
 
     IdeFocusManager.getInstance(myProject).requestFocus(myTree, true);
@@ -309,46 +364,29 @@ public class FileStructurePopup implements Disposable {
         myPopup.cancel();
       }
     });
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-          @Override
-          public void run() {
-            myFilteringStructure.rebuild();
-          }
-        });
+    ApplicationManager.getApplication().executeOnPooledThread(() -> {
+      ApplicationManager.getApplication().runReadAction(() -> myFilteringStructure.rebuild());
 
-        //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            myAbstractTreeBuilder.queueUpdate().doWhenDone(new Runnable() {
-              @Override
-              public void run() {
-                myTreeHasBuilt.setDone();
-                //noinspection SSBasedInspection
-                SwingUtilities.invokeLater(new Runnable() {
-                  @Override
-                  public void run() {
-                    if (myAbstractTreeBuilder.isDisposed()) return;
-                    if (selectPsiElement(myInitialPsiElement) == null) {
-                      TreeUtil.ensureSelection(myAbstractTreeBuilder.getTree());
-                      myAbstractTreeBuilder.revalidateTree();
-                    }
-                  }
-                });
-              }
-            });
-            installUpdater();
-          }
+      //noinspection SSBasedInspection
+      SwingUtilities.invokeLater(() -> {
+        myAbstractTreeBuilder.queueUpdate().doWhenDone(() -> {
+          myTreeHasBuilt.setDone();
+          //noinspection SSBasedInspection
+          SwingUtilities.invokeLater(() -> {
+            if (myAbstractTreeBuilder.isDisposed()) return;
+            if (selectPsiElement(myInitialPsiElement) == null) {
+              TreeUtil.ensureSelection(myAbstractTreeBuilder.getTree());
+              myAbstractTreeBuilder.revalidateTree();
+            }
+          });
         });
-      }
+        installUpdater();
+      });
     });
   }
 
   private void installUpdater() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (ApplicationManager.getApplication().isUnitTestMode() || myPopup.isDisposed()) {
       return;
     }
     final Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, myPopup);
@@ -365,32 +403,26 @@ public class FileStructurePopup implements Disposable {
         if (!filter.equals(prefix)) {
           final boolean isBackspace = prefix.length() < filter.length();
           filter = prefix;
-          myAbstractTreeBuilder.refilter(null, false, false).doWhenProcessed(new Runnable() {
-            @Override
-            public void run() {
-              //noinspection SSBasedInspection
-              SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                  if (myAbstractTreeBuilder.isDisposed()) return;
-                  myTree.repaint();
-                  if (isBackspace && handleBackspace(filter)) {
-                    return;
-                  }
-                  if (myFilteringStructure.getRootElement().getChildren().length == 0) {
-                    for (JCheckBox box : myCheckBoxes.values()) {
-                      if (!box.isSelected()) {
-                        myAutoClicked.add(box);
-                        myTriggeredCheckboxes.add(0, Pair.create(filter, box));
-                        box.doClick();
-                        filter = "";
-                        break;
-                      }
-                    }
+          myAbstractTreeBuilder.refilter(null, false, false).doWhenProcessed(() -> {
+            //noinspection SSBasedInspection
+            SwingUtilities.invokeLater(() -> {
+              if (myAbstractTreeBuilder.isDisposed()) return;
+              myTree.repaint();
+              if (isBackspace && handleBackspace(filter)) {
+                return;
+              }
+              if (myFilteringStructure.getRootElement().getChildren().length == 0) {
+                for (JCheckBox box : myCheckBoxes.values()) {
+                  if (!box.isSelected()) {
+                    myAutoClicked.add(box);
+                    myTriggeredCheckboxes.add(0, Pair.create(filter, box));
+                    box.doClick();
+                    filter = "";
+                    break;
                   }
                 }
-              });
-            }
+              }
+            });
           });
         }
         if (!alarm.isDisposed()) {
@@ -467,7 +499,7 @@ public class FileStructurePopup implements Disposable {
   }
 
   private static Set<PsiElement> getAllParents(PsiElement element) {
-    Set<PsiElement> parents = new java.util.HashSet<PsiElement>();
+    Set<PsiElement> parents = new java.util.HashSet<>();
 
     while (element != null) {
       parents.add(element);
@@ -497,6 +529,10 @@ public class FileStructurePopup implements Disposable {
 
   }
 
+  private static boolean isShouldNarrowDown() {
+    return PropertiesComponent.getInstance().getBoolean(narrowDownPropertyKey, true);
+  }
+
   @NonNls
   protected static String getDimensionServiceKey() {
     return "StructurePopup";
@@ -519,8 +555,8 @@ public class FileStructurePopup implements Disposable {
   }
 
   public JComponent createCenterPanel() {
-    List<FileStructureFilter> fileStructureFilters = new ArrayList<FileStructureFilter>();
-    List<FileStructureNodeProvider> fileStructureNodeProviders = new ArrayList<FileStructureNodeProvider>();
+    List<FileStructureFilter> fileStructureFilters = new ArrayList<>();
+    List<FileStructureNodeProvider> fileStructureNodeProviders = new ArrayList<>();
     if (myTreeActionsOwner != null) {
       for (Filter filter : myBaseTreeModel.getFilters()) {
         if (filter instanceof FileStructureFilter) {
@@ -544,7 +580,7 @@ public class FileStructurePopup implements Disposable {
     final Shortcut[] F4 = ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE).getShortcutSet().getShortcuts();
     final Shortcut[] ENTER = CustomShortcutSet.fromString("ENTER").getShortcuts();
     final CustomShortcutSet shortcutSet = new CustomShortcutSet(ArrayUtil.mergeArrays(F4, ENTER));
-    new AnAction() {
+    new DumbAwareAction() {
       @Override
       public void actionPerformed(AnActionEvent e) {
         final boolean succeeded = navigateSelectedElement();
@@ -554,7 +590,7 @@ public class FileStructurePopup implements Disposable {
       }
     }.registerCustomShortcutSet(shortcutSet, panel);
 
-    new AnAction() {
+    new DumbAwareAction() {
       @Override
       public void actionPerformed(AnActionEvent e) {
         if (mySpeedSearch != null && mySpeedSearch.isPopupActive()) {
@@ -568,7 +604,7 @@ public class FileStructurePopup implements Disposable {
 
     new ClickListener() {
       @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
+      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
         final TreePath path = myTree.getPathForLocation(e.getX(), e.getY());
         if (path == null) return false; // user wants to expand/collapse a node
         navigateSelectedElement();
@@ -583,12 +619,17 @@ public class FileStructurePopup implements Disposable {
     for (FileStructureNodeProvider provider : fileStructureNodeProviders) {
       addCheckbox(comboPanel, provider);
     }
+    final JPanel topPanel = new JPanel(new BorderLayout());
+    topPanel.add(comboPanel);
+
+    topPanel.add(createSettingsButton(), BorderLayout.EAST);
+
     myPreferredWidth = Math.max(comboPanel.getPreferredSize().width, JBUI.scale(350));
-    panel.add(comboPanel, BorderLayout.NORTH);
+    panel.add(topPanel, BorderLayout.NORTH);
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myAbstractTreeBuilder.getTree());
     scrollPane.setBorder(IdeBorderFactory.createBorder(SideBorder.TOP | SideBorder.BOTTOM));
     panel.add(scrollPane, BorderLayout.CENTER);
-    panel.add(createSouthPanel(), BorderLayout.SOUTH);
+    //panel.add(createSouthPanel(), BorderLayout.SOUTH);
     DataManager.registerDataProvider(panel, new DataProvider() {
       @Override
       public Object getData(@NonNls String dataId) {
@@ -604,14 +645,7 @@ public class FileStructurePopup implements Disposable {
           return getPsi((FilteringTreeStructure.FilteringNode)node);
         }
         if (LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId)) {
-          Set<Object> nodes = myAbstractTreeBuilder.getSelectedElements();
-          if (nodes.isEmpty()) return PsiElement.EMPTY_ARRAY;
-          ArrayList<PsiElement> result = new ArrayList<PsiElement>();
-          for (Object o : nodes) {
-            if (!(o instanceof FilteringTreeStructure.FilteringNode)) continue;
-            ContainerUtil.addIfNotNull(result, getPsi((FilteringTreeStructure.FilteringNode)o));
-          }
-          return ContainerUtil.toArray(result, PsiElement.ARRAY_FACTORY);
+          return ContainerUtil.toArray(getPsiElementsFromSelection(), PsiElement.ARRAY_FACTORY);
         }
         if (LangDataKeys.POSITION_ADJUSTER_POPUP.is(dataId)) {
           return myPopup;
@@ -631,6 +665,96 @@ public class FileStructurePopup implements Disposable {
     });
 
     return panel;
+  }
+
+  @NotNull
+  private List<PsiElement> getPsiElementsFromSelection() {
+    Set<Object> nodes = myAbstractTreeBuilder.getSelectedElements();
+    if (nodes.isEmpty()) return Collections.emptyList();
+    List<PsiElement> result = ContainerUtil.newArrayListWithCapacity(nodes.size());
+    for (Object o : nodes) {
+      if (!(o instanceof FilteringTreeStructure.FilteringNode)) continue;
+      ContainerUtil.addIfNotNull(result, getPsi((FilteringTreeStructure.FilteringNode)o));
+    }
+    return result;
+  }
+
+  @NotNull
+  protected JComponent createSettingsButton() {
+    final JLabel label = new JLabel(AllIcons.General.SecondaryGroup);
+    new ClickListener() {
+      @Override
+      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+        DefaultActionGroup group = new DefaultActionGroup();
+        //addSorters(group);
+        //addGroupers(group);
+        //addFilters(group);
+
+        group.add(new ToggleAction(IdeBundle.message("checkbox.narrow.down.on.typing")) {
+          @Override
+          public boolean isSelected(AnActionEvent e) {
+            return isShouldNarrowDown();
+          }
+
+          @Override
+          public void setSelected(AnActionEvent e, boolean state) {
+            PropertiesComponent.getInstance().setValue(narrowDownPropertyKey, Boolean.toString(state));
+            if (mySpeedSearch.isPopupActive() && !StringUtil.isEmpty(mySpeedSearch.getEnteredPrefix())) {
+              myAbstractTreeBuilder.queueUpdate();
+            }
+          }
+        });
+
+        final DataManager dataManager = DataManager.getInstance();
+        assert dataManager != null;
+        final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(null, group,
+                                                                                    dataManager.getDataContext(label),
+                                                                                    JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                                                                                    false);
+        popup.addListener(
+                new JBPopupListener() {
+                  @Override
+                  public void beforeShown(LightweightWindowEvent event) {
+
+                  }
+
+                  @Override
+                  public void onClosed(LightweightWindowEvent event) {
+                    myCanClose = true;
+                  }
+                });
+        myCanClose = false;
+        popup.showUnderneathOf(label);
+        return true;
+      }
+    }.installOn(label);
+    return label;
+  }
+
+  protected void addFilters(DefaultActionGroup group) {
+    Filter[] filters = myTreeModel.getFilters();
+    for (Filter filter : filters) {
+      group.add(new TreeActionWrapper(filter, this));
+    }
+  }
+
+  protected void addGroupers(DefaultActionGroup group) {
+    Grouper[] groupers = myTreeModel.getGroupers();
+    for (Grouper grouper : groupers) {
+      group.add(new TreeActionWrapper(grouper, this));
+    }
+  }
+
+  protected void addSorters(DefaultActionGroup group) {
+    Sorter[] sorters = myTreeModel.getSorters();
+    for (final Sorter sorter : sorters) {
+      if (sorter.isVisible()) {
+        group.add(new TreeActionWrapper(sorter, this));
+      }
+    }
+    if (sorters.length > 0) {
+      group.addSeparator();
+    }
   }
 
   @Nullable
@@ -661,51 +785,26 @@ public class FileStructurePopup implements Disposable {
       }
     }
 
-    final Ref<Boolean> succeeded = new Ref<Boolean>();
+    final Ref<Boolean> succeeded = new Ref<>();
     final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(myProject, new Runnable() {
-      @Override
-      public void run() {
-        if (selectedNode != null) {
-          if (selectedNode.canNavigateToSource()) {
-            myPopup.cancel();
-            selectedNode.navigate(true);
-            succeeded.set(true);
-          }
-          else {
-            succeeded.set(false);
-          }
+    commandProcessor.executeCommand(myProject, () -> {
+      if (selectedNode != null) {
+        if (selectedNode.canNavigateToSource()) {
+          myPopup.cancel();
+          selectedNode.navigate(true);
+          succeeded.set(true);
         }
         else {
           succeeded.set(false);
         }
-
-        IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
       }
+      else {
+        succeeded.set(false);
+      }
+
+      IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
     }, "Navigate", null);
     return succeeded.get();
-  }
-
-  private JComponent createSouthPanel() {
-    final JCheckBox checkBox = new JCheckBox(IdeBundle.message("checkbox.narrow.down.on.typing"));
-    checkBox.setSelected(PropertiesComponent.getInstance().getBoolean(narrowDownPropertyKey, true));
-    checkBox.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        myShouldNarrowDown = checkBox.isSelected();
-        PropertiesComponent.getInstance().setValue(narrowDownPropertyKey, Boolean.toString(myShouldNarrowDown));
-
-        if (mySpeedSearch.isPopupActive() && !StringUtil.isEmpty(mySpeedSearch.getEnteredPrefix())) {
-          myAbstractTreeBuilder.queueUpdate();
-        }
-      }
-    });
-
-    checkBox.setFocusable(false);
-    UIUtil.applyStyle(UIUtil.ComponentStyle.MINI, checkBox);
-    final JPanel panel = new JPanel(new BorderLayout());
-    panel.add(checkBox, BorderLayout.WEST);
-    return panel;
   }
 
   private void addCheckbox(final JPanel panel, final TreeAction action) {
@@ -714,16 +813,15 @@ public class FileStructurePopup implements Disposable {
 
     if (text == null) return;
 
-    Shortcut[] shortcuts = action instanceof FileStructureFilter ?
-                           ((FileStructureFilter)action).getShortcut() : ((FileStructureNodeProvider)action).getShortcut();
-
+    Shortcut[] shortcuts = extractShortcutFor(action);
 
     final JCheckBox chkFilter = new JCheckBox();
     UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, chkFilter);
 
     final boolean selected = getDefaultValue(action);
     chkFilter.setSelected(selected);
-    myTreeActionsOwner.setActionIncluded(action, action instanceof FileStructureFilter ? !selected : selected);
+    final boolean isRevertedStructureFilter = action instanceof FileStructureFilter && ((FileStructureFilter)action).isReverted();
+    myTreeActionsOwner.setActionIncluded(action, isRevertedStructureFilter ? !selected : selected);
     chkFilter.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
@@ -731,7 +829,7 @@ public class FileStructurePopup implements Disposable {
         if (!myAutoClicked.contains(chkFilter)) {
           saveState(action, state);
         }
-        myTreeActionsOwner.setActionIncluded(action, action instanceof FileStructureFilter ? !state : state);
+        myTreeActionsOwner.setActionIncluded(action, isRevertedStructureFilter ? !state : state);
         //final String filter = mySpeedSearch.isPopupActive() ? mySpeedSearch.getEnteredPrefix() : null;
         //mySpeedSearch.hidePopup();
         Object selection = ContainerUtil.getFirstItem(myAbstractTreeBuilder.getSelectedElements());
@@ -742,24 +840,13 @@ public class FileStructurePopup implements Disposable {
         myFilteringStructure.rebuild();
 
         final Object sel = selection;
-        final Runnable runnable = new Runnable() {
-          @Override
-          public void run() {
-            ApplicationManager.getApplication().runReadAction(new Runnable() {
-              @Override
-              public void run() {
-                myAbstractTreeBuilder.refilter(sel, true, false).doWhenProcessed(new Runnable() {
-                  @Override
-                  public void run() {
-                    if (mySpeedSearch.isPopupActive()) {
-                      mySpeedSearch.refreshSelection();
-                    }
-                  }
-                });
-              }
-            });
-          }
-        };
+        final Runnable runnable = () -> ApplicationManager.getApplication().runReadAction(() -> {
+          myAbstractTreeBuilder.refilter(sel, true, false).doWhenProcessed(() -> {
+            if (mySpeedSearch.isPopupActive()) {
+              mySpeedSearch.refreshSelection();
+            }
+          });
+        });
         if (ApplicationManager.getApplication().isUnitTestMode()) {
           runnable.run();
         }
@@ -772,7 +859,7 @@ public class FileStructurePopup implements Disposable {
 
     if (shortcuts.length > 0) {
       text += " (" + KeymapUtil.getShortcutText(shortcuts[0]) + ")";
-      new AnAction() {
+      new DumbAwareAction() {
         @Override
         public void actionPerformed(final AnActionEvent e) {
           chkFilter.doClick();
@@ -784,10 +871,20 @@ public class FileStructurePopup implements Disposable {
     myCheckBoxes.put(action.getClass(), chkFilter);
   }
 
+  @NotNull
+  static Shortcut[] extractShortcutFor(@NotNull TreeAction action) {
+    if (action instanceof ActionShortcutProvider) {
+      String actionId = ((ActionShortcutProvider)action).getActionIdForShortcut();
+      return KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
+    }
+    return action instanceof FileStructureFilter ?
+           ((FileStructureFilter)action).getShortcut() : ((FileStructureNodeProvider)action).getShortcut();
+  }
+
   private static boolean getDefaultValue(TreeAction action) {
     if (action instanceof PropertyOwner) {
       final String propertyName = ((PropertyOwner)action).getPropertyName();
-      return PropertiesComponent.getInstance().getBoolean(getPropertyName(propertyName), false);
+      return PropertiesComponent.getInstance().getBoolean(TreeStructureUtil.getPropertyName(propertyName));
     }
 
     return false;
@@ -796,13 +893,8 @@ public class FileStructurePopup implements Disposable {
   private static void saveState(TreeAction action, boolean state) {
     if (action instanceof PropertyOwner) {
       final String propertyName = ((PropertyOwner)action).getPropertyName();
-      PropertiesComponent.getInstance().setValue(getPropertyName(propertyName), Boolean.toString(state));
+      PropertiesComponent.getInstance().setValue(TreeStructureUtil.getPropertyName(propertyName), state);
     }
-  }
-
-  @NonNls
-  public static String getPropertyName(String propertyName) {
-    return propertyName + ".file.structure.state";
   }
 
   public void setTitle(String title) {
@@ -860,14 +952,15 @@ public class FileStructurePopup implements Disposable {
       }
       return text;
     }
-
+    // NB!: this point is achievable if the following method returns null
+    // see com.intellij.ide.util.treeView.NodeDescriptor.toString
     if (userObject instanceof StructureViewComponent.StructureViewTreeElementWrapper) {
       return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
         @Nullable
         @Override
         public String compute() {
           final ItemPresentation presentation =
-            ((StructureViewComponent.StructureViewTreeElementWrapper)userObject).getValue().getPresentation();
+                  ((StructureViewComponent.StructureViewTreeElementWrapper)userObject).getValue().getPresentation();
           return presentation.getPresentableText();
         }
       });
@@ -876,14 +969,24 @@ public class FileStructurePopup implements Disposable {
     return null;
   }
 
+  @Override
+  public void setActionActive(String name, boolean state) {
+
+  }
+
+  @Override
+  public boolean isActionActive(String name) {
+    return false;
+  }
+
   private class FileStructurePopupFilter implements ElementFilter {
     private String myLastFilter = null;
-    private HashSet<Object> myVisibleParents = new HashSet<Object>();
+    private final Set<Object> myVisibleParents = new HashSet<>();
     private final boolean isUnitTest = ApplicationManager.getApplication().isUnitTestMode();
 
     @Override
     public boolean shouldBeShowing(Object value) {
-      if (!myShouldNarrowDown) return true;
+      if (!isShouldNarrowDown()) return true;
 
       String filter = getSearchPrefix();
       if (!StringUtil.equals(myLastFilter, filter)) {
@@ -967,11 +1070,11 @@ public class FileStructurePopup implements Disposable {
         return paths.get(0).node;
       }
       final Set<PsiElement> parents = getAllParents(myInitialPsiElement);
-      ArrayList<SpeedSearchObjectWithWeight> cur = new ArrayList<SpeedSearchObjectWithWeight>();
+      ArrayList<SpeedSearchObjectWithWeight> cur = new ArrayList<>();
       int max = -1;
       for (SpeedSearchObjectWithWeight p : paths) {
         final Object last = ((TreePath)p.node).getLastPathComponent();
-        final List<PsiElement> elements = new ArrayList<PsiElement>();
+        final List<PsiElement> elements = new ArrayList<>();
         final Object object = ((DefaultMutableTreeNode)last).getUserObject();
         if (object instanceof FilteringTreeStructure.FilteringNode) {
           FilteringTreeStructure.FilteringNode node = (FilteringTreeStructure.FilteringNode)object;
@@ -996,40 +1099,28 @@ public class FileStructurePopup implements Disposable {
         }
       }
 
-      Collections.sort(cur, new Comparator<SpeedSearchObjectWithWeight>() {
-        @Override
-        public int compare(SpeedSearchObjectWithWeight o1, SpeedSearchObjectWithWeight o2) {
-          final int i = o1.compareWith(o2);
-          return i != 0 ? i
-                        : ((TreePath)o2.node).getPathCount() - ((TreePath)o1.node).getPathCount();
-        }
+      Collections.sort(cur, (o1, o2) -> {
+        final int i = o1.compareWith(o2);
+        return i != 0 ? i
+                      : ((TreePath)o2.node).getPathCount() - ((TreePath)o1.node).getPathCount();
       });
       return cur.isEmpty() ? null : cur.get(0).node;
     }
   }
 
-  class FileStructureTree extends JBTreeWithHintProvider implements AlwaysExpandedTree {
+  class FileStructureTree extends JBTreeWithHintProvider implements AlwaysExpandedTree, PlaceProvider<String> {
     private final boolean fast;
 
     public FileStructureTree(Object rootElement, boolean fastExpand) {
       super(new DefaultMutableTreeNode(rootElement));
       if (fastExpand) {
-        boolean newValueIsSet;
-        try {
-          final Field field = JTree.class.getDeclaredField("expandedState");
-          field.setAccessible(true);
-          field.set(this, new Hashtable() {
-            @Override
-            public synchronized Object get(Object key) {
-              return Boolean.TRUE;
-            }
-          });
-          newValueIsSet = true;
-        }
-        catch (Exception e) {
-          newValueIsSet = false;
-        }
-        fast = newValueIsSet;
+        Hashtable hashtable = new Hashtable() {
+          @Override
+          public synchronized Object get(Object key) {
+            return Boolean.TRUE;
+          }
+        };
+        fast = ReflectionUtil.setField(JTree.class, this, Hashtable.class, "expandedState", hashtable);
       }
       else {
         fast = false;
@@ -1061,6 +1152,11 @@ public class FileStructurePopup implements Disposable {
     protected PsiElement getPsiElementForHint(Object selectedValue) {
       //noinspection ConstantConditions
       return getPsi((FilteringTreeStructure.FilteringNode)((DefaultMutableTreeNode)selectedValue).getUserObject());
+    }
+
+    @Override
+    public String getPlace() {
+      return ActionPlaces.STRUCTURE_VIEW_POPUP;
     }
   }
 }

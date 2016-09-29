@@ -192,6 +192,7 @@ class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterato
     return nextIndex;
   }
 
+  @NotNull
   private List<Inlay> getCurrentInlays() {
     return myInlays.subList(myCurrentInlayIndex, getNextInlayIndex());
   }

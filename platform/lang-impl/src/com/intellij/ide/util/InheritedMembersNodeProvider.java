@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,26 +21,33 @@ import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.openapi.actionSystem.Shortcut;
-import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class InheritedMembersNodeProvider<T extends TreeElement> implements FileStructureNodeProvider<T> {
+public abstract class InheritedMembersNodeProvider<T extends TreeElement> implements FileStructureNodeProvider<T>, ActionShortcutProvider {
   @NonNls public static final String ID = "SHOW_INHERITED";
 
+  @NotNull
   @Override
   public String getCheckBoxText() {
     return IdeBundle.message("file.structure.toggle.show.inherited");
   }
 
+  @NotNull
   @Override
   public Shortcut[] getShortcut() {
-    return KeymapManager.getInstance().getActiveKeymap().getShortcuts("FileStructurePopup");
+    throw new IncorrectOperationException("see getActionIdForShortcut()");
   }
 
+  @NotNull
+  @Override
+  public String getActionIdForShortcut() {
+    return "FileStructurePopup";
+  }
 
   @Override
   @NotNull

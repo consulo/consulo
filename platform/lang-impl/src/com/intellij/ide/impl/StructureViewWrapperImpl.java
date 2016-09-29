@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.intellij.ide.impl;
 
+import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
@@ -45,9 +46,9 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.content.*;
+import com.intellij.util.BitUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
@@ -114,7 +115,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     myToolWindow.getComponent().addHierarchyListener(new HierarchyListener() {
       @Override
       public void hierarchyChanged(HierarchyEvent e) {
-        if ((e.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED) != 0) {
+        if (BitUtil.isSet(e.getChangeFlags(), HierarchyEvent.DISPLAYABILITY_CHANGED)) {
           scheduleRebuild();
         }
       }
@@ -216,16 +217,13 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     // this is dirty hack since some bright minds decided to used different TreeUi every time, so selection may be followed
     // by rebuild on completely different instance of TreeUi
 
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        if (myStructureView != null) {
-          if (!Comparing.equal(myFileEditor, fileEditor)) {
-            myFile = file;
-            rebuild();
-          }
-          myStructureView.navigateToSelectedElement(requestFocus);
-        }
+    Runnable runnable = () -> {
+      if (!Comparing.equal(myFileEditor, fileEditor)) {
+        myFile = file;
+        rebuild();
+      }
+      if (myStructureView != null) {
+        myStructureView.navigateToSelectedElement(requestFocus);
       }
     };
 
@@ -254,7 +252,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
 
   public void rebuild() {
     if (myProject.isDisposed()) return;
-    PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+
     Dimension referenceSize = null;
 
     if (myStructureView != null) {
@@ -363,13 +361,13 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
   }
 
   private void updateHeaderActions(StructureView structureView) {
-    ActionGroup gearActions = null;
     AnAction[] titleActions = AnAction.EMPTY_ARRAY;
     if (structureView instanceof StructureViewComponent) {
-      gearActions = ((StructureViewComponent)structureView).getGearActions();
-      titleActions = ((StructureViewComponent)structureView).getTitleActions();
+      JTree tree = ((StructureViewComponent)structureView).getTree();
+      titleActions = new AnAction[]{
+              CommonActionsManager.getInstance().createExpandAllHeaderAction(tree),
+              CommonActionsManager.getInstance().createCollapseAllHeaderAction(tree)};
     }
-    myToolWindow.setAdditionalGearActions(gearActions);
     myToolWindow.setTitleActions(titleActions);
   }
 

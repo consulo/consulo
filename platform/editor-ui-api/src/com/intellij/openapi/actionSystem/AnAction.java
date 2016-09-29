@@ -72,9 +72,6 @@ import java.util.List;
 public abstract class AnAction implements PossiblyDumbAware {
   public static final Key<List<AnAction>> ACTIONS_KEY = Key.create("AnAction.shortcutSet");
 
-  @NonNls
-  public static final String ourClientProperty = "AnAction.shortcutSet";
-
   private Presentation myTemplatePresentation;
   private ShortcutSet myShortcutSet;
   private boolean myEnabledInModalContext;
@@ -147,31 +144,16 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param component   the component for which the shortcuts will be active.
    */
   public final void registerCustomShortcutSet(@NotNull ShortcutSet shortcutSet, @Nullable JComponent component) {
-    myShortcutSet = shortcutSet;
-    if (component != null) {
-      @SuppressWarnings("unchecked") ArrayList<AnAction> actionList = (ArrayList<AnAction>)component.getClientProperty(ourClientProperty);
-      if (actionList == null) {
-        actionList = new ArrayList<AnAction>(1);
-        component.putClientProperty(ourClientProperty, actionList);
-      }
-      if (!actionList.contains(this)) {
-        actionList.add(this);
-      }
-    }
+    registerCustomShortcutSet(shortcutSet, component, null);
   }
 
   public final void registerCustomShortcutSet(int keyCode, @JdkConstants.InputEventMask int modifiers, @Nullable JComponent component) {
     registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
   }
 
-  public final void registerCustomShortcutSet(@NotNull ShortcutSet shortcutSet, @NotNull final JComponent component, @NotNull Disposable parentDisposable) {
-    registerCustomShortcutSet(shortcutSet, component);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        unregisterCustomShortcutSet(component);
-      }
-    });
+  public final void registerCustomShortcutSet(@NotNull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable Disposable parentDisposable) {
+    setShortcutSet(shortcutSet);
+    registerCustomShortcutSet(component, parentDisposable);
   }
 
   public final void registerCustomShortcutSet(@Nullable JComponent component, @Nullable Disposable parentDisposable) {
@@ -195,11 +177,9 @@ public abstract class AnAction implements PossiblyDumbAware {
   }
 
   public final void unregisterCustomShortcutSet(JComponent component) {
-    if (component != null) {
-      @SuppressWarnings("unchecked") ArrayList<AnAction> actionList = (ArrayList<AnAction>)component.getClientProperty(ourClientProperty);
-      if (actionList != null) {
-        actionList.remove(this);
-      }
+    List<AnAction> actionList = UIUtil.getClientProperty(component, ACTIONS_KEY);
+    if (actionList != null) {
+      actionList.remove(this);
     }
   }
 

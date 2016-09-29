@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.HintUpdateSupply;
-import com.intellij.util.ObjectUtil;
+import com.intellij.util.ObjectUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -60,17 +60,17 @@ public abstract class JBListWithHintProvider extends JBList {
 
   @Deprecated
   public void registerHint(JBPopup hint) {
-    ObjectUtil.assertNotNull(HintUpdateSupply.getSupply(this)).registerHint(hint);
+    ObjectUtils.assertNotNull(HintUpdateSupply.getSupply(this)).registerHint(hint);
   }
 
   @Deprecated
   public void hideHint() {
-    ObjectUtil.assertNotNull(HintUpdateSupply.getSupply(this)).hideHint();
+    ObjectUtils.assertNotNull(HintUpdateSupply.getSupply(this)).hideHint();
   }
 
   @Deprecated
   public void updateHint(PsiElement element) {
-    ObjectUtil.assertNotNull(HintUpdateSupply.getSupply(this)).updateHint(element);
+    ObjectUtils.assertNotNull(HintUpdateSupply.getSupply(this)).updateHint(element);
   }
 
 }

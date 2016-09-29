@@ -36,6 +36,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -57,10 +58,10 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -276,7 +277,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     myToolbarStatusPanel.setContent(null);
     myToolbarPanel.setContent(null);
     myContentPanel.setContent(null);
-    myMainPanel.putClientProperty(AnAction.ourClientProperty, null);
+    ActionUtil.clearActions(myMainPanel);
 
     myActiveRequest.onAssigned(false);
     myActiveRequest = request;
