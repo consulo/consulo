@@ -29,6 +29,8 @@ import sun.misc.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -38,6 +40,33 @@ import java.util.List;
 
 public class UrlClassLoader extends ClassLoader {
   @NonNls static final String CLASS_EXTENSION = ".class";
+
+  private static final boolean HAS_PARALLEL_LOADERS = SystemInfo.isJavaVersionAtLeast("1.7") && !SystemInfo.isIbmJvm;
+
+  static {
+    if (HAS_PARALLEL_LOADERS) {
+      try {
+        //todo Patches.USE_REFLECTION_TO_ACCESS_JDK7
+        Method registerAsParallelCapable = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable");
+        registerAsParallelCapable.setAccessible(true);
+        registerAsParallelCapable.invoke(null);
+      }
+      catch (Exception ignored) { }
+    }
+  }
+
+  public static boolean isRegisteredAsParallelCapable(@NotNull ClassLoader loader) {
+    if (!HAS_PARALLEL_LOADERS) return false;
+    try {
+      //todo Patches.USE_REFLECTION_TO_ACCESS_JDK7
+      Field parallelLockMap = ClassLoader.class.getDeclaredField("parallelLockMap");
+      parallelLockMap.setAccessible(true);
+      return parallelLockMap.get(loader) != null;
+    }
+    catch (Exception e) {
+      throw new AssertionError("Internal error: ClassLoader implementation has been altered");
+    }
+  }
 
   public static final class Builder {
     private List<URL> myURLs = ContainerUtil.emptyList();

@@ -147,4 +147,9 @@ public class Patches {
    * On Mac OS font ligatures are not supported for natively loaded fonts, font needs to be loaded explicitly by JDK.
    */
   public static final boolean JDK_BUG_ID_7162125 = SystemInfo.isMac && !SystemInfo.isJavaVersionAtLeast("1.9");
+
+  /**
+   * Some HTTP connections lock the context class loader: https://bugs.openjdk.java.net/browse/JDK-8032832
+   */
+  public static boolean JDK_BUG_ID_8032832 = SystemInfo.isJavaVersionAtLeast("1.8.0_20");
 }
