@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -71,7 +72,7 @@ class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterato
   private int mySegmentEndOffset;
   private int myCurrentFoldRegionIndex;
   private Iterator<LineLayout.VisualFragment> myFragmentIterator;
-  private List<Inlay> myInlays;
+  private List<Inlay> myInlays = Collections.emptyList();
   private int myCurrentInlayIndex;
   private float myCurrentX;
   private int myCurrentVisualColumn;
