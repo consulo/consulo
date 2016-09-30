@@ -20,6 +20,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
+import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
@@ -27,6 +28,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -73,6 +75,7 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
+import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -101,7 +104,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
   private final Map<String, FocusWatcher> myId2FocusWatcher;
   private final Set<String> myDumbAwareIds = Collections.synchronizedSet(ContainerUtil.<String>newTroveSet());
 
-  private final EditorComponentFocusWatcher myEditorComponentFocusWatcher;
+  private final EditorComponentFocusWatcher myEditorComponentFocusWatcher = new EditorComponentFocusWatcher();
   private final MyToolWindowPropertyChangeListener myToolWindowPropertyChangeListener;
   private final InternalDecoratorListener myInternalDecoratorListener;
 
@@ -196,7 +199,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     myId2StripeButton = new HashMap<String, StripeButton>();
     myId2FocusWatcher = new HashMap<String, FocusWatcher>();
 
-    myEditorComponentFocusWatcher = new EditorComponentFocusWatcher();
     myToolWindowPropertyChangeListener = new MyToolWindowPropertyChangeListener();
     myInternalDecoratorListener = new MyInternalDecoratorListener();
 
@@ -1243,7 +1245,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     // Create decorator
 
     ToolWindowImpl toolWindow = new ToolWindowImpl(this, id, canCloseContent, component);
-    InternalDecorator decorator = new InternalDecorator(myProject, info.copy(), toolWindow);
+    InternalDecorator decorator = new InternalDecorator(myProject, info.copy(), toolWindow, canWorkInDumbMode);
     ActivateToolWindowAction.ensureToolWindowActionRegistered(toolWindow);
     myId2InternalDecorator.put(id, decorator);
     decorator.addInternalDecoratorListener(myInternalDecoratorListener);
@@ -2285,6 +2287,14 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
       final KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
       final Component owner = mgr.getFocusOwner();
 
+      if (owner instanceof EditorComponentImpl && cause instanceof FocusEvent) {
+        JFrame frame = WindowManager.getInstance().getFrame(myProject);
+        Component oppositeComponent = ((FocusEvent)cause).getOppositeComponent();
+        if (oppositeComponent != null && UIUtil.getWindow(oppositeComponent) != frame) {
+          return;
+        }
+      }
+
       IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {
         @Override
         public void run() {
@@ -2365,27 +2375,27 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
    */
   private final class MyInternalDecoratorListener implements InternalDecoratorListener {
     @Override
-    public void anchorChanged(final InternalDecorator source, final ToolWindowAnchor anchor) {
+    public void anchorChanged(@NotNull final InternalDecorator source, @NotNull final ToolWindowAnchor anchor) {
       setToolWindowAnchor(source.getToolWindow().getId(), anchor);
     }
 
     @Override
-    public void autoHideChanged(final InternalDecorator source, final boolean autoHide) {
+    public void autoHideChanged(@NotNull final InternalDecorator source, final boolean autoHide) {
       setToolWindowAutoHide(source.getToolWindow().getId(), autoHide);
     }
 
     @Override
-    public void hidden(final InternalDecorator source) {
+    public void hidden(@NotNull final InternalDecorator source) {
       hideToolWindow(source.getToolWindow().getId(), false);
     }
 
     @Override
-    public void hiddenSide(final InternalDecorator source) {
+    public void hiddenSide(@NotNull final InternalDecorator source) {
       hideToolWindow(source.getToolWindow().getId(), true);
     }
 
     @Override
-    public void contentUiTypeChanges(InternalDecorator source, ToolWindowContentUiType type) {
+    public void contentUiTypeChanges(@NotNull InternalDecorator source, @NotNull ToolWindowContentUiType type) {
       setContentUiType(source.getToolWindow().getId(), type);
     }
 
@@ -2394,21 +2404,27 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
      * tool window depending on decoration type.
      */
     @Override
-    public void resized(final InternalDecorator source) {
+    public void resized(@NotNull final InternalDecorator source) {
       if (!source.isShowing()) {
         return; // do not recalculate the tool window size if it is not yet shown (and, therefore, has 0,0,0,0 bounds)
       }
 
       final WindowInfoImpl info = getInfo(source.getToolWindow().getId());
-      InternalDecorator another = null;
       if (info.isFloating()) {
         final Window owner = SwingUtilities.getWindowAncestor(source);
         if (owner != null) {
           info.setFloatingBounds(owner.getBounds());
         }
       }
+      else if (info.isWindowed()) {
+        WindowedDecorator decorator = getWindowedDecorator(info.getId());
+        Window frame = decorator != null ? decorator.getFrame() : null;
+        if (frame == null || !frame.isShowing()) return;
+        info.setFloatingBounds(getRootBounds((JFrame)frame));
+      }
       else { // docked and sliding windows
         ToolWindowAnchor anchor = info.getAnchor();
+        InternalDecorator another = null;
         if (source.getParent() instanceof Splitter) {
           float sizeInSplit = anchor.isSplitVertically() ? source.getHeight() : source.getWidth();
           Splitter splitter = (Splitter)source.getParent();
@@ -2441,18 +2457,23 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     }
 
     @Override
-    public void activated(final InternalDecorator source) {
+    public void activated(@NotNull final InternalDecorator source) {
       activateToolWindow(source.getToolWindow().getId(), true, true);
     }
 
     @Override
-    public void typeChanged(final InternalDecorator source, final ToolWindowType type) {
+    public void typeChanged(@NotNull final InternalDecorator source, @NotNull final ToolWindowType type) {
       setToolWindowType(source.getToolWindow().getId(), type);
     }
 
     @Override
-    public void sideStatusChanged(final InternalDecorator source, final boolean isSideTool) {
+    public void sideStatusChanged(@NotNull final InternalDecorator source, final boolean isSideTool) {
       setSideTool(source.getToolWindow().getId(), isSideTool);
+    }
+
+    @Override
+    public void visibleStripeButtonChanged(@NotNull InternalDecorator source, boolean visible) {
+      setShowStripeButton(source.getToolWindow().getId(), visible);
     }
   }
 
@@ -2584,7 +2605,35 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     return IdeFocusManager.getInstance(myProject).dispatch(e);
   }
 
+  void setShowStripeButton(@NotNull String id, boolean visibleOnPanel) {
+    checkId(id);
+    WindowInfoImpl info = getInfo(id);
+    if (visibleOnPanel == info.isShowStripeButton()) {
+      return;
+    }
+    info.setShowStripeButton(visibleOnPanel);
+    UsageTrigger.trigger("StripeButton[" + id + "]." + (visibleOnPanel ? "shown" : "hidden"));
+
+    List<FinalizableCommand> commandList = new ArrayList<>();
+    appendApplyWindowInfoCmd(info, commandList);
+    execute(commandList);
+  }
+
+  boolean isShowStripeButton(@NotNull String id) {
+    WindowInfoImpl info = getInfo(id);
+    return info == null || info.isShowStripeButton();
+  }
+
   public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
     return IdeFocusManager.getInstance(myProject).getTimestamp(trackOnlyForcedCommands);
+  }
+
+
+  @NotNull
+  private static Rectangle getRootBounds(JFrame frame) {
+    JRootPane rootPane = frame.getRootPane();
+    Rectangle bounds = rootPane.getBounds();
+    bounds.setLocation(frame.getX() + rootPane.getX(), frame.getY() + rootPane.getY());
+    return bounds;
   }
 }

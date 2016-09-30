@@ -30,24 +30,26 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.NullUtils;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.PrevNextActionsDescriptor;
 import com.intellij.ui.SideBorder;
 import com.intellij.ui.TabbedPaneWrapper;
+import com.intellij.ui.components.JBPanelWithEmptyText;
+import com.intellij.ui.components.panels.NonOpaquePanel;
+import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -91,8 +93,9 @@ public abstract class EditorComposite implements Disposable {
    */
   private FileEditor mySelectedEditor;
   private final FileEditorManagerEx myFileEditorManager;
-  private final Map<FileEditor, JComponent> myTopComponents = new HashMap<FileEditor, JComponent>();
-  private final Map<FileEditor, JComponent> myBottomComponents = new HashMap<FileEditor, JComponent>();
+  private final Map<FileEditor, JComponent> myTopComponents = new HashMap<>();
+  private final Map<FileEditor, JComponent> myBottomComponents = new HashMap<>();
+  private final Map<FileEditor, String> myDisplayNames = ContainerUtil.newHashMap();
 
   /**
    * @param file <code>file</code> for which composite is being constructed
@@ -137,16 +140,13 @@ public abstract class EditorComposite implements Disposable {
         final VirtualFile oldFile = event.getOldFile();
         final VirtualFile newFile = event.getNewFile();
         if (Comparing.equal(oldFile, newFile) && Comparing.equal(getFile(), newFile)) {
-          Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-              final FileEditor oldEditor = event.getOldEditor();
-              if (oldEditor != null) oldEditor.deselectNotify();
-              final FileEditor newEditor = event.getNewEditor();
-              if (newEditor != null) newEditor.selectNotify();
-              ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance()).providerSelected(EditorComposite.this);
-              ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(myFileEditorManager.getProject())).onSelectionChanged();
-            }
+          Runnable runnable = () -> {
+            final FileEditor oldEditor = event.getOldEditor();
+            if (oldEditor != null) oldEditor.deselectNotify();
+            final FileEditor newEditor = event.getNewEditor();
+            if (newEditor != null) newEditor.selectNotify();
+            ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance()).providerSelected(EditorComposite.this);
+            ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(myFileEditorManager.getProject())).onSelectionChanged();
           };
           if (ApplicationManager.getApplication().isDispatchThread()) {
             CommandProcessor.getInstance().executeCommand(myFileEditorManager.getProject(), runnable, "Switch Active Editor", null);
@@ -175,7 +175,7 @@ public abstract class EditorComposite implements Disposable {
     boolean firstEditor = true;
     for (FileEditor editor : editors) {
       JComponent component = firstEditor && myComponent != null ? (JComponent)myComponent.getComponent(0) : createEditorComponent(editor);
-      wrapper.addTab(editor.getName(), component);
+      wrapper.addTab(getDisplayName(editor), component);
       firstEditor = false;
     }
     wrapper.addChangeListener(new MyChangeListener());
@@ -219,13 +219,10 @@ public abstract class EditorComposite implements Disposable {
 
   private void fireSelectedEditorChanged(final FileEditor oldSelectedEditor, final FileEditor newSelectedEditor){
     if ((!EventQueue.isDispatchThread() || !myFileEditorManager.isInsideChange()) && !Comparing.equal(oldSelectedEditor, newSelectedEditor)) {
-      myFileEditorManager.notifyPublisher(new Runnable() {
-        @Override
-        public void run() {
-          final FileEditorManagerEvent event = new FileEditorManagerEvent(myFileEditorManager, myFile, oldSelectedEditor, myFile, newSelectedEditor);
-          final FileEditorManagerListener publisher = myFileEditorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
-          publisher.selectionChanged(event);
-        }
+      myFileEditorManager.notifyPublisher(() -> {
+        final FileEditorManagerEvent event = new FileEditorManagerEvent(myFileEditorManager, myFile, oldSelectedEditor, myFile, newSelectedEditor);
+        final FileEditorManagerListener publisher = myFileEditorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
+        publisher.selectionChanged(event);
       });
       final JComponent component = newSelectedEditor.getComponent();
       final EditorWindowHolder holder = UIUtil.getParentOfType(EditorWindowHolder.class, component);
@@ -292,11 +289,11 @@ public abstract class EditorComposite implements Disposable {
 
   @NotNull
   private List<JComponent> getTopBottomComponents(@NotNull FileEditor editor, boolean top) {
-    SmartList<JComponent> result = new SmartList<JComponent>();
+    SmartList<JComponent> result = new SmartList<>();
     JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
     for (Component each : container.getComponents()) {
-      if (each instanceof TopBottomComponentWrapper) {
-        result.add(((TopBottomComponentWrapper)each).getWrappee());
+      if (each instanceof NonOpaquePanel) {
+        result.add(((NonOpaquePanel)each).getTargetComponent());
       }
     }
     return Collections.unmodifiableList(result);
@@ -324,10 +321,44 @@ public abstract class EditorComposite implements Disposable {
 
     if (remove) {
       container.remove(component.getParent());
-    } else {
-      container.add(new TopBottomComponentWrapper(component, top));
+    }
+    else {
+      NonOpaquePanel wrapper = new NonOpaquePanel(component);
+      wrapper.setBorder(createTopBottomSideBorder(top));
+      container.add(wrapper, calcComponentInsertionIndex(component, container));
     }
     container.revalidate();
+  }
+
+  private static int calcComponentInsertionIndex(@NotNull JComponent newComponent, @NotNull JComponent container) {
+    for (int i = 0, max = container.getComponentCount(); i < max; i++) {
+      Component childWrapper = container.getComponent(i);
+      Component childComponent = childWrapper instanceof Wrapper ? ((Wrapper)childWrapper).getTargetComponent() : childWrapper;
+      boolean weighted1 = newComponent instanceof Weighted;
+      boolean weighted2 = childComponent instanceof Weighted;
+      if (!weighted2) continue;
+      if (!weighted1) return i;
+
+      double w1 = ((Weighted)newComponent).getWeight();
+      double w2 = ((Weighted)childComponent).getWeight();
+      if (w1 < w2) return i;
+    }
+    return -1;
+  }
+
+  public void setDisplayName(@NotNull FileEditor editor, @NotNull String name) {
+    int index = ContainerUtil.indexOfIdentity(ContainerUtil.immutableList(myEditors), editor);
+    assert index != -1;
+
+    myDisplayNames.put(editor, name);
+    if (myTabbedPaneWrapper != null) {
+      myTabbedPaneWrapper.setTitleAt(index, name);
+    }
+  }
+
+  @NotNull
+  protected String getDisplayName(@NotNull FileEditor editor) {
+    return ObjectUtils.notNull(myDisplayNames.get(editor), editor.getName());
   }
 
   /**
@@ -469,13 +500,13 @@ public abstract class EditorComposite implements Disposable {
     }
     else {
       JComponent component = createEditorComponent(editor);
-      myTabbedPaneWrapper.addTab(editor.getName(), component);
+      myTabbedPaneWrapper.addTab(getDisplayName(editor), component);
     }
     myFocusWatcher.deinstall(myFocusWatcher.getTopComponent());
     myFocusWatcher.install(myComponent);
   }
 
-  private static class TopBottomPanel extends JPanel {
+  private static class TopBottomPanel extends JBPanelWithEmptyText {
     private TopBottomPanel() {
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
@@ -487,28 +518,14 @@ public abstract class EditorComposite implements Disposable {
     }
   }
 
-  private static class TopBottomComponentWrapper extends JPanel {
-    private final JComponent myWrappee;
-
-    public TopBottomComponentWrapper(JComponent component, boolean top) {
-      super(new BorderLayout());
-      myWrappee = component;
-      setOpaque(false);
-
-      setBorder(new SideBorder(null, top ? SideBorder.BOTTOM : SideBorder.TOP) {
-        @Override
-        public Color getLineColor() {
-          Color result = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.TEARLINE_COLOR);
-          return result == null ? JBColor.BLACK : result;
-        }
-      });
-
-      add(component);
-    }
-
-    @NotNull
-    public JComponent getWrappee() {
-      return myWrappee;
-    }
+  @NotNull
+  private static SideBorder createTopBottomSideBorder(boolean top) {
+    return new SideBorder(null, top ? SideBorder.BOTTOM : SideBorder.TOP) {
+      @Override
+      public Color getLineColor() {
+        Color result = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.TEARLINE_COLOR);
+        return result == null ? JBColor.BLACK : result;
+      }
+    };
   }
 }

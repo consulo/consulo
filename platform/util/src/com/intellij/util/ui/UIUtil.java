@@ -113,6 +113,13 @@ public class UIUtil {
     }
   };
 
+  private static final Function.Mono<Component> COMPONENT_PARENT = new Function.Mono<Component>() {
+    @Override
+    public Component fun(Component c) {
+      return c.getParent();
+    }
+  };
+
   public static int getMultiClickInterval() {
     Object property = Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
     if (property instanceof Integer) {
@@ -214,6 +221,18 @@ public class UIUtil {
 
   public static boolean isAppleRetina() {
     return isRetina() && SystemInfo.isAppleJvm;
+  }
+
+  @NotNull
+  public static JBIterable<Component> uiParents(@Nullable Component c, boolean strict) {
+    return strict ? JBIterable.generate(c, COMPONENT_PARENT).skip(1) : JBIterable.generate(c, COMPONENT_PARENT);
+  }
+
+  @NotNull
+  public static JBIterable<Component> uiChildren(@Nullable Component component) {
+    if (!(component instanceof Container)) return JBIterable.empty();
+    Container container = (Container)component;
+    return JBIterable.of(container.getComponents());
   }
 
   @NotNull

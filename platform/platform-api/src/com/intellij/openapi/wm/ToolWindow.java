@@ -19,17 +19,17 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.ContentManager;
-import com.intellij.util.ui.JBEmptyBorder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.InputEvent;
 
 public interface ToolWindow extends BusyObject {
 
-  Key<Boolean> SHOW_CONTENT_ICON = new Key<Boolean>("ContentIcon");
+  Key<Boolean> SHOW_CONTENT_ICON = new Key<>("ContentIcon");
 
   /**
    * @exception IllegalStateException if tool window isn't installed.
@@ -74,7 +74,7 @@ public interface ToolWindow extends BusyObject {
   /**
    * @exception IllegalStateException if tool window isn't installed.
    */
-  void setAnchor(ToolWindowAnchor anchor, @Nullable Runnable runnable);
+  void setAnchor(@NotNull ToolWindowAnchor anchor, @Nullable Runnable runnable);
 
   /**
    * @exception IllegalStateException if tool window isn't installed.
@@ -104,7 +104,7 @@ public interface ToolWindow extends BusyObject {
   /**
    * @exception IllegalStateException if tool window isn't installed.
    */
-  void setType(ToolWindowType type, @Nullable Runnable runnable);
+  void setType(@NotNull ToolWindowType type, @Nullable Runnable runnable);
 
   /**
    * @return window icon. Returns <code>null</code> if window has no icon.
@@ -149,9 +149,10 @@ public interface ToolWindow extends BusyObject {
    */
   void setAvailable(boolean available, @Nullable Runnable runnable);
 
-  void setContentUiType(ToolWindowContentUiType type, @Nullable Runnable runnable);
+  void setContentUiType(@NotNull ToolWindowContentUiType type, @Nullable Runnable runnable);
   void setDefaultContentUiType(@NotNull ToolWindowContentUiType type);
 
+  @NotNull
   ToolWindowContentUiType getContentUiType();
 
   void installWatcher(ContentManager contentManager);
@@ -172,13 +173,21 @@ public interface ToolWindow extends BusyObject {
 
   boolean isToHideOnEmptyContent();
 
+  /**
+   *
+   * @param show if <code>false</code> stripe button would be hidden
+   */
+  void setShowStripeButton(boolean show);
+
+  boolean isShowStripeButton();
+
   boolean isDisposed();
 
   void showContentPopup(InputEvent inputEvent);
 
   ActionCallback getActivation();
 
-  class Border extends JBEmptyBorder {
+  class Border extends EmptyBorder {
     public Border() {
       this(true, true, true, true);
     }

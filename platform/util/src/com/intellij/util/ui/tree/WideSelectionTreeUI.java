@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.TreePath;
@@ -297,6 +298,11 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
   public boolean isWideSelection() {
     return myWideSelection;
+  }
+
+  public static boolean isWideSelection(@NotNull JTree tree) {
+    TreeUI ui = tree.getUI();
+    return ui instanceof WideSelectionTreeUI && ((WideSelectionTreeUI)ui).isWideSelection();
   }
 
   @Override

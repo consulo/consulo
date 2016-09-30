@@ -468,6 +468,16 @@ public final class ToolWindowImpl implements ToolWindowEx {
   }
 
   @Override
+  public void setShowStripeButton(boolean show) {
+    myToolWindowManager.setShowStripeButton(myId, show);
+  }
+
+  @Override
+  public boolean isShowStripeButton() {
+    return myToolWindowManager.isShowStripeButton(myId);
+  }
+
+  @Override
   public boolean isDisposed() {
     return myContentManager.isDisposed();
   }
@@ -496,9 +506,7 @@ public final class ToolWindowImpl implements ToolWindowEx {
 
   public void setContentFactory(ToolWindowFactory contentFactory) {
     myContentFactory = contentFactory;
-    if (contentFactory instanceof ToolWindowFactoryEx) {
-      ((ToolWindowFactoryEx)contentFactory).init(this);
-    }
+    contentFactory.init(this);
   }
 
   public void ensureContentInitialized() {

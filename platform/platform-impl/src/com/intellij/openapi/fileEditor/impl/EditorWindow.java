@@ -112,7 +112,7 @@ public class EditorWindow {
     }
   };
   private AtomicBoolean myTabsHidingInProgress = new AtomicBoolean(false);
-  private final Stack<Pair<String, Integer>> myHiddenTabs = new Stack<Pair<String, Integer>>();
+  private final Stack<Pair<String, Integer>> myHiddenTabs = new Stack<>();
 
   protected EditorWindow(final EditorsSplitters owner) {
     myOwner = owner;
@@ -245,6 +245,16 @@ public class EditorWindow {
             }
           }
           else {
+
+            if (inSplitter()) {
+              Splitter splitter = (Splitter)myPanel.getParent();
+              JComponent otherComponent = splitter.getOtherComponent(myPanel);
+
+              if (otherComponent != null) {
+                IdeFocusManager.findInstance().requestFocus(otherComponent, true);
+              }
+            }
+
             myPanel.removeAll ();
             if (editor != null) {
               editorManager.disposeComposite(editor);
@@ -275,15 +285,12 @@ public class EditorWindow {
         finally {
           editorManager.removeSelectionRecord(file, EditorWindow.this);
 
-          editorManager.notifyPublisher(new Runnable() {
-            @Override
-            public void run() {
-              final Project project = editorManager.getProject();
-              if (!project.isDisposed()) {
-                final FileEditorManagerListener afterPublisher =
-                        project.getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
-                afterPublisher.fileClosed(editorManager, file);
-              }
+          editorManager.notifyPublisher(() -> {
+            final Project project = editorManager.getProject();
+            if (!project.isDisposed()) {
+              final FileEditorManagerListener afterPublisher =
+                      project.getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
+              afterPublisher.fileClosed(editorManager, file);
             }
           });
 
@@ -521,14 +528,11 @@ public class EditorWindow {
       addFocusListener(new FocusAdapter() {
         @Override
         public void focusGained(FocusEvent e) {
-          ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              if (!TComp.this.hasFocus()) return;
-              final JComponent focus = myEditor.getSelectedEditorWithProvider().getFirst().getPreferredFocusedComponent();
-              if (focus != null && !focus.hasFocus()) {
-                IdeFocusManager.getGlobalInstance().requestFocus(focus, true);
-              }
+          ApplicationManager.getApplication().invokeLater(() -> {
+            if (!TComp.this.hasFocus()) return;
+            final JComponent focus = myEditor.getSelectedEditorWithProvider().getFirst().getPreferredFocusedComponent();
+            if (focus != null && !focus.hasFocus()) {
+              IdeFocusManager.getGlobalInstance().requestFocus(focus, true);
             }
           });
         }
@@ -625,12 +629,9 @@ public class EditorWindow {
     if (editor != null) {
       final int index = findFileIndex(editor.getFile());
       if (index != -1) {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            if (myTabbedPane != null) {
-              myTabbedPane.setSelectedIndex(index, focusEditor);
-            }
+        UIUtil.invokeLaterIfNeeded(() -> {
+          if (myTabbedPane != null) {
+            myTabbedPane.setSelectedIndex(index, focusEditor);
           }
         });
       }
@@ -815,12 +816,9 @@ public class EditorWindow {
         final ScrollingModel scrollingModel = editor.getScrollingModel();
         scrollingModel.scrollVertically(scrollOffset);
 
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (!editor.isDisposed()) {
-              scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE);
-            }
+        SwingUtilities.invokeLater(() -> {
+          if (!editor.isDisposed()) {
+            scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE);
           }
         });
       }
@@ -829,7 +827,7 @@ public class EditorWindow {
 
   public EditorWindow[] findSiblings() {
     checkConsistency();
-    final ArrayList<EditorWindow> res = new ArrayList<EditorWindow>();
+    final ArrayList<EditorWindow> res = new ArrayList<>();
     if (myPanel.getParent() instanceof Splitter) {
       final Splitter splitter = (Splitter)myPanel.getParent();
       for (final EditorWindow win : myOwner.getWindows()) {
@@ -1071,18 +1069,15 @@ public class EditorWindow {
   void trimToSize(final int limit, @Nullable final VirtualFile fileToIgnore, final boolean transferFocus) {
     if (myTabbedPane == null) return;
 
-    FileEditorManagerEx.getInstanceEx(getManager().getProject()).getReady(this).doWhenDone(new Runnable() {
-      @Override
-      public void run() {
-        if (myTabbedPane == null) return;
-        final boolean closeNonModifiedFilesFirst = UISettings.getInstance().CLOSE_NON_MODIFIED_FILES_FIRST;
-        final EditorComposite selectedComposite = getSelectedEditor();
-        try {
-          doTrimSize(limit, fileToIgnore, closeNonModifiedFilesFirst, transferFocus);
-        }
-        finally {
-          setSelectedEditor(selectedComposite, false);
-        }
+    FileEditorManagerEx.getInstanceEx(getManager().getProject()).getReady(this).doWhenDone(() -> {
+      if (myTabbedPane == null) return;
+      final boolean closeNonModifiedFilesFirst = UISettings.getInstance().CLOSE_NON_MODIFIED_FILES_FIRST;
+      final EditorComposite selectedComposite = getSelectedEditor();
+      try {
+        doTrimSize(limit, fileToIgnore, closeNonModifiedFilesFirst, transferFocus);
+      }
+      finally {
+        setSelectedEditor(selectedComposite, false);
       }
     });
   }
