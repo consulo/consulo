@@ -15,21 +15,23 @@
  */
 package com.intellij.notification;
 
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.DumbAwareAction;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Alexander Lobas
  */
-public abstract class NotificationAction extends AnAction {
+public abstract class NotificationAction extends DumbAwareAction {
   public NotificationAction(@Nullable String text) {
     super(text);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     actionPerformed(e, Notification.get(e));
   }
 
