@@ -23,15 +23,17 @@ import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.bundle.PredefinedBundlesProvider;
+import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 15:05/22.11.13
  */
+@Logger
 public class PredefinedBundlesLoader extends ApplicationComponent.Adapter {
   @Override
   public void initComponent() {
-    if (SystemProperties.is("disable.predefined.bundles")) {
+    if (SystemProperties.is("consulo.disable.predefined.bundles")) {
       return;
     }
 
@@ -39,18 +41,20 @@ public class PredefinedBundlesLoader extends ApplicationComponent.Adapter {
       @Override
       @RequiredDispatchThread
       public void consume(final SdkImpl sdk) {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            sdk.setPredefined(true);
-            SdkTable.getInstance().addSdk(sdk);
-          }
+        ApplicationManager.getApplication().runWriteAction(() -> {
+          sdk.setPredefined(true);
+          SdkTable.getInstance().addSdk(sdk);
         });
       }
     };
 
     for (PredefinedBundlesProvider predefinedBundlesProvider : PredefinedBundlesProvider.EP_NAME.getExtensions()) {
-      predefinedBundlesProvider.createBundles(consumer);
+      try {
+        predefinedBundlesProvider.createBundles(consumer);
+      }
+      catch (Throwable e) {
+        LOGGER.error(e);
+      }
     }
   }
 }
