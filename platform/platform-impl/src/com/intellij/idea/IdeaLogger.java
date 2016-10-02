@@ -29,11 +29,6 @@ import org.apache.log4j.Level;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-
 /**
  * @author Mike
  */
@@ -46,36 +41,6 @@ public class IdeaLogger extends Logger {
   private final org.apache.log4j.Logger myLogger;
   /** If not null - it means that errors occurred and it is the first of them. */
   public static Exception ourErrorsOccurred;
-
-  public static String getOurCompilationTimestamp() {
-    return ourCompilationTimestamp;
-  }
-
-  private static String ourCompilationTimestamp;
-
-  @NonNls private static final String COMPILATION_TIMESTAMP_RESOURCE_NAME = "/.compilation-timestamp";
-
-  static {
-    InputStream stream = Logger.class.getResourceAsStream(COMPILATION_TIMESTAMP_RESOURCE_NAME);
-    if (stream != null) {
-      LineNumberReader reader = new LineNumberReader(new InputStreamReader(stream));
-      try {
-        String s = reader.readLine();
-        if (s != null) {
-          ourCompilationTimestamp = s.trim();
-        }
-      }
-      catch (IOException ignored) {
-      }
-      finally {
-        try {
-          stream.close();
-        }
-        catch (IOException ignored) {
-        }
-      }
-    }
-  }
 
   IdeaLogger(org.apache.log4j.Logger logger) {
     myLogger = logger;
@@ -143,10 +108,6 @@ public class IdeaLogger extends Logger {
 
     if (info != null) {
       myLogger.error(info);
-    }
-
-    if (ourCompilationTimestamp != null) {
-      myLogger.error("Internal version. Compiled " + ourCompilationTimestamp);
     }
 
     myLogger.error("JDK: " + System.getProperties().getProperty("java.version", "unknown"));

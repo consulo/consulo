@@ -58,7 +58,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String myAboutImageUrl = null;
 
   private Calendar myBuildDate = null;
-  private Calendar myMajorReleaseBuildDate = null;
   private String myDocumentationUrl;
   private String mySupportUrl;
   private String myEAPFeedbackUrl;
@@ -86,7 +85,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ELEMENT_COMPANY = "company";
   @NonNls private static final String ATTRIBUTE_NUMBER = "number";
   @NonNls private static final String ATTRIBUTE_DATE = "date";
-  @NonNls private static final String ATTRIBUTE_MAJOR_RELEASE_DATE = "majorReleaseDate";
   @NonNls private static final String ELEMENT_LOGO = "logo";
   @NonNls private static final String ATTRIBUTE_URL = "url";
   @NonNls private static final String ATTRIBUTE_PROGRESS_COLOR = "progressColor";
@@ -117,11 +115,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @Override
   public Calendar getBuildDate() {
     return myBuildDate;
-  }
-
-  @Override
-  public Calendar getMajorReleaseBuildDate() {
-    return myMajorReleaseBuildDate != null ? myMajorReleaseBuildDate : myBuildDate;
   }
 
   @Override
@@ -350,10 +343,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
       }
       else {
         myBuildDate = parseDate(dateString);
-      }
-      String majorReleaseDateString = buildElement.getAttributeValue(ATTRIBUTE_MAJOR_RELEASE_DATE);
-      if (majorReleaseDateString != null) {
-        myMajorReleaseBuildDate = parseDate(majorReleaseDateString);
       }
     }
 

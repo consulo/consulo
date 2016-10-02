@@ -43,6 +43,8 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author max
@@ -61,10 +63,7 @@ public class ITNReporter extends ErrorReportSubmitter {
   }
 
   @Override
-  public boolean trySubmitAsync(IdeaLoggingEvent[] events,
-                                String additionalInfo,
-                                Component parentComponent,
-                                Consumer<SubmittedReportInfo> consumer) {
+  public boolean trySubmitAsync(IdeaLoggingEvent[] events, String additionalInfo, Component parentComponent, Consumer<SubmittedReportInfo> consumer) {
     return sendError(events[0], additionalInfo, parentComponent, consumer);
   }
 
@@ -108,12 +107,12 @@ public class ITNReporter extends ErrorReportSubmitter {
 
     Throwable t = event.getThrowable();
     if (t != null) {
-      final PluginId pluginId = IdeErrorsDialog.findPluginId(t);
-      if (pluginId != null) {
-        final IdeaPluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(pluginId);
-        if (ideaPluginDescriptor != null && !ideaPluginDescriptor.isBundled()) {
-          errorBean.setPluginName(ideaPluginDescriptor.getName());
-          errorBean.setPluginVersion(ideaPluginDescriptor.getVersion());
+      Set<PluginId> pluginIds = IdeErrorsDialog.findPluginIds(t);
+      Map<String, String> affectedPluginIds = errorBean.getAffectedPluginIds();
+      for (PluginId pluginId : pluginIds) {
+        final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
+        if (pluginDescriptor != null) {
+          affectedPluginIds.put(pluginId.getIdString(), StringUtil.notNullize(pluginDescriptor.getVersion(), "?"));
         }
       }
     }
@@ -135,7 +134,7 @@ public class ITNReporter extends ErrorReportSubmitter {
       password = "guest";
     }
 
-    ErrorReportSender.sendError(project, login, password, errorBean, new Consumer<Integer>() {
+    ErrorReportSender.sendError(project, login, errorBean, new Consumer<Integer>() {
                                   @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
                                   @Override
                                   public void consume(Integer threadId) {
@@ -159,9 +158,8 @@ public class ITNReporter extends ErrorReportSubmitter {
                                                                 ? NotificationType.ERROR
                                                                 : NotificationType.INFORMATION;
                                         NotificationListener listener = url != null ? new NotificationListener.UrlOpeningListener(true) : null;
-                                        ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT,
-                                                                                XmlStringUtil.wrapInHtml(text),
-                                                                                type, listener).setImportant(false).notify(project);
+                                        ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT, XmlStringUtil.wrapInHtml(text), type, listener)
+                                                .setImportant(false).notify(project);
                                       }
                                     });
                                   }
@@ -182,8 +180,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                                           msg = DiagnosticBundle.message("error.report.sending.failure");
                                         }
                                         if (e instanceof UpdateAvailableException) {
-                                          String message = DiagnosticBundle.message(
-                                            "error.report.new.eap.build.message", e.getMessage());
+                                          String message = DiagnosticBundle.message("error.report.new.eap.build.message", e.getMessage());
                                           showMessageDialog(parentComponent, project, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon());
                                           callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
                                         }
@@ -211,14 +208,16 @@ public class ITNReporter extends ErrorReportSubmitter {
                                       }
                                     });
                                   }
-                                });
+                                }
+    );
     return true;
   }
 
   private static void showMessageDialog(Component parentComponent, Project project, String message, String title, Icon icon) {
     if (parentComponent.isShowing()) {
       Messages.showMessageDialog(parentComponent, message, title, icon);
-    } else {
+    }
+    else {
       Messages.showMessageDialog(project, message, title, icon);
     }
   }
@@ -226,7 +225,8 @@ public class ITNReporter extends ErrorReportSubmitter {
   private static int showYesNoDialog(Component parentComponent, Project project, String message, String title, Icon icon) {
     if (parentComponent.isShowing()) {
       return Messages.showYesNoDialog(parentComponent, message, title, icon);
-    } else {
+    }
+    else {
       return Messages.showYesNoDialog(project, message, title, icon);
     }
   }

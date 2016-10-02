@@ -15,15 +15,14 @@
  */
 package com.intellij.errorreport.error;
 
+import java.io.IOException;
+
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Aug 5, 2003
- * Time: 3:13:15 PM
- * To change this template use Options | File Templates.
+ * @author stathik
+ * @since 3:13:15 PM Aug 5, 2003
  */
-public class InternalEAPException extends Exception {
-    public InternalEAPException(String message) {
-        super(message);
-    }
+public class InternalEAPException extends IOException {
+  public InternalEAPException(String message) {
+    super(message);
+  }
 }

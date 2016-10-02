@@ -32,15 +32,12 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Calendar;
 
 public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public static ApplicationInfoEx getInstanceEx() {
     return (ApplicationInfoEx) ApplicationInfo.getInstance();
   }
-
-  public abstract Calendar getMajorReleaseBuildDate();
 
   public abstract String getSplashImageUrl();
 
@@ -73,6 +70,7 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public abstract String getFullApplicationName();
 
+  @Deprecated
   public abstract boolean isEAP();
 
   public abstract String getDocumentationUrl();

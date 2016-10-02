@@ -15,30 +15,70 @@
  */
 package com.intellij.errorreport.bean;
 
+import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Attachment;
+import com.intellij.util.SystemProperties;
+import consulo.ide.updateSettings.UpdateChannel;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author stathik
  * @since May 5, 2003
  */
+@SuppressWarnings("unused")
 public class ErrorBean {
+  private static class AttachmentBean {
+    private String name;
+    private String path;
+    private String encodedText;
+
+    private AttachmentBean(String name, String path, String encodedText) {
+      this.name = name;
+      this.path = path;
+      this.encodedText = encodedText;
+    }
+  }
+
+  private final String osName = SystemProperties.getOsName();
+  private final String javaVersion = SystemProperties.getJavaVersion();
+  private final String javaVmVendor = SystemProperties.getJavaVmVendor();
+
+  private final String appName = ApplicationNamesInfo.getInstance().getFullProductName();
+  private final UpdateChannel appUpdateChannel;
+  private final String appBuild;
+  private final String appVersionMajor;
+  private final String appVersionMinor;
+  private final String appBuildDate;
+  private final boolean appIsInternal;
+
   private String lastAction;
-  private String pluginName;
-  private String pluginVersion;
   private Integer previousException;
   private String message;
   private String stackTrace;
   private String description;
   private Integer assigneeId;
-  private List<Attachment> attachments = Collections.emptyList();
+
+  private final Map<String, String> affectedPluginIds = new TreeMap<>();
+
+  private List<AttachmentBean> attachments = Collections.emptyList();
 
   public ErrorBean(Throwable throwable, String lastAction) {
+    appIsInternal = ApplicationManager.getApplication().isInternal();
+    appUpdateChannel = consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel();
+
+    ApplicationInfoEx appInfo = (ApplicationInfoEx)ApplicationInfo.getInstance();
+    appBuild = appInfo.getBuild().asString();
+    appVersionMajor = appInfo.getMajorVersion();
+    appVersionMinor = appInfo.getMinorVersion();
+    appBuildDate = appInfo.getBuildDate() == null ? null : String.valueOf(appInfo.getBuildDate().getTimeInMillis());
+
     if (throwable != null) {
       message = throwable.getMessage();
 
@@ -50,28 +90,16 @@ public class ErrorBean {
     this.lastAction = lastAction;
   }
 
+  public Map<String, String> getAffectedPluginIds() {
+    return affectedPluginIds;
+  }
+
   public Integer getPreviousException() {
     return previousException;
   }
 
   public void setPreviousException(Integer previousException) {
     this.previousException = previousException;
-  }
-
-  public String getPluginName() {
-    return pluginName;
-  }
-
-  public void setPluginName(String pluginName) {
-    this.pluginName = pluginName;
-  }
-
-  public String getPluginVersion() {
-    return pluginVersion;
-  }
-
-  public void setPluginVersion(String pluginVersion) {
-    this.pluginVersion = pluginVersion;
   }
 
   public String getLastAction() {
@@ -99,11 +127,10 @@ public class ErrorBean {
   }
 
   public void setAttachments(List<Attachment> attachments) {
-    this.attachments = attachments;
-  }
-
-  public List<Attachment> getAttachments() {
-    return attachments;
+    this.attachments = new ArrayList<>(attachments.size());
+    for (Attachment attachment : attachments) {
+      this.attachments.add(new AttachmentBean(attachment.getName(), attachment.getPath(), attachment.getEncodedBytes()));
+    }
   }
 
   public Integer getAssigneeId() {
