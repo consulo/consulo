@@ -1,4 +1,4 @@
-# Consulo - multi-language ide [![Build Status](http://must-be.org/jenkins/job/consulo/badge/icon)](http://must-be.org/jenkins/job/consulo/)
+# Consulo - multi-language ide [![Build Status](https://ci.consulo.io/job/consulo/badge/icon)](https://ci.consulo.io/job/consulo/)
 
 ## Versions & Branches
 
