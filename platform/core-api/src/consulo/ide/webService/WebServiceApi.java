@@ -28,9 +28,9 @@ import java.util.Locale;
  * > updates - think it will be dropped
  */
 public enum WebServiceApi {
-  MAIN("http://consulo.io"),
-  ERROR_REPORTER_API("http://must-be.org/api/v2/consulo/errorReporter/"),
-  PLUGINS_API("http://must-be.org/api/v2/consulo/plugins/");
+  MAIN("https://consulo.io"),
+  ERROR_REPORTER_API("https://hub.consulo.io/api/errorReporter/"),
+  PLUGINS_API("https://hub.consulo.io/api/plugins/");
 
   private String myDefaultUrl;
   private String myOverrideProperty;

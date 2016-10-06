@@ -24,6 +24,7 @@ import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -41,8 +42,12 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.impl.ApplicationInfoImpl");
 
   @NonNls
+  @Deprecated
+  @DeprecationInfo(value = "Use consulo.ide.webService.WebServiceApi")
   private static final String DEFAULT_STATISTICS_HOST = "http://must-be.org/consulo/statistics/";
   @NonNls
+  @Deprecated
+  @DeprecationInfo(value = "Use consulo.ide.webService.WebServiceApi")
   private static final String DEFAULT_UPDATES_HOST = "http://must-be.org/consulo/updates/";
 
   private String myMajorVersion = null;
