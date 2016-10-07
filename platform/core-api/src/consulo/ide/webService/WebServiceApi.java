@@ -30,7 +30,7 @@ import java.util.Locale;
 public enum WebServiceApi {
   MAIN("https://consulo.io"),
   ERROR_REPORTER_API("https://hub.consulo.io/api/errorReporter/"),
-  PLUGINS_API("https://hub.consulo.io/api/plugins/");
+  REPOSITORY_API("https://hub.consulo.io/api/repository/");
 
   private String myDefaultUrl;
   private String myOverrideProperty;

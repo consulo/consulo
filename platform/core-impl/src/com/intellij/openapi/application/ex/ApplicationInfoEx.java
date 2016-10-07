@@ -82,15 +82,15 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
   public abstract String getReleaseFeedbackUrl();
 
   public String getPluginManagerUrl() {
-    return WebServiceApi.PLUGINS_API.buildUrl();
+    return WebServiceApi.REPOSITORY_API.buildUrl();
   }
 
   public String getPluginsListUrl() {
-    return WebServiceApi.PLUGINS_API.buildUrl("list");
+    return WebServiceApi.REPOSITORY_API.buildUrl("list");
   }
 
   public String getPluginsDownloadUrl() {
-    return WebServiceApi.PLUGINS_API.buildUrl("download");
+    return WebServiceApi.REPOSITORY_API.buildUrl("download");
   }
 
   public abstract String getUpdatesInfoUrl();
