@@ -26,7 +26,6 @@ package com.intellij.openapi.application.ex;
 
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.IconLoader;
-import consulo.ide.webService.WebServiceApi;
 import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,18 +79,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
   public abstract String getEAPFeedbackUrl();
 
   public abstract String getReleaseFeedbackUrl();
-
-  public String getPluginManagerUrl() {
-    return WebServiceApi.REPOSITORY_API.buildUrl();
-  }
-
-  public String getPluginsListUrl() {
-    return WebServiceApi.REPOSITORY_API.buildUrl("list");
-  }
-
-  public String getPluginsDownloadUrl() {
-    return WebServiceApi.REPOSITORY_API.buildUrl("download");
-  }
 
   public abstract String getUpdatesInfoUrl();
 

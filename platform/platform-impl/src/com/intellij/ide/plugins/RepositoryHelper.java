@@ -25,6 +25,7 @@ import com.intellij.util.net.HttpConfigurable;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ide.webService.WebServiceApi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +49,7 @@ public class RepositoryHelper {
   public static String buildUrlForList(@NotNull UpdateChannel channel) {
     ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
 
-    return appInfo.getPluginsListUrl() + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel;
+    return WebServiceApi.REPOSITORY_API.buildUrl("list") + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel;
   }
 
   @NotNull
@@ -57,7 +58,7 @@ public class RepositoryHelper {
 
     String id = PermanentInstallationID.get();
 
-    return appInfo.getPluginsDownloadUrl() + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel + "&pluginId=" + pluginId + "&id=" + id;
+    return WebServiceApi.REPOSITORY_API.buildUrl("download") + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel + "&pluginId=" + pluginId + "&id=" + id;
   }
 
   @NotNull
@@ -68,19 +69,17 @@ public class RepositoryHelper {
 
   @NotNull
   public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @NotNull UpdateChannel channel) throws Exception {
-    ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
-
     String url = buildUrlForList(channel);
 
     if (indicator != null) {
-      indicator.setText2(IdeBundle.message("progress.connecting.to.plugin.manager", appInfo.getPluginManagerUrl()));
+      indicator.setText2(IdeBundle.message("progress.connecting.to.plugin.manager", WebServiceApi.REPOSITORY_API.buildUrl()));
     }
 
     HttpURLConnection connection = HttpConfigurable.getInstance().openHttpConnection(url);
     connection.setRequestProperty("Accept-Encoding", "gzip");
 
     if (indicator != null) {
-      indicator.setText2(IdeBundle.message("progress.waiting.for.reply.from.plugin.manager", appInfo.getPluginManagerUrl()));
+      indicator.setText2(IdeBundle.message("progress.waiting.for.reply.from.plugin.manager", WebServiceApi.REPOSITORY_API.buildUrl()));
     }
 
     connection.connect();
