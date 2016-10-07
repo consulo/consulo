@@ -80,10 +80,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public abstract String getReleaseFeedbackUrl();
 
-  public abstract String getUpdatesInfoUrl();
-
-  public abstract String getUpdatesDownloadUrl();
-
   public abstract String getStatisticsUrl();
 
   public abstract String getWebHelpUrl();

@@ -40,8 +40,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
@@ -231,28 +229,6 @@ public class PluginDownloader {
         return newFile;
       }
     });
-  }
-
-  private URLConnection openConnection(final String url) throws IOException {
-    final URLConnection connection = new URL(url).openConnection();
-    if (connection instanceof HttpURLConnection) {
-      final int responseCode = ((HttpURLConnection)connection).getResponseCode();
-      if (responseCode != HttpURLConnection.HTTP_OK) {
-        String location = null;
-        if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
-          location = connection.getHeaderField("Location");
-        }
-        if (location == null) {
-          throw new IOException(IdeBundle.message("error.connection.failed.with.http.code.N", responseCode));
-        }
-        else {
-          myPluginUrl = location;
-          ((HttpURLConnection)connection).disconnect();
-          return openConnection(location);
-        }
-      }
-    }
-    return connection;
   }
 
   @NotNull

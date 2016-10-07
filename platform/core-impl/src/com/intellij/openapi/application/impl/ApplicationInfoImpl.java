@@ -45,10 +45,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @Deprecated
   @DeprecationInfo(value = "Use consulo.ide.webService.WebServiceApi")
   private static final String DEFAULT_STATISTICS_HOST = "http://must-be.org/consulo/statistics/";
-  @NonNls
-  @Deprecated
-  @DeprecationInfo(value = "Use consulo.ide.webService.WebServiceApi")
-  private static final String DEFAULT_UPDATES_HOST = "http://must-be.org/consulo/updates/";
 
   private String myMajorVersion = null;
   private String myMinorVersion = null;
@@ -67,8 +63,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String mySupportUrl;
   private String myEAPFeedbackUrl;
   private String myReleaseFeedbackUrl;
-  private String myUpdatesInfoUrl;
-  private String myUpdatesDownloadUrl;
+
   private String myStatisticsUrl;
   private String myWhatsNewUrl;
   private String myWinKeymapUrl;
@@ -205,16 +200,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @Override
   public String getStatisticsUrl() {
     return myStatisticsUrl;
-  }
-
-  @Override
-  public String getUpdatesInfoUrl() {
-    return myUpdatesInfoUrl;
-  }
-
-  @Override
-  public String getUpdatesDownloadUrl() {
-    return myUpdatesDownloadUrl;
   }
 
   @Override
@@ -429,14 +414,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
     }
 
     myStatisticsUrl = StringUtil.notNullize(System.getProperty("consulo.statistics.host"), DEFAULT_STATISTICS_HOST) + "post";
-
-    myUpdatesInfoUrl = DEFAULT_UPDATES_HOST + "list";
-    myUpdatesDownloadUrl = DEFAULT_UPDATES_HOST + "download";
-    final String updatesHost = System.getProperty("consulo.updates.host");
-    if (updatesHost != null) {
-      myUpdatesInfoUrl = myUpdatesInfoUrl.replace(DEFAULT_UPDATES_HOST, updatesHost);
-      myUpdatesDownloadUrl = myUpdatesDownloadUrl.replace(DEFAULT_UPDATES_HOST, updatesHost);
-    }
 
     Element keymapElement = parentNode.getChild(ELEMENT_KEYMAP);
     if (keymapElement != null) {

@@ -25,7 +25,6 @@ import java.util.Locale;
  *
  * TODO [VISTALL] missed:
  * > statistics
- * > updates - think it will be dropped
  */
 public enum WebServiceApi {
   MAIN("https://consulo.io"),

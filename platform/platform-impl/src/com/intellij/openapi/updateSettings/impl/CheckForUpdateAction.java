@@ -63,17 +63,6 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
-        final CheckForUpdateResult result = UpdateChecker.checkForUpdates(instance, true);
-
-        if (result.getState() == UpdateStrategy.State.CONNECTION_ERROR) {
-          ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              UpdateChecker.showConnectionErrorDialog();
-            }
-          });
-          return;
-        }
 
         final List<Couple<IdeaPluginDescriptor>> updatedPlugins = UpdateChecker.loadPluginsForUpdate(true, hostsConfigurable, indicator);
         if(updatedPlugins == null) {
@@ -83,7 +72,7 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
           @Override
           public void run() {
             instance.saveLastCheckedInfo();
-            UpdateChecker.showUpdateResult(result, updatedPlugins, true, enableLink, true);
+            UpdateChecker.showUpdateResult(updatedPlugins, true, enableLink, true);
           }
         });
       }

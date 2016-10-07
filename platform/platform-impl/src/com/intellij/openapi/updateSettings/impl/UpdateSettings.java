@@ -21,7 +21,6 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.net.NetUtils;
 import com.intellij.util.xmlb.annotations.CollectionBean;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +33,7 @@ import java.util.List;
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/updates.xml", roamingType = RoamingType.DISABLED)}
 )
 @Deprecated
-public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State>, UserUpdateSettings {
+public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State> {
   private static final UpdateSettings ourInstance = new UpdateSettings();
   private State myState = new State();
 
@@ -50,10 +49,6 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
     @CollectionBean
     public final List<String> pluginHosts = new SmartList<String>();
     @CollectionBean
-    public final List<String> knownUpdateChannels = new SmartList<String>();
-    @CollectionBean
-    public final List<String> ignoredBuildNumbers = new SmartList<String>();
-    @CollectionBean
     public final List<String> outdatedPlugins = new SmartList<String>();
 
     public boolean CHECK_NEEDED = true;
@@ -61,7 +56,6 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
 
     public String LAST_BUILD_CHECKED;
     public String UPDATE_CHANNEL_TYPE = ChannelStatus.RELEASE_CODE;
-    public boolean SECURE_CONNECTION = false;
   }
 
   @Nullable
@@ -80,14 +74,6 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
 
   public void setCheckNeeded(boolean value) {
     myState.CHECK_NEEDED = value;
-  }
-
-  public boolean isSecureConnection() {
-    return myState.SECURE_CONNECTION;
-  }
-
-  public void setSecureConnection(boolean value) {
-    myState.SECURE_CONNECTION = value;
   }
 
   @NotNull
@@ -126,34 +112,6 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
     updateDefaultChannel();
   }
 
-  @NotNull
-  @Override
-  public List<String> getKnownChannelsIds() {
-    return new ArrayList<String>(myState.knownUpdateChannels);
-  }
-
-  @Override
-  public void setKnownChannelIds(@NotNull List<String> ids) {
-    myState.knownUpdateChannels.clear();
-    for (String id : ids) {
-      myState.knownUpdateChannels.add(id);
-    }
-  }
-
-  public void forgetChannelId(String id) {
-    myState.knownUpdateChannels.remove(id);
-  }
-
-  @Override
-  public List<String> getIgnoredBuildNumbers() {
-    return myState.ignoredBuildNumbers;
-  }
-
-  @NotNull
-  @Override
-  public ChannelStatus getSelectedChannelStatus() {
-    return ChannelStatus.fromCode(myState.UPDATE_CHANNEL_TYPE);
-  }
 
   public List<String> getPluginHosts() {
     List<String> hosts = new ArrayList<String>(myState.pluginHosts);
@@ -171,9 +129,5 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
   public void saveLastCheckedInfo() {
     myState.LAST_TIME_CHECKED = System.currentTimeMillis();
     myState.LAST_BUILD_CHECKED = ApplicationInfo.getInstance().getBuild().asString();
-  }
-
-  public boolean canUseSecureConnection() {
-    return myState.SECURE_CONNECTION && NetUtils.isSniEnabled();
   }
 }
