@@ -18,7 +18,6 @@ package com.intellij.ide.plugins;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
-import consulo.annotations.DeprecationInfo;
 import consulo.ide.plugins.SimpleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -83,24 +82,14 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
 
   String getDownloads();
 
-  @Deprecated
-  @DeprecationInfo(value = "Always return null. Use #getPlatformVersion()", until = "2.0")
-  default String getSinceBuild() {
-    return null;
-  }
-
-  @Deprecated
-  @DeprecationInfo(value = "Always return null. Use #getPlatformVersion()", until = "2.0")
-  default String getUntilBuild() {
-    return null;
-  }
-
   @NotNull
   default List<SimpleExtension> getSimpleExtensions() {
     return Collections.emptyList();
   }
 
-  boolean isBundled();
+  default boolean isBundled() {
+    return false;
+  }
 
   boolean isEnabled();
 

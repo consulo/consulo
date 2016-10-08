@@ -873,22 +873,15 @@ public class PluginManagerCore {
   }
 
   public static boolean isIncompatible(final IdeaPluginDescriptor descriptor) {
+    String platformVersion = descriptor.getPlatformVersion();
+    if(StringUtil.isEmpty(platformVersion)) {
+      return false;
+    }
+
     try {
       BuildNumber buildNumber = getBuildNumber();
-
-      if (!StringUtil.isEmpty(descriptor.getSinceBuild())) {
-        BuildNumber sinceBuild = BuildNumber.fromString(descriptor.getSinceBuild(), descriptor.getName());
-        if (sinceBuild.compareTo(buildNumber) > 0) {
-          return true;
-        }
-      }
-
-      if (!StringUtil.isEmpty(descriptor.getUntilBuild()) && !buildNumber.isSnapshot()) {
-        BuildNumber untilBuild = BuildNumber.fromString(descriptor.getUntilBuild(), descriptor.getName());
-        if (untilBuild.compareTo(buildNumber) < 0) {
-          return true;
-        }
-      }
+      BuildNumber pluginBuildNumber = BuildNumber.fromString(platformVersion);
+      return !buildNumber.isSnapshot() && !buildNumber.equals(pluginBuildNumber);
     }
     catch (RuntimeException ignored) {
     }

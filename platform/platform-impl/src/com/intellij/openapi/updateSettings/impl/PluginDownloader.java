@@ -128,7 +128,7 @@ public class PluginDownloader {
       }
 
       if (PluginManagerCore.isIncompatible(actualDescriptor)) {
-        LOG.info("Plugin " + myPluginId + " is incompatible with current installation (since: " + actualDescriptor.getSinceBuild() + ", until: " + actualDescriptor.getUntilBuild()+ ")");
+        LOG.info("Plugin " + myPluginId + " is incompatible with current installation (platformVersion: " + actualDescriptor.getPlatformVersion() + ")");
         return false; //shouldn't happen
       }
 

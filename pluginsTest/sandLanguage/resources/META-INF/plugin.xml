@@ -1,5 +1,6 @@
 <idea-plugin>
   <name>Sand Language</name>
+  <platformVersion>SNAPSHOT</platformVersion>
 
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand1EapDescriptor" />
