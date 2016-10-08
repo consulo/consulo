@@ -102,12 +102,8 @@ public class PluginHeaderPanel {
         default:
           myActionId = ACTION_ID.INSTALL;
       }
-      if (node.getRepositoryName() != null) {
-        myCategory.setVisible(false);
-        myDownloadsPanel.setVisible(false);
-        myUpdated.setVisible(false);
-      }
-    } else {
+    }
+    else {
       myActionId = null;
       myVersionInfoPanel.remove(myUpdated);
       myCategory.setVisible(false);

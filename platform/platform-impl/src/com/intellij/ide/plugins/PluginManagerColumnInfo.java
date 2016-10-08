@@ -302,9 +302,7 @@ class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, String> {
         myLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       } else if (column == COLUMN_CATEGORY) {
         String category = myPluginDescriptor.getCategory();
-        if (StringUtil.isEmpty(category)) {
-          category = myPluginDescriptor.getRepositoryName();
-        }
+
         myLabel.setText(!StringUtil.isEmpty(category) ? category : "n/a");
       }
       if (myPluginDescriptor.getStatus() == PluginNode.STATUS_INSTALLED) {

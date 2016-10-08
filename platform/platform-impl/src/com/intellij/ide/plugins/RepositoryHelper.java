@@ -24,7 +24,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.ide.updateSettings.UpdateChannel;
-import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.webService.WebServiceApi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +35,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -59,12 +57,6 @@ public class RepositoryHelper {
     String id = PermanentInstallationID.get();
 
     return WebServiceApi.REPOSITORY_API.buildUrl("download") + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel + "&pluginId=" + pluginId + "&id=" + id;
-  }
-
-  @NotNull
-  @Deprecated
-  public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator) throws Exception {
-    return loadPluginsFromRepository(indicator, UpdateSettings.getInstance().getChannel());
   }
 
   @NotNull
@@ -134,10 +126,5 @@ public class RepositoryHelper {
       pluginDescriptors.add(new PluginNode(jsonPlugin));
     }
     return pluginDescriptors;
-  }
-
-  @Deprecated
-  public static List<IdeaPluginDescriptor> loadPluginsFromDescription(InputStream is, ProgressIndicator indicator) throws Exception {
-    return Collections.emptyList();
   }
 }

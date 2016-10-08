@@ -16,7 +16,6 @@
 package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginHostsConfigurable;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -30,7 +29,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.List;
@@ -52,19 +50,16 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   public void actionPerformed(AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
-    actionPerformed(project, true, null, UpdateSettings.getInstance());
+    actionPerformed(project, true, UpdateSettings.getInstance());
   }
 
-  public static void actionPerformed(Project project,
-                                     final boolean enableLink,
-                                     final @Nullable PluginHostsConfigurable hostsConfigurable,
-                                     final UpdateSettings instance) {
+  public static void actionPerformed(Project project, final boolean enableLink, final UpdateSettings instance) {
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Checking for updates", true) {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
 
-        final List<Couple<IdeaPluginDescriptor>> updatedPlugins = UpdateChecker.loadPluginsForUpdate(true, hostsConfigurable, indicator);
+        final List<Couple<IdeaPluginDescriptor>> updatedPlugins = UpdateChecker.loadPluginsForUpdate(true, indicator);
         if(updatedPlugins == null) {
           return;
         }

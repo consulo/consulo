@@ -40,9 +40,6 @@ public class AvailablePluginsTableModel extends PluginTableModel {
 
   protected static final String STATUS = "Status";
 
-  public static final String JETBRAINS_REPO = "JetBrains";
-  private String myRepository = ALL;
-
   public AvailablePluginsTableModel() {
     super.columns = new ColumnInfo[] {
             new AvailablePluginColumnInfo(this),
@@ -65,11 +62,6 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     filter(filter);
   }
 
-  public void setRepository(String repository, String filter) {
-    myRepository = repository;
-    filter(filter);
-  }
-
   @Override
   public boolean isPluginDescriptorAccepted(IdeaPluginDescriptor descriptor) {
     final String category = descriptor.getCategory();
@@ -77,21 +69,11 @@ public class AvailablePluginsTableModel extends PluginTableModel {
       if (!ALL.equals(myCategory) && !category.equals(myCategory)) return false;
     }
 
-    final String repositoryName = ((PluginNode)descriptor).getRepositoryName();
-    if (repositoryName != null) {
-      if (!ALL.equals(myRepository) && !repositoryName.equals(myRepository)) return false;
-    } else {
-      return ALL.equals(myRepository) || JETBRAINS_REPO.equals(myRepository);
-    }
     return true;
   }
 
   public TreeSet<String> getAvailableCategories() {
     return myAvailableCategories;
-  }
-
-  public String getRepository() {
-    return myRepository;
   }
 
   private static void updateStatus(final IdeaPluginDescriptor descr) {

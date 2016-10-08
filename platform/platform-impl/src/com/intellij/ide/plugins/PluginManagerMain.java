@@ -275,10 +275,6 @@ public abstract class PluginManagerMain implements Disposable {
     return main;
   }
 
-  protected boolean acceptHost(String host) {
-    return true;
-  }
-
   /**
    * Start a new thread which downloads new list of plugins from the site in
    * the background and updates a list of plugins in the table.

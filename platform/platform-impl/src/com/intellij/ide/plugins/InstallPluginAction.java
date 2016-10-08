@@ -110,7 +110,6 @@ public class InstallPluginAction extends AnAction implements DumbAware {
           pluginNode.addDependency(descr.getDependentPluginIds());
           pluginNode.addOptionalDependency(descr.getOptionalDependentPluginIds());
           pluginNode.setSize("-1");
-          pluginNode.setRepositoryName(((InstalledPluginsTableModel)pluginTableModel).getPluginHostUrl(pluginId.getIdString()));
         }
 
         if (pluginNode != null) {

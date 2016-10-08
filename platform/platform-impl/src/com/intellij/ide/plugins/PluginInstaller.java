@@ -24,8 +24,6 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
-import com.intellij.openapi.updateSettings.impl.UpdateChecker;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ArrayListSet;
@@ -108,29 +106,8 @@ public class PluginInstaller {
     toDownloadList.add(toInstall);
 
     for (PluginNode pluginNode : toDownloadList) {
-      PluginDownloader downloader = null;
-      final String repositoryName = pluginNode.getRepositoryName();
-      if (repositoryName != null) {
-        try {
-          final List<PluginDownloader> downloaders = new ArrayList<PluginDownloader>();
-          if (!UpdateChecker.checkPluginsHost(repositoryName, downloaders)) {
-            return null;
-          }
-          for (PluginDownloader pluginDownloader : downloaders) {
-            if (Comparing.strEqual(pluginDownloader.getPluginId(), pluginNode.getPluginId().getIdString())) {
-              downloader = pluginDownloader;
-              break;
-            }
-          }
-          if (downloader == null) return null;
-        }
-        catch (Exception e) {
-          return null;
-        }
-      }
-      else {
-        downloader = PluginDownloader.createDownloader(pluginNode);
-      }
+      PluginDownloader downloader = PluginDownloader.createDownloader(pluginNode);
+
       if (downloader.prepareToInstall(ProgressManager.getInstance().getProgressIndicator())) {
         downloader.install(true);
         pluginNode.setStatus(PluginNode.STATUS_DOWNLOADED);

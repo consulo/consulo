@@ -20,12 +20,11 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.CollectionBean;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @State(
@@ -47,8 +46,6 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
 
   static class State {
     @CollectionBean
-    public final List<String> pluginHosts = new SmartList<String>();
-    @CollectionBean
     public final List<String> outdatedPlugins = new SmartList<String>();
 
     public boolean CHECK_NEEDED = true;
@@ -65,7 +62,7 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
 
   @NotNull
   public List<String> getStoredPluginHosts() {
-    return myState.pluginHosts;
+    return Collections.emptyList();
   }
 
   public boolean isCheckNeeded() {
@@ -110,16 +107,6 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
     myState = state;
     myState.LAST_BUILD_CHECKED = StringUtil.nullize(myState.LAST_BUILD_CHECKED);
     updateDefaultChannel();
-  }
-
-
-  public List<String> getPluginHosts() {
-    List<String> hosts = new ArrayList<String>(myState.pluginHosts);
-    String pluginHosts = System.getProperty("idea.plugin.hosts");
-    if (pluginHosts != null) {
-      ContainerUtil.addAll(hosts, pluginHosts.split(";"));
-    }
-    return hosts;
   }
 
   public void forceCheckForUpdateAfterRestart() {

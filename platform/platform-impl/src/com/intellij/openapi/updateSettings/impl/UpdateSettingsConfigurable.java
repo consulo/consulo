@@ -124,7 +124,7 @@ public class UpdateSettingsConfigurable implements SearchableConfigurable {
           UpdateSettings settings = new UpdateSettings();
           settings.loadState(UpdateSettings.getInstance().getState());
           settings.setUpdateChannelType(getSelectedChannelType().getCode());
-          CheckForUpdateAction.actionPerformed(project, false, null, settings);  //todo load configured hosts on the fly
+          CheckForUpdateAction.actionPerformed(project, false, settings);  //todo load configured hosts on the fly
           updateLastCheckedLabel();
         }
       });

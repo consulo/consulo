@@ -27,9 +27,6 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.PathUtil;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
@@ -311,88 +308,11 @@ public class PluginDownloader {
   }
 
   public static PluginDownloader createDownloader(IdeaPluginDescriptor descriptor) {
-    String url = null;
-    if (descriptor instanceof PluginNode) {
-      url = ((PluginNode)descriptor).getDownloadUrl();
-    }
-
-    if (url == null) {
-      url = RepositoryHelper.buildUrlForDownload(consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString());
-    }
+    String url = RepositoryHelper.buildUrlForDownload(consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString());
 
     PluginDownloader downloader = new PluginDownloader(descriptor.getPluginId().getIdString(), url, null, null, descriptor.getName());
     downloader.setDescriptor(descriptor);
     return downloader;
-  }
-
-  @Nullable
-  public static VirtualFile findPluginFile(String pluginUrl, String host) {
-    final VirtualFileManager fileManager = VirtualFileManager.getInstance();
-    VirtualFile pluginFile = fileManager.findFileByUrl(pluginUrl);
-    if (pluginFile == null) {
-      final VirtualFile hostFile = fileManager.findFileByUrl(host);
-      if (hostFile == null) {
-        LOG.error("can't find file by url '" + host + "'");
-        return null;
-      }
-      pluginFile = findPluginByRelativePath(hostFile.getParent(), pluginUrl, hostFile.getFileSystem());
-    }
-    if (pluginFile == null) {
-      LOG.error("can't find '" + pluginUrl + "' relative to '" + host + "'");
-      return null;
-    }
-    return pluginFile;
-  }
-
-  @Nullable
-  private static VirtualFile findPluginByRelativePath(@NotNull final VirtualFile hostFile,
-                                                      @NotNull @NonNls final String relPath,
-                                                      @NotNull final VirtualFileSystem fileSystem) {
-    if (relPath.length() == 0) return hostFile;
-    int index = relPath.indexOf('/');
-    if (index < 0) index = relPath.length();
-    String name = relPath.substring(0, index);
-
-    VirtualFile child;
-    if (name.equals(".")) {
-      child = hostFile;
-    }
-    else if (name.equals("..")) {
-      child = hostFile.getParent();
-    }
-    else {
-      child = fileSystem.findFileByPath(hostFile.getPath() + "/" + name);
-    }
-
-    if (child == null) return null;
-
-    if (index < relPath.length()) {
-      return findPluginByRelativePath(child, relPath.substring(index + 1), fileSystem);
-    }
-    else {
-      return child;
-    }
-  }
-
-  @Nullable
-  public static PluginNode createPluginNode(String host, PluginDownloader downloader) {
-    if (downloader.getDescriptor() instanceof PluginNode) {
-      return (PluginNode)downloader.getDescriptor();
-    }
-
-    final VirtualFile pluginFile = findPluginFile(downloader.myPluginUrl, host);
-    if (pluginFile != null) {
-      final PluginNode node = new PluginNode(PluginId.getId(downloader.getPluginId()));
-      node.setName(downloader.getPluginName());
-      node.setVersion(downloader.getPluginVersion());
-      node.setRepositoryName(host);
-      node.setDownloadUrl(pluginFile.getUrl());
-      node.addDependency(downloader.getDepends());
-      node.addOptionalDependency(downloader.getOptionalDepends());
-      node.setDescription(downloader.getDescription());
-      return node;
-    }
-    return null;
   }
 
   public void setDescriptor(IdeaPluginDescriptor descriptor) {

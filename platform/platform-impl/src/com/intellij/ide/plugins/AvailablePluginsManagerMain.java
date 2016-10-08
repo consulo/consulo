@@ -21,7 +21,6 @@ import com.intellij.ide.plugins.sorters.SortByUpdatedAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.RequiredDispatchThread;
@@ -127,13 +126,6 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
       actionGroup.add(new InstallPluginAction(getAvailable(), getInstalled()));
     }
     return actionGroup;
-  }
-
-  @Override
-  protected boolean acceptHost(String host) {
-    final String repository = ((AvailablePluginsTableModel)myPluginsModel).getRepository();
-    if (AvailablePluginsTableModel.ALL.equals(repository)) return true;
-    return Comparing.equal(host, repository);
   }
 
   @Override

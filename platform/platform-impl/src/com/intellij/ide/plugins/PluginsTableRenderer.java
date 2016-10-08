@@ -102,7 +102,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
       myDownloads.setText("");
 
       final PluginNode pluginNode = myPluginDescriptor instanceof PluginNode ? (PluginNode)myPluginDescriptor : null;
-      if (pluginNode != null && pluginNode.getRepositoryName() == null) {
+      if (pluginNode != null) {
         String downloads = pluginNode.getDownloads();
         if (downloads == null) downloads= "";
         if (downloads.length() > 3) {
