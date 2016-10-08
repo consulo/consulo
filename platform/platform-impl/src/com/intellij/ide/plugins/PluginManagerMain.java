@@ -139,7 +139,7 @@ public abstract class PluginManagerMain implements Disposable {
         super.paintComponent(g);
         final Color bg = UIUtil.getTableBackground(false);
         ((Graphics2D)g).setPaint(new GradientPaint(0, 0, ColorUtil.shift(bg, 1.4), 0, getHeight(), ColorUtil.shift(bg, 0.9)));
-        g.fillRect(0,0, getWidth(), getHeight());
+        g.fillRect(0, 0, getWidth(), getHeight());
       }
     };
     header.setBorder(new CustomLineBorder(JBUI.scale(1), JBUI.scale(1), 0, JBUI.scale(1)));
@@ -289,7 +289,7 @@ public abstract class PluginManagerMain implements Disposable {
       @Override
       public Object construct() {
         try {
-          list = RepositoryHelper.loadPluginsFromRepository(null, consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel());
+          list = RepositoryHelper.loadOnlyPluginsFromRepository(null, consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel());
         }
         catch (Exception e) {
           LOG.info(e);
