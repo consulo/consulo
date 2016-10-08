@@ -270,7 +270,7 @@ public class PluginNode implements IdeaPluginDescriptor {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof PluginNode && name.equals(((PluginNode)object).getName());
+    return object instanceof PluginNode && id.equals(((PluginNode)object).getPluginId());
   }
 
   public void addDependency(PluginId... depends) {
