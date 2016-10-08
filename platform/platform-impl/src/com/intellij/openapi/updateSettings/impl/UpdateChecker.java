@@ -58,35 +58,29 @@ public final class UpdateChecker {
   }
 
   public static boolean checkNeeded() {
-    final UpdateSettings settings = UpdateSettings.getInstance();
-    if (settings == null) return false;
+    consulo.ide.updateSettings.UpdateSettings updateSettings = consulo.ide.updateSettings.UpdateSettings.getInstance();
+    if(!updateSettings.isEnable()) {
+      return false;
+    }
 
-    final long timeDelta = System.currentTimeMillis() - settings.getLastTimeChecked();
-    if (Math.abs(timeDelta) < DateFormatUtil.DAY) return false;
-
-    return settings.isCheckNeeded();
+    final long timeDelta = System.currentTimeMillis() - updateSettings.getLastTimeCheck();
+    return Math.abs(timeDelta) >= DateFormatUtil.DAY;
   }
 
   public static ActionCallback updateAndShowResult() {
     final ActionCallback result = new ActionCallback();
     final Application app = ApplicationManager.getApplication();
-    final UpdateSettings updateSettings = UpdateSettings.getInstance();
-    if (!updateSettings.isCheckNeeded()) {
+    final consulo.ide.updateSettings.UpdateSettings updateSettings = consulo.ide.updateSettings.UpdateSettings.getInstance();
+    if (!updateSettings.isEnable()) {
       result.setDone();
       return result;
     }
-    app.executeOnPooledThread(new Runnable() {
-      @Override
-      public void run() {
-        final List<Couple<IdeaPluginDescriptor>> updatedPlugins = loadPluginsForUpdate(false, null);
-        app.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            showUpdateResult(updatedPlugins, true, true, false);
-            result.setDone();
-          }
-        });
-      }
+    app.executeOnPooledThread(() -> {
+      final List<Couple<IdeaPluginDescriptor>> updatedPlugins = loadPluginsForUpdate(false, null);
+      app.invokeLater(() -> {
+        showUpdateResult(updatedPlugins, true, true, false);
+        result.setDone();
+      });
     });
     return result;
   }

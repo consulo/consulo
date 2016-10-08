@@ -29,6 +29,8 @@ import org.jetbrains.annotations.NotNull;
 @ApplicationService
 public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State> {
   static class State {
+    public boolean enable = true;
+    public long lastTimeCheck = 0;
     public UpdateChannel channel = UpdateChannel.nightly;   //TODO [VISTALL] we need change it
   }
 
@@ -40,6 +42,14 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
 
   public void setChannel(@NotNull UpdateChannel channel) {
     myState.channel = channel;
+  }
+
+  public boolean isEnable() {
+    return myState.enable;
+  }
+
+  public long getLastTimeCheck() {
+    return myState.lastTimeCheck;
   }
 
   @Override

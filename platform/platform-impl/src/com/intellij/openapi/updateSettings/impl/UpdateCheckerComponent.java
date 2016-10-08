@@ -25,26 +25,14 @@ import org.jetbrains.annotations.NotNull;
  * @author yole
  */
 public class UpdateCheckerComponent implements ApplicationComponent {
-  private static final long CHECK_INTERVAL = DateFormatUtil.DAY;
+  private static final long ourCheckInterval = DateFormatUtil.DAY;
   private final Alarm myCheckForUpdatesAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
-  private final Runnable myCheckRunnable = new Runnable() {
-    @Override
-    public void run() {
-      UpdateChecker.updateAndShowResult().doWhenDone(new Runnable() {
-        @Override
-        public void run() {
-          queueNextUpdateCheck(CHECK_INTERVAL);
-        }
-      });
-    }
-  };
+  private final Runnable myCheckRunnable = () -> UpdateChecker.updateAndShowResult().doWhenDone(() -> queueNextUpdateCheck(ourCheckInterval));
 
   @Override
   public void initComponent() {
-    final long interval = UpdateSettings.getInstance().getLastTimeChecked() + CHECK_INTERVAL - System.currentTimeMillis();
-    queueNextUpdateCheck(UpdateChecker.checkNeeded()
-                         ? CHECK_INTERVAL
-                         : Math.max(interval, DateFormatUtil.MINUTE));
+    final long interval = consulo.ide.updateSettings.UpdateSettings.getInstance().getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
+    queueNextUpdateCheck(UpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
   }
 
   private void queueNextUpdateCheck(long interval) {

@@ -16,16 +16,9 @@
 package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SmartList;
-import com.intellij.util.xmlb.annotations.CollectionBean;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
-import java.util.List;
 
 @State(
         name = "UpdatesConfigurable",
@@ -37,7 +30,6 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
   private State myState = new State();
 
   public UpdateSettings() {
-    updateDefaultChannel();
   }
 
   public static UpdateSettings getInstance() {
@@ -45,24 +37,12 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
   }
 
   static class State {
-    @CollectionBean
-    public final List<String> outdatedPlugins = new SmartList<String>();
 
     public boolean CHECK_NEEDED = true;
     public long LAST_TIME_CHECKED = 0;
 
     public String LAST_BUILD_CHECKED;
     public String UPDATE_CHANNEL_TYPE = ChannelStatus.RELEASE_CODE;
-  }
-
-  @Nullable
-  public String getLastBuildChecked() {
-    return myState.LAST_BUILD_CHECKED;
-  }
-
-  @NotNull
-  public List<String> getStoredPluginHosts() {
-    return Collections.emptyList();
   }
 
   public boolean isCheckNeeded() {
@@ -86,16 +66,6 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
     myState.UPDATE_CHANNEL_TYPE = value;
   }
 
-  @NotNull
-  public List<String> getOutdatedPlugins() {
-    return myState.outdatedPlugins;
-  }
-
-  private void updateDefaultChannel() {
-    if (ApplicationInfoImpl.getShadowInstance().isEAP()) {
-      myState.UPDATE_CHANNEL_TYPE = ChannelStatus.EAP_CODE;
-    }
-  }
 
   @Override
   public State getState() {
@@ -106,7 +76,6 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
   public void loadState(State state) {
     myState = state;
     myState.LAST_BUILD_CHECKED = StringUtil.nullize(myState.LAST_BUILD_CHECKED);
-    updateDefaultChannel();
   }
 
   public void forceCheckForUpdateAfterRestart() {

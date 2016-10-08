@@ -50,6 +50,7 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   public void actionPerformed(AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
+
     actionPerformed(project, true, UpdateSettings.getInstance());
   }
 

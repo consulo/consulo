@@ -27,7 +27,6 @@ import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
-import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.Couple;
 import consulo.ide.plugins.SimpleExtension;
 import org.jetbrains.annotations.NotNull;
@@ -48,14 +47,15 @@ public class PluginsAdvertiser implements StartupActivity {
 
   @Override
   public void runActivity(@NotNull final Project project) {
-    if (!UpdateSettings.getInstance().isCheckNeeded()) {
+    consulo.ide.updateSettings.UpdateSettings updateSettings = consulo.ide.updateSettings.UpdateSettings.getInstance();
+    if (!updateSettings.isEnable()) {
       return;
     }
 
     Task.Backgroundable.queue(project, "Loading plugin list", false, indicator -> {
       List<IdeaPluginDescriptor> pluginDescriptors = Collections.emptyList();
       try {
-        pluginDescriptors = RepositoryHelper.loadPluginsFromRepository(indicator, consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel());
+        pluginDescriptors = RepositoryHelper.loadPluginsFromRepository(indicator, updateSettings.getChannel());
       }
       catch (Exception ignored) {
       }
