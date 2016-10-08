@@ -32,7 +32,6 @@ import java.util.Map;
 @ApplicationService
 @State(
   name = "EarlyAccessProgramManager",
-  roamingType = RoamingType.GLOBAL,
   storages = {
     @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")
   }
