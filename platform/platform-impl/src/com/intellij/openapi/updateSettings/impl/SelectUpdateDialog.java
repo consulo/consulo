@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * @author pti
  */
-class NoUpdatesDialog extends AbstractUpdateDialog {
-  protected NoUpdatesDialog(final boolean canBeParent, final List<Couple<IdeaPluginDescriptor>> updatePlugins, boolean enableLink) {
-    super(canBeParent, enableLink, updatePlugins);
+class SelectUpdateDialog extends AbstractUpdateDialog {
+  protected SelectUpdateDialog(final List<Couple<IdeaPluginDescriptor>> updatePlugins, boolean enableLink) {
+    super(true, enableLink, updatePlugins);
     setTitle(IdeBundle.message("updates.info.dialog.title"));
     init();
   }

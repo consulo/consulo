@@ -27,7 +27,6 @@ import com.intellij.ide.plugins.PluginManagerConfigurable;
 import com.intellij.ide.plugins.PluginManagerUISettings;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -41,8 +40,6 @@ import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +81,7 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
     }
     updateLinkPane.setBackground(UIUtil.getPanelBackground());
     String css = UIUtil.getCssFontDeclaration(UIUtil.getLabelFont());
-    if (UIUtil.isUnderDarcula()) {
+    if (UIUtil.isUnderDarkBuildInLaf()) {
       css += "<style>body {background: #" + ColorUtil.toHex(UIUtil.getPanelBackground()) + ";}</style>";
     }
     updateLinkPane.setBorder(IdeBorderFactory.createEmptyBorder(0));
@@ -92,7 +89,7 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
     updateLinkPane.setEditable(false);
     LabelTextReplacingUtil.replaceText(panel);
 
-    if (myEnableLink) {
+    /*if (myEnableLink) {
       updateLinkPane.addHyperlinkListener(new HyperlinkListener() {
         @Override
         public void hyperlinkUpdate(final HyperlinkEvent e) {
@@ -104,7 +101,7 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
           }
         }
       });
-    }
+    }*/
   }
 
   private void setButtonsText() {

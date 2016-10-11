@@ -16,37 +16,30 @@
 package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.*;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.InstalledPluginsTableModel;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PermanentInstallationID;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author mike
@@ -59,7 +52,7 @@ public final class UpdateChecker {
 
   public static boolean checkNeeded() {
     consulo.ide.updateSettings.UpdateSettings updateSettings = consulo.ide.updateSettings.UpdateSettings.getInstance();
-    if(!updateSettings.isEnable()) {
+    if (!updateSettings.isEnable()) {
       return false;
     }
 
@@ -76,87 +69,14 @@ public final class UpdateChecker {
       return result;
     }
     app.executeOnPooledThread(() -> {
-      final List<Couple<IdeaPluginDescriptor>> updatedPlugins = loadPluginsForUpdate(false, null);
-      app.invokeLater(() -> {
-        showUpdateResult(updatedPlugins, true, true, false);
-        result.setDone();
-      });
+      PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(true, null).notify(result);
     });
     return result;
   }
 
-  /**
-   * Return list of couple PluginDescriptor. First is current plugin, Second is target for update
-   */
-  @Nullable
-  public static List<Couple<IdeaPluginDescriptor>> loadPluginsForUpdate(final boolean showErrorDialog,
-                                                                        @Nullable ProgressIndicator indicator) {
-    final List<Couple<IdeaPluginDescriptor>> targets = new ArrayList<>();
-    List<IdeaPluginDescriptor> remotePluginDescriptors = new ArrayList<>();
-    try {
-      remotePluginDescriptors.addAll(RepositoryHelper.loadPluginsFromRepository(indicator, consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel()));
-    }
-    catch (ProcessCanceledException e) {
-      return null;
-    }
-    catch (Exception e) {
-      LOGGER.info(e);
-    }
-
-    final Map<PluginId, IdeaPluginDescriptor> ourPlugins = new HashMap<PluginId, IdeaPluginDescriptor>();
-    final IdeaPluginDescriptor[] installedPlugins = PluginManagerCore.getPlugins();
-    final List<String> disabledPlugins = PluginManagerCore.getDisabledPlugins();
-    for (IdeaPluginDescriptor installedPlugin : installedPlugins) {
-      if (!installedPlugin.isBundled() && !disabledPlugins.contains(installedPlugin.getPluginId().getIdString())) {
-        ourPlugins.put(installedPlugin.getPluginId(), installedPlugin);
-      }
-    }
-
-    final PluginManagerUISettings updateSettings = PluginManagerUISettings.getInstance();
-    updateSettings.myOutdatedPlugins.clear();
-    if (!ourPlugins.isEmpty()) {
-      try {
-        for (final Map.Entry<PluginId, IdeaPluginDescriptor> entry : ourPlugins.entrySet()) {
-          final PluginId pluginId = entry.getKey();
-
-          List<IdeaPluginDescriptor> filter = ContainerUtil.filter(remotePluginDescriptors, new Condition<IdeaPluginDescriptor>() {
-            @Override
-            public boolean value(IdeaPluginDescriptor ideaPluginDescriptor) {
-              return pluginId.equals(ideaPluginDescriptor.getPluginId());
-            }
-          });
-
-          if (filter.isEmpty()) {
-            continue;
-          }
-
-          for (IdeaPluginDescriptor filtered : filter) {
-            if (StringUtil.compareVersionNumbers(filtered.getVersion(), entry.getValue().getVersion()) > 0) {
-              updateSettings.myOutdatedPlugins.add(pluginId.toString());
-              targets.add(Couple.of(entry.getValue(), filtered));
-            }
-          }
-        }
-      }
-      catch (ProcessCanceledException ignore) {
-        return null;
-      }
-      catch (Exception e) {
-        showErrorMessage(showErrorDialog, e.getMessage());
-      }
-    }
-
-    return targets;
-  }
-
-  private static void showErrorMessage(boolean showErrorDialog, final String failedMessage) {
+  public static void showErrorMessage(boolean showErrorDialog, final String failedMessage) {
     if (showErrorDialog) {
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          Messages.showErrorDialog(failedMessage, IdeBundle.message("title.connection.error"));
-        }
-      });
+      UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(failedMessage, IdeBundle.message("title.connection.error")));
     }
     else {
       LOGGER.info(failedMessage);
@@ -165,6 +85,7 @@ public final class UpdateChecker {
 
   private static boolean ourUpdateInfoDialogShown = false;
 
+  @Deprecated
   public static void showUpdateResult(final List<Couple<IdeaPluginDescriptor>> targetsForUpdate,
                                       final boolean showConfirmation,
                                       final boolean enableLink,
@@ -175,7 +96,7 @@ public final class UpdateChecker {
     final Runnable showPluginsUpdateDialogRunnable = new Runnable() {
       @Override
       public void run() {
-        final NoUpdatesDialog dialog = new NoUpdatesDialog(true, targetsForUpdate, enableLink) {
+        final SelectUpdateDialog dialog = new SelectUpdateDialog(targetsForUpdate, enableLink) {
           @Override
           protected void dispose() {
             ourUpdateInfoDialogShown = false;
@@ -188,12 +109,7 @@ public final class UpdateChecker {
       }
     };
     if (showBalloonNotification && targetsForUpdate != null) {
-      final String updatedPluginsList = StringUtil.join(targetsForUpdate, new Function<Couple<IdeaPluginDescriptor>, String>() {
-        @Override
-        public String fun(Couple<IdeaPluginDescriptor> downloader) {
-          return downloader.getSecond().getName();
-        }
-      }, ", ");
+      final String updatedPluginsList = StringUtil.join(targetsForUpdate, downloader -> downloader.getSecond().getName(), ", ");
       String message = "You have the latest version of " + ApplicationInfo.getInstance().getVersionName() + " installed.<br> ";
       message += "The following plugin" + (targetsForUpdate.size() == 1 ? " is" : "s are") + " ready to <a href=\"update\">update</a>: " + updatedPluginsList;
       showBalloonNotification(showPluginsUpdateDialogRunnable, message);

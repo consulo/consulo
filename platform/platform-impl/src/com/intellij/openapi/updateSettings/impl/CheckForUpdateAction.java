@@ -15,23 +15,19 @@
  */
 package com.intellij.openapi.updateSettings.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
-
-import java.util.List;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import org.jetbrains.annotations.NotNull;
 
 public class CheckForUpdateAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
@@ -48,29 +44,19 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredDispatchThread
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
 
     actionPerformed(project, true, UpdateSettings.getInstance());
   }
 
-  public static void actionPerformed(Project project, final boolean enableLink, final UpdateSettings instance) {
+  public static void actionPerformed(Project project, final boolean enableLink, final UpdateSettings updateSettings) {
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Checking for updates", true) {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
 
-        final List<Couple<IdeaPluginDescriptor>> updatedPlugins = UpdateChecker.loadPluginsForUpdate(true, indicator);
-        if(updatedPlugins == null) {
-          return;
-        }
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            instance.saveLastCheckedInfo();
-            UpdateChecker.showUpdateResult(updatedPlugins, true, enableLink, true);
-          }
-        });
+        PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(true, indicator).doWhenDone(updateSettings::saveLastCheckedInfo);
       }
     });
   }

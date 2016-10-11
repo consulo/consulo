@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.intellij.openapi.updateSettings.impl.NoUpdatesDialog.NoUpdatesPanel">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.intellij.openapi.updateSettings.impl.SelectUpdateDialog.NoUpdatesPanel">
   <grid id="18751" binding="myPanel" layout-manager="GridBagLayout">
     <constraints>
       <xy x="63" y="44" width="604" height="510"/>

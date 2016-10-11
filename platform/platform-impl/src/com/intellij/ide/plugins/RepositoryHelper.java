@@ -48,10 +48,8 @@ public class RepositoryHelper {
   public static final String[] ourPlatformPluginIds = {"consulo-win-no-jre", "consulo-linux-no-jre", "consulo-mac-no-jre"};
 
   @NotNull
-  public static String buildUrlForList(@NotNull UpdateChannel channel) {
-    ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
-
-    return WebServiceApi.REPOSITORY_API.buildUrl("list") + "?platformVersion=" + appInfo.getBuild().asString() + "&channel=" + channel;
+  public static String buildUrlForList(@NotNull UpdateChannel channel, @NotNull String buildNumber) {
+    return WebServiceApi.REPOSITORY_API.buildUrl("list") + "?platformVersion=" + buildNumber + "&channel=" + channel;
   }
 
   @NotNull
@@ -83,7 +81,19 @@ public class RepositoryHelper {
 
   @NotNull
   public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @NotNull UpdateChannel channel) throws Exception {
-    String url = buildUrlForList(channel);
+    return loadPluginsFromRepository(indicator, channel, null);
+  }
+
+  @NotNull
+  public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
+                                                                     @NotNull UpdateChannel channel,
+                                                                     @Nullable("if null used app build number") String buildNumber) throws Exception {
+    if (buildNumber == null) {
+      ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
+      buildNumber = appInfo.getBuild().asString();
+    }
+
+    String url = buildUrlForList(channel, buildNumber);
 
     if (indicator != null) {
       indicator.setText2(IdeBundle.message("progress.connecting.to.plugin.manager", WebServiceApi.REPOSITORY_API.buildUrl()));

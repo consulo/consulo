@@ -336,6 +336,11 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
       }
     }
 
+    String consuloBuildNumber = System.getProperty("consulo.build.number");
+    if(consuloBuildNumber != null) {
+      myBuildNumber = consuloBuildNumber;
+    }
+
     Thread currentThread = Thread.currentThread();
     currentThread.setName(currentThread.getName() + " " + myMajorVersion + "." + myMinorVersion + "#" + myBuildNumber + ", eap:" + myEAP);
 

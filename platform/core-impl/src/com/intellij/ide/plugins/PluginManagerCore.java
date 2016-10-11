@@ -22,6 +22,7 @@ import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
@@ -38,6 +39,7 @@ import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.xmlb.XmlSerializationException;
+import consulo.application.ApplicationProperties;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntProcedure;
@@ -45,7 +47,6 @@ import org.jdom.Document;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.application.ApplicationProperties;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -89,7 +90,6 @@ public class PluginManagerCore {
   static List<String> myPlugins2Disable = null;
   static LinkedHashSet<String> myPlugins2Enable = null;
   public static String BUILD_NUMBER;
-  private static BuildNumber ourBuildNumber;
 
   /**
    * do not call this method during bootstrap, should be called in a copy of PluginManager, loaded by IdeaClassLoader
@@ -763,12 +763,7 @@ public class PluginManagerCore {
     if(Boolean.getBoolean(ApplicationProperties.CONSULO_IN_UNIT_TEST)) {
       IdeaPluginDescriptorImpl pluginDescriptor = new IdeaPluginDescriptorImpl(new File(PathManager.getPreInstalledPluginsPath(), "unittest"));
       pluginDescriptor.setId(UNIT_TEST_PLUGIN);
-      List<PluginId> map = ContainerUtil.map(result, new Function<IdeaPluginDescriptorImpl, PluginId>() {
-        @Override
-        public PluginId fun(IdeaPluginDescriptorImpl ideaPluginDescriptor) {
-          return ideaPluginDescriptor.getPluginId();
-        }
-      });
+      List<PluginId> map = ContainerUtil.map(result, IdeaPluginDescriptorImpl::getPluginId);
       pluginDescriptor.setDependencies(ContainerUtil.toArray(map, PluginId.EMPTY_ARRAY));
       result.add(pluginDescriptor);
     }
@@ -801,19 +796,6 @@ public class PluginManagerCore {
     final List<File> classPath = descriptor.getClassPath();
     final ClassLoader loader = createPluginClassLoader(classPath.toArray(new File[classPath.size()]), new ClassLoader[]{parentLoader}, descriptor);
     descriptor.setLoader(loader);
-  }
-
-  static BuildNumber getBuildNumber() {
-    if (ourBuildNumber == null) {
-      ourBuildNumber = BuildNumber.fromString(System.getProperty("idea.plugins.compatible.build"));
-      if (ourBuildNumber == null) {
-        ourBuildNumber = BUILD_NUMBER == null ? null : BuildNumber.fromString(BUILD_NUMBER);
-        if (ourBuildNumber == null) {
-          ourBuildNumber = BuildNumber.fallback();
-        }
-      }
-    }
-    return ourBuildNumber;
   }
 
   static boolean shouldSkipPlugin(final IdeaPluginDescriptor descriptor, IdeaPluginDescriptor[] loaded) {
@@ -879,9 +861,9 @@ public class PluginManagerCore {
     }
 
     try {
-      BuildNumber buildNumber = getBuildNumber();
+      BuildNumber buildNumber = ApplicationInfoImpl.getShadowInstance().getBuild();
       BuildNumber pluginBuildNumber = BuildNumber.fromString(platformVersion);
-      return !buildNumber.isSnapshot() && !buildNumber.equals(pluginBuildNumber);
+      return !buildNumber.isSnapshot() && !pluginBuildNumber.isSnapshot() && !buildNumber.equals(pluginBuildNumber);
     }
     catch (RuntimeException ignored) {
     }
