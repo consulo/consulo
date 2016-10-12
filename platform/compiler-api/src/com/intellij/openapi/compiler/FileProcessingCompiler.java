@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.compiler;
 
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
 
 /**
  * A base interface describing shared functionality for various types of file processing compilers.
@@ -41,7 +42,7 @@ public interface FileProcessingCompiler extends Compiler, ValidityStateFactory {
      * @return a file to be processed; cannot be null
      */
     @NotNull
-    VirtualFile getFile();
+    File getFile();
 
     /**
      * @return an object describing dependencies of the instrumented file (can be null).

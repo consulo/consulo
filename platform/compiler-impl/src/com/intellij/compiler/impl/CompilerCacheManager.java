@@ -57,20 +57,25 @@ public class CompilerCacheManager implements ProjectComponent {
     return project.getComponent(CompilerCacheManager.class);
   }
 
+  @Override
   public void projectOpened() {
   }
 
+  @Override
   public void projectClosed() {
   }
 
+  @Override
   @NotNull
   public String getComponentName() {
     return "CompilerCacheManager";
   }
 
+  @Override
   public void initComponent() {
   }
 
+  @Override
   public void disposeComponent() {
     flushCaches();
   }
@@ -88,13 +93,11 @@ public class CompilerCacheManager implements ProjectComponent {
       final GenericCompilerCache<?,?,?> genericCache = new GenericCompilerCache<Key, SourceState, OutputState>(compiler, GenericCompilerRunner
         .getGenericCompilerCacheDir(myProject, compiler));
       myGenericCachesMap.put(compiler, genericCache);
-      myCacheDisposables.add(new Disposable() {
-        public void dispose() {
-          if (LOG.isDebugEnabled()) {
-            LOG.debug("Closing cache for feneric compiler " + compiler.getId());
-          }
-          genericCache.close();
+      myCacheDisposables.add(() -> {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Closing cache for feneric compiler " + compiler.getId());
         }
+        genericCache.close();
       });
       cache = genericCache;
     }
@@ -108,13 +111,11 @@ public class CompilerCacheManager implements ProjectComponent {
       final File compilerRootDir = getCompilerRootDir(compiler);
       final FileProcessingCompilerStateCache stateCache = new FileProcessingCompilerStateCache(compilerRootDir, compiler);
       myCompilerToCacheMap.put(compiler, stateCache);
-      myCacheDisposables.add(new Disposable() {
-        public void dispose() {
-          if (LOG.isDebugEnabled()) {
-            LOG.debug("Closing cache for compiler " + compiler.getDescription() + "; cache root dir: " + compilerRootDir);
-          }
-          stateCache.close();
+      myCacheDisposables.add(() -> {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Closing cache for compiler " + compiler.getDescription() + "; cache root dir: " + compilerRootDir);
         }
+        stateCache.close();
       });
       cache = stateCache;
     }
@@ -129,23 +130,23 @@ public class CompilerCacheManager implements ProjectComponent {
     if (cache == null) {
       final File cacheDir = getCompilerRootDir(compiler);
       final StateCache<ValidityState> stateCache = new StateCache<ValidityState>(new File(cacheDir, "timestamps")) {
+        @Override
         public ValidityState read(DataInput stream) throws IOException {
           return compiler.createValidityState(stream);
         }
 
+        @Override
         public void write(ValidityState validityState, DataOutput out) throws IOException {
           validityState.save(out);
         }
       };
       myCompilerToCacheMap.put(compiler, stateCache);
-      myCacheDisposables.add(new Disposable() {
-        public void dispose() {
-          try {
-            stateCache.close();
-          }
-          catch (IOException e) {
-            LOG.info(e);
-          }
+      myCacheDisposables.add(() -> {
+        try {
+          stateCache.close();
+        }
+        catch (IOException e) {
+          LOG.info(e);
         }
       });
       cache = stateCache;

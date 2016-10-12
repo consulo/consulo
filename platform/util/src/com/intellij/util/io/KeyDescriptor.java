@@ -19,5 +19,5 @@
  */
 package com.intellij.util.io;
 
-public interface KeyDescriptor<T> extends EqualityPolicy<T>, DataExternalizer<T> {
+public interface KeyDescriptor<T> extends com.intellij.util.containers.hash.EqualityPolicy<T>, DataExternalizer<T> {
 }

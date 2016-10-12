@@ -46,13 +46,11 @@ import java.util.*;
  */
 @Logger
 public class ResourceCompiler implements TranslatingCompiler {
-  private final Project myProject;
   private final ResourceCompilerExtension[] myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensions();
   private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
   private final ProjectFileIndex myProjectFileIndex;
 
   public ResourceCompiler(Project project) {
-    myProject = project;
     myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
     myProjectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
   }
@@ -195,7 +193,7 @@ public class ResourceCompiler implements TranslatingCompiler {
   private static void addToMap(Map<String, Collection<OutputItem>> map, String outputDir, OutputItem item) {
     Collection<OutputItem> list = map.get(outputDir);
     if (list == null) {
-      list = new ArrayList<OutputItem>();
+      list = new ArrayList<>();
       map.put(outputDir, list);
     }
     list.add(item);

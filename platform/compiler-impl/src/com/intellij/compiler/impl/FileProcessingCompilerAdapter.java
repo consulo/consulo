@@ -20,6 +20,8 @@ import com.intellij.openapi.compiler.FileProcessingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+
 /**
  * @author Eugene Zhuravlev
  *         Date: Oct 16
@@ -50,5 +52,5 @@ public class FileProcessingCompilerAdapter {
     return myCompiler;
   }
 
-  public void processOutdatedItem(CompileContext context, String url, @Nullable ValidityState state){}
+  public void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state){}
 }

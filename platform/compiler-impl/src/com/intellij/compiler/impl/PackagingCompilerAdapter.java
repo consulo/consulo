@@ -20,6 +20,8 @@ import com.intellij.openapi.compiler.PackagingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+
 public class PackagingCompilerAdapter extends FileProcessingCompilerAdapter{
   private final PackagingCompiler myCompiler;
 
@@ -28,7 +30,8 @@ public class PackagingCompilerAdapter extends FileProcessingCompilerAdapter{
     myCompiler = compiler;
   }
 
-  public void processOutdatedItem(CompileContext context, String url, @Nullable ValidityState state) {
-    myCompiler.processOutdatedItem(context, url, state);
+  @Override
+  public void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state) {
+    myCompiler.processOutdatedItem(context, file, state);
   }
 }

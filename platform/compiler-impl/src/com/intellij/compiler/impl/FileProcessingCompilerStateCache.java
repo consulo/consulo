@@ -24,7 +24,6 @@ package com.intellij.compiler.impl;
 import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.compiler.ValidityStateFactory;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -36,10 +35,12 @@ public class FileProcessingCompilerStateCache {
 
   public FileProcessingCompilerStateCache(File storeDirectory, final ValidityStateFactory stateFactory) throws IOException {
     myCache = new StateCache<MyState>(new File(storeDirectory, "timestamps")) {
+      @Override
       public MyState read(DataInput stream) throws IOException {
         return new MyState(stream.readLong(), stateFactory.createValidityState(stream));
       }
 
+      @Override
       public void write(MyState state, DataOutput out) throws IOException {
         out.writeLong(state.getTimestamp());
         final ValidityState extState = state.getExtState();
@@ -50,18 +51,15 @@ public class FileProcessingCompilerStateCache {
     };
   }
 
-  public void update(VirtualFile sourceFile, ValidityState extState) throws IOException {
-    if (sourceFile.isValid()) {
-      // only mark as up-to-date if the file did not become invalid during make
-      myCache.update(sourceFile.getUrl(), new MyState(sourceFile.getTimeStamp(), extState));
-    }
+  public void update(File file, ValidityState extState) throws IOException {
+    myCache.update(file, new MyState(file.lastModified(), extState));
   }
 
-  public void remove(String url) throws IOException {
+  public void remove(File url) throws IOException {
     myCache.remove(url);
   }
 
-  public long getTimestamp(String url) throws IOException {
+  public long getTimestamp(File url) throws IOException {
     final Serializable savedState = myCache.getState(url);
     if (savedState != null) {
       LOG.assertTrue(savedState instanceof MyState);
@@ -70,7 +68,7 @@ public class FileProcessingCompilerStateCache {
     return (state != null)? state.getTimestamp() : -1L;
   }
 
-  public ValidityState getExtState(String url) throws IOException {
+  public ValidityState getExtState(File url) throws IOException {
     MyState state = myCache.getState(url);
     return (state != null)? state.getExtState() : null;
   }
@@ -79,8 +77,8 @@ public class FileProcessingCompilerStateCache {
     myCache.force();
   }
 
-  public Collection<String> getUrls() throws IOException {
-    return myCache.getUrls();
+  public Collection<File> getFiles() throws IOException {
+    return myCache.getFiles();
   }
 
   public boolean wipe() {

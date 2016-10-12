@@ -15,8 +15,10 @@
  */
 package com.intellij.compiler.impl;
 
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.EnumeratorStringDescriptor;
+import com.intellij.util.io.IOUtil;
+import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.io.PersistentHashMap;
 import org.jetbrains.annotations.NonNls;
 
@@ -28,7 +30,31 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public abstract class StateCache<T> {
-  private PersistentHashMap<String, T> myMap;
+  private static class FileKeyDescriptor implements KeyDescriptor<File> {
+    public static final FileKeyDescriptor INSTANCE = new FileKeyDescriptor();
+
+    @Override
+    public int getHashCode(File value) {
+      return FileUtil.fileHashCode(value);
+    }
+
+    @Override
+    public boolean isEqual(File val1, File val2) {
+      return FileUtil.filesEqual(val1, val2);
+    }
+
+    @Override
+    public void save(DataOutput out, File value) throws IOException {
+      IOUtil.writeUTF(out, value.getPath());
+    }
+
+    @Override
+    public File read(DataInput in) throws IOException {
+      return new File(IOUtil.readUTF(in));
+    }
+  }
+
+  private PersistentHashMap<File, T> myMap;
   private final File myBaseFile;
 
   public StateCache(@NonNls File storePath) throws IOException {
@@ -64,38 +90,40 @@ public abstract class StateCache<T> {
     return true;
   }
 
-  public void update(@NonNls String url, T state) throws IOException {
+  public void update(@NonNls File file, T state) throws IOException {
     if (state != null) {
-      myMap.put(url, state);
+      myMap.put(file, state);
     }
     else {
-      remove(url);
+      remove(file);
     }
   }
 
-  public void remove(String url) throws IOException {
-    myMap.remove(url);
+  public void remove(File file) throws IOException {
+    myMap.remove(file);
   }
 
-  public T getState(String url) throws IOException {
-    return myMap.get(url);
+  public T getState(File file) throws IOException {
+    return myMap.get(file);
   }
 
-  public Collection<String> getUrls() throws IOException {
+  public Collection<File> getFiles() throws IOException {
     return myMap.getAllKeysWithExistingMapping();
   }
 
-  public Iterator<String> getUrlsIterator() throws IOException {
+  public Iterator<File> getFilesIterator() throws IOException {
     return myMap.getAllKeysWithExistingMapping().iterator();
   }
 
 
-  private PersistentHashMap<String, T> createMap(final File file) throws IOException {
-    return new PersistentHashMap<String,T>(file, new EnumeratorStringDescriptor(), new DataExternalizer<T>() {
+  private PersistentHashMap<File, T> createMap(final File file) throws IOException {
+    return new PersistentHashMap<>(file, FileKeyDescriptor.INSTANCE, new DataExternalizer<T>() {
+      @Override
       public void save(final DataOutput out, final T value) throws IOException {
         StateCache.this.write(value, out);
       }
 
+      @Override
       public T read(final DataInput in) throws IOException {
         return StateCache.this.read(in);
       }
