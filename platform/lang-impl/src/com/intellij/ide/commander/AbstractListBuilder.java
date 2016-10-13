@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.ListScrollingUtil;
-import com.intellij.util.Alarm;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.HashMap;
 import gnu.trove.THashSet;
 
@@ -33,6 +33,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Eugene Belyaev
@@ -173,13 +175,13 @@ public abstract class AbstractListBuilder {
             StructureViewTreeElement treeelement = (StructureViewTreeElement)desc.getValue();
             if (element.equals(treeelement.getValue())) {
               selectItem(i);
-            break;
+              break;
             }
           }
           else {
             if (element.equals(desc.getValue())) {
               selectItem(i);
-            break;
+              break;
             }
           }
         }
@@ -271,16 +273,8 @@ public abstract class AbstractListBuilder {
 
   private void buildList(final AbstractTreeNode parentElement) {
     myCurrentParent = parentElement;
-    final Alarm alarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
-    alarm.addRequest(
-        new Runnable() {
-        @Override
-        public void run() {
-          myList.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        }
-      },
-      200
-    );
+    Future<?> future = AppExecutorUtil.getAppScheduledExecutorService()
+            .schedule(() -> myList.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)), 200, TimeUnit.MILLISECONDS);
 
     final Object[] children = getChildren(parentElement);
     myModel.removeAllElements();
@@ -299,17 +293,9 @@ public abstract class AbstractListBuilder {
       myModel.addElement(aChildren);
     }
 
-    final int n = alarm.cancelAllRequests();
-    if (n == 0) {
-      alarm.addRequest(
-          new Runnable() {
-          @Override
-          public void run() {
-            myList.setCursor(Cursor.getDefaultCursor());
-          }
-        },
-        0
-      );
+    boolean canceled = future.cancel(false);
+    if (!canceled) {
+      AppExecutorUtil.getAppExecutorService().execute(() -> myList.setCursor(Cursor.getDefaultCursor()));
     }
   }
 
@@ -318,12 +304,12 @@ public abstract class AbstractListBuilder {
   }
 
   private Object[] getChildren(final AbstractTreeNode parentElement) {
-     if (parentElement == null) {
-       return new Object[]{myTreeStructure.getRootElement()};
-     }
-     else {
-       return myTreeStructure.getChildElements(parentElement);
-     }
+    if (parentElement == null) {
+      return new Object[]{myTreeStructure.getRootElement()};
+    }
+    else {
+      return myTreeStructure.getChildElements(parentElement);
+    }
   }
 
   protected final void updateList() {
@@ -343,7 +329,7 @@ public abstract class AbstractListBuilder {
     }
 
     final Object[] children = getChildren(parentDescriptor);
-    final HashMap<Object,Integer> elementToIndexMap = new HashMap<Object, Integer>();
+    final HashMap<Object, Integer> elementToIndexMap = new HashMap<Object, Integer>();
     for (int i = 0; i < children.length; i++) {
       elementToIndexMap.put(children[i], Integer.valueOf(i));
     }

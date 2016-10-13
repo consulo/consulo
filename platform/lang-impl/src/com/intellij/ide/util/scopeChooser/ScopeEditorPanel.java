@@ -36,15 +36,15 @@ import com.intellij.packageDependencies.ui.*;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -56,6 +56,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class ScopeEditorPanel {
 
@@ -74,7 +77,7 @@ public class ScopeEditorPanel {
   private PackageSet myCurrentScope = null;
   private boolean myIsInUpdate = false;
   private String myErrorMessage;
-  private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
+  private Future<?> myUpdateAlarm = CompletableFuture.completedFuture(null);
 
   private JLabel myCaretPositionLabel;
   private int myCaretPosition = 0;
@@ -186,7 +189,7 @@ public class ScopeEditorPanel {
 
   private void onTextChange() {
     if (!myIsInUpdate) {
-      myUpdateAlarm.cancelAllRequests();
+      myUpdateAlarm.cancel(false);
       myTextChanged = true;
       final String text = myPatternField.getText();
       myCurrentScope = new InvalidPackageSet(text);
@@ -437,7 +440,7 @@ public class ScopeEditorPanel {
   }
 
   private void rebuild(final boolean updateText, @Nullable final Runnable runnable, final boolean requestFocus, final int delayMillis){
-    myUpdateAlarm.cancelAllRequests();
+    myUpdateAlarm.cancel(false);
     final Runnable request = new Runnable() {
       @Override
       public void run() {
@@ -475,7 +478,7 @@ public class ScopeEditorPanel {
         });
       }
     };
-    myUpdateAlarm.addRequest(request, delayMillis);
+    myUpdateAlarm = AppExecutorUtil.getAppScheduledExecutorService().schedule(request, delayMillis, TimeUnit.MILLISECONDS);
   }
 
   private void rebuild(final boolean updateText) {

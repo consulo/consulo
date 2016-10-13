@@ -49,10 +49,10 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Alarm;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.NullableFunction;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -73,7 +73,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   private final Hashtable<String, JTree> myType2TreeMap = new Hashtable<String, JTree>();
 
   private final RefreshAction myRefreshAction = new RefreshAction();
-  private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
+  private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
   private SmartPsiElementPointer mySmartPsiElementPointer;
   private final CardLayout myCardLayout;
   private final JPanel myTreePanel;
@@ -229,8 +229,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         @Override
         public void removeNotify() {
           super.removeNotify();
-          if (ScreenUtil.isStandardAddRemoveNotify(this))
-            myRefreshAction.unregisterCustomShortcutSet(this);
+          if (ScreenUtil.isStandardAddRemoveNotify(this)) myRefreshAction.unregisterCustomShortcutSet(this);
         }
 
         @Override
@@ -287,12 +286,11 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       }
     }
     else {
-      tree = new Tree(new DefaultTreeModel(new DefaultMutableTreeNode("")))  {
+      tree = new Tree(new DefaultTreeModel(new DefaultMutableTreeNode(""))) {
         @Override
         public void removeNotify() {
           super.removeNotify();
-          if (ScreenUtil.isStandardAddRemoveNotify(this))
-            myRefreshAction.unregisterCustomShortcutSet(this);
+          if (ScreenUtil.isStandardAddRemoveNotify(this)) myRefreshAction.unregisterCustomShortcutSet(this);
         }
 
         @Override
@@ -533,8 +531,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
   protected class AlphaSortAction extends ToggleAction {
     public AlphaSortAction() {
-      super(IdeBundle.message("action.sort.alphabetically"), IdeBundle.message("action.sort.alphabetically"),
-            AllIcons.ObjectBrowser.Sorted);
+      super(IdeBundle.message("action.sort.alphabetically"), IdeBundle.message("action.sort.alphabetically"), AllIcons.ObjectBrowser.Sorted);
     }
 
     @Override
@@ -589,10 +586,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
       final String currentViewType = browser.myCurrentViewType;
       Disposer.dispose(browser);
-      final HierarchyProvider provider = BrowseHierarchyActionBase.findProvider(myProviderLanguageExtension,
-                                                                                selectedElement,
-                                                                                selectedElement.getContainingFile(),
-                                                                                event.getDataContext());
+      final HierarchyProvider provider =
+              BrowseHierarchyActionBase.findProvider(myProviderLanguageExtension, selectedElement, selectedElement.getContainingFile(), event.getDataContext());
       final HierarchyBrowser newBrowser = BrowseHierarchyActionBase.createAndAddToPanel(selectedElement.getProject(), provider, selectedElement);
       ApplicationManager.getApplication().invokeLater(new Runnable() {
         @Override
@@ -675,7 +670,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       presentation.setText(getCurrentScopeType());
     }
 
-    protected boolean isEnabled(){
+    protected boolean isEnabled() {
       return true;
     }
 
@@ -684,7 +679,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     protected final DefaultActionGroup createPopupActionGroup(final JComponent button) {
       final DefaultActionGroup group = new DefaultActionGroup();
 
-      for(String name: getValidScopeNames()) {
+      for (String name : getValidScopeNames()) {
         group.add(new MenuAction(name));
       }
 

@@ -20,7 +20,7 @@ import com.intellij.openapi.externalSystem.service.project.ExternalSystemProject
 import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager;
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.util.Alarm;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -31,6 +31,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -44,15 +46,13 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
   private static final long DEFAULT_REMOTE_PROCESS_TTL_IN_MS = TimeUnit.MILLISECONDS.convert(3, TimeUnit.MINUTES);
 
   private final AtomicInteger myCallsInProgressNumber = new AtomicInteger();
-  private final Alarm         myShutdownAlarm         = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
-  private final AtomicLong    myTtlMs                 = new AtomicLong(DEFAULT_REMOTE_PROCESS_TTL_IN_MS);
+  private Future<?> myShutdownFuture = CompletableFuture.completedFuture(null);
+  private final AtomicLong myTtlMs = new AtomicLong(DEFAULT_REMOTE_PROCESS_TTL_IN_MS);
 
   private volatile boolean myStdOutputConfigured;
 
   public RemoteExternalSystemFacadeImpl(@NotNull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
-                                        @NotNull Class<ExternalSystemTaskManager<S>> buildManagerClass)
-    throws IllegalAccessException, InstantiationException
-  {
+                                        @NotNull Class<ExternalSystemTaskManager<S>> buildManagerClass) throws IllegalAccessException, InstantiationException {
     super(projectResolverClass, buildManagerClass);
     updateAutoShutdownTime();
   }
@@ -61,33 +61,29 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
   public static void main(String[] args) throws Exception {
     if (args.length < 1) {
       throw new IllegalArgumentException(
-        "Can't create external system facade. Reason: given arguments don't contain information about external system resolver to use");
+              "Can't create external system facade. Reason: given arguments don't contain information about external system resolver to use");
     }
     final Class<ExternalSystemProjectResolver<?>> resolverClass = (Class<ExternalSystemProjectResolver<?>>)Class.forName(args[0]);
     if (!ExternalSystemProjectResolver.class.isAssignableFrom(resolverClass)) {
-      throw new IllegalArgumentException(String.format(
-        "Can't create external system facade. Reason: given external system resolver class (%s) must be IS-A '%s'",
-        resolverClass,
-        ExternalSystemProjectResolver.class));
+      throw new IllegalArgumentException(
+              String.format("Can't create external system facade. Reason: given external system resolver class (%s) must be IS-A '%s'", resolverClass,
+                            ExternalSystemProjectResolver.class));
     }
 
     if (args.length < 2) {
       throw new IllegalArgumentException(
-        "Can't create external system facade. Reason: given arguments don't contain information about external system build manager to use"
-      );
+              "Can't create external system facade. Reason: given arguments don't contain information about external system build manager to use");
     }
     final Class<ExternalSystemTaskManager<?>> buildManagerClass = (Class<ExternalSystemTaskManager<?>>)Class.forName(args[1]);
     if (!ExternalSystemProjectResolver.class.isAssignableFrom(resolverClass)) {
-      throw new IllegalArgumentException(String.format(
-        "Can't create external system facade. Reason: given external system build manager (%s) must be IS-A '%s'",
-        buildManagerClass, ExternalSystemTaskManager.class
-      ));
+      throw new IllegalArgumentException(
+              String.format("Can't create external system facade. Reason: given external system build manager (%s) must be IS-A '%s'", buildManagerClass,
+                            ExternalSystemTaskManager.class));
     }
 
     // running the code indicates remote communication mode with external system
-    Registry.get(
-      System.getProperty(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY) +
-      ExternalSystemConstants.USE_IN_PROCESS_COMMUNICATION_REGISTRY_KEY_SUFFIX).setValue(false);
+    Registry.get(System.getProperty(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY) + ExternalSystemConstants.USE_IN_PROCESS_COMMUNICATION_REGISTRY_KEY_SUFFIX)
+            .setValue(false);
 
     RemoteExternalSystemFacadeImpl facade = new RemoteExternalSystemFacadeImpl(resolverClass, buildManagerClass);
     facade.init();
@@ -97,8 +93,7 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
   @SuppressWarnings({"IOResourceOpenedButNotSafelyClosed", "unchecked", "UseOfSystemOutOrSystemErr"})
   @Override
   protected <I extends RemoteExternalSystemService<S>, C extends I> I createService(@NotNull Class<I> interfaceClass, @NotNull final C impl)
-    throws ClassNotFoundException, IllegalAccessException, InstantiationException, RemoteException
-  {
+          throws ClassNotFoundException, IllegalAccessException, InstantiationException, RemoteException {
     if (!myStdOutputConfigured) {
       myStdOutputConfigured = true;
       System.setOut(new LineAwarePrintStream(System.out));
@@ -118,7 +113,7 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
         }
       }
     });
-    return  (I)UnicastRemoteObject.exportObject(proxy, 0);
+    return (I)UnicastRemoteObject.exportObject(proxy, 0);
   }
 
   @Override
@@ -132,22 +127,19 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
 
   /**
    * Schedules automatic process termination in {@code #REMOTE_GRADLE_PROCESS_TTL_IN_MS} milliseconds.
-   * <p/>
+   * <p>
    * Rationale: it's possible that IJ user performs gradle related activity (e.g. import from gradle) when the works purely
    * at IJ. We don't want to keep remote process that communicates with the gradle api then.
    */
   private void updateAutoShutdownTime() {
-    myShutdownAlarm.cancelAllRequests();
-    myShutdownAlarm.addRequest(new Runnable() {
-      @Override
-      public void run() {
-        if (myCallsInProgressNumber.get() > 0) {
-          updateAutoShutdownTime();
-          return;
-        }
-        System.exit(0);
+    myShutdownFuture.cancel(false);
+    myShutdownFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+      if (myCallsInProgressNumber.get() > 0) {
+        updateAutoShutdownTime();
+        return;
       }
-    }, (int)myTtlMs.get());
+      System.exit(0);
+    }, (int)myTtlMs.get(), TimeUnit.MILLISECONDS);
   }
 
   @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")

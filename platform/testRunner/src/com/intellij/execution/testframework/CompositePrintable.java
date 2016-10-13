@@ -23,7 +23,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.Alarm;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.IOUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class CompositePrintable implements Printable, Disposable {
   public static final String NEW_LINE = "\n";
@@ -41,7 +42,7 @@ public class CompositePrintable implements Printable, Disposable {
   private int myCurrentSize = 0;
   private String myOutputFile = null;
   private String myFrameworkOutputFile;
-  private static final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
+  private static final ExecutorService ourTestExecutorService = AppExecutorUtil.createBoundedApplicationPoolExecutor("tests", 1);
 
   public void flush() {
     synchronized (myNestedPrintables) {
@@ -59,7 +60,7 @@ public class CompositePrintable implements Printable, Disposable {
     if (sync) {
       runnable.run();
     } else {
-      myAlarm.addRequest(runnable, 0);
+      ourTestExecutorService.execute(runnable);
     }
   }
 

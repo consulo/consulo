@@ -18,16 +18,18 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.util.Alarm;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.compiler.ModuleCompilerPathsManager;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredWriteAction;
+import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,7 +51,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
    */
   private static final int PROJECT_INITIALISATION_DELAY_MS = (int)TimeUnit.SECONDS.toMillis(1);
 
-  private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
+  private Future<?> myFuture = CompletableFuture.completedFuture(null);
 
   @NotNull
   @Override
@@ -58,14 +60,13 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
   }
 
   @Override
-  public void importData(@NotNull final Collection<DataNode<ModuleData>> toImport,
-                         @NotNull final Project project,
-                         final boolean synchronous) {
+  public void importData(@NotNull final Collection<DataNode<ModuleData>> toImport, @NotNull final Project project, final boolean synchronous) {
     if (toImport.isEmpty()) {
       return;
     }
     if (!project.isInitialized()) {
-      myAlarm.addRequest(new ImportModulesTask(project, toImport, synchronous), PROJECT_INITIALISATION_DELAY_MS);
+      myFuture = AppExecutorUtil.getAppScheduledExecutorService()
+              .schedule(new ImportModulesTask(project, toImport, synchronous), PROJECT_INITIALISATION_DELAY_MS, TimeUnit.MILLISECONDS);
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
@@ -135,8 +136,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
   }
 
   @NotNull
-  private Collection<DataNode<ModuleData>> filterExistingModules(@NotNull Collection<DataNode<ModuleData>> modules,
-                                                                 @NotNull Project project) {
+  private Collection<DataNode<ModuleData>> filterExistingModules(@NotNull Collection<DataNode<ModuleData>> modules, @NotNull Project project) {
     Collection<DataNode<ModuleData>> result = ContainerUtilRt.newArrayList();
     for (DataNode<ModuleData> node : modules) {
       ModuleData moduleData = node.getData();
@@ -158,7 +158,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
       return;
     }
     compilerPathsManager.setInheritedCompilerOutput(data.isInheritProjectCompileOutputPath());
-    if(!data.isInheritProjectCompileOutputPath()) {
+    if (!data.isInheritProjectCompileOutputPath()) {
       String compileOutputPath = data.getCompileOutputPath(ExternalSystemSourceType.SOURCE);
       if (compileOutputPath != null) {
         compilerPathsManager.setCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance(), VfsUtilCore.pathToUrl(compileOutputPath));
@@ -209,9 +209,10 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
     @Override
     public void run() {
-      myAlarm.cancelAllRequests();
+      myFuture.cancel(false);
       if (!myProject.isInitialized()) {
-        myAlarm.addRequest(new ImportModulesTask(myProject, myModules, mySynchronous), PROJECT_INITIALISATION_DELAY_MS);
+        myFuture = AppExecutorUtil.getAppScheduledExecutorService()
+                .schedule(new ImportModulesTask(myProject, myModules, mySynchronous), PROJECT_INITIALISATION_DELAY_MS, TimeUnit.MILLISECONDS);
         return;
       }
 
