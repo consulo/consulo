@@ -113,30 +113,29 @@ public class PlatformOrPluginUpdateChecker {
           // change current build
           currentBuildNumber = pluginDescriptor.getVersion();
           newPlatformPlugin = pluginDescriptor;
-
-          //TODO [VISTALL] remove this hack
-          ((PluginNode)newPlatformPlugin).setName("Platform");
           break;
         }
       }
     }
 
     final List<Couple<IdeaPluginDescriptor>> targets = new ArrayList<>();
-    PluginNode thisPlatform = new PluginNode(platformPluginId);
-    thisPlatform.setVersion(appInfo.getBuild().asString());
-    thisPlatform.setName("Platform");
+    if(newPlatformPlugin != null) {
+      PluginNode thisPlatform = new PluginNode(platformPluginId);
+      thisPlatform.setVersion(appInfo.getBuild().asString());
+      thisPlatform.setName(newPlatformPlugin.getName());
 
-    targets.add(Couple.of(thisPlatform, newPlatformPlugin));
+      targets.add(Couple.of(thisPlatform, newPlatformPlugin));
 
-    // load new plugins with new app build
-    try {
-      remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel, currentBuildNumber);
-    }
-    catch (ProcessCanceledException e) {
-      return PlatformOrPluginUpdateResult.CANCELED;
-    }
-    catch (Exception e) {
-      LOGGER.info(e);
+      // load new plugins with new app build
+      try {
+        remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel, currentBuildNumber);
+      }
+      catch (ProcessCanceledException e) {
+        return PlatformOrPluginUpdateResult.CANCELED;
+      }
+      catch (Exception e) {
+        LOGGER.info(e);
+      }
     }
 
     final Map<PluginId, IdeaPluginDescriptor> ourPlugins = new HashMap<>();
