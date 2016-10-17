@@ -19,26 +19,26 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public abstract class ListItemDescriptorAdapter implements ListItemDescriptor {
+public abstract class ListItemDescriptorAdapter<T> implements ListItemDescriptor<T> {
   @Nullable
   @Override
-  public String getCaptionAboveOf(Object value) {
+  public String getCaptionAboveOf(T value) {
     return null;
   }
 
   @Nullable
   @Override
-  public String getTooltipFor(Object value) {
+  public String getTooltipFor(T value) {
     return null;
   }
 
   @Override
-  public Icon getIconFor(Object value) {
+  public Icon getIconFor(T value) {
     return null;
   }
 
   @Override
-  public boolean hasSeparatorAboveOf(Object value) {
+  public boolean hasSeparatorAboveOf(T value) {
     return false;
   }
 }

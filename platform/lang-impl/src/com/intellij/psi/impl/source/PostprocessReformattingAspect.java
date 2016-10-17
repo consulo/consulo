@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,11 +53,11 @@ import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.TextRangeUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.annotations.RequiredReadAction;
 
 import java.util.*;
 
@@ -84,12 +84,11 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     myPsiManager = psiManager;
     myTreeAspect = treeAspect;
     PomManager.getModel(psiManager.getProject())
-            .registerAspect(PostprocessReformattingAspect.class, this,
-                            Collections.singleton((PomModelAspect)treeAspect));
+            .registerAspect(PostprocessReformattingAspect.class, this, Collections.singleton((PomModelAspect)treeAspect));
 
     ApplicationListener applicationListener = new ApplicationAdapter() {
       @Override
-      public void writeActionStarted(final Object action) {
+      public void writeActionStarted(@NotNull final Object action) {
         if (processor != null) {
           final Project project = processor.getCurrentCommandProject();
           if (project == myProject) {
@@ -99,7 +98,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
       }
 
       @Override
-      public void writeActionFinished(final Object action) {
+      public void writeActionFinished(@NotNull final Object action) {
         if (processor != null) {
           final Project project = processor.getCurrentCommandProject();
           if (project == myProject) {
@@ -112,12 +111,9 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   }
 
   public void disablePostprocessFormattingInside(@NotNull final Runnable runnable) {
-    disablePostprocessFormattingInside(new NullableComputable<Object>() {
-      @Override
-      public Object compute() {
-        runnable.run();
-        return null;
-      }
+    disablePostprocessFormattingInside((NullableComputable<Object>)() -> {
+      runnable.run();
+      return null;
     });
   }
 
@@ -134,12 +130,9 @@ public class PostprocessReformattingAspect implements PomModelAspect {
 
   @RequiredDispatchThread
   public void postponeFormattingInside(@NotNull final Runnable runnable) {
-    postponeFormattingInside(new NullableComputable<Object>() {
-      @Override
-      public Object compute() {
-        runnable.run();
-        return null;
-      }
+    postponeFormattingInside((NullableComputable<Object>)() -> {
+      runnable.run();
+      return null;
     });
   }
 
@@ -169,12 +162,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
         doPostponedFormatting();
       }
       else {
-        application.runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            doPostponedFormatting();
-          }
-        });
+        application.runWriteAction(() -> doPostponedFormatting());
       }
     }
   }
@@ -229,22 +217,19 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   }
 
   public void doPostponedFormatting() {
-    atomic(new Runnable() {
-      @Override
-      public void run() {
-        if (isDisabled()) return;
-        try {
-          FileViewProvider[] viewProviders = getContext().myUpdatedProviders.toArray(new FileViewProvider[getContext().myUpdatedProviders.size()]);
-          for (final FileViewProvider viewProvider : viewProviders) {
-            doPostponedFormatting(viewProvider);
-          }
+    atomic(() -> {
+      if (isDisabled()) return;
+      try {
+        FileViewProvider[] viewProviders = getContext().myUpdatedProviders.toArray(new FileViewProvider[getContext().myUpdatedProviders.size()]);
+        for (final FileViewProvider viewProvider : viewProviders) {
+          doPostponedFormatting(viewProvider);
         }
-        catch (Exception e) {
-          LOG.error(e);
-        }
-        finally {
-          LOG.assertTrue(getContext().myReformatElements.isEmpty(), getContext().myReformatElements);
-        }
+      }
+      catch (Exception e) {
+        LOG.error(e);
+      }
+      finally {
+        LOG.assertTrue(getContext().myReformatElements.isEmpty(), getContext().myReformatElements);
       }
     });
   }
@@ -258,24 +243,16 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   }
 
   private void postponedFormattingImpl(@NotNull final FileViewProvider viewProvider, final boolean check) {
-    atomic(new Runnable() {
-      @Override
-      public void run() {
-        if (isDisabled() || check && !getContext().myUpdatedProviders.contains(viewProvider)) return;
+    atomic(() -> {
+      if (isDisabled() || check && !getContext().myUpdatedProviders.contains(viewProvider)) return;
 
-        try {
-          disablePostprocessFormattingInside(new Runnable() {
-            @Override
-            public void run() {
-              doPostponedFormattingInner(viewProvider);
-            }
-          });
-        }
-        finally {
-          getContext().myUpdatedProviders.remove(viewProvider);
-          getContext().myReformatElements.remove(viewProvider);
-          viewProvider.putUserData(REFORMAT_ORIGINATOR, null);
-        }
+      try {
+        disablePostprocessFormattingInside(() -> doPostponedFormattingInner(viewProvider));
+      }
+      finally {
+        getContext().myUpdatedProviders.remove(viewProvider);
+        getContext().myReformatElements.remove(viewProvider);
+        viewProvider.putUserData(REFORMAT_ORIGINATOR, null);
       }
     });
   }
@@ -307,7 +284,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }
     List<ASTNode> list = getContext().myReformatElements.get(viewProvider);
     if (list == null) {
-      list = new ArrayList<ASTNode>();
+      list = new ArrayList<>();
       getContext().myReformatElements.put(viewProvider, list);
       if (Holder.STORE_REFORMAT_ORIGINATOR_STACKTRACE) {
         viewProvider.putUserData(REFORMAT_ORIGINATOR, new Throwable());
@@ -338,7 +315,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
       }
     }
 
-    final TreeSet<PostprocessFormattingTask> postProcessTasks = new TreeSet<PostprocessFormattingTask>();
+    final TreeSet<PostprocessFormattingTask> postProcessTasks = new TreeSet<>();
     Collection<Disposable> toDispose = ContainerUtilRt.newArrayList();
     try {
       // process all roots in viewProvider to find marked for reformat before elements and create appropriate range markers
@@ -389,8 +366,8 @@ public class PostprocessReformattingAspect implements PomModelAspect {
 
     String fileName = key.getVirtualFile().getName();
     PsiFile psi = PsiFileFactory.getInstance(myProject)
-            .createFileFromText(fileName, FileTypeManager.getInstance().getFileTypeByFileName(fileName),
-                                actualPsi.getNode().getText(), LocalTimeCounter.currentTime(), false);
+            .createFileFromText(fileName, FileTypeManager.getInstance().getFileTypeByFileName(fileName), actualPsi.getNode().getText(),
+                                LocalTimeCounter.currentTime(), false);
 
     if (actualPsi.getClass().equals(psi.getClass())) {
       String expectedPsi = treeDebugBuilder.psiToString(psi);
@@ -404,8 +381,8 @@ public class PostprocessReformattingAspect implements PomModelAspect {
 
   @NotNull
   private List<PostponedAction> normalizeAndReorderPostponedActions(@NotNull Set<PostprocessFormattingTask> rangesToProcess, @NotNull Document document) {
-    final List<PostprocessFormattingTask> freeFormattingActions = new ArrayList<PostprocessFormattingTask>();
-    final List<ReindentTask> indentActions = new ArrayList<ReindentTask>();
+    final List<PostprocessFormattingTask> freeFormattingActions = new ArrayList<>();
+    final List<ReindentTask> indentActions = new ArrayList<>();
 
     PostprocessFormattingTask accumulatedTask = null;
     Iterator<PostprocessFormattingTask> iterator = rangesToProcess.iterator();
@@ -496,7 +473,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
       }
     }
 
-    final List<PostponedAction> result = new ArrayList<PostponedAction>();
+    final List<PostponedAction> result = new ArrayList<>();
     Collections.reverse(freeFormattingActions);
     Collections.reverse(indentActions);
 
@@ -534,7 +511,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   private static void createActionsMap(@NotNull List<ASTNode> astNodes,
                                        @NotNull FileViewProvider provider,
                                        @NotNull final TreeSet<PostprocessFormattingTask> rangesToProcess) {
-    final Set<ASTNode> nodesToProcess = new HashSet<ASTNode>(astNodes);
+    final Set<ASTNode> nodesToProcess = new HashSet<>(astNodes);
     final Document document = provider.getDocument();
     if (document == null) {
       return;
@@ -560,9 +537,12 @@ public class PostprocessReformattingAspect implements PomModelAspect {
           }
           if (!currentNodeGenerated && inGeneratedContext) {
             if (element.getElementType() == TokenType.WHITE_SPACE) return false;
-            final int oldIndent = CodeEditUtil.getOldIndentation(element);
+            int oldIndent = CodeEditUtil.getOldIndentation(element);
+            if (oldIndent < 0) {
+              LOG.warn("For not generated items old indentation must be defined: element " + element);
+              oldIndent = 0;
+            }
             CodeEditUtil.setOldIndentation(element, -1);
-            LOG.assertTrue(oldIndent >= 0, "for not generated items old indentation must be defined: element " + element);
             for (TextRange indentRange : getEnabledRanges(element.getPsi())) {
               rangesToProcess.add(new ReindentTask(document.createRangeMarker(indentRange), oldIndent));
             }
@@ -572,7 +552,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
         }
 
         private Iterable<TextRange> getEnabledRanges(@NotNull PsiElement element) {
-          List<TextRange> disabledRanges = new ArrayList<TextRange>();
+          List<TextRange> disabledRanges = new ArrayList<>();
           for (DisabledIndentRangesProvider rangesProvider : DisabledIndentRangesProvider.EP_NAME.getExtensions()) {
             Collection<TextRange> providedDisabledRanges = rangesProvider.getDisabledIndentRanges(element);
             if (providedDisabledRanges != null) {
@@ -762,10 +742,10 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   }
 
   private static class ReindentRangesAction implements PostponedAction {
-    private final List<Pair<Integer, RangeMarker>> myRangesToReindent = new ArrayList<Pair<Integer, RangeMarker>>();
+    private final List<Pair<Integer, RangeMarker>> myRangesToReindent = new ArrayList<>();
 
     public void add(@NotNull RangeMarker rangeMarker, int oldIndent) {
-      myRangesToReindent.add(new Pair<Integer, RangeMarker>(oldIndent, rangeMarker));
+      myRangesToReindent.add(new Pair<>(oldIndent, rangeMarker));
     }
 
     @Override
@@ -806,7 +786,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   private static class Context {
     private int myPostponedCounter = 0;
     private int myDisabledCounter = 0;
-    private final Set<FileViewProvider> myUpdatedProviders = new HashSet<FileViewProvider>();
-    private final Map<FileViewProvider, List<ASTNode>> myReformatElements = new HashMap<FileViewProvider, List<ASTNode>>();
+    private final Set<FileViewProvider> myUpdatedProviders = new HashSet<>();
+    private final Map<FileViewProvider, List<ASTNode>> myReformatElements = new HashMap<>();
   }
 }

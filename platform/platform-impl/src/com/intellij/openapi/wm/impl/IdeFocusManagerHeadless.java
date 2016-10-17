@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
@@ -33,21 +34,30 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
 
   public static final IdeFocusManagerHeadless INSTANCE = new IdeFocusManagerHeadless();
 
+  @Override
   @NotNull
   public ActionCallback requestFocus(@NotNull final Component c, final boolean forced) {
-    return new ActionCallback.Done();
+    return ActionCallback.DONE;
   }
 
+  @Override
   @NotNull
   public ActionCallback requestFocus(@NotNull final FocusCommand command, final boolean forced) {
-    return new ActionCallback.Done();
+    return ActionCallback.DONE;
   }
 
+  @Override
   public JComponent getFocusTargetFor(@NotNull final JComponent comp) {
     return null;
   }
 
+  @Override
   public void doWhenFocusSettlesDown(@NotNull final Runnable runnable) {
+    runnable.run();
+  }
+
+  @Override
+  public void doWhenFocusSettlesDown(@NotNull Runnable runnable, @NotNull ModalityState modality) {
     runnable.run();
   }
 
@@ -58,11 +68,13 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
     }
   }
 
+  @Override
   public Component getFocusedDescendantFor(final Component c) {
     return null;
   }
 
-  public boolean dispatch(KeyEvent e) {
+  @Override
+  public boolean dispatch(@NotNull KeyEvent e) {
     return false;
   }
 
@@ -75,8 +87,10 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
     return false;
   }
 
+  @Override
+  @NotNull
   public ActionCallback requestDefaultFocus(boolean forced) {
-    return new ActionCallback.Done();
+    return ActionCallback.DONE;
   }
 
   @Override
@@ -84,15 +98,18 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
     return true;
   }
 
+  @NotNull
   @Override
   public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
     return new Expirable() {
+      @Override
       public boolean isExpired() {
         return false;
       }
     };
   }
 
+  @NotNull
   @Override
   public FocusRequestor getFurtherRequestor() {
     return this;
@@ -112,7 +129,7 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
   }
 
   @Override
-  public void runOnOwnContext(DataContext context, Runnable runnable) {
+  public void runOnOwnContext(@NotNull DataContext context, @NotNull Runnable runnable) {
     runnable.run();
   }
 

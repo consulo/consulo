@@ -30,6 +30,7 @@ import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
+import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.project.DumbAware;
@@ -163,6 +164,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
       return;
     }
 
+    NonProjectFileWritingAccessProvider.allowWriting(virtualFile);
     OpenFileDescriptor descriptor = new OpenFileDescriptor(project, virtualFile);
     FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
   }

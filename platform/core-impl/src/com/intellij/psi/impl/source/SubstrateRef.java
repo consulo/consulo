@@ -46,6 +46,11 @@ public abstract class SubstrateRef {
     return null;
   }
 
+  @Nullable
+  public Stub getGreenStub(int index) {
+    return getStub();
+  }
+
   public abstract boolean isValid();
 
   @NotNull
@@ -93,7 +98,7 @@ public abstract class SubstrateRef {
       @Override
       public PsiFile getContainingFile() {
         PsiFile file = SharedImplUtil.getContainingFile(node);
-        if (file == null) throw new PsiInvalidElementAccessException(node.getPsi());
+        if (file == null) throw PsiInvalidElementAccessException.createByNode(node, null);
         return file;
       }
     };
@@ -112,7 +117,7 @@ public abstract class SubstrateRef {
       throw new UnsupportedOperationException();
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Stub getStub() {
       return myStub;

@@ -203,6 +203,8 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.actionSystem.TypedActionHandler"/>
     </extensionPoint>
 
+    <extensionPoint name="customFileDropHandler" area="CONSULO_PROJECT" interface="com.intellij.openapi.editor.CustomFileDropHandler"/>
+
     <extensionPoint name="toolWindow" beanClass="com.intellij.openapi.wm.ToolWindowEP">
       <with attribute="factoryClass" implements="com.intellij.openapi.wm.ToolWindowFactory"/>
       <with attribute="conditionClass" implements="com.intellij.openapi.util.Condition"/>
@@ -1264,6 +1266,8 @@
     <applicationService serviceImplementation="consulo.ide.updateSettings.UpdateSettings" />
     <applicationService serviceInterface="com.intellij.featureStatistics.FeatureUsageTracker"
                         serviceImplementation="com.intellij.featureStatistics.FeatureUsageTrackerImpl"/>
+    <applicationService serviceInterface="com.intellij.reporting.FreezeLogger"
+                        serviceImplementation="com.intellij.reporting.FreezeLoggerImpl"/>
     <applicationService serviceInterface="com.intellij.featureStatistics.ProductivityFeaturesRegistry"
                         serviceImplementation="com.intellij.featureStatistics.ProductivityFeaturesRegistryImpl"/>
     <applicationService serviceInterface="com.intellij.internal.psiView.PsiViewerSettings"
@@ -2526,5 +2530,9 @@
     <orderEntryTypeEditor key="module-library" implementationClass="consulo.roots.orderEntry.ModuleLibraryOrderEntryTypeEditor"/>
     <orderEntryTypeEditor key="module" implementationClass="consulo.roots.orderEntry.ModuleOrderEntryTypeEditor"/>
     <orderEntryTypeEditor key="sourceFolder" implementationClass="consulo.roots.orderEntry.ModuleSourceOrderEntryTypeEditor"/>
+
+    <writingAccessProvider implementation="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider" order="first"/>
+
+    <customFileDropHandler implementation="com.intellij.openapi.vcs.changes.patch.PatchFileDropHandler"/>
   </extensions>
 </idea-plugin>

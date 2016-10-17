@@ -16,6 +16,7 @@
 
 package com.intellij.psi.impl.source.tree;
 
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.application.ApplicationManager;
@@ -40,12 +41,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Set;
 
 public class TreeUtil {
-  public static final Key<String> UNCLOSED_ELEMENT_PROPERTY = Key.create("UNCLOSED_ELEMENT_PROPERTY");
+  private static final Key<String> UNCLOSED_ELEMENT_PROPERTY = Key.create("UNCLOSED_ELEMENT_PROPERTY");
 
   private TreeUtil() {
   }
@@ -57,8 +58,10 @@ public class TreeUtil {
   }
 
   public static void ensureParsedRecursively(@NotNull ASTNode node) {
-    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() { });
+    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
+    });
   }
+
   public static void ensureParsedRecursivelyCheckingProgress(@NotNull ASTNode node, @NotNull final ProgressIndicator indicator) {
     ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
       @Override
@@ -148,7 +151,7 @@ public class TreeUtil {
     }
   }
 
-  public static boolean isLeafOrCollapsedChameleon(ASTNode node) {
+  private static boolean isLeafOrCollapsedChameleon(ASTNode node) {
     return node instanceof LeafElement || isCollapsedChameleon(node);
   }
 
@@ -249,11 +252,11 @@ public class TreeUtil {
     if (one == two) return Couple.of(null, null);
 
     LinkedList<ASTNode> oneParents = new LinkedList<ASTNode>();
-    LinkedList<ASTNode> twoParents = new LinkedList<ASTNode>();
     while (one != null) {
       oneParents.add(one);
       one = one.getTreeParent();
     }
+    LinkedList<ASTNode> twoParents = new LinkedList<ASTNode>();
     while (two != null) {
       twoParents.add(two);
       two = two.getTreeParent();
@@ -284,6 +287,7 @@ public class TreeUtil {
   }
 
   public static final Key<FileElement> CONTAINING_FILE_KEY_AFTER_REPARSE = Key.create("CONTAINING_FILE_KEY_AFTER_REPARSE");
+
   public static FileElement getFileElement(TreeElement element) {
     TreeElement parent = element;
     while (parent != null && !(parent instanceof FileElement)) {
@@ -314,10 +318,7 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static TreeElement nextLeaf(@NotNull TreeElement start,
-                                     CommonParentState commonParent,
-                                     IElementType searchedType,
-                                     boolean expandChameleons) {
+  public static TreeElement nextLeaf(@NotNull TreeElement start, CommonParentState commonParent, IElementType searchedType, boolean expandChameleons) {
     TreeElement element = start;
     while (element != null) {
       if (commonParent != null) {
@@ -338,7 +339,7 @@ public class TreeUtil {
       }
       element = element.getTreeParent();
     }
-    return element;
+    return null;
   }
 
   private static void initStrongWhitespaceHolder(CommonParentState commonParent, ASTNode start, boolean slopeSide) {
@@ -355,9 +356,9 @@ public class TreeUtil {
                                                  final CommonParentState commonParent,
                                                  final boolean expandChameleons) {
     class MyVisitor extends RecursiveTreeElementWalkingVisitor {
-      TreeElement result;
+      private TreeElement result;
 
-      MyVisitor(boolean doTransform) {
+      private MyVisitor(boolean doTransform) {
         super(doTransform);
       }
 
@@ -440,20 +441,20 @@ public class TreeUtil {
   }
 
   public static final class CommonParentState {
-    public TreeElement startLeafBranchStart = null;
-    public ASTNode nextLeafBranchStart = null;
-    public CompositeElement strongWhiteSpaceHolder = null;
-    public boolean isStrongElementOnRisingSlope = true;
+    TreeElement startLeafBranchStart;
+    public ASTNode nextLeafBranchStart;
+    CompositeElement strongWhiteSpaceHolder;
+    boolean isStrongElementOnRisingSlope = true;
   }
 
   public static class StubBindingException extends RuntimeException {
-    public StubBindingException(String message) {
+    StubBindingException(String message) {
       super(message);
     }
   }
 
   public static void bindStubsToTree(@NotNull PsiFileImpl file, @NotNull StubTree stubTree, @NotNull FileElement tree) throws StubBindingException {
-    final Iterator<StubElement<?>> stubs = stubTree.getPlainList().iterator();
+    final ListIterator<StubElement<?>> stubs = stubTree.getPlainList().listIterator();
     stubs.next();  // skip file root stub
 
     final IStubFileElementType type = file.getElementTypeForStubBuilder();
@@ -474,8 +475,10 @@ public class TreeUtil {
             throw new StubBindingException("stub:" + stub + ", AST:" + type);
           }
 
+          StubBasedPsiElementBase psi = (StubBasedPsiElementBase)node.getPsi();
           //noinspection unchecked
-          ((StubBase)stub).setPsi(node.getPsi());
+          ((StubBase)stub).setPsi(psi);
+          psi.setStubIndex(stubs.previousIndex());
         }
 
         super.visitNode(node);
@@ -489,12 +492,12 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static ASTNode skipWhitespaceCommentsAndTokens(final ASTNode node, TokenSet alsoSkip, boolean forward) {
+  public static ASTNode skipWhitespaceCommentsAndTokens(final ASTNode node, @NotNull TokenSet alsoSkip, boolean forward) {
     ASTNode element = node;
     while (true) {
       if (element == null) return null;
       if (!isWhitespaceOrComment(element) && !alsoSkip.contains(element.getElementType())) break;
-      element = forward ? element.getTreeNext(): element.getTreePrev();
+      element = forward ? element.getTreeNext() : element.getTreePrev();
     }
     return element;
   }

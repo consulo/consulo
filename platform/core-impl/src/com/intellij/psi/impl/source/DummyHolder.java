@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,16 @@ import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.util.CharTable;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DummyHolder extends PsiFileImpl {
-  public final PsiElement myContext;
+  protected final PsiElement myContext;
   private final CharTable myTable;
   private final Boolean myExplicitlyValid;
   private final Language myLanguage;
-  private volatile FileElement myFileElement = null;
+  private volatile FileElement myFileElement;
   @SuppressWarnings("EmptyClass") private static class DummyHolderTreeLock {}
   private final DummyHolderTreeLock myTreeElementLock = new DummyHolderTreeLock();
 
@@ -93,13 +94,13 @@ public class DummyHolder extends PsiFileImpl {
 
   @Override
   public PsiElement getContext() {
-    return myContext;
+    return myContext != null && myContext.isValid() ? myContext : super.getContext();
   }
 
   @Override
   public boolean isValid() {
     if (myExplicitlyValid != null) return myExplicitlyValid.booleanValue();
-    return super.isValid() && !(myContext != null && !myContext.isValid());
+    return super.isValid();
   }
 
   @Override
@@ -115,8 +116,9 @@ public class DummyHolder extends PsiFileImpl {
   @Override
   @NotNull
   public FileType getFileType() {
-    if (myContext != null) {
-      PsiFile containingFile = myContext.getContainingFile();
+    PsiElement context = getContext();
+    if (context != null) {
+      PsiFile containingFile = context.getContainingFile();
       if (containingFile != null) return containingFile.getFileType();
     }
     final LanguageFileType fileType = myLanguage.getAssociatedFileType();
@@ -124,6 +126,7 @@ public class DummyHolder extends PsiFileImpl {
   }
 
   @Override
+  @NotNull
   public FileElement getTreeElement() {
     FileElement fileElement = myFileElement;
     if (fileElement != null) return fileElement;
@@ -141,6 +144,7 @@ public class DummyHolder extends PsiFileImpl {
     }
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public Language getLanguage() {
@@ -150,23 +154,28 @@ public class DummyHolder extends PsiFileImpl {
   @Override
   @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException"})
   protected PsiFileImpl clone() {
-    final PsiFileImpl psiFile = cloneImpl(myFileElement);
+    final PsiFileImpl psiClone = cloneImpl(myFileElement);
     final DummyHolderViewProvider dummyHolderViewProvider = new DummyHolderViewProvider(getManager());
     myViewProvider = dummyHolderViewProvider;
-    dummyHolderViewProvider.setDummyHolder((DummyHolder)psiFile);
+    dummyHolderViewProvider.setDummyHolder((DummyHolder)psiClone);
     final FileElement treeClone = (FileElement)calcTreeElement().clone();
-    psiFile.setTreeElementPointer(treeClone); // should not use setTreeElement here because cloned file still have VirtualFile (SCR17963)
-    psiFile.myOriginalFile = isPhysical() ? this : myOriginalFile;
-    treeClone.setPsi(psiFile);
-    return psiFile;
+    psiClone.setTreeElementPointer(treeClone); // should not use setTreeElement here because cloned file still have VirtualFile (SCR17963)
+    psiClone.myOriginalFile = isPhysical() ? this : myOriginalFile;
+    treeClone.setPsi(psiClone);
+    return psiClone;
   }
 
-  private FileViewProvider myViewProvider = null;
+  private FileViewProvider myViewProvider;
 
   @Override
   @NotNull
   public FileViewProvider getViewProvider() {
     if(myViewProvider != null) return myViewProvider;
     return super.getViewProvider();
+  }
+
+  @Override
+  public boolean useStrongRefs() {
+    return true;
   }
 }

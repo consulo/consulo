@@ -22,11 +22,13 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
+import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
-import com.intellij.psi.tree.IStubFileElementType;
+import com.intellij.util.containers.BooleanStack;
 import com.intellij.util.containers.Stack;
+import consulo.annotations.RequiredReadAction;
 import gnu.trove.TIntStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,6 +38,7 @@ public class LightStubBuilder implements StubBuilder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.LightStubBuilder");
   public static final ThreadLocal<LighterAST> FORCED_AST = new ThreadLocal<LighterAST>();
 
+  @RequiredReadAction
   @Override
   public StubElement buildStubTree(@NotNull PsiFile file) {
     LighterAST tree = FORCED_AST.get();
@@ -45,15 +48,15 @@ public class LightStubBuilder implements StubBuilder {
         LOG.error("File is not of LanguageFileType: " + fileType + ", " + file);
         return null;
       }
-      Language language = ((LanguageFileType)fileType).getLanguage();
-      final IFileElementType contentType = LanguageParserDefinitions.INSTANCE.forLanguage(language).getFileNodeType();
-      if (!(contentType instanceof IStubFileElementType)) {
-        LOG.error("File is not of IStubFileElementType: " + contentType + ", " + file);
+      assert file instanceof PsiFileImpl;
+      final IFileElementType contentType = ((PsiFileImpl)file).getElementTypeForStubBuilder();
+      if (contentType == null) {
+        LOG.error("File is not of IStubFileElementType: " + file);
         return null;
       }
 
       final FileASTNode node = file.getNode();
-      if (contentType instanceof ILightStubFileElementType) {
+      if (node.getElementType() instanceof ILightStubFileElementType) {
         tree = node.getLighterAST();
       }
       else {
@@ -78,6 +81,7 @@ public class LightStubBuilder implements StubBuilder {
   protected void buildStubTree(@NotNull LighterAST tree, @NotNull LighterASTNode root, @NotNull StubElement rootStub) {
     final Stack<LighterASTNode> parents = new Stack<LighterASTNode>();
     final TIntStack childNumbers = new TIntStack();
+    final BooleanStack parentsStubbed = new BooleanStack();
     final Stack<List<LighterASTNode>> kinderGarden = new Stack<List<LighterASTNode>>();
     final Stack<StubElement> parentStubs = new Stack<StubElement>();
 
@@ -86,10 +90,15 @@ public class LightStubBuilder implements StubBuilder {
     List<LighterASTNode> children = null;
     int childNumber = 0;
     StubElement parentStub = rootStub;
+    boolean immediateParentStubbed = true;
 
     nextElement:
     while (element != null) {
       final StubElement stub = createStub(tree, element, parentStub);
+      boolean hasStub = stub != parentStub || parent == null;
+      if (hasStub && !immediateParentStubbed) {
+        ((ObjectStubBase) stub).markDangling();
+      }
 
       if (parent == null || !skipNode(tree, parent, element)) {
         final List<LighterASTNode> kids = tree.getChildren(element);
@@ -99,8 +108,10 @@ public class LightStubBuilder implements StubBuilder {
             childNumbers.push(childNumber);
             kinderGarden.push(children);
             parentStubs.push(parentStub);
+            parentsStubbed.push(immediateParentStubbed);
           }
           parent = element;
+          immediateParentStubbed = hasStub;
           element = (children = kids).get(childNumber = 0);
           parentStub = stub;
           if (!skipNode(tree, parent, element)) continue nextElement;
@@ -121,6 +132,7 @@ public class LightStubBuilder implements StubBuilder {
         }
         children = kinderGarden.pop();
         parentStub = parentStubs.pop();
+        immediateParentStubbed = parentsStubbed.pop();
         while (++childNumber < children.size()) {
           element = children.get(childNumber);
           if (!skipNode(tree, parent, element)) continue nextElement;
@@ -130,8 +142,8 @@ public class LightStubBuilder implements StubBuilder {
     }
   }
 
-  @SuppressWarnings({"MethodMayBeStatic"})
-  protected StubElement createStub(final LighterAST tree, final LighterASTNode element, final StubElement parentStub) {
+  @NotNull
+  private static StubElement createStub(final LighterAST tree, final LighterASTNode element, final StubElement parentStub) {
     final IElementType elementType = element.getTokenType();
     if (elementType instanceof IStubElementType) {
       if (elementType instanceof ILightStubElementType) {

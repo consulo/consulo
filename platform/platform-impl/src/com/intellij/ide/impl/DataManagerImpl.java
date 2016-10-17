@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.impl.dataRules.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
@@ -34,9 +33,9 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FloatingDecorator;
+import com.intellij.reference.SoftReference;
 import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.containers.WeakValueHashMap;
-import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -44,27 +43,22 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-public class DataManagerImpl extends DataManager implements ApplicationComponent {
+public class DataManagerImpl extends DataManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.impl.DataManagerImpl");
-  private final Map<String, GetDataRule> myDataConstantToRuleMap = new THashMap<String, GetDataRule>();
+  private final ConcurrentMap<String, GetDataRule> myDataConstantToRuleMap = new ConcurrentHashMap<>();
   private WindowManagerEx myWindowManager;
 
   public DataManagerImpl() {
     registerRules();
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   @Nullable
@@ -89,7 +83,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
 
       GetDataRule dataRule = getDataRule(dataId);
       if (dataRule != null) {
-        final Set<String> ids = alreadyComputedIds == null ? new THashSet<String>() : alreadyComputedIds;
+        final Set<String> ids = alreadyComputedIds == null ? new THashSet<>() : alreadyComputedIds;
         ids.add(dataId);
         data = dataRule.getData(new DataProvider() {
           @Override
@@ -160,7 +154,9 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
           rule = ruleEP.getInstance();
         }
       }
-      myDataConstantToRuleMap.put(dataId, rule);
+      if (rule != null) {
+        myDataConstantToRuleMap.putIfAbsent(dataId, rule);
+      }
     }
     return rule;
   }
@@ -213,15 +209,8 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
 
   @Override
   public AsyncResult<DataContext> getDataContextFromFocus() {
-    final AsyncResult<DataContext> context = new AsyncResult<DataContext>();
-
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(new Runnable() {
-      @Override
-      public void run() {
-        context.setDone(getDataContext());
-      }
-    });
-
+    AsyncResult<DataContext> context = new AsyncResult<>();
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> context.setDone(getDataContext()), ModalityState.current());
     return context;
   }
 
@@ -302,12 +291,6 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
   }
 
   @Override
-  @NotNull
-  public String getComponentName() {
-    return "DataManager";
-  }
-
-  @Override
   public <T> void saveInDataContext(DataContext dataContext, @NotNull Key<T> dataKey, @Nullable T data) {
     if (dataContext instanceof UserDataHolder) {
       ((UserDataHolder)dataContext).putUserData(dataKey, data);
@@ -335,7 +318,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
     public static final NullResult INSTANCE = new NullResult();
   }
 
-  private static final Set<String> ourSafeKeys = new HashSet<String>(Arrays.asList(
+  private static final Set<String> ourSafeKeys = new HashSet<>(Arrays.asList(
           CommonDataKeys.PROJECT.getName(),
           CommonDataKeys.EDITOR.getName(),
           PlatformDataKeys.IS_MODAL_CONTEXT.getName(),
@@ -348,15 +331,14 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
     // To prevent memory leak we have to wrap passed component into
     // the weak reference. For example, Swing often remembers menu items
     // that have DataContext as a field.
-    private final WeakReference<Component> myRef;
-    private WeakValueHashMap<Key, Object> myUserData;
-    private final WeakValueHashMap<String, Object> myCachedData = new WeakValueHashMap<String, Object>();
+    private final Reference<Component> myRef;
+    private Map<Key, Object> myUserData;
+    private final Map<String, Object> myCachedData = new WeakValueHashMap<>();
 
     public MyDataContext(final Component component) {
       myEventCount = -1;
-      myRef = new WeakReference<Component>(component);
+      myRef = component == null ? null : new WeakReference<>(component);
     }
-
 
     public void setEventCount(int eventCount, Object caller) {
       assert caller instanceof IdeKeyEventDispatcher : "This method might be accessible from " + IdeKeyEventDispatcher.class.getName() + " only";
@@ -389,7 +371,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
 
     @Nullable
     private Object doGetData(@NotNull String dataId) {
-      Component component = myRef.get();
+      Component component = SoftReference.dereference(myRef);
       if (PlatformDataKeys.IS_MODAL_CONTEXT.is(dataId)) {
         if (component == null) {
           return null;
@@ -402,7 +384,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
       if (PlatformDataKeys.MODALITY_STATE.is(dataId)) {
         return component != null ? ModalityState.stateForComponent(component) : ModalityState.NON_MODAL;
       }
-      if (CommonDataKeys.EDITOR.is(dataId)) {
+      if (CommonDataKeys.EDITOR.is(dataId) || CommonDataKeys.HOST_EDITOR.is(dataId)) {
         Editor editor = (Editor)((DataManagerImpl)DataManager.getInstance()).getData(dataId, component);
         return validateEditor(editor);
       }
@@ -411,7 +393,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
 
     @NonNls
     public String toString() {
-      return "component=" + myRef.get();
+      return "component=" + SoftReference.dereference(myRef);
     }
 
     @Override
@@ -425,10 +407,11 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
       getOrCreateMap().put(key, value);
     }
 
-    private WeakValueHashMap<Key, Object> getOrCreateMap() {
-      WeakValueHashMap<Key, Object> userData = myUserData;
+    @NotNull
+    private Map<Key, Object> getOrCreateMap() {
+      Map<Key, Object> userData = myUserData;
       if (userData == null) {
-        myUserData = userData = new WeakValueHashMap<Key, Object>();
+        myUserData = userData = new WeakValueHashMap<>();
       }
       return userData;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.ui.popup;
+package com.intellij.reporting;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+public abstract class FreezeLogger {
 
-/**
- * @author kir
- */
-public interface ListItemDescriptor<T> {
-  @Nullable
-  String getTextFor(T value);
+  public static FreezeLogger getInstance() {
+    return ServiceManager.getService(FreezeLogger.class);
+  }
 
-  @Nullable
-  String getTooltipFor(T value);
+  public abstract void runUnderPerformanceMonitor(@Nullable Project project, @NotNull Runnable action);
 
-  @Nullable
-  Icon getIconFor(T value);
-
-  boolean hasSeparatorAboveOf(T value);
-
-  @Nullable
-  String getCaptionAboveOf(T value);
 }

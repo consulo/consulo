@@ -16,6 +16,7 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
@@ -53,6 +54,11 @@ public class PassThroughIdeFocusManager extends IdeFocusManager {
 
   @Override
   public void doWhenFocusSettlesDown(@NotNull Runnable runnable) {
+    runnable.run();
+  }
+
+  @Override
+  public void doWhenFocusSettlesDown(@NotNull Runnable runnable, @NotNull ModalityState modality) {
     runnable.run();
   }
 

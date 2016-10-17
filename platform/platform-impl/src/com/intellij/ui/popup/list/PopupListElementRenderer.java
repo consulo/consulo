@@ -16,51 +16,84 @@
 package com.intellij.ui.popup.list;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.ui.popup.ListItemDescriptor;
+import com.intellij.openapi.actionSystem.Shortcut;
+import com.intellij.openapi.actionSystem.ShortcutProvider;
+import com.intellij.openapi.actionSystem.ShortcutSet;
+import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
 import com.intellij.openapi.ui.popup.ListPopupStep;
+import com.intellij.openapi.ui.popup.ListPopupStepEx;
+import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.ColorUtil;
+import com.intellij.ui.IdeBorderFactory;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class PopupListElementRenderer extends GroupedItemsListRenderer {
+public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
   private final ListPopupImpl myPopup;
+  private JLabel myShortcutLabel;
 
   public PopupListElementRenderer(final ListPopupImpl aPopup) {
-    super(new ListItemDescriptor() {
+    super(new ListItemDescriptorAdapter<E>() {
       @Override
-      public String getTextFor(Object value) {
+      public String getTextFor(E value) {
         return aPopup.getListStep().getTextFor(value);
       }
 
       @Override
-      public String getTooltipFor(Object value) {
-        return null;
-      }
-
-      @Override
-      public Icon getIconFor(Object value) {
+      public Icon getIconFor(E value) {
         return aPopup.getListStep().getIconFor(value);
       }
 
       @Override
-      public boolean hasSeparatorAboveOf(Object value) {
+      public boolean hasSeparatorAboveOf(E value) {
         return aPopup.getListModel().isSeparatorAboveOf(value);
       }
 
       @Override
-      public String getCaptionAboveOf(Object value) {
+      public String getCaptionAboveOf(E value) {
         return aPopup.getListModel().getCaptionAboveOf(value);
+      }
+
+      @Nullable
+      @Override
+      public String getTooltipFor(E value) {
+        ListPopupStep<Object> listStep = aPopup.getListStep();
+        if (!(listStep instanceof ListPopupStepEx)) return null;
+        return ((ListPopupStepEx<E>)listStep).getTooltipTextFor(value);
       }
     });
     myPopup = aPopup;
   }
 
   @Override
-  protected void customizeComponent(JList list, Object value, boolean isSelected) {
+  protected JComponent createItemComponent() {
+    JPanel panel = new JPanel(new BorderLayout());
+    createLabel();
+    panel.add(myTextLabel, BorderLayout.CENTER);
+    myShortcutLabel = new JLabel();
+    myShortcutLabel.setBorder(IdeBorderFactory.createEmptyBorder(0, 0, 0, 3));
+    Color color = UIManager.getColor("MenuItem.acceleratorForeground");
+    myShortcutLabel.setForeground(color);
+    panel.add(myShortcutLabel, BorderLayout.EAST);
+    return layoutComponent(panel);
+  }
+
+  @Override
+  protected void customizeComponent(JList<? extends E> list, E value, boolean isSelected) {
     ListPopupStep<Object> step = myPopup.getListStep();
     boolean isSelectable = step.isSelectable(value);
     myTextLabel.setEnabled(isSelectable);
+    if (!isSelected && step instanceof BaseListPopupStep) {
+      Color bg = ((BaseListPopupStep)step).getBackgroundFor(value);
+      Color fg = ((BaseListPopupStep)step).getForegroundFor(value);
+      if (fg != null) myTextLabel.setForeground(fg);
+      if (bg != null) UIUtil.setBackgroundRecursively(myComponent, bg);
+    }
 
     if (step.isMnemonicsNavigationEnabled()) {
       final int pos = step.getMnemonicNavigationFilter().getMnemonicPos(value);
@@ -87,13 +120,22 @@ public class PopupListElementRenderer extends GroupedItemsListRenderer {
       //myNextStepLabel.setIcon(PopupIcons.EMPTY_ICON);
     }
 
-    if (isSelected) {
-      setSelected(myNextStepLabel);
-    }
-    else {
-      setDeselected(myNextStepLabel);
+    setSelected(myNextStepLabel, isSelected);
+
+
+    if (myShortcutLabel != null) {
+      myShortcutLabel.setText("");
+      if (value instanceof ShortcutProvider) {
+        ShortcutSet set = ((ShortcutProvider)value).getShortcut();
+        if (set != null) {
+          Shortcut shortcut = ArrayUtil.getFirstElement(set.getShortcuts());
+          if (shortcut != null) {
+            myShortcutLabel.setText("     " + KeymapUtil.getShortcutText(shortcut));
+          }
+        }
+      }
+      setSelected(myShortcutLabel, isSelected);
+      myShortcutLabel.setForeground(isSelected ? UIManager.getColor("MenuItem.acceleratorSelectionForeground") : UIManager.getColor("MenuItem.acceleratorForeground"));
     }
   }
-
-
 }
