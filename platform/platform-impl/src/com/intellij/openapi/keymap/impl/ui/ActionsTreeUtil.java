@@ -80,7 +80,7 @@ public class ActionsTreeUtil {
     for (IdeaPluginDescriptor plugin : plugins) {
       collected.add(plugin.getPluginId());
       Group pluginGroup;
-      if (plugin.getName().equals("IDEA CORE")) {
+      if (plugin.getPluginId().equals(PluginManagerCore.CORE_PLUGIN)) {
         continue;
       }
       else {

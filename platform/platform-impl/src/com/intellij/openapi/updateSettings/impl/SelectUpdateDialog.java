@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * @author pti
  */
+@Deprecated
 class SelectUpdateDialog extends AbstractUpdateDialog {
   protected SelectUpdateDialog(final List<Couple<IdeaPluginDescriptor>> updatePlugins, boolean enableLink) {
     super(true, enableLink, updatePlugins);

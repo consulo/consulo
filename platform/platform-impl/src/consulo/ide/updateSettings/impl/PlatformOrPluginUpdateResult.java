@@ -27,10 +27,12 @@ import java.util.List;
  */
 public class PlatformOrPluginUpdateResult {
   public static PlatformOrPluginUpdateResult CANCELED = new PlatformOrPluginUpdateResult(Type.CANCELED, Collections.emptyList());
+  public static PlatformOrPluginUpdateResult NO_UPDATE = new PlatformOrPluginUpdateResult(Type.NO_UPDATE, Collections.emptyList());
 
   public enum Type {
     PLATFORM_UPDATE,
     PLUGIN_UPDATE,
+    NO_UPDATE,
     CANCELED
   }
 

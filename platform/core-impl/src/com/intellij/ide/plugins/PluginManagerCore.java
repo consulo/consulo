@@ -77,8 +77,7 @@ public class PluginManagerCore {
   public static final float PLUGINS_PROGRESS_MAX_VALUE = 0.3f;
   static final Map<PluginId, Integer> ourId2Index = new THashMap<PluginId, Integer>();
   static final PluginClassCache ourPluginClasses = new PluginClassCache();
-  @NonNls
-  static final String SPECIAL_IDEA_PLUGIN = "IDEA CORE";
+
   static final String DISABLE = "disable";
   static final String ENABLE = "enable";
   static final String EDIT = "edit";
@@ -311,7 +310,7 @@ public class PluginManagerCore {
       final String version = descriptor.getVersion();
       String s = descriptor.getName() + (version != null ? " (" + version + ")" : "");
       if (descriptor.isEnabled()) {
-        if (descriptor.isBundled() || SPECIAL_IDEA_PLUGIN.equals(descriptor.getName())) {
+        if (descriptor.isBundled() || CORE_PLUGIN.equals(descriptor.getPluginId())) {
           loadedBundled.add(s);
         }
         else {
@@ -811,7 +810,7 @@ public class PluginManagerCore {
 
   static PluginSkipReason calcPluginSkipReason(final IdeaPluginDescriptor descriptor, IdeaPluginDescriptor[] loaded) {
     final String idString = descriptor.getPluginId().getIdString();
-    if (idString.equals(CORE_PLUGIN_ID)) {
+    if (descriptor.getPluginId().equals(CORE_PLUGIN)) {
       return PluginSkipReason.NO;
     }
 

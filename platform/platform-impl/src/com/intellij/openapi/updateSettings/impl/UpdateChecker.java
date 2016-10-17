@@ -69,7 +69,7 @@ public final class UpdateChecker {
       return result;
     }
     app.executeOnPooledThread(() -> {
-      PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(true, null).notify(result);
+      PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(null, false, null).notify(result);
     });
     return result;
   }

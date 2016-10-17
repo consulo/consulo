@@ -223,16 +223,16 @@ public class PluginManager extends PluginManagerCore {
     if (config != null) {
       pluginId = config.getPluginId();
     }
-    if (pluginId == null || CORE_PLUGIN_ID.equals(pluginId.getIdString())) {
+    if (pluginId == null || CORE_PLUGIN.equals(pluginId)) {
       pluginId = componentClassName == null ? null : getPluginByClassName(componentClassName);
     }
-    if (pluginId == null || CORE_PLUGIN_ID.equals(pluginId.getIdString())) {
+    if (pluginId == null || CORE_PLUGIN.equals(pluginId)) {
       if (t instanceof PicoPluginExtensionInitializationException) {
         pluginId = ((PicoPluginExtensionInitializationException)t).getPluginId();
       }
     }
 
-    if (pluginId != null && !CORE_PLUGIN_ID.equals(pluginId.getIdString())) {
+    if (pluginId != null && !CORE_PLUGIN.equals(pluginId)) {
       getLogger().warn(t);
 
       disablePlugin(pluginId.getIdString());

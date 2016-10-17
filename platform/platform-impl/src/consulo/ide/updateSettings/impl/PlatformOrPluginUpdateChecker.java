@@ -15,12 +15,17 @@
  */
 package consulo.ide.updateSettings.impl;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.*;
+import com.intellij.notification.NotificationDisplayType;
+import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.updateSettings.impl.UpdateChecker;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
@@ -41,6 +46,8 @@ import java.util.*;
  */
 @Logger
 public class PlatformOrPluginUpdateChecker {
+  private static final NotificationGroup ourGroup = new NotificationGroup("platformOrPluginUpdate", NotificationDisplayType.STICKY_BALLOON, false);
+
   @NotNull
   public static String getPlatformPluginId() {
     if (SystemInfo.isWindows) {
@@ -54,24 +61,26 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
-  public static void showUpdateResult(final PlatformOrPluginUpdateResult targetsForUpdate,
-                                      final boolean showConfirmation,
-                                      final boolean enableLink,
-                                      final boolean alwaysShowResults) {
+  public static void showUpdateResult(@Nullable Project project, final PlatformOrPluginUpdateResult targetsForUpdate, final boolean showResults) {
     PlatformOrPluginUpdateResult.Type type = targetsForUpdate.getType();
     switch (type) {
+      case NO_UPDATE:
+        if (showResults) {
+          ourGroup.createNotification(IdeBundle.message("update.available.group"), "There no updates", NotificationType.INFORMATION, null).notify(project);
+        }
+        break;
       case PLATFORM_UPDATE:
-        UpdateChecker.showUpdateResult(targetsForUpdate.getPlugins(), showConfirmation, enableLink, alwaysShowResults);
+        UpdateChecker.showUpdateResult(targetsForUpdate.getPlugins(), true, true, showResults);
         break;
       case PLUGIN_UPDATE:
-        UpdateChecker.showUpdateResult(targetsForUpdate.getPlugins(), showConfirmation, enableLink, alwaysShowResults);
+        UpdateChecker.showUpdateResult(targetsForUpdate.getPlugins(), true, true, showResults);
         break;
     }
   }
 
-  public static ActionCallback checkAndNotifyForUpdates(boolean silent, @Nullable ProgressIndicator indicator) {
+  public static ActionCallback checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {
     ActionCallback actionCallback = new ActionCallback();
-    PlatformOrPluginUpdateResult updateResult = checkForUpdates(silent, indicator);
+    PlatformOrPluginUpdateResult updateResult = checkForUpdates(showResults, indicator);
     if (updateResult == PlatformOrPluginUpdateResult.CANCELED) {
       actionCallback.setDone();
       return actionCallback;
@@ -80,13 +89,13 @@ public class PlatformOrPluginUpdateChecker {
     UIUtil.invokeLaterIfNeeded(() -> {
       actionCallback.setDone();
 
-      showUpdateResult(updateResult, true, true, !silent);
+      showUpdateResult(project, updateResult, showResults);
     });
     return actionCallback;
   }
 
   @NotNull
-  private static PlatformOrPluginUpdateResult checkForUpdates(final boolean showErrorDialog, @Nullable ProgressIndicator indicator) {
+  private static PlatformOrPluginUpdateResult checkForUpdates(final boolean showResults, @Nullable ProgressIndicator indicator) {
     PluginId platformPluginId = PluginId.getId(getPlatformPluginId());
 
     ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
@@ -119,7 +128,7 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     final List<Couple<IdeaPluginDescriptor>> targets = new ArrayList<>();
-    if(newPlatformPlugin != null) {
+    if (newPlatformPlugin != null) {
       PluginNode thisPlatform = new PluginNode(platformPluginId);
       thisPlatform.setVersion(appInfo.getBuild().asString());
       thisPlatform.setName(newPlatformPlugin.getName());
@@ -173,13 +182,16 @@ public class PlatformOrPluginUpdateChecker {
         return PlatformOrPluginUpdateResult.CANCELED;
       }
       catch (Exception e) {
-        UpdateChecker.showErrorMessage(showErrorDialog, e.getMessage());
+        UpdateChecker.showErrorMessage(showResults, e.getMessage());
       }
     }
 
     if (newPlatformPlugin != null) {
       return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE, targets);
     }
-    return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
+
+    return targets.isEmpty()
+           ? PlatformOrPluginUpdateResult.NO_UPDATE
+           : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
   }
 }

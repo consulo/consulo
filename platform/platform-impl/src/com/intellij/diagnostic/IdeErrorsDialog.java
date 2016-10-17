@@ -26,7 +26,6 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.*;
@@ -48,7 +47,6 @@ import com.intellij.ui.HeaderlessTabbedPane;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.Consumer;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
@@ -412,22 +410,13 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginId);
     final Ref<Boolean> hasDependants = new Ref<Boolean>(false);
-    PluginManager.checkDependants(plugin, new Function<PluginId, IdeaPluginDescriptor>() {
-                                    @Override
-                                    public IdeaPluginDescriptor fun(PluginId pluginId) {
-                                      return PluginManager.getPlugin(pluginId);
-                                    }
-                                  }, new Condition<PluginId>() {
-                                    @Override
-                                    public boolean value(PluginId pluginId) {
-                                      if (PluginManager.CORE_PLUGIN_ID.equals(pluginId.getIdString())) {
-                                        return true;
-                                      }
-                                      hasDependants.set(true);
-                                      return false;
-                                    }
-                                  }
-    );
+    PluginManager.checkDependants(plugin, PluginManager::getPlugin, pluginId1 -> {
+      if (PluginManager.CORE_PLUGIN.equals(pluginId1)) {
+        return true;
+      }
+      hasDependants.set(true);
+      return false;
+    });
 
     Application app = ApplicationManager.getApplication();
     DisablePluginWarningDialog d = new DisablePluginWarningDialog(getRootPane(), plugin.getName(), hasDependants.get(), app.isRestartCapable());
@@ -558,7 +547,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         text.append(DiagnosticBundle.message("error.list.message.blame.unknown.plugin"));
       }
       else {
-        text.append(DiagnosticBundle.message("error.list.message.blame.core", ApplicationNamesInfo.getInstance().getProductName()));
+        text.append(DiagnosticBundle.message("error.list.message.blame.core"));
       }
     }
     else {

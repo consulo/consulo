@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Logger
+@Deprecated
 public abstract class AbstractUpdateDialog extends DialogWrapper {
   private final boolean myEnableLink;
   protected final List<Couple<IdeaPluginDescriptor>> myUploadedPlugins;

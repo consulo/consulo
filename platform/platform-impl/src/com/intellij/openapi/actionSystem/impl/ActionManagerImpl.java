@@ -428,7 +428,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
 
   @Nullable
   private static ResourceBundle getActionsResourceBundle(ClassLoader loader, IdeaPluginDescriptor plugin) {
-    @NonNls final String resBundleName = plugin != null && !plugin.getPluginId().getIdString().equals(PluginManagerCore.CORE_PLUGIN_ID)
+    @NonNls final String resBundleName = plugin != null && !plugin.getPluginId().equals(PluginManagerCore.CORE_PLUGIN)
                                          ? plugin.getResourceBundleBaseName()
                                          : ACTIONS_BUNDLE;
     ResourceBundle bundle = null;

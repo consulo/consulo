@@ -47,16 +47,16 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
   public void actionPerformed(@NotNull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
 
-    actionPerformed(project, true, UpdateSettings.getInstance());
+    actionPerformed(project, UpdateSettings.getInstance());
   }
 
-  public static void actionPerformed(Project project, final boolean enableLink, final UpdateSettings updateSettings) {
+  public static void actionPerformed(Project project, final UpdateSettings updateSettings) {
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Checking for updates", true) {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
 
-        PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(true, indicator).doWhenDone(updateSettings::saveLastCheckedInfo);
+        PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator).doWhenDone(updateSettings::saveLastCheckedInfo);
       }
     });
   }

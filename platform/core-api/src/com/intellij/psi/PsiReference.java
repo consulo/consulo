@@ -103,7 +103,7 @@ public interface PsiReference {
    * instances representing all identifiers that are visible at the location of the reference. The contents
    * of the returned array is used to build the lookup list for basic code completion. (The list
    * of visible identifiers may not be filtered by the completion prefix string - the
-   * filtering is performed later by IDEA core.)
+   * filtering is performed later.)
    *
    * @return the array of available identifiers.
    */
