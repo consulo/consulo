@@ -21,6 +21,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
@@ -401,12 +402,16 @@ public interface Application extends ComponentManager {
    * Returns lock used for read operations, should be closed in finally block
    */
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use runReadAction(Runnable)")
   AccessToken acquireReadActionLock();
 
   /**
    * Returns lock used for write operations, should be closed in finally block
    */
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use runWriteAction(Runnable)")
   @RequiredDispatchThread
   AccessToken acquireWriteActionLock(@NotNull Class marker);
 
