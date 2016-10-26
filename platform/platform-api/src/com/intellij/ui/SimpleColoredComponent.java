@@ -163,12 +163,16 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   /**
    * Appends text fragment and sets it's end offset and alignment.
    * See SimpleColoredComponent#appendTextPadding for details
-   * @param fragment text fragment
+   *
+   * @param fragment   text fragment
    * @param attributes text attributes
-   * @param padding end offset of the text
-   * @param align alignment between current offset and padding
+   * @param padding    end offset of the text
+   * @param align      alignment between current offset and padding
    */
-  public final void append(@NotNull final String fragment, @NotNull final SimpleTextAttributes attributes, int padding, @JdkConstants.HorizontalAlignment int align) {
+  public final void append(@NotNull final String fragment,
+                           @NotNull final SimpleTextAttributes attributes,
+                           int padding,
+                           @JdkConstants.HorizontalAlignment int align) {
     append(fragment, attributes, myMainTextLastIndex < 0);
     appendTextPadding(padding, align);
   }
@@ -234,9 +238,9 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
   /**
    * @param padding end offset that will be set after drawing current text fragment
-   * @param align alignment of the current text fragment, if it is SwingConstants.RIGHT
-   *              or SwingConstants.TRAILING then the text fragment will be aligned to the right at
-   *              the padding, otherwise it will be aligned to the left
+   * @param align   alignment of the current text fragment, if it is SwingConstants.RIGHT
+   *                or SwingConstants.TRAILING then the text fragment will be aligned to the right at
+   *                the padding, otherwise it will be aligned to the left
    */
   public synchronized void appendTextPadding(int padding, @JdkConstants.HorizontalAlignment int align) {
     final int alignIndex = myFragments.size() - 1;
@@ -490,7 +494,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     AttributedCharacterIterator it = string.getIterator(new AttributedCharacterIterator.Attribute[0], start, end);
     Font currentFont = basefont;
     int currentIndex = start;
-    for(char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
+    for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
       Font font = basefont;
       if (!font.canDisplay(c)) {
         for (SuitableFontProvider provider : SuitableFontProvider.EP_NAME.getExtensions()) {
@@ -514,8 +518,9 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   }
 
   private boolean needFontFallback(Font font, String text) {
-    return mySupportFontFallback && font.canDisplayUpTo(text) != -1
-           && text.indexOf(CharacterIterator.DONE) == -1; // see IDEA-137517, TextLayout does not support this character
+    return mySupportFontFallback &&
+           font.canDisplayUpTo(text) != -1 &&
+           text.indexOf(CharacterIterator.DONE) == -1; // see IDEA-137517, TextLayout does not support this character
   }
 
   /**
@@ -617,10 +622,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
   }
 
-  static void formatLink(@NotNull StringBuilder builder,
-                         @NotNull String fragment,
-                         @NotNull SimpleTextAttributes attributes,
-                         @NotNull String url) {
+  static void formatLink(@NotNull StringBuilder builder, @NotNull String fragment, @NotNull SimpleTextAttributes attributes, @NotNull String url) {
     if (!fragment.isEmpty()) {
       builder.append("<a href=\"").append(StringUtil.replace(url, "\"", "%22")).append("\"");
       formatStyle(builder, attributes);
@@ -783,8 +785,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       final int fragmentAlignment = myFragmentAlignment.get(i);
 
       final int endOffset;
-      if (fragmentPadding > 0 &&
-          fragmentPadding > fragmentWidth) {
+      if (fragmentPadding > 0 && fragmentPadding > fragmentWidth) {
         endOffset = fragmentPadding;
         if (fragmentAlignment == SwingConstants.RIGHT || fragmentAlignment == SwingConstants.TRAILING) {
           offset = (fragmentPadding - fragmentWidth);
@@ -992,8 +993,9 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
   @NotNull
   public CharSequence getCharSequence(boolean mainOnly) {
-    List<String> fragments = mainOnly && myMainTextLastIndex > -1 && myMainTextLastIndex + 1 < myFragments.size() ?
-                             myFragments.subList(0, myMainTextLastIndex + 1) : myFragments;
+    List<String> fragments = mainOnly && myMainTextLastIndex > -1 && myMainTextLastIndex + 1 < myFragments.size()
+                             ? myFragments.subList(0, myMainTextLastIndex + 1)
+                             : myFragments;
     return StringUtil.join(fragments, "");
   }
 

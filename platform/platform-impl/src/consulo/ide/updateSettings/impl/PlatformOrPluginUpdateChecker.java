@@ -48,16 +48,20 @@ import java.util.*;
 public class PlatformOrPluginUpdateChecker {
   private static final NotificationGroup ourGroup = new NotificationGroup("platformOrPluginUpdate", NotificationDisplayType.STICKY_BALLOON, false);
 
+  private static final PluginId ourWinNoJre = PluginId.getId("consulo-win-no-jre");
+  private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
+  private static final PluginId ourLinuxNoJre = PluginId.getId("consulo-linux-no-jre");
+
   @NotNull
-  public static String getPlatformPluginId() {
+  public static PluginId getPlatformPluginId() {
     if (SystemInfo.isWindows) {
-      return "consulo-win-no-jre";
+      return ourWinNoJre;
     }
     else if (SystemInfo.isMac) {
-      return "consulo-mac-no-jre";
+      return ourMacNoJre;
     }
     else {
-      return "consulo-linux-no-jre";
+      return ourLinuxNoJre;
     }
   }
 
@@ -96,7 +100,7 @@ public class PlatformOrPluginUpdateChecker {
 
   @NotNull
   private static PlatformOrPluginUpdateResult checkForUpdates(final boolean showResults, @Nullable ProgressIndicator indicator) {
-    PluginId platformPluginId = PluginId.getId(getPlatformPluginId());
+    PluginId platformPluginId = getPlatformPluginId();
 
     ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
     String currentBuildNumber = appInfo.getBuild().asString();
@@ -122,6 +126,9 @@ public class PlatformOrPluginUpdateChecker {
           // change current build
           currentBuildNumber = pluginDescriptor.getVersion();
           newPlatformPlugin = pluginDescriptor;
+
+          // FIXME [VISTALL]  drop it
+          ((PluginNode) pluginDescriptor).setName("Platform");
           break;
         }
       }

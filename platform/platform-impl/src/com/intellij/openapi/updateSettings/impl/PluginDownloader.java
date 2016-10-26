@@ -28,6 +28,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,12 +55,15 @@ public class PluginDownloader {
 
   private IdeaPluginDescriptor myDescriptor;
 
+  private boolean myPlatformNode;
+
   public PluginDownloader(@NotNull PluginId pluginId, String pluginUrl, String pluginVersion, String fileName, String pluginName) {
     myPluginId = pluginId;
     myPluginUrl = pluginUrl;
     myPluginVersion = pluginVersion;
     myFileName = fileName;
     myPluginName = pluginName;
+    myPlatformNode = PlatformOrPluginUpdateChecker.getPlatformPluginId() == pluginId;
   }
 
   public boolean prepareToInstall(ProgressIndicator pi) throws IOException {
@@ -87,12 +91,7 @@ public class PluginDownloader {
     if (myFile == null) {
       final String text = IdeBundle.message("error.plugin.was.not.installed", getPluginName(), errorMessage);
       final String title = IdeBundle.message("title.failed.to.download");
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          Messages.showErrorDialog(text, title);
-        }
-      });
+      ApplicationManager.getApplication().invokeLater(() -> Messages.showErrorDialog(text, title));
       return false;
     }
 
@@ -141,6 +140,10 @@ public class PluginDownloader {
 
   public void install(boolean deleteTempFile) throws IOException {
     LOG.assertTrue(myFile != null);
+    if (myPlatformNode) {
+      return;
+    }
+
     if (myOldFile != null) {
       // add command to delete the 'action script' file
       StartupActionScriptManager.ActionCommand deleteOld = new StartupActionScriptManager.DeleteCommand(myOldFile);
@@ -182,7 +185,12 @@ public class PluginDownloader {
     final File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
 
     indicator.checkCanceled();
-    indicator.setText2(IdeBundle.message("progress.downloading.plugin", getPluginName()));
+    if(myPlatformNode) {
+      indicator.setText2(IdeBundle.message("progress.downloading.platform"));
+    }
+    else {
+      indicator.setText2(IdeBundle.message("progress.downloading.plugin", getPluginName()));
+    }
 
     return HttpRequests.request(myPluginUrl).gzip(false).connect(request -> {
       request.saveToFile(file, indicator);
@@ -194,9 +202,15 @@ public class PluginDownloader {
     });
   }
 
+  @NotNull
   public String getFileName() {
     if (myFileName == null) {
-      myFileName = myPluginId + ".zip";
+      if (myPlatformNode) {
+        return "platform.tar.gz";
+      }
+      else {
+        return myPluginId + ".zip";
+      }
     }
     return myFileName;
   }

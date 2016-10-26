@@ -539,6 +539,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       setEnabledInModalContext(true);
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       Presentation presentation = e.getPresentation();
