@@ -27,10 +27,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.containers.HashMap;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.cookie.CookiePolicy;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -129,8 +131,7 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
         final PsiElement element = info.myAnchor.retrieve();
         if (element != null) {
           final int start = element.getTextRange().getStartOffset();
-          final TextRange range = new TextRange(start + info.myRangeInElement.getStartOffset(),
-                                                start + info.myRangeInElement.getEndOffset());
+          final TextRange range = new TextRange(start + info.myRangeInElement.getStartOffset(), start + info.myRangeInElement.getEndOffset());
           final String message = getErrorMessage(info.myUrl);
 
           final Annotation annotation;
@@ -184,18 +185,17 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
   }
 
   private static MyFetchResult doCheckUrl(String url) {
-    final HttpClient client = new HttpClient();
-    client.setTimeout(3000);
-    client.setConnectionTimeout(3000);
-    // see http://hc.apache.org/httpclient-3.x/cookies.html
-    client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-    try {
-      final GetMethod method = new GetMethod(url);
-      final int code = client.executeMethod(method);
+    RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+    requestConfigBuilder.setConnectTimeout(3000);
+    requestConfigBuilder.setSocketTimeout(3000);
+    requestConfigBuilder.setConnectionRequestTimeout(3000);
+    requestConfigBuilder.setCookieSpec(CookieSpecs.BROWSER_COMPATIBILITY);
 
-      return code == HttpStatus.SC_OK || code == HttpStatus.SC_REQUEST_TIMEOUT
-             ? MyFetchResult.OK
-             : MyFetchResult.NONEXISTENCE;
+    try (CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfigBuilder.build()).build()) {
+      return httpClient.execute(new HttpGet(url), response -> {
+        int code = response.getStatusLine().getStatusCode();
+        return code == HttpStatus.SC_OK || code == HttpStatus.SC_REQUEST_TIMEOUT ? MyFetchResult.OK : MyFetchResult.NONEXISTENCE;
+      });
     }
     catch (UnknownHostException e) {
       LOG.info(e);

@@ -15,56 +15,59 @@
  */
 package com.intellij.internal.statistic.connect;
 
-import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.updateSettings.impl.UpdateChecker;
+import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.util.text.StringUtil;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatisticsHttpClientSender implements StatisticsDataSender {
 
   @Override
   public void send(@NotNull String url, @NotNull String content) throws StatServiceException {
-    PostMethod post = null;
+    //HttpConfigurable.getInstance().prepareURL(url);
+    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
 
-    try {
-      //HttpConfigurable.getInstance().prepareURL(url);
+      HttpPost post = new HttpPost(url);
+      List<NameValuePair> pairs = new ArrayList<>(2);
+      pairs.add(new BasicNameValuePair("content", content));
+      pairs.add(new BasicNameValuePair("uuid", PermanentInstallationID.get()));
 
-      HttpClient httpclient = new HttpClient();
-      post = new PostMethod(url);
+      post.setEntity(new UrlEncodedFormEntity(pairs));
+      httpClient.execute(post, new ResponseHandler<Object>() {
+        @Override
+        public Object handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+          int statusCode = response.getStatusLine().getStatusCode();
+          if (statusCode != HttpStatus.SC_OK) {
+            throw new StatServiceException("Error during data sending... Code: " + statusCode);
+          }
 
-      post.setRequestBody(new NameValuePair[]{
-        new NameValuePair("content", content),
-        new NameValuePair("uuid", UpdateChecker.getInstallationUID(PropertiesComponent.getInstance()))
+          final Header errors = response.getFirstHeader("errors");
+          if (errors != null) {
+            final String value = errors.getValue();
+
+            throw new StatServiceException("Error during updating statistics " + (!StringUtil.isEmptyOrSpaces(value) ? " : " + value : ""));
+          }
+          return null;
+        }
       });
 
-      httpclient.executeMethod(post);
-
-      if (post.getStatusCode() != HttpStatus.SC_OK) {
-        throw new StatServiceException("Error during data sending... Code: " + post.getStatusCode());
-      }
-
-      final Header errors = post.getResponseHeader("errors");
-      if (errors != null) {
-        final String value = errors.getValue();
-
-        throw new StatServiceException("Error during updating statistics " + (!StringUtil.isEmptyOrSpaces(value) ? " : " + value : ""));
-      }
-    }
-    catch (StatServiceException e) {
-          throw e;
     }
     catch (Exception e) {
       throw new StatServiceException("Error during data sending...", e);
-    }
-    finally {
-      if (post != null) {
-        post.releaseConnection();
-      }
     }
   }
 }

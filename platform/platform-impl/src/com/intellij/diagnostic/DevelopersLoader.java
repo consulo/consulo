@@ -16,39 +16,40 @@
 package com.intellij.diagnostic;
 
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 class DevelopersLoader {
   private static final String DEVELOPERS_LIST_URL = "http://ea-engine.labs.intellij.net/data?category=developers";
-  private static final String DATA_CHARSET = "utf-8";
-  public static final int TIMEOUT = 1000;
 
   private DevelopersLoader() {
   }
 
   public static Collection<Developer> fetchDevelopers(ProgressIndicator indicator) throws IOException {
-    List<Developer> developers = new LinkedList<Developer>();
-    developers.add(Developer.NULL);
+    RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(1000).build();
+    try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build()) {
+      return client.execute(new HttpGet(DEVELOPERS_LIST_URL), response -> {
+        List<Developer> developers = new LinkedList<Developer>();
+        developers.add(Developer.NULL);
 
-    HttpClient client = new HttpClient();
-    client.getHttpConnectionManager().getParams().setConnectionTimeout(TIMEOUT);
-    HttpMethod method = new GetMethod(DEVELOPERS_LIST_URL);
+        HttpEntity entity = response.getEntity();
+        if (entity == null) {
+          return developers;
+        }
 
-    try {
-      client.executeMethod(method);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent(), StandardCharsets.UTF_8));
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(), DATA_CHARSET));
-
-      try {
         while (true) {
           String line = reader.readLine();
           if (line == null) break;
@@ -59,12 +60,9 @@ class DevelopersLoader {
           developers.add(new Developer(id, name));
           indicator.checkCanceled();
         }
+
         return developers;
-      } finally {
-        reader.close();
-      }
-    } finally {
-      method.releaseConnection();
+      });
     }
   }
 }
