@@ -52,6 +52,10 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
     return myState.lastTimeCheck;
   }
 
+  public void setLastTimeCheck(long time) {
+    myState.lastTimeCheck = time;
+  }
+
   @Override
   public State getState() {
     return myState;

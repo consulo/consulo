@@ -47,16 +47,17 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
   public void actionPerformed(@NotNull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
 
-    actionPerformed(project, UpdateSettings.getInstance());
+    actionPerformed(project, consulo.ide.updateSettings.UpdateSettings.getInstance());
   }
 
-  public static void actionPerformed(Project project, final UpdateSettings updateSettings) {
+  public static void actionPerformed(Project project, final consulo.ide.updateSettings.UpdateSettings updateSettings) {
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Checking for updates", true) {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
 
-        PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator).doWhenDone(updateSettings::saveLastCheckedInfo);
+        PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator)
+                .doWhenDone(() -> updateSettings.setLastTimeCheck(System.currentTimeMillis()));
       }
     });
   }

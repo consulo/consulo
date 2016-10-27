@@ -88,7 +88,6 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
     updateLinkPane.setBorder(IdeBorderFactory.createEmptyBorder(0));
     updateLinkPane.setText(IdeBundle.message("updates.configure.label", css));
     updateLinkPane.setEditable(false);
-    LabelTextReplacingUtil.replaceText(panel);
 
     /*if (myEnableLink) {
       updateLinkPane.addHyperlinkListener(new HyperlinkListener() {

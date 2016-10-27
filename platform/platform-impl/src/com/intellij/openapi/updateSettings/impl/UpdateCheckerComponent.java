@@ -16,18 +16,27 @@
 package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.util.Alarm;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.text.DateFormatUtil;
+import consulo.ide.updateSettings.UpdateSettings;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author yole
  */
 public class UpdateCheckerComponent implements ApplicationComponent {
   private static final long ourCheckInterval = DateFormatUtil.DAY;
-  private final Alarm myCheckForUpdatesAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
-  private final Runnable myCheckRunnable = () -> UpdateChecker.updateAndShowResult().doWhenDone(() -> queueNextUpdateCheck(ourCheckInterval));
+
+  private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
+
+  private final Runnable myCheckRunnable = () -> UpdateChecker.updateAndShowResult().doWhenDone(() -> {
+    UpdateSettings.getInstance().setLastTimeCheck(System.currentTimeMillis());
+    queueNextUpdateCheck(ourCheckInterval);
+  });
 
   @Override
   public void initComponent() {
@@ -36,12 +45,12 @@ public class UpdateCheckerComponent implements ApplicationComponent {
   }
 
   private void queueNextUpdateCheck(long interval) {
-    myCheckForUpdatesAlarm.addRequest(myCheckRunnable, interval);
+    myCheckFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(myCheckRunnable, interval, TimeUnit.MILLISECONDS);
   }
 
   @Override
   public void disposeComponent() {
-    Disposer.dispose(myCheckForUpdatesAlarm);
+    myCheckFuture.cancel(false);
   }
 
   @NotNull
