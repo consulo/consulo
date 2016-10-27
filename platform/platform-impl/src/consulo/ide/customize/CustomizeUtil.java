@@ -21,6 +21,7 @@ import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -48,7 +49,7 @@ import java.util.zip.ZipInputStream;
  */
 @Logger
 public class CustomizeUtil {
-  private static final String TEMPLATES_URL = "https://github.com/consulo/consulo-firststart-templates/archive/master.zip";
+  private static final String TEMPLATES_URL = "https://github.com/consulo/consulo-firststart-templates/archive/2.0.zip";
 
   public static void show(boolean initLaf) {
     if (initLaf) {
@@ -76,7 +77,7 @@ public class CustomizeUtil {
         UIUtil.invokeLaterIfNeeded(new Runnable() {
           @Override
           public void run() {
-            downloadDialog.close(0);
+            downloadDialog.close(DialogWrapper.OK_EXIT_CODE);
             new CustomizeIDEWizardDialog(pluginDescriptors, predefinedTemplateSets).show();
           }
         });
@@ -99,8 +100,7 @@ public class CustomizeUtil {
 
       DownloadUtil.downloadContentToFile(null, TEMPLATES_URL, zipFile);
 
-      ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile));
-      try {
+      try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile))) {
         ZipEntry e;
         while ((e = zipInputStream.getNextEntry()) != null) {
           if (e.isDirectory()) {
@@ -120,14 +120,11 @@ public class CustomizeUtil {
 
       }
       catch (JDOMException e) {
-        CustomizeUtil.LOGGER.warn(e);
-      }
-      finally {
-        zipInputStream.close();
+        LOGGER.warn(e);
       }
     }
     catch (IOException e) {
-      CustomizeUtil.LOGGER.warn(e);
+      LOGGER.warn(e);
     }
   }
 
@@ -164,5 +161,4 @@ public class CustomizeUtil {
       e.printStackTrace();
     }
   }
-
 }
