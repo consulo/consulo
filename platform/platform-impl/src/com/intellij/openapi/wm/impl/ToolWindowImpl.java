@@ -18,6 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.ide.UiActivity;
 import com.intellij.ide.UiActivityMonitor;
 import com.intellij.ide.impl.ContentManagerWatcher;
+import com.intellij.notification.EventLog;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -92,8 +93,7 @@ public final class ToolWindowImpl implements ToolWindowEx {
 
     final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
     myContentUI = new ToolWindowContentUi(this);
-    myContentManager =
-            contentFactory.createContentManager(myContentUI, canCloseContent, toolWindowManager.getProject());
+    myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, toolWindowManager.getProject());
 
     if (component != null) {
       final Content content = contentFactory.createContent(component, "", false);
@@ -341,8 +341,8 @@ public final class ToolWindowImpl implements ToolWindowEx {
 
   /**
    * @return <code>true</code> if the component passed into constructor is not instance of
-   *         <code>ContentManager</code> class. Otherwise it delegates the functionality to the
-   *         passed content manager.
+   * <code>ContentManager</code> class. Otherwise it delegates the functionality to the
+   * passed content manager.
    */
   @Override
   public final boolean isAvailable() {
@@ -391,8 +391,13 @@ public final class ToolWindowImpl implements ToolWindowEx {
   public final void setIcon(final Icon icon) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     final Icon oldIcon = getIcon();
-    if (oldIcon != icon && icon != null && !(icon instanceof LayeredIcon) && (icon.getIconHeight() != JBUI.scaleIconSize(13) || icon.getIconWidth() != JBUI.scaleIconSize(13))) {
-      LOG.warn("ToolWindow icons should be 13x13. Please fix ToolWindow (ID:  " + getId() + ") or icon " + icon);
+    if (!EventLog.LOG_TOOL_WINDOW_ID.equals(getId())) {
+      if (oldIcon != icon &&
+          icon != null &&
+          !(icon instanceof LayeredIcon) &&
+          (icon.getIconHeight() != JBUI.scaleIconSize(13) || icon.getIconWidth() != JBUI.scaleIconSize(13))) {
+        LOG.warn("ToolWindow icons should be 13x13. Please fix ToolWindow (ID:  " + getId() + ") or icon " + icon);
+      }
     }
     //getSelectedContent().setIcon(icon);
     myIcon = icon;
