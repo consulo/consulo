@@ -4,30 +4,35 @@
     <root id="root">
       <element id="zip-archive" name="consulo-win.zip">
         <element id="directory" name="Consulo">
-          <element id="directory" name="bin">
-            <element id="dir-copy" path="$PROJECT_DIR$/bin/win" />
-          </element>
           <element id="artifact" artifact-name="distMain" />
+          <element id="directory" name="platform">
+            <element id="directory" name="buildSNAPSHOT">
+              <element id="dir-copy" path="$PROJECT_DIR$/distribution/platform/win" />
+            </element>
+          </element>
         </element>
       </element>
       <element id="zip-archive" name="consulo-mac.zip">
         <element id="directory" name="Consulo.app">
-          <element id="dir-copy" path="$PROJECT_DIR$/build/conf/mac" />
           <element id="directory" name="Contents">
-            <element id="directory" name="bin">
-              <element id="dir-copy" path="$PROJECT_DIR$/bin/mac" />
-            </element>
             <element id="artifact" artifact-name="distMain" />
+            <element id="directory" name="platform">
+              <element id="directory" name="buildSNAPSHOT">
+                <element id="dir-copy" path="$PROJECT_DIR$/distribution/platform/mac" />
+              </element>
+            </element>
           </element>
+          <element id="dir-copy" path="$PROJECT_DIR$/distribution/boot/mac" />
         </element>
       </element>
       <element id="zip-archive" name="consulo-linux.zip">
         <element id="directory" name="Consulo">
-          <element id="directory" name="bin">
-            <element id="dir-copy" path="$PROJECT_DIR$/bin/linux" />
-          </element>
           <element id="artifact" artifact-name="distMain" />
-          <element id="file-copy" path="$PROJECT_DIR$/build/Install-Linux-tar.txt" />
+          <element id="directory" name="platform">
+            <element id="directory" name="buildSNAPSHOT">
+              <element id="dir-copy" path="$PROJECT_DIR$/distribution/platform/linux" />
+            </element>
+          </element>
         </element>
       </element>
     </root>

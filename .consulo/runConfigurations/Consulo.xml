@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Consulo" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Consulo In Sandbox" singleton="true">
-    <option name="VM_PARAMETERS" value="-Xmx1g -Xms1g -ea -Didea.is.internal=true" />
+    <option name="VM_PARAMETERS" value="-Xmx1g -Xms1g -ea -Didea.is.internal=true -Dconsulo.build.number=1474" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="USE_ALT_CONSULO_SDK" value="true" />
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/out/artifacts/distForRuntime" />

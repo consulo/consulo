@@ -2,20 +2,23 @@
   <artifact name="distForRuntime">
     <output-path>$PROJECT_DIR$/out/artifacts/distForRuntime</output-path>
     <root id="root">
-      <element id="directory" name="bin">
-        <element id="dir-copy" path="$PROJECT_DIR$/bin/linux" />
-        <element id="dir-copy" path="$PROJECT_DIR$/bin/mac" />
-        <element id="dir-copy" path="$PROJECT_DIR$/bin/win" />
-      </element>
       <element id="artifact" artifact-name="distMain" />
-      <element id="directory" name="plugins">
-        <element id="directory" name="sandLanguage">
-          <element id="directory" name="lib">
-            <element id="zip-archive" name="sandLanguage.jar">
-              <element id="module-output" name="sandLanguage" />
-              <element id="module-production-resource-output" name="sandLanguage" />
+      <element id="directory" name="platform">
+        <element id="directory" name="buildSNAPSHOT">
+          <element id="directory" name="plugins">
+            <element id="directory" name="sandLanguage">
+              <element id="directory" name="lib">
+                <element id="zip-archive" name="sandLanguage.jar">
+                  <element id="module-output" name="sandLanguage" />
+                  <element id="module-production-resource-output" name="sandLanguage" />
+                </element>
+              </element>
             </element>
           </element>
+          <element id="dir-copy" path="$PROJECT_DIR$/distribution/platform/mac" />
+          <element id="dir-copy" path="$PROJECT_DIR$/distribution/platform/shared" />
+          <element id="dir-copy" path="$PROJECT_DIR$/distribution/platform/win" />
+          <element id="dir-copy" path="$PROJECT_DIR$/distribution/platform/linux" />
         </element>
       </element>
     </root>
