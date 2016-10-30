@@ -19,6 +19,10 @@
 
 typedef JNIIMPORT jint(JNICALL *JNI_createJavaVM)(JavaVM **pvm, JNIEnv **env, void *args);
 
+WCHAR* moduleFilePath = NULL;
+WCHAR* propertiesFilePath = NULL;
+WCHAR* workingDirectoryPath = NULL;
+
 HINSTANCE hInst; // Current instance.
 char jvmPath[_MAX_PATH] = "";
 JavaVMOption* vmOptions = NULL;
@@ -104,18 +108,13 @@ bool FindValidJVM(const char* path)
   return false;
 }
 
-std::string GetAdjacentDir(const char* suffix)
+std::string GetAdjacentDir(char* suffix)
 {
-  char libDir[_MAX_PATH];
-  GetModuleFileNameA(NULL, libDir, _MAX_PATH - 1);
-  char* lastSlash = strrchr(libDir, '\\');
-  if (!lastSlash) return "";
-  *lastSlash = '\0';
-  lastSlash = strrchr(libDir, '\\');
-  if (!lastSlash) return "";
-  strcpy(lastSlash + 1, suffix);
-  strcat_s(libDir, "\\");
-  return std::string(libDir);
+	std::wstring path(workingDirectoryPath);
+
+	std::string target = std::string(path.begin(), path.end());
+
+	return target + "\\" + suffix + "\\";
 }
 
 bool FindJVMInEnvVar(const char* envVarName, bool& result)
@@ -351,42 +350,18 @@ bool AddClassPathOptions(std::vector<std::string>& vmOptionLines)
 
 void AddPredefinedVMOptions(std::vector<std::string>& vmOptionLines)
 {
-  char propertiesFile[_MAX_PATH];
-  if (GetEnvironmentVariableA(LoadStdString(IDS_PROPS_ENV_VAR).c_str(), propertiesFile, _MAX_PATH))
-  {
-    vmOptionLines.push_back(std::string("-Didea.properties.file=") + propertiesFile);
-  }
+	vmOptionLines.push_back("-Didea.properties.file=" + EncodeWideACP(std::wstring(propertiesFilePath)));
+	vmOptionLines.push_back("-Didea.home.path=" + EncodeWideACP(std::wstring(workingDirectoryPath)));
 }
 
-bool LoadVMOptions()
+bool LoadVMOptions(WCHAR* targetVmOptionFile)
 {
-  TCHAR buffer[_MAX_PATH];
-  TCHAR copy[_MAX_PATH];
-
   std::vector<std::wstring> files;
 
-  GetModuleFileName(NULL, buffer, _MAX_PATH);
-  std::wstring module(buffer);
+  files.push_back(std::wstring(targetVmOptionFile));
 
-  files.push_back(module + L".vmoptions");
-
-
-  if (LoadString(hInst, IDS_VM_OPTIONS_PATH, buffer, _MAX_PATH))
+  if (files.size() == 0)
   {
-    ExpandEnvironmentStrings(buffer, copy, _MAX_PATH - 1);
-    std::wstring selector(copy);
-    files.push_back(selector + module.substr(module.find_last_of('\\')) + L".vmoptions");
-  }
-
-  if (LoadString(hInst, IDS_VM_OPTIONS_ENV_VAR, buffer, _MAX_PATH))
-  {
-    if (GetEnvironmentVariableW(buffer, copy, _MAX_PATH)) {
-    ExpandEnvironmentStrings(copy, buffer, _MAX_PATH);
-    files.push_back(std::wstring(buffer));
-    }
-  }
-
-  if (files.size() == 0) {
     std::string error = LoadStdString(IDS_ERROR_LAUNCHING_APP);
     MessageBoxA(NULL, "Cannot find VM options file", error.c_str(), MB_OK);
     return false;
@@ -609,31 +584,36 @@ void SendCommandLineToFirstInstance()
 
 bool CheckSingleInstance()
 {
-  char moduleFileName[_MAX_PATH];
-  GetModuleFileNameA(NULL, moduleFileName, _MAX_PATH - 1);
-  for (char *p = moduleFileName; *p; p++)
-  {
-    if (*p == ':' || *p == '\\') *p = '_';
-  }
-  std::string mappingName = std::string("ConsuloLauncherMapping.") + moduleFileName;
-  std::string eventName = std::string("ConsuloLauncherEvent.") + moduleFileName;
+	std::string temp2 = EncodeWideACP(std::wstring(moduleFilePath));
 
-  hEvent = CreateEventA(NULL, FALSE, FALSE, eventName.c_str());
+	char* moduleFileName = (char*)temp2.c_str();
 
-  hFileMapping = OpenFileMappingA(FILE_MAP_ALL_ACCESS, FALSE, mappingName.c_str());
-  if (!hFileMapping)
-  {
-    hFileMapping = CreateFileMappingA(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, FILE_MAPPING_SIZE,
-      mappingName.c_str());
-    return true;
-  }
-  else
-  {
-    SendCommandLineToFirstInstance();
-    CloseHandle(hFileMapping);
-    CloseHandle(hEvent);
-    return false;
-  }
+	for (char *p = moduleFileName; *p; p++)
+	{
+		if (*p == ':' || *p == '\\')
+		{
+			*p = '_';
+		}
+	}
+	std::string mappingName = std::string("ConsuloLauncherMapping.") + moduleFileName;
+	std::string eventName = std::string("ConsuloLauncherEvent.") + moduleFileName;
+
+	hEvent = CreateEventA(NULL, FALSE, FALSE, eventName.c_str());
+
+	hFileMapping = OpenFileMappingA(FILE_MAP_ALL_ACCESS, FALSE, mappingName.c_str());
+	if (!hFileMapping)
+	{
+		hFileMapping = CreateFileMappingA(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, FILE_MAPPING_SIZE,
+		mappingName.c_str());
+		return true;
+	}
+	else
+	{
+		SendCommandLineToFirstInstance();
+		CloseHandle(hFileMapping);
+		CloseHandle(hEvent);
+		return false;
+	}
 }
 
 void DrawSplashImage(HWND hWnd)
@@ -759,7 +739,6 @@ DWORD WINAPI SplashScreen(HBITMAP hSplashBitmap)
 
 void StartSplashProcess()
 {
-  TCHAR ownPath[_MAX_PATH];
   TCHAR params[_MAX_PATH];
 
   PROCESS_INFORMATION splashProcessInformation;
@@ -770,25 +749,34 @@ void StartSplashProcess()
   startupInfo.dwFlags = STARTF_USESHOWWINDOW;
   startupInfo.wShowWindow = SW_SHOW;
 
-  GetModuleFileName(NULL, ownPath, (sizeof(ownPath)));
   _snwprintf(params, _MAX_PATH, _T("SPLASH %d"), GetCurrentProcessId());
-  if (CreateProcess(ownPath, params, NULL, NULL, FALSE, 0, NULL, NULL, &startupInfo, &splashProcessInformation))
+  if (CreateProcess(moduleFilePath, params, NULL, NULL, FALSE, 0, NULL, NULL, &startupInfo, &splashProcessInformation))
   {
     CloseHandle(splashProcessInformation.hProcess);
     CloseHandle(splashProcessInformation.hThread);
   }
 }
 
-int APIENTRY _tWinMain(HINSTANCE hInstance,
+extern "C" int __declspec(dllexport) __cdecl launchConsulo(HINSTANCE hInstance,
                        HINSTANCE hPrevInstance,
                        LPTSTR    lpCmdLine,
-                       int       nCmdShow)
+                       int       nCmdShow,
+					   int argc,
+					   WCHAR** wargv,
+					   WCHAR* moduleFile,
+					   WCHAR* workingDirectory,
+					   WCHAR* propertiesFile,
+					   WCHAR* vmOptionFile)
 {
   UNREFERENCED_PARAMETER(hPrevInstance);
 
+  moduleFilePath = moduleFile;
+  workingDirectoryPath = workingDirectory;
+  propertiesFilePath = propertiesFile;
+
   hInst = hInstance;
 
-  if (__argc == 2 && _wcsicmp(__wargv[0], _T("SPLASH")) == 0)
+  if (argc == 2 && _wcsicmp(wargv[0], _T("SPLASH")) == 0)
   {
 	  HDC monitor = GetDC(NULL);
 	  int logPixelX = GetDeviceCaps(monitor, LOGPIXELSX);
@@ -807,7 +795,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	  if (hSplashBitmap)
 	  {
-		  parentProcId = _wtoi(__wargv[1]);
+		  parentProcId = _wtoi(wargv[1]);
 		  parentProcHandle = OpenProcess(SYNCHRONIZE, FALSE, parentProcId);
 		  if (IsParentProcessRunning(parentProcHandle))
 		  {
@@ -827,11 +815,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
   if (!LocateJVM()) 
   {
-	  MessageBox(NULL, L"Cant locate JVM libraries", L"Consulo", 0);
+	  //MessageBox(NULL, L"Cant locate JVM libraries", L"Consulo", 0);
 	  return 1;
   }
 
-  if (!LoadVMOptions())
+  if (!LoadVMOptions(vmOptionFile))
   {
 	  MessageBox(NULL, L"Cant load vm options", L"Consulo", 0);
 	  return 1;

@@ -10,6 +10,7 @@
               <element id="dir-copy" path="$PROJECT_DIR$/distribution/platform/win" />
             </element>
           </element>
+          <element id="dir-copy" path="$PROJECT_DIR$/distribution/boot/win" />
         </element>
       </element>
       <element id="zip-archive" name="consulo-mac.zip">
@@ -33,6 +34,7 @@
               <element id="dir-copy" path="$PROJECT_DIR$/distribution/platform/linux" />
             </element>
           </element>
+          <element id="dir-copy" path="$PROJECT_DIR$/distribution/boot/linux" />
         </element>
       </element>
     </root>

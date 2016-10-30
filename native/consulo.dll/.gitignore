@@ -1,0 +1,9 @@
+Debug
+Release
+x64
+*.aps
+*.vcxproj.user     
+*.sdf
+*.suo
+jdk6
+ipch
