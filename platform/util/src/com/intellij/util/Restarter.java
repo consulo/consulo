@@ -110,7 +110,7 @@ public class Restarter {
     final int pid = kernel32.GetCurrentProcessId();
     final IntByReference argc = new IntByReference();
     Pointer argv_ptr = shell32.CommandLineToArgvW(kernel32.GetCommandLineW(), argc);
-    final String[] argv = argv_ptr.getStringArray(0, argc.getValue(), true);
+    final String[] argv = argv_ptr.getWideStringArray(0, argc.getValue());
     kernel32.LocalFree(argv_ptr);
 
     doScheduleRestart(new File(PathManager.getBinPath(), "restarter.exe"), new Consumer<List<String>>() {
@@ -150,7 +150,7 @@ public class Restarter {
     List<String> commands = new ArrayList<String>();
     commands.add(createTempExecutable(restarterFile).getPath());
     argumentsBuilder.consume(commands);
-    Runtime.getRuntime().exec(commands.toArray(new String[commands.size()]));
+    Runtime.getRuntime().exec(commands.toArray(new String[commands.size()]), null, PathManager.getDistributionDirectory());
   }
 
   public static File createTempExecutable(File executable) throws IOException {
@@ -184,6 +184,7 @@ public class Restarter {
       myOut = out;
     }
 
+    @Override
     public void run() {
       try {
         StreamUtil.copyStreamContent(myIn, myOut);

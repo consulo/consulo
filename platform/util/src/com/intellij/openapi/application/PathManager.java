@@ -121,6 +121,19 @@ public class PathManager {
   }
 
   @NotNull
+  public static File getDistributionDirectory() {
+    File homeDir = new File(getHomePath());
+
+    // 'platform' directory
+    File parentFile = homeDir.getParentFile();
+    if (!parentFile.getName().equals("platform")) {
+      throw new IllegalArgumentException("Parent dir is not platform: " + parentFile.getName());
+    }
+
+    return parentFile.getParentFile();
+  }
+
+  @NotNull
   public static String getBinPath() {
     return getHomePath() + File.separator + BIN_FOLDER;
   }
