@@ -40,18 +40,8 @@ fi
 
 OS_TYPE=`"$UNAME" -s`
 
-# ---------------------------------------------------------------------
-# Ensure IDE_HOME points to the directory where the IDE is installed.
-# ---------------------------------------------------------------------
-SCRIPT_LOCATION=$0
-if [ -x "$READLINK" ]; then
-  while [ -L "$SCRIPT_LOCATION" ]; do
-    SCRIPT_LOCATION=`"$READLINK" -e "$SCRIPT_LOCATION"`
-  done
-fi
-
-IDE_HOME=`dirname "$SCRIPT_LOCATION"`/..
-IDE_BIN_HOME=`dirname "$SCRIPT_LOCATION"`
+IDE_HOME="$CONSULO_HOME"
+IDE_BIN_HOME="$CONSULO_HOME/bin"
 
 # ---------------------------------------------------------------------
 # Locate a JDK installation directory which will be used to run the IDE.
@@ -119,26 +109,20 @@ fi
 # ---------------------------------------------------------------------
 # Collect JVM options and properties.
 # ---------------------------------------------------------------------
-if [ -n "$IDEA_PROPERTIES" ]; then
-  IDE_PROPERTIES_PROPERTY="-Didea.properties.file=\"$IDEA_PROPERTIES\""
-fi
 
 MAIN_CLASS_NAME="$IDEA_MAIN_CLASS_NAME"
 if [ -z "$MAIN_CLASS_NAME" ]; then
   MAIN_CLASS_NAME="com.intellij.idea.Main"
 fi
 
-VM_OPTIONS_FILE="$IDEA_VM_OPTIONS"
-if [ -z "$VM_OPTIONS_FILE" ]; then
-  VM_OPTIONS_FILE="$IDE_BIN_HOME/consulo$BITS.vmoptions"
-fi
+VM_OPTIONS_FILE="$ROOT_DIR/consulo$BITS.vmoptions"
 
 if [ -r "$VM_OPTIONS_FILE" ]; then
   VM_OPTIONS=`"$CAT" "$VM_OPTIONS_FILE" | "$GREP" -v "^#.*" | "$TR" '\n' ' '`
   VM_OPTIONS="$VM_OPTIONS -Djb.vmOptionsFile=\"$VM_OPTIONS_FILE\""
 fi
 
-COMMON_JVM_ARGS="\"-Xbootclasspath/a:$IDE_HOME/lib/boot.jar\" $IDE_PROPERTIES_PROPERTY"
+COMMON_JVM_ARGS="\"-Xbootclasspath/a:$IDE_HOME/lib/boot.jar\" -Didea.home.path=\"$IDE_HOME\" -Didea.properties.file=\"$ROOT_DIR/consulo.properties\""
 IDE_JVM_ARGS=""
 ALL_JVM_ARGS="$VM_OPTIONS $COMMON_JVM_ARGS $IDE_JVM_ARGS $AGENT $REQUIRED_JVM_ARGS"
 
