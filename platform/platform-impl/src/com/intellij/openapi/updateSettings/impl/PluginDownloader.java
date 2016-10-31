@@ -41,13 +41,7 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
+import java.io.*;
 
 /**
  * @author anna
@@ -139,19 +133,21 @@ public class PluginDownloader {
           // we interest only in new build
           if (name.startsWith(prefix) && name.length() != prefix.length()) {
             File targetFile = new File(platformDirectory, name.substring(prefix.length(), name.length()));
-            Path targetPath = targetFile.toPath();
 
             if (tempEntry.isDirectory()) {
-              Files.createDirectories(targetPath);
+              FileUtil.createDirectory(targetFile);
             }
             else {
-              try (OutputStream stream = Files.newOutputStream(targetPath)) {
+              try (OutputStream stream = new FileOutputStream(targetFile)) {
                 StreamUtil.copyStreamContent(ais, stream);
               }
 
-              Files.setLastModifiedTime(targetPath, FileTime.fromMillis(tempEntry.getLastModifiedDate().getTime()));
+              targetFile.setLastModified(tempEntry.getLastModifiedDate().getTime());
 
-              PathUtil.setPosixFilePermissions(targetPath, PathUtil.convertModeToFilePermissions(tempEntry.getMode()));
+              // it's a fix for TarArchiveEntry.DEFAULT_FILE_MODE
+              if (tempEntry.getMode() == 0b111_101_101) {
+                PathUtil.setPosixFilePermissions(targetFile.toPath(), PathUtil.convertModeToFilePermissions(tempEntry.getMode()));
+              }
             }
           }
         }
