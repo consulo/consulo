@@ -150,7 +150,7 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
             try {
               PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor);
               if (downloader.prepareToInstall(indicator)) {
-                downloader.install(true);
+                downloader.install(indicator, true);
               }
             }
             catch (Exception e) {

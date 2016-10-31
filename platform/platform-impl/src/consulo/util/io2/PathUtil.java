@@ -1,0 +1,49 @@
+package consulo.util.io2;
+
+import consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.EnumSet;
+import java.util.Set;
+
+/**
+ * @author VISTALL
+ * @since 31-Oct-16
+ */
+@Logger
+public class PathUtil {
+  private static final boolean ourSupportPosixFilePermissions = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");
+
+  public static boolean isSupportPosixFilePermissions() {
+    return ourSupportPosixFilePermissions;
+  }
+
+  public static void setPosixFilePermissions(@NotNull Path path, @NotNull Set<PosixFilePermission> posixFilePermissions) {
+    if (isSupportPosixFilePermissions()) {
+      try {
+        Files.setPosixFilePermissions(path, posixFilePermissions);
+      }
+      catch (IOException e) {
+        LOGGER.error(e);
+      }
+    }
+  }
+
+  @NotNull
+  public static Set<PosixFilePermission> convertModeToFilePermissions(int mode) {
+    int mask = 1;
+    Set<PosixFilePermission> perms = EnumSet.noneOf(PosixFilePermission.class);
+    for (PosixFilePermission flag : PosixFilePermission.values()) {
+      if (flag != null && (mask & mode) != 0) {
+        perms.add(flag);
+      }
+      mask = mask << 1;
+    }
+    return perms;
+  }
+}

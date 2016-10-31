@@ -81,7 +81,7 @@ public class PluginsAdvertiserDialog extends DialogWrapper {
       try {
         for (PluginDownloader downloader : downloaders) {
           if (downloader.prepareToInstall(it)) {
-            downloader.install(true);
+            downloader.install(it, true);
           }
         }
 

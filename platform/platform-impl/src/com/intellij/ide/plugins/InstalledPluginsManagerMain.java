@@ -25,6 +25,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -34,11 +35,13 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.StatusText;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.AvailablePluginsDialog;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +86,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
           public void consume(@NotNull VirtualFile virtualFile) {
             final File file = VfsUtilCore.virtualToIoFile(virtualFile);
             try {
-              final IdeaPluginDescriptorImpl pluginDescriptor = PluginDownloader.loadDescriptionFromJar(file);
+              final IdeaPluginDescriptorImpl pluginDescriptor = loadDescriptionFromJar(file);
               if (pluginDescriptor == null) {
                 Messages.showErrorDialog("Fail to load plugin descriptor from file " + file.getName(), CommonBundle.getErrorTitle());
                 return;
@@ -129,6 +132,28 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     emptyText.appendText("View available plugins...", SimpleTextAttributes.LINK_ATTRIBUTES, new BrowseRepoListener());
     emptyText.appendText(" to view available plugins.");
   }
+
+  @Nullable
+  public static IdeaPluginDescriptorImpl loadDescriptionFromJar(final File file) throws IOException {
+    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(file);
+    if (descriptor == null) {
+      if (file.getName().endsWith(".zip")) {
+        final File outputDir = FileUtil.createTempDirectory("plugin", "");
+        try {
+          ZipUtil.extract(file, outputDir, null);
+          final File[] files = outputDir.listFiles();
+          if (files != null && files.length == 1) {
+            descriptor = PluginManagerCore.loadDescriptor(files[0], PluginManagerCore.PLUGIN_XML);
+          }
+        }
+        finally {
+          FileUtil.delete(outputDir);
+        }
+      }
+    }
+    return descriptor;
+  }
+
 
   private void checkInstalledPluginDependencies(IdeaPluginDescriptorImpl pluginDescriptor) {
     final Set<PluginId> notInstalled = new HashSet<PluginId>();

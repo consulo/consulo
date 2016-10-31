@@ -17,8 +17,6 @@ package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.InstalledPluginsTableModel;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
@@ -38,7 +36,6 @@ import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -134,23 +131,5 @@ public final class UpdateChecker {
   @DeprecationInfo("Use PermanentInstallationID#get()")
   public static String getInstallationUID(final PropertiesComponent propertiesComponent) {
     return PermanentInstallationID.get();
-  }
-
-  public static boolean install(List<PluginDownloader> downloaders) {
-    boolean installed = false;
-    for (PluginDownloader downloader : downloaders) {
-      final IdeaPluginDescriptor descriptor = downloader.getDescriptor();
-      if (descriptor != null) {
-        try {
-          InstalledPluginsTableModel.updateExistingPlugin(descriptor, PluginManager.getPlugin(descriptor.getPluginId()));
-          downloader.install(true);
-          installed = true;
-        }
-        catch (IOException e) {
-          LOGGER.info(e);
-        }
-      }
-    }
-    return installed;
   }
 }

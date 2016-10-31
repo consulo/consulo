@@ -52,6 +52,7 @@ public class PathManager {
   public static final String PROPERTY_ORIGINAL_WORKING_DIR = "original.working.dir";
   public static final String DEFAULT_OPTIONS_FILE_NAME = "other";
 
+  private static final String PLATFORM_FOLDER = "platform";
   private static final String LIB_FOLDER = "lib";
   private static final String PLUGINS_FOLDER = "plugins";
   private static final String BIN_FOLDER = "bin";
@@ -121,12 +122,17 @@ public class PathManager {
   }
 
   @NotNull
+  public static File getPlatformDirectory() {
+    return new File(getDistributionDirectory(), PLATFORM_FOLDER);
+  }
+
+  @NotNull
   public static File getDistributionDirectory() {
     File homeDir = new File(getHomePath());
 
     // 'platform' directory
     File parentFile = homeDir.getParentFile();
-    if (!parentFile.getName().equals("platform")) {
+    if (!parentFile.getName().equals(PLATFORM_FOLDER)) {
       throw new IllegalArgumentException("Parent dir is not platform: " + parentFile.getName());
     }
 

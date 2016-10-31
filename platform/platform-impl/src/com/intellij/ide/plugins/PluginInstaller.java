@@ -21,11 +21,11 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -47,12 +47,12 @@ public class PluginInstaller {
 
   @Nullable("Will return null is download failed")
   public static Set<PluginNode> prepareToInstall(List<PluginNode> pluginsToInstall, List<IdeaPluginDescriptor> allPlugins) {
-    final List<PluginId> pluginIds = new ArrayList<PluginId>();
+    final List<PluginId> pluginIds = new ArrayList<>();
     for (PluginNode pluginNode : pluginsToInstall) {
       pluginIds.add(pluginNode.getPluginId());
     }
 
-    Set<PluginNode> result = new ArrayListSet<PluginNode>();
+    Set<PluginNode> result = new ArrayListSet<>();
 
     for (final PluginNode pluginNode : pluginsToInstall) {
       try {
@@ -78,21 +78,16 @@ public class PluginInstaller {
   private static Set<PluginNode> prepareToInstall(@NotNull PluginNode toInstall,
                                                   @NotNull List<PluginId> toInstallAll,
                                                   @NotNull List<IdeaPluginDescriptor> allPlugins) throws IOException {
-    Set<PluginNode> depends = new ArrayListSet<PluginNode>();
+    Set<PluginNode> depends = new ArrayListSet<>();
     collectDepends(toInstall, toInstallAll, depends, allPlugins);
 
-    Set<PluginNode> toDownloadList = new ArrayListSet<PluginNode>();
+    Set<PluginNode> toDownloadList = new ArrayListSet<>();
     if (!depends.isEmpty()) {
 
       UIUtil.invokeAndWaitIfNeeded(new Runnable() {
         @Override
         public void run() {
-          String mergedIds = StringUtil.join(depends, new Function<PluginNode, String>() {
-            @Override
-            public String fun(PluginNode pluginNode) {
-              return pluginNode.getName();
-            }
-          }, ", ");
+          String mergedIds = StringUtil.join(depends, PluginNode::getName, ", ");
 
           String title = IdeBundle.message("plugin.manager.dependencies.detected.title");
           String message = IdeBundle.message("plugin.manager.dependencies.detected.message", depends.size(), mergedIds);
@@ -105,11 +100,11 @@ public class PluginInstaller {
 
     toDownloadList.add(toInstall);
 
+    ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
     for (PluginNode pluginNode : toDownloadList) {
       PluginDownloader downloader = PluginDownloader.createDownloader(pluginNode);
-
-      if (downloader.prepareToInstall(ProgressManager.getInstance().getProgressIndicator())) {
-        downloader.install(true);
+      if (downloader.prepareToInstall(progressIndicator)) {
+        downloader.install(progressIndicator, true);
         pluginNode.setStatus(PluginNode.STATUS_DOWNLOADED);
       }
       else {

@@ -531,6 +531,7 @@
           <orderEntry type="module" module-name="editor-ui-api" />
           <orderEntry type="library" name="apache-httpclient" level="project" />
           <orderEntry type="module" module-name="diff-api" />
+          <orderEntry type="library" name="commons-compress" level="project" />
         </module-layer>
       </module>
       <module name="platform/platform-main" dirurl="file://$PROJECT_DIR$/platform/platform-main" current-layer="Default">

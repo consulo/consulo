@@ -16,7 +16,10 @@
 package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.*;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.InstalledPluginsTableModel;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
@@ -24,16 +27,27 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
+import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.util.io2.PathUtil;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 
 /**
  * @author anna
@@ -42,28 +56,31 @@ import java.io.IOException;
 public class PluginDownloader {
   private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
 
+  public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor) {
+    String url = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString());
+
+    return new PluginDownloader(descriptor, url);
+  }
+
   private final PluginId myPluginId;
   private String myPluginUrl;
-  private String myPluginVersion;
 
-  private String myFileName;
   private String myPluginName;
 
   private File myFile;
   private File myOldFile;
   private String myDescription;
 
-  private IdeaPluginDescriptor myDescriptor;
+  private final IdeaPluginDescriptor myDescriptor;
 
-  private boolean myPlatformNode;
+  private boolean myIsPlatform;
 
-  public PluginDownloader(@NotNull PluginId pluginId, String pluginUrl, String pluginVersion, String fileName, String pluginName) {
-    myPluginId = pluginId;
+  public PluginDownloader(@NotNull IdeaPluginDescriptor pluginDescriptor, @NotNull String pluginUrl) {
+    myPluginId = pluginDescriptor.getPluginId();
+    myDescriptor = pluginDescriptor;
     myPluginUrl = pluginUrl;
-    myPluginVersion = pluginVersion;
-    myFileName = fileName;
-    myPluginName = pluginName;
-    myPlatformNode = PlatformOrPluginUpdateChecker.getPlatformPluginId() == pluginId;
+    myPluginName = pluginDescriptor.getName();
+    myIsPlatform = PlatformOrPluginUpdateChecker.getPlatformPluginId() == pluginDescriptor.getPluginId();
   }
 
   public boolean prepareToInstall(ProgressIndicator pi) throws IOException {
@@ -71,11 +88,7 @@ public class PluginDownloader {
     if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.isPluginInstalled(myPluginId)) {
       //store old plugins file
       descriptor = PluginManager.getPlugin(myPluginId);
-      LOG.assertTrue(descriptor != null);
-      if (myPluginVersion != null && StringUtil.compareVersionNumbers(descriptor.getVersion(), myPluginVersion) >= 0) {
-        LOG.info("Plugin " + myPluginId + ": current version (max) " + myPluginVersion);
-        return false;
-      }
+
       myOldFile = descriptor.getPath();
     }
 
@@ -95,65 +108,62 @@ public class PluginDownloader {
       return false;
     }
 
-    IdeaPluginDescriptorImpl actualDescriptor = loadDescriptionFromJar(myFile);
-    if (actualDescriptor != null) {
-      if (InstalledPluginsTableModel.wasUpdated(actualDescriptor.getPluginId())) {
-        return false; //already updated
-      }
-
-      myPluginVersion = actualDescriptor.getVersion();
-      if (descriptor != null && StringUtil.compareVersionNumbers(descriptor.getVersion(), actualDescriptor.getVersion()) >= 0) {
-        LOG.info("Plugin " + myPluginId + ": current version (max) " + myPluginVersion);
-        return false; //was not updated
-      }
-
-      if (PluginManagerCore.isIncompatible(actualDescriptor)) {
-        LOG.info("Plugin " + myPluginId + " is incompatible with current installation (platformVersion: " + actualDescriptor.getPlatformVersion() + ")");
-        return false; //shouldn't happen
-      }
-
-      setDescriptor(actualDescriptor);
-    }
-    return true;
-  }
-
-  @Nullable
-  public static IdeaPluginDescriptorImpl loadDescriptionFromJar(final File file) throws IOException {
-    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(file);
-    if (descriptor == null) {
-      if (file.getName().endsWith(".zip")) {
-        final File outputDir = FileUtil.createTempDirectory("plugin", "");
-        try {
-          ZipUtil.extract(file, outputDir, null);
-          final File[] files = outputDir.listFiles();
-          if (files != null && files.length == 1) {
-            descriptor = PluginManagerCore.loadDescriptor(files[0], PluginManagerCore.PLUGIN_XML);
-          }
-        }
-        finally {
-          FileUtil.delete(outputDir);
-        }
-      }
-    }
-    return descriptor;
+    return !InstalledPluginsTableModel.wasUpdated(myDescriptor.getPluginId());
   }
 
   public void install(boolean deleteTempFile) throws IOException {
-    LOG.assertTrue(myFile != null);
-    if (myPlatformNode) {
-      return;
-    }
+    install(null, deleteTempFile);
+  }
 
+  public void install(@Nullable ProgressIndicator indicator, boolean deleteTempFile) throws IOException {
+    LOG.assertTrue(myFile != null);
     if (myOldFile != null) {
       // add command to delete the 'action script' file
       StartupActionScriptManager.ActionCommand deleteOld = new StartupActionScriptManager.DeleteCommand(myOldFile);
       StartupActionScriptManager.addActionCommand(deleteOld);
     }
-    install(myFile, getPluginName(), deleteTempFile);
-  }
 
-  public static void install(final File fromFile, final String pluginName) throws IOException {
-    install(fromFile, pluginName, true);
+    if (myIsPlatform) {
+      if (indicator != null) {
+        indicator.setText2(IdeBundle.message("progress.extracting.platform"));
+      }
+
+      String prefix = SystemInfo.isMac ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
+
+      File platformDirectory = PathManager.getPlatformDirectory();
+
+      try (TarArchiveInputStream ais = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(myFile)))) {
+        TarArchiveEntry tempEntry;
+        while ((tempEntry = (TarArchiveEntry)ais.getNextEntry()) != null) {
+          String name = tempEntry.getName();
+          // we interest only in new build
+          if (name.startsWith(prefix) && name.length() != prefix.length()) {
+            File targetFile = new File(platformDirectory, name.substring(prefix.length(), name.length()));
+            Path targetPath = targetFile.toPath();
+
+            if (tempEntry.isDirectory()) {
+              Files.createDirectories(targetPath);
+            }
+            else {
+              try (OutputStream stream = Files.newOutputStream(targetPath)) {
+                StreamUtil.copyStreamContent(ais, stream);
+              }
+
+              Files.setLastModifiedTime(targetPath, FileTime.fromMillis(tempEntry.getLastModifiedDate().getTime()));
+            }
+
+            PathUtil.setPosixFilePermissions(targetPath, PathUtil.convertModeToFilePermissions(tempEntry.getMode()));
+          }
+        }
+      }
+
+      FileUtil.delete(myFile);
+
+      myFile = null;
+    }
+    else {
+      install(myFile, getPluginName(), deleteTempFile);
+    }
   }
 
   public static void install(final File fromFile, final String pluginName, boolean deleteFromFile) throws IOException {
@@ -185,7 +195,7 @@ public class PluginDownloader {
     final File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
 
     indicator.checkCanceled();
-    if(myPlatformNode) {
+    if (myIsPlatform) {
       indicator.setText2(IdeBundle.message("progress.downloading.platform"));
     }
     else {
@@ -204,15 +214,12 @@ public class PluginDownloader {
 
   @NotNull
   public String getFileName() {
-    if (myFileName == null) {
-      if (myPlatformNode) {
-        return "platform.tar.gz";
-      }
-      else {
-        return myPluginId + ".zip";
-      }
+    if (myIsPlatform) {
+      return "platform.tar.gz";
     }
-    return myFileName;
+    else {
+      return myPluginId + ".zip";
+    }
   }
 
   public String getPluginName() {
@@ -222,29 +229,12 @@ public class PluginDownloader {
     return myPluginName;
   }
 
-  public String getPluginVersion() {
-    return myPluginVersion;
-  }
-
   public void setDescription(String description) {
     myDescription = description;
   }
 
   public String getDescription() {
     return myDescription;
-  }
-
-  public static PluginDownloader createDownloader(IdeaPluginDescriptor descriptor) {
-    String url =
-            RepositoryHelper.buildUrlForDownload(consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString());
-
-    PluginDownloader downloader = new PluginDownloader(descriptor.getPluginId(), url, null, null, descriptor.getName());
-    downloader.setDescriptor(descriptor);
-    return downloader;
-  }
-
-  public void setDescriptor(IdeaPluginDescriptor descriptor) {
-    myDescriptor = descriptor;
   }
 
   public IdeaPluginDescriptor getDescriptor() {
