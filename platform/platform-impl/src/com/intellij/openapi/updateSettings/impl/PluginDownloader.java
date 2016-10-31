@@ -150,9 +150,9 @@ public class PluginDownloader {
               }
 
               Files.setLastModifiedTime(targetPath, FileTime.fromMillis(tempEntry.getLastModifiedDate().getTime()));
-            }
 
-            PathUtil.setPosixFilePermissions(targetPath, PathUtil.convertModeToFilePermissions(tempEntry.getMode()));
+              PathUtil.setPosixFilePermissions(targetPath, PathUtil.convertModeToFilePermissions(tempEntry.getMode()));
+            }
           }
         }
       }
