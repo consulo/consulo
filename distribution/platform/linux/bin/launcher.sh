@@ -141,10 +141,6 @@ export CLASSPATH
 LD_LIBRARY_PATH="$IDE_BIN_HOME:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
 
-# ---------------------------------------------------------------------
-# Run the IDE.
-# ---------------------------------------------------------------------
-while true ; do
-  eval "$JDK/bin/java" $ALL_JVM_ARGS -Djb.restart.code=88 $MAIN_CLASS_NAME "$@"
-  test $? -ne 88 && break
-done
+export ALL_JVM_ARGS
+export MAIN_CLASS_NAME
+export JDK
