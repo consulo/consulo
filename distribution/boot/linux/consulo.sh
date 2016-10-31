@@ -13,10 +13,6 @@ while true ; do
 
   . "$CONSULO_HOME/bin/launcher.sh"
 
-  echo "->CONSULO_HOME="$CONSULO_HOME
-  echo "->MAIN_CLASS_NAME="$MAIN_CLASS_NAME
-  echo "->ALL_JVM_ARGS="$ALL_JVM_ARGS
-
   eval "$JDK/bin/java" $ALL_JVM_ARGS -Djb.restart.code=88 $MAIN_CLASS_NAME "$@"
 
   test $? -ne 88 && break
