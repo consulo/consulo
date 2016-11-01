@@ -32,8 +32,6 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Couple;
-import com.intellij.ui.ColorUtil;
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TableUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.lombok.annotations.Logger;
@@ -47,13 +45,11 @@ import java.util.List;
 @Logger
 @Deprecated
 public abstract class AbstractUpdateDialog extends DialogWrapper {
-  private final boolean myEnableLink;
   protected final List<Couple<IdeaPluginDescriptor>> myUploadedPlugins;
   protected boolean myShowConfirmation = true;
 
   protected AbstractUpdateDialog(boolean canBeParent, boolean enableLink, final List<Couple<IdeaPluginDescriptor>> updatePlugins) {
     super(canBeParent);
-    myEnableLink = enableLink;
     myUploadedPlugins = updatePlugins;
   }
 
@@ -63,7 +59,7 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
     super.init();
   }
 
-  protected void initPluginsPanel(final JPanel panel, JPanel pluginsPanel, JEditorPane updateLinkPane) {
+  protected void initPluginsPanel(final JPanel panel, JPanel pluginsPanel) {
     pluginsPanel.setVisible(myUploadedPlugins != null);
     if (myUploadedPlugins != null) {
       final DetectedPluginsPanel foundPluginsPanel = new DetectedPluginsPanel();
@@ -80,28 +76,6 @@ public abstract class AbstractUpdateDialog extends DialogWrapper {
       TableUtil.ensureSelectionExists(foundPluginsPanel.getEntryTable());
       pluginsPanel.add(foundPluginsPanel, BorderLayout.CENTER);
     }
-    updateLinkPane.setBackground(UIUtil.getPanelBackground());
-    String css = UIUtil.getCssFontDeclaration(UIUtil.getLabelFont());
-    if (UIUtil.isUnderDarkBuildInLaf()) {
-      css += "<style>body {background: #" + ColorUtil.toHex(UIUtil.getPanelBackground()) + ";}</style>";
-    }
-    updateLinkPane.setBorder(IdeBorderFactory.createEmptyBorder(0));
-    updateLinkPane.setText(IdeBundle.message("updates.configure.label", css));
-    updateLinkPane.setEditable(false);
-
-    /*if (myEnableLink) {
-      updateLinkPane.addHyperlinkListener(new HyperlinkListener() {
-        @Override
-        public void hyperlinkUpdate(final HyperlinkEvent e) {
-          if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
-            UpdateSettingsConfigurable updatesSettings = new UpdateSettingsConfigurable();
-            updatesSettings.setCheckNowEnabled(false);
-            util.editConfigurable(panel, updatesSettings);
-          }
-        }
-      });
-    }*/
   }
 
   private void setButtonsText() {

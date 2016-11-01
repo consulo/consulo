@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerConfigurable;
-import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Couple;
 import org.jetbrains.annotations.NotNull;
@@ -70,16 +69,12 @@ class SelectUpdateDialog extends AbstractUpdateDialog {
   private class NoUpdatesPanel {
     private JPanel myPanel;
     private JPanel myPluginsPanel;
-    private JEditorPane myEditorPane;
-    private JLabel myNothingFoundToUpdateLabel;
+
     private JLabel myPluginsToUpdateLabel;
 
     public NoUpdatesPanel() {
-      initPluginsPanel(myPanel, myPluginsPanel, myEditorPane);
+      initPluginsPanel(myPanel, myPluginsPanel);
       myPluginsToUpdateLabel.setVisible(myUploadedPlugins != null);
-      myNothingFoundToUpdateLabel.setVisible(myUploadedPlugins == null);
-      myNothingFoundToUpdateLabel.setText("You already have the latest version of " +
-                                          ApplicationInfo.getInstance().getVersionName()+ " installed.");
     }
   }
 }
