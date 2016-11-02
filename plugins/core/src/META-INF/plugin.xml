@@ -217,8 +217,6 @@
 
     <extensionPoint name="customizableActionGroupProvider" interface="com.intellij.ide.ui.customization.CustomizableActionGroupProvider"/>
 
-    <extensionPoint name="statusBarComponent" interface="com.intellij.openapi.wm.StatusBarCustomComponentFactory"/>
-
     <extensionPoint name="checkinHandlerFactory" interface="com.intellij.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
     <extensionPoint name="writingAccessProvider" area="CONSULO_PROJECT" interface="com.intellij.openapi.vfs.WritingAccessProvider"/>

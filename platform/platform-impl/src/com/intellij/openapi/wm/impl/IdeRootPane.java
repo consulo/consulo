@@ -80,9 +80,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   private final boolean myGlassPaneInitialized;
   private final IdeGlassPaneImpl myGlassPane;
 
-  private final Application myApplication;
   private MemoryUsagePanel myMemoryWidget;
-  private final StatusBarCustomComponentFactory[] myStatusBarCustomComponentFactories;
 
   private boolean myFullScreen;
 
@@ -91,9 +89,6 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     myUISettings = uiSettings;
 
     myContentPane.add(myNorthPanel, BorderLayout.NORTH);
-
-    myStatusBarCustomComponentFactories = application.getExtensions(StatusBarCustomComponentFactory.EP_NAME);
-    myApplication = application;
 
     createStatusBar(frame);
 
@@ -240,38 +235,6 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     myStatusBar.install(frame);
 
     myMemoryWidget = new MemoryUsagePanel();
-
-    if (myStatusBarCustomComponentFactories != null) {
-      for (final StatusBarCustomComponentFactory<JComponent> componentFactory : myStatusBarCustomComponentFactories) {
-        final JComponent c = componentFactory.createComponent(myStatusBar);
-        myStatusBar.addWidget(new CustomStatusBarWidget() {
-          @Override
-          public JComponent getComponent() {
-            return c;
-          }
-
-          @Override
-          @NotNull
-          public String ID() {
-            return c.getClass().getSimpleName();
-          }
-
-          @Override
-          public WidgetPresentation getPresentation(@NotNull PlatformType type) {
-            return null;
-          }
-
-          @Override
-          public void install(@NotNull StatusBar statusBar) {
-          }
-
-          @Override
-          public void dispose() {
-            componentFactory.disposeComponent(myStatusBar, c);
-          }
-        }, "before " + MemoryUsagePanel.WIDGET_ID);
-      }
-    }
 
     myStatusBar.addWidget(myMemoryWidget);
     myStatusBar.addWidget(new IdeMessagePanel(frame, MessagePool.getInstance()), "before " + MemoryUsagePanel.WIDGET_ID);
