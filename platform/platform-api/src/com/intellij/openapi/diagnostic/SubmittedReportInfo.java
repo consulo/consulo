@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.diagnostic;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Simple bean representing error submission status.
  */
@@ -42,12 +44,13 @@ public class SubmittedReportInfo {
 
   /**
    * Create new submission status bean
-   * @param URL url that points to newly created issue. Optional. Pass <code>null</code> value if N/A or failed
+   *
+   * @param url      url that points to newly created issue. Optional. Pass <code>null</code> value if N/A or failed
    * @param linkText short text that UI interface pointing to the issue should have.
-   * @param status submission success/failure
+   * @param status   submission success/failure
    */
-  public SubmittedReportInfo(final String URL, final String linkText, final SubmissionStatus status) {
-    myURL = URL;
+  public SubmittedReportInfo(@Nullable String url, @Nullable String linkText, final SubmissionStatus status) {
+    myURL = url;
     myLinkText = linkText;
     myStatus = status;
   }

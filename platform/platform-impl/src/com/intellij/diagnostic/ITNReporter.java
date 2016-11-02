@@ -18,9 +18,9 @@ package com.intellij.diagnostic;
 import com.intellij.CommonBundle;
 import com.intellij.errorreport.ErrorReportSender;
 import com.intellij.errorreport.bean.ErrorBean;
-import com.intellij.errorreport.error.InternalEAPException;
-import com.intellij.errorreport.error.NoSuchEAPUserException;
+import com.intellij.errorreport.error.AuthorizationFailedException;
 import com.intellij.errorreport.error.UpdateAvailableException;
+import com.intellij.errorreport.error.WebServiceException;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
@@ -39,7 +39,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,17 +49,9 @@ import java.util.Set;
  * @author max
  */
 public class ITNReporter extends ErrorReportSubmitter {
-  public static final ITNReporter ourInstance = new ITNReporter();
+  public static final ITNReporter ourInternalInstance = new ITNReporter();
 
-  private static int previousExceptionThreadId = 0;
-  private static boolean wasException = false;
-  @NonNls private static final String URL_HEADER = "http://www.intellij.net/tracker/idea/viewSCR?publicId=";
-
-  @Override
-  public SubmittedReportInfo submit(IdeaLoggingEvent[] events, Component parentComponent) {
-    // obsolete API
-    return new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED);
-  }
+  private static String previousExceptionThreadId;
 
   @Override
   public boolean trySubmitAsync(IdeaLoggingEvent[] events, String additionalInfo, Component parentComponent, Consumer<SubmittedReportInfo> consumer) {
@@ -87,21 +78,10 @@ public class ITNReporter extends ErrorReportSubmitter {
     final DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
     final Project project = CommonDataKeys.PROJECT.getData(dataContext);
 
-    final ErrorReportConfigurable errorReportConfigurable = ErrorReportConfigurable.getInstance();
-    if (!errorReportConfigurable.KEEP_ITN_PASSWORD &&
-        !StringUtil.isEmpty(errorReportConfigurable.ITN_LOGIN) &&
-        StringUtil.isEmpty(errorReportConfigurable.getPlainItnPassword())) {
-      final JetBrainsAccountDialog dlg = new JetBrainsAccountDialog(parentComponent);
-      dlg.show();
-      if (!dlg.isOK()) {
-        return false;
-      }
-    }
-
     errorBean.setDescription(description);
     errorBean.setMessage(event.getMessage());
 
-    if (previousExceptionThreadId != 0) {
+    if (previousExceptionThreadId != null) {
       errorBean.setPreviousException(previousExceptionThreadId);
     }
 
@@ -127,89 +107,54 @@ public class ITNReporter extends ErrorReportSubmitter {
       errorBean.setAttachments(((LogMessageEx)data).getAttachments());
     }
 
-    @NonNls String login = errorReportConfigurable.ITN_LOGIN;
-    @NonNls String password = errorReportConfigurable.getPlainItnPassword();
-    if (login.trim().length() == 0 && password.trim().length() == 0) {
-      login = "idea_anonymous";
-      password = "guest";
-    }
+    ErrorReportSender.sendReport(project, null, errorBean, id -> {
+      previousExceptionThreadId = id;
+      final SubmittedReportInfo reportInfo = new SubmittedReportInfo(null, null, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
+      callback.consume(reportInfo);
 
-    ErrorReportSender.sendError(project, login, errorBean, new Consumer<Integer>() {
-                                  @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
-                                  @Override
-                                  public void consume(Integer threadId) {
-                                    previousExceptionThreadId = threadId;
-                                    wasException = true;
-                                    final SubmittedReportInfo reportInfo = new SubmittedReportInfo(URL_HEADER + threadId, String.valueOf(threadId),
-                                                                                                   SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
-                                    callback.consume(reportInfo);
-                                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                                      @Override
-                                      public void run() {
-                                        StringBuilder text = new StringBuilder();
-                                        final String url = IdeErrorsDialog.getUrl(reportInfo, true);
-                                        IdeErrorsDialog.appendSubmissionInformation(reportInfo, text, url);
-                                        text.append(".");
-                                        if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
-                                          text.append("<br/>").append(DiagnosticBundle.message("error.report.gratitude"));
-                                        }
+      ApplicationManager.getApplication().invokeLater(() -> {
+        StringBuilder text = new StringBuilder();
+        final String url = IdeErrorsDialog.getUrl(reportInfo);
 
-                                        NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
-                                                                ? NotificationType.ERROR
-                                                                : NotificationType.INFORMATION;
-                                        NotificationListener listener = url != null ? new NotificationListener.UrlOpeningListener(true) : null;
-                                        ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT, XmlStringUtil.wrapInHtml(text), type, listener)
-                                                .setImportant(false).notify(project);
-                                      }
-                                    });
-                                  }
-                                }, new Consumer<Exception>() {
-                                  @Override
-                                  public void consume(final Exception e) {
-                                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                                      @Override
-                                      public void run() {
-                                        String msg;
-                                        if (e instanceof NoSuchEAPUserException) {
-                                          msg = DiagnosticBundle.message("error.report.authentication.failed");
-                                        }
-                                        else if (e instanceof InternalEAPException) {
-                                          msg = DiagnosticBundle.message("error.report.posting.failed", e.getMessage());
-                                        }
-                                        else {
-                                          msg = DiagnosticBundle.message("error.report.sending.failure");
-                                        }
-                                        if (e instanceof UpdateAvailableException) {
-                                          String message = DiagnosticBundle.message("error.report.new.eap.build.message", e.getMessage());
-                                          showMessageDialog(parentComponent, project, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon());
-                                          callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
-                                        }
-                                        else if (showYesNoDialog(parentComponent, project, msg, ReportMessages.ERROR_REPORT, Messages.getErrorIcon()) != 0) {
-                                          callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
-                                        }
-                                        else {
-                                          if (e instanceof NoSuchEAPUserException) {
-                                            final JetBrainsAccountDialog dialog;
-                                            if (parentComponent.isShowing()) {
-                                              dialog = new JetBrainsAccountDialog(parentComponent);
-                                            }
-                                            else {
-                                              dialog = new JetBrainsAccountDialog(project);
-                                            }
-                                            dialog.show();
-                                          }
-                                          ApplicationManager.getApplication().invokeLater(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                              doSubmit(event, parentComponent, callback, errorBean, description);
-                                            }
-                                          });
-                                        }
-                                      }
-                                    });
-                                  }
-                                }
-    );
+        IdeErrorsDialog.appendSubmissionInformation(reportInfo, text, url);
+
+        text.append(".");
+
+        if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
+          text.append("<br/>").append(DiagnosticBundle.message("error.report.gratitude"));
+        }
+
+        NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED ? NotificationType.ERROR : NotificationType.INFORMATION;
+        NotificationListener listener = url != null ? new NotificationListener.UrlOpeningListener(true) : null;
+        ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT, XmlStringUtil.wrapInHtml(text), type, listener).setImportant(false)
+                .notify(project);
+      });
+    }, e -> ApplicationManager.getApplication().invokeLater(() -> {
+      String msg;
+      if (e instanceof AuthorizationFailedException) {
+        msg = DiagnosticBundle.message("error.report.authentication.failed");
+      }
+      else if (e instanceof WebServiceException) {
+        msg = DiagnosticBundle.message("error.report.posting.failed", e.getMessage());
+      }
+      else {
+        msg = DiagnosticBundle.message("error.report.sending.failure");
+      }
+      if (e instanceof UpdateAvailableException) {
+        showMessageDialog(parentComponent, project, DiagnosticBundle.message("error.report.update.required.message"), CommonBundle.getWarningTitle(),
+                          Messages.getWarningIcon());
+        callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+      }
+      else if (showYesNoDialog(parentComponent, project, msg, ReportMessages.ERROR_REPORT, Messages.getErrorIcon()) != 0) {
+        callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+      }
+      else {
+        if (e instanceof AuthorizationFailedException) {
+          // TODO [VISTALL]
+        }
+        ApplicationManager.getApplication().invokeLater(() -> doSubmit(event, parentComponent, callback, errorBean, description));
+      }
+    }));
     return true;
   }
 

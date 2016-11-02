@@ -21,8 +21,12 @@ import java.io.IOException;
  * @author stathik
  * @since 3:13:15 PM Aug 5, 2003
  */
-public class InternalEAPException extends IOException {
-  public InternalEAPException(String message) {
+public class WebServiceException extends IOException {
+  public WebServiceException(String message) {
     super(message);
+  }
+
+  public WebServiceException() {
+    this("Problem with web service");
   }
 }
