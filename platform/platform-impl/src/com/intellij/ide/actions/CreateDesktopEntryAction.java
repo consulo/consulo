@@ -38,6 +38,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,16 +57,18 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     return SystemInfo.isUnix && SystemInfo.hasXdgOpen();
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@NotNull final AnActionEvent event) {
     final boolean enabled = isAvailable();
     final Presentation presentation = event.getPresentation();
     presentation.setEnabled(enabled);
     presentation.setVisible(enabled);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(final AnActionEvent event) {
+  public void actionPerformed(@NotNull final AnActionEvent event) {
     if (!isAvailable()) return;
 
     final Project project = event.getProject();
