@@ -1,6 +1,8 @@
 /out
 .DS_Store
-/.consulo/workspace.xml
+project.xcworkspace/
+xcschemes/
+workspace.xml
 /.consulo/sandbox
 /impl/web-impl/dep
 /impl/web-impl/gwt-out
