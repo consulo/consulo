@@ -24,8 +24,6 @@ import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-
 /**
  * @author VISTALL
  * @since 22-Sep-16
@@ -73,13 +71,6 @@ public abstract class SimpleConfigurable<T extends NotNullComputable<? extends C
       myComponent = createPanel();
     }
     return myComponent.compute();
-  }
-
-  @RequiredDispatchThread
-  @Nullable
-  @Override
-  public JComponent createComponent() {
-    return null;
   }
 
   @Override
