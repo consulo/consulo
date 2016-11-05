@@ -1088,6 +1088,7 @@ public abstract class DialogWrapper {
    *         on the screen.
    */
   @Nullable
+  @RequiredDispatchThread
   public JComponent getPreferredFocusedComponent() {
     return SystemInfo.isMac ? myPreferredFocusedComponent : null;
   }

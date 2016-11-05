@@ -34,9 +34,7 @@ import java.util.Set;
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml")}
 )
 public class EditorSettingsExternalizable implements PersistentStateComponent<EditorSettingsExternalizable.OptionSet> {
-  //Q: make it interface?
   public static final class OptionSet {
-    public String LINE_SEPARATOR;
     public String USE_SOFT_WRAPS;
     public boolean USE_CUSTOM_SOFT_WRAP_INDENT = false;
     public int CUSTOM_SOFT_WRAP_INDENT = 0;

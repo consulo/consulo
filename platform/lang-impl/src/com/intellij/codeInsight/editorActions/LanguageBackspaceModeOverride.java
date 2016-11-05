@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package com.intellij.codeInsight.editorActions;
 
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.LanguageExtension;
 
-/**
- * @author VISTALL
- * @since 12-Jun-16
- */
-public class ListItemRenders {
-  private static final ListItemRender ourDefaultRender = (render, index, item) -> render.append(item == null ? "" : item.toString());
+public class LanguageBackspaceModeOverride extends LanguageExtension<BackspaceModeOverride> {
+  public static final LanguageBackspaceModeOverride INSTANCE = new LanguageBackspaceModeOverride();
 
-  @SuppressWarnings("unchecked")
-  @NotNull
-  public static <E> ListItemRender<E> defaultRender() {
-    return ourDefaultRender;
+  private LanguageBackspaceModeOverride() {
+    super("com.intellij.editor.backspaceModeOverride");
   }
 }

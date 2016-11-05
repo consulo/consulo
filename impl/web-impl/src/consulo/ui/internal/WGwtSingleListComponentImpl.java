@@ -121,7 +121,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
 
   //@Override
   @RequiredUIAccess
-  public void setValue(int index) {
+  public void setValueByIndex(int index) {
     setValue(myModel.get(index));
   }
 

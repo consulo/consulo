@@ -16,7 +16,7 @@
 package consulo.ui.internal;
 
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
-import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.*;
 import consulo.ui.Component;
 import consulo.ui.model.ListModel;
@@ -39,15 +39,16 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
     myModel = new DesktopComboBoxModelWrapper<E>(model);
 
     setModel(myModel);
-    setRenderer(new ColoredListCellRendererWrapper<E>() {
+    setRenderer(new ColoredListCellRenderer<E>() {
       @Override
-      protected void doCustomize(JList list, E value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@NotNull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
         DesktopListItemPresentationImpl<E> render = new DesktopListItemPresentationImpl<E>(this);
         myRender.render(render, index, value);
       }
     });
   }
 
+  @RequiredUIAccess
   @Override
   public void setSize(@NotNull Size size) {
     setSize(new Dimension(size.getWidth(), size.getHeight()));
@@ -65,10 +66,11 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
   }
 
   @Override
-  public void setValue(int index) {
+  public void setValueByIndex(int index) {
     setSelectedIndex(index);
   }
 
+  @RequiredUIAccess
   @Override
   public void setValue(@NotNull E value) {
     setSelectedItem(value);

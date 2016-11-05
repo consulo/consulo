@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight;
 
+import com.intellij.codeInsight.editorActions.SmartBackspaceMode;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -24,7 +25,9 @@ import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializationException;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
+import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.util.xmlb.annotations.Property;
+import com.intellij.util.xmlb.annotations.Transient;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -36,11 +39,8 @@ import java.io.File;
 
 @State(
         name = "CodeInsightSettings",
-        storages = {
-                @Storage(
-                        file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml"
-                )}
-)
+        storages = {@Storage(
+                file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml")})
 public class CodeInsightSettings implements PersistentStateComponent<Element>, Cloneable, ExportableComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.CodeInsightSettings");
 
@@ -94,10 +94,8 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
 
   public boolean SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO = false;
 
-  @MagicConstant(intValues = {OFF, AUTOINDENT})
-  public int SMART_BACKSPACE = AUTOINDENT;
-  public static final int OFF = 0;
-  public static final int AUTOINDENT = 1;
+  @OptionTag("SMART_BACKSPACE") // explicit name makes it work also for obfuscated private field's name
+  private int SMART_BACKSPACE = SmartBackspaceMode.AUTOINDENT.ordinal();
 
   public boolean SMART_INDENT_ON_ENTER = true;
   public boolean INSERT_BRACE_ON_ENTER = true;
@@ -111,12 +109,13 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   public boolean AUTOINSERT_PAIR_QUOTE = true;
   public boolean REFORMAT_BLOCK_ON_RBRACE = true;
 
-  @MagicConstant(intValues = {NO_REFORMAT, INDENT_BLOCK, INDENT_EACH_LINE, REFORMAT_BLOCK})
-  public int REFORMAT_ON_PASTE = INDENT_EACH_LINE;
   public static final int NO_REFORMAT = 1;
   public static final int INDENT_BLOCK = 2;
   public static final int INDENT_EACH_LINE = 3;
   public static final int REFORMAT_BLOCK = 4;
+
+  @MagicConstant(intValues = {NO_REFORMAT, INDENT_BLOCK, INDENT_EACH_LINE, REFORMAT_BLOCK})
+  public int REFORMAT_ON_PASTE = INDENT_EACH_LINE;
 
   public boolean INDENT_TO_CARET_ON_PASTE = false;
 
@@ -136,12 +135,23 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   public boolean ADD_MEMBER_IMPORTS_ON_THE_FLY = true;
   public boolean JSP_ADD_UNAMBIGIOUS_IMPORTS_ON_THE_FLY = false;
 
-  @Property(surroundWithTag = false)
-  @AbstractCollection(
+  @Property(surroundWithTag = false) @AbstractCollection(
           surroundWithTag = false,
           elementTag = "EXCLUDED_PACKAGE",
           elementValueAttribute = "NAME")
   public String[] EXCLUDED_PACKAGES = ArrayUtil.EMPTY_STRING_ARRAY;
+
+  @Transient
+  @NotNull
+  public SmartBackspaceMode getBackspaceMode() {
+    SmartBackspaceMode[] values = SmartBackspaceMode.values();
+    return SMART_BACKSPACE >= 0 && SMART_BACKSPACE < values.length ? values[SMART_BACKSPACE] : SmartBackspaceMode.OFF;
+  }
+
+  @Transient
+  public void setBackspaceMode(@NotNull SmartBackspaceMode mode) {
+    SMART_BACKSPACE = mode.ordinal();
+  }
 
   @Override
   public void loadState(final Element state) {

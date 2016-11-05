@@ -19,14 +19,14 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 05-Nov-16
  */
-public class ListItemRenders {
-  private static final ListItemRender ourDefaultRender = (render, index, item) -> render.append(item == null ? "" : item.toString());
-
-  @SuppressWarnings("unchecked")
-  @NotNull
-  public static <E> ListItemRender<E> defaultRender() {
-    return ourDefaultRender;
+public class Labels {
+  @RequiredUIAccess
+  public static Component left(@NotNull String text, @NotNull Component component) {
+    HorizontalLayout horizontal = Layouts.horizontal();
+    horizontal.add(Components.label(text));
+    horizontal.add(component);
+    return horizontal;
   }
 }

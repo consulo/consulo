@@ -31,6 +31,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
+import consulo.options.ConfigurableUIMigrationUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -265,7 +266,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (myConfigurable instanceof Configurable.HoldPreferredFocusedComponent) {
-      JComponent preferred = ((Configurable.HoldPreferredFocusedComponent)myConfigurable).getPreferredFocusedComponent();
+      JComponent preferred = ConfigurableUIMigrationUtil.getPreferredFocusedComponent((Configurable.HoldPreferredFocusedComponent)myConfigurable);
       if (preferred != null) return preferred;
     }
     return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myCenterPanel);

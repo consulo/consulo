@@ -26,7 +26,10 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.*;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.MasterDetails;
+import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.options.ex.GlassPanel;
 import com.intellij.openapi.project.Project;
@@ -49,6 +52,8 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.options.ConfigurableUIMigrationUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -87,8 +92,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   //private final Splitter myMainSplitter;
   //[back/forward] JComponent myToolbarComponent;
 
-  private final DetailsComponent myOwnDetails = new DetailsComponent(false, false).setEmptyContentText(
-          "Select configuration element in the tree to edit its settings");
+  private final DetailsComponent myOwnDetails =
+          new DetailsComponent(false, false).setEmptyContentText("Select configuration element in the tree to edit its settings");
   private final ContentWrapper myContentWrapper = new ContentWrapper();
 
 
@@ -128,7 +133,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         myTree.processTextEvent(e);
       }
     };
-    
+
     mySearch.getTextEditor().addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(MouseEvent e) {
@@ -136,13 +141,13 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         if (!myContext.isHoldingFilter() && hasText) {
           myFilter.reenable();
         }
-        
+
         if (!isSearchFieldFocused() && hasText) {
           mySearch.selectText();
         }
       }
     });
-    
+
     myTree = new OptionsTree(myProject, configurables, getContext()) {
       @Override
       protected void onTreeKeyEvent(final KeyEvent e) {
@@ -213,23 +218,23 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     myLeftSide.add(myTree, BorderLayout.CENTER);
 
     myLoadingDecorator = new LoadingDecorator(myOwnDetails.getComponent(), this, 150);
-   //myMainSplitter.setProportion(readProportion(0.3f, MAIN_SPLITTER_PROPORTION));
+    //myMainSplitter.setProportion(readProportion(0.3f, MAIN_SPLITTER_PROPORTION));
     myContentWrapper.mySplitter.setProportion(readProportion(0.2f, DETAILS_SPLITTER_PROPORTION));
 
-   MyColleague colleague = new MyColleague();
+    MyColleague colleague = new MyColleague();
     getContext().addColleague(colleague);
 
     mySpotlightUpdate = new MergingUpdateQueue("OptionsSpotlight", 200, false, rootPanel, this, rootPanel);
 
     if (preselectedConfigurable != null) {
       myTree.select(preselectedConfigurable);
-    } else {
+    }
+    else {
       myTree.selectFirst();
     }
 
-    Toolkit.getDefaultToolkit().addAWTEventListener(this,
-                                                    AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
-    
+    Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+
     ActionManager.getInstance().addAnActionListener(new AnActionListener() {
       @Override
       public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
@@ -278,7 +283,9 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     return myLoadingDecorator.getComponent();
   }
 
-  /** @see #select(com.intellij.openapi.options.Configurable) */
+  /**
+   * @see #select(com.intellij.openapi.options.Configurable)
+   */
   @Deprecated
   public ActionCallback select(Class<? extends Configurable> configurableClass) {
     final Configurable configurable = findConfigurable(configurableClass);
@@ -288,7 +295,9 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     return select(configurable);
   }
 
-  /** @see #findConfigurableById(String) */
+  /**
+   * @see #findConfigurableById(String)
+   */
   @Deprecated
   @Nullable
   public <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
@@ -304,11 +313,12 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     clearFilter();
     return select(configurable, "");
   }
-  
+
   public ActionCallback select(Configurable configurable) {
     if (StringUtil.isEmpty(mySearch.getText())) {
       return select(configurable, "");
-    } else {
+    }
+    else {
       return myFilter.refilterFor(mySearch.getText(), true, true);
     }
   }
@@ -345,7 +355,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
       result.setDone();
 
-    } else {
+    }
+    else {
       getUiFor(configurable).doWhenDone(new EdtRunnable() {
         @Override
         public void runEdt() {
@@ -368,7 +379,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
           final ConfigurableContent content = myConfigurable2Content.get(current);
 
           content.setText(getBannerText(configurable));
-          content.setBannerActions(new Action[] {new ResetAction(configurable)});
+          content.setBannerActions(new Action[]{new ResetAction(configurable)});
 
           content.updateBannerActions();
 
@@ -381,7 +392,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
           if (myTree.myBuilder.getSelectedElements().size() == 0) {
             select(configurable).notify(result);
-          } else {
+          }
+          else {
             result.setDone();
           }
         }
@@ -487,7 +499,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       if (!success) {
         updateSpotlight(false);
       }
-    } else {
+    }
+    else {
       mySpotlightUpdate.queue(new Update(this) {
         @Override
         public void run() {
@@ -504,7 +517,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     final List<Configurable> list = myTree.getPathToRoot(configurable);
     final String[] result = new String[list.size()];
     int add = 0;
-    for (int i = list.size() - 1; i >=0; i--) {
+    for (int i = list.size() - 1; i >= 0; i--) {
       result[add++] = list.get(i).getDisplayName().replace('\n', ' ');
     }
     return result;
@@ -536,7 +549,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       }
 
       result.addAll(getContext().getChildren(nearestParent));
-    } else {
+    }
+    else {
       result.add(actual);
     }
 
@@ -576,7 +590,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   private void fireModificationInt(final Configurable configurable) {
     if (configurable.isModified()) {
       getContext().fireModifiedAdded(configurable, null);
-    } else if (!configurable.isModified() && !getContext().getErrors().containsKey(configurable)) {
+    }
+    else if (!configurable.isModified() && !getContext().getErrors().containsKey(configurable)) {
       getContext().fireModifiedRemoved(configurable, null);
     }
   }
@@ -698,7 +713,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       if (component != null) {
         boolean noMargin = ConfigurableWrapper.isNoMargin(configurable);
         JComponent wrapComponent = component;
-        if(!noMargin) {
+        if (!noMargin) {
           wrapComponent = JBUI.Panels.simplePanel().addToCenter(wrapComponent);
           wrapComponent.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
         }
@@ -765,7 +780,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
       if (myMaster == null) {
         return NullableComponent.Check.isNull(mySimpleContent);
-      } else {
+      }
+      else {
         return NullableComponent.Check.isNull(myMaster);
       }
     }
@@ -863,12 +879,12 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
       return update(DocumentEvent.EventType.CHANGE, adjustSelection, now);
     }
-    
+
     public void clearTemporary() {
       myContext.setHoldingFilter(false);
       updateSpotlight(false);
     }
-    
+
     public void reenable() {
       myContext.setHoldingFilter(true);
       updateSpotlight(false);
@@ -881,7 +897,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       if (getFilterText().length() == 0) {
         myContext.setHoldingFilter(false);
         myFiltered = null;
-      } else {
+      }
+      else {
         myContext.setHoldingFilter(true);
         myHits = myIndex.getConfigurables(myConfigurables, type, myFiltered, text, myProject);
         myFiltered = myHits.getAll();
@@ -889,7 +906,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
       if (myFiltered != null && myFiltered.isEmpty()) {
         mySearch.getTextEditor().setBackground(LightColors.RED);
-      } else {
+      }
+      else {
         mySearch.getTextEditor().setBackground(UIUtil.getTextFieldBackground());
       }
 
@@ -910,7 +928,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       if (shouldMoveSelection && myHits != null) {
         if (!myHits.getNameHits().isEmpty()) {
           toSelect = suggestToSelect(myHits.getNameHits(), myHits.getNameFullHits());
-        } else if (!myHits.getContentHits().isEmpty()) {
+        }
+        else if (!myHits.getContentHits().isEmpty()) {
           toSelect = suggestToSelect(myHits.getContentHits(), null);
         }
       }
@@ -921,11 +940,11 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         toSelect = myLastSelected;
         myLastSelected = null;
       }
-      
+
       if (toSelect == null && current != null) {
         myLastSelected = current;
       }
-      
+
       final ActionCallback callback = fireUpdate(adjustSelection ? myTree.findNodeFor(toSelect) : null, adjustSelection, now);
 
       myFilterDocumentWasChanged = true;
@@ -1010,7 +1029,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
             each.disposeUIResources();
           }
         });
-      } else {
+      }
+      else {
         each.disposeUIResources();
       }
     }
@@ -1049,7 +1069,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         final ConfigurableContent content = myConfigurable2Content.get(configurable);
         content.updateBannerActions();
         return new ActionCallback.Done();
-      } else {
+      }
+      else {
         return new ActionCallback.Rejected();
       }
     }
@@ -1097,7 +1118,9 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
   private boolean isPopupOverEditor(Component c) {
     final Window wnd = SwingUtilities.getWindowAncestor(c);
-    return (wnd instanceof JWindow || wnd instanceof JDialog && ((JDialog)wnd).getModalityType() == Dialog.ModalityType.MODELESS) && myWindow != null && wnd.getParent() == myWindow;
+    return (wnd instanceof JWindow || wnd instanceof JDialog && ((JDialog)wnd).getModalityType() == Dialog.ModalityType.MODELESS) &&
+           myWindow != null &&
+           wnd.getParent() == myWindow;
   }
 
   private static class MySearchField extends SearchTextField {
@@ -1106,7 +1129,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
     private MySearchField() {
       super(false);
-      addKeyListener(new KeyAdapter() {});
+      addKeyListener(new KeyAdapter() {
+      });
     }
 
     @Override
@@ -1121,8 +1145,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         if (getTextEditor().isFocusOwner()) {
           try {
             myDelegatingNow = true;
-            boolean treeNavigation =
-              stroke.getModifiers() == 0 && (stroke.getKeyCode() == KeyEvent.VK_UP || stroke.getKeyCode() == KeyEvent.VK_DOWN);
+            boolean treeNavigation = stroke.getModifiers() == 0 && (stroke.getKeyCode() == KeyEvent.VK_UP || stroke.getKeyCode() == KeyEvent.VK_DOWN);
 
             if ("pressed ENTER".equals(stroke.toString())) {
               return true; // avoid closing dialog on ENTER
@@ -1171,8 +1194,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       String text = getFilterText();
 
       try {
-        final boolean sameText =
-          myConfigurableToLastOption.containsKey(current) && text.equals(myConfigurableToLastOption.get(current));
+        final boolean sameText = myConfigurableToLastOption.containsKey(current) && text.equals(myConfigurableToLastOption.get(current));
 
 
         if (current == null) {
@@ -1184,12 +1206,13 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         SearchableConfigurable searchable;
         if (current instanceof SearchableConfigurable) {
           searchable = (SearchableConfigurable)current;
-        } else {
+        }
+        else {
           searchable = new SearachableWrappper(current);
         }
 
         myGP.clear();
-        
+
         final Runnable runnable = SearchUtil.lightOptions(searchable, myContentWrapper, text, myGP);
         if (runnable != null) {
           myVisible = true;//myContext.isHoldingFilter();
@@ -1198,18 +1221,20 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
           boolean pushFilteringFurther = true;
           if (sameText) {
             pushFilteringFurther = false;
-          } else {
+          }
+          else {
             if (myFilter.myHits != null) {
               pushFilteringFurther = !myFilter.myHits.getNameHits().contains(current);
             }
           }
-          
+
           final Runnable ownSearch = searchable.enableSearch(text);
           if (pushFilteringFurther && ownSearch != null) {
             ownSearch.run();
           }
           fireNeedsRepaint(myOwnDetails.getComponent());
-        } else {
+        }
+        else {
           myVisible = false;
         }
       }
@@ -1303,16 +1328,19 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     JComponent myComponent;
     Configurable myConfigurable;
 
+    @RequiredDispatchThread
     Simple(final Configurable configurable) {
       myConfigurable = configurable;
-      myComponent = configurable.createComponent();
+      myComponent = ConfigurableUIMigrationUtil.createComponent(configurable);
 
       if (myComponent != null) {
         final Object clientProperty = myComponent.getClientProperty(NOT_A_NEW_COMPONENT);
         if (clientProperty != null && ApplicationManager.getApplication().isInternal()) {
-          LOG.warn(String.format("Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!",
-                                 configurable.getClass().getCanonicalName()));
-        } else {
+          LOG.warn(String.format(
+                  "Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!",
+                  configurable.getClass().getCanonicalName()));
+        }
+        else {
           myComponent.putClientProperty(NOT_A_NEW_COMPONENT, Boolean.TRUE);
         }
       }

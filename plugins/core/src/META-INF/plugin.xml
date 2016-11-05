@@ -402,6 +402,9 @@
                     interface="com.intellij.codeInsight.editorActions.JoinLinesHandlerDelegate"/>
     <extensionPoint name="enterHandlerDelegate" interface="com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegate"/>
     <extensionPoint name="backspaceHandlerDelegate" interface="com.intellij.codeInsight.editorActions.BackspaceHandlerDelegate"/>
+    <extensionPoint name="editor.backspaceModeOverride" beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.BackspaceModeOverride"/>
+    </extensionPoint>
 
     <extensionPoint name="codeStyleSettingsProvider"
                     interface="com.intellij.psi.codeStyle.CodeStyleSettingsProvider"/>
@@ -2486,7 +2489,8 @@
 
     <newModuleBuilder implementation="consulo.ide.impl.EmptyNewModuleBuilder"/>
 
-    <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.IndentingBackspaceHandler"/>
+    <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.SimpleIndentingBackspaceHandler" />
+    <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.SmartIndentingBackspaceHandler" />
 
     <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.FileOrDirectoryDependencyTabFactory"/>
     <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.ModuleDependencyTabFactory"/>
