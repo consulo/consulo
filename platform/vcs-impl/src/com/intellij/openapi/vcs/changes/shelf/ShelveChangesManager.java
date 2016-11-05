@@ -36,6 +36,7 @@ import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
@@ -354,6 +355,41 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
     }
 
     return changeList;
+  }
+
+  public void unshelveSilentlyAsynchronously(@NotNull final Project project,
+                                             @NotNull final List<ShelvedChangeList> selectedChangeLists,
+                                             @NotNull final List<ShelvedChange> selectedChanges,
+                                             @NotNull final List<ShelvedBinaryFile> selectedBinaryChanges,
+                                             @Nullable final LocalChangeList forcePredefinedOneChangelist) {
+    ProgressManager.getInstance().run(new Task.Backgroundable(project, VcsBundle.message("unshelve.changes.progress.title"), true) {
+      @Override
+      public void run(@NotNull ProgressIndicator indicator) {
+        for (ShelvedChangeList changeList : selectedChangeLists) {
+          List<ShelvedChange> changesForChangelist =
+                  ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getChanges(myProject), selectedChanges));
+          List<ShelvedBinaryFile> binariesForChangelist =
+                  ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getBinaryFiles(), selectedBinaryChanges));
+          boolean shouldUnshelveAllList = changesForChangelist.isEmpty() && binariesForChangelist.isEmpty();
+          unshelveChangeList(changeList, shouldUnshelveAllList ? null : changesForChangelist,
+                             shouldUnshelveAllList ? null : binariesForChangelist,
+                             forcePredefinedOneChangelist != null ? forcePredefinedOneChangelist : getChangeListUnshelveTo(changeList),
+                             true);
+        }
+      }
+    });
+  }
+
+  @NotNull
+  private LocalChangeList getChangeListUnshelveTo(@NotNull ShelvedChangeList list) {
+    String changeListName = list.DESCRIPTION;
+    ChangeListManager manager = ChangeListManager.getInstance(myProject);
+    LocalChangeList localChangeList = manager.findChangeList(changeListName);
+    if (localChangeList != null) return localChangeList;
+    if (list.isMarkedToDelete()) {
+      localChangeList = ChangeListUtil.getPredefinedChangeList(changeListName, manager);
+    }
+    return localChangeList != null ? localChangeList : manager.addChangeList(changeListName, "");
   }
 
   @NotNull

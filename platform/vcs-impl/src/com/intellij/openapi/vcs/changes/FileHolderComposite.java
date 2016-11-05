@@ -26,7 +26,7 @@ public class FileHolderComposite implements FileHolder {
   private final Map<HolderType, FileHolder> myHolders;
 
   public FileHolderComposite(final Project project) {
-    myHolders = new HashMap<HolderType, FileHolder>();
+    myHolders = new HashMap<>();
     myHolders.put(FileHolder.HolderType.UNVERSIONED, new VirtualFileHolder(project, FileHolder.HolderType.UNVERSIONED));
     myHolders.put(FileHolder.HolderType.ROOT_SWITCH, new SwitchedFileHolder(project, HolderType.ROOT_SWITCH));
     myHolders.put(FileHolder.HolderType.MODIFIED_WITHOUT_EDITING, new VirtualFileHolder(project, FileHolder.HolderType.MODIFIED_WITHOUT_EDITING));
@@ -36,7 +36,7 @@ public class FileHolderComposite implements FileHolder {
   }
 
   public FileHolderComposite(final FileHolderComposite holder) {
-    myHolders = new HashMap<HolderType, FileHolder>();
+    myHolders = new HashMap<>();
     for (FileHolder fileHolder : holder.myHolders.values()) {
       myHolders.put(fileHolder.getType(), fileHolder.copy());
     }
@@ -48,18 +48,21 @@ public class FileHolderComposite implements FileHolder {
     return added;
   }
 
+  @Override
   public void cleanAll() {
     for (FileHolder holder : myHolders.values()) {
       holder.cleanAll();
     }
   }
 
+  @Override
   public void cleanAndAdjustScope(final VcsModifiableDirtyScope scope) {
     for (FileHolder holder : myHolders.values()) {
       holder.cleanAndAdjustScope(scope);
     }
   }
 
+  @Override
   public FileHolder copy() {
     return new FileHolderComposite(this);
   }
@@ -96,14 +99,16 @@ public class FileHolderComposite implements FileHolder {
     return myHolders != null ? myHolders.hashCode() : 0;
   }
 
+  @Override
   public HolderType getType() {
     throw new UnsupportedOperationException();
   }
 
-  public IgnoredFilesHolder getIgnoredFileHolder() {
-    return (IgnoredFilesHolder) myHolders.get(HolderType.IGNORED);
+  public IgnoredFilesCompositeHolder getIgnoredFileHolder() {
+    return (IgnoredFilesCompositeHolder) myHolders.get(HolderType.IGNORED);
   }
 
+  @Override
   public void notifyVcsStarted(AbstractVcs vcs) {
     for (FileHolder fileHolder : myHolders.values()) {
       fileHolder.notifyVcsStarted(vcs);

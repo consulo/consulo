@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ZipperUpdater;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -33,6 +33,7 @@ import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotifications;
+import com.intellij.util.Alarm;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashSet;
@@ -40,6 +41,7 @@ import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -74,29 +76,21 @@ public class ChangelistConflictTracker {
     myDocumentManager = FileDocumentManager.getInstance();
     myFileStatusManager = fileStatusManager;
     myCheckSetLock = new Object();
-    myCheckSet = new HashSet<VirtualFile>();
+    myCheckSet = new HashSet<>();
 
     final Application application = ApplicationManager.getApplication();
-    final ZipperUpdater zipperUpdater = new ZipperUpdater(300, myProject);
-    final Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        if (Boolean.TRUE.equals(application.runReadAction(new Computable<Boolean>() {
-          @Override
-          public Boolean compute() {
-            return (application.isDisposed() || myProject.isDisposed() || !myProject.isOpen());
-          }
-        }))) {
-          return;
-        }
-        final Set<VirtualFile> localSet;
-        synchronized (myCheckSetLock) {
-          localSet = new HashSet<VirtualFile>();
-          localSet.addAll(myCheckSet);
-          myCheckSet.clear();
-        }
-        checkFiles(localSet);
+    final ZipperUpdater zipperUpdater = new ZipperUpdater(300, Alarm.ThreadToUse.SWING_THREAD, project);
+    final Runnable runnable = () -> {
+      if (application.isDisposed() || myProject.isDisposed() || !myProject.isOpen()) {
+        return;
       }
+      final Set<VirtualFile> localSet;
+      synchronized (myCheckSetLock) {
+        localSet = new HashSet<>();
+        localSet.addAll(myCheckSet);
+        myCheckSet.clear();
+      }
+      checkFiles(localSet);
     };
     myDocumentListener = new DocumentAdapter() {
       @Override
@@ -105,11 +99,13 @@ public class ChangelistConflictTracker {
           return;
         }
         Document document = e.getDocument();
-        final VirtualFile file = myDocumentManager.getFile(document);
-        synchronized (myCheckSetLock) {
-          myCheckSet.add(file);
+        VirtualFile file = myDocumentManager.getFile(document);
+        if (ProjectUtil.guessProjectForFile(file) == myProject) {
+          synchronized (myCheckSetLock) {
+            myCheckSet.add(file);
+          }
+          zipperUpdater.queue(runnable);
         }
-        zipperUpdater.queue(runnable);
       }
     };
 
@@ -141,34 +137,33 @@ public class ChangelistConflictTracker {
   }
 
   private void checkFiles(final Collection<VirtualFile> files) {
-    myChangeListManager.invokeAfterUpdate(new Runnable() {
-      public void run() {
-        final LocalChangeList list = myChangeListManager.getDefaultChangeList();
-        for (VirtualFile file : files) {
-          checkOneFile(file, list);
-        }
+    myChangeListManager.invokeAfterUpdate(() -> {
+      final LocalChangeList list = myChangeListManager.getDefaultChangeList();
+      for (VirtualFile file : files) {
+        checkOneFile(file, list);
       }
     }, InvokeAfterUpdateMode.SILENT, null, null);
   }
 
   private void checkOneFile(VirtualFile file, LocalChangeList defaultList) {
-    if (file == null || Comparing.equal(myChangeListManager.getChangeList(file), defaultList) || ChangesUtil.isInternalOperation(file)) {
+    if (file == null) {
+      return;
+    }
+    LocalChangeList changeList = myChangeListManager.getChangeList(file);
+    if (changeList == null || Comparing.equal(changeList, defaultList) || ChangesUtil.isInternalOperation(file)) {
       return;
     }
 
     String path = file.getPath();
     boolean newConflict = false;
-    Conflict conflict;
     synchronized (myConflicts) {
-      conflict = myConflicts.get(path);
+      Conflict conflict = myConflicts.get(path);
       if (conflict == null) {
         conflict = new Conflict();
         myConflicts.put(path, conflict);
         newConflict = true;
       }
     }
-    conflict.timestamp = System.currentTimeMillis();
-    conflict.changelistId = defaultList.getId();
 
     if (newConflict && myOptions.HIGHLIGHT_CONFLICTS) {
       myFileStatusManager.fileStatusChanged(file);
@@ -217,11 +212,6 @@ public class ChangelistConflictTracker {
     for (Map.Entry<String,Conflict> entry : myConflicts.entrySet()) {
       Element fileElement = new Element("file");
       fileElement.setAttribute("path", entry.getKey());
-      String id = entry.getValue().changelistId;
-      if (id != null) {
-        fileElement.setAttribute("changelist", id);
-      }
-      fileElement.setAttribute("time", Long.toString(entry.getValue().timestamp));
       fileElement.setAttribute("ignored", Boolean.toString(entry.getValue().ignored));
       to.addContent(fileElement);
     }
@@ -234,18 +224,16 @@ public class ChangelistConflictTracker {
     for (Object file : files) {
       Element element = (Element)file;
       String path = element.getAttributeValue("path");
-      if (path != null) {
-        Conflict conflict = new Conflict();
-        conflict.changelistId = element.getAttributeValue("changelist");
-        try {
-          conflict.timestamp = Long.parseLong(element.getAttributeValue("time"));
-        }
-        catch (NumberFormatException e) {
-          // do nothing
-        }
-        conflict.ignored = Boolean.parseBoolean(element.getAttributeValue("ignored"));
-        myConflicts.put(path, conflict);
+      if (path == null) {
+        continue;
       }
+      VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(new File(path));
+      if (vf == null || myChangeListManager.getChangeList(vf) == null) {
+        continue;
+      }
+      Conflict conflict = new Conflict();
+      conflict.ignored = Boolean.parseBoolean(element.getAttributeValue("ignored"));
+      myConflicts.put(path, conflict);
     }
     XmlSerializer.deserializeInto(myOptions, from);
   }
@@ -265,16 +253,10 @@ public class ChangelistConflictTracker {
   }
 
   public Collection<String> getIgnoredConflicts() {
-    return ContainerUtil.mapNotNull(myConflicts.entrySet(), new NullableFunction<Map.Entry<String, Conflict>, String>() {
-      public String fun(Map.Entry<String, Conflict> entry) {
-        return entry.getValue().ignored ? entry.getKey() : null;
-      }
-    });
+    return ContainerUtil.mapNotNull(myConflicts.entrySet(), (NullableFunction<Map.Entry<String, Conflict>, String>)entry -> entry.getValue().ignored ? entry.getKey() : null);
   }
 
   public static class Conflict {
-    long timestamp;
-    String changelistId;
     boolean ignored;
   }
 

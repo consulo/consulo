@@ -21,7 +21,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vcs.*;
+import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.vcs.FilePath;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -32,8 +35,11 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
+import com.intellij.vcsUtil.VcsUtil;
 import gnu.trove.THashSet;
+import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -43,9 +49,22 @@ import java.util.*;
  * @author yole
  */
 public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
-  private final Map<VirtualFile, THashSet<FilePath>> myDirtyFiles = new HashMap<VirtualFile, THashSet<FilePath>>();
-  private final Map<VirtualFile, THashSet<FilePath>> myDirtyDirectoriesRecursively = new HashMap<VirtualFile, THashSet<FilePath>>();
-  private final Set<VirtualFile> myAffectedContentRoots = new THashSet<VirtualFile>();
+  private static final TObjectHashingStrategy<FilePath> CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY = new TObjectHashingStrategy<FilePath>() {
+    @Override
+    public int computeHashCode(@NotNull FilePath path) {
+      return Objects.hash(path.getPath(), path.isDirectory(), path.isNonLocal());
+    }
+
+    @Override
+    public boolean equals(@NotNull FilePath path1, @NotNull FilePath path2) {
+      return path1.isDirectory() == path2.isDirectory() &&
+             path1.isNonLocal() == path2.isNonLocal() &&
+             path1.getPath().equals(path2.getPath());
+    }
+  };
+  private final Map<VirtualFile, THashSet<FilePath>> myDirtyFiles = new HashMap<>();
+  private final Map<VirtualFile, THashSet<FilePath>> myDirtyDirectoriesRecursively = new HashMap<>();
+  private final Set<VirtualFile> myAffectedContentRoots = new THashSet<>();
   private final Project myProject;
   private final ProjectLevelVcsManager myVcsManager;
   private final AbstractVcs myVcs;
@@ -68,21 +87,21 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
         if (myDirtyFiles.isEmpty()) {
           return Collections.<FilePath>emptyList().iterator();
         }
-        final ArrayList<Iterator<FilePath>> iteratorList = new ArrayList<Iterator<FilePath>>(myDirtyFiles.size());
+        final ArrayList<Iterator<FilePath>> iteratorList = new ArrayList<>(myDirtyFiles.size());
         for (THashSet<FilePath> paths : myDirtyFiles.values()) {
           iteratorList.add(paths.iterator());
         }
         return ContainerUtil.concatIterators(iteratorList);
       }
 
-      @Nullable
+      @NotNull
       @Override
       public Iterator<FilePath> getDirtyDirectoriesIterator(final VirtualFile root) {
         final THashSet<FilePath> filePaths = myDirtyDirectoriesRecursively.get(root);
         if (filePaths != null) {
           return filePaths.iterator();
         }
-        return null;
+        return ContainerUtil.emptyIterator();
       }
 
       @Override
@@ -92,7 +111,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
       }
 
       private void recheckMap(Map<VirtualFile, THashSet<FilePath>> map) {
-        for (Iterator<THashSet<FilePath>> iterator = map.values().iterator(); iterator.hasNext();) {
+        for (Iterator<THashSet<FilePath>> iterator = map.values().iterator(); iterator.hasNext(); ) {
           final THashSet<FilePath> next = iterator.next();
           if (next.isEmpty()) {
             iterator.remove();
@@ -113,7 +132,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
       final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myVcs.getProject());
       final VirtualFile[] roots = vcsManager.getRootsUnderVcs(myVcs);
 
-      final Set<VirtualFile> result = new HashSet<VirtualFile>(myAffectedContentRoots);
+      final Set<VirtualFile> result = new HashSet<>(myAffectedContentRoots);
       for (VirtualFile root : roots) {
         for (VirtualFile dir : myDirtyDirectoriesRecursively.keySet()) {
           if (VfsUtilCore.isAncestor(dir, root, true)) {
@@ -121,7 +140,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
           }
         }
       }
-      return new SmartList<VirtualFile>(result);
+      return new SmartList<>(result);
     }
     return myAffectedContentRoots;
   }
@@ -138,7 +157,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
 
   @Override
   public Set<FilePath> getDirtyFiles() {
-    final THashSet<FilePath> result = new THashSet<FilePath>();
+    final THashSet<FilePath> result = newFilePathsSet();
     for (THashSet<FilePath> paths : myDirtyFiles.values()) {
       result.addAll(paths);
     }
@@ -146,8 +165,8 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
       for (FilePath filePath : paths) {
         VirtualFile vFile = filePath.getVirtualFile();
         if (vFile != null && vFile.isValid() && vFile.isDirectory()) {
-          for(VirtualFile child: vFile.getChildren()) {
-            result.add(new FilePathImpl(child));
+          for (VirtualFile child : vFile.getChildren()) {
+            result.add(VcsUtil.getFilePath(child));
           }
         }
       }
@@ -157,7 +176,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
 
   @Override
   public Set<FilePath> getDirtyFilesNoExpand() {
-    final THashSet<FilePath> paths = new THashSet<FilePath>();
+    final THashSet<FilePath> paths = newFilePathsSet();
     for (THashSet<FilePath> filePaths : myDirtyFiles.values()) {
       paths.addAll(filePaths);
     }
@@ -166,8 +185,8 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
 
   @Override
   public Set<FilePath> getRecursivelyDirtyDirectories() {
-    THashSet<FilePath> result = new THashSet<FilePath>();
-    for(THashSet<FilePath> dirsByRoot: myDirtyDirectoriesRecursively.values()) {
+    THashSet<FilePath> result = newFilePathsSet();
+    for (THashSet<FilePath> dirsByRoot : myDirtyDirectoriesRecursively.values()) {
       result.addAll(dirsByRoot);
     }
     return result;
@@ -175,7 +194,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
 
   @Override
   public boolean isRecursivelyDirty(final VirtualFile vf) {
-    for(THashSet<FilePath> dirsByRoot: myDirtyDirectoriesRecursively.values()) {
+    for (THashSet<FilePath> dirsByRoot : myDirtyDirectoriesRecursively.values()) {
       for (FilePath dir : dirsByRoot) {
         final VirtualFile dirVf = dir.getVirtualFile();
         if (dirVf != null) {
@@ -198,91 +217,93 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
     }
   }
 
-  public void addDirtyData(final Collection<FilePath> dirs, final Collection<FilePath> files) {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        final HashSet<FilePath> newFiles = new HashSet<FilePath>(files);
-        newFiles.removeAll(dirs); // if the same dir is added recursively and not recursively, prefer recursive mark
+  public void addDirtyData(@NotNull Collection<FilePath> dirs, @NotNull Collection<FilePath> files) {
+    final HashSet<FilePath> newFiles = new HashSet<>(files);
+    newFiles.removeAll(dirs); // if the same dir is added recursively and not recursively, prefer recursive mark
 
-        final MultiMap<VirtualFile, FileOrDir> perRoot = new MultiMap<VirtualFile, FileOrDir>() {
-          @Override
-          protected Collection<FileOrDir> createCollection() {
-            return new THashSet<FileOrDir>();
-          }
-        };
-        for (Map.Entry<VirtualFile, THashSet<FilePath>> entry : myDirtyDirectoriesRecursively.entrySet()) {
-          newFiles.removeAll(entry.getValue()); // if the same dir is added recursively and not recursively, prefer recursive mark
-          for (FilePath path : entry.getValue()) {
-            perRoot.putValue(entry.getKey(), new FileOrDir(path, true));
-          }
-        }
+    final MultiMap<VirtualFile, FileOrDir> perRoot = MultiMap.createSet();
+    for (Map.Entry<VirtualFile, THashSet<FilePath>> entry : myDirtyDirectoriesRecursively.entrySet()) {
+      newFiles.removeAll(entry.getValue()); // if the same dir is added recursively and not recursively, prefer recursive mark
+      for (FilePath path : entry.getValue()) {
+        perRoot.putValue(entry.getKey(), new FileOrDir(path, true));
+      }
+    }
 
-        for (Map.Entry<VirtualFile, THashSet<FilePath>> entry : myDirtyFiles.entrySet()) {
-          for (FilePath path : entry.getValue()) {
-            perRoot.putValue(entry.getKey(), new FileOrDir(path, false));
-          }
-        }
+    for (Map.Entry<VirtualFile, THashSet<FilePath>> entry : myDirtyFiles.entrySet()) {
+      for (FilePath path : entry.getValue()) {
+        perRoot.putValue(entry.getKey(), new FileOrDir(path, false));
+      }
+    }
 
-        for (FilePath dir : dirs) {
-          addFilePathToMap(perRoot, dir, true);
-        }
-        for (FilePath file : newFiles) {
-          addFilePathToMap(perRoot, file, false);
-        }
+    for (FilePath dir : dirs) {
+      addFilePathToMap(perRoot, dir, true);
+    }
+    for (FilePath file : newFiles) {
+      addFilePathToMap(perRoot, file, false);
+    }
 
-        for (Map.Entry<VirtualFile, Collection<FileOrDir>> entry : perRoot.entrySet()) {
-          final Collection<FileOrDir> set = entry.getValue();
-          final Collection<FileOrDir> newCollection = FileUtil.removeAncestors(set, new Convertor<FileOrDir, String>() {
-            @Override
-            public String convert(FileOrDir o) {
-              return o.myPath.getPath();
-            }
-          }, new PairProcessor<FileOrDir, FileOrDir>() {
-              @Override
-              public boolean process(FileOrDir parent, FileOrDir child) {
-                if (parent.myRecursive) {
-                  return true;
-                }
-                // if under non-recursive dirty dir, generally do not remove child with one exception...
-                if (child.myRecursive || child.myPath.isDirectory()) {
-                  return false;
-                }
-                // only if dir non-recursively + non-recursive file child -> can be truncated to dir only
-                return Comparing.equal(child.myPath.getParentPath(), parent.myPath);
-              }
-          });
-          set.retainAll(newCollection);
-        }
+    for (Map.Entry<VirtualFile, Collection<FileOrDir>> entry : perRoot.entrySet()) {
+      final Collection<FileOrDir> set = entry.getValue();
+      final Collection<FileOrDir> newCollection = FileUtil.removeAncestors(set, new Convertor<FileOrDir, String>() {
+                                                                             @Override
+                                                                             public String convert(FileOrDir o) {
+                                                                               return o.myPath.getPath();
+                                                                             }
+                                                                           }, new PairProcessor<FileOrDir, FileOrDir>() {
+                                                                             @Override
+                                                                             public boolean process(FileOrDir parent, FileOrDir child) {
+                                                                               if (parent.myRecursive) {
+                                                                                 return true;
+                                                                               }
+                                                                               // if under non-recursive dirty dir, generally do not remove child with one exception...
+                                                                               if (child.myRecursive || child.myPath.isDirectory()) {
+                                                                                 return false;
+                                                                               }
+                                                                               // only if dir non-recursively + non-recursive file child -> can be truncated to dir only
+                                                                               return Comparing.equal(child.myPath.getParentPath(), parent.myPath);
+                                                                             }
+                                                                           }
+      );
+      set.retainAll(newCollection);
+    }
 
-        myAffectedContentRoots.addAll(perRoot.keySet());
-        for (Map.Entry<VirtualFile, Collection<FileOrDir>> entry : perRoot.entrySet()) {
-          final VirtualFile root = entry.getKey();
-          final THashSet<FilePath> curFiles = new THashSet<FilePath>();
-          final THashSet<FilePath> curDirs = new THashSet<FilePath>();
-          final Collection<FileOrDir> value = entry.getValue();
-          for (FileOrDir fileOrDir : value) {
-            if (fileOrDir.myRecursive) {
-              curDirs.add(fileOrDir.myPath);
-            } else {
-              curFiles.add(fileOrDir.myPath);
-            }
-          }
-          // no clear is necessary since no root can disappear
-          // also, we replace contents, so here's no merging
-          if (! curDirs.isEmpty()) {
-            myDirtyDirectoriesRecursively.put(root, curDirs);
-          }
-          if (! curFiles.isEmpty()) {
-            myDirtyFiles.put(root, curFiles);
-          }
+    myAffectedContentRoots.addAll(perRoot.keySet());
+    for (Map.Entry<VirtualFile, Collection<FileOrDir>> entry : perRoot.entrySet()) {
+      final VirtualFile root = entry.getKey();
+      final THashSet<FilePath> curFiles = newFilePathsSet();
+      final THashSet<FilePath> curDirs = newFilePathsSet();
+      final Collection<FileOrDir> value = entry.getValue();
+      for (FileOrDir fileOrDir : value) {
+        if (fileOrDir.myRecursive) {
+          curDirs.add(fileOrDir.myPath);
+        }
+        else {
+          curFiles.add(fileOrDir.myPath);
         }
       }
-    });
+      // no clear is necessary since no root can disappear
+      // also, we replace contents, so here's no merging
+      if (!curDirs.isEmpty()) {
+        myDirtyDirectoriesRecursively.put(root, curDirs);
+      }
+      if (!curFiles.isEmpty()) {
+        myDirtyFiles.put(root, curFiles);
+      }
+    }
   }
 
-  private void addFilePathToMap(MultiMap<VirtualFile, FileOrDir> perRoot, FilePath dir, final boolean recursively) {
-    final VirtualFile vcsRoot = myVcsManager.getVcsRootFor(dir);
+  @NotNull
+  private THashSet<FilePath> newFilePathsSet() {
+    return new THashSet<>(CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY);
+  }
+
+  private void addFilePathToMap(MultiMap<VirtualFile, FileOrDir> perRoot, final FilePath dir, final boolean recursively) {
+    VirtualFile vcsRoot = ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
+      @Override
+      public VirtualFile compute() {
+        return myVcsManager.getVcsRootFor(dir);
+      }
+    });
     if (vcsRoot != null) {
       perRoot.putValue(vcsRoot, new FileOrDir(dir, recursively));
     }
@@ -297,99 +318,89 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
    */
   @Override
   public void addDirtyDirRecursively(final FilePath newcomer) {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        final VirtualFile vcsRoot = myVcsManager.getVcsRootFor(newcomer);
-        if (vcsRoot == null) return;
-        myAffectedContentRoots.add(vcsRoot);
+    final VirtualFile vcsRoot = myVcsManager.getVcsRootFor(newcomer);
+    if (vcsRoot == null) return;
+    myAffectedContentRoots.add(vcsRoot);
 
-        for (Map.Entry<VirtualFile, THashSet<FilePath>> entry : myDirtyFiles.entrySet()) {
-          final VirtualFile groupRoot = entry.getKey();
-          if (VfsUtilCore.isAncestor(vcsRoot, groupRoot, false)) {
-            final THashSet<FilePath> files = entry.getValue();
-            if (files != null) {
-              for (Iterator<FilePath> it = files.iterator(); it.hasNext();) {
-                FilePath oldBoy = it.next();
-                if (oldBoy.isUnder(newcomer, false)) {
-                  it.remove();
-                }
-              }
-            }
-          }
-        }
-
-        THashSet<FilePath> dirsByRoot = myDirtyDirectoriesRecursively.get(vcsRoot);
-        if (dirsByRoot == null) {
-          dirsByRoot = new THashSet<FilePath>();
-          myDirtyDirectoriesRecursively.put(vcsRoot, dirsByRoot);
-        }
-        else {
-          for (Iterator<FilePath> it = dirsByRoot.iterator(); it.hasNext();) {
+    for (Map.Entry<VirtualFile, THashSet<FilePath>> entry : myDirtyFiles.entrySet()) {
+      final VirtualFile groupRoot = entry.getKey();
+      if (groupRoot != null && VfsUtilCore.isAncestor(vcsRoot, groupRoot, false)) {
+        final THashSet<FilePath> files = entry.getValue();
+        if (files != null) {
+          for (Iterator<FilePath> it = files.iterator(); it.hasNext(); ) {
             FilePath oldBoy = it.next();
-            if (newcomer.isUnder(oldBoy, false)) {
-              return;
-            }
-
             if (oldBoy.isUnder(newcomer, false)) {
               it.remove();
             }
           }
         }
-
-        dirsByRoot.add(newcomer);
       }
-    });
+    }
+
+    THashSet<FilePath> dirsByRoot = myDirtyDirectoriesRecursively.get(vcsRoot);
+    if (dirsByRoot == null) {
+      dirsByRoot = newFilePathsSet();
+      myDirtyDirectoriesRecursively.put(vcsRoot, dirsByRoot);
+    }
+    else {
+      for (Iterator<FilePath> it = dirsByRoot.iterator(); it.hasNext(); ) {
+        FilePath oldBoy = it.next();
+        if (newcomer.isUnder(oldBoy, false)) {
+          return;
+        }
+
+        if (oldBoy.isUnder(newcomer, false)) {
+          it.remove();
+        }
+      }
+    }
+
+    dirsByRoot.add(newcomer);
   }
 
   /**
-   * Add dirty file to the scope. Note that file is not added
-   * if its ancestor was added as dirty recursively or if its parent
-   * is in already in the dirty scope. Also immendiate non-directory
-   * children are removed from the set of dirty files.
+   * Add dirty file to the scope. Note that file is not added if its ancestor was added as dirty recursively or if its parent is in already
+   * in the dirty scope. Also immediate non-directory children are removed from the set of dirty files.
    *
    * @param newcomer a file or directory added to the dirty scope.
    */
   @Override
   public void addDirtyFile(final FilePath newcomer) {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        final VirtualFile vcsRoot = myVcsManager.getVcsRootFor(newcomer);
-        myAffectedContentRoots.add(vcsRoot);
+    final VirtualFile vcsRoot = myVcsManager.getVcsRootFor(newcomer);
+    myAffectedContentRoots.add(vcsRoot);
 
-        THashSet<FilePath> dirsByRoot = myDirtyDirectoriesRecursively.get(vcsRoot);
-        if (dirsByRoot != null) {
-          for (FilePath oldBoy : dirsByRoot) {
-            if (newcomer.isUnder(oldBoy, false)) {
-              return;
-            }
-          }
+    THashSet<FilePath> dirsByRoot = myDirtyDirectoriesRecursively.get(vcsRoot);
+    if (dirsByRoot != null) {
+      for (FilePath oldBoy : dirsByRoot) {
+        if (newcomer.isUnder(oldBoy, false)) {
+          return;
         }
+      }
+    }
 
-        final THashSet<FilePath> dirtyFiles = myDirtyFiles.get(vcsRoot);
-        if (dirtyFiles == null) {
-          final THashSet<FilePath> set = new THashSet<FilePath>();
-          set.add(newcomer);
-          myDirtyFiles.put(vcsRoot, set);
-        } else {
-          if (newcomer.isDirectory()) {
-            for (Iterator<FilePath> iterator = dirtyFiles.iterator(); iterator.hasNext(); ) {
-              final FilePath oldBoy = iterator.next();
-              if (!oldBoy.isDirectory() && Comparing.equal(oldBoy.getVirtualFileParent(), newcomer.getVirtualFile())) {
-                iterator.remove();
-              }
-            }
-          } else if (!dirtyFiles.isEmpty()) {
-            VirtualFile parent = newcomer.getVirtualFileParent();
-            if (parent != null && dirtyFiles.contains(new FilePathImpl(parent))) {
-              return;
-            }
-            dirtyFiles.add(newcomer);
+    final THashSet<FilePath> dirtyFiles = myDirtyFiles.get(vcsRoot);
+    if (dirtyFiles == null) {
+      final THashSet<FilePath> set = newFilePathsSet();
+      set.add(newcomer);
+      myDirtyFiles.put(vcsRoot, set);
+    }
+    else {
+      if (newcomer.isDirectory()) {
+        for (Iterator<FilePath> iterator = dirtyFiles.iterator(); iterator.hasNext(); ) {
+          final FilePath oldBoy = iterator.next();
+          if (!oldBoy.isDirectory() && Comparing.equal(oldBoy.getVirtualFileParent(), newcomer.getVirtualFile())) {
+            iterator.remove();
           }
         }
       }
-    });
+      else if (!dirtyFiles.isEmpty()) {
+        VirtualFile parent = newcomer.getVirtualFileParent();
+        if (parent != null && dirtyFiles.contains(VcsUtil.getFilePath(parent))) {
+          return;
+        }
+        dirtyFiles.add(newcomer);
+      }
+    }
   }
 
   @Override
@@ -416,7 +427,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
           final VirtualFile vFile = file.getVirtualFile();
           if (vFile != null && vFile.isValid() && vFile.isDirectory()) {
             for (VirtualFile child : vFile.getChildren()) {
-              iterator.process(new FilePathImpl(child));
+              iterator.process(VcsUtil.getFilePath(child));
             }
           }
         }
@@ -471,51 +482,39 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
 
   @Override
   public boolean belongsTo(final FilePath path, final Consumer<AbstractVcs> vcsConsumer) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-      @Override
-      public Boolean compute() {
-        if (myProject.isDisposed()) return Boolean.FALSE;
-        final VcsRoot rootObject = myVcsManager.getVcsRootObjectFor(path);
-        if (vcsConsumer != null && rootObject != null) {
-          vcsConsumer.consume(rootObject.getVcs());
-        }
-        if (rootObject == null || rootObject.getVcs() != myVcs) {
-          return Boolean.FALSE;
-        }
+    if (myProject.isDisposed()) return false;
+    final VcsRoot rootObject = myVcsManager.getVcsRootObjectFor(path);
+    if (vcsConsumer != null && rootObject != null) {
+      vcsConsumer.consume(rootObject.getVcs());
+    }
+    if (rootObject == null || rootObject.getVcs() != myVcs) {
+      return false;
+    }
 
-        final VirtualFile vcsRoot = rootObject.getPath();
-        if (vcsRoot != null) {
-          for (VirtualFile contentRoot : myAffectedContentRoots) {
-            // since we don't know exact dirty mechanics, maybe we have 3 nested mappings like:
-            // /root -> vcs1, /root/child -> vcs2, /root/child/inner -> vcs1, and we have file /root/child/inner/file,
-            // mapping is detected as vcs1 with root /root/child/inner, but we could possibly have in scope
-            // "affected root" -> /root with scope = /root recursively
-            if (VfsUtilCore.isAncestor(contentRoot, vcsRoot, false)) {
-              THashSet<FilePath> dirsByRoot = myDirtyDirectoriesRecursively.get(contentRoot);
-              if (dirsByRoot != null) {
-                for (FilePath filePath : dirsByRoot) {
-                  if (path.isUnder(filePath, false)) return Boolean.TRUE;
-                }
-              }
+    final VirtualFile vcsRoot = rootObject.getPath();
+    if (vcsRoot != null) {
+      for (VirtualFile contentRoot : myAffectedContentRoots) {
+        // since we don't know exact dirty mechanics, maybe we have 3 nested mappings like:
+        // /root -> vcs1, /root/child -> vcs2, /root/child/inner -> vcs1, and we have file /root/child/inner/file,
+        // mapping is detected as vcs1 with root /root/child/inner, but we could possibly have in scope
+        // "affected root" -> /root with scope = /root recursively
+        if (VfsUtilCore.isAncestor(contentRoot, vcsRoot, false)) {
+          THashSet<FilePath> dirsByRoot = myDirtyDirectoriesRecursively.get(contentRoot);
+          if (dirsByRoot != null) {
+            for (FilePath filePath : dirsByRoot) {
+              if (path.isUnder(filePath, false)) return true;
             }
           }
         }
-
-        if (!myDirtyFiles.isEmpty()) {
-          FilePath parent;
-          VirtualFile vParent = path.getVirtualFileParent();
-          if (vParent != null && vParent.isValid()) {
-            parent = new FilePathImpl(vParent);
-          }
-          else {
-            parent = FilePathImpl.create(path.getIOFile().getParentFile());
-          }
-          return isInDirtyFiles(path) || isInDirtyFiles(parent);
-        }
-
-        return Boolean.FALSE;
       }
-    }).booleanValue();
+    }
+
+    if (!myDirtyFiles.isEmpty()) {
+      FilePath parent = path.getParentPath();
+      return isInDirtyFiles(path) || isInDirtyFiles(parent);
+    }
+
+    return false;
   }
 
   private boolean isInDirtyFiles(final FilePath path) {
@@ -532,11 +531,12 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
     return belongsTo(path, null);
   }
 
-  @Override @NonNls
+  @Override
+  @NonNls
   public String toString() {
     @NonNls StringBuilder result = new StringBuilder("VcsDirtyScope[");
     if (!myDirtyFiles.isEmpty()) {
-      result.append(" files=");
+      result.append(" files: ");
       for (THashSet<FilePath> paths : myDirtyFiles.values()) {
         for (FilePath file : paths) {
           result.append(file).append(" ");
@@ -544,18 +544,18 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
       }
     }
     if (!myDirtyDirectoriesRecursively.isEmpty()) {
-      result.append(" dirs=");
-      for(THashSet<FilePath> dirsByRoot: myDirtyDirectoriesRecursively.values()) {
-        for(FilePath file: dirsByRoot) {
+      result.append("\ndirs: ");
+      for (THashSet<FilePath> dirsByRoot : myDirtyDirectoriesRecursively.values()) {
+        for (FilePath file : dirsByRoot) {
           result.append(file).append(" ");
         }
       }
     }
-    result.append("affected roots=");
+    result.append("\naffected roots: ");
     for (VirtualFile contentRoot : myAffectedContentRoots) {
       result.append(contentRoot.getPath()).append(" ");
     }
-    result.append("affected roots DISCLOSED=");
+    result.append("\naffected roots with check: ");
     for (VirtualFile contentRoot : getAffectedContentRootsWithCheck()) {
       result.append(contentRoot.getPath()).append(" ");
     }

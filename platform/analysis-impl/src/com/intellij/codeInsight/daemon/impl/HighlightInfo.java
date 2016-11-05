@@ -42,7 +42,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.BitUtil;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.intellij.lang.annotations.MagicConstant;
@@ -721,13 +720,13 @@ public class HighlightInfo implements Segment {
       this(action, options, displayName, icon, null, null, null);
     }
 
-    private IntentionActionDescriptor(@NotNull IntentionAction action,
-                                      @Nullable final List<IntentionAction> options,
-                                      @Nullable final String displayName,
-                                      @Nullable Icon icon,
-                                      @Nullable HighlightDisplayKey key,
-                                      @Nullable ProblemGroup problemGroup,
-                                      @Nullable HighlightSeverity severity) {
+    public IntentionActionDescriptor(@NotNull IntentionAction action,
+                                     @Nullable final List<IntentionAction> options,
+                                     @Nullable final String displayName,
+                                     @Nullable Icon icon,
+                                     @Nullable HighlightDisplayKey key,
+                                     @Nullable ProblemGroup problemGroup,
+                                     @Nullable HighlightSeverity severity) {
       myAction = action;
       myOptions = options;
       myDisplayName = displayName;
@@ -795,16 +794,16 @@ public class HighlightInfo implements Segment {
         InspectionProfileEntry wrappedTool = toolWrapper instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)toolWrapper).getTool()
                                                                                                : ((GlobalInspectionToolWrapper)toolWrapper).getTool();
         if (wrappedTool instanceof DefaultHighlightVisitorBasedInspection.AnnotatorBasedInspection) {
-          List<IntentionAction> actions = Collections.<IntentionAction>emptyList();
+          List<IntentionAction> actions = Collections.emptyList();
           if (myProblemGroup instanceof SuppressableProblemGroup) {
-            actions = Arrays.<IntentionAction>asList(((SuppressableProblemGroup)myProblemGroup).getSuppressActions(element));
+            actions = Arrays.asList(((SuppressableProblemGroup)myProblemGroup).getSuppressActions(element));
           }
           if (fixAllIntention != null) {
             if (actions.isEmpty()) {
-              return Collections.<IntentionAction>singletonList(fixAllIntention);
+              return Collections.singletonList(fixAllIntention);
             }
             else {
-              actions = new ArrayList<IntentionAction>(actions);
+              actions = new ArrayList<>(actions);
               actions.add(fixAllIntention);
             }
           }
@@ -820,12 +819,7 @@ public class HighlightInfo implements Segment {
         else {
           SuppressQuickFix[] suppressFixes = wrappedTool.getBatchSuppressActions(element);
           if (suppressFixes.length > 0) {
-            ContainerUtil.addAll(newOptions, ContainerUtil.map(suppressFixes, new Function<SuppressQuickFix, IntentionAction>() {
-              @Override
-              public IntentionAction fun(SuppressQuickFix fix) {
-                return SuppressIntentionActionFromFix.convertBatchToSuppressIntentionAction(fix);
-              }
-            }));
+            ContainerUtil.addAll(newOptions, ContainerUtil.map(suppressFixes, SuppressIntentionActionFromFix::convertBatchToSuppressIntentionAction));
           }
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,14 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.progress.BackgroundTaskQueue;
-import consulo.annotations.RequiredDispatchThread;
+import com.intellij.openapi.vcs.AbstractVcs;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+public interface VcsIgnoredFilesHolder extends IgnoredFilesHolder {
+  ExtensionPointName<VcsIgnoredFilesHolder> VCS_IGNORED_FILES_HOLDER_EP = ExtensionPointName.create("com.intellij.vcs.ignoredFilesHolder");
 
-/**
- * @author irengrig
- *         Date: 7/5/11
- *         Time: 2:49 PM
- */
-public interface VcsChangeDetailsProvider {
-  ExtensionPointName<VcsChangeDetailsProvider> EP_NAME = ExtensionPointName.create("com.intellij.vcschangedetails");
+  default boolean isInUpdatingMode() {return false;}
 
-  String getName();
-
-  @RequiredDispatchThread
-  boolean canComment(final Change change);
-  @RequiredDispatchThread
-  RefreshablePanel comment(final Change change, JComponent parent, BackgroundTaskQueue queue);
+  @NotNull
+  AbstractVcs getVcs();
 }

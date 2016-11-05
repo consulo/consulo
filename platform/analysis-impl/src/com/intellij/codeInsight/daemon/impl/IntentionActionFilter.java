@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,35 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.diff.DiffRequest;
-import com.intellij.openapi.vcs.changes.actions.DiffRequestPresentable;
+package com.intellij.codeInsight.daemon.impl;
+
+import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public interface ChangeRequestChain {
-  boolean canMoveForward();
-
-  boolean canMoveBack();
-
-  @Nullable
-  DiffRequest moveForward();
-
-  @Nullable
-  DiffRequest moveBack();
-
-  @NotNull
-  List<DiffRequestPresentable> getAllRequests();
-
-  @Nullable
-  DiffRequest moveTo(DiffRequestPresentable request);
+public interface IntentionActionFilter {
+  ExtensionPointName<IntentionActionFilter> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.daemon.intentionActionFilter");
 
   /**
-   * Returns the diff request which is currently shown in the diff dialog.
+   * @param file - might (and will be) null. Return true in this case if you'd like to switch this kind of action in ANY file
    */
-  @Nullable
-  DiffRequestPresentable getCurrentRequest();
+  boolean accept(@NotNull IntentionAction intentionAction, @Nullable PsiFile file);
 }
+

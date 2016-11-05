@@ -55,7 +55,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
   }
 
   public static boolean canShowDiff(@Nullable Project project, @Nullable Change[] changes) {
-    return changes != null && canShowDiff(project, Arrays.<Change>asList(changes));
+    return changes != null && canShowDiff(project, Arrays.asList(changes));
   }
 
   public static boolean canShowDiff(@Nullable Project project, @Nullable List<Change> changes) {
