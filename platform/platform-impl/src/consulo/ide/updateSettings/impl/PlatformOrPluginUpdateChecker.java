@@ -52,6 +52,8 @@ public class PlatformOrPluginUpdateChecker {
   private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
   private static final PluginId ourLinuxNoJre = PluginId.getId("consulo-linux-no-jre");
 
+  public static final PluginId[] ourPlatformIds = {ourWinNoJre, ourLinuxNoJre, ourMacNoJre};
+
   @NotNull
   public static PluginId getPlatformPluginId() {
     if (SystemInfo.isWindows) {
@@ -128,7 +130,7 @@ public class PlatformOrPluginUpdateChecker {
           newPlatformPlugin = pluginDescriptor;
 
           // FIXME [VISTALL]  drop it
-          ((PluginNode) pluginDescriptor).setName("Platform");
+          ((PluginNode)pluginDescriptor).setName("Platform");
           break;
         }
       }
