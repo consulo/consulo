@@ -18,6 +18,7 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,8 +27,10 @@ import org.jetbrains.annotations.NotNull;
 public abstract class GeneratedSourcesFilter {
   public static final ExtensionPointName<GeneratedSourcesFilter> EP_NAME = ExtensionPointName.create("com.intellij.generatedSourcesFilter");
 
+  @RequiredReadAction
   public abstract boolean isGeneratedSource(@NotNull VirtualFile file, @NotNull Project project);
 
+  @RequiredReadAction
   public static boolean isGenerated(@NotNull Project project, @NotNull VirtualFile file) {
     for (GeneratedSourcesFilter filter : GeneratedSourcesFilter.EP_NAME.getExtensions()) {
       if (filter.isGeneratedSource(file, project)) {
