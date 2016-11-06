@@ -16,7 +16,7 @@
 package com.intellij.errorreport.error;
 
 public class UpdateAvailableException extends Exception {
-    public UpdateAvailableException(String update) {
-        super(update);
-    }
+  public UpdateAvailableException() {
+    super();
+  }
 }

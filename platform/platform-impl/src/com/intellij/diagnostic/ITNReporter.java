@@ -15,7 +15,6 @@
  */
 package com.intellij.diagnostic;
 
-import com.intellij.CommonBundle;
 import com.intellij.errorreport.ErrorReportSender;
 import com.intellij.errorreport.bean.ErrorBean;
 import com.intellij.errorreport.error.AuthorizationFailedException;
@@ -24,9 +23,13 @@ import com.intellij.errorreport.error.WebServiceException;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.idea.ActionsBundle;
 import com.intellij.idea.IdeaLogger;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
@@ -36,9 +39,12 @@ import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.updateSettings.impl.CheckForUpdateAction;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.ide.updateSettings.UpdateSettings;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,9 +147,19 @@ public class ITNReporter extends ErrorReportSubmitter {
         msg = DiagnosticBundle.message("error.report.sending.failure");
       }
       if (e instanceof UpdateAvailableException) {
-        showMessageDialog(parentComponent, project, DiagnosticBundle.message("error.report.update.required.message"), CommonBundle.getWarningTitle(),
-                          Messages.getWarningIcon());
         callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+
+        Notification notification =
+                ReportMessages.GROUP.createNotification(DiagnosticBundle.message("error.report.update.required.message"), NotificationType.INFORMATION);
+        notification.setTitle(ReportMessages.ERROR_REPORT);
+        notification.setImportant(false);
+        notification.addAction(new NotificationAction(ActionsBundle.actionText("CheckForUpdate")) {
+          @Override
+          public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+            CheckForUpdateAction.actionPerformed(e.getData(CommonDataKeys.PROJECT), UpdateSettings.getInstance());
+          }
+        });
+        notification.notify(project);
       }
       else if (showYesNoDialog(parentComponent, project, msg, ReportMessages.ERROR_REPORT, Messages.getErrorIcon()) != 0) {
         callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));

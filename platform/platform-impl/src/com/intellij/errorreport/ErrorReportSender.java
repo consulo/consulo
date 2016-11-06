@@ -97,7 +97,7 @@ public class ErrorReportSender {
           return id;
         case PLATFORM_UPDATE_REQUIRED:
         case PLUGIN_UPDATE_REQUIRED:
-          throw new UpdateAvailableException(reply.substring(7));
+          throw new UpdateAvailableException();
         case BAD_REPORT:
         default:
           throw new WebServiceException();
