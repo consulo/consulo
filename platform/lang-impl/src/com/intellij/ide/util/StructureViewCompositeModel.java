@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,14 +65,16 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
         return file.canNavigateToSource();
       }
 
+      @NotNull
       @Override
       public ItemPresentation getPresentation() {
         return file.getPresentation();
       }
 
+      @NotNull
       @Override
       public TreeElement[] getChildren() {
-        ArrayList<TreeElement> elements = new ArrayList<TreeElement>();
+        ArrayList<TreeElement> elements = new ArrayList<>();
         for (StructureViewComposite.StructureViewDescriptor view : views) {
           elements.add(createTreeElementFromView(file, view));
         }
@@ -84,7 +86,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
   @NotNull
   @Override
   public Collection<NodeProvider> getNodeProviders() {
-    final Set<NodeProvider> providers = new HashSet<NodeProvider>();
+    final Set<NodeProvider> providers = new HashSet<>();
     for (StructureViewComposite.StructureViewDescriptor view : myViews) {
       final StructureViewModel model = view.structureView.getTreeModel();
       if (model instanceof ProvidingTreeModel) {
@@ -97,7 +99,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
   @NotNull
   @Override
   public Filter[] getFilters() {
-    final HashSet<Filter> filters = new HashSet<Filter>();
+    final HashSet<Filter> filters = new HashSet<>();
     for (StructureViewComposite.StructureViewDescriptor view : myViews) {
       final StructureViewModel model = view.structureView.getTreeModel();
       filters.addAll(Arrays.asList(model.getFilters()));
@@ -127,6 +129,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
         return file.canNavigateToSource();
       }
 
+      @NotNull
       @Override
       public ItemPresentation getPresentation() {
         return new ItemPresentation() {
@@ -150,12 +153,11 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
         };
       }
 
+      @NotNull
       @Override
       public TreeElement[] getChildren() {
         return view.structureView.getTreeModel().getRoot().getChildren();
       }
     };
-
-
   }
 }
