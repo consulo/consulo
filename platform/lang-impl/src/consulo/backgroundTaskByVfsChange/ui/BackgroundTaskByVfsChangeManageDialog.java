@@ -122,8 +122,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
 
             @Override
             public PopupStep onChosen(final BackgroundTaskByVfsChangeProvider val, boolean finalChoice) {
-              add(val);
-              return FINAL_CHOICE;
+              return doFinalStep(() -> add(val));
             }
           };
           ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(listPopupStep);
