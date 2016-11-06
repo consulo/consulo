@@ -28,7 +28,6 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.HashSet;
@@ -218,27 +217,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
   private void onAppClosing() {
     final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
 
-    messageBus.connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
-      @Override
-      public void appFrameCreated(String[] commandLineArgs, @NotNull Ref<Boolean> willOpenProject) {
-      }
-
-      @Override
-      public void appStarting(Project projectFromCommandLine) {
-      }
-
-      @Override
-      public void projectFrameClosed() {
-      }
-
-      @Override
-      public void projectOpenFailed() {
-      }
-
-      @Override
-      public void welcomeScreenDisplayed() {
-      }
-
+    messageBus.connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener.Adapter() {
       @Override
       public void appClosing() {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {

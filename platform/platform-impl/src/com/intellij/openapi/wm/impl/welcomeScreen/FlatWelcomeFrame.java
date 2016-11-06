@@ -69,13 +69,10 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
     AppUIUtil.updateWindowIcon(this);
     setSize(getDefaultWindowSize());
     setResizable(false);
-    //int x = bounds.x + (bounds.width - getWidth()) / 2;
-    //int y = bounds.y + (bounds.height - getHeight()) / 2;
-    Point location = DimensionService.getInstance().getLocation(WelcomeFrame.DIMENSION_KEY, null);
+    Point location = DimensionService.getInstance().getLocationNoRealKey(WelcomeFrame.DIMENSION_KEY);
     Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
     setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
 
-    //setLocation(x, y);
     ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
       @Override
       public void projectOpened(Project project) {
@@ -106,7 +103,6 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
     }
 
     myDisposed = true;
-    saveLocation(getBounds());
     super.dispose();
 
     if (myBalloonLayout != null) {
@@ -119,11 +115,6 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
 
     // open project from welcome screen show progress dialog and call FocusTrackback.register()
     FocusTrackback.release(this);
-  }
-
-  private static void saveLocation(Rectangle location) {
-    Point middle = new Point(location.x + location.width / 2, location.y = location.height / 2);
-    DimensionService.getInstance().setLocation(WelcomeFrame.DIMENSION_KEY, middle, null);
   }
 
   @Override
@@ -198,9 +189,5 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
   @Override
   public JComponent getComponent() {
     return getRootPane();
-  }
-
-  public static void notifyFrameClosed(JFrame frame) {
-    saveLocation(frame.getBounds());
   }
 }

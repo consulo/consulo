@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.wm.impl.welcomeScreen.NewWelcomeScreen;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 
 /**
  * @author Dmitry Avdeev
@@ -31,7 +31,7 @@ public class ImportProjectAction extends ImportModuleAction {
 
   @Override
   public void update(AnActionEvent e) {
-    if (NewWelcomeScreen.isNewWelcomeScreen(e)) {
+    if (WelcomeFrame.isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.ImportProject);
     }
   }
