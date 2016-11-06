@@ -52,40 +52,31 @@ public class BalloonLayoutImpl implements BalloonLayout {
   protected JLayeredPane myLayeredPane;
   private final Insets myInsets;
 
-  protected final List<Balloon> myBalloons = new ArrayList<Balloon>();
-  private final Map<Balloon, BalloonLayoutData> myLayoutData = new HashMap<Balloon, BalloonLayoutData>();
+  protected final List<Balloon> myBalloons = new ArrayList<>();
+  private final Map<Balloon, BalloonLayoutData> myLayoutData = new HashMap<>();
   private Integer myWidth;
 
   private final Alarm myRelayoutAlarm = new Alarm();
-  private final Runnable myRelayoutRunnable = new Runnable() {
-    @Override
-    public void run() {
-      BalloonLayoutImpl.this.relayout();
-      BalloonLayoutImpl.this.fireRelayout();
-    }
+  private final Runnable myRelayoutRunnable = () -> {
+    relayout();
+    fireRelayout();
   };
   private JRootPane myParent;
 
-  private final Runnable myCloseAll = new Runnable() {
-    @Override
-    public void run() {
-      for (Balloon balloon : new ArrayList<Balloon>(myBalloons)) {
-        BalloonLayoutImpl.this.remove(balloon, true);
-      }
+  private final Runnable myCloseAll = () -> {
+    for (Balloon balloon : new ArrayList<>(myBalloons)) {
+      remove(balloon, true);
     }
   };
-  private final Runnable myLayoutRunnable = new Runnable() {
-    @Override
-    public void run() {
-      BalloonLayoutImpl.this.calculateSize();
-      BalloonLayoutImpl.this.relayout();
-      BalloonLayoutImpl.this.fireRelayout();
-    }
+  private final Runnable myLayoutRunnable = () -> {
+    calculateSize();
+    relayout();
+    fireRelayout();
   };
 
   private LafManagerListener myLafListener;
 
-  private final List<Runnable> myListeners = new ArrayList<Runnable>();
+  private final List<Runnable> myListeners = new ArrayList<>();
 
   public BalloonLayoutImpl(@NotNull JRootPane parent, @NotNull Insets insets) {
     myParent = parent;
@@ -100,7 +91,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
       LafManager.getInstance().removeLafManagerListener(myLafListener);
       myLafListener = null;
     }
-    for (Balloon balloon : new ArrayList<Balloon>(myBalloons)) {
+    for (Balloon balloon : new ArrayList<>(myBalloons)) {
       Disposer.dispose(balloon);
     }
     myRelayoutAlarm.cancelAllRequests();
@@ -435,7 +426,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
   }
 
   private List<Integer> computeWidths(List<ArrayList<Balloon>> columns) {
-    List<Integer> columnWidths = new ArrayList<Integer>();
+    List<Integer> columnWidths = new ArrayList<>();
     for (ArrayList<Balloon> eachColumn : columns) {
       int maxWidth = 0;
       for (Balloon each : eachColumn) {
@@ -447,16 +438,16 @@ public class BalloonLayoutImpl implements BalloonLayout {
   }
 
   private List<ArrayList<Balloon>> createColumns(Rectangle layoutRec) {
-    List<ArrayList<Balloon>> columns = new ArrayList<ArrayList<Balloon>>();
+    List<ArrayList<Balloon>> columns = new ArrayList<>();
 
-    ArrayList<Balloon> eachColumn = new ArrayList<Balloon>();
+    ArrayList<Balloon> eachColumn = new ArrayList<>();
     columns.add(eachColumn);
 
     int eachColumnHeight = 0;
     for (Balloon each : myBalloons) {
       final Dimension eachSize = getSize(each);
       if (eachColumnHeight + eachSize.height > layoutRec.getHeight()) {
-        eachColumn = new ArrayList<Balloon>();
+        eachColumn = new ArrayList<>();
         columns.add(eachColumn);
         eachColumnHeight = 0;
       }
