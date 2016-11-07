@@ -20,7 +20,6 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NotNull;
@@ -34,9 +33,11 @@ import java.util.Collection;
  * @author Anton Makeev
  * @author Konstantin Bulenkov
  */
-public class JBList extends JList implements ComponentWithEmptyText, ComponentWithExpandableItems<Integer>{
-  @NotNull private StatusText myEmptyText;
-  @NotNull private ExpandableItemsHandler<Integer> myExpandableItemsHandler;
+public class JBList<E> extends JList<E> implements ComponentWithEmptyText, ComponentWithExpandableItems<Integer> {
+  @NotNull
+  private StatusText myEmptyText;
+  @NotNull
+  private ExpandableItemsHandler<Integer> myExpandableItemsHandler;
 
   @Nullable private AsyncProcessIcon myBusyIcon;
   private boolean myBusy;
@@ -46,35 +47,45 @@ public class JBList extends JList implements ComponentWithEmptyText, ComponentWi
     init();
   }
 
-  public JBList(@NotNull ListModel dataModel) {
+  public JBList(@NotNull ListModel<E> dataModel) {
     super(dataModel);
     init();
   }
 
-  public JBList(@NotNull Object... listData) {
+  @SafeVarargs
+  public JBList(@NotNull E... listData) {
     super(createDefaultListModel(listData));
     init();
   }
 
   @NotNull
-  public static DefaultListModel createDefaultListModel(@NotNull Object... items) {
-    final DefaultListModel model = new DefaultListModel();
-    for (Object item : items) {
+  @SafeVarargs
+  public static <E> DefaultListModel<E> createDefaultListModel(@NotNull E... items) {
+    final DefaultListModel<E> model = new DefaultListModel<>();
+    for (E item : items) {
       model.add(model.getSize(), item);
     }
     return model;
   }
 
-  public JBList(@NotNull Collection items) {
-    this(ArrayUtil.toObjectArray(items));
+  @NotNull
+  public static <E> DefaultListModel<E> createDefaultListModel(@NotNull Iterable<? extends E> items) {
+    final DefaultListModel<E> model = new DefaultListModel<>();
+    for (E item : items) {
+      model.add(model.getSize(), item);
+    }
+    return model;
+  }
+
+  public JBList(@NotNull Collection<? extends E> items) {
+    this(JBList.<E>createDefaultListModel(items));
   }
 
   @Override
   public void removeNotify() {
     super.removeNotify();
 
-    if (!ScreenUtil.isStandardAddRemoveNotify(this))
-      return;
+    if (!ScreenUtil.isStandardAddRemoveNotify(this)) return;
 
     if (myBusyIcon != null) {
       remove(myBusyIcon);
@@ -150,7 +161,8 @@ public class JBList extends JList implements ComponentWithEmptyText, ComponentWi
       Dimension s = getEmptyText().getPreferredSize();
       JBInsets.addTo(s, getInsets());
       return s;
-    } else {
+    }
+    else {
       return super.getPreferredSize();
     }
   }
@@ -206,25 +218,21 @@ public class JBList extends JList implements ComponentWithEmptyText, ComponentWi
   }
 
   @Override
-  public void setCellRenderer(final ListCellRenderer cellRenderer) {
+  public void setCellRenderer(ListCellRenderer<? super E> cellRenderer) {
     // myExpandableItemsHandler may not yeb be initialized
     //noinspection ConstantConditions
     if (myExpandableItemsHandler == null) {
       super.setCellRenderer(cellRenderer);
       return;
     }
-    super.setCellRenderer(new ExpandedItemListCellRendererWrapper(cellRenderer, myExpandableItemsHandler));
+    super.setCellRenderer(new ExpandedItemListCellRendererWrapper<>(cellRenderer, myExpandableItemsHandler));
   }
 
   public <T> void installCellRenderer(@NotNull final NotNullFunction<T, JComponent> fun) {
     setCellRenderer(new DefaultListCellRenderer() {
       @NotNull
       @Override
-      public Component getListCellRendererComponent(@NotNull JList list,
-                                                    Object value,
-                                                    int index,
-                                                    boolean isSelected,
-                                                    boolean cellHasFocus) {
+      public Component getListCellRendererComponent(@NotNull JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         @SuppressWarnings({"unchecked"})
         final JComponent comp = fun.fun((T)value);
         comp.setOpaque(true);

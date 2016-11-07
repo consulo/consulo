@@ -17,23 +17,26 @@ package consulo.ide.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.*;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
+import com.intellij.notification.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.updateSettings.impl.UpdateChecker;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.updateSettings.UpdateChannel;
+import consulo.ide.updateSettings.UpdateSettings;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,6 +70,39 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
+  public static boolean checkNeeded() {
+    UpdateSettings updateSettings = UpdateSettings.getInstance();
+    if (!updateSettings.isEnable()) {
+      return false;
+    }
+
+    final long timeDelta = System.currentTimeMillis() - updateSettings.getLastTimeCheck();
+    return Math.abs(timeDelta) >= DateFormatUtil.DAY;
+  }
+
+  public static ActionCallback updateAndShowResult() {
+    final ActionCallback result = new ActionCallback();
+    final Application app = ApplicationManager.getApplication();
+    final UpdateSettings updateSettings = UpdateSettings.getInstance();
+    if (!updateSettings.isEnable()) {
+      result.setDone();
+      return result;
+    }
+    app.executeOnPooledThread(() -> {
+      checkAndNotifyForUpdates(null, false, null).notify(result);
+    });
+    return result;
+  }
+
+  public static void showErrorMessage(boolean showErrorDialog, final String failedMessage) {
+    if (showErrorDialog) {
+      UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(failedMessage, IdeBundle.message("title.connection.error")));
+    }
+    else {
+      LOGGER.info(failedMessage);
+    }
+  }
+
   public static void showUpdateResult(@Nullable Project project, final PlatformOrPluginUpdateResult targetsForUpdate, final boolean showResults) {
     PlatformOrPluginUpdateResult.Type type = targetsForUpdate.getType();
     switch (type) {
@@ -76,12 +112,26 @@ public class PlatformOrPluginUpdateChecker {
         }
         break;
       case PLATFORM_UPDATE:
-        UpdateChecker.showUpdateResult(targetsForUpdate.getPlugins(), true, true, showResults);
-        break;
-      case PLUGIN_UPDATE:
-        UpdateChecker.showUpdateResult(targetsForUpdate.getPlugins(), true, true, showResults);
+        if (showResults) {
+          showDialog(project, targetsForUpdate);
+        }
+        else {
+          Notification notification =
+                  ourGroup.createNotification(IdeBundle.message("update.available.group"), "Updates available", NotificationType.INFORMATION, null);
+          notification.addAction(new NotificationAction("View updates") {
+            @Override
+            public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+              showDialog(project, targetsForUpdate);
+            }
+          });
+          notification.notify(project);
+        }
         break;
     }
+  }
+
+  private static void showDialog(@Nullable Project project, PlatformOrPluginUpdateResult targetsForUpdate) {
+    new PluginListDialog(project, targetsForUpdate).show();
   }
 
   public static ActionCallback checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {
@@ -108,7 +158,7 @@ public class PlatformOrPluginUpdateChecker {
     String currentBuildNumber = appInfo.getBuild().asString();
 
     List<IdeaPluginDescriptor> remotePlugins = Collections.emptyList();
-    UpdateChannel channel = consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel();
+    UpdateChannel channel = UpdateSettings.getInstance().getChannel();
     try {
       remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel);
     }
@@ -191,7 +241,7 @@ public class PlatformOrPluginUpdateChecker {
         return PlatformOrPluginUpdateResult.CANCELED;
       }
       catch (Exception e) {
-        UpdateChecker.showErrorMessage(showResults, e.getMessage());
+        showErrorMessage(showResults, e.getMessage());
       }
     }
 

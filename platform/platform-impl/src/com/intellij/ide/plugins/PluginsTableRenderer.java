@@ -34,7 +34,7 @@ import java.text.DecimalFormat;
  * @author Konstantin Bulenkov
  */
 public class PluginsTableRenderer extends DefaultTableCellRenderer {
-  private JLabel myName;
+  protected JLabel myName;
   private JLabel myStatus;
   private RatesPanel myRating;
   private JLabel myDownloads;
@@ -49,12 +49,12 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
 
   public PluginsTableRenderer(IdeaPluginDescriptor pluginDescriptor, boolean showFullInfo) {
     myPluginDescriptor = pluginDescriptor;
-    boolean myShowFullInfo = showFullInfo;
 
     final Font smallFont;
     if (SystemInfo.isMac) {
       smallFont = UIUtil.getLabelFont(UIUtil.FontSize.MINI);
-    } else {
+    }
+    else {
       smallFont = UIUtil.getLabelFont().deriveFont(Math.max(UIUtil.getLabelFont().getSize() - 2, 11f));
     }
     myName.setFont(UIUtil.getLabelFont().deriveFont(UIUtil.getLabelFont().getSize() + 1.0f));
@@ -64,81 +64,78 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     myStatus.setText("");
     myCategory.setText("");
     myLastUpdated.setFont(smallFont);
-    if (!myShowFullInfo || !(pluginDescriptor instanceof PluginNode)) {
+    if (!showFullInfo || !(pluginDescriptor instanceof PluginNode)) {
       myPanel.remove(myRightPanel);
     }
 
-    if (!myShowFullInfo) {
+    if (!showFullInfo) {
       myInfoPanel.remove(myBottomPanel);
     }
 
-    myPanel.setBorder(UIUtil.isRetina() ? JBUI.Borders.empty(4,3,4,3) : JBUI.Borders.empty(2, 3, 2, 3));
+    myPanel.setBorder(UIUtil.isRetina() ? JBUI.Borders.empty(4, 3, 4, 3) : JBUI.Borders.empty(2, 3, 2, 3));
   }
 
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-    if (myPluginDescriptor != null) {
-      myName.setText(myPluginDescriptor.getName() + "  ");
-
-      final Color fg = UIUtil.getTableForeground(isSelected);
-      final Color bg = UIUtil.getTableBackground(isSelected);
-      final Color grayedFg = isSelected ? fg : new JBColor(Gray._130, Gray._120);
-      myName.setForeground(fg);
-      myStatus.setForeground(grayedFg);
-      myStatus.setIcon(AllIcons.Nodes.Plugin);
-      String category = myPluginDescriptor.getCategory();
-      myCategory.setForeground(grayedFg);
-      if (category != null) {
-        myCategory.setText(category.toUpperCase() + " ");
-      }
-      if (myPluginDescriptor.isBundled()) {
-        myCategory.setText(myCategory.getText() + "[Bundled]");
-      }
-
-      myPanel.setBackground(bg);
-      myLastUpdated.setForeground(grayedFg);
-      myLastUpdated.setText("");
-      myDownloads.setForeground(grayedFg);
-      myDownloads.setText("");
-
-      final PluginNode pluginNode = myPluginDescriptor instanceof PluginNode ? (PluginNode)myPluginDescriptor : null;
-      if (pluginNode != null) {
-        String downloads = pluginNode.getDownloads();
-        if (downloads == null) downloads= "";
-        if (downloads.length() > 3) {
-          downloads = new DecimalFormat("#,###").format(Integer.parseInt(downloads));
-        }
-        myDownloads.setText(downloads);
-
-        myRating.setRate(pluginNode.getRating());
-        myLastUpdated.setText(DateFormatUtil.formatBetweenDates(pluginNode.getDate(), System.currentTimeMillis()));
-      }
-
-      final IdeaPluginDescriptor installed = PluginManager.getPlugin(myPluginDescriptor.getPluginId());
-      if ((pluginNode != null && PluginManagerColumnInfo.isDownloaded(pluginNode)) ||
-          (installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId()))) {
-        if (!isSelected) myName.setForeground(FileStatus.ADDED.getColor());
-        //todo[kb] set proper icon
-        //myStatus.setText("[Downloaded]");
-        //myPanel.setToolTipText(IdeBundle.message("plugin.download.status.tooltip"));
-        //myStatus.setBorder(BorderFactory.createEmptyBorder(0, LEFT_MARGIN, 0, 0));
-      }
-      else if (pluginNode != null && pluginNode.getStatus() == PluginNode.STATUS_INSTALLED) {
-        PluginId pluginId = pluginNode.getPluginId();
-        final boolean hasNewerVersion = InstalledPluginsTableModel.hasNewerVersion(pluginId);
-        if (!isSelected) myName.setForeground(FileStatus.MODIFIED.getColor());
-        if (hasNewerVersion) {
-          if (!isSelected) {
-            myName.setForeground(JBColor.RED);
-          }
-          myStatus.setIcon(AllIcons.Nodes.Pluginobsolete);
-        }
-        //todo[kb] set proper icon
-        //myStatus.setText("v." + pluginNode.getInstalledVersion() + (hasNewerVersion ? (" -> " + pluginNode.getVersion()) : ""));
-      }
+    if (myPluginDescriptor == null) {
+      return myPanel;
     }
 
+    myName.setText(myPluginDescriptor.getName() + "  ");
+
+    final Color fg = UIUtil.getTableForeground(isSelected);
+    final Color bg = UIUtil.getTableBackground(isSelected);
+    final Color grayedFg = isSelected ? fg : new JBColor(Gray._130, Gray._120);
+    myName.setForeground(fg);
+    myStatus.setForeground(grayedFg);
+    myStatus.setIcon(AllIcons.Nodes.Plugin);
+    String category = myPluginDescriptor.getCategory();
+    myCategory.setForeground(grayedFg);
+    if (category != null) {
+      myCategory.setText(category.toUpperCase() + " ");
+    }
+
+    myPanel.setBackground(bg);
+    myLastUpdated.setForeground(grayedFg);
+    myLastUpdated.setText("");
+    myDownloads.setForeground(grayedFg);
+    myDownloads.setText("");
+
+    final PluginNode pluginNode = myPluginDescriptor instanceof PluginNode ? (PluginNode)myPluginDescriptor : null;
+    if (pluginNode != null) {
+      String downloads = pluginNode.getDownloads();
+      if (downloads == null) downloads = "";
+      if (downloads.length() > 3) {
+        downloads = new DecimalFormat("#,###").format(Integer.parseInt(downloads));
+      }
+      myDownloads.setText(downloads);
+
+      myRating.setRate(pluginNode.getRating());
+      myLastUpdated.setText(DateFormatUtil.formatBetweenDates(pluginNode.getDate(), System.currentTimeMillis()));
+    }
+
+    updatePresentation(isSelected, pluginNode);
+
     return myPanel;
+  }
+
+  protected void updatePresentation(boolean isSelected, PluginNode pluginNode) {
+    final IdeaPluginDescriptor installed = PluginManager.getPlugin(myPluginDescriptor.getPluginId());
+    if ((pluginNode != null && PluginManagerColumnInfo.isDownloaded(pluginNode)) ||
+        (installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId()))) {
+      if (!isSelected) myName.setForeground(FileStatus.ADDED.getColor());
+    }
+    else if (pluginNode != null && pluginNode.getStatus() == PluginNode.STATUS_INSTALLED) {
+      PluginId pluginId = pluginNode.getPluginId();
+      final boolean hasNewerVersion = InstalledPluginsTableModel.hasNewerVersion(pluginId);
+      if (!isSelected) myName.setForeground(FileStatus.MODIFIED.getColor());
+      if (hasNewerVersion) {
+        if (!isSelected) {
+          myName.setForeground(JBColor.RED);
+        }
+        myStatus.setIcon(AllIcons.Nodes.Pluginobsolete);
+      }
+    }
   }
 
   private void createUIComponents() {

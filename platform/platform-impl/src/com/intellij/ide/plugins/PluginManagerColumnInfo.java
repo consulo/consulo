@@ -38,7 +38,7 @@ import java.util.Comparator;
  * Time: 2:55:50 PM
  * To change this template use Options | File Templates.
  */
-class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, String> {
+public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, String> {
   public static final int COLUMN_NAME = 0;
   public static final int COLUMN_DOWNLOADS = 1;
   public static final int COLUMN_RATE = 2;

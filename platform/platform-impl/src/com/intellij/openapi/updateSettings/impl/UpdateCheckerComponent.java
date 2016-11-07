@@ -19,6 +19,7 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -33,7 +34,7 @@ public class UpdateCheckerComponent implements ApplicationComponent {
 
   private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
 
-  private final Runnable myCheckRunnable = () -> UpdateChecker.updateAndShowResult().doWhenDone(() -> {
+  private final Runnable myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult().doWhenDone(() -> {
     UpdateSettings.getInstance().setLastTimeCheck(System.currentTimeMillis());
     queueNextUpdateCheck(ourCheckInterval);
   });
@@ -41,7 +42,7 @@ public class UpdateCheckerComponent implements ApplicationComponent {
   @Override
   public void initComponent() {
     final long interval = consulo.ide.updateSettings.UpdateSettings.getInstance().getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
-    queueNextUpdateCheck(UpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
+    queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
   }
 
   private void queueNextUpdateCheck(long interval) {
