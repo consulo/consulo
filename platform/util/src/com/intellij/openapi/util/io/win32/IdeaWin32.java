@@ -44,17 +44,8 @@ public class IdeaWin32 {
       try {
         String path = PathManager.getBinPath() + "/" + libName;
         if (!new File(path).exists()) {
-          path = PathManager.getHomePath() + "/community/bin/win/" + libName;
-          if (!new File(path).exists()) {
-            path = PathManager.getHomePath() + "/bin/win/" + libName;
-            if (!new File(path).exists()) {
-              path = PathManager.getHomePathFor(IdeaWin32.class) + "/bin/" + libName;
-              if (!new File(path).exists()) {
-                throw new FileNotFoundException("Native filesystem .dll is missing (path=" + PathManager.getBinPath() +
-                                                " content=" + Arrays.toString(new File(PathManager.getBinPath()).list()) + ")");
-              }
-            }
-          }
+          throw new FileNotFoundException("Native filesystem .dll is missing (path=" + PathManager.getBinPath() +
+                                          " content=" + Arrays.toString(new File(PathManager.getBinPath()).list()) + ")");
         }
         LOG.debug("Loading " + path);
         System.load(path);

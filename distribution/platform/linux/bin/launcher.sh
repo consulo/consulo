@@ -45,10 +45,10 @@ IDE_BIN_HOME="$CONSULO_HOME/bin"
 
 # ---------------------------------------------------------------------
 # Locate a JDK installation directory which will be used to run the IDE.
-# Try (in order): CONSULO_JDK, bundled jdk, JDK_HOME, JAVA_HOME, "java" in PATH.
+# Try (in order): CONSULO_JRE, bundled jdk, JDK_HOME, JAVA_HOME, "java" in PATH.
 # ---------------------------------------------------------------------
-if [ -n "$CONSULO_JDK" -a -x "$CONSULO_JDK/bin/java" ]; then
-  JDK="$CONSULO_JDK"
+if [ -n "$CONSULO_JRE" -a -x "$CONSULO_JRE/bin/java" ]; then
+  JDK="$CONSULO_JRE"
 elif [ -x "$IDE_HOME/jre/bin/java" ] && "$IDE_HOME/jre/bin/java" -version > /dev/null 2>&1 ; then
   JDK="$IDE_HOME/jre"
 elif [ -n "$JDK_HOME" -a -x "$JDK_HOME/bin/java" ]; then
@@ -91,7 +91,7 @@ else
 fi
 
 if [ -z "$JDK" ]; then
-  message "No JDK found. Please validate either CONSULO_JDK, JDK_HOME or JAVA_HOME environment variable points to valid JDK installation."
+  message "No JDK found. Please validate either CONSULO_JRE, JDK_HOME or JAVA_HOME environment variable points to valid JDK installation."
   exit 1
 fi
 
@@ -133,6 +133,7 @@ CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jdom.jar"
 CLASSPATH="$CLASSPATH:$IDE_HOME/lib/log4j.jar"
 CLASSPATH="$CLASSPATH:$IDE_HOME/lib/trove4j.jar"
 CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jna.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jna-platform.jar"
 if [ -n "$IDEA_CLASSPATH" ]; then
   CLASSPATH="$CLASSPATH:$IDEA_CLASSPATH"
 fi

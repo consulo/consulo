@@ -24,6 +24,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
+import consulo.application.DefaultPaths;
 import gnu.trove.THashSet;
 import org.apache.log4j.Appender;
 import org.apache.oro.text.regex.PatternMatcher;
@@ -48,19 +49,12 @@ public class PathManager {
   public static final String PROPERTY_PLUGINS_PATH = "idea.plugins.path";
   public static final String PROPERTY_HOME_PATH = "idea.home.path";
   public static final String PROPERTY_LOG_PATH = "idea.log.path";
-  public static final String PROPERTY_PATHS_SELECTOR = "idea.paths.selector";
-  public static final String PROPERTY_ORIGINAL_WORKING_DIR = "original.working.dir";
-  public static final String DEFAULT_OPTIONS_FILE_NAME = "other";
 
   private static final String PLATFORM_FOLDER = "platform";
   private static final String LIB_FOLDER = "lib";
   private static final String PLUGINS_FOLDER = "plugins";
   private static final String BIN_FOLDER = "bin";
-  private static final String LOG_DIRECTORY = "log";
-  private static final String CONFIG_FOLDER = "config";
   private static final String OPTIONS_FOLDER = "options";
-  private static final String SYSTEM_FOLDER = "system";
-  private static final String PATHS_SELECTOR = System.getProperty(PROPERTY_PATHS_SELECTOR);
 
   private static String ourHomePath;
   private static String ourSystemPath;
@@ -83,10 +77,8 @@ public class PathManager {
       }
     }
     else {
-      ourHomePath = getHomePathFor(PathManager.class);
       if (ourHomePath == null) {
-        String advice = SystemInfo.isMac ? "reinstall the software." : "make sure bin/idea.properties is present in the installation directory.";
-        throw new RuntimeException("Could not find installation home path. Please " + advice);
+        throw new RuntimeException("Could not find installation home path.");
       }
     }
 
@@ -99,26 +91,6 @@ public class PathManager {
     }
 
     return ourHomePath;
-  }
-
-  @Nullable
-  public static String getHomePathFor(@NotNull Class aClass) {
-    String rootPath = getResourceRoot(aClass, "/" + aClass.getName().replace('.', '/') + ".class");
-    if (rootPath == null) return null;
-
-    File root = new File(rootPath).getAbsoluteFile();
-    do {
-      String parent = root.getParent();
-      if (parent == null) return null;
-      root = new File(parent).getAbsoluteFile();  // one step back to get folder
-    }
-    while (!isIdeaHome(root));
-    return root.getAbsolutePath();
-  }
-
-  private static boolean isIdeaHome(final File root) {
-    return new File(root, FileUtil.toSystemDependentName("bin/idea.properties")).exists() ||
-           new File(root, FileUtil.toSystemDependentName("Contents/Info.plist")).exists();  // MacOS bundle doesn't include idea.properties
   }
 
   @NotNull
@@ -156,12 +128,6 @@ public class PathManager {
   }
 
   // config paths
-
-  @Nullable
-  public static String getPathsSelector() {
-    return PATHS_SELECTOR;
-  }
-
   @NotNull
   public static String getConfigPath() {
     if (ourConfigPath != null) return ourConfigPath;
@@ -169,11 +135,8 @@ public class PathManager {
     if (System.getProperty(PROPERTY_CONFIG_PATH) != null) {
       ourConfigPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_CONFIG_PATH)));
     }
-    else if (PATHS_SELECTOR != null) {
-      ourConfigPath = getDefaultConfigPathFor(PATHS_SELECTOR);
-    }
     else {
-      ourConfigPath = getHomePath() + File.separator + CONFIG_FOLDER;
+      ourConfigPath = DefaultPaths.getInstance().getRoamingSettingsDir();
     }
 
     return ourConfigPath;
@@ -191,11 +154,6 @@ public class PathManager {
     }
 
     return ourScratchPath;
-  }
-
-  @NotNull
-  public static String getDefaultConfigPathFor(@NotNull String selector) {
-    return platformPath(selector, "Library/Preferences", CONFIG_FOLDER);
   }
 
   public static void ensureConfigFolderExists() {
@@ -224,11 +182,12 @@ public class PathManager {
     if (System.getProperty(PROPERTY_PLUGINS_PATH) != null) {
       ourPluginsPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_PLUGINS_PATH)));
     }
-    else if (PATHS_SELECTOR != null) {
-      ourPluginsPath = platformPath(PATHS_SELECTOR, "Library/Application Support", CONFIG_FOLDER + File.separatorChar + PLUGINS_FOLDER);
+    else if (System.getProperty(PROPERTY_CONFIG_PATH) != null) {
+      // if config path overridden, use another logic for plugins
+      ourPluginsPath = getConfigPath() + File.separatorChar + "plugins";
     }
     else {
-      ourPluginsPath = getConfigPath() + File.separatorChar + PLUGINS_FOLDER;
+      ourPluginsPath = DefaultPaths.getInstance().getRoamingPluginsDir();
     }
 
     return ourPluginsPath;
@@ -243,11 +202,8 @@ public class PathManager {
     if (System.getProperty(PROPERTY_SYSTEM_PATH) != null) {
       ourSystemPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_SYSTEM_PATH)));
     }
-    else if (PATHS_SELECTOR != null) {
-      ourSystemPath = platformPath(PATHS_SELECTOR, "Library/Caches", SYSTEM_FOLDER);
-    }
     else {
-      ourSystemPath = getHomePath() + File.separator + SYSTEM_FOLDER;
+      ourSystemPath = DefaultPaths.getInstance().getLocalSettingsDir();
     }
 
     checkAndCreate(ourSystemPath, true);
@@ -273,11 +229,12 @@ public class PathManager {
     if (System.getProperty(PROPERTY_LOG_PATH) != null) {
       ourLogPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_LOG_PATH)));
     }
-    else if (PATHS_SELECTOR != null) {
-      ourLogPath = platformPath(PATHS_SELECTOR, "Library/Logs", SYSTEM_FOLDER + File.separatorChar + LOG_DIRECTORY);
+    else if (System.getProperty(PROPERTY_SYSTEM_PATH) != null) {
+      // if system path overridden, use another logic for logs
+      ourLogPath = getSystemPath() + File.separatorChar + "logs";
     }
     else {
-      ourLogPath = getSystemPath() + File.separatorChar + LOG_DIRECTORY;
+      ourLogPath = DefaultPaths.getInstance().getLocalLogsDir();
     }
 
     return ourLogPath;
@@ -289,11 +246,6 @@ public class PathManager {
   }
 
   // misc stuff
-
-  @Nullable
-  public static String getOriginalWorkingDir() {
-    return System.getProperty(PROPERTY_ORIGINAL_WORKING_DIR);
-  }
 
   /**
    * Attempts to detect classpath entry which contains given resource.
@@ -407,8 +359,7 @@ public class PathManager {
 
   @NotNull
   public static File findFileInLibDirectory(@NotNull String relativePath) {
-    File file = new File(getLibPath() + File.separator + relativePath);
-    return file.exists() ? file : new File(getHomePath(), "community" + File.separator + "lib" + File.separator + relativePath);
+    return new File(getLibPath() + File.separator + relativePath);
   }
 
   @Nullable
@@ -427,7 +378,7 @@ public class PathManager {
             THashSet.class,               // trove4j
             PicoContainer.class,          // PicoContainer
             TypeMapper.class,             // JNA
-            FileUtils.class,              // JNA (jna-utils)
+            FileUtils.class,              // JNA (jna-platform)
             PatternMatcher.class          // OROMatcher
     };
 
@@ -464,16 +415,6 @@ public class PathManager {
       return path.substring(1, path.length() - 1);
     }
     return path;
-  }
-
-  // todo[r.sh] XDG directories, Windows folders
-  private static String platformPath(String selector, String macDir, String fallback) {
-    if (SystemInfo.isMac) {
-      return getUserHome() + File.separator + macDir + File.separator + selector;
-    }
-    else {
-      return getUserHome() + File.separator + "." + selector + File.separator + fallback;
-    }
   }
 
   private static boolean checkAndCreate(String path, boolean createIfNotExists) {

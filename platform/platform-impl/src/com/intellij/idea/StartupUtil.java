@@ -17,7 +17,6 @@ package com.intellij.idea;
 
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ConfigImportHelper;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
@@ -38,7 +37,9 @@ import javax.swing.*;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author yole
@@ -77,10 +78,6 @@ public class StartupUtil {
     boolean canStart = checkSystemFolders() && lockSystemFolders(args);  // note: uses config folder!
     if (!canStart) {
       System.exit(Main.STARTUP_IMPOSSIBLE);
-    }
-
-    if (newConfigFolder) {
-      ConfigImportHelper.importConfigsTo(PathManager.getConfigPath());
     }
 
     Logger.setFactory(LoggerFactory.class);

@@ -92,10 +92,6 @@
       <string>com.intellij.idea.Main</string>
       <key>Properties</key>
       <dict>
-
-        <key>idea.paths.selector</key>
-        <string>ConsuloData</string>
-
         <key>idea.executable</key>
         <string>consulo</string>
 

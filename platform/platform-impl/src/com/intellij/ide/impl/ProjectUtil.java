@@ -171,6 +171,6 @@ public class ProjectUtil {
     if (lastProjectLocation != null) {
       return lastProjectLocation.replace('/', File.separatorChar);
     }
-    return DefaultPaths.getInstance().getDirectoryForProjects();
+    return DefaultPaths.getInstance().getDocumentsDir();
   }
 }

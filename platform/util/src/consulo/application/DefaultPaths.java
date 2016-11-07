@@ -31,40 +31,116 @@ public abstract class DefaultPaths {
   private static class Fallback extends DefaultPaths {
     @NotNull
     @Override
-    protected String getUserDocumentsDir() {
-      throw new UnsupportedOperationException();
-    }
-
-    @NotNull
-    @Override
-    public String getDirectoryForProjects() {
+    public String getDocumentsDir() {
       String userHome = SystemProperties.getUserHome();
-      // some OS can have documents dir inside user home, for example Ubuntu
+      // some OS-es can have documents dir inside user home, for example Ubuntu
       File file = new File(userHome, "Documents");
       if (file.exists()) {
-        return userHome + File.separatorChar + "Documents" + File.separatorChar + "Consulo";
+        return userHome + File.separatorChar + "Documents" + File.separatorChar + ourDefaultPrefix;
       }
-      return userHome + File.separatorChar + "Consulo Project";
+      return userHome + File.separatorChar + ourDefaultPrefix + " Project";
+    }
+
+    @NotNull
+    @Override
+    public String getLocalSettingsDir() {
+      String userHome = SystemProperties.getUserHome();
+      return userHome + File.separatorChar + ".consulo_settings" + File.separatorChar + "system";
+    }
+
+    @NotNull
+    @Override
+    public String getRoamingSettingsDir() {
+      String userHome = SystemProperties.getUserHome();
+      return userHome + File.separatorChar + ".consulo_settings" + File.separatorChar + "config";
     }
   }
 
-  private static class Mac extends DefaultPaths {
+  private static abstract class SimpleDefaultPaths extends DefaultPaths {
+    @NotNull
+    protected abstract String getDocumentsDirNoPrefix();
+
+    @Override
+    @NotNull
+    public String getDocumentsDir() {
+      return getDocumentsDirNoPrefix() + File.separatorChar + ourDefaultPrefix;
+    }
+
+    @NotNull
+    protected abstract String getLocalSettingsDirNoPrefix();
+
+    @Override
+    @NotNull
+    public String getLocalSettingsDir() {
+      return getLocalSettingsDirNoPrefix() + File.separatorChar + ourDefaultPrefix;
+    }
+
+    @NotNull
+    protected abstract String getRoamingSettingsDirNoPrefix();
+
     @NotNull
     @Override
-    protected String getUserDocumentsDir() {
-      return SystemProperties.getUserHome() + File.separatorChar + "Documents";
+    public String getRoamingSettingsDir() {
+      return getRoamingSettingsDirNoPrefix() + File.separatorChar + ourDefaultPrefix;
     }
   }
 
-  private static class Windows extends DefaultPaths {
+  private static class Mac extends SimpleDefaultPaths {
     @NotNull
     @Override
-    protected String getUserDocumentsDir() {
+    protected String getDocumentsDirNoPrefix() {
+      return SystemProperties.getUserHome() + "/Documents";
+    }
+
+    @NotNull
+    @Override
+    protected String getLocalSettingsDirNoPrefix() {
+      return SystemProperties.getUserHome() + "/Library/Caches";
+    }
+
+    @NotNull
+    @Override
+    protected String getRoamingSettingsDirNoPrefix() {
+      return SystemProperties.getUserHome() + "/Library/Preferences";
+    }
+
+    @NotNull
+    @Override
+    public String getRoamingPluginsDir() {
+      return SystemProperties.getUserHome() + "/Library/Application Support/" + ourDefaultPrefix;
+    }
+
+    @NotNull
+    @Override
+    public String getLocalLogsDir() {
+      return SystemProperties.getUserHome() + "/Library/Logs/" + ourDefaultPrefix;
+    }
+  }
+
+  private static class Windows extends SimpleDefaultPaths {
+    @NotNull
+    @Override
+    protected String getDocumentsDirNoPrefix() {
       return Shell32Util.getFolderPath(ShlObj.CSIDL_PERSONAL);
+    }
+
+    @NotNull
+    @Override
+    protected String getLocalSettingsDirNoPrefix() {
+      // will return path like C:\Users\{user.name}\AppData\Local
+      return Shell32Util.getFolderPath(ShlObj.CSIDL_LOCAL_APPDATA);
+    }
+
+    @NotNull
+    @Override
+    protected String getRoamingSettingsDirNoPrefix() {
+      // will return path like C:\Users\{user.name}\AppData\Roaming
+      return Shell32Util.getFolderPath(ShlObj.CSIDL_APPDATA);
     }
   }
 
   private static final DefaultPaths ourInstance = get();
+  private static final String ourDefaultPrefix = "Consulo";
 
   private static DefaultPaths get() {
     if (SystemInfo.isMac) {
@@ -81,11 +157,31 @@ public abstract class DefaultPaths {
     return ourInstance;
   }
 
+  /**
+   * @return default directory for new projects
+   */
   @NotNull
-  public String getDirectoryForProjects() {
-    return getUserDocumentsDir() + File.separatorChar + "Consulo";
-  }
+  public abstract String getDocumentsDir();
+
+  /**
+   * @return directory for caches, etc. Removing will not broke user settings
+   */
+  @NotNull
+  public abstract String getLocalSettingsDir();
 
   @NotNull
-  protected abstract String getUserDocumentsDir();
+  public String getLocalLogsDir() {
+    return getLocalSettingsDir() + File.separatorChar + "logs";
+  }
+
+  /**
+   * @return directory for user settings
+   */
+  @NotNull
+  public abstract String getRoamingSettingsDir();
+
+  @NotNull
+  public String getRoamingPluginsDir() {
+    return getRoamingSettingsDir() + File.separatorChar + "plugins";
+  }
 }

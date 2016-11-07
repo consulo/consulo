@@ -18,7 +18,6 @@ package com.intellij.util.lang;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
@@ -51,7 +50,8 @@ public class UrlClassLoader extends ClassLoader {
         registerAsParallelCapable.setAccessible(true);
         registerAsParallelCapable.invoke(null);
       }
-      catch (Exception ignored) { }
+      catch (Exception ignored) {
+      }
     }
   }
 
@@ -76,18 +76,57 @@ public class UrlClassLoader extends ClassLoader {
     private boolean myAcceptUnescaped = false;
     private boolean myPreload = true;
 
-    private Builder() { }
+    private Builder() {
+    }
 
-    public Builder urls(List<URL> urls) { myURLs = urls; return this; }
-    public Builder urls(URL... urls) { myURLs = Arrays.asList(urls); return this; }
-    public Builder parent(ClassLoader parent) { myParent = parent; return this; }
-    public Builder allowLock() { myLockJars = true; return this; }
-    public Builder allowLock(boolean lockJars) { myLockJars = lockJars; return this; }
-    public Builder useCache() { myUseCache = true; return this; }
-    public Builder useCache(boolean useCache) { myUseCache = useCache; return this; }
-    public Builder allowUnescaped() { myAcceptUnescaped = true; return this; }
-    public Builder noPreload() { myPreload = false; return this; }
-    public UrlClassLoader get() { return new UrlClassLoader(this); }
+    public Builder urls(List<URL> urls) {
+      myURLs = urls;
+      return this;
+    }
+
+    public Builder urls(URL... urls) {
+      myURLs = Arrays.asList(urls);
+      return this;
+    }
+
+    public Builder parent(ClassLoader parent) {
+      myParent = parent;
+      return this;
+    }
+
+    public Builder allowLock() {
+      myLockJars = true;
+      return this;
+    }
+
+    public Builder allowLock(boolean lockJars) {
+      myLockJars = lockJars;
+      return this;
+    }
+
+    public Builder useCache() {
+      myUseCache = true;
+      return this;
+    }
+
+    public Builder useCache(boolean useCache) {
+      myUseCache = useCache;
+      return this;
+    }
+
+    public Builder allowUnescaped() {
+      myAcceptUnescaped = true;
+      return this;
+    }
+
+    public Builder noPreload() {
+      myPreload = false;
+      return this;
+    }
+
+    public UrlClassLoader get() {
+      return new UrlClassLoader(this);
+    }
   }
 
   public static Builder build() {
@@ -227,14 +266,7 @@ public class UrlClassLoader extends ClassLoader {
     String libPath = PathManager.getBinPath() + "/" + libFileName;
 
     if (!new File(libPath).exists()) {
-      String platform = getPlatformName();
-      if (!new File(libPath = PathManager.getHomePath() + "/community/bin/" + platform + libFileName).exists()) {
-        if (!new File(libPath = PathManager.getHomePath() + "/bin/" + platform + libFileName).exists()) {
-          if (!new File(libPath = PathManager.getHomePathFor(IdeaWin32.class) + "/bin/" + libFileName).exists()) {
-            throw new UnsatisfiedLinkError("'" + libFileName + "' not found among " + Arrays.toString(new File(PathManager.getBinPath()).listFiles()));
-          }
-        }
-      }
+      throw new UnsatisfiedLinkError("'" + libFileName + "' not found among " + Arrays.toString(new File(PathManager.getBinPath()).listFiles()));
     }
 
     System.load(libPath);
@@ -253,9 +285,17 @@ public class UrlClassLoader extends ClassLoader {
   }
 
   private static String getPlatformName() {
-    if (SystemInfo.isWindows) return "win/";
-    else if (SystemInfo.isMac) return "mac/";
-    else if (SystemInfo.isLinux) return "linux/";
-    else return "";
+    if (SystemInfo.isWindows) {
+      return "win/";
+    }
+    else if (SystemInfo.isMac) {
+      return "mac/";
+    }
+    else if (SystemInfo.isLinux) {
+      return "linux/";
+    }
+    else {
+      return "";
+    }
   }
 }
