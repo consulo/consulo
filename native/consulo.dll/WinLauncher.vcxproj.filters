@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="WinLauncher.ico">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="logo.bmp">
       <Filter>Resource Files</Filter>
     </None>
