@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -32,7 +31,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
-import com.intellij.util.SystemProperties;
+import consulo.application.DefaultPaths;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +45,8 @@ import java.io.IOException;
 public class ProjectUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.impl.ProjectUtil");
 
-  private ProjectUtil() { }
+  private ProjectUtil() {
+  }
 
   public static void updateLastProjectLocation(final String projectFilePath) {
     File lastProjectLocation = new File(projectFilePath);
@@ -83,8 +83,8 @@ public class ProjectUtil {
    * @param projectToClose      currently active project
    * @param forceOpenInNewFrame forces opening in new frame
    * @return project by path if the path was recognized as IDEA project file or one of the project formats supported by
-   *         installed importers (regardless of opening/import result)
-   *         null otherwise
+   * installed importers (regardless of opening/import result)
+   * null otherwise
    */
   @Nullable
   public static Project openOrImport(@NotNull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
@@ -117,34 +117,26 @@ public class ProjectUtil {
 
 
   /**
-   * @return {@link com.intellij.ide.GeneralSettings#OPEN_PROJECT_SAME_WINDOW}
-   *         {@link com.intellij.ide.GeneralSettings#OPEN_PROJECT_NEW_WINDOW}
-   *         {@link com.intellij.openapi.ui.Messages#CANCEL} - if user canceled the dialog
    * @param isNewProject
+   * @return {@link com.intellij.ide.GeneralSettings#OPEN_PROJECT_SAME_WINDOW}
+   * {@link com.intellij.ide.GeneralSettings#OPEN_PROJECT_NEW_WINDOW}
+   * {@link com.intellij.openapi.ui.Messages#CANCEL} - if user canceled the dialog
    */
   public static int confirmOpenNewProject(boolean isNewProject) {
     final GeneralSettings settings = GeneralSettings.getInstance();
     int confirmOpenNewProject = settings.getConfirmOpenNewProject();
     if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
       if (isNewProject) {
-        int exitCode = Messages.showYesNoDialog(IdeBundle.message("prompt.open.project.in.new.frame"),
-                                                IdeBundle.message("title.new.project"),
-                                                IdeBundle.message("button.existingframe"),
-                                                IdeBundle.message("button.newframe"),
-                                                Messages.getQuestionIcon(),
+        int exitCode = Messages.showYesNoDialog(IdeBundle.message("prompt.open.project.in.new.frame"), IdeBundle.message("title.new.project"),
+                                                IdeBundle.message("button.existingframe"), IdeBundle.message("button.newframe"), Messages.getQuestionIcon(),
                                                 new ProjectNewWindowDoNotAskOption());
         return exitCode == 0 ? GeneralSettings.OPEN_PROJECT_SAME_WINDOW : GeneralSettings.OPEN_PROJECT_NEW_WINDOW;
       }
       else {
-        int exitCode = Messages.showYesNoCancelDialog(IdeBundle.message("prompt.open.project.in.new.frame"),
-                                                      IdeBundle.message("title.open.project"),
-                                                      IdeBundle.message("button.existingframe"),
-                                                      IdeBundle.message("button.newframe"),
-                                                      CommonBundle.getCancelButtonText(),
-                                                      Messages.getQuestionIcon(),
-                                                      new ProjectNewWindowDoNotAskOption());
-        return exitCode == 0 ? GeneralSettings.OPEN_PROJECT_SAME_WINDOW :
-               exitCode == 1 ? GeneralSettings.OPEN_PROJECT_NEW_WINDOW : Messages.CANCEL;
+        int exitCode = Messages.showYesNoCancelDialog(IdeBundle.message("prompt.open.project.in.new.frame"), IdeBundle.message("title.open.project"),
+                                                      IdeBundle.message("button.existingframe"), IdeBundle.message("button.newframe"),
+                                                      CommonBundle.getCancelButtonText(), Messages.getQuestionIcon(), new ProjectNewWindowDoNotAskOption());
+        return exitCode == 0 ? GeneralSettings.OPEN_PROJECT_SAME_WINDOW : exitCode == 1 ? GeneralSettings.OPEN_PROJECT_NEW_WINDOW : Messages.CANCEL;
       }
     }
     return confirmOpenNewProject;
@@ -167,19 +159,18 @@ public class ProjectUtil {
     if (executeIfAppInactive) {
       AppIcon.getInstance().requestFocus((IdeFrame)WindowManager.getInstance().getFrame(p));
       cmd.run();
-    } else {
+    }
+    else {
       IdeFocusManager.getInstance(p).requestFocus(cmd, false);
     }
   }
 
+  @NotNull
   public static String getBaseDir() {
     final String lastProjectLocation = GeneralSettings.getInstance().getLastProjectCreationLocation();
     if (lastProjectLocation != null) {
       return lastProjectLocation.replace('/', File.separatorChar);
     }
-    final String userHome = SystemProperties.getUserHome();
-    //noinspection HardCodedStringLiteral
-    return userHome.replace('/', File.separatorChar) + File.separator + ApplicationNamesInfo.getInstance().getLowercaseProductName() +
-           "Projects";
+    return DefaultPaths.getInstance().getDirectoryForProjects();
   }
 }
