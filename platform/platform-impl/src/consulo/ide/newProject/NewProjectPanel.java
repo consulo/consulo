@@ -126,7 +126,10 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
     NewModuleContext.Group[] groups = context.getGroups();
 
     for (NewModuleContext.Group group : groups) {
-      model.add(group);
+      // do not add simple line
+      if(!(groups.length == 1 && group.getId().equals(NewModuleContext.UGROUPED))) {
+        model.add(group);
+      }
 
       for (NewModuleContext.Item item : group.getItems()) {
         model.add(item);
