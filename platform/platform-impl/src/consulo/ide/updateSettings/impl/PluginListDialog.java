@@ -27,7 +27,6 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.JBUI;
@@ -62,7 +61,13 @@ public class PluginListDialog extends DialogWrapper {
       return new PluginsTableRenderer(pluginDescriptor, true) {
         @Override
         protected void updatePresentation(boolean isSelected, PluginNode pluginNode) {
-          if (!isSelected) myName.setForeground(FileStatus.MODIFIED.getColor());
+          FileStatus status = FileStatus.MODIFIED;
+          IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginNode.getPluginId());
+          if (plugin == null && !PlatformOrPluginUpdateChecker.isPlatform(pluginNode.getPluginId())) {
+            status = FileStatus.ADDED;
+          }
+
+          if (!isSelected) myName.setForeground(status.getColor());
         }
       };
     }
@@ -115,8 +120,7 @@ public class PluginListDialog extends DialogWrapper {
 
     ContainerUtil.sort(myNodes, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
-    Optional<IdeaPluginDescriptor> platform =
-            myNodes.stream().filter(x -> ArrayUtil.contains(x.getPluginId(), PlatformOrPluginUpdateChecker.ourPlatformIds)).findAny();
+    Optional<IdeaPluginDescriptor> platform = myNodes.stream().filter(x -> PlatformOrPluginUpdateChecker.isPlatform(x.getPluginId())).findAny();
     platform.ifPresent(plugin -> {
       // move platform node to top
       myNodes.remove(plugin);

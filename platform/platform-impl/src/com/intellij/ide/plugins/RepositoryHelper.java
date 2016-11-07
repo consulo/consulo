@@ -21,7 +21,6 @@ import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.ide.plugins.PluginJsonNode;
@@ -81,7 +80,7 @@ public class RepositoryHelper {
   public static List<IdeaPluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator, @NotNull UpdateChannel channel)
           throws Exception {
     List<IdeaPluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
-    return ContainerUtil.filter(ideaPluginDescriptors, it -> !ArrayUtil.contains(it.getPluginId(), PlatformOrPluginUpdateChecker.ourPlatformIds));
+    return ContainerUtil.filter(ideaPluginDescriptors, it -> !PlatformOrPluginUpdateChecker.isPlatform(it.getPluginId()));
   }
 
   @NotNull

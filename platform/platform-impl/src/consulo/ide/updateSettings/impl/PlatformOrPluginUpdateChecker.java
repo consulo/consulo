@@ -32,6 +32,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
@@ -70,6 +71,10 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
+  public static boolean isPlatform(@NotNull PluginId pluginId) {
+    return ArrayUtil.contains(pluginId, ourPlatformIds);
+  }
+
   public static boolean checkNeeded() {
     UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
@@ -88,9 +93,7 @@ public class PlatformOrPluginUpdateChecker {
       result.setDone();
       return result;
     }
-    app.executeOnPooledThread(() -> {
-      checkAndNotifyForUpdates(null, false, null).notify(result);
-    });
+    app.executeOnPooledThread(() -> checkAndNotifyForUpdates(null, false, null).notify(result));
     return result;
   }
 
@@ -222,18 +225,18 @@ public class PlatformOrPluginUpdateChecker {
         for (final Map.Entry<PluginId, IdeaPluginDescriptor> entry : ourPlugins.entrySet()) {
           final PluginId pluginId = entry.getKey();
 
-          List<IdeaPluginDescriptor> filter = ContainerUtil.filter(remotePlugins, it -> pluginId.equals(it.getPluginId()));
+          IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
-          if (filter.isEmpty()) {
+          if (filtered == null) {
             continue;
           }
 
-          for (IdeaPluginDescriptor filtered : filter) {
-            if (StringUtil.compareVersionNumbers(filtered.getVersion(), entry.getValue().getVersion()) > 0) {
-              updateSettings.myOutdatedPlugins.add(pluginId.toString());
+          if (StringUtil.compareVersionNumbers(filtered.getVersion(), entry.getValue().getVersion()) > 0) {
+            updateSettings.myOutdatedPlugins.add(pluginId.toString());
 
-              targets.add(Couple.of(entry.getValue(), filtered));
-            }
+            processDependencies(filtered, targets, remotePlugins);
+
+            targets.add(Couple.of(entry.getValue(), filtered));
           }
         }
       }
@@ -252,5 +255,22 @@ public class PlatformOrPluginUpdateChecker {
     return targets.isEmpty()
            ? PlatformOrPluginUpdateResult.NO_UPDATE
            : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
+  }
+
+  private static void processDependencies(@NotNull IdeaPluginDescriptor target,
+                                          List<Couple<IdeaPluginDescriptor>> targets,
+                                          List<IdeaPluginDescriptor> remotePlugins) {
+    PluginId[] dependentPluginIds = target.getDependentPluginIds();
+    for (PluginId pluginId : dependentPluginIds) {
+      IdeaPluginDescriptor depPlugin = PluginManager.getPlugin(pluginId);
+      // if plugin is not installed
+      if (depPlugin == null) {
+        IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
+
+        if (filtered != null) {
+          targets.add(Couple.of(null, filtered));
+        }
+      }
+    }
   }
 }
