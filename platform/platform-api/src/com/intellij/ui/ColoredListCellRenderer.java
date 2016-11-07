@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +35,9 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
   @Nullable
   private final JComboBox myComboBox;
 
+  private boolean mySeparator;
+  private String mySeparatorText;
+
   public ColoredListCellRenderer() {
     this(null);
   }
@@ -45,14 +49,23 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     getIpad().right = UIUtil.getListCellHPadding();
   }
 
+  public void setSeparator(@Nullable String text) {
+    mySeparator = true;
+    mySeparatorText = text;
+  }
+
   @Override
   public Component getListCellRendererComponent(JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
     clear();
+    mySeparator = false;
+    mySeparatorText = null;
 
     if (myComboBox != null) {
       setEnabled(myComboBox.isEnabled());
     }
+
     setFont(list.getFont());
+
     mySelected = selected;
     myForeground = isEnabled() ? list.getForeground() : UIManager.getColor("Label.disabledForeground");
     mySelectionForeground = list.getSelectionForeground();
@@ -69,6 +82,19 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     setPaintFocusBorder(hasFocus);
 
     customizeCellRenderer(list, value, index, selected, hasFocus);
+
+    if (mySeparator) {
+      final TitledSeparator separator = new TitledSeparator(mySeparatorText);
+      separator.setBorder(JBUI.Borders.empty(0, 2, 0, 0));
+
+      if (!UIUtil.isUnderGTKLookAndFeel()) {
+        separator.setOpaque(false);
+        separator.setBackground(UIUtil.TRANSPARENT_COLOR);
+        separator.getLabel().setOpaque(false);
+        separator.getLabel().setBackground(UIUtil.TRANSPARENT_COLOR);
+      }
+      return separator;
+    }
 
     if (myDefaultGtkRenderer != null && list.getModel() instanceof ComboBoxModel) {
       final Component component = myDefaultGtkRenderer.getListCellRendererComponent(list, value, index, selected, hasFocus);

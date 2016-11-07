@@ -26,7 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.LocationNameFieldsBinding;
 import com.intellij.ui.CollectionListModel;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBLabel;
@@ -57,7 +57,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
   @Nullable
   private VirtualFile myVirtualFile;
 
-  private JBList myList;
+  private JBList<Object> myList;
 
   public NewProjectPanel(@NotNull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
     super(parentDisposable);
@@ -99,19 +99,18 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
     NewModuleBuilder.EP_NAME.composite().setupContext(context);
 
     CollectionListModel<Object> model = new CollectionListModel<>();
-    myList = new JBList(model);
-    myList.setCellRenderer(new ListCellRendererWrapper() {
+    myList = new JBList<>(model);
+    myList.setCellRenderer(new ColoredListCellRenderer<Object>() {
       @Override
-      public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@NotNull JList list, Object value, int index, boolean selected, boolean hasFocus) {
         setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));
 
         if (value instanceof NewModuleContext.Group) {
-          setText(StringUtil.nullize(((NewModuleContext.Group)value).getName()));
-          setSeparator();
+          setSeparator(StringUtil.nullize(((NewModuleContext.Group)value).getName()));
         }
         else if (value instanceof NewModuleContext.Item) {
           setIcon(((NewModuleContext.Item)value).getIcon());
-          setText(((NewModuleContext.Item)value).getName());
+          append(((NewModuleContext.Item)value).getName());
         }
       }
 
@@ -144,13 +143,13 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
     myNameField = new JTextField();
     myLocationField = new TextFieldWithBrowseButton();
 
-    panel.add(LabeledComponent.create(myNameField, "Name").setLabelLocation(BorderLayout.WEST));
+    panel.add(LabeledComponent.left(myNameField, "Name"));
 
     if (myVirtualFile != null) {
       myNameField.setText(myVirtualFile.getName());
     }
     else {
-      panel.add(LabeledComponent.create(myLocationField, "Path").setLabelLocation(BorderLayout.WEST));
+      panel.add(LabeledComponent.left(myLocationField, "Path"));
 
       new LocationNameFieldsBinding(myProject, myLocationField, myNameField, ProjectUtil.getBaseDir(), "Select Directory");
     }

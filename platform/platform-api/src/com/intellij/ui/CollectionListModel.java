@@ -27,7 +27,7 @@ import java.util.*;
 /**
  * @author yole
  */
-public class CollectionListModel<T> extends AbstractListModel implements EditableModel {
+public class CollectionListModel<T> extends AbstractListModel<T> implements EditableModel {
   private final List<T> myItems;
 
   public CollectionListModel(@NotNull final Collection<? extends T> items) {
