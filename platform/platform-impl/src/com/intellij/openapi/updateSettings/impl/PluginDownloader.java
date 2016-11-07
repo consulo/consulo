@@ -50,8 +50,14 @@ import java.io.*;
 public class PluginDownloader {
   private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
 
+  @NotNull
   public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor) {
-    String url = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString());
+    return createDownloader(descriptor, null);
+  }
+
+  @NotNull
+  public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor, @Nullable String platformVersion) {
+    String url = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion);
 
     return new PluginDownloader(descriptor, url);
   }

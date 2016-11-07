@@ -103,6 +103,8 @@ public class PluginListDialog extends DialogWrapper {
   private List<IdeaPluginDescriptor> myNodes;
   @Nullable
   private Project myProject;
+  @Nullable
+  private String myPlatformVersion;
 
   public PluginListDialog(@Nullable Project project, PlatformOrPluginUpdateResult updateResult) {
     super(project);
@@ -115,10 +117,12 @@ public class PluginListDialog extends DialogWrapper {
 
     Optional<IdeaPluginDescriptor> platform =
             myNodes.stream().filter(x -> ArrayUtil.contains(x.getPluginId(), PlatformOrPluginUpdateChecker.ourPlatformIds)).findAny();
-    platform.ifPresent(ideaPluginDescriptor -> {
+    platform.ifPresent(plugin -> {
       // move platform node to top
-      myNodes.remove(ideaPluginDescriptor);
-      myNodes.add(0, ideaPluginDescriptor);
+      myNodes.remove(plugin);
+      myNodes.add(0, plugin);
+
+      myPlatformVersion = plugin.getVersion();
     });
 
     OurPluginModel model = new OurPluginModel();
@@ -136,7 +140,7 @@ public class PluginListDialog extends DialogWrapper {
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
       for (IdeaPluginDescriptor pluginDescriptor : myNodes) {
         try {
-          PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor);
+          PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion);
           if (downloader.prepareToInstall(indicator)) {
             downloader.install(indicator, true);
           }

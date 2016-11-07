@@ -47,19 +47,25 @@ import java.util.zip.GZIPInputStream;
  */
 public class RepositoryHelper {
   @NotNull
-  public static String buildUrlForList(@NotNull UpdateChannel channel, @NotNull String buildNumber) {
-    return WebServiceApi.REPOSITORY_API.buildUrl("list") + "?platformVersion=" + buildNumber + "&channel=" + channel;
+  public static String buildUrlForList(@NotNull UpdateChannel channel, @NotNull String platformVersion) {
+    return WebServiceApi.REPOSITORY_API.buildUrl("list") + "?platformVersion=" + platformVersion + "&channel=" + channel;
   }
 
   @NotNull
   public static String buildUrlForDownload(@NotNull UpdateChannel channel, @NotNull String pluginId) {
-    ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
+    return buildUrlForDownload(channel, pluginId, null);
+  }
+
+  @NotNull
+  public static String buildUrlForDownload(@NotNull UpdateChannel channel, @NotNull String pluginId, @Nullable String platformVersion) {
+    if (platformVersion == null) {
+      platformVersion = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
+    }
 
     String id = PermanentInstallationID.get();
-
     return WebServiceApi.REPOSITORY_API.buildUrl("download") +
            "?platformVersion=" +
-           appInfo.getBuild().asString() +
+           platformVersion +
            "&channel=" +
            channel +
            "&pluginId=" +
