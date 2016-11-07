@@ -28,6 +28,8 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.Couple;
+import com.intellij.ui.EditorNotifications;
+import com.intellij.util.ui.UIUtil;
 import consulo.ide.plugins.SimpleExtension;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,6 +67,8 @@ public class PluginsAdvertiser implements StartupActivity {
       if (pluginDescriptors.isEmpty()) {
         return;
       }
+
+      UIUtil.invokeLaterIfNeeded(() -> EditorNotifications.getInstance(project).updateAllNotifications());
 
       final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(project);
       final Set<UnknownExtension> unknownExtensions = collectorSuggester.getUnknownExtensions();
