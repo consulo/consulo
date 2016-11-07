@@ -160,7 +160,6 @@
     </None>
     <None Include="logo%402x.bmp" />
     <None Include="logo.bmp" />
-    <None Include="WinLauncher.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />
