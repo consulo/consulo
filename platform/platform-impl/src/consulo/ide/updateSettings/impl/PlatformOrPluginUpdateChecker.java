@@ -50,7 +50,7 @@ import java.util.*;
  */
 @Logger
 public class PlatformOrPluginUpdateChecker {
-  private static final NotificationGroup ourGroup = new NotificationGroup("platformOrPluginUpdate", NotificationDisplayType.STICKY_BALLOON, false);
+  private static final NotificationGroup ourGroup = new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
 
   private static final PluginId ourWinNoJre = PluginId.getId("consulo-win-no-jre");
   private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
