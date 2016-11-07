@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
@@ -51,7 +52,7 @@ import java.util.stream.Collectors;
  */
 @Logger
 public class PluginListDialog extends DialogWrapper {
-  private static class OurPluginColumnInfo extends PluginManagerColumnInfo {
+  private class OurPluginColumnInfo extends PluginManagerColumnInfo {
     public OurPluginColumnInfo(PluginTableModel model) {
       super(PluginManagerColumnInfo.COLUMN_NAME, model);
     }
@@ -61,11 +62,25 @@ public class PluginListDialog extends DialogWrapper {
       return new PluginsTableRenderer(pluginDescriptor, true) {
         @Override
         protected void updatePresentation(boolean isSelected, PluginNode pluginNode) {
+          Couple<IdeaPluginDescriptor> couple = ContainerUtil.find(myNodes, it -> it.getSecond() == pluginDescriptor);
+          assert couple != null;
+          IdeaPluginDescriptor oldPlugin = couple.getFirst();
+          if (oldPlugin != null) {
+            myCategory.setText(oldPlugin.getVersion() + " " + UIUtil.rightArrow() + " " + pluginNode.getVersion());
+          }
+          else {
+            myCategory.setText(pluginNode.getVersion());
+          }
+
           FileStatus status = FileStatus.MODIFIED;
           IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginNode.getPluginId());
-          if (plugin == null && !PlatformOrPluginUpdateChecker.isPlatform(pluginNode.getPluginId())) {
+          boolean platform = PlatformOrPluginUpdateChecker.isPlatform(pluginNode.getPluginId());
+          if (plugin == null && !platform) {
             status = FileStatus.ADDED;
           }
+
+          myRating.setVisible(false);
+          myDownloads.setVisible(false);
 
           if (!isSelected) myName.setForeground(status.getColor());
         }
@@ -78,7 +93,7 @@ public class PluginListDialog extends DialogWrapper {
     }
   }
 
-  private static class OurPluginModel extends PluginTableModel {
+  private class OurPluginModel extends PluginTableModel {
     private OurPluginModel() {
       setSortKey(new RowSorter.SortKey(getNameColumn(), SortOrder.ASCENDING));
       super.columns = new ColumnInfo[]{new OurPluginColumnInfo(this)};
@@ -105,7 +120,7 @@ public class PluginListDialog extends DialogWrapper {
   }
 
   private JComponent myRoot;
-  private List<IdeaPluginDescriptor> myNodes;
+  private List<Couple<IdeaPluginDescriptor>> myNodes;
   @Nullable
   private Project myProject;
   @Nullable
@@ -116,21 +131,23 @@ public class PluginListDialog extends DialogWrapper {
     myProject = project;
     setTitle(IdeBundle.message("update.available.group"));
 
-    myNodes = updateResult.getPlugins().stream().map(x -> x.getSecond()).collect(Collectors.toList());
+    myNodes = updateResult.getPlugins();
 
-    ContainerUtil.sort(myNodes, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+    List<IdeaPluginDescriptor> list = updateResult.getPlugins().stream().map(x -> x.getSecond()).collect(Collectors.toList());
 
-    Optional<IdeaPluginDescriptor> platform = myNodes.stream().filter(x -> PlatformOrPluginUpdateChecker.isPlatform(x.getPluginId())).findAny();
+    ContainerUtil.sort(list, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+
+    Optional<IdeaPluginDescriptor> platform = list.stream().filter(x -> PlatformOrPluginUpdateChecker.isPlatform(x.getPluginId())).findAny();
     platform.ifPresent(plugin -> {
       // move platform node to top
-      myNodes.remove(plugin);
-      myNodes.add(0, plugin);
+      list.remove(plugin);
+      list.add(0, plugin);
 
       myPlatformVersion = plugin.getVersion();
     });
 
     OurPluginModel model = new OurPluginModel();
-    model.updatePluginsList(myNodes);
+    model.updatePluginsList(list);
 
     PluginTable pluginList = new PluginTable(model);
 
@@ -142,7 +159,9 @@ public class PluginListDialog extends DialogWrapper {
   @Override
   protected void doOKAction() {
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
-      for (IdeaPluginDescriptor pluginDescriptor : myNodes) {
+      for (Couple<IdeaPluginDescriptor> couple : myNodes) {
+        IdeaPluginDescriptor pluginDescriptor = couple.getSecond();
+
         try {
           PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion);
           if (downloader.prepareToInstall(indicator)) {

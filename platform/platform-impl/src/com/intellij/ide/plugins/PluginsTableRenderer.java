@@ -36,12 +36,12 @@ import java.text.DecimalFormat;
 public class PluginsTableRenderer extends DefaultTableCellRenderer {
   protected JLabel myName;
   private JLabel myStatus;
-  private RatesPanel myRating;
-  private JLabel myDownloads;
+  protected RatesPanel myRating;
+  protected JLabel myDownloads;
   private JLabel myLastUpdated;
   private JPanel myPanel;
 
-  private JLabel myCategory;
+  protected JLabel myCategory;
   private JPanel myRightPanel;
   private JPanel myBottomPanel;
   private JPanel myInfoPanel;
