@@ -21,6 +21,7 @@ import com.intellij.ide.plugins.InstalledPluginsTableModel;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.startup.StartupActionScriptManager;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -158,6 +159,11 @@ public class PluginDownloader {
           }
         }
       }
+
+      // at start - delete old version, after restart
+      String buildNumber = ApplicationInfo.getInstance().getBuild().asString();
+      StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(new File(platformDirectory, "build" + buildNumber));
+      StartupActionScriptManager.addActionCommand(deleteTemp);
 
       FileUtil.delete(myFile);
 
