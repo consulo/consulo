@@ -56,18 +56,13 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     mySelected = selected;
     myForeground = isEnabled() ? list.getForeground() : UIManager.getColor("Label.disabledForeground");
     mySelectionForeground = list.getSelectionForeground();
-    if (UIUtil.isWinLafOnVista()) {
-      // the system draws a gradient background on the combobox selected item - don't overdraw it with our solid background
-      if (index == -1) {
-        setOpaque(false);
-        mySelected = false;
-      }
-      else {
-        setOpaque(true);
-        setBackground(selected ? list.getSelectionBackground() : null);
-      }
+
+    if (index == -1) {
+      setOpaque(false);
+      mySelected = false;
     }
     else {
+      setOpaque(true);
       setBackground(selected ? list.getSelectionBackground() : null);
     }
 
