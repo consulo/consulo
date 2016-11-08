@@ -19,11 +19,13 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ui.EdtInvocationManager;
 import org.jetbrains.annotations.NotNull;
@@ -179,10 +181,18 @@ public class ProgressIndicatorUtils {
               final ReadTask.Continuation continuation = runUnderProgress(progressIndicator, readTask);
               continued = continuation != null;
               if (continuation != null) {
-                application.invokeLater(() -> {
-                  application.removeApplicationListener(listener);
-                  if (!progressIndicator.isCanceled()) {
-                    continuation.getAction().run();
+                application.invokeLater(new Runnable() {
+                  @Override
+                  public void run() {
+                    application.removeApplicationListener(listener);
+                    if (!progressIndicator.isCanceled()) {
+                      continuation.getAction().run();
+                    }
+                  }
+
+                  @Override
+                  public String toString() {
+                    return "continuation of " + readTask;
                   }
                 }, continuation.getModalityState());
               }
@@ -216,5 +226,13 @@ public class ProgressIndicatorUtils {
         return null;
       }
     }, progressIndicator);
+  }
+
+  /**
+   * Ensure the current EDT activity finishes in case it requires many write actions, with each being delayed a bit
+   * by background thread read action (until its first checkCanceled call).
+   */
+  public static void yieldToPendingWriteActions() {
+    ApplicationManager.getApplication().invokeAndWait(EmptyRunnable.INSTANCE, ModalityState.any());
   }
 }

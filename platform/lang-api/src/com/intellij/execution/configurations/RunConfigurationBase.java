@@ -281,6 +281,14 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     return false;
   }
 
+  /**
+   * @return true if "Make" Before Launch task should be added automatically on run configuration creation
+   * @see RunProfileWithCompileBeforeLaunchOption
+   */
+  public boolean isCompileBeforeLaunchAddedByDefault() {
+    return true;
+  }
+
   @Override
   public String toString() {
     return getType().getDisplayName() + ": " + getName();

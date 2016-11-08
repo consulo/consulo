@@ -30,9 +30,9 @@ import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.frame.XValueContainer;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import java.util.Comparator;
 import java.util.List;
@@ -51,15 +51,14 @@ public abstract class XDebuggerUtil {
     toggleLineBreakpoint(project, file, line, false);
   }
 
-  public abstract void toggleLineBreakpoint(@NotNull Project project,
-                                            @NotNull VirtualFile file,
-                                            int line,
-                                            boolean temporary);
+  public abstract void toggleLineBreakpoint(@NotNull Project project, @NotNull VirtualFile file, int line, boolean temporary);
 
   public abstract boolean canPutBreakpointAt(@NotNull Project project, @NotNull VirtualFile file, int line);
 
-  public <P extends XBreakpointProperties> void toggleLineBreakpoint(@NotNull Project project, @NotNull XLineBreakpointType<P> type,
-                                                                     @NotNull VirtualFile file, int line) {
+  public <P extends XBreakpointProperties> void toggleLineBreakpoint(@NotNull Project project,
+                                                                     @NotNull XLineBreakpointType<P> type,
+                                                                     @NotNull VirtualFile file,
+                                                                     int line) {
     toggleLineBreakpoint(project, type, file, line, false);
   }
 
@@ -75,6 +74,7 @@ public abstract class XDebuggerUtil {
 
   /**
    * Create {@link XSourcePosition} instance by line number
+   *
    * @param file file
    * @param line 0-based line number
    * @return source position
@@ -84,12 +84,16 @@ public abstract class XDebuggerUtil {
 
   /**
    * Create {@link XSourcePosition} instance by line number
-   * @param file file
+   *
+   * @param file   file
    * @param offset offset from the beginning of file
    * @return source position
    */
   @Nullable
   public abstract XSourcePosition createPositionByOffset(@Nullable VirtualFile file, int offset);
+
+  @Nullable
+  public abstract XSourcePosition createPositionByElement(@Nullable PsiElement element);
 
   public abstract <B extends XLineBreakpoint<?>> XBreakpointGroupingRule<B, ?> getGroupingByFileRule();
 
@@ -106,9 +110,10 @@ public abstract class XDebuggerUtil {
 
   /**
    * Process all {@link com.intellij.psi.PsiElement}s on the specified line
-   * @param project project
-   * @param document document
-   * @param line 0-based line number
+   *
+   * @param project   project
+   * @param document  document
+   * @param line      0-based line number
    * @param processor processor
    */
   @RequiredReadAction

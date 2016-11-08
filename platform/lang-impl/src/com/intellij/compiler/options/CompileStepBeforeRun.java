@@ -96,10 +96,16 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
   }
 
   @Override
-  public MakeBeforeRunTask createTask(RunConfiguration runConfiguration) {
-    return !(runConfiguration instanceof Suppressor) && runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption
-           ? new MakeBeforeRunTask()
-           : null;
+  public MakeBeforeRunTask createTask(RunConfiguration configuration) {
+    MakeBeforeRunTask task = null;
+
+    if (!(configuration instanceof Suppressor) && configuration instanceof RunProfileWithCompileBeforeLaunchOption) {
+      task = new MakeBeforeRunTask();
+      if (configuration instanceof RunConfigurationBase) {
+        task.setEnabled(((RunConfigurationBase)configuration).isCompileBeforeLaunchAddedByDefault());
+      }
+    }
+    return task;
   }
 
   @Override
@@ -117,7 +123,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     return doMake(myProject, configuration, env, false);
   }
 
-   static boolean doMake(final Project myProject, final RunConfiguration configuration, final ExecutionEnvironment env, final boolean ignoreErrors) {
+  static boolean doMake(final Project myProject, final RunConfiguration configuration, final ExecutionEnvironment env, final boolean ignoreErrors) {
     if (!(configuration instanceof RunProfileWithCompileBeforeLaunchOption)) {
       return true;
     }
@@ -135,7 +141,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
       final CompileStatusNotification callback = new CompileStatusNotification() {
         @Override
         public void finished(final boolean aborted, final int errors, final int warnings, CompileContext compileContext) {
-          if ((errors == 0  || ignoreErrors) && !aborted) {
+          if ((errors == 0 || ignoreErrors) && !aborted) {
             result.set(Boolean.TRUE);
           }
           done.up();

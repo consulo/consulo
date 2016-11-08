@@ -67,10 +67,12 @@ public class EditorHyperlinkSupport {
 
   private final Editor myEditor;
   @NotNull private final Project myProject;
+  private final AsyncFilterRunner myFilterRunner;
 
   public EditorHyperlinkSupport(@NotNull final Editor editor, @NotNull final Project project) {
     myEditor = editor;
     myProject = project;
+    myFilterRunner = new AsyncFilterRunner(this, myEditor);
 
     editor.addEditorMouseListener(new EditorMouseAdapter() {
       @Override
@@ -106,6 +108,11 @@ public class EditorHyperlinkSupport {
     for (RangeHighlighter highlighter : getHyperlinks(0, myEditor.getDocument().getTextLength(), myEditor)) {
       removeHyperlink(highlighter);
     }
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  public void waitForPendingFilters(long timeoutMs) {
+    myFilterRunner.waitForPendingFilters(timeoutMs);
   }
 
   @Deprecated
@@ -196,7 +203,7 @@ public class EditorHyperlinkSupport {
 
   /**
    * @deprecated for binary compatibility with older plugins
-   * @see #createHyperlink(int, int, com.intellij.openapi.editor.markup.TextAttributes, com.intellij.execution.filters.HyperlinkInfo)
+   * @see #createHyperlink(int, int, TextAttributes, HyperlinkInfo)
    */
   public void addHyperlink(final int highlightStartOffset,
                            final int highlightEndOffset,
@@ -262,30 +269,15 @@ public class EditorHyperlinkSupport {
   }
 
   public void highlightHyperlinks(final Filter customFilter, final int line1, final int endLine) {
-    final Document document = myEditor.getDocument();
-
-    final int startLine = Math.max(0, line1);
-
-    for (int line = startLine; line <= endLine; line++) {
-      int endOffset = document.getLineEndOffset(line);
-      if (endOffset < document.getTextLength()) {
-        endOffset++; // add '\n'
-      }
-      final String text = getLineText(document, line, true);
-      Filter.Result result = customFilter.applyFilter(text, endOffset);
-      if (result != null) {
-        highlightHyperlinks(result);
-      }
-    }
+    myFilterRunner.highlightHyperlinks(customFilter, Math.max(0, line1), endLine);
   }
 
-  public void highlightHyperlinks(@NotNull Filter.Result result) {
+  void highlightHyperlinks(@NotNull Filter.Result result, int offsetDelta) {
     Document document = myEditor.getDocument();
     for (Filter.ResultItem resultItem : result.getResultItems()) {
-      int start = resultItem.getHighlightStartOffset();
-      int end = resultItem.getHighlightEndOffset();
-      if (end < start || end > document.getTextLength()) {
-        LOG.error("Filter returned wrong range: start=" + start + "; end=" + end + "; length=" + document.getTextLength());
+      int start = resultItem.getHighlightStartOffset() + offsetDelta;
+      int end = resultItem.getHighlightEndOffset() + offsetDelta;
+      if (start < 0 || end < start || end > document.getTextLength()) {
         continue;
       }
 
@@ -338,7 +330,7 @@ public class EditorHyperlinkSupport {
     while (newIndex < ranges.size() && newIndex >= 0) {
       newIndex = (newIndex + delta + ranges.size()) % ranges.size();
       final RangeHighlighter next = ranges.get(newIndex);
-      HyperlinkInfo info = EditorHyperlinkSupport.getHyperlinkInfo(next);
+      HyperlinkInfo info = getHyperlinkInfo(next);
       assert info != null;
       if (info.includeInOccurenceNavigation()) {
         boolean inCollapsedRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(next.getStartOffset()) != null;
@@ -377,12 +369,13 @@ public class EditorHyperlinkSupport {
   }
 
 
-  public static String getLineText(Document document, int lineNumber, boolean includeEol) {
+  @NotNull
+  public static String getLineText(@NotNull Document document, int lineNumber, boolean includeEol) {
     int endOffset = document.getLineEndOffset(lineNumber);
     if (includeEol && endOffset < document.getTextLength()) {
       endOffset++;
     }
-    return document.getCharsSequence().subSequence(document.getLineStartOffset(lineNumber), endOffset).toString();
+    return document.getImmutableCharSequence().subSequence(document.getLineStartOffset(lineNumber), endOffset).toString();
   }
 
   private static class HyperlinkInfoTextAttributes extends TextAttributes {
