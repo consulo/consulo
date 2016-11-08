@@ -222,6 +222,19 @@ public class GeneralCommandLine implements UserDataHolder {
     myProgramParams.add(parameter);
   }
 
+  @NotNull
+  public GeneralCommandLine withParameters(@NotNull String... parameters) {
+    for (String parameter : parameters) addParameter(parameter);
+    return this;
+  }
+
+  @NotNull
+  public GeneralCommandLine withParameters(@NotNull List<String> parameters) {
+    for (String parameter : parameters) addParameter(parameter);
+    return this;
+  }
+
+
   public ParametersList getParametersList() {
     return myProgramParams;
   }
