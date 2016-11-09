@@ -21,6 +21,7 @@ import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.extensions.PluginId;
@@ -42,6 +43,7 @@ import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -53,21 +55,28 @@ public class PlatformOrPluginUpdateChecker {
   private static final NotificationGroup ourGroup = new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
 
   private static final PluginId ourWinNoJre = PluginId.getId("consulo-win-no-jre");
-  private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
+  private static final PluginId ourWin = PluginId.getId("consulo-win");
+  private static final PluginId ourWin64 = PluginId.getId("consulo-win64");
   private static final PluginId ourLinuxNoJre = PluginId.getId("consulo-linux-no-jre");
+  private static final PluginId ourLinux = PluginId.getId("consulo-linux");
+  private static final PluginId ourLinux64 = PluginId.getId("consulo-linux64");
+  private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
+  private static final PluginId ourMac64 = PluginId.getId("consulo-mac64");
 
-  public static final PluginId[] ourPlatformIds = {ourWinNoJre, ourLinuxNoJre, ourMacNoJre};
+  private static final PluginId[] ourPlatformIds = {ourWinNoJre, ourWin, ourWin64, ourLinuxNoJre, ourLinux, ourLinux64, ourMacNoJre, ourMac64};
 
   @NotNull
   public static PluginId getPlatformPluginId() {
+    boolean isJreBuild = new File(PathManager.getHomePath(), "jre").exists();
+    boolean is64Bit = SystemInfo.is64Bit;
     if (SystemInfo.isWindows) {
-      return ourWinNoJre;
+      return isJreBuild ? (is64Bit ? ourWin64 : ourWin) : ourWinNoJre;
     }
     else if (SystemInfo.isMac) {
-      return ourMacNoJre;
+      return isJreBuild ? ourMac64 : ourMacNoJre;
     }
     else {
-      return ourLinuxNoJre;
+      return isJreBuild ? (is64Bit ? ourLinux64 : ourLinux) : ourLinuxNoJre;
     }
   }
 
