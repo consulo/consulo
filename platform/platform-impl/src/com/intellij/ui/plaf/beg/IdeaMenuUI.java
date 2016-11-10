@@ -72,7 +72,9 @@ public class IdeaMenuUI extends BasicMenuUI{
     }
 
     // define selft icon due with hidpi, jdk icon is too small
-    arrowIcon = AllIcons.Nodes.TreeExpandNode;
+    if (JBUI.isHiDPI()) {
+      arrowIcon = AllIcons.Nodes.TreeExpandNode;
+    }
   }
 
   @Override
