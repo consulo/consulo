@@ -62,7 +62,7 @@
     <key>LSRequiresNativeExecution</key>
     <string>YES</string>
     <key>LSMinimumSystemVersion</key>
-    <string>10.8</string>
+    <string>10.9</string>
 
 
       <key>CFBundleURLTypes</key>
@@ -74,44 +74,9 @@
           <string>Stacktrace</string>
           <key>CFBundleURLSchemes</key>
           <array>
-            <string>idea</string>
+            <string>consulo</string>
           </array>
         </dict>
       </array>
-
-
-    <key>JVMOptions</key>
-    <dict>
-      <key>ClassPath</key>
-      <string>$APP_PACKAGE/Contents/lib/bootstrap.jar:$APP_PACKAGE/Contents/lib/extensions.jar:$APP_PACKAGE/Contents/lib/util.jar:$APP_PACKAGE/Contents/lib/jdom.jar:$APP_PACKAGE/Contents/lib/log4j.jar:$APP_PACKAGE/Contents/lib/trove4j.jar:$APP_PACKAGE/Contents/lib/jna.jar</string>
-
-      <key>JVMVersion</key>
-      <string>1.8*,1.8+</string>
-
-      <key>MainClass</key>
-      <string>com.intellij.idea.Main</string>
-      <key>Properties</key>
-      <dict>
-
-        <key>idea.paths.selector</key>
-        <string>ConsuloData</string>
-
-        <key>idea.executable</key>
-        <string>consulo</string>
-
-
-        <key>idea.java.redist</key>
-        <string>jdk-bundled</string>
-
-        <key>idea.home.path</key>
-        <string>$APP_PACKAGE/Contents</string>
-      </dict>
-
-      <key>VMOptions</key>
-      <string>-Dfile.encoding=UTF-8 -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -XX:MaxJavaStackTraceDepth=-1 -Xverify:none -Xbootclasspath/a:../lib/boot.jar</string>
-
-      <key>WorkingDirectory</key>
-      <string>$APP_PACKAGE/Contents/bin</string>
-    </dict>
   </dict>
 </plist>

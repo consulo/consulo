@@ -1,42 +1,74 @@
-#import "Launcher.h"
+#import <dlfcn.h>
 
-#define FOREVER ((CFTimeInterval) 1e20)
+typedef int (launchConsulo)(int argc, char* argv[], NSString* workingDirectory, NSString* propertiesFile, NSString* vmOptionsFile);
 
-static void timer_empty(CFRunLoopTimerRef timer, void *info) {
-}
-
-static void parkRunLoop() {
-    CFRunLoopTimerRef t = CFRunLoopTimerCreate(kCFAllocatorDefault, FOREVER, (CFTimeInterval)0.0, 0, 0, timer_empty, NULL);
-    CFRunLoopAddTimer(CFRunLoopGetCurrent(), t, kCFRunLoopDefaultMode);
-    CFRelease(t);
-
-    SInt32 result;
-    do {
-        result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, FOREVER, false);
-    } while (result != kCFRunLoopRunFinished);
-}
-
-static void makeSameStackSize(NSThread *thread) {
-    struct rlimit l;
-    int err = getrlimit(RLIMIT_STACK, &l);
-    if (err == ERR_SUCCESS && l.rlim_cur > 0) {
-        thread.stackSize = (NSUInteger) l.rlim_cur;
-    }
-}
-
-static void launchInNewThread(Launcher *launcher) {
-   NSThread *thread = [[[NSThread alloc] initWithTarget:launcher selector:@selector(launch) object:nil] autorelease];
-   makeSameStackSize(thread);
-   [thread start];
-
+void error(NSString* message) {
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert addButtonWithTitle:@"OK"];
+    [alert setMessageText:@"Consulo"];
+    [alert setInformativeText:message];
+    [alert setAlertStyle:NSCriticalAlertStyle];
+    [alert runModal];
+    [alert release];
 }
 
 int main(int argc, char *argv[]) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    if (validationJavaVersion()){
-        launchInNewThread([[[Launcher alloc] initWithArgc:argc argv:argv] autorelease]);
-        parkRunLoop();
+    NSFileManager* fileManager = [NSFileManager defaultManager];
+
+    NSString* appPath = [[NSBundle mainBundle] bundlePath];
+
+    NSString* platformDir = [NSString stringWithFormat:@"%@/Contents/%@", appPath, @"platform"];
+    if (![fileManager fileExistsAtPath:platformDir]) {
+        error(@"'platform' directory is not exists");
+        return 1;
     }
-    [pool release];
-    return 0;
+
+    NSArray *dirFiles = [fileManager contentsOfDirectoryAtPath:platformDir error:nil];
+
+    NSMutableArray* builds = [NSMutableArray arrayWithCapacity:dirFiles.count];
+    for (NSString* dir in dirFiles) {
+        if ([dir hasPrefix:@"build"]) {
+            [builds addObject:dir];
+        }
+    }
+
+    if(builds.count == 0) {
+        error(@"No build for run");
+        return 1;
+    }
+
+    NSArray* sortedArray = [builds sortedArrayUsingComparator:^(id a, id b) { return [a compare:b options:NSNumericSearch]; }];
+
+    NSString* lastBuildNotAbsolute = sortedArray[sortedArray.count -1];
+
+    NSString* lastBuild = [NSString stringWithFormat:@"%@/%@", platformDir, lastBuildNotAbsolute];
+
+    NSString* propertiesFile = [NSString stringWithFormat:@"%@/Contents/consulo.properties", appPath];
+
+    if (![fileManager fileExistsAtPath:propertiesFile]) {
+        error(@"'consulo.properties' is not exists");
+        return 1;
+    }
+
+    NSString* vmOptionsFile = [NSString stringWithFormat:@"%@/Contents/consulo.vmoptions", appPath];
+
+    if (![fileManager fileExistsAtPath:vmOptionsFile]) {
+        error(@"'consulo.vmoptions' is not exists");
+        return 2;
+    }
+
+    void *libHandle = dlopen([[NSString stringWithFormat:@"%@/bin/libconsulo.dylib", lastBuild] UTF8String], RTLD_NOW + RTLD_GLOBAL);
+    if (libHandle) {
+        launchConsulo* main = dlsym(libHandle, "launchConsulo");
+        if (!main) {
+            error(@"Entry point for launch is not found");
+            return 3;
+        }
+
+        return main(argc,argv, lastBuild, propertiesFile, vmOptionsFile);
+    }
+    else {
+        error(@"Failed load launcher library");
+        return 4;
+    }
 }
