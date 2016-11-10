@@ -16,6 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.StreamUtil;
@@ -100,7 +101,8 @@ public class Restarter {
         errThread.join();
       }
     }
-    catch (InterruptedException ignore) { }
+    catch (InterruptedException ignore) {
+    }
   }
 
   private static void restartOnWindows(@NotNull final String... beforeRestart) throws IOException {
@@ -113,14 +115,11 @@ public class Restarter {
     final String[] argv = argv_ptr.getWideStringArray(0, argc.getValue());
     kernel32.LocalFree(argv_ptr);
 
-    doScheduleRestart(new File(PathManager.getBinPath(), "restarter.exe"), new Consumer<List<String>>() {
-      @Override
-      public void consume(List<String> commands) {
-        Collections.addAll(commands, String.valueOf(pid), String.valueOf(beforeRestart.length));
-        Collections.addAll(commands, beforeRestart);
-        Collections.addAll(commands, String.valueOf(argc.getValue()));
-        Collections.addAll(commands, argv);
-      }
+    doScheduleRestart(new File(PathManager.getBinPath(), "restarter.exe"), PathManager.getDistributionDirectory(), commands -> {
+      Collections.addAll(commands, String.valueOf(pid), String.valueOf(beforeRestart.length));
+      Collections.addAll(commands, beforeRestart);
+      Collections.addAll(commands, String.valueOf(argc.getValue()));
+      Collections.addAll(commands, argv);
     });
 
     // Since the process ID is passed through the command line, we want to make sure that we don't exit before the "restarter"
@@ -134,30 +133,35 @@ public class Restarter {
   }
 
   private static void restartOnMac(@NotNull final String... beforeRestart) throws IOException {
-    final String homePath = PathManager.getHomePath();
-    if (!StringUtil.endsWithIgnoreCase(homePath, ".app")) throw new IOException("Application bundle not found: " + homePath);
+    File distributionDirectory = PathManager.getDistributionDirectory();
 
-    doScheduleRestart(new File(PathManager.getBinPath(), "restarter"), new Consumer<List<String>>() {
-      @Override
-      public void consume(List<String> commands) {
-        Collections.addAll(commands, homePath);
-        Collections.addAll(commands, beforeRestart);
-      }
+    File contentsDirectory = distributionDirectory.getParentFile();
+    if (!Comparing.equal("Contents", contentsDirectory.getName())) {
+      throw new IOException("Parent directory is not 'Contents': " + contentsDirectory.getPath());
+    }
+
+    File appDirectory = contentsDirectory.getParentFile();
+    if (!StringUtil.endsWithIgnoreCase(appDirectory.getName(), ".app")) {
+      throw new IOException("Application bundle not found: " + appDirectory.getPath());
+    }
+
+    doScheduleRestart(new File(PathManager.getBinPath(), "restarter"), appDirectory, commands -> {
+      Collections.addAll(commands, appDirectory.getPath());
+      Collections.addAll(commands, beforeRestart);
     });
   }
 
-  private static void doScheduleRestart(File restarterFile, Consumer<List<String>> argumentsBuilder) throws IOException {
-    List<String> commands = new ArrayList<String>();
+  private static void doScheduleRestart(File restarterFile, File workingDirectory, Consumer<List<String>> argumentsBuilder) throws IOException {
+    List<String> commands = new ArrayList<>();
     commands.add(createTempExecutable(restarterFile).getPath());
     argumentsBuilder.consume(commands);
-    Runtime.getRuntime().exec(commands.toArray(new String[commands.size()]), null, PathManager.getDistributionDirectory());
+    Runtime.getRuntime().exec(ArrayUtil.toStringArray(commands), null, workingDirectory);
   }
 
   public static File createTempExecutable(File executable) throws IOException {
     String ext = FileUtilRt.getExtension(executable.getName());
-    File copy = FileUtilRt.createTempFile(FileUtilRt.getNameWithoutExtension(executable.getName()),
-                                          StringUtil.isEmptyOrSpaces(ext) ? ".tmp" : ("." + ext),
-                                          false);
+    File copy =
+            FileUtilRt.createTempFile(FileUtilRt.getNameWithoutExtension(executable.getName()), StringUtil.isEmptyOrSpaces(ext) ? ".tmp" : ("." + ext), false);
     FileUtilRt.copy(executable, copy);
     if (!copy.setExecutable(executable.canExecute())) throw new IOException("Cannot make file executable: " + copy);
     return copy;
