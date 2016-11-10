@@ -24,11 +24,13 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.UserDataHolder;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
+import consulo.annotations.DeprecationInfo;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,14 +38,11 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * OS-independent way of executing external processes with complex parameters.
- * <p/>
+ * <p>
  * Main idea of the class is to accept parameters "as-is", just as they should look to an external process, and quote/escape them
  * as required by the underlying platform.
  *
@@ -52,16 +51,31 @@ import java.util.Map;
 public class GeneralCommandLine implements UserDataHolder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.configurations.GeneralCommandLine");
 
+  /**
+   * Determines the scope of a parent environment passed to a child process.
+   * <p>
+   * {@code NONE} means a child process will receive an empty environment. <br/>
+   * {@code SYSTEM} will provide it with the same environment as an IDE. <br/>
+   * {@code CONSOLE} provides the child with a similar environment as if it was launched from, well, a console.
+   * On OS X, a console environment is simulated (see {@link EnvironmentUtil#getEnvironmentMap()} for reasons it's needed
+   * and details on how it works). On Windows and Unix hosts, this option is no different from {@code SYSTEM}
+   * since there is no drastic distinction in environment between GUI and console apps.
+   */
+  public enum ParentEnvironmentType {
+    NONE, SYSTEM, CONSOLE
+  }
+
   private String myExePath = null;
   private File myWorkDirectory = null;
   private final Map<String, String> myEnvParams = new MyTHashMap();
-  private boolean myPassParentEnvironment = true;
+  private ParentEnvironmentType myParentEnvironmentType = ParentEnvironmentType.CONSOLE;
   private final ParametersList myProgramParams = new ParametersList();
   private Charset myCharset = CharsetToolkit.getDefaultSystemCharset();
   private boolean myRedirectErrorStream = false;
   private Map<Object, Object> myUserData = null;
 
-  public GeneralCommandLine() { }
+  public GeneralCommandLine() {
+  }
 
   public GeneralCommandLine(@NotNull String... command) {
     this(Arrays.asList(command));
@@ -130,26 +144,66 @@ public class GeneralCommandLine implements UserDataHolder {
     return this;
   }
 
+  @Deprecated
+  @DeprecationInfo(value = "Use #getParentEnvironmentType()", until = "3.0")
   public boolean isPassParentEnvironment() {
-    return myPassParentEnvironment;
+    return myParentEnvironmentType != ParentEnvironmentType.NONE;
   }
 
   @NotNull
+  @Deprecated
+  @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)", until = "3.0")
   public GeneralCommandLine withPassParentEnvironment(boolean passParentEnvironment) {
-    myPassParentEnvironment = passParentEnvironment;
+    withParentEnvironmentType(passParentEnvironment ? ParentEnvironmentType.CONSOLE : ParentEnvironmentType.NONE);
     return this;
   }
 
+  @NotNull
+  @Deprecated
+  @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)", until = "3.0")
   public void setPassParentEnvironment(boolean passParentEnvironment) {
     withPassParentEnvironment(passParentEnvironment);
+  }
+
+  @NotNull
+  public ParentEnvironmentType getParentEnvironmentType() {
+    return myParentEnvironmentType;
+  }
+
+  @NotNull
+  public GeneralCommandLine withParentEnvironmentType(@NotNull ParentEnvironmentType type) {
+    myParentEnvironmentType = type;
+    return this;
   }
 
   /**
    * @return unmodifiable map of the parent environment, that will be passed to the process if isPassParentEnvironment() == true
    */
+  /**
+   * Returns an environment that will be inherited by a child process.
+   * @see #getEffectiveEnvironment()
+   */
   @NotNull
   public Map<String, String> getParentEnvironment() {
-    return EnvironmentUtil.getEnvironmentMap();
+    switch (myParentEnvironmentType) {
+      case SYSTEM:
+        return System.getenv();
+      case CONSOLE:
+        return EnvironmentUtil.getEnvironmentMap();
+      default:
+        return Collections.emptyMap();
+    }
+  }
+
+  /**
+   * Returns an environment as seen by a child process,
+   * that is the {@link #getEnvironment() environment} merged with the {@link #getParentEnvironment() parent} one.
+   */
+  @NotNull
+  public Map<String, String> getEffectiveEnvironment() {
+    MyTHashMap env = new MyTHashMap();
+    setupEnvironment(env);
+    return env;
   }
 
   public void addParameters(String... parameters) {
@@ -167,6 +221,19 @@ public class GeneralCommandLine implements UserDataHolder {
   public void addParameter(@NotNull String parameter) {
     myProgramParams.add(parameter);
   }
+
+  @NotNull
+  public GeneralCommandLine withParameters(@NotNull String... parameters) {
+    for (String parameter : parameters) addParameter(parameter);
+    return this;
+  }
+
+  @NotNull
+  public GeneralCommandLine withParameters(@NotNull List<String> parameters) {
+    for (String parameter : parameters) addParameter(parameter);
+    return this;
+  }
+
 
   public ParametersList getParametersList() {
     return myProgramParams;
@@ -254,6 +321,8 @@ public class GeneralCommandLine implements UserDataHolder {
   public Process createProcess() throws ExecutionException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Executing [" + getCommandLineString() + "]");
+      LOG.debug("  environment: " + myEnvParams + " (+" + myParentEnvironmentType + ")");
+      LOG.debug("  charset: " + myCharset);
     }
 
     List<String> commands;
@@ -294,8 +363,7 @@ public class GeneralCommandLine implements UserDataHolder {
       return;
     }
     if (!myWorkDirectory.exists()) {
-      throw new ExecutionException(
-              IdeBundle.message("run.configuration.error.working.directory.does.not.exist", myWorkDirectory.getAbsolutePath()));
+      throw new ExecutionException(IdeBundle.message("run.configuration.error.working.directory.does.not.exist", myWorkDirectory.getAbsolutePath()));
     }
     if (!myWorkDirectory.isDirectory()) {
       throw new ExecutionException(IdeBundle.message("run.configuration.error.working.directory.not.directory"));
@@ -305,13 +373,20 @@ public class GeneralCommandLine implements UserDataHolder {
   protected void setupEnvironment(@NotNull Map<String, String> environment) {
     environment.clear();
 
-    if (myPassParentEnvironment) {
+    if (myParentEnvironmentType != ParentEnvironmentType.NONE) {
       environment.putAll(getParentEnvironment());
+    }
+
+    if (SystemInfo.isUnix) {
+      File workDirectory = getWorkDirectory();
+      if (workDirectory != null) {
+        environment.put("PWD", FileUtil.toSystemDependentName(workDirectory.getAbsolutePath()));
+      }
     }
 
     if (!myEnvParams.isEmpty()) {
       if (SystemInfo.isWindows) {
-        THashMap<String, String> envVars = new THashMap<String, String>(CaseInsensitiveStringHashingStrategy.INSTANCE);
+        THashMap<String, String> envVars = new THashMap<>(CaseInsensitiveStringHashingStrategy.INSTANCE);
         envVars.putAll(environment);
         envVars.putAll(myEnvParams);
         environment.clear();

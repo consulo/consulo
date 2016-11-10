@@ -31,8 +31,7 @@ public class VMOptionsTest extends UsefulTestCase {
     super.setUp();
 
     myFile = FileUtil.createTempFile("vmoptions.", ".txt");
-    writeFile("-Xmx512m\n" +
-              "-XX:MaxPermSize=128m");
+    writeFile("-Xmx512m");
     VMOptions.setTestFile(myFile.getPath());
   }
 
@@ -85,86 +84,66 @@ public class VMOptionsTest extends UsefulTestCase {
 
   public void testReading() throws Exception {
     assertEquals(512, VMOptions.readXmx());
-    assertEquals(128, VMOptions.readMaxPermGen());
   }
 
   public void testReadingEmpty() throws Exception {
     writeFile("");
 
     assertEquals(-1, VMOptions.readXmx());
-    assertEquals(-1, VMOptions.readMaxPermGen());
   }
 
   public void testReadingKilos() throws Exception {
-    writeFile("-Xmx512000k\n" +
-              "-XX:MaxPermSize=128000K  -XX:ReservedCodeCacheSize=256000K");
+    writeFile("-Xmx512000k\n" + "-XX:ReservedCodeCacheSize=256000K");
 
     assertEquals(512000 / 1024, VMOptions.readXmx());
-    assertEquals(128000 / 1024, VMOptions.readMaxPermGen());
     assertEquals(256000 / 1024, VMOptions.readCodeCache());
   }
 
   public void testReadingGigs() throws Exception {
-    writeFile("-Xmx512g\n" +
-              "-XX:MaxPermSize=128G");
+    writeFile("-Xmx512g\n");
 
     assertEquals(512 * 1024, VMOptions.readXmx());
-    assertEquals(128 * 1024, VMOptions.readMaxPermGen());
   }
 
   public void testReadingWithoutUnit() throws Exception {
-    writeFile("-Xmx512\n" +
-              "-XX:MaxPermSize=128");
+    writeFile("-Xmx512");
 
     assertEquals(512, VMOptions.readXmx());
-    assertEquals(128, VMOptions.readMaxPermGen());
   }
 
   public void testWriting() throws Exception {
     VMOptions.writeXmx(1024);
-    VMOptions.writeMaxPermGen(256);
 
-    assertEquals("-Xmx1024m\n" +
-                 "-XX:MaxPermSize=256m",
-                 readFile());
+    assertEquals("-Xmx1024m\n", readFile());
   }
 
   public void testWritingPreservingLocation() throws Exception {
     writeFile("-someOption\n" +
               "-Xmx512m\n" +
-              "-XX:MaxPermSize=128m\n" +
               "-anotherOption");
 
     VMOptions.writeXmx(1024);
-    VMOptions.writeMaxPermGen(256);
 
     assertEquals("-someOption\n" +
                  "-Xmx1024m\n" +
-                 "-XX:MaxPermSize=256m\n" +
-                 "-anotherOption",
-                 readFile());
+                 "-anotherOption", readFile());
   }
 
   public void testWritingNew() throws Exception {
     writeFile("-someOption");
 
     VMOptions.writeXmx(1024);
-    VMOptions.writeMaxPermGen(256);
     VMOptions.writeCodeCache(256);
 
-    assertEquals("-someOption -Xmx1024m -XX:MaxPermSize=256m -XX:ReservedCodeCacheSize=256m",
-                 readFile());
+    assertEquals("-someOption -Xmx1024m -XX:ReservedCodeCacheSize=256m", readFile());
   }
 
   public void testWritingReadOnlyFile() throws Exception {
     FileUtil.setReadOnlyAttribute(myFile.getPath(), true);
-    
-    VMOptions.writeXmx(1024);
-    VMOptions.writeMaxPermGen(256);
 
-    assertEquals("-Xmx1024m\n" +
-                 "-XX:MaxPermSize=256m",
-                 readFile());
+    VMOptions.writeXmx(1024);
+
+    assertEquals("-Xmx1024m", readFile());
   }
 
 

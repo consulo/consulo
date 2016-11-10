@@ -15,14 +15,17 @@
  */
 package com.intellij.openapi.options;
 
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 /**
  * Component which provides a configuration user interface.
  *
+ * @see consulo.options.SimpleConfigurable
  * @author lesya
  */
 public interface UnnamedConfigurable {
@@ -33,7 +36,15 @@ public interface UnnamedConfigurable {
    */
   @Nullable
   @RequiredDispatchThread
-  JComponent createComponent();
+  default JComponent createComponent() {
+    return null;
+  }
+
+  @Nullable
+  @RequiredUIAccess
+  default Component createUIComponent() {
+    return null;
+  }
 
   /**
    * Checks if the settings in the user interface component were modified by the user and

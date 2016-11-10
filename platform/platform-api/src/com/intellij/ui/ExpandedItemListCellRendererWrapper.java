@@ -20,17 +20,17 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-public class ExpandedItemListCellRendererWrapper implements ListCellRenderer {
-  @NotNull private final ListCellRenderer myWrappee;
+public class ExpandedItemListCellRendererWrapper<E> implements ListCellRenderer<E> {
+  @NotNull private final ListCellRenderer<E> myWrappee;
   @NotNull private final ExpandableItemsHandler<Integer> myHandler;
 
-  public ExpandedItemListCellRendererWrapper(@NotNull ListCellRenderer wrappee, @NotNull ExpandableItemsHandler<Integer> handler) {
+  public ExpandedItemListCellRendererWrapper(@NotNull ListCellRenderer<E> wrappee, @NotNull ExpandableItemsHandler<Integer> handler) {
     myWrappee = wrappee;
     myHandler = handler;
   }
 
   @Override
-  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+  public Component getListCellRendererComponent(JList<? extends E> list, E value, int index, boolean isSelected, boolean cellHasFocus) {
     Component result = myWrappee.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     if (myHandler.getExpandedItems().contains(index)) {
       result = new ExpandedItemRendererComponentWrapper(result);

@@ -477,7 +477,7 @@ public class XDebugSessionImpl implements XDebugSession {
       disableBreakpoints();
     }
     doResume();
-    myDebugProcess.startStepOver();
+    myDebugProcess.startStepOver(mySuspendContext);
   }
 
   @Override
@@ -485,7 +485,7 @@ public class XDebugSessionImpl implements XDebugSession {
     if (!myDebugProcess.checkCanPerformCommands()) return;
 
     doResume();
-    myDebugProcess.startStepInto();
+    myDebugProcess.startStepInto(mySuspendContext);
   }
 
   @Override
@@ -493,7 +493,7 @@ public class XDebugSessionImpl implements XDebugSession {
     if (!myDebugProcess.checkCanPerformCommands()) return;
 
     doResume();
-    myDebugProcess.startStepOut();
+    myDebugProcess.startStepOut(mySuspendContext);
   }
 
   @Override
@@ -509,7 +509,7 @@ public class XDebugSessionImpl implements XDebugSession {
     if (!myDebugProcess.checkCanPerformCommands()) return;
 
     doResume();
-    myDebugProcess.startForceStepInto();
+    myDebugProcess.startForceStepInto(mySuspendContext);
   }
 
   @Override
@@ -520,7 +520,7 @@ public class XDebugSessionImpl implements XDebugSession {
       disableBreakpoints();
     }
     doResume();
-    myDebugProcess.runToPosition(position);
+    myDebugProcess.runToPosition(position, mySuspendContext);
   }
 
   @Override
@@ -546,7 +546,7 @@ public class XDebugSessionImpl implements XDebugSession {
     if (!myDebugProcess.checkCanPerformCommands()) return;
 
     doResume();
-    myDebugProcess.resume();
+    myDebugProcess.resume(mySuspendContext);
   }
 
   public void doResume() {

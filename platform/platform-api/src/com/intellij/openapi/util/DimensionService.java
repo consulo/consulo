@@ -42,11 +42,8 @@ import java.util.Map;
  */
 @State(
         name = "DimensionService",
-        storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/dimensions.xml", roamingType = RoamingType.DISABLED),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true)
-        }
-)
+        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/dimensions.xml", roamingType = RoamingType.DISABLED),
+                @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true)})
 public class DimensionService implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DimensionService.class);
 
@@ -99,6 +96,26 @@ public class DimensionService implements PersistentStateComponent<Element> {
   }
 
   /**
+   * This method is not use {@link DimensionService#realKey} because welcome frame can't calc screen position when it not showed (it always showed on first
+   * screen device)
+   *
+   * @param key a String key to perform a query for.
+   * @return point stored under the specified <code>key</code>. The method returns
+   * <code>null</code> if there is no stored value under the <code>key</code>. If point
+   * is outside of current screen bounds then the method returns <code>null</code>. It
+   * properly works in multi-monitor configuration.
+   * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
+   */
+  @Nullable
+  public synchronized Point getLocationNoRealKey(@NotNull String key) {
+    Point point = myKey2Location.get(key);
+    if (point != null && !ScreenUtil.getScreenRectangle(point).contains(point)) {
+      point = null;
+    }
+    return point != null ? (Point)point.clone() : null;
+  }
+
+  /**
    * Store specified <code>point</code> under the <code>key</code>. If <code>point</code> is
    * <code>null</code> then the value stored under <code>key</code> will be removed.
    *
@@ -113,6 +130,26 @@ public class DimensionService implements PersistentStateComponent<Element> {
   public synchronized void setLocation(@NotNull String key, Point point, Project project) {
     key = realKey(key, project);
 
+    if (point != null) {
+      myKey2Location.put(key, (Point)point.clone());
+    }
+    else {
+      myKey2Location.remove(key);
+    }
+  }
+
+  /**
+   * Store specified <code>point</code> under the <code>key</code>. If <code>point</code> is
+   * <code>null</code> then the value stored under <code>key</code> will be removed.
+   * <p>
+   * This method is not use {@link DimensionService#realKey} because welcome frame can't calc screen position when it not showed (it always showed on first
+   * screen device)
+   *
+   * @param key   a String key to store location for.
+   * @param point location to save.
+   * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
+   */
+  public synchronized void setLocationNoRealKey(@NotNull String key, Point point) {
     if (point != null) {
       myKey2Location.put(key, (Point)point.clone());
     }
@@ -206,16 +243,16 @@ public class DimensionService implements PersistentStateComponent<Element> {
     for (Element e : element.getChildren()) {
       if (ELEMENT_LOCATION.equals(e.getName())) {
         try {
-          myKey2Location.put(e.getAttributeValue(KEY), new Point(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_X)),
-                                                                 Integer.parseInt(e.getAttributeValue(ATTRIBUTE_Y))));
+          myKey2Location.put(e.getAttributeValue(KEY),
+                             new Point(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_X)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_Y))));
         }
         catch (NumberFormatException ignored) {
         }
       }
       else if (ELEMENT_SIZE.equals(e.getName())) {
         try {
-          myKey2Size.put(e.getAttributeValue(KEY), new Dimension(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_WIDTH)),
-                                                                 Integer.parseInt(e.getAttributeValue(ATTRIBUTE_HEIGHT))));
+          myKey2Size.put(e.getAttributeValue(KEY),
+                         new Dimension(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_WIDTH)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_HEIGHT))));
         }
         catch (NumberFormatException ignored) {
         }
@@ -289,7 +326,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
     }
     String realKey = key + '.' + screen.x + '.' + screen.y + '.' + screen.width + '.' + screen.height;
     if (JBUI.isHiDPI()) {
-      realKey+= "@" + (((int)(96 * JBUI.scale(1f)))) + "dpi";
+      realKey += "@" + (((int)(96 * JBUI.scale(1f)))) + "dpi";
     }
     return realKey;
   }

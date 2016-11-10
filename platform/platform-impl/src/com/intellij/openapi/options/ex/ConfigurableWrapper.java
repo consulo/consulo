@@ -23,6 +23,8 @@ import com.intellij.openapi.options.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -139,6 +141,13 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @Override
   public JComponent createComponent() {
     return getConfigurable().createComponent();
+  }
+
+  @RequiredUIAccess
+  @Nullable
+  @Override
+  public Component createUIComponent() {
+    return getConfigurable().createUIComponent();
   }
 
   @Override

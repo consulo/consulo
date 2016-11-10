@@ -83,13 +83,10 @@ public class WelcomeBalloonLayoutImpl extends BalloonLayoutImpl {
     }
   }
 
-  private void addToPopup(@NotNull final BalloonImpl balloon, @NotNull BalloonLayoutData layoutData) {
-    layoutData.doLayout = new Runnable() {
-      @Override
-      public void run() {
-        WelcomeBalloonLayoutImpl.this.layoutPopup();
-      }
-    };
+  private void addToPopup(@NotNull BalloonImpl balloon, @NotNull BalloonLayoutData layoutData) {
+    balloon.traceDispose(false);
+
+    layoutData.doLayout = this::layoutPopup;
     layoutData.configuration = layoutData.configuration.replace(JBUI.scale(myPopupBalloon == null ? 7 : 5), JBUI.scale(12));
 
     if (myPopupBalloon == null) {
@@ -110,17 +107,12 @@ public class WelcomeBalloonLayoutImpl extends BalloonLayoutImpl {
       });
 
       myPopupBalloon =
-              new BalloonImpl(pane, BORDER_COLOR, new Insets(0, 0, 0, 0), FILL_COLOR, true, false, false, false, true, 0, false, false, null,
-                              false, 0, 0, 0, 0, false, null, null, false, false, false, null, false);
+              new BalloonImpl(pane, BORDER_COLOR, new Insets(0, 0, 0, 0), FILL_COLOR, true, false, false, true, false, true, 0, false, false,
+                              null, false, 0, 0, 0, 0, false, null, null, false, false, false, null, false);
       myPopupBalloon.setAnimationEnabled(false);
       myPopupBalloon.setShadowBorderProvider(
               new NotificationBalloonShadowBorderProvider(FILL_COLOR, BORDER_COLOR));
-      myPopupBalloon.setHideListener(new Runnable() {
-        @Override
-        public void run() {
-          myPopupBalloon.getComponent().setVisible(false);
-        }
-      });
+      myPopupBalloon.setHideListener(() -> myPopupBalloon.getComponent().setVisible(false));
       myPopupBalloon.setActionProvider(new BalloonImpl.ActionProvider() {
         private BalloonImpl.ActionButton myAction;
 
@@ -164,6 +156,13 @@ public class WelcomeBalloonLayoutImpl extends BalloonLayoutImpl {
     }
   }
 
+  @Override
+  public void queueRelayout() {
+    if (myVisible) {
+      layoutPopup();
+    }
+  }
+
   private void layoutPopup() {
     Dimension layeredSize = myLayeredPane.getSize();
     Dimension size = new Dimension(myPopupBalloon.getPreferredSize());
@@ -183,14 +182,19 @@ public class WelcomeBalloonLayoutImpl extends BalloonLayoutImpl {
 
   private void updatePopup() {
     int count = myBalloonPanel.getComponentCount();
-    List<NotificationType> types = new ArrayList<NotificationType>(count);
+    List<NotificationType> types = new ArrayList<>(count);
     for (int i = 0; i < count; i++) {
       types.add((NotificationType)((JComponent)myBalloonPanel.getComponent(i)).getClientProperty(TYPE_KEY));
     }
     myListener.run(types);
 
     if (myVisible) {
-      layoutPopup();
+      if (count == 0) {
+        myPopupBalloon.getComponent().setVisible(false);
+      }
+      else {
+        layoutPopup();
+      }
     }
   }
 

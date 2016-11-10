@@ -164,7 +164,7 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighter"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.syntaxHighlighterFactory"  beanClass="com.intellij.openapi.fileTypes.SyntaxHighlighterFactoryEP">
+    <extensionPoint name="lang.syntaxHighlighterFactory" beanClass="com.intellij.openapi.fileTypes.SyntaxHighlighterFactoryEP">
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighterFactory"/>
     </extensionPoint>
 
@@ -216,8 +216,6 @@
     <extensionPoint name="iconDescriptorUpdater" interface="consulo.ide.IconDescriptorUpdater"/>
 
     <extensionPoint name="customizableActionGroupProvider" interface="com.intellij.ide.ui.customization.CustomizableActionGroupProvider"/>
-
-    <extensionPoint name="statusBarComponent" interface="com.intellij.openapi.wm.StatusBarCustomComponentFactory"/>
 
     <extensionPoint name="checkinHandlerFactory" interface="com.intellij.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
@@ -294,13 +292,19 @@
                     interface="com.intellij.openapi.vcs.impl.FileStatusProvider"
                     area="CONSULO_PROJECT"/>
 
+    <extensionPoint name="vcs.baseContentProvider"
+                    interface="com.intellij.openapi.vcs.impl.VcsBaseContentProvider"
+                    area="CONSULO_PROJECT"/>
+
     <extensionPoint name="vcsPopupProvider"
                     interface="com.intellij.openapi.vcs.actions.VcsQuickListContentProvider"/>
+    <extensionPoint name="vcs.ignoredFilesHolder" interface="com.intellij.openapi.vcs.changes.VcsIgnoredFilesHolder" area="CONSULO_PROJECT"/>
+    <extensionPoint name="vcs.ignoredFileProvider"
+                    interface="com.intellij.openapi.vcs.changes.IgnoredFileProvider"/>
+
     <extensionPoint name="patch.extension" interface="com.intellij.openapi.diff.impl.patch.PatchEP" area="CONSULO_PROJECT"/>
     <extensionPoint name="vcsChangesViewRefresher" interface="com.intellij.openapi.vcs.changes.ChangesViewRefresher"/>
     <extensionPoint name="vcsAnnotationGutterActionProvider" interface="com.intellij.openapi.vcs.annotate.AnnotationGutterActionProvider"/>
-    <extensionPoint name="vcschangedetails" interface="com.intellij.openapi.vcs.changes.VcsChangeDetailsProvider" area="CONSULO_PROJECT"/>
-    <extensionPoint name="vcs.rootFinder" interface="com.intellij.openapi.vcs.VcsRootFinder" area="CONSULO_PROJECT"/>
     <extensionPoint name="vcs.taskHandler" interface="com.intellij.openapi.vcs.VcsTaskHandler" area="CONSULO_PROJECT"/>
 
     <extensionPoint name="compiler.additionalCompileScopeProvider"
@@ -404,12 +408,18 @@
                     interface="com.intellij.codeInsight.editorActions.JoinLinesHandlerDelegate"/>
     <extensionPoint name="enterHandlerDelegate" interface="com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegate"/>
     <extensionPoint name="backspaceHandlerDelegate" interface="com.intellij.codeInsight.editorActions.BackspaceHandlerDelegate"/>
+    <extensionPoint name="editor.backspaceModeOverride" beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.BackspaceModeOverride"/>
+    </extensionPoint>
 
     <extensionPoint name="codeStyleSettingsProvider"
                     interface="com.intellij.psi.codeStyle.CodeStyleSettingsProvider"/>
 
     <extensionPoint name="daemon.highlightInfoFilter"
                     interface="com.intellij.codeInsight.daemon.impl.HighlightInfoFilter"/>
+
+    <extensionPoint name="daemon.intentionActionFilter"
+                    interface="com.intellij.codeInsight.daemon.impl.IntentionActionFilter"/>
 
     <extensionPoint name="daemon.externalAnnotatorsFilter"
                     interface="com.intellij.lang.ExternalAnnotatorsFilter"/>
@@ -1223,8 +1233,6 @@
     <applicationService serviceInterface="com.intellij.openapi.editor.EditorCopyPasteHelper"
                         serviceImplementation="com.intellij.openapi.editor.impl.EditorCopyPasteHelperImpl"/>
 
-    <applicationService serviceInterface="com.intellij.diagnostic.ErrorReportConfigurable"
-                        serviceImplementation="com.intellij.diagnostic.ErrorReportConfigurable"/>
     <applicationService serviceInterface="com.intellij.openapi.vfs.impl.http.RemoteFileManager"
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
@@ -1261,7 +1269,7 @@
                         serviceImplementation="com.intellij.codeInsight.hint.TooltipController"/>
     <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.EditorActionManager"
                         serviceImplementation="com.intellij.openapi.editor.impl.EditorActionManagerImpl"/>
-    <applicationService serviceImplementation="consulo.ide.updateSettings.UpdateSettings" />
+    <applicationService serviceImplementation="consulo.ide.updateSettings.UpdateSettings"/>
     <applicationService serviceInterface="com.intellij.featureStatistics.FeatureUsageTracker"
                         serviceImplementation="com.intellij.featureStatistics.FeatureUsageTrackerImpl"/>
     <applicationService serviceInterface="com.intellij.reporting.FreezeLogger"
@@ -1318,6 +1326,9 @@
 
     <applicationService serviceInterface="com.intellij.codeInsight.daemon.LineMarkerSettings"
                         serviceImplementation="com.intellij.codeInsight.daemon.impl.LineMarkerSettingsImpl"/>
+
+    <applicationService serviceInterface="com.intellij.remote.ext.CredentialsManager"
+                        serviceImplementation="com.intellij.remote.ext.CredentialsManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
@@ -2270,9 +2281,11 @@
     <applicationService serviceInterface="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"
                         serviceImplementation="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
 
-    <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="messages.InspectionsBundle" enabledByDefault="true" level="ERROR"
+    <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="messages.InspectionsBundle"
+                      enabledByDefault="true" level="ERROR"
                       implementationClass="com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$AnnotatorBasedInspection"/>
-    <globalInspection shortName="SyntaxError" displayName="Syntax error" groupKey="inspection.general.tools.group.name" groupBundle="messages.InspectionsBundle" enabledByDefault="true" level="ERROR"
+    <globalInspection shortName="SyntaxError" displayName="Syntax error" groupKey="inspection.general.tools.group.name" groupBundle="messages.InspectionsBundle"
+                      enabledByDefault="true" level="ERROR"
                       implementationClass="com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$SyntaxErrorInspection"/>
     <localInspection shortName="LossyEncoding" bundle="messages.InspectionsBundle" key="lossy.encoding"
                      groupKey="group.names.internationalization.issues" enabledByDefault="true" level="WARNING"
@@ -2490,7 +2503,8 @@
 
     <newModuleBuilder implementation="consulo.ide.impl.EmptyNewModuleBuilder"/>
 
-    <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.IndentingBackspaceHandler"/>
+    <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.SimpleIndentingBackspaceHandler"/>
+    <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.SmartIndentingBackspaceHandler"/>
 
     <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.FileOrDirectoryDependencyTabFactory"/>
     <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.ModuleDependencyTabFactory"/>
@@ -2532,5 +2546,8 @@
     <writingAccessProvider implementation="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider" order="first"/>
 
     <customFileDropHandler implementation="com.intellij.openapi.vcs.changes.patch.PatchFileDropHandler"/>
+
+    <vcs.ignoredFileProvider implementation="com.intellij.openapi.vcs.changes.ChangeListManagerImpl$DefaultIgnoredFileProvider" order="last"/>
+    <vcs.ignoredFileProvider implementation="consulo.configurationStore.vcs.StoreIgnoredFileProvider"/>
   </extensions>
 </idea-plugin>

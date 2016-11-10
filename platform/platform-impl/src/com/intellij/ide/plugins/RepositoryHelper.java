@@ -21,11 +21,11 @@ import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.ide.updateSettings.UpdateChannel;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.webService.WebServiceApi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,22 +45,26 @@ import java.util.zip.GZIPInputStream;
  * @since Mar 28, 2003
  */
 public class RepositoryHelper {
-  public static final String[] ourPlatformPluginIds = {"consulo-win-no-jre", "consulo-linux-no-jre", "consulo-mac-no-jre"};
-
   @NotNull
-  public static String buildUrlForList(@NotNull UpdateChannel channel, @NotNull String buildNumber) {
-    return WebServiceApi.REPOSITORY_API.buildUrl("list") + "?platformVersion=" + buildNumber + "&channel=" + channel;
+  public static String buildUrlForList(@NotNull UpdateChannel channel, @NotNull String platformVersion) {
+    return WebServiceApi.REPOSITORY_API.buildUrl("list") + "?platformVersion=" + platformVersion + "&channel=" + channel;
   }
 
   @NotNull
   public static String buildUrlForDownload(@NotNull UpdateChannel channel, @NotNull String pluginId) {
-    ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
+    return buildUrlForDownload(channel, pluginId, null);
+  }
+
+  @NotNull
+  public static String buildUrlForDownload(@NotNull UpdateChannel channel, @NotNull String pluginId, @Nullable String platformVersion) {
+    if (platformVersion == null) {
+      platformVersion = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
+    }
 
     String id = PermanentInstallationID.get();
-
     return WebServiceApi.REPOSITORY_API.buildUrl("download") +
            "?platformVersion=" +
-           appInfo.getBuild().asString() +
+           platformVersion +
            "&channel=" +
            channel +
            "&pluginId=" +
@@ -76,7 +80,7 @@ public class RepositoryHelper {
   public static List<IdeaPluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator, @NotNull UpdateChannel channel)
           throws Exception {
     List<IdeaPluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
-    return ContainerUtil.filter(ideaPluginDescriptors, it -> !ArrayUtil.contains(it.getPluginId().getIdString(), ourPlatformPluginIds));
+    return ContainerUtil.filter(ideaPluginDescriptors, it -> !PlatformOrPluginUpdateChecker.isPlatform(it.getPluginId()));
   }
 
   @NotNull

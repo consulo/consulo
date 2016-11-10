@@ -46,8 +46,6 @@ import java.util.List;
  * @author yole
  */
 public class AppUIUtil {
-  private static final String VENDOR_PREFIX = "jetbrains-";
-
   public static void updateWindowIcon(@NotNull Window window) {
     window.setIconImages(getAppIconImages());
   }
@@ -117,7 +115,7 @@ public class AppUIUtil {
 
   public static String getFrameClass() {
     String name = ApplicationNamesInfo.getInstance().getProductName().toLowerCase();
-    String wmClass = VENDOR_PREFIX + StringUtil.replaceChar(name, ' ', '-');
+    String wmClass = StringUtil.replaceChar(name, ' ', '-');
     if ("true".equals(System.getProperty("idea.debug.mode"))) {
       wmClass += "-debug";
     }

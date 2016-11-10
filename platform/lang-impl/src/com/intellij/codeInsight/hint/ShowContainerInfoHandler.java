@@ -31,8 +31,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.LightweightHint;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -102,14 +102,11 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
       return;
     }
     final PsiElement _container = container;
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        LightweightHint hint = EditorFragmentComponent.showEditorFragmentHint(editor, range, true, true);
-        if (hint != null) {
-          hint.putUserData(CONTAINER_KEY, _container);
-          editor.putUserData(MY_LAST_HINT_KEY, new WeakReference<LightweightHint>(hint));
-        }
+    ApplicationManager.getApplication().invokeLater(() -> {
+      LightweightHint hint1 = EditorFragmentComponent.showEditorFragmentHint(editor, range, true, true);
+      if (hint1 != null) {
+        hint1.putUserData(CONTAINER_KEY, _container);
+        editor.putUserData(MY_LAST_HINT_KEY, new WeakReference<>(hint1));
       }
     });
   }

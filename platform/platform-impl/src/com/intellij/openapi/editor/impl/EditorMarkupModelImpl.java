@@ -58,11 +58,12 @@ import com.intellij.util.ui.ButtonlessScrollBarUI;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.lombok.annotations.Logger;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,6 +78,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Logger
 public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
   private static final TooltipGroup ERROR_STRIPE_TOOLTIP_GROUP = new TooltipGroup("ERROR_STRIPE_TOOLTIP_GROUP", 0);
   private final EditorImpl myEditor;
@@ -320,7 +322,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   @Override
   public void setErrorStripeVisible(boolean val) {
     if (val) {
-      if(myErrorPanel != null) {
+      if (myErrorPanel != null) {
         myErrorPanel.setPopupHandler(null);
       }
 
@@ -413,8 +415,8 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       myDirtyYPositions = WHOLE_DOCUMENT;
     }
 
-    if(myErrorPanel != null) {
-      myErrorPanel.repaint(0, range.getStartOffset(), myErrorPanel.getWidth() , range.getLength() + myMinMarkHeight);
+    if (myErrorPanel != null) {
+      myErrorPanel.repaint(0, range.getStartOffset(), myErrorPanel.getWidth(), range.getLength() + myMinMarkHeight);
     }
   }
 
@@ -523,8 +525,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       Shape oldClip = g.getClip();
       g.clipRect(clip.x, clip.y, clip.width, clip.height);
 
-      drawMarkup(g, startOffset, endOffset,
-                 (MarkupModelEx)DocumentMarkupModel.forDocument(document, myEditor.getProject(), true), EditorMarkupModelImpl.this);
+      drawMarkup(g, startOffset, endOffset, (MarkupModelEx)DocumentMarkupModel.forDocument(document, myEditor.getProject(), true), EditorMarkupModelImpl.this);
 
       g.setClip(oldClip);
     }
@@ -550,8 +551,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
       MarkupIterator<RangeHighlighterEx> iterator1 = markup1.overlappingIterator(startOffset, endOffset);
       MarkupIterator<RangeHighlighterEx> iterator2 = markup2.overlappingIterator(startOffset, endOffset);
-      MarkupIterator<RangeHighlighterEx> iterator =
-              IntervalTreeImpl.mergeIterators(iterator1, iterator2, RangeHighlighterEx.BY_AFFECTED_START_OFFSET);
+      MarkupIterator<RangeHighlighterEx> iterator = IntervalTreeImpl.mergeIterators(iterator1, iterator2, RangeHighlighterEx.BY_AFFECTED_START_OFFSET);
       try {
         ContainerUtil.process(iterator, new Processor<RangeHighlighterEx>() {
           @Override
@@ -630,7 +630,8 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     private int drawStripesEndingBefore(int ys,
                                         @NotNull Queue<PositionedStripe> ends,
                                         @NotNull List<PositionedStripe> stripes,
-                                        @NotNull Graphics g, int yStart) {
+                                        @NotNull Graphics g,
+                                        int yStart) {
       while (!ends.isEmpty()) {
         PositionedStripe endingStripe = ends.peek();
         if (endingStripe.yEnd > ys) break;
@@ -823,9 +824,9 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   public void markDirtied(@NotNull ProperTextRange yPositions) {
     if (myDirtyYPositions != WHOLE_DOCUMENT) {
       int start = Math.max(0, yPositions.getStartOffset() - myEditor.getLineHeight());
-      int end = myEditorScrollbarTop + myEditorTargetHeight == 0 ? yPositions.getEndOffset() + myEditor.getLineHeight()
-                                                                 : Math
-                        .min(myEditorScrollbarTop + myEditorTargetHeight, yPositions.getEndOffset() + myEditor.getLineHeight());
+      int end = myEditorScrollbarTop + myEditorTargetHeight == 0
+                ? yPositions.getEndOffset() + myEditor.getLineHeight()
+                : Math.min(myEditorScrollbarTop + myEditorTargetHeight, yPositions.getEndOffset() + myEditor.getLineHeight());
       ProperTextRange adj = new ProperTextRange(start, Math.max(end, start));
 
       myDirtyYPositions = myDirtyYPositions == null ? adj : myDirtyYPositions.union(adj);
@@ -944,7 +945,17 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
         endY = myEditorScrollbarTop + (int)((float)endLineNumber / lineCount * myEditorTargetHeight);
       }
     }
+
     if (endY < startY) endY = startY;
+    if (startY < 0 || endY < 0) {
+      LOGGER.error("Bad text range startY=" + startY +
+                   ", endY=" +  endY +
+                   ", myEditorSourceHeight=" + myEditorSourceHeight +
+                   ", myEditorTargetHeight=" + myEditorTargetHeight +
+                   ", myEditorScrollbarTop=" + myEditorScrollbarTop);
+      return new ProperTextRange(0, 0);
+    }
+
     return new ProperTextRange(startY, endY);
   }
 

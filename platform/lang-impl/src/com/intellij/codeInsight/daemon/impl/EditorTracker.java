@@ -51,9 +51,9 @@ public class EditorTracker extends AbstractProjectComponent {
   private final WindowManager myWindowManager;
   private final EditorFactory myEditorFactory;
 
-  private final Map<Window, List<Editor>> myWindowToEditorsMap = new HashMap<Window, List<Editor>>();
-  private final Map<Window, WindowFocusListener> myWindowToWindowFocusListenerMap = new HashMap<Window, WindowFocusListener>();
-  private final Map<Editor, Window> myEditorToWindowMap = new HashMap<Editor, Window>();
+  private final Map<Window, List<Editor>> myWindowToEditorsMap = new HashMap<>();
+  private final Map<Window, WindowAdapter> myWindowToWindowFocusListenerMap = new HashMap<>();
+  private final Map<Editor, Window> myEditorToWindowMap = new HashMap<>();
   private List<Editor> myActiveEditors = Collections.emptyList(); // accessed in EDT only
 
   private final EventDispatcher<EditorTrackerListener> myDispatcher = EventDispatcher.create(EditorTrackerListener.class);
@@ -124,11 +124,11 @@ public class EditorTracker extends AbstractProjectComponent {
     myEditorToWindowMap.put(editor, window);
     List<Editor> list = myWindowToEditorsMap.get(window);
     if (list == null) {
-      list = new ArrayList<Editor>();
+      list = new ArrayList<>();
       myWindowToEditorsMap.put(window, list);
 
       if (!(window instanceof IdeFrameImpl)) {
-        WindowFocusListener listener =  new WindowFocusListener() {
+        WindowAdapter listener =  new WindowAdapter() {
           @Override
           public void windowGainedFocus(WindowEvent e) {
             if (LOG.isDebugEnabled()) {
@@ -146,9 +146,19 @@ public class EditorTracker extends AbstractProjectComponent {
 
             setActiveWindow(null);
           }
+
+          @Override
+          public void windowClosed(WindowEvent event) {
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("windowClosed:" + window);
+            }
+
+            setActiveWindow(null);
+          }
         };
         myWindowToWindowFocusListenerMap.put(window, listener);
         window.addWindowFocusListener(listener);
+        window.addWindowListener(listener);
         if (window.isFocused()) {  // windowGainedFocus is missed; activate by force
           setActiveWindow(window);
         }
@@ -171,8 +181,11 @@ public class EditorTracker extends AbstractProjectComponent {
 
       if (editorsList.isEmpty()) {
         myWindowToEditorsMap.remove(oldWindow);
-        final WindowFocusListener listener = myWindowToWindowFocusListenerMap.remove(oldWindow);
-        if (listener != null) oldWindow.removeWindowFocusListener(listener);
+        final WindowAdapter listener = myWindowToWindowFocusListenerMap.remove(oldWindow);
+        if (listener != null) {
+          oldWindow.removeWindowFocusListener(listener);
+          oldWindow.removeWindowListener(listener);
+        }
       }
     }
   }
@@ -201,7 +214,7 @@ public class EditorTracker extends AbstractProjectComponent {
   private List<Editor> editorsByWindow(Window window) {
     List<Editor> list = myWindowToEditorsMap.get(window);
     if (list == null) return Collections.emptyList();
-    List<Editor> filtered = new SmartList<Editor>();
+    List<Editor> filtered = new SmartList<>();
     for (Editor editor : list) {
       if (editor.getContentComponent().isShowing()) {
         filtered.add(editor);
@@ -230,7 +243,7 @@ public class EditorTracker extends AbstractProjectComponent {
   }
 
   private class MyEditorFactoryListener implements EditorFactoryListener {
-    private final Map<Editor, Runnable> myExecuteOnEditorRelease = new HashMap<Editor, Runnable>();
+    private final Map<Editor, Runnable> myExecuteOnEditorRelease = new HashMap<>();
 
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
@@ -262,12 +275,9 @@ public class EditorTracker extends AbstractProjectComponent {
       };
       contentComponent.addFocusListener(focusListener);
 
-      myExecuteOnEditorRelease.put(event.getEditor(), new Runnable() {
-        @Override
-        public void run() {
-          component.removeHierarchyListener(hierarchyListener);
-          contentComponent.removeFocusListener(focusListener);
-        }
+      myExecuteOnEditorRelease.put(event.getEditor(), () -> {
+        component.removeHierarchyListener(hierarchyListener);
+        contentComponent.removeFocusListener(focusListener);
       });
     }
 

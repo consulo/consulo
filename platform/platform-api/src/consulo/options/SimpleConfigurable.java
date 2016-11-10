@@ -17,33 +17,35 @@ package consulo.options;
 
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.UnnamedConfigurable;
+import com.intellij.openapi.util.NotNullComputable;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 22-Sep-16
  */
-public abstract class SimpleConfigurable<T extends JComponent> implements UnnamedConfigurable {
+public abstract class SimpleConfigurable<T extends NotNullComputable<? extends Component>> implements UnnamedConfigurable {
   private T myComponent;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
+  @NotNull
   protected abstract T createPanel();
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract boolean isModified(@NotNull T component);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract void apply(@NotNull T component) throws ConfigurationException;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract void reset(@NotNull T component);
 
   @Nullable
-  public final JComponent getPreferredFocusedComponent(@NotNull T component) {
+  public final Component getPreferredFocusedComponent(@NotNull T component) {
     return null;
   }
 
@@ -54,28 +56,31 @@ public abstract class SimpleConfigurable<T extends JComponent> implements Unname
 
   @Nullable
   // usage if implement Configurable.HoldPreferredFocusedComponent
-  public final JComponent getPreferredFocusedComponent() {
-    if(myComponent != null) {
+  public final Component getPreferredFocusedUIComponent() {
+    if (myComponent != null) {
       return getPreferredFocusedComponent(myComponent);
     }
     return null;
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
-  public final JComponent createComponent() {
-    if (myComponent != null) {
+  public Component createUIComponent() {
+    if (myComponent == null) {
       myComponent = createPanel();
     }
-    return myComponent;
+    return myComponent.compute();
   }
 
   @Override
+  @RequiredUIAccess
   public final boolean isModified() {
     return myComponent != null && isModified(myComponent);
   }
 
   @Override
+  @RequiredUIAccess
   public final void apply() throws ConfigurationException {
     if (myComponent != null) {
       apply(myComponent);
@@ -83,6 +88,7 @@ public abstract class SimpleConfigurable<T extends JComponent> implements Unname
   }
 
   @Override
+  @RequiredUIAccess
   public final void reset() {
     if (myComponent != null) {
       reset(myComponent);
@@ -90,6 +96,7 @@ public abstract class SimpleConfigurable<T extends JComponent> implements Unname
   }
 
   @Override
+  @RequiredUIAccess
   public final void disposeUIResources() {
     if (myComponent != null) {
       disposeUIResources(myComponent);

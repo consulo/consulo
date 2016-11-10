@@ -998,6 +998,10 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="diff-api" exported="" />
           <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="analysis-impl" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="vcs-api" />
         </module-layer>
       </module>
       <module name="platform/diff-api" dirurl="file://$PROJECT_DIR$/platform/diff-api" current-layer="Default">

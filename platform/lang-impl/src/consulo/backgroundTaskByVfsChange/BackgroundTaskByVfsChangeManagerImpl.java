@@ -51,7 +51,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   @NotNull
   private final Project myProject;
 
-  private List<BackgroundTaskByVfsChangeTaskImpl> myTasks = new ArrayList<BackgroundTaskByVfsChangeTaskImpl>();
+  private List<BackgroundTaskByVfsChangeTaskImpl> myTasks = new ArrayList<>();
 
   private Listener myListener;
 
@@ -77,7 +77,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   @NotNull
   @Override
   public List<BackgroundTaskByVfsChangeTask> findTasks(@NotNull VirtualFile virtualFile) {
-    List<BackgroundTaskByVfsChangeTask> list = new ArrayList<BackgroundTaskByVfsChangeTask>();
+    List<BackgroundTaskByVfsChangeTask> list = new ArrayList<>();
     for (BackgroundTaskByVfsChangeTaskImpl task : myTasks) {
       VirtualFile file = task.getVirtualFilePointer().getFile();
       if (file == null) {
@@ -93,7 +93,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   @NotNull
   @Override
   public List<BackgroundTaskByVfsChangeTask> findEnabledTasks(@NotNull VirtualFile virtualFile) {
-    List<BackgroundTaskByVfsChangeTask> list = new ArrayList<BackgroundTaskByVfsChangeTask>();
+    List<BackgroundTaskByVfsChangeTask> list = new ArrayList<>();
     for (BackgroundTaskByVfsChangeTaskImpl task : myTasks) {
       if(!task.isEnabled()) {
         continue;
@@ -163,12 +163,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     BackgroundTaskByVfsChangeTaskImpl task = (BackgroundTaskByVfsChangeTaskImpl)tasks.get(index);
 
     ActionCallback callback = new ActionCallback();
-    callback.doWhenProcessed(new Runnable() {
-      @Override
-      public void run() {
-        call(indicator, file, tasks, index + 1);
-      }
-    });
+    callback.doWhenProcessed(() -> call(indicator, file, tasks, index + 1));
     indicator.setText2("Task: " + task.getName());
     task.run(callback);
   }

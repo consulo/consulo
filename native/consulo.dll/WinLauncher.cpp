@@ -39,6 +39,9 @@ HANDLE hEvent;
 HANDLE hSingleInstanceWatcherThread;
 const int FILE_MAPPING_SIZE = 16000;
 
+#define BOOTCLASSPATH "bootstrap.jar;extensions.jar;util.jar;jdom.jar;log4j.jar;trove4j.jar;jna.jar;jna-platform.jar"
+#define CONSULO_JRE "CONSULO_JRE"
+
 #ifdef _M_X64
 bool need64BitJRE = true;
 #define BITS_STR "64-bit"
@@ -215,7 +218,7 @@ BOOL IsWow64()
 bool LocateJVM()
 {
   bool result;
-  if (FindJVMInEnvVar(LoadStdString(IDS_JDK_ENV_VAR).c_str(), result))
+  if (FindJVMInEnvVar(CONSULO_JRE, result))
   {
     return result;
   }
@@ -320,6 +323,8 @@ std::string CollectLibJars(const std::string& jarList)
     }
     result += libDir;
     result += jarList.substr(pos, delimiterPos - pos);
+
+
     pos = delimiterPos + 1;
   }
   return result;
@@ -327,7 +332,7 @@ std::string CollectLibJars(const std::string& jarList)
 
 std::string BuildClassPath()
 {
-  std::string classpathLibs = LoadStdString(IDS_CLASSPATH_LIBS);
+  std::string classpathLibs = std::string(BOOTCLASSPATH);
   std::string result = CollectLibJars(classpathLibs);
   return result;
 }

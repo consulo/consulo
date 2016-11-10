@@ -36,7 +36,7 @@ import java.io.IOException;
 public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplicationStore {
   private static final Logger LOG = Logger.getInstance(ApplicationStoreImpl.class);
 
-  private static final String DEFAULT_STORAGE_SPEC = StoragePathMacros.APP_CONFIG + "/" + PathManager.DEFAULT_OPTIONS_FILE_NAME + DirectoryStorageData.DEFAULT_EXT;
+  private static final String DEFAULT_STORAGE_SPEC = StoragePathMacros.APP_CONFIG + "/other" + DirectoryStorageData.DEFAULT_EXT;
   private static final String ROOT_ELEMENT_NAME = "application";
 
   private final ApplicationEx2 myApplication;

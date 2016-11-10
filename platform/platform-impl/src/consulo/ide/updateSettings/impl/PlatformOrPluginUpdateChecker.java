@@ -17,27 +17,33 @@ package consulo.ide.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.*;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
+import com.intellij.notification.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.updateSettings.impl.UpdateChecker;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.updateSettings.UpdateChannel;
+import consulo.ide.updateSettings.UpdateSettings;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -46,22 +52,66 @@ import java.util.*;
  */
 @Logger
 public class PlatformOrPluginUpdateChecker {
-  private static final NotificationGroup ourGroup = new NotificationGroup("platformOrPluginUpdate", NotificationDisplayType.STICKY_BALLOON, false);
+  private static final NotificationGroup ourGroup = new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
 
   private static final PluginId ourWinNoJre = PluginId.getId("consulo-win-no-jre");
-  private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
+  private static final PluginId ourWin = PluginId.getId("consulo-win");
+  private static final PluginId ourWin64 = PluginId.getId("consulo-win64");
   private static final PluginId ourLinuxNoJre = PluginId.getId("consulo-linux-no-jre");
+  private static final PluginId ourLinux = PluginId.getId("consulo-linux");
+  private static final PluginId ourLinux64 = PluginId.getId("consulo-linux64");
+  private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
+  private static final PluginId ourMac64 = PluginId.getId("consulo-mac64");
+
+  private static final PluginId[] ourPlatformIds = {ourWinNoJre, ourWin, ourWin64, ourLinuxNoJre, ourLinux, ourLinux64, ourMacNoJre, ourMac64};
 
   @NotNull
   public static PluginId getPlatformPluginId() {
+    boolean isJreBuild = new File(PathManager.getHomePath(), "jre").exists();
+    boolean is64Bit = SystemInfo.is64Bit;
     if (SystemInfo.isWindows) {
-      return ourWinNoJre;
+      return isJreBuild ? (is64Bit ? ourWin64 : ourWin) : ourWinNoJre;
     }
     else if (SystemInfo.isMac) {
-      return ourMacNoJre;
+      return isJreBuild ? ourMac64 : ourMacNoJre;
     }
     else {
-      return ourLinuxNoJre;
+      return isJreBuild ? (is64Bit ? ourLinux64 : ourLinux) : ourLinuxNoJre;
+    }
+  }
+
+  public static boolean isPlatform(@NotNull PluginId pluginId) {
+    return ArrayUtil.contains(pluginId, ourPlatformIds);
+  }
+
+  public static boolean checkNeeded() {
+    UpdateSettings updateSettings = UpdateSettings.getInstance();
+    if (!updateSettings.isEnable()) {
+      return false;
+    }
+
+    final long timeDelta = System.currentTimeMillis() - updateSettings.getLastTimeCheck();
+    return Math.abs(timeDelta) >= DateFormatUtil.DAY;
+  }
+
+  public static ActionCallback updateAndShowResult() {
+    final ActionCallback result = new ActionCallback();
+    final Application app = ApplicationManager.getApplication();
+    final UpdateSettings updateSettings = UpdateSettings.getInstance();
+    if (!updateSettings.isEnable()) {
+      result.setDone();
+      return result;
+    }
+    app.executeOnPooledThread(() -> checkAndNotifyForUpdates(null, false, null).notify(result));
+    return result;
+  }
+
+  public static void showErrorMessage(boolean showErrorDialog, final String failedMessage) {
+    if (showErrorDialog) {
+      UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(failedMessage, IdeBundle.message("title.connection.error")));
+    }
+    else {
+      LOGGER.info(failedMessage);
     }
   }
 
@@ -74,12 +124,26 @@ public class PlatformOrPluginUpdateChecker {
         }
         break;
       case PLATFORM_UPDATE:
-        UpdateChecker.showUpdateResult(targetsForUpdate.getPlugins(), true, true, showResults);
-        break;
-      case PLUGIN_UPDATE:
-        UpdateChecker.showUpdateResult(targetsForUpdate.getPlugins(), true, true, showResults);
+        if (showResults) {
+          showDialog(project, targetsForUpdate);
+        }
+        else {
+          Notification notification =
+                  ourGroup.createNotification(IdeBundle.message("update.available.group"), "Updates available", NotificationType.INFORMATION, null);
+          notification.addAction(new NotificationAction("View updates") {
+            @Override
+            public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+              showDialog(project, targetsForUpdate);
+            }
+          });
+          notification.notify(project);
+        }
         break;
     }
+  }
+
+  private static void showDialog(@Nullable Project project, PlatformOrPluginUpdateResult targetsForUpdate) {
+    new PluginListDialog(project, targetsForUpdate).show();
   }
 
   public static ActionCallback checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {
@@ -106,7 +170,7 @@ public class PlatformOrPluginUpdateChecker {
     String currentBuildNumber = appInfo.getBuild().asString();
 
     List<IdeaPluginDescriptor> remotePlugins = Collections.emptyList();
-    UpdateChannel channel = consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel();
+    UpdateChannel channel = UpdateSettings.getInstance().getChannel();
     try {
       remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel);
     }
@@ -128,7 +192,7 @@ public class PlatformOrPluginUpdateChecker {
           newPlatformPlugin = pluginDescriptor;
 
           // FIXME [VISTALL]  drop it
-          ((PluginNode) pluginDescriptor).setName("Platform");
+          ((PluginNode)pluginDescriptor).setName("Platform");
           break;
         }
       }
@@ -170,18 +234,18 @@ public class PlatformOrPluginUpdateChecker {
         for (final Map.Entry<PluginId, IdeaPluginDescriptor> entry : ourPlugins.entrySet()) {
           final PluginId pluginId = entry.getKey();
 
-          List<IdeaPluginDescriptor> filter = ContainerUtil.filter(remotePlugins, it -> pluginId.equals(it.getPluginId()));
+          IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
-          if (filter.isEmpty()) {
+          if (filtered == null) {
             continue;
           }
 
-          for (IdeaPluginDescriptor filtered : filter) {
-            if (StringUtil.compareVersionNumbers(filtered.getVersion(), entry.getValue().getVersion()) > 0) {
-              updateSettings.myOutdatedPlugins.add(pluginId.toString());
+          if (StringUtil.compareVersionNumbers(filtered.getVersion(), entry.getValue().getVersion()) > 0) {
+            updateSettings.myOutdatedPlugins.add(pluginId.toString());
 
-              targets.add(Couple.of(entry.getValue(), filtered));
-            }
+            processDependencies(filtered, targets, remotePlugins);
+
+            targets.add(Couple.of(entry.getValue(), filtered));
           }
         }
       }
@@ -189,7 +253,7 @@ public class PlatformOrPluginUpdateChecker {
         return PlatformOrPluginUpdateResult.CANCELED;
       }
       catch (Exception e) {
-        UpdateChecker.showErrorMessage(showResults, e.getMessage());
+        showErrorMessage(showResults, e.getMessage());
       }
     }
 
@@ -200,5 +264,22 @@ public class PlatformOrPluginUpdateChecker {
     return targets.isEmpty()
            ? PlatformOrPluginUpdateResult.NO_UPDATE
            : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
+  }
+
+  private static void processDependencies(@NotNull IdeaPluginDescriptor target,
+                                          List<Couple<IdeaPluginDescriptor>> targets,
+                                          List<IdeaPluginDescriptor> remotePlugins) {
+    PluginId[] dependentPluginIds = target.getDependentPluginIds();
+    for (PluginId pluginId : dependentPluginIds) {
+      IdeaPluginDescriptor depPlugin = PluginManager.getPlugin(pluginId);
+      // if plugin is not installed
+      if (depPlugin == null) {
+        IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
+
+        if (filtered != null) {
+          targets.add(Couple.of(null, filtered));
+        }
+      }
+    }
   }
 }

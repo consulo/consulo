@@ -23,7 +23,6 @@ import com.intellij.openapi.diagnostic.ErrorLogger;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.io.MappingFailedException;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -35,8 +34,6 @@ public class DefaultIdeaErrorLogger implements ErrorLogger {
   private static boolean ourOomOccurred = false;
   private static boolean ourLoggerBroken = false;
   private static boolean ourMappingFailedNotificationPosted = false;
-
-  @NonNls private static final String PARAM_PERM_GEN = "PermGen";
 
   @Override
   public boolean canHandle(IdeaLoggingEvent event) {
@@ -83,17 +80,11 @@ public class DefaultIdeaErrorLogger implements ErrorLogger {
   private static void processOOMError(final Throwable throwable) throws InterruptedException, InvocationTargetException {
     ourOomOccurred = true;
 
-    SwingUtilities.invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-        String message = throwable.getMessage();
-        OutOfMemoryDialog.MemoryKind k = message != null && message.contains(PARAM_PERM_GEN)
-                                         ? OutOfMemoryDialog.MemoryKind.PERM_GEN
-                                         : message != null && message.contains("CodeCache")
-                                           ? OutOfMemoryDialog.MemoryKind.CODE_CACHE
-                                           : OutOfMemoryDialog.MemoryKind.HEAP;
-        new OutOfMemoryDialog(k).show();
-      }
+    SwingUtilities.invokeAndWait(() -> {
+      String message = throwable.getMessage();
+      OutOfMemoryDialog.MemoryKind k =
+              message != null && message.contains("CodeCache") ? OutOfMemoryDialog.MemoryKind.CODE_CACHE : OutOfMemoryDialog.MemoryKind.HEAP;
+      new OutOfMemoryDialog(k).show();
     });
   }
 

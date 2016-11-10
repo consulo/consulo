@@ -19,6 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.FList;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +37,8 @@ import static com.intellij.openapi.util.Pair.pair;
  * @author oleg
  * @since 30.09.2010
  */
+@Deprecated
+@DeprecationInfo(value = "Use com.intellij.ui.ColoredListCellRenderer", until = "3.0")
 public abstract class ListCellRendererWrapper<T> implements ListCellRenderer {
   private final ListCellRenderer myDefaultRenderer;
 

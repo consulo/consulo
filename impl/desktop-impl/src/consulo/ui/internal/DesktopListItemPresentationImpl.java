@@ -15,7 +15,7 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.ui.ImageRef;
@@ -32,9 +32,9 @@ import javax.swing.*;
  * some dummy impl
  */
 public class DesktopListItemPresentationImpl<E> implements ListItemPresentation {
-  private ColoredListCellRendererWrapper<E> myRenderer;
+  private ColoredListCellRenderer<E> myRenderer;
 
-  public DesktopListItemPresentationImpl(ColoredListCellRendererWrapper<E> renderer) {
+  public DesktopListItemPresentationImpl(ColoredListCellRenderer<E> renderer) {
     myRenderer = renderer;
   }
 

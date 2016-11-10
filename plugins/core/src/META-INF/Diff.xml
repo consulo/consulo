@@ -41,5 +41,10 @@
 
     <diff.merge.MergeTool implementation="com.intellij.openapi.vcs.changes.patch.tool.ApplyPatchMergeTool"/>
     <diff.DiffTool implementation="com.intellij.openapi.vcs.changes.patch.tool.ApplyPatchDiffTool"/>
+
+    <daemon.highlightInfoFilter implementation="com.intellij.diff.contents.DiffPsiFileSupport$HighlightFilter"/>
+    <daemon.intentionActionFilter implementation="com.intellij.diff.contents.DiffPsiFileSupport$IntentionFilter"/>
+    <defaultHighlightingSettingProvider id="GeneratedSourcesHighlightingSettingProvider"
+                                        implementation="com.intellij.diff.contents.DiffPsiFileSupport$HighlightingSettingProvider"/>
   </extensions>
 </idea-plugin>

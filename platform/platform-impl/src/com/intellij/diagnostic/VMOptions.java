@@ -35,17 +35,14 @@ public class VMOptions {
   private static final Logger LOG = Logger.getInstance("#com.intellij.diagnostic.VMOptions");
 
   @NonNls static final String XMX_OPTION_NAME = "Xmx";
-  @NonNls static final String PERM_GEN_OPTION_NAME = "XX:MaxPermSize";
   @NonNls static final String CODE_CACHE_OPTION_NAME = "XX:ReservedCodeCacheSize";
   @NonNls static final String MAC_ARCH_VM_OPTIONS = SystemInfo.is64Bit ? "VMOptions.x86_64" : "VMOptions.i386";
 
   @NonNls private static final String XMX_OPTION = "-" + XMX_OPTION_NAME;
-  @NonNls private static final String PERM_GEN_OPTION = "-" + PERM_GEN_OPTION_NAME + "=";
   @NonNls private static final String CODE_CACHE_OPTION = "-" + CODE_CACHE_OPTION_NAME + "=";
 
   @NonNls private static final String MEM_SIZE_EXPR = "(\\d*)([a-zA-Z]*)";
   @NonNls private static final Pattern XMX_PATTERN = Pattern.compile(XMX_OPTION + MEM_SIZE_EXPR);
-  @NonNls private static final Pattern PERM_GEN_PATTERN = Pattern.compile(PERM_GEN_OPTION + MEM_SIZE_EXPR);
   @NonNls private static final Pattern CODE_CACHE_PATTERN = Pattern.compile(CODE_CACHE_OPTION + MEM_SIZE_EXPR);
 
   private static String ourTestPath;
@@ -68,16 +65,8 @@ public class VMOptions {
     writeOption(XMX_OPTION, value, XMX_PATTERN);
   }
 
-  public static int readMaxPermGen() {
-    return readOption(PERM_GEN_PATTERN);
-  }
-
   public static int readCodeCache() {
     return readOption(CODE_CACHE_PATTERN);
-  }
-
-  public static void writeMaxPermGen(int value) {
-    writeOption(PERM_GEN_OPTION, value, PERM_GEN_PATTERN);
   }
 
   public static void writeCodeCache(int value) {

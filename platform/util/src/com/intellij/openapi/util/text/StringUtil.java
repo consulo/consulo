@@ -1096,6 +1096,14 @@ public class StringUtil extends StringUtilRt {
     return string.subSequence(0, index + 1);
   }
 
+  @NotNull
+  @Contract(pure = true)
+  public static String trimTrailing(@NotNull String string, char symbol) {
+    int index = string.length() - 1;
+    while (index >= 0 && string.charAt(index) == symbol) index--;
+    return string.substring(0, index + 1);
+  }
+
   @Contract(pure = true)
   public static boolean startsWithChar(@Nullable CharSequence s, char prefix) {
     return s != null && s.length() != 0 && s.charAt(0) == prefix;
@@ -2294,12 +2302,19 @@ public class StringUtil extends StringUtilRt {
   @NotNull
   @Contract(pure = true)
   public static String replace(@NotNull String text, @NotNull String[] from, @NotNull String[] to) {
+    return replace(text, Arrays.asList(from), Arrays.asList(to));
+  }
+
+  @NotNull
+  @Contract(pure = true)
+  public static String replace(@NotNull String text, @NotNull List<String> from, @NotNull List<String> to) {
+    assert from.size() == to.size();
     final StringBuilder result = new StringBuilder(text.length());
     replace:
     for (int i = 0; i < text.length(); i++) {
-      for (int j = 0; j < from.length; j += 1) {
-        String toReplace = from[j];
-        String replaceWith = to[j];
+      for (int j = 0; j < from.size(); j += 1) {
+        String toReplace = from.get(j);
+        String replaceWith = to.get(j);
 
         final int len = toReplace.length();
         if (text.regionMatches(i, toReplace, 0, len)) {

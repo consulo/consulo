@@ -15,22 +15,18 @@
  */
 package com.intellij.openapi.diagnostic;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.util.Consumer;
 
 import java.awt.*;
 
-/**
- * This class should be extended by plugin vendor and provided by means of {@link EP_NAME} if
- * reporting errors that happened in plugin code to vendor is desirable.
- */
 public abstract class ErrorReportSubmitter implements PluginAware {
   private PluginDescriptor myPlugin;
 
   /**
    * Called by the framework. Allows to identify the plugin that provided this extension.
+   *
    * @param plugin
    */
   @Override
@@ -45,29 +41,7 @@ public abstract class ErrorReportSubmitter implements PluginAware {
     return myPlugin;
   }
 
-  /**
-   * This method is called whenever fatal error (aka exception) in plugin code had happened and user decided to report this problem to
-   * plugin vendor.
-   * @param events sequence of the fatal error descriptors. Fatal errors that happened immediately one after another most probably caused
-   * by first one that happened so it's a common practice to submit only first one. Array passed is guaranteed to have at least one element.
-   * @param parentComponent one usually wants to show up a dialog asking user for additional details and probably authentication info.
-   * parentComponent parameter is passed so dialog that would come up would be properly aligned with its parent dialog (IDE Fatal Errors).
-   * @return submission result status.
-   */
-  public abstract SubmittedReportInfo submit(IdeaLoggingEvent[] events, Component parentComponent);
-
-  public void submitAsync(IdeaLoggingEvent[] events,
-                          String additionalInfo,
-                          Component parentComponent,
-                          Consumer<SubmittedReportInfo> consumer) {
-    consumer.consume(submit(events, parentComponent));
-  }
-
-  public boolean trySubmitAsync(IdeaLoggingEvent[] events,
-                                String additionalInfo,
-                                Component parentComponent,
-                                Consumer<SubmittedReportInfo> consumer) {
-    submitAsync(events, additionalInfo, parentComponent, consumer);
+  public boolean trySubmitAsync(IdeaLoggingEvent[] events, String additionalInfo, Component parentComponent, Consumer<SubmittedReportInfo> consumer) {
     return true;
   }
 }

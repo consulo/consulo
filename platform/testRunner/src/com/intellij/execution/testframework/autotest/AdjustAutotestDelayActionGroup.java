@@ -19,9 +19,9 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -45,7 +45,7 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
     if (descriptor != null) {
       for (AnAction action : descriptor.getRestartActions()) {
         if (action instanceof ToggleAutoTestAction) {
-          visible = true;
+          visible = ((ToggleAutoTestAction)action).isDelayApplicable();
           break;
         }
       }

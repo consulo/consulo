@@ -65,7 +65,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
 
   private Future<?> startServerInPooledThread() {
     Application application = ApplicationManager.getApplication();
-    if (application.isUnitTestMode() && !myEnabledInUnitTestMode) {
+    if (application.isUnitTestMode() && !myEnabledInUnitTestMode || application.isCompilerServerMode()) {
       return null;
     }
 

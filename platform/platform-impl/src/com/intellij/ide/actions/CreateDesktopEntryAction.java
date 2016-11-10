@@ -38,16 +38,15 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
-
-import static com.intellij.util.containers.ContainerUtil.newHashMap;
-import static java.util.Arrays.asList;
+import java.util.Arrays;
 
 public class CreateDesktopEntryAction extends DumbAwareAction {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.CreateDesktopEntryAction");
@@ -56,16 +55,18 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     return SystemInfo.isUnix && SystemInfo.hasXdgOpen();
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@NotNull final AnActionEvent event) {
     final boolean enabled = isAvailable();
     final Presentation presentation = event.getPresentation();
     presentation.setEnabled(enabled);
     presentation.setVisible(enabled);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(final AnActionEvent event) {
+  public void actionPerformed(@NotNull final AnActionEvent event) {
     if (!isAvailable()) return;
 
     final Project project = event.getProject();
@@ -83,9 +84,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     });
   }
 
-  public static void createDesktopEntry(@Nullable final Project project,
-                                        @NotNull final ProgressIndicator indicator,
-                                        final boolean globalEntry) {
+  public static void createDesktopEntry(@Nullable final Project project, @NotNull final ProgressIndicator indicator, final boolean globalEntry) {
     if (!isAvailable()) return;
     final double step = (1.0 - indicator.getFraction()) / 3.0;
 
@@ -102,11 +101,9 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
       install(entry, globalEntry);
       indicator.setFraction(indicator.getFraction() + step);
 
-      final String message = ApplicationBundle.message("desktop.entry.success",
-                                                       ApplicationNamesInfo.getInstance().getProductName());
+      final String message = ApplicationBundle.message("desktop.entry.success", ApplicationNamesInfo.getInstance().getProductName());
       if (ApplicationManager.getApplication() != null) {
-        Notifications.Bus
-                .notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Desktop entry created", message, NotificationType.INFORMATION));
+        Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Desktop entry created", message, NotificationType.INFORMATION));
       }
     }
     catch (Exception e) {
@@ -116,10 +113,8 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
       final String message = e.getMessage();
       if (!StringUtil.isEmptyOrSpaces(message)) {
         LOG.warn(e);
-        Notifications.Bus.notify(
-                new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Failed to create desktop entry", message, NotificationType.ERROR),
-                project
-        );
+        Notifications.Bus
+                .notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Failed to create desktop entry", message, NotificationType.ERROR), project);
       }
       else {
         LOG.error(e);
@@ -133,28 +128,23 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   }
 
   private static File prepare() throws IOException {
-    final String homePath = PathManager.getHomePath();
-    assert new File(homePath).isDirectory() : "Invalid home path: '" + homePath + "'";
-    final String binPath = homePath + "/bin";
-    assert new File(binPath).isDirectory() : "Invalid bin path: '" + binPath + "'";
-
+    File distributionDirectory = PathManager.getDistributionDirectory();
     String name = ApplicationNamesInfo.getInstance().getFullProductName();
 
-    final String iconPath = AppUIUtil.findIcon(binPath);
+    final String iconPath = AppUIUtil.findIcon(distributionDirectory.getPath());
     if (iconPath == null) {
-      throw new RuntimeException(ApplicationBundle.message("desktop.entry.icon.missing", binPath));
+      throw new RuntimeException(ApplicationBundle.message("desktop.entry.icon.missing", distributionDirectory.getPath()));
     }
 
-    final String execPath = findScript(binPath);
-    if (execPath == null) {
-      throw new RuntimeException(ApplicationBundle.message("desktop.entry.script.missing", binPath));
+    final File execPath = new File(distributionDirectory, "consulo.sh");
+    if (!execPath.exists()) {
+      throw new RuntimeException(ApplicationBundle.message("desktop.entry.script.missing", distributionDirectory.getPath()));
     }
 
     final String wmClass = AppUIUtil.getFrameClass();
 
-    final String content = ExecUtil.loadTemplate(CreateDesktopEntryAction.class.getClassLoader(), "entry.desktop",
-                                                 newHashMap(asList("$NAME$", "$SCRIPT$", "$ICON$", "$WM_CLASS$"),
-                                                            asList(name, execPath, iconPath, wmClass)));
+    final String content = ExecUtil.loadTemplate(CreateDesktopEntryAction.class.getClassLoader(), "entry.desktop", ContainerUtil
+            .newHashMap(Arrays.asList("$NAME$", "$SCRIPT$", "$ICON$", "$WM_CLASS$"), Arrays.asList(name, execPath.getPath(), iconPath, wmClass)));
 
     final String entryName = wmClass + ".desktop";
     final File entryFile = new File(FileUtil.getTempDirectory(), entryName);
@@ -163,31 +153,13 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     return entryFile;
   }
 
-  @Nullable
-  private static String findScript(String binPath) {
-    String productName = ApplicationNamesInfo.getInstance().getProductName();
-
-    String execPath = binPath + '/' + productName + ".sh";
-    if (new File(execPath).canExecute()) return execPath;
-
-    execPath = binPath + '/' + productName.toLowerCase(Locale.US) + ".sh";
-    if (new File(execPath).canExecute()) return execPath;
-
-    String scriptName = ApplicationNamesInfo.getInstance().getScriptName();
-    execPath = binPath + '/' + scriptName + ".sh";
-    if (new File(execPath).canExecute()) return execPath;
-
-    return null;
-  }
-
   private static void install(File entryFile, boolean globalEntry) throws IOException, ExecutionException, InterruptedException {
     if (globalEntry) {
-      File script = ExecUtil.createTempExecutableScript(
-              "sudo", ".sh", "#!/bin/sh\n" +
-                             "xdg-desktop-menu install --mode system \"" + entryFile.getAbsolutePath() + "\"\n" +
-                             "RV=$?\n" +
-                             "xdg-desktop-menu forceupdate --mode system\n" +
-                             "exit $RV\n");
+      File script = ExecUtil.createTempExecutableScript("sudo", ".sh", "#!/bin/sh\n" +
+                                                                       "xdg-desktop-menu install --mode system \"" + entryFile.getAbsolutePath() + "\"\n" +
+                                                                       "RV=$?\n" +
+                                                                       "xdg-desktop-menu forceupdate --mode system\n" +
+                                                                       "exit $RV\n");
       script.deleteOnExit();
       String prompt = ApplicationBundle.message("desktop.entry.sudo.prompt");
       int result = ExecUtil.sudoAndGetOutput(new GeneralCommandLine(script.getPath()), prompt).getExitCode();

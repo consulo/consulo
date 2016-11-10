@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.intellij.util.ui.table;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.util.Comparing;
@@ -27,60 +26,58 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
+import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.CollectionItemEditor;
+import com.intellij.util.ui.CollectionModelEditor;
 import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
-import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TableModelEditor<T> implements ElementProducer<T> {
+public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItemEditor<T>> {
   private final TableView<T> table;
   private final ToolbarDecorator toolbarDecorator;
 
-  private final ItemEditor<T> itemEditor;
+  private final MyListTableModel model;
 
-  private final MyListTableModel<T> model;
-
-  public TableModelEditor(@NotNull ColumnInfo[] columns, @NotNull ItemEditor<T> itemEditor, @NotNull String emptyText) {
-    this(Collections.<T>emptyList(), columns, itemEditor, emptyText);
+  public TableModelEditor(@NotNull ColumnInfo[] columns, @NotNull CollectionItemEditor<T> itemEditor, @NotNull String emptyText) {
+    this(Collections.emptyList(), columns, itemEditor, emptyText);
   }
 
   /**
    * source will be copied, passed list will not be used directly
    *
-   * Implement {@link DialogItemEditor} instead of {@link ItemEditor} if you want provide dialog to edit.
+   * Implement {@link DialogItemEditor} instead of {@link CollectionItemEditor} if you want provide dialog to edit.
    */
-  public TableModelEditor(@NotNull List<T> items, @NotNull ColumnInfo[] columns, @NotNull ItemEditor<T> itemEditor, @NotNull String emptyText) {
-    this.itemEditor = itemEditor;
+  public TableModelEditor(@NotNull List<T> items, @NotNull ColumnInfo[] columns, @NotNull CollectionItemEditor<T> itemEditor, @NotNull String emptyText) {
+    super(itemEditor);
 
-    model = new MyListTableModel<T>(columns, new ArrayList<T>(items), this);
-    table = new TableView<T>(model);
+    model = new MyListTableModel(columns, new ArrayList<>(items));
+    table = new TableView<>(model);
     table.setDefaultEditor(Enum.class, ComboBoxTableCellEditor.INSTANCE);
     table.setStriped(true);
     table.setEnableAntialiasing(true);
     preferredScrollableViewportHeightInRows(JBTable.PREFERRED_SCROLLABLE_VIEWPORT_HEIGHT_IN_ROWS);
     new TableSpeedSearch(table);
-    if (columns[0].getColumnClass() == Boolean.class && columns[0].getName().isEmpty()) {
+    ColumnInfo firstColumn = columns[0];
+    if ((firstColumn.getColumnClass() == boolean.class || firstColumn.getColumnClass() == Boolean.class) && firstColumn.getName().isEmpty()) {
       TableUtil.setupCheckboxColumn(table.getColumnModel().getColumn(0));
     }
 
-    boolean needTableHeader = false;
+   boolean needTableHeader = false;
     for (ColumnInfo column : columns) {
       if (!StringUtil.isEmpty(column.getName())) {
         needTableHeader = true;
@@ -101,6 +98,7 @@ public class TableModelEditor<T> implements ElementProducer<T> {
     }
   }
 
+  @NotNull
   public TableModelEditor<T> preferredScrollableViewportHeightInRows(int rows) {
     table.setPreferredScrollableViewportSize(new Dimension(200, table.getRowHeight() * rows));
     return this;
@@ -113,17 +111,12 @@ public class TableModelEditor<T> implements ElementProducer<T> {
         T item = table.getSelectedObject();
         if (item != null) {
           Function<T, T> mutator;
-          if (model.isMutable(item)) {
+          if (helper.isMutable(item)) {
             mutator = FunctionUtil.id();
           }
           else {
             final int selectedRow = table.getSelectedRow();
-            mutator = new Function<T, T>() {
-              @Override
-              public T fun(T item) {
-                return model.getMutable(selectedRow, item);
-              }
-            };
+            mutator = item12 -> helper.getMutable(item12, selectedRow);
           }
           ((DialogItemEditor<T>)itemEditor).edit(item, mutator, false);
           table.requestFocus();
@@ -142,23 +135,22 @@ public class TableModelEditor<T> implements ElementProducer<T> {
         @Override
         public void run(AnActionButton button) {
           T item = createElement();
-          ((DialogItemEditor<T>)itemEditor).edit(item, new Function<T, T>() {
-            @Override
-            public T fun(T item) {
-              model.addRow(item);
-              return item;
-            }
+          ((DialogItemEditor<T>)itemEditor).edit(item, item1 -> {
+            model.addRow(item1);
+            return item1;
           }, true);
         }
       });
     }
   }
 
+  @NotNull
   public TableModelEditor<T> disableUpDownActions() {
     toolbarDecorator.disableUpDownActions();
     return this;
   }
 
+  @NotNull
   public TableModelEditor<T> enabled(boolean value) {
     table.setEnabled(value);
     return this;
@@ -168,7 +160,7 @@ public class TableModelEditor<T> implements ElementProducer<T> {
     public abstract void dataChanged(@NotNull ColumnInfo<T, ?> columnInfo, int rowIndex);
 
     @Override
-    public void tableChanged(TableModelEvent e) {
+    public void tableChanged(@NotNull TableModelEvent e) {
     }
   }
 
@@ -183,35 +175,16 @@ public class TableModelEditor<T> implements ElementProducer<T> {
     return model;
   }
 
-  public static abstract class ItemEditor<T> {
-    /**
-     * Used for "copy" and "in place edit" actions.
-     *
-     * You must perform deep clone in case of "add" operation, but in case of "in place edit" you should copy only exposed (via column) properties.
-     */
-    public abstract T clone(@NotNull T item, boolean forInPlaceEditing);
+  public interface DialogItemEditor<T> extends CollectionItemEditor<T> {
+    void edit(@NotNull T item, @NotNull Function<T, T> mutator, boolean isAdd);
 
-    @NotNull
-    /**
-     * Class must have empty constructor.
-     */
-    public abstract Class<T> getItemClass();
+    void applyEdited(@NotNull T oldItem, @NotNull T newItem);
 
-    public boolean isRemovable(@NotNull T item) {
-      return true;
-    }
-  }
-
-  public static abstract class DialogItemEditor<T> extends ItemEditor<T> {
-    public abstract void edit(@NotNull T item, @NotNull Function<T, T> mutator, boolean isAdd);
-
-    public abstract void applyEdited(@NotNull T oldItem, @NotNull T newItem);
-
-    public boolean isEditable(@NotNull T item) {
+    default boolean isEditable(@NotNull T item) {
       return true;
     }
 
-    public boolean isUseDialogToAdd() {
+    default boolean isUseDialogToAdd() {
       return false;
     }
   }
@@ -225,29 +198,25 @@ public class TableModelEditor<T> implements ElementProducer<T> {
     return newItem;
   }
 
-  private static final class MyListTableModel<T> extends ListTableModel<T> {
+  private final class MyListTableModel extends ListTableModel<T> {
     private List<T> items;
-    private final TableModelEditor<T> editor;
-    private final THashMap<T, T> modifiedToOriginal = new THashMap<T, T>();
     private DataChangedListener<T> dataChangedListener;
 
-    public MyListTableModel(@NotNull ColumnInfo[] columns, @NotNull List<T> items, @NotNull TableModelEditor<T> editor) {
+    public MyListTableModel(@NotNull ColumnInfo[] columns, @NotNull List<T> items) {
       super(columns, items);
 
       this.items = items;
-      this.editor = editor;
     }
 
     @Override
     public void setItems(@NotNull List<T> items) {
-      modifiedToOriginal.clear();
       this.items = items;
       super.setItems(items);
     }
 
     @Override
     public void removeRow(int index) {
-      modifiedToOriginal.remove(getItem(index));
+      helper.remove(getItem(index));
       super.removeRow(index);
     }
 
@@ -262,78 +231,12 @@ public class TableModelEditor<T> implements ElementProducer<T> {
             ? !Comparing.strEqual(((String)oldValue), ((String)newValue))
             : !Comparing.equal(oldValue, newValue)) {
 
-          column.setValue(getMutable(rowIndex, item), newValue);
+          column.setValue(helper.getMutable(item, rowIndex), newValue);
           if (dataChangedListener != null) {
             dataChangedListener.dataChanged(column, rowIndex);
           }
         }
       }
-    }
-
-    private T getMutable(int rowIndex, T item) {
-      if (isMutable(item)) {
-        return item;
-      }
-      else {
-        T mutable = editor.itemEditor.clone(item, true);
-        modifiedToOriginal.put(mutable, item);
-        items.set(rowIndex, mutable);
-        return mutable;
-      }
-    }
-
-    private boolean isMutable(T item) {
-      return modifiedToOriginal.containsKey(item);
-    }
-
-    public boolean isModified(@NotNull List<T> oldItems) {
-      if (items.size() != oldItems.size()) {
-        return true;
-      }
-      else {
-        for (int i = 0, size = items.size(); i < size; i++) {
-          if (!items.get(i).equals(oldItems.get(i))) {
-            return true;
-          }
-        }
-      }
-
-      return false;
-    }
-
-    @NotNull
-    public List<T> apply() {
-      if (modifiedToOriginal.isEmpty()) {
-        return items;
-      }
-
-      @SuppressWarnings("unchecked")
-      final ColumnInfo<T, Object>[] columns = getColumnInfos();
-      modifiedToOriginal.forEachEntry(new TObjectObjectProcedure<T, T>() {
-        @Override
-        public boolean execute(T newItem, @Nullable T oldItem) {
-          if (oldItem == null) {
-            // it is added item, we don't need to sync
-            return true;
-          }
-
-          for (ColumnInfo<T, Object> column : columns) {
-            if (column.isCellEditable(newItem)) {
-              column.setValue(oldItem, column.valueOf(newItem));
-            }
-          }
-
-          if (editor.itemEditor instanceof DialogItemEditor) {
-            ((DialogItemEditor<T>)editor.itemEditor).applyEdited(oldItem, newItem);
-          }
-
-          items.set(ContainerUtil.indexOfIdentity(items, newItem), oldItem);
-          return true;
-        }
-      });
-
-      modifiedToOriginal.clear();
-      return items;
     }
   }
 
@@ -355,63 +258,40 @@ public class TableModelEditor<T> implements ElementProducer<T> {
   @NotNull
   public JComponent createComponent() {
     return toolbarDecorator.addExtraAction(
-            new ToolbarDecorator.ElementActionButton(IdeBundle.message("button.copy"), AllIcons.Actions.Copy) {
-              @Override
-              public void actionPerformed(AnActionEvent e) {
-                TableUtil.stopEditing(table);
+      new ToolbarDecorator.ElementActionButton(IdeBundle.message("button.copy"), PlatformIcons.COPY_ICON) {
+        @Override
+        public void actionPerformed(@NotNull AnActionEvent e) {
+          TableUtil.stopEditing(table);
 
-                List<T> selectedItems = table.getSelectedObjects();
-                if (selectedItems.isEmpty()) {
-                  return;
-                }
+          List<T> selectedItems = table.getSelectedObjects();
+          if (selectedItems.isEmpty()) {
+            return;
+          }
 
-                for (T item : selectedItems) {
-                  model.addRow(itemEditor.clone(item, false));
-                }
+          for (T item : selectedItems) {
+            model.addRow(itemEditor.clone(item, false));
+          }
 
-                table.requestFocus();
-                TableUtil.updateScroller(table, false);
-              }
-            }
+          table.requestFocus();
+          TableUtil.updateScroller(table);
+        }
+      }
     ).createPanel();
   }
 
+  @NotNull
   @Override
-  public T createElement() {
-    try {
-      Constructor<T> constructor = itemEditor.getItemClass().getDeclaredConstructor();
-      try {
-        constructor.setAccessible(true);
-      }
-      catch (SecurityException ignored) {
-        return itemEditor.getItemClass().newInstance();
-      }
-      return constructor.newInstance();
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Override
-  public boolean canCreateElement() {
-    return true;
-  }
-
-  public boolean isModified(@NotNull List<T> oldItems) {
-    return model.isModified(oldItems);
+  protected List<T> getItems() {
+    return model.items;
   }
 
   public void selectItem(@NotNull final T item) {
     table.clearSelection();
 
     final Ref<T> ref;
-    if (model.modifiedToOriginal.isEmpty()) {
-      ref = null;
-    }
-    else {
+    if (helper.hasModifiedItems()) {
       ref = Ref.create();
-      model.modifiedToOriginal.forEachEntry(new TObjectObjectProcedure<T, T>() {
+      helper.process(new TObjectObjectProcedure<T, T>() {
         @Override
         public boolean execute(T modified, T original) {
           if (item == original) {
@@ -421,17 +301,44 @@ public class TableModelEditor<T> implements ElementProducer<T> {
         }
       });
     }
+    else {
+      ref = null;
+    }
 
     table.addSelection(ref == null || ref.isNull() ? item : ref.get());
   }
 
   @NotNull
   public List<T> apply() {
-    return model.apply();
+    if (helper.hasModifiedItems()) {
+      @SuppressWarnings("unchecked")
+      final ColumnInfo<T, Object>[] columns = model.getColumnInfos();
+      helper.process(new TObjectObjectProcedure<T, T>() {
+        @Override
+        public boolean execute(T newItem, @NotNull T oldItem) {
+          for (ColumnInfo<T, Object> column : columns) {
+            if (column.isCellEditable(newItem)) {
+              column.setValue(oldItem, column.valueOf(newItem));
+            }
+          }
+
+          if (itemEditor instanceof DialogItemEditor) {
+            ((DialogItemEditor<T>)itemEditor).applyEdited(oldItem, newItem);
+          }
+
+          model.items.set(ContainerUtil.indexOfIdentity(model.items, newItem), oldItem);
+          return true;
+        }
+      });
+    }
+
+    helper.reset(model.items);
+    return model.items;
   }
 
   public void reset(@NotNull List<T> items) {
-    model.setItems(new ArrayList<T>(items));
+    super.reset(items);
+    model.setItems(new ArrayList<>(items));
   }
 
   private class MyRemoveAction implements AnActionButtonRunnable, AnActionButtonUpdater, TableUtil.ItemChecker {
@@ -439,7 +346,7 @@ public class TableModelEditor<T> implements ElementProducer<T> {
     public void run(AnActionButton button) {
       if (TableUtil.doRemoveSelectedItems(table, model, this)) {
         table.requestFocus();
-        TableUtil.updateScroller(table, false);
+        TableUtil.updateScroller(table);
       }
     }
 
@@ -451,12 +358,7 @@ public class TableModelEditor<T> implements ElementProducer<T> {
 
     @Override
     public boolean isEnabled(AnActionEvent e) {
-      for (T item : table.getSelectedObjects()) {
-        if (itemEditor.isRemovable(item)) {
-          return true;
-        }
-      }
-      return false;
+      return areSelectedItemsRemovable(table.getSelectionModel());
     }
   }
 }

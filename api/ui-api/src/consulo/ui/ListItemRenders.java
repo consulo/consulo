@@ -16,19 +16,13 @@
 package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public class ListItemRenders {
-  private static final ListItemRender ourDefaultRender = new ListItemRender() {
-    @Override
-    public void render(@NotNull ListItemPresentation render, int index, @Nullable Object item) {
-      render.append(item == null ? "" : item.toString());
-    }
-  };
+  private static final ListItemRender ourDefaultRender = (render, index, item) -> render.append(item == null ? "" : item.toString());
 
   @SuppressWarnings("unchecked")
   @NotNull

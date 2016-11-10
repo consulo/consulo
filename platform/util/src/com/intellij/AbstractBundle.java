@@ -15,8 +15,8 @@
  */
 package com.intellij;
 
-import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.ConcurrentWeakFactoryMap;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -66,16 +67,16 @@ public abstract class AbstractBundle {
   }
 
   @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-  private static final FactoryMap<ClassLoader, ConcurrentHashMap<String, SoftReference<ResourceBundle>>> ourCache =
-    new ConcurrentWeakFactoryMap<ClassLoader, ConcurrentHashMap<String, SoftReference<ResourceBundle>>>() {
-      @Override
-      protected ConcurrentHashMap<String, SoftReference<ResourceBundle>> create(ClassLoader key) {
-        return new ConcurrentHashMap<String, SoftReference<ResourceBundle>>();
-      }
-    };
+  private static final FactoryMap<ClassLoader, Map<String, SoftReference<ResourceBundle>>> ourCache =
+          new ConcurrentWeakFactoryMap<ClassLoader, Map<String, SoftReference<ResourceBundle>>>() {
+            @Override
+            protected Map<String, SoftReference<ResourceBundle>> create(ClassLoader key) {
+              return ContainerUtil.newConcurrentMap();
+            }
+          };
 
   public static ResourceBundle getResourceBundle(@NotNull String pathToBundle, @NotNull ClassLoader loader) {
-    ConcurrentHashMap<String, SoftReference<ResourceBundle>> map = ourCache.get(loader);
+    Map<String, SoftReference<ResourceBundle>> map = ourCache.get(loader);
     SoftReference<ResourceBundle> reference = map.get(pathToBundle);
     ResourceBundle result = reference == null ? null : reference.get();
     if (result == null) {

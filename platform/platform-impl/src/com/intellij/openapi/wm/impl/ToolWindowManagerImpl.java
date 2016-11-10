@@ -58,7 +58,6 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.switcher.QuickAccessSettings;
 import com.intellij.ui.switcher.SwitchManager;
 import com.intellij.util.*;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
@@ -102,7 +101,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
   private final Map<String, WindowedDecorator> myId2WindowedDecorator;
   private final Map<String, StripeButton> myId2StripeButton;
   private final Map<String, FocusWatcher> myId2FocusWatcher;
-  private final Set<String> myDumbAwareIds = Collections.synchronizedSet(ContainerUtil.<String>newTroveSet());
 
   private final EditorComponentFocusWatcher myEditorComponentFocusWatcher = new EditorComponentFocusWatcher();
   private final MyToolWindowPropertyChangeListener myToolWindowPropertyChangeListener;
@@ -424,30 +422,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     }
     execute(commandsList);
 
-    final DumbService.DumbModeListener dumbModeListener = new DumbService.DumbModeListener() {
-      @Override
-      public void enteredDumbMode() {
-        disableStripeButtons();
-      }
-
-      @Override
-      public void exitDumbMode() {
-        for (final String id : getToolWindowIds()) {
-          getStripeButton(id).setEnabled(true);
-        }
-      }
-    };
-    myProject.getMessageBus().connect().subscribe(DumbService.DUMB_MODE, dumbModeListener);
-
-    StartupManager.getInstance(myProject).registerPostStartupActivity(new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        registerToolWindowsFromBeans();
-        if (DumbService.getInstance(myProject).isDumb()) {
-          disableStripeButtons();
-        }
-      }
-    });
+    StartupManager.getInstance(myProject).registerPostStartupActivity((DumbAwareRunnable)() -> registerToolWindowsFromBeans());
 
     IdeEventQueue.getInstance().addDispatcher(new IdeEventQueue.EventDispatcher() {
       @Override
@@ -461,20 +436,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
         return false;
       }
     }, myProject);
-  }
-
-  private void disableStripeButtons() {
-    for (final String id : getToolWindowIds()) {
-      if (!myDumbAwareIds.contains(id)) {
-        if (isToolWindowVisible(id)) {
-          hideToolWindow(id, true);
-        }
-        StripeButton button = getStripeButton(id);
-        if (button != null) {
-          button.setEnabled(false);
-        }
-      }
-    }
   }
 
   private JComponent createEditorComponent(Project project) {
@@ -797,9 +758,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     }
     ApplicationManager.getApplication().assertIsDispatchThread();
     checkId(id);
-    if (DumbService.getInstance(myProject).isDumb() && !myDumbAwareIds.contains(id)) {
-      return;
-    }
 
     final ArrayList<FinalizableCommand> commandList = new ArrayList<FinalizableCommand>();
     activateToolWindowImpl(id, commandList, forced, autoFocusContents);
@@ -1084,10 +1042,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
       return;
     }
 
-    if (DumbService.getInstance(myProject).isDumb() && !myDumbAwareIds.contains(id)) {
-      return;
-    }
-
     toBeShownInfo.setVisible(true);
     final InternalDecorator decorator = getInternalDecorator(id);
 
@@ -1258,13 +1212,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     myId2StripeButton.put(id, button);
     List<FinalizableCommand> commandsList = new ArrayList<FinalizableCommand>();
     appendAddButtonCmd(button, info, commandsList);
-
-    if (canWorkInDumbMode) {
-      myDumbAwareIds.add(id);
-    }
-    else if (DumbService.getInstance(getProject()).isDumb()) {
-      button.setEnabled(false);
-    }
 
     // If preloaded info is visible or active then we have to show/activate the installed
     // tool window. This step has sense only for windows which are not in the autohide

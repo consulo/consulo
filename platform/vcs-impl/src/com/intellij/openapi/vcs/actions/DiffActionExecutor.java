@@ -16,14 +16,15 @@
 package com.intellij.openapi.vcs.actions;
 
 import com.intellij.diff.DiffContentFactory;
+import com.intellij.diff.DiffContentFactoryEx;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.contents.FileAwareDocumentContent;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.util.DiffUserDataKeys;
+import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -35,8 +36,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vcs.*;
-import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import com.intellij.openapi.vcs.changes.BinaryContentRevision;
+import com.intellij.openapi.vcs.changes.ByteBackedContentRevision;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.diff.DiffProvider;
 import com.intellij.openapi.vcs.diff.ItemLatestState;
@@ -45,9 +46,9 @@ import com.intellij.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import com.intellij.openapi.vcs.impl.VcsBackgroundableActions;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.io.IOException;
 
@@ -70,34 +71,41 @@ public abstract class DiffActionExecutor {
   @Nullable
   protected DiffContent createRemote(final VcsRevisionNumber revisionNumber) throws IOException, VcsException {
     final ContentRevision fileRevision = myDiffProvider.createFileContent(revisionNumber, mySelectedFile);
+    if (fileRevision == null) return null;
+    DiffContentFactoryEx contentFactory = DiffContentFactoryEx.getInstanceEx();
+
+    DiffContent diffContent;
     if (fileRevision instanceof BinaryContentRevision) {
       FilePath filePath = fileRevision.getFile();
       final byte[] content = ((BinaryContentRevision)fileRevision).getBinaryContent();
       if (content == null) return null;
 
-      return DiffContentFactory.getInstance().createBinary(myProject, filePath.getName(), filePath.getFileType(), content);
+      diffContent = contentFactory.createBinary(myProject, content, filePath.getFileType(), filePath.getName());
+    }
+    else if (fileRevision instanceof ByteBackedContentRevision) {
+      byte[] content = ((ByteBackedContentRevision)fileRevision).getContentAsBytes();
+      if (content == null) throw new VcsException("Failed to load content");
+      diffContent = contentFactory.createFromBytes(myProject, content, fileRevision.getFile());
+    }
+    else {
+      String content = fileRevision.getContent();
+      if (content == null) throw new VcsException("Failed to load content");
+      diffContent = contentFactory.create(myProject, content, fileRevision.getFile());
     }
 
-    if (fileRevision != null) {
-      final String content = fileRevision.getContent();
-      if (content == null) {
-        throw new VcsException("Failed to load content");
-      }
-      return FileAwareDocumentContent.create(myProject, content, fileRevision.getFile());
-    }
-    return null;
+    diffContent.putUserData(DiffUserDataKeysEx.REVISION_INFO, Pair.create(fileRevision.getFile(), fileRevision.getRevisionNumber()));
+    return diffContent;
   }
 
   public void showDiff() {
-    final Ref<VcsException> exceptionRef = new Ref<VcsException>();
-    final Ref<DiffRequest> requestRef = new Ref<DiffRequest>();
+    final Ref<VcsException> exceptionRef = new Ref<>();
+    final Ref<DiffRequest> requestRef = new Ref<>();
 
     final Task.Backgroundable task = new Task.Backgroundable(myProject,
                                                              VcsBundle.message("show.diff.progress.title.detailed",
                                                                                mySelectedFile.getPresentableUrl()),
-                                                             true, BackgroundFromStartOption.getInstance()) {
+                                                             true) {
 
-      @Override
       public void run(@NotNull ProgressIndicator indicator) {
         final VcsRevisionNumber revisionNumber = getRevisionNumber();
         try {
@@ -201,7 +209,6 @@ public abstract class DiffActionExecutor {
       myNumber = number;
     }
 
-    @Override
     protected VcsRevisionNumber getRevisionNumber() {
       return myNumber;
     }
@@ -213,7 +220,6 @@ public abstract class DiffActionExecutor {
       super(diffProvider, selectedFile, project, actionKey);
     }
 
-    @Override
     @Nullable
     protected VcsRevisionNumber getRevisionNumber() {
       return myDiffProvider.getCurrentRevision(mySelectedFile);
@@ -228,7 +234,6 @@ public abstract class DiffActionExecutor {
       super(diffProvider, selectedFile, project, actionKey);
     }
 
-    @Override
     protected VcsRevisionNumber getRevisionNumber() {
       final ItemLatestState itemState = myDiffProvider.getLastRevision(mySelectedFile);
       if (itemState == null) {

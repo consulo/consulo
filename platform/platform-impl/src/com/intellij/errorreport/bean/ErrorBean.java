@@ -59,7 +59,7 @@ public class ErrorBean {
   private final boolean appIsInternal;
 
   private String lastAction;
-  private Integer previousException;
+  private String previousException;
   private String message;
   private String stackTrace;
   private String description;
@@ -94,11 +94,11 @@ public class ErrorBean {
     return affectedPluginIds;
   }
 
-  public Integer getPreviousException() {
+  public String getPreviousException() {
     return previousException;
   }
 
-  public void setPreviousException(Integer previousException) {
+  public void setPreviousException(String previousException) {
     this.previousException = previousException;
   }
 

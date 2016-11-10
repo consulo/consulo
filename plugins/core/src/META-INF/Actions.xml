@@ -832,7 +832,7 @@
               icon="AllIcons.Actions.Submit1"/>
       <action id="ChangesView.Move" class="com.intellij.openapi.vcs.changes.actions.MoveChangesToAnotherListAction"
               icon="AllIcons.Actions.MoveToAnotherChangelist"/>
-      <action id="ChangesView.Diff" class="com.intellij.openapi.vcs.changes.actions.ShowDiffAction"
+      <action id="ChangesView.Diff" class="com.intellij.openapi.vcs.changes.actions.diff.ShowDiffAction"
               icon="AllIcons.Actions.Diff"/>
     </group>
 
@@ -933,12 +933,12 @@
 
     <action id="ChangesView.Browse" class="com.intellij.openapi.vcs.changes.actions.BrowseChangesAction"/>
 
-    <action id="Diff.PrevChange" class="com.intellij.openapi.vcs.changes.actions.ShowPrevChangeAction"
+    <action id="Diff.PrevChange" class="com.intellij.openapi.actionSystem.EmptyAction"
             icon="AllIcons.Actions.Prevfile" use-shortcut-of="PreviousTab"/>
-    <action id="Diff.NextChange" class="com.intellij.openapi.vcs.changes.actions.ShowNextChangeAction"
+    <action id="Diff.NextChange" class="com.intellij.openapi.actionSystem.EmptyAction"
             icon="AllIcons.Actions.Nextfile" use-shortcut-of="NextTab"/>
-    <action id="Diff.SelectedChange" class="com.intellij.openapi.vcs.changes.actions.ShowSelectedChangeAction"
-            icon="AllIcons.Actions.ShowAsTree" use-shortcut-of="GotoClass"/>
+    <action id="Diff.SelectedChange" class="com.intellij.openapi.actionSystem.EmptyAction"
+            icon="AllIcons.Actions.ShowAsTree" use-shortcut-of="GotoChangedFile"/>
 
     <group id="EditorGutterVcsPopupMenu">
       <reference ref="Annotate"/>

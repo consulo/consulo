@@ -32,14 +32,17 @@ public class FakeRevision implements ContentRevision {
     myFile = file;
   }
 
+  @Override
   @Nullable
   public String getContent() { return null; }
 
+  @Override
   @NotNull
   public FilePath getFile() {
     return myFile;
   }
 
+  @Override
   @NotNull
   public VcsRevisionNumber getRevisionNumber() {
     return VcsRevisionNumber.NULL;

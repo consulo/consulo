@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -38,14 +39,16 @@ import java.util.List;
 /**
  * The standard {@link StructureViewModel} implementation which is linked to a text editor.
  *
- * @see com.intellij.ide.structureView.TreeBasedStructureViewBuilder#createStructureViewModel(Editor editor)
+ * @see TreeBasedStructureViewBuilder#createStructureViewModel(Editor editor)
  */
 
 public abstract class TextEditorBasedStructureViewModel implements StructureViewModel, ProvidingTreeModel {
   private final Editor myEditor;
   private final PsiFile myPsiFile;
-  private final Disposable myDisposable = Disposer.newDisposable();
   private final List<FileEditorPositionListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private List<ModelListener> myModelListeners = new ArrayList<>(2);
+  private CaretAdapter myEditorCaretListener;
+  private Disposable myEditorCaretListenerDisposable;
 
   /**
    * Creates a structure view model instance linked to a text editor displaying the specified
@@ -70,33 +73,48 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
     myEditor = editor;
     myPsiFile = file;
 
-    if (editor != null) {
-      EditorFactory.getInstance().getEventMulticaster().addCaretListener(new CaretAdapter() {
-        @Override
-        public void caretPositionChanged(CaretEvent e) {
-          if (e.getEditor().equals(myEditor)) {
-            for (FileEditorPositionListener listener : myListeners) {
-              listener.onCurrentElementChanged();
-            }
+    myEditorCaretListener = new CaretAdapter() {
+      @Override
+      public void caretPositionChanged(CaretEvent e) {
+        if (e.getEditor().equals(myEditor)) {
+          for (FileEditorPositionListener listener : myListeners) {
+            listener.onCurrentElementChanged();
           }
         }
-      }, myDisposable);
-    }
+      }
+    };
   }
 
   @Override
   public final void addEditorPositionListener(@NotNull FileEditorPositionListener listener) {
+    if (myEditor != null && myListeners.isEmpty()) {
+      myEditorCaretListenerDisposable = Disposer.newDisposable();
+      EditorFactory.getInstance().getEventMulticaster().addCaretListener(myEditorCaretListener, myEditorCaretListenerDisposable);
+    }
     myListeners.add(listener);
   }
 
   @Override
   public final void removeEditorPositionListener(@NotNull FileEditorPositionListener listener) {
     myListeners.remove(listener);
+    if (myEditor != null && myListeners.isEmpty()) {
+      Disposer.dispose(myEditorCaretListenerDisposable);
+      myEditorCaretListenerDisposable = null;
+    }
   }
 
   @Override
   public void dispose() {
-    Disposer.dispose(myDisposable);
+    if (myEditorCaretListenerDisposable != null) {
+      Disposer.dispose(myEditorCaretListenerDisposable);
+    }
+    myModelListeners.clear();
+  }
+
+  public void fireModelUpdate() {
+    for (ModelListener listener : myModelListeners) {
+      listener.onModelChanged();
+    }
   }
 
   @Override
@@ -137,12 +155,12 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
 
   @Override
   public void addModelListener(@NotNull ModelListener modelListener) {
-
+    myModelListeners.add(modelListener);
   }
 
   @Override
   public void removeModelListener(@NotNull ModelListener modelListener) {
-
+    myModelListeners.remove(modelListener);
   }
 
   /**

@@ -29,7 +29,7 @@ import java.util.Set;
 /**
  * <p>The dirty scope for a version control system. The instance of this interface
  * is passed to implementers of the {@link com.intellij.openapi.vcs.changes.ChangeProvider}
- * interface to the method {@link ChangeProvider#getChanges(VcsDirtyScope, ChangelistBuilder,com.intellij.openapi.progress.ProgressIndicator, ChangeListManagerGate)}.</p>
+ * interface to the method {@link ChangeProvider#getChanges(VcsDirtyScope, ChangelistBuilder, com.intellij.openapi.progress.ProgressIndicator, ChangeListManagerGate)}.</p>
  * <p/>
  * <p>The instance of this class is valid only while the project is valid.</p>
  *
@@ -38,11 +38,11 @@ import java.util.Set;
 public abstract class VcsDirtyScope {
   /**
    * @return a set of content roots affected. The content root
-   *         is considered affected if there is at least one descendant
-   *         dirty file or directory which is under this content root.
+   * is considered affected if there is at least one descendant
+   * dirty file or directory which is under this content root.
    * @see #getRecursivelyDirtyDirectories()
    * @see #getDirtyFiles()
-   * @see com.intellij.openapi.vcs.ProjectLevelVcsManager#getVcsRootFor(com.intellij.openapi.vcs.FilePath) 
+   * @see com.intellij.openapi.vcs.ProjectLevelVcsManager#getVcsRootFor(com.intellij.openapi.vcs.FilePath)
    */
   public abstract Collection<VirtualFile> getAffectedContentRoots();
 
@@ -92,7 +92,7 @@ public abstract class VcsDirtyScope {
    * @param iterator an iterator to invoke
    */
   public abstract void iterate(Processor<FilePath> iterator);
-  
+
   public abstract void iterateExistingInsideScope(Processor<VirtualFile> vf);
 
   public abstract boolean isEmpty();
@@ -110,7 +110,7 @@ public abstract class VcsDirtyScope {
   public Collection<VirtualFile> getAffectedContentRootsWithCheck() {
     return getAffectedContentRoots();
   }
-  
+
   public boolean wasEveryThingDirty() {
     return false;
   }

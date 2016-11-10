@@ -15,7 +15,6 @@
  */
 package consulo.backgroundTaskByVfsChange.ui;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -27,7 +26,6 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
-import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.backgroundTaskByVfsChange.*;
@@ -35,8 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,82 +58,66 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
     myVfsChangePanel = new BackgroundTaskByVfsChangePanel(project);
     myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
 
-    myBoxlist = new CheckBoxList<BackgroundTaskByVfsChangeTask>();
+    myBoxlist = new CheckBoxList<>();
     myBoxlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    myBoxlist.setCheckBoxListListener(new CheckBoxListListener() {
-      @Override
-      public void checkBoxSelectionChanged(int index, boolean value) {
-        BackgroundTaskByVfsChangeTask task = (BackgroundTaskByVfsChangeTask)myBoxlist.getItemAt(index);
-        if (task == null) {
-          return;
-        }
-        task.setEnabled(value);
+    myBoxlist.setCheckBoxListListener((index, value) -> {
+      BackgroundTaskByVfsChangeTask task = (BackgroundTaskByVfsChangeTask)myBoxlist.getItemAt(index);
+      if (task == null) {
+        return;
       }
+      task.setEnabled(value);
     });
-    myBoxlist.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        if (myPrevTask != null) {
-          myVfsChangePanel.applyTo(myPrevTask.getParameters());
-          myPrevTask = null;
-        }
-
-        if (myBoxlist.getItemsCount() == 0 || myBoxlist.getSelectedIndex() == -1) {
-          myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
-          return;
-        }
-        BackgroundTaskByVfsChangeTask task = (BackgroundTaskByVfsChangeTask)myBoxlist.getItemAt(myBoxlist.getSelectedIndex());
-        if (task == null) {
-          myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
-          return;
-        }
-        myVfsChangePanel.reset(task.getParameters());
-        myPrevTask = task;
+    myBoxlist.addListSelectionListener(e -> {
+      if (myPrevTask != null) {
+        myVfsChangePanel.applyTo(myPrevTask.getParameters());
+        myPrevTask = null;
       }
+
+      if (myBoxlist.getItemsCount() == 0 || myBoxlist.getSelectedIndex() == -1) {
+        myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
+        return;
+      }
+      BackgroundTaskByVfsChangeTask task = (BackgroundTaskByVfsChangeTask)myBoxlist.getItemAt(myBoxlist.getSelectedIndex());
+      if (task == null) {
+        myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
+        return;
+      }
+      myVfsChangePanel.reset(task.getParameters());
+      myPrevTask = task;
     });
     myBoxlist.setBorder(null);
     myBoxlist.setPreferredSize(JBUI.size(550, 200));
 
-    final List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders
-            .getProviders(project, virtualFile);
+    final List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders.getProviders(project, virtualFile);
 
     ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myBoxlist);
-    decorator = decorator.setAddActionUpdater(new AnActionButtonUpdater() {
-      @Override
-      public boolean isEnabled(AnActionEvent e) {
-        return !providers.isEmpty();
+    decorator = decorator.setAddActionUpdater(e -> !providers.isEmpty());
+    decorator = decorator.setAddAction(anActionButton -> {
+
+      if (providers.size() > 1) {
+        ListPopupStep<BackgroundTaskByVfsChangeProvider> listPopupStep = new BaseListPopupStep<BackgroundTaskByVfsChangeProvider>("Add", providers) {
+          @NotNull
+          @Override
+          public String getTextFor(BackgroundTaskByVfsChangeProvider value) {
+            return value.getTemplateName();
+          }
+
+          @Override
+          public PopupStep onChosen(final BackgroundTaskByVfsChangeProvider val, boolean finalChoice) {
+            return doFinalStep(() -> add(val));
+          }
+        };
+        ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(listPopupStep);
+        listPopup.show(anActionButton.getPreferredPopupPoint());
       }
-    });
-    decorator = decorator.setAddAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton anActionButton) {
-
-        if (providers.size() > 1) {
-          ListPopupStep<BackgroundTaskByVfsChangeProvider> listPopupStep = new BaseListPopupStep<BackgroundTaskByVfsChangeProvider>("Add", providers) {
-            @NotNull
-            @Override
-            public String getTextFor(BackgroundTaskByVfsChangeProvider value) {
-              return value.getTemplateName();
-            }
-
-            @Override
-            public PopupStep onChosen(final BackgroundTaskByVfsChangeProvider val, boolean finalChoice) {
-              add(val);
-              return FINAL_CHOICE;
-            }
-          };
-          ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(listPopupStep);
-          listPopup.show(anActionButton.getPreferredPopupPoint());
-        }
-        else {
-          add(providers.get(0));
-        }
+      else {
+        add(providers.get(0));
       }
     });
 
     List<BackgroundTaskByVfsChangeTask> originalTasks = BackgroundTaskByVfsChangeManager.getInstance(project).findTasks(virtualFile);
 
-    List<BackgroundTaskByVfsChangeTask> cloneTasks = new ArrayList<BackgroundTaskByVfsChangeTask>(originalTasks.size());
+    List<BackgroundTaskByVfsChangeTask> cloneTasks = new ArrayList<>(originalTasks.size());
     for (BackgroundTaskByVfsChangeTask task : originalTasks) {
       cloneTasks.add(task.clone());
     }
@@ -151,18 +131,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
   }
 
   private void set(List<BackgroundTaskByVfsChangeTask> cloneTasks) {
-    myBoxlist.setItems(cloneTasks, new Function<BackgroundTaskByVfsChangeTask, String>() {
-                         @Override
-                         public String fun(BackgroundTaskByVfsChangeTask backgroundTaskByVfsChangeTask) {
-                           return backgroundTaskByVfsChangeTask.getName();
-                         }
-                       }, new Function<BackgroundTaskByVfsChangeTask, Boolean>() {
-                         @Override
-                         public Boolean fun(BackgroundTaskByVfsChangeTask backgroundTaskByVfsChangeTask) {
-                           return backgroundTaskByVfsChangeTask.isEnabled();
-                         }
-                       }
-    );
+    myBoxlist.setItems(cloneTasks, BackgroundTaskByVfsChangeTask::getName, BackgroundTaskByVfsChangeTask::isEnabled);
   }
 
   private void add(@NotNull BackgroundTaskByVfsChangeProvider provider) {
@@ -186,7 +155,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
 
   @NotNull
   private List<BackgroundTaskByVfsChangeTask> getTasks() {
-    List<BackgroundTaskByVfsChangeTask> list = new ArrayList<BackgroundTaskByVfsChangeTask>();
+    List<BackgroundTaskByVfsChangeTask> list = new ArrayList<>();
     for (int i = 0; i < myBoxlist.getItemsCount(); i++) {
       BackgroundTaskByVfsChangeTask task = (BackgroundTaskByVfsChangeTask)myBoxlist.getItemAt(i);
       list.add(task);

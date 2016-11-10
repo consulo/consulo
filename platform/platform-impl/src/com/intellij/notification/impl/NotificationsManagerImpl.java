@@ -851,6 +851,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
             .setCloseButtonEnabled(buttons == null)
             .setShowCallout(showCallout)
             .setShadow(false)
+            .setAnimationCycle(200)
             .setHideOnClickOutside(hideOnClickOutside)
             .setHideOnAction(hideOnClickOutside)
             .setHideOnKeyOutside(hideOnClickOutside)

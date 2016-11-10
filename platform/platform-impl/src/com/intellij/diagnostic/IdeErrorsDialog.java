@@ -46,7 +46,6 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.HeaderlessTabbedPane;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
@@ -357,7 +356,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       @Override
       public void hyperlinkUpdate(HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          new JetBrainsAccountDialog(getRootPane()).show();
           updateCredentialsPane(getSelectedMessage());
         }
       }
@@ -511,7 +509,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       final ErrorReportSubmitter submitter = getSubmitter(message.getThrowable());
       if (submitter instanceof ITNReporter) {
         myCredentialsPanel.setVisible(true);
-        String userName = ErrorReportConfigurable.getInstance().ITN_LOGIN;
+        String userName = null;
         if (StringUtil.isEmpty(userName)) {
           myCredentialsLabel.setHtmlText(DiagnosticBundle.message("diagnostic.error.report.submit.error.anonymously"));
         }
@@ -559,7 +557,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     String url = null;
     if (message.isSubmitted()) {
       final SubmittedReportInfo info = message.getSubmissionInfo();
-      url = getUrl(info, getSubmitter(throwable) instanceof ITNReporter);
+      url = getUrl(info);
       appendSubmissionInformation(info, text, url);
       text.append(". ");
     }
@@ -591,16 +589,11 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   }
 
   @Nullable
-  public static String getUrl(SubmittedReportInfo info, boolean reportedToJetbrains) {
+  public static String getUrl(SubmittedReportInfo info) {
     if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED || info.getLinkText() == null) {
       return null;
     }
-    if (reportedToJetbrains) {
-      return "http://ea.jetbrains.com/browser/ea_reports/" + info.getLinkText();
-    }
-    else {
-      return info.getURL();
-    }
+    return info.getURL();
   }
 
   private void updateForeignPluginLabel(AbstractMessage message) {
@@ -918,20 +911,17 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         else {
           parentComponent = getContentPane();
         }
-        return submitter.trySubmitAsync(getEvents(logMessage), logMessage.getAdditionalInfo(), parentComponent, new Consumer<SubmittedReportInfo>() {
-          @Override
-          public void consume(final SubmittedReportInfo submittedReportInfo) {
-            logMessage.setSubmitting(false);
-            logMessage.setSubmitted(submittedReportInfo);
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                if (!dialogClosed) {
-                  updateOnSubmit();
-                }
+        return submitter.trySubmitAsync(getEvents(logMessage), logMessage.getAdditionalInfo(), parentComponent, submittedReportInfo -> {
+          logMessage.setSubmitting(false);
+          logMessage.setSubmitted(submittedReportInfo);
+          ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              if (!dialogClosed) {
+                updateOnSubmit();
               }
-            });
-          }
+            }
+          });
         });
       }
       return false;
@@ -981,7 +971,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     if (throwable instanceof MessagePool.TooManyErrorsException || throwable instanceof AbstractMethodError) {
       return null;
     }
-    return ITNReporter.ourInstance;
+    return ITNReporter.ourInternalInstance;
   }
 
   @Override

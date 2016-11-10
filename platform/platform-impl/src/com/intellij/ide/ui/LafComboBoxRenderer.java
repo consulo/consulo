@@ -15,17 +15,18 @@
  */
 package com.intellij.ide.ui;
 
-import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class LafComboBoxRenderer extends ListCellRendererWrapper<UIManager.LookAndFeelInfo> {
+public class LafComboBoxRenderer extends ColoredListCellRenderer<UIManager.LookAndFeelInfo> {
   @Override
-  public void customize(final JList list,
-                        final UIManager.LookAndFeelInfo value,
-                        final int index,
-                        final boolean selected,
-                        final boolean cellHasFocus) {
-    setText(value.getName());
+  protected void customizeCellRenderer(@NotNull JList<? extends UIManager.LookAndFeelInfo> list,
+                                       UIManager.LookAndFeelInfo value,
+                                       int index,
+                                       boolean selected,
+                                       boolean hasFocus) {
+    append(value.getName());
   }
 }

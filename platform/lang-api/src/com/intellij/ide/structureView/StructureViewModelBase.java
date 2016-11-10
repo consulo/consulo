@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@
 package com.intellij.ide.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.Sorter;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
@@ -28,9 +30,14 @@ public class StructureViewModelBase extends TextEditorBasedStructureViewModel {
   private Sorter[] mySorters = Sorter.EMPTY_ARRAY;
   private Class[] mySuitableClasses = null;
 
-  public StructureViewModelBase(@NotNull PsiFile psiFile, @NotNull StructureViewTreeElement root) {
-    super(psiFile);
+  public StructureViewModelBase(@NotNull PsiFile psiFile, @Nullable Editor editor, @NotNull StructureViewTreeElement root) {
+    super(editor, psiFile);
+
     myRoot = root;
+  }
+
+  public StructureViewModelBase(@NotNull PsiFile psiFile, @NotNull StructureViewTreeElement root) {
+    this(psiFile, null, root);
   }
 
   @Override
@@ -39,12 +46,14 @@ public class StructureViewModelBase extends TextEditorBasedStructureViewModel {
     return myRoot;
   }
 
-  public StructureViewModelBase withSorters(Sorter... sorters) {
+  @NotNull
+  public StructureViewModelBase withSorters(@NotNull Sorter... sorters) {
     mySorters = sorters;
     return this;
   }
 
-  public StructureViewModelBase withSuitableClasses(Class... suitableClasses) {
+  @NotNull
+  public StructureViewModelBase withSuitableClasses(@NotNull Class... suitableClasses) {
     mySuitableClasses = suitableClasses;
     return this;
   }

@@ -19,126 +19,52 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.MnemonicHelper;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.DumbAwareRunnable;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.util.DimensionService;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
-import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.openapi.wm.impl.WindowManagerImpl;
-import com.intellij.openapi.wm.impl.status.IdeStatusBarImpl;
-import com.intellij.ui.AppUIUtil;
-import com.intellij.ui.BalloonLayout;
-import com.intellij.ui.BalloonLayoutImpl;
-import com.intellij.util.ui.UIUtil;
-import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
-import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 
-@Deprecated
-@DeprecationInfo("We don't use this implementation")
-public class WelcomeFrame extends JFrame implements IdeFrame, AccessibleContextAccessor {
+public class WelcomeFrame {
   static final String DIMENSION_KEY = "WELCOME_SCREEN";
   private static IdeFrame ourInstance;
-  private final WelcomeScreen myScreen;
-  private final BalloonLayout myBalloonLayout;
-
-  public WelcomeFrame() {
-    JRootPane rootPane = getRootPane();
-    final WelcomeScreen screen = createScreen(rootPane);
-
-    final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
-    setGlassPane(glassPane);
-    glassPane.setVisible(false);
-    setContentPane(screen.getWelcomePanel());
-    setTitle(ApplicationNamesInfo.getInstance().getFullProductName());
-    AppUIUtil.updateWindowIcon(this);
-
-    ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
-      @Override
-      public void projectOpened(Project project) {
-        dispose();
-      }
-    });
-
-    myBalloonLayout = new BalloonLayoutImpl(rootPane, new Insets(8, 8, 8, 8));
-
-    myScreen = screen;
-    setupCloseAction(this);
-    MnemonicHelper.init(this);
-    myScreen.setupFrame(this);
-    Disposer.register(ApplicationManager.getApplication(), new Disposable() {
-      @Override
-      public void dispose() {
-        WelcomeFrame.this.dispose();
-      }
-    });
-  }
 
   public static IdeFrame getInstance() {
     return ourInstance;
   }
 
-  @Override
-  public void dispose() {
-    saveLocation(getBounds());
-
-    super.dispose();
-
-    Disposer.dispose(myScreen);
-
-    resetInstance();
-  }
-
-  private static void saveLocation(Rectangle location) {
+  public static void saveLocation(Rectangle location) {
     Point middle = new Point(location.x + location.width / 2, location.y = location.height / 2);
-    DimensionService.getInstance().setLocation(DIMENSION_KEY, middle, null);
+    DimensionService.getInstance().setLocationNoRealKey(WelcomeFrame.DIMENSION_KEY, middle);
   }
 
   static void setupCloseAction(final JFrame frame) {
     frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    frame.addWindowListener(
-            new WindowAdapter() {
-              public void windowClosing(final WindowEvent e) {
-                frame.dispose();
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(final WindowEvent e) {
+        WelcomeFrame.saveLocation(frame.getBounds());
 
-                if (ProjectManager.getInstance().getOpenProjects().length == 0) {
-                  ApplicationManagerEx.getApplicationEx().exit();
-                }
-              }
-            }
-    );
-  }
+        frame.dispose();
 
-  public static void clearRecents() {
-    if (ourInstance != null) {
-      if (ourInstance instanceof WelcomeFrame) {
-        WelcomeScreen screen = ((WelcomeFrame)ourInstance).myScreen;
-        // todo clear recent projects
+        if (ProjectManager.getInstance().getOpenProjects().length == 0) {
+          ApplicationManagerEx.getApplicationEx().exit();
+        }
       }
-    }
-  }
-
-  private static WelcomeScreen createScreen(JRootPane rootPane) {
-    WelcomeScreen screen = null;
-
-    return screen = new NewWelcomeScreen();
+    });
   }
 
   public static void resetInstance() {
@@ -147,7 +73,7 @@ public class WelcomeFrame extends JFrame implements IdeFrame, AccessibleContextA
 
   public static void showNow() {
     if (ourInstance == null) {
-      IdeFrame         frame = new FlatWelcomeFrame();
+      IdeFrame frame = new FlatWelcomeFrame();
       ((JFrame)frame).setVisible(true);
       ourInstance = frame;
     }
@@ -167,51 +93,7 @@ public class WelcomeFrame extends JFrame implements IdeFrame, AccessibleContextA
     }, ModalityState.NON_MODAL);
   }
 
-  @Override
-  public StatusBar getStatusBar() {
-    Container pane = getContentPane();
-    //noinspection ConstantConditions
-    return pane instanceof JComponent ? UIUtil.findComponentOfType((JComponent)pane, IdeStatusBarImpl.class) : null;
-  }
-
-  @Override
-  public BalloonLayout getBalloonLayout() {
-    return myBalloonLayout;
-  }
-
-  @Override
-  public Rectangle suggestChildFrameBounds() {
-    return getBounds();
-  }
-
-  @Nullable
-  @Override
-  public Project getProject() {
-    return ProjectManager.getInstance().getDefaultProject();
-  }
-
-  @Override
-  public void setFrameTitle(String title) {
-    setTitle(title);
-  }
-
-  @Override
-  public void setFileTitle(String fileTitle, File ioFile) {
-    setTitle(fileTitle);
-  }
-
-  @Override
-  public IdeRootPaneNorthExtension getNorthExtension(String key) {
-    return null;
-  }
-
-  @Override
-  public JComponent getComponent() {
-    return getRootPane();
-  }
-
-  @Override
-  public AccessibleContext getCurrentAccessibleContext() {
-    return accessibleContext;
+  public static boolean isFromWelcomeFrame(@NotNull AnActionEvent e) {
+    return e.getPlace() == ActionPlaces.WELCOME_SCREEN;
   }
 }

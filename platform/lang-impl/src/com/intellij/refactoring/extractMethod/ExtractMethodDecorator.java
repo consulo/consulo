@@ -19,5 +19,5 @@ package com.intellij.refactoring.extractMethod;
  * @author oleg
  */
 public interface ExtractMethodDecorator {
-  String createMethodPreview(String methodName, AbstractVariableData[] variableDatas);
+  String createMethodSignature(String methodName, AbstractVariableData[] variableDatas);
 }

@@ -17,6 +17,8 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +28,7 @@ import javax.swing.*;
 
 /**
  * Named component which provides a configuration user interface.
- *
+ * <p>
  * <p><p>
  * Use {@code com.intellij.projectConfigurable} and {@code com.intellij.applicationConfigurable} extensions to provide items for
  * "Project Settings" and "IDE Settings" groups correspondingly in the "Settings" dialog. There are two ways to declare such extension:
@@ -48,6 +50,7 @@ import javax.swing.*;
  * </ul>
  *
  * @see SearchableConfigurable
+ * @see consulo.options.SimpleConfigurable
  */
 @ArrayFactoryFields
 public interface Configurable extends UnnamedConfigurable {
@@ -71,7 +74,8 @@ public interface Configurable extends UnnamedConfigurable {
    * @return the help topic, or null if no help is available.
    */
   @Nullable
-  @NonNls String getHelpTopic();
+  @NonNls
+  String getHelpTopic();
 
   /**
    * @deprecated this marker interface was used to hide a Configurable declared as applicationConfigurable or projectConfigurable extension
@@ -102,6 +106,15 @@ public interface Configurable extends UnnamedConfigurable {
 
   interface HoldPreferredFocusedComponent {
     @Nullable
-    JComponent getPreferredFocusedComponent();
+    @RequiredUIAccess
+    default JComponent getPreferredFocusedComponent() {
+      return null;
+    }
+
+    @RequiredUIAccess
+    @Nullable
+    default Component getPreferredFocusedUIComponent() {
+      return null;
+    }
   }
 }
