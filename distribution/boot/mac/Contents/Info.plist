@@ -34,37 +34,31 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleIdentifier</key>
-    <string>org.mustbe.consulo</string>
+    <string>consulo</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleGetInfoString</key>
-    <string>Consulo 1. Copyright consulo.io, (c) 2013-2016</string>
+    <string>Consulo. Copyright consulo.io, (c) 2013-2016</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0</string>
+    <string>2.0</string>
     <key>CFBundleVersion</key>
-    <string>1.0</string>
+    <string>2.0</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.developer-tools</string>
     <key>CFBundleHelpBookName</key>
-    <string>JetBrains.IJ.help</string>
+    <string>Consulo.help</string>
     <key>CFBundleHelpBookFolder</key>
-    <string>IJ.help</string>
-
+    <string>Consulo.help</string>
     <key>NSHighResolutionCapable</key>
     <true/>
-
     <key>NSSupportsAutomaticGraphicsSwitching</key>
     <true/>
-
     <key>LSArchitecturePriority</key>
     <array><string>x86_64</string></array>
-
     <key>LSRequiresNativeExecution</key>
     <string>YES</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.9</string>
-
-
       <key>CFBundleURLTypes</key>
       <array>
         <dict>
