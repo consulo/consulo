@@ -11,11 +11,14 @@
 
 @interface Launcher : NSObject {
     int argc;
-    char **argv;
+    char** argv;
+    NSString* myPropertiesFile;
+    NSString* myVmOptionsFile;
+    NSString* myWorkingDirectory;
 }
-- (id)initWithArgc:(int)anArgc argv:(char **)anArgv;
+- (id)initWithArgc:(int)anArgc argv:(char**)anArgv workDirectory:(NSString*)anWorkDirectory propertiesFile:(NSString*)anPropertiesFile vmOptionsFile:(NSString*)anVmOptionsFile;
 
-BOOL validationJavaVersion();
+BOOL validationJavaVersion(NSString* workingDirectory);
 
-- (void) launch;
+- (void)launch;
 @end

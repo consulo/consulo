@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/AppLauncher.iml" filepath="$PROJECT_DIR$/.idea/AppLauncher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/dylibConsulo.iml" filepath="$PROJECT_DIR$/.idea/dylibConsulo.iml" />
     </modules>
   </component>
 </project>
-
