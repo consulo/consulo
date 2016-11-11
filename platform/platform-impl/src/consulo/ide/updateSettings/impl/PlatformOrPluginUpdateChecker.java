@@ -123,6 +123,7 @@ public class PlatformOrPluginUpdateChecker {
           ourGroup.createNotification(IdeBundle.message("update.available.group"), "There no updates", NotificationType.INFORMATION, null).notify(project);
         }
         break;
+      case PLUGIN_UPDATE:
       case PLATFORM_UPDATE:
         if (showResults) {
           showDialog(project, targetsForUpdate);
