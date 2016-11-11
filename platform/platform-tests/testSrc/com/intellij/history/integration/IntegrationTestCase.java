@@ -67,8 +67,8 @@ public abstract class IntegrationTestCase extends PlatformTestCase {
   }
 
   @Override
-  protected File getIprFile() throws IOException {
-    return new File(createTempDirectory(), "test.ipr");
+  protected File getTempProjectDir() throws IOException {
+    return createTempDirectory();
   }
 
   protected void setUpInWriteAction() throws Exception {

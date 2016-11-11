@@ -25,7 +25,7 @@ import java.io.IOException;
 
 public class ProjectStoreImplIdeaDirTest extends ProjectStoreBaseTestCase {
   @Override
-  protected File getIprFile() throws IOException {
+  protected File getTempProjectDir() throws IOException {
     final File projectDir = FileUtil.createTempDirectory(getTestName(true), "project");
     File ideaDir = new File(projectDir, Project.DIRECTORY_STORE_FOLDER);
     assertTrue(ideaDir.mkdir() || ideaDir.isDirectory());

@@ -17,7 +17,6 @@
 package com.intellij.testFramework.fixtures.impl;
 
 import com.intellij.ide.IdeView;
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -75,7 +74,6 @@ import java.util.Set;
 class HeavyIdeaTestFixtureImpl extends BaseFixture implements HeavyIdeaTestFixture {
 
   @NonNls private static final String PROJECT_FILE_PREFIX = "temp";
-  @NonNls private static final String PROJECT_FILE_SUFFIX = ProjectFileType.DOT_DEFAULT_EXTENSION;
 
   private Project myProject;
   private final Set<File> myFilesToDelete = new HashSet<File>();
@@ -145,16 +143,16 @@ class HeavyIdeaTestFixtureImpl extends BaseFixture implements HeavyIdeaTestFixtu
     new WriteCommandAction.Simple(null) {
       @Override
       protected void run() throws Throwable {
-        File projectFile = FileUtil.createTempFile(myName+"_", PROJECT_FILE_SUFFIX);
-        FileUtil.delete(projectFile);
-        myFilesToDelete.add(projectFile);
+        File projectDir = FileUtil.createTempDirectory(myName + "_", "project");
+        FileUtil.delete(projectDir);
+        myFilesToDelete.add(projectDir);
 
-        LocalFileSystem.getInstance().refreshAndFindFileByIoFile(projectFile);
+        LocalFileSystem.getInstance().refreshAndFindFileByIoFile(projectDir);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        new Throwable(projectFile.getPath()).printStackTrace(new PrintStream(buffer));
-        myProject = PlatformTestCase.createProject(projectFile, buffer.toString());
+        new Throwable(projectDir.getPath()).printStackTrace(new PrintStream(buffer));
+        myProject = PlatformTestCase.createProject(projectDir, buffer.toString());
 
-        for (ModuleFixtureBuilder moduleFixtureBuilder: myModuleFixtureBuilders) {
+        for (ModuleFixtureBuilder moduleFixtureBuilder : myModuleFixtureBuilders) {
           moduleFixtureBuilder.getFixture().setUp();
         }
 

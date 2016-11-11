@@ -16,7 +16,6 @@
 package com.intellij.testFramework;
 
 import com.intellij.history.integration.LocalHistoryImpl;
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.IdeaLogger;
@@ -176,9 +175,9 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     myProjectManager = ProjectManagerEx.getInstanceEx();
     assertNotNull("Cannot instantiate ProjectManager component", myProjectManager);
 
-    File projectFile = getIprFile();
+    File tempProjectDir = getTempProjectDir();
 
-    myProject = doCreateProject(projectFile);
+    myProject = doCreateProject(tempProjectDir);
     myProjectManager.openTestProject(myProject);
     LocalFileSystem.getInstance().refreshIoFiles(myFilesToDelete);
 
@@ -189,8 +188,8 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     runStartupActivities();
   }
 
-  protected Project doCreateProject(File projectFile) throws Exception {
-    return createProject(projectFile, getClass().getName() + "." + getName());
+  protected Project doCreateProject(File projectDir) throws Exception {
+    return createProject(projectDir, getClass().getName() + "." + getName());
   }
 
   @NotNull
@@ -237,10 +236,8 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     startupManager.runPostStartupActivities();
   }
 
-  protected File getIprFile() throws IOException {
-    File tempFile = FileUtil.createTempFile(getName() + "_", ProjectFileType.DOT_DEFAULT_EXTENSION);
-    myFilesToDelete.add(tempFile);
-    return tempFile;
+  protected File getTempProjectDir() throws IOException {
+    return createTempDirectory();
   }
 
   protected void setUpModule() {

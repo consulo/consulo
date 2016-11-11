@@ -4,7 +4,6 @@ import com.intellij.ProjectTopics;
 import com.intellij.compiler.impl.CompileDriver;
 import com.intellij.compiler.impl.ExitStatus;
 import consulo.compiler.server.BuildManager;
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.PathManagerEx;
@@ -351,13 +350,12 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
       //todo[nik] reuse code from PlatformTestCase
       final VirtualFile baseDir = myProject.getBaseDir();
       Assert.assertNotNull(baseDir);
-      final File moduleFile = new File(baseDir.getPath().replace('/', File.separatorChar), moduleName + ModuleFileType.DOT_DEFAULT_EXTENSION);
-      PlatformTestCase.myFilesToDelete.add(moduleFile);
+      final File moduleDir = new File(baseDir.getPath().replace('/', File.separatorChar), moduleName);
       return new WriteAction<Module>() {
         @Override
         protected void run(Result<Module> result) throws Throwable {
           Module module = ModuleManager.getInstance(myProject)
-            .newModule(FileUtil.toSystemIndependentName(moduleFile.getAbsolutePath()));
+            .newModule(FileUtil.toSystemIndependentName(moduleDir.getAbsolutePath()));
           module.getModuleFile();
           result.setResult(module);
         }

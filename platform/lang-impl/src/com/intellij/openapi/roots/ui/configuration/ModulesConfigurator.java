@@ -474,7 +474,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
           moduleBuilder.setName(wizard.getProjectName());
         }
         if (moduleBuilder.getModuleDirPath() == null) {
-          moduleBuilder.setModuleDirPath(wizard.getModuleFilePath());
+          moduleBuilder.setModuleDirPath(wizard.getModuleDirPath());
         }
       }
       if (!builder.validate(myProject, myProject)) {

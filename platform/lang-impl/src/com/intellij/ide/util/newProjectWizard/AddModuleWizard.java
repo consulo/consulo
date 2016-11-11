@@ -21,7 +21,6 @@
 package com.intellij.ide.util.newProjectWizard;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.util.newProjectWizard.modes.ImportMode;
 import com.intellij.ide.util.newProjectWizard.modes.WizardMode;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
@@ -345,8 +344,8 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
   }
 
   @NonNls
-  public String getModuleFilePath() {
-    return myWizardContext.getProjectFileDirectory() + File.separator + myWizardContext.getProjectName() + ModuleFileType.DOT_DEFAULT_EXTENSION;
+  public String getModuleDirPath() {
+    return myWizardContext.getProjectFileDirectory() + File.separator + myWizardContext.getProjectName();
   }
 
   public ProjectBuilder getProjectBuilder() {
