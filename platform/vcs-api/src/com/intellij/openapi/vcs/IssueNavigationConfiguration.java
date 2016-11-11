@@ -34,17 +34,11 @@ import java.util.regex.Pattern;
  * @author yole
  */
 @State(
-  name = "IssueNavigationConfiguration",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.PROJECT_FILE
-    )
-    ,@Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml", scheme = StorageScheme.DIRECTORY_BASED)
-    }
-)
+        name = "IssueNavigationConfiguration",
+        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class IssueNavigationConfiguration implements PersistentStateComponent<IssueNavigationConfiguration> {
   @NonNls private static final Pattern ourHtmlPattern =
-    Pattern.compile("(http:|https:)\\/\\/([^\\s()](?!&(gt|lt|nbsp)+;))+[^\\p{Pe}\\p{Pc}\\p{Pd}\\p{Ps}\\p{Po}\\s]/?");
+          Pattern.compile("(http:|https:)\\/\\/([^\\s()](?!&(gt|lt|nbsp)+;))+[^\\p{Pe}\\p{Pc}\\p{Pd}\\p{Ps}\\p{Po}\\s]/?");
 
   public static IssueNavigationConfiguration getInstance(Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetService(project, IssueNavigationConfiguration.class);
@@ -89,23 +83,23 @@ public class IssueNavigationConfiguration implements PersistentStateComponent<Is
       if (!(o instanceof LinkMatch)) {
         return 0;
       }
-      LinkMatch rhs = (LinkMatch) o;
+      LinkMatch rhs = (LinkMatch)o;
       return myRange.getStartOffset() - rhs.getRange().getStartOffset();
     }
   }
 
   public List<LinkMatch> findIssueLinks(String text) {
     final List<LinkMatch> result = new ArrayList<LinkMatch>();
-    for(IssueNavigationLink link: myLinks) {
+    for (IssueNavigationLink link : myLinks) {
       Pattern issuePattern = link.getIssuePattern();
       Matcher m = issuePattern.matcher(text);
-      while(m.find()) {
+      while (m.find()) {
         String replacement = issuePattern.matcher(m.group(0)).replaceFirst(link.getLinkRegexp());
         addMatch(result, new TextRange(m.start(), m.end()), replacement);
       }
     }
     Matcher m = ourHtmlPattern.matcher(text);
-    while(m.find()) {
+    while (m.find()) {
       addMatch(result, new TextRange(m.start(), m.end()), m.group());
     }
     Collections.sort(result);
@@ -113,7 +107,7 @@ public class IssueNavigationConfiguration implements PersistentStateComponent<Is
   }
 
   private static void addMatch(final List<LinkMatch> result, final TextRange range, final String replacement) {
-    for (Iterator<LinkMatch> iterator = result.iterator(); iterator.hasNext();) {
+    for (Iterator<LinkMatch> iterator = result.iterator(); iterator.hasNext(); ) {
       LinkMatch oldMatch = iterator.next();
       if (range.contains(oldMatch.getRange())) {
         iterator.remove();

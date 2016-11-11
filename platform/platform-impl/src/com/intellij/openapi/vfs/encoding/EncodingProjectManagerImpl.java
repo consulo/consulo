@@ -57,7 +57,7 @@ import java.util.*;
 
 @State(
         name = "Encoding",
-        storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
+        storages = {
                 @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/encodings.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class EncodingProjectManagerImpl extends EncodingProjectManager implements PersistentStateComponent<Element> {
   @NonNls private static final String PROJECT_URL = "PROJECT";

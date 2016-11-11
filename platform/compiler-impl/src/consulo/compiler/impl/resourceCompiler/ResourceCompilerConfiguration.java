@@ -53,7 +53,7 @@ import java.util.StringTokenizer;
 @ProjectService
 @State(
   name = "ResourceCompilerConfiguration",
-  storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
+  storages = {
     @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
   public static final String RESOURCE_EXTENSIONS = "resourceExtensions";

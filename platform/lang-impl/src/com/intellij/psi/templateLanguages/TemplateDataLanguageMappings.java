@@ -34,7 +34,6 @@ import java.util.List;
 @State(
     name = "TemplateDataLanguageMappings",
     storages = {
-        @Storage( file = StoragePathMacros.PROJECT_FILE),
         @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/templateLanguages.xml", scheme = StorageScheme.DIRECTORY_BASED)
 })
 public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Language> {

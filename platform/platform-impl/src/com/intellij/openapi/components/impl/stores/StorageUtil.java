@@ -345,6 +345,6 @@ public class StorageUtil {
   }
 
   public static boolean isProjectOrModuleFile(@NotNull String fileSpec) {
-    return StoragePathMacros.PROJECT_FILE.equals(fileSpec) || fileSpec.startsWith(StoragePathMacros.PROJECT_CONFIG_DIR) || fileSpec.equals(StoragePathMacros.MODULE_FILE);
+    return fileSpec.startsWith(StoragePathMacros.PROJECT_CONFIG_DIR) || fileSpec.equals(StoragePathMacros.MODULE_FILE);
   }
 }

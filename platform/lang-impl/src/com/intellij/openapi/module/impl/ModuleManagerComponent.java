@@ -41,12 +41,8 @@ import java.lang.reflect.Method;
  */
 @Logger
 @State(
-  name = ModuleManagerImpl.COMPONENT_NAME,
-  storages = {
-    @Storage( file = StoragePathMacros.PROJECT_FILE)
-   ,@Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml", scheme = StorageScheme.DIRECTORY_BASED)
-    }
-)
+        name = ModuleManagerImpl.COMPONENT_NAME,
+        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ModuleManagerComponent extends ModuleManagerImpl {
   private final ProgressManager myProgressManager;
   private final MessageBusConnection myConnection;
@@ -83,7 +79,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
   @Override
   protected void fireModulesAdded() {
-    if(ApplicationManager.getApplication().isCompilerServerMode()) {
+    if (ApplicationManager.getApplication().isCompilerServerMode()) {
       for (final Module module : myModuleModel.getModules()) {
         fireModuleAdded(module);
       }

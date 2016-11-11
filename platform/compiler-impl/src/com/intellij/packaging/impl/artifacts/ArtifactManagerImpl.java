@@ -50,7 +50,6 @@ import java.util.*;
 @State(
     name = "ArtifactManager",
     storages = {
-        @Storage( file = StoragePathMacros.PROJECT_FILE),
         @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/artifacts/", scheme = StorageScheme.DIRECTORY_BASED, stateSplitter = ArtifactManagerStateSplitter.class)
     }
 )
