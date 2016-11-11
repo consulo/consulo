@@ -24,18 +24,16 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author dsl
  */
-public interface ModuleExtensionWithSdkOrderEntry extends SdkOrderEntry, OrderEntry, OrderEntryWithTracking {
+public interface ModuleExtensionWithSdkOrderEntry extends OrderEntry, OrderEntryWithTracking {
   @NotNull
   String getModuleExtensionId();
 
   @Nullable
   ModuleExtensionWithSdk<?> getModuleExtension();
 
-  @Override
   @Nullable
   Sdk getSdk();
 
-  @Override
   @Nullable
   String getSdkName();
 }
