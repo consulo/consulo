@@ -83,8 +83,7 @@ public abstract class XExecutionStack {
    * so it should return quickly
    * @param container callback
    */
-  public void computeStackFrames(XStackFrameContainer container) {
-  }
+  public abstract void computeStackFrames(XStackFrameContainer container);
 
   public interface XStackFrameContainer extends Obsolescent, XValueCallback {
     /**

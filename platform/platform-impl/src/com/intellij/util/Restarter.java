@@ -16,7 +16,6 @@
 package com.intellij.util;
 
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.StreamUtil;
