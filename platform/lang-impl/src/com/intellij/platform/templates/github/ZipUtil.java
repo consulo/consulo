@@ -8,6 +8,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.Producer;
+import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.io.Outcome;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -26,7 +26,7 @@ import consulo.annotations.DeprecationInfo;
  * @author peter
  */
 @Deprecated
-@DeprecationInfo(value = "Use com.intellij.util.ObjectUtil", until = "1.0")
+@DeprecationInfo(value = "Use com.intellij.util.ObjectUtil")
 public class ObjectUtils {
   private ObjectUtils() {
   }

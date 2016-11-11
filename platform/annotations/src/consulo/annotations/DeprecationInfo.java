@@ -26,5 +26,8 @@ import java.lang.annotation.*;
 public @interface DeprecationInfo {
   String value();
 
+  /**
+   * @return version or date (for date pattern is yyyy-MM-dd)
+   */
   String until() default "0.0";
 }

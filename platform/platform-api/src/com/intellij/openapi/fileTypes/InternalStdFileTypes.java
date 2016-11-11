@@ -18,7 +18,7 @@ package com.intellij.openapi.fileTypes;
 import consulo.annotations.DeprecationInfo;
 
 @Deprecated
-@DeprecationInfo(value = "Platform should not known about plugin file types", until = "1.0")
+@DeprecationInfo(value = "Platform should not known about plugin file types")
 public class InternalStdFileTypes {
   private InternalStdFileTypes() { }
 

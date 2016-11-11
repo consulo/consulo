@@ -24,7 +24,7 @@ import java.io.IOException;
  * @author max
  */
 @Deprecated
-@DeprecationInfo(value = "Please regenerate lexer with new skeleton, avoid using IDEA jflex skeleton", until = "2.0")
+@DeprecationInfo(value = "Please regenerate lexer with new skeleton, avoid using IDEA jflex skeleton")
 public interface FlexLexer {
   void yybegin(int state);
   int yystate();

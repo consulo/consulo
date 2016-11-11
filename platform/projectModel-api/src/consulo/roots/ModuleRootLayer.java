@@ -163,8 +163,7 @@ public interface ModuleRootLayer {
    */
   @NotNull
   @Deprecated
-  @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()",
-                   until = "2.0")
+  @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()")
   String[] getSourceRootUrls(boolean includingTests);
 
   /**
