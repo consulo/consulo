@@ -135,12 +135,7 @@ public class Restarter {
   private static void restartOnMac(@NotNull final String... beforeRestart) throws IOException {
     File distributionDirectory = PathManager.getDistributionDirectory();
 
-    File contentsDirectory = distributionDirectory.getParentFile();
-    if (!Comparing.equal("Contents", contentsDirectory.getName())) {
-      throw new IOException("Parent directory is not 'Contents': " + contentsDirectory.getPath());
-    }
-
-    File appDirectory = contentsDirectory.getParentFile();
+    File appDirectory = distributionDirectory.getParentFile();
     if (!StringUtil.endsWithIgnoreCase(appDirectory.getName(), ".app")) {
       throw new IOException("Application bundle not found: " + appDirectory.getPath());
     }
