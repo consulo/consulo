@@ -18,6 +18,7 @@ package com.intellij.openapi.util.io.win32;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.lang.UrlClassLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,38 +33,21 @@ import java.util.Arrays;
  * @since 12.0
  */
 public class IdeaWin32 {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.io.win32.IdeaWin32");
+  private static final Logger LOG = Logger.getInstance(IdeaWin32.class);
   private static final boolean DEBUG_ENABLED = LOG.isDebugEnabled();
 
   private static final IdeaWin32 ourInstance;
 
   static {
-    boolean available = false;
-    if (SystemInfo.isWin2kOrNewer) {
-      String libName = SystemInfo.is64Bit ? "IdeaWin64.dll" : "IdeaWin32.dll";
-      try {
-        String path = PathManager.getBinPath() + "/" + libName;
-        if (!new File(path).exists()) {
-          throw new FileNotFoundException("Native filesystem .dll is missing (path=" + PathManager.getBinPath() +
-                                          " content=" + Arrays.toString(new File(PathManager.getBinPath()).list()) + ")");
-        }
-        LOG.debug("Loading " + path);
-        System.load(path);
-        available = true;
-      }
-      catch (Throwable t) {
-        LOG.error("Failed to load native filesystem for Windows", t);
-      }
-    }
-
     IdeaWin32 instance = null;
-    if (available) {
+    if (SystemInfo.isWin2kOrNewer && Boolean.parseBoolean(System.getProperty("idea.use.native.fs.for.win", "true"))) {
       try {
+        UrlClassLoader.loadPlatformLibrary("IdeaWin32");
         instance = new IdeaWin32();
         LOG.info("Native filesystem for Windows is operational");
       }
       catch (Throwable t) {
-        LOG.error("Failed to initialize native filesystem for Windows", t);
+        LOG.error("Failed to load native filesystem for Windows", t);
       }
     }
     ourInstance = instance;
