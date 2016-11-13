@@ -57,7 +57,6 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.wm.impl.status.ModuleLayerWidget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.io.PowerSupplyKit;
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,12 +136,6 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
       }
     });
     // UIUtil.suppressFocusStealing();
-  }
-
-  @Override
-  public void addNotify() {
-    super.addNotify();
-    PowerSupplyKit.checkPowerSupply();
   }
 
   private void updateBorder() {
