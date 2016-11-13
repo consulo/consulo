@@ -38,6 +38,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.BaseButtonBehavior;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -197,7 +198,7 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
           GotItMessage.createMessage(UIBundle.message("tool.window.quick.access.title"), UIBundle.message(
                   "tool.window.quick.access.message"))
                   .setDisposable(ToolWindowsWidget.this)
-                  .show(new RelativePoint(ToolWindowsWidget.this, new Point(10, 0)), Balloon.Position.above);
+                  .show(new RelativePoint(ToolWindowsWidget.this, new Point(JBUI.scale(10), 0)), Balloon.Position.above);
           Disposer.dispose(alarm);
         }
       }, 20000);

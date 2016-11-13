@@ -23,11 +23,13 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.ui.*;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
+import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
@@ -65,6 +67,8 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -172,6 +176,31 @@ public class UIUtil {
 
   @NonNls
   public static final String BORDER_LINE = "<hr size=1 noshade>";
+
+  private static final StyleSheet DEFAULT_HTML_KIT_CSS;
+
+  static {
+    blockATKWrapper();
+    // save the default JRE CSS and ..
+    HTMLEditorKit kit = new HTMLEditorKit();
+    DEFAULT_HTML_KIT_CSS = kit.getStyleSheet();
+    // .. erase global ref to this CSS so no one can alter it
+    kit.setStyleSheet(null);
+  }
+
+  private static void blockATKWrapper() {
+    /*
+     * The method should be called before java.awt.Toolkit.initAssistiveTechnologies()
+     * which is called from Toolkit.getDefaultToolkit().
+     */
+    if (!(SystemInfo.isLinux && Registry.is("linux.jdk.accessibility.atkwrapper.block"))) return;
+
+    if (ScreenReader.isEnabled(ScreenReader.ATK_WRAPPER)) {
+      // Replace AtkWrapper with a dummy Object. It'll be instantiated & GC'ed right away, a NOP.
+      System.setProperty("javax.accessibility.assistive_technologies", "java.lang.Object");
+      LOG.info(ScreenReader.ATK_WRAPPER + " is blocked, see IDEA-149219");
+    }
+  }
 
   public static void applyStyle(@NotNull ComponentStyle componentStyle, @NotNull Component comp) {
     if (!(comp instanceof JComponent)) return;
@@ -2217,18 +2246,45 @@ public class UIUtil {
     return getBorderColor();
   }
 
+
+  @Nullable
+  public static StyleSheet loadStyleSheet(@Nullable URL url) {
+    if (url == null) return null;
+    try {
+      StyleSheet styleSheet = new StyleSheet();
+      styleSheet.loadRules(new InputStreamReader(url.openStream(), CharsetToolkit.UTF8), url);
+      return styleSheet;
+    }
+    catch (IOException e) {
+      LOG.warn(url + " loading failed", e);
+      return null;
+    }
+  }
+
   public static HTMLEditorKit getHTMLEditorKit() {
-    final HTMLEditorKit kit = new HTMLEditorKit();
+    return getHTMLEditorKit(true);
+  }
 
+  public static HTMLEditorKit getHTMLEditorKit(boolean noGapsBetweenParagraphs) {
     Font font = getLabelFont();
-    @NonNls String family = font != null ? font.getFamily() : "Tahoma";
-    int size = font != null ? font.getSize() : 11;
+    @NonNls String family = !SystemInfo.isWindows && font != null ? font.getFamily() : "Tahoma";
+    final int size = font != null ? font.getSize() : JBUI.scale(11);
 
-    final StyleSheet styleSheet = kit.getStyleSheet();
-    styleSheet.addRule(String.format("body, div, p { font-family: %s; font-size: %s; } p { margin-top: 0; }", family, size));
-    kit.setStyleSheet(styleSheet);
+    String customCss = String.format("body, div, p { font-family: %s; font-size: %s; }", family, size);
+    if (noGapsBetweenParagraphs) {
+      customCss += " p { margin-top: 0; }";
+    }
 
-    return kit;
+    final StyleSheet style = new StyleSheet();
+    style.addStyleSheet(isUnderDarcula() ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : DEFAULT_HTML_KIT_CSS);
+    style.addRule(customCss);
+
+    return new HTMLEditorKit() {
+      @Override
+      public StyleSheet getStyleSheet() {
+        return style;
+      }
+    };
   }
 
   public static void removeScrollBorder(final Component c) {

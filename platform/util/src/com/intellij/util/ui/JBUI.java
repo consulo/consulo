@@ -185,6 +185,10 @@ public class JBUI {
       return label().deriveFont(scale(size));
     }
 
+    public static JBFont biggerFont() {
+      return label().deriveFont(UIUtil.getFontSize(UIUtil.FontSize.BIGGER));
+    }
+
     public static JBFont smallFont() {
       return label().deriveFont(UIUtil.getFontSize(UIUtil.FontSize.SMALL));
     }

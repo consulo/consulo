@@ -19,7 +19,9 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,21 +39,22 @@ public class GotItMessage {
   private Disposable myDisposable;
   private boolean myShowCallout = true;
 
-  private GotItMessage(@NotNull String title,
-                       @NotNull String message) {
+  private GotItMessage(@NotNull String title, @NotNull String message) {
     myTitle = title;
-    final String[] lines = message.split("\n");
 
-    myMessage = "<html><body><div align='center' style=\"font-family: " +
-                 UIUtil.getLabelFont().getFontName() +
-                 "; " +
-                 "font-size: 12pt;\">" +
-                 (lines.length > 1 ? message.replace("\n", "<br>") : message) +
-                 "</div></body></html>";
+    StringBuilder builder = new StringBuilder();
+    builder.append("<html><body><div align='center' style=\"font-family: ");
+    builder.append(UIUtil.getLabelFont().getFontName());
+    builder.append("; ");
+    builder.append("font-size: ");
+    builder.append(JBUI.scale(12));
+    builder.append("pt;\">");
+    builder.append(StringUtil.replace(message, "\n", "<br>"));
+    builder.append("</div></body></html>");
+    myMessage = builder.toString();
   }
 
-  public static GotItMessage createMessage(@NotNull String title,
-                                           @NotNull String message) {
+  public static GotItMessage createMessage(@NotNull String title, @NotNull String message) {
     return new GotItMessage(title, message);
   }
 
@@ -81,15 +84,14 @@ public class GotItMessage {
       builder.setDisposable(myDisposable);
     }
 
-    final Balloon balloon = builder
-            .setFillColor(UIUtil.getListBackground())
-            .setHideOnClickOutside(false)
-            .setHideOnAction(false)
-            .setHideOnFrameResize(false)
-            .setHideOnKeyOutside(false)
-            .setShowCallout(myShowCallout)
-            .setBlockClicksThroughBalloon(true)
-            .createBalloon();
+    builder.setFillColor(UIUtil.getListBackground());
+    builder.setHideOnClickOutside(false);
+    builder.setHideOnAction(false);
+    builder.setHideOnFrameResize(false);
+    builder.setHideOnKeyOutside(false);
+    builder.setShowCallout(myShowCallout);
+    builder.setBlockClicksThroughBalloon(true);
+    final Balloon balloon = builder.createBalloon();
     panel.myButton.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
