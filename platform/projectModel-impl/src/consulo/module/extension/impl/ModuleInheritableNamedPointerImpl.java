@@ -20,6 +20,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.util.pointers.Named;
@@ -82,21 +83,16 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
   public boolean equals(Object obj) {
     if (obj instanceof ModuleInheritableNamedPointerImpl) {
       final ModuleInheritableNamedPointerImpl another = (ModuleInheritableNamedPointerImpl)obj;
-      if (!Comparing.equal(myModulePointer, another.myModulePointer)) {
-        return false;
-      }
-      if (!Comparing.equal(myTargetPointer, another.myTargetPointer)) {
-        return false;
-      }
-      return true;
+      return Comparing.equal(myModulePointer, another.myModulePointer) && Comparing.equal(myTargetPointer, another.myTargetPointer);
     }
     else {
       return false;
     }
   }
 
+  @RequiredReadAction
   @Override
-  public void set(ModuleInheritableNamedPointer<T> anotherItem) {
+  public void set(@NotNull ModuleInheritableNamedPointer<T> anotherItem) {
     if (anotherItem.isNull()) {
       myModulePointer = null;
       myTargetPointer = null;
@@ -112,23 +108,50 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     }
   }
 
+  @RequiredReadAction
   @Override
   public void set(@Nullable String moduleName, @Nullable String name) {
-    myModulePointer = moduleName == null ? null : ModuleUtilCore.createPointer(myProject, moduleName);
-    myTargetPointer = name == null ? null : getPointer(myProject, name);
+    if(moduleName != null) {
+      myModulePointer = ModuleUtilCore.createPointer(myProject, moduleName);
+      myTargetPointer = null;
+    }
+    else if(name != null) {
+      myTargetPointer = getPointer(myProject, name);
+      myModulePointer = null;
+    }
+    else {
+      myModulePointer = null;
+      myTargetPointer = null;
+    }
   }
 
+  @RequiredReadAction
   @Override
   public void set(@Nullable Module module, @Nullable T named) {
-    myModulePointer = module == null ? null : ModuleUtilCore.createPointer(module);
-    myTargetPointer = named == null ? null : getPointer(myProject, named.getName());
+    if(module != null) {
+      myModulePointer = ModuleUtilCore.createPointer(module);
+      myTargetPointer = null;
+    }
+    else if(named != null) {
+      myTargetPointer = getPointer(myProject, named.getName());
+      myModulePointer = null;
+    }
+    else {
+      myModulePointer = null;
+      myTargetPointer = null;
+    }
   }
 
   public void toXml(Element element) {
-    element.setAttribute(myXmlPrefix + "-module-name", StringUtil.notNullize(myModulePointer == null ? null : myModulePointer.getName()));
-    element.setAttribute(myXmlPrefix + "-name", StringUtil.notNullize(myTargetPointer == null ? null : myTargetPointer.getName()));
+    if(myModulePointer != null) {
+      element.setAttribute(myXmlPrefix + "-module-name", myModulePointer.getName());
+    }
+    else if(myTargetPointer != null) {
+      element.setAttribute(myXmlPrefix + "-name", myTargetPointer.getName());
+    }
   }
 
+  @RequiredReadAction
   public void fromXml(Element element) {
     final String moduleName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-module-name"));
     if (moduleName != null) {

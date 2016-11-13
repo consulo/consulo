@@ -16,7 +16,9 @@
 package consulo.module.extension;
 
 import com.intellij.openapi.module.Module;
+import consulo.annotations.RequiredReadAction;
 import consulo.util.pointers.Named;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -24,9 +26,12 @@ import org.jetbrains.annotations.Nullable;
  * @since 20:06/15.06.13
  */
 public interface MutableModuleInheritableNamedPointer<T extends Named> extends ModuleInheritableNamedPointer<T> {
-  void set(ModuleInheritableNamedPointer<T> value);
+  @RequiredReadAction
+  void set(@NotNull ModuleInheritableNamedPointer<T> value);
 
+  @RequiredReadAction
   void set(@Nullable String moduleName, @Nullable String name);
 
+  @RequiredReadAction
   void set(@Nullable Module module, @Nullable T named);
 }
