@@ -16,12 +16,11 @@
 package consulo.bundle;
 
 import com.intellij.icons.AllIcons;
-import consulo.ide.IconDescriptor;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.util.ObjectUtil;
-import consulo.bundle.SdkPointerManager;
+import consulo.annotations.DeprecationInfo;
+import consulo.ide.IconDescriptor;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,15 +33,15 @@ import javax.swing.*;
  */
 public class SdkUtil {
   @NotNull
+  @DeprecationInfo(value = "Use SdkPointerManager.getInstance()", until = "2.0")
   public static NamedPointer<Sdk> createPointer(@NotNull Sdk sdk) {
-    final SdkPointerManager service = ServiceManager.getService(SdkPointerManager.class);
-    return service.create(sdk);
+    return SdkPointerManager.getInstance().create(sdk);
   }
 
   @NotNull
+  @DeprecationInfo(value = "Use SdkPointerManager.getInstance()", until = "2.0")
   public static NamedPointer<Sdk> createPointer(@NotNull String name) {
-    final SdkPointerManager service = ServiceManager.getService(SdkPointerManager.class);
-    return service.create(name);
+    return SdkPointerManager.getInstance().create(name);
   }
 
   @NotNull

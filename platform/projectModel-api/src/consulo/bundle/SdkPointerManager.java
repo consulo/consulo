@@ -15,12 +15,20 @@
  */
 package consulo.bundle;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.projectRoots.Sdk;
+import consulo.lombok.annotations.Lazy;
 import consulo.util.pointers.NamedPointerManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 17:17/15.06.13
  */
 public interface SdkPointerManager extends NamedPointerManager<Sdk> {
+  @NotNull
+  @Lazy
+  static SdkPointerManager getInstance() {
+    return ServiceManager.getService(SdkPointerManager.class);
+  }
 }

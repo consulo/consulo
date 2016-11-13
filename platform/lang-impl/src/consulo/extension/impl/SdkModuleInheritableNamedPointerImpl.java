@@ -19,11 +19,11 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
+import consulo.bundle.SdkPointerManager;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
-import consulo.bundle.SdkUtil;
 
 /**
  * @author VISTALL
@@ -58,6 +58,6 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
   @NotNull
   @Override
   public NamedPointer<Sdk> getPointer(@NotNull Project project, @NotNull String name) {
-    return SdkUtil.createPointer(name);
+    return SdkPointerManager.getInstance().create(name);
   }
 }
