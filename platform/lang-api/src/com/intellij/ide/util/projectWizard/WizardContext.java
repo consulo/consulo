@@ -17,6 +17,7 @@ package com.intellij.ide.util.projectWizard;
 
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.RecentProjectsManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -61,7 +62,7 @@ public class WizardContext extends UserDataHolderBase {
     if (myProjectFileDirectory != null) {
       return myProjectFileDirectory;
     }
-    final String lastProjectLocation = GeneralSettings.getInstance().getLastProjectCreationLocation();
+    final String lastProjectLocation = RecentProjectsManager.getInstance().getLastProjectCreationLocation();
     if (lastProjectLocation != null) {
       return lastProjectLocation.replace('/', File.separatorChar);
     }

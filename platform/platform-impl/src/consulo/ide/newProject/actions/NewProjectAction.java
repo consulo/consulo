@@ -19,6 +19,7 @@ import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.RecentProjectsManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
@@ -156,7 +157,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       }
     }
 
-    GeneralSettings.getInstance().setLastProjectCreationLocation(location.getParent());
+    RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
     return PlatformProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, project1 -> doCreate(projectPanel, project1, baseDir));
   }
 

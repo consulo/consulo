@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ExportableApplicationComponent;
 import com.intellij.openapi.util.NamedJDOMExternalizable;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.annotations.DeprecationInfo;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -48,7 +48,6 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
   private final PropertyChangeSupport myPropertyChangeSupport;
   private boolean myUseDefaultBrowser = true;
   private boolean myConfirmExtractFiles = true;
-  private String myLastProjectLocation;
   private boolean mySearchInBackground;
   private boolean myConfirmExit = true;
   private int myConfirmOpenNewProject = OPEN_PROJECT_ASK;
@@ -70,7 +69,6 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
   @NonNls private static final String OPTION_SEARCH_IN_BACKGROUND = "searchInBackground";
   @NonNls private static final String OPTION_CONFIRM_EXIT = "confirmExit";
   @NonNls private static final String OPTION_CONFIRM_OPEN_NEW_PROJECT = "confirmOpenNewProject2";
-  @NonNls private static final String OPTION_LAST_PROJECT_LOCATION = "lastProjectLocation";
 
   public static GeneralSettings getInstance(){
     return ApplicationManager.getApplication().getComponent(GeneralSettings.class);
@@ -78,17 +76,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
 
   public GeneralSettings() {
     myInactiveTimeout=DEFAULT_INACTIVE_TIMEOUT;
-
-    if (SystemInfo.isWindows) {
-      myBrowserPath = "C:\\Program Files\\Internet Explorer\\IExplore.exe";
-    }
-    else if (SystemInfo.isMac) {
-      myBrowserPath = "open";
-    }
-    else {
-      myBrowserPath = "";
-    }
-
+    myBrowserPath = BrowserUtil.getDefaultAlternativeBrowserPath();
     myPropertyChangeSupport = new PropertyChangeSupport(this);
   }
 
@@ -110,15 +98,15 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
     return myBrowserPath;
   }
 
-  /**
-   * @return a path pointing to a directory where the last project was created or null if not available
-   */
+  @Deprecated
+  @DeprecationInfo(value = "Use RecentProjectsManager", until = "2.0")
   public String getLastProjectCreationLocation() {
-    return myLastProjectLocation;
+    return null;
   }
 
+  @Deprecated
+  @DeprecationInfo(value = "Use RecentProjectsManager", until = "2.0")
   public void setLastProjectCreationLocation(String lastProjectLocation) {
-    myLastProjectLocation = lastProjectLocation;
   }
 
   public void setBrowserPath(String browserPath) {
@@ -330,15 +318,6 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
           myConfirmOpenNewProject = OPEN_PROJECT_ASK;
         }
       }
-
-      if (OPTION_LAST_PROJECT_LOCATION.equals(name)) {
-        try {
-          myLastProjectLocation = value;
-        }
-        catch (Exception ex) {
-          myLastProjectLocation = null;
-        }
-      }
     }
 
     if (!safeWriteSettingRead && "true".equals(System.getProperty("idea.no.safe.write"))) {
@@ -424,13 +403,6 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
     optionElement.setAttribute(ATTRIBUTE_NAME, OPTION_CONFIRM_OPEN_NEW_PROJECT);
     optionElement.setAttribute(ATTRIBUTE_VALUE, Integer.toString(myConfirmOpenNewProject));
     parentNode.addContent(optionElement);
-
-    if (myLastProjectLocation != null) {
-      optionElement = new Element(ELEMENT_OPTION);
-      optionElement.setAttribute(ATTRIBUTE_NAME, OPTION_LAST_PROJECT_LOCATION);
-      optionElement.setAttribute(ATTRIBUTE_VALUE, myLastProjectLocation);
-      parentNode.addContent(optionElement);
-    }
   }
 
   @Override
