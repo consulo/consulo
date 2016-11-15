@@ -33,6 +33,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -138,6 +139,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
     return ScrollPaneFactory.createScrollPane(myList, true);
   }
 
+  @RequiredDispatchThread
   @NotNull
   @Override
   protected JComponent createRightComponent() {

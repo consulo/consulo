@@ -72,12 +72,13 @@ public class ImageLoader implements Serializable {
     for (Pair<String, Integer> each : getFileNames(url.toString())) {
       try {
         Image image = loadFromStream(URLUtil.openStream(new URL(each.first)), each.second);
-        float scale = allowFloatScaling ? JBUI.scale(1f) : JBUI.scale(1f) > 1.5f ? 2f : 1f;
+        float scale = JBUI.scale(1f);
         //we can't check all 3rd party plugins and convince the authors to add @2x icons.
         // isHiDPI() != isRetina() => we should scale images manually
-        if (image != null && JBUI.isHiDPI() && !each.first.contains("@2x")) {
-          image = upscale(image, scale);
-        } else if (image != null && JBUI.scale(1f) >= 1.5f && JBUI.scale(1f) < 2.0f && each.first.contains("@2x")) {
+        if (image != null && JBUI.isHiDPI()) {
+          image = upscale(image, scale, each.first.contains("@2x"));
+        }
+        else if (image != null && JBUI.scale(1f) >= 1.5f && JBUI.scale(1f) < 2.0f && each.first.contains("@2x")) {
           image = downscale(image, scale);
         }
         return image;
@@ -89,9 +90,15 @@ public class ImageLoader implements Serializable {
   }
 
   @NotNull
-  private static Image upscale(Image image, float scale) {
-    int width = (int)(scale * image.getWidth(null));
-    int height = (int)(scale * image.getHeight(null));
+  private static Image upscale(Image image, float scale, boolean _2x) {
+    int oriWidth = image.getWidth(null);
+    int oriHeight = image.getHeight(null);
+
+    int width = (int)(scale * (oriWidth / (_2x ? 2 : 1)));
+    int height = (int)(scale * (oriHeight / (_2x ? 2 : 1)));
+    if(width == oriWidth && height == oriHeight) {
+      return image;
+    }
     return Scalr.resize(ImageUtil.toBufferedImage(image), Scalr.Method.ULTRA_QUALITY, width, height);
   }
 

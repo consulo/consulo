@@ -100,9 +100,10 @@ public class JBUI {
 
   public static int scaleIconSize(int iconSize) {
     // if we get scale 2.5 we need scale icon only to 2
-    if(SCALE_FACTOR >= 2.5) {
+    // now we scale original icon
+    /*if(SCALE_FACTOR >= 2.5) {
       return iconSize * 2;
-    }
+    }*/
     return scale(iconSize);
   }
 

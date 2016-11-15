@@ -64,6 +64,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   public ParameterizedRunnable<List<NotificationType>> myEventListener;
   public Computable<Point> myEventLocation;
 
+  @RequiredDispatchThread
   public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame) {
     super(flatWelcomeFrame);
     myFlatWelcomeFrame = flatWelcomeFrame;
@@ -84,6 +85,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     }
   }
 
+  @RequiredDispatchThread
   public abstract JComponent createActionPanel();
 
   @NotNull
@@ -92,6 +94,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     return new NewRecentProjectPanel(parentDisposable);
   }
 
+  @RequiredDispatchThread
   @Override
   @NotNull
   protected JComponent createRightComponent() {

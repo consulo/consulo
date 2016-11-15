@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -31,6 +32,7 @@ import java.awt.*;
 public abstract class BaseWelcomeScreenPanel extends JPanel {
   protected final JComponent myLeftComponent;
 
+  @RequiredDispatchThread
   public BaseWelcomeScreenPanel(@NotNull Disposable parentDisposable) {
     super(new BorderLayout());
 
@@ -58,5 +60,6 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
   protected abstract JComponent createLeftComponent(Disposable parentDisposable);
 
   @NotNull
+  @RequiredDispatchThread
   protected abstract JComponent createRightComponent();
 }

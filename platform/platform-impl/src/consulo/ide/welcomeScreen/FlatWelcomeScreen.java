@@ -26,6 +26,7 @@ import com.intellij.ui.JBCardLayout;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.JBUI;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -44,11 +45,13 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
   private final FlatWelcomePanel myMainWelcomePanel;
   private final FlatWelcomeFrame myWelcomeFrame;
 
+  @RequiredDispatchThread
   public FlatWelcomeScreen(FlatWelcomeFrame welcomeFrame) {
     super(new JBCardLayout());
     myWelcomeFrame = welcomeFrame;
     myMainWelcomePanel = new FlatWelcomePanel(welcomeFrame) {
       @Override
+      @RequiredDispatchThread
       public JComponent createActionPanel() {
         return FlatWelcomeScreen.this.createActionPanel(this);
       }
@@ -69,6 +72,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
     return myMainWelcomePanel;
   }
 
+  @RequiredDispatchThread
   private JComponent createActionPanel(FlatWelcomePanel welcomePanel) {
     JPanel actions = new NonOpaquePanel();
     actions.setBorder(JBUI.Borders.emptyLeft(10));
@@ -85,6 +89,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
       if (action instanceof WelcomeScreenSlideAction) {
         final WelcomeScreenSlideAction oldAction = (WelcomeScreenSlideAction)action;
         action = new AnAction() {
+          @RequiredDispatchThread
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {
             JComponent panel = oldAction.createSlide(myWelcomeFrame, myWelcomeFrame::setTitle);
@@ -105,11 +110,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
         if (text != null && text.endsWith("...")) {
           text = text.substring(0, text.length() - 3);
         }
-        Icon icon = presentation.getIcon();
-        if (icon.getIconHeight() != JBUI.scaleIconSize(16) || icon.getIconWidth() != JBUI.scaleIconSize(16)) {
-          icon = JBUI.emptyIcon(16);
-        }
-        ActionLink link = new ActionLink(text, icon, action, createUsageTracker(action));
+        ActionLink link = new ActionLink(text, presentation.getIcon(), action, createUsageTracker(action));
         // Don't allow focus, as the containing panel is going to focusable.
         link.setFocusable(false);
         link.setPaintUnderline(false);
