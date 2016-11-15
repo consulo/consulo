@@ -24,7 +24,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
@@ -33,9 +32,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import org.apache.oro.text.regex.*;
 import consulo.lombok.annotations.Logger;
 import consulo.lombok.annotations.ProjectService;
+import org.apache.oro.text.regex.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -259,7 +258,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
 
   private boolean doConvertPatterns() throws MalformedPatternException {
     final String[] regexpPatterns = getRegexpPatterns();
-    final List<String> converted = new ArrayList<String>();
+    final List<String> converted = new ArrayList<>();
     final Pattern multipleExtensionsPatternPattern = compilePattern("\\.\\+\\\\\\.\\((\\w+(?:\\|\\w+)*)\\)");
     final Pattern singleExtensionPatternPattern = compilePattern("\\.\\+\\\\\\.(\\w+)");
     final Perl5Matcher matcher = new Perl5Matcher();
@@ -371,30 +370,29 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   @Nullable
   @Override
   public Element getState() {
-    Element parentNode = new Element("state");
-    final Element newChild = addChild(parentNode, RESOURCE_EXTENSIONS);
-    for (final String pattern : getRegexpPatterns()) {
+    String[] patterns = getRegexpPatterns();
+    if(patterns.length == 0 && myWildcardPatterns.isEmpty()) {
+      return null;
+    }
+    Element state = new Element("state");
+    final Element newChild = addChild(state, RESOURCE_EXTENSIONS);
+    for (final String pattern : patterns) {
       addChild(newChild, ENTRY).setAttribute(NAME, pattern);
     }
 
     if (myWildcardPatternsInitialized || !myWildcardPatterns.isEmpty()) {
-      final Element wildcardPatterns = addChild(parentNode, WILDCARD_RESOURCE_PATTERNS);
+      final Element wildcardPatterns = addChild(state, WILDCARD_RESOURCE_PATTERNS);
       for (final String wildcardPattern : myWildcardPatterns) {
         addChild(wildcardPatterns, ENTRY)
           .setAttribute(NAME, wildcardPattern);
       }
     }
-    return parentNode;
+    return state;
   }
 
   @Override
   public void loadState(Element state) {
-    try {
-      readExternal(state);
-    }
-    catch (InvalidDataException e) {
-      ResourceCompilerConfiguration.LOGGER.error(e);
-    }
+    readExternal(state);
   }
 
   private void removeRegexpPatterns() {
@@ -408,15 +406,12 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     }
   }
 
-  public void readExternal(Element parentNode) throws InvalidDataException {
-    DefaultJDOMExternalizer.readExternal(this, parentNode);
-
+  public void readExternal(Element parentNode) {
     try {
       removeRegexpPatterns();
       Element node = parentNode.getChild(RESOURCE_EXTENSIONS);
       if (node != null) {
-        for (final Object o : node.getChildren(ENTRY)) {
-          Element element = (Element)o;
+        for (final Element element : node.getChildren(ENTRY)) {
           String pattern = element.getAttributeValue(NAME);
           if (!StringUtil.isEmpty(pattern)) {
             addRegexpPattern(pattern);
@@ -428,8 +423,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
       node = parentNode.getChild(WILDCARD_RESOURCE_PATTERNS);
       if (node != null) {
         myWildcardPatternsInitialized = true;
-        for (final Object o : node.getChildren(ENTRY)) {
-          final Element element = (Element)o;
+        for (final Element element : node.getChildren(ENTRY)) {
           String pattern = element.getAttributeValue(NAME);
           if (!StringUtil.isEmpty(pattern)) {
             addWildcardResourcePattern(pattern);
