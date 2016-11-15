@@ -100,6 +100,7 @@ public class ImportModuleAction extends AnAction {
   public static AddModuleWizard selectFileAndCreateWizard(final Project project, Component dialogParent) {
     FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, false, false) {
       FileChooserDescriptor myDelegate = new OpenProjectFileChooserDescriptor(true);
+
       @Override
       public Icon getIcon(VirtualFile file) {
         for (ProjectImportProvider projectImportProvider : ProjectImportProvider.EP_NAME.getExtensions()) {
@@ -132,7 +133,7 @@ public class ImportModuleAction extends AnAction {
     if (lastLocation != null) {
       toSelect = LocalFileSystem.getInstance().refreshAndFindFileByPath(lastLocation);
     }
-    VirtualFile[] files = chooser.choose(project, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[] {toSelect});
+    VirtualFile[] files = chooser.choose(project, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{toSelect});
     if (files.length == 0) {
       return null;
     }
@@ -193,17 +194,13 @@ public class ImportModuleAction extends AnAction {
   public void update(@NotNull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
-    if(!canCreateNewProject() && e.getProject() == null) {
+    if (!canCreateNewProject() && e.getProject() == null) {
       presentation.setEnabledAndVisible(false);
       return;
     }
 
-    presentation.setEnabledAndVisible(ContainerUtil.find(ProjectImportProvider.EP_NAME.getExtensions(), new Condition<ProjectImportProvider>() {
-      @Override
-      public boolean value(ProjectImportProvider projectImportProvider) {
-        return projectImportProvider.canCreateNewProject() == canCreateNewProject();
-      }
-    }) != null);
+    ProjectImportProvider[] extensions = ProjectImportProvider.EP_NAME.getExtensions();
+    presentation.setEnabledAndVisible(ContainerUtil.find(extensions, it -> it.canCreateNewProject() == canCreateNewProject()) != null);
   }
 
   public boolean canCreateNewProject() {

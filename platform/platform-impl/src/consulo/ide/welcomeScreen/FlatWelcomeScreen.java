@@ -106,7 +106,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
           text = text.substring(0, text.length() - 3);
         }
         Icon icon = presentation.getIcon();
-        if (icon.getIconHeight() != JBUI.scale(16) || icon.getIconWidth() != JBUI.scale(16)) {
+        if (icon.getIconHeight() != JBUI.scaleIconSize(16) || icon.getIconWidth() != JBUI.scaleIconSize(16)) {
           icon = JBUI.emptyIcon(16);
         }
         ActionLink link = new ActionLink(text, icon, action, createUsageTracker(action));
