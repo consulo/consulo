@@ -23,17 +23,15 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.Gray;
-import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
-import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProviders;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;
+import consulo.editor.notifications.EditorNotificationProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -63,39 +61,22 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
       return null;
     }
 
-
-    EditorNotificationPanel panel = new EditorNotificationPanel() {
-      @Override
-      public Color getBackground() {
-        return Gray._220;
-      }
-    };
+    EditorNotificationPanel panel = new EditorNotificationPanel(Gray._220);
 
     List<BackgroundTaskByVfsChangeTask> tasks = BackgroundTaskByVfsChangeManager.getInstance(myProject).findTasks(file);
     if (!tasks.isEmpty()) {
-      panel.text("Task(s): " + StringUtil.join(tasks, new Function<BackgroundTaskByVfsChangeTask, String>() {
-        @Override
-        public String fun(BackgroundTaskByVfsChangeTask backgroundTaskByVfsChangeTask) {
-          return backgroundTaskByVfsChangeTask.getName() + (!backgroundTaskByVfsChangeTask.isEnabled() ? " (disabled)" : "");
-        }
-      }, ", "));
+      panel.text("Task(s): " + StringUtil.join(tasks, it -> it.getName() + (!it.isEnabled() ? " (disabled)" : ""), ", "));
 
-      panel.createActionLabel("Force Run", new Runnable() {
-        @Override
-        public void run() {
-          BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(file);
-        }
+      panel.createActionLabel("Force Run", () -> {
+        BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(file);
       });
     }
     else {
       panel.text("Background task(s) on file change is available");
     }
 
-    panel.createActionLabel("Manage", new Runnable() {
-      @Override
-      public void run() {
-        BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(file);
-      }
+    panel.createActionLabel("Manage", () -> {
+      BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(file);
     });
     return panel;
   }

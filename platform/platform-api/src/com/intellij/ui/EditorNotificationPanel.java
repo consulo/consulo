@@ -28,6 +28,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -40,9 +41,15 @@ public class EditorNotificationPanel extends JPanel {
   protected final JLabel myLabel = new JLabel();
   protected final JLabel myGearLabel = new JLabel();
   protected final JPanel myLinksPanel;
+  private final Color myBackgroundColor;
 
   public EditorNotificationPanel() {
+    this(null);
+  }
+
+  public EditorNotificationPanel(@Nullable Color backgroundColor) {
     super(new BorderLayout());
+    myBackgroundColor = backgroundColor;
     setBorder(JBUI.Borders.empty(1, 10, 1, 10));
 
     setPreferredSize(JBUI.size(-1, 24));
@@ -75,19 +82,16 @@ public class EditorNotificationPanel extends JPanel {
   }
 
   @Override
-  public Color getBackground() {
+  public final Color getBackground() {
+    if(myBackgroundColor != null) {
+      return myBackgroundColor;
+    }
     Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.NOTIFICATION_BACKGROUND);
     return color == null ? UIUtil.getToolTipBackground() : color;
   }
 
   public HyperlinkLabel createActionLabel(final String text, @NonNls final String actionId) {
-    return createActionLabel(text, new Runnable() {
-      @Override
-      @RequiredDispatchThread
-      public void run() {
-        executeAction(actionId);
-      }
-    });
+    return createActionLabel(text, () -> executeAction(actionId));
   }
 
   public HyperlinkLabel createActionLabel(final String text, final Runnable action) {
