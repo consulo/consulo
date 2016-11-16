@@ -75,10 +75,10 @@ public class ImageLoader implements Serializable {
         float scale = JBUI.scale(1f);
         //we can't check all 3rd party plugins and convince the authors to add @2x icons.
         // isHiDPI() != isRetina() => we should scale images manually
-        if (image != null && JBUI.isHiDPI()) {
+        if (image != null && JBUI.isHiDPI() && allowFloatScaling) {
           image = upscale(image, scale, each.first.contains("@2x"));
         }
-        else if (image != null && JBUI.scale(1f) >= 1.5f && JBUI.scale(1f) < 2.0f && each.first.contains("@2x")) {
+        else if (image != null && JBUI.scale(1f) >= 1.5f && JBUI.scale(1f) < 2.0f && each.first.contains("@2x") && allowFloatScaling) {
           image = downscale(image, scale);
         }
         return image;

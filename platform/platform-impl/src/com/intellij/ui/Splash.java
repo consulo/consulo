@@ -16,8 +16,9 @@
 package com.intellij.ui;
 
 import com.intellij.ide.StartupProgress;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ImageLoader;
+import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,7 +59,7 @@ public class Splash extends JDialog implements StartupProgress {
     }
     setFocusableWindowState(false);
 
-    Icon originalImage = IconLoader.getIcon("/logo.png");
+    Icon originalImage = new JBImageIcon(ImageLoader.loadFromUrl(Splash.class.getResource("/logo.png"), false));
     myImage = new SplashImage(originalImage);
     myLabel = new JLabel(myImage) {
       @Override
