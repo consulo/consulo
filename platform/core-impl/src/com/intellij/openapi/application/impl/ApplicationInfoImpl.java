@@ -50,12 +50,10 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String myMinorVersion = null;
   private String myBuildNumber = null;
   private String myCompanyName = "Must-Be";
-  private String myCompanyUrl = "http://consulo.site";
-  private Color myProgressColor = null;
+  private String myCompanyUrl = "https://consulo.io";
   private Color myAboutForeground = Color.black;
   private Color myAboutLinkColor = null;
 
-  private String mySplashImageUrl = null;
   private String myAboutImageUrl = null;
 
   private Calendar myBuildDate = null;
@@ -85,9 +83,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ELEMENT_COMPANY = "company";
   @NonNls private static final String ATTRIBUTE_NUMBER = "number";
   @NonNls private static final String ATTRIBUTE_DATE = "date";
-  @NonNls private static final String ELEMENT_LOGO = "logo";
   @NonNls private static final String ATTRIBUTE_URL = "url";
-  @NonNls private static final String ATTRIBUTE_PROGRESS_COLOR = "progressColor";
   @NonNls private static final String ATTRIBUTE_ABOUT_FOREGROUND_COLOR = "foreground";
   @NonNls private static final String ATTRIBUTE_ABOUT_LINK_COLOR = "linkColor";
   @NonNls private static final String ELEMENT_ABOUT = "about";
@@ -159,17 +155,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   }
 
   @Override
-  public String getSplashImageUrl() {
-    return mySplashImageUrl;
-  }
-
-  @Override
   public String getAboutImageUrl() {
     return myAboutImageUrl;
-  }
-
-  public Color getProgressColor() {
-    return myProgressColor;
   }
 
   @Override
@@ -343,15 +330,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
 
     Thread currentThread = Thread.currentThread();
     currentThread.setName(currentThread.getName() + " " + myMajorVersion + "." + myMinorVersion + "#" + myBuildNumber + ", eap:" + myEAP);
-
-    Element logoElement = parentNode.getChild(ELEMENT_LOGO);
-    if (logoElement != null) {
-      mySplashImageUrl = logoElement.getAttributeValue(ATTRIBUTE_URL);
-      String v = logoElement.getAttributeValue(ATTRIBUTE_PROGRESS_COLOR);
-      if (v != null) {
-        myProgressColor = parseColor(v);
-      }
-    }
 
     Element aboutLogoElement = parentNode.getChild(ELEMENT_ABOUT);
     if (aboutLogoElement != null) {

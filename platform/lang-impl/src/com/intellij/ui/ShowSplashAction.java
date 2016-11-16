@@ -18,9 +18,9 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.*;
 
@@ -28,10 +28,10 @@ import java.awt.event.*;
  * @author Konstantin Bulenkov
  */
 public class ShowSplashAction extends AnAction {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    final ApplicationInfoEx app = ApplicationInfoImpl.getShadowInstance();
-    final Splash splash = new Splash(app);
+  public void actionPerformed(@NotNull AnActionEvent e) {
+    final Splash splash = new Splash();
     final SplashListener listener = new SplashListener(splash);
     splash.addFocusListener(listener);
     splash.addKeyListener(listener);

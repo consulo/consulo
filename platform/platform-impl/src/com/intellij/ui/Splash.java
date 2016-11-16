@@ -16,8 +16,6 @@
 package com.intellij.ui;
 
 import com.intellij.ide.StartupProgress;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
@@ -45,13 +43,13 @@ public class Splash extends JDialog implements StartupProgress {
   @Nullable public static Rectangle BOUNDS;
 
   private final Icon myImage;
-  private Color myProgressColor = null;
+  private Color myProgressColor = Color.WHITE;
   private float myProgress;
   private boolean mySplashIsVisible;
   private int myProgressLastPosition = 0;
   private final JLabel myLabel;
 
-  public Splash(String imageName) {
+  public Splash() {
     super((Frame)null, false);
 
     setUndecorated(true);
@@ -60,7 +58,7 @@ public class Splash extends JDialog implements StartupProgress {
     }
     setFocusableWindowState(false);
 
-    Icon originalImage = IconLoader.getIcon(imageName);
+    Icon originalImage = IconLoader.getIcon("/logo.png");
     myImage = new SplashImage(originalImage);
     myLabel = new JLabel(myImage) {
       @Override
@@ -90,14 +88,6 @@ public class Splash extends JDialog implements StartupProgress {
     }
     else {
       setLocation((bounds.width - getWidth()) / 2, (bounds.height - getHeight()) / 2);
-    }
-  }
-
-  public Splash(ApplicationInfoEx info) {
-    this(info.getSplashImageUrl());
-    if (info instanceof ApplicationInfoImpl) {
-      final ApplicationInfoImpl appInfo = (ApplicationInfoImpl)info;
-      myProgressColor = appInfo.getProgressColor();
     }
   }
 

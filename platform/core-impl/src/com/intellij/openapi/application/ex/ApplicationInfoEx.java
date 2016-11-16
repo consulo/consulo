@@ -38,8 +38,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
     return (ApplicationInfoEx) ApplicationInfo.getInstance();
   }
 
-  public abstract String getSplashImageUrl();
-
   public abstract String getAboutImageUrl();
 
   public String getIconUrl() {

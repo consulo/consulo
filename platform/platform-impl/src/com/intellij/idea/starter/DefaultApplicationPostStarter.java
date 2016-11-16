@@ -61,10 +61,9 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
   @Override
   public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, String[] args) {
     if (StartupUtil.shouldShowSplash(args)) {
-      final ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
-        mySplash = new Splash(appInfo);
+        mySplash = new Splash();
         mySplash.show();
       }
     }
