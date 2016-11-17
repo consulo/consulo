@@ -18,6 +18,7 @@ package com.intellij.util.ui.tree;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -131,6 +132,16 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     UIManager.put("Tree.repaintWholeRow", true);
 
     tree.setShowsRootHandles(true);
+  }
+
+  @Override
+  public void setLeftChildIndent(int newAmount) {
+    super.setLeftChildIndent(JBUI.scale(newAmount));
+  }
+
+  @Override
+  public void setRightChildIndent(int newAmount) {
+    super.setRightChildIndent(JBUI.scale(newAmount));
   }
 
   @Override
