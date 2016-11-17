@@ -64,7 +64,7 @@ public class CustomizeUtil {
         MultiMap<String, IdeaPluginDescriptor> pluginDescriptors = new MultiMap<String, IdeaPluginDescriptor>();
         MultiMap<String, String> predefinedTemplateSets = new MultiMap<String, String>();
         try {
-          List<IdeaPluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
+          List<IdeaPluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
           for (IdeaPluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
             pluginDescriptors.putValue(ideaPluginDescriptor.getCategory(), ideaPluginDescriptor);
           }
