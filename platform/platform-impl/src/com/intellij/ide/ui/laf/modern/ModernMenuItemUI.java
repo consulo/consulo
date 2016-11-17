@@ -18,8 +18,6 @@ package com.intellij.ide.ui.laf.modern;
 import com.intellij.openapi.actionSystem.impl.ActionMenuItem;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.plaf.beg.BegMenuItemUI;
-import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -34,7 +32,6 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
@@ -49,7 +46,6 @@ public class ModernMenuItemUI extends BasicMenuItemUI {
   private static final Rectangle d = new Rectangle();
   private int myMaxGutterIconWidth;
   private static Rectangle i = new Rectangle();
-  private int k;
   private static final Rectangle c = new Rectangle();
   private static final Rectangle h = new Rectangle();
   private static final Rectangle l = new Rectangle();
@@ -127,17 +123,7 @@ public class ModernMenuItemUI extends BasicMenuItemUI {
         }
         else {
           g.setColor(selectionBackground);
-          if (icon2 != null) {
-            g.fillRect(k, 0, j1 - k, k1);
-          }
-          else {
-            g.fillRect(0, 0, j1, k1);
-            //graphics.setColor(BegResources.q);
-            //graphics.drawLine(0, 0, 0, k1);
-            g.setColor(selectionBackground);
-          }
-          //graphics.setColor(BegResources.r);
-          //graphics.drawLine(j1 - 1, 0, j1 - 1, k1);
+          g.fillRect(0, 0, j1, k1);
         }
       }
       g.setColor(color2);
@@ -145,7 +131,7 @@ public class ModernMenuItemUI extends BasicMenuItemUI {
     if (icon2 != null) {
       if(useCheckAndArrow()) {
         g.setColor(buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected() ? selectionBackground : comp.getBackground());
-        g.fillRect(0, 0, comp.getHeight() + JBUI.scale(1), comp.getHeight());
+        g.fillRect(0, 0, comp.getHeight() + Math.round(JBUI.scale(1f)), comp.getHeight());
       }
 
       if (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected()) {
@@ -198,7 +184,7 @@ public class ModernMenuItemUI extends BasicMenuItemUI {
           g.setColor(jmenuitem.getBackground().brighter());
           BasicGraphicsUtils.drawStringUnderlineCharAt(g, s1, mnemonicIndex, j.x, j.y + fontmetrics.getAscent());
           g.setColor(jmenuitem.getBackground().darker());
-          BasicGraphicsUtils.drawStringUnderlineCharAt(g, s1, mnemonicIndex, j.x - 1, (j.y + fontmetrics.getAscent()) - 1);
+          BasicGraphicsUtils.drawStringUnderlineCharAt(g, s1, mnemonicIndex, j.x - Math.round(JBUI.scale(1f)), (j.y + fontmetrics.getAscent()) - Math.round(JBUI.scale(1f)));
         }
       }
     }
@@ -226,7 +212,7 @@ public class ModernMenuItemUI extends BasicMenuItemUI {
         g.setColor(jmenuitem.getBackground().brighter());
         BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x, c.y + fontmetrics.getAscent());
         g.setColor(jmenuitem.getBackground().darker());
-        BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x - 1, (c.y + fontmetrics.getAscent()) - 1);
+        BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x - Math.round(JBUI.scale(1f)), (c.y + fontmetrics.getAscent()) - Math.round(JBUI.scale(1f)));
       }
     }
     if (arrowIcon != null) {
@@ -381,9 +367,6 @@ public class ModernMenuItemUI extends BasicMenuItemUI {
       if (checkIcon != null) {
         checkIconRect.y = (viewRect.y + labelRect.height / 2) - checkIconRect.height / 2;
         checkIconRect.x += (viewRect.x + myMaxGutterIconWidth / 2) - checkIcon.getIconWidth() / 2;
-        int a = viewRect.x;
-        int e = (viewRect.y + labelRect.height / 2) - myMaxGutterIconWidth / 2;
-        k = viewRect.x + myMaxGutterIconWidth + JBUI.scale(2);
       }
       else {
         checkIconRect.x = checkIconRect.y = 0;
