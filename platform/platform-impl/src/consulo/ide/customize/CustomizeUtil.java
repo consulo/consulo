@@ -58,30 +58,24 @@ public class CustomizeUtil {
 
     CustomizeDownloadDialog downloadDialog = new CustomizeDownloadDialog();
 
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-      @Override
-      public void run() {
-        MultiMap<String, IdeaPluginDescriptor> pluginDescriptors = new MultiMap<String, IdeaPluginDescriptor>();
-        MultiMap<String, String> predefinedTemplateSets = new MultiMap<String, String>();
-        try {
-          List<IdeaPluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
-          for (IdeaPluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
-            pluginDescriptors.putValue(ideaPluginDescriptor.getCategory(), ideaPluginDescriptor);
-          }
-          loadPredefinedTemplateSets(predefinedTemplateSets);
+    ApplicationManager.getApplication().executeOnPooledThread(() -> {
+      MultiMap<String, IdeaPluginDescriptor> pluginDescriptors = new MultiMap<>();
+      MultiMap<String, String> predefinedTemplateSets = new MultiMap<>();
+      try {
+        List<IdeaPluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
+        for (IdeaPluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
+          pluginDescriptors.putValue(ideaPluginDescriptor.getCategory(), ideaPluginDescriptor);
         }
-        catch (Exception e) {
-          LOGGER.warn(e);
-        }
-
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            downloadDialog.close(DialogWrapper.OK_EXIT_CODE);
-            new CustomizeIDEWizardDialog(pluginDescriptors, predefinedTemplateSets).show();
-          }
-        });
+        loadPredefinedTemplateSets(predefinedTemplateSets);
       }
+      catch (Exception e) {
+        LOGGER.warn(e);
+      }
+
+      UIUtil.invokeLaterIfNeeded(() -> {
+        downloadDialog.close(DialogWrapper.OK_EXIT_CODE);
+        new CustomizeIDEWizardDialog(pluginDescriptors, predefinedTemplateSets).show();
+      });
     });
     downloadDialog.show();
   }
@@ -147,7 +141,7 @@ public class CustomizeUtil {
   }
 
   private static void initLaf() {
-    String className = null;
+    String className;
     if (SystemInfo.isMac) {
       className = "com.apple.laf.AquaLookAndFeel";
     }
