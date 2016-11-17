@@ -29,7 +29,7 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.ide.updateSettings.UpdateChannel;
+import consulo.ide.updateSettings.UpdateSettings;
 import consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -64,14 +64,14 @@ public class CustomizeUtil {
         MultiMap<String, IdeaPluginDescriptor> pluginDescriptors = new MultiMap<String, IdeaPluginDescriptor>();
         MultiMap<String, String> predefinedTemplateSets = new MultiMap<String, String>();
         try {
-          List<IdeaPluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadPluginsFromRepository(null, UpdateChannel.release);
+          List<IdeaPluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
           for (IdeaPluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
             pluginDescriptors.putValue(ideaPluginDescriptor.getCategory(), ideaPluginDescriptor);
           }
           loadPredefinedTemplateSets(predefinedTemplateSets);
         }
         catch (Exception e) {
-          CustomizeUtil.LOGGER.warn(e);
+          LOGGER.warn(e);
         }
 
         UIUtil.invokeLaterIfNeeded(new Runnable() {
