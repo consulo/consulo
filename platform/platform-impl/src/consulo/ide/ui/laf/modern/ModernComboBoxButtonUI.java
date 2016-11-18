@@ -19,7 +19,9 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.actionSystem.ex.ComboBoxButton;
 import com.intellij.openapi.actionSystem.ex.ComboBoxButtonUI;
+import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import sun.swing.DefaultLookup;
@@ -140,10 +142,11 @@ public class ModernComboBoxButtonUI extends ComboBoxButtonUI {
       }
     }
 
+    GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
     g.setColor(comboBoxButton.isEnabled() ? comboBoxButton.getForeground() : borderColor);
     g.drawLine(x + JBUI.scale(3), JBUI.scale(7), x + JBUI.scale(7), JBUI.scale(11));
     g.drawLine(x + JBUI.scale(7), JBUI.scale(11), x + JBUI.scale(11), JBUI.scale(7));
-
+    config.restore();
     g.setPaintMode();
   }
 }
