@@ -25,6 +25,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
+import com.intellij.openapi.actionSystem.ex.ComboBoxButton;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -35,9 +36,9 @@ import com.intellij.ui.SizedIcon;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -131,7 +132,6 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
   @Override
   public JComponent createCustomComponent(final Presentation presentation) {
     ComboBoxButton button = createComboBoxButton(presentation);
-    button.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
     NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
     panel.setBorder(IdeBorderFactory.createEmptyBorder(0, 0, 0, 2));
     panel.add(button);

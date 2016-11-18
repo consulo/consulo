@@ -45,10 +45,7 @@ import java.awt.event.MouseMotionListener;
  * This is extract code from {@link ComboBoxButton}
  */
 public class ComboBoxButtonUI extends BasicButtonUI {
-  private static final Icon ARROW_ICON = UIUtil.isUnderDarcula() ? AllIcons.General.ComboArrow : AllIcons.General.ComboBoxButtonArrow;
-  private static final Icon DISABLED_ARROW_ICON = IconLoader.getDisabledIcon(ARROW_ICON);
-
-  private boolean myMouseInside = false;
+  protected boolean myMouseInside;
 
   public static ComponentUI createUI(JComponent c) {
     return new ComboBoxButtonUI((ComboBoxButton)c);
@@ -96,16 +93,27 @@ public class ComboBoxButtonUI extends BasicButtonUI {
       }
     });
 
+    setupBorder(comboBoxButton);
+  }
+
+  protected void setupBorder(ComboBoxButton comboBoxButton) {
     comboBoxButton.setBorder(new AbstractBorder() {
       @Override
       public Insets getBorderInsets(Component c) {
         final Insets insets = super.getBorderInsets(c);
         //noinspection UseDPIAwareInsets
-        return new Insets(insets.top, insets.left + JBUI.scale(2), insets.bottom, insets.right + JBUI.scale(2) + ARROW_ICON.getIconWidth());
+        return new Insets(insets.top, insets.left + JBUI.scale(2), insets.bottom, insets.right + JBUI.scale(2) + getArrowIcon().getIconWidth());
       }
     });
   }
 
+  public static Icon getArrowIcon() {
+    return UIUtil.isUnderDarkBuildInLaf() ? AllIcons.General.ComboArrow : AllIcons.General.ComboBoxButtonArrow;
+  }
+
+  public static Icon getDisabledArrowIcon() {
+    return IconLoader.getDisabledIcon(getArrowIcon());
+  }
 
   // Event forwarding. We need it if user does press-and-drag gesture for opening popup and choosing item there.
   // It works in JComboBox, here we provide the same behavior
@@ -138,7 +146,7 @@ public class ComboBoxButtonUI extends BasicButtonUI {
     ComboBoxAction comboBoxAction = comboBoxButton.getComboBoxAction();
 
     final boolean isEmpty = comboBoxButton.getIcon() == null && StringUtil.isEmpty(comboBoxButton.getText());
-    int width = isEmpty ? JBUI.scale(10) + ARROW_ICON.getIconWidth() : super.getPreferredSize(c).width;
+    int width = isEmpty ? JBUI.scale(10) + getArrowIcon().getIconWidth() : super.getPreferredSize(c).width;
     if (comboBoxAction.isSmallVariant()) width += JBUI.scale(4);
     return new Dimension(width, comboBoxAction.isSmallVariant() ? JBUI.scale(19) : super.getPreferredSize(c).height);
   }
@@ -210,7 +218,7 @@ public class ComboBoxButtonUI extends BasicButtonUI {
       }
     }
     final Insets insets = comboBoxButton.insets(); // FIXME [VISTALL] we need this ?
-    final Icon icon = comboBoxButton.isEnabled() ? ARROW_ICON : DISABLED_ARROW_ICON;
+    final Icon icon = comboBoxButton.isEnabled() ? getArrowIcon() : getDisabledArrowIcon();
     final int x;
     if (isEmpty) {
       x = (size.width - icon.getIconWidth()) / 2;

@@ -24,6 +24,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
+import com.intellij.openapi.actionSystem.ex.ComboBoxButtonUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
@@ -453,7 +454,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     if (UIUtil.isUnderAquaLookAndFeel()) {
       uiDefaults.put("Panel.opaque", Boolean.TRUE);
-      uiDefaults.put("ScrollBarUI", "com.intellij.ide.ui.laf.IntelliJButtonlessScrollBarUI");
+      uiDefaults.put("ScrollBarUI", IntelliJButtonlessScrollBarUI.class.getName());
+      uiDefaults.put("ComboBoxButtonUI", ComboBoxButtonUI.class.getName());
     }
     else if (UIUtil.isWinLafOnVista()) {
       uiDefaults.put("ComboBox.border", null);

@@ -127,7 +127,7 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
     return popup;
   }
 
-  protected ComboBoxAction getComboBoxAction() {
+  public ComboBoxAction getComboBoxAction() {
     return myComboBoxAction;
   }
 
@@ -168,7 +168,7 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
 
   @Override
   public void updateUI() {
-    setUI(new ComboBoxButtonUI(this));
+    setUI(UIManager.getUI(this));
   }
 
   protected class MyButtonModel extends DefaultButtonModel {
