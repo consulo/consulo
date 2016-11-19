@@ -16,6 +16,7 @@
 
 package com.intellij.ide.util;
 
+import com.intellij.util.ui.JBUI;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.navigation.ColoredItemPresentation;
@@ -184,7 +185,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
       rightCellRendererComponent = rightRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
       add(rightCellRendererComponent, BorderLayout.EAST);
       spacer = new JPanel();
-      spacer.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
+      spacer.setBorder(JBUI.Borders.empty(0, 2, 0, 2));
       add(spacer, BorderLayout.CENTER);
       myRightComponentWidth = rightCellRendererComponent.getPreferredSize().width;
       myRightComponentWidth += spacer.getPreferredSize().width;

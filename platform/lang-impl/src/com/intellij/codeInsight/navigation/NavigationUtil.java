@@ -53,6 +53,7 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -354,7 +355,7 @@ public final class NavigationUtil {
 
         final JComponent leftRenderer = (JComponent)component.getComponents()[0];
         component.remove(leftRenderer);
-        panelWithMnemonic.setBorder(BorderFactory.createEmptyBorder(0, 7, 0, 0));
+        panelWithMnemonic.setBorder(JBUI.Borders.empty(0, 7, 0, 0));
         panelWithMnemonic.setBackground(leftRenderer.getBackground());
         label.setBackground(leftRenderer.getBackground());
         panelWithMnemonic.add(label, BorderLayout.WEST);
@@ -433,7 +434,7 @@ public final class NavigationUtil {
       }
     });
 
-    popup.setMinimumSize(new Dimension(200, -1));
+    popup.setMinimumSize(JBUI.size(200, -1));
 
     for (Object item : elements) {
       final int mnemonic = getMnemonic(item, itemsMap);
