@@ -26,11 +26,11 @@ import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.tabs.impl.TabLabel;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Map;
 
@@ -69,7 +69,7 @@ public class JBRunnerTabs extends JBEditorTabs {
   @Override
   public Rectangle layout(JComponent c, Rectangle bounds) {
     if (c instanceof Toolbar) {
-      bounds.height -= 5;
+      bounds.height -= JBUI.scale(5);
       return super.layout(c, bounds);
     }
     return super.layout(c, bounds);
@@ -101,7 +101,7 @@ public class JBRunnerTabs extends JBEditorTabs {
 
     @Override
     public void apply(UiDecorator.UiDecoration decoration) {
-      setBorder(new EmptyBorder(5, 5, 7, 5));
+      setBorder(JBUI.Borders.empty(5, 5, 7, 5));
     }
 
     @Override
