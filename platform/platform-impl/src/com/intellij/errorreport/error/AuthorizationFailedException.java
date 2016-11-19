@@ -20,7 +20,4 @@ package com.intellij.errorreport.error;
  * @since 2:56:46 PM Aug 5, 2003
  */
 public class AuthorizationFailedException extends Exception {
-  public AuthorizationFailedException(String message) {
-    super(message);
-  }
 }

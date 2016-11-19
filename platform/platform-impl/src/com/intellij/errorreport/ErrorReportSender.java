@@ -27,6 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.ide.webService.WebServiceApi;
+import consulo.ide.webService.WebServicesConfiguration;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -48,22 +49,19 @@ public class ErrorReportSender {
     OK,
     PLATFORM_UPDATE_REQUIRED,
     PLUGIN_UPDATE_REQUIRED,
-    BAD_REPORT
+    BAD_REPORT,
+    AUTHORIZATION_FAILED
   }
 
   private ErrorReportSender() {
   }
 
-  public static void sendReport(Project project,
-                                String logic,
-                                ErrorBean errorBean,
-                                final java.util.function.Consumer<String> callback,
-                                final Consumer<Exception> errback) {
+  public static void sendReport(Project project, ErrorBean errorBean, final java.util.function.Consumer<String> callback, final Consumer<Exception> errback) {
     Task.Backgroundable.queue(project, DiagnosticBundle.message("title.submitting.error.report"), indicator -> {
       try {
         HttpConfigurable.getInstance().prepareURL(WebServiceApi.MAIN.buildUrl());
 
-        String id = sendAndHandleResult(logic, errorBean);
+        String id = sendAndHandleResult(errorBean);
 
         callback.accept(id);
       }
@@ -73,7 +71,7 @@ public class ErrorReportSender {
     });
   }
 
-  public static String sendAndHandleResult(String login, ErrorBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
+  public static String sendAndHandleResult(ErrorBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
     String reply = doPost(WebServiceApi.ERROR_REPORTER_API.buildUrl("create"), error);
 
     Map<String, String> map = new Gson().fromJson(reply, new TypeToken<Map<String, String>>() {
@@ -84,8 +82,6 @@ public class ErrorReportSender {
       throw new WebServiceException();
     }
 
-    //TODO [VISTALL]  throw new AuthorizationFailedException(login);
-
     try {
       ResultType resultType = ResultType.valueOf(type);
       switch (resultType) {
@@ -95,6 +91,8 @@ public class ErrorReportSender {
             throw new WebServiceException();
           }
           return id;
+        case AUTHORIZATION_FAILED:
+          throw new AuthorizationFailedException();
         case PLATFORM_UPDATE_REQUIRED:
         case PLUGIN_UPDATE_REQUIRED:
           throw new UpdateAvailableException();
@@ -113,6 +111,10 @@ public class ErrorReportSender {
     HttpPost post = new HttpPost(url);
     post.setEntity(new StringEntity(new Gson().toJson(errorBean), ContentType.APPLICATION_JSON));
 
+    String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.ERROR_REPORTER_API);
+    if(authKey != null) {
+      post.addHeader("Authorization", authKey);
+    }
     return httpClient.execute(post, response -> {
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode != HttpURLConnection.HTTP_OK) {

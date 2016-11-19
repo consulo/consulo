@@ -113,7 +113,7 @@ public class ITNReporter extends ErrorReportSubmitter {
       errorBean.setAttachments(((LogMessageEx)data).getAttachments());
     }
 
-    ErrorReportSender.sendReport(project, null, errorBean, id -> {
+    ErrorReportSender.sendReport(project, errorBean, id -> {
       previousExceptionThreadId = id;
       final SubmittedReportInfo reportInfo = new SubmittedReportInfo(null, null, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
       callback.consume(reportInfo);

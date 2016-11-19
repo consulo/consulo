@@ -31,7 +31,7 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
   static class State {
     public boolean enable = true;
     public long lastTimeCheck = 0;
-    public UpdateChannel channel = UpdateChannel.nightly;   //TODO [VISTALL] we need change it
+    public UpdateChannel channel = UpdateChannel.nightly;   //TODO [VISTALL] we need load it while app start
   }
 
   private State myState = new State();
@@ -46,6 +46,10 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
 
   public boolean isEnable() {
     return myState.enable;
+  }
+
+  public void setEnable(boolean value) {
+    myState.enable = value;
   }
 
   public long getLastTimeCheck() {

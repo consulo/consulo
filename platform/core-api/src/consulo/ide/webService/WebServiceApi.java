@@ -16,27 +16,35 @@
 package consulo.ide.webService;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
 /**
  * @author VISTALL
  * @since 24-Sep-16
- *
- * TODO [VISTALL] missed:
- * > statistics
  */
 public enum WebServiceApi {
-  MAIN("https://consulo.io"),
-  ERROR_REPORTER_API("https://hub.consulo.io/api/errorReporter/"),
-  REPOSITORY_API("https://hub.consulo.io/api/repository/");
+  MAIN(null, "https://consulo.io"),
+  ERROR_REPORTER_API("Error Reporter", "https://hub.consulo.io/api/errorReporter/"),
+  STATISTICS_API(null, "https://hub.consulo.io/api/statistics/"),
+  SYNCHRONIZE_API("Synchronize", "https://hub.consulo.io/api/synchronize/"),
+  REPOSITORY_API(null, "https://hub.consulo.io/api/repository/");
 
+  @Nullable
+  private String myDescription;
   private String myDefaultUrl;
   private String myOverrideProperty;
 
-  WebServiceApi(String defaultUrl) {
+  WebServiceApi(@Nullable String description, String defaultUrl) {
+    myDescription = description;
     myDefaultUrl = defaultUrl;
     myOverrideProperty = "consulo." + name().toLowerCase(Locale.US).replace("_", ".");
+  }
+
+  @Nullable
+  public String getDescription() {
+    return myDescription;
   }
 
   @NotNull

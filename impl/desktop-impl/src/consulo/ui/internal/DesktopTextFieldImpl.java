@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.RequiredUIAccess;
@@ -65,7 +66,7 @@ public class DesktopTextFieldImpl extends JBTextField implements TextField, Swin
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
   private void fireListeners() {
-    myEventDispatcher.getMulticaster().valueChanged(new ValueEvent(this, getText()));
+    myEventDispatcher.getMulticaster().valueChanged(new ValueEvent(this, getValue()));
   }
 
   @Override
@@ -80,7 +81,7 @@ public class DesktopTextFieldImpl extends JBTextField implements TextField, Swin
 
   @Override
   public String getValue() {
-    return getText();
+    return StringUtil.nullize(getText());
   }
 
   @RequiredUIAccess
