@@ -121,10 +121,6 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     });
     myActionsPanel.add(installPluginFromFileSystem);
 
-    final JButton button = new JButton("Update Settings");
-    button.setMnemonic('s');
-
-    myActionsPanel.add(button);
 
     final StatusText emptyText = myPluginTable.getEmptyText();
     emptyText.setText("Nothing to show.");
