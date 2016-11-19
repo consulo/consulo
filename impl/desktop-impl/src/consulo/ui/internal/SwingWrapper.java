@@ -15,26 +15,34 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.MenuBar;
-import consulo.ui.MenuItem;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 19-Nov-16.
  */
-public class DesktopMenuBarImpl extends JMenuBar implements MenuBar, SwingWrapper {
-  @NotNull
+public interface SwingWrapper extends Component {
+  @Nullable
   @Override
-  public MenuBar add(@NotNull MenuItem menuItem) {
-    if(menuItem instanceof JMenu) {
-      add((JMenu)menuItem);
-    }
-    else {
-      add((JMenu)new DesktopMenuImpl(menuItem.getText()));
-    }
-    return this;
+  default Component getParentComponent() {
+    Container container = (Container)this;
+    return (Component)container.getParent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  default void setSize(@NotNull Size size) {
+    Container container = (Container)this;
+    container.setPreferredSize(new Dimension(size.getWidth(), size.getHeight()));
+  }
+
+  @Override
+  default void dispose() {
   }
 }

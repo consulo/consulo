@@ -15,37 +15,16 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.Component;
 import consulo.ui.Label;
-import consulo.ui.shared.Size;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class DesktopLabelImpl extends JLabel implements Label {
+public class DesktopLabelImpl extends JLabel implements Label, SwingWrapper {
   public DesktopLabelImpl(String text) {
     super(text);
-  }
-
-  @Override
-  public void setSize(@NotNull Size size) {
-    setSize(new Dimension(size.getWidth(), size.getHeight()));
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @Override
-  public void dispose() {
-
   }
 }

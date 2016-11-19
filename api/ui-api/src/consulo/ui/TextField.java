@@ -13,28 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
-
-import consulo.ui.MenuBar;
-import consulo.ui.MenuItem;
-import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 19-Nov-16.
  */
-public class DesktopMenuBarImpl extends JMenuBar implements MenuBar, SwingWrapper {
-  @NotNull
-  @Override
-  public MenuBar add(@NotNull MenuItem menuItem) {
-    if(menuItem instanceof JMenu) {
-      add((JMenu)menuItem);
-    }
-    else {
-      add((JMenu)new DesktopMenuImpl(menuItem.getText()));
-    }
-    return this;
-  }
+public interface TextField extends ValueComponent<String> {
 }

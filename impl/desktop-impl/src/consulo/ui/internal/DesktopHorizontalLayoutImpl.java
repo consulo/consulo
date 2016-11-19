@@ -17,25 +17,17 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.HorizontalLayout;
-import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLayout {
+public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLayout, SwingWrapper {
   public DesktopHorizontalLayoutImpl() {
     super(new com.intellij.ui.components.panels.HorizontalLayout(0));
-  }
-
-  @Override
-  public void setSize(@NotNull Size size) {
-    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @NotNull
@@ -43,16 +35,5 @@ public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLay
   public HorizontalLayout add(@NotNull Component component) {
     add((java.awt.Component)component);
     return this;
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @Override
-  public void dispose() {
-
   }
 }

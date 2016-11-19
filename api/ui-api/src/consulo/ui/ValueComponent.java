@@ -17,6 +17,8 @@ package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EventListener;
+
 /**
  * @author VISTALL
  * @since 13-Jun-16
@@ -40,7 +42,7 @@ public interface ValueComponent<V> extends Component {
     }
   }
 
-  interface ValueListener<V> {
+  interface ValueListener<V> extends EventListener{
     @RequiredUIAccess
     void valueChanged(@NotNull ValueEvent<V> event);
   }

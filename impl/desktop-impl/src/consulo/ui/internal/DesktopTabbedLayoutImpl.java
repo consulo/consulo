@@ -29,16 +29,11 @@ import java.awt.*;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout {
+public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout, SwingWrapper {
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
     return this;
-  }
-
-  @Override
-  public void setSize(@NotNull Size size) {
-    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @NotNull
@@ -46,16 +41,5 @@ public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout
   public TabbedLayout addTab(@NotNull String tabName, @NotNull Component component) {
     addTab(tabName, (java.awt.Component)component);
     return this;
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @Override
-  public void dispose() {
-
   }
 }

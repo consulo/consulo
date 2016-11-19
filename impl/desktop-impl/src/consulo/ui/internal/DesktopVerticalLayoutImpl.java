@@ -17,43 +17,26 @@ package consulo.ui.internal;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.ui.Component;
-import consulo.ui.shared.Size;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.VerticalLayout;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout {
+public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout, SwingWrapper {
   public DesktopVerticalLayoutImpl() {
     super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
   }
 
-  @Override
-  public void setSize(@NotNull Size size) {
-    setSize(new Dimension(size.getWidth(), size.getHeight()));
-  }
-
+  @RequiredUIAccess
   @NotNull
   @Override
   public VerticalLayout add(@NotNull Component component) {
     add((java.awt.Component)component);
     return this;
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @Override
-  public void dispose() {
-
   }
 }

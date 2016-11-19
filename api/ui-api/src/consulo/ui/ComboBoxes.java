@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -30,6 +31,17 @@ public class ComboBoxes {
 
     public SimpleBuilder<K> add(K key, String value) {
       myValues.put(key, value);
+      return this;
+    }
+
+    public SimpleBuilder<K> fillByEnum(Class<? extends K> clazz, Function<K, String> presentation) {
+      if (!clazz.isEnum()) {
+        throw new IllegalArgumentException("Accepted only enum");
+      }
+      K[] enumConstants = clazz.getEnumConstants();
+      for (K enumConstant : enumConstants) {
+        add(enumConstant, presentation.apply(enumConstant));
+      }
       return this;
     }
 

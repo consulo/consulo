@@ -29,4 +29,12 @@ public class Labels {
     horizontal.add(component);
     return horizontal;
   }
+
+  @RequiredUIAccess
+  public static Component leftFilled(@NotNull String text, @NotNull Component component) {
+    DockLayout dock = Layouts.dock();
+    dock.left(Components.label(text));
+    dock.center(component);
+    return dock;
+  }
 }

@@ -70,6 +70,8 @@ abstract class _UIInternals {
 
   abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
+  abstract TextField _Components_TextField(String text);
+
   abstract RadioButton _Components_radioButton(String text, boolean selected);
 
   abstract Image _Components_image(ImageRef imageRef);
@@ -81,7 +83,6 @@ abstract class _UIInternals {
   abstract Menu _MenuItems_menu(String text);
 
   abstract MenuBar _MenuItems_menuBar();
-
   @RequiredUIAccess
   @NotNull
   abstract UIAccess _UIAccess_get();

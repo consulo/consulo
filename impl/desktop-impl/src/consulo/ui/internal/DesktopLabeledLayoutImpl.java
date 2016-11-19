@@ -18,9 +18,7 @@ package consulo.ui.internal;
 import com.intellij.ui.IdeBorderFactory;
 import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
-import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,16 +27,11 @@ import java.awt.*;
  * @author VISTALL
  * @since 15-Jun-16
  */
-public class DesktopLabeledLayoutImpl extends JPanel implements LabeledLayout {
+public class DesktopLabeledLayoutImpl extends JPanel implements SwingWrapper, LabeledLayout {
   public DesktopLabeledLayoutImpl(String text) {
     super(new BorderLayout());
 
     setBorder(IdeBorderFactory.createTitledBorder(text));
-  }
-
-  @Override
-  public void setSize(@NotNull Size size) {
-    setSize(new Dimension(size.getWidth(), size.getHeight()));
   }
 
   @NotNull
@@ -46,16 +39,5 @@ public class DesktopLabeledLayoutImpl extends JPanel implements LabeledLayout {
   public LabeledLayout set(@NotNull Component component) {
     add((java.awt.Component)component, BorderLayout.CENTER);
     return this;
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @Override
-  public void dispose() {
-
   }
 }

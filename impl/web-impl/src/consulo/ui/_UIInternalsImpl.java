@@ -88,6 +88,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  TextField _Components_TextField(String text) {
+    return null;
+  }
+
+  @Override
   RadioButton _Components_radioButton(String text, boolean selected) {
     return new WGwtRadioButtonImpl(selected, text);
   }

@@ -18,12 +18,23 @@ package consulo.ui;
 import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
-* @author VISTALL
-* @since 14-Jun-16
-*/
+ * @author VISTALL
+ * @since 14-Jun-16
+ */
 public class Components {
+  @NotNull
+  public static TextField textField() {
+    return textField(null);
+  }
+
+  @NotNull
+  public static TextField textField(@Nullable String text) {
+    return _UIInternals.get()._Components_TextField(text);
+  }
+
   @NotNull
   public static CheckBox checkBox(@NotNull String text) {
     return checkBox(text, false);

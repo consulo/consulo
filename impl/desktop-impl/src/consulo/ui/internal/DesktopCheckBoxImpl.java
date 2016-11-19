@@ -17,19 +17,15 @@ package consulo.ui.internal;
 
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.CheckBox;
-import consulo.ui.Component;
-import consulo.ui.shared.Size;
 import consulo.ui.ValueComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox {
+public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox, SwingWrapper {
   public DesktopCheckBoxImpl(String text, boolean selected) {
     super(text, selected);
   }
@@ -47,22 +43,6 @@ public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox {
     }
 
     setSelected(value);
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @Override
-  public void setSize(@NotNull Size size) {
-    setSize(new Dimension(size.getWidth(), size.getHeight()));
-  }
-
-  @Override
-  public void dispose() {
-
   }
 
   @Override
