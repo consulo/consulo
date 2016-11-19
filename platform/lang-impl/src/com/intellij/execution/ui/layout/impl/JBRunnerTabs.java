@@ -123,7 +123,7 @@ public class JBRunnerTabs extends JBEditorTabs {
     @Override
     public Dimension getPreferredSize() {
       Dimension result = super.getPreferredSize();
-      result.height += myTabs.getActiveTabUnderlineHeight() - 1;
+      result.height += myTabs.getActiveTabUnderlineHeight() - JBUI.scale(1);
       return result;
     }
   }
