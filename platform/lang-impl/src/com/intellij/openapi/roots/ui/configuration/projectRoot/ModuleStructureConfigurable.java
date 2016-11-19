@@ -48,6 +48,7 @@ import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.projectImport.ProjectImportProvider;
 import com.intellij.ui.navigation.Place;
@@ -340,6 +341,13 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   @Override
   public JComponent createComponent() {
     return new MyDataProviderWrapper(super.createComponent());
+  }
+
+  @NotNull
+  @Override
+  public Couple<JComponent> createSplitterComponents() {
+    Couple<JComponent> couple = super.createSplitterComponents();
+    return Couple.of(new MyDataProviderWrapper(couple.getFirst()), couple.getSecond());
   }
 
   @Override
