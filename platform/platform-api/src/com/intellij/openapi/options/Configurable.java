@@ -65,7 +65,9 @@ public interface Configurable extends UnnamedConfigurable {
    * @return the visible name of the component.
    */
   @Nls
-  String getDisplayName();
+  default String getDisplayName() {
+    return null;
+  }
 
   /**
    * Returns the topic in the help file which is shown when help for the configurable
@@ -75,7 +77,9 @@ public interface Configurable extends UnnamedConfigurable {
    */
   @Nullable
   @NonNls
-  String getHelpTopic();
+  default String getHelpTopic() {
+    return null;
+  }
 
   /**
    * @deprecated this marker interface was used to hide a Configurable declared as applicationConfigurable or projectConfigurable extension
