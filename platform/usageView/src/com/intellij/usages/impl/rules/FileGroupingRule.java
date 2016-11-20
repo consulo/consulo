@@ -31,7 +31,7 @@ import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageInFile;
-import com.intellij.util.IconUtil;
+import consulo.fileTypes.impl.VfsIconUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,7 +70,7 @@ public class FileGroupingRule implements UsageGroupingRule {
     }
 
     private Icon getIconImpl() {
-      return IconUtil.getIcon(myFile, Iconable.ICON_FLAG_READ_STATUS, myProject);
+      return VfsIconUtil.getIcon(myFile, Iconable.ICON_FLAG_READ_STATUS, myProject);
     }
 
     @Override

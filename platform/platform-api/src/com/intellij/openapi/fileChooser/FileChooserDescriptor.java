@@ -16,7 +16,6 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.icons.AllIcons;
-import consulo.fileTypes.ArchiveFileType;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Iconable;
@@ -24,10 +23,11 @@ import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.UIBundle;
-import com.intellij.util.IconUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.fileTypes.ArchiveFileType;
+import consulo.fileTypes.impl.VfsIconUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.*;
@@ -262,10 +262,7 @@ public class FileChooserDescriptor implements Cloneable {
   }
 
   public Icon getIcon(final VirtualFile file) {
-    if (file.isDirectory()) {
-      return dressIcon(file, AllIcons.Nodes.TreeClosed);
-    }
-    return IconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null);
+    return VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null);
   }
 
   protected static Icon dressIcon(final VirtualFile file, final Icon baseIcon) {

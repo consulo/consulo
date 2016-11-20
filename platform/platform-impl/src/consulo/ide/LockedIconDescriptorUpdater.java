@@ -17,9 +17,13 @@ package consulo.ide;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.WritingAccessProvider;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.util.BitUtil;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
@@ -29,9 +33,14 @@ public class LockedIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override
   public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
-    final boolean isLocked = (flags & Iconable.ICON_FLAG_READ_STATUS) != 0 && !element.isWritable();
-    if(isLocked) {
-      iconDescriptor.addLayerIcon(AllIcons.Nodes.Locked);
+    if (BitUtil.isSet(flags, Iconable.ICON_FLAG_READ_STATUS)) {
+
+      VirtualFile file = PsiUtilCore.getVirtualFile(element);
+      final boolean isLocked = !element.isWritable() || !WritingAccessProvider.isPotentiallyWritable(file, element.getProject());
+
+      if (isLocked) {
+        iconDescriptor.addLayerIcon(AllIcons.Nodes.Locked);
+      }
     }
   }
 }

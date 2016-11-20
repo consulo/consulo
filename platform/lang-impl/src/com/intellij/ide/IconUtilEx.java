@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.IconUtil;
+import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ide.IconDescriptorUpdaters;
 
 import javax.swing.*;
@@ -37,7 +37,7 @@ public class IconUtilEx {
     }
     if (object instanceof VirtualFile) {
       VirtualFile file = (VirtualFile)object;
-      return IconUtil.getIcon(file, flags, project);
+      return VfsIconUtil.getIcon(file, flags, project);
     }
     return null;
   }

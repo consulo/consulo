@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.util.IconUtil;
+import consulo.fileTypes.impl.VfsIconUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -67,7 +67,7 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
 
   @Override
   public Icon getIcon() {
-    return IconUtil.getIcon(myVFile, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS, myProject);
+    return VfsIconUtil.getIcon(myVFile, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS, myProject);
   }
 
   @Override

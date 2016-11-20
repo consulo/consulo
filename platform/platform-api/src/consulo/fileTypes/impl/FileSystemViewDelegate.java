@@ -15,6 +15,7 @@
  */
 package consulo.fileTypes.impl;
 
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,19 +52,32 @@ public class FileSystemViewDelegate {
 
     try {
       Object object = ourShellFolderMethod.invoke(FileSystemView.getFileSystemView(), file);
-      if(!(object instanceof ShellFolder)) {
+      if (!(object instanceof ShellFolder)) {
         return getDefaultIcon(file);
       }
 
-      ShellFolder sf = (ShellFolder)object;
-      Image icon = sf.getIcon(JBUI.scale(1f) > 1.5f);
-      if(icon != null) {
-        return new ImageIcon(icon, sf.getFolderType());
+      if (SystemInfo.isWindows) {
+        if(!JBUI.isHiDPI()) {
+          return getIconFromShellFolder(file, (ShellFolder)object);
+        }
+
+        // on HiDPI monitors, ShellFolder return 32x32 only icons, and cut base icon
+        // it ignore scale, for 2.5 scale return icon with 32x32 (and cut only 25% of icon, not resize)
+        // that why - return default icon
+      }
+      else {
+        return getIconFromShellFolder(file, (ShellFolder)object);
       }
     }
-    catch (IllegalAccessException ignored) {
+    catch (IllegalAccessException | InvocationTargetException ignored) {
     }
-    catch (InvocationTargetException ignored) {
+    return getDefaultIcon(file);
+  }
+
+  private static Icon getIconFromShellFolder(File file, ShellFolder sf) {
+    Image icon = sf.getIcon(JBUI.isHiDPI());
+    if (icon != null) {
+      return new ImageIcon(icon, sf.getFolderType());
     }
     return getDefaultIcon(file);
   }

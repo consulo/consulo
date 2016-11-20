@@ -23,9 +23,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DeferredIcon;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
-import com.intellij.util.IconUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.web.gwt.shared.transport.GwtVirtualFile;
 
 import javax.swing.*;
@@ -45,7 +45,7 @@ public class GwtVirtualFileUtil {
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       @Override
       public void run() {
-        Icon icon = IconUtil.getIcon(virtualFile, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY, project);
+        Icon icon = VfsIconUtil.getIcon(virtualFile, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY, project);
         if (icon instanceof DeferredIcon) {
           icon = ((DeferredIcon)icon).evaluate();
         }

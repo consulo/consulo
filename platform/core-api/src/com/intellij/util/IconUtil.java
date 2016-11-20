@@ -15,89 +15,24 @@
  */
 package com.intellij.util;
 
-import com.intellij.icons.AllIcons;
-import consulo.ide.IconDescriptor;
-import consulo.ide.IconDescriptorUpdaters;
-import com.intellij.ide.presentation.VirtualFilePresentation;
-import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.VFileProperty;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.ui.IconDeferrer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-
 /**
  * @author max
  * @author Konstantin Bulenkov
  */
 public class IconUtil {
-  private static final Key<Boolean> PROJECT_WAS_EVER_INITIALIZED = Key.create("iconDeferrer:projectWasEverInitialized");
-
-  private static NullableFunction<AnyIconKey<VirtualFile>, Icon> ourVirtualFileIconFunc = new NullableFunction<AnyIconKey<VirtualFile>, Icon>() {
-    @Override
-    @RequiredReadAction
-    public Icon fun(final AnyIconKey<VirtualFile> key) {
-      final VirtualFile file = key.getObject();
-      final int flags = key.getFlags();
-      final Project project = key.getProject();
-
-      if (!file.isValid() || project != null && (project.isDisposed() || !wasEverInitialized(project))) return null;
-
-      boolean processedDescriptors = false;
-      final Icon nativeIcon = NativeFileIconUtil.INSTANCE.getIcon(file);
-      IconDescriptor iconDescriptor = new IconDescriptor(nativeIcon == null ? VirtualFilePresentation.getIcon(file) : nativeIcon);
-      if (project != null) {
-        PsiManager manager = PsiManager.getInstance(project);
-        final PsiElement element = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
-        if (element != null) {
-          IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, element, flags);
-          processedDescriptors = true;
-        }
-      }
-
-      // if descriptors not processed - we need add layer icon obviously
-      if (!processedDescriptors && file.is(VFileProperty.SYMLINK)) {
-        iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
-      }
-
-      Icon icon = iconDescriptor.toIcon();
-      Iconable.LastComputedIcon.put(file, icon, flags);
-      return icon;
-    }
-  };
-
-  private static boolean wasEverInitialized(@NotNull Project project) {
-    Boolean was = project.getUserData(PROJECT_WAS_EVER_INITIALIZED);
-    if (was == null) {
-      if (project.isInitialized()) {
-        was = Boolean.valueOf(true);
-        project.putUserData(PROJECT_WAS_EVER_INITIALIZED, was);
-      }
-      else {
-        was = Boolean.valueOf(false);
-      }
-    }
-
-    return was.booleanValue();
-  }
 
   @NotNull
   public static Icon cropIcon(@NotNull Icon icon, int maxWidth, int maxHeight) {
@@ -145,16 +80,6 @@ public class IconUtil {
     }
     g.dispose();
     return new ImageIcon(second);
-  }
-
-  @Nullable
-  public static Icon getIcon(@NotNull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
-    Icon icon = Iconable.LastComputedIcon.get(file, flags);
-    if(icon == null) {
-      icon = VirtualFilePresentation.getIcon(file);
-    }
-
-    return IconDeferrer.getInstance().defer(icon, new AnyIconKey<VirtualFile>(file, project, flags), ourVirtualFileIconFunc);
   }
 
   @NotNull
