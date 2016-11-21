@@ -23,6 +23,7 @@ import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.tabs.impl.TabLabel;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,7 +71,7 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
           maxOffset++;
           g2d.setPaint(UIUtil.getPanelBackground());
           if (getFirstTabOffset() > 0) {
-            g2d.fillRect(clip.x, clip.y, clip.x + getFirstTabOffset() - 1, clip.y + maxLength - myTabs.getActiveTabUnderlineHeight());
+            g2d.fillRect(clip.x, clip.y, clip.x + JBUI.scale(getFirstTabOffset() - 1),clip.y + maxLength - myTabs.getActiveTabUnderlineHeight());
           }
           g2d.fillRect(clip.x + maxOffset, clip.y, clip.width - maxOffset, clip.y + maxLength - myTabs.getActiveTabUnderlineHeight());
           g2d.setPaint(new JBColor(Gray._181, UIUtil.getPanelBackground()));
