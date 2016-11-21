@@ -33,6 +33,7 @@ import com.intellij.ui.*;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,6 +56,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
   private final FlatWelcomeScreen myScreen;
   private boolean myDisposed;
 
+  @RequiredDispatchThread
   public FlatWelcomeFrame() {
     final JRootPane rootPane = getRootPane();
     myScreen = new FlatWelcomeScreen(this);
@@ -64,7 +66,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
     setGlassPane(glassPane);
     glassPane.setVisible(false);
     //setUndecorated(true);
-    setContentPane(myScreen.getWelcomePanel());
+    setContentPane(myScreen);
     setDefaultTitle();
     AppUIUtil.updateWindowIcon(this);
     setSize(getDefaultWindowSize());
@@ -110,7 +112,6 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
       myBalloonLayout = null;
     }
 
-    Disposer.dispose(myScreen);
     WelcomeFrame.resetInstance();
 
     // open project from welcome screen show progress dialog and call FocusTrackback.register()

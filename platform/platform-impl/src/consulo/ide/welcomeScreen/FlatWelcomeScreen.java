@@ -18,7 +18,6 @@ package consulo.ide.welcomeScreen;
 import com.intellij.ide.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.wm.WelcomeScreen;
 import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomePanel;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomePopupAction;
@@ -39,7 +38,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Sep-16
  */
-public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
+public class FlatWelcomeScreen extends JPanel {
   public static final String MAIN = "main";
 
   private final FlatWelcomePanel myMainWelcomePanel;
@@ -144,21 +143,6 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreen {
 
   private static Runnable createUsageTracker(final AnAction action) {
     return () -> UsageTrigger.trigger("welcome.screen." + ActionManager.getInstance().getId(action));
-  }
-
-  @Override
-  public JComponent getWelcomePanel() {
-    return this;
-  }
-
-  @Override
-  public void setupFrame(JFrame frame) {
-
-  }
-
-  @Override
-  public void dispose() {
-
   }
 
   public void replacePanel(JComponent oldCard) {
