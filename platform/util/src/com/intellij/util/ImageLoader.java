@@ -135,7 +135,7 @@ public class ImageLoader implements Serializable {
   }
 
   public static List<Pair<String, Integer>> getFileNames(@NotNull String file) {
-    return getFileNames(file, UIUtil.isUnderDarkBuildInLaf(), UIUtil.isRetina() || JBUI.scale(1.0f) >= 1.5f);
+    return getFileNames(file, UIUtil.isUnderDarkBuildInLaf(), UIUtil.isHiDPIRender() || JBUI.scale(1.0f) >= 1.5f);
   }
 
   public static List<Pair<String, Integer>> getFileNames(@NotNull String file, boolean dark, boolean retina) {
@@ -188,7 +188,7 @@ public class ImageLoader implements Serializable {
 
       waitForImage(image);
 
-      if (UIUtil.isRetina() && scale > 1) {
+      if (UIUtil.isHiDPIRender() && scale > 1) {
         image = RetinaImage.createFrom(image, scale, ourComponent);
       }
 

@@ -56,10 +56,10 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.ui.AntialiasingUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -943,7 +943,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
           myOpened = true;
           final DialogWrapper activeWrapper = getActiveWrapper();
           for (JComponent c : UIUtil.uiTraverser(e.getWindow()).filter(JComponent.class)) {
-            c.putClientProperty(SwingUtilities2.AA_TEXT_PROPERTY_KEY, AntialiasingType.getAAHintForSwingComponent());
+            AntialiasingUtil.setup(c::putClientProperty, AntialiasingType.getAAHintForSwingComponent());
           }
           if (activeWrapper == null) {
             myFocusedCallback.setRejected();

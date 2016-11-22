@@ -16,9 +16,9 @@
 package com.intellij.util.lang;
 
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.internal.sun.misc.Resource;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
-import sun.misc.Resource;
 
 import java.io.*;
 import java.net.URL;

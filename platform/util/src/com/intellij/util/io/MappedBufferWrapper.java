@@ -16,7 +16,6 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.diagnostic.Logger;
-import sun.nio.ch.DirectBuffer;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,7 +76,7 @@ public abstract class MappedBufferWrapper extends ByteBufferWrapper {
       return false;
     }
 
-    return DirectBufferWrapper.disposeDirectBuffer((DirectBuffer)buffer);
+    return DirectBufferWrapper.disposeDirectBuffer(buffer);
   }
 
   private static boolean tryForce(MappedByteBuffer buffer) {

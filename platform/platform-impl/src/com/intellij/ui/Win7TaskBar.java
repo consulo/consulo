@@ -28,8 +28,6 @@ import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
 
 import java.awt.*;
-import java.awt.peer.ComponentPeer;
-import java.lang.reflect.Method;
 
 /**
  * @author Alexander Lobas
@@ -189,9 +187,8 @@ class Win7TaskBar {
 
   private static WinDef.HWND getHandle(IdeFrame frame) {
     try {
-      ComponentPeer peer = ((Component)frame).getPeer();
-      Method getHWnd = peer.getClass().getMethod("getHWnd");
-      return new WinDef.HWND(new Pointer((Long)getHWnd.invoke(peer)));
+      Pointer pointer = Native.getWindowPointer((Window)frame);
+      return new WinDef.HWND(pointer);
     }
     catch (Throwable e) {
       LOG.error(e);

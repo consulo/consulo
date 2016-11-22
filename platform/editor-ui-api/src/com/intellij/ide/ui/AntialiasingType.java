@@ -18,7 +18,7 @@ package com.intellij.ide.ui;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.ui.UIUtil;
-import sun.swing.SwingUtilities2;
+import consulo.util.ui.AATextInfo;
 
 import java.awt.*;
 
@@ -27,7 +27,7 @@ public enum AntialiasingType {
   GREYSCALE("Greyscale", RenderingHints.VALUE_TEXT_ANTIALIAS_ON, true),
   OFF("No antialiasing", RenderingHints.VALUE_TEXT_ANTIALIAS_OFF, false);
 
-  public static Object getAAHintForSwingComponent() {
+  public static AATextInfo getAAHintForSwingComponent() {
     Application application = ApplicationManager.getApplication();
     if (application != null) {
       AntialiasingType type = UISettings.getInstance().IDE_AA_TYPE;
@@ -57,8 +57,8 @@ public enum AntialiasingType {
     isEnabled = enabled;
   }
 
-  public SwingUtilities2.AATextInfo getTextInfo() {
-    return !isEnabled ? null : new SwingUtilities2.AATextInfo(myHint, UIUtil.getLcdContrastValue());
+  public AATextInfo getTextInfo() {
+    return !isEnabled ? null : new AATextInfo(myHint, UIUtil.getLcdContrastValue());
   }
 
   @Override

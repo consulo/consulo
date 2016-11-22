@@ -22,9 +22,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.Stack;
+import consulo.internal.sun.misc.Resource;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
-import sun.misc.Resource;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,7 +37,7 @@ import java.util.*;
 public class ClassPath {
   private final Stack<URL> myUrls = new Stack<URL>();
   private final ArrayList<Loader> myLoaders = new ArrayList<Loader>();
-  private final HashMap<URL,Loader> myLoadersMap = new HashMap<URL, Loader>();
+  private final HashMap<URL, Loader> myLoadersMap = new HashMap<URL, Loader>();
   private final ClasspathCache myCache = new ClasspathCache();
 
   @NonNls private static final String FILE_PROTOCOL = "file";
@@ -120,12 +120,12 @@ public class ClassPath {
 
   @Nullable
   public Resource getResource(String s, boolean flag) {
-    final long started = myDebugTime ? System.nanoTime():0;
+    final long started = myDebugTime ? System.nanoTime() : 0;
 
     try {
       int i;
       if (myCanUseCache) {
-        Resource prevResource = myCache.iterateLoaders(s, flag ? checkedIterator:uncheckedIterator, s, this);
+        Resource prevResource = myCache.iterateLoaders(s, flag ? checkedIterator : uncheckedIterator, s, this);
         if (prevResource != null) return prevResource;
 
         synchronized (myUrls) {
@@ -199,17 +199,19 @@ public class ClassPath {
     String s;
     if (myAcceptUnescapedUrls) {
       s = url.getFile();
-    } else {
+    }
+    else {
       try {
         s = url.toURI().getSchemeSpecificPart();
-      } catch (URISyntaxException thisShouldNotHappen) {
+      }
+      catch (URISyntaxException thisShouldNotHappen) {
         thisShouldNotHappen.printStackTrace();
         s = url.getFile();
       }
     }
 
     Loader loader = null;
-    if (s != null  && new File(s).isDirectory()) {
+    if (s != null && new File(s).isDirectory()) {
       if (FILE_PROTOCOL.equals(url.getProtocol())) {
         loader = new FileLoader(url, index);
       }
@@ -314,7 +316,7 @@ public class ClassPath {
     total += doneFor;
     ++requests;
     if (doneFor > NS_THRESHOLD) {
-      System.out.println((doneFor/1000000) + " ms for " +msg);
+      System.out.println((doneFor / 1000000) + " ms for " + msg);
     }
     if (requests % 1000 == 0) {
       System.out.println(toString() + ", requests:" + requests + ", time:" + (total / 1000000) + "ms");
@@ -341,6 +343,7 @@ public class ClassPath {
       return null;
     }
   }
+
   private static final ResourceStringLoaderIterator checkedIterator = new ResourceStringLoaderIterator(true);
   private static final ResourceStringLoaderIterator uncheckedIterator = new ResourceStringLoaderIterator(false);
   private final static LoaderCollector myLoaderCollector = new LoaderCollector();

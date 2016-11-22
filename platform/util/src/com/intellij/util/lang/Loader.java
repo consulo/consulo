@@ -16,8 +16,8 @@
 
 package com.intellij.util.lang;
 
+import consulo.internal.sun.misc.Resource;
 import org.jetbrains.annotations.Nullable;
-import sun.misc.Resource;
 
 import java.io.IOException;
 import java.net.URL;

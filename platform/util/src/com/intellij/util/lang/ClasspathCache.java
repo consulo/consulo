@@ -21,12 +21,12 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.BloomFilterBase;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.HashMap;
+import consulo.internal.sun.misc.Resource;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.Nullable;
-import sun.misc.Resource;
 
 import java.util.List;
 import java.util.Map;

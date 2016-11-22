@@ -21,7 +21,7 @@ import com.intellij.util.TimedComputable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sun.misc.Resource;
+import consulo.internal.sun.misc.Resource;
 
 import java.io.*;
 import java.lang.ref.SoftReference;

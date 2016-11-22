@@ -18,10 +18,10 @@ package com.intellij.util.io.zip;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.lang.JarMemoryLoader;
+import consulo.internal.sun.misc.Resource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sun.misc.Resource;
 
 import java.io.File;
 import java.io.IOException;

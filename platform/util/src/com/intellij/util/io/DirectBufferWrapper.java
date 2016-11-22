@@ -16,9 +16,8 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.diagnostic.Logger;
+import consulo.util.io.DirectBufferReflect;
 import org.jetbrains.annotations.Nullable;
-import sun.misc.Cleaner;
-import sun.nio.ch.DirectBuffer;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,17 +53,17 @@ public abstract class DirectBufferWrapper extends ByteBufferWrapper {
   @Override
   public void unmap() {
     if (isDirty()) flush();
-    if (myBuffer != null) disposeDirectBuffer((DirectBuffer)myBuffer);
+    if (myBuffer != null) disposeDirectBuffer(myBuffer);
     myBuffer = null;
   }
 
- static boolean disposeDirectBuffer(final DirectBuffer buffer) {
+ static boolean disposeDirectBuffer(final ByteBuffer buffer) {
     return AccessController.doPrivileged(new PrivilegedAction<Object>() {
+      @Override
       @Nullable
       public Object run() {
         try {
-          Cleaner cleaner = buffer.cleaner();
-          if (cleaner != null) cleaner.clean(); // Already cleaned otherwise
+          DirectBufferReflect.clean(buffer);
           return null;
         }
         catch (Exception e) {
@@ -73,5 +72,4 @@ public abstract class DirectBufferWrapper extends ByteBufferWrapper {
       }
     }) == null;
   }
-
 }

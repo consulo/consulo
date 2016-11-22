@@ -29,10 +29,10 @@ import java.util.Arrays;
 
 /**
  * Please don't look, there's nothing interesting here.
- *
- *
- *
- *
+ * <p/>
+ * <p/>
+ * <p/>
+ * <p/>
  * If you insist, JVM stores stacktrace information in compact form in Throwable.backtrace field, but blocks reflective access to this field.
  * This class uses this field for comparing Throwables.
  * The available method Throwable.getStackTrace() unfortunately can't be used for that because it's
@@ -72,15 +72,31 @@ public class ThrowableInterner {
   });
 
   private static final long BACKTRACE_FIELD_OFFSET;
+
   static {
-    if ((SystemInfo.isOracleJvm || SystemInfo.isJetbrainsJvm) && SystemInfo.isJavaVersionAtLeast("1.7")) {
+    if (SystemInfo.isJavaVersionAtLeast("1.9")) {
+      try {
+        Field backtrace = Throwable.class.getDeclaredField("backtrace");
+        BACKTRACE_FIELD_OFFSET = backtrace == null ? -1 : AtomicFieldUpdater.getUnsafe().objectFieldOffset(backtrace);
+        if (BACKTRACE_FIELD_OFFSET == -1 || !(AtomicFieldUpdater.getUnsafe().getObject(new Throwable(), BACKTRACE_FIELD_OFFSET) instanceof Object[])) {
+          throw new RuntimeException(
+                  "Unknown layout: " + Arrays.asList(Throwable.class.getDeclaredFields()) + ". Please specify -Didea.disposer.debug=off in consulo.properties" +
+                  " to suppress");
+        }
+      }
+      catch (NoSuchFieldException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    else if ((SystemInfo.isOracleJvm || SystemInfo.isJetbrainsJvm) && SystemInfo.isJavaVersionAtLeast("1.7")) {
       Field firstField = Throwable.class.getDeclaredFields()[1];
       long firstFieldOffset = AtomicFieldUpdater.getUnsafe().objectFieldOffset(firstField);
       BACKTRACE_FIELD_OFFSET = firstFieldOffset == 12 ? 8 : firstFieldOffset == 16 ? 12 : firstFieldOffset == 24 ? 16 : -1;
-      if (BACKTRACE_FIELD_OFFSET == -1
-          || !firstField.getName().equals("detailMessage")
-          || !(AtomicFieldUpdater.getUnsafe().getObject(new Throwable(), BACKTRACE_FIELD_OFFSET) instanceof Object[])) {
-        throw new RuntimeException("Unknown layout: "+firstField+";"+firstFieldOffset+". Please specify -Didea.disposer.debug=off in idea.properties to suppress");
+      if (BACKTRACE_FIELD_OFFSET == -1 ||
+          !firstField.getName().equals("detailMessage") ||
+          !(AtomicFieldUpdater.getUnsafe().getObject(new Throwable(), BACKTRACE_FIELD_OFFSET) instanceof Object[])) {
+        throw new RuntimeException(
+                "Unknown layout: " + firstField + ";" + firstFieldOffset + ". Please specify -Didea.disposer.debug=off in consulo.properties to suppress");
       }
     }
     else {

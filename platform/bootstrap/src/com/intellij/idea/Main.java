@@ -64,6 +64,12 @@ public class Main {
       Bootstrap.main(args, Main.class.getName() + "Impl", "start");
     }
     catch (Throwable t) {
+      if(t instanceof IllegalAccessError && SystemInfo.isJavaVersionAtLeast("1.9")) {
+        showMessage("Unsupported Java Version", "Cannot start under Java " + SystemInfo.JAVA_RUNTIME_VERSION + ". Please read https://github" +
+                                                ".com/consulo/consulo/wiki/Java-9-Runtime", true);
+        System.exit(UNSUPPORTED_JAVA_VERSION);
+      }
+
       showMessage("Start Failed", t);
       System.exit(STARTUP_EXCEPTION);
     }

@@ -3,11 +3,14 @@ package com.intellij.util.lang;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.io.zip.ZipShort;
+import consulo.internal.sun.misc.Resource;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.Nullable;
-import sun.misc.Resource;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.zip.ZipEntry;

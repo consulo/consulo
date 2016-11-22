@@ -349,6 +349,7 @@ public class UIUtil {
   @NonNls private static final String ROOT_PANE = "JRootPane.future";
 
   private static final Ref<Boolean> ourRetina = Ref.create(SystemInfo.isMac ? null : false);
+  private static final Ref<Float> ourJava9HiDPI = Ref.create(null);
 
   private UIUtil() {
   }
@@ -475,8 +476,12 @@ public class UIUtil {
       return DetectRetinaKit.isMacRetina(graphics);
     }
     else {
-      return isRetina();
+      return isHiDPIRender();
     }
+  }
+
+  public static boolean isHiDPIRender() {
+    return isRetina() || getJava9HiDPIScale() >= 2f;
   }
 
   public static boolean isRetina() {
@@ -522,6 +527,34 @@ public class UIUtil {
         return ourRetina.get();
       }
     }
+  }
+
+  public static float getJava9HiDPIScale() {
+    synchronized (ourJava9HiDPI) {
+      if (ourJava9HiDPI.isNull()) {
+        ourJava9HiDPI.set(0f);
+
+        if (SystemInfo.isJavaVersionAtLeast("1.9")) {
+          try {
+            GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            final GraphicsDevice device = env.getDefaultScreenDevice();
+            Float scale = ReflectionUtil.getField(device.getClass(), device, float.class, "scaleX");
+            if (scale != null && scale >= 2) {
+              ourJava9HiDPI.set(scale);
+              return scale;
+            }
+          }
+          catch (AWTError ignore) {
+          }
+          catch (Exception ignore) {
+          }
+        }
+        ourJava9HiDPI.set(0f);
+      }
+
+      return ourJava9HiDPI.get();
+    }
+
   }
 
   public static boolean hasLeakingAppleListeners() {
@@ -1821,7 +1854,7 @@ public class UIUtil {
   }
 
   public static BufferedImage createImage(int width, int height, int type) {
-    if (isRetina()) {
+    if (isHiDPIRender()) {
       return RetinaImage.create(width, height, type);
     }
     //noinspection UndesirableClassUsage
