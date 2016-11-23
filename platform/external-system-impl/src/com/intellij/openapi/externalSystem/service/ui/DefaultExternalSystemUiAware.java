@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.externalSystem.service.ui;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.externalSystem.ExternalSystemUiAware;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.util.SandboxUtil;
 import icons.ExternalSystemIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +50,7 @@ public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
   @NotNull
   @Override
   public Icon getProjectIcon() {
-    return AllIcons.Icon16;
+    return SandboxUtil.getAppIcon();
   }
 
   @NotNull

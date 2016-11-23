@@ -15,10 +15,13 @@
  */
 package consulo.util;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.SystemProperties;
-import org.jetbrains.annotations.NotNull;
 import consulo.application.ApplicationProperties;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -32,6 +35,11 @@ public class SandboxUtil {
       return SystemProperties.getBooleanProperty(ApplicationProperties.CONSULO_IN_SANDBOX, false);
     }
   };
+
+  @NotNull
+  public static Icon getAppIcon() {
+    return isInsideSandbox() ? AllIcons.Icon16_Sandbox : AllIcons.Icon16;
+  }
 
   public static boolean isInsideSandbox() {
     return ourSandboxLazyValue.getValue();

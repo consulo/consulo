@@ -24,7 +24,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
@@ -44,6 +43,7 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.SandboxUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.imgscalr.Scalr;
@@ -65,7 +65,6 @@ import java.util.List;
 public abstract class RecentProjectsManagerBase extends RecentProjectsManager implements PersistentStateComponent<RecentProjectsManagerBase.State> {
   private static final int MAX_PROJECTS_IN_MAIN_MENU = 6;
   private static final Map<String, MyIcon> ourProjectIcons = new HashMap<String, MyIcon>();
-  private static Icon ourSmallAppIcon;
   private final Alarm myNamesResolver = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, ApplicationManager.getApplication());
   private final Set<String> myNamesToResolve = new HashSet<String>(MAX_PROJECTS_IN_MAIN_MENU);
 
@@ -308,28 +307,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   }
 
   protected static Icon getSmallApplicationIcon() {
-    if (ourSmallAppIcon == null) {
-      try {
-        Icon appIcon = IconLoader.findIcon(ApplicationInfoEx.getInstanceEx().getIconUrl());
-
-        if (appIcon != null) {
-          if (appIcon.getIconWidth() == JBUI.scale(16) && appIcon.getIconHeight() == JBUI.scale(16)) {
-            ourSmallAppIcon = appIcon;
-          } else {
-            BufferedImage image = ImageUtil.toBufferedImage(IconUtil.toImage(appIcon));
-            image = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, UIUtil.isRetina() ? 32 : JBUI.scale(16));
-            ourSmallAppIcon = toRetinaAwareIcon(image);
-          }
-        }
-      }
-      catch (Exception e) {//
-      }
-      if (ourSmallAppIcon == null) {
-        ourSmallAppIcon = EmptyIcon.ICON_16;
-      }
-    }
-
-    return ourSmallAppIcon;
+    return SandboxUtil.getAppIcon();
   }
 
   private Set<String> getDuplicateProjectNames(final Set<String> openedPaths, final Set<String> recentPaths) {

@@ -15,12 +15,12 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -39,7 +39,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   @Override
   public Icon getIcon(final VirtualFile file) {
     if (isProjectDirectory(file)) {
-      return dressIcon(file, AllIcons.Icon16);
+      return dressIcon(file, SandboxUtil.getAppIcon());
     }
     final Icon icon = getImporterIcon(file);
     if (icon != null) {
@@ -52,7 +52,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   private static Icon getImporterIcon(final VirtualFile virtualFile) {
     final ProjectOpenProcessor provider = ProjectOpenProcessor.getImportProvider(virtualFile);
     if (provider != null) {
-      return virtualFile.isDirectory() && provider.lookForProjectsInDirectory() ? AllIcons.Icon16 : provider.getIcon(virtualFile);
+      return virtualFile.isDirectory() && provider.lookForProjectsInDirectory() ? SandboxUtil.getAppIcon() : provider.getIcon(virtualFile);
     }
     return null;
   }

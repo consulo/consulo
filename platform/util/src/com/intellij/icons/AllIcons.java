@@ -533,6 +533,7 @@ public class AllIcons {
 
   }
   public static final Icon Icon16 = IconLoader.getIcon("/icon16.png"); // 16x16
+  public static final Icon Icon16_Sandbox = IconLoader.getIcon("/icon16-sandbox.png"); // 16x16
   public static final Icon Icon32 = IconLoader.getIcon("/icon32.png"); // 32x32
   
   public static class Icons {

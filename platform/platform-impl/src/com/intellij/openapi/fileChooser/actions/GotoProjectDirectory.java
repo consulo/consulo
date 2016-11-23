@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.fileChooser.actions;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.Nullable;
 
 public final class GotoProjectDirectory extends FileChooserAction {
@@ -37,7 +37,7 @@ public final class GotoProjectDirectory extends FileChooserAction {
 
   protected void update(final FileSystemTree fileSystemTree, final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    presentation.setIcon(AllIcons.Icon16);
+    presentation.setIcon(SandboxUtil.getAppIcon());
     final VirtualFile projectPath = getProjectDir(e);
     presentation.setEnabled(projectPath != null && fileSystemTree.isUnderRoots(projectPath));
   }

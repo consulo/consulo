@@ -1,7 +1,6 @@
 package org.jetbrains.io;
 
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.util.IconLoader;
+import consulo.util.SandboxUtil;
 import org.apache.sanselan.ImageFormat;
 import org.apache.sanselan.Sanselan;
 import org.jboss.netty.channel.*;
@@ -27,15 +26,13 @@ final class DelegatingHttpRequestHandler extends SimpleChannelUpstreamHandler {
     QueryStringDecoder urlDecoder = new QueryStringDecoder(request.getUri());
 
     if (urlDecoder.getPath().equals("/favicon.ico")) {
-      Icon icon = IconLoader.findIcon(ApplicationInfoEx.getInstanceEx().getSmallIconUrl());
-      if (icon != null) {
-        //noinspection UndesirableClassUsage
-        BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-        icon.paintIcon(null, image.getGraphics(), 0, 0);
-        byte[] icoBytes = Sanselan.writeImageToBytes(image, ImageFormat.IMAGE_FORMAT_ICO, null);
-        Responses.send(FileResponses.createResponse(urlDecoder.getPath()), icoBytes, request, context);
-        return;
-      }
+      Icon icon = SandboxUtil.getAppIcon();
+      //noinspection UndesirableClassUsage
+      BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+      icon.paintIcon(null, image.getGraphics(), 0, 0);
+      byte[] icoBytes = Sanselan.writeImageToBytes(image, ImageFormat.IMAGE_FORMAT_ICO, null);
+      Responses.send(FileResponses.createResponse(urlDecoder.getPath()), icoBytes, request, context);
+      return;
     }
     else if (urlDecoder.getPath().equals(WebServer.START_TIME_PATH)) {
       Responses.send(WebServer.getApplicationStartTime(), request, context);

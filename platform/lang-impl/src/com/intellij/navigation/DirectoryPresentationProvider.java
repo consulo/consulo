@@ -25,6 +25,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.util.SandboxUtil;
 
 public class DirectoryPresentationProvider implements ItemPresentationProvider<PsiDirectory> {
   @Override
@@ -34,7 +35,7 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
     final String locationString = vFile.getPath();
 
     if (ProjectRootsUtil.isProjectHome(directory)) {
-      return new PresentationData(project.getName(), locationString, AllIcons.Icon16, null);
+      return new PresentationData(project.getName(), locationString, SandboxUtil.getAppIcon(), null);
     }
 
     if (ProjectRootsUtil.isModuleContentRoot(directory)) {

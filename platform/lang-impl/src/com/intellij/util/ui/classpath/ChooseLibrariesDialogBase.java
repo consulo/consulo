@@ -55,6 +55,7 @@ import com.intellij.ui.treeStructure.WeightBasedComparator;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.SandboxUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -292,7 +293,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
   private static class ProjectDescriptor extends LibrariesTreeNodeBase<Project> {
     protected ProjectDescriptor(final Project project, final Project element) {
       super(project, null, element);
-      getTemplatePresentation().setIcon(AllIcons.Icon16);
+      getTemplatePresentation().setIcon(SandboxUtil.getAppIcon());
       getTemplatePresentation().addText(notEmpty(getElement().getName()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
   }
