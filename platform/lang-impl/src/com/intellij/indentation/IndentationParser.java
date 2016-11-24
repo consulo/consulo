@@ -1,6 +1,7 @@
 package com.intellij.indentation;
 
 import com.intellij.lang.ASTNode;
+import consulo.annotations.Exported;
 import consulo.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author oleg
  */
+@Exported
 public abstract class IndentationParser implements PsiParser {
   @NotNull
   private final IElementType myEolTokenType;
@@ -19,15 +21,13 @@ public abstract class IndentationParser implements PsiParser {
   private final IElementType myIndentTokenType;
   @NotNull
   private final IElementType myBlockElementType;
-  @NotNull
+  @Nullable
   private final IElementType myDocumentType;
 
-  public IndentationParser(
-    @NotNull IElementType documentType,
-    @NotNull final IElementType blockElementType,
-    @NotNull final IElementType eolTokenType,
-    @NotNull final IElementType indentTokenType)
-  {
+  public IndentationParser(@Nullable IElementType documentType,
+                           @NotNull IElementType blockElementType,
+                           @NotNull IElementType eolTokenType,
+                           @NotNull IElementType indentTokenType) {
     myDocumentType = documentType;
     myBlockElementType = blockElementType;
     myEolTokenType = eolTokenType;
@@ -38,9 +38,9 @@ public abstract class IndentationParser implements PsiParser {
   @NotNull
   public final ASTNode parse(@NotNull final IElementType root, @NotNull final PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
     final PsiBuilder.Marker fileMarker = builder.mark();
-    final PsiBuilder.Marker documentMarker = builder.mark();
+    final PsiBuilder.Marker documentMarker = myDocumentType == null ? null : builder.mark();
 
-    final Stack<BlockInfo> stack = new Stack<BlockInfo>();
+    final Stack<BlockInfo> stack = new Stack<>();
     stack.push(new BlockInfo(0, builder.mark(), builder.getTokenType()));
 
     PsiBuilder.Marker startLineMarker = null;
@@ -98,23 +98,22 @@ public abstract class IndentationParser implements PsiParser {
     }
 
     // Close all left opened markers
-    if (startLineMarker != null){
+    if (startLineMarker != null) {
       startLineMarker.drop();
     }
-    while (!stack.isEmpty()){
+    while (!stack.isEmpty()) {
       final BlockInfo blockInfo = stack.pop();
       closeBlock(builder, blockInfo.getMarker(), blockInfo.getStartTokenType());
     }
 
-    documentMarker.done(myDocumentType);
+    if (documentMarker != null) {
+      documentMarker.done(myDocumentType);
+    }
     fileMarker.done(root);
     return builder.getTreeBuilt();
   }
 
-  protected void closeBlock(final @NotNull PsiBuilder builder,
-                            final @NotNull PsiBuilder.Marker marker,
-                            final @Nullable IElementType startTokenType)
-  {
+  protected void closeBlock(final @NotNull PsiBuilder builder, final @NotNull PsiBuilder.Marker marker, final @Nullable IElementType startTokenType) {
     marker.done(myBlockElementType);
   }
 
