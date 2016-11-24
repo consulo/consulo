@@ -6,6 +6,8 @@ import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.tree.TokenSet;
+import consulo.annotations.Exported;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +18,7 @@ import java.util.Queue;
 /**
  * @author oleg
  */
+@Exported
 public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbAware {
   private final TokenSet myTokenSet;
 
@@ -23,6 +26,7 @@ public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbA
     myTokenSet = tokenSet;
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
   public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode astNode, @NotNull Document document) {
@@ -31,6 +35,7 @@ public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbA
     return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
   }
 
+  @RequiredReadAction
   private void collectDescriptors(@NotNull final ASTNode node, @NotNull final List<FoldingDescriptor> descriptors) {
     final Queue<ASTNode> toProcess = new LinkedList<ASTNode>();
     toProcess.add(node);
@@ -48,6 +53,7 @@ public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbA
     }
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public String getPlaceholderText(@NotNull final ASTNode node) {
@@ -88,6 +94,7 @@ public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbA
     return end == -1 ? text.substring(start) : text.substring(start, end);
   }
 
+  @RequiredReadAction
   @Override
   public boolean isCollapsedByDefault(@NotNull ASTNode node) {
     return false;

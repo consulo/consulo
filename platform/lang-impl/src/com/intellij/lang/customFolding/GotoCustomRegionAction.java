@@ -33,6 +33,8 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.HashSet;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,8 +45,9 @@ import java.util.Set;
  * @author Rustam Vishnyakov
  */
 public class GotoCustomRegionAction extends AnAction implements DumbAware, PopupAction {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@NotNull final AnActionEvent e) {
     final Project project = e.getProject();
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
     if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
@@ -56,28 +59,22 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
         return;
       }
       CommandProcessor processor = CommandProcessor.getInstance();
-      processor.executeCommand(
-              project,
-              new Runnable() {
-                @Override
-                public void run() {
-                  Collection<FoldingDescriptor> foldingDescriptors = getCustomFoldingDescriptors(editor, project);
-                  if (foldingDescriptors.size() > 0) {
-                    CustomFoldingRegionsPopup regionsPopup = new CustomFoldingRegionsPopup(foldingDescriptors, editor, project);
-                    regionsPopup.show();
-                  }
-                  else {
-                    notifyCustomRegionsUnavailable(editor, project);
-                  }
-                }
-              },
-              IdeBundle.message("goto.custom.region.command"),
-              null);
+      processor.executeCommand(project, () -> {
+        Collection<FoldingDescriptor> foldingDescriptors = getCustomFoldingDescriptors(editor, project);
+        if (foldingDescriptors.size() > 0) {
+          CustomFoldingRegionsPopup regionsPopup = new CustomFoldingRegionsPopup(foldingDescriptors, editor, project);
+          regionsPopup.show();
+        }
+        else {
+          notifyCustomRegionsUnavailable(editor, project);
+        }
+      }, IdeBundle.message("goto.custom.region.command"), null);
     }
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setText(IdeBundle.message("goto.custom.region.menu.item"));
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
@@ -88,8 +85,9 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
   }
 
   @NotNull
+  @RequiredReadAction
   private static Collection<FoldingDescriptor> getCustomFoldingDescriptors(@NotNull Editor editor, @NotNull Project project) {
-    Set<FoldingDescriptor> foldingDescriptors = new HashSet<FoldingDescriptor>();
+    Set<FoldingDescriptor> foldingDescriptors = new HashSet<>();
     final Document document = editor.getDocument();
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
     PsiFile file = documentManager != null ? documentManager.getPsiFile(document) : null;
@@ -123,12 +121,9 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
 
   private static void notifyCustomRegionsUnavailable(@NotNull Editor editor, @NotNull Project project) {
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-    Balloon balloon = popupFactory
-            .createHtmlTextBalloonBuilder(IdeBundle.message("goto.custom.region.message.unavailable"), MessageType.INFO, null)
-            .setFadeoutTime(2000)
-            .setHideOnClickOutside(true)
-            .setHideOnKeyOutside(true)
-            .createBalloon();
+    Balloon balloon =
+            popupFactory.createHtmlTextBalloonBuilder(IdeBundle.message("goto.custom.region.message.unavailable"), MessageType.INFO, null).setFadeoutTime(2000)
+                    .setHideOnClickOutside(true).setHideOnKeyOutside(true).createBalloon();
     Disposer.register(project, balloon);
     balloon.show(popupFactory.guessBestPopupLocation(editor), Balloon.Position.below);
   }

@@ -37,6 +37,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.StringTokenizer;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -108,10 +110,12 @@ class DocumentFoldingInfo implements JDOMExternalizable, CodeFoldingState {
     }
   }
 
+  @RequiredDispatchThread
   private static void assertDispatchThread() {
     ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
   }
 
+  @RequiredDispatchThread
   @Override
   public void setToEditor(@NotNull final Editor editor) {
     assertDispatchThread();
@@ -179,6 +183,7 @@ class DocumentFoldingInfo implements JDOMExternalizable, CodeFoldingState {
   }
 
   @NotNull
+  @RequiredReadAction
   private static Map<PsiElement, FoldingDescriptor> buildRanges(@NotNull Editor editor, @NotNull PsiFile psiFile) {
     final FoldingBuilder foldingBuilder = LanguageFolding.INSTANCE.forLanguage(psiFile.getLanguage());
     final ASTNode node = psiFile.getNode();

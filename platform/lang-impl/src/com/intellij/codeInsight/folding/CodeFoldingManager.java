@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.WriteExternalException;
+import consulo.annotations.RequiredDispatchThread;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,13 +43,17 @@ public abstract class CodeFoldingManager {
   public abstract FoldRegion findFoldRegion(@NotNull Editor editor, int startOffset, int endOffset);
   public abstract FoldRegion[] getFoldRegionsAtOffset(@NotNull Editor editor, int offset);
 
+  @RequiredDispatchThread
   public abstract CodeFoldingState saveFoldingState(@NotNull Editor editor);
+  @RequiredDispatchThread
   public abstract void restoreFoldingState(@NotNull Editor editor, @NotNull CodeFoldingState state);
 
   public abstract void writeFoldingState(@NotNull CodeFoldingState state, @NotNull Element element) throws WriteExternalException;
   public abstract CodeFoldingState readFoldingState(@NotNull Element element, @NotNull Document document);
 
+  @RequiredDispatchThread
   public abstract void releaseFoldings(@NotNull Editor editor);
+  @RequiredDispatchThread
   public abstract void buildInitialFoldings(@NotNull Editor editor);
   @Nullable
   public abstract CodeFoldingState buildInitialFoldings(@NotNull Document document);

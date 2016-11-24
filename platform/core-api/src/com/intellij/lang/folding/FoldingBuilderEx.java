@@ -20,8 +20,11 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * Allows a custom language plugin to define rules for folding code in the language handled
@@ -44,11 +47,14 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    * @return the array of folding descriptors.
    */
   @NotNull
+  @RequiredReadAction
   public abstract FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick);
 
+  @Override
+  @RequiredReadAction
   @NotNull
   public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
-    return buildFoldRegions(node.getPsi(), document, false);
+    return buildFoldRegions(Objects.requireNonNull(node.getPsi()), document, false);
   }
 
   /**
@@ -61,6 +67,7 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    * @return the placeholder text.
    */
   @Nullable
+  @RequiredReadAction
   public String getPlaceholderText(@NotNull ASTNode node, @NotNull TextRange range){
     return getPlaceholderText(node);
   }
@@ -71,5 +78,7 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    * @param node the node for which the collapsed state is requested.
    * @return true if the region is collapsed by default, false otherwise.
    */
+  @Override
+  @RequiredReadAction
   public abstract boolean isCollapsedByDefault(@NotNull ASTNode node);
 }

@@ -25,6 +25,7 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.containers.hash.HashSet;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,6 +44,7 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
   private static final RegistryValue myMaxLookupDepth = Registry.get("custom.folding.max.lookup.depth");
   private static final ThreadLocal<Set<ASTNode>> ourCustomRegionElements = new ThreadLocal<Set<ASTNode>>();
 
+  @RequiredReadAction
   @NotNull
   @Override
   public final FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
@@ -64,6 +66,7 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
     return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
   }
 
+  @RequiredReadAction
   @NotNull
   @Override
   public final FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
@@ -79,11 +82,13 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
    * @param quick       whether the result should be provided as soon as possible without reference resolving
    *                    and complex checks.
    */
+  @RequiredReadAction
   protected abstract void buildLanguageFoldRegions(@NotNull List<FoldingDescriptor> descriptors,
                                                    @NotNull PsiElement root,
                                                    @NotNull Document document,
                                                    boolean quick);
 
+  @RequiredReadAction
   private void addCustomFoldingRegionsRecursively(@NotNull FoldingStack foldingStack,
                                                   @NotNull ASTNode node,
                                                   @NotNull List<FoldingDescriptor> descriptors,
@@ -112,6 +117,7 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
     }
   }
 
+  @RequiredReadAction
   @Override
   public final String getPlaceholderText(@NotNull ASTNode node, @NotNull TextRange range) {
     if (isCustomFoldingCandidate(node)) {
@@ -127,12 +133,14 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
   protected abstract String getLanguagePlaceholderText(@NotNull ASTNode node, @NotNull TextRange range);
 
 
+  @RequiredReadAction
   @Override
   public final String getPlaceholderText(@NotNull ASTNode node) {
     return "...";
   }
 
 
+  @RequiredReadAction
   @Override
   public final boolean isCollapsedByDefault(@NotNull ASTNode node) {
     if (isCustomRegionStart(node)) {

@@ -22,6 +22,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -37,10 +38,10 @@ import java.util.List;
  * @since 9.0
  */
 public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAware {
-  public static final Key<FoldingBuilder> FOLDING_BUILDER = new Key<FoldingBuilder>("FOLDING_BUILDER");
+  public static final Key<FoldingBuilder> FOLDING_BUILDER = new Key<>("FOLDING_BUILDER");
   private final List<FoldingBuilder> myBuilders;
 
-  CompositeFoldingBuilder(List<FoldingBuilder> builders) {    
+  CompositeFoldingBuilder(List<FoldingBuilder> builders) {
     myBuilders = builders;
   }
 
@@ -49,6 +50,8 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
     return Collections.unmodifiableList(myBuilders);
   }
 
+  @Override
+  @RequiredReadAction
   @NotNull
   public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
     final List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
@@ -63,19 +66,24 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
     return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
   }
 
-    @Override
+  @RequiredReadAction
+  @Override
   public String getPlaceholderText(@NotNull ASTNode node, @NotNull TextRange range) {
     final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
-    return builder == null ? node.getText() : builder instanceof FoldingBuilderEx
-                                              ? ((FoldingBuilderEx)builder).getPlaceholderText(node, range) : builder.getPlaceholderText(node);
-    }
+    return builder == null
+           ? node.getText()
+           : builder instanceof FoldingBuilderEx ? ((FoldingBuilderEx)builder).getPlaceholderText(node, range) : builder.getPlaceholderText(node);
+  }
 
+  @RequiredReadAction
   @Override
   public String getPlaceholderText(@NotNull ASTNode node) {
     final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder == null ? node.getText() : builder.getPlaceholderText(node);
   }
 
+  @Override
+  @RequiredReadAction
   public boolean isCollapsedByDefault(@NotNull ASTNode node) {
     final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder != null && builder.isCollapsedByDefault(node);

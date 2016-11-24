@@ -22,6 +22,7 @@ import com.intellij.lang.LanguageExtension;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -68,10 +69,10 @@ public class LanguageFolding extends LanguageExtension<FoldingBuilder> {
   public List<FoldingBuilder> allForLanguage(@NotNull Language l) {
     FoldingBuilder result = forLanguage(l);
     if (result == null) return Collections.emptyList();
-    return result instanceof CompositeFoldingBuilder ? ((CompositeFoldingBuilder)result).getAllBuilders()
-                                                     : Collections.singletonList(result);
+    return result instanceof CompositeFoldingBuilder ? ((CompositeFoldingBuilder)result).getAllBuilders() : Collections.singletonList(result);
   }
 
+  @RequiredReadAction
   public static FoldingDescriptor[] buildFoldingDescriptors(FoldingBuilder builder, PsiElement root, Document document, boolean quick) {
     if (!DumbService.isDumbAware(builder) && DumbService.getInstance(root.getProject()).isDumb()) {
       return FoldingDescriptor.EMPTY;

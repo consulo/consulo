@@ -39,6 +39,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.containers.WeakList;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -177,6 +179,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     });
   }
 
+  @RequiredDispatchThread
   @Override
   public void releaseFoldings(@NotNull Editor editor) {
     ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
@@ -195,6 +198,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     EditorFoldingInfo.get(editor).dispose();
   }
 
+  @RequiredDispatchThread
   @Override
   public void buildInitialFoldings(@NotNull final Editor editor) {
     final Project project = editor.getProject();
@@ -212,6 +216,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
   @Nullable
   @Override
+  @RequiredReadAction
   public CodeFoldingState buildInitialFoldings(@NotNull final Document document) {
     if (myProject.isDisposed()) {
       return null;
@@ -232,6 +237,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     final FoldingUpdate.FoldingMap foldingMap = FoldingUpdate.getFoldingsFor(file, document, true);
 
     return new CodeFoldingState() {
+      @RequiredDispatchThread
       @Override
       public void setToEditor(@NotNull final Editor editor) {
         ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
@@ -339,6 +345,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Nullable
+  @RequiredReadAction
   private Runnable updateFoldRegions(@NotNull Editor editor, boolean applyDefaultState, boolean quick) {
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
     if (file != null) {
@@ -349,6 +356,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public CodeFoldingState saveFoldingState(@NotNull Editor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -359,6 +367,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     return info;
   }
 
+  @RequiredDispatchThread
   @Override
   public void restoreFoldingState(@NotNull Editor editor, @NotNull CodeFoldingState state) {
     ApplicationManager.getApplication().assertIsDispatchThread();

@@ -29,6 +29,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.HashSet;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,6 +49,7 @@ public class GotoCustomRegionDialog extends DialogWrapper {
   private final Editor myEditor;
   private final Project myProject;
 
+  @RequiredReadAction
   protected GotoCustomRegionDialog(@Nullable Project project, @NotNull Editor editor) {
     super(project);
     myEditor = editor;
@@ -65,6 +68,7 @@ public class GotoCustomRegionDialog extends DialogWrapper {
     setTitle(IdeBundle.message("goto.custom.region.command"));
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (!myRegionsList.isEmpty()) {
@@ -78,6 +82,7 @@ public class GotoCustomRegionDialog extends DialogWrapper {
     return myContentPane;
   }
 
+  @RequiredReadAction
   private Collection<FoldingDescriptor> getCustomFoldingDescriptors() {
     Set<FoldingDescriptor> foldingDescriptors = new HashSet<FoldingDescriptor>();
     final Document document = myEditor.getDocument();
@@ -106,13 +111,10 @@ public class GotoCustomRegionDialog extends DialogWrapper {
   private static Collection<FoldingDescriptor> orderByPosition(Collection<FoldingDescriptor> descriptors) {
     List<FoldingDescriptor> sorted = new ArrayList<FoldingDescriptor>(descriptors.size());
     sorted.addAll(descriptors);
-    Collections.sort(sorted, new Comparator<FoldingDescriptor>() {
-      @Override
-      public int compare(FoldingDescriptor descriptor1, FoldingDescriptor descriptor2) {
-        int pos1 = descriptor1.getElement().getTextRange().getStartOffset();
-        int pos2 = descriptor2.getElement().getTextRange().getStartOffset();
-        return pos1 - pos2;
-      }
+    Collections.sort(sorted, (descriptor1, descriptor2) -> {
+      int pos1 = descriptor1.getElement().getTextRange().getStartOffset();
+      int pos2 = descriptor2.getElement().getTextRange().getStartOffset();
+      return pos1 - pos2;
     });
     return sorted;
   }
