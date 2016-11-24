@@ -30,6 +30,7 @@ import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 
@@ -78,9 +79,10 @@ public class PlainTextParserDefinition implements ParserDefinition {
     return TokenSet.EMPTY;
   }
 
+  @RequiredReadAction
   @Override
   @NotNull
-  public PsiElement createElement(ASTNode node) {
+  public PsiElement createElement(@NotNull ASTNode node) {
     return PsiUtilCore.NULL_PSI_ELEMENT;
   }
 

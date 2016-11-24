@@ -29,6 +29,7 @@ import com.intellij.pom.tree.events.TreeChangeEvent;
 import com.intellij.pom.tree.events.impl.ChangeInfoImpl;
 import com.intellij.pom.tree.events.impl.ReplaceChangeInfoImpl;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredReadAction;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLock;
@@ -797,6 +798,7 @@ public class CompositeElement extends TreeElement {
     return LeafElement.getPsi(clazz, getPsi(), LOG);
   }
 
+  @RequiredReadAction
   protected PsiElement createPsiNoLock() {
     return PsiElementFactory.EP.getValue(getElementType()).createElement(this);
   }

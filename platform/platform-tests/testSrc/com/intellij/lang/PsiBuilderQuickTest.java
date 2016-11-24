@@ -32,6 +32,7 @@ import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
+import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -545,9 +546,10 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         return null;
       }
 
+      @RequiredReadAction
       @NotNull
       @Override
-      public PsiElement createElement(ASTNode node) {
+      public PsiElement createElement(@NotNull ASTNode node) {
         return null;
       }
 
@@ -669,9 +671,10 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
             return null;
           }
 
+          @RequiredReadAction
           @NotNull
           @Override
-          public PsiElement createElement(ASTNode node) {
+          public PsiElement createElement(@NotNull ASTNode node) {
             return null;
           }
 

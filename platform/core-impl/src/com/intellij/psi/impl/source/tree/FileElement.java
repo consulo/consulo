@@ -26,6 +26,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.util.CharTable;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +34,7 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
   private volatile CharTable myCharTable = new CharTableImpl();
   private volatile boolean myDetached;
 
+  @RequiredReadAction
   @Override
   protected PsiElement createPsiNoLock() {
     return myDetached ? null : super.createPsiNoLock();

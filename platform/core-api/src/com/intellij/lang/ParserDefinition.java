@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 
@@ -100,7 +101,10 @@ public interface ParserDefinition {
    * @return the PSI element matching the element type of the AST node.
    */
   @NotNull
-  PsiElement createElement(@NotNull ASTNode node);
+  @RequiredReadAction
+  default PsiElement createElement(@NotNull ASTNode node) {
+    throw new UnsupportedOperationException("#createElement() is not implemented for elementType: " + node.getElementType());
+  }
 
   /**
    * Creates a PSI element for the specified virtual file.

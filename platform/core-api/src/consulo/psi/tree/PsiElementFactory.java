@@ -19,6 +19,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.Predicate;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,5 +31,6 @@ public interface PsiElementFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<PsiElementFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.psi.elementFactory");
 
   @Nullable
+  @RequiredReadAction
   PsiElement createElement(@NotNull ASTNode node);
 }

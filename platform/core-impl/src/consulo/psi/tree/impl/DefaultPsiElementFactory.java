@@ -18,6 +18,7 @@ package consulo.psi.tree.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
+import consulo.annotations.RequiredReadAction;
 import consulo.psi.tree.PsiElementFactory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -30,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 1:38/02.04.13
  */
 public class DefaultPsiElementFactory implements PsiElementFactory {
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiElement createElement(@NotNull ASTNode node) {
@@ -38,6 +40,7 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
       return ((IElementTypeAsPsiFactory)elementType).createElement(node);
     }
 
+    assert elementType != null;
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(elementType.getLanguage());
     if (parserDefinition != null) {
       return parserDefinition.createElement(node);

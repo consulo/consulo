@@ -21,6 +21,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
+import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersionableParserDefinition;
 import consulo.sandboxPlugin.lang.psi.SandFile;
 import org.jetbrains.annotations.NotNull;
@@ -38,9 +39,10 @@ public class SandParsingDefinition extends LanguageVersionableParserDefinition {
     return FILE;
   }
 
+  @RequiredReadAction
   @NotNull
   @Override
-  public PsiElement createElement(ASTNode node) {
+  public PsiElement createElement(@NotNull ASTNode node) {
     return new ASTWrapperPsiElement(node);
   }
 
