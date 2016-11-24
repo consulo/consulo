@@ -41,9 +41,6 @@ import java.beans.PropertyChangeListener;
 public class ComboBoxButton extends JButton implements UserActivityProviderComponent {
   private static final String uiClassID = "ComboBoxButtonUI";
 
-  //public static final Icon ARROW_ICON = UIUtil.isUnderDarcula() ? AllIcons.General.ComboArrow : AllIcons.General.ComboBoxButtonArrow;
-  //public static final Icon DISABLED_ARROW_ICON = IconLoader.getDisabledIcon(ARROW_ICON);
-
   private ComboBoxAction myComboBoxAction;
   private final Presentation myPresentation;
   private boolean myForcePressed = false;
@@ -60,11 +57,7 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
     setFocusable(false);
     Insets margins = getMargin();
     setMargin(JBUI.insets(margins.top, 2, margins.bottom, 2));
-    if (myComboBoxAction.isSmallVariant()) {
-      if (!UIUtil.isUnderGTKLookAndFeel()) {
-        setFont(JBUI.Fonts.label(11));
-      }
-    }
+    setFont(SystemInfo.isMac && myComboBoxAction.isSmallVariant() ? UIUtil.getLabelFont(UIUtil.FontSize.SMALL) : UIUtil.getLabelFont());
 
     addActionListener(e -> {
       if (!myForcePressed) {
@@ -204,124 +197,10 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
     }
   }
 
- /* @Override
-  public Insets getInsets() {
-    final Insets insets = super.getInsets();
-    return new Insets(insets.top, insets.left, insets.bottom, insets.right + ARROW_ICON.getIconWidth());
-  } */
-
- /* @Override
-  public Insets getInsets(Insets insets) {
-    final Insets result = super.getInsets(insets);
-    result.right += ARROW_ICON.getIconWidth();
-
-    return result;
-  } */
-
   @Override
   public boolean isOpaque() {
     return !myComboBoxAction.isSmallVariant();
   }
-
-  /*@Override
-  public Dimension getPreferredSize() {
-    final boolean isEmpty = getIcon() == null && StringUtil.isEmpty(getText());
-    int width = isEmpty ? JBUI.scale(10) + ARROW_ICON.getIconWidth() : super.getPreferredSize().width;
-    if (myComboBoxAction.isSmallVariant()) width += JBUI.scale(4);
-    return new Dimension(width, myComboBoxAction.isSmallVariant() ? JBUI.scale(19) : super.getPreferredSize().height);
-  }*/
-
-  /*@Override
-  public Dimension getMinimumSize() {
-    return new Dimension(super.getMinimumSize().width, getPreferredSize().height);
-  } */
-
-  @Override
-  public Font getFont() {
-    return SystemInfo.isMac && myComboBoxAction.isSmallVariant() ? UIUtil.getLabelFont(UIUtil.FontSize.SMALL) : UIUtil.getLabelFont();
-  }
-
- /* @Override
-  public void paint(Graphics g) {
-    UISettings.setupAntialiasing(g);
-    final Dimension size = getSize();
-    final boolean isEmpty = getIcon() == null && StringUtil.isEmpty(getText());
-
-    final Color textColor = isEnabled() ? UIManager.getColor("Panel.foreground") : UIUtil.getInactiveTextColor();
-    if (myForceTransparent) {
-      final Icon icon = getIcon();
-      int x = 7;
-      if (icon != null) {
-        icon.paintIcon(this, g, x, (size.height - icon.getIconHeight()) / 2);
-        x += icon.getIconWidth() + 3;
-      }
-      if (!StringUtil.isEmpty(getText())) {
-        final Font font = getFont();
-        g.setFont(font);
-        g.setColor(textColor);
-        g.drawString(getText(), x, (size.height + font.getSize()) / 2 - 1);
-      }
-    }
-    else {
-
-      if (myComboBoxAction.isSmallVariant()) {
-        final Graphics2D g2 = (Graphics2D)g;
-        g2.setColor(UIUtil.getControlColor());
-        final int w = getWidth();
-        final int h = getHeight();
-        if (getModel().isArmed() && getModel().isPressed()) {
-          g2.setPaint(UIUtil.getGradientPaint(0, 0, UIUtil.getControlColor(), 0, h, ColorUtil.shift(UIUtil.getControlColor(), 0.8)));
-        }
-        else {
-          if (UIUtil.isUnderDarcula()) {
-            g2.setPaint(UIUtil.getGradientPaint(0, 0, ColorUtil.shift(UIUtil.getControlColor(), 1.1), 0, h, ColorUtil.shift(UIUtil.getControlColor(), 0.9)));
-          }
-          else {
-            g2.setPaint(UIUtil.getGradientPaint(0, 0, new JBColor(SystemInfo.isMac ? Gray._226 : Gray._245, Gray._131), 0, h,
-                                                new JBColor(SystemInfo.isMac ? Gray._198 : Gray._208, Gray._128)));
-          }
-        }
-        g2.fillRoundRect(2, 0, w - 2, h, 5, 5);
-
-        Color borderColor = myMouseInside ? new JBColor(Gray._111, Gray._118) : new JBColor(Gray._151, Gray._95);
-        g2.setPaint(borderColor);
-        g2.drawRoundRect(2, 0, w - 3, h - 1, 5, 5);
-
-        final Icon icon = getIcon();
-        int x = 7;
-        if (icon != null) {
-          icon.paintIcon(this, g, x, (size.height - icon.getIconHeight()) / 2);
-          x += icon.getIconWidth() + 3;
-        }
-        if (!StringUtil.isEmpty(getText())) {
-          final Font font = getFont();
-          g2.setFont(font);
-          g2.setColor(textColor);
-          g2.drawString(getText(), x, (size.height + font.getSize()) / 2 - 1);
-        }
-      }
-      else {
-        super.paint(g);
-      }
-    }
-    final Insets insets = super.getInsets();
-    final Icon icon = isEnabled() ? ARROW_ICON : DISABLED_ARROW_ICON;
-    final int x;
-    if (isEmpty) {
-      x = (size.width - icon.getIconWidth()) / 2;
-    }
-    else {
-      if (myComboBoxAction.isSmallVariant()) {
-        x = size.width - icon.getIconWidth() - insets.right + 1;
-      }
-      else {
-        x = size.width - icon.getIconWidth() - insets.right + (UIUtil.isUnderNimbusLookAndFeel() ? -3 : 2);
-      }
-    }
-
-    icon.paintIcon(null, g, x, (size.height - icon.getIconHeight()) / 2);
-    g.setPaintMode();
-  }  */
 
   protected void updateButtonSize() {
     invalidate();
