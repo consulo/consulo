@@ -68,7 +68,7 @@ public class ArchivesBuilder {
       return false;
     }
 
-    myBuiltArchives = new HashMap<ArchivePackageInfo, File>();
+    myBuiltArchives = new HashMap<>();
     try {
       for (ArchivePackageInfo archivePackageInfo : sortedArchives) {
         myContext.getProgressIndicator().checkCanceled();
@@ -121,7 +121,7 @@ public class ArchivesBuilder {
 
   @Nullable
   private ArchivePackageInfo[] sortArchives() {
-    final DFSTBuilder<ArchivePackageInfo> builder = new DFSTBuilder<ArchivePackageInfo>(GraphGenerator.create(CachingSemiGraph.create(new ArchivesGraph())));
+    final DFSTBuilder<ArchivePackageInfo> builder = new DFSTBuilder<>(GraphGenerator.create(CachingSemiGraph.create(new ArchivesGraph())));
     if (!builder.isAcyclic()) {
       final Pair<ArchivePackageInfo, ArchivePackageInfo> dependency = builder.getCircularDependency();
       String message = CompilerBundle
@@ -150,7 +150,7 @@ public class ArchivesBuilder {
     }
 
     myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.building.0", archive.getPresentableDestination()));
-    File tempFile = FileUtil.createTempFile("artifactCompiler", "tmp");
+    File tempFile = File.createTempFile("artifactCompiler", "tmp");
 
     myBuiltArchives.put(archive, tempFile);
 
@@ -168,7 +168,7 @@ public class ArchivesBuilder {
     }
 
     try {
-      final THashSet<String> writtenPaths = new THashSet<String>();
+      final THashSet<String> writtenPaths = new THashSet<>();
       for (Pair<String, VirtualFile> pair : archive.getPackedFiles()) {
         final VirtualFile sourceFile = pair.getSecond();
         if (sourceFile.isInLocalFileSystem()) {
@@ -242,12 +242,8 @@ public class ArchivesBuilder {
 
     myContext.getProgressIndicator().setText2(relativePath);
 
-    FileInputStream fileOutputStream = new FileInputStream(file);
-    try {
+    try (FileInputStream fileOutputStream = new FileInputStream(file)) {
       writer.addFile(archiveObject, fileOutputStream, relativePath, file.length(), file.lastModified());
-    }
-    finally {
-      fileOutputStream.close();
     }
   }
 
@@ -280,7 +276,7 @@ public class ArchivesBuilder {
 
     @Override
     public Iterator<ArchivePackageInfo> getIn(final ArchivePackageInfo n) {
-      Set<ArchivePackageInfo> ins = new HashSet<ArchivePackageInfo>();
+      Set<ArchivePackageInfo> ins = new HashSet<>();
       for (ArchiveDestinationInfo destination : n.getArchiveDestinations()) {
         ins.add(destination.getArchivePackageInfo());
       }
