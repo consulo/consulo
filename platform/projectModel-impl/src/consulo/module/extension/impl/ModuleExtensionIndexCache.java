@@ -28,7 +28,7 @@ import java.util.Map;
  * @since 25-Nov-16.
  */
 public class ModuleExtensionIndexCache {
-  private static Map<Class<?>, int[]> ourClassCache = new THashMap<>();
+  private static final Map<Class<?>, int[]> ourClassCache = new THashMap<>();
 
   @NotNull
   public static int[] get(@NotNull Class<?> clazz) {
