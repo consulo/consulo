@@ -174,14 +174,14 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     }
   }
 
-  private final Set<ContentEntry> myContent = new TreeSet<ContentEntry>(ContentComparator.INSTANCE);
+  private final Set<ContentEntry> myContent = new TreeSet<>(ContentComparator.INSTANCE);
 
   private final List<OrderEntry> myOrderEntries = new Order();
   // cleared by myOrderEntries modification, see Order
   @Nullable
   private OrderEntry[] myCachedOrderEntries;
-  private final Set<ModuleExtension<?>> myExtensions = new LinkedHashSet<ModuleExtension<?>>();
-  private final List<Element> myUnknownModuleExtensions = new SmartList<Element>();
+  private final Set<ModuleExtension<?>> myExtensions = new LinkedHashSet<>();
+  private final List<Element> myUnknownModuleExtensions = new SmartList<>();
   private RootModelImpl myRootModel;
   @NotNull
   private final ModuleLibraryTable myModuleLibraryTable;
@@ -257,7 +257,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   public void writeExternal(@NotNull Element element) {
-    List<Element> moduleExtensionElements = new ArrayList<Element>();
+    List<Element> moduleExtensionElements = new ArrayList<>();
     for (ModuleExtension<?> extension : myExtensions) {
       final Element state = extension.getState();
       if (state == null) {
@@ -269,12 +269,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     for (Element unknownModuleExtension : myUnknownModuleExtensions) {
       moduleExtensionElements.add(unknownModuleExtension.clone());
     }
-    Collections.sort(moduleExtensionElements, new Comparator<Element>() {
-      @Override
-      public int compare(Element o1, Element o2) {
-        return Comparing.compare(o1.getAttributeValue("id"), o2.getAttributeValue("id"));
-      }
-    });
+    Collections.sort(moduleExtensionElements, (o1, o2) -> Comparing.compare(o1.getAttributeValue("id"), o2.getAttributeValue("id")));
 
     element.addContent(moduleExtensionElements);
 
@@ -410,6 +405,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     return myRootModel;
   }
 
+  @SuppressWarnings("unchecked")
   public boolean areExtensionsChanged(@NotNull ModuleRootLayerImpl original) {
     for (ModuleExtension<?> extension : myExtensions) {
       MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
@@ -493,7 +489,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public VirtualFile[] getContentRoots() {
-    final ArrayList<VirtualFile> result = new ArrayList<VirtualFile>();
+    final ArrayList<VirtualFile> result = new ArrayList<>();
 
     for (ContentEntry contentEntry : getContent()) {
       final VirtualFile file = contentEntry.getFile();
@@ -508,7 +504,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Override
   public String[] getContentRootUrls() {
     if (getContent().isEmpty()) return ArrayUtil.EMPTY_STRING_ARRAY;
-    final ArrayList<String> result = new ArrayList<String>(getContent().size());
+    final ArrayList<String> result = new ArrayList<>(getContent().size());
 
     for (ContentEntry contentEntry : getContent()) {
       result.add(contentEntry.getUrl());
@@ -520,7 +516,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public String[] getContentFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    List<String> result = new SmartList<String>();
+    List<String> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
       Collections.addAll(result, contentEntry.getFolderUrls(predicate));
     }
@@ -530,7 +526,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public VirtualFile[] getContentFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    List<VirtualFile> result = new SmartList<VirtualFile>();
+    List<VirtualFile> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
       Collections.addAll(result, contentEntry.getFolderFiles(predicate));
     }
@@ -540,7 +536,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public ContentFolder[] getContentFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    List<ContentFolder> result = new SmartList<ContentFolder>();
+    List<ContentFolder> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
       Collections.addAll(result, contentEntry.getFolders(predicate));
     }
@@ -550,7 +546,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public VirtualFile[] getExcludeRoots() {
-    final List<VirtualFile> result = new SmartList<VirtualFile>();
+    final List<VirtualFile> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
       Collections.addAll(result, contentEntry.getFolderFiles(ContentFolderScopes.excluded()));
     }
@@ -560,7 +556,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public String[] getExcludeRootUrls() {
-    final List<String> result = new SmartList<String>();
+    final List<String> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
       Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderScopes.excluded()));
     }
@@ -576,7 +572,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public VirtualFile[] getSourceRoots(boolean includingTests) {
-    List<VirtualFile> result = new SmartList<VirtualFile>();
+    List<VirtualFile> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
       Collections.addAll(result, includingTests
                                  ? contentEntry.getFolderFiles(ContentFolderScopes.productionAndTest())
@@ -594,7 +590,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public String[] getSourceRootUrls(boolean includingTests) {
-    List<String> result = new SmartList<String>();
+    List<String> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
       Collections.addAll(result, includingTests
                                  ? contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest())
@@ -632,7 +628,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     if (myExtensions.isEmpty()) {
       return ModuleExtension.EMPTY_ARRAY;
     }
-    List<ModuleExtension> list = new ArrayList<ModuleExtension>(myExtensions.size());
+    List<ModuleExtension> list = new ArrayList<>(myExtensions.size());
     for (ModuleExtension<?> extension : myExtensions) {
       if (extension.isEnabled()) {
         list.add(extension);
@@ -650,7 +646,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public Module[] getModuleDependencies(boolean includeTests) {
-    final List<Module> result = new ArrayList<Module>();
+    final List<Module> result = new ArrayList<>();
 
     for (OrderEntry entry : getOrderEntries()) {
       if (entry instanceof ModuleOrderEntry) {
@@ -861,7 +857,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     if (newEntries.length != myOrderEntries.size()) {
       return "Size mismatch: old size=" + myOrderEntries.size() + "; new size=" + newEntries.length;
     }
-    Set<OrderEntry> set = new HashSet<OrderEntry>();
+    Set<OrderEntry> set = new HashSet<>();
     for (OrderEntry newEntry : newEntries) {
       if (!myOrderEntries.contains(newEntry)) {
         return "Trying to add nonexisting order entry " + newEntry;
