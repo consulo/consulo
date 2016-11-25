@@ -16,14 +16,15 @@
 package consulo.roots.ui.configuration.extension;
 
 import com.intellij.openapi.roots.ModifiableRootModel;
-import consulo.roots.ui.configuration.ExtensionEditor;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.CheckedTreeNode;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.module.extension.MutableModuleExtension;
+import consulo.roots.ui.configuration.ExtensionEditor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,7 +71,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
     setAllowsChildren(true);
     List<ExtensionCheckedTreeNode> child = new ArrayList<ExtensionCheckedTreeNode>();
-    for (ModuleExtensionProviderEP ep : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+    for (ModuleExtensionProviderEP ep : ModuleExtensionProviders.getProviders()) {
       if (Comparing.equal(ep.parentKey, parentKey)) {
         final ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state, myExtensionEditor);
         e.setParent(this);
@@ -124,7 +125,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     }
 
     // if no nodes checked - it enabled
-    for (ModuleExtensionProviderEP ep : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+    for (ModuleExtensionProviderEP ep : ModuleExtensionProviders.getProviders()) {
       if (ep.parentKey != null) {
         continue;
       }
@@ -137,7 +138,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
   @NotNull
   private static ModuleExtensionProviderEP findParentWithoutParent(String id) {
-    for (ModuleExtensionProviderEP ep : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+    for (ModuleExtensionProviderEP ep : ModuleExtensionProviders.getProviders()) {
       if (ep.key.equals(id)) {
         if (ep.parentKey == null) {
           return ep;

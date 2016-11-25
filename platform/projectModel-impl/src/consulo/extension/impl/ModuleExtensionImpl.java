@@ -30,6 +30,8 @@ import consulo.annotations.RequiredReadAction;
  * @since 12:30/19.05.13
  */
 public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements ModuleExtension<T> {
+  public static final String ELEMENT_NAME = "extension";
+
   protected boolean myIsEnabled;
   protected final String myId;
   protected final ModuleRootLayer myModuleRootLayer;
@@ -79,7 +81,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
     if (!isEnabled()) {
       return null;
     }
-    Element element = new Element("extension");
+    Element element = new Element(ELEMENT_NAME);
     element.setAttribute("id", myId);
 
     getStateImpl(element);
@@ -107,7 +109,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (o == null || !(o instanceof ModuleExtensionImpl)) return false;
 
     ModuleExtensionImpl that = (ModuleExtensionImpl)o;
 

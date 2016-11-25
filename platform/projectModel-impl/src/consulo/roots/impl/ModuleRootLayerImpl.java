@@ -34,20 +34,19 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.extension.impl.ModuleExtensionImpl;
+import consulo.lombok.annotations.Logger;
+import consulo.module.extension.*;
+import consulo.module.extension.impl.ModuleExtensionIndexCache;
+import consulo.module.extension.impl.ModuleExtensionProviders;
+import consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.orderEntry.OrderEntrySerializationUtil;
-import consulo.lombok.annotations.Logger;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.ModuleExtensionChangeListener;
-import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.module.extension.MutableModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.module.extension.ModuleExtensionProviderEP;
-import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;
 
@@ -180,7 +179,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   // cleared by myOrderEntries modification, see Order
   @Nullable
   private OrderEntry[] myCachedOrderEntries;
-  private final Set<ModuleExtension<?>> myExtensions = new LinkedHashSet<>();
+  private ModuleExtension[] myExtensions = ModuleExtension.EMPTY_ARRAY;
   private final List<Element> myUnknownModuleExtensions = new SmartList<>();
   private RootModelImpl myRootModel;
   @NotNull
@@ -210,44 +209,46 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     for (Element child : children) {
       i++;
 
-      if(i % 10 == 0) {
+      if (i % 10 == 0) {
         if (progressIndicator != null) {
           progressIndicator.checkCanceled();
         }
       }
 
       String name = child.getName();
-      if("extension".equals(name))  {
-        final String id = child.getAttributeValue("id");
+      switch (name) {
+        case ModuleExtensionImpl.ELEMENT_NAME:
+          final String id = child.getAttributeValue("id");
 
-        ModuleExtensionProviderEP providerEP = ModuleExtensionProviderEP.findProviderEP(id);
-        if (providerEP != null) {
-          ModuleExtension<?> moduleExtension = getExtensionWithoutCheck(id);
-          assert moduleExtension != null;
-          moduleExtension.loadState(child);
-        }
-        else {
-          UnknownFeaturesCollector.getInstance(getProject()).registerUnknownFeature(ModuleExtensionProviderEP.EP_NAME.getName(), id);
+          ModuleExtensionProviderEP providerEP = ModuleExtensionProviders.findProvider(id);
+          if (providerEP != null) {
+            ModuleExtension<?> moduleExtension = getExtensionWithoutCheck(id);
+            assert moduleExtension != null;
+            moduleExtension.loadState(child);
+          }
+          else {
+            UnknownFeaturesCollector.getInstance(getProject()).registerUnknownFeature(ModuleExtensionProviders.getEpName(), id);
 
-          myUnknownModuleExtensions.add(child.clone());
-        }
-      }
-      else if(ContentEntryImpl.ELEMENT_NAME.equals(name))  {
-        ContentEntryImpl contentEntry = new ContentEntryImpl(child, this);
-        myContent.add(contentEntry);
-      }
-      else if(OrderEntrySerializationUtil.ORDER_ENTRY_ELEMENT_NAME.equals(name)) {
-        final OrderEntry orderEntry = OrderEntrySerializationUtil.loadOrderEntry(child, this);
-        if (orderEntry == null) {
-          continue;
-        }
-        if (orderEntry instanceof ModuleSourceOrderEntry) {
-          if (moduleSourceAdded) {
+            myUnknownModuleExtensions.add(child.clone());
+          }
+          break;
+        case ContentEntryImpl.ELEMENT_NAME:
+          ContentEntryImpl contentEntry = new ContentEntryImpl(child, this);
+          myContent.add(contentEntry);
+          break;
+        case OrderEntrySerializationUtil.ORDER_ENTRY_ELEMENT_NAME:
+          final OrderEntry orderEntry = OrderEntrySerializationUtil.loadOrderEntry(child, this);
+          if (orderEntry == null) {
             continue;
           }
-          moduleSourceAdded = true;
-        }
-        myOrderEntries.add(orderEntry);
+          if (orderEntry instanceof ModuleSourceOrderEntry) {
+            if (moduleSourceAdded) {
+              continue;
+            }
+            moduleSourceAdded = true;
+          }
+          myOrderEntries.add(orderEntry);
+          break;
       }
     }
 
@@ -259,6 +260,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public void writeExternal(@NotNull Element element) {
     List<Element> moduleExtensionElements = new ArrayList<>();
     for (ModuleExtension<?> extension : myExtensions) {
+      if (extension == null) {
+        continue;
+      }
+
       final Element state = extension.getState();
       if (state == null) {
         continue;
@@ -293,6 +298,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     ModuleExtensionChangeListener moduleExtensionChangeListener = getModule().getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC);
 
     for (ModuleExtension extension : myExtensions) {
+      if (extension == null) {
+        continue;
+      }
+
       MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
 
       ModuleExtension originalExtension = toSet.getExtensionWithoutCheck(extension.getId());
@@ -325,7 +334,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @SuppressWarnings("unchecked")
   public void createMutableExtensions(@Nullable ModuleRootLayerImpl layer) {
-    for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+    ModuleExtensionProviderEP[] providers = ModuleExtensionProviders.getProviders();
+    myExtensions = new ModuleExtension[providers.length];
+    for (ModuleExtensionProviderEP providerEP : providers) {
       MutableModuleExtension mutable = providerEP.createMutable(this);
       if (mutable == null) {
         continue;
@@ -337,7 +348,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
         mutable.commit(originalExtension);
       }
 
-      myExtensions.add(mutable);
+      myExtensions[providerEP.getInternalIndex()] = mutable;
     }
   }
 
@@ -362,7 +373,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   public void init() {
     removeAllOrderEntries();
-    myExtensions.clear();
+    myExtensions = ModuleExtension.EMPTY_ARRAY;
 
     addSourceOrderEntries();
     createMutableExtensions(null);
@@ -407,11 +418,15 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @SuppressWarnings("unchecked")
   public boolean areExtensionsChanged(@NotNull ModuleRootLayerImpl original) {
-    for (ModuleExtension<?> extension : myExtensions) {
-      MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
-      ModuleExtension<?> originalExtension = original.getExtensionWithoutCheck(extension.getId());
-      assert originalExtension != null;
-      if (mutableExtension.isModified(originalExtension)) {
+    for (int i = 0; i < ModuleExtensionProviders.getProviders().length; i++) {
+      MutableModuleExtension selfExtension = getExtension0(i);
+      ModuleExtension originalExtension = original.getExtension0(i);
+
+      if (selfExtension == null || originalExtension == null) {
+        continue;
+      }
+
+      if (selfExtension.isModified(originalExtension)) {
         return true;
       }
     }
@@ -469,7 +484,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Override
   public boolean iterateContentEntries(@NotNull Processor<ContentEntry> processor) {
     for (ContentEntry contentEntry : myContent) {
-      if(!processor.process(contentEntry)) {
+      if (!processor.process(contentEntry)) {
         return false;
       }
     }
@@ -625,10 +640,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public ModuleExtension[] getExtensions() {
-    if (myExtensions.isEmpty()) {
+    if (myExtensions.length == 0) {
       return ModuleExtension.EMPTY_ARRAY;
     }
-    List<ModuleExtension> list = new ArrayList<>(myExtensions.size());
+    List<ModuleExtension> list = new ArrayList<>(myExtensions.length);
     for (ModuleExtension<?> extension : myExtensions) {
       if (extension.isEnabled()) {
         list.add(extension);
@@ -667,10 +682,12 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Override
   @Nullable
+  @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
-    for (ModuleExtension<?> extension : myExtensions) {
-      if (extension.isEnabled() && clazz.isAssignableFrom(extension.getClass())) {
-        //noinspection unchecked
+    int[] ids = ModuleExtensionIndexCache.get(clazz);
+    for (int id : ids) {
+      ModuleExtension extension = myExtensions[id];
+      if (extension != null && extension.isEnabled()) {
         return (T)extension;
       }
     }
@@ -679,22 +696,12 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Override
   @Nullable
-  public <T extends ModuleExtension> T getExtension(@NotNull String key) {
-    for (ModuleExtension<?> extension : myExtensions) {
-      if (extension.isEnabled() && Comparing.equal(extension.getId(), key)) {
-        //noinspection unchecked
-        return (T)extension;
-      }
-    }
-    return null;
-  }
-
-  @Override
-  @Nullable
+  @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
-    for (ModuleExtension<?> extension : myExtensions) {
-      if (clazz.isAssignableFrom(extension.getClass())) {
-        //noinspection unchecked
+    int[] ids = ModuleExtensionIndexCache.get(clazz);
+    for (int id : ids) {
+      ModuleExtension extension = myExtensions[id];
+      if (extension != null) {
         return (T)extension;
       }
     }
@@ -703,14 +710,32 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Override
   @Nullable
-  public <T extends ModuleExtension> T getExtensionWithoutCheck(@NotNull String key) {
-    for (ModuleExtension<?> extension : myExtensions) {
-      if (Comparing.equal(extension.getId(), key)) {
-        //noinspection unchecked
-        return (T)extension;
-      }
+  @SuppressWarnings("unchecked")
+  public <T extends ModuleExtension> T getExtension(@NotNull String key) {
+    ModuleExtensionProviderEP ep = ModuleExtensionProviders.findProvider(key);
+    if (ep == null) {
+      return null;
     }
-    return null;
+    ModuleExtension extension = getExtension0(ep.getInternalIndex());
+    return extension != null && extension.isEnabled() ? (T)extension : null;
+  }
+
+  @Override
+  @Nullable
+  @SuppressWarnings("unchecked")
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(@NotNull String key) {
+    ModuleExtensionProviderEP ep = ModuleExtensionProviders.findProvider(key);
+    if (ep == null) {
+      return null;
+    }
+    return getExtension0(ep.getInternalIndex());
+  }
+
+  @Nullable
+  @SuppressWarnings("unchecked")
+  private <T extends ModuleExtension> T getExtension0(int i) {
+    ModuleExtension extension = myExtensions.length == 0 ? null : myExtensions[i];
+    return (T)extension;
   }
 
   @NotNull
@@ -727,7 +752,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Override
   public void removeContentEntry(@NotNull ContentEntry entry) {
-    ModuleRootLayerImpl.LOGGER.assertTrue(myContent.contains(entry));
+    LOGGER.assertTrue(myContent.contains(entry));
     if (entry instanceof Disposable) {
       Disposer.dispose((Disposable)entry);
     }
@@ -736,7 +761,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Override
   public void addOrderEntry(@NotNull OrderEntry entry) {
-    ModuleRootLayerImpl.LOGGER.assertTrue(!myOrderEntries.contains(entry));
+    LOGGER.assertTrue(!myOrderEntries.contains(entry));
     myOrderEntries.add(entry);
   }
 
@@ -790,8 +815,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public ModuleOrderEntry addModuleOrderEntry(@NotNull Module module) {
-    ModuleRootLayerImpl.LOGGER.assertTrue(!module.equals(getModule()));
-    ModuleRootLayerImpl.LOGGER.assertTrue(Comparing.equal(myRootModel.getModule().getProject(), module.getProject()));
+    LOGGER.assertTrue(!module.equals(getModule()));
+    LOGGER.assertTrue(Comparing.equal(myRootModel.getModule().getProject(), module.getProject()));
     final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(module, this);
     myOrderEntries.add(moduleOrderEntry);
     return moduleOrderEntry;
@@ -800,7 +825,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public ModuleOrderEntry addInvalidModuleEntry(@NotNull String name) {
-    ModuleRootLayerImpl.LOGGER.assertTrue(!name.equals(getModule().getName()));
+    LOGGER.assertTrue(!name.equals(getModule().getName()));
     final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(name, this);
     myOrderEntries.add(moduleOrderEntry);
     return moduleOrderEntry;
@@ -835,7 +860,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   private void removeOrderEntryInternal(OrderEntry entry) {
-    ModuleRootLayerImpl.LOGGER.assertTrue(myOrderEntries.contains(entry));
+    LOGGER.assertTrue(myOrderEntries.contains(entry));
     Disposer.dispose((OrderEntryBaseImpl)entry);
     myOrderEntries.remove(entry);
   }
@@ -849,7 +874,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   private void assertValidRearrangement(@NotNull OrderEntry[] newEntries) {
     String error = checkValidRearrangement(newEntries);
-    ModuleRootLayerImpl.LOGGER.assertTrue(error == null, error);
+    LOGGER.assertTrue(error == null, error);
   }
 
   @Nullable
@@ -893,11 +918,11 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     removeAllContentEntries();
     removeAllOrderEntries();
     for (ModuleExtension<?> extension : myExtensions) {
-      if(extension instanceof Disposable) {
+      if (extension instanceof Disposable) {
         Disposer.dispose((Disposable)extension);
       }
     }
-    myExtensions.clear();
+    myExtensions = ModuleExtension.EMPTY_ARRAY;
   }
 
   @NotNull

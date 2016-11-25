@@ -19,6 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.impl.ModuleExtensionProviders;
 import org.jetbrains.annotations.NotNull;
 
 public class CantRunException extends ExecutionException {
@@ -44,7 +45,7 @@ public class CantRunException extends ExecutionException {
   }
 
   public static CantRunException noSdkForModuleExtension(@NotNull final ModuleExtension e) {
-    final ModuleExtensionProviderEP provider = ModuleExtensionProviderEP.findProviderEP(e.getId());
+    final ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(e.getId());
     assert provider != null;
     return new CantRunException(ExecutionBundle.message("no.sdk.for.module.extension.error.message", provider.getName(), e.getModule().getName()));
   }

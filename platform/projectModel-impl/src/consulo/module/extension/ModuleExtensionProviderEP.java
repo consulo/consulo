@@ -17,22 +17,23 @@ package consulo.module.extension;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.NullableLazyValue;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.annotations.DeprecationInfo;
 import consulo.lombok.annotations.Logger;
+import consulo.module.extension.impl.ModuleExtensionProviders;
+import consulo.roots.ModuleRootLayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.lang.reflect.Constructor;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author VISTALL
@@ -40,7 +41,9 @@ import java.util.Map;
  */
 @Logger
 public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME = ExtensionPointName.create("com.intellij.moduleExtensionProvider");
+  private static AtomicInteger ourCounter = new AtomicInteger();
+
+  private final int myInternalIndex = ourCounter.getAndIncrement();
 
   @Attribute("key")
   public String key;
@@ -64,20 +67,11 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
   public String immutableClass;
 
   @Attribute("icon")
-  @NotNull
   public String icon;
 
-  private static NotNullLazyValue<Map<String, ModuleExtensionProviderEP>> ourAllValue = new NotNullLazyValue<Map<String, ModuleExtensionProviderEP>>() {
-    @NotNull
-    @Override
-    protected Map<String, ModuleExtensionProviderEP> compute() {
-      Map<String, ModuleExtensionProviderEP> map = new HashMap<String, ModuleExtensionProviderEP>();
-      for (ModuleExtensionProviderEP ep : EP_NAME.getExtensions()) {
-        map.put(ep.key, ep);
-      }
-      return map;
-    }
-  };
+  public int getInternalIndex() {
+    return myInternalIndex;
+  }
 
   private NotNullLazyValue<Icon> myIconValue = new NotNullLazyValue<Icon>() {
     @NotNull
@@ -86,51 +80,38 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
       if (StringUtil.isEmpty(icon)) {
         return AllIcons.Toolbar.Unknown;
       }
-      Icon icon1 = IconLoader.findIcon(icon, getLoaderForClass());
-      return icon1 == null ? AllIcons.Toolbar.Unknown : icon1;
+      Icon temp = IconLoader.findIcon(icon, getLoaderForClass());
+      return temp == null ? AllIcons.Toolbar.Unknown : temp;
     }
   };
 
-  private NullableLazyValue<Constructor<ModuleExtension>> myImmutableConstructorValue = new NullableLazyValue<Constructor<ModuleExtension>>() {
-    @Override
-    protected Constructor<ModuleExtension> compute() {
-      Class<ModuleExtension> value = findClassNoExceptions(immutableClass);
-      if(value == null) {
-        return null;
-      }
-      try {
-        return value.getConstructor(String.class, ModuleRootLayer.class);
-      }
-      catch (NoSuchMethodException e) {
-         ModuleExtensionProviderEP.LOGGER.error(e);
-      }
-      return null;
-    }
-  };
+  private NullableLazyValue<Pair<Class<ModuleExtension>, Constructor<ModuleExtension>>> myImmutableValue =
+          NullableLazyValue.of(() -> this.<ModuleExtension>resolveFor(immutableClass));
 
-  private NullableLazyValue<Constructor<MutableModuleExtension>> myMutableConstructorValue = new NullableLazyValue<Constructor<MutableModuleExtension>>() {
-    @Override
-    protected Constructor<MutableModuleExtension> compute() {
-      Class<MutableModuleExtension> value = findClassNoExceptions(mutableClass);
-      if(value == null) {
-        return null;
-      }
-      try {
-        return value.getConstructor(String.class, ModuleRootLayer.class);
-      }
-      catch (NoSuchMethodException e) {
-        ModuleExtensionProviderEP.LOGGER.error(e);
-      }
+  private NullableLazyValue<Pair<Class<MutableModuleExtension>, Constructor<MutableModuleExtension>>> myMutableValue =
+          NullableLazyValue.of(() -> this.<MutableModuleExtension>resolveFor(mutableClass));
+
+  @Nullable
+  private <E> Pair<Class<E>, Constructor<E>> resolveFor(String className) {
+    Class<E> value = findClassNoExceptions(className);
+    if (value == null) {
       return null;
     }
-  };
+    try {
+      return Pair.create(value, value.getConstructor(String.class, ModuleRootLayer.class));
+    }
+    catch (NoSuchMethodException e) {
+      ModuleExtensionProviderEP.LOGGER.error(e);
+    }
+    return null;
+  }
 
   @Nullable
   public ModuleExtension<?> createImmutable(@NotNull ModuleRootLayer modifiableRootModel) {
     try {
-      Constructor<ModuleExtension> value = myImmutableConstructorValue.getValue();
-      if(value != null) {
-        return ReflectionUtil.createInstance(value, key, modifiableRootModel);
+      Pair<Class<ModuleExtension>, Constructor<ModuleExtension>> value = myImmutableValue.getValue();
+      if (value != null) {
+        return ReflectionUtil.createInstance(value.getSecond(), key, modifiableRootModel);
       }
     }
     catch (Error e) {
@@ -140,17 +121,29 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
   }
 
   @Nullable
+  public Class<ModuleExtension> getImmutableClass() {
+    Pair<Class<ModuleExtension>, Constructor<ModuleExtension>> value = myImmutableValue.getValue();
+    return value == null ? null : value.getFirst();
+  }
+
+  @Nullable
   public MutableModuleExtension<?> createMutable(@NotNull ModuleRootLayer modifiableRootModel) {
     try {
-      Constructor<MutableModuleExtension> value = myMutableConstructorValue.getValue();
-      if(value != null) {
-        return ReflectionUtil.createInstance(value, key, modifiableRootModel);
+      Pair<Class<MutableModuleExtension>, Constructor<MutableModuleExtension>> value = myMutableValue.getValue();
+      if (value != null) {
+        return ReflectionUtil.createInstance(value.getSecond(), key, modifiableRootModel);
       }
     }
     catch (Error e) {
       ModuleExtensionProviderEP.LOGGER.error("Problem with module extension: " + key, e);
     }
     return null;
+  }
+
+  @Nullable
+  public Class<MutableModuleExtension> getMutableClass() {
+    Pair<Class<MutableModuleExtension>, Constructor<MutableModuleExtension>> value = myMutableValue.getValue();
+    return value == null ? null : value.getFirst();
   }
 
   @NotNull
@@ -160,7 +153,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
 
   @NotNull
   public String getName() {
-    if(StringUtil.isEmpty(name)) {
+    if (StringUtil.isEmpty(name)) {
       ModuleExtensionProviderEP.LOGGER.error("Name is empty for extension '" + key + "'. Capitalized 'key' used as name. Please define 'name' attribute for ep");
       name = StringUtil.capitalize(key);
     }
@@ -173,7 +166,9 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
   }
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo(value = "Use ModuleExtensionProviders#findProvider(String)", until = "2.0")
   public static ModuleExtensionProviderEP findProviderEP(@NotNull String id) {
-    return ourAllValue.getValue().get(id);
+    return ModuleExtensionProviders.findProvider(id);
   }
 }

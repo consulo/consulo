@@ -21,14 +21,10 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import consulo.roots.ModuleRootLayer;
-import consulo.roots.ModuleRootLayerListener;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.messages.MessageBus;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.ModuleExtensionChangeListener;
-import consulo.module.extension.ModuleExtensionProviderEP;
-import consulo.module.extension.MutableModuleExtension;
+import consulo.module.extension.*;
+import consulo.module.extension.impl.ModuleExtensionProviders;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -51,7 +47,7 @@ public class ExtensionListenerByLayerListenerInvoker extends AbstractProjectComp
                                       @NotNull final ModuleRootLayer newLayer) {
 
         final List<Couple<ModuleExtension>> list = new ArrayList<Couple<ModuleExtension>>();
-        for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+        for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviders.getProviders()) {
           MutableModuleExtension oldExtension = oldLayer.getExtensionWithoutCheck(providerEP.getKey());
           MutableModuleExtension newExtension = newLayer.getExtensionWithoutCheck(providerEP.getKey());
 
