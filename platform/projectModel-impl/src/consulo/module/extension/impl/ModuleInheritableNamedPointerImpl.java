@@ -16,13 +16,13 @@
 package consulo.module.extension.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.util.pointers.Named;
 import consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
@@ -36,11 +36,11 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ModuleInheritableNamedPointerImpl<T extends Named> implements MutableModuleInheritableNamedPointer<T> {
   private NamedPointer<Module> myModulePointer;
   private NamedPointer<T> myTargetPointer;
-  private final Project myProject;
+  private final ModuleRootLayer myRootLayer;
   private final String myXmlPrefix;
 
-  protected ModuleInheritableNamedPointerImpl(Project project, String xmlPrefix) {
-    myProject = project;
+  protected ModuleInheritableNamedPointerImpl(ModuleRootLayer layer, String xmlPrefix) {
+    myRootLayer = layer;
     myXmlPrefix = xmlPrefix;
   }
 
@@ -51,7 +51,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
   public abstract T getItemFromModule(@NotNull Module module);
 
   @NotNull
-  public abstract NamedPointer<T> getPointer(@NotNull Project project, @NotNull String name);
+  public abstract NamedPointer<T> getPointer(@NotNull ModuleRootLayer layer, @NotNull String name);
 
   @Nullable
   @Override
@@ -99,11 +99,11 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     }
     else {
       final String moduleName = anotherItem.getModuleName();
-      myModulePointer = moduleName == null ? null : ModuleUtilCore.createPointer(myProject, moduleName);
+      myModulePointer = moduleName == null ? null : createModulePointer(moduleName);
 
       if (myModulePointer == null) {
         final String targetName = anotherItem.getName();
-        myTargetPointer = getPointer(myProject, targetName);
+        myTargetPointer = getPointer(myRootLayer, targetName);
       }
     }
   }
@@ -111,12 +111,12 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
   @RequiredReadAction
   @Override
   public void set(@Nullable String moduleName, @Nullable String name) {
-    if(moduleName != null) {
-      myModulePointer = ModuleUtilCore.createPointer(myProject, moduleName);
+    if (moduleName != null) {
+      myModulePointer = createModulePointer(moduleName);
       myTargetPointer = null;
     }
-    else if(name != null) {
-      myTargetPointer = getPointer(myProject, name);
+    else if (name != null) {
+      myTargetPointer = getPointer(myRootLayer, name);
       myModulePointer = null;
     }
     else {
@@ -128,12 +128,12 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
   @RequiredReadAction
   @Override
   public void set(@Nullable Module module, @Nullable T named) {
-    if(module != null) {
-      myModulePointer = ModuleUtilCore.createPointer(module);
+    if (module != null) {
+      myModulePointer = createModulePointer(module.getName());
       myTargetPointer = null;
     }
-    else if(named != null) {
-      myTargetPointer = getPointer(myProject, named.getName());
+    else if (named != null) {
+      myTargetPointer = getPointer(myRootLayer, named.getName());
       myModulePointer = null;
     }
     else {
@@ -143,10 +143,10 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
   }
 
   public void toXml(Element element) {
-    if(myModulePointer != null) {
+    if (myModulePointer != null) {
       element.setAttribute(myXmlPrefix + "-module-name", myModulePointer.getName());
     }
-    else if(myTargetPointer != null) {
+    else if (myTargetPointer != null) {
       element.setAttribute(myXmlPrefix + "-name", myTargetPointer.getName());
     }
   }
@@ -155,12 +155,18 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
   public void fromXml(Element element) {
     final String moduleName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-module-name"));
     if (moduleName != null) {
-      myModulePointer = ModuleUtilCore.createPointer(myProject, moduleName);
+      myModulePointer = createModulePointer(moduleName);
     }
     final String itemName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-name"));
     if (itemName != null) {
-      myTargetPointer = getPointer(myProject, itemName);
+      myTargetPointer = getPointer(myRootLayer, itemName);
     }
+  }
+
+  @NotNull
+  @RequiredReadAction
+  private NamedPointer<Module> createModulePointer(String name) {
+    return ((ModuleRootLayerImpl)myRootLayer).getRootModel().getConfigurationAccessor().getModulePointer(myRootLayer.getProject(), name);
   }
 
   @Nullable

@@ -17,8 +17,14 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.libraries.Library;
+import consulo.annotations.RequiredReadAction;
+import consulo.bundle.SdkPointerManager;
+import consulo.util.pointers.NamedPointer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -35,7 +41,18 @@ public class RootConfigurationAccessor {
     return sdk;
   }
 
+  @NotNull
+  public NamedPointer<Sdk> getSdkPointer(String sdkName) {
+    return SdkPointerManager.getInstance().create(sdkName);
+  }
+
   public Module getModule(final Module module, final String moduleName) {
     return module;
+  }
+
+  @NotNull
+  @RequiredReadAction
+  public NamedPointer<Module> getModulePointer(Project project, String name) {
+    return ModuleUtilCore.createPointer(project, name);
   }
 }

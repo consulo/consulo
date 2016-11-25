@@ -17,10 +17,10 @@ package consulo.module.extension.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import consulo.bundle.SdkPointerManager;
 import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,8 +31,8 @@ import org.jetbrains.annotations.NotNull;
 public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamedPointerImpl<Sdk> {
   private final String myExtensionId;
 
-  public SdkModuleInheritableNamedPointerImpl(@NotNull Project project, @NotNull String id) {
-    super(project, "sdk");
+  public SdkModuleInheritableNamedPointerImpl(@NotNull ModuleRootLayer layer, @NotNull String id) {
+    super(layer, "sdk");
     myExtensionId = id;
   }
 
@@ -56,7 +56,7 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
 
   @NotNull
   @Override
-  public NamedPointer<Sdk> getPointer(@NotNull Project project, @NotNull String name) {
-    return SdkPointerManager.getInstance().create(name);
+  public NamedPointer<Sdk> getPointer(@NotNull ModuleRootLayer layer, @NotNull String name) {
+    return ((ModuleRootLayerImpl)layer).getRootModel().getConfigurationAccessor().getSdkPointer(name);
   }
 }

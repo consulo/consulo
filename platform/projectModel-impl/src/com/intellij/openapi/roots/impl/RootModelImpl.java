@@ -62,6 +62,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   RootModelImpl(@NotNull ModuleRootManagerImpl moduleRootManager) {
     myModuleRootManager = moduleRootManager;
     myWritable = false;
+    myConfigurationAccessor = new RootConfigurationAccessor();
 
     try {
       initDefaultLayer(null);
@@ -69,8 +70,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     catch (InvalidDataException e) {
       //
     }
-
-    myConfigurationAccessor = new RootConfigurationAccessor();
   }
 
   @RequiredReadAction
@@ -81,11 +80,11 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
           throws InvalidDataException {
     myModuleRootManager = moduleRootManager;
 
+    myConfigurationAccessor = new RootConfigurationAccessor();
+
     loadState(element, progressIndicator);
 
     myWritable = writable;
-
-    myConfigurationAccessor = new RootConfigurationAccessor();
   }
 
   //creates modifiable model
@@ -154,6 +153,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return myWritable;
   }
 
+  @NotNull
   public RootConfigurationAccessor getConfigurationAccessor() {
     return myConfigurationAccessor;
   }

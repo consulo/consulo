@@ -417,6 +417,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     return false;
   }
 
+  @NotNull
   public RootModelImpl getRootModel() {
     return myRootModel;
   }

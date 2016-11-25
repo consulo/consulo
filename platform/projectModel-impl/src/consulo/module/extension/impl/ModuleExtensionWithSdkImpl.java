@@ -32,10 +32,10 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
 
   private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 
-  public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
-    super(id, rootModel);
+  public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull ModuleRootLayer rootLayer) {
+    super(id, rootLayer);
 
-    mySdkPointer = new SdkModuleInheritableNamedPointerImpl(rootModel.getProject(), id);
+    mySdkPointer = new SdkModuleInheritableNamedPointerImpl(rootLayer, id);
   }
 
   @RequiredReadAction

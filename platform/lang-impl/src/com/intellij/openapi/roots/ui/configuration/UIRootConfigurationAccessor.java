@@ -23,6 +23,9 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import consulo.annotations.RequiredReadAction;
+import consulo.util.pointers.NamedPointer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -43,7 +46,8 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
       if (libraryName != null) {
         library = context.getLibrary(libraryName, libraryLevel);
       }
-    } else {
+    }
+    else {
       final Library model = context.getLibraryModel(library);
       if (model != null) {
         library = model;
@@ -60,11 +64,48 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }
 
+  @NotNull
+  @Override
+  public NamedPointer<Sdk> getSdkPointer(String sdkName) {
+    return new NamedPointer<Sdk>() {
+      @Nullable
+      @Override
+      public Sdk get() {
+        return ProjectStructureConfigurable.getInstance(myProject).getSdkConfigurable().getSdksTreeModel().findSdk(sdkName);
+      }
+
+      @NotNull
+      @Override
+      public String getName() {
+        return sdkName;
+      }
+    };
+  }
+
   @Override
   public Module getModule(final Module module, final String moduleName) {
     if (module == null) {
       return ModuleStructureConfigurable.getInstance(myProject).getModule(moduleName);
     }
     return module;
+  }
+
+  @RequiredReadAction
+  @NotNull
+  @Override
+  public NamedPointer<Module> getModulePointer(Project project, String name) {
+    return new NamedPointer<Module>() {
+      @Nullable
+      @Override
+      public Module get() {
+        return ModuleStructureConfigurable.getInstance(myProject).getModule(name);
+      }
+
+      @NotNull
+      @Override
+      public String getName() {
+        return name;
+      }
+    };
   }
 }
