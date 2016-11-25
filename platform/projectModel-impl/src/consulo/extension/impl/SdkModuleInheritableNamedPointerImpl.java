@@ -15,49 +15,18 @@
  */
 package consulo.extension.impl;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import consulo.bundle.SdkPointerManager;
-import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
-import consulo.util.pointers.NamedPointer;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 19:35/15.06.13
  */
-public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamedPointerImpl<Sdk> {
-  private final String myExtensionId;
-
+@Deprecated
+@DeprecationInfo("Use consulo.module.extension.impl.SdkModuleInheritableNamedPointerImpl")
+public class SdkModuleInheritableNamedPointerImpl extends consulo.module.extension.impl.SdkModuleInheritableNamedPointerImpl {
   public SdkModuleInheritableNamedPointerImpl(@NotNull Project project, @NotNull String id) {
-    super(project, "sdk");
-    myExtensionId = id;
-  }
-
-  @Override
-  public String getItemNameFromModule(@NotNull Module module) {
-    final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk) ModuleUtilCore.getExtension(module, myExtensionId);
-    if (extension != null) {
-      return extension.getInheritableSdk().getName();
-    }
-    return null;
-  }
-
-  @Override
-  public Sdk getItemFromModule(@NotNull Module module) {
-    final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)  ModuleUtilCore.getExtension(module, myExtensionId);
-    if (extension != null) {
-      return extension.getInheritableSdk().get();
-    }
-    return null;
-  }
-
-  @NotNull
-  @Override
-  public NamedPointer<Sdk> getPointer(@NotNull Project project, @NotNull String name) {
-    return SdkPointerManager.getInstance().create(name);
+    super(project, id);
   }
 }

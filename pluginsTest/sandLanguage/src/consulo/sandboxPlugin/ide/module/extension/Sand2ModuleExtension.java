@@ -15,8 +15,8 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
+import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.roots.ModuleRootLayer;
-import consulo.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**

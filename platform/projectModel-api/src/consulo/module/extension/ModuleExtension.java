@@ -18,6 +18,7 @@ package consulo.module.extension;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredReadAction;
 import consulo.roots.ModuleRootLayer;
 import com.intellij.util.messages.Topic;
 import org.jdom.Element;
@@ -46,5 +47,6 @@ public interface ModuleExtension<T extends ModuleExtension> extends PersistentSt
   @NotNull
   Project getProject();
 
+  @RequiredReadAction
   void commit(@NotNull T mutableModuleExtension);
 }

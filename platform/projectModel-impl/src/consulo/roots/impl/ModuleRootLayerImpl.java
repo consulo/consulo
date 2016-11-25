@@ -34,9 +34,10 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.extension.impl.ModuleExtensionImpl;
+import consulo.annotations.RequiredReadAction;
 import consulo.lombok.annotations.Logger;
 import consulo.module.extension.*;
+import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.module.extension.impl.ModuleExtensionIndexCache;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.roots.ContentFolderScopes;
@@ -185,6 +186,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   private final ModuleLibraryTable myModuleLibraryTable;
 
+  @RequiredReadAction
   public ModuleRootLayerImpl(@Nullable ModuleRootLayerImpl originalLayer, @NotNull RootModelImpl rootModel) {
     myRootModel = rootModel;
     myModuleLibraryTable = new ModuleLibraryTable(this);
@@ -293,6 +295,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   @SuppressWarnings("unchecked")
+  @RequiredReadAction
   public boolean copy(@NotNull ModuleRootLayerImpl toSet, boolean notifyExtensionListener) {
     boolean changed = false;
     ModuleExtensionChangeListener moduleExtensionChangeListener = getModule().getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC);
@@ -333,6 +336,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   @SuppressWarnings("unchecked")
+  @RequiredReadAction
   public void createMutableExtensions(@Nullable ModuleRootLayerImpl layer) {
     ModuleExtensionProviderEP[] providers = ModuleExtensionProviders.getProviders();
     myExtensions = new ModuleExtension[providers.length];
@@ -371,6 +375,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
 
+  @RequiredReadAction
   public void init() {
     removeAllOrderEntries();
     myExtensions = ModuleExtension.EMPTY_ARRAY;

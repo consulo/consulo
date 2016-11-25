@@ -16,8 +16,6 @@
 package consulo.module.extension.impl;
 
 import com.intellij.util.ArrayUtil;
-import consulo.extension.impl.ModuleExtensionImpl;
-import consulo.extension.impl.ModuleExtensionWithSdkImpl;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import gnu.trove.THashMap;
@@ -38,7 +36,7 @@ public class ModuleExtensionIndexCache {
     return ints == null ? ArrayUtil.EMPTY_INT_ARRAY : ints;
   }
 
-  public static synchronized void put(@NotNull Class<?> clazz, int index) {
+  public static void put(@NotNull Class<?> clazz, int index) {
     put0(clazz, index);
   }
 

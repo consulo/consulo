@@ -15,75 +15,19 @@
  */
 package consulo.extension.impl;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
-import consulo.roots.ModuleRootLayer;
+import consulo.annotations.DeprecationInfo;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.module.extension.ModuleInheritableNamedPointer;
-import org.jdom.Element;
+import consulo.roots.ModuleRootLayer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL
  * @since 12:42/19.05.13
  */
-public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionImpl<T>
-  implements ModuleExtensionWithSdk<T> {
-
-  private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
-
+@Deprecated
+@DeprecationInfo("Use consulo.module.extension.impl.ModuleExtensionWithSdkImpl")
+public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> extends consulo.module.extension.impl.ModuleExtensionWithSdkImpl<T> {
   public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
     super(id, rootModel);
-
-    mySdkPointer = new SdkModuleInheritableNamedPointerImpl(rootModel.getProject(), id);
-  }
-
-  @Override
-  public void commit(@NotNull T mutableModuleExtension) {
-    super.commit(mutableModuleExtension);
-
-    mySdkPointer.set(mutableModuleExtension.getInheritableSdk());
-  }
-
-  @NotNull
-  @Override
-  public ModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
-    return mySdkPointer;
-  }
-
-  @Nullable
-  @Override
-  public Sdk getSdk() {
-    return getInheritableSdk().get();
-  }
-
-  @Nullable
-  @Override
-  public String getSdkName() {
-    return getInheritableSdk().getName();
-  }
-
-  public boolean isModifiedImpl(ModuleExtensionWithSdk<T> originExtension) {
-    if (myIsEnabled != originExtension.isEnabled()) {
-      return true;
-    }
-    return !mySdkPointer.equals(originExtension.getInheritableSdk());
-  }
-
-  @Override
-  protected void getStateImpl(@NotNull Element element) {
-    super.getStateImpl(element);
-
-    mySdkPointer.toXml(element);
-  }
-
-  @Override
-  @RequiredReadAction
-  protected void loadStateImpl(@NotNull Element element) {
-    super.loadStateImpl(element);
-
-    mySdkPointer.fromXml(element);
   }
 }
