@@ -158,7 +158,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
               buttonSize)
       {
         @Override
-        protected Icon getIcon() {
+        public Icon getIcon() {
           return myCloseButtonHovered ? action.getTemplatePresentation().getHoveredIcon() : action.getTemplatePresentation().getIcon();
         }
       };

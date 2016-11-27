@@ -50,7 +50,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
   @NotNull private final ArrangementRuleIndexControl     myRowIndexControl;
   @NotNull private final ArrangementUiComponent          myDelegate;
   @NotNull private final ArrangementMatchingRulesControl myControl;
-  @NotNull private final MyActionButton                  myEditButton;
+  @NotNull private final ActionButton                  myEditButton;
 
   @Nullable private Rectangle myScreenBounds;
 
@@ -69,7 +69,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     Presentation presentation = action.getTemplatePresentation().clone();
     Icon editIcon = presentation.getIcon();
     Dimension buttonSize = new Dimension(editIcon.getIconWidth(), editIcon.getIconHeight());
-    myEditButton = new MyActionButton(action, presentation, ArrangementConstants.MATCHING_RULES_CONTROL_PLACE, buttonSize);
+    myEditButton = new ActionButton(action, presentation, ArrangementConstants.MATCHING_RULES_CONTROL_PLACE, buttonSize);
     myEditButton.setVisible(false);
 
     FontMetrics metrics = getFontMetrics(getFont());
@@ -293,16 +293,5 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
   @Override
   public String toString() {
     return "list row decorator for " + myDelegate.toString();
-  }
-
-  private static class MyActionButton extends ActionButton {
-    MyActionButton(AnAction action, Presentation presentation, String place, @NotNull Dimension minimumSize) {
-      super(action, presentation, place, minimumSize);
-    }
-
-    @NotNull
-    public Presentation getPresentation() {
-      return myPresentation;
-    }
   }
 }

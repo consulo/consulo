@@ -24,7 +24,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
-import com.intellij.openapi.actionSystem.impl.InplaceActionButtonLook;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.Gray;
@@ -73,7 +72,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     ShowHistoryAction historyAction = new ShowHistoryAction(search);
     ActionButton button =
             new ActionButton(historyAction, historyAction.getTemplatePresentation(), ActionPlaces.UNKNOWN, new Dimension(JBUI.scale(16), JBUI.scale(16)));
-    button.setLook(new InplaceActionButtonLook());
+    button.setMinimalMode(true);
 
     myInfoLabel = new JBLabel(UIUtil.ComponentStyle.SMALL);
     myInfoLabel.setForeground(JBColor.GRAY);

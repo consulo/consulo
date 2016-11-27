@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.impl.IdeaActionButtonLook;
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
 public abstract class ActionButtonLook {
   public static final ActionButtonLook IDEA_LOOK = new IdeaActionButtonLook();
 

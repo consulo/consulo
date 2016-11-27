@@ -17,6 +17,7 @@ package consulo.ide.ui.laf.modern;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import sun.swing.SwingUtilities2;
@@ -67,7 +68,7 @@ public class ModernButtonUI extends BasicButtonUI {
       if (c.isEnabled()) {
         if (!square) {
           if (myMouseEnterHandler.isMousePressed()) {
-            g.setColor(ModernUIUtil.getActiveBorderColor());
+            g.setColor(ColorUtil.toAlpha(ModernUIUtil.getSelectionBackground(), 100));
           }
           else {
             if (ModernButtonBorderPainter.isDefaultButton(c)) {

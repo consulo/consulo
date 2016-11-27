@@ -18,7 +18,6 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.ActionButtonLook;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
@@ -243,28 +242,22 @@ public class ContextMenuImpl extends JPanel implements Disposable {
 
   private ActionToolbar createToolbar(final ActionGroup group) {
     final ActionToolbarImpl actionToolbar =
-      new ActionToolbarImpl(ActionPlaces.CONTEXT_TOOLBAR, group, true, DataManager.getInstance(), ActionManagerEx.getInstanceEx(),
-                            KeymapManagerEx.getInstanceEx()) {
+            new ActionToolbarImpl(ActionPlaces.CONTEXT_TOOLBAR, group, true, DataManager.getInstance(), ActionManagerEx.getInstanceEx(),
+                                  KeymapManagerEx.getInstanceEx()) {
 
-        @Override
-        public ActionButton createToolbarButton(final AnAction action,
-                                                final ActionButtonLook look,
-                                                final String place,
-                                                final Presentation presentation,
-                                                final Dimension minimumSize) {
-          final ActionButton result = new ActionButton(action, presentation, place, minimumSize) {
-            @Override
-            public void paintComponent(final Graphics g) {
-              final ActionButtonLook look = getButtonLook();
-              look.paintBackground(g, this);
-              look.paintIcon(g, this, getIcon());
-            }
-          };
-
-          result.setLook(look);
-          return result;
-        }
-      };
+              @Override
+              protected ActionButton createToolbarButton(final AnAction action,
+                                                         boolean minimalMode,
+                                                         boolean decorateButtons,
+                                                         final String place,
+                                                         final Presentation presentation,
+                                                         final Dimension minimumSize) {
+                final ActionButton result = new ActionButton(action, presentation, place, minimumSize);
+                result.setMinimalMode(minimalMode);
+                result.setDecorateButtons(decorateButtons);
+                return result;
+              }
+            };
 
     actionToolbar.setTargetComponent(myEditor.getContentComponent());
     return actionToolbar;

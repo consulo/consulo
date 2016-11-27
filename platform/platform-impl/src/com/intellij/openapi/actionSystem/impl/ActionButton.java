@@ -15,10 +15,8 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.ActionButtonLook;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
@@ -38,6 +36,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class ActionButton extends JComponent implements ActionButtonComponent, AnActionHolder {
+  private static final String uiClassID = "ActionButtonUI";
+
   @Deprecated
   private static final Icon ourEmptyIcon = EmptyIcon.ICON_18;
   private static final int ourEmptyIconSize = 18;
@@ -49,20 +49,17 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   protected final Presentation myPresentation;
   protected final AnAction myAction;
   private final String myPlace;
-  private ActionButtonLook myLook = ActionButtonLook.IDEA_LOOK;
   private boolean myMouseDown;
   private boolean myRollover;
-  private static boolean ourGlobalMouseDown = false;
+  private static boolean ourGlobalMouseDown;
 
-  private boolean myNoIconsInPopup = false;
+  private boolean myNoIconsInPopup;
   private Insets myInsets;
 
-  public ActionButton(
-    final AnAction action,
-    final Presentation presentation,
-    final String place,
-    @NotNull final Dimension minimumSize
-    ) {
+  private boolean myMinimalMode;
+  private boolean myDecorateButtons;
+
+  public ActionButton(final AnAction action, final Presentation presentation, final String place, @NotNull final Dimension minimumSize) {
     setMinimumButtonSize(minimumSize);
     setIconInsets(null);
     myRollover = false;
@@ -75,6 +72,24 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     myMinimumButtonSize = minimumSize;
 
     putClientProperty(UIUtil.CENTER_TOOLTIP_DEFAULT, Boolean.TRUE);
+
+    updateUI();
+  }
+
+  public void setMinimalMode(boolean minimalMode) {
+    myMinimalMode = minimalMode;
+  }
+
+  public void setDecorateButtons(boolean decorateButtons) {
+    myDecorateButtons = decorateButtons;
+  }
+
+  public boolean isMinimalMode() {
+    return myMinimalMode;
+  }
+
+  public boolean isDecorateButtons() {
+    return myDecorateButtons;
   }
 
   public void setNoIconsInPopup(boolean noIconsInPopup) {
@@ -84,9 +99,6 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   public void setMinimumButtonSize(@NotNull Dimension size) {
     myMinimumButtonSize = size;
   }
-
-  @Override
-  public void paintChildren(Graphics g) {}
 
   @Override
   public int getPopState() {
@@ -100,7 +112,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     }
   }
 
-  protected boolean isButtonEnabled() {
+  public boolean isButtonEnabled() {
     return isEnabled() && myPresentation.isEnabled();
   }
 
@@ -113,13 +125,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   }
 
   private void performAction(MouseEvent e) {
-    AnActionEvent event = new AnActionEvent(
-      e, getDataContext(),
-      myPlace,
-      myPresentation,
-      ActionManager.getInstance(),
-      e.getModifiers()
-    );
+    AnActionEvent event = new AnActionEvent(e, getDataContext(), myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers());
     if (!ActionUtil.lastUpdateAndCheckDumb(myAction, event, false)) {
       return;
     }
@@ -162,7 +168,8 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
         popupMenu.getComponent().show(this, getWidth(), 0);
       }
 
-    } else {
+    }
+    else {
       ActionUtil.performActionDumbAware(myAction, event);
     }
   }
@@ -196,21 +203,14 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   @Override
   public Dimension getPreferredSize() {
     Icon icon = getIcon();
-    if (
-      icon.getIconWidth() < myMinimumButtonSize.width &&
-      icon.getIconHeight() < myMinimumButtonSize.height
-    ) {
+    if (icon.getIconWidth() < myMinimumButtonSize.width && icon.getIconHeight() < myMinimumButtonSize.height) {
       return myMinimumButtonSize;
     }
     else {
-      return new Dimension(
-        icon.getIconWidth() + myInsets.left + myInsets.right,
-        icon.getIconHeight() + myInsets.top + myInsets.bottom
-      );
+      return new Dimension(icon.getIconWidth() + myInsets.left + myInsets.right, icon.getIconHeight() + myInsets.top + myInsets.bottom);
     }
   }
 
-  
   public void setIconInsets(@Nullable Insets insets) {
     myInsets = insets != null ? insets : JBUI.emptyInsets();
   }
@@ -222,10 +222,10 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
   /**
    * @return button's icon. Icon depends on action's state. It means that the method returns
-   *         disabled icon if action is disabled. If the action's icon is <code>null</code> then it returns
-   *         an empty icon.
+   * disabled icon if action is disabled. If the action's icon is <code>null</code> then it returns
+   * an empty icon.
    */
-  protected Icon getIcon() {
+  public Icon getIcon() {
     Icon icon = isButtonEnabled() ? myIcon : myDisabledIcon;
     if (icon == null) {
       icon = JBUI.emptyIcon(ourEmptyIconSize);
@@ -253,44 +253,13 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   }
 
   @Override
-  public void paintComponent(Graphics g) {
-    super.paintComponent(g);
-
-    paintButtonLook(g);
-
-    if (myAction instanceof ActionGroup && ((ActionGroup)myAction).isPopup()) {
-
-      int x = JBUI.scale(5);
-      int y = JBUI.scale(4);
-
-      if (getPopState() == PUSHED) {
-        x += JBUI.scale(1);
-        y += JBUI.scale(1);
-      }
-
-      AllIcons.General.Dropdown.paintIcon(this, g, x, y);
-    }
+  public String getUIClassID() {
+    return uiClassID;
   }
 
-  protected void paintButtonLook(Graphics g) {
-    ActionButtonLook look = getButtonLook();
-    look.paintBackground(g, this);
-    look.paintIcon(g, this, getIcon());
-    look.paintBorder(g, this);
-  }
-
-  protected ActionButtonLook getButtonLook() {
-    return myLook;
-  }
-
-  public void setLook(ActionButtonLook look) {
-    if (look != null) {
-      myLook = look;
-    }
-    else {
-      myLook = ActionButtonLook.IDEA_LOOK;
-    }
-    repaint();
+  @Override
+  public void updateUI() {
+    setUI(UIManager.getUI(this));
   }
 
   @Override
@@ -339,6 +308,10 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     else {
       return !myRollover || !isButtonEnabled() ? NORMAL : POPPED;
     }
+  }
+
+  public Presentation getPresentation() {
+    return myPresentation;
   }
 
   @Override
