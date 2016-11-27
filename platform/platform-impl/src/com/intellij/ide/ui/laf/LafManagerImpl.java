@@ -116,16 +116,10 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   @NonNls private static final String[] ourOptionPaneIconKeys =
           {"OptionPane.errorIcon", "OptionPane.informationIcon", "OptionPane.warningIcon", "OptionPane.questionIcon"};
 
-  private static final String[] ourAlloyComponentsToPatchSelection =
-          {"Tree", "MenuItem", "Menu", "List", "ComboBox", "Table", "TextArea", "EditorPane", "TextPane", "FormattedTextField", "PasswordField", "TextField",
-                  "RadioButtonMenuItem", "CheckBoxMenuItem"};
-
   private final EventListenerList myListenerList;
   private final UIManager.LookAndFeelInfo[] myLaFs;
   private UIManager.LookAndFeelInfo myCurrentLaf;
-  private final HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults =
-          new HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>>();
-  private final UISettings myUiSettings;
+  private final HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
   private String myLastWarning = null;
   private PropertyChangeListener myThemeChangeListener = null;
 
@@ -133,8 +127,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   /**
    * Invoked via reflection.
    */
-  LafManagerImpl(UISettings uiSettings) {
-    myUiSettings = uiSettings;
+  LafManagerImpl() {
     myListenerList = new EventListenerList();
 
     List<UIManager.LookAndFeelInfo> lafList = ContainerUtil.newArrayList();
@@ -639,7 +632,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     UIManager.LookAndFeelInfo lf = getCurrentLookAndFeel();
     HashMap<String, Object> lfDefaults = myStoredDefaults.get(lf);
     if (lfDefaults == null) {
-      lfDefaults = new HashMap<String, Object>();
+      lfDefaults = new HashMap<>();
       for (String resource : ourPatchableFontResources) {
         lfDefaults.put(resource, defaults.get(resource));
       }
