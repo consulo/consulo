@@ -23,7 +23,6 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
@@ -86,12 +85,14 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     myMinimumButtonSize = size;
   }
 
+  @Override
   public void paintChildren(Graphics g) {}
 
+  @Override
   public int getPopState() {
     if (myAction instanceof Toggleable) {
       Boolean selected = (Boolean)myPresentation.getClientProperty(Toggleable.SELECTED_PROPERTY);
-      boolean flag1 = selected != null && selected.booleanValue();
+      boolean flag1 = selected != null && selected;
       return getPopState(flag1);
     }
     else {
@@ -153,12 +154,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
           }
         }
       });
-      popupMenu.setDataContextProvider(new Getter<DataContext>() {
-        @Override
-        public DataContext get() {
-          return ActionButton.this.getDataContext();
-        }
-      });
+      popupMenu.setDataContextProvider(ActionButton.this::getDataContext);
       if (ActionPlaces.isToolbarPlace(event.getPlace())) {
         popupMenu.getComponent().show(this, 0, getHeight());
       }
@@ -171,6 +167,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     }
   }
 
+  @Override
   public void removeNotify() {
     if (myActionButtonSynchronizer != null) {
       myPresentation.removePropertyChangeListener(myActionButtonSynchronizer);
@@ -179,6 +176,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     super.removeNotify();
   }
 
+  @Override
   public void addNotify() {
     super.addNotify();
     if (myActionButtonSynchronizer == null) {
@@ -189,11 +187,13 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     updateIcon();
   }
 
+  @Override
   public void setToolTipText(String s) {
     String tooltipText = KeymapUtil.createTooltipText(s, myAction);
     super.setToolTipText(tooltipText.length() > 0 ? tooltipText : null);
   }
 
+  @Override
   public Dimension getPreferredSize() {
     Icon icon = getIcon();
     if (
@@ -212,9 +212,10 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
   
   public void setIconInsets(@Nullable Insets insets) {
-    myInsets = insets != null ? insets : new Insets(0,0,0,0);
+    myInsets = insets != null ? insets : JBUI.emptyInsets();
   }
-  
+
+  @Override
   public Dimension getMinimumSize() {
     return getPreferredSize();
   }
@@ -251,6 +252,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     setToolTipText(text == null ? myPresentation.getDescription() : text);
   }
 
+  @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
 
@@ -291,6 +293,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     repaint();
   }
 
+  @Override
   protected void processMouseEvent(MouseEvent e) {
     super.processMouseEvent(e);
     if (e.isConsumed()) return;
@@ -338,6 +341,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     }
   }
 
+  @Override
   public AnAction getAction() {
     return myAction;
   }
@@ -345,26 +349,29 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   private class ActionButtonSynchronizer implements PropertyChangeListener {
     @NonNls protected static final String SELECTED_PROPERTY_NAME = "selected";
 
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
       String propertyName = e.getPropertyName();
-      if (Presentation.PROP_TEXT.equals(propertyName)) {
-        updateToolTipText();
-      }
-      else if (Presentation.PROP_ENABLED.equals(propertyName)) {
-        repaint();
-      }
-      else if (Presentation.PROP_ICON.equals(propertyName)) {
-        updateIcon();
-        repaint();
-      }
-      else if (Presentation.PROP_DISABLED_ICON.equals(propertyName)) {
-        setDisabledIcon(myPresentation.getDisabledIcon());
-        repaint();
-      }
-      else if (Presentation.PROP_VISIBLE.equals(propertyName)) {
-      }
-      else if (SELECTED_PROPERTY_NAME.equals(propertyName)) {
-        repaint();
+      switch (propertyName) {
+        case Presentation.PROP_TEXT:
+          updateToolTipText();
+          break;
+        case Presentation.PROP_ENABLED:
+          repaint();
+          break;
+        case Presentation.PROP_ICON:
+          updateIcon();
+          repaint();
+          break;
+        case Presentation.PROP_DISABLED_ICON:
+          setDisabledIcon(myPresentation.getDisabledIcon());
+          repaint();
+          break;
+        case Presentation.PROP_VISIBLE:
+          break;
+        case SELECTED_PROPERTY_NAME:
+          repaint();
+          break;
       }
     }
   }
