@@ -24,7 +24,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
-import com.intellij.openapi.actionSystem.ex.ComboBoxButtonUI;
+import consulo.actionSystem.ex.ComboBoxButtonUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
@@ -92,12 +92,9 @@ import java.util.List;
  */
 @State(
         name = "LafManager",
-        storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml"),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)
-        },
-        storageChooser = LastStorageChooserForWrite.ElementStateLastStorageChooserForWrite.class
-)
+        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml"),
+                @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)},
+        storageChooser = LastStorageChooserForWrite.ElementStateLastStorageChooserForWrite.class)
 public final class LafManagerImpl extends LafManager implements ApplicationComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
 
@@ -105,27 +102,29 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   @NonNls private static final String ATTRIBUTE_CLASS_NAME = "class-name";
   @NonNls private static final String GNOME_THEME_PROPERTY_NAME = "gnome.Net/ThemeName";
 
-  @NonNls private static final String[] ourPatchableFontResources = {"Button.font", "ToggleButton.font", "RadioButton.font",
-    "CheckBox.font", "ColorChooser.font", "ComboBox.font", "Label.font", "List.font", "MenuBar.font", "MenuItem.font",
-    "MenuItem.acceleratorFont", "RadioButtonMenuItem.font", "CheckBoxMenuItem.font", "Menu.font", "PopupMenu.font", "OptionPane.font",
-    "Panel.font", "ProgressBar.font", "ScrollPane.font", "Viewport.font", "TabbedPane.font", "Table.font", "TableHeader.font",
-    "TextField.font", "PasswordField.font", "TextArea.font", "TextPane.font", "EditorPane.font", "TitledBorder.font", "ToolBar.font",
-    "ToolTip.font", "Tree.font"};
+  @NonNls private static final String[] ourPatchableFontResources =
+          {"Button.font", "ToggleButton.font", "RadioButton.font", "CheckBox.font", "ColorChooser.font", "ComboBox.font", "Label.font", "List.font",
+                  "MenuBar.font", "MenuItem.font", "MenuItem.acceleratorFont", "RadioButtonMenuItem.font", "CheckBoxMenuItem.font", "Menu.font",
+                  "PopupMenu.font", "OptionPane.font", "Panel.font", "ProgressBar.font", "ScrollPane.font", "Viewport.font", "TabbedPane.font", "Table.font",
+                  "TableHeader.font", "TextField.font", "PasswordField.font", "TextArea.font", "TextPane.font", "EditorPane.font", "TitledBorder.font",
+                  "ToolBar.font", "ToolTip.font", "Tree.font"};
 
-  @NonNls private static final String[] ourFileChooserTextKeys = {"FileChooser.viewMenuLabelText", "FileChooser.newFolderActionLabelText",
-    "FileChooser.listViewActionLabelText", "FileChooser.detailsViewActionLabelText", "FileChooser.refreshActionLabelText"};
+  @NonNls private static final String[] ourFileChooserTextKeys =
+          {"FileChooser.viewMenuLabelText", "FileChooser.newFolderActionLabelText", "FileChooser.listViewActionLabelText",
+                  "FileChooser.detailsViewActionLabelText", "FileChooser.refreshActionLabelText"};
 
-  @NonNls private static final String[] ourOptionPaneIconKeys = {"OptionPane.errorIcon", "OptionPane.informationIcon",
-    "OptionPane.warningIcon", "OptionPane.questionIcon"};
+  @NonNls private static final String[] ourOptionPaneIconKeys =
+          {"OptionPane.errorIcon", "OptionPane.informationIcon", "OptionPane.warningIcon", "OptionPane.questionIcon"};
 
-  private static final String[] ourAlloyComponentsToPatchSelection = {"Tree", "MenuItem", "Menu", "List",
-    "ComboBox", "Table", "TextArea", "EditorPane", "TextPane", "FormattedTextField", "PasswordField",
-    "TextField", "RadioButtonMenuItem", "CheckBoxMenuItem"};
+  private static final String[] ourAlloyComponentsToPatchSelection =
+          {"Tree", "MenuItem", "Menu", "List", "ComboBox", "Table", "TextArea", "EditorPane", "TextPane", "FormattedTextField", "PasswordField", "TextField",
+                  "RadioButtonMenuItem", "CheckBoxMenuItem"};
 
   private final EventListenerList myListenerList;
   private final UIManager.LookAndFeelInfo[] myLaFs;
   private UIManager.LookAndFeelInfo myCurrentLaf;
-  private final HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>>();
+  private final HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults =
+          new HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>>();
   private final UISettings myUiSettings;
   private String myLastWarning = null;
   private PropertyChangeListener myThemeChangeListener = null;
@@ -147,8 +146,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       lafList.add(new IntelliJLookAndFeelInfo());
     }
 
-    if(!SystemInfo.isMac) {
-      if(SystemInfo.isWin8OrNewer) {
+    if (!SystemInfo.isMac) {
+      if (SystemInfo.isWin8OrNewer) {
         lafList.add(new NativeModernWhiteLookAndFeelInfo());
       }
       lafList.add(new ModernWhiteLookAndFeelInfo());
@@ -257,8 +256,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     Element element = new Element("state");
     if (myCurrentLaf != null) {
       String className = myCurrentLaf.getClassName();
-      if (className != null){
-        Element child=new Element(ELEMENT_LAF);
+      if (className != null) {
+        Element child = new Element(ELEMENT_LAF);
         child.setAttribute(ATTRIBUTE_CLASS_NAME, className);
         element.addContent(child);
       }
@@ -267,12 +266,12 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   @Override
-  public UIManager.LookAndFeelInfo[] getInstalledLookAndFeels(){
+  public UIManager.LookAndFeelInfo[] getInstalledLookAndFeels() {
     return myLaFs.clone();
   }
 
   @Override
-  public UIManager.LookAndFeelInfo getCurrentLookAndFeel(){
+  public UIManager.LookAndFeelInfo getCurrentLookAndFeel() {
     return myCurrentLaf;
   }
 
@@ -335,11 +334,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       UIManager.setLookAndFeel(laf);
     }
     catch (Exception e) {
-      Messages.showMessageDialog(
-        IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()),
-        CommonBundle.getErrorTitle(),
-        Messages.getErrorIcon()
-      );
+      Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()), CommonBundle.getErrorTitle(),
+                                 Messages.getErrorIcon());
       return;
     }
     myCurrentLaf = lookAndFeelInfo;
@@ -382,14 +378,14 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   @Nullable
   private static Icon getAquaMenuInvertedIcon() {
     if (!UIUtil.isUnderAquaLookAndFeel()) return null;
-    final Icon arrow = (Icon) UIManager.get("Menu.arrowIcon");
+    final Icon arrow = (Icon)UIManager.get("Menu.arrowIcon");
     if (arrow == null) return null;
 
     try {
       final Method method = arrow.getClass().getMethod("getInvertedIcon");
       if (method != null) {
         method.setAccessible(true);
-        return (Icon) method.invoke(arrow);
+        return (Icon)method.invoke(arrow);
       }
 
       return null;
@@ -566,27 +562,28 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     final SynthStyleFactory original = SynthLookAndFeel.getStyleFactory();
 
     SynthLookAndFeel.setStyleFactory(new SynthStyleFactory() {
-        @Override
-        public SynthStyle getStyle(final JComponent c, final Region id) {
-          final SynthStyle style = original.getStyle(c, id);
-          if (id == Region.POPUP_MENU) {
-            try {
-              Field f = style.getClass().getDeclaredField("xThickness");
+      @Override
+      public SynthStyle getStyle(final JComponent c, final Region id) {
+        final SynthStyle style = original.getStyle(c, id);
+        if (id == Region.POPUP_MENU) {
+          try {
+            Field f = style.getClass().getDeclaredField("xThickness");
+            f.setAccessible(true);
+            final Object x = f.get(style);
+            if (x instanceof Integer && (Integer)x == 0) {
+              // workaround for Sun bug #6636964
+              f.set(style, 1);
+              f = style.getClass().getDeclaredField("yThickness");
               f.setAccessible(true);
-              final Object x = f.get(style);
-              if (x instanceof Integer && (Integer)x == 0) {
-                // workaround for Sun bug #6636964
-                f.set(style, 1);
-                f = style.getClass().getDeclaredField("yThickness");
-                f.setAccessible(true);
-                f.set(style, 3);
-              }
+              f.set(style, 3);
             }
-            catch (Exception ignore) { }
           }
-          return style;
+          catch (Exception ignore) {
+          }
         }
-      });
+        return style;
+      }
+    });
 
     new JBPopupMenu();  // invokes updateUI() -> updateStyle()
 
@@ -594,7 +591,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   private static void patchFileChooserStrings(final UIDefaults defaults) {
-    if (!defaults.containsKey(ourFileChooserTextKeys [0])) {
+    if (!defaults.containsKey(ourFileChooserTextKeys[0])) {
       // Alloy L&F does not define strings for names of context menu actions, so we have to patch them in here
       for (String key : ourFileChooserTextKeys) {
         defaults.put(key, IdeBundle.message(key));
@@ -625,7 +622,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     else {
       restoreOriginalFontDefaults(uiDefaults);
     }
-    JBUI.setScaleFactor(JBUI.Fonts.label().getSize()/12f);
+    JBUI.setScaleFactor(JBUI.Fonts.label().getSize() / 12f);
   }
 
   private void restoreOriginalFontDefaults(UIDefaults defaults) {
@@ -650,12 +647,12 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
   }
 
-  private static void updateUI(Window window){
-    if(!window.isDisplayable()){
+  private static void updateUI(Window window) {
+    if (!window.isDisplayable()) {
       return;
     }
     IJSwingUtilities.updateComponentTreeUI(window);
-    Window[] children=window.getOwnedWindows();
+    Window[] children = window.getOwnedWindows();
     for (Window aChildren : children) {
       updateUI(aChildren);
     }
@@ -665,19 +662,19 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
    * Repaints all displayable window.
    */
   @Override
-  public void repaintUI(){
-    Frame[] frames=Frame.getFrames();
+  public void repaintUI() {
+    Frame[] frames = Frame.getFrames();
     for (Frame frame : frames) {
       repaintUI(frame);
     }
   }
 
-  private static void repaintUI(Window window){
-    if(!window.isDisplayable()){
+  private static void repaintUI(Window window) {
+    if (!window.isDisplayable()) {
       return;
     }
     window.repaint();
-    Window[] children=window.getOwnedWindows();
+    Window[] children = window.getOwnedWindows();
     for (Window aChildren : children) {
       repaintUI(aChildren);
     }
@@ -698,30 +695,30 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
-  public static void initInputMapDefaults(UIDefaults defaults){
+  public static void initInputMapDefaults(UIDefaults defaults) {
     // Make ENTER work in JTrees
     InputMap treeInputMap = (InputMap)defaults.get("Tree.focusInputMap");
-    if(treeInputMap!=null){ // it's really possible. For example,  GTK+ doesn't have such map
-      treeInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"toggle");
+    if (treeInputMap != null) { // it's really possible. For example,  GTK+ doesn't have such map
+      treeInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "toggle");
     }
     // Cut/Copy/Paste in JTextAreas
-    InputMap textAreaInputMap=(InputMap)defaults.get("TextArea.focusInputMap");
-    if(textAreaInputMap!=null){ // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
+    InputMap textAreaInputMap = (InputMap)defaults.get("TextArea.focusInputMap");
+    if (textAreaInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
       installCutCopyPasteShortcuts(textAreaInputMap, false);
     }
     // Cut/Copy/Paste in JTextFields
-    InputMap textFieldInputMap=(InputMap)defaults.get("TextField.focusInputMap");
-    if(textFieldInputMap!=null){ // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
+    InputMap textFieldInputMap = (InputMap)defaults.get("TextField.focusInputMap");
+    if (textFieldInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
       installCutCopyPasteShortcuts(textFieldInputMap, false);
     }
     // Cut/Copy/Paste in JPasswordField
-    InputMap passwordFieldInputMap=(InputMap)defaults.get("PasswordField.focusInputMap");
-    if(passwordFieldInputMap!=null){ // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
+    InputMap passwordFieldInputMap = (InputMap)defaults.get("PasswordField.focusInputMap");
+    if (passwordFieldInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
       installCutCopyPasteShortcuts(passwordFieldInputMap, false);
     }
     // Cut/Copy/Paste in JTables
-    InputMap tableInputMap=(InputMap)defaults.get("Table.ancestorInputMap");
-    if(tableInputMap!=null){ // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
+    InputMap tableInputMap = (InputMap)defaults.get("Table.ancestorInputMap");
+    if (tableInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
       installCutCopyPasteShortcuts(tableInputMap, true);
     }
   }
@@ -812,7 +809,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
           }
           break;
         }
-        catch (Exception ignored) { }
+        catch (Exception ignored) {
+        }
       }
     }
   }

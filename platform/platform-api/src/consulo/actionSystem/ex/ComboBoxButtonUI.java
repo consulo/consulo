@@ -14,10 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.actionSystem.ex;
+package consulo.actionSystem.ex;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
+import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
+import com.intellij.openapi.actionSystem.ex.ComboBoxButton;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
@@ -42,7 +44,7 @@ import java.awt.event.MouseMotionListener;
  * @author VISTALL
  * @since 25-Oct-16
  * <p>
- * This is extract code from {@link ComboBoxButton}
+ * This is extract paint code from {@link com.intellij.openapi.actionSystem.ex.ComboBoxButton}
  */
 public class ComboBoxButtonUI extends BasicButtonUI {
   protected boolean myMouseInside;
@@ -52,7 +54,6 @@ public class ComboBoxButtonUI extends BasicButtonUI {
   }
 
   public ComboBoxButtonUI(ComboBoxButton comboBoxButton) {
-    //noinspection HardCodedStringLiteral
     comboBoxButton.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseEntered(MouseEvent e) {

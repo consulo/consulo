@@ -18,7 +18,7 @@ package consulo.ide.ui.laf.modern;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.actionSystem.ex.ComboBoxButton;
-import com.intellij.openapi.actionSystem.ex.ComboBoxButtonUI;
+import consulo.actionSystem.ex.ComboBoxButtonUI;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.GraphicsUtil;
