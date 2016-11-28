@@ -17,7 +17,11 @@ package com.intellij.psi;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.ArrayFactory;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +46,7 @@ public interface PsiReference {
    *
    * @return the underlying element of the reference.
    */
+  @RequiredReadAction
   PsiElement getElement();
 
   /**
@@ -50,6 +55,8 @@ public interface PsiReference {
    *
    * @return Relative range in element
    */
+  @NotNull
+  @RequiredReadAction
   TextRange getRangeInElement();
 
   /**
@@ -57,7 +64,9 @@ public interface PsiReference {
    *
    * @return the target element, or null if it was not possible to resolve the reference to a valid target.
    */
-  @Nullable PsiElement resolve();
+  @Nullable
+  @RequiredReadAction
+  PsiElement resolve();
 
   /**
    * Returns the name of the reference target element which does not depend on import statements
@@ -67,6 +76,7 @@ public interface PsiReference {
    * @return the canonical text of the reference.
    */
   @NotNull
+  @RequiredReadAction
   String getCanonicalText();
 
   /**
@@ -77,6 +87,7 @@ public interface PsiReference {
    * @return the new underlying element of the reference.
    * @throws IncorrectOperationException if the rename cannot be handled for some reason.
    */
+  @RequiredWriteAction
   PsiElement handleElementRename(String newElementName) throws IncorrectOperationException;
 
   /**
@@ -88,6 +99,7 @@ public interface PsiReference {
    * @return the new underlying element of the reference.
    * @throws IncorrectOperationException if the rebind cannot be handled for some reason.
    */
+  @RequiredWriteAction
   PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException;
 
   /**
@@ -96,6 +108,7 @@ public interface PsiReference {
    * @param element the element to check target for.
    * @return true if the reference targets that element, false otherwise.
    */
+  @RequiredReadAction
   boolean isReferenceTo(PsiElement element);
 
   /**
@@ -108,7 +121,12 @@ public interface PsiReference {
    * @return the array of available identifiers.
    */
   @NotNull
-  Object[] getVariants();
+  @RequiredReadAction
+  @Deprecated
+  @DeprecationInfo(value = "Use com.intellij.codeInsight.completion.CompletionContributor", until = "3.0")
+  default Object[] getVariants() {
+    return ArrayUtil.EMPTY_OBJECT_ARRAY;
+  }
 
   /**
    * Returns false if the underlying element is guaranteed to be a reference, or true
@@ -118,5 +136,6 @@ public interface PsiReference {
    *
    * @return true if the reference is soft, false otherwise.
    */
+  @RequiredReadAction
   boolean isSoft();
 }
