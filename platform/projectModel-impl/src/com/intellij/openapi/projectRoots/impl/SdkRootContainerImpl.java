@@ -22,7 +22,6 @@ import com.intellij.openapi.projectRoots.ProjectRootListener;
 import com.intellij.openapi.projectRoots.ex.SdkRoot;
 import com.intellij.openapi.projectRoots.ex.SdkRootContainer;
 import com.intellij.openapi.roots.OrderRootType;
-import consulo.roots.OrderRootTypeWithConvert;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.ArchiveCopyingFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -228,7 +227,7 @@ public class SdkRootContainerImpl implements PersistentStateComponent<Element>, 
   }
 
   private void read(Element element, OrderRootType type) {
-    Element child = OrderRootTypeWithConvert.findFirstElement(element, type);
+    Element child = element.getChild(type.getName());
     if (child == null) {
       myRoots.put(type, new CompositeSdkRoot());
       return;

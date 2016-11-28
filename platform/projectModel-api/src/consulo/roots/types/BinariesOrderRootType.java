@@ -15,7 +15,7 @@
  */
 package consulo.roots.types;
 
-import consulo.roots.OrderRootTypeWithConvert;
+import com.intellij.openapi.roots.OrderRootType;
 import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 17.08.14
  */
-public class BinariesOrderRootType extends OrderRootTypeWithConvert {
+public class BinariesOrderRootType extends OrderRootType {
   @NotNull
   @Lazy
   public static BinariesOrderRootType getInstance() {
@@ -31,6 +31,6 @@ public class BinariesOrderRootType extends OrderRootTypeWithConvert {
   }
 
   public BinariesOrderRootType() {
-    super("binaries", "CLASSES", "classPath");
+    super("binaries");
   }
 }

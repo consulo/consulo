@@ -21,7 +21,6 @@ import com.intellij.openapi.components.ComponentSerializationUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderRootType;
-import consulo.roots.OrderRootTypeWithConvert;
 import com.intellij.openapi.roots.RootProvider;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
@@ -287,7 +286,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
 
   private void readRoots(Element element) throws InvalidDataException {
     for (OrderRootType rootType : OrderRootType.getAllTypes()) {
-      final Element rootChild = OrderRootTypeWithConvert.findFirstElement(element, rootType);
+      final Element rootChild = element.getChild(rootType.getName());
       if (rootChild == null) {
         continue;
       }
