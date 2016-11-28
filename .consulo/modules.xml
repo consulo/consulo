@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ModuleManager">
     <modules>
-      <module name="platform/analysis-api" dirurl="file://$PROJECT_DIR$/platform/analysis-api" current-layer="Default">
+      <module name="api/analysis-api" dirurl="file://$PROJECT_DIR$/platform/analysis-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -20,7 +20,7 @@
           <orderEntry type="module" module-name="editor-ui-api" exported="" />
         </module-layer>
       </module>
-      <module name="platform/analysis-impl" dirurl="file://$PROJECT_DIR$/platform/analysis-impl" current-layer="Default">
+      <module name="impl/analysis-impl" dirurl="file://$PROJECT_DIR$/platform/analysis-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -39,7 +39,7 @@
           <orderEntry type="module" module-name="indexing-impl" />
         </module-layer>
       </module>
-      <module name="platform/annotations" dirurl="file://$PROJECT_DIR$/platform/annotations" current-layer="Default">
+      <module name="impl/annotations" dirurl="file://$PROJECT_DIR$/platform/annotations" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_6" bytecode-version="1.6" />
           <content url="file://$MODULE_DIR$">
@@ -49,7 +49,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="platform/boot" dirurl="file://$PROJECT_DIR$/platform/boot" current-layer="Default">
+      <module name="impl/boot" dirurl="file://$PROJECT_DIR$/platform/boot" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -59,7 +59,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="platform/bootstrap" dirurl="file://$PROJECT_DIR$/platform/bootstrap" current-layer="Default">
+      <module name="impl/bootstrap" dirurl="file://$PROJECT_DIR$/platform/bootstrap" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_6" bytecode-version="1.6" />
           <content url="file://$MODULE_DIR$">
@@ -70,7 +70,7 @@
           <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
-      <module name="platform/compiler/compiler-api" dirurl="file://$PROJECT_DIR$/platform/compiler-api" current-layer="Default">
+      <module name="api/compiler-api" dirurl="file://$PROJECT_DIR$/platform/compiler-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -84,7 +84,7 @@
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
-      <module name="platform/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-bridge-impl" current-layer="Default">
+      <module name="impl/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-bridge-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -96,7 +96,7 @@
           <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
-      <module name="platform/compiler/compiler-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-impl" current-layer="Default">
+      <module name="impl/compiler-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -116,7 +116,7 @@
           <orderEntry type="module" module-name="lang-api" />
         </module-layer>
       </module>
-      <module name="platform/compiler-server-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-server-impl" current-layer="Default">
+      <module name="impl/compiler-server-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-server-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -185,7 +185,7 @@
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
-      <module name="platform/core-api" dirurl="file://$PROJECT_DIR$/platform/core-api" current-layer="Default">
+      <module name="api/core-api" dirurl="file://$PROJECT_DIR$/platform/core-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -205,7 +205,7 @@
           <orderEntry type="library" name="CGLIB" level="project" />
         </module-layer>
       </module>
-      <module name="platform/core-impl" dirurl="file://$PROJECT_DIR$/platform/core-impl" current-layer="Default">
+      <module name="impl/core-impl" dirurl="file://$PROJECT_DIR$/platform/core-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -221,7 +221,7 @@
           <orderEntry type="library" name="Guava" level="project" />
         </module-layer>
       </module>
-      <module name="platform/editor-ui-api" dirurl="file://$PROJECT_DIR$/platform/editor-ui-api" current-layer="Default">
+      <module name="api/editor-ui-api" dirurl="file://$PROJECT_DIR$/platform/editor-ui-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -237,7 +237,7 @@
           <orderEntry type="module" module-name="indexing-api" />
         </module-layer>
       </module>
-      <module name="platform/editor-ui-ex" dirurl="file://$PROJECT_DIR$/platform/editor-ui-ex" current-layer="Default">
+      <module name="api/editor-ui-ex" dirurl="file://$PROJECT_DIR$/platform/editor-ui-ex" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -253,7 +253,7 @@
           <orderEntry type="module" module-name="projectModel-impl" />
         </module-layer>
       </module>
-      <module name="platform/extensions" dirurl="file://$PROJECT_DIR$/platform/extensions" current-layer="Default">
+      <module name="impl/extensions" dirurl="file://$PROJECT_DIR$/platform/extensions" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -272,7 +272,7 @@
           <orderEntry type="library" name="Mocks" level="project" />
         </module-layer>
       </module>
-      <module name="platform/external-system-api" dirurl="file://$PROJECT_DIR$/platform/external-system-api" current-layer="Default">
+      <module name="api/external-system-api" dirurl="file://$PROJECT_DIR$/platform/external-system-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -290,7 +290,7 @@
           <orderEntry type="module" module-name="compiler-api" exported="" />
         </module-layer>
       </module>
-      <module name="platform/external-system-impl" dirurl="file://$PROJECT_DIR$/platform/external-system-impl" current-layer="Default">
+      <module name="impl/external-system-impl" dirurl="file://$PROJECT_DIR$/platform/external-system-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -308,7 +308,7 @@
           <orderEntry type="module" module-name="xdebugger-impl" />
         </module-layer>
       </module>
-      <module name="platform/forms_rt" dirurl="file://$PROJECT_DIR$/platform/forms_rt" current-layer="Default">
+      <module name="impl/forms_rt" dirurl="file://$PROJECT_DIR$/platform/forms_rt" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -318,7 +318,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="platform/graph-api" dirurl="file://$PROJECT_DIR$/platform/graph-api" current-layer="Default">
+      <module name="api/graph-api" dirurl="file://$PROJECT_DIR$/platform/graph-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -329,7 +329,7 @@
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
-      <module name="platform/graph-impl" dirurl="file://$PROJECT_DIR$/platform/graph-impl" current-layer="Default">
+      <module name="impl/graph-impl" dirurl="file://$PROJECT_DIR$/platform/graph-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -341,7 +341,7 @@
           <orderEntry type="module" module-name="graph-api" />
         </module-layer>
       </module>
-      <module name="platform/icons" dirurl="file://$PROJECT_DIR$/platform/icons" current-layer="Default">
+      <module name="impl/icons" dirurl="file://$PROJECT_DIR$/platform/icons" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -351,7 +351,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="platform/indexing-api" dirurl="file://$PROJECT_DIR$/platform/indexing-api" current-layer="Default">
+      <module name="api/indexing-api" dirurl="file://$PROJECT_DIR$/platform/indexing-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -365,7 +365,7 @@
           <orderEntry type="library" name="NanoXML" level="project" />
         </module-layer>
       </module>
-      <module name="platform/indexing-impl" dirurl="file://$PROJECT_DIR$/platform/indexing-impl" current-layer="Default">
+      <module name="impl/indexing-impl" dirurl="file://$PROJECT_DIR$/platform/indexing-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -379,7 +379,7 @@
           <orderEntry type="module" module-name="projectModel-impl" />
         </module-layer>
       </module>
-      <module name="platform/lang-api" dirurl="file://$PROJECT_DIR$/platform/lang-api" current-layer="Default">
+      <module name="api/lang-api" dirurl="file://$PROJECT_DIR$/platform/lang-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -400,7 +400,7 @@
           <orderEntry type="module" module-name="resources-en" />
         </module-layer>
       </module>
-      <module name="platform/lang-impl" dirurl="file://$PROJECT_DIR$/platform/lang-impl" current-layer="Default">
+      <module name="impl/lang-impl" dirurl="file://$PROJECT_DIR$/platform/lang-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -431,7 +431,7 @@
           <orderEntry type="library" name="apache-httpclient" level="project" />
         </module-layer>
       </module>
-      <module name="platform/lvcs-api" dirurl="file://$PROJECT_DIR$/platform/lvcs-api" current-layer="Default">
+      <module name="api/lvcs-api" dirurl="file://$PROJECT_DIR$/platform/lvcs-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -442,7 +442,7 @@
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
-      <module name="platform/lvcs-impl" dirurl="file://$PROJECT_DIR$/platform/lvcs-impl" current-layer="Default">
+      <module name="impl/lvcs-impl" dirurl="file://$PROJECT_DIR$/platform/lvcs-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -460,7 +460,7 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="platform/platform-api" dirurl="file://$PROJECT_DIR$/platform/platform-api" current-layer="Default">
+      <module name="api/platform-api" dirurl="file://$PROJECT_DIR$/platform/platform-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -489,7 +489,7 @@
           <orderEntry type="module" module-name="diff-api" />
         </module-layer>
       </module>
-      <module name="platform/platform-impl" dirurl="file://$PROJECT_DIR$/platform/platform-impl" current-layer="Default">
+      <module name="impl/platform-impl" dirurl="file://$PROJECT_DIR$/platform/platform-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -534,7 +534,7 @@
           <orderEntry type="library" name="commons-compress" level="project" />
         </module-layer>
       </module>
-      <module name="platform/platform-main" dirurl="file://$PROJECT_DIR$/platform/platform-main" current-layer="Default">
+      <module name="impl/platform-main" dirurl="file://$PROJECT_DIR$/platform/platform-main" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -546,7 +546,7 @@
           <orderEntry type="module" module-name="bootstrap" />
         </module-layer>
       </module>
-      <module name="platform/platform-resources" dirurl="file://$PROJECT_DIR$/platform/platform-resources" current-layer="Default">
+      <module name="impl/platform-resources" dirurl="file://$PROJECT_DIR$/platform/platform-resources" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -558,7 +558,7 @@
           <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
-      <module name="platform/platform-resources-en" dirurl="file://$PROJECT_DIR$/platform/platform-resources-en" current-layer="Default">
+      <module name="impl/platform-resources-en" dirurl="file://$PROJECT_DIR$/platform/platform-resources-en" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -568,7 +568,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="platform/platform-tests" dirurl="file://$PROJECT_DIR$/platform/platform-tests" current-layer="Default">
+      <module name="impl/platform-tests" dirurl="file://$PROJECT_DIR$/platform/platform-tests" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -588,7 +588,7 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="platform/projectModel-api" dirurl="file://$PROJECT_DIR$/platform/projectModel-api" current-layer="Default">
+      <module name="api/projectModel-api" dirurl="file://$PROJECT_DIR$/platform/projectModel-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -603,7 +603,7 @@
           <orderEntry type="module" module-name="ui-api" exported="" />
         </module-layer>
       </module>
-      <module name="platform/projectModel-impl" dirurl="file://$PROJECT_DIR$/platform/projectModel-impl" current-layer="Default">
+      <module name="impl/projectModel-impl" dirurl="file://$PROJECT_DIR$/platform/projectModel-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -618,7 +618,7 @@
           <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
-      <module name="remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/platform/remote-servers-agent-rt" current-layer="Default">
+      <module name="impl/remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/platform/remote-servers-agent-rt" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -628,7 +628,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="platform/remote-servers-api" dirurl="file://$PROJECT_DIR$/platform/remote-servers-api" current-layer="Default">
+      <module name="api/remote-servers-api" dirurl="file://$PROJECT_DIR$/platform/remote-servers-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -642,7 +642,7 @@
           <orderEntry type="module" module-name="lang-api" />
         </module-layer>
       </module>
-      <module name="platform/remote-servers-impl" dirurl="file://$PROJECT_DIR$/platform/remote-servers-impl" current-layer="Default">
+      <module name="impl/remote-servers-impl" dirurl="file://$PROJECT_DIR$/platform/remote-servers-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -657,7 +657,7 @@
           <orderEntry type="module" module-name="compiler-impl" />
         </module-layer>
       </module>
-      <module name="resources" dirurl="file://$PROJECT_DIR$/resources" current-layer="Default">
+      <module name="impl/resources" dirurl="file://$PROJECT_DIR$/resources" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -669,7 +669,7 @@
           <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
-      <module name="resources-en" dirurl="file://$PROJECT_DIR$/resources-en" current-layer="Default">
+      <module name="impl/resources-en" dirurl="file://$PROJECT_DIR$/resources-en" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -679,7 +679,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="platform/smRunner" dirurl="file://$PROJECT_DIR$/platform/smRunner" current-layer="Default">
+      <module name="impl/smRunner" dirurl="file://$PROJECT_DIR$/platform/smRunner" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -699,7 +699,7 @@
           <orderEntry type="library" name="slf4j-api" level="project" />
         </module-layer>
       </module>
-      <module name="platform/testFramework" dirurl="file://$PROJECT_DIR$/platform/testFramework" current-layer="Default">
+      <module name="impl/testFramework" dirurl="file://$PROJECT_DIR$/platform/testFramework" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -724,7 +724,7 @@
           <orderEntry type="library" name="tcServiceMessages" level="project" />
         </module-layer>
       </module>
-      <module name="platform/testRunner" dirurl="file://$PROJECT_DIR$/platform/testRunner" current-layer="Default">
+      <module name="impl/testRunner" dirurl="file://$PROJECT_DIR$/platform/testRunner" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -739,7 +739,7 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="platform/usageView" dirurl="file://$PROJECT_DIR$/platform/usageView" current-layer="Default">
+      <module name="impl/usageView" dirurl="file://$PROJECT_DIR$/platform/usageView" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -751,7 +751,7 @@
           <orderEntry type="module" module-name="platform-impl" />
         </module-layer>
       </module>
-      <module name="platform/util" dirurl="file://$PROJECT_DIR$/platform/util" current-layer="Default">
+      <module name="impl/util" dirurl="file://$PROJECT_DIR$/platform/util" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_6" bytecode-version="1.6" />
           <extension id="lombok" />
@@ -779,7 +779,7 @@
           <orderEntry type="library" exploded="" name="imgscalr" level="project" />
         </module-layer>
       </module>
-      <module name="platform/util-rt" dirurl="file://$PROJECT_DIR$/platform/util-rt" current-layer="Default">
+      <module name="impl/util-rt" dirurl="file://$PROJECT_DIR$/platform/util-rt" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_6" bytecode-version="1.6" />
           <content url="file://$MODULE_DIR$">
@@ -790,7 +790,7 @@
           <orderEntry type="module" module-name="annotations" />
         </module-layer>
       </module>
-      <module name="platform/vcs-api" dirurl="file://$PROJECT_DIR$/platform/vcs-api" current-layer="Default">
+      <module name="api/vcs-api" dirurl="file://$PROJECT_DIR$/platform/vcs-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -803,7 +803,7 @@
           <orderEntry type="module" module-name="vcs-api-core" exported="" />
         </module-layer>
       </module>
-      <module name="platform/vcs-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-impl" current-layer="Default">
+      <module name="impl/vcs-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -822,7 +822,7 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="platform/vcs-log-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log-api" current-layer="Default">
+      <module name="api/vcs-log-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -838,7 +838,7 @@
           <orderEntry type="module" module-name="vcs-log-graph-api" />
         </module-layer>
       </module>
-      <module name="platform/vcs-log-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log-impl" current-layer="Default">
+      <module name="impl/vcs-log-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -860,7 +860,7 @@
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
-      <module name="platform/xdebugger-api" dirurl="file://$PROJECT_DIR$/platform/xdebugger-api" current-layer="Default">
+      <module name="api/xdebugger-api" dirurl="file://$PROJECT_DIR$/platform/xdebugger-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -872,7 +872,7 @@
           <orderEntry type="module" module-name="lang-api" exported="" />
         </module-layer>
       </module>
-      <module name="platform/xdebugger-impl" dirurl="file://$PROJECT_DIR$/platform/xdebugger-impl" current-layer="Default">
+      <module name="impl/xdebugger-impl" dirurl="file://$PROJECT_DIR$/platform/xdebugger-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -903,7 +903,7 @@
           <orderEntry type="module" module-name="compiler-impl" />
         </module-layer>
       </module>
-      <module name="platform/coverage-impl" dirurl="file://$PROJECT_DIR$/platform/coverage-impl" current-layer="Default">
+      <module name="impl/coverage-impl" dirurl="file://$PROJECT_DIR$/platform/coverage-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -915,7 +915,7 @@
           <orderEntry type="module" module-name="testRunner" />
         </module-layer>
       </module>
-      <module name="platform/dvcs-api" dirurl="file://$PROJECT_DIR$/platform/dvcs-api" current-layer="Default">
+      <module name="api/dvcs-api" dirurl="file://$PROJECT_DIR$/platform/dvcs-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -928,7 +928,7 @@
           <orderEntry type="module" module-name="vcs-api" />
         </module-layer>
       </module>
-      <module name="platform/vcs-log-graph-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log-graph-api" current-layer="Default">
+      <module name="api/vcs-log-graph-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log-graph-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -940,7 +940,7 @@
           <orderEntry type="module" module-name="util-rt" />
         </module-layer>
       </module>
-      <module name="platform/dvcs-impl" dirurl="file://$PROJECT_DIR$/platform/dvcs-impl" current-layer="Default">
+      <module name="impl/dvcs-impl" dirurl="file://$PROJECT_DIR$/platform/dvcs-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -960,7 +960,7 @@
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
-      <module name="platform/vcs-log-graph-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log-graph-impl" current-layer="Default">
+      <module name="impl/vcs-log-graph-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log-graph-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -976,7 +976,7 @@
           <orderEntry type="library" name="Guava" level="project" />
         </module-layer>
       </module>
-      <module name="platform/slf4j-bind" dirurl="file://$PROJECT_DIR$/platform/slf4j-bind" current-layer="Default">
+      <module name="impl/slf4j-bind" dirurl="file://$PROJECT_DIR$/platform/slf4j-bind" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -988,7 +988,7 @@
           <orderEntry type="library" name="slf4j-api" level="project" />
         </module-layer>
       </module>
-      <module name="platform/diff-impl" dirurl="file://$PROJECT_DIR$/platform/diff-impl" current-layer="Default">
+      <module name="impl/diff-impl" dirurl="file://$PROJECT_DIR$/platform/diff-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -1004,7 +1004,7 @@
           <orderEntry type="module" module-name="vcs-api" />
         </module-layer>
       </module>
-      <module name="platform/diff-api" dirurl="file://$PROJECT_DIR$/platform/diff-api" current-layer="Default">
+      <module name="api/diff-api" dirurl="file://$PROJECT_DIR$/platform/diff-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -1016,7 +1016,7 @@
           <orderEntry type="module" module-name="vcs-api-core" exported="" />
         </module-layer>
       </module>
-      <module name="platform/vcs-api-core" dirurl="file://$PROJECT_DIR$/platform/vcs-api-core" current-layer="Default">
+      <module name="api/vcs-api-core" dirurl="file://$PROJECT_DIR$/platform/vcs-api-core" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <extension id="lombok" />
@@ -1028,7 +1028,7 @@
           <orderEntry type="module" module-name="core-api" exported="" />
         </module-layer>
       </module>
-      <module name="web-impl" dirurl="file://$PROJECT_DIR$/impl/web-impl" current-layer="Default">
+      <module name="impl/web-impl" dirurl="file://$PROJECT_DIR$/impl/web-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <extension id="java-web" />
@@ -1062,7 +1062,7 @@
           </orderEntry>
         </module-layer>
       </module>
-      <module name="ui-api" dirurl="file://$PROJECT_DIR$/api/ui-api" current-layer="Default">
+      <module name="api/ui-api" dirurl="file://$PROJECT_DIR$/api/ui-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -1075,7 +1075,7 @@
           <orderEntry type="module" module-name="util-rt" />
         </module-layer>
       </module>
-      <module name="desktop-impl" dirurl="file://$PROJECT_DIR$/impl/desktop-impl" current-layer="Default">
+      <module name="impl/desktop-impl" dirurl="file://$PROJECT_DIR$/impl/desktop-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
