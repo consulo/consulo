@@ -21,19 +21,21 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import consulo.lang.BaseLanguageVersion;
+import com.intellij.util.containers.ConcurrentMultiMap;
+import com.intellij.util.containers.MultiMap;
+import consulo.annotations.Exported;
+import consulo.annotations.Immutable;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionDefines;
-import gnu.trove.THashMap;
-import consulo.annotations.Immutable;
 import consulo.util.pointers.Named;
+import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The base class for all programming language support implementations. Specific language implementations should inherit from this class
@@ -42,16 +44,14 @@ import java.util.*;
  * There should be exactly one instance of each Language.
  * It is usually created when creating {@link com.intellij.openapi.fileTypes.LanguageFileType} and can be retrieved later
  * with {@link #findInstance(Class)}.
- * For the list of standard languages, see {@link com.intellij.lang.StdLanguages}.
  */
 public abstract class Language extends UserDataHolderBase implements Named {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.lang.Language");
+  private static final Logger LOG = Logger.getInstance(Language.class);
 
-  private static final Map<Class<? extends Language>, Language> ourRegisteredLanguages =
-    Collections.synchronizedMap(new THashMap<Class<? extends Language>, Language>());
-  private static final Map<String, List<Language>> ourRegisteredMimeTypes =
-    Collections.synchronizedMap(new THashMap<String, List<Language>>());
-  private static final Map<String, Language> ourRegisteredIDs = new THashMap<String, Language>();
+  private static final Map<Class<? extends Language>, Language> ourRegisteredLanguages = new ConcurrentHashMap<>();
+  private static final MultiMap<String, LanguageVersion> ourRegisteredMimeTypes = new ConcurrentMultiMap<>();
+  private static final Map<String, Language> ourRegisteredIDs = new THashMap<>();
+
   private final Language myBaseLanguage;
   private final String myID;
   private final String[] myMimeTypes;
@@ -69,9 +69,23 @@ public abstract class Language extends UserDataHolderBase implements Named {
     @Override
     protected LanguageVersion[] compute() {
       LanguageVersion[] versions = findVersions();
-      if(versions.length == 0) {
+      if (versions.length == 0) {
         throw new IllegalArgumentException("Language version is empty for language: " + Language.this);
       }
+
+      for (LanguageVersion version : versions) {
+        for (String mimeType : version.getMimeTypes()) {
+          ourRegisteredMimeTypes.putValue(mimeType, version);
+        }
+      }
+
+      String[] mimeTypes = Language.this.getMimeTypes();
+      for (String mimeType : mimeTypes) {
+        for (LanguageVersion version : versions) {
+          ourRegisteredMimeTypes.putValue(mimeType, version);
+        }
+      }
+
       return versions;
     }
   };
@@ -98,42 +112,30 @@ public abstract class Language extends UserDataHolderBase implements Named {
     if (prev != null) {
       LOG.error("Language with ID '" + ID + "' is already registered: " + prev.getClass());
     }
-    for (String mimeType : mimeTypes) {
-      if (StringUtil.isEmpty(mimeType)) {
-        continue;
-      }
-      List<Language> languagesByMimeType = ourRegisteredMimeTypes.get(mimeType);
-      if (languagesByMimeType == null) {
-        synchronized (ourRegisteredMimeTypes) {
-          languagesByMimeType = ourRegisteredMimeTypes.get(mimeType);
-          if (languagesByMimeType == null) {
-            languagesByMimeType = Collections.synchronizedList(new ArrayList<Language>());
-            ourRegisteredMimeTypes.put(mimeType, languagesByMimeType);
-          }
-        }
-      }
-      languagesByMimeType.add(this);
-    }
   }
 
-  /** Fake language identifier without registering */
+  /**
+   * Fake language identifier without registering
+   */
   protected Language(String id, @SuppressWarnings("UnusedParameters") boolean register) {
     myID = id;
     myBaseLanguage = null;
-    myMimeTypes = null;
+    myMimeTypes = ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
   /**
    * @return collection of all languages registered so far.
    */
+  @NotNull
   public static Collection<Language> getRegisteredLanguages() {
-    return new ArrayList<Language>(ourRegisteredLanguages.values());
+    return new ArrayList<>(ourRegisteredLanguages.values());
   }
 
   /**
    * @param klass <code>java.lang.Class</code> of the particular language. Serves key purpose.
    * @return instance of the <code>klass</code> language registered if any.
    */
+  @Nullable
   public static <T extends Language> T findInstance(Class<T> klass) {
     //noinspection unchecked
     return (T)ourRegisteredLanguages.get(klass);
@@ -144,20 +146,37 @@ public abstract class Language extends UserDataHolderBase implements Named {
    * @return collection of all languages for the given <code>mimeType</code>.
    */
   @NotNull
-  @Immutable
+  @Exported
   public static Collection<Language> findInstancesByMimeType(@Nullable String mimeType) {
-    List<Language> result = mimeType != null ? ourRegisteredMimeTypes.get(mimeType) : null;
-    return result != null ? Collections.unmodifiableList(result) : Collections.<Language>emptyList();
+    Collection<LanguageVersion> versions = ourRegisteredMimeTypes.get(mimeType);
+    Set<Language> languages = new HashSet<>();
+    for (LanguageVersion version : versions) {
+      languages.add(version.getLanguage());
+    }
+    return languages;
   }
 
   @NotNull
   protected LanguageVersion[] findVersions() {
     List<LanguageVersion> languageVersion = LanguageVersionDefines.INSTANCE.allForLanguage(this);
-    if(languageVersion.isEmpty()) {
-      return new LanguageVersion[] {new BaseLanguageVersion<Language>("DEFAULT", this)};
+    if (languageVersion.isEmpty()) {
+      return new LanguageVersion[]{new LanguageVersion("DEFAULT", "Default", this)};
     }
     Collections.reverse(languageVersion);
     return languageVersion.toArray(new LanguageVersion[languageVersion.size()]);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Language)) return false;
+    Language language = (Language)o;
+    return Objects.equals(myID, language.myID);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(myID);
   }
 
   @Override
@@ -167,8 +186,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
   }
 
   /**
-   * Returns the list of MIME types corresponding to the language. The language MIME type is used for specifying the base language
-   * of a JSP page.
+   * Returns the list of MIME types corresponding to the language.
    *
    * @return The list of MIME types.
    */
@@ -222,9 +240,10 @@ public abstract class Language extends UserDataHolderBase implements Named {
 
   @Nullable
   @SuppressWarnings("unchecked")
+  @Exported
   public <T extends LanguageVersion> T findVersionByClass(@NotNull Class<T> clazz) {
     for (LanguageVersion languageVersion : getVersions()) {
-      if(languageVersion.getClass() == clazz) {
+      if (languageVersion.getClass() == clazz) {
         return (T)languageVersion;
       }
     }
@@ -252,6 +271,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
     return false;
   }
 
+  @Exported
   public final boolean isKindOf(String anotherLanguageId) {
     Language l = this;
     while (l != null) {

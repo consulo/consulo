@@ -35,7 +35,7 @@ public interface MultiHostRegistrar {
   MultiHostRegistrar startInjecting(@NotNull Language language);
 
   @NotNull
-  MultiHostRegistrar startInjecting(@NotNull LanguageVersion<? extends Language> languageVersion);
+  MultiHostRegistrar startInjecting(@NotNull LanguageVersion languageVersion);
 
   @NotNull
   MultiHostRegistrar addPlace(@NonNls @Nullable String prefix, @NonNls @Nullable String suffix, @NotNull PsiLanguageInjectionHost host, @NotNull TextRange rangeInsideHost);

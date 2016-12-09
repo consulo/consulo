@@ -1,9 +1,7 @@
 package com.intellij.mock;
 
-import consulo.lang.BaseLanguageVersion;
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
@@ -20,13 +18,14 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.lang.LanguageVersion;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class MockPsiFile extends MockPsiElement implements PsiFile {
-  public static final LanguageVersion<Language> DUMMY_LANG_VERSION = new BaseLanguageVersion<Language>("DUMMY_LANG_VERSION", Language.ANY);
+  public static final LanguageVersion DUMMY_LANG_VERSION = new LanguageVersion("DUMMY_LANG_VERSION", "DUMMY_LANG_VERSION", Language.ANY);
 
   private final long myModStamp = LocalTimeCounter.currentTime();
   private VirtualFile myVirtualFile = null;

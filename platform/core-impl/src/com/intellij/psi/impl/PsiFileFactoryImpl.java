@@ -97,7 +97,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
   @Override
   public PsiFile createFileFromText(@NotNull String name,
                                     @NotNull Language language,
-                                    @NotNull LanguageVersion<?> languageVersion,
+                                    @NotNull LanguageVersion languageVersion,
                                     @NotNull CharSequence text,
                                     boolean physical,
                                     boolean markAsCopy,
@@ -113,7 +113,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
   @Nullable
   @Override
   public PsiFile createFileFromText(@NotNull String name,
-                                    @NotNull LanguageVersion<?> languageVersion,
+                                    @NotNull LanguageVersion languageVersion,
                                     @NotNull CharSequence text,
                                     boolean physical,
                                     boolean markAsCopy,
@@ -150,7 +150,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
   @Nullable
   public PsiFile trySetupPsiForFile(final LightVirtualFile virtualFile,
                                     @NotNull Language language,
-                                    @NotNull LanguageVersion<? extends Language> languageVersion,
+                                    @NotNull LanguageVersion languageVersion,
                                     final boolean physical,
                                     final boolean markAsCopy) {
     final FileViewProviderFactory factory = LanguageFileViewProviders.INSTANCE.forLanguage(language);

@@ -41,7 +41,7 @@ public class DefaultASTLeafFactory implements ASTLeafFactory {
 
   @NotNull
   @Override
-  public LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion<?> languageVersion, @NotNull CharSequence text) {
+  public LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion languageVersion, @NotNull CharSequence text) {
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(type.getLanguage());
     if(parserDefinition != null) {
       if(parserDefinition.getCommentTokens(languageVersion).contains(type)) {

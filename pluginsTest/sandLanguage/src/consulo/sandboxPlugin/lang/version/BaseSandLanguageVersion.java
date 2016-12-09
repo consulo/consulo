@@ -15,9 +15,6 @@
  */
 package consulo.sandboxPlugin.lang.version;
 
-import consulo.lang.BaseLanguageVersion;
-import consulo.lang.LanguageVersionWithDefinition;
-import consulo.lang.LanguageVersionWithParsing;
 import com.intellij.lang.PsiParser;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -28,10 +25,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import consulo.lang.LanguageVersion;
+import consulo.lang.LanguageVersionWithDefinition;
+import consulo.lang.LanguageVersionWithParsing;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.parser.SandParser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +40,7 @@ import java.util.List;
  * @author VISTALL
  * @since 19.03.14
  */
-public abstract class BaseSandLanguageVersion extends BaseLanguageVersion<SandLanguage>
-        implements LanguageVersionWithDefinition<SandLanguage>, LanguageVersionWithParsing<SandLanguage> {
+public abstract class BaseSandLanguageVersion extends LanguageVersion implements LanguageVersionWithDefinition, LanguageVersionWithParsing {
 
   private NotNullLazyValue<List<Pair<IElementType, IElementType>>> myValue = new NotNullLazyValue<List<Pair<IElementType, IElementType>>>() {
     @NotNull
@@ -64,7 +63,7 @@ public abstract class BaseSandLanguageVersion extends BaseLanguageVersion<SandLa
   };
 
   public BaseSandLanguageVersion(String name) {
-    super(name, SandLanguage.INSTANCE);
+    super(name, name, SandLanguage.INSTANCE);
   }
 
   @NotNull

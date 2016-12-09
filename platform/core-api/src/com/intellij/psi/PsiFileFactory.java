@@ -95,7 +95,7 @@ public abstract class PsiFileFactory {
   @Nullable
   public abstract PsiFile createFileFromText(@NotNull String name,
                                              @NotNull Language language,
-                                             @NotNull LanguageVersion<?> languageVersion,
+                                             @NotNull LanguageVersion languageVersion,
                                              @NotNull CharSequence text,
                                              boolean physical,
                                              boolean markAsCopy,
@@ -103,7 +103,7 @@ public abstract class PsiFileFactory {
 
   @Nullable
   public abstract PsiFile createFileFromText(@NotNull String name,
-                                             @NotNull LanguageVersion<?> languageVersion,
+                                             @NotNull LanguageVersion languageVersion,
                                              @NotNull CharSequence text,
                                              boolean physical,
                                              boolean markAsCopy,

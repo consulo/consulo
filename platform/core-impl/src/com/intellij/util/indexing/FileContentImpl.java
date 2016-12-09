@@ -101,9 +101,8 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     }
     final Language language = ((LanguageFileType)getFileTypeWithoutSubstitution()).getLanguage();
     final Language substitutedLanguage = LanguageSubstitutors.INSTANCE.substituteLanguage(language, getFile(), project);
-    LanguageVersion<? extends Language> languageVersion =
+    LanguageVersion languageVersion =
             LanguageVersionResolvers.INSTANCE.forLanguage(substitutedLanguage).getLanguageVersion(substitutedLanguage, project, getFile());
-
     return PsiFileFactory.getInstance(project).createFileFromText(getFileName(), languageVersion, text, false, false, true);
   }
 

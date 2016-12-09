@@ -15,7 +15,6 @@
  */
 package consulo.lang;
 
-import com.intellij.lang.Language;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.psi.tree.TokenSet;
@@ -25,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 19:51/24.06.13
  */
-public interface LanguageVersionWithParsing<T extends Language> extends LanguageVersion<T> {
+public interface LanguageVersionWithParsing {
   @NotNull
   Lexer createLexer();
 

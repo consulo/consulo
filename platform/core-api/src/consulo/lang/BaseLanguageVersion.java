@@ -16,34 +16,23 @@
 package consulo.lang;
 
 import com.intellij.lang.Language;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 13:23/25.08.13
  */
-public class BaseLanguageVersion<T extends Language> implements LanguageVersion<T> {
-  private final String myName;
-  private final T myLanguage;
-
+@Deprecated
+@DeprecationInfo("Use LanguageVersion class instead")
+public class BaseLanguageVersion<T extends Language> extends LanguageVersion {
   public BaseLanguageVersion(String name, T language) {
-    myName = name;
-    myLanguage = language;
+    super(name, name, language);
   }
 
   @NotNull
   @Override
-  public String getName() {
-    return myName;
-  }
-
-  @Override
   public T getLanguage() {
-    return myLanguage;
-  }
-
-  @Override
-  public String toString() {
-    return "LanguageVersion: " + getName() + " for language: " + getLanguage();
+    return (T)super.getLanguage();
   }
 }

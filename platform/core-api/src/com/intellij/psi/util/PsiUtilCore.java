@@ -713,7 +713,7 @@ public class PsiUtilCore {
   }
 
   @NotNull
-  public static LanguageVersion<?> findLanguageVersionFromElement(final PsiElement elt) {
+  public static LanguageVersion findLanguageVersionFromElement(final PsiElement elt) {
     if (elt.getFirstChild() == null) { //is leaf
       final PsiElement parent = elt.getParent();
       if (parent != null) {

@@ -16,6 +16,7 @@
 package consulo.lang.util;
 
 import com.intellij.lang.Language;
+import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
 import com.intellij.openapi.project.Project;
@@ -30,20 +31,20 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 14:09/27.06.13
  */
-@SuppressWarnings("unchecked")
 public class LanguageVersionUtil {
-  public static <T extends Language> LanguageVersion<T> findLanguageVersion(@NotNull T language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
-
-    final LanguageVersion<? extends Language> languageVersion = LanguageVersion.KEY.get(virtualFile);
+  @RequiredReadAction
+  public static LanguageVersion findLanguageVersion(@NotNull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+    final LanguageVersion languageVersion = LanguageVersion.KEY.get(virtualFile);
     if (languageVersion != null) {
-      return (LanguageVersion<T>)languageVersion;
+      return languageVersion;
     }
     else {
-      return (LanguageVersion<T>)LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, project, virtualFile);
+      return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, project, virtualFile);
     }
   }
 
-  public static LanguageVersion<?> findLanguageVersion(@NotNull Language language, @NotNull PsiFile psiFile) {
+  @RequiredReadAction
+  public static LanguageVersion findLanguageVersion(@NotNull Language language, @NotNull PsiFile psiFile) {
     if (psiFile.getLanguage() == language) {
       return psiFile.getLanguageVersion();
     }
@@ -57,18 +58,20 @@ public class LanguageVersionUtil {
     return psi.getLanguageVersion();
   }
 
-  public static LanguageVersion<?> findLanguageVersion(@NotNull Language language, @NotNull PsiElement element) {
+  @RequiredReadAction
+  public static LanguageVersion findLanguageVersion(@NotNull Language language, @NotNull PsiElement element) {
     if (element.getLanguage() == language) {
       return element.getLanguageVersion();
     }
     PsiFile containingFile = element.getContainingFile();
-    if(containingFile == null) {
+    if (containingFile == null) {
       return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, element);
     }
     return findLanguageVersion(language, containingFile);
   }
 
-  public static <T extends Language> LanguageVersion<T> findDefaultVersion(@NotNull T language) {
-    return (LanguageVersion<T>)LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, null, null);
+  @RequiredReadAction
+  public static LanguageVersion findDefaultVersion(@NotNull Language language) {
+    return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, null, null);
   }
 }

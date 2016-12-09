@@ -48,7 +48,7 @@ public class SkipAutopopupInStrings extends CompletionConfidence {
   }
 
   public static boolean isInStringLiteral(PsiElement element) {
-    LanguageVersion<?> languageVersion = PsiUtilCore.findLanguageVersionFromElement(element);
+    LanguageVersion languageVersion = PsiUtilCore.findLanguageVersionFromElement(element);
 
     ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(languageVersion.getLanguage());
     if (definition == null) {

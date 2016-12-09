@@ -54,7 +54,7 @@ public final class ASTFactory {
   }
 
   @NotNull
-  public static LeafElement leaf(@NotNull final IElementType type, @NotNull LanguageVersion<?> languageVersion, final CharSequence text) {
+  public static LeafElement leaf(@NotNull final IElementType type, @NotNull LanguageVersion languageVersion, final CharSequence text) {
     return ASTLeafFactory.EP.getValue(type).createLeaf(type, languageVersion, text);
   }
 

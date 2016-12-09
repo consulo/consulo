@@ -92,7 +92,7 @@ public abstract class PlatformIdTableBuilding {
     if (fileType instanceof LanguageFileType) {
       final Language lang = ((LanguageFileType)fileType).getLanguage();
       final ParserDefinition parserDef = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
-      LanguageVersion<Language> languageVersion = LanguageVersionUtil.findLanguageVersion(lang, project, virtualFile);
+      LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(lang, project, virtualFile);
       final TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens(languageVersion) : null;
       if (commentTokens != null) {
         return new TokenSetTodoIndexer(commentTokens, languageVersion, virtualFile, project);
@@ -155,12 +155,12 @@ public abstract class PlatformIdTableBuilding {
     @NotNull
     private final TokenSet myCommentTokens;
     @Nullable
-    private final LanguageVersion<Language> myLanguageVersion;
+    private final LanguageVersion myLanguageVersion;
     private final VirtualFile myFile;
     private final Project myProject;
 
     public TokenSetTodoIndexer(@NotNull final TokenSet commentTokens,
-                               @Nullable LanguageVersion<Language> languageVersion,
+                               @Nullable LanguageVersion languageVersion,
                                @NotNull final VirtualFile file,
                                @Nullable Project project) {
       myCommentTokens = commentTokens;
@@ -190,7 +190,7 @@ public abstract class PlatformIdTableBuilding {
         BaseFilterLexer.TodoScanningState todoScanningState = null;
         final HighlighterIterator iterator = highlighter.createIterator(0);
 
-        Map<Language, LanguageVersion<?>> languageVersionCache = ContainerUtil.newLinkedHashMap();
+        Map<Language, LanguageVersion> languageVersionCache = ContainerUtil.newLinkedHashMap();
         if(myLanguageVersion != null) {
           languageVersionCache.put(myLanguageVersion.getLanguage(), myLanguageVersion);
         }
@@ -221,9 +221,9 @@ public abstract class PlatformIdTableBuilding {
       return Collections.emptyMap();
     }
 
-    private boolean isCommentToken(Map<Language, LanguageVersion<?>> cache, IElementType token) {
+    private boolean isCommentToken(Map<Language, LanguageVersion> cache, IElementType token) {
       Language language = token.getLanguage();
-      LanguageVersion<?> languageVersion = cache.get(language);
+      LanguageVersion languageVersion = cache.get(language);
       if(languageVersion == null) {
         cache.put(language, languageVersion = LanguageVersionUtil.findLanguageVersion(language, myProject, myFile));
       }

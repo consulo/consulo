@@ -42,8 +42,8 @@ public class Sand2LanguageVersion extends BaseSandLanguageVersion {
   @Override
   protected List<Pair<IElementType, IElementType>> createList() {
     List<Pair<IElementType, IElementType>> list = new ArrayList<>(2);
-    list.add(new Pair<IElementType, IElementType>(SandTokens.CLASS_KEYWORD, SandElements.CLASS));
-    list.add(new Pair<IElementType, IElementType>(Sand2Tokens.DEF_KEYWORD, SandElements.DEF));
+    list.add(Pair.create(SandTokens.CLASS_KEYWORD, SandElements.CLASS));
+    list.add(Pair.create(Sand2Tokens.DEF_KEYWORD, SandElements.DEF));
     return list;
   }
 

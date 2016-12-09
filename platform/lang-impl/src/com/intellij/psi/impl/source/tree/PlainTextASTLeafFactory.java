@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 public class PlainTextASTLeafFactory implements ASTLeafFactory {
   @NotNull
   @Override
-  public LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion<?> languageVersion, @NotNull CharSequence text) {
+  public LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion languageVersion, @NotNull CharSequence text) {
     return new PsiPlainTextImpl(text);
   }
 

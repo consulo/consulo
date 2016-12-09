@@ -117,7 +117,7 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
   }
 
   @NotNull
-  protected LanguageVersion<?> resolveLanguageVersion(@NotNull FileType fileType) {
+  protected LanguageVersion resolveLanguageVersion(@NotNull FileType fileType) {
     if(fileType instanceof LanguageFileType) {
       return LanguageVersionUtil.findDefaultVersion(((LanguageFileType)fileType).getLanguage());
     }
@@ -126,7 +126,7 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
 
   @NotNull
   protected PsiFile createFile(@NonNls String name, @NotNull FileType fileType, String text) {
-    LanguageVersion<?> languageVersion = resolveLanguageVersion(fileType);
+    LanguageVersion languageVersion = resolveLanguageVersion(fileType);
 
     return myFileFactory.createFileFromText(name, languageVersion.getLanguage(), languageVersion, text);
   }

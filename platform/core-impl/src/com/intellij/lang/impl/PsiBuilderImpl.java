@@ -71,7 +71,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
   private static TokenSet ourAnyLanguageWhitespaceTokens = TokenSet.EMPTY;
 
   private final Project myProject;
-  private final LanguageVersion<?> myLanguageVersion;
+  private final LanguageVersion myLanguageVersion;
   private PsiFile myFile;
 
   private int[] myLexStarts;

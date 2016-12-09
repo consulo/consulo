@@ -19,15 +19,15 @@ import com.intellij.lang.Language;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
  * @since 18:31/31.08.13
  */
 public class LanguagePointerUtil {
-  private static final Map<String, NamedPointer<Language>> ourPointersCache = new HashMap<String, NamedPointer<Language>>();
+  private static final Map<String, NamedPointer<Language>> ourPointersCache = new ConcurrentHashMap<>();
 
   @NotNull
   public static NamedPointer<Language> createPointer(@NotNull String name) {

@@ -15,7 +15,6 @@
  */
 package consulo.lang;
 
-import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -25,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 13:37/25.08.13
  */
-public interface LanguageVersionWithDefinition<T extends Language> extends LanguageVersion<T> {
+public interface LanguageVersionWithDefinition {
   boolean isMyElement(@Nullable PsiElement element);
 
   boolean isMyFile(@Nullable Project project, @Nullable VirtualFile virtualFile);

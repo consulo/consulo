@@ -71,7 +71,7 @@ import java.util.Map;
 public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationTracker {
   private List<Pair<Place, PsiFile>> result;
   private Language myLanguage;
-  private LanguageVersion<? extends Language> myLanguageVersion;
+  private LanguageVersion myLanguageVersion;
   private List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers;
   private List<PsiLanguageInjectionHost.Shred> shreds;
   private StringBuilder outChars;
@@ -113,7 +113,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
 
   @Override
   @NotNull
-  public MultiHostRegistrar startInjecting(@NotNull LanguageVersion<? extends Language> languageVersion) {
+  public MultiHostRegistrar startInjecting(@NotNull LanguageVersion languageVersion) {
     escapers = new SmartList<LiteralTextEscaper<? extends PsiLanguageInjectionHost>>();
     shreds = new SmartList<PsiLanguageInjectionHost.Shred>();
     outChars = new StringBuilder();
