@@ -15,8 +15,8 @@
   -->
 <idea-plugin>
   <extensionPoints>
-    <extensionPoint name="logProvider" interface="com.intellij.vcs.log.VcsLogProvider" area="CONSULO_PROJECT"/>
-    <extensionPoint name="logHighlighterFactory" interface="com.intellij.vcs.log.ui.VcsLogHighlighterFactory" area="CONSULO_PROJECT"/>
+    <extensionPoint name="logProvider" interface="com.intellij.vcs.log.VcsLogProvider" area="PROJECT"/>
+    <extensionPoint name="logHighlighterFactory" interface="com.intellij.vcs.log.ui.VcsLogHighlighterFactory" area="PROJECT"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">

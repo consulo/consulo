@@ -99,7 +99,7 @@
 
     <extensionPoint name="projectConfigurable"
                     beanClass="com.intellij.openapi.options.ConfigurableEP"
-                    area="CONSULO_PROJECT">
+                    area="PROJECT">
       <with attribute="instanceClass" implements="com.intellij.openapi.options.Configurable"/>
     </extensionPoint>
 
@@ -114,7 +114,7 @@
 
     <extensionPoint name="selectInTarget"
                     interface="com.intellij.ide.SelectInTarget"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="fileEditorProvider"
                     interface="com.intellij.openapi.fileEditor.FileEditorProvider"/>
@@ -146,18 +146,16 @@
     <extensionPoint name="exportable" beanClass="com.intellij.openapi.components.ServiceBean"/>
     <extensionPoint name="schemeOwner" beanClass="com.intellij.openapi.components.ServiceBean"/>
 
-    <extensionPoint name="ideRootPaneNorth" interface="com.intellij.openapi.wm.IdeRootPaneNorthExtension" area="CONSULO_PROJECT"/>
+    <extensionPoint name="ideRootPaneNorth" interface="com.intellij.openapi.wm.IdeRootPaneNorthExtension" area="PROJECT"/>
 
-    <extensionPoint name="handleTypeFactory" interface="com.intellij.openapi.vcs.readOnlyHandler.HandleTypeFactory"
-                    area="CONSULO_PROJECT"/>
+    <extensionPoint name="handleTypeFactory" interface="com.intellij.openapi.vcs.readOnlyHandler.HandleTypeFactory" area="PROJECT"/>
     <extensionPoint name="customFileTypeFactory" interface="com.intellij.openapi.fileTypes.ex.CustomFileTypeFactory"/>
     <extensionPoint name="fileTypeRegistrator" interface="com.intellij.ide.highlighter.FileTypeRegistrator"/>
 
     <extensionPoint name="undoProvider" interface="com.intellij.openapi.command.impl.UndoProvider"/>
-    <extensionPoint name="projectUndoProvider" interface="com.intellij.openapi.command.impl.UndoProvider"
-                    area="CONSULO_PROJECT"/>
+    <extensionPoint name="projectUndoProvider" interface="com.intellij.openapi.command.impl.UndoProvider" area="PROJECT"/>
 
-    <extensionPoint name="cachedValuesFactory" interface="com.intellij.util.CachedValuesFactory" area="CONSULO_PROJECT"/>
+    <extensionPoint name="cachedValuesFactory" interface="com.intellij.util.CachedValuesFactory" area="PROJECT"/>
 
     <extensionPoint name="syntaxHighlighter"
                     beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
@@ -203,7 +201,7 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.actionSystem.TypedActionHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="customFileDropHandler" area="CONSULO_PROJECT" interface="com.intellij.openapi.editor.CustomFileDropHandler"/>
+    <extensionPoint name="customFileDropHandler" area="PROJECT" interface="com.intellij.openapi.editor.CustomFileDropHandler"/>
 
     <extensionPoint name="toolWindow" beanClass="com.intellij.openapi.wm.ToolWindowEP">
       <with attribute="factoryClass" implements="com.intellij.openapi.wm.ToolWindowFactory"/>
@@ -219,12 +217,12 @@
 
     <extensionPoint name="checkinHandlerFactory" interface="com.intellij.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
-    <extensionPoint name="writingAccessProvider" area="CONSULO_PROJECT" interface="com.intellij.openapi.vfs.WritingAccessProvider"/>
-    <extensionPoint name="nonProjectFileWritingAccessExtension" area="CONSULO_PROJECT"
+    <extensionPoint name="writingAccessProvider" area="PROJECT" interface="com.intellij.openapi.vfs.WritingAccessProvider"/>
+    <extensionPoint name="nonProjectFileWritingAccessExtension" area="PROJECT"
                     interface="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
-    <extensionPoint name="editorNotificationProvider" area="CONSULO_PROJECT" interface="consulo.editor.notifications.EditorNotificationProvider"/>
+    <extensionPoint name="editorNotificationProvider" area="PROJECT" interface="consulo.editor.notifications.EditorNotificationProvider"/>
 
-    <extensionPoint name="editorCustomization" area="CONSULO_PROJECT" interface="com.intellij.ui.EditorCustomization"/>
+    <extensionPoint name="editorCustomization" area="PROJECT" interface="com.intellij.ui.EditorCustomization"/>
     <extensionPoint name="editorNavigation" interface="com.intellij.openapi.editor.EditorNavigationDelegate"/>
 
     <extensionPoint name="statistics.usagesCollector" interface="com.intellij.internal.statistic.UsagesCollector"/>
@@ -265,7 +263,7 @@
 
     <extensionPoint name="vcs"
                     beanClass="com.intellij.openapi.vcs.impl.VcsEP"
-                    area="CONSULO_PROJECT">
+                    area="PROJECT">
       <with attribute="vcsClass" implements="com.intellij.openapi.vcs.AbstractVcs"/>
     </extensionPoint>
 
@@ -274,11 +272,11 @@
 
     <extensionPoint name="changesViewContent"
                     beanClass="com.intellij.openapi.vcs.changes.ui.ChangesViewContentEP"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="editChangelistSupport"
                     interface="com.intellij.openapi.vcs.changes.ui.EditChangelistSupport"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="vcsSelectionProvider"
                     interface="com.intellij.vcsUtil.VcsSelectionProvider"/>
@@ -290,22 +288,22 @@
 
     <extensionPoint name="vcs.fileStatusProvider"
                     interface="com.intellij.openapi.vcs.impl.FileStatusProvider"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="vcs.baseContentProvider"
                     interface="com.intellij.openapi.vcs.impl.VcsBaseContentProvider"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="vcsPopupProvider"
                     interface="com.intellij.openapi.vcs.actions.VcsQuickListContentProvider"/>
-    <extensionPoint name="vcs.ignoredFilesHolder" interface="com.intellij.openapi.vcs.changes.VcsIgnoredFilesHolder" area="CONSULO_PROJECT"/>
+    <extensionPoint name="vcs.ignoredFilesHolder" interface="com.intellij.openapi.vcs.changes.VcsIgnoredFilesHolder" area="PROJECT"/>
     <extensionPoint name="vcs.ignoredFileProvider"
                     interface="com.intellij.openapi.vcs.changes.IgnoredFileProvider"/>
 
-    <extensionPoint name="patch.extension" interface="com.intellij.openapi.diff.impl.patch.PatchEP" area="CONSULO_PROJECT"/>
+    <extensionPoint name="patch.extension" interface="com.intellij.openapi.diff.impl.patch.PatchEP" area="PROJECT"/>
     <extensionPoint name="vcsChangesViewRefresher" interface="com.intellij.openapi.vcs.changes.ChangesViewRefresher"/>
     <extensionPoint name="vcsAnnotationGutterActionProvider" interface="com.intellij.openapi.vcs.annotate.AnnotationGutterActionProvider"/>
-    <extensionPoint name="vcs.taskHandler" interface="com.intellij.openapi.vcs.VcsTaskHandler" area="CONSULO_PROJECT"/>
+    <extensionPoint name="vcs.taskHandler" interface="com.intellij.openapi.vcs.VcsTaskHandler" area="PROJECT"/>
 
     <extensionPoint name="compiler.additionalCompileScopeProvider"
                     interface="com.intellij.compiler.impl.AdditionalCompileScopeProvider"/>
@@ -337,7 +335,7 @@
     </extensionPoint>
 
 
-    <extensionPoint name="compiler" area="CONSULO_PROJECT" interface="com.intellij.openapi.compiler.Compiler"/>
+    <extensionPoint name="compiler" area="PROJECT" interface="com.intellij.openapi.compiler.Compiler"/>
 
     <extensionPoint name="projectStructureValidator"
                     interface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator"/>
@@ -359,10 +357,10 @@
     <!-- Code Insight -->
     <extensionPoint name="highlightVisitor"
                     interface="com.intellij.codeInsight.daemon.impl.HighlightVisitor"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
     <extensionPoint name="highlightErrorFilter"
                     interface="com.intellij.codeInsight.highlighting.HighlightErrorFilter"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
     <extensionPoint name="errorQuickFixProvider"
                     interface="com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider"/>
 
@@ -440,10 +438,10 @@
                     interface="com.intellij.psi.LanguageInjector"/>
     <extensionPoint name="concatenationAwareInjector"
                     interface="com.intellij.lang.injection.ConcatenationAwareInjector"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
     <extensionPoint name="multiHostInjector"
                     beanClass="consulo.lang.injection.MultiHostInjectorExtensionPoint"
-                    area="CONSULO_PROJECT">
+                    area="PROJECT">
       <with attribute="forClass" implements="com.intellij.psi.PsiElement"/>
       <with attribute="implementationClass" implements="com.intellij.lang.injection.MultiHostInjector"/>
     </extensionPoint>
@@ -603,7 +601,7 @@
 
     <extensionPoint name="gotoRelatedProvider" interface="com.intellij.navigation.GotoRelatedProvider"/>
 
-    <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="CONSULO_PROJECT"/>
+    <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="PROJECT"/>
 
     <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.extension.ModuleExtensionProviderEP">
       <with attribute="immutableClass" implements="consulo.module.extension.ModuleExtension"/>
@@ -618,7 +616,7 @@
     </extensionPoint>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
     <extensionPoint name="directoryIndexExcludePolicy" interface="com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
     <extensionPoint name="librarySettingsProvider" interface="com.intellij.openapi.roots.ui.configuration.LibrarySettingsProvider"/>
 
     <extensionPoint name="smartPointerAnchorProvider" interface="com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider"/>
@@ -638,7 +636,7 @@
 
     <extensionPoint name="customScopesProvider"
                     interface="com.intellij.psi.search.scope.packageSet.CustomScopesProvider"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="scopeDescriptorProvider" interface="com.intellij.ide.util.scopeChooser.ScopeDescriptorProvider"/>
     <extensionPoint name="patternDialectProvider" interface="com.intellij.packageDependencies.ui.PatternDialectProvider"/>
@@ -690,10 +688,10 @@
 
     <extensionPoint name="favoriteNodeProvider"
                     interface="com.intellij.ide.favoritesTreeView.FavoriteNodeProvider"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
     <extensionPoint name="favoritesListProvider"
                     interface="com.intellij.ide.favoritesTreeView.FavoritesListProvider"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="lang.emacs" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.emacs.EmacsProcessingHandler"/>
@@ -756,7 +754,7 @@
 
     <extensionPoint name="stepsBeforeRunProvider"
                     interface="com.intellij.execution.BeforeRunTaskProvider"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="consoleFilterProvider" interface="com.intellij.execution.filters.ConsoleFilterProvider"/>
     <extensionPoint name="consoleInputFilterProvider" interface="com.intellij.execution.filters.ConsoleInputFilterProvider"/>
@@ -774,8 +772,8 @@
     </extensionPoint>
 
     <extensionPoint name="hectorComponentProvider" interface="com.intellij.openapi.editor.HectorComponentPanelsProvider"
-                    area="CONSULO_PROJECT"/>
-    <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
+    <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="PROJECT"/>
 
     <extensionPoint name="ui.suitableFontProvider" interface="com.intellij.ui.SuitableFontProvider"/>
 
@@ -788,7 +786,7 @@
       <with attribute="implementationClass" implements="com.intellij.psi.ElementManipulator"/>
     </extensionPoint>
 
-    <extensionPoint name="fileContextProvider" interface="com.intellij.psi.FileContextProvider" area="CONSULO_PROJECT"/>
+    <extensionPoint name="fileContextProvider" interface="com.intellij.psi.FileContextProvider" area="PROJECT"/>
     <extensionPoint name="psi.fileReferenceHelper"
                     interface="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelper"/>
 
@@ -883,7 +881,7 @@
     <extensionPoint name="renameInputValidator" interface="com.intellij.refactoring.rename.RenameInputValidator"/>
 
     <extensionPoint name="findUsagesHandlerFactory" interface="com.intellij.find.findUsages.FindUsagesHandlerFactory"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
     <extensionPoint name="customUsageSearcher" interface="com.intellij.find.findUsages.CustomUsageSearcher"/>
 
     <extensionPoint name="readWriteAccessDetector" interface="com.intellij.codeInsight.highlighting.ReadWriteAccessDetector"/>
@@ -934,11 +932,11 @@
                     interface="com.intellij.usages.impl.FileStructureGroupRuleProvider"/>
     <extensionPoint name="usageContextPanelProvider"
                     interface="com.intellij.usages.UsageContextPanel$Provider"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="treeStructureProvider"
                     interface="com.intellij.ide.projectView.TreeStructureProvider"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="defaultLiveTemplatesProvider"
                     interface="com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider"/>
@@ -1059,21 +1057,21 @@
 
     <extensionPoint name="refactoring.elementListenerProvider"
                     interface="com.intellij.refactoring.listeners.RefactoringElementListenerProvider"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
-    <extensionPoint name="problemFileHighlightFilter" interface="com.intellij.openapi.util.Condition" area="CONSULO_PROJECT"/>
+    <extensionPoint name="problemFileHighlightFilter" interface="com.intellij.openapi.util.Condition" area="PROJECT"/>
 
     <extensionPoint name="problemHighlightFilter" interface="com.intellij.codeInsight.daemon.ProblemHighlightFilter"/>
 
     <extensionPoint name="uiDebuggerExtension" interface="com.intellij.ui.debugger.UiDebuggerExtension"/>
 
-    <extensionPoint name="projectViewPane" interface="com.intellij.ide.projectView.impl.AbstractProjectViewPane" area="CONSULO_PROJECT"/>
+    <extensionPoint name="projectViewPane" interface="com.intellij.ide.projectView.impl.AbstractProjectViewPane" area="PROJECT"/>
     <extensionPoint name="projectViewOptionProvider" interface="consulo.ide.projectView.impl.ProjectViewPaneOptionProvider"/>
 
     <extensionPoint name="inlineActionHandler" interface="com.intellij.lang.refactoring.InlineActionHandler"/>
 
     <extensionPoint name="projectViewNodeDecorator" interface="com.intellij.ide.projectView.ProjectViewNodeDecorator"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="previewHintProvider" interface="com.intellij.codeInsight.preview.PreviewHintProvider"/>
     <extensionPoint name="elementPreviewProvider" interface="com.intellij.codeInsight.preview.ElementPreviewProvider"/>
@@ -1088,7 +1086,7 @@
     <extensionPoint name="predefinedCodeStyle" interface="com.intellij.psi.codeStyle.PredefinedCodeStyle"/>
 
     <extensionPoint name="semContributor"
-                    beanClass="com.intellij.semantic.SemContributorEP" area="CONSULO_PROJECT">
+                    beanClass="com.intellij.semantic.SemContributorEP" area="PROJECT">
       <with attribute="implementation" implements="com.intellij.semantic.SemContributor"/>
     </extensionPoint>
 
@@ -1096,7 +1094,7 @@
 
     <extensionPoint name="typeIcon" beanClass="com.intellij.ide.TypeIconEP"/>
 
-    <extensionPoint name="analyzeStacktraceFilter" interface="com.intellij.execution.filters.Filter" area="CONSULO_PROJECT"/>
+    <extensionPoint name="analyzeStacktraceFilter" interface="com.intellij.execution.filters.Filter" area="PROJECT"/>
 
     <extensionPoint name="stacktrace.fold" beanClass="com.intellij.execution.console.CustomizableConsoleFoldingBean"/>
     <extensionPoint name="changeSignatureDetector"
@@ -1121,7 +1119,7 @@
 
     <extensionPoint name="psi.treeChangePreprocessor"
                     interface="com.intellij.psi.impl.PsiTreeChangePreprocessor"
-                    area="CONSULO_PROJECT"/>
+                    area="PROJECT"/>
 
     <extensionPoint name="codeBlockProvider"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -1331,7 +1329,7 @@
                         serviceImplementation="com.intellij.remote.ext.CredentialsManagerImpl"/>
 
     <applicationService serviceInterface="consulo.ide.webService.WebServicesConfiguration"
-                        serviceImplementation="consulo.ide.webService.WebServicesConfiguration" />
+                        serviceImplementation="consulo.ide.webService.WebServicesConfiguration"/>
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>

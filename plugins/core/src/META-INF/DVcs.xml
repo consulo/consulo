@@ -22,10 +22,10 @@
 
   <extensionPoints>
     <extensionPoint name="pushSupport"
-                    interface="com.intellij.dvcs.push.PushSupport" area="CONSULO_PROJECT"/>
+                    interface="com.intellij.dvcs.push.PushSupport" area="PROJECT"/>
     <extensionPoint name="cherryPicker"
-                    interface="com.intellij.dvcs.cherrypick.VcsCherryPicker" area="CONSULO_PROJECT"/>
-    <extensionPoint name="vcsRepositoryCreator" interface="com.intellij.dvcs.repo.VcsRepositoryCreator" area="CONSULO_PROJECT"/>
+                    interface="com.intellij.dvcs.cherrypick.VcsCherryPicker" area="PROJECT"/>
+    <extensionPoint name="vcsRepositoryCreator" interface="com.intellij.dvcs.repo.VcsRepositoryCreator" area="PROJECT"/>
   </extensionPoints>
   <actions>
     <action id="Vcs.CherryPick" class="com.intellij.dvcs.cherrypick.VcsCherryPickAction" icon="DvcsImplIcons.CherryPick"/>

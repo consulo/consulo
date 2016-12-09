@@ -264,8 +264,8 @@ public class PluginManagerCore {
 
   static void configureExtensions() {
     Extensions.setLogProvider(new IdeaLogProvider());
-    Extensions.registerAreaClass(ExtensionAreas.IDEA_PROJECT, null);
-    Extensions.registerAreaClass(ExtensionAreas.IDEA_MODULE, ExtensionAreas.IDEA_PROJECT);
+    Extensions.registerAreaClass(ExtensionAreas.PROJECT, null);
+    Extensions.registerAreaClass(ExtensionAreas.MODULE, ExtensionAreas.PROJECT);
   }
 
   @Nullable

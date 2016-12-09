@@ -131,7 +131,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   protected void bootstrapPicoContainer(@NotNull String name) {
-    Extensions.instantiateArea(ExtensionAreas.IDEA_PROJECT, this, null);
+    Extensions.instantiateArea(ExtensionAreas.PROJECT, this, null);
     super.bootstrapPicoContainer(name);
     final MutablePicoContainer picoContainer = getPicoContainer();
 

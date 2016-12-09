@@ -98,7 +98,7 @@ public class CoreApplicationEnvironment {
     myLocalFileSystem = createLocalFileSystem();
     myJarFileSystem = createJarFileSystem();
 
-    Extensions.registerAreaClass(ExtensionAreas.IDEA_PROJECT, null);
+    Extensions.registerAreaClass(ExtensionAreas.PROJECT, null);
 
     final MutablePicoContainer appContainer = myApplication.getPicoContainer();
     registerComponentInstance(appContainer, FileDocumentManager.class, new MockFileDocumentManagerImpl(new Function<CharSequence, Document>() {

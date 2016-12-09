@@ -15,14 +15,19 @@
  */
 package com.intellij.openapi.components;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 /**
  * @author yole
  */
 public interface ExtensionAreas {
-  @NonNls
-  String IDEA_PROJECT = "CONSULO_PROJECT";
-  @NonNls
-  String IDEA_MODULE = "CONSULO_MODULE";
+  @NonNls @Deprecated @DeprecationInfo("Use 'PROJECT'") String IDEA_PROJECT = "PROJECT";
+  @NonNls @Deprecated @DeprecationInfo("Use 'MODULE'") String IDEA_MODULE = "MODULE";
+
+  @NonNls String APPLICATION = "";
+  @NonNls String PROJECT = "PROJECT";
+  @NonNls String MODULE = "MODULE";
+
+  String[] ourAllowedAres = new String[]{APPLICATION, PROJECT, MODULE};
 }

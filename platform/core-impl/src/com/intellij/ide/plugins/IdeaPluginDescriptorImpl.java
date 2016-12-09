@@ -21,6 +21,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ComponentConfig;
+import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.extensions.PluginId;
@@ -104,7 +105,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
       return null;
     }
 
-    List<Element> result = new SmartList<Element>();
+    List<Element> result = new SmartList<>();
     for (Element extensionsRoot : elements) {
       for (Element element : extensionsRoot.getChildren()) {
         JDOMUtil.internElement(element, interner);
@@ -158,10 +159,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     catch (FileNotFoundException e) {
       throw e;
     }
-    catch (IOException e) {
-      throw new InvalidDataException(e);
-    }
-    catch (JDOMException e) {
+    catch (IOException | JDOMException e) {
       throw new InvalidDataException(e);
     }
   }
@@ -192,14 +190,14 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
 
     // preserve items order as specified in xml (filterBadPlugins will not fail if module comes first)
-    Set<PluginId> dependentPlugins = new LinkedHashSet<PluginId>();
+    Set<PluginId> dependentPlugins = new LinkedHashSet<>();
     // we always depend to core plugin, but prevent recursion
     if (!PluginManagerCore.CORE_PLUGIN.equals(myId)) {
       dependentPlugins.add(PluginManagerCore.CORE_PLUGIN);
     }
-    Set<PluginId> optionalDependentPlugins = new LinkedHashSet<PluginId>();
+    Set<PluginId> optionalDependentPlugins = new LinkedHashSet<>();
     if (pluginBean.dependencies != null) {
-      myOptionalConfigs = new THashMap<PluginId, String>();
+      myOptionalConfigs = new THashMap<>();
       for (PluginDependency dependency : pluginBean.dependencies) {
         String text = dependency.pluginId;
         if (!StringUtil.isEmpty(text)) {
@@ -252,14 +250,41 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     if (extensionPoints != null) {
       myExtensionsPoints = MultiMap.createSmart();
       for (Element extensionPoint : extensionPoints) {
-        myExtensionsPoints.putValue(StringUtil.notNullize(extensionPoint.getAttributeValue(ExtensionsAreaImpl.ATTRIBUTE_AREA)), extensionPoint);
+        String areaId = StringUtil.notNullize(extensionPoint.getAttributeValue(ExtensionsAreaImpl.ATTRIBUTE_AREA), ExtensionAreas.APPLICATION);
+        if("CONSULO_PROJECT".equals(areaId)) {
+          LOG.warn("Deprecated areaId '" + areaId + "' for extensionPoint: " + buildEpId(extensionPoint));
+          areaId = ExtensionAreas.PROJECT;
+        }
+        else if("CONSULO_MODULE".equals(areaId)) {
+          LOG.warn("Deprecated areaId '" + areaId + "' for extensionPoint: " + buildEpId(extensionPoint));
+          areaId = ExtensionAreas.MODULE;
+        }
+
+        if(!ArrayUtil.contains(areaId, ExtensionAreas.ourAllowedAres)) {
+          LOG.error("Bad areaId for extensionPoint: " + buildEpId(extensionPoint));
+          continue;
+        }
+
+        myExtensionsPoints.putValue(areaId, extensionPoint);
       }
     }
 
     myActionsElements = copyElements(pluginBean.actions, interner);
   }
 
-  // made public for Upsource
+  private String buildEpId(Element element) {
+    final String pluginId = getPluginId().getIdString();
+    String epName = element.getAttributeValue("qualifiedName");
+    if (epName == null) {
+      final String name = element.getAttributeValue("name");
+      if (name == null) {
+        throw new RuntimeException("'name' attribute not specified for extension point in '" + pluginId + "' plugin");
+      }
+      epName = pluginId + '.' + name;
+    }
+    return epName;
+  }
+
   public void registerExtensionPoints(@NotNull ExtensionsArea area) {
     if (myExtensionsPoints != null) {
       for (Element element : myExtensionsPoints.get(StringUtil.notNullize(area.getAreaClass()))) {
@@ -360,7 +385,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   public List<File> getClassPath() {
     // special hack for unit test loader
     if(PluginManagerCore.UNIT_TEST_PLUGIN.equals(getPluginId())) {
-      final List<File> result = new ArrayList<File>();
+      final List<File> result = new ArrayList<>();
       String testClasspath = System.getProperty("consulo.test.classpath");
       if (!StringUtil.isEmpty(testClasspath)) {
         List<String> paths = StringUtil.split(testClasspath, ";");
@@ -372,7 +397,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
 
     if (myPath.isDirectory()) {
-      final List<File> result = new ArrayList<File>();
+      final List<File> result = new ArrayList<>();
       final File classesDir = new File(myPath, "classes");
 
       if (classesDir.exists()) {
