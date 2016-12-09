@@ -157,6 +157,13 @@ public abstract class Language extends UserDataHolderBase implements Named {
   }
 
   @NotNull
+  @Exported
+  public static Collection<LanguageVersion> findVersionsByMimeType(@Nullable String mimeType) {
+    Collection<LanguageVersion> versions = ourRegisteredMimeTypes.get(mimeType);
+    return new ArrayList<>(versions);
+  }
+
+  @NotNull
   protected LanguageVersion[] findVersions() {
     List<LanguageVersion> languageVersion = LanguageVersionDefines.INSTANCE.allForLanguage(this);
     if (languageVersion.isEmpty()) {
