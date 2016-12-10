@@ -28,6 +28,7 @@ public class XDebuggerGeneralSettings {
 
   private boolean hideDebuggerOnProcessTermination;
   private boolean myShowDebuggerOnBreakpoint = true;
+  private boolean myMayBringFrameToFrontOnBreakpoint = true;
   private boolean myScrollToCenter = false;
 
   @Tag("evaluation-dialog-mode")
@@ -62,6 +63,14 @@ public class XDebuggerGeneralSettings {
 
   public void setShowDebuggerOnBreakpoint(boolean showDebuggerOnBreakpoint) {
     this.myShowDebuggerOnBreakpoint = showDebuggerOnBreakpoint;
+  }
+
+  public boolean isMayBringFrameToFrontOnBreakpoint() {
+    return myMayBringFrameToFrontOnBreakpoint;
+  }
+
+  public void setMayBringFrameToFrontOnBreakpoint(boolean mayBringFrameToFrontOnBreakpoint) {
+    myMayBringFrameToFrontOnBreakpoint = mayBringFrameToFrontOnBreakpoint;
   }
 
   @Tag("scroll-to-center")

@@ -20,17 +20,20 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.options.ConfigurableUIMigrationUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 
 public class DebuggerConfigurable implements SearchableConfigurable.Parent {
   public static final String DISPLAY_NAME = XDebuggerBundle.message("debugger.configurable.display.name");
@@ -104,7 +107,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
 
   private static void computeMergedConfigurables(@NotNull List<Configurable> result) {
     for (DebuggerSettingsCategory category : MERGED_CATEGORIES) {
-      List<Configurable> configurables = getConfigurables(category);
+      Collection<Configurable> configurables = XDebuggerConfigurableProvider.getConfigurables(category);
       if (!configurables.isEmpty()) {
         String id = category.name().toLowerCase(Locale.ENGLISH);
         result.add(new MergedCompositeConfigurable("debugger." + id, XDebuggerBundle.message("debugger." + id + ".display.name"),
@@ -115,7 +118,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
 
   @Nullable
   private static MergedCompositeConfigurable computeGeneralConfigurables() {
-    List<Configurable> rootConfigurables = getConfigurables(DebuggerSettingsCategory.GENERAL);
+    Collection<Configurable> rootConfigurables = XDebuggerConfigurableProvider.getConfigurables(DebuggerSettingsCategory.GENERAL);
     if (rootConfigurables.isEmpty()) {
       return null;
     }
@@ -152,7 +155,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
   @Override
   public JComponent createComponent() {
     compute();
-    return myRootConfigurable != null ? myRootConfigurable.createComponent() : null;
+    return myRootConfigurable != null ? ConfigurableUIMigrationUtil.createComponent(myRootConfigurable) : null;
   }
 
   @RequiredDispatchThread
@@ -182,16 +185,5 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
   @NonNls
   public String getId() {
     return "project.propDebugger";
-  }
-
-  @NotNull
-  static List<Configurable> getConfigurables(@NotNull DebuggerSettingsCategory category) {
-    List<Configurable> configurables = null;
-    Collection<? extends Configurable> providerConfigurables = XDebuggerConfigurableProvider.getConfigurables(category);
-    if (!providerConfigurables.isEmpty()) {
-      configurables = new SmartList<>();
-      configurables.addAll(providerConfigurables);
-    }
-    return ContainerUtil.notNullize(configurables);
   }
 }

@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.List;
+import java.util.Collection;
 
 abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent {
   protected DataViewsConfigurableUi root;
@@ -88,7 +88,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
   @Override
   public final Configurable[] getConfigurables() {
     if (children == null) {
-      List<Configurable> configurables = DebuggerConfigurable.getConfigurables(getCategory());
+      Collection<Configurable> configurables = XDebuggerConfigurableProvider.getConfigurables(getCategory());
       children = configurables.toArray(new Configurable[configurables.size()]);
     }
     return isChildrenMerged() ? DebuggerConfigurable.EMPTY_CONFIGURABLES : children;

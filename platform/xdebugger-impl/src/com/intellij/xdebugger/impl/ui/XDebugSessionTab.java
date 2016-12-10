@@ -52,6 +52,7 @@ import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import com.intellij.xdebugger.impl.frame.*;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -396,7 +397,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
     if (focus) {
       ApplicationManager.getApplication().invokeLater(() -> {
-        boolean focusWnd = Registry.is("debugger.mayBringFrameToFrontOnBreakpoint");
+        boolean focusWnd = XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isMayBringFrameToFrontOnBreakpoint();
         ProjectUtil.focusProjectWindow(myProject, focusWnd);
         if (!focusWnd) {
           AppIcon.getInstance().requestAttention(myProject, true);

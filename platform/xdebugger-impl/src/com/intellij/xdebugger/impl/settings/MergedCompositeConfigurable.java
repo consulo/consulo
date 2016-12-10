@@ -8,6 +8,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TitledSeparator;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.options.ConfigurableUIMigrationUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,19 +60,20 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     if (rootComponent == null) {
       Configurable firstConfigurable = children[0];
       if (children.length == 1) {
-        rootComponent = firstConfigurable.createComponent();
+        rootComponent = ConfigurableUIMigrationUtil.createComponent(firstConfigurable);
       }
       else {
         JPanel panel = createPanel(true);
         for (Configurable configurable : children) {
-          JComponent component = configurable.createComponent();
+          JComponent component = ConfigurableUIMigrationUtil.createComponent(configurable);
           assert component != null;
           String displayName = configurable.getDisplayName();
           if (StringUtil.isEmpty(displayName)) {
             component.setBorder(BOTTOM_INSETS);
           }
           else {
-            component.setBorder(IdeBorderFactory.createTitledBorder(displayName, false, firstConfigurable == configurable ? FIRST_COMPONENT_INSETS : N_COMPONENT_INSETS));
+            component.setBorder(
+                    IdeBorderFactory.createTitledBorder(displayName, false, firstConfigurable == configurable ? FIRST_COMPONENT_INSETS : N_COMPONENT_INSETS));
           }
           panel.add(component);
         }

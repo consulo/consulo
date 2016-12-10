@@ -1,12 +1,11 @@
 package com.intellij.xdebugger.impl.settings;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.SimpleConfigurable;
-import com.intellij.openapi.util.Getter;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
+import consulo.xdebugger.impl.settings.XDebuggerGeneralConfigurable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -14,15 +13,10 @@ import java.util.List;
 
 public class XDebuggerConfigurableProvider {
   @NotNull
-  public static Collection<? extends Configurable> getConfigurables(@NotNull DebuggerSettingsCategory category) {
+  public static Collection<Configurable> getConfigurables(@NotNull DebuggerSettingsCategory category) {
     List<Configurable> list;
     if (category == DebuggerSettingsCategory.GENERAL) {
-      list = new SmartList<>(SimpleConfigurable.create("debugger.general", "", GeneralConfigurableUi.class, new Getter<XDebuggerGeneralSettings>() {
-        @Override
-        public XDebuggerGeneralSettings get() {
-          return XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();
-        }
-      }));
+      list = new SmartList<>(new XDebuggerGeneralConfigurable());
     }
     else {
       list = null;
