@@ -21,7 +21,6 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.xdebugger.XDebuggerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -53,24 +52,11 @@ public abstract class XDebuggerSettings<T> implements PersistentStateComponent<T
     return myId;
   }
 
-  @Nullable
-  @Deprecated
-  /**
-   * @deprecated Please use {@link #createConfigurables(DebuggerSettingsCategory)}
-   */
-  public Configurable createConfigurable() {
-    return null;
-  }
-
   @NotNull
   public Collection<? extends Configurable> createConfigurables(@NotNull DebuggerSettingsCategory category) {
     return Collections.emptyList();
   }
 
   public void generalApplied(@NotNull DebuggerSettingsCategory category) {
-  }
-
-  public boolean isTargetedToProduct(@NotNull Configurable configurable) {
-    return false;
   }
 }

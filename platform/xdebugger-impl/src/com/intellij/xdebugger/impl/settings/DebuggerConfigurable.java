@@ -23,8 +23,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
-import com.intellij.xdebugger.settings.DebuggerConfigurableProvider;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,17 +69,14 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
       return;
     }
 
-    List<Configurable> configurables = new SmartList<Configurable>();
+    List<Configurable> configurables = new SmartList<>();
     configurables.add(new DataViewsConfigurable());
 
-    DebuggerConfigurableProvider[] providers = DebuggerConfigurableProvider.EXTENSION_POINT.getExtensions();
-    computeMergedConfigurables(providers, configurables);
+    computeMergedConfigurables(configurables);
 
-    for (DebuggerConfigurableProvider provider : providers) {
-      configurables.addAll(provider.getConfigurables(DebuggerSettingsCategory.ROOT));
-    }
+    configurables.addAll(XDebuggerConfigurableProvider.getConfigurables(DebuggerSettingsCategory.ROOT));
 
-    MergedCompositeConfigurable mergedGeneralConfigurable = computeGeneralConfigurables(providers);
+    MergedCompositeConfigurable mergedGeneralConfigurable = computeGeneralConfigurables();
     if (configurables.isEmpty() && mergedGeneralConfigurable == null) {
       myRootConfigurable = null;
       myChildren = EMPTY_CONFIGURABLES;
@@ -105,9 +102,9 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     }
   }
 
-  private static void computeMergedConfigurables(@NotNull DebuggerConfigurableProvider[] providers, @NotNull List<Configurable> result) {
+  private static void computeMergedConfigurables(@NotNull List<Configurable> result) {
     for (DebuggerSettingsCategory category : MERGED_CATEGORIES) {
-      List<Configurable> configurables = getConfigurables(category, providers);
+      List<Configurable> configurables = getConfigurables(category);
       if (!configurables.isEmpty()) {
         String id = category.name().toLowerCase(Locale.ENGLISH);
         result.add(new MergedCompositeConfigurable("debugger." + id, XDebuggerBundle.message("debugger." + id + ".display.name"),
@@ -117,24 +114,22 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
   }
 
   @Nullable
-  private static MergedCompositeConfigurable computeGeneralConfigurables(@NotNull DebuggerConfigurableProvider[] providers) {
-    List<Configurable> rootConfigurables = getConfigurables(DebuggerSettingsCategory.GENERAL, providers);
+  private static MergedCompositeConfigurable computeGeneralConfigurables() {
+    List<Configurable> rootConfigurables = getConfigurables(DebuggerSettingsCategory.GENERAL);
     if (rootConfigurables.isEmpty()) {
       return null;
     }
 
     Configurable[] mergedRootConfigurables = rootConfigurables.toArray(new Configurable[rootConfigurables.size()]);
     // move unnamed to top
-    Arrays.sort(mergedRootConfigurables, new Comparator<Configurable>() {
-      @Override
-      public int compare(@NotNull Configurable o1, @NotNull Configurable o2) {
-        boolean c1e = StringUtil.isEmpty(o1.getDisplayName());
-        return c1e == StringUtil.isEmpty(o2.getDisplayName()) ? 0 : (c1e ? -1 : 1);
-      }
+    Arrays.sort(mergedRootConfigurables, (o1, o2) -> {
+      boolean c1e = StringUtil.isEmpty(o1.getDisplayName());
+      return c1e == StringUtil.isEmpty(o2.getDisplayName()) ? 0 : (c1e ? -1 : 1);
     });
     return new MergedCompositeConfigurable("", "", mergedRootConfigurables);
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     if (myRootConfigurable != null) {
@@ -153,22 +148,20 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     return XBreakpointType.EXTENSION_POINT_NAME.getExtensions().length != 0;
   }
 
-  @Override
-  public Runnable enableSearch(final String option) {
-    return null;
-  }
-
+  @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
     compute();
     return myRootConfigurable != null ? myRootConfigurable.createComponent() : null;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     return myRootConfigurable != null && myRootConfigurable.isModified();
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     if (myRootConfigurable != null) {
@@ -176,6 +169,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     if (myRootConfigurable != null) {
@@ -192,20 +186,11 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
 
   @NotNull
   static List<Configurable> getConfigurables(@NotNull DebuggerSettingsCategory category) {
-    return getConfigurables(category, DebuggerConfigurableProvider.EXTENSION_POINT.getExtensions());
-  }
-
-  @NotNull
-  private static List<Configurable> getConfigurables(@NotNull DebuggerSettingsCategory category, @NotNull DebuggerConfigurableProvider[] providers) {
     List<Configurable> configurables = null;
-    for (DebuggerConfigurableProvider provider : providers) {
-      Collection<? extends Configurable> providerConfigurables = provider.getConfigurables(category);
-      if (!providerConfigurables.isEmpty()) {
-        if (configurables == null) {
-          configurables = new SmartList<Configurable>();
-        }
-        configurables.addAll(providerConfigurables);
-      }
+    Collection<? extends Configurable> providerConfigurables = XDebuggerConfigurableProvider.getConfigurables(category);
+    if (!providerConfigurables.isEmpty()) {
+      configurables = new SmartList<>();
+      configurables.addAll(providerConfigurables);
     }
     return ContainerUtil.notNullize(configurables);
   }

@@ -7,7 +7,7 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TitledSeparator;
-import com.intellij.xdebugger.settings.DebuggerConfigurableProvider;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,25 +48,11 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
 
   @Nullable
   @Override
-  public Runnable enableSearch(String option) {
-    return null;
-  }
-
-  @Nullable
-  @Override
   public String getHelpTopic() {
     return children.length == 1 ? children[0].getHelpTopic() : null;
   }
 
-  /**
-   * false by default.
-   *
-   * If Ruby general settings will be without titled border in RubyMine, user could think that all other debugger categories also about Ruby.
-   */
-  protected boolean isUseTargetedProductPolicyIfSeveralChildren() {
-    return false;
-  }
-
+  @RequiredDispatchThread
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -74,13 +60,8 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
       Configurable firstConfigurable = children[0];
       if (children.length == 1) {
         rootComponent = firstConfigurable.createComponent();
-        String rootComponentDisplayName = firstConfigurable.getDisplayName();
-        if (!StringUtil.isEmpty(rootComponentDisplayName) && !isTargetedToProduct(firstConfigurable)) {
-          rootComponent.setBorder(IdeBorderFactory.createTitledBorder(rootComponentDisplayName, false, FIRST_COMPONENT_INSETS));
-        }
       }
       else {
-        boolean isFirstNamed = true;
         JPanel panel = createPanel(true);
         for (Configurable configurable : children) {
           JComponent component = configurable.createComponent();
@@ -90,16 +71,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
             component.setBorder(BOTTOM_INSETS);
           }
           else {
-            boolean addBorder = true;
-            if (isUseTargetedProductPolicyIfSeveralChildren() && isFirstNamed) {
-              isFirstNamed = false;
-              if (isTargetedToProduct(configurable)) {
-                addBorder = false;
-              }
-            }
-            if (addBorder) {
-              component.setBorder(IdeBorderFactory.createTitledBorder(displayName, false, firstConfigurable == configurable ? FIRST_COMPONENT_INSETS : N_COMPONENT_INSETS));
-            }
+            component.setBorder(IdeBorderFactory.createTitledBorder(displayName, false, firstConfigurable == configurable ? FIRST_COMPONENT_INSETS : N_COMPONENT_INSETS));
           }
           panel.add(component);
         }
@@ -107,15 +79,6 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
       }
     }
     return rootComponent;
-  }
-
-  static boolean isTargetedToProduct(@NotNull Configurable configurable) {
-    for (DebuggerConfigurableProvider provider : DebuggerConfigurableProvider.EXTENSION_POINT.getExtensions()) {
-      if (provider.isTargetedToProduct(configurable)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   @NotNull
@@ -129,6 +92,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return panel;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     for (Configurable child : children) {
@@ -139,6 +103,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     for (Configurable child : children) {
@@ -148,6 +113,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     for (Configurable child : children) {
@@ -155,6 +121,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     rootComponent = null;

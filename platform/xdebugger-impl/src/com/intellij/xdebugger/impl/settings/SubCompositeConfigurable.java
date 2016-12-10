@@ -20,8 +20,8 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.xdebugger.settings.DebuggerConfigurableProvider;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,6 +56,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return children != null && children.length == 1 ? children[0].getHelpTopic() : null;
   }
 
+  @RequiredDispatchThread
   @Override
   public final void disposeUIResources() {
     root = null;
@@ -93,6 +94,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return isChildrenMerged() ? DebuggerConfigurable.EMPTY_CONFIGURABLES : children;
   }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   public final JComponent createComponent() {
@@ -119,7 +121,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
           for (Configurable configurable : children) {
             JComponent component = configurable.createComponent();
             if (component != null) {
-              if (children[0] != configurable || !MergedCompositeConfigurable.isTargetedToProduct(configurable)) {
+              if (children[0] != configurable || !true) {
                 component.setBorder(IdeBorderFactory.createTitledBorder(configurable.getDisplayName(), false));
               }
               panel.add(component);
@@ -135,6 +137,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return rootComponent;
   }
 
+  @RequiredDispatchThread
   @Override
   public final void reset() {
     if (root != null) {
@@ -148,6 +151,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public final boolean isModified() {
     if (root != null && root.isModified(getSettings())) {
@@ -163,13 +167,12 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public final void apply() throws ConfigurationException {
     if (root != null) {
       root.apply(getSettings());
-      for (DebuggerConfigurableProvider provider : DebuggerConfigurableProvider.EXTENSION_POINT.getExtensions()) {
-        provider.generalApplied(getCategory());
-      }
+      XDebuggerConfigurableProvider.generalApplied(getCategory());
     }
 
     if (isChildrenMerged()) {
