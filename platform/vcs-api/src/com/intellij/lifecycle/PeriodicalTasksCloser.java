@@ -51,9 +51,7 @@ public class PeriodicalTasksCloser implements ApplicationComponent {
     try {
       component = project.getComponent(componentClass);
     }
-    catch (NullPointerException e) {
-      throwCanceledException(project, e);
-    } catch (AssertionError e) {
+    catch (NullPointerException | AssertionError e) {
       throwCanceledException(project, e);
     }
     if (component == null) {
@@ -73,15 +71,13 @@ public class PeriodicalTasksCloser implements ApplicationComponent {
       }
       return service;
     }
-    catch (NullPointerException e) {
-      throwCanceledException(project, e);
-    } catch (AssertionError e) {
+    catch (NullPointerException | AssertionError e) {
       throwCanceledException(project, e);
     }
     return null;
   }
 
-  private void throwCanceledException(final Project project, final Throwable t) {
+  private void throwCanceledException(@NotNull  Project project, final Throwable t) {
     synchronized (myLock) {
       // allow NPE & assertion _catch_ only if project is closed and being disposed
       if (project.isOpen()) {

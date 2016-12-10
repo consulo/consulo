@@ -86,7 +86,7 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
   private ScheduledFuture<?> myCleaningFuture;
   private boolean myRemoveFilesFromShelf;
 
-  public static ShelveChangesManager getInstance(Project project) {
+  public static ShelveChangesManager getInstance(@NotNull Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, ShelveChangesManager.class);
   }
 

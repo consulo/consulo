@@ -17,15 +17,18 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 public class ShowHideRecycledAction extends AnAction {
+  @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@NotNull final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     final Presentation presentation = e.getPresentation();
     if (project == null) {
-      presentation.setEnabled(false);
-      presentation.setVisible(false);
+      presentation.setEnabledAndVisible(false);
+      return;
     }
     presentation.setEnabled(true);
     presentation.setVisible(true);
@@ -33,7 +36,9 @@ public class ShowHideRecycledAction extends AnAction {
     presentation.setText(show ? "Hide Already Unshelved" : "Show Already Unshelved");
   }
 
-  public void actionPerformed(final AnActionEvent e) {
+  @Override
+  @RequiredDispatchThread
+  public void actionPerformed(@NotNull final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
