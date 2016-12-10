@@ -18,6 +18,7 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -29,6 +30,8 @@ import java.util.List;
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use 'consulo.options.SimpleConfigurableByProperties'")
 public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
   private final T myInstance;
 
