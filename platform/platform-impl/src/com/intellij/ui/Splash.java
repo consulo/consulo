@@ -17,9 +17,8 @@ package com.intellij.ui;
 
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.ImageLoader;
-import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
+import consulo.spash.AnimatedLogoLabel;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -30,7 +29,7 @@ import java.awt.*;
  * To customize your IDE splash go to YourIdeNameApplicationInfo.xml and find
  * section corresponding to IDE logo. It should look like:
  * <p>
- *   &lt;logo url=&quot;/idea_logo.png&quot; textcolor=&quot;919191&quot; progressColor=&quot;264db5&quot; progressY=&quot;235&quot;/&gt;
+ * &lt;logo url=&quot;/idea_logo.png&quot; textcolor=&quot;919191&quot; progressColor=&quot;264db5&quot; progressY=&quot;235&quot;/&gt;
  * </p>
  * <p>where <code>url</code> is path to your splash image
  * <p><code>textColor</code> is HEX representation of text color for user name
@@ -41,14 +40,10 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class Splash extends JDialog implements StartupProgress {
-  @Nullable public static Rectangle BOUNDS;
+  @Nullable
+  public static Rectangle BOUNDS;
 
-  private final Icon myImage;
-  private Color myProgressColor = Color.WHITE;
-  private float myProgress;
-  private boolean mySplashIsVisible;
-  private int myProgressLastPosition = 0;
-  private final JLabel myLabel;
+  private final AnimatedLogoLabel myLabel;
 
   public Splash() {
     super((Frame)null, false);
@@ -59,17 +54,9 @@ public class Splash extends JDialog implements StartupProgress {
     }
     setFocusableWindowState(false);
 
-    Icon originalImage = new JBImageIcon(ImageLoader.loadFromUrl(Splash.class.getResource("/logo.png"), false));
-    myImage = new SplashImage(originalImage);
-    myLabel = new JLabel(myImage) {
-      @Override
-      protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        mySplashIsVisible = true;
-        myProgressLastPosition = 0;
-        paintProgress(g);
-      }
-    };
+    myLabel = new AnimatedLogoLabel();
+    myLabel.setPreferredSize(JBUI.size(602, 294));
+
     Container contentPane = getContentPane();
     contentPane.setLayout(new BorderLayout());
     contentPane.add(myLabel, BorderLayout.CENTER);
@@ -95,95 +82,15 @@ public class Splash extends JDialog implements StartupProgress {
   @Override
   @SuppressWarnings("deprecation")
   public void show() {
+    myLabel.start();
+
     super.show();
     toFront();
-    //noinspection AssignmentToStaticFieldFromInstanceMethod
     BOUNDS = getBounds();
-    //Sometimes this causes deadlock in EDT
-    // http://bugs.sun.com/view_bug.do?bug_id=6724890
-    //
-    //myLabel.paintImmediately(0, 0, myImage.getIconWidth(), myImage.getIconHeight());
   }
 
   @Override
   public void showProgress(String message, float progress) {
-    if (getProgressColor() == null) return;
-    //myMessage = message;
-    myProgress = progress;
-    myLabel.paintImmediately(0, 0, myImage.getIconWidth(), myImage.getIconHeight());
+    myLabel.setValue((int)(progress * 100f));
   }
-
-  private void paintProgress(Graphics g) {
-    final Color color = getProgressColor();
-    if (color == null) return;
-
-    if (!mySplashIsVisible) {
-      myImage.paintIcon(this, g, 0, 0);
-      mySplashIsVisible = true;
-    }
-
-    final int progressWidth = (int)(myImage.getIconWidth() * myProgress);
-    final int width = progressWidth - myProgressLastPosition;
-    g.setColor(color);
-    int progressSize = JBUI.scaleIconSize(4);
-    int progressY = myImage.getIconHeight() - progressSize;
-    g.fillRect(0, progressY, width, progressSize);
-    myProgressLastPosition = progressWidth;
-  }
-
-  private Color getProgressColor() {
-    return myProgressColor;
-  }
-
-  private static final class SplashImage implements Icon {
-    private final Icon myIcon;
-    private boolean myRedrawing;
-
-    public SplashImage(Icon originalIcon) {
-      myIcon = originalIcon;
-    }
-
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      if (!myRedrawing) {
-        try {
-          Thread.sleep(10);
-        }
-        catch (InterruptedException ignore) {}
-        myRedrawing = true;
-      }
-
-      myIcon.paintIcon(c, g, x, y);
-    }
-
-    @Override
-    public int getIconWidth() {
-      return myIcon.getIconWidth();
-    }
-
-    @Override
-    public int getIconHeight() {
-      return myIcon.getIconHeight();
-    }
-  }
-
-  //public static void main(String[] args) {
-  //  final ImageIcon icon = new ImageIcon("c:\\IDEA\\ultimate\\ultimate-resources\\src\\progress_tail.png");
-  //
-  //  final int w = icon.getIconWidth();
-  //  final int h = icon.getIconHeight();
-  //  final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment()
-  //    .getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(w, h, Color.TRANSLUCENT);
-  //  final Graphics2D g = image.createGraphics();
-  //  icon.paintIcon(null, g, 0, 0);
-  //  g.dispose();
-  //
-  //  for (int y = 0; y < image.getHeight(); y++) {
-  //    for (int x = 0; x < image.getWidth(); x++) {
-  //      final Color c = new Color(image.getRGB(x, y), true);
-  //      System.out.print(String.format("[%3d,%3d,%3d,%3d]  ", c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()));
-  //    }
-  //    System.out.println("");
-  //  }
-  //}
 }
