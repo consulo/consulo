@@ -34,6 +34,7 @@ import consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -48,7 +49,7 @@ import java.util.zip.ZipInputStream;
  * @since 27.11.14
  */
 @Logger
-public class CustomizeUtil {
+public class FirstStartCustomizeUtil {
   private static final String TEMPLATES_URL = "https://github.com/consulo/consulo-firststart-templates/archive/2.0.zip";
 
   public static void show(boolean initLaf) {
@@ -56,7 +57,25 @@ public class CustomizeUtil {
       initLaf();
     }
 
-    CustomizeDownloadDialog downloadDialog = new CustomizeDownloadDialog();
+    DialogWrapper downloadDialog = new DialogWrapper(false) {
+      {
+        setResizable(false);
+        pack();
+        init();
+      }
+
+      @Nullable
+      @Override
+      protected JComponent createSouthPanel() {
+        return null;
+      }
+
+      @Nullable
+      @Override
+      protected JComponent createCenterPanel() {
+        return new JLabel("Connecting to plugin manager");
+      }
+    };
 
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       MultiMap<String, IdeaPluginDescriptor> pluginDescriptors = new MultiMap<>();

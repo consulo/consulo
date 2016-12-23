@@ -38,7 +38,7 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.Splash;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotations.Internal;
-import consulo.ide.customize.CustomizeUtil;
+import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
 import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
@@ -113,7 +113,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     }, ModalityState.NON_MODAL);
 
     if (Registry.is("ide.firstStartup") && !SandboxUtil.isInsideSandbox()) {
-      CustomizeUtil.show(true);
+      FirstStartCustomizeUtil.show(true);
     }
 
     if (!willOpenProject.get()) {

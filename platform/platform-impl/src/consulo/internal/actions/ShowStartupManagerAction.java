@@ -15,7 +15,7 @@
  */
 package consulo.internal.actions;
 
-import consulo.ide.customize.CustomizeUtil;
+import consulo.ide.customize.FirstStartCustomizeUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
@@ -26,6 +26,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 public class ShowStartupManagerAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    CustomizeUtil.show(false);
+    FirstStartCustomizeUtil.show(false);
   }
 }
