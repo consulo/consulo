@@ -1,4 +1,4 @@
-package org.jetbrains.ide;
+package com.intellij.ide;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationDisplayType;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jetbrains.ide.BuiltInServerManager;
 import org.jetbrains.io.WebServer;
 
 import java.util.concurrent.Future;
