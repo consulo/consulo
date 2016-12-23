@@ -62,7 +62,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
 
   @Override
   public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
-    if (args.isNoSplash()) {
+    if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
         mySplash = new Splash();
@@ -111,7 +111,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       FirstStartCustomizeUtil.show(true);
     }
 
-    if (recentProjectsManager.getLastProjectPath() != null) {
+    if (recentProjectsManager.getLastProjectPath() == null) {
       WelcomeFrame.showNow();
     }
     else {
