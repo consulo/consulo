@@ -98,7 +98,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     WindowManagerImpl windowManager = (WindowManagerImpl)WindowManager.getInstance();
     IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-    Ref<Boolean> willOpenProject = new Ref<Boolean>(Boolean.FALSE);
+    Ref<Boolean> willOpenProject = Ref.create(Boolean.FALSE);
     AppLifecycleListener lifecyclePublisher = app.getMessageBus().syncPublisher(AppLifecycleListener.TOPIC);
     lifecyclePublisher.appFrameCreated(args, willOpenProject);
 
@@ -133,13 +133,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       final MessageBus bus = ApplicationManager.getApplication().getMessageBus();
       bus.syncPublisher(AppLifecycleListener.TOPIC).appStarting(projectFromCommandLine);
 
-      //noinspection SSBasedInspection
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          PluginManager.reportPluginError();
-        }
-      });
+      SwingUtilities.invokeLater(PluginManager::reportPluginError);
 
       //safe for headless and unit test modes
       UsageTrigger.trigger(app.getName() + "app.started");
