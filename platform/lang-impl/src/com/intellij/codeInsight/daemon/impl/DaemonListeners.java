@@ -161,7 +161,7 @@ public class DaemonListeners implements Disposable {
     if (project.isDefault()) return;
     MessageBusConnection connection = messageBus.connect();
 
-    connection.subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener.Adapter() {
+    connection.subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         stopDaemon(false, "App closing");

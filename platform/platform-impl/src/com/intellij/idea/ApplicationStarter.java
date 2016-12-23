@@ -29,9 +29,9 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.X11UiUtil;
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.application.ApplicationProperties;
+import consulo.start.CommandLineArgs;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.lang.reflect.Constructor;
@@ -50,11 +50,11 @@ public class ApplicationStarter {
     return ourLoaded;
   }
 
-  private final String[] myArgs;
+  private final CommandLineArgs myArgs;
   private boolean myPerformProjectLoad = true;
   private ApplicationPostStarter myPostStarter;
 
-  public ApplicationStarter(String[] args) {
+  public ApplicationStarter(CommandLineArgs args) {
     LOG.assertTrue(ourInstance == null);
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     ourInstance = this;
@@ -138,11 +138,6 @@ public class ApplicationStarter {
     catch (Exception e) {
       throw new RuntimeException(e);
     }
-  }
-
-  @Nullable
-  public String[] getCommandLineArguments() {
-    return myArgs;
   }
 
   public boolean isPerformProjectLoad() {

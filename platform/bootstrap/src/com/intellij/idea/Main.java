@@ -29,10 +29,12 @@ import java.io.StringWriter;
 
 @SuppressWarnings({"UseOfSystemOutOrSystemErr", "MethodNamesDifferingOnlyByCase"})
 public class Main {
-  public static final int STARTUP_EXCEPTION = 2;
-  public static final int STARTUP_IMPOSSIBLE = 3;
-  public static final int PLUGIN_ERROR = 4;
-  public static final int UNSUPPORTED_JAVA_VERSION = 10;
+  public static final int USAGE_INFO = 0;
+  public static final int VERSION_INFO = 0;
+  public static final int STARTUP_EXCEPTION = 1;
+  public static final int STARTUP_IMPOSSIBLE = 2;
+  public static final int PLUGIN_ERROR = 3;
+  public static final int UNSUPPORTED_JAVA_VERSION = 4;
 
   private static final String AWT_HEADLESS = "java.awt.headless";
 

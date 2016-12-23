@@ -17,7 +17,9 @@ package com.intellij.ui;
 
 import com.intellij.ide.CommandLineProcessor;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.URLUtil;
+import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
@@ -31,10 +33,11 @@ public class CustomProtocolHandler {
   public static final String LINE_NUMBER_ARG_NAME = "--line";
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.CustomProtocolHandler");
+
   public boolean openLink(@NotNull URI uri) {
     LOG.info("CustomProtocolHandler.openLink");
     final List<String> args = getOpenArgs(uri);
-    return !args.isEmpty() && CommandLineProcessor.processExternalCommandLine(args, null) != null;
+    return !args.isEmpty() && CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), null) != null;
   }
 
   @NotNull

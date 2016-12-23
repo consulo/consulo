@@ -159,7 +159,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
       }
     };
 
-    bus.connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener.Adapter() {
+    bus.connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         // save full screen window states

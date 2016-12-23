@@ -20,20 +20,24 @@ import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import consulo.annotations.Internal;
+import consulo.start.CommandLineArgs;
 
 /**
  * @author VISTALL
- * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
  * @since 15-May-16
- * <p/>
+ *
  * Used via reflection
+ * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
  */
+@SuppressWarnings("unused")
+@Internal
 public class WebPostStarter extends ApplicationPostStarter {
   public WebPostStarter(ApplicationStarter application) {
   }
 
   @Override
-  public void main(String[] args) {
+  public void main(CommandLineArgs args) {
     /*ApplicationManager.getApplication().invokeAndWait(new Runnable() {
       @Override
       public void run() {

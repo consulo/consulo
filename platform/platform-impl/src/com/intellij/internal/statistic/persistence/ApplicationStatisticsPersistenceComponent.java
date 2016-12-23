@@ -217,7 +217,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
   private void onAppClosing() {
     final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
 
-    messageBus.connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener.Adapter() {
+    messageBus.connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {

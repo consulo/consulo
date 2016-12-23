@@ -69,6 +69,7 @@ import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
+import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -88,6 +89,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Consumer;
 
 public class ApplicationImpl extends PlatformComponentManagerImpl implements ApplicationEx2 {
   private static final Logger LOG = Logger.getInstance("#com.intellij.application.impl.ApplicationImpl");
@@ -225,26 +227,19 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     if (!isUnitTestMode && !isHeadless) {
       Disposer.register(this, Disposer.newDisposable(), "ui");
 
-      StartupUtil.addExternalInstanceListener(new Consumer<List<String>>() {
+      StartupUtil.addExternalInstanceListener(new Consumer<CommandLineArgs>() {
         @Override
-        public void consume(final List<String> args) {
-          invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              LOG.info("ApplicationImpl.externalInstanceListener invocation");
-              String currentDirectory = args.isEmpty() ? null : args.get(0);
-              List<String> realArgs = args.isEmpty() ? args : args.subList(1, args.size());
-              final Project project = CommandLineProcessor.processExternalCommandLine(realArgs, currentDirectory);
-              final JFrame frame;
-              if (project != null) {
-                frame = (JFrame)WindowManager.getInstance().getIdeFrame(project);
-              }
-              else {
-                frame = WindowManager.getInstance().findVisibleFrame();
-              }
-              if (frame != null) frame.requestFocus();
-            }
-          });
+        public void accept(CommandLineArgs commandLineArgs) {
+          LOG.info("ApplicationImpl.externalInstanceListener invocation");
+          final Project project = CommandLineProcessor.processExternalCommandLine(commandLineArgs, null);
+          final JFrame frame;
+          if (project != null) {
+            frame = (JFrame)WindowManager.getInstance().getIdeFrame(project);
+          }
+          else {
+            frame = WindowManager.getInstance().findVisibleFrame();
+          }
+          if (frame != null) frame.requestFocus();
         }
       });
 
@@ -252,13 +247,10 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
         @Override
         public void processWindowsLauncherCommandLine(final String currentDirectory, final String commandLine) {
           LOG.info("Received external Windows command line: current directory " + currentDirectory + ", command line " + commandLine);
-          invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              final List<String> args = StringUtil.splitHonorQuotes(commandLine, ' ');
-              args.remove(0);   // process name
-              CommandLineProcessor.processExternalCommandLine(args, currentDirectory);
-            }
+          invokeLater(() -> {
+            final List<String> args = StringUtil.splitHonorQuotes(commandLine, ' ');
+            args.remove(0);   // process name
+            CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), currentDirectory);
           });
         }
       };
@@ -1267,7 +1259,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       name = name.substring(name.lastIndexOf('.') + 1);
       name = name.substring(name.lastIndexOf('$') + 1);
       if (!name.equals("AccessToken")) {
-        return " [" + name+"]";
+        return " [" + name + "]";
       }
       return null;
     }

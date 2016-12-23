@@ -18,6 +18,7 @@ package com.intellij.idea;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
@@ -27,52 +28,53 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import com.sun.jna.Native;
-import org.jetbrains.annotations.NonNls;
+import consulo.start.CommandLineArgs;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 /**
  * @author yole
  */
 public class StartupUtil {
-  @NonNls public static final String NO_SPLASH = "nosplash";
-
   private static SocketLock ourLock;
 
-  private StartupUtil() { }
-
-  public static boolean shouldShowSplash(final String[] args) {
-    return !Arrays.asList(args).contains(NO_SPLASH);
+  private StartupUtil() {
   }
 
-  public synchronized static void addExternalInstanceListener(Consumer<List<String>> consumer) {
+  public synchronized static void addExternalInstanceListener(@NotNull Consumer<CommandLineArgs> consumer) {
     ourLock.setActivateListener(consumer);
-  }
-
-  public interface AppStarter {
-    void start(boolean newConfigFolder);
   }
 
   public synchronized static int getAcquiredPort() {
     return ourLock.getAcquiredPort();
   }
 
-  public static void prepareAndStart(String[] args, AppStarter appStarter) {
-    boolean newConfigFolder = false;
+  public static void prepareAndStart(String[] args, Consumer<CommandLineArgs> appStarter) {
+    CommandLineArgs commandLineArgs = CommandLineArgs.parse(args);
+
+    if (commandLineArgs.isShowHelp()) {
+      CommandLineArgs.printUsage();
+      System.exit(Main.USAGE_INFO);
+    }
+
+    if(commandLineArgs.isShowVersion()) {
+      ApplicationInfoEx infoEx = ApplicationInfoImpl.getShadowInstance();
+      System.out.println(infoEx.getFullApplicationName());
+      System.exit(Main.VERSION_INFO);
+    }
 
     if (!Main.isHeadless()) {
       AppUIUtil.updateFrameClass();
-      newConfigFolder = !new File(PathManager.getConfigPath()).exists();
     }
 
     boolean canStart = checkSystemFolders() && lockSystemFolders(args);  // note: uses config folder!
@@ -91,7 +93,7 @@ public class StartupUtil {
       AppUIUtil.registerBundledFonts();
     }
 
-    appStarter.start(newConfigFolder);
+    appStarter.accept(commandLineArgs);
   }
 
   private synchronized static boolean checkSystemFolders() {

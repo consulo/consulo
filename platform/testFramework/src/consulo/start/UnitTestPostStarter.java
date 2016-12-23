@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.idea.starter;
+package consulo.start;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.idea.ApplicationStarter;
+import com.intellij.idea.starter.ApplicationPostStarter;
+import com.intellij.idea.starter.SMTestSender;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotations.Internal;
+import org.jetbrains.annotations.NotNull;
 import org.junit.runner.JUnitCore;
 
 import java.io.IOException;
@@ -35,6 +39,8 @@ import java.util.List;
  * Used via reflection
  * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
  */
+@SuppressWarnings("unused")
+@Internal
 public class UnitTestPostStarter extends ApplicationPostStarter {
   private static final Logger LOGGER = Logger.getInstance(UnitTestPostStarter.class);
 
@@ -42,14 +48,13 @@ public class UnitTestPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(String[] args) {
+  public void main(@NotNull CommandLineArgs args) {
     IdeaPluginDescriptorImpl plugin = (IdeaPluginDescriptorImpl)PluginManager.getPlugin(PluginManagerCore.UNIT_TEST_PLUGIN);
     assert plugin != null;
     PluginClassLoader pluginClassLoader = (PluginClassLoader)plugin.getPluginClassLoader();
 
-    String testData = args[0];
     try {
-      List<String> list = FileUtil.loadLines(StringUtil.unquoteString(testData));
+      List<String> list = FileUtil.loadLines(StringUtil.unquoteString(args.getFile()));
       if (list.isEmpty()) {
         System.exit(-1);
         return;

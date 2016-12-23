@@ -21,8 +21,9 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Consumer;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.net.NetUtils;
+import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +37,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author mike
@@ -49,20 +51,20 @@ public class SocketLock {
   private static final int[] FORBIDDEN_PORTS = {6953, 6969, 6970};
 
   private ServerSocket mySocket;
-  private final List<String> myLockedPaths = new ArrayList<String>();
+  private final List<String> myLockedPaths = new ArrayList<>();
   private boolean myIsDialogShown = false;
   @NonNls private static final String LOCK_THREAD_NAME = "Lock thread";
   @NonNls private static final String ACTIVATE_COMMAND = "activate ";
 
   @Nullable
-  private Consumer<List<String>> myActivateListener;
+  private Consumer<CommandLineArgs> myActivateListener;
 
   public static enum ActivateStatus { ACTIVATED, NO_INSTANCE, CANNOT_ACTIVATE }
 
   public SocketLock() {
   }
 
-  public void setActivateListener(@Nullable Consumer<List<String>> consumer) {
+  public void setActivateListener(@Nullable Consumer<CommandLineArgs> consumer) {
     myActivateListener = consumer;
   }
 
@@ -141,7 +143,7 @@ public class SocketLock {
   }
 
   private static ActivateStatus tryActivate(int portNumber, String path, String[] args) {
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
 
     try {
       try {
@@ -234,7 +236,7 @@ public class SocketLock {
             if (command.startsWith(ACTIVATE_COMMAND)) {
               List<String> args = StringUtil.split(command.substring(ACTIVATE_COMMAND.length()), "\0");
               if (myActivateListener != null) {
-                myActivateListener.consume(args);
+                myActivateListener.accept(CommandLineArgs.parse(ArrayUtil.toStringArray(args)));
               }
               out.writeUTF("ok");
             }

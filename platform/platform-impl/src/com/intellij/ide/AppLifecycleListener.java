@@ -18,6 +18,8 @@ package com.intellij.ide;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.messages.Topic;
+import consulo.annotations.DeprecationInfo;
+import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,34 +28,52 @@ import org.jetbrains.annotations.NotNull;
 public interface AppLifecycleListener {
   Topic<AppLifecycleListener> TOPIC = Topic.create("Application lifecycle notifications", AppLifecycleListener.class);
 
-  void appFrameCreated(final String[] commandLineArgs, @NotNull Ref<Boolean> willOpenProject);
-  void appStarting(Project projectFromCommandLine);
-  void projectFrameClosed();
-  void projectOpenFailed();
-  void welcomeScreenDisplayed();
+  default void appFrameCreated(@NotNull CommandLineArgs commandLineArgs, @NotNull Ref<Boolean> willOpenProject) {
+  }
+
+  default void appStarting(Project projectFromCommandLine) {
+  }
+
+  default void projectFrameClosed() {
+  }
+
+  default void projectOpenFailed() {
+  }
+
+  default void welcomeScreenDisplayed() {
+  }
 
   /**
    * Fired before saving settings and before final 'can exit?' check. App may end up not closing if some of the 'can exit?' listeners
    * return false.
    */
-  void appClosing();
+  default void appClosing() {
+  }
 
+  @Deprecated
+  @DeprecationInfo("Use 'com.intellij.ide.AppLifecycleListener' instead")
   abstract class Adapter implements AppLifecycleListener {
-    public void appFrameCreated(final String[] commandLineArgs, @NotNull final Ref<Boolean> willOpenProject) {
+    @Override
+    public void appFrameCreated(@NotNull CommandLineArgs commandLineArgs, @NotNull final Ref<Boolean> willOpenProject) {
     }
 
+    @Override
     public void appStarting(final Project projectFromCommandLine) {
     }
 
+    @Override
     public void projectFrameClosed() {
     }
 
+    @Override
     public void projectOpenFailed() {
     }
 
+    @Override
     public void welcomeScreenDisplayed() {
     }
 
+    @Override
     public void appClosing() {
     }
   }

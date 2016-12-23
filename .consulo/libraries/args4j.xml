@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="args4j">
+    <binaries>
+      <root url="jar://$PROJECT_DIR$/lib/args4j-2.33.jar!/" />
+    </binaries>
+    <sources>
+      <root url="jar://$PROJECT_DIR$/libSrc/args4j-2.33-sources.jar!/" />
+    </sources>
+  </library>
+</component>

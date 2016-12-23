@@ -18,19 +18,15 @@ package com.intellij.idea.starter;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.CommandLineProcessor;
 import com.intellij.ide.IdeEventQueue;
-import consulo.ide.customize.CustomizeUtil;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.StartupUtil;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.ApplicationImpl;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
@@ -40,14 +36,23 @@ import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.WindowManagerImpl;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.Splash;
-import consulo.util.SandboxUtil;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.Internal;
+import consulo.ide.customize.CustomizeUtil;
+import consulo.start.CommandLineArgs;
+import consulo.util.SandboxUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
+/**
+ * Used via reflection
+ * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
+ */
+@SuppressWarnings("unused")
+@Internal
 public class DefaultApplicationPostStarter extends ApplicationPostStarter {
   private static final Logger LOG = Logger.getInstance(DefaultApplicationPostStarter.class);
 
@@ -59,8 +64,8 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, String[] args) {
-    if (StartupUtil.shouldShowSplash(args)) {
+  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
+    if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
         mySplash = new Splash();
@@ -83,7 +88,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(String[] args) {
+  public void main(@NotNull CommandLineArgs args) {
     SystemDock.updateMenu();
 
     // Event queue should not be changed during initialization of application components.
@@ -100,13 +105,10 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     LOG.info("App initialization took " + (System.nanoTime() - PluginManager.startupStart) / 1000000 + " ms");
     PluginManagerCore.dumpPluginClassStatistics();
 
-    app.invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-        if (mySplash != null) {
-          mySplash.dispose();
-          mySplash = null; // Allow GC collect the splash window
-        }
+    app.invokeAndWait(() -> {
+      if (mySplash != null) {
+        mySplash.dispose();
+        mySplash = null; // Allow GC collect the splash window
       }
     }, ModalityState.NON_MODAL);
 
@@ -122,38 +124,25 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       windowManager.showFrame();
     }
 
-    app.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        Project projectFromCommandLine = null;
-        if (myApplicationStarter.isPerformProjectLoad()) {
-          projectFromCommandLine = loadProjectFromExternalCommandLine();
-        }
-
-        final MessageBus bus = ApplicationManager.getApplication().getMessageBus();
-        bus.syncPublisher(AppLifecycleListener.TOPIC).appStarting(projectFromCommandLine);
-
-        //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            PluginManager.reportPluginError();
-          }
-        });
-
-        //safe for headless and unit test modes
-        UsageTrigger.trigger(app.getName() + "app.started");
+    app.invokeLater(() -> {
+      Project projectFromCommandLine = null;
+      if (myApplicationStarter.isPerformProjectLoad()) {
+        projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
       }
-    }, ModalityState.NON_MODAL);
-  }
 
-  private Project loadProjectFromExternalCommandLine() {
-    String[] args = myApplicationStarter.getCommandLineArguments();
-    Project project = null;
-    if (args != null && args.length > 0 && args[0] != null) {
-      LOG.info("DefaultApplicationStarter.loadProjectFromExternalCommandLine");
-      project = CommandLineProcessor.processExternalCommandLine(Arrays.asList(args), null);
-    }
-    return project;
+      final MessageBus bus = ApplicationManager.getApplication().getMessageBus();
+      bus.syncPublisher(AppLifecycleListener.TOPIC).appStarting(projectFromCommandLine);
+
+      //noinspection SSBasedInspection
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          PluginManager.reportPluginError();
+        }
+      });
+
+      //safe for headless and unit test modes
+      UsageTrigger.trigger(app.getName() + "app.started");
+    }, ModalityState.NON_MODAL);
   }
 }

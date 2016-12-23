@@ -26,20 +26,14 @@ public class MainImpl {
   /**
    * Called from PluginManager via reflection.
    */
-  protected static void start(final String[] args) {
-    StartupUtil.prepareAndStart(args, new StartupUtil.AppStarter() {
-      @Override
-      public void start(boolean newConfigFolder) {
-        final ApplicationStarter app = new ApplicationStarter(args);
-        //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            PluginManager.installExceptionHandler();
-            app.run();
-          }
-        });
-      }
+  protected static void start(String[] args) {
+    StartupUtil.prepareAndStart(args, (commandLineArgs) -> {
+      ApplicationStarter app = new ApplicationStarter(commandLineArgs);
+
+      SwingUtilities.invokeLater(() -> {
+        PluginManager.installExceptionHandler();
+        app.run();
+      });
     });
   }
 }

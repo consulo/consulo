@@ -16,18 +16,22 @@
 package com.intellij.idea.starter;
 
 import com.intellij.openapi.application.impl.ApplicationImpl;
+import consulo.annotations.Internal;
+import consulo.start.CommandLineArgs;
+import org.jetbrains.annotations.NotNull;
 
+@Internal
 public abstract class ApplicationPostStarter {
   public static final String IDEA_APPLICATION = "idea";
 
 
-  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, String[] args) {
+  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
     new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, IDEA_APPLICATION, null);
   }
 
-  public void premain(String[] args) {
+  public void premain(@NotNull CommandLineArgs args) {
   }
 
-  public void main(String[] args) {
+  public void main(@NotNull CommandLineArgs args) {
   }
 }

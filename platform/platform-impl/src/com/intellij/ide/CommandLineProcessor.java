@@ -16,7 +16,6 @@
 package com.intellij.ide;
 
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -30,12 +29,12 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
+import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.List;
 
 /**
  * @author yole
@@ -94,7 +93,7 @@ public class CommandLineProcessor {
         new OpenFileDescriptor(project, virtualFile).navigate(true);
       }
       else {
-        new OpenFileDescriptor(project, virtualFile, line-1, 0).navigate(true);
+        new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
       }
       return project;
     }
@@ -113,56 +112,31 @@ public class CommandLineProcessor {
   }
 
   @Nullable
-  public static Project processExternalCommandLine(List<String> args, @Nullable String currentDirectory) {
-    if (args.size() > 0) {
-      LOG.info("External command line:");
-      LOG.info("Dir: " + currentDirectory);
-      for (String arg : args) {
-        LOG.info(arg);
-      }
+  public static Project processExternalCommandLine(CommandLineArgs commandLineArgs, @Nullable String currentDirectory) {
+    String file = commandLineArgs.getFile();
+    if (file == null) {
+      return null;
     }
-    LOG.info("-----");
-
     Project lastOpenedProject = null;
-    int line = -1;
-    for (int i = 0, argsSize = args.size(); i < argsSize; i++) {
-      String arg = args.get(i);
-      if (arg.equals(StartupUtil.NO_SPLASH)) {
-        continue;
-      }
-      if (arg.equals("-l") || arg.equals("--line")) {
-        //noinspection AssignmentToForLoopParameter
-        i++;
-        if (i == args.size()) {
-          break;
-        }
-        try {
-          line = Integer.parseInt(args.get(i));
-        }
-        catch (NumberFormatException e) {
-          line = -1;
-        }
+    int line = commandLineArgs.getLine();
+
+    if (StringUtil.isQuotedString(file)) {
+      file = StringUtil.stripQuotesAroundValue(file);
+    }
+    if (!new File(file).isAbsolute()) {
+      file = currentDirectory != null ? new File(currentDirectory, file).getAbsolutePath() : new File(file).getAbsolutePath();
+    }
+    if (line != -1) {
+      final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(file);
+      if (virtualFile != null) {
+        lastOpenedProject = doOpenFile(virtualFile, line);
       }
       else {
-        if (StringUtil.isQuotedString(arg)) {
-          arg = StringUtil.stripQuotesAroundValue(arg);
-        }
-        if (!new File(arg).isAbsolute()) {
-          arg = currentDirectory != null ? new File(currentDirectory, arg).getAbsolutePath() : new File(arg).getAbsolutePath();
-        }
-        if (line != -1) {
-          final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(arg);
-          if (virtualFile != null) {
-            lastOpenedProject = doOpenFile(virtualFile, line);
-          }
-          else {
-            Messages.showErrorDialog("Cannot find file '" + arg + "'", "Cannot find file");
-          }
-        }
-        else {
-          lastOpenedProject = doOpenFileOrProject(arg);
-        }
+        Messages.showErrorDialog("Cannot find file '" + file + "'", "Cannot find file");
       }
+    }
+    else {
+      lastOpenedProject = doOpenFileOrProject(file);
     }
     return lastOpenedProject;
   }
