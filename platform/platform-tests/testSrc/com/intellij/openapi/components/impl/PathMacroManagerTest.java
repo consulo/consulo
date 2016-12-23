@@ -71,7 +71,6 @@ public class PathMacroManagerTest {
     context.checking(new Expectations() {
       {
         allowing(myApplication).isUnitTestMode(); will(returnValue(false));
-        allowing(myApplication).getName(); will(returnValue("IDEA"));
 
         // some tests leave invokeLater()'s after them
         allowing(myApplication).invokeLater(with(any(Runnable.class)), with(any(ModalityState.class)));

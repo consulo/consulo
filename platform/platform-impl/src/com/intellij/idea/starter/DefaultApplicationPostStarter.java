@@ -130,8 +130,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
 
       SwingUtilities.invokeLater(PluginManager::reportPluginError);
 
-      //safe for headless and unit test modes
-      UsageTrigger.trigger(app.getName() + "app.started");
+      UsageTrigger.trigger("consulo.app.started");
     }, ModalityState.NON_MODAL);
   }
 }

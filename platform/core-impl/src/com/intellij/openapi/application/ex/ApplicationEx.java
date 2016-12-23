@@ -41,9 +41,6 @@ public interface ApplicationEx extends Application {
 
   boolean isLoaded();
 
-  @NotNull
-  String getName();
-
   /**
    * @return true if this thread is inside read action.
    * @see #runReadAction(Runnable)

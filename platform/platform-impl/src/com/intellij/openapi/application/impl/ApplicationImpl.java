@@ -109,7 +109,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   private final boolean myCommandLineMode;
 
   private final boolean myIsInternal;
-  private final String myName;
 
   private final Stack<Class> myWriteActionsStack = new Stack<Class>(); // accessed from EDT only, no need to sync
 
@@ -209,7 +208,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
     myStartTime = System.currentTimeMillis();
     mySplash = splash;
-    myName = appName;
 
     myIsInternal = isInternal;
     myTestModeFlag = isUnitTestMode || Boolean.getBoolean(ApplicationProperties.CONSULO_AS_WEB_APP);
@@ -320,12 +318,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
     Disposer.assertIsEmpty();
     return true;
-  }
-
-  @Override
-  @NotNull
-  public String getName() {
-    return myName;
   }
 
   @Override

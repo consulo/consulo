@@ -72,8 +72,7 @@ public class DecodeDefaultsUtil {
   }
 
   private static URL getResourceByRelativePath(Object requestor, final String componentResourcePath, String resourceExtension) {
-    String appName = ApplicationManagerEx.getApplicationEx().getName();
-    URL result = requestor.getClass().getResource("/" + appName + "/" + componentResourcePath + resourceExtension);
+    URL result = requestor.getClass().getResource("/idea/" + componentResourcePath + resourceExtension);
     if (result == null) {
       result = requestor.getClass().getResource("/" + componentResourcePath + resourceExtension);
     }
