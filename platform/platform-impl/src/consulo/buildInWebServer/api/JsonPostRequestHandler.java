@@ -29,8 +29,6 @@ import java.io.IOException;
 /**
  * @author VISTALL
  * @since 27.10.2015
- * <p/>
- * draft
  */
 public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHandler {
   private Class<Request> myRequestClass;
