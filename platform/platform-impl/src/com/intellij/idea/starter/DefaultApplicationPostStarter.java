@@ -15,28 +15,25 @@
  */
 package com.intellij.idea.starter;
 
-import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.CommandLineProcessor;
 import com.intellij.ide.IdeEventQueue;
+import com.intellij.ide.RecentProjectsManagerBase;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.WindowManagerImpl;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.Splash;
-import com.intellij.util.messages.MessageBus;
 import consulo.annotations.Internal;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
@@ -98,9 +95,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     WindowManagerImpl windowManager = (WindowManagerImpl)WindowManager.getInstance();
     IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-    Ref<Boolean> willOpenProject = Ref.create(Boolean.FALSE);
-    AppLifecycleListener lifecyclePublisher = app.getMessageBus().syncPublisher(AppLifecycleListener.TOPIC);
-    lifecyclePublisher.appFrameCreated(args, willOpenProject);
+    RecentProjectsManagerBase recentProjectsManager = RecentProjectsManagerBase.getInstanceEx();
 
     LOG.info("App initialization took " + (System.nanoTime() - PluginManager.startupStart) / 1000000 + " ms");
     PluginManagerCore.dumpPluginClassStatistics();
@@ -116,9 +111,8 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       FirstStartCustomizeUtil.show(true);
     }
 
-    if (!willOpenProject.get()) {
+    if (recentProjectsManager.getLastProjectPath() != null) {
       WelcomeFrame.showNow();
-      lifecyclePublisher.welcomeScreenDisplayed();
     }
     else {
       windowManager.showFrame();
@@ -130,8 +124,9 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
         projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
       }
 
-      final MessageBus bus = ApplicationManager.getApplication().getMessageBus();
-      bus.syncPublisher(AppLifecycleListener.TOPIC).appStarting(projectFromCommandLine);
+      if(projectFromCommandLine == null) {
+        recentProjectsManager.doReopenLastProject();
+      }
 
       SwingUtilities.invokeLater(PluginManager::reportPluginError);
 

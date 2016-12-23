@@ -15,12 +15,8 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.DeprecationInfo;
-import consulo.start.CommandLineArgs;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author yole
@@ -28,19 +24,10 @@ import org.jetbrains.annotations.NotNull;
 public interface AppLifecycleListener {
   Topic<AppLifecycleListener> TOPIC = Topic.create("Application lifecycle notifications", AppLifecycleListener.class);
 
-  default void appFrameCreated(@NotNull CommandLineArgs commandLineArgs, @NotNull Ref<Boolean> willOpenProject) {
-  }
-
-  default void appStarting(Project projectFromCommandLine) {
-  }
-
   default void projectFrameClosed() {
   }
 
   default void projectOpenFailed() {
-  }
-
-  default void welcomeScreenDisplayed() {
   }
 
   /**
@@ -53,13 +40,6 @@ public interface AppLifecycleListener {
   @Deprecated
   @DeprecationInfo("Use 'com.intellij.ide.AppLifecycleListener' instead")
   abstract class Adapter implements AppLifecycleListener {
-    @Override
-    public void appFrameCreated(@NotNull CommandLineArgs commandLineArgs, @NotNull final Ref<Boolean> willOpenProject) {
-    }
-
-    @Override
-    public void appStarting(final Project projectFromCommandLine) {
-    }
 
     @Override
     public void projectFrameClosed() {
@@ -67,10 +47,6 @@ public interface AppLifecycleListener {
 
     @Override
     public void projectOpenFailed() {
-    }
-
-    @Override
-    public void welcomeScreenDisplayed() {
     }
 
     @Override

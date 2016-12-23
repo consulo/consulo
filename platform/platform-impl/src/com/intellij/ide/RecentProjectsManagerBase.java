@@ -566,11 +566,11 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     }
   }
 
-  protected boolean willReopenProjectOnStart() {
+  public boolean willReopenProjectOnStart() {
     return GeneralSettings.getInstance().isReopenLastProject() && getLastProjectPath() != null;
   }
 
-  protected void doReopenLastProject() {
+  public void doReopenLastProject() {
     GeneralSettings generalSettings = GeneralSettings.getInstance();
     if (generalSettings.isReopenLastProject()) {
       Set<String> openPaths;
@@ -608,19 +608,6 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   }
 
   private class MyAppLifecycleListener implements AppLifecycleListener {
-    @Override
-    public void appFrameCreated(@NotNull final CommandLineArgs commandLineArgs, @NotNull final Ref<Boolean> willOpenProject) {
-      if (willReopenProjectOnStart()) {
-        willOpenProject.set(Boolean.TRUE);
-      }
-    }
-
-    @Override
-    public void appStarting(Project projectFromCommandLine) {
-      if (projectFromCommandLine != null) return;
-      doReopenLastProject();
-    }
-
     @Override
     public void projectFrameClosed() {
       updateLastProjectPath();
