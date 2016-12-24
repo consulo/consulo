@@ -111,7 +111,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       FirstStartCustomizeUtil.show(true);
     }
 
-    if (recentProjectsManager.getLastProjectPath() == null || args.isNoRecentProjects()) {
+    if (!recentProjectsManager.willReopenProjectOnStart() || args.isNoRecentProjects()) {
       WelcomeFrame.showNow();
     }
     else {
