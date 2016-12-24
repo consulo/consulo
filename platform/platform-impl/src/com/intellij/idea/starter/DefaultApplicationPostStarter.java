@@ -111,7 +111,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       FirstStartCustomizeUtil.show(true);
     }
 
-    if (recentProjectsManager.getLastProjectPath() == null) {
+    if (recentProjectsManager.getLastProjectPath() == null || args.isNoRecentProjects()) {
       WelcomeFrame.showNow();
     }
     else {
@@ -119,13 +119,15 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     }
 
     app.invokeLater(() -> {
-      Project projectFromCommandLine = null;
-      if (myApplicationStarter.isPerformProjectLoad()) {
-        projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
-      }
+      if(!args.isNoRecentProjects()) {
+        Project projectFromCommandLine = null;
+        if (myApplicationStarter.isPerformProjectLoad()) {
+          projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
+        }
 
-      if(projectFromCommandLine == null) {
-        recentProjectsManager.doReopenLastProject();
+        if (projectFromCommandLine == null) {
+          recentProjectsManager.doReopenLastProject();
+        }
       }
 
       SwingUtilities.invokeLater(PluginManager::reportPluginError);

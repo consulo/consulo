@@ -32,12 +32,6 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
     super(parentDisposable);
   }
 
-  @NotNull
-  @Override
-  public String getName() {
-    return "mock";
-  }
-
   @Override
   public boolean holdsReadLock() {
     return false;

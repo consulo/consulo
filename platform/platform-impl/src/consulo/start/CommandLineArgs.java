@@ -28,6 +28,9 @@ public class CommandLineArgs {
   @Option(name = "-no-splash", usage = "Disable splash at start")
   private boolean myNoSplash;
 
+  @Option(name = "-no-recent-projects", usage = "Disable opening recent projects at start")
+  private boolean myNoRecentProjects;
+
   @Option(name = "-line", metaVar = "<line>", usage = "Line of file")
   private int myLine = -1;
 
@@ -42,6 +45,10 @@ public class CommandLineArgs {
 
   public boolean isShowVersion() {
     return myShowVersion;
+  }
+
+  public boolean isNoRecentProjects() {
+    return myNoRecentProjects;
   }
 
   public int getLine() {

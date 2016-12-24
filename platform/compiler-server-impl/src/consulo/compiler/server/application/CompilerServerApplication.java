@@ -512,12 +512,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
-  @NotNull
-  @Override
-  public String getName() {
-    return "idea";
-  }
-
   @Override
   public boolean holdsReadLock() {
     return false;
