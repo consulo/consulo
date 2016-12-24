@@ -25,19 +25,19 @@ import org.kohsuke.args4j.Option;
  * @since 23-Dec-16
  */
 public class CommandLineArgs {
-  @Option(name = "-no-splash", usage = "Disable splash at start")
+  @Option(name = "--no-splash", usage = "Disable splash at start")
   private boolean myNoSplash;
 
-  @Option(name = "-no-recent-projects", usage = "Disable opening recent projects at start")
+  @Option(name = "--no-recent-projects", usage = "Disable opening recent projects at start")
   private boolean myNoRecentProjects;
 
-  @Option(name = "-line", metaVar = "<line>", usage = "Line of file")
+  @Option(name = "--line", metaVar = "<line>", usage = "Line of file")
   private int myLine = -1;
 
-  @Option(name = "-version", usage = "Print version")
+  @Option(name = "--version", usage = "Print version")
   private boolean myShowVersion;
 
-  @Option(name = "-help", help = true, usage = "Show help")
+  @Option(name = "--help", help = true, usage = "Show help")
   private boolean myShowHelp;
 
   @Argument(usage = "File or project for open", metaVar = "<file>")
