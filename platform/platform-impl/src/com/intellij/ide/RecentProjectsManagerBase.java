@@ -32,28 +32,18 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.util.Alarm;
-import com.intellij.util.ImageLoader;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.ImageUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.util.SandboxUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.util.*;
-import java.util.List;
 
 /**
  * @author yole
@@ -61,7 +51,6 @@ import java.util.List;
  */
 public abstract class RecentProjectsManagerBase extends RecentProjectsManager implements PersistentStateComponent<RecentProjectsManagerBase.State> {
   private static final int MAX_PROJECTS_IN_MAIN_MENU = 6;
-  private static final Map<String, MyIcon> ourProjectIcons = new HashMap<>();
   private final Alarm myNamesResolver = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, ApplicationManager.getApplication());
   private final Set<String> myNamesToResolve = new HashSet<>(MAX_PROJECTS_IN_MAIN_MENU);
 
@@ -217,94 +206,6 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   @NotNull
   protected String getProjectDisplayName(@NotNull Project project) {
     return "";
-  }
-
-  @Nullable
-  public static Icon getProjectIcon(String path, boolean isDark) {
-    File file = isDark ? new File(path + "/.idea/icon_dark.png") : new File(path + "/.idea/icon.png");
-    if (file.exists()) {
-      final long timestamp = file.lastModified();
-      MyIcon icon = ourProjectIcons.get(path);
-      if (icon != null && icon.getTimestamp() == timestamp) {
-        return icon.getIcon();
-      }
-      try {
-        Icon ico = createIcon(file);
-        icon = new MyIcon(ico, timestamp);
-        ourProjectIcons.put(path, icon);
-        return icon.getIcon();
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    return null;
-  }
-
-  @NotNull
-  public static Icon createIcon(File file) {
-    final BufferedImage image = loadAndScaleImage(file);
-    return toRetinaAwareIcon(image);
-  }
-
-  @NotNull
-  protected static Icon toRetinaAwareIcon(final BufferedImage image) {
-    return new Icon() {
-      @Override
-      public void paintIcon(Component c, Graphics g, int x, int y) {
-        if (UIUtil.isRetina()) {
-          final Graphics2D newG = (Graphics2D)g.create(x, y, image.getWidth(), image.getHeight());
-          newG.scale(0.5, 0.5);
-          newG.drawImage(image, x/2, y/2, null);
-          newG.scale(1, 1);
-          newG.dispose();
-        }
-        else {
-          g.drawImage(image, x, y, null);
-        }
-      }
-
-      @Override
-      public int getIconWidth() {
-        return UIUtil.isRetina() ? image.getWidth() / 2 : image.getWidth();
-      }
-
-      @Override
-      public int getIconHeight() {
-        return UIUtil.isRetina() ? image.getHeight() / 2 : image.getHeight();
-      }
-    };
-  }
-
-  private static BufferedImage loadAndScaleImage(File file) {
-    try {
-      Image img = ImageLoader.loadFromUrl(file.toURL());
-      return Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.ULTRA_QUALITY, UIUtil.isRetina() ? 32 : JBUI.scale(16));
-    }
-    catch (MalformedURLException e) {//
-    }
-    return null;
-  }
-
-  public static Icon getProjectOrAppIcon(String path) {
-    Icon icon = getProjectIcon(path, UIUtil.isUnderDarcula());
-    if (icon != null) {
-      return icon;
-    }
-
-    if (UIUtil.isUnderDarcula()) {
-      //No dark icon for this project
-      icon = getProjectIcon(path, false);
-      if (icon != null) {
-        return icon;
-      }
-    }
-
-    return getSmallApplicationIcon();
-  }
-
-  protected static Icon getSmallApplicationIcon() {
-    return SandboxUtil.getAppIcon();
   }
 
   private Set<String> getDuplicateProjectNames(final Set<String> openedPaths, final Set<String> recentPaths) {

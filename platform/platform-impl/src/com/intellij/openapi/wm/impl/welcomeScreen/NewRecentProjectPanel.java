@@ -253,19 +253,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               p.add(name, BorderLayout.NORTH);
               p.add(path, BorderLayout.SOUTH);
 
-              String projectPath = ((ReopenProjectAction)value).getProjectPath();
-              Icon icon = RecentProjectsManagerBase.getProjectIcon(projectPath, UIUtil.isUnderDarcula());
-              if (icon == null) {
-                if (UIUtil.isUnderDarcula()) {
-                  //No dark icon for this project
-                  icon = RecentProjectsManagerBase.getProjectIcon(projectPath, false);
-                }
-              }
-              if (icon == null) {
-                icon = EmptyIcon.ICON_16;
-              }
-
-              final JLabel projectIcon = new JLabel("", icon, SwingConstants.LEFT) {
+              final JLabel projectIcon = new JLabel("", EmptyIcon.ICON_16, SwingConstants.LEFT) {
                 @Override
                 protected void paintComponent(Graphics g) {
                   getIcon().paintIcon(this, g, 0, (getHeight() - getIcon().getIconHeight()) / 2);
