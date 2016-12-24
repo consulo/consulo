@@ -25,7 +25,7 @@ import org.kohsuke.args4j.Option;
  * @since 23-Dec-16
  */
 public class CommandLineArgs {
-  @Option(name = "-nosplash", usage = "Disable splash at start")
+  @Option(name = "-no-splash", usage = "Disable splash at start")
   private boolean myNoSplash;
 
   @Option(name = "-line", metaVar = "<line>", usage = "Line of file")
