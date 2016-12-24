@@ -24,7 +24,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.registry.Registry;
@@ -41,7 +40,6 @@ import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -517,20 +515,6 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     @Override
     public void appClosing() {
       updateLastProjectPath();
-    }
-  }
-
-  private static class MyIcon extends Pair<Icon, Long> {
-    public MyIcon(Icon icon, Long timestamp) {
-      super(icon, timestamp);
-    }
-
-    public Icon getIcon() {
-      return first;
-    }
-
-    public long getTimestamp() {
-      return second;
     }
   }
 
