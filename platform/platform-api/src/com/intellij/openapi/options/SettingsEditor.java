@@ -18,7 +18,6 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Factory;
-import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -53,12 +52,9 @@ public abstract class SettingsEditor<Settings> implements Disposable {
 
   public SettingsEditor(Factory<Settings> settingsFactory) {
     mySettingsFactory = settingsFactory;
-    Disposer.register(this, new Disposable() {
-      @Override
-      public void dispose() {
-        disposeEditor();
-        uninstallWatcher();
-      }
+    Disposer.register(this, () -> {
+      disposeEditor();
+      uninstallWatcher();
     });
   }
 
@@ -115,13 +111,8 @@ public abstract class SettingsEditor<Settings> implements Disposable {
   protected void installWatcher(JComponent c) {
     myWatcher = new UserActivityWatcher();
     myWatcher.register(c);
-    UserActivityListener userActivityListener = new UserActivityListener() {
-      @Override
-      public void stateChanged() {
-        fireEditorStateChanged();
-      }
-    };
-    myWatcher.addUserActivityListener(userActivityListener, this);
+
+    myWatcher.addUserActivityListener(this::fireEditorStateChanged, this);
   }
 
   public final void addSettingsEditorListener(SettingsEditorListener<Settings> listener) {
@@ -132,6 +123,7 @@ public abstract class SettingsEditor<Settings> implements Disposable {
     myListeners.remove(listener);
   }
 
+  @SuppressWarnings("unchecked")
   protected final void fireEditorStateChanged() {
     if (myIsInUpdate || myListeners == null) return;
     for (SettingsEditorListener listener : myListeners) {
