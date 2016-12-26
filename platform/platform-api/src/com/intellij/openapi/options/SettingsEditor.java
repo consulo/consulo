@@ -20,7 +20,10 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Factory;
 import com.intellij.ui.UserActivityWatcher;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -41,7 +44,21 @@ public abstract class SettingsEditor<Settings> implements Disposable {
   protected abstract void applyEditorTo(Settings s) throws ConfigurationException;
 
   @NotNull
-  protected abstract JComponent createEditor();
+  @Deprecated
+  @DeprecationInfo(value = "Implement interface via overriding 'createUIComponent()' method")
+  protected JComponent createEditor() {
+    Component uiComponent = createUIComponent();
+    if(uiComponent != null) {
+      return (JComponent)uiComponent;
+    }
+
+    throw new AbstractMethodError("please implement 'createEditor()' or 'createUIComponent()'");
+  }
+
+  @Nullable
+  protected Component createUIComponent() {
+    return null;
+  }
 
   protected void disposeEditor() {
   }
