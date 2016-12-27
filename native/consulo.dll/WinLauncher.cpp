@@ -621,70 +621,6 @@ bool CheckSingleInstance()
 	}
 }
 
-void DrawSplashImage(HWND hWnd)
-{
-  HBITMAP hSplashBitmap = (HBITMAP)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-  PAINTSTRUCT ps;
-  HDC hDC = BeginPaint(hWnd, &ps);
-  HDC hMemDC = CreateCompatibleDC(hDC);
-  HBITMAP hOldBmp = (HBITMAP)SelectObject(hMemDC, hSplashBitmap);
-  BITMAP splashBitmap;
-  GetObject(hSplashBitmap, sizeof(splashBitmap), &splashBitmap);
-  BitBlt(hDC, 0, 0, splashBitmap.bmWidth, splashBitmap.bmHeight, hMemDC, 0, 0, SRCCOPY);
-  SelectObject(hMemDC, hOldBmp);
-  DeleteDC(hMemDC);
-  EndPaint(hWnd, &ps);
-}
-
-LRESULT CALLBACK SplashScreenWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-  switch (uMsg)
-  {
-  case WM_PAINT:
-    DrawSplashImage(hWnd);
-    break;
-  }
-  return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
-
-const TCHAR splashClassName[] = _T("ConsuloLauncherSplash");
-
-void RegisterSplashScreenWndClass()
-{
-  WNDCLASSEX wcx;
-  wcx.cbSize = sizeof(wcx);
-  wcx.style = 0;
-  wcx.lpfnWndProc = SplashScreenWndProc;
-  wcx.cbClsExtra = 0;
-  wcx.cbWndExtra = 0;
-  wcx.hInstance = hInst;
-  wcx.hIcon = 0;
-  wcx.hCursor = LoadCursor(NULL, IDC_WAIT);
-  wcx.hbrBackground = (HBRUSH)GetStockObject(LTGRAY_BRUSH);
-  wcx.lpszMenuName = 0;
-  wcx.lpszClassName = splashClassName;
-  wcx.hIconSm = 0;
-
-  RegisterClassEx(&wcx);
-}
-
-HWND ShowSplashScreenWindow(HBITMAP hSplashBitmap)
-{
-  RECT workArea;
-  SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
-  BITMAP splashBitmap;
-  GetObject(hSplashBitmap, sizeof(splashBitmap), &splashBitmap);
-  int x = workArea.left + ((workArea.right - workArea.left) - splashBitmap.bmWidth) / 2;
-  int y = workArea.top + ((workArea.bottom - workArea.top) - splashBitmap.bmHeight) / 2;
-
-  HWND splashWindow = CreateWindowEx(WS_EX_TOOLWINDOW, splashClassName, splashClassName, WS_POPUP,
-    x, y, splashBitmap.bmWidth, splashBitmap.bmHeight, NULL, NULL, NULL, NULL);
-  SetWindowLongPtr(splashWindow, GWLP_USERDATA, (LONG_PTR)hSplashBitmap);
-  ShowWindow(splashWindow, SW_SHOW);
-  UpdateWindow(splashWindow);
-  return splashWindow;
-}
-
 DWORD parentProcId;
 HANDLE parentProcHandle;
 
@@ -714,54 +650,6 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam)
   return TRUE;
 }
 
-DWORD WINAPI SplashScreen(HBITMAP hSplashBitmap)
-{
-  RegisterSplashScreenWndClass();
-  HWND splashWindow = ShowSplashScreenWindow(hSplashBitmap);
-  MSG msg;
-  while (true)
-  {
-    while (PeekMessage(&msg, splashWindow, 0, 0, PM_REMOVE))
-    {
-      TranslateMessage(&msg);
-      DispatchMessage(&msg);
-    }
-    Sleep(50);
-    HWND hNewWindow = NULL;
-    EnumWindows(EnumWindowsProc, (LPARAM)&hNewWindow);
-    if (hNewWindow)
-    {
-      BringWindowToTop(hNewWindow);
-      Sleep(100);
-      DeleteObject(hSplashBitmap);
-      DestroyWindow(splashWindow);
-      break;
-    }
-    if (!IsParentProcessRunning(parentProcHandle)) break;
-  }
-  return 0;
-}
-
-void StartSplashProcess()
-{
-  TCHAR params[_MAX_PATH];
-
-  PROCESS_INFORMATION splashProcessInformation;
-  STARTUPINFO startupInfo;
-  memset(&splashProcessInformation, 0, sizeof(splashProcessInformation));
-  memset(&startupInfo, 0, sizeof(startupInfo));
-  startupInfo.cb = sizeof(startupInfo);
-  startupInfo.dwFlags = STARTF_USESHOWWINDOW;
-  startupInfo.wShowWindow = SW_SHOW;
-
-  _snwprintf(params, _MAX_PATH, _T("SPLASH %d"), GetCurrentProcessId());
-  if (CreateProcess(moduleFilePath, params, NULL, NULL, FALSE, 0, NULL, NULL, &startupInfo, &splashProcessInformation))
-  {
-    CloseHandle(splashProcessInformation.hProcess);
-    CloseHandle(splashProcessInformation.hThread);
-  }
-}
-
 extern "C" int __declspec(dllexport) __cdecl launchConsulo(HINSTANCE hInstance,
                        HINSTANCE hPrevInstance,
                        LPTSTR    lpCmdLine,
@@ -781,42 +669,10 @@ extern "C" int __declspec(dllexport) __cdecl launchConsulo(HINSTANCE hInstance,
 
   hInst = hInstance;
 
-  if (argc == 2 && _wcsicmp(wargv[0], _T("SPLASH")) == 0)
-  {
-	  HDC monitor = GetDC(NULL);
-	  int logPixelX = GetDeviceCaps(monitor, LOGPIXELSX);
-	  int logPixelY = GetDeviceCaps(monitor, LOGPIXELSY);
-
-	  HBITMAP hSplashBitmap;
-
-	  if(logPixelX >= 144 || logPixelY >= 144)
-	  {
-		  hSplashBitmap = static_cast<HBITMAP>(LoadImage(hInst, MAKEINTRESOURCE(IDB_SPLASH_2X), IMAGE_BITMAP, 0, 0, 0));
-	  }
-	  else
-	  {
-		  hSplashBitmap = static_cast<HBITMAP>(LoadImage(hInst, MAKEINTRESOURCE(IDB_SPLASH), IMAGE_BITMAP, 0, 0, 0));
-	  }
-
-	  if (hSplashBitmap)
-	  {
-		  parentProcId = _wtoi(wargv[1]);
-		  parentProcHandle = OpenProcess(SYNCHRONIZE, FALSE, parentProcId);
-		  if (IsParentProcessRunning(parentProcHandle))
-		  {
-			  SplashScreen(hSplashBitmap);
-		  }
-	  }
-	  CloseHandle(parentProcHandle);
-	  return 0;
-  }
-
   if (!CheckSingleInstance()) 
   {
 	  return 1;
   }
-
-  if (wcsstr(lpCmdLine, _T("nosplash")) == NULL) StartSplashProcess();
 
   if (!LocateJVM()) 
   {
