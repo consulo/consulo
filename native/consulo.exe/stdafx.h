@@ -19,8 +19,6 @@
 #include <memory.h>
 #include <tchar.h>
 
-#include <jni.h>
-
 #include <vector>
 #include <string>
 #include <sstream>

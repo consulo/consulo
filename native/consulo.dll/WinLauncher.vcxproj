@@ -158,8 +158,6 @@
     <None Include="DpiManifest.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="logo%402x.bmp" />
-    <None Include="logo.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />

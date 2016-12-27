@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="logo.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="logo%402x.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="DpiManifest.xml">
       <Filter>Resource Files</Filter>
     </None>
