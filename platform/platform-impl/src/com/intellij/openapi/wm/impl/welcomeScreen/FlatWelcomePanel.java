@@ -24,13 +24,9 @@ import com.intellij.notification.impl.IdeNotificationArea;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
-import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.labels.ActionLink;
@@ -43,6 +39,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
+import consulo.spash.AnimatedLogoLabel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,8 +49,6 @@ import javax.accessibility.AccessibleRole;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -99,7 +94,13 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   @NotNull
   protected JComponent createRightComponent() {
     JPanel panel = new JPanel(new BorderLayout());
-    panel.add(createLogo(), BorderLayout.NORTH);
+    JPanel logoPanel = new JPanel(new BorderLayout());
+    logoPanel.setBorder(JBUI.Borders.empty(53, 66, 45, 0));
+    AnimatedLogoLabel animatedLogoLabel = new AnimatedLogoLabel(8, false);
+    animatedLogoLabel.setForeground(JBColor.GRAY);
+    logoPanel.add(animatedLogoLabel, BorderLayout.CENTER);
+
+    panel.add(logoPanel, BorderLayout.NORTH);
     panel.add(createActionPanel(), BorderLayout.CENTER);
     panel.add(createSettingsAndDocs(), BorderLayout.SOUTH);
     return panel;
@@ -251,47 +252,6 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
       }
     }.installOn(arrow);
     return arrow;
-  }
-
-  private JComponent createLogo() {
-    NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
-    JLabel logo = new JLabel(ApplicationInfoEx.getWelcomeScreenLogo());
-    logo.setBorder(JBUI.Borders.empty(30, 0, 10, 0));
-    logo.setHorizontalAlignment(SwingConstants.CENTER);
-    panel.add(logo, BorderLayout.NORTH);
-    JLabel appName = new JLabel(ApplicationNamesInfo.getInstance().getFullProductName());
-    Font font = getProductFont();
-    appName.setForeground(JBColor.foreground());
-    appName.setFont(font.deriveFont(JBUI.scale(36f)).deriveFont(Font.PLAIN));
-    appName.setHorizontalAlignment(SwingConstants.CENTER);
-
-    panel.add(appName);
-    panel.setBorder(JBUI.Borders.emptyBottom(20));
-    return panel;
-  }
-
-  private Font getProductFont() {
-    String name = "/fonts/Roboto-Light.ttf";
-    URL url = AppUIUtil.class.getResource(name);
-    if (url == null) {
-      Logger.getInstance(AppUIUtil.class).warn("Resource missing: " + name);
-    }
-    else {
-
-      try {
-        InputStream is = url.openStream();
-        try {
-          return Font.createFont(Font.TRUETYPE_FONT, is);
-        }
-        finally {
-          is.close();
-        }
-      }
-      catch (Throwable t) {
-        Logger.getInstance(AppUIUtil.class).warn("Cannot load font: " + url, t);
-      }
-    }
-    return UIUtil.getLabelFont();
   }
 
   public void installFocusable(final JComponent comp, final AnAction action, final int prevKeyCode, final int nextKeyCode, final boolean focusListOnLeft) {

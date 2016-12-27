@@ -24,7 +24,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -54,13 +53,6 @@ public class AppUIUtil {
   private static List<Image> getAppIconImages() {
     ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
     List<Image> images = ContainerUtil.newArrayListWithCapacity(3);
-
-    if (SystemInfo.isXWindow) {
-      String bigIconUrl = appInfo.getBigIconUrl();
-      if (bigIconUrl != null) {
-        images.add(com.intellij.util.ImageLoader.loadFromResource(bigIconUrl));
-      }
-    }
 
     images.add(com.intellij.util.ImageLoader.loadFromResource(appInfo.getIconUrl()));
     images.add(com.intellij.util.ImageLoader.loadFromResource(appInfo.getSmallIconUrl()));

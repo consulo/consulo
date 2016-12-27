@@ -28,7 +28,6 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.IconLoader;
 import consulo.annotations.DeprecationInfo;
 import consulo.util.SandboxUtil;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,11 +50,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
   @DeprecationInfo("Do not use this method. Use SandboxUtil.getAppIcon()")
   public String getSmallIconUrl() {
     return getUrl("/icon16");
-  }
-
-  @Nullable
-  public String getBigIconUrl() {
-    return getUrl("/icon128");
   }
 
   public static Icon getWelcomeScreenLogo() {
